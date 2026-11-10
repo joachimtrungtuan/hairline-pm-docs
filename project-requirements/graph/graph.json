@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-10T15:56:53Z",
+  "generated_at": "2026-11-10T16:09:13Z",
   "schema_version": 9,
   "nodes": [
     {
@@ -66229,6 +66229,714 @@
       }
     },
     {
+      "id": "REQ-018-208",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Total Referrals validation (Screen 1)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Read-only, system-calculated",
+        "rationale": "Screen 1, Total Referrals, Validation Rules column (PRD line 331, 332, 333, 334, 338, 339, 340, 430, 434, 530, 616, 617, 618, 619, 656, 657, 658, 659, 698, 699, 737, 739, 740, 787, 788, 861, 862, 863, 864, 865, 866, 904, 905, 906, 907, 908, 917, 918, 919, 920, 921, 954, 955, 963, 965, 975, 976, 977, 978)"
+      }
+    },
+    {
+      "id": "REQ-018-209",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Status validation (Screen 1)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Admin dropdown: Active / Suspended / Inactive; Pending is read-only/system-set",
+        "rationale": "Screen 1, Status, Validation Rules column (PRD line 335)"
+      }
+    },
+    {
+      "id": "REQ-018-210",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Country/Region validation (Screen 1)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Uses supported country/region list",
+        "rationale": "Screen 1, Country/Region, Validation Rules column (PRD line 336, 382)"
+      }
+    },
+    {
+      "id": "REQ-018-211",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Affiliate Type validation (Screen 1)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Dropdown with configured options",
+        "rationale": "Screen 1, Affiliate Type, Validation Rules column (PRD line 337, 383)"
+      }
+    },
+    {
+      "id": "REQ-018-213",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Contact Email validation (Screen 2)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Valid email format, unique across affiliates",
+        "rationale": "Screen 2, Contact Email, Validation Rules column (PRD line 379)"
+      }
+    },
+    {
+      "id": "REQ-018-214",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Phone Number validation (Screen 2)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Valid international phone format",
+        "rationale": "Screen 2, Phone Number, Validation Rules column (PRD line 380, 1013)"
+      }
+    },
+    {
+      "id": "REQ-018-216",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Tax / VAT / Business Reg ID validation (Screen 2)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Max 50 chars; format validated per country if set",
+        "rationale": "Screen 2, Tax / VAT / Business Reg ID, Validation Rules column (PRD line 384)"
+      }
+    },
+    {
+      "id": "REQ-018-217",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Account Holder Name validation (Screen 2)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Required, max 200 characters",
+        "rationale": "Screen 2, Account Holder Name, Validation Rules column (PRD line 385, 386)"
+      }
+    },
+    {
+      "id": "REQ-018-218",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Account Number validation (Screen 2)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Required, format valid for selected country, masked in UI (last 4 digits), encrypted at rest",
+        "rationale": "Screen 2, Account Number, Validation Rules column (PRD line 387)"
+      }
+    },
+    {
+      "id": "REQ-018-219",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Routing / SWIFT Code validation (Screen 2)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Required, SWIFT/routing format validated",
+        "rationale": "Screen 2, Routing / SWIFT Code, Validation Rules column (PRD line 388)"
+      }
+    },
+    {
+      "id": "REQ-018-220",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "IBAN validation (Screen 2)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Valid IBAN format if provided",
+        "rationale": "Screen 2, IBAN, Validation Rules column (PRD line 389)"
+      }
+    },
+    {
+      "id": "REQ-018-221",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Commission Type validation (Screen 2)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "One option must be selected",
+        "rationale": "Screen 2, Commission Type, Validation Rules column (PRD line 390, 499, 561, 568, 571)"
+      }
+    },
+    {
+      "id": "REQ-018-226",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Activation Status validation (Screen 2)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Read-only, system-managed",
+        "rationale": "Screen 2, Activation Status, Validation Rules column (PRD line 395)"
+      }
+    },
+    {
+      "id": "REQ-018-227",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Last Login validation (Screen 2)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Read-only, system-recorded",
+        "rationale": "Screen 2, Last Login, Validation Rules column (PRD line 396, 661, 792)"
+      }
+    },
+    {
+      "id": "REQ-018-229",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Affiliate Header validation (Screen 3)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Read-only, from affiliate record",
+        "rationale": "Screen 3, Affiliate Header, Validation Rules column (PRD line 429, 738, 741, 789)"
+      }
+    },
+    {
+      "id": "REQ-018-230",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Account Details Panel validation (Screen 3)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Read-only; \"Edit\" opens Screen 2",
+        "rationale": "Screen 3, Account Details Panel, Validation Rules column (PRD line 431)"
+      }
+    },
+    {
+      "id": "REQ-018-231",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Assigned Promo Codes List validation (Screen 3)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Read-only; each row links to Screen 6",
+        "rationale": "Screen 3, Assigned Promo Codes List, Validation Rules column (PRD line 432)"
+      }
+    },
+    {
+      "id": "REQ-018-232",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Payout History List validation (Screen 3)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Read-only; each row links to Screen 8",
+        "rationale": "Screen 3, Payout History List, Validation Rules column (PRD line 433)"
+      }
+    },
+    {
+      "id": "REQ-018-233",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Activity / Audit Panel validation (Screen 3)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Read-only, append-only",
+        "rationale": "Screen 3, Activity / Audit Panel, Validation Rules column (PRD line 435, 702)"
+      }
+    },
+    {
+      "id": "REQ-018-238",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Effective Date validation (Screen 5)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Must be today or future (not in the past)",
+        "rationale": "Screen 5, Effective Date, Validation Rules column (PRD line 502)"
+      }
+    },
+    {
+      "id": "REQ-018-240",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Linked Affiliate validation (Screen 7)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Dropdown of active affiliates; required in Single mode",
+        "rationale": "Screen 7, Linked Affiliate, Validation Rules column (PRD line 560)"
+      }
+    },
+    {
+      "id": "REQ-018-241",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Affiliate Selection validation (Screen 7)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Required for Selected Affiliates mode",
+        "rationale": "Screen 7, Affiliate Selection, Validation Rules column (PRD line 562)"
+      }
+    },
+    {
+      "id": "REQ-018-242",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Filter Criteria validation (Screen 7)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Required for Filtered Segment mode",
+        "rationale": "Screen 7, Filter Criteria, Validation Rules column (PRD line 563)"
+      }
+    },
+    {
+      "id": "REQ-018-243",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Campaign Name validation (Screen 7)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "3-120 characters",
+        "rationale": "Screen 7, Campaign Name, Validation Rules column (PRD line 564)"
+      }
+    },
+    {
+      "id": "REQ-018-244",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Code Pattern validation (Screen 7)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Uppercase alphanumeric pattern, uniqueness checked",
+        "rationale": "Screen 7, Code Pattern, Validation Rules column (PRD line 565)"
+      }
+    },
+    {
+      "id": "REQ-018-245",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Discount Code validation (Screen 7)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Uppercase alphanumeric, 4-20 chars, unique; required in Single mode",
+        "rationale": "Screen 7, Discount Code, Validation Rules column (PRD line 566)"
+      }
+    },
+    {
+      "id": "REQ-018-247",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Discount Percentage validation (Screen 7)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Required if \"Percentage\" selected, range 5-30%",
+        "rationale": "Screen 7, Discount Percentage, Validation Rules column (PRD line 569)"
+      }
+    },
+    {
+      "id": "REQ-018-248",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Discount Fixed Amount validation (Screen 7)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Required if \"Fixed Amount\" selected, min $10",
+        "rationale": "Screen 7, Discount Fixed Amount, Validation Rules column (PRD line 570)"
+      }
+    },
+    {
+      "id": "REQ-018-249",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Expiration Date validation (Screen 7)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Must be future date if set",
+        "rationale": "Screen 7, Expiration Date, Validation Rules column (PRD line 572)"
+      }
+    },
+    {
+      "id": "REQ-018-250",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Maximum Usage Count validation (Screen 7)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Min 1 if set, unlimited if blank",
+        "rationale": "Screen 7, Maximum Usage Count, Validation Rules column (PRD line 573)"
+      }
+    },
+    {
+      "id": "REQ-018-251",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Per-Patient Usage Limit validation (Screen 7)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Default 1",
+        "rationale": "Screen 7, Per-Patient Usage Limit, Validation Rules column (PRD line 574)"
+      }
+    },
+    {
+      "id": "REQ-018-252",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Status validation (Screen 7)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Toggle switch, default Active",
+        "rationale": "Screen 7, Status, Validation Rules column (PRD line 575)"
+      }
+    },
+    {
+      "id": "REQ-018-253",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Batch ID validation (Screen 8)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Read-only, system-generated",
+        "rationale": "Screen 8, Batch ID, Validation Rules column (PRD line 614)"
+      }
+    },
+    {
+      "id": "REQ-018-254",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Result Rows validation (Screen 8)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Read-only; failed rows selectable for retry",
+        "rationale": "Screen 8, Result Rows, Validation Rules column (PRD line 620)"
+      }
+    },
+    {
+      "id": "REQ-018-255",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Linked Affiliate validation (Screen 9)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Read-only; links to Screen 3",
+        "rationale": "Screen 9, Linked Affiliate, Validation Rules column (PRD line 653, 696, 785)"
+      }
+    },
+    {
+      "id": "REQ-018-256",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Status validation (Screen 9)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Read-only badge",
+        "rationale": "Screen 9, Status, Validation Rules column (PRD line 660, 900, 964)"
+      }
+    },
+    {
+      "id": "REQ-018-257",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Code Settings Panel validation (Screen 10)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Read-only; editable subset per rules",
+        "rationale": "Screen 10, Code Settings Panel, Validation Rules column (PRD line 697)"
+      }
+    },
+    {
+      "id": "REQ-018-258",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Payout Month validation (Screen 11)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Format: \"November 2025\"",
+        "rationale": "Screen 11, Payout Month, Validation Rules column (PRD line 736)"
+      }
+    },
+    {
+      "id": "REQ-018-259",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Payment Details validation (Screen 11)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Read-only, masked",
+        "rationale": "Screen 11, Payment Details, Validation Rules column (PRD line 742, 790, 980)"
+      }
+    },
+    {
+      "id": "REQ-018-260",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Payout Status validation (Screen 11)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Read-only, from FR-017 payout execution state",
+        "rationale": "Screen 11, Payout Status, Validation Rules column (PRD line 743)"
+      }
+    },
+    {
+      "id": "REQ-018-261",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Transaction ID validation (Screen 11)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Read-only, from Stripe",
+        "rationale": "Screen 11, Transaction ID, Validation Rules column (PRD line 744, 791, 967, 981)"
+      }
+    },
+    {
+      "id": "REQ-018-262",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Notes validation (Screen 11)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Max 500 characters",
+        "rationale": "Screen 11, Notes, Validation Rules column (PRD line 745, 794)"
+      }
+    },
+    {
+      "id": "REQ-018-263",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Actions validation (Screen 11)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Read-only/export actions only",
+        "rationale": "Screen 11, Actions, Validation Rules column (PRD line 746)"
+      }
+    },
+    {
+      "id": "REQ-018-264",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Failure Reason validation (Screen 12)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Read-only, shown only when Failed",
+        "rationale": "Screen 12, Failure Reason, Validation Rules column (PRD line 793)"
+      }
+    },
+    {
+      "id": "REQ-018-265",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Actions validation (Screen 12)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Read-only/export action only",
+        "rationale": "Screen 12, Actions, Validation Rules column (PRD line 795)"
+      }
+    },
+    {
+      "id": "REQ-018-266",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Next Payout Date validation (Screen 14)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Read-only, system-set (fixed: 7th of month)",
+        "rationale": "Screen 14, Next Payout Date, Validation Rules column (PRD line 867, 953)"
+      }
+    },
+    {
+      "id": "REQ-018-269",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Minimum Threshold Note validation (Screen 16)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Read-only, shown when applicable",
+        "rationale": "Screen 16, Minimum Threshold Note, Validation Rules column (PRD line 956)"
+      }
+    },
+    {
+      "id": "REQ-018-270",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Payout Period validation (Screen 16)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Read-only (e.g., \"November 2025\")",
+        "rationale": "Screen 16, Payout Period, Validation Rules column (PRD line 962)"
+      }
+    },
+    {
+      "id": "REQ-018-275",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Activation Link Status validation (Screen 19)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Read-only, system-evaluated",
+        "rationale": "Screen 19, Activation Link Status, Validation Rules column (PRD line 1080)"
+      }
+    },
+    {
+      "id": "REQ-018-276",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Confirm Password validation (Screen 19)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Must match New Password",
+        "rationale": "Screen 19, Confirm Password, Validation Rules column (PRD line 1083)"
+      }
+    },
+    {
+      "id": "REQ-018-277",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Password Strength Meter validation (Screen 19)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Read-only, reflects entered password",
+        "rationale": "Screen 19, Password Strength Meter, Validation Rules column (PRD line 1084)"
+      }
+    },
+    {
+      "id": "REQ-018-278",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Set Password validation (Screen 19)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Enabled only when both fields are valid",
+        "rationale": "Screen 19, Set Password, Validation Rules column (PRD line 1085)"
+      }
+    },
+    {
+      "id": "REQ-018-279",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Resend Activation validation (Screen 20)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Subject to rate limiting",
+        "rationale": "Screen 20, Resend Activation, Validation Rules column (PRD line 1111)"
+      }
+    },
+    {
+      "id": "REQ-018-280",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Bulk code generation should be available only after at least one eligi",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Bulk code generation should be available only after at least one eligible active affiliate is selected",
+        "rationale": "Screen 1 business rules (PRD line 365)"
+      }
+    },
+    {
+      "id": "REQ-018-285",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Surface a clear \"Invited — activation pending\" indicator until first p",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Surface a clear \"Invited — activation pending\" indicator until first password set",
+        "rationale": "Screen 3 business rules (PRD line 458)"
+      }
+    },
+    {
+      "id": "REQ-018-287",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Surface the FR-019 redemption status alongside the FR-018 attribution",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Surface the FR-019 redemption status alongside the FR-018 attribution to avoid confusion",
+        "rationale": "Screen 10 business rules (PRD line 722)"
+      }
+    },
+    {
+      "id": "REQ-018-294",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Profile Completion: \"Complete Profile\" routes to Screen 9.4, where the",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Profile Completion: \"Complete Profile\" routes to Screen 9.4, where the affiliate can fill non-sensitive fields (phone, language)",
+        "rationale": "Screen 21 business rules (PRD line 1148)"
+      }
+    },
+    {
+      "id": "REQ-018-295",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Threat mitigation: Rate limiting on dashboard API (100 requests/minute",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Threat mitigation: Rate limiting on dashboard API (100 requests/minute/user) to prevent abuse; CAPTCHA on affiliate login after 3 failed attempts; activation link is one-time and expires in 24 hours",
+        "rationale": "Implementation Notes, Security Considerations (PRD line 1424)"
+      }
+    },
+    {
+      "id": "REQ-018-296",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Compliance: PCI-DSS compliance for handling affiliate bank account det",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Compliance: PCI-DSS compliance for handling affiliate bank account details; GDPR compliance for affiliate personal data (right to deletion)",
+        "rationale": "Implementation Notes, Security Considerations (PRD line 1425)"
+      }
+    },
+    {
       "id": "REQ-019-001",
       "type": "Rule",
       "owner_fr": "FR-019",
@@ -85876,6 +86584,42 @@
       "attrs": {
         "statement": "Patient content is curated to avoid medical advice and to focus on platform usage, appointment management and general information.",
         "rationale": "Promoted from Business Process Assumption 5 because it constrains what content admins publish. PRD: Assumptions, Business Process Assumption 5 (1194)."
+      }
+    },
+    {
+      "id": "REQ-033-089",
+      "type": "Rule",
+      "owner_fr": "FR-033",
+      "title": "Media storage failure: queue uploads, cached content, notify admin",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "If media storage unavailable, queue uploads for retry; display cached content to providers; notify admin of storage issues",
+        "rationale": "Dependencies, External Dependencies, Media Storage Service failure handling (PRD line 1140)."
+      }
+    },
+    {
+      "id": "REQ-033-090",
+      "type": "Rule",
+      "owner_fr": "FR-033",
+      "title": "Editor library fails to load: plain textarea fallback",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "If editor library fails to load, fall back to plain textarea with markdown support",
+        "rationale": "Dependencies, External Dependencies, Rich Text Editor Library failure handling (PRD line 1145)."
+      }
+    },
+    {
+      "id": "REQ-033-091",
+      "type": "Rule",
+      "owner_fr": "FR-033",
+      "title": "Virus scanner unavailable: quarantine uploads",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "If virus scanner unavailable, quarantine uploads and notify admin; do not make files available to providers until scan completes",
+        "rationale": "Dependencies, External Dependencies, Virus Scanning Service failure handling (PRD line 1150)."
       }
     },
     {
@@ -160942,7 +161686,7 @@
       "verb": "active in",
       "to_id": "STG-main-05-payment",
       "attrs": {
-        "rules": 206
+        "rules": 265
       },
       "derived": true
     },
@@ -161956,7 +162700,7 @@
       "verb": "active in",
       "to_id": "STG-patient-03-active",
       "attrs": {
-        "rules": 69
+        "rules": 71
       },
       "derived": true
     },
@@ -161965,7 +162709,7 @@
       "verb": "active in",
       "to_id": "STG-provider-03-active",
       "attrs": {
-        "rules": 83
+        "rules": 86
       },
       "derived": true
     },
@@ -212115,6 +212859,1320 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-208",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-208",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-code-batch.created_count",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-208",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-code-batch.failed_count",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-208",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-code-batch.requested_count",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-208",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-code-batch.skipped_count",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-208",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.applied_count",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-208",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.commission_earned",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-208",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.completed_count",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-208",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.conversion_rate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-208",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.last_used_at",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-208",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.revenue_generated",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-208",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-payout.net_amount",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-208",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-payout.total_bookings_count",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-208",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-payout.total_commission_amount",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-208",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.active_codes_count",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-208",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.campaign_eligibility",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-208",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.pending_payout",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-208",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.performance_tier",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-208",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.referrals_this_month",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-208",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.settlement_outcome",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-208",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.total_commissions_earned",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-208",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.total_commissions_paid",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-208",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.total_referrals",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-208",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.total_revenue",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-208",
+      "verb": "applies to",
+      "to_id": "SCR-018-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-208",
+      "verb": "applies to",
+      "to_id": "SCR-018-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-208",
+      "verb": "applies to",
+      "to_id": "SCR-018-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-208",
+      "verb": "applies to",
+      "to_id": "SCR-018-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-208",
+      "verb": "applies to",
+      "to_id": "SCR-018-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-208",
+      "verb": "applies to",
+      "to_id": "SCR-018-10",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-208",
+      "verb": "applies to",
+      "to_id": "SCR-018-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-208",
+      "verb": "applies to",
+      "to_id": "SCR-018-12",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-208",
+      "verb": "applies to",
+      "to_id": "SCR-018-14",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-208",
+      "verb": "applies to",
+      "to_id": "SCR-018-15",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-208",
+      "verb": "applies to",
+      "to_id": "SCR-018-16",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-209",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-209",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-209",
+      "verb": "applies to",
+      "to_id": "SCR-018-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-210",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-210",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.country_region",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-210",
+      "verb": "applies to",
+      "to_id": "SCR-018-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-210",
+      "verb": "applies to",
+      "to_id": "SCR-018-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-211",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-211",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.affiliate_type",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-211",
+      "verb": "applies to",
+      "to_id": "SCR-018-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-211",
+      "verb": "applies to",
+      "to_id": "SCR-018-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-213",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-213",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.contact_email",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-213",
+      "verb": "applies to",
+      "to_id": "SCR-018-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-214",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-214",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.phone_number",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-214",
+      "verb": "applies to",
+      "to_id": "SCR-018-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-214",
+      "verb": "applies to",
+      "to_id": "SCR-018-17",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-216",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-216",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.tax_vat_business_reg_id",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-216",
+      "verb": "applies to",
+      "to_id": "SCR-018-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-217",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-217",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.bank_account_holder_name",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-217",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.bank_name",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-217",
+      "verb": "applies to",
+      "to_id": "SCR-018-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-218",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-218",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.bank_account_number",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-218",
+      "verb": "applies to",
+      "to_id": "SCR-018-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-219",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-219",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.bank_routing_swift_code",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-219",
+      "verb": "applies to",
+      "to_id": "SCR-018-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-220",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-220",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.bank_iban",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-220",
+      "verb": "applies to",
+      "to_id": "SCR-018-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-221",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-221",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.application_method",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-221",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.discount_amount_type",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-221",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.generation_mode",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-221",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.commission_type",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-221",
+      "verb": "applies to",
+      "to_id": "SCR-018-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-221",
+      "verb": "applies to",
+      "to_id": "SCR-018-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-221",
+      "verb": "applies to",
+      "to_id": "SCR-018-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-226",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-226",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.activation_status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-226",
+      "verb": "applies to",
+      "to_id": "SCR-018-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-227",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-227",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.created_at",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-227",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-payout.status_timeline",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-227",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.last_login_at",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-227",
+      "verb": "applies to",
+      "to_id": "SCR-018-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-227",
+      "verb": "applies to",
+      "to_id": "SCR-018-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-227",
+      "verb": "applies to",
+      "to_id": "SCR-018-12",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-229",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-229",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-payout.payment_method",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-229",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.name",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-229",
+      "verb": "applies to",
+      "to_id": "SCR-018-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-229",
+      "verb": "applies to",
+      "to_id": "SCR-018-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-229",
+      "verb": "applies to",
+      "to_id": "SCR-018-12",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-230",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-230",
+      "verb": "applies to",
+      "to_id": "SCR-018-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-231",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-231",
+      "verb": "applies to",
+      "to_id": "SCR-018-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-232",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-232",
+      "verb": "applies to",
+      "to_id": "SCR-018-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-233",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-233",
+      "verb": "applies to",
+      "to_id": "SCR-018-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-233",
+      "verb": "applies to",
+      "to_id": "SCR-018-10",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-238",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-238",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.commission_effective_date",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-238",
+      "verb": "applies to",
+      "to_id": "SCR-018-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-240",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-240",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.affiliate_id",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-240",
+      "verb": "applies to",
+      "to_id": "SCR-018-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-241",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-241",
+      "verb": "applies to",
+      "to_id": "SCR-018-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-242",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-242",
+      "verb": "applies to",
+      "to_id": "SCR-018-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-243",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-243",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.campaign_name",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-243",
+      "verb": "applies to",
+      "to_id": "SCR-018-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-244",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-244",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-code-batch.code_pattern",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-244",
+      "verb": "applies to",
+      "to_id": "SCR-018-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-245",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-245",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.code_text",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-245",
+      "verb": "applies to",
+      "to_id": "SCR-018-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-247",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-247",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.discount_percentage",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-247",
+      "verb": "applies to",
+      "to_id": "SCR-018-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-248",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-248",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.discount_fixed_amount",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-248",
+      "verb": "applies to",
+      "to_id": "SCR-018-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-249",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-249",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.expiration_date",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-249",
+      "verb": "applies to",
+      "to_id": "SCR-018-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-250",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-250",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.max_usage_count",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-250",
+      "verb": "applies to",
+      "to_id": "SCR-018-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-251",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-251",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.per_patient_usage_limit",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-251",
+      "verb": "applies to",
+      "to_id": "SCR-018-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-252",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-252",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-252",
+      "verb": "applies to",
+      "to_id": "SCR-018-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-253",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-253",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-code-batch.id",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-253",
+      "verb": "applies to",
+      "to_id": "SCR-018-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-254",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-254",
+      "verb": "applies to",
+      "to_id": "SCR-018-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-255",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-255",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.affiliate_id",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-255",
+      "verb": "applies to",
+      "to_id": "SCR-018-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-255",
+      "verb": "applies to",
+      "to_id": "SCR-018-10",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-255",
+      "verb": "applies to",
+      "to_id": "SCR-018-12",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-256",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-256",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-discount-code.status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-256",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-payout.status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-256",
+      "verb": "applies to",
+      "to_id": "SCR-018-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-256",
+      "verb": "applies to",
+      "to_id": "SCR-018-15",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-256",
+      "verb": "applies to",
+      "to_id": "SCR-018-16",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-257",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-257",
+      "verb": "applies to",
+      "to_id": "SCR-018-10",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-258",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-258",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-payout.payout_month",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-258",
+      "verb": "applies to",
+      "to_id": "SCR-018-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-259",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-259",
+      "verb": "applies to",
+      "to_id": "SCR-018-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-259",
+      "verb": "applies to",
+      "to_id": "SCR-018-12",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-259",
+      "verb": "applies to",
+      "to_id": "SCR-018-16",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-260",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-260",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-payout.status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-260",
+      "verb": "applies to",
+      "to_id": "SCR-018-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-261",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-261",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-payout.stripe_transfer_id",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-261",
+      "verb": "applies to",
+      "to_id": "SCR-018-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-261",
+      "verb": "applies to",
+      "to_id": "SCR-018-12",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-261",
+      "verb": "applies to",
+      "to_id": "SCR-018-16",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-262",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-262",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-payout.admin_notes",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-262",
+      "verb": "applies to",
+      "to_id": "SCR-018-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-262",
+      "verb": "applies to",
+      "to_id": "SCR-018-12",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-263",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-263",
+      "verb": "applies to",
+      "to_id": "SCR-018-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-264",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-264",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-payout.failure_reason",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-264",
+      "verb": "applies to",
+      "to_id": "SCR-018-12",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-265",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-265",
+      "verb": "applies to",
+      "to_id": "SCR-018-12",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-266",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-266",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.next_payout_date",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-266",
+      "verb": "applies to",
+      "to_id": "SCR-018-14",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-266",
+      "verb": "applies to",
+      "to_id": "SCR-018-16",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-269",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-269",
+      "verb": "applies to",
+      "to_id": "SCR-018-16",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-270",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-270",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-payout.payout_month",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-270",
+      "verb": "applies to",
+      "to_id": "SCR-018-16",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-275",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-275",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.activation_link_expires_at",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-275",
+      "verb": "applies to",
+      "to_id": "SCR-018-19",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-276",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-276",
+      "verb": "applies to",
+      "to_id": "SCR-018-19",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-277",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-277",
+      "verb": "applies to",
+      "to_id": "SCR-018-19",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-278",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-278",
+      "verb": "applies to",
+      "to_id": "SCR-018-19",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-279",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-279",
+      "verb": "applies to",
+      "to_id": "SCR-018-20",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-280",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-280",
+      "verb": "applies to",
+      "to_id": "SCR-018-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-285",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-285",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.activation_status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-285",
+      "verb": "applies to",
+      "to_id": "SCR-018-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-287",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-287",
+      "verb": "applies to",
+      "to_id": "SCR-018-10",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-294",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-294",
+      "verb": "applies to",
+      "to_id": "SCR-018-17",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-294",
+      "verb": "applies to",
+      "to_id": "SCR-018-21",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-295",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-295",
+      "verb": "applies to",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-295",
+      "verb": "applies to",
+      "to_id": "SCR-018-13",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-296",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-296",
+      "verb": "applies to",
+      "to_id": "ACT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-296",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate.bank_account_number",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-019-001",
       "verb": "applies at",
       "to_id": "STG-main-02-quote",
@@ -245190,6 +247248,72 @@
       "from_id": "REQ-033-088",
       "verb": "applies to",
       "to_id": "ENT-help-centre-content",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-089",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-089",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-089",
+      "verb": "applies to",
+      "to_id": "ENT-content-attachment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-090",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-090",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-090",
+      "verb": "applies to",
+      "to_id": "SCR-033-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-090",
+      "verb": "applies to",
+      "to_id": "SCR-033-21",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-091",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-091",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-091",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-091",
+      "verb": "applies to",
+      "to_id": "ENT-content-attachment",
       "attrs": {}
     },
     {
@@ -368716,6 +370840,94 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261110-160812-0639adff",
+      "at": "2026-11-10T16:08:12.593320+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-033 Rules from rule-like PRD lines outside the business-rule sections (Validation Rules cells, screen business-rule bullets, Security Considerations and External Dependencies lines), released from 2026-11-10-fr033-completeness-held.yaml after decision D51: each statement is the PRD text at its cited line word for word and duplicates no live Rule. Apply after the other 2026-11-10 files of the FR, in FR number order (see plans/reports/fullstack-developer-261110-2350-rule-like-lines-apply.md).",
+      "source_id": null,
+      "nodes_added": [
+        "REQ-033-089",
+        "REQ-033-090",
+        "REQ-033-091"
+      ],
+      "nodes_updated": [],
+      "edges_added": 11,
+      "edges_removed": 0,
+      "rows": 29
+    },
+    {
+      "id": "cs-20261110-160812-40bdca31",
+      "at": "2026-11-10T16:08:12.475927+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-018 Rules from rule-like PRD lines outside the business-rule sections (Validation Rules cells, screen business-rule bullets, Security Considerations and External Dependencies lines), released from 2026-11-10-fr018-completeness-held.yaml after decision D51: each statement is the PRD text at its cited line word for word and duplicates no live Rule. Apply after the other 2026-11-10 files of the FR, in FR number order (see plans/reports/fullstack-developer-261110-2350-rule-like-lines-apply.md).",
+      "source_id": null,
+      "nodes_added": [
+        "REQ-018-208",
+        "REQ-018-209",
+        "REQ-018-210",
+        "REQ-018-211",
+        "REQ-018-213",
+        "REQ-018-214",
+        "REQ-018-216",
+        "REQ-018-217",
+        "REQ-018-218",
+        "REQ-018-219",
+        "REQ-018-220",
+        "REQ-018-221",
+        "REQ-018-226",
+        "REQ-018-227",
+        "REQ-018-229",
+        "REQ-018-230",
+        "REQ-018-231",
+        "REQ-018-232",
+        "REQ-018-233",
+        "REQ-018-238",
+        "REQ-018-240",
+        "REQ-018-241",
+        "REQ-018-242",
+        "REQ-018-243",
+        "REQ-018-244",
+        "REQ-018-245",
+        "REQ-018-247",
+        "REQ-018-248",
+        "REQ-018-249",
+        "REQ-018-250",
+        "REQ-018-251",
+        "REQ-018-252",
+        "REQ-018-253",
+        "REQ-018-254",
+        "REQ-018-255",
+        "REQ-018-256",
+        "REQ-018-257",
+        "REQ-018-258",
+        "REQ-018-259",
+        "REQ-018-260",
+        "REQ-018-261",
+        "REQ-018-262",
+        "REQ-018-263",
+        "REQ-018-264",
+        "REQ-018-265",
+        "REQ-018-266",
+        "REQ-018-269",
+        "REQ-018-270",
+        "REQ-018-275",
+        "REQ-018-276",
+        "REQ-018-277",
+        "REQ-018-278",
+        "REQ-018-279",
+        "REQ-018-280",
+        "REQ-018-285",
+        "REQ-018-287",
+        "REQ-018-294",
+        "REQ-018-295",
+        "REQ-018-296"
+      ],
+      "nodes_updated": [],
+      "edges_added": 219,
+      "edges_removed": 0,
+      "rows": 573
+    },
     {
       "id": "cs-20261110-155504-a6b05d2b",
       "at": "2026-11-10T15:55:04.226545+00:00",
