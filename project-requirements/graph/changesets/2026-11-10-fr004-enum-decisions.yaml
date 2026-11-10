@@ -1,0 +1,6 @@
+reason: "FR-004 allowed-value list ruling (user ruling on allowed-value lists, 2026-11-10 evening): ENT-quote.cancellation_provenance adds InquiryCancelled and OtherQuoteAccepted for the four causes on prd.md line 253, in the naming style of ProviderSuspended and ProviderDeactivated."
+by: fullstack-developer
+operations:
+  # add: continue the sort order after ProviderDeactivated (1)
+  - {"op": "add_enum_value", "field_id": "ENT-quote.cancellation_provenance", "value": "InquiryCancelled", "label": "Inquiry cancelled", "sort_order": 2}
+  - {"op": "add_enum_value", "field_id": "ENT-quote.cancellation_provenance", "value": "OtherQuoteAccepted", "label": "Other quote accepted", "sort_order": 3}

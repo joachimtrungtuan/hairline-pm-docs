@@ -1,0 +1,5 @@
+reason: "FR-015 allowed-value list ruling (user ruling on allowed-value lists, 2026-11-10 evening): keep twice_monthly (Key Entities, prd.md line 1233) and retire 2x_a_month, so ENT-provider.payout_frequency becomes weekly, twice_monthly, monthly."
+by: fullstack-developer
+operations:
+  # retire: duplicate stored value with the same label as twice_monthly
+  - {"op": "retire_enum_value", "field_id": "ENT-provider.payout_frequency", "value": "2x_a_month"}

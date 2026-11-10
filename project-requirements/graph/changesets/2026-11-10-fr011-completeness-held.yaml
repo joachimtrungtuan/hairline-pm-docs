@@ -2,11 +2,4 @@ reason: "FR-011 completeness, held operations: Steps the PRD assigns to the syst
 by: tester
 operations:
   # 2026-11-10 D44: 134 ops that waited only on the system Actor left this file (134 moved to 2026-11-10-fr011-system-steps.yaml, 0 already in the live graph); the ops below still wait on their own reason.
-  # waits on: field type change text to enum (user review, PRD line 1047)
-  - {"op": "update_field", "id": "ENT-aftercare-request.payment_status", "data_type": "enum"}
-  # waits on: field type change text to enum (user review, PRD line 1047)
-  - {"op": "add_enum_value", "field_id": "ENT-aftercare-request.payment_status", "value": "paid", "label": "Paid", "sort_order": 0}
-  # waits on: field type change text to enum (user review, PRD line 1047)
-  - {"op": "add_enum_value", "field_id": "ENT-aftercare-request.payment_status", "value": "pending", "label": "Pending", "sort_order": 1}
-  # waits on: field type change text to enum (user review, PRD line 1047)
-  - {"op": "add_enum_value", "field_id": "ENT-aftercare-request.payment_status", "value": "failed", "label": "Failed", "sort_order": 2}
+  # 2026-11-10 allowed-value list ruling: 4 ops that waited on the field type change text to enum left this file (moved to 2026-11-10-fr011-enum-decisions.yaml): ENT-aftercare-request.payment_status becomes an enum with Paid, Pending, Failed; the required flag is unchanged.

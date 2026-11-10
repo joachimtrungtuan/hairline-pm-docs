@@ -1,0 +1,5 @@
+reason: "FR-006 (field owner; ruled as the FR-007 booking payment status question) allowed-value list ruling (user ruling on allowed-value lists, 2026-11-10 evening): Overdue is a separate flag, not a payment status. ENT-booking.payment_status becomes unpaid, deposit_only, installments_active, full_paid. How the flag is stored is not ruled, so no flag field is added. FR-007 Screen 5 (prd.md line 475) is a PRD line to correct."
+by: fullstack-developer
+operations:
+  # retire: overdue is a flag, not a status
+  - {"op": "retire_enum_value", "field_id": "ENT-booking.payment_status", "value": "overdue"}

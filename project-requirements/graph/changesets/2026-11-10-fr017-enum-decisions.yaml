@@ -1,0 +1,6 @@
+reason: "FR-017 allowed-value list ruling (user ruling on allowed-value lists, 2026-11-10 evening): the payout record field follows the FR-015 spelling: 2x_a_month is replaced by twice_monthly (label 2x a Month), so ENT-provider-payout.payout_frequency becomes weekly, twice_monthly, monthly."
+by: fullstack-developer
+operations:
+  # replace: retire 2x_a_month and add twice_monthly at the same sort order
+  - {"op": "retire_enum_value", "field_id": "ENT-provider-payout.payout_frequency", "value": "2x_a_month"}
+  - {"op": "add_enum_value", "field_id": "ENT-provider-payout.payout_frequency", "value": "twice_monthly", "label": "2x a Month", "sort_order": 1}

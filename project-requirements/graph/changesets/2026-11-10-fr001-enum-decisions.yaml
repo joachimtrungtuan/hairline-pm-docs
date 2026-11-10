@@ -1,0 +1,6 @@
+reason: "FR-001 allowed-value list ruling (user ruling on allowed-value lists, 2026-11-10 evening): ENT-patient.account_status becomes Active, Suspended, Deactivated (sort order 0, 1, 2). inactive and pending_verification leave the list. FR-001 Screen 19 (prd.md line 910) is a PRD line to correct."
+by: fullstack-developer
+operations:
+  # retire: values outside the ruled list (active 0, suspended 1, deactivated 2 stay as they are)
+  - {"op": "retire_enum_value", "field_id": "ENT-patient.account_status", "value": "inactive"}
+  - {"op": "retire_enum_value", "field_id": "ENT-patient.account_status", "value": "pending_verification"}

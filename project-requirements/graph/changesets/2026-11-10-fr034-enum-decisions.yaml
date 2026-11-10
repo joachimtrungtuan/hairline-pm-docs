@@ -1,0 +1,8 @@
+reason: "FR-034 allowed-value list ruling (user ruling on allowed-value lists, 2026-11-10 evening): ENT-support-case-timeline-event.event_type adds the four events the PRD logs in the timeline (A1 step 6, prd.md lines 1142, 1166 and 1236): 17 values in total."
+by: fullstack-developer
+operations:
+  # add: continue the sort order after case_closed (12)
+  - {"op": "add_enum_value", "field_id": "ENT-support-case-timeline-event.event_type", "value": "case_escalated", "label": "Case escalated", "sort_order": 13}
+  - {"op": "add_enum_value", "field_id": "ENT-support-case-timeline-event.event_type", "value": "notification_sent", "label": "Notification sent", "sort_order": 14}
+  - {"op": "add_enum_value", "field_id": "ENT-support-case-timeline-event.event_type", "value": "notification_failed", "label": "Notification failed", "sort_order": 15}
+  - {"op": "add_enum_value", "field_id": "ENT-support-case-timeline-event.event_type", "value": "admin_deactivated", "label": "Admin deactivated", "sort_order": 16}

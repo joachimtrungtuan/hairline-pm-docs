@@ -1,0 +1,8 @@
+reason: "FR-011 allowed-value list ruling (user ruling on allowed-value lists, 2026-11-10 evening): ENT-aftercare-request.payment_status becomes an enum with Paid, Pending, Failed (prd.md line 1047). The 4 ops are released unchanged from 2026-11-10-fr011-completeness-held.yaml; the required flag is not changed."
+by: fullstack-developer
+operations:
+  # released from 2026-11-10-fr011-completeness-held.yaml (waited on: field type change text to enum)
+  - {"op": "update_field", "id": "ENT-aftercare-request.payment_status", "data_type": "enum"}
+  - {"op": "add_enum_value", "field_id": "ENT-aftercare-request.payment_status", "value": "paid", "label": "Paid", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-aftercare-request.payment_status", "value": "pending", "label": "Pending", "sort_order": 1}
+  - {"op": "add_enum_value", "field_id": "ENT-aftercare-request.payment_status", "value": "failed", "label": "Failed", "sort_order": 2}

@@ -1,0 +1,7 @@
+reason: "FR-007B allowed-value list ruling (user ruling on allowed-value lists, 2026-11-10 evening): Overdue is a separate flag on the installment plan, not a plan status, so ENT-installment-plan.status becomes active, completed, defaulted, canceled; no flag field is added. ENT-installment-payment.status becomes scheduled, paid, failed, retried, overdue, cancelled (retrying leaves). The plan status screen lines 288, 300, 324 and 405 of prd.md are PRD lines to correct."
+by: fullstack-developer
+operations:
+  # retire: overdue is a flag, not a plan status
+  - {"op": "retire_enum_value", "field_id": "ENT-installment-plan.status", "value": "overdue"}
+  # retire: retried is the one retry value (Key Entities and REQ-007b-008)
+  - {"op": "retire_enum_value", "field_id": "ENT-installment-payment.status", "value": "retrying"}
