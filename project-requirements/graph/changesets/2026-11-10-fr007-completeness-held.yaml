@@ -3,8 +3,7 @@ by: tester
 operations:
   # 2026-11-10 D44: 103 ops that waited only on the system Actor left this file (103 moved to 2026-11-10-fr007-system-steps.yaml, 0 already in the live graph); the ops below still wait on their own reason.
   # 2026-11-10 D45/D46: 14 ops left this file (moved to 2026-11-10-fr007-external-steps.yaml): the external-service or payment-capture Steps and the ops that waited only on them; the ops below still wait on their own reason.
-  # waits on: platform-wide rules placement (scope global or object-level; REQ-007-008)
-  - {"op": "add_edge", "from": "REQ-007-008", "verb": "applies to", "to": "ENT-payment", "attrs": {}}
+  # 2026-11-11 D53: REQ-007-008 is platform-wide and now carries scope: global (2026-11-11-fr007-global-scope.yaml), so its object-level alternative left this file: 1 op dropped, 0 released; the ops below still wait on their own reason.
   # waits on: platform-wide rules placement (scope global or object-level; REQ-007-013)
   - {"op": "add_edge", "from": "REQ-007-013", "verb": "applies to", "to": "ENT-payment", "attrs": {}}
   - {"op": "add_edge", "from": "REQ-007-013", "verb": "applies to", "to": "ENT-payout", "attrs": {}}

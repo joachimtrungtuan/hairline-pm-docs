@@ -1,0 +1,4 @@
+reason: "FR-005 Rules that the PRD states platform-wide get scope: global after decision D53 (2026-11-10): each statement applies to the whole platform and names no FR-specific screen, entity, flow, actor or module; statements are unchanged. Apply after the other 2026-11-10 files of the FR (see plans/reports/fullstack-developer-261111-0740-global-scope-apply.md)."
+by: fullstack-developer
+operations:
+  - {"op": "update_node", "id": "REQ-005-009", "attrs": {"scope": "global"}}
