@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-10T16:09:13Z",
+  "generated_at": "2026-11-11T00:41:32Z",
   "schema_version": 9,
   "nodes": [
     {
@@ -43699,10 +43699,11 @@
       "owner_fr": "FR-005",
       "title": "Encryption at rest and in transit; RBAC for actions",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST encrypt data at rest and in transit and enforce RBAC for actions.",
-        "rationale": "Restated by Data & Privacy Rule 2 (all data in transit and at rest is protected according to platform policies) and the security note (RBAC for all actors; encryption at rest and in transit)."
+        "rationale": "Restated by Data & Privacy Rule 2 (all data in transit and at rest is protected according to platform policies) and the security note (RBAC for all actors; encryption at rest and in transit).",
+        "scope": "global"
       }
     },
     {
@@ -45239,9 +45240,10 @@
       "owner_fr": "FR-007",
       "title": "No card numbers stored by the platform",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "System MUST ensure no card numbers are stored by the platform; only the processor handles them"
+        "statement": "System MUST ensure no card numbers are stored by the platform; only the processor handles them",
+        "scope": "global"
       }
     },
     {
@@ -73073,10 +73075,11 @@
       "owner_fr": "FR-023",
       "title": "Medical records retained 7 years; no hard-delete before expiry",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST retain patient medical records for a minimum of 7 years; hard-deletion is prohibited before expiry.",
-        "rationale": "Restated by Assumptions (7-year minimum applies to medical and financial records platform-wide unless stricter jurisdictional rules exist) and the Executive Summary (minimum 7 years for medical and financial records)."
+        "rationale": "Restated by Assumptions (7-year minimum applies to medical and financial records platform-wide unless stricter jurisdictional rules exist) and the Executive Summary (minimum 7 years for medical and financial records).",
+        "scope": "global"
       }
     },
     {
@@ -73085,9 +73088,10 @@
       "owner_fr": "FR-023",
       "title": "Financial records retained 7 years; no hard-delete before expiry",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "System MUST retain financial transaction records for a minimum of 7 years; hard-deletion is prohibited before expiry."
+        "statement": "System MUST retain financial transaction records for a minimum of 7 years; hard-deletion is prohibited before expiry.",
+        "scope": "global"
       }
     },
     {
@@ -73202,10 +73206,11 @@
       "owner_fr": "FR-023",
       "title": "Backups every 6 hours, 30-day retention, deleted personal data excluded beyond window",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Backups MUST occur at least every 6 hours with 30-day retention (per system PRD) and exclude already-deleted personal data beyond backup windows.",
-        "rationale": "Restated by Assumptions (backups every 6 hours with 30-day retention per system PRD; deleted data may persist in backups until window expiry)."
+        "rationale": "Restated by Assumptions (backups every 6 hours with 30-day retention per system PRD; deleted data may persist in backups until window expiry).",
+        "scope": "global"
       }
     },
     {
@@ -73225,9 +73230,10 @@
       "owner_fr": "FR-023",
       "title": "Anonymization removes direct identifiers and reduces re-identification risk",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "Anonymization MUST remove direct identifiers and reduce re-identification risk for quasi-identifiers."
+        "statement": "Anonymization MUST remove direct identifiers and reduce re-identification risk for quasi-identifiers.",
+        "scope": "global"
       }
     },
     {
@@ -370840,6 +370846,51 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261111-004025-16256838",
+      "at": "2026-11-11T00:40:25.841611+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-023 Rules that the PRD states platform-wide get scope: global after decision D53 (2026-11-10): each statement applies to the whole platform and names no FR-specific screen, entity, flow, actor or module; statements are unchanged. Apply after the other 2026-11-10 files of the FR (see plans/reports/fullstack-developer-261111-0740-global-scope-apply.md).",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-023-001",
+        "REQ-023-002",
+        "REQ-023-012",
+        "REQ-023-014"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 4
+    },
+    {
+      "id": "cs-20261111-004025-d7ef5fe5",
+      "at": "2026-11-11T00:40:25.736169+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-007 Rules that the PRD states platform-wide get scope: global after decision D53 (2026-11-10): each statement applies to the whole platform and names no FR-specific screen, entity, flow, actor or module; statements are unchanged. Apply after the other 2026-11-10 files of the FR (see plans/reports/fullstack-developer-261111-0740-global-scope-apply.md).",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-007-008"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 1
+    },
+    {
+      "id": "cs-20261111-004025-957b414e",
+      "at": "2026-11-11T00:40:25.631811+00:00",
+      "changed_by": "fullstack-developer",
+      "reason": "FR-005 Rules that the PRD states platform-wide get scope: global after decision D53 (2026-11-10): each statement applies to the whole platform and names no FR-specific screen, entity, flow, actor or module; statements are unchanged. Apply after the other 2026-11-10 files of the FR (see plans/reports/fullstack-developer-261111-0740-global-scope-apply.md).",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-005-009"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 1
+    },
     {
       "id": "cs-20261110-160812-0639adff",
       "at": "2026-11-10T16:08:12.593320+00:00",
