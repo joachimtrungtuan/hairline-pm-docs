@@ -1,0 +1,34 @@
+# Requirements Baseline Reset — PRDs and Requirements Graph
+
+**Date:** 2026-11-20
+**Type:** Major update — all 38 feature PRDs and the system PRD revised; requirements graph schema v10 and data changes
+**Programme:** `plans/261108-1040-requirements-graph-programme/` (Hairline root)
+**Final report:** `plans/reports/final-261120-1530-requirements-baseline-graph-apply.md`
+**Backlog:** `plans/reports/implementation-backlog-261120.md`
+
+## Summary
+
+The owner's answers from the programme's question rounds were applied as the new requirements baseline. The PRDs were edited first, then the graph was brought in line with them. By owner ruling this baseline needs no Change Request files.
+
+## What changed
+
+### PRDs
+
+- The 38 feature PRDs and the system PRD were edited from the decision manifests and then reconciled against each other (41 files in commit `ef2178a`).
+- Each PRD's Appendix: Change Log carries a row for this baseline.
+- Platform-wide rules now live once in the system PRD; feature PRDs cite them instead of restating them.
+
+### Requirements graph
+
+- Schema v10; platform-wide Rules `REQ-SYS-001` to `REQ-SYS-014`; the Stage list set by the GLOBAL change-set.
+- 51 change-sets dated 2026-11-20 in `graph/changesets/`: one baseline per FR (38), eleven cross-FR files, one cleanup file. Each was applied after a backup in `graph/backups/`.
+- `graph.json` re-exported.
+
+## Verification
+
+- Lint on the final graph: 4,449 findings (L03 10, L10 4,274, L12 76, L18 89; L15 0), down from 4,516.
+- Test suites: 237 tests pass.
+
+## Not done
+
+Items the inputs left open are listed per FR in `plans/reports/graph-result-261120-frNNN.md` and collected in the backlog file above.
