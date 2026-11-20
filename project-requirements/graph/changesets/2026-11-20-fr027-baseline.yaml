@@ -1,0 +1,159 @@
+reason: 'Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-027)'
+by: controller
+operations:
+  - {"op": "remove_edge", "from": "STP-027-001", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-027-001", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-027-002", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-027-002", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-027-003", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-027-003", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-027-004", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-027-004", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-027-005", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-027-005", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-027-020", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-027-020", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-027-021", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-027-021", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-027-030", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-027-030", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-027-031", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-027-031", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "SCR-027-01", "verb": "belongs to", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "SCR-027-01", "verb": "belongs to", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "SCR-027-02", "verb": "belongs to", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "SCR-027-02", "verb": "belongs to", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "SCR-027-03", "verb": "belongs to", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "SCR-027-03", "verb": "belongs to", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "SCR-027-04", "verb": "belongs to", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "SCR-027-04", "verb": "belongs to", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "SCR-027-05", "verb": "belongs to", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "SCR-027-05", "verb": "belongs to", "to": "STG-admin-01-configuration"}
+  - {"op": "update_node", "id": "STP-027-004", "title": "System publishes the version: it is Scheduled until its effective date, then becomes current and the previous version is archived"}
+  - {"op": "update_node", "id": "STP-027-006", "title": "System prompts patients to accept"}
+  - {"op": "remove_edge", "from": "STP-027-006", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-027-006", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_node", "id": "STP-027-007", "type": "Step", "owner_fr": "FR-027", "title": "System prompts providers to accept", "attrs": {"prd_ref": "Main Flow: Admin Publishes New Legal Version, step 6"}}
+  - {"op": "add_edge", "from": "STP-027-007", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-027-007", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-027-007", "verb": "applies", "to": "REQ-027-004"}
+  - {"op": "add_edge", "from": "STP-027-007", "verb": "applies", "to": "REQ-027-014"}
+  - {"op": "add_edge", "from": "STP-027-007", "verb": "applies", "to": "REQ-027-033"}
+  - {"op": "add_edge", "from": "STP-027-005", "verb": "next", "to": "STP-027-007"}
+  - {"op": "add_node", "id": "STP-027-008", "type": "Step", "owner_fr": "FR-027", "title": "Patient reviews the legal content and accepts", "attrs": {"prd_ref": "Main Flow: User Accepts New Version, step 2"}}
+  - {"op": "add_edge", "from": "STP-027-008", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-027-008", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-027-008", "verb": "applies", "to": "REQ-027-012"}
+  - {"op": "add_edge", "from": "STP-027-008", "verb": "applies", "to": "REQ-027-005"}
+  - {"op": "add_node", "id": "STP-027-009", "type": "Step", "owner_fr": "FR-027", "title": "Provider account holder reviews the legal content and accepts for the clinic", "attrs": {"prd_ref": "Main Flow: User Accepts New Version, step 2"}}
+  - {"op": "add_edge", "from": "STP-027-009", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-027-009", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-027-009", "verb": "applies", "to": "REQ-027-012"}
+  - {"op": "add_edge", "from": "STP-027-009", "verb": "applies", "to": "REQ-027-005"}
+  - {"op": "add_edge", "from": "STP-027-009", "verb": "applies", "to": "REQ-027-019"}
+  - {"op": "add_edge", "from": "STP-027-010", "verb": "next", "to": "STP-027-008"}
+  - {"op": "add_edge", "from": "STP-027-006", "verb": "next", "to": "STP-027-008"}
+  - {"op": "add_edge", "from": "STP-027-007", "verb": "next", "to": "STP-027-009"}
+  - {"op": "update_node", "id": "REQ-027-011", "title": "Authorized Admin roles only for the Legal Documents list and for create/edit/publish; publication needs explicit confirmation", "attrs": {"statement": "Only authorized Admin roles can access the Legal Documents list and create/edit/publish legal documents; publication actions require explicit confirmation"}}
+  - {"op": "update_node", "id": "REQ-027-024", "title": "Warning banner on the document list when pending acceptance is below the Admin-set threshold", "attrs": {"statement": "Screen 1 (Admin Legal Documents List, SCR-027-01) shows warning banners for pending acceptance coverage below the Admin-set threshold.", "rationale": "Screen 1 notes. The threshold is set by Admin and has no default (CL-5)."}}
+  - {"op": "update_node", "id": "REQ-027-029", "title": "One Current version per document type; the prior Current is archived when the new version becomes Current", "attrs": {"statement": "Only one Current version per document type at a time; when a newly published version becomes Current, the prior Current is auto-archived.", "rationale": "Screen 1 business rules and Status validation. Restated by Main Flow step 4 and Screen 3 business rule. A published version with a future effective date is Scheduled and the previous version stays Current until then."}}
+  - {"op": "update_node", "id": "REQ-027-030", "title": "A future effective date keeps the previous version Current until then, then activates the new version and starts prompts", "attrs": {"statement": "When Admin sets a future effective date, System marks the new version Scheduled and the previous version stays Current; on the effective date the new version becomes Current, the previous version is archived, and prompts begin.", "rationale": "Alternative Flow A1 and Screen 3 business rule. Until the effective date the new version is Scheduled."}}
+  - {"op": "update_node", "id": "REQ-027-031", "title": "Restoring an earlier text is a new draft published as a new version; no revert button; prompts updated and audit entry recorded", "attrs": {"statement": "There is no revert button. To go back to the text of an earlier version, Admin creates a new draft from the old version and publishes the restored text as a new version through the normal publishing flow; prompts update accordingly and an audit entry is recorded.", "rationale": "Alternative Flow B1 (Restoring an Earlier Version)."}}
+  - {"op": "update_node", "id": "REQ-027-032", "title": "Restoring an earlier text keeps existing acceptance records; users who accepted only the replaced version accept the restored one", "attrs": {"statement": "When an earlier text is restored it is published as a new version; existing acceptance records are preserved, and users who accepted only the version that was replaced are asked to accept the restored version.", "rationale": "Edge Cases (restoring an earlier text after partial acceptance) and Alternative Flow B1 outcome."}}
+  - {"op": "update_node", "id": "REQ-027-053", "title": "Acceptance Rate base is the users who must accept that document, computed from the ledger; Pending Users are those who must accept and have not", "attrs": {"statement": "Acceptance Rate is the % accepted out of the users who must accept that document, computed from the acceptance ledger; Pending Users are the users who must accept that document and have not.", "rationale": "Screen 4 Acceptance Rate and Pending Users. Computes ENT-legal-document.acceptance_rate and pending_user_count."}}
+  - {"op": "update_node", "id": "REQ-027-049", "attrs": {"rationale": "Screen 1 business rules and Actions field: Edit is shown for Draft versions only."}}
+  - {"op": "update_node", "id": "REQ-027-036", "title": "Missing translation falls back to the platform default language (English) with a notice; publishing needs complete English (en-US) content", "attrs": {"statement": "If a localized version is unavailable, fall back to the platform default language (English) and display a discreet notice. When a version is published globally, the system validates that at least the English (en-US) locale content is complete; if other locales are configured, the Admin UI summarises their completeness and publishing proceeds with the platform default language (English, en-US) version as the single fallback where a locale is missing or incomplete (as per CL-3).", "rationale": "CL-3, Edge Cases (locale mismatch), Assumptions and Screen 3 business rule. The platform default language (English) is the single fallback. Merged from REQ-027-039."}}
+  - {"op": "merge_node", "survivor": "REQ-027-036", "loser": "REQ-027-039"}
+  - {"op": "remove_edge", "from": "REQ-027-036", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-036", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "retire_node", "id": "REQ-027-018"}
+  - {"op": "retire_node", "id": "REQ-027-020"}
+  - {"op": "remove_edge", "from": "REQ-027-001", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-001", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-003", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-003", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-007", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-007", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-010", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-010", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-011", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-011", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-013", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-013", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-021", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-021", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-022", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-022", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-028", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-028", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-029", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-029", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-030", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-030", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-031", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-031", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-040", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-040", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-041", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-041", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-042", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-042", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-043", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-043", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-044", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-044", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-045", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-045", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-046", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-046", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-047", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-047", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-048", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-048", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-050", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-050", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-051", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-051", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-052", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-052", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-006", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-006", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-016", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-016", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-024", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-024", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-027", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-027", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-049", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-049", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-053", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-053", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-054", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-054", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-055", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-055", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-056", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-056", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-057", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-057", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-002", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-002", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-008", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-008", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-023", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-023", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-025", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-025", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-037", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-037", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-026", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-026", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-027-032", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-027-032", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-027-014", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "update_node", "id": "SET-legal-coverage-threshold", "attrs": {"description": "Coverage level below which the Admin is notified and the document list shows a warning banner. Set by Admin; no default value. FR-027 owns this setting (CL-5)."}}
+  - {"op": "update_node", "id": "SET-legal-acceptance-rules", "attrs": {"description": "Admin-configurable acceptance rules: who must accept, and when enforcement applies. FR-027 owns this setting (CL-5)."}}
+  - {"op": "add_node", "id": "SET-legal-reminder-limit", "type": "Setting", "owner_fr": "FR-027", "title": "Reminder limit for pending acceptance", "attrs": {"description": "Limit on reminders sent to users with pending acceptance. Set by Admin; no default value (CL-5)."}}
+  - {"op": "add_node", "id": "SET-legal-export-limit", "type": "Setting", "owner_fr": "FR-027", "title": "Acceptance export limit", "attrs": {"description": "Limit on CSV exports from the acceptance dashboard and detail list. Set by Admin; no default value (CL-5)."}}
+  - {"op": "add_edge", "from": "REQ-027-014", "verb": "governed by", "to": "SET-legal-reminder-limit"}
+  - {"op": "add_edge", "from": "REQ-027-055", "verb": "governed by", "to": "SET-legal-export-limit"}
