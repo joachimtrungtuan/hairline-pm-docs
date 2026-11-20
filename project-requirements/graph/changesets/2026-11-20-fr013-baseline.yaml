@@ -1,0 +1,750 @@
+reason: 'Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-013)'
+by: controller
+operations:
+- op: update_node
+  id: REQ-013-002
+  title: Review needs 3 months since completion; one published review per procedure
+  attrs:
+    statement: System MUST enforce time gating (≥ 3 months) and one published review per completed procedure. After an approved takedown the patient MAY submit one new review for the same procedure; both reviews are kept in the archive.
+- op: update_node
+  id: REQ-013-017
+  title: Review events raise notifications; delivery follows FR-020 and FR-030
+  attrs:
+    statement: 'The review module raises a notification on each of these events: new published review, provider reply, admin removal, takedown decision. Invitation and reminder timing is owned by FR-030. Delivery, recipients, content and opt-out follow the notification-service Rule in FR-020 and the FR-030 notification catalogue.'
+    rationale: Restated by Main Flow step 4(d), workflows A3 step 4, A4 step 4 and B1 outcome, the Provider Platform scope (receive notification on new published reviews) and Shared Services. Invite and reminder timing is owned by FR-030; delivery, recipients, content and opt-out are owned by FR-020 and the FR-030 catalogue.
+- op: update_node
+  id: REQ-013-020
+  title: Takedown modal with required reason and 10-year retention notice
+  attrs:
+    statement: Takedown request submission MUST use a confirmation modal/bottom-sheet with required patient reason and explicit 10-year retention-policy notice before submission.
+    rationale: 'Screen 3 rules: the takedown request is submitted from a bottom sheet/modal with required reason and mandatory retention-policy notice. The notice text is display-only policy text: "Review content will be removed from public view but archived for 10 years. Audit records of this takedown are kept for the same 10 years." Change Log 1.14 makes the reason required.'
+- op: update_node
+  id: REQ-013-035
+  attrs:
+    statement: Admin-imported authenticated reviews must be flagged as "Verified Off‑platform" with verification source and date. These are published directly by admin (no patient submission flow). Each is linked to a placeholder patient and a placeholder procedure.
+- op: update_node
+  id: REQ-013-040
+  attrs:
+    statement: 'Review status badge uses app-facing labels: `Published`, `Removed`. A review with status `Flagged` stays publicly visible and shows as `Published` to the patient. `Submitted` is not a review status in V1; successful review submission immediately creates a `Published` review. Takedown request state is displayed separately from review status when applicable (`Pending`, `Approved`, `Rejected`). `Removed` means no longer publicly visible due to admin action or approved takedown.'
+    rationale: Screen 2 business rules. Key Entities give the review a third status, Flagged, which admins see and patients and the public see as Published (REQ-013-079). Change Log 1.10.
+- op: update_node
+  id: REQ-013-046
+  attrs:
+    statement: 'Admin reviews request reason, review content, and compliance context. Admin approves or rejects request with decision note. System applies decision: approved -> review unpublished/archived and provider rating metrics recalculated; rejected -> review remains published. System notifies patient of decision and reason; the decision note is also shown on Review Detail (Screen 3).'
+    rationale: Workflow A4. Edge Cases add that on a rejected request the review stays published and the decision reason is visible to the patient on Review Detail (Screen 3).
+- op: update_node
+  id: REQ-013-048
+  title: Review content retained for the 10-year period; takedowns archive, never hard-delete
+  attrs:
+    statement: 'Review content (review record + photos + provider responses + takedown requests) retained per the system PRD, Platform-Wide Rules: One 10-year retention period; approved takedown requests are processed by unpublish + archival with restricted access — never hard-deleted.'
+- op: update_node
+  id: REQ-013-049
+  title: Audit records immutable and retained for the 10-year period
+  attrs:
+    statement: '`AdminAction` and all audit-log records (patient self-edits, admin edits/removals/seeded reviews, takedown decisions, settings changes, provider responses) are immutable (Constitution §VI, Audit Trail); retention follows the system PRD, Platform-Wide Rules: One 10-year retention period.'
+    rationale: Data & Privacy Rules; Change Log 1.13 item 1. Retention follows the one 10-year period of the system PRD.
+- op: update_node
+  id: REQ-013-069
+  attrs:
+    statement: 'Configurable with Restrictions: Flagging thresholds and auto-flag rules for admin review (within safe bounds approved by policy). Takedown decision SLA/queue prioritization parameters (within policy bounds); the takedown decision deadline defaults to 48 hours.'
+- op: update_node
+  id: REQ-013-070
+  attrs:
+    rationale: Composed from the Admin Editability Rules (Editable by Admin) and the Screen 10 row Review categories/labels (Admin-editable labels; canonical keys remain fixed). Invitation timing and reminders are configured in FR-030, not here (REQ-013-022, Screen 10 and Change Logs 1.12 and 1.14).
+- op: update_node
+  id: REQ-013-073
+  attrs:
+    statement: 'Trigger: Content flagged by system-automated detection (keyword matching, duplicate submission patterns, rate-limit triggers). User-initiated flagging is a future enhancement. Steps: System queues flagged content for admin review; Admin may redact, unpublish, or uphold. Outcome: Policy-compliant content remains; violations are removed with audit record. A flagged review stays publicly visible (shown as Published) until an admin removes it.'
+- op: update_node
+  id: REQ-013-075
+  attrs:
+    statement: Review content will be removed from public view but archived for 10 years. Audit records of this takedown are kept for the same 10 years.
+    rationale: Screen 3 Retention notice. REQ-013-020 requires the notice; this Rule carries its text, which reflects the one 10-year retention period.
+- op: add_node
+  id: REQ-013-077
+  type: Rule
+  owner_fr: FR-013
+  title: Admin-seeded reviews use a placeholder patient and procedure
+  attrs:
+    statement: Each admin-seeded (off-platform) review MUST be linked to a placeholder patient and a placeholder procedure, so REQ-013-010 holds for every review.
+    rationale: Admin-Seeded Review Policy and Data Requirements. Closes the gap that seeded reviews have no real patient or procedure while REQ-013-010 requires both links.
+- op: add_edge
+  from: REQ-013-077
+  verb: applies at
+  to: STG-main-09-review-close
+- op: add_edge
+  from: REQ-013-077
+  verb: applies to
+  to: ACT-platform-admin
+- op: add_edge
+  from: REQ-013-077
+  verb: applies to
+  to: ENT-review.patient_id
+- op: add_edge
+  from: REQ-013-077
+  verb: applies to
+  to: ENT-review.procedure_id
+- op: add_edge
+  from: REQ-013-077
+  verb: applies to
+  to: SCR-013-08
+- op: add_node
+  id: REQ-013-078
+  type: Rule
+  owner_fr: FR-013
+  title: Takedown decision deadline setting defaults to 48 hours
+  attrs:
+    statement: Admin Review Settings MUST include a takedown decision deadline setting, within policy bounds, that defaults to 48 hours.
+    rationale: Integration Requirements, Screen 10 Takedown SLA settings row and Configurable with Restrictions.
+- op: add_edge
+  from: REQ-013-078
+  verb: applies at
+  to: STG-main-09-review-close
+- op: add_edge
+  from: REQ-013-078
+  verb: applies to
+  to: ENT-review-settings.takedown_sla
+- op: add_edge
+  from: REQ-013-078
+  verb: applies to
+  to: SCR-013-10
+- op: add_edge
+  from: REQ-013-078
+  verb: governed by
+  to: SET-review-takedown-sla
+- op: add_node
+  id: REQ-013-079
+  type: Rule
+  owner_fr: FR-013
+  title: Flagged review stays publicly visible, shows as Published
+  attrs:
+    statement: A review with status Flagged MUST stay publicly visible until an admin removes it; patients and the public see it as Published.
+    rationale: Security and Privacy Requirements, workflow B2 outcome and Edge Cases (duplicate or spam). Admins see the Flagged status; the public view does not change until a removal.
+- op: add_edge
+  from: REQ-013-079
+  verb: applies at
+  to: STG-main-09-review-close
+- op: add_edge
+  from: REQ-013-079
+  verb: applies to
+  to: ENT-review.status
+- op: add_edge
+  from: REQ-013-079
+  verb: applies to
+  to: ENT-review.flag_reason
+- op: add_edge
+  from: REQ-013-079
+  verb: applies to
+  to: SCR-013-02
+- op: add_edge
+  from: REQ-013-079
+  verb: applies to
+  to: SCR-013-03
+- op: update_node
+  id: SET-review-takedown-sla
+  attrs:
+    description: Queue priority and SLA target for takedown decisions, plus the takedown decision deadline, within a restricted policy range. The deadline defaults to 48 hours.
+    default: '48'
+    unit: hours
+- op: update_node
+  id: ENT-review-settings.takedown_sla
+  attrs:
+    description: Queue priority, SLA target and the takedown decision deadline (default 48 hours).
+- op: update_node
+  id: ENT-review-settings
+  attrs:
+    description: 'Admin-managed review configuration: category labels, photo guidelines, removal reasons, display policy, flagging thresholds and takedown SLA settings (including the takedown decision deadline, default 48 hours), with who updated it and when. Review invite and reminder cadence is owned by FR-030.'
+- op: add_field
+  id: ENT-review.overall_rating
+  entity_id: ENT-review
+  name: overall_rating
+  data_type: int
+  title: Overall rating
+  owner_fr: FR-013
+  required: true
+  attrs:
+    description: Overall star rating 1 to 5 (REQ-013-001 overall rating; also the rating shown on review lists and cards).
+- op: add_edge
+  from: SCR-032-04
+  verb: shows
+  to: ENT-review.overall_rating
+  attrs:
+    provenance: inherited from another FR
+    label: Review Cards
+    editable: false
+- op: remove_edge
+  from: SCR-032-04
+  verb: shows
+  to: ENT-review.rating
+- op: add_edge
+  from: SCR-013-01
+  verb: shows
+  to: ENT-review.overall_rating
+  attrs:
+    provenance: user input
+    label: Overall Rating
+    editable: true
+- op: remove_edge
+  from: SCR-013-01
+  verb: shows
+  to: ENT-review.rating
+- op: add_edge
+  from: SCR-013-02
+  verb: shows
+  to: ENT-review.overall_rating
+  attrs:
+    provenance: retrieved
+    label: Rating + time row (rating)
+    editable: false
+- op: remove_edge
+  from: SCR-013-02
+  verb: shows
+  to: ENT-review.rating
+- op: add_edge
+  from: SCR-013-03
+  verb: shows
+  to: ENT-review.overall_rating
+  attrs:
+    provenance: retrieved
+    label: Review detail payload (overall rating)
+    editable: false
+- op: remove_edge
+  from: SCR-013-03
+  verb: shows
+  to: ENT-review.rating
+- op: add_edge
+  from: SCR-013-04
+  verb: shows
+  to: ENT-review.overall_rating
+  attrs:
+    provenance: retrieved
+    label: Rating + date row (rating)
+    editable: false
+- op: remove_edge
+  from: SCR-013-04
+  verb: shows
+  to: ENT-review.rating
+- op: add_edge
+  from: SCR-013-05
+  verb: shows
+  to: ENT-review.overall_rating
+  attrs:
+    provenance: retrieved
+    label: Review list (rating)
+    editable: false
+- op: remove_edge
+  from: SCR-013-05
+  verb: shows
+  to: ENT-review.rating
+- op: add_edge
+  from: SCR-013-06
+  verb: shows
+  to: ENT-review.overall_rating
+  attrs:
+    provenance: retrieved
+    label: Review detail payload (overall rating)
+    editable: false
+- op: remove_edge
+  from: SCR-013-06
+  verb: shows
+  to: ENT-review.rating
+- op: add_edge
+  from: SCR-013-07
+  verb: shows
+  to: ENT-review.overall_rating
+  attrs:
+    provenance: retrieved
+    label: Review list (rating)
+    editable: false
+- op: remove_edge
+  from: SCR-013-07
+  verb: shows
+  to: ENT-review.rating
+- op: add_edge
+  from: SCR-013-08
+  verb: shows
+  to: ENT-review.overall_rating
+  attrs:
+    provenance: user input
+    label: Review detail payload (overall rating)
+    editable: true
+- op: remove_edge
+  from: SCR-013-08
+  verb: shows
+  to: ENT-review.rating
+- op: add_edge
+  from: SCR-013-09
+  verb: shows
+  to: ENT-review.overall_rating
+  attrs:
+    provenance: retrieved
+    label: Linked review preview (rating)
+    editable: false
+- op: remove_edge
+  from: SCR-013-09
+  verb: shows
+  to: ENT-review.rating
+- op: add_edge
+  from: REQ-013-026
+  verb: applies to
+  to: ENT-review.overall_rating
+- op: remove_edge
+  from: REQ-013-026
+  verb: applies to
+  to: ENT-review.rating
+- op: add_edge
+  from: REQ-013-053
+  verb: applies to
+  to: ENT-review.overall_rating
+- op: remove_edge
+  from: REQ-013-053
+  verb: applies to
+  to: ENT-review.rating
+- op: retire_node
+  id: ENT-review.rating
+- op: add_field
+  id: ENT-review.feedback_text
+  entity_id: ENT-review
+  name: feedback_text
+  data_type: text
+  title: Feedback text
+  owner_fr: FR-013
+  required: true
+  attrs:
+    description: Feedback narrative, 100-2000 characters; shown truncated or as an excerpt with See more or Read more.
+- op: add_edge
+  from: SCR-032-04
+  verb: shows
+  to: ENT-review.feedback_text
+  attrs:
+    provenance: inherited from another FR
+    label: Review Cards
+    editable: false
+- op: remove_edge
+  from: SCR-032-04
+  verb: shows
+  to: ENT-review.review_text
+- op: add_edge
+  from: SCR-013-01
+  verb: shows
+  to: ENT-review.feedback_text
+  attrs:
+    provenance: user input
+    label: Feedback
+    editable: true
+- op: remove_edge
+  from: SCR-013-01
+  verb: shows
+  to: ENT-review.review_text
+- op: add_edge
+  from: SCR-013-02
+  verb: shows
+  to: ENT-review.feedback_text
+  attrs:
+    provenance: retrieved
+    label: Review excerpt
+    editable: false
+- op: remove_edge
+  from: SCR-013-02
+  verb: shows
+  to: ENT-review.review_text
+- op: add_edge
+  from: SCR-013-03
+  verb: shows
+  to: ENT-review.feedback_text
+  attrs:
+    provenance: retrieved
+    label: Review detail payload (feedback)
+    editable: false
+- op: remove_edge
+  from: SCR-013-03
+  verb: shows
+  to: ENT-review.review_text
+- op: add_edge
+  from: SCR-013-04
+  verb: shows
+  to: ENT-review.feedback_text
+  attrs:
+    provenance: retrieved
+    label: Review excerpt/body
+    editable: false
+- op: remove_edge
+  from: SCR-013-04
+  verb: shows
+  to: ENT-review.review_text
+- op: add_edge
+  from: SCR-013-06
+  verb: shows
+  to: ENT-review.feedback_text
+  attrs:
+    provenance: retrieved
+    label: Review detail payload (feedback)
+    editable: false
+- op: remove_edge
+  from: SCR-013-06
+  verb: shows
+  to: ENT-review.review_text
+- op: add_edge
+  from: SCR-013-08
+  verb: shows
+  to: ENT-review.feedback_text
+  attrs:
+    provenance: user input
+    label: Review detail payload (feedback)
+    editable: true
+- op: remove_edge
+  from: SCR-013-08
+  verb: shows
+  to: ENT-review.review_text
+- op: add_edge
+  from: SCR-013-09
+  verb: shows
+  to: ENT-review.feedback_text
+  attrs:
+    provenance: retrieved
+    label: Linked review preview (feedback)
+    editable: false
+- op: remove_edge
+  from: SCR-013-09
+  verb: shows
+  to: ENT-review.review_text
+- op: add_edge
+  from: REQ-013-026
+  verb: applies to
+  to: ENT-review.feedback_text
+- op: remove_edge
+  from: REQ-013-026
+  verb: applies to
+  to: ENT-review.review_text
+- op: add_edge
+  from: REQ-013-051
+  verb: applies to
+  to: ENT-review.feedback_text
+- op: remove_edge
+  from: REQ-013-051
+  verb: applies to
+  to: ENT-review.review_text
+- op: retire_node
+  id: ENT-review.review_text
+- op: add_field
+  id: ENT-review.treatment_name
+  entity_id: ENT-review
+  name: treatment_name
+  data_type: text
+  title: Treatment name
+  owner_fr: FR-013
+  required: true
+  attrs:
+    description: Read-only treatment label derived from the completed procedure (treatment name on Screens 1 to 6).
+- op: add_edge
+  from: SCR-032-04
+  verb: shows
+  to: ENT-review.treatment_name
+  attrs:
+    provenance: inherited from another FR
+    label: Review Cards
+    editable: false
+- op: remove_edge
+  from: SCR-032-04
+  verb: shows
+  to: ENT-review.treatment_type
+- op: add_edge
+  from: SCR-013-01
+  verb: shows
+  to: ENT-review.treatment_name
+  attrs:
+    provenance: retrieved
+    label: Treatment Name
+    editable: false
+- op: remove_edge
+  from: SCR-013-01
+  verb: shows
+  to: ENT-review.treatment_type
+- op: add_edge
+  from: SCR-013-02
+  verb: shows
+  to: ENT-review.treatment_name
+  attrs:
+    provenance: retrieved
+    label: Treatment line
+    editable: false
+- op: remove_edge
+  from: SCR-013-02
+  verb: shows
+  to: ENT-review.treatment_type
+- op: add_edge
+  from: SCR-013-03
+  verb: shows
+  to: ENT-review.treatment_name
+  attrs:
+    provenance: retrieved
+    label: Review detail payload (treatment context)
+    editable: false
+- op: remove_edge
+  from: SCR-013-03
+  verb: shows
+  to: ENT-review.treatment_type
+- op: add_edge
+  from: SCR-013-04
+  verb: shows
+  to: ENT-review.treatment_name
+  attrs:
+    provenance: retrieved
+    label: Treatment context
+    editable: false
+- op: remove_edge
+  from: SCR-013-04
+  verb: shows
+  to: ENT-review.treatment_type
+- op: add_edge
+  from: SCR-013-05
+  verb: shows
+  to: ENT-review.treatment_name
+  attrs:
+    provenance: retrieved
+    label: Case/treatment context (treatment)
+    editable: false
+- op: remove_edge
+  from: SCR-013-05
+  verb: shows
+  to: ENT-review.treatment_type
+- op: add_edge
+  from: SCR-013-06
+  verb: shows
+  to: ENT-review.treatment_name
+  attrs:
+    provenance: retrieved
+    label: Review detail payload (treatment context)
+    editable: false
+- op: remove_edge
+  from: SCR-013-06
+  verb: shows
+  to: ENT-review.treatment_type
+- op: retire_node
+  id: ENT-review.treatment_type
+- op: add_field
+  id: ENT-review.created_at
+  entity_id: ENT-review
+  name: created_at
+  data_type: datetime
+  title: Created at
+  owner_fr: FR-013
+  required: true
+  attrs:
+    description: Date and time the review was submitted; relative time on cards and lists.
+- op: add_edge
+  from: SCR-032-04
+  verb: shows
+  to: ENT-review.created_at
+  attrs:
+    provenance: inherited from another FR
+    label: Review Cards
+    editable: false
+- op: remove_edge
+  from: SCR-032-04
+  verb: shows
+  to: ENT-review.review_date
+- op: add_edge
+  from: SCR-013-02
+  verb: shows
+  to: ENT-review.created_at
+  attrs:
+    provenance: retrieved
+    label: Rating + time row (relative time)
+    editable: false
+- op: remove_edge
+  from: SCR-013-02
+  verb: shows
+  to: ENT-review.review_date
+- op: add_edge
+  from: SCR-013-03
+  verb: shows
+  to: ENT-review.created_at
+  attrs:
+    provenance: retrieved
+    label: Review submission date
+    editable: false
+- op: remove_edge
+  from: SCR-013-03
+  verb: shows
+  to: ENT-review.review_date
+- op: add_edge
+  from: SCR-013-04
+  verb: shows
+  to: ENT-review.created_at
+  attrs:
+    provenance: retrieved
+    label: Rating + date row (date)
+    editable: false
+- op: remove_edge
+  from: SCR-013-04
+  verb: shows
+  to: ENT-review.review_date
+- op: add_edge
+  from: SCR-013-05
+  verb: shows
+  to: ENT-review.created_at
+  attrs:
+    provenance: retrieved
+    label: Review list (date)
+    editable: false
+- op: remove_edge
+  from: SCR-013-05
+  verb: shows
+  to: ENT-review.review_date
+- op: add_edge
+  from: SCR-013-07
+  verb: shows
+  to: ENT-review.created_at
+  attrs:
+    provenance: retrieved
+    label: Review list (date)
+    editable: false
+- op: remove_edge
+  from: SCR-013-07
+  verb: shows
+  to: ENT-review.review_date
+- op: add_edge
+  from: SCR-013-08
+  verb: shows
+  to: ENT-review.created_at
+  attrs:
+    provenance: retrieved
+    label: Review detail payload (submitted at)
+    editable: false
+- op: remove_edge
+  from: SCR-013-08
+  verb: shows
+  to: ENT-review.review_date
+- op: retire_node
+  id: ENT-review.review_date
+- op: add_enum_value
+  field_id: ENT-review.status
+  value: flagged
+  label: Flagged
+- op: update_node
+  id: ENT-review.status
+  attrs:
+    description: 'Review visibility state: Published, Flagged or Removed. A Flagged review stays publicly visible and shows as Published to patients and the public; admins see Flagged.'
+- op: update_node
+  id: ENT-review
+  attrs:
+    description: A patient-submitted or admin-seeded review of a provider after a completed treatment case, published immediately. Every platform reads and writes this one canonical schema. Status is Published, Flagged or Removed; a Flagged review stays publicly visible and shows as Published to patients and the public.
+- op: remove_edge
+  from: SCR-013-07
+  verb: shows
+  to: ENT-review.flagged_status
+- op: remove_edge
+  from: SCR-013-08
+  verb: shows
+  to: ENT-review.flagged_status
+- op: remove_edge
+  from: REQ-013-073
+  verb: applies to
+  to: ENT-review.flagged_status
+- op: add_edge
+  from: REQ-013-073
+  verb: applies to
+  to: ENT-review.status
+- op: retire_node
+  id: ENT-review.flagged_status
+- op: add_enum_value
+  field_id: ENT-admin-action.action_type
+  value: settings_change
+  label: Settings change
+- op: add_enum_value
+  field_id: ENT-admin-action.action_type
+  value: export
+  label: Export
+- op: add_enum_value
+  field_id: ENT-admin-action.action_type
+  value: response_remove
+  label: Response remove
+- op: add_enum_value
+  field_id: ENT-admin-action.action_type
+  value: flag_resolve
+  label: Flag resolve
+- op: update_node
+  id: ENT-admin-action.action_type
+  attrs:
+    description: 'Kind of admin action. The PRD lists nine values: insert, edit, remove, takedown_approve, takedown_reject, settings_change, export, response_remove, flag_resolve.'
+- op: add_field
+  id: ENT-provider-response.status
+  entity_id: ENT-provider-response
+  name: status
+  data_type: enum
+  title: Response status
+  owner_fr: FR-013
+  required: true
+  attrs:
+    description: Whether the response is active or removed by an admin.
+- op: add_enum_value
+  field_id: ENT-provider-response.status
+  value: active
+  label: Active
+- op: add_enum_value
+  field_id: ENT-provider-response.status
+  value: removed
+  label: Removed
+- op: add_field
+  id: ENT-provider-response.removed_at
+  entity_id: ENT-provider-response
+  name: removed_at
+  data_type: datetime
+  title: Removed date
+  owner_fr: FR-013
+  required: false
+  attrs:
+    description: When an admin removed the response; empty while it is active.
+- op: update_node
+  id: ENT-provider-response
+  attrs:
+    description: 'A public provider response to a review: text, author, timestamp, status (active or removed) and removed date, associated with one review.'
+- op: add_edge
+  from: SCR-013-03
+  verb: shows
+  to: ENT-takedown-request.decision_note
+  attrs:
+    provenance: retrieved
+    label: Takedown decision note
+    editable: false
+- op: update_node
+  id: SCR-013-03
+  attrs:
+    platform: patient
+    description: Full submitted review with provider response when available, admin removal reason when removed, the takedown decision note once a request is decided, Edit review and Request takedown actions for Published reviews, and the takedown confirmation bottom sheet/modal with required reason and retention notice.
+- op: update_node
+  id: EVT-review-requested
+  owner_fr: FR-030
+- op: update_node
+  id: EVT-review-published
+  owner_fr: FR-030
+- op: update_node
+  id: EVT-provider-response-published
+  owner_fr: FR-030
+- op: update_node
+  id: EVT-review-removed
+  owner_fr: FR-030
+- op: update_node
+  id: EVT-takedown-decided
+  owner_fr: FR-030
+- op: update_node
+  id: EVT-review-removed
+  attrs:
+    description: Admin removal notice (REQ-013-017); sent to the reviewing patient only. FR-030 catalogue key review.removed_by_admin.
+- op: update_node
+  id: EVT-review-requested
+  attrs:
+    description: 'review.requested: time-gated review invitation (and reminders) sent to the patient once the 3-month threshold after procedure completion is reached. FR-030 owns the event and its timing and cadence (Screen 10 link-outs).'
+- op: add_edge
+  from: REQ-020-133
+  verb: applies to
+  to: EVT-provider-response-published
+- op: add_edge
+  from: REQ-020-134
+  verb: applies to
+  to: EVT-review-removed
+- op: add_edge
+  from: REQ-020-135
+  verb: applies to
+  to: EVT-takedown-decided
