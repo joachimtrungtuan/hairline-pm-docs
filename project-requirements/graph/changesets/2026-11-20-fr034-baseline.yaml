@@ -1,0 +1,113 @@
+reason: "Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-034)"
+by: controller
+operations:
+  # Reworded Rules (statement copied from the PRD as it reads now)
+  - {"op": "update_node", "id": "REQ-034-036", "title": "Support file attachments up to 10MB per file, 5 files per message", "attrs": {"statement": "System MUST support file attachments up to 10MB per file, with up to 5 files per message (replies included)"}}
+  - {"op": "update_node", "id": "REQ-034-038", "attrs": {"statement": "System MUST retain all case data per the system PRD, Platform-Wide Rules: One 10-year retention period (archive after closure, do not hard delete)"}}
+  - {"op": "update_node", "id": "REQ-034-042", "attrs": {"statement": "System MUST enforce RBAC permissions for case access (Support Staff and Super Admin roles)"}}
+  - {"op": "update_node", "id": "REQ-034-056", "title": "Support keyword search across case ID, title, description, names, email and phone", "attrs": {"statement": "System MUST support keyword search across case ID, case title, description, patient name, provider name, email address, and phone number (internal notes are not searched)"}}
+  - {"op": "update_node", "id": "REQ-034-058", "title": "Display warning for cases with no activity beyond the Case Inactivity Threshold", "attrs": {"statement": "System MUST display warning for cases with no activity for longer than the Case Inactivity Threshold (Screen 7, default 14 days)"}}
+  - {"op": "update_node", "id": "REQ-034-061", "title": "Support auto-closure period: Immediately, 3, 7, or 14 days", "attrs": {"statement": "System MUST support auto-closure period: Immediately, 3, 7, or 14 days after case marked Resolved (default 7 days)"}}
+  - {"op": "update_node", "id": "REQ-034-114", "attrs": {"statement": "Default view shows Open and In Progress cases from last 90 days, sorted by Last Updated descending; the provider My Support Cases list (FR-032 Screen 5.7) uses this same default and refers to this rule, while its 20-cases-per-page detail is a separate rule in FR-032"}}
+  - {"op": "update_node", "id": "REQ-034-078", "attrs": {"statement": "Cases with no activity for longer than the Case Inactivity Threshold (Screen 7, default 14 days) flagged for admin review and potential closure; the same threshold drives the warning shown in the case list and case detail view"}}
+  - {"op": "update_node", "id": "REQ-034-103", "attrs": {"statement": "Admin clicks \"Reassign Case\" (there is no separate escalation button or form); System displays the Reassign Case modal (Screen 5); Admin selects the new assignee, enters the required reassignment reason, and ticks \"Escalate\"; System raises case priority to \"High\" or \"Urgent\" as the admin chooses; System sends the escalation notice to the new assignee; System logs the reassignment in case timeline, marked as an escalation; Case reassigned to higher-level support staff with increased priority", "rationale": "Alternative Flow A1. Escalation is the Escalate tick in the Reassign Case modal (Screen 5); it has no separate screen or form."}}
+  - {"op": "update_node", "id": "REQ-034-105", "attrs": {"statement": "Admin manager or colleague opens case; Admin clicks \"Reassign Case\" button; System displays team member list; Admin selects new assignee and enters reassignment reason; System updates case assignment and notifies new assignee; System logs reassignment action in case timeline", "rationale": "Alternative Flow B2. Screen 5 rules add the logging and notification detail. Assignee availability status is out of scope."}}
+  - {"op": "update_node", "id": "REQ-034-113", "attrs": {"statement": "System queues the notification for retry following the FR-030 retry rule (FR-030 owns the retry schedule and count); Case timeline logs notification failure with timestamp; Admin dashboard displays notification status indicator (sent, pending, failed); If the notification still fails once the FR-030 retry rule is exhausted, admin receives alert to manually contact patient/provider"}}
+  - {"op": "update_node", "id": "REQ-034-118", "attrs": {"statement": "View: Opens case detail view (Screen 3); Reassign: Opens reassignment modal (Screen 5) - only for Open/In Progress cases; Resolve: Opens resolution modal (Screen 4) - only for In Progress cases; Reopen: Reopens case (changes status from Closed to Open) - only for Closed cases; Close: Closes case - only for Resolved cases; Actions column: View, Reassign, Resolve, Reopen, Close; Buttons shown/hidden based on case status; Not sortable", "rationale": "Screen 1 quick actions and Actions column."}}
+  - {"op": "update_node", "id": "REQ-034-128", "attrs": {"statement": "Display character count for Title and Description fields; Description: Min 20 chars, max 5000 chars, supports plain text", "rationale": "Screen 2 notes and data fields. Description stays plain text."}}
+  - {"op": "update_node", "id": "REQ-034-135", "attrs": {"statement": "Show unread message count badge (required) if patient/provider has sent new messages since last admin view", "rationale": "Screen 3 notes. The read flag is stored for each message; an admin-facing display of whether the patient/provider has viewed a message is a future enhancement."}}
+  - {"op": "add_edge", "from": "FR-034", "verb": "references", "to": "REQ-SYS-002"}
+  - {"op": "add_edge", "from": "REQ-034-058", "verb": "governed by", "to": "SET-support-case-inactivity-threshold"}
+  # Merged and retired Rules
+  - {"op": "merge_node", "survivor": "REQ-034-017", "loser": "REQ-034-063"}
+  - {"op": "retire_node", "id": "REQ-034-072"}
+  - {"op": "retire_node", "id": "REQ-034-075"}
+  - {"op": "retire_node", "id": "REQ-034-084"}
+  - {"op": "retire_node", "id": "REQ-034-127"}
+  # New Rules REQ-034-164 to REQ-034-170 (statements copied from the PRD)
+  - {"op": "add_node", "id": "REQ-034-164", "type": "Rule", "owner_fr": "FR-034", "title": "Report a problem (device details attached, submissions throttled)", "attrs": {"statement": "Report a problem: FR-034 owns the Report a problem rule for the patient app (FR-035 and FR-001 point to it). A problem report MUST create a support case with the device, operating system, app version, and report timestamp attached, and problem report submissions MUST be throttled", "rationale": "Functional Requirements Summary; restated in General Module Rules, Rule 18. FR-035 and FR-001 point to it."}}
+  - {"op": "add_edge", "from": "REQ-034-164", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-034-164", "verb": "applies to", "to": "ENT-support-case"}
+  - {"op": "add_node", "id": "REQ-034-165", "type": "Rule", "owner_fr": "FR-034", "title": "Automatic reopen recorded by System with reason User replied", "attrs": {"statement": "System MUST record an automatic reopen (a patient or provider reply to a Resolved case) as a Reopening record reopened by System with the reason \"User replied\"", "rationale": "Functional Requirements Summary; Screen 4 business rules and Entity 7."}}
+  - {"op": "add_edge", "from": "REQ-034-165", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-034-165", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-034-165", "verb": "applies to", "to": "ENT-support-case-reopening"}
+  - {"op": "add_edge", "from": "REQ-034-165", "verb": "applies to", "to": "EVT-support-case-reopened"}
+  - {"op": "add_node", "id": "REQ-034-166", "type": "Rule", "owner_fr": "FR-034", "title": "Link a support case to a provider-caused cancellation (no automatic ticket)", "attrs": {"statement": "System MUST allow an admin to link a support case to a provider-caused cancellation (FR-015 A5 impact shown in FR-016 Provider-Caused Impacts); the system MUST NOT create a support case automatically when a provider-caused cancellation happens", "rationale": "Functional Requirements Summary; restated in General Module Rules, Rule 19. FR-016 points to it."}}
+  - {"op": "add_edge", "from": "REQ-034-166", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-034-166", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-034-166", "verb": "applies to", "to": "ENT-support-case"}
+  - {"op": "add_node", "id": "REQ-034-167", "type": "Rule", "owner_fr": "FR-034", "title": "Booking cancellation or change case carries a request type", "attrs": {"statement": "A support case raised for a booking cancellation or booking change MUST carry a request type: booking cancellation or booking change (shown in FR-016 as Cancellation or Appointment Change)", "rationale": "Data Requirements; General Module Rules, Rule 20."}}
+  - {"op": "add_edge", "from": "REQ-034-167", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-034-167", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-034-167", "verb": "applies to", "to": "ENT-support-case.request_type"}
+  - {"op": "add_node", "id": "REQ-034-168", "type": "Rule", "owner_fr": "FR-034", "title": "Request status is kept beside case status", "attrs": {"statement": "Such a case MUST carry a request status of Open, Resolved, or Declined. The request status describes what happened to the patient's request; the case status (Open, In Progress, Resolved, Closed) describes the support work on the case. Both are kept and shown, and neither replaces the other", "rationale": "Data Requirements; General Module Rules, Rule 20."}}
+  - {"op": "add_edge", "from": "REQ-034-168", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-034-168", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-034-168", "verb": "applies to", "to": "ENT-support-case.request_status"}
+  - {"op": "add_node", "id": "REQ-034-169", "type": "Rule", "owner_fr": "FR-034", "title": "Declined request requires a decline reason of at least 20 characters", "attrs": {"statement": "When an admin declines a request, the system MUST require a decline reason of at least 20 characters", "rationale": "Data Requirements; General Module Rules, Rule 20."}}
+  - {"op": "add_edge", "from": "REQ-034-169", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-034-169", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-034-169", "verb": "applies to", "to": "ENT-support-case.decline_reason"}
+  - {"op": "add_node", "id": "REQ-034-170", "type": "Rule", "owner_fr": "FR-034", "title": "Resolved or declined request records the outcome", "attrs": {"statement": "For a Resolved or Declined request, the system MUST record the outcome: the action taken, the admin who took it, the time, and a link to the audit entry", "rationale": "Data Requirements; General Module Rules, Rule 20."}}
+  - {"op": "add_edge", "from": "REQ-034-170", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-034-170", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-034-170", "verb": "applies to", "to": "ENT-support-case.outcome"}
+  # Escalation is a tick in the Reassign Case modal (Screen 5); flow A1 and B2 wording
+  - {"op": "add_field", "id": "ENT-support-case-assignment.is_escalation", "entity_id": "ENT-support-case-assignment", "name": "is_escalation", "data_type": "bool", "title": "Escalation", "owner_fr": "FR-034", "required": false, "attrs": {"description": "Escalate tick in the Reassign Case modal: marks the reassignment as an escalation, raises the case priority to High or Urgent and sends the escalation notice to the new assignee."}}
+  - {"op": "add_edge", "from": "SCR-034-05", "verb": "shows", "to": "ENT-support-case-assignment.is_escalation", "attrs": {"provenance": "user input", "label": "Escalate", "editable": true}}
+  - {"op": "update_node", "id": "STP-034-021", "title": "Admin clicks \"Reassign Case\" (there is no separate escalation button or form)"}
+  - {"op": "add_edge", "from": "STP-034-021", "verb": "on", "to": "SCR-034-05"}
+  - {"op": "update_node", "id": "STP-034-022", "title": "System displays the Reassign Case modal (Screen 5)"}
+  - {"op": "add_edge", "from": "STP-034-022", "verb": "on", "to": "SCR-034-05"}
+  - {"op": "update_node", "id": "STP-034-023", "title": "Admin selects the new assignee, enters the required reassignment reason, and ticks \"Escalate\""}
+  - {"op": "add_edge", "from": "STP-034-023", "verb": "on", "to": "SCR-034-05"}
+  - {"op": "update_node", "id": "STP-034-024", "title": "System raises case priority to \"High\" or \"Urgent\" as the admin chooses"}
+  - {"op": "add_edge", "from": "STP-034-024", "verb": "on", "to": "SCR-034-05"}
+  - {"op": "update_node", "id": "STP-034-025", "title": "System sends the escalation notice to the new assignee"}
+  - {"op": "add_edge", "from": "STP-034-025", "verb": "on", "to": "SCR-034-05"}
+  - {"op": "update_node", "id": "STP-034-026", "title": "System logs the reassignment in case timeline, marked as an escalation"}
+  - {"op": "add_edge", "from": "STP-034-026", "verb": "on", "to": "SCR-034-05"}
+  - {"op": "update_node", "id": "STP-034-087", "title": "System displays team member list"}
+  # Unread badge on Screen 3 (read flag stored, badge required)
+  - {"op": "add_edge", "from": "SCR-034-03", "verb": "shows", "to": "ENT-support-case-message.is_read", "attrs": {"provenance": "system calculated", "label": "Unread message count badge", "editable": false}}
+  # Auto-close period gains Immediately
+  - {"op": "update_node", "id": "SET-support-case-auto-closure-period", "attrs": {"description": "Days a Resolved support case waits for a patient reply before it closes automatically. Options Immediately, 3, 7 or 14 days (FR-034 REQ-034-061/062; FR-035 lines 394, 412, 473)."}}
+  - {"op": "update_node", "id": "ENT-support-case-resolution.auto_close_period_days", "attrs": {"description": "Days to wait before the case closes automatically: Immediately, 3, 7 or 14."}}
+  # Provider-stage events (the three held emits edges are released)
+  - {"op": "add_edge", "from": "STG-provider-03-active", "verb": "emits", "to": "EVT-support-case-assigned"}
+  - {"op": "add_edge", "from": "STG-provider-03-active", "verb": "emits", "to": "EVT-support-case-admin-reply"}
+  - {"op": "add_edge", "from": "STG-provider-03-active", "verb": "emits", "to": "EVT-support-case-escalated"}
+  # Retire ENT-support-center-configuration and its three threshold fields (the Settings are the record)
+  - {"op": "remove_edge", "from": "SCR-034-07", "verb": "shows", "to": "ENT-support-center-configuration.urgent_unassigned_threshold_hours"}
+  - {"op": "remove_edge", "from": "SCR-034-07", "verb": "shows", "to": "ENT-support-center-configuration.high_priority_threshold_hours"}
+  - {"op": "remove_edge", "from": "SCR-034-07", "verb": "shows", "to": "ENT-support-center-configuration.inactivity_threshold_days"}
+  - {"op": "remove_edge", "from": "STG-patient-03-active", "verb": "reads", "to": "ENT-support-center-configuration"}
+  - {"op": "remove_edge", "from": "STG-provider-03-active", "verb": "reads", "to": "ENT-support-center-configuration"}
+  - {"op": "retire_node", "id": "ENT-support-center-configuration.urgent_unassigned_threshold_hours"}
+  - {"op": "retire_node", "id": "ENT-support-center-configuration.high_priority_threshold_hours"}
+  - {"op": "retire_node", "id": "ENT-support-center-configuration.inactivity_threshold_days"}
+  - {"op": "retire_node", "id": "ENT-support-center-configuration"}
+  # Retire case-level copies; edges move to the resolution or reopening record, or are dropped
+  - {"op": "remove_edge", "from": "SCR-032-18", "verb": "shows", "to": "ENT-support-case.reopen_reason"}
+  - {"op": "add_edge", "from": "SCR-032-18", "verb": "shows", "to": "ENT-support-case-reopening.reopening_reason", "attrs": {"provenance": "user input", "label": "Reopening Reason", "editable": true}}
+  - {"op": "retire_node", "id": "ENT-support-case.reopen_reason"}
+  - {"op": "remove_edge", "from": "SCR-032-16", "verb": "shows", "to": "ENT-support-case.case_type"}
+  - {"op": "remove_edge", "from": "SCR-032-17", "verb": "shows", "to": "ENT-support-case.case_type"}
+  - {"op": "retire_node", "id": "ENT-support-case.case_type"}
+  - {"op": "remove_edge", "from": "SCR-035-04", "verb": "shows", "to": "ENT-support-case.resolution_summary"}
+  - {"op": "add_edge", "from": "SCR-035-04", "verb": "shows", "to": "ENT-support-case-resolution.resolution_summary", "attrs": {"provenance": "retrieved", "label": "Resolution Summary", "editable": false}}
+  - {"op": "remove_edge", "from": "REQ-035-021", "verb": "applies to", "to": "ENT-support-case.resolution_summary"}
+  - {"op": "add_edge", "from": "REQ-035-021", "verb": "applies to", "to": "ENT-support-case-resolution.resolution_summary"}
+  - {"op": "remove_edge", "from": "REQ-035-070", "verb": "applies to", "to": "ENT-support-case.resolution_summary"}
+  - {"op": "add_edge", "from": "REQ-035-070", "verb": "applies to", "to": "ENT-support-case-resolution.resolution_summary"}
+  - {"op": "retire_node", "id": "ENT-support-case.resolution_summary"}
+  - {"op": "retire_node", "id": "ENT-support-case.resolution_category"}
+  - {"op": "retire_node", "id": "ENT-support-case.auto_close_period_days"}
+  - {"op": "update_field", "id": "ENT-support-case.auto_closure_deadline", "calculated_by": null}
+  - {"op": "remove_edge", "from": "SCR-035-03", "verb": "shows", "to": "ENT-support-case.auto_closure_deadline"}
+  - {"op": "remove_edge", "from": "SCR-035-04", "verb": "shows", "to": "ENT-support-case.auto_closure_deadline"}
+  - {"op": "remove_edge", "from": "REQ-035-020", "verb": "applies to", "to": "ENT-support-case.auto_closure_deadline"}
+  - {"op": "remove_edge", "from": "REQ-035-048", "verb": "applies to", "to": "ENT-support-case.auto_closure_deadline"}
+  - {"op": "remove_edge", "from": "REQ-035-067", "verb": "applies to", "to": "ENT-support-case.auto_closure_deadline"}
+  - {"op": "retire_node", "id": "ENT-support-case.auto_closure_deadline"}
