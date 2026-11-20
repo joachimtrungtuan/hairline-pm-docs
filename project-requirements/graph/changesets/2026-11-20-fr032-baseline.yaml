@@ -1,0 +1,57 @@
+reason: "Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-032)"
+by: controller
+operations:
+  # Reworded Rules (statement copied from the PRD as it reads now)
+  - {op: update_node, id: REQ-032-020, attrs: {statement: "System MUST log all profile changes, account settings changes, billing settings changes, and account closure requests in audit trail (timestamp, user ID, IP address, action, and old/new values; bank details, password, phone and email values are masked)"}}
+  - {op: update_node, id: REQ-032-023, attrs: {statement: "System MUST process approved account-closure requests as FR-015 deactivation (account status = \"Deactivated\", standard FR-015 cascade, data archived; retention follows the system PRD, Platform-Wide Rules: One 10-year retention period)"}}
+  - {op: update_node, id: REQ-032-029, attrs: {statement: "System MUST show provider Owners a read-only Commission & Payout panel in Screen 4 with commission model, value, Flat Rate Currency, Effective Date, any scheduled configuration, and payout timing (automatic release on the Stripe Connect rail; the one platform-wide settlement period owned by FR-029 on the manual rail; there is no per-clinic payout frequency), plus the payout method (chosen by the admin when the clinic is created in FR-015) and payout readiness"}}
+  - {op: update_node, id: REQ-032-031, attrs: {statement: "System MUST NOT offer a provider notification preference toggle for any mandatory provider notice, and MUST deliver each mandatory notice to the affected provider regardless of notification type and channel preferences. Which notices are mandatory, to whom they go and what they say is defined by the notification Rules: FR-020 REQ-020-020 for the inquiry-cancelled quote notice (`quote.cancelled_inquiry`) and FR-030 Non-Disableable by Default for the others"}}
+  - {op: update_node, id: REQ-032-063, attrs: {statement: "Account Name: Max 200 chars; First Name and Last Name: 2-50 characters, letters, spaces, hyphens (same as FR-009); Account Email: Valid email format, unique in system"}}
+  - {op: update_node, id: REQ-032-072, attrs: {statement: "System notifies admins of the request (FR-020 `provider.closure_requested`, a mandatory notice; recipients and content are defined by the notification Rules REQ-020-016 and REQ-030-101), and FR-015 Screen 1 shows the provider with the Closure Requested marker and filter"}}
+  - {op: update_node, id: REQ-032-102, attrs: {statement: "Support Request Form - Subject: Max 200 chars; Support Request Form - Message: Max 5000 chars, min 20 chars; Support Request Form - Priority: Default: Medium; Support Request Form - Attachment: Max 10MB, common file types (PDF, PNG, JPG, DOCX)"}}
+  - {op: update_node, id: REQ-032-103, attrs: {statement: "Support request confirmation displayed: \"Support request submitted. Case #[number]. Our team will respond within 24 hours.\""}}
+  - {op: update_node, id: REQ-032-104, attrs: {statement: "Feedback Form - Title: Max 100 chars; Feedback Form - Description: Max 5000 chars, min 20 chars; Feedback Form - Priority: Default: Low"}}
+  - {op: update_node, id: REQ-032-107, attrs: {statement: "Search Bar: Min 3 chars to trigger search, real-time search; searches across Case ID, Title, Description, Message content; Filters are cumulative (AND logic between different filter types); Filter options: Status (Open, In Progress, Resolved, Closed; default Open and In Progress), Type (Support Request, Feedback; default all types), Date Range (custom range on the case creation date; default last 90 days); several selections within one filter combine as OR"}}
+  - {op: update_node, id: REQ-032-110, attrs: {statement: "Reply Message Box: Max 5000 chars; only enabled for Open and In Progress cases; Character counter displayed; Attach Files Button: Max 5 files, 10MB per file, formats: JPG, PNG, PDF, DOC, DOCX; Attachment files validated before upload (file type, size, virus scan)"}}
+  - {op: update_node, id: REQ-032-111, attrs: {statement: "An admin reply notifies the provider (support.case_admin_reply) and a provider reply notifies the assigned admin, or all support staff if unassigned (support.case_user_reply); recipients, content and channels are defined by the notification catalogue (FR-030 REQ-030-065 and REQ-030-066); email notification sent to provider when admin responds or updates status"}}
+
+  # Retired into shared Rules
+  - {op: retire_node, id: REQ-032-091}
+  - {op: retire_node, id: REQ-032-051}
+  - {op: retire_node, id: REQ-032-066}
+
+  # Default case-list view is one shared Rule with the admin list; the 20-per-page detail stays as its own Rule
+  - {op: merge_node, survivor: REQ-034-114, loser: REQ-032-106}
+  - {op: add_node, id: REQ-032-118, type: Rule, owner_fr: FR-032, title: "Provider support case list shows 20 cases per page", attrs: {statement: "The case list shows 20 cases per page by default", rationale: "Screen 5.7 Business Rules. Detail kept from the former default-view Rule REQ-032-106, which is merged into REQ-034-114. Screen: SCR-032-16."}}
+  - {op: add_edge, from: REQ-032-118, verb: applies at, to: STG-provider-03-active}
+  - {op: add_edge, from: REQ-032-118, verb: applies to, to: SCR-032-16}
+
+  # Account-state Rules apply to the provider
+  - {op: add_edge, from: REQ-032-030, verb: applies to, to: ACT-provider}
+  - {op: add_edge, from: REQ-032-067, verb: applies to, to: ACT-provider}
+  - {op: add_edge, from: REQ-032-068, verb: applies to, to: ACT-provider}
+  - {op: add_edge, from: REQ-032-069, verb: applies to, to: ACT-provider}
+
+  # Citations of Rules homed elsewhere
+  - {op: add_edge, from: FR-032, verb: references, to: REQ-022-081}
+  - {op: add_edge, from: FR-032, verb: references, to: REQ-022-084}
+  - {op: add_edge, from: FR-032, verb: references, to: REQ-034-114}
+  - {op: add_edge, from: FR-032, verb: references, to: REQ-020-020}
+  - {op: add_edge, from: FR-032, verb: references, to: REQ-020-016}
+  - {op: add_edge, from: FR-032, verb: references, to: REQ-030-101}
+  - {op: add_edge, from: FR-032, verb: references, to: REQ-030-065}
+  - {op: add_edge, from: FR-032, verb: references, to: REQ-030-066}
+  - {op: add_edge, from: FR-032, verb: references, to: REQ-SYS-002}
+  - {op: add_edge, from: FR-032, verb: references, to: REQ-SYS-007}
+
+  # Screen 4: the per-clinic payout frequency field is retired; the panel shows the payout method
+  - {op: remove_edge, from: SCR-032-08, verb: shows, to: ENT-provider.payout_frequency}
+  - {op: add_edge, from: SCR-032-08, verb: shows, to: ENT-provider.payout_method, attrs: {provenance: inherited from another FR, label: Payout Method, editable: false}}
+
+  # Screen 5.9: resolution details live on the resolution record only
+  - {op: remove_edge, from: SCR-032-18, verb: shows, to: ENT-support-case.resolution_summary}
+  - {op: add_edge, from: SCR-032-18, verb: shows, to: ENT-support-case-resolution.resolution_summary, attrs: {provenance: retrieved, label: Previous Resolution Summary, editable: false}}
+
+  # Screen 5.4: "ticket number" is now "case number"
+  - {op: remove_edge, from: SCR-032-14, verb: shows, to: ENT-support-case.case_id}
+  - {op: add_edge, from: SCR-032-14, verb: shows, to: ENT-support-case.case_id, attrs: {provenance: retrieved, label: "Submission Tracking: case number", editable: false}}
