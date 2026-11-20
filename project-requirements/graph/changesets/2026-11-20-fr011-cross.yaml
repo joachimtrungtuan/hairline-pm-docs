@@ -1,0 +1,5 @@
+reason: "Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-011)"
+by: controller
+operations:
+  # REQ-007-088 (standalone aftercare payment) is added by the FR-007 change-set; FR-011 cites it in its dependency line.
+  - {op: add_edge, from: FR-011, verb: references, to: REQ-007-088}
