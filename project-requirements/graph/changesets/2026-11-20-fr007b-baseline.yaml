@@ -1,0 +1,135 @@
+reason: "Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-007B)"
+by: controller
+operations:
+  - {"op": "retire_node", "id": "REQ-007B-082"}
+  - {"op": "retire_node", "id": "SET-installment-first-installment-type"}
+  - {"op": "update_node", "id": "REQ-007B-002", "attrs": {"statement": "System MUST determine feasible installment options based on time until procedure, monthly frequency, and cutoff days configured in FR-029 (minimum 30 days); the maximum number of installments is (days until procedure - 30) ÷ 30 + 1, rounded down, so 60 days allows 2 installments; offered options are limited to enabled installment counts configured in FR-029 (2-9)"}}
+  - {"op": "update_node", "id": "REQ-007B-004", "attrs": {"statement": "System MUST calculate installment amounts as equal shares: booking total (accepted price after promotion) ÷ number of installments, rounded to 2 decimal places"}}
+  - {"op": "update_node", "id": "REQ-007B-008", "attrs": {"statement": "System MUST track installment payment status as one list: scheduled, retrying, paid, failed, overdue, cancelled"}}
+  - {"op": "update_node", "id": "REQ-007B-012", "attrs": {"statement": "System MUST log every installment payment attempt and lifecycle event (scheduled, charged, failed, retried, refunded) with timestamp, amount, status, and user, in a tamper-evident audit trail"}}
+  - {"op": "update_node", "id": "REQ-007B-018", "title": "Technical failures retried after waits of 1, 3 and 7 days; no automatic retry after a hard decline", "attrs": {"statement": "System MUST execute 3 automatic retry attempts for an installment whose charge failed for a technical reason, with waits of 1 day, 3 days and 7 days (retries fall on day 1, day 4 and day 11 after the failure). After a hard decline System MUST NOT retry automatically; it MUST notify the patient, who must retry or update the card"}}
+  - {"op": "update_node", "id": "REQ-007B-021", "attrs": {"statement": "System MUST allow the patient to update the payment method of an active installment plan at any time before the next installment is charged; the new method applies to the remaining installments only"}}
+  - {"op": "update_node", "id": "REQ-007B-022", "title": "Refund on partial installments is a percentage of the amount paid, per the FR-029 refund ladder", "attrs": {"statement": "System MUST calculate refunds for canceled bookings with partial installments paid as a percentage of the amount paid so far, per the cancellation refund ladder owned by FR-029"}}
+  - {"op": "update_node", "id": "REQ-007B-023", "attrs": {"statement": "System MUST cancel remaining installments when booking is canceled; stopping the installments and the refund happen inside the FR-006 Cancel Booking action, and installment plans have no separate cancel action"}}
+  - {"op": "update_node", "id": "REQ-007B-024", "attrs": {"statement": "System MUST handle procedure date rescheduling by recalculating installment schedule or requiring immediate payment; when the new date leaves too little time for the remaining installments, System MUST notify the patient (insufficient-time notice)"}}
+  - {"op": "update_node", "id": "REQ-007B-031", "attrs": {"statement": "If a plan is flagged Overdue or is \"Defaulted\", the provider detail screen shows the banner \"Please contact Hairline support; payment follow-up is handled by admin team.\""}}
+  - {"op": "update_node", "id": "REQ-007B-033", "attrs": {"statement": "The provider installment list supports filtering by plan status (Active, Canceled, Completed, Defaulted), the Overdue flag and procedure date range. Default sort is nearest upcoming procedure date, then highest risk (Overdue/Defaulted) at top. Overdue and defaulted plans are visually emphasized (e.g. warning badges, sort to top)."}}
+  - {"op": "update_node", "id": "REQ-007B-044", "attrs": {"statement": "The patient installment schedule view shows a progress bar of installments completed over total installments, a countdown \"X days until next payment\", the reminder status (\"Reminder sent\" or \"Reminder pending\"), the final deadline \"All payments complete by [date]\", a visual timeline with checkmarks for completed installments and a status for each installment (Scheduled, Retrying, Paid, Failed, Overdue, Cancelled). Payment history is read-only."}}
+  - {"op": "update_node", "id": "REQ-007B-050", "attrs": {"statement": "After a failed installment is resolved manually or the booking is cancelled, the patient may be charged late fees or rescheduling fees, with amounts set in the FR-029 late-fee and rescheduling-fee settings."}}
+  - {"op": "update_node", "id": "REQ-007B-054", "attrs": {"statement": "Cancellation refunds are a percentage of the amount paid so far, set by the refund ladder in FR-029 (Payment settings)."}}
+  - {"op": "update_node", "id": "REQ-007B-056", "title": "Refund ladder is owned and set in FR-029", "attrs": {"statement": "The cancellation refund ladder for installment plans is owned by FR-029 (Payment settings) and is configurable with restrictions."}}
+  - {"op": "update_node", "id": "REQ-007B-062", "title": "Insufficient time: remaining balance paid immediately with reminders, or booking cancelled", "attrs": {"statement": "If the new procedure date leaves insufficient time, the system sends the patient an insufficient-time notice that the remaining balance must be paid immediately or the installment plan canceled; the patient pays the remaining balance immediately, and the system sends reminders until it is paid; or the admin, in coordination with the patient, cancels the booking through the FR-006 Cancel Booking action."}}
+  - {"op": "update_node", "id": "REQ-007B-074", "attrs": {"statement": "The following are fixed in code and not editable by the admin: interest rate (always 0%), installment frequency (monthly, 30-day intervals), core payment security controls and encryption standards, number of retry attempts (3, only after a technical failure), retry schedule (waits of 1, 3 and 7 days), reminder timing (3 days before the due date) and audit logging scope for payment events. Payment processor integration settings require technical deployment and are not runtime editable."}}
+  - {"op": "update_node", "id": "REQ-007B-075", "attrs": {"statement": "The admin dashboard shows the active plans count, overdue installments (failed after retries, flagged for admin action), total installment revenue collected, average installments selected and success rate (successful installment charges over total attempts), and a plan list with patient, provider, status and progress, whose filter criteria are owned by FR-022, with drill-down into individual plan details; the admin can generate reports on installment plan usage and performance."}}
+  - {"op": "update_node", "id": "REQ-007B-079", "attrs": {"statement": "The admin views the installment plan configuration (managed in FR-029) and a link to the configuration screen for authorized users; enabled installment counts, cutoff days, minimum booking amount and the late payment grace period are configured in FR-029."}}
+  - {"op": "update_node", "id": "REQ-007B-084", "attrs": {"statement": "Retry Charge is logged with installment ID and retry attempt number; Mark as Resolved with installment ID and resolution method."}}
+  - {"op": "update_node", "id": "REQ-007B-095", "attrs": {"statement": "Overdue Days is the number of days since the first missed or failed installment and appears only for plans flagged Overdue or Defaulted."}}
+  - {"op": "add_node", "id": "REQ-007B-098", "type": "Rule", "owner_fr": "FR-007B", "title": "Money movement follows the owner decisions that replace the missing Payment Routing Spec", "attrs": {"statement": "Money movement follows the owner decisions that replace the missing Payment Routing Spec: Hairline is the seller on the card payment, and Hairline's balance pays refunds, chargebacks and Stripe fees first and recovers the clinic's part afterwards. Hairline holds the payment; the clinic's share moves to the clinic's locked Stripe balance 60 days before treatment (30 days for an installment plan once it is fully paid) and is paid out at release. If the booking is cancelled after the share has moved, Hairline refunds the patient per the refund ladder, pulls the share back from the clinic's locked balance and deducts any shortfall from the clinic's next payout. If the booking is rescheduled after the share has moved, Hairline always pulls it back and moves it again 60 or 30 days before the new date.", "rationale": "PRD prose rule, no id. Payment & Billing Rules (money movement)."}}
+  - {"op": "add_node", "id": "REQ-007B-099", "type": "Rule", "owner_fr": "FR-007B", "title": "Late fee charged when the late payment grace period passes without payment", "attrs": {"statement": "A late fee is charged when the late payment grace period (FR-029) has passed without payment; the amounts of the late fee and the rescheduling fee are set by the admin in FR-029.", "rationale": "PRD prose rule, no id. Payment & Billing Rules and Alternative Flow B1 Outcome."}}
+  - {"op": "add_edge", "from": "REQ-007B-098", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-007B-098", "verb": "applies to", "to": "ENT-installment-plan"}
+  - {"op": "add_edge", "from": "REQ-007B-099", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-007B-099", "verb": "applies to", "to": "ENT-installment-payment"}
+  - {"op": "add_edge", "from": "REQ-007B-099", "verb": "governed by", "to": "SET-installment-late-payment-grace-period"}
+  - {"op": "add_edge", "from": "REQ-007B-064", "verb": "decided by", "to": "SRC-PO-001-Q35"}
+  - {"op": "add_edge", "from": "REQ-007B-063", "verb": "decided by", "to": "SRC-PO-001-Q36"}
+  - {"op": "add_edge", "from": "REQ-007B-053", "verb": "decided by", "to": "SRC-PO-001-Q37"}
+  - {"op": "add_edge", "from": "REQ-007B-060", "verb": "decided by", "to": "SRC-PO-001-Q42"}
+  - {"op": "add_node", "id": "EVT-installment-provider-overdue-alert", "type": "Event", "owner_fr": "FR-007B", "title": "Provider alerted that an installment is overdue", "attrs": {"description": "Alert to the provider when an installment becomes overdue (Alternative Flow B1 step 7; REQ-007B-032)."}}
+  - {"op": "add_node", "id": "EVT-installment-insufficient-time-notice", "type": "Event", "owner_fr": "FR-007B", "title": "Patient notified that a date change leaves too little time", "attrs": {"description": "Notice to the patient when an admin date change leaves too little time for the remaining installments (Alternative Flow B3 step 4; REQ-007B-024, REQ-007B-062)."}}
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "emits", "to": "EVT-installment-provider-overdue-alert"}
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "emits", "to": "EVT-installment-insufficient-time-notice"}
+  - {"op": "add_edge", "from": "REQ-007B-032", "verb": "applies to", "to": "EVT-installment-provider-overdue-alert"}
+  - {"op": "add_edge", "from": "REQ-007B-024", "verb": "applies to", "to": "EVT-installment-insufficient-time-notice"}
+  - {"op": "add_edge", "from": "REQ-007B-062", "verb": "applies to", "to": "EVT-installment-insufficient-time-notice"}
+  - {"op": "update_node", "id": "ENT-payment-method", "attrs": {"description": "The single record of a patient's saved payment method, used by installment plans and read by the FR-007 payment screens and the FR-016 patient payments view. The payment methods it records are card and bank transfer. For a card it is a tokenized recurring payment method; for a bank transfer, which has no saved card, there is no card token, last 4 digits or expiration date to show. Belongs to one patient; used by one or more installment plans. Full card numbers are never stored."}}
+  - {"op": "update_node", "id": "ENT-installment-plan.status", "attrs": {"description": "Active, Canceled, Completed (shown as Fully Paid) or Defaulted. Overdue is not a status: it is the calculated is_overdue flag, not stored."}}
+  - {"op": "update_node", "id": "ENT-installment-payment.status", "attrs": {"description": "One list: Scheduled, Retrying, Paid, Failed, Overdue, Cancelled."}}
+  - {"op": "update_node", "id": "ENT-installment-plan.max_installments", "attrs": {"description": "Calculated maximum number of installments available, 2 to 9: (days until procedure minus 30) divided by 30 plus 1, rounded down (60 days gives 2)."}}
+  - {"op": "update_node", "id": "ENT-installment-plan.overdue_days", "attrs": {"description": "Days since the first missed or failed installment; only for plans flagged Overdue or Defaulted."}}
+  - {"op": "add_field", "id": "ENT-installment-plan.is_overdue", "entity_id": "ENT-installment-plan", "name": "is_overdue", "data_type": "bool", "title": "Overdue flag", "owner_fr": "FR-007B", "required": false, "attrs": {"description": "Calculated, not stored: true when an installment due date has passed and the installment is unpaid. Shown beside the plan status."}}
+  - {"op": "add_edge", "from": "SCR-007B-03", "verb": "shows", "to": "ENT-installment-plan.is_overdue", "attrs": {"provenance": "system calculated", "label": "Overdue flag"}}
+  - {"op": "add_edge", "from": "SCR-007B-04", "verb": "shows", "to": "ENT-installment-plan.is_overdue", "attrs": {"provenance": "system calculated", "label": "Overdue flag"}}
+  - {"op": "add_edge", "from": "SCR-007B-06", "verb": "shows", "to": "ENT-installment-plan.is_overdue", "attrs": {"provenance": "system calculated", "label": "Overdue flag"}}
+  - {"op": "retire_enum_value", "field_id": "ENT-installment-payment.status", "value": "retried"}
+  - {"op": "add_enum_value", "field_id": "ENT-installment-payment.status", "value": "retrying", "label": "Retrying", "sort_order": 3}
+  - {"op": "add_node", "id": "STP-007B-401", "type": "Step", "owner_fr": "FR-007B", "title": "System detects failure and logs the reason", "attrs": {"prd_ref": "Alternative Flow B1 step 1"}}
+  - {"op": "add_edge", "from": "STP-007B-401", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-007B-401", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-007B-401", "verb": "applies", "to": "REQ-007B-012"}
+  - {"op": "add_edge", "from": "STP-007B-401", "verb": "applies", "to": "REQ-007B-017"}
+  - {"op": "add_node", "id": "STP-007B-402", "type": "Step", "owner_fr": "FR-007B", "title": "System notifies the patient of the failed payment", "attrs": {"prd_ref": "Alternative Flow B1 step 2"}}
+  - {"op": "add_edge", "from": "STP-007B-402", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-007B-402", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-007B-402", "verb": "applies", "to": "REQ-007B-017"}
+  - {"op": "add_node", "id": "STP-007B-403", "type": "Step", "owner_fr": "FR-007B", "title": "If the failure was technical, system schedules the first retry after a wait of 1 day", "attrs": {"prd_ref": "Alternative Flow B1 step 3"}}
+  - {"op": "add_edge", "from": "STP-007B-403", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-007B-403", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-007B-403", "verb": "applies", "to": "REQ-007B-018"}
+  - {"op": "add_node", "id": "STP-007B-404", "type": "Step", "owner_fr": "FR-007B", "title": "System waits 3 days and attempts the second retry if the first retry fails", "attrs": {"prd_ref": "Alternative Flow B1 step 4"}}
+  - {"op": "add_edge", "from": "STP-007B-404", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-007B-404", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-007B-404", "verb": "applies", "to": "REQ-007B-018"}
+  - {"op": "add_node", "id": "STP-007B-405", "type": "Step", "owner_fr": "FR-007B", "title": "System waits 7 days and attempts the third retry if the second retry fails", "attrs": {"prd_ref": "Alternative Flow B1 step 5"}}
+  - {"op": "add_edge", "from": "STP-007B-405", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-007B-405", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-007B-405", "verb": "applies", "to": "REQ-007B-018"}
+  - {"op": "add_node", "id": "STP-007B-406", "type": "Step", "owner_fr": "FR-007B", "title": "System flags the plan Defaulted if all 3 retries fail", "attrs": {"prd_ref": "Alternative Flow B1 step 6"}}
+  - {"op": "add_edge", "from": "STP-007B-406", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-007B-406", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-007B-406", "verb": "applies", "to": "REQ-007B-019"}
+  - {"op": "add_node", "id": "STP-007B-407", "type": "Step", "owner_fr": "FR-007B", "title": "System notifies admin of the defaulted plan and overdue booking, and alerts the provider that an installment is overdue", "attrs": {"prd_ref": "Alternative Flow B1 step 7"}}
+  - {"op": "add_edge", "from": "STP-007B-407", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-007B-407", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-007B-407", "verb": "applies", "to": "REQ-007B-020"}
+  - {"op": "add_edge", "from": "STP-007B-407", "verb": "applies", "to": "REQ-007B-032"}
+  - {"op": "add_node", "id": "STP-007B-408", "type": "Step", "owner_fr": "FR-007B", "title": "Admin reviews and contacts the patient to resolve the payment issue", "attrs": {"prd_ref": "Alternative Flow B1 step 8", "handoff_to": "FR-006: Cancel Booking action (admin cancels with a mandatory reason)"}}
+  - {"op": "add_edge", "from": "STP-007B-408", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-007B-408", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-007B-408", "verb": "applies", "to": "REQ-007B-051"}
+  - {"op": "add_node", "id": "STP-007B-602", "type": "Step", "owner_fr": "FR-007B", "title": "System checks whether the new date allows the remaining installments", "attrs": {"prd_ref": "Alternative Flow B3 step 2"}}
+  - {"op": "add_edge", "from": "STP-007B-602", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-007B-602", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-007B-602", "verb": "applies", "to": "REQ-007B-061"}
+  - {"op": "add_node", "id": "STP-007B-603", "type": "Step", "owner_fr": "FR-007B", "title": "System adjusts installment schedule dates to the new procedure date", "attrs": {"prd_ref": "Alternative Flow B3 step 3"}}
+  - {"op": "add_edge", "from": "STP-007B-603", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-007B-603", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-007B-603", "verb": "applies", "to": "REQ-007B-061"}
+  - {"op": "add_node", "id": "STP-007B-604", "type": "Step", "owner_fr": "FR-007B", "title": "System sends the patient an insufficient-time notice that the balance must be paid now or the plan cancelled", "attrs": {"prd_ref": "Alternative Flow B3 step 4"}}
+  - {"op": "add_edge", "from": "STP-007B-604", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-007B-604", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-007B-604", "verb": "applies", "to": "REQ-007B-062"}
+  - {"op": "add_edge", "from": "STP-007B-604", "verb": "applies", "to": "REQ-007B-024"}
+  - {"op": "add_node", "id": "STP-007B-605", "type": "Step", "owner_fr": "FR-007B", "title": "Patient pays the remaining balance immediately, or the admin cancels the booking through the FR-006 Cancel Booking action", "attrs": {"prd_ref": "Alternative Flow B3 step 5", "handoff_to": "FR-006: Cancel Booking action"}}
+  - {"op": "add_edge", "from": "STP-007B-605", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-007B-605", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-007B-605", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-007B-605", "verb": "applies", "to": "REQ-007B-062"}
+  - {"op": "add_node", "id": "STP-007B-702", "type": "Step", "owner_fr": "FR-007B", "title": "Paid installments become credit toward the replacement booking, unused part refunded", "attrs": {"prd_ref": "Alternative Flow B4 step 2"}}
+  - {"op": "add_edge", "from": "STP-007B-702", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-007B-702", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-007B-702", "verb": "applies", "to": "REQ-007B-027"}
+  - {"op": "add_node", "id": "STP-007B-703", "type": "Step", "owner_fr": "FR-007B", "title": "Replacement plan takes total, currency and rate from the replacement quote snapshot", "attrs": {"prd_ref": "Alternative Flow B4 step 3"}}
+  - {"op": "add_edge", "from": "STP-007B-703", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-007B-703", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-007B-703", "verb": "applies", "to": "REQ-007B-064"}
+  - {"op": "add_edge", "from": "STP-007B-401", "verb": "next", "to": "STP-007B-402"}
+  - {"op": "add_edge", "from": "STP-007B-402", "verb": "next", "to": "STP-007B-403"}
+  - {"op": "add_edge", "from": "STP-007B-403", "verb": "next", "to": "STP-007B-404", "attrs": {"label": "retry fails"}}
+  - {"op": "add_edge", "from": "STP-007B-404", "verb": "next", "to": "STP-007B-405", "attrs": {"label": "retry fails"}}
+  - {"op": "add_edge", "from": "STP-007B-405", "verb": "next", "to": "STP-007B-406", "attrs": {"label": "all 3 retries fail"}}
+  - {"op": "add_edge", "from": "STP-007B-406", "verb": "next", "to": "STP-007B-407"}
+  - {"op": "add_edge", "from": "STP-007B-407", "verb": "next", "to": "STP-007B-408"}
+  - {"op": "add_edge", "from": "STP-007B-601", "verb": "next", "to": "STP-007B-602"}
+  - {"op": "add_edge", "from": "STP-007B-602", "verb": "next", "to": "STP-007B-603", "attrs": {"label": "sufficient time"}}
+  - {"op": "add_edge", "from": "STP-007B-602", "verb": "next", "to": "STP-007B-604", "attrs": {"label": "insufficient time"}}
+  - {"op": "add_edge", "from": "STP-007B-604", "verb": "next", "to": "STP-007B-605"}
+  - {"op": "add_edge", "from": "STP-007B-701", "verb": "next", "to": "STP-007B-702"}
+  - {"op": "add_edge", "from": "STP-007B-702", "verb": "next", "to": "STP-007B-703"}
+  - {"op": "add_node", "id": "FLW-007b-installment-fails", "type": "Flow", "title": "Installment payment fails", "attrs": {"kind": "alternative", "description": "Installment payment fails", "prd_ref": "Alternative Flow B1"}}
+  - {"op": "add_node", "id": "FLW-007b-date-change", "type": "Flow", "title": "Procedure date changes after the plan is established", "attrs": {"kind": "alternative", "description": "Procedure date changes after the plan is established", "prd_ref": "Alternative Flow B3"}}
+  - {"op": "add_node", "id": "FLW-007b-provider-fault", "type": "Flow", "title": "Provider fault after acceptance", "attrs": {"kind": "alternative", "description": "Provider fault after acceptance", "prd_ref": "Alternative Flow B4"}}
+  - {"op": "add_edge", "from": "FLW-007b-installment-fails", "verb": "starts at", "to": "STP-007B-401"}
+  - {"op": "add_edge", "from": "FLW-007b-date-change", "verb": "starts at", "to": "STP-007B-601"}
+  - {"op": "add_edge", "from": "FLW-007b-provider-fault", "verb": "starts at", "to": "STP-007B-701"}
+  - {"op": "update_node", "id": "STP-007B-504", "title": "System processes the refund as a percentage of the amount paid so far, per the FR-029 refund ladder"}
