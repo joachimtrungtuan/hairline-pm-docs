@@ -1,0 +1,26 @@
+reason: "Owner ruling Q-fr001-009-85: pending Sources that at least one active Rule or Entity cites through a decided by edge are marked incorporated; Sources nothing cites stay pending review and are listed for the owner"
+by: controller
+operations:
+  - {"op": "update_node", "id": "SRC-DOC-001-R05", "source": {"lifecycle": "incorporated"}}
+  - {"op": "update_node", "id": "SRC-DOC-001-R07", "source": {"lifecycle": "incorporated"}}
+  - {"op": "update_node", "id": "SRC-DOC-001-R08", "source": {"lifecycle": "incorporated"}}
+  - {"op": "update_node", "id": "SRC-DOC-001-R10", "source": {"lifecycle": "incorporated"}}
+  - {"op": "update_node", "id": "SRC-DOC-001-R11", "source": {"lifecycle": "incorporated"}}
+  - {"op": "update_node", "id": "SRC-DOC-001-R12", "source": {"lifecycle": "incorporated"}}
+  - {"op": "update_node", "id": "SRC-MTG-001-D01", "source": {"lifecycle": "incorporated"}}
+  - {"op": "update_node", "id": "SRC-MTG-001-D05", "source": {"lifecycle": "incorporated"}}
+  - {"op": "update_node", "id": "SRC-MTG-001-W01", "source": {"lifecycle": "incorporated"}}
+  - {"op": "update_node", "id": "SRC-MTG-001-W02", "source": {"lifecycle": "incorporated"}}
+  - {"op": "update_node", "id": "SRC-MTG-001-W03", "source": {"lifecycle": "incorporated"}}
+  - {"op": "update_node", "id": "SRC-MTG-001-W04", "source": {"lifecycle": "incorporated"}}
+  - {"op": "update_node", "id": "SRC-MTG-002-D02", "source": {"lifecycle": "incorporated"}}
+  - {"op": "update_node", "id": "SRC-MTG-002-D07", "source": {"lifecycle": "incorporated"}}
+  - {"op": "update_node", "id": "SRC-MTG-002-D09", "source": {"lifecycle": "incorporated"}}
+  - {"op": "update_node", "id": "SRC-MTG-002-D11", "source": {"lifecycle": "incorporated"}}
+  - {"op": "update_node", "id": "SRC-MTG-002-O04", "source": {"lifecycle": "incorporated"}}
+  - {"op": "update_node", "id": "SRC-MTG-002-O05", "source": {"lifecycle": "incorporated"}}
+  - {"op": "update_node", "id": "SRC-MTG-003-D02", "source": {"lifecycle": "incorporated"}}
+  - {"op": "update_node", "id": "SRC-MTG-003-D05", "source": {"lifecycle": "incorporated"}}
+  - {"op": "update_node", "id": "SRC-MTG-003-D06", "source": {"lifecycle": "incorporated"}}
+  - {"op": "update_node", "id": "SRC-TRN-002", "source": {"lifecycle": "incorporated"}}
+  - {"op": "update_node", "id": "SRC-TRN-006", "source": {"lifecycle": "incorporated"}}
