@@ -1,0 +1,164 @@
+reason: "Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-010)"
+by: controller
+operations:
+  # New Rules, statements as the FR-010 PRD Functional Requirements Summary reads now.
+  - op: add_node
+    id: REQ-010-106
+    type: Rule
+    owner_fr: FR-010
+    title: "Check In allowed only when Confirmed, procedure date today or past, and fully paid"
+    attrs:
+      statement: "System MUST allow Check In only when the booking is Confirmed, the procedure date is today or in the past, and the booking is fully paid; otherwise Check In is disabled and the reason is shown to the provider. This is the one merged Check In rule (Rule 3; Payment Rule 2)"
+      rationale: "Functional Requirements Summary. Screen SCR-010-04. Merges the former FR-006 Check In rule."
+  - op: add_node
+    id: REQ-010-107
+    type: Rule
+    owner_fr: FR-010
+    title: "Report Issue Before Check In control for No-show and Medical postponement; notifies admin only"
+    attrs:
+      statement: "System MUST give providers a Report Issue Before Check In control on a Confirmed case, with the reasons No-show and Medical postponement, that only notifies the admin and leaves the booking Confirmed; Cancel / Close Case remains available only while the case is In Progress, with the Alternative Flow B4 reason list (Alternative Flows B1, B2 and B4; Screen 4)"
+      rationale: "Functional Requirements Summary. Screen SCR-010-04. Alternative Flows B1, B2 and B4."
+  - op: add_node
+    id: REQ-010-108
+    type: Rule
+    owner_fr: FR-010
+    title: "Provider In Progress listing filters by treatment start date range"
+    attrs:
+      statement: "System MUST let providers filter the In Progress listing by treatment start date range, defaulting to the current month (Screen 3)"
+      rationale: "Functional Requirements Summary. Screen SCR-010-03."
+      distinct_from: "REQ-010-111"
+  - op: add_node
+    id: REQ-010-109
+    type: Rule
+    owner_fr: FR-010
+    title: "Provider In Progress listing filters by assigned clinician"
+    attrs:
+      statement: "System MUST let providers filter the In Progress listing by any assigned clinician, chosen from the clinic's active clinicians (Screen 3)"
+      rationale: "Functional Requirements Summary. Screen SCR-010-03."
+  - op: add_node
+    id: REQ-010-110
+    type: Rule
+    owner_fr: FR-010
+    title: "Admin In Progress listing filters by provider or clinic"
+    attrs:
+      statement: "System MUST let admins filter the admin In Progress listing by provider or clinic (Screen 7)"
+      rationale: "Functional Requirements Summary. Screen SCR-010-07."
+      distinct_from: "REQ-010-112"
+  - op: add_node
+    id: REQ-010-111
+    type: Rule
+    owner_fr: FR-010
+    title: "Admin In Progress listing filters by procedure start date range"
+    attrs:
+      statement: "System MUST let admins filter the admin In Progress listing by procedure start date range, defaulting to the current month (Screen 7)"
+      rationale: "Functional Requirements Summary. Screen SCR-010-07."
+      distinct_from: "REQ-010-108"
+  - op: add_node
+    id: REQ-010-112
+    type: Rule
+    owner_fr: FR-010
+    title: "Admin In Progress listing filters by assigned clinician"
+    attrs:
+      statement: "System MUST let admins filter the admin In Progress listing by any assigned clinician (Screen 7)"
+      rationale: "Functional Requirements Summary. Screen SCR-010-07."
+      distinct_from: "REQ-010-110"
+  - op: add_node
+    id: REQ-010-113
+    type: Rule
+    owner_fr: FR-010
+    title: "Case detail page in tabs; the In Progress tab becomes active at Check In"
+    attrs:
+      statement: "System MUST present the provider case detail page in tabs (Treatment Plan, Note, Book hotel & Book flight, In Progress); the In Progress tab becomes the active tab at Check In and the other tabs stay accessible for reference (Screen 4)"
+      rationale: "Functional Requirements Summary. Screen SCR-010-04."
+
+  # Placement of the new Rules: the Stage and Screen they govern.
+  - {op: add_edge, from: REQ-010-106, verb: applies at, to: STG-main-06-treatment}
+  - {op: add_edge, from: REQ-010-106, verb: applies to, to: SCR-010-04}
+  - {op: add_edge, from: REQ-010-107, verb: applies at, to: STG-main-06-treatment}
+  - {op: add_edge, from: REQ-010-107, verb: applies to, to: SCR-010-04}
+  - {op: add_edge, from: REQ-010-113, verb: applies at, to: STG-main-06-treatment}
+  - {op: add_edge, from: REQ-010-113, verb: applies to, to: SCR-010-04}
+  - {op: add_edge, from: REQ-010-108, verb: applies at, to: STG-main-06-treatment}
+  - {op: add_edge, from: REQ-010-108, verb: applies to, to: SCR-010-03}
+  - {op: add_edge, from: REQ-010-109, verb: applies at, to: STG-main-06-treatment}
+  - {op: add_edge, from: REQ-010-109, verb: applies to, to: SCR-010-03}
+  - {op: add_edge, from: REQ-010-110, verb: applies at, to: STG-main-06-treatment}
+  - {op: add_edge, from: REQ-010-110, verb: applies to, to: SCR-010-07}
+  - {op: add_edge, from: REQ-010-111, verb: applies at, to: STG-main-06-treatment}
+  - {op: add_edge, from: REQ-010-111, verb: applies to, to: SCR-010-07}
+  - {op: add_edge, from: REQ-010-112, verb: applies at, to: STG-main-06-treatment}
+  - {op: add_edge, from: REQ-010-112, verb: applies to, to: SCR-010-07}
+
+  # Merges. FR-006 Check In rule folds into REQ-010-106 (FR-010 now owns it, so the FR-010 citation of it is dropped
+  # first); REQ-010-025 (cancel reading) folds into REQ-010-041 (stay In Progress reading).
+  - {op: remove_edge, from: FR-010, verb: references, to: REQ-006-043}
+  - {op: merge_node, survivor: REQ-010-106, loser: REQ-006-043}
+  - {op: merge_node, survivor: REQ-010-041, loser: REQ-010-025}
+
+  # Reworded Rules, statements as the PRD reads now.
+  - op: update_node
+    id: REQ-010-004
+    attrs:
+      statement: "System MUST require minimum documentation before allowing treatment completion: conclusion notes, prescription, advice, medication (one text box, must not be empty), actual graft count, final head scan photo set (V1)"
+  - op: update_node
+    id: REQ-010-010
+    attrs:
+      statement: "System MUST send the first documentation reminder at the reminder-timing setting (default 12 hours after Check In) and the second at the configured completion deadline (default 24 hours) while documentation is incomplete, then flag the case as Overdue Documentation on the admin dashboard; enforcement is reminders plus the flag only and nothing is blocked"
+  - op: update_node
+    id: REQ-010-013
+    title: "Treatment photos encrypted at rest; retention follows the system 10-year Rule"
+    attrs:
+      statement: "System MUST store treatment photos encrypted at rest (AES-256); retention follows the system PRD, Platform-Wide Rules: One 10-year retention period"
+  - op: update_node
+    id: REQ-010-022
+    title: "Patient notifications for treatment events; delivery governed by the FR-020 notification-service Rule"
+    attrs:
+      statement: "System MUST send status notifications, post-op instructions, and medication instructions to patients for treatment events; delivery through the Notification Service is governed by the FR-020 notification-service Rule"
+  - op: update_node
+    id: REQ-010-041
+    attrs:
+      statement: "When a provider's suspension or deactivation becomes effective, System MUST leave that provider's In Progress cases In Progress with cause `ProviderSuspended` or `ProviderDeactivated` and an independent `supportRequired` marker, block further provider documentation, preserve clinical notes/photos and any recorded completion milestone, and let an admin decide case by case through FR-006 Alternative Flow B7 (move the booking to Aftercare with an FR-011 aftercare reassignment, or cancel the booking), without restoring the provider's actions on reactivation (Alternative Flow B5; Rule 12; FR-015 A5/Screen 4). Provider-requested Cancel/Close Case (B4) remains a non-transitioning admin notification."
+      rationale: "Functional Requirements Summary carries the stay-In-Progress reading; the former REQ-010-025 (cancel reading) is merged into this Rule. Also stated in Alternative Flow B5, Rule 12 and the suspended-mid-treatment edge case; the edge case adds that a later deactivation does not overwrite an earlier ProviderSuspended cause."
+  - op: update_node
+    id: REQ-010-066
+    title: "Admin can view payment status for operational follow-up"
+    attrs:
+      statement: "View payment status (outstanding balance / split pay) for operational follow-up (view only; no new screen part)"
+      rationale: "Module Scope, Admin Platform. View only; no screen field shows payment status."
+  - op: update_node
+    id: REQ-010-076
+    title: "Patient no-show: Report Issue Before Check In notifies admin; booking stays Confirmed"
+    attrs:
+      statement: "Provider clicks Report Issue Before Check In; selects reason: No-show; adds note System notifies admin; the booking stays Confirmed. The admin rebooks through the FR-006 Change Appointment action (FR-006 Screen 8) or cancels through the FR-006 Cancel Booking action (FR-006 Screen 9); deposit retention follows the FR-006 payment placeholder. No-Show is an admin-managed case label, not a system-defined booking pipeline status"
+      rationale: "Alternative Flow B1. The outcome states no financial penalty; the admin decides rebook or cancel and handles deposit retention."
+  - op: update_node
+    id: REQ-010-077
+    title: "Medical postponement: Report Issue Before Check In notifies admin; booking stays Confirmed"
+    attrs:
+      statement: "Provider does not click Check In; instead clicks Report Issue Before Check In, selects reason: Medical postponement; documents the condition and clearance requirements System notifies admin; the booking stays Confirmed. The admin reschedules through the FR-006 Change Appointment action (FR-006 Screen 8) with no financial penalty, or cancels through the FR-006 Cancel Booking action (FR-006 Screen 9). Note: 'Postponed' is an admin-managed case label, not a system-defined booking pipeline status"
+  - op: update_node
+    id: REQ-010-095
+    title: "Reminders at the reminder-timing setting and the completion deadline; admin dashboard flags Overdue Documentation"
+    attrs:
+      statement: "System sends the first reminder to the provider at the reminder-timing setting (default 12 hours after Check In) if treatment is still \"In Progress\"; the second reminder follows at the configured completion deadline (default 24 hours); the admin dashboard then flags the treatment as \"Overdue Documentation\" for manual follow-up. Enforcement is reminders plus the flag only; nothing is blocked."
+
+  # Archive flag on the treatment media record and the documentation records.
+  - {op: add_field, id: ENT-treatment-media.is_archived, entity_id: ENT-treatment-media, name: is_archived, data_type: bool, title: Archived, owner_fr: FR-010, required: false, attrs: {description: "Archive flag; admin archive and restore only, never a hard delete."}}
+  - {op: add_field, id: ENT-treatment-media.archived_at, entity_id: ENT-treatment-media, name: archived_at, data_type: datetime, title: Archived at, owner_fr: FR-010, required: false}
+  - {op: add_field, id: ENT-treatment-media.archived_by, entity_id: ENT-treatment-media, name: archived_by, data_type: id, title: Archived by, owner_fr: FR-010, required: false, attrs: {description: "Admin user ID."}}
+  - {op: add_field, id: ENT-treatment-day-record.is_archived, entity_id: ENT-treatment-day-record, name: is_archived, data_type: bool, title: Archived, owner_fr: FR-010, required: false, attrs: {description: "Archive flag; archiving does not change the treatment status list."}}
+  - {op: add_field, id: ENT-treatment-day-record.archived_at, entity_id: ENT-treatment-day-record, name: archived_at, data_type: datetime, title: Archived at, owner_fr: FR-010, required: false}
+  - {op: add_field, id: ENT-treatment-day-record.archived_by, entity_id: ENT-treatment-day-record, name: archived_by, data_type: id, title: Archived by, owner_fr: FR-010, required: false, attrs: {description: "Admin user ID."}}
+  - {op: add_field, id: ENT-medication-instructions.is_archived, entity_id: ENT-medication-instructions, name: is_archived, data_type: bool, title: Archived, owner_fr: FR-010, required: false, attrs: {description: "Archive flag; archiving does not change the treatment status list."}}
+  - {op: add_field, id: ENT-medication-instructions.archived_at, entity_id: ENT-medication-instructions, name: archived_at, data_type: datetime, title: Archived at, owner_fr: FR-010, required: false}
+  - {op: add_field, id: ENT-medication-instructions.archived_by, entity_id: ENT-medication-instructions, name: archived_by, data_type: id, title: Archived by, owner_fr: FR-010, required: false, attrs: {description: "Admin user ID."}}
+
+  # Notification Events move to FR-030; the plan-changed Event is also emitted from the booking Stage (Confirmed).
+  - {op: update_node, id: EVT-treatment-documentation-completed, owner_fr: FR-030}
+  - {op: update_node, id: EVT-treatment-task-in-progress-reminder, owner_fr: FR-030}
+  - {op: add_edge, from: STG-main-04-booking, verb: emits, to: EVT-treatment-plan-changed}
+
+  # Support emergency contact is now two FR-026 Settings; the Entity and its Fields are retired.
+  - {op: retire_node, id: ENT-support-emergency-contact.phone}
+  - {op: retire_node, id: ENT-support-emergency-contact.email}
+  - {op: retire_node, id: ENT-support-emergency-contact}
