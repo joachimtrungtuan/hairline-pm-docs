@@ -1,0 +1,9 @@
+reason: "Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-033)"
+by: controller
+operations:
+  - {"op": "remove_edge", "from": "SCR-032-09", "verb": "shows", "to": "ENT-help-centre-content.category"}
+  - {"op": "add_edge", "from": "SCR-032-09", "verb": "shows", "to": "ENT-help-centre-content.content_type", "attrs": {"provenance": "inherited from another FR", "label": "Category Navigation", "editable": false}}
+  - {"op": "remove_edge", "from": "SCR-032-11", "verb": "shows", "to": "ENT-help-centre-content.category"}
+  - {"op": "add_edge", "from": "SCR-032-11", "verb": "shows", "to": "ENT-help-centre-content.content_type", "attrs": {"provenance": "inherited from another FR", "label": "Article Metadata", "editable": false}}
+  - {"op": "remove_edge", "from": "SCR-035-02", "verb": "shows", "to": "ENT-help-centre-content.category"}
+  - {"op": "add_edge", "from": "SCR-035-02", "verb": "shows", "to": "ENT-help-centre-content.content_type", "attrs": {"provenance": "retrieved", "label": "Content Type Cards: type label, icon and item count badge", "editable": false}}
