@@ -1,0 +1,109 @@
+reason: "Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-008)"
+by: controller
+operations:
+  # Retired Rule: the admin travel list was removed from the PRD.
+  - {op: retire_node, id: REQ-008-023}
+
+  # Renumbered ids keep the old PRD ids as aliases so old citations resolve.
+  - {op: update_node, id: REQ-008-034, attrs: {rationale: "Passport is not requested in Path B (Passport Rules).", aliases: "REQ-008-005b"}}
+  - {op: update_node, id: REQ-008-035, attrs: {aliases: "REQ-008-F01"}}
+  - {op: update_node, id: REQ-008-036, attrs: {aliases: "REQ-008-F02"}}
+  - {op: update_node, id: REQ-008-037, attrs: {aliases: "REQ-008-F03"}}
+  - {op: update_node, id: REQ-008-038, attrs: {aliases: "REQ-008-F04"}}
+  - {op: update_node, id: REQ-008-039, attrs: {aliases: "REQ-008-F05"}}
+
+  # Admin travel settings are future phase only; no Setting node.
+  - op: update_node
+    id: REQ-008-075
+    title: "Future phase: Admin manages travel API configuration"
+    attrs:
+      statement: "Future phase: Admin MUST be able to manage travel API configuration once API booking is live. There are no travel settings in the first release."
+      rationale: "Admin Platform scope line."
+
+  # Retention now points to the single system Rule.
+  - op: update_node
+    id: REQ-008-069
+    title: "Travel data retention follows the system retention rule"
+    attrs:
+      statement: "Travel records (passport, flight, hotel) and travel audit entries (TravelAuditEntry) follow the one retention period: retention follows the system PRD, Platform-Wide Rules: One 10-year retention period. At account deletion the passport number and passport photo are removed, not kept in anonymised form."
+  - {op: add_edge, from: FR-008, verb: references, to: REQ-SYS-002}
+
+  # Changed Rule statements.
+  - op: update_node
+    id: REQ-008-032
+    attrs:
+      statement: "When FR-006 Alternative Flow B5 transfers a patient to a replacement booking, the system MUST keep the original TravelContext closed with its records read-only, MUST carry the passport record over to the replacement TravelContext as a new locked booking-linked record, MUST copy the current flight and hotel records to it with a copy-source reference and the flag \"travel-date review required\", and MUST set the replacement TravelContext to `travel-date-review-required` until an admin clears the review under REQ-008-030. Each copied record (passport, flight, hotel) keeps its original submitter plus the copy-source reference; any correction to a copy goes through the admin."
+  - op: update_node
+    id: REQ-008-051
+    attrs:
+      statement: "If passport details were previously submitted for an earlier appointment, the passport request is still sent as usual. The patient either confirms the earlier details or enters new ones, and the result is a new booking-linked locked record; the earlier record is not edited."
+  - op: update_node
+    id: REQ-008-052
+    attrs:
+      statement: "Once a passport, flight or hotel record is submitted, an attempt by the patient or provider to edit, delete or re-submit it MUST be blocked and the submitter MUST be shown a message that corrections are requested through admin. The provider has no edit or flag capability on a patient-submitted record and contacts admin when it looks incorrect. The one exception is an admin soft-delete of a passport record, after which the patient may submit one new passport (REQ-008-076)."
+  - op: update_node
+    id: REQ-008-065
+    attrs:
+      statement: "'Incomplete' MUST be an admin-managed passport status, used when a submitted passport record is deemed unusable or incorrect and is pending admin correction; the patient and provider cannot re-submit to change a locked record, except after an admin soft-delete returns the passport to Awaiting (REQ-008-076)."
+
+  # New Rule.
+  - op: add_node
+    id: REQ-008-076
+    type: Rule
+    owner_fr: FR-008
+    title: "After an admin soft-delete the passport returns to Awaiting and one new submission is allowed"
+    attrs:
+      statement: "After an admin soft-deletes a passport record, the system MUST set the passport status back to Awaiting and allow exactly one new submission by the patient. The deleted record stays in the travel audit trail."
+      rationale: "Passport Rules, Screen 1 business rules and Screen 12 General Business Rules."
+  - {op: add_edge, from: REQ-008-076, verb: applies at, to: STG-main-04-booking}
+  - {op: add_edge, from: REQ-008-076, verb: applies to, to: SCR-008-12}
+  - {op: add_edge, from: REQ-008-076, verb: applies to, to: ENT-passport-record.status}
+
+  # Decision links.
+  - {op: remove_edge, from: REQ-008-073, verb: decided by, to: SRC-PO-001-Q36}
+
+  # Booking-rescheduled event (FR-006) links.
+  - {op: add_edge, from: REQ-008-028, verb: applies to, to: EVT-booking-rescheduled}
+  - {op: add_edge, from: REQ-008-030, verb: applies to, to: EVT-booking-rescheduled}
+  - {op: add_edge, from: REQ-008-062, verb: applies to, to: EVT-booking-rescheduled}
+
+  # New Field: copy-source reference on a passport record.
+  - {op: add_field, id: ENT-passport-record.copied_from_passport_id, entity_id: ENT-passport-record, name: copied_from_passport_id, data_type: id, title: Copied from passport ID, owner_fr: FR-008, required: false, attrs: {description: "Set when the record is a copy of earlier details."}}
+  - {op: add_edge, from: REQ-008-032, verb: applies to, to: ENT-passport-record.copied_from_passport_id}
+
+  # Passport status values: awaiting, submitted, incomplete.
+  - {op: retire_enum_value, field_id: ENT-passport-record.status, value: pending}
+  - {op: retire_enum_value, field_id: ENT-passport-record.status, value: complete}
+  - {op: add_enum_value, field_id: ENT-passport-record.status, value: awaiting, label: Awaiting, sort_order: 0}
+  - {op: add_enum_value, field_id: ENT-passport-record.status, value: submitted, label: Submitted, sort_order: 1}
+
+  # Screen 11: initial request sent.
+  - {op: add_edge, from: SCR-008-11, verb: shows, to: ENT-travel-context.initial_request_dispatched_at, attrs: {provenance: retrieved, label: "Initial Request Sent"}}
+
+  # New Entity: the travel audit entry, owned by FR-008.
+  - op: add_node
+    id: ENT-travel-audit-entry
+    type: Entity
+    owner_fr: FR-008
+    title: Travel audit entry
+    attrs:
+      description: "FR-008's own travel audit entity, not shared with another feature's audit log. Entries belong to a TravelContext and are never edited or removed; retention follows the system retention rule."
+  - {op: add_field, id: ENT-travel-audit-entry.id, entity_id: ENT-travel-audit-entry, name: id, data_type: id, title: Audit entry ID, owner_fr: FR-008, required: true}
+  - {op: add_field, id: ENT-travel-audit-entry.travel_context_id, entity_id: ENT-travel-audit-entry, name: travel_context_id, data_type: id, title: TravelContext ID, owner_fr: FR-008, required: true}
+  - {op: add_field, id: ENT-travel-audit-entry.actor_id, entity_id: ENT-travel-audit-entry, name: actor_id, data_type: id, title: Acting user ID, owner_fr: FR-008, required: true}
+  - {op: add_field, id: ENT-travel-audit-entry.actor_role, entity_id: ENT-travel-audit-entry, name: actor_role, data_type: text, title: Acting user role, owner_fr: FR-008, required: true}
+  - {op: add_field, id: ENT-travel-audit-entry.action, entity_id: ENT-travel-audit-entry, name: action, data_type: enum, title: Action, owner_fr: FR-008, required: true}
+  - {op: add_field, id: ENT-travel-audit-entry.affected_record_type, entity_id: ENT-travel-audit-entry, name: affected_record_type, data_type: text, title: Affected record type, owner_fr: FR-008, required: false}
+  - {op: add_field, id: ENT-travel-audit-entry.affected_record_id, entity_id: ENT-travel-audit-entry, name: affected_record_id, data_type: id, title: Affected record ID, owner_fr: FR-008, required: false}
+  - {op: add_field, id: ENT-travel-audit-entry.affected_record_version, entity_id: ENT-travel-audit-entry, name: affected_record_version, data_type: int, title: Affected record version, owner_fr: FR-008, required: false}
+  - {op: add_field, id: ENT-travel-audit-entry.reason, entity_id: ENT-travel-audit-entry, name: reason, data_type: text, title: Reason, owner_fr: FR-008, required: false, attrs: {description: "Mandatory for corrections and soft-deletes."}}
+  - {op: add_field, id: ENT-travel-audit-entry.occurred_at, entity_id: ENT-travel-audit-entry, name: occurred_at, data_type: datetime, title: Timestamp, owner_fr: FR-008, required: true}
+  - {op: add_field, id: ENT-travel-audit-entry.ip_address, entity_id: ENT-travel-audit-entry, name: ip_address, data_type: text, title: IP address, owner_fr: FR-008, required: true}
+  - {op: add_enum_value, field_id: ENT-travel-audit-entry.action, value: submission, label: Submission}
+  - {op: add_enum_value, field_id: ENT-travel-audit-entry.action, value: correction, label: Correction}
+  - {op: add_enum_value, field_id: ENT-travel-audit-entry.action, value: soft_delete, label: Soft-delete}
+  - {op: add_enum_value, field_id: ENT-travel-audit-entry.action, value: re_notification, label: Re-notification}
+  - {op: add_enum_value, field_id: ENT-travel-audit-entry.action, value: travel_date_review_outcome, label: Travel-date review outcome}
+  - {op: add_enum_value, field_id: ENT-travel-audit-entry.action, value: record_access, label: Record access}
+  - {op: add_edge, from: STG-main-04-booking, verb: writes, to: ENT-travel-audit-entry}
+  - {op: add_edge, from: REQ-008-069, verb: applies to, to: ENT-travel-audit-entry}
