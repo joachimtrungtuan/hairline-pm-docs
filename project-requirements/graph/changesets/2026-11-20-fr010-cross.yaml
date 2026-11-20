@@ -1,0 +1,18 @@
+reason: "Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-010)"
+by: controller
+operations:
+  - {"op": "merge_node", "survivor": "REQ-024-085", "loser": "REQ-010-050"}
+  - {"op": "add_edge", "from": "FR-010", "verb": "references", "to": "REQ-004-037"}
+  - {"op": "add_edge", "from": "FR-010", "verb": "references", "to": "REQ-004-065"}
+  - {"op": "add_edge", "from": "FR-010", "verb": "references", "to": "REQ-004-084"}
+  - {"op": "add_edge", "from": "FR-010", "verb": "references", "to": "REQ-004-085"}
+  - {"op": "add_edge", "from": "FR-010", "verb": "references", "to": "REQ-005-006"}
+  - {"op": "add_edge", "from": "FR-010", "verb": "references", "to": "REQ-005-024"}
+  - {"op": "add_edge", "from": "FR-010", "verb": "references", "to": "REQ-005-023"}
+  - {"op": "add_edge", "from": "FR-010", "verb": "references", "to": "REQ-005-045"}
+  - {"op": "add_edge", "from": "FR-010", "verb": "references", "to": "REQ-006-018"}
+  - {"op": "add_edge", "from": "FR-010", "verb": "references", "to": "REQ-006-054"}
+  - {"op": "add_edge", "from": "FR-010", "verb": "references", "to": "REQ-007-005"}
+  - {"op": "add_edge", "from": "FR-010", "verb": "references", "to": "REQ-030-050"}
+  - {"op": "add_edge", "from": "FR-010", "verb": "references", "to": "REQ-020-017"}
+  - {"op": "add_edge", "from": "FR-010", "verb": "references", "to": "REQ-030-132"}
