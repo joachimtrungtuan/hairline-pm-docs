@@ -1,0 +1,619 @@
+reason: 'Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-020)'
+by: controller
+operations:
+- op: add_edge
+  from: REQ-020-072
+  verb: applies to
+  to: EVT-verification-otp-sent
+- op: add_edge
+  from: REQ-020-073
+  verb: applies to
+  to: EVT-password-reset-otp-sent
+- op: add_edge
+  from: REQ-020-100
+  verb: applies to
+  to: EVT-billing-payment-received
+- op: add_edge
+  from: REQ-020-101
+  verb: applies to
+  to: EVT-billing-payment-failed
+- op: add_edge
+  from: REQ-020-103
+  verb: applies to
+  to: EVT-payout-executed
+- op: add_edge
+  from: REQ-020-104
+  verb: applies to
+  to: EVT-billing-affiliate-payout-processed
+- op: add_edge
+  from: REQ-020-105
+  verb: applies to
+  to: EVT-billing-payout-failed
+- op: add_edge
+  from: REQ-020-106
+  verb: applies to
+  to: EVT-message-sent
+- op: add_edge
+  from: REQ-020-102
+  verb: applies to
+  to: EVT-billing-payment-due-reminder
+- op: add_edge
+  from: REQ-020-102
+  verb: applies to
+  to: EVT-payment-reminder
+- op: add_edge
+  from: REQ-020-102
+  verb: applies to
+  to: EVT-installment-reminder-due
+- op: add_edge
+  from: REQ-020-129
+  verb: applies to
+  to: EVT-monitoring-export-ready
+- op: update_node
+  id: EVT-provider-activation
+  owner_fr: FR-030
+- op: update_node
+  id: EVT-provider-login-email-changed
+  owner_fr: FR-030
+- op: update_node
+  id: EVT-provider-reactivated
+  owner_fr: FR-030
+- op: update_node
+  id: EVT-provider-scheduled-change-cancelled
+  owner_fr: FR-030
+- op: update_node
+  id: EVT-provider-status-cancellation-admin-support
+  owner_fr: FR-030
+- op: update_node
+  id: EVT-provider-status-cancellation-patient
+  owner_fr: FR-030
+- op: update_node
+  id: EVT-provider-suspended
+  owner_fr: FR-030
+- op: update_node
+  id: EVT-analytics-export-ready
+  owner_fr: FR-030
+- op: update_node
+  id: EVT-inquiry-ttfq-sla-breached
+  owner_fr: FR-030
+- op: remove_edge
+  from: REQ-020-148
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: add_edge
+  from: REQ-020-148
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: remove_edge
+  from: REQ-020-149
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: add_edge
+  from: REQ-020-149
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: remove_edge
+  from: REQ-020-026
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-020-026
+  verb: applies at
+  to: STG-provider-03-active
+- op: add_edge
+  from: REQ-020-026
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: remove_edge
+  from: SCR-020-03
+  verb: belongs to
+  to: STG-provider-03-active
+- op: add_edge
+  from: SCR-020-03
+  verb: belongs to
+  to: STG-admin-01-configuration
+- op: update_node
+  id: REQ-020-003
+  attrs:
+    statement: 'Post-MVP (future phase): System MUST support optional/configurable SMS for urgent events. SMS is not available in MVP; no SMS is sent until a later phase enables it.'
+    rationale: 'Functional Requirements Summary. Marked Post-MVP, consistent with REQ-020-030: SMS is not available in MVP.'
+- op: update_node
+  id: REQ-020-037
+  attrs:
+    statement: '(Post-MVP, future phase: if SMS enabled and urgent) include SMS path; in MVP, email/push only.'
+    rationale: Main Flow step 5, marked Post-MVP.
+- op: update_node
+  id: REQ-020-062
+  attrs:
+    statement: 'Filter options: All, Unread, By Type (Inquiry, Quote, Booking, Payment, Treatment, Aftercare, Account, Messaging, Review, Monitoring, Support, Provider/Compliance).'
+    rationale: Screen 1 Business Rules, filter options.
+- op: update_node
+  id: REQ-020-097
+  attrs:
+    statement: 'Notification catalog event treatment.completed (Treatment Completed (Post‑Op Instructions)), category Treatment. Primary recipients: Patient, Provider, Admin (optional). Notes: Completion confirmation; triggers post-op and aftercare next steps. The patient copy also states the deadline to raise a problem and links to the support request; the provider and admin copies keep their wording without the deadline. No new event'
+- op: update_node
+  id: REQ-020-130
+  title: 'Catalog: Monitoring Converted to Inquiry (monitoring.converted_to_inquiry)'
+  attrs:
+    statement: 'Notification catalog event monitoring.converted_to_inquiry (Monitoring Converted to Inquiry), category Monitoring. Primary recipients: Patient. Notes: Monitoring case successfully converts into a distinct FR-003 inquiry (FR-037/FR-038)'
+- op: update_node
+  id: REQ-020-137
+  attrs:
+    statement: 'Notification catalog event provider.onboarding_requested (Provider Onboarding Requested), category Provider/Compliance. Primary recipients: Admin. Notes: New provider onboarding request awaiting review/approval. Not triggered at launch (future)'
+- op: update_node
+  id: REQ-020-147
+  attrs:
+    statement: 'Notification catalog event provider.document_expiration_warning (Provider Document Expiration Warning), category Provider/Compliance. Primary recipients: Admin, Provider (optional). Notes: License/credential expiry warnings; timing is policy-driven. Not triggered at launch (future)'
+- op: update_node
+  id: REQ-020-014
+  attrs:
+    statement: System MUST retry failed provider-status notifications (per Flow B2) without duplicates per provider-status event + affected record + recipient, and a retry MUST NOT restore a cancelled record; System MUST send `provider.suspended` / `provider.deactivated` email to the provider Owner only when "Notify Provider" is checked; for a scheduled change, the email MUST be sent when the change is created and again when it takes effect. `provider.status_cancellation_admin_support` MUST go to admins with the FR-031 Respond to Support permission, and `provider.reactivated` and `provider.scheduled_change_cancelled` MUST go to the provider Owner only.
+    rationale: Functional Requirements Summary. Carries the never-restore-a-cancelled-record clause of the merged REQ-020-151; the Business Rules Provider-Status Cancellation bullet points here.
+- op: merge_node
+  survivor: REQ-020-014
+  loser: REQ-020-151
+- op: add_field
+  id: ENT-notification-record.urgency
+  entity_id: ENT-notification-record
+  name: urgency
+  data_type: enum
+  title: Urgency
+  owner_fr: FR-020
+  required: false
+  attrs:
+    description: 'Screen 3 Urgency badge: Critical, Warning or Info; the red badge shows for Critical only.'
+- op: add_enum_value
+  field_id: ENT-notification-record.urgency
+  value: critical
+  label: Critical
+- op: add_enum_value
+  field_id: ENT-notification-record.urgency
+  value: warning
+  label: Warning
+- op: add_enum_value
+  field_id: ENT-notification-record.urgency
+  value: info
+  label: Info
+- op: remove_edge
+  from: SCR-020-03
+  verb: shows
+  to: ENT-notification-record.severity
+- op: remove_edge
+  from: SCR-020-03
+  verb: shows
+  to: ENT-notification-record.priority
+- op: add_edge
+  from: SCR-020-03
+  verb: shows
+  to: ENT-notification-record.urgency
+  attrs:
+    provenance: retrieved
+    label: Urgency
+- op: remove_edge
+  from: REQ-020-070
+  verb: applies to
+  to: ENT-notification-record.severity
+- op: remove_edge
+  from: REQ-020-070
+  verb: applies to
+  to: ENT-notification-record.priority
+- op: add_edge
+  from: REQ-020-070
+  verb: applies to
+  to: ENT-notification-record.urgency
+- op: retire_node
+  id: ENT-notification-record.severity
+- op: retire_node
+  id: ENT-notification-record.priority
+- op: update_node
+  id: REQ-020-070
+  title: Admin dropdown shows the notification type and an Urgency badge
+  attrs:
+    statement: 'Notification Type: category of the notification (Payment, Aftercare, Booking, Support, etc.), read-only. Urgency: Critical, Warning or Info; the red badge shows for Critical only, read-only, color-coded.'
+    rationale: Screen 3 data fields. One Urgency field replaces the earlier Notification Type (critical, warning, info) and Priority Indicator (Critical/High) pair; High is removed.
+- op: update_node
+  id: ENT-notification-record.type
+  attrs:
+    description: Category of the notification (for example Payment, Aftercare, Booking, Support). Shown as Notification Type on the screens.
+- op: update_field
+  id: ENT-notification-record.message
+  required: true
+- op: add_node
+  id: REQ-020-152
+  type: Rule
+  owner_fr: FR-020
+  title: Every feature sends its notices through the Notification Service
+  attrs:
+    statement: Every feature that notifies a patient, provider, affiliate or admin MUST send its notices through the Notification Service (S-03), so that channel preferences, throttling, templates and delivery tracking apply to every notice; no feature sends its own notices outside the service.
+    rationale: Functional Requirements Summary and Business Rules, Every Feature Uses the Notification Service.
+- op: add_edge
+  from: REQ-020-152
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: add_node
+  id: REQ-020-153
+  type: Rule
+  owner_fr: FR-020
+  title: 'Catalog: Quote Restored (Expired Quote Reopened by Admin) (quote.restored)'
+  attrs:
+    statement: 'Notification catalog event quote.restored (Quote Restored (Expired Quote Reopened by Admin)), category Quote. Primary recipients: Patient, Provider. Notes: Fired by FR-004 when an admin restores an expired quote. The quote returns to sent with a fresh full expiry window (restore time plus the FR-026 window in force). The notice says the quote is open again and shows the new expiry date. Channels follow the FR-030 default channel policy'
+    rationale: Event Catalog table. The table mirrors FR-030; FR-030 prevails on any mismatch.
+- op: add_edge
+  from: REQ-020-153
+  verb: applies at
+  to: STG-main-02-quote
+- op: add_edge
+  from: REQ-020-153
+  verb: applies to
+  to: ACT-patient
+- op: add_edge
+  from: REQ-020-153
+  verb: applies to
+  to: ACT-provider
+- op: add_node
+  id: REQ-020-154
+  type: Rule
+  owner_fr: FR-020
+  title: 'Catalog: Monitoring Aftercare Conversion Started (monitoring.aftercare_conversion_started)'
+  attrs:
+    statement: 'Notification catalog event monitoring.aftercare_conversion_started (Monitoring Aftercare Conversion Started), category Monitoring. Primary recipients: Patient. Notes: The patient selects Switch to Aftercare Package on a transplant-progress monitoring case (FR-038). Patient only'
+    rationale: Event Catalog table. The table mirrors FR-030; FR-030 prevails on any mismatch.
+- op: add_edge
+  from: REQ-020-154
+  verb: applies at
+  to: STG-monitoring-03-conversion
+- op: add_edge
+  from: REQ-020-154
+  verb: applies to
+  to: ACT-patient
+- op: add_edge
+  from: REQ-020-154
+  verb: applies to
+  to: EVT-transplant-progress-conversion-started
+- op: add_node
+  id: REQ-020-155
+  type: Rule
+  owner_fr: FR-020
+  title: 'Catalog: Monitoring Converted to Aftercare (monitoring.converted_to_aftercare)'
+  attrs:
+    statement: 'Notification catalog event monitoring.converted_to_aftercare (Monitoring Converted to Aftercare), category Monitoring. Primary recipients: Patient. Notes: The aftercare request is successfully created from the monitoring case (FR-038)'
+    rationale: Event Catalog table. The table mirrors FR-030; FR-030 prevails on any mismatch.
+- op: add_edge
+  from: REQ-020-155
+  verb: applies at
+  to: STG-monitoring-03-conversion
+- op: add_edge
+  from: REQ-020-155
+  verb: applies to
+  to: ACT-patient
+- op: add_edge
+  from: REQ-020-155
+  verb: applies to
+  to: EVT-transplant-progress-converted
+- op: add_edge
+  from: ACT-system
+  verb: acts in
+  to: STG-platform-01-all-stages
+- op: add_node
+  id: STP-020-001
+  type: Step
+  title: Event is emitted with payload type, actor, subject and recipient id
+  owner_fr: FR-020
+  attrs:
+    prd_ref: Main Flow step 1
+- op: add_edge
+  from: STP-020-001
+  verb: at
+  to: STG-platform-01-all-stages
+- op: add_edge
+  from: STP-020-001
+  verb: done by
+  to: ACT-system
+- op: add_edge
+  from: STP-020-001
+  verb: applies
+  to: REQ-020-034
+- op: add_node
+  id: STP-020-002
+  type: Step
+  title: Notification Service evaluates preferences and throttling
+  owner_fr: FR-020
+  attrs:
+    prd_ref: Main Flow step 2
+- op: add_edge
+  from: STP-020-002
+  verb: at
+  to: STG-platform-01-all-stages
+- op: add_edge
+  from: STP-020-002
+  verb: done by
+  to: ACT-system
+- op: add_edge
+  from: STP-020-002
+  verb: applies
+  to: REQ-020-035
+- op: add_edge
+  from: STP-020-002
+  verb: applies
+  to: REQ-020-006
+- op: add_node
+  id: STP-020-003
+  type: Step
+  title: Notification Service builds the message from the template and routes it to enabled channels
+  owner_fr: FR-020
+  attrs:
+    prd_ref: Main Flow step 3
+- op: add_edge
+  from: STP-020-003
+  verb: at
+  to: STG-platform-01-all-stages
+- op: add_edge
+  from: STP-020-003
+  verb: done by
+  to: ACT-system
+- op: add_edge
+  from: STP-020-003
+  verb: applies
+  to: REQ-020-035
+- op: add_edge
+  from: STP-020-003
+  verb: applies
+  to: REQ-020-005
+- op: add_node
+  id: STP-020-004
+  type: Step
+  title: Notification Service records the delivery attempt and status and exposes the audit
+  owner_fr: FR-020
+  attrs:
+    prd_ref: Main Flow step 4
+- op: add_edge
+  from: STP-020-004
+  verb: at
+  to: STG-platform-01-all-stages
+- op: add_edge
+  from: STP-020-004
+  verb: done by
+  to: ACT-system
+- op: add_edge
+  from: STP-020-004
+  verb: applies
+  to: REQ-020-036
+- op: add_edge
+  from: STP-020-004
+  verb: applies
+  to: REQ-020-007
+- op: add_node
+  id: STP-020-005
+  type: Step
+  title: SMS path is included when SMS is enabled and the event is urgent, otherwise email and push only
+  owner_fr: FR-020
+  attrs:
+    prd_ref: Main Flow step 5
+- op: add_edge
+  from: STP-020-005
+  verb: at
+  to: STG-platform-01-all-stages
+- op: add_edge
+  from: STP-020-005
+  verb: done by
+  to: ACT-system
+- op: add_edge
+  from: STP-020-005
+  verb: applies
+  to: REQ-020-037
+- op: add_node
+  id: STP-020-006
+  type: Step
+  title: Channel is suppressed and delivery is attempted on the remaining enabled channels
+  owner_fr: FR-020
+  attrs:
+    prd_ref: A1 outcome
+- op: add_edge
+  from: STP-020-006
+  verb: at
+  to: STG-platform-01-all-stages
+- op: add_edge
+  from: STP-020-006
+  verb: done by
+  to: ACT-system
+- op: add_edge
+  from: STP-020-006
+  verb: applies
+  to: REQ-020-038
+- op: add_node
+  id: STP-020-007
+  type: Step
+  title: Notifications are coalesced or deferred per policy and the suppression is recorded in the audit
+  owner_fr: FR-020
+  attrs:
+    prd_ref: B1 outcome
+- op: add_edge
+  from: STP-020-007
+  verb: at
+  to: STG-platform-01-all-stages
+- op: add_edge
+  from: STP-020-007
+  verb: done by
+  to: ACT-system
+- op: add_edge
+  from: STP-020-007
+  verb: applies
+  to: REQ-020-039
+- op: add_edge
+  from: STP-020-007
+  verb: applies
+  to: REQ-020-042
+- op: add_node
+  id: STP-020-008
+  type: Step
+  title: Delivery is retried with backoff, failover is used when configured, and the status reflects the failure cause
+  owner_fr: FR-020
+  attrs:
+    prd_ref: B2 outcome
+- op: add_edge
+  from: STP-020-008
+  verb: at
+  to: STG-platform-01-all-stages
+- op: add_edge
+  from: STP-020-008
+  verb: done by
+  to: ACT-system
+- op: add_edge
+  from: STP-020-008
+  verb: applies
+  to: REQ-020-040
+- op: add_edge
+  from: STP-020-008
+  verb: applies
+  to: REQ-020-043
+- op: add_node
+  id: FLW-020-main
+  type: Flow
+  title: Event to notification dispatch
+  attrs:
+    kind: main
+    description: 'Main Flow: Event to Notification Dispatch'
+    prd_ref: Main Flow
+- op: add_node
+  id: FLW-020-preference-disabled
+  type: Flow
+  title: Preference disabled
+  attrs:
+    kind: alternative
+    description: 'A1: Preference Disabled'
+    prd_ref: A1
+- op: add_node
+  id: FLW-020-throttling
+  type: Flow
+  title: Throttling
+  attrs:
+    kind: alternative
+    description: 'B1: Throttling'
+    prd_ref: B1
+- op: add_node
+  id: FLW-020-channel-failure
+  type: Flow
+  title: Channel failure
+  attrs:
+    kind: alternative
+    description: 'B2: Channel Failure'
+    prd_ref: B2
+- op: add_edge
+  from: FLW-020-main
+  verb: starts at
+  to: STP-020-001
+- op: add_edge
+  from: FLW-020-preference-disabled
+  verb: starts at
+  to: STP-020-006
+- op: add_edge
+  from: FLW-020-throttling
+  verb: starts at
+  to: STP-020-007
+- op: add_edge
+  from: FLW-020-channel-failure
+  verb: starts at
+  to: STP-020-008
+- op: add_edge
+  from: STP-020-001
+  verb: next
+  to: STP-020-002
+- op: add_edge
+  from: STP-020-002
+  verb: next
+  to: STP-020-003
+- op: add_edge
+  from: STP-020-003
+  verb: next
+  to: STP-020-004
+- op: add_edge
+  from: STP-020-004
+  verb: next
+  to: STP-020-005
+- op: add_edge
+  from: STP-020-002
+  verb: next
+  to: STP-020-006
+  attrs:
+    label: Recipient has disabled Email or Push
+    condition: REQ-020-038
+- op: add_edge
+  from: STP-020-002
+  verb: next
+  to: STP-020-007
+  attrs:
+    label: Excessive events in short time window
+    condition: REQ-020-039
+- op: add_edge
+  from: STP-020-004
+  verb: next
+  to: STP-020-008
+  attrs:
+    label: Email, push or SMS provider unavailable
+    condition: REQ-020-040
+- op: merge_node
+  survivor: REQ-030-033
+  loser: REQ-020-078
+- op: merge_node
+  survivor: REQ-030-034
+  loser: REQ-020-079
+- op: merge_node
+  survivor: REQ-030-035
+  loser: REQ-020-080
+- op: merge_node
+  survivor: REQ-030-037
+  loser: REQ-020-082
+- op: merge_node
+  survivor: REQ-030-040
+  loser: REQ-020-085
+- op: merge_node
+  survivor: REQ-030-094
+  loser: REQ-020-138
+- op: merge_node
+  survivor: REQ-030-050
+  loser: REQ-020-095
+- op: merge_node
+  survivor: REQ-030-027
+  loser: REQ-020-072
+- op: merge_node
+  survivor: REQ-030-032
+  loser: REQ-020-077
+- op: merge_node
+  survivor: REQ-030-038
+  loser: REQ-020-083
+- op: merge_node
+  survivor: REQ-030-039
+  loser: REQ-020-084
+- op: merge_node
+  survivor: REQ-030-041
+  loser: REQ-020-086
+- op: merge_node
+  survivor: REQ-030-042
+  loser: REQ-020-087
+- op: merge_node
+  survivor: REQ-030-043
+  loser: REQ-020-088
+- op: merge_node
+  survivor: REQ-030-044
+  loser: REQ-020-089
+- op: merge_node
+  survivor: REQ-030-046
+  loser: REQ-020-091
+- op: merge_node
+  survivor: REQ-030-051
+  loser: REQ-020-096
+- op: merge_node
+  survivor: REQ-030-077
+  loser: REQ-020-122
+- op: merge_node
+  survivor: REQ-030-081
+  loser: REQ-020-126
+- op: merge_node
+  survivor: REQ-030-095
+  loser: REQ-020-139
+- op: merge_node
+  survivor: REQ-030-096
+  loser: REQ-020-140
+- op: merge_node
+  survivor: REQ-030-105
+  loser: REQ-020-150
