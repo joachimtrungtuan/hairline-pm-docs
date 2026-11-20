@@ -1,0 +1,448 @@
+reason: "Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-022)"
+by: controller
+operations:
+  # Patient inbox search and filter: one statement (REQ-022-070); 049 and 050 merge into it
+  - {"op": "merge_node", "survivor": "REQ-022-070", "loser": "REQ-022-049"}
+  - {"op": "merge_node", "survivor": "REQ-022-070", "loser": "REQ-022-050"}
+  # Quote list sort and filter choices: 068 merges into 057
+  - {"op": "merge_node", "survivor": "REQ-022-057", "loser": "REQ-022-068"}
+  # Retire REQ-022-009: admin export of search results
+  - {"op": "retire_node", "id": "REQ-022-009"}
+  # Retire REQ-022-053: patient support ticket status filter (REQ-022-073 stays)
+  - {"op": "retire_node", "id": "REQ-022-053"}
+  # Retire REQ-022-086: My Support Cases criteria, now owned by FR-032 (REQ-032-106, REQ-032-107)
+  - {"op": "retire_node", "id": "REQ-022-086"}
+  # Retire REQ-022-139: complex filters in a single query
+  - {"op": "retire_node", "id": "REQ-022-139"}
+  # Retire REQ-022-142: consistent snapshot for concurrent searches
+  - {"op": "retire_node", "id": "REQ-022-142"}
+  # Statements that changed in the PRD
+  - {"op": "update_node", "id": "REQ-022-070", "attrs": {"statement": "System MUST allow patients to search their messages inbox by provider name and message content and to filter it by read status (All, Unread, Read); this is the one statement for the inbox search and filter", "rationale": "Patient inbox search and filter, kept as the one statement for both (REQ-022-049 and REQ-022-050 merged into it). Screen criteria: Screen Specifications, FR-012 / Screen 1 (P1). Search inputs and filter controls are UI controls, not Fields; FR-022 owns the criteria (Maintenance Convention)."}}
+  - {"op": "update_node", "id": "REQ-022-043", "attrs": {"statement": "System MUST allow providers to search and filter support cases by case ID, keywords, status, type, and date range (criteria owned by FR-032: REQ-032-106 and REQ-032-107)"}}
+  - {"op": "update_node", "id": "REQ-022-058", "attrs": {"statement": "System MUST order any patient-facing price sort or price filter by each price converted to the patient's display currency at the current rate, for ordering and filtering only; each card carrying a quote MUST keep showing its own quote currency, and the price order MUST be labelled approximate when the listed items use more than one currency."}}
+  - {"op": "update_node", "id": "REQ-022-026", "attrs": {"statement": "System MUST show providers only the Patient ID and a masked patient name in search results until the patient has confirmed payment; search itself stays by Patient ID only"}}
+  - {"op": "update_node", "id": "REQ-022-124", "attrs": {"statement": "Search functionality MUST support fuzzy matching (e.g., \"Mark P\" matches \"Mark Patterson\"; \"Mehmet\" matches \"Mehmet Yilmaz\"; accent-insensitive matching, e.g., \"Jose\" matches \"José\")", "rationale": "General Module Rule 2. Restated by Edge Case 4 (accent-insensitive matching, José matches Jose). Refines REQ-022-007."}}
+  - {"op": "update_node", "id": "REQ-022-127", "attrs": {"statement": "No user-facing search history is offered (no recent-searches list or saved searches); the admin audit log of admin searches stays (see Audit Rule)"}}
+  - {"op": "update_node", "id": "REQ-022-131", "attrs": {"statement": "Provider visibility status: active providers appear in patient provider search, suspended do not. Admin can temporarily disable provider from patient provider search results (suspension) but cannot delete provider record."}}
+  - {"op": "update_node", "id": "REQ-022-133", "attrs": {"statement": "Search query max length is fixed in codebase (not editable): 200 chars for admin, 200 chars for provider, 50 chars for patient, unless the screen states less."}}
+  - {"op": "update_node", "id": "REQ-022-141", "attrs": {"statement": "Search performs accent-insensitive matching (José matches Jose).", "rationale": "Edge Case 4. Restates the accent-insensitive part of REQ-022-124."}}
+  - {"op": "update_node", "id": "REQ-022-062", "attrs": {"statement": "When a search term or filter combination matches no records, the System displays 'No results found' with refinement guidance: check spelling or try different keywords; remove one or more filters. In patient provider discovery the System displays 'No providers found' with refinement guidance."}}
+  - {"op": "update_node", "id": "REQ-022-079", "attrs": {"statement": "FR-014 / Screen 1: Provider Analytics Dashboard [P1 — MVP]. Provider filters analytics reports by date range and treatment type. Filters: Date Range (Type: Segmented + custom picker; Options: Today, This week, Last 4 weeks, Last 12 weeks, Custom; Default: Last 4 weeks; Logic: Single selection) / Treatment Type (Type: Multi-select; Options: All, FUE, FUT, DHI, Sapphire FUE, and other admin-defined types; Default: All; Logic: OR (within field)) / Benchmarks Toggle (Type: Toggle; Options: Show industry benchmarks overlay; Default: Off; Logic: Single flag). Notes: No search input on this screen — filtering only."}}
+  - {"op": "update_node", "id": "REQ-022-081", "attrs": {"statement": "FR-032 / Screen 5: Help Centre [P1 — MVP]. Provider searches across Help Centre content from the main support landing page. Search: Search Bar (Type: text; Placeholder: Global Help Centre search; Max Length: 200 chars; Notes: Global search across all provider Help Centre content types (FAQs, articles, resources, and videos) with autocomplete suggestions). Notes: No additional filter controls on this landing screen — topic and content-specific filtering occurs in the relevant Help Centre sub-screens."}}
+  - {"op": "update_node", "id": "REQ-022-085", "attrs": {"statement": "FR-012 / Screen 3: Provider Messages List [P1 — MVP]. Provider searches for and filters their patient conversations from the header messages list. Search: Patient name / inquiry or quote ID / message content (Type: text; Placeholder: \"Search messages…\"; Min Length: 2 chars; Debounce: 300ms; Notes: Filters the conversation list in real time; case-insensitive fuzzy match across patient name, inquiry/quote ID, and message content). Filters: Read Status (Type: Toggle; Options: All, Unread Only; Default: All; Logic: Exact match) / Date Range (Type: Dropdown; Options: Today, Last 7 days, Last 30 days, All; Default: All; Logic: Filters by activity date) / Service Type (Type: Dropdown; Options: All; options from service catalog; Default: All; Logic: Exact match)."}}
+  - {"op": "update_node", "id": "REQ-022-089", "attrs": {"statement": "FR-005 / Screen 5: Quote Acceptance Table [P1 — MVP]. Admin filters the quote acceptance overview by acceptance status. Filters: Acceptance Status (Type: Multi-select; Options: Active, Booking Cancelled, Superseded — Provider Fault; Default: Active; Logic: OR (within field)). Notes: No search input on this screen — filtering only."}}
+  - {"op": "update_node", "id": "REQ-022-115", "attrs": {"statement": "FR-031 / Screen 1 / Tab 2: Admin Users List [P1 — MVP]. Admin searches for and filters admin user accounts. Search: Name / email (Type: text; Placeholder: \"Search admin users…\"; Debounce: 300ms; Notes: Real-time filter; case-insensitive). Filters: Role (Type: Dropdown; Options: All Roles, Super Admin, Aftercare Specialist, Billing Staff, Support Staff; Default: All Roles; Logic: Exact match) / Status (Type: Multi-select; Options: All, Active, Suspended, Pending Invitation; Default: All; Logic: OR (within field))."}}
+  - {"op": "update_node", "id": "REQ-022-123", "attrs": {"statement": "FR-034 / Screen 1: Support Center Dashboard [P1 — MVP]. Admin searches for and filters all support tickets from patients and providers. Search: Case ID / patient name / provider name / email / title keywords (Type: text; Placeholder: \"Search support cases…\"; Min Length: 3 chars; Debounce: 300ms; Notes: Real-time search across all listed fields). Filters: Status (Type: Multi-select; Options: Open, In Progress, Resolved, Closed; Default: Open + In Progress; Logic: OR (within field)) / Priority (Type: Multi-select; Options: High, Medium, Low; Default: All; Logic: OR (within field)) / Category (Type: Dropdown; Options: All; admin-defined ticket categories; Default: All; Logic: Exact match) / Ticket Source (Type: Dropdown; Options: All, Patient App, Provider App, Admin Portal; Default: All; Logic: Exact match) / Submitter Type (Type: Dropdown; Options: All, Patient, Provider; Default: All; Logic: Exact match) / Date Range (Type: Date range picker; Options: Custom; Default: Last 30 days; Logic: Filters by ticket creation date) / Assigned Admin (Type: Dropdown; Options: All; admin user list; Default: All; Logic: Exact match)."}}
+  - {"op": "update_node", "id": "REQ-022-084", "attrs": {"statement": "FR-032 / Screen 1 / Tab 5: Reviews Tab [P1 — MVP]. Provider filters their patient reviews by star rating. Filters: Rating (Type: Multi-select star chips; Options: 5★, 4★, 3★, 2★, 1★; Default: All ratings; Logic: OR (within field)) / Sort (Type: Dropdown; Options: Most recent, Highest rated, Lowest rated, Oldest first; Default: Most recent; Logic: Single selection). Notes: No search input on this screen — filtering only. Filter and sort selections on this screen persist for the session."}}
+  - {"op": "update_node", "id": "REQ-022-122", "attrs": {"statement": "FR-012 / Screen 5: Communication Monitoring Center [P1 — MVP]. Admin searches for and filters all platform conversations for oversight and support. Search: Patient / provider / keyword / inquiry ID (Type: text; Placeholder: \"Search conversations…\"; Min Length: 2 chars; Debounce: 300ms; Notes: Searches across all four fields simultaneously). Filters: Patient (Type: Autocomplete; Options: Matching patient names; Default: None; Logic: Exact selection) / Provider (Type: Autocomplete; Options: Matching provider names; Default: None; Logic: Exact selection) / Service Type (Type: Multi-select; Options: All; platform-defined service types; Default: All; Logic: OR (within field)) / Quote ID (text (optional); \"Filter by quote ID…\"; —; Optional exact match) / Inquiry ID (text (optional); \"Filter by inquiry ID…\"; —; Optional exact match) / Date Range (Type: Date range picker + presets; Options: Custom; Today, Last 7 days, Last 30 days, All; Default: All; Logic: Filters by message date) / Flag Type (Type: Multi-select; Options: Keyword Flagged, Manually Flagged, Intervened, No Flags; Default: All; Logic: OR (within field)) / Conversation Status (Type: Multi-select; Options: Active, Resolved, Escalated; Default: All; Logic: OR (within field)). Active filters combine, and the filters are remembered."}}
+  # New Rule: provider card without a quote
+  - {"op": "add_node", "id": "REQ-022-143", "type": "Rule", "owner_fr": "FR-022", "title": "Provider card without a quote shows the starting price in the patient's currency", "attrs": {"statement": "System MUST show the starting price on a provider card that carries no quote converted to the patient's currency [P2 - Post-MVP]", "rationale": "Enhanced Requirements (P2) and General Module Rule 10. Counterpart of REQ-022-058 and General Module Rule 9, which apply to cards that carry a quote."}}
+  - {"op": "add_edge", "from": "REQ-022-143", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-022-143", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-022-143", "verb": "applies to", "to": "ENT-provider"}
+  # Page-size setting covers admin and provider lists only
+  - {"op": "update_node", "id": "SET-search-results-page-size", "title": "Maximum search results per page (admin and provider lists)", "attrs": {"description": "Admin-editable maximum search results per page for admin and provider lists; range 10-100. The patient app is fixed at 10 results per page and is not governed by this setting."}}
+  # Fold ENT-patient-search-record into ENT-patient: new Fields the search uses that the record does not list
+  - {"op": "add_field", "id": "ENT-patient.location", "entity_id": "ENT-patient", "name": "location", "data_type": "text", "title": "Location", "owner_fr": "FR-022", "required": false, "attrs": {}}
+  - {"op": "add_field", "id": "ENT-patient.treatment_type", "entity_id": "ENT-patient", "name": "treatment_type", "data_type": "text", "title": "Treatment type", "owner_fr": "FR-022", "required": false, "attrs": {}}
+  - {"op": "add_field", "id": "ENT-provider.clinic_name", "entity_id": "ENT-provider", "name": "clinic_name", "data_type": "text", "title": "Clinic name", "owner_fr": "FR-022", "required": false, "attrs": {}}
+  - {"op": "add_field", "id": "ENT-provider.location", "entity_id": "ENT-provider", "name": "location", "data_type": "text", "title": "Location", "owner_fr": "FR-022", "required": false, "attrs": {"description": "City and country."}}
+  - {"op": "add_field", "id": "ENT-provider.specialties", "entity_id": "ENT-provider", "name": "specialties", "data_type": "text[]", "title": "Specialties", "owner_fr": "FR-022", "required": false, "attrs": {}}
+  - {"op": "add_field", "id": "ENT-provider.rating", "entity_id": "ENT-provider", "name": "rating", "data_type": "decimal", "title": "Rating", "owner_fr": "FR-022", "required": false, "attrs": {}}
+  - {"op": "add_field", "id": "ENT-provider.review_count", "entity_id": "ENT-provider", "name": "review_count", "data_type": "int", "title": "Review count", "owner_fr": "FR-022", "required": false, "attrs": {}}
+  - {"op": "add_field", "id": "ENT-provider.active_patients", "entity_id": "ENT-provider", "name": "active_patients", "data_type": "int", "title": "Active patients", "owner_fr": "FR-022", "required": false, "attrs": {}}
+  - {"op": "add_field", "id": "ENT-provider.total_procedures", "entity_id": "ENT-provider", "name": "total_procedures", "data_type": "int", "title": "Total procedures", "owner_fr": "FR-022", "required": false, "attrs": {}}
+  # Repoint Rule links from the search records to the Patient and Provider records
+  - {"op": "remove_edge", "from": "REQ-022-001", "verb": "applies to", "to": "ENT-patient-search-record"}
+  - {"op": "add_edge", "from": "REQ-022-001", "verb": "applies to", "to": "ENT-patient"}
+  - {"op": "remove_edge", "from": "REQ-022-001", "verb": "applies to", "to": "ENT-patient-search-record.email"}
+  - {"op": "add_edge", "from": "REQ-022-001", "verb": "applies to", "to": "ENT-patient.email"}
+  - {"op": "remove_edge", "from": "REQ-022-001", "verb": "applies to", "to": "ENT-patient-search-record.name"}
+  - {"op": "add_edge", "from": "REQ-022-001", "verb": "applies to", "to": "ENT-patient.name"}
+  - {"op": "remove_edge", "from": "REQ-022-001", "verb": "applies to", "to": "ENT-patient-search-record.patient_id"}
+  - {"op": "add_edge", "from": "REQ-022-001", "verb": "applies to", "to": "ENT-patient.patient_id"}
+  - {"op": "remove_edge", "from": "REQ-022-001", "verb": "applies to", "to": "ENT-patient-search-record.phone"}
+  - {"op": "add_edge", "from": "REQ-022-001", "verb": "applies to", "to": "ENT-patient.phone"}
+  - {"op": "remove_edge", "from": "REQ-022-002", "verb": "applies to", "to": "ENT-patient-search-record"}
+  - {"op": "add_edge", "from": "REQ-022-002", "verb": "applies to", "to": "ENT-patient"}
+  - {"op": "remove_edge", "from": "REQ-022-002", "verb": "applies to", "to": "ENT-patient-search-record.location"}
+  - {"op": "add_edge", "from": "REQ-022-002", "verb": "applies to", "to": "ENT-patient.location"}
+  - {"op": "remove_edge", "from": "REQ-022-002", "verb": "applies to", "to": "ENT-patient-search-record.registration_date"}
+  - {"op": "add_edge", "from": "REQ-022-002", "verb": "applies to", "to": "ENT-patient.registration_date"}
+  - {"op": "remove_edge", "from": "REQ-022-002", "verb": "applies to", "to": "ENT-patient-search-record.status"}
+  - {"op": "add_edge", "from": "REQ-022-002", "verb": "applies to", "to": "ENT-patient.account_status"}
+  - {"op": "remove_edge", "from": "REQ-022-010", "verb": "applies to", "to": "ENT-patient-search-record"}
+  - {"op": "add_edge", "from": "REQ-022-010", "verb": "applies to", "to": "ENT-patient"}
+  - {"op": "remove_edge", "from": "REQ-022-010", "verb": "applies to", "to": "ENT-patient-search-record.last_activity_date"}
+  - {"op": "add_edge", "from": "REQ-022-010", "verb": "applies to", "to": "ENT-patient.last_activity_at"}
+  - {"op": "remove_edge", "from": "REQ-022-010", "verb": "applies to", "to": "ENT-patient-search-record.location"}
+  - {"op": "add_edge", "from": "REQ-022-010", "verb": "applies to", "to": "ENT-patient.location"}
+  - {"op": "remove_edge", "from": "REQ-022-010", "verb": "applies to", "to": "ENT-patient-search-record.status"}
+  - {"op": "add_edge", "from": "REQ-022-010", "verb": "applies to", "to": "ENT-patient.account_status"}
+  - {"op": "remove_edge", "from": "REQ-022-022", "verb": "applies to", "to": "ENT-patient-search-record"}
+  - {"op": "add_edge", "from": "REQ-022-022", "verb": "applies to", "to": "ENT-patient"}
+  - {"op": "remove_edge", "from": "REQ-022-026", "verb": "applies to", "to": "ENT-patient-search-record.name"}
+  - {"op": "add_edge", "from": "REQ-022-026", "verb": "applies to", "to": "ENT-patient.name"}
+  - {"op": "remove_edge", "from": "REQ-022-128", "verb": "applies to", "to": "ENT-patient-search-record.email"}
+  - {"op": "add_edge", "from": "REQ-022-128", "verb": "applies to", "to": "ENT-patient.email"}
+  - {"op": "remove_edge", "from": "REQ-022-128", "verb": "applies to", "to": "ENT-patient-search-record.phone"}
+  - {"op": "add_edge", "from": "REQ-022-128", "verb": "applies to", "to": "ENT-patient.phone"}
+  - {"op": "remove_edge", "from": "REQ-022-135", "verb": "applies to", "to": "ENT-patient-search-record"}
+  - {"op": "add_edge", "from": "REQ-022-135", "verb": "applies to", "to": "ENT-patient"}
+  - {"op": "remove_edge", "from": "REQ-022-137", "verb": "applies to", "to": "ENT-patient-search-record"}
+  - {"op": "add_edge", "from": "REQ-022-137", "verb": "applies to", "to": "ENT-patient"}
+  - {"op": "remove_edge", "from": "REQ-022-137", "verb": "applies to", "to": "ENT-patient-search-record.email"}
+  - {"op": "add_edge", "from": "REQ-022-137", "verb": "applies to", "to": "ENT-patient.email"}
+  - {"op": "remove_edge", "from": "REQ-022-137", "verb": "applies to", "to": "ENT-patient-search-record.name"}
+  - {"op": "add_edge", "from": "REQ-022-137", "verb": "applies to", "to": "ENT-patient.name"}
+  - {"op": "remove_edge", "from": "REQ-022-138", "verb": "applies to", "to": "ENT-patient-search-record.email"}
+  - {"op": "add_edge", "from": "REQ-022-138", "verb": "applies to", "to": "ENT-patient.email"}
+  - {"op": "remove_edge", "from": "REQ-022-138", "verb": "applies to", "to": "ENT-patient-search-record.phone"}
+  - {"op": "add_edge", "from": "REQ-022-138", "verb": "applies to", "to": "ENT-patient.phone"}
+  - {"op": "remove_edge", "from": "REQ-022-141", "verb": "applies to", "to": "ENT-patient-search-record"}
+  - {"op": "add_edge", "from": "REQ-022-141", "verb": "applies to", "to": "ENT-patient"}
+  - {"op": "remove_edge", "from": "STG-patient-03-active", "verb": "reads", "to": "ENT-patient-search-record"}
+  - {"op": "remove_edge", "from": "REQ-022-003", "verb": "applies to", "to": "ENT-provider-search-record"}
+  - {"op": "add_edge", "from": "REQ-022-003", "verb": "applies to", "to": "ENT-provider"}
+  - {"op": "remove_edge", "from": "REQ-022-003", "verb": "applies to", "to": "ENT-provider-search-record.clinic_name"}
+  - {"op": "add_edge", "from": "REQ-022-003", "verb": "applies to", "to": "ENT-provider.clinic_name"}
+  - {"op": "remove_edge", "from": "REQ-022-004", "verb": "applies to", "to": "ENT-provider-search-record"}
+  - {"op": "add_edge", "from": "REQ-022-004", "verb": "applies to", "to": "ENT-provider"}
+  - {"op": "remove_edge", "from": "REQ-022-004", "verb": "applies to", "to": "ENT-provider-search-record.status"}
+  - {"op": "add_edge", "from": "REQ-022-004", "verb": "applies to", "to": "ENT-provider.status"}
+  - {"op": "remove_edge", "from": "REQ-022-011", "verb": "applies to", "to": "ENT-provider-search-record"}
+  - {"op": "add_edge", "from": "REQ-022-011", "verb": "applies to", "to": "ENT-provider"}
+  - {"op": "remove_edge", "from": "REQ-022-011", "verb": "applies to", "to": "ENT-provider-search-record.active_patients"}
+  - {"op": "add_edge", "from": "REQ-022-011", "verb": "applies to", "to": "ENT-provider.active_patients"}
+  - {"op": "remove_edge", "from": "REQ-022-011", "verb": "applies to", "to": "ENT-provider-search-record.location"}
+  - {"op": "add_edge", "from": "REQ-022-011", "verb": "applies to", "to": "ENT-provider.location"}
+  - {"op": "remove_edge", "from": "REQ-022-011", "verb": "applies to", "to": "ENT-provider-search-record.rating"}
+  - {"op": "add_edge", "from": "REQ-022-011", "verb": "applies to", "to": "ENT-provider.rating"}
+  - {"op": "remove_edge", "from": "REQ-022-011", "verb": "applies to", "to": "ENT-provider-search-record.status"}
+  - {"op": "add_edge", "from": "REQ-022-011", "verb": "applies to", "to": "ENT-provider.status"}
+  - {"op": "remove_edge", "from": "REQ-022-013", "verb": "applies to", "to": "ENT-provider-search-record"}
+  - {"op": "add_edge", "from": "REQ-022-013", "verb": "applies to", "to": "ENT-provider"}
+  - {"op": "remove_edge", "from": "REQ-022-013", "verb": "applies to", "to": "ENT-provider-search-record.specialties"}
+  - {"op": "add_edge", "from": "REQ-022-013", "verb": "applies to", "to": "ENT-provider.specialties"}
+  - {"op": "remove_edge", "from": "REQ-022-014", "verb": "applies to", "to": "ENT-provider-search-record"}
+  - {"op": "add_edge", "from": "REQ-022-014", "verb": "applies to", "to": "ENT-provider"}
+  - {"op": "remove_edge", "from": "REQ-022-014", "verb": "applies to", "to": "ENT-provider-search-record.rating"}
+  - {"op": "add_edge", "from": "REQ-022-014", "verb": "applies to", "to": "ENT-provider.rating"}
+  - {"op": "remove_edge", "from": "REQ-022-014", "verb": "applies to", "to": "ENT-provider-search-record.specialties"}
+  - {"op": "add_edge", "from": "REQ-022-014", "verb": "applies to", "to": "ENT-provider.specialties"}
+  - {"op": "remove_edge", "from": "REQ-022-015", "verb": "applies to", "to": "ENT-provider-search-record.location"}
+  - {"op": "add_edge", "from": "REQ-022-015", "verb": "applies to", "to": "ENT-provider.location"}
+  - {"op": "remove_edge", "from": "REQ-022-018", "verb": "applies to", "to": "ENT-provider-search-record"}
+  - {"op": "add_edge", "from": "REQ-022-018", "verb": "applies to", "to": "ENT-provider"}
+  - {"op": "remove_edge", "from": "REQ-022-022", "verb": "applies to", "to": "ENT-provider-search-record"}
+  - {"op": "add_edge", "from": "REQ-022-022", "verb": "applies to", "to": "ENT-provider"}
+  - {"op": "remove_edge", "from": "REQ-022-130", "verb": "applies to", "to": "ENT-provider-search-record"}
+  - {"op": "add_edge", "from": "REQ-022-130", "verb": "applies to", "to": "ENT-provider"}
+  - {"op": "remove_edge", "from": "REQ-022-131", "verb": "applies to", "to": "ENT-provider-search-record"}
+  - {"op": "add_edge", "from": "REQ-022-131", "verb": "applies to", "to": "ENT-provider"}
+  - {"op": "remove_edge", "from": "REQ-022-131", "verb": "applies to", "to": "ENT-provider-search-record.status"}
+  - {"op": "add_edge", "from": "REQ-022-131", "verb": "applies to", "to": "ENT-provider.status"}
+  - {"op": "remove_edge", "from": "REQ-022-134", "verb": "applies to", "to": "ENT-provider-search-record"}
+  - {"op": "add_edge", "from": "REQ-022-134", "verb": "applies to", "to": "ENT-provider"}
+  - {"op": "remove_edge", "from": "REQ-022-141", "verb": "applies to", "to": "ENT-provider-search-record"}
+  - {"op": "add_edge", "from": "REQ-022-141", "verb": "applies to", "to": "ENT-provider"}
+  - {"op": "remove_edge", "from": "STG-main-01-inquiry", "verb": "reads", "to": "ENT-provider-search-record"}
+  - {"op": "remove_edge", "from": "STG-provider-03-active", "verb": "reads", "to": "ENT-provider-search-record"}
+  # Retire the search-record Fields and Entities
+  - {"op": "retire_node", "id": "ENT-patient-search-record.patient_id"}
+  - {"op": "retire_node", "id": "ENT-patient-search-record.name"}
+  - {"op": "retire_node", "id": "ENT-patient-search-record.email"}
+  - {"op": "retire_node", "id": "ENT-patient-search-record.phone"}
+  - {"op": "retire_node", "id": "ENT-patient-search-record.status"}
+  - {"op": "retire_node", "id": "ENT-patient-search-record.location"}
+  - {"op": "retire_node", "id": "ENT-patient-search-record.registration_date"}
+  - {"op": "retire_node", "id": "ENT-patient-search-record.last_activity_date"}
+  - {"op": "retire_node", "id": "ENT-patient-search-record.treatment_type"}
+  - {"op": "retire_node", "id": "ENT-patient-search-record"}
+  - {"op": "retire_node", "id": "ENT-provider-search-record.provider_id"}
+  - {"op": "retire_node", "id": "ENT-provider-search-record.clinic_name"}
+  - {"op": "retire_node", "id": "ENT-provider-search-record.location"}
+  - {"op": "retire_node", "id": "ENT-provider-search-record.status"}
+  - {"op": "retire_node", "id": "ENT-provider-search-record.specialties"}
+  - {"op": "retire_node", "id": "ENT-provider-search-record.rating"}
+  - {"op": "retire_node", "id": "ENT-provider-search-record.review_count"}
+  - {"op": "retire_node", "id": "ENT-provider-search-record.years_experience"}
+  - {"op": "retire_node", "id": "ENT-provider-search-record.active_patients"}
+  - {"op": "retire_node", "id": "ENT-provider-search-record.total_procedures"}
+  - {"op": "retire_node", "id": "ENT-provider-search-record"}
+  # Search and filter Rules that apply platform-wide get scope global and lose their Stage links (REQ-022-139 is retired instead)
+  - {"op": "update_node", "id": "REQ-022-005", "attrs": {"scope": "global"}}
+  - {"op": "remove_edge", "from": "REQ-022-005", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-022-005", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "remove_edge", "from": "REQ-022-005", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "remove_edge", "from": "REQ-022-005", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "remove_edge", "from": "REQ-022-005", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "remove_edge", "from": "REQ-022-005", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "remove_edge", "from": "REQ-022-005", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "remove_edge", "from": "REQ-022-005", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "remove_edge", "from": "REQ-022-005", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-022-005", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "update_node", "id": "REQ-022-007", "attrs": {"scope": "global"}}
+  - {"op": "remove_edge", "from": "REQ-022-007", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-022-007", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "remove_edge", "from": "REQ-022-007", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "remove_edge", "from": "REQ-022-007", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "remove_edge", "from": "REQ-022-007", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "remove_edge", "from": "REQ-022-007", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "remove_edge", "from": "REQ-022-007", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "remove_edge", "from": "REQ-022-007", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "remove_edge", "from": "REQ-022-007", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-022-007", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "update_node", "id": "REQ-022-008", "attrs": {"scope": "global"}}
+  - {"op": "remove_edge", "from": "REQ-022-008", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-022-008", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "remove_edge", "from": "REQ-022-008", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "remove_edge", "from": "REQ-022-008", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "remove_edge", "from": "REQ-022-008", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "remove_edge", "from": "REQ-022-008", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "remove_edge", "from": "REQ-022-008", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "remove_edge", "from": "REQ-022-008", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "remove_edge", "from": "REQ-022-008", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-022-008", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "update_node", "id": "REQ-022-012", "attrs": {"scope": "global"}}
+  - {"op": "remove_edge", "from": "REQ-022-012", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-022-012", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "remove_edge", "from": "REQ-022-012", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "remove_edge", "from": "REQ-022-012", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "remove_edge", "from": "REQ-022-012", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "remove_edge", "from": "REQ-022-012", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "remove_edge", "from": "REQ-022-012", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "remove_edge", "from": "REQ-022-012", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "remove_edge", "from": "REQ-022-012", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-022-012", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "update_node", "id": "REQ-022-021", "attrs": {"scope": "global"}}
+  - {"op": "remove_edge", "from": "REQ-022-021", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-022-021", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "remove_edge", "from": "REQ-022-021", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "remove_edge", "from": "REQ-022-021", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "remove_edge", "from": "REQ-022-021", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "remove_edge", "from": "REQ-022-021", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "remove_edge", "from": "REQ-022-021", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "remove_edge", "from": "REQ-022-021", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "remove_edge", "from": "REQ-022-021", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-022-021", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "update_node", "id": "REQ-022-024", "attrs": {"scope": "global"}}
+  - {"op": "remove_edge", "from": "REQ-022-024", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-022-024", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "remove_edge", "from": "REQ-022-024", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "remove_edge", "from": "REQ-022-024", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "remove_edge", "from": "REQ-022-024", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "remove_edge", "from": "REQ-022-024", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "remove_edge", "from": "REQ-022-024", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "remove_edge", "from": "REQ-022-024", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "remove_edge", "from": "REQ-022-024", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-022-024", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "update_node", "id": "REQ-022-025", "attrs": {"scope": "global"}}
+  - {"op": "remove_edge", "from": "REQ-022-025", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-022-025", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "remove_edge", "from": "REQ-022-025", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "remove_edge", "from": "REQ-022-025", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "remove_edge", "from": "REQ-022-025", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "remove_edge", "from": "REQ-022-025", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "remove_edge", "from": "REQ-022-025", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "remove_edge", "from": "REQ-022-025", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "remove_edge", "from": "REQ-022-025", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-022-025", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "update_node", "id": "REQ-022-028", "attrs": {"scope": "global"}}
+  - {"op": "remove_edge", "from": "REQ-022-028", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-022-028", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "remove_edge", "from": "REQ-022-028", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "remove_edge", "from": "REQ-022-028", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "remove_edge", "from": "REQ-022-028", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "remove_edge", "from": "REQ-022-028", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "remove_edge", "from": "REQ-022-028", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "remove_edge", "from": "REQ-022-028", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "remove_edge", "from": "REQ-022-028", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-022-028", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "update_node", "id": "REQ-022-029", "attrs": {"scope": "global"}}
+  - {"op": "remove_edge", "from": "REQ-022-029", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-022-029", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "remove_edge", "from": "REQ-022-029", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "remove_edge", "from": "REQ-022-029", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "remove_edge", "from": "REQ-022-029", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "remove_edge", "from": "REQ-022-029", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "remove_edge", "from": "REQ-022-029", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "remove_edge", "from": "REQ-022-029", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "remove_edge", "from": "REQ-022-029", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-022-029", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "update_node", "id": "REQ-022-032", "attrs": {"scope": "global"}}
+  - {"op": "remove_edge", "from": "REQ-022-032", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-022-032", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "remove_edge", "from": "REQ-022-032", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "remove_edge", "from": "REQ-022-032", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "remove_edge", "from": "REQ-022-032", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "remove_edge", "from": "REQ-022-032", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "remove_edge", "from": "REQ-022-032", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "remove_edge", "from": "REQ-022-032", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "remove_edge", "from": "REQ-022-032", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-022-032", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "update_node", "id": "REQ-022-054", "attrs": {"scope": "global"}}
+  - {"op": "remove_edge", "from": "REQ-022-054", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-022-054", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "remove_edge", "from": "REQ-022-054", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "remove_edge", "from": "REQ-022-054", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "remove_edge", "from": "REQ-022-054", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "remove_edge", "from": "REQ-022-054", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "remove_edge", "from": "REQ-022-054", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "remove_edge", "from": "REQ-022-054", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "remove_edge", "from": "REQ-022-054", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-022-054", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "update_node", "id": "REQ-022-055", "attrs": {"scope": "global"}}
+  - {"op": "remove_edge", "from": "REQ-022-055", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-022-055", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "remove_edge", "from": "REQ-022-055", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "remove_edge", "from": "REQ-022-055", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "remove_edge", "from": "REQ-022-055", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "remove_edge", "from": "REQ-022-055", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "remove_edge", "from": "REQ-022-055", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "remove_edge", "from": "REQ-022-055", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "remove_edge", "from": "REQ-022-055", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-022-055", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "update_node", "id": "REQ-022-056", "attrs": {"scope": "global"}}
+  - {"op": "remove_edge", "from": "REQ-022-056", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-022-056", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "remove_edge", "from": "REQ-022-056", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "remove_edge", "from": "REQ-022-056", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "remove_edge", "from": "REQ-022-056", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "remove_edge", "from": "REQ-022-056", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "remove_edge", "from": "REQ-022-056", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "remove_edge", "from": "REQ-022-056", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "remove_edge", "from": "REQ-022-056", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-022-056", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "update_node", "id": "REQ-022-060", "attrs": {"scope": "global"}}
+  - {"op": "remove_edge", "from": "REQ-022-060", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-022-060", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "remove_edge", "from": "REQ-022-060", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "remove_edge", "from": "REQ-022-060", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "remove_edge", "from": "REQ-022-060", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "remove_edge", "from": "REQ-022-060", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "remove_edge", "from": "REQ-022-060", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "remove_edge", "from": "REQ-022-060", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "remove_edge", "from": "REQ-022-060", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-022-060", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "update_node", "id": "REQ-022-062", "attrs": {"scope": "global"}}
+  - {"op": "remove_edge", "from": "REQ-022-062", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-022-062", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "remove_edge", "from": "REQ-022-062", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "remove_edge", "from": "REQ-022-062", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "remove_edge", "from": "REQ-022-062", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "remove_edge", "from": "REQ-022-062", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "remove_edge", "from": "REQ-022-062", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "remove_edge", "from": "REQ-022-062", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "remove_edge", "from": "REQ-022-062", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-022-062", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "update_node", "id": "REQ-022-063", "attrs": {"scope": "global"}}
+  - {"op": "remove_edge", "from": "REQ-022-063", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-022-063", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "remove_edge", "from": "REQ-022-063", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "remove_edge", "from": "REQ-022-063", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "remove_edge", "from": "REQ-022-063", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "remove_edge", "from": "REQ-022-063", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "remove_edge", "from": "REQ-022-063", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "remove_edge", "from": "REQ-022-063", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "remove_edge", "from": "REQ-022-063", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-022-063", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "update_node", "id": "REQ-022-064", "attrs": {"scope": "global"}}
+  - {"op": "remove_edge", "from": "REQ-022-064", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-022-064", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "remove_edge", "from": "REQ-022-064", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "remove_edge", "from": "REQ-022-064", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "remove_edge", "from": "REQ-022-064", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "remove_edge", "from": "REQ-022-064", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "remove_edge", "from": "REQ-022-064", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "remove_edge", "from": "REQ-022-064", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "remove_edge", "from": "REQ-022-064", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-022-064", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "update_node", "id": "REQ-022-065", "attrs": {"scope": "global"}}
+  - {"op": "remove_edge", "from": "REQ-022-065", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-022-065", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "remove_edge", "from": "REQ-022-065", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "remove_edge", "from": "REQ-022-065", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "remove_edge", "from": "REQ-022-065", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "remove_edge", "from": "REQ-022-065", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "remove_edge", "from": "REQ-022-065", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "remove_edge", "from": "REQ-022-065", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "remove_edge", "from": "REQ-022-065", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-022-065", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "update_node", "id": "REQ-022-066", "attrs": {"scope": "global"}}
+  - {"op": "remove_edge", "from": "REQ-022-066", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-022-066", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "remove_edge", "from": "REQ-022-066", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "remove_edge", "from": "REQ-022-066", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "remove_edge", "from": "REQ-022-066", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "remove_edge", "from": "REQ-022-066", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "remove_edge", "from": "REQ-022-066", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "remove_edge", "from": "REQ-022-066", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "remove_edge", "from": "REQ-022-066", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-022-066", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "update_node", "id": "REQ-022-124", "attrs": {"scope": "global"}}
+  - {"op": "remove_edge", "from": "REQ-022-124", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-022-124", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "remove_edge", "from": "REQ-022-124", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "remove_edge", "from": "REQ-022-124", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "remove_edge", "from": "REQ-022-124", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "remove_edge", "from": "REQ-022-124", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "remove_edge", "from": "REQ-022-124", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "remove_edge", "from": "REQ-022-124", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "remove_edge", "from": "REQ-022-124", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-022-124", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "update_node", "id": "REQ-022-125", "attrs": {"scope": "global"}}
+  - {"op": "remove_edge", "from": "REQ-022-125", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-022-125", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "remove_edge", "from": "REQ-022-125", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "remove_edge", "from": "REQ-022-125", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "remove_edge", "from": "REQ-022-125", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "remove_edge", "from": "REQ-022-125", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "remove_edge", "from": "REQ-022-125", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "remove_edge", "from": "REQ-022-125", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "remove_edge", "from": "REQ-022-125", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-022-125", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "update_node", "id": "REQ-022-126", "attrs": {"scope": "global"}}
+  - {"op": "remove_edge", "from": "REQ-022-126", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-022-126", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "remove_edge", "from": "REQ-022-126", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "remove_edge", "from": "REQ-022-126", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "remove_edge", "from": "REQ-022-126", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "remove_edge", "from": "REQ-022-126", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "remove_edge", "from": "REQ-022-126", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "remove_edge", "from": "REQ-022-126", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "remove_edge", "from": "REQ-022-126", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-022-126", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "update_node", "id": "REQ-022-132", "attrs": {"scope": "global"}}
+  - {"op": "remove_edge", "from": "REQ-022-132", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-022-132", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "remove_edge", "from": "REQ-022-132", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "remove_edge", "from": "REQ-022-132", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "remove_edge", "from": "REQ-022-132", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "remove_edge", "from": "REQ-022-132", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "remove_edge", "from": "REQ-022-132", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "remove_edge", "from": "REQ-022-132", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "remove_edge", "from": "REQ-022-132", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-022-132", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "update_node", "id": "REQ-022-133", "attrs": {"scope": "global"}}
+  - {"op": "remove_edge", "from": "REQ-022-133", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-022-133", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "remove_edge", "from": "REQ-022-133", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "remove_edge", "from": "REQ-022-133", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "remove_edge", "from": "REQ-022-133", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "remove_edge", "from": "REQ-022-133", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "remove_edge", "from": "REQ-022-133", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "remove_edge", "from": "REQ-022-133", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "remove_edge", "from": "REQ-022-133", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-022-133", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "update_node", "id": "REQ-022-136", "attrs": {"scope": "global"}}
+  - {"op": "remove_edge", "from": "REQ-022-136", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-022-136", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "remove_edge", "from": "REQ-022-136", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "remove_edge", "from": "REQ-022-136", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "remove_edge", "from": "REQ-022-136", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "remove_edge", "from": "REQ-022-136", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "remove_edge", "from": "REQ-022-136", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "remove_edge", "from": "REQ-022-136", "verb": "applies at", "to": "STG-main-09-review-close"}
+  - {"op": "remove_edge", "from": "REQ-022-136", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-022-136", "verb": "applies at", "to": "STG-provider-03-active"}
