@@ -1,0 +1,203 @@
+reason: "Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-016)"
+by: controller
+operations:
+  - {"op": "add_field", "id": "ENT-patient.suspension_end_date", "entity_id": "ENT-patient", "name": "suspension_end_date", "data_type": "date", "title": "Suspension end date", "owner_fr": "FR-016", "required": false, "attrs": {"description": "Date on which a 30-day or 90-day suspension ends and the account returns to Active by itself. Empty for a permanent suspension."}}
+  - {"op": "add_enum_value", "field_id": "ENT-admin-action-log.action_type", "value": "booking_change_or_cancellation", "label": "Booking Change or Cancellation", "sort_order": 11}
+  - {"op": "add_enum_value", "field_id": "ENT-admin-action-log.action_type", "value": "request_decline", "label": "Request Decline", "sort_order": 12}
+  - {"op": "add_enum_value", "field_id": "ENT-admin-action-log.action_type", "value": "conversation_flag_or_unflag", "label": "Conversation Flag or Unflag", "sort_order": 13}
+  - {"op": "add_enum_value", "field_id": "ENT-admin-action-log.action_type", "value": "payment_retry", "label": "Payment Retry", "sort_order": 14}
+  - {"op": "add_node", "id": "REQ-016-200", "type": "Rule", "owner_fr": "FR-016", "title": "Uploaded documents on the Medical Data tab share its access controls", "attrs": {"statement": "Documents the patient uploaded other than photos are listed on the Medical Data tab and are covered by the same justification prompt, permission, and access logging as the rest of the medical data", "rationale": "Stated in prd.md, Screen 4: Patient Detail View - Medical Data Tab (Uploaded Documents row and Business Rules)."}}
+  - {"op": "add_edge", "from": "REQ-016-200", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-016-200", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-016-200", "verb": "applies to", "to": "SCR-016-04"}
+  - {"op": "add_node", "id": "REQ-016-201", "type": "Rule", "owner_fr": "FR-016", "title": "A 30-day or 90-day suspension ends by itself on its end date", "attrs": {"statement": "A 30-day or 90-day account suspension ends by itself: when the suspension end date is reached the patient account returns to Active without an admin action. A permanent suspension has no end date", "rationale": "Stated in prd.md, Business Rules, General Module Rule 9; Screen 2 Suspension End Date row."}}
+  - {"op": "add_edge", "from": "REQ-016-201", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-016-201", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-016-201", "verb": "applies to", "to": "SCR-016-02"}
+  - {"op": "add_edge", "from": "REQ-016-201", "verb": "applies to", "to": "ENT-patient"}
+  - {"op": "add_edge", "from": "REQ-016-201", "verb": "applies to", "to": "ENT-patient.account_status"}
+  - {"op": "add_edge", "from": "REQ-016-201", "verb": "applies to", "to": "ENT-patient.suspension_end_date"}
+  - {"op": "add_node", "id": "REQ-016-202", "type": "Rule", "owner_fr": "FR-016", "title": "Deletion Requests screen sits under User management, Patients", "attrs": {"statement": "The Deletion Requests screen (patient data deletion requests, GDPR) is located under User management, Patients in the admin menu", "rationale": "Stated in prd.md, Screen 8: Patient Deletion Requests List (GDPR), Screen Title row."}}
+  - {"op": "add_edge", "from": "REQ-016-202", "verb": "applies at", "to": "STG-patient-05-deleted"}
+  - {"op": "add_edge", "from": "REQ-016-202", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-016-202", "verb": "applies to", "to": "SCR-016-08"}
+  - {"op": "add_node", "id": "REQ-016-203", "type": "Rule", "owner_fr": "FR-016", "title": "Booking Support Requests screen sits under User management, Patients", "attrs": {"statement": "The Booking Support Requests screen (patient cancellation and change requests) is located under User management, Patients in the admin menu, beside the other patient screens", "rationale": "Stated in prd.md, Screen 9: Booking Support Requests (Cancellation and Change), Screen Title row."}}
+  - {"op": "add_edge", "from": "REQ-016-203", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-016-203", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-016-203", "verb": "applies to", "to": "SCR-016-09"}
+  - {"op": "add_node", "id": "REQ-016-204", "type": "Rule", "owner_fr": "FR-016", "title": "Send Notification sends a manual notification to one patient", "attrs": {"statement": "The Send Notification button on the patient Overview tab lets an admin send a manual notification to this patient; the action requires a justification and is logged in the audit trail", "rationale": "Stated in prd.md, Screen 2: Patient Detail View - Overview Tab (Notes)."}}
+  - {"op": "add_edge", "from": "REQ-016-204", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-016-204", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-016-204", "verb": "applies to", "to": "SCR-016-02"}
+  - {"op": "add_node", "id": "REQ-016-205", "type": "Rule", "owner_fr": "FR-016", "title": "Bulk send of a manual notification from the patient list is high-impact", "attrs": {"statement": "An admin can send one manual notification to several selected patients from the patient list; bulk patient notifications are a high-impact action and require enhanced confirmation + justification (General Module Rule 4)", "rationale": "Stated in prd.md, Screen 1: Patient List View (Notes)."}}
+  - {"op": "add_edge", "from": "REQ-016-205", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-016-205", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-016-205", "verb": "applies to", "to": "SCR-016-01"}
+  - {"op": "add_node", "id": "REQ-016-206", "type": "Rule", "owner_fr": "FR-016", "title": "Deletion request shows Verification Required when identity proof is not enough", "attrs": {"statement": "When the identity proof on a deletion request is not sufficient, the request shows the status Verification Required (FR-023 Alternative Flow A1), and the Status filter of the queue offers that status; the SLA due date stays at 30 calendar days from submission and does not pause during verification", "rationale": "Stated in prd.md, Screen 8: Patient Deletion Requests List (GDPR), Filters row and Business Rules."}}
+  - {"op": "add_edge", "from": "REQ-016-206", "verb": "applies at", "to": "STG-patient-05-deleted"}
+  - {"op": "add_edge", "from": "REQ-016-206", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-016-206", "verb": "applies to", "to": "SCR-016-08"}
+  - {"op": "add_edge", "from": "REQ-016-206", "verb": "applies to", "to": "ENT-deletion-request.status"}
+  - {"op": "add_node", "id": "REQ-016-207", "type": "Rule", "owner_fr": "FR-016", "title": "Admin validates the additional verification in the deletion request queue", "attrs": {"statement": "Once the patient has provided the additional verification, the admin validates it with the Validate Verification button in the deletion request queue, with a justification, and processing of the request resumes", "rationale": "Stated in prd.md, Screen 8: Patient Deletion Requests List (GDPR), Validate Verification button row and Business Rules."}}
+  - {"op": "add_edge", "from": "REQ-016-207", "verb": "applies at", "to": "STG-patient-05-deleted"}
+  - {"op": "add_edge", "from": "REQ-016-207", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-016-207", "verb": "applies to", "to": "SCR-016-08"}
+  - {"op": "add_node", "id": "REQ-016-208", "type": "Rule", "owner_fr": "FR-016", "title": "Each booking support request is an FR-034 support case with a Ticket Source", "attrs": {"statement": "Each request on the Booking Support Requests screen is an FR-034 support case whose Ticket Source shows that the patient raised it through Contact Support on an FR-006 booking screen; the Ticket Source values are defined by FR-034", "rationale": "Stated in prd.md, Screen 9: Booking Support Requests (Cancellation and Change), Business Rules."}}
+  - {"op": "add_edge", "from": "REQ-016-208", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-016-208", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-016-208", "verb": "applies to", "to": "SCR-016-09"}
+  - {"op": "add_edge", "from": "REQ-016-208", "verb": "applies to", "to": "ENT-support-case.ticket_source"}
+  - {"op": "add_edge", "from": "SCR-016-02", "verb": "shows", "to": "ENT-patient.suspension_end_date", "attrs": {"provenance": "retrieved", "label": "Suspension End Date"}}
+  - {"op": "update_node", "id": "REQ-016-016", "title": "Process patient data deletion requests by anonymization and archival", "attrs": {"statement": "System MUST process patient data deletion requests (GDPR) via anonymization + archival workflow, retaining compliance records (retention follows the system PRD, Platform-Wide Rules: One 10-year retention period)", "rationale": "Stated in prd.md, Functional Requirements Summary, Data Governance Requirements."}}
+  - {"op": "update_node", "id": "REQ-016-020", "title": "Require enhanced confirmation + justification for high-impact actions", "attrs": {"statement": "System MUST require enhanced confirmation + justification for high-impact actions (account suspension of any duration, refunds exceeding $1,000, manual booking modifications during active treatment, bulk patient notifications, patient data deletion for GDPR requests) even when the admin holds the FR-031 permission for the action", "rationale": "Stated in prd.md, Functional Requirements Summary, Security & Privacy Requirements; same list as General Module Rule 4 and Admin Editability Rules, High-Impact Actions."}}
+  - {"op": "merge_node", "survivor": "REQ-016-020", "loser": "REQ-016-082"}
+  - {"op": "update_node", "id": "REQ-016-027", "title": "Notify the patient when an admin action affects them", "attrs": {"statement": "System MUST notify the patient when an admin takes an action that affects them; delivery follows the FR-020 notification service Rule", "rationale": "Stated in prd.md, Functional Requirements Summary, Integration Requirements."}}
+  - {"op": "update_node", "id": "REQ-016-061", "title": "Admin starts the deletion workflow when no obligations exist", "attrs": {"statement": "If no obligations, admin initiates data deletion workflow:; Mark account for anonymization; Remove PII (name, email, phone, address); Retain anonymized medical records and archive transaction history (retention follows the system PRD, Platform-Wide Rules: One 10-year retention period)", "rationale": "Stated in prd.md, Alternative Flows, patient data deletion request."}}
+  - {"op": "update_node", "id": "REQ-016-069", "title": "Admins may edit questionnaire responses with a logged reason; scans stay unchanged", "attrs": {"statement": "Admins MAY edit a patient's medical questionnaire responses and alerts (FR-003 admin edit capability), but only with a typed reason that is logged in the audit trail with the edit. Patient scans MUST NOT be modified by admins; scan media is immutable except by patients", "rationale": "Stated in prd.md, Business Rules, General Module Rule 2."}}
+  - {"op": "update_node", "id": "REQ-016-097", "title": "No inline editing on the patient list; Edit Patient only", "attrs": {"statement": "No inline editing on the patient list: patient profile fields are changed only through the \"Edit Patient\" button on the Overview tab, with justification and audit logging", "rationale": "Stated in prd.md, Screen 1: Patient List View (Notes)."}}
+  - {"op": "update_node", "id": "REQ-016-130", "title": "Compliance note on the Medical Data tab follows the platform retention period", "attrs": {"statement": "Compliance note: \"Data retained per the platform retention period\" (retention follows the system PRD, Platform-Wide Rules: One 10-year retention period)", "rationale": "Stated in prd.md, Screen 4: Patient Detail View - Medical Data Tab (compliance note)."}}
+  - {"op": "update_node", "id": "REQ-016-169", "title": "Deletion requests queue lists FR-023 requests and records the admin review", "attrs": {"statement": "This screen is a queue for deletion requests initiated by patients; the one deletion request record and its lifecycle are owned by FR-023, and this screen only lists the requests and records the admin's review", "rationale": "Stated in prd.md, Screen 8: Patient Deletion Requests List (GDPR), Business Rules."}}
+  - {"op": "update_node", "id": "REQ-016-170", "title": "Admin may contact the patient before approving a deletion request", "attrs": {"statement": "Admin may contact the patient (call/email) for additional confirmation before approving", "rationale": "Stated in prd.md, Screen 8: Patient Deletion Requests List (GDPR), Business Rules."}}
+  - {"op": "update_node", "id": "REQ-016-183", "title": "Account status filter: Active, Suspended, Deactivated, Locked", "attrs": {"statement": "Account status filter: Filter by account status; Options: Active, Suspended, Deactivated, Locked", "rationale": "Stated in prd.md, Screen 1: Patient List View, Account Status Filter row."}}
+  - {"op": "update_node", "id": "REQ-016-186", "title": "Deletion requests default filter is Pending Admin Review", "attrs": {"statement": "Deletion requests default filter: Status = Pending Admin Review; the Status filter also offers Verification Required", "rationale": "Stated in prd.md, Screen 8: Patient Deletion Requests List (GDPR), Filters row."}}
+  - {"op": "update_node", "id": "ENT-support-case.request_type", "owner_fr": "FR-034"}
+  - {"op": "update_node", "id": "ENT-support-case.request_status", "owner_fr": "FR-034"}
+  - {"op": "update_node", "id": "ENT-support-case.decline_reason", "owner_fr": "FR-034"}
+  - {"op": "update_node", "id": "ENT-support-case.outcome", "owner_fr": "FR-034"}
+  - {"op": "remove_edge", "from": "REQ-016-077", "verb": "decided by", "to": "SRC-PO-001-D2"}
+  - {"op": "add_edge", "from": "STP-007B-501", "verb": "next", "to": "STP-016-091", "attrs": {"back": true, "label": "request reaches the admin queue"}}
+  - {"op": "remove_edge", "from": "SCR-016-05", "verb": "shows", "to": "ENT-payment.payment_method"}
+  - {"op": "add_edge", "from": "SCR-016-05", "verb": "shows", "to": "ENT-payment-method.last_four_digits", "attrs": {"provenance": "inherited from another FR", "label": "Payment Method"}}
+  - {"op": "add_edge", "from": "FR-030", "verb": "references", "to": "REQ-016-028"}
+  - {"op": "add_edge", "from": "FR-030", "verb": "references", "to": "REQ-016-058"}
+  - {"op": "add_edge", "from": "FR-016", "verb": "references", "to": "REQ-001-023"}
+  - {"op": "add_edge", "from": "FR-016", "verb": "references", "to": "REQ-001-029"}
+  - {"op": "add_edge", "from": "FR-016", "verb": "references", "to": "REQ-001-004"}
+  - {"op": "add_edge", "from": "FR-016", "verb": "references", "to": "REQ-001-037"}
+  - {"op": "add_edge", "from": "FR-016", "verb": "references", "to": "REQ-003-091"}
+  - {"op": "add_edge", "from": "FR-016", "verb": "references", "to": "REQ-003-005"}
+  - {"op": "add_edge", "from": "FR-016", "verb": "references", "to": "REQ-004-077"}
+  - {"op": "add_edge", "from": "FR-016", "verb": "references", "to": "REQ-012-021"}
+  - {"op": "add_edge", "from": "FR-016", "verb": "references", "to": "REQ-012-011"}
+  - {"op": "add_edge", "from": "FR-016", "verb": "references", "to": "REQ-012-004"}
+  - {"op": "add_edge", "from": "FR-016", "verb": "references", "to": "REQ-002-029"}
+  - {"op": "add_edge", "from": "FR-016", "verb": "references", "to": "REQ-002-031"}
+  - {"op": "add_edge", "from": "FR-016", "verb": "references", "to": "REQ-020-073"}
+  - {"op": "add_edge", "from": "FR-016", "verb": "references", "to": "REQ-020-091"}
+  - {"op": "add_edge", "from": "FR-016", "verb": "references", "to": "REQ-020-092"}
+  - {"op": "add_edge", "from": "FR-016", "verb": "references", "to": "REQ-020-028"}
+  - {"op": "add_edge", "from": "FR-016", "verb": "references", "to": "REQ-002-024"}
+  - {"op": "add_edge", "from": "FR-016", "verb": "references", "to": "REQ-031-008"}
+  - {"op": "add_edge", "from": "FR-016", "verb": "references", "to": "REQ-031-014"}
+  - {"op": "add_edge", "from": "FR-016", "verb": "references", "to": "REQ-030-025"}
+  - {"op": "update_node", "id": "REQ-016-033", "title": "Admin module has no patient-facing or provider-facing functionality"}
+  - {"op": "update_node", "id": "REQ-016-035", "title": "Patients may be notified when admins act on their behalf"}
+  - {"op": "update_node", "id": "REQ-016-036", "title": "Out of scope: direct admin-to-patient messaging and intercepting messages"}
+  - {"op": "update_node", "id": "REQ-016-037", "title": "Support escalations are viewable through a link to the Support Center"}
+  - {"op": "update_node", "id": "REQ-016-038", "title": "Admin patient search and overview flow with attention alerts"}
+  - {"op": "update_node", "id": "REQ-016-040", "title": "In V1 patient 3D scans are standardized head scan photo sets"}
+  - {"op": "update_node", "id": "REQ-016-041", "title": "Patient list results show key patient information in a paginated list"}
+  - {"op": "update_node", "id": "REQ-016-042", "title": "Patient detail view is organised into tabs"}
+  - {"op": "update_node", "id": "REQ-016-043", "title": "Treatment Journey tab shows chronological milestone cards with case links"}
+  - {"op": "update_node", "id": "REQ-016-044", "title": "Medical Data tab shows questionnaire, scans, photos, medications and history"}
+  - {"op": "update_node", "id": "REQ-016-046", "title": "No patients found: the system suggests broadening the search"}
+  - {"op": "update_node", "id": "REQ-016-047", "title": "Admin chooses an intervention action from the available options"}
+  - {"op": "update_node", "id": "REQ-016-048", "title": "Intervention confirmation dialog shows action summary, patient impact and justification"}
+  - {"op": "update_node", "id": "REQ-016-049", "title": "Executing an intervention updates the account, logs it and notifies the patient"}
+  - {"op": "update_node", "id": "REQ-016-050", "title": "Password reset generates a token and emails a 6-digit OTP link to the patient"}
+  - {"op": "update_node", "id": "REQ-016-051", "title": "Warning when the patient changed the password within the last 5 minutes"}
+  - {"op": "update_node", "id": "REQ-016-052", "title": "Suspension warning: patient login blocked and active bookings cancelled"}
+  - {"op": "update_node", "id": "REQ-016-054", "title": "Patient receives a suspension notification with appeal information"}
+  - {"op": "update_node", "id": "REQ-016-055", "title": "Booking changes and cancellations happen on the case detail page, not in the intervention flow"}
+  - {"op": "update_node", "id": "REQ-016-056", "title": "After subquote acceptance the patient requests cancellation through Contact Support"}
+  - {"op": "update_node", "id": "REQ-016-057", "title": "Provider suspension or deactivation cancels patient cases and flags Admin Support Required"}
+  - {"op": "update_node", "id": "REQ-016-058", "title": "Admin Support Required view needs View Patients; Resolve Support needs Respond to Support"}
+  - {"op": "update_node", "id": "REQ-016-059", "title": "Admin assists the patient through existing owners; no automatic rebooking, refund or ticket"}
+  - {"op": "update_node", "id": "REQ-016-060", "title": "Data deletion request handling: verify identity, check obligations, explain or proceed"}
+  - {"op": "update_node", "id": "REQ-016-063", "title": "Admin confirms the deletion to the patient and closes the request"}
+  - {"op": "update_node", "id": "REQ-016-064", "title": "Concurrent admin edits use optimistic locking; the second admin must reload"}
+  - {"op": "update_node", "id": "REQ-016-065", "title": "A new support escalation from the patient alerts the admin dashboard in real time"}
+  - {"op": "update_node", "id": "REQ-016-066", "title": "Banner and conflict warning when the patient is active during an admin edit"}
+  - {"op": "update_node", "id": "REQ-016-067", "title": "Deletion is blocked while the patient has a pending refund"}
+  - {"op": "update_node", "id": "REQ-016-068", "title": "Failed refunds retry automatically, then alert the admin after one hour"}
+  - {"op": "update_node", "id": "REQ-016-070", "title": "Admin visibility and edit rights follow FR-031 role permissions"}
+  - {"op": "update_node", "id": "REQ-016-071", "title": "Admin booking interventions use FR-006 actions and notify patient and provider within 5 minutes"}
+  - {"op": "update_node", "id": "REQ-016-072", "title": "Patient scans in the admin interface are read-only and access-controlled"}
+  - {"op": "update_node", "id": "REQ-016-073", "title": "Only Manage Aftercare admins can view and download patient scans, with downloads logged"}
+  - {"op": "update_node", "id": "REQ-016-074", "title": "Archived patient data is reachable only through the archive interface with justification"}
+  - {"op": "update_node", "id": "REQ-016-075", "title": "Patient consent is required before medical data is shared with third parties"}
+  - {"op": "update_node", "id": "REQ-016-076", "title": "Admins can edit patient account status"}
+  - {"op": "update_node", "id": "REQ-016-077", "title": "Admins can change a booking appointment date only through the FR-006 guarded date change"}
+  - {"op": "update_node", "id": "REQ-016-078", "title": "Admins can cancel a booking only through the FR-006 Cancel Booking action"}
+  - {"op": "update_node", "id": "REQ-016-079", "title": "Admins can edit payment status (manual refund, payment retry)"}
+  - {"op": "update_node", "id": "REQ-016-080", "title": "Admins cannot edit transaction timestamps and amounts"}
+  - {"op": "update_node", "id": "REQ-016-081", "title": "Admins can reset but not view the patient password"}
+  - {"op": "update_node", "id": "REQ-016-083", "title": "Admin session times out after 30 minutes of inactivity; sensitive actions re-authenticate"}
+  - {"op": "update_node", "id": "REQ-016-084", "title": "Patient search is rate limited to 100 searches per admin per minute"}
+  - {"op": "update_node", "id": "REQ-016-085", "title": "Patient list default view is sorted by last activity, most recent first"}
+  - {"op": "update_node", "id": "REQ-016-086", "title": "Patient search runs automatically after a 500ms typing pause"}
+  - {"op": "update_node", "id": "REQ-016-088", "title": "Patient list updates in real time when new patients register"}
+  - {"op": "update_node", "id": "REQ-016-090", "title": "Patient list rows mirror the inquiry list layout"}
+  - {"op": "update_node", "id": "REQ-016-091", "title": "Journey stage badges are colour-coded; the Suspended status badge is dark red"}
+  - {"op": "update_node", "id": "REQ-016-092", "title": "Flagged patients show a red alert icon with the flag reason on hover"}
+  - {"op": "update_node", "id": "REQ-016-096", "title": "Bulk actions, such as sending a notification, are available for selected patients"}
+  - {"op": "update_node", "id": "REQ-016-101", "title": "Email and phone are clickable (mail client opens, phone copies)"}
+  - {"op": "update_node", "id": "REQ-016-104", "title": "Flags and alerts section shows the 3 most critical items with a View All link"}
+  - {"op": "update_node", "id": "REQ-016-105", "title": "Last Activity timestamp updates in real time while the patient is active"}
+  - {"op": "update_node", "id": "REQ-016-106", "title": "Cancelled status shows reason and timestamp; admin has oversight only"}
+  - {"op": "update_node", "id": "REQ-016-107", "title": "Provider-caused impacts show the cause; resolving support clears only the marker"}
+  - {"op": "update_node", "id": "REQ-016-110", "title": "Overview quick actions: Reset Password, Suspend Account, Send Notification"}
+  - {"op": "update_node", "id": "REQ-016-111", "title": "Admin access to the Overview tab is logged in the audit trail"}
+  - {"op": "update_node", "id": "REQ-016-112", "title": "Milestones show most recent first and collapse intermediate system events"}
+  - {"op": "update_node", "id": "REQ-016-113", "title": "Each milestone card links to the case detail screen where full actions occur"}
+  - {"op": "update_node", "id": "REQ-016-115", "title": "Failed milestones show a warning icon and a link to the payment record"}
+  - {"op": "update_node", "id": "REQ-016-116", "title": "Inquiry Cancelled milestone is a terminal card with reason, timestamp and patient indicator"}
+  - {"op": "update_node", "id": "REQ-016-117", "title": "Provider-caused cancellations show a terminal card with prior stage and support state"}
+  - {"op": "update_node", "id": "REQ-016-118", "title": "Admin notes on a milestone are optional and logged in the audit trail"}
+  - {"op": "update_node", "id": "REQ-016-120", "title": "Treatment Journey tab shows a summary; detail and editing stay on the case page"}
+  - {"op": "update_node", "id": "REQ-016-122", "title": "Justification dialog appears when the Medical Data tab is clicked"}
+  - {"op": "update_node", "id": "REQ-016-123", "title": "Medical questionnaire responses are colour-coded by severity"}
+  - {"op": "update_node", "id": "REQ-016-124", "title": "V1 head scan viewer is a photo gallery with zoom and basic comparison"}
+  - {"op": "update_node", "id": "REQ-016-125", "title": "V2 interactive 3D viewer allows rotation and zoom; downloads are logged"}
+  - {"op": "update_node", "id": "REQ-016-126", "title": "Photo gallery supports zoom but blocks right-click save"}
+  - {"op": "update_node", "id": "REQ-016-127", "title": "Medical Data tab shows a Protected Health Information warning banner"}
+  - {"op": "update_node", "id": "REQ-016-128", "title": "Request Provider Medical Report button asks the provider for additional information"}
+  - {"op": "update_node", "id": "REQ-016-129", "title": "Medical Data tab shows an encryption status indicator"}
+  - {"op": "update_node", "id": "REQ-016-131", "title": "Payment summary calculates Total Paid, Outstanding Balance and Total Refunds"}
+  - {"op": "update_node", "id": "REQ-016-133", "title": "Failed payments show the processor error message and troubleshooting tips"}
+  - {"op": "update_node", "id": "REQ-016-134", "title": "Amounts are shown in the original transaction currency"}
+  - {"op": "update_node", "id": "REQ-016-136", "title": "Stripe Payment ID links to the Stripe dashboard for admins with Stripe access"}
+  - {"op": "update_node", "id": "REQ-016-138", "title": "Installment plans show total, paid and remaining installments and the next due date"}
+  - {"op": "update_node", "id": "REQ-016-139", "title": "Payment timeline compares the payment schedule with actual payments"}
+  - {"op": "update_node", "id": "REQ-016-142", "title": "Payment status updates in real time when a payment succeeds or fails"}
+  - {"op": "update_node", "id": "REQ-016-143", "title": "Commission calculation shows total amount, provider share and Hairline commission"}
+  - {"op": "update_node", "id": "REQ-016-145", "title": "Conversations are grouped by partner (provider, support team, aftercare team)"}
+  - {"op": "update_node", "id": "REQ-016-146", "title": "Flagged conversations are highlighted in red"}
+  - {"op": "update_node", "id": "REQ-016-147", "title": "Keywords such as outside platform, bank transfer and WhatsApp trigger auto-flagging"}
+  - {"op": "update_node", "id": "REQ-016-152", "title": "Communications tab shows a compliance warning banner"}
+  - {"op": "update_node", "id": "REQ-016-153", "title": "Flag for Review button lets an admin escalate suspicious conversations"}
+  - {"op": "update_node", "id": "REQ-016-157", "title": "Patient identity stays anonymized in pre-payment messages"}
+  - {"op": "update_node", "id": "REQ-016-160", "title": "Action types are limited to the enumerated list; a new type needs a PRD update"}
+  - {"op": "update_node", "id": "REQ-016-162", "title": "Automated actions are marked System-Generated"}
+  - {"op": "update_node", "id": "REQ-016-168", "title": "Audit entries can come from any FR-031 admin role, limited to that role's permissions"}
+  - {"op": "update_node", "id": "REQ-016-171", "title": "Approval is blocked while active obligations exist; the request stays pending"}
+  - {"op": "update_node", "id": "REQ-016-172", "title": "Approve triggers anonymization and archival; protected records are kept with restricted access"}
+  - {"op": "update_node", "id": "REQ-016-173", "title": "Deny records a reason, notifies the patient and keeps the request auditable"}
+  - {"op": "update_node", "id": "REQ-016-174", "title": "Approve and Deny require justification and are written to the audit trail with the request ID"}
+  - {"op": "update_node", "id": "REQ-016-175", "title": "Booking support requests appear after acceptance through Contact Support; early-stage requests are excluded"}
+  - {"op": "update_node", "id": "REQ-016-176", "title": "The admin cancels or changes a booking only through the FR-006 action"}
+  - {"op": "update_node", "id": "REQ-016-177", "title": "Request is Resolved when the FR-006 action completes and Declined when a reason is recorded"}
+  - {"op": "update_node", "id": "REQ-016-178", "title": "Every action on Screen 9 is logged on Screen 7 with request and booking references"}
+  - {"op": "update_node", "id": "REQ-016-179", "title": "Refund amounts and cancellation fees are not set on Screen 9"}
+  - {"op": "update_node", "id": "REQ-016-180", "title": "Patient search input covers name, email, patient code and phone, minimum 2 characters"}
+  - {"op": "update_node", "id": "REQ-016-182", "title": "Journey stage filter uses the FR-003 stage list"}
+  - {"op": "update_node", "id": "REQ-016-184", "title": "Stage column shows the current journey stage badge using the FR-003 stage list"}
+  - {"op": "update_node", "id": "REQ-016-185", "title": "Resolve Support clears Admin Support Required on one record with a reason of 20+ characters"}
+  - {"op": "update_node", "id": "REQ-016-188", "title": "Deletion SLA due date is 30 calendar days after submission (FR-023)"}
+  - {"op": "update_node", "id": "REQ-016-190", "title": "Approve deletion request requires enhanced confirmation and justification"}
+  - {"op": "update_node", "id": "REQ-016-192", "title": "Booking support request status filter: Open, Resolved, Declined; default Open"}
+  - {"op": "update_node", "id": "REQ-016-194", "title": "Cancel Booking action opens the FR-006 Cancel Booking action for cancellation requests"}
+  - {"op": "update_node", "id": "REQ-016-195", "title": "Change Appointment action opens the FR-006 Change Appointment action for change requests"}
+  - {"op": "update_node", "id": "REQ-016-196", "title": "Decline Request action declines without changing the booking; reason of 20+ characters"}
+  - {"op": "update_node", "id": "REQ-016-197", "title": "Request outcome shows action taken, admin, timestamp and audit entry"}
+  - {"op": "update_node", "id": "REQ-016-199", "title": "Admin notes on a deletion request are optional and stored in the audit trail"}
