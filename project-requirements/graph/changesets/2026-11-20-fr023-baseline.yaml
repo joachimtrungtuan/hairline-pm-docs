@@ -1,0 +1,66 @@
+reason: "Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-023)"
+by: controller
+operations:
+  # Reworded Rules (PRD as it reads now)
+  - {op: update_node, id: REQ-023-003, attrs: {statement: "System MUST support soft-deletes only for protected categories (Medical Records, Financial Records, Account Profile), preserving recoverability and auditability. Patient-cancelled inquiries (FR-003 Workflow 5) and all records generated from the cancellation cascade — including auto-cancelled quotes with status \"Cancelled (Inquiry Cancelled)\" per FR-004 — are subject to the same retention rules as completed inquiries and quotes. They are soft-deleted/archived, never hard-deleted before the retention period expires. This applies to inquiry records, quote records, acceptance events (including superseded AcceptanceEvents per FR-005), and associated audit trail entries.", rationale: "Restated by the Executive Summary (soft-deletion only for critical data) and Success Criteria (0% of critical records, medical and financial, hard-deleted before end of retention). The protected categories are Medical Records, Financial Records and Account Profile; the REQ-023-009 list has six categories.", scope: global}}
+  - {op: update_node, id: REQ-023-004, title: "Deletion request: non-protected data deleted or anonymized; protected records retained anonymised with restricted access", attrs: {statement: "System MUST allow patients to request data deletion (erasure); non-protected data is deleted or anonymized; protected records (Medical Records, Financial Records, Account Profile) are retained in anonymised form, with strict access restrictions and documented legal basis.", rationale: "Restated by Main Flow step 4 (system deletes or anonymises non-protected data; anonymises and restricts access to protected records), Clarification CL-1 (retain in anonymised form and fully restrict access during the legal retention period; document legal basis in outcomes) and Success Criteria (retained protected records are kept in anonymised form). User Story 1 acceptance scenario 1 says protected records are \"restricted/anonymized\"."}}
+  - {op: update_node, id: REQ-023-011, title: "Audit log entries immutable; retention follows the 10-year system rule", attrs: {statement: "Audit log entries MUST be immutable; their retention follows the system PRD, Platform-Wide Rules: One 10-year retention period.", rationale: "Restated by Clarification CL-3 (audit log retention follows the system PRD, Platform-Wide Rules: One 10-year retention period, REQ-SYS-002; logs are immutable and included in compliance reporting).", scope: global}}
+  - {op: update_node, id: REQ-023-037, title: "Concurrent DSRs merged into one request; SLA per consolidated request", attrs: {statement: "When a patient submits multiple DSRs concurrently, the system merges them into one request with a clear status; the SLA applies per consolidated request."}}
+  - {op: update_node, id: REQ-023-039, attrs: {rationale: "Restated by Assumptions (retention follows the system PRD, Platform-Wide Rules: One 10-year retention period, unless stricter jurisdictional rules exist)."}}
+  - {op: update_node, id: REQ-023-040, attrs: {statement: "A deletion request made after the patient cancelled an inquiry proceeds normally, because a cancelled inquiry is a terminal state with no active obligation. Cancelled inquiry records, cascaded cancelled quotes, and associated audit entries are retained per the system PRD, Platform-Wide Rules: One 10-year retention period and REQ-023-003 even after the deletion request is fulfilled; the retained records are kept in anonymised form."}}
+  - {op: update_node, id: REQ-023-019, attrs: {statement: "Entry points: Patient: Profile > Delete Account. Provider: Settings → Data Policy (read-only); Activity Logs. Admin: Compliance dashboard → Retention Settings; DSR Queue; Audit Logs; Reports."}}
+  - {op: update_node, id: REQ-023-030, title: "Deletion request submitted from Profile > Delete Account and verified", attrs: {statement: "A patient submits a deletion request from Profile > Delete Account and completes verification.", rationale: "Restated by the Main Flow trigger (patient requests deletion from Profile > Delete Account) and Assumptions (patients are willing and able to complete identity verification for DSRs by standard methods)."}}
+  - {op: update_node, id: STP-023-004, title: "System deletes or anonymizes the non-protected data, and anonymises and restricts access to protected records"}
+  # Retired Rules
+  - {op: retire_node, id: REQ-023-025}
+  - {op: retire_node, id: REQ-023-035}
+  # Whole-platform scope marks (REQ-023-012 and 014 already carry it); the provisional Stage link at the Deleted Stage goes
+  - {op: update_node, id: REQ-023-005, attrs: {scope: global}}
+  - {op: update_node, id: REQ-023-006, attrs: {scope: global}}
+  - {op: update_node, id: REQ-023-010, attrs: {scope: global}}
+  - {op: update_node, id: REQ-023-013, attrs: {scope: global}}
+  - {op: update_node, id: REQ-023-015, attrs: {scope: global}}
+  - {op: update_node, id: REQ-023-026, attrs: {scope: global}}
+  - {op: update_node, id: REQ-023-027, attrs: {scope: global}}
+  - {op: remove_edge, from: REQ-023-005, verb: applies at, to: STG-patient-05-deleted}
+  - {op: remove_edge, from: REQ-023-006, verb: applies at, to: STG-patient-05-deleted}
+  - {op: remove_edge, from: REQ-023-010, verb: applies at, to: STG-patient-05-deleted}
+  - {op: remove_edge, from: REQ-023-011, verb: applies at, to: STG-patient-05-deleted}
+  - {op: remove_edge, from: REQ-023-012, verb: applies at, to: STG-patient-05-deleted}
+  - {op: remove_edge, from: REQ-023-013, verb: applies at, to: STG-patient-05-deleted}
+  - {op: remove_edge, from: REQ-023-014, verb: applies at, to: STG-patient-05-deleted}
+  - {op: remove_edge, from: REQ-023-015, verb: applies at, to: STG-patient-05-deleted}
+  - {op: remove_edge, from: REQ-023-026, verb: applies at, to: STG-patient-05-deleted}
+  - {op: remove_edge, from: REQ-023-027, verb: applies at, to: STG-patient-05-deleted}
+  # Links
+  - {op: add_edge, from: REQ-023-015, verb: applies to, to: ENT-patient.analytics_consent}
+  - {op: add_edge, from: REQ-023-029, verb: applies to, to: EVT-account-deletion-requested}
+  - {op: add_edge, from: STG-patient-03-active, verb: emits, to: EVT-dsr-verification-required}
+  - {op: add_edge, from: REQ-023-003, verb: decided by, to: SRC-TRN-006}
+  # One deletion-request record: ENT-account-deletion-request merged into ENT-deletion-request
+  - {op: update_node, id: ENT-deletion-request, attrs: {description: "Data Subject Request (DSR) of type deletion: a patient's request to erase account data, processed by an Admin (classification, approval, deletion/anonymization of non-protected data, access restriction of protected records) and notified to the patient at each status change. FR-016 reviews it on Screen 8. The PRD Key Entities list one DSR; this entity carries those fields and is the single deletion-request record used by the FR-001 Delete Account screen and the FR-016 queue (the former FR-001 stub ENT-account-deletion-request is merged into it)."}}
+  - {op: update_node, id: ENT-deletion-request.request_id, attrs: {description: "Identifier of the Data Subject Request (Key Entities: id), shown to the patient as the request reference."}}
+  - {op: update_node, id: ENT-deletion-request.reason, attrs: {description: "Optional reason picked by the patient on the Delete Account screen (Key Entities: optional reason)."}}
+  - {op: remove_edge, from: STG-patient-03-active, verb: writes, to: ENT-account-deletion-request}
+  - {op: remove_edge, from: STG-patient-05-deleted, verb: reads, to: ENT-account-deletion-request}
+  - {op: remove_edge, from: REQ-001-031, verb: applies to, to: ENT-account-deletion-request}
+  - {op: remove_edge, from: REQ-001-090, verb: applies to, to: ENT-account-deletion-request}
+  - {op: remove_edge, from: REQ-001-094, verb: applies to, to: ENT-account-deletion-request}
+  - {op: remove_edge, from: REQ-001-095, verb: applies to, to: ENT-account-deletion-request}
+  - {op: remove_edge, from: REQ-001-096, verb: applies to, to: ENT-account-deletion-request.reason}
+  - {op: remove_edge, from: SCR-001-16, verb: shows, to: ENT-account-deletion-request.reason}
+  - {op: remove_edge, from: SCR-001-16, verb: shows, to: ENT-account-deletion-request.request_reference}
+  - {op: add_edge, from: REQ-001-031, verb: applies to, to: ENT-deletion-request}
+  - {op: add_edge, from: REQ-001-090, verb: applies to, to: ENT-deletion-request}
+  - {op: add_edge, from: REQ-001-094, verb: applies to, to: ENT-deletion-request}
+  - {op: add_edge, from: REQ-001-095, verb: applies to, to: ENT-deletion-request}
+  - {op: add_edge, from: REQ-001-096, verb: applies to, to: ENT-deletion-request.reason}
+  - {op: add_edge, from: SCR-001-16, verb: shows, to: ENT-deletion-request.reason, attrs: {provenance: user input, label: Reason for Deletion, editable: true}}
+  - {op: add_edge, from: SCR-001-16, verb: shows, to: ENT-deletion-request.request_id, attrs: {provenance: system calculated, label: Submission Confirmation, editable: false}}
+  - {op: retire_node, id: ENT-account-deletion-request.reason}
+  - {op: retire_node, id: ENT-account-deletion-request.request_reference}
+  - {op: retire_node, id: ENT-account-deletion-request}
+  # Retention period text: one 10-year period (system PRD)
+  - {op: update_node, id: SET-retention-period-by-category, attrs: {description: "Retention policy per data category (Medical Records, Financial Records, Communications, Media, Account Profile, Analytics) with legal basis and per-jurisdiction overrides, configured by Admin. Retention follows the one 10-year period of the system PRD (REQ-SYS-002), unless stricter jurisdictional rules exist. The PRD names module A-09 for the configuration and no FR-026 setting; FR-023 owns the policy itself."}}
+  - {op: update_node, id: ENT-retention-policy.default_retention, attrs: {description: "Default retention duration of the category. Medical records, financial records and audit logs: the one 10-year period of the system PRD (REQ-SYS-002)."}}
+  - {op: update_node, id: ENT-audit-log-entry, attrs: {description: "Immutable record of a read, write or delete on a protected record: who, when, which object, which action and the outcome. References users and data categories; kept in an immutable store whose retention follows the one 10-year period of the system PRD (REQ-SYS-002) (REQ-023-006, REQ-023-011). Distinct from the FR-specific audit entities such as ENT-audit-entry (FR-005)."}}
