@@ -1,0 +1,90 @@
+reason: "Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-002)"
+by: controller
+operations:
+  # Admin template Steps and both flows are removed from the PRD (owned by FR-025). Retired nodes keep their edges as history.
+  - {op: retire_node, id: STP-002-015}
+  - {op: retire_node, id: STP-002-016}
+  - {op: retire_node, id: STP-002-017}
+  - {op: retire_node, id: STP-002-018}
+  - {op: retire_node, id: STP-002-019}
+  - {op: retire_node, id: STP-002-020}
+  - {op: retire_node, id: STP-002-021}
+  - {op: retire_node, id: FLW-002-template-management}
+  - {op: retire_node, id: FLW-002-template-deprecation}
+
+  # Rules that lost their applying Steps stay; their rationale no longer cites the removed workflow text.
+  - op: update_node
+    id: REQ-002-019
+    attrs:
+      rationale: "Admin Platform breakdown. Admin Editability 1: admin can manage templates, guidance copy, and risk-tag rules. Workflow 3 states that template creation and editing are owned by FR-025. Merged as one rule."
+  - op: update_node
+    id: REQ-002-022
+    attrs:
+      rationale: "Admin Platform breakdown. Workflow 3 states that template publishing is owned by FR-025 and the engine consumes the published version."
+  - op: update_node
+    id: REQ-002-041
+    attrs:
+      rationale: "Alternative Flow C1 (owned by FR-025): FR-002 only consumes the result, prior versions are kept for existing inquiries and new inquiries use the latest published version. Workflow 3 outcome: applies to new submissions only. Business Process assumption: new submissions use the latest published questionnaire/rules; existing retain prior versions."
+
+  # Reworded Rules (statement copied from the PRD as it reads now).
+  - op: update_node
+    id: REQ-002-020
+    title: Admin configures validation and media constraints
+    attrs:
+      statement: "Admin configures validation rules and media constraints (head scan photo limits are fixed). Alert severity is driven by the severity flags admins set on questionnaire answers in FR-025; there is no separate alert threshold setting."
+      rationale: "Admin Platform breakdown. Head scan photo limits are fixed in Media Rules 3, so they are not admin settings; alert severity follows the FR-025 severity flags."
+  - op: update_node
+    id: REQ-002-023
+    attrs:
+      statement: "S-01: 3D Media Processing Service: Validates head scan media (V1 photo set) and handles media transformations (the original file stays unmodified; see Media Rules)"
+      rationale: "Shared Services. What a transformation may do to the original is stated as REQ-002-042."
+  - op: update_node
+    id: REQ-002-028
+    title: Deletion requests archive or anonymize, never hard delete
+    attrs:
+      statement: "Retention follows the system PRD rule One 10-year retention period (REQ-SYS-002); deletion requests result in archival/anonymization (no hard deletes)."
+      rationale: "Data & Privacy Rules 2. The retention period itself is carried by REQ-SYS-002; this Rule keeps the archival/anonymization and no-hard-delete clause. Applies at the patient deleted stage because deletion requests are named."
+  - op: update_node
+    id: REQ-002-032
+    title: Head scan needs at least one photo; no view is compulsory
+    attrs:
+      statement: "The head scan offers five views (front, top, left, right, back). At least one photo is required; no single view is compulsory."
+      rationale: "Media Rules 2. Implementation Notes: V1 validates that at least one photo is present. Error code MEDIA_INCOMPLETE_VIEW_SET when no head scan photo is supplied (User Story 2)."
+  - op: update_node
+    id: REQ-002-033
+    title: Allowed formats and fixed photo limits enforced
+    attrs:
+      statement: "Allowed formats: JPG/PNG. A head scan holds up to 5 photos of at most 2 MB each, counted on its own (separate from the FR-003 visual evidence limit, which has its own count)."
+      rationale: "Media Rules 3. Error code MEDIA_SIZE_EXCEEDED with compression guidance (User Story 2); edge case 'oversize file'."
+  - op: update_node
+    id: REQ-002-037
+    title: Older template version accepted and recorded
+    attrs:
+      statement: "Engine accepts a submission made on an older template version and records the version used (templateVersionUsed) in the audit log."
+      rationale: "Alternative Flow A2: when the submitted templateVersion is older than the currently published version, the engine accepts the submission and records the version used. Repeated in Edge Cases."
+
+  # New Rule: original media kept unmodified (Media Rules 7).
+  - op: add_node
+    id: REQ-002-042
+    type: Rule
+    owner_fr: FR-002
+    title: Original media file kept unmodified; a transformation creates a separate copy
+    attrs:
+      statement: "The original media file is kept unmodified; any transformation creates a separate copy."
+      rationale: "Media Rules 7. Answers the open question under REQ-002-023 about what transformations may do to the original."
+  - {op: add_edge, from: REQ-002-042, verb: applies at, to: STG-main-01-inquiry}
+  - {op: add_edge, from: REQ-002-042, verb: applies to, to: ENT-media-artifact}
+
+  # FR-002 now cites the system retention Rule instead of restating the period.
+  - {op: add_edge, from: FR-002, verb: references, to: REQ-SYS-002}
+
+  # Entity detail.
+  - op: update_node
+    id: ENT-intake-processing-result.ruleset_version
+    attrs:
+      description: "rulesetVersion: the FR-025 questionnaire set version in force when the request was processed (General Rules 3)."
+  - op: update_node
+    id: ENT-media-artifact.validation_status
+    attrs:
+      description: "validationStatus (REQ-002-006). One value, passed, kept for audit: failed media is never persisted (REQ-002-036)."
+  - {op: add_enum_value, field_id: ENT-media-artifact.validation_status, value: passed, label: Passed}
