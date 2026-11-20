@@ -1,0 +1,70 @@
+reason: "Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-009)"
+by: controller
+operations:
+  # Custom provider roles removed: Rules, Actor and Setting retire; edges that would point at retired nodes are removed first.
+  - {op: "remove_edge", from: "REQ-009-002", verb: "applies to", to: "ACT-provider-custom-role"}
+  - {op: "remove_edge", from: "REQ-009-160", verb: "governed by", to: "SET-activity-log-retention-period"}
+  - {op: "remove_edge", from: "REQ-009-156", verb: "governed by", to: "SET-activity-log-retention-period"}
+  - {op: "retire_node", id: "REQ-009-149"}
+  - {op: "retire_node", id: "REQ-009-060"}
+  - {op: "retire_node", id: "REQ-009-064"}
+  - {op: "retire_node", id: "REQ-009-172"}
+  - {op: "retire_node", id: "ACT-provider-custom-role"}
+  - {op: "retire_node", id: "SET-activity-log-retention-period"}
+
+  # Reworded Rules, statements copied from the PRD as it reads now.
+  - {op: "update_node", id: "REQ-009-001", title: "System MUST allow the Provider Owner or Manager to invite team members via email with secure,...", attrs: {statement: "System MUST allow the Provider Owner or Manager to invite team members via email with secure, time-limited invitation links (7-day expiry), MUST let a Manager invite only Clinical Staff and Billing Staff (the Owner can also invite a Manager), and MUST make provider-side team management view-only while the provider organization is Suspended, blocking invite, resend, role change, suspend, and remove (Rule 10)"}}
+  - {op: "update_node", id: "REQ-009-002", title: "System MUST support the four provider roles (Owner, Manager, Clinical Staff, Billing Staff)...", attrs: {statement: "System MUST support the four provider roles (Owner, Manager, Clinical Staff, Billing Staff) defined in FR-031; custom provider roles do not exist", rationale: "The provider platform starts with four clinic-side roles that directly reflect how real clinics operate, while keeping clear separation from Hairline's own Admin Platform roles."}}
+  - {op: "update_node", id: "REQ-009-004", title: "System MUST allow Owners and Managers with the required permission to modify non-Owner team...", attrs: {statement: "System MUST allow Owners and Managers with the required permission to modify non-Owner team member roles with immediate permission updates"}}
+  - {op: "update_node", id: "REQ-009-006", title: "System MUST keep exactly one Owner per provider organization at all times", attrs: {statement: "System MUST keep exactly one Owner per provider organization at all times—prevent removal or demotion of the Owner and prevent a second Owner from being created from the provider platform; the Owner changes only through the Hairline admin handover (REQ-009-174)"}}
+  - {op: "update_node", id: "REQ-009-011", title: "System MUST consume the provider role permission definitions configured centrally in FR-031", attrs: {statement: "System MUST consume the provider role permission definitions configured centrally in FR-031"}}
+  - {op: "update_node", id: "REQ-009-038", attrs: {statement: "Provider Owner or Manager enters team member details and selects a non-Owner role. The Owner can choose Manager, Clinical Staff, or Billing Staff; for a Manager the form lists only Clinical Staff and Billing Staff. Owner is not assignable from this flow and is reserved for the single primary account holder."}}
+  - {op: "update_node", id: "REQ-009-054", attrs: {statement: "System logs the error and retries sending under the FR-030 notification retry rule. If all retries fail, the invitation stays Pending and the system sets its delivery state to \"Pending Send\". \"Pending Send\" is a delivery state, not an invitation status, and the invitation takes a seat while it is Pending (Rule 6). System displays warning to Provider Owner: \"Invitation created but email failed. We'll retry automatically.\" If sending still fails when the FR-030 retry rule is exhausted, system alerts admin team"}}
+  - {op: "update_node", id: "REQ-009-055", title: "B4: admin team alerted when the notification retry rule is exhausted", attrs: {statement: "If sending still fails when the FR-030 retry rule is exhausted, system alerts admin team"}}
+  - {op: "update_node", id: "REQ-009-068", attrs: {statement: "Provider Owner or Manager selects the reassignment target. \"Archive unassigned\" is offered only when the team member has nothing outstanding; otherwise the work must be reassigned"}}
+  - {op: "update_node", id: "REQ-009-087", title: "Dashboard access: Owners and authorized Managers", attrs: {statement: "Only Owners and authorized Managers can access the dashboard; non-Owner users have read-only visibility into Owner rows."}}
+  - {op: "update_node", id: "REQ-009-097", attrs: {statement: "Quick stats: Total, Active, Pending Invitations (count of invitations with status Pending that are not past expires_at), Suspended, Seats Remaining."}}
+  - {op: "update_node", id: "REQ-009-115", attrs: {statement: "If invitee already has global Hairline account, screen switches to login-only acceptance flow, unless the email belongs to another provider (A3)."}}
+  - {op: "update_node", id: "REQ-009-122", title: "Admin audit log defaults to 90 days, up to 10 years, 100 events per page", attrs: {statement: "Screen 11 Tab 2 Date Range Filter: Defaults to last 90 days; can query up to 10 years (global audit-log retention). Pagination: Server-side pagination, 100 events per page. Action Type Filter categories: Login, Patient Access, Data Export, Settings Change, Communication, Treatment."}}
+  - {op: "update_node", id: "REQ-009-134", title: "Patient data access log is kept 10 years like all audit logs", attrs: {statement: "Patient data access log is kept for 10 years, like all audit logs (global audit-log rule); it is not anonymized after 1 year or deleted after 2 years."}}
+  - {op: "update_node", id: "REQ-009-160", title: "Admin-editable limits: team size and invitation expiry", attrs: {statement: "Maximum team size limit per provider (default 100, adjustable 1-500) Invitation expiry period (default 7 days, range 1-30 days)"}}
+  - {op: "update_node", id: "REQ-009-163", attrs: {statement: "Protected role identities and primary Owner rule. Role permissions are configured centrally in FR-031, not by provider organizations. Number of Owners (always exactly 1) Team activity log retention: the global audit-log rule applies (10 years); there is no FR-009 retention setting Audit log structure and required fields Email invitation template structure (content editable, structure fixed) Session management security parameters"}}
+  - {op: "update_node", id: "REQ-009-168", title: "Edge: bounced invitation stays Pending and the Owner is notified in-platform", attrs: {statement: "System logs the bounce event, keeps the invitation status Pending with delivery state \"Pending Send\" (there is no Bounced status), and notifies provider owner via in-app notification: \"Invitation to [email] failed—email address may be invalid. Please verify and resend.\""}}
+  - {op: "update_node", id: "REQ-009-171", title: "Edge: concurrent role change, the last change wins", attrs: {statement: "The last change wins. The later change overwrites the earlier one and no error is shown to either person. The activity log records both changes with who made each."}}
+
+  # New Rule: Owner handover by a Hairline admin.
+  - {op: "add_node", id: "REQ-009-174", type: "Rule", owner_fr: "FR-009", title: "Only a Hairline admin can hand the Owner role to another person", attrs: {statement: "System MUST let only a Hairline admin hand the Owner role of a provider organization to another person (Rule 11). The provider organization keeps exactly one Owner before, during, and after the handover, and no provider-side user can start a handover", rationale: "Rule 11 (Owner Handover): Only a Hairline admin can hand the Owner role of a provider organization to another person; no provider-side user can do it (Rule 2). The handover is one admin action, so the provider organization has exactly one Owner before and after it (Rule 1). The action requires a reason, is recorded in the FR-009 audit trail (Rule 4) and FR-015 Tab 8: Activity Log with the admin as actor, and the new and the previous Owner are notified by email."}}
+  - {op: "add_edge", from: "REQ-009-174", verb: "applies at", to: "STG-provider-03-active"}
+  - {op: "add_edge", from: "REQ-009-174", verb: "applies to", to: "ACT-platform-admin"}
+  - {op: "add_edge", from: "REQ-009-174", verb: "applies to", to: "ACT-provider-owner"}
+  - {op: "add_edge", from: "REQ-009-174", verb: "applies to", to: "ENT-team-member-org-role"}
+
+  # Admin invite is blocked for a Suspended or Deactivated provider; Offboarded is read as the Deactivated state.
+  - {op: "add_edge", from: "REQ-009-024", verb: "applies at", to: "STG-provider-05-offboarded"}
+
+  # Invitee joins the team: Steps move to the provider Configuration Stage.
+  - {op: "add_edge", from: "ACT-team-invitee", verb: "acts in", to: "STG-provider-config-01-configuration"}
+  - {op: "remove_edge", from: "STP-009-005", verb: "at", to: "STG-provider-03-active"}
+  - {op: "add_edge", from: "STP-009-005", verb: "at", to: "STG-provider-config-01-configuration"}
+  - {op: "remove_edge", from: "STP-009-006", verb: "at", to: "STG-provider-03-active"}
+  - {op: "add_edge", from: "STP-009-006", verb: "at", to: "STG-provider-config-01-configuration"}
+  - {op: "remove_edge", from: "STP-009-007", verb: "at", to: "STG-provider-03-active"}
+  - {op: "add_edge", from: "STP-009-007", verb: "at", to: "STG-provider-config-01-configuration"}
+
+  # Dependency lines in other FRs that now cite FR-009 Rules.
+  - {op: "add_edge", from: "FR-010", verb: "references", to: "REQ-009-033"}
+  - {op: "add_edge", from: "FR-010", verb: "references", to: "REQ-009-002"}
+  - {op: "add_edge", from: "FR-010", verb: "references", to: "REQ-009-011"}
+  - {op: "add_edge", from: "FR-024", verb: "references", to: "REQ-009-003"}
+  - {op: "add_edge", from: "FR-024", verb: "references", to: "REQ-009-011"}
+
+  # Field descriptions without custom-role wording.
+  - {op: "update_node", id: "ENT-invitation.role", attrs: {description: "Non-Owner clinic role offered: Manager, Clinical Staff, or Billing Staff."}}
+  - {op: "update_node", id: "ENT-team-member-org-role.role_id", attrs: {description: "One of the four clinic roles defined in FR-031."}}
+
+  # Activity audit log action types: the values the PRD lists that the graph lacked.
+  - {op: "add_enum_value", field_id: "ENT-team-activity-audit-log.action_type", value: "treatment", label: "Treatment"}
+  - {op: "add_enum_value", field_id: "ENT-team-activity-audit-log.action_type", value: "patient_communication", label: "Patient Communication"}
+  - {op: "add_enum_value", field_id: "ENT-team-activity-audit-log.action_type", value: "settings", label: "Settings"}
+  - {op: "add_enum_value", field_id: "ENT-team-activity-audit-log.action_type", value: "patient_access", label: "Patient Access"}
+  - {op: "add_enum_value", field_id: "ENT-team-activity-audit-log.action_type", value: "data_export", label: "Data Export"}
