@@ -1,0 +1,680 @@
+reason: 'Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-014)'
+by: controller
+operations:
+- {op: merge_node, survivor: REQ-005-020, loser: REQ-014-105}
+- {op: merge_node, survivor: REQ-005-020, loser: REQ-014-118}
+- {op: merge_node, survivor: REQ-004-030, loser: REQ-014-108}
+- {op: merge_node, survivor: REQ-004-030, loser: REQ-014-130}
+- {op: add_edge, from: ACT-platform-admin, verb: acts in, to: STG-admin-02-operations}
+- {op: remove_edge, from: STP-014-006, verb: at, to: STG-provider-03-active}
+- {op: add_edge, from: STP-014-006, verb: at, to: STG-admin-02-operations}
+- {op: remove_edge, from: STP-014-007, verb: at, to: STG-provider-03-active}
+- {op: add_edge, from: STP-014-007, verb: at, to: STG-admin-02-operations}
+- {op: remove_edge, from: STP-014-008, verb: at, to: STG-provider-03-active}
+- {op: add_edge, from: STP-014-008, verb: at, to: STG-admin-02-operations}
+- {op: remove_edge, from: STP-014-009, verb: at, to: STG-provider-03-active}
+- {op: add_edge, from: STP-014-009, verb: at, to: STG-admin-02-operations}
+- {op: remove_edge, from: STP-014-010, verb: at, to: STG-provider-03-active}
+- {op: add_edge, from: STP-014-010, verb: at, to: STG-admin-02-operations}
+- {op: remove_edge, from: STP-014-011, verb: at, to: STG-provider-03-active}
+- {op: add_edge, from: STP-014-011, verb: at, to: STG-admin-02-operations}
+- {op: remove_edge, from: STP-014-012, verb: at, to: STG-provider-03-active}
+- {op: add_edge, from: STP-014-012, verb: at, to: STG-admin-02-operations}
+- {op: remove_edge, from: STP-014-013, verb: at, to: STG-provider-03-active}
+- {op: add_edge, from: STP-014-013, verb: at, to: STG-admin-02-operations}
+- {op: remove_edge, from: STP-014-018, verb: at, to: STG-provider-03-active}
+- {op: add_edge, from: STP-014-018, verb: at, to: STG-admin-02-operations}
+- {op: remove_edge, from: SCR-014-07, verb: belongs to, to: STG-provider-03-active}
+- {op: add_edge, from: SCR-014-07, verb: belongs to, to: STG-admin-02-operations}
+- {op: remove_edge, from: SCR-014-08, verb: belongs to, to: STG-provider-03-active}
+- {op: add_edge, from: SCR-014-08, verb: belongs to, to: STG-admin-02-operations}
+- {op: remove_edge, from: SCR-014-09, verb: belongs to, to: STG-provider-03-active}
+- {op: add_edge, from: SCR-014-09, verb: belongs to, to: STG-admin-02-operations}
+- {op: remove_edge, from: SCR-014-10, verb: belongs to, to: STG-provider-03-active}
+- {op: add_edge, from: SCR-014-10, verb: belongs to, to: STG-admin-02-operations}
+- {op: remove_edge, from: SCR-014-11, verb: belongs to, to: STG-provider-03-active}
+- {op: add_edge, from: SCR-014-11, verb: belongs to, to: STG-admin-02-operations}
+- {op: remove_edge, from: SCR-014-12, verb: belongs to, to: STG-provider-03-active}
+- {op: add_edge, from: SCR-014-12, verb: belongs to, to: STG-admin-02-operations}
+- {op: remove_edge, from: SCR-014-13, verb: belongs to, to: STG-provider-03-active}
+- {op: add_edge, from: SCR-014-13, verb: belongs to, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-064, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-064, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-065, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-065, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-066, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-066, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-067, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-067, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-068, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-068, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-069, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-069, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-070, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-070, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-071, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-071, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-072, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-072, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-073, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-073, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-074, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-074, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-075, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-075, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-076, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-076, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-077, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-077, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-078, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-078, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-079, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-079, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-080, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-080, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-081, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-081, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-082, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-082, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-083, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-083, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-084, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-084, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-085, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-085, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-086, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-086, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-087, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-087, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-088, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-088, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-089, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-089, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-090, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-090, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-091, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-091, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-092, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-092, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-093, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-093, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-094, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-094, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-095, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-095, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-096, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-096, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-097, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-097, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-098, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-098, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-099, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-099, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-100, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-100, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-101, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-101, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-102, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-102, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-103, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-103, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-104, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-104, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-106, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-107, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-109, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-110, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-111, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-112, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-115, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-116, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-117, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-121, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-121, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-123, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-123, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-124, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-124, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-125, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-126, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-128, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-129, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-131, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-132, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-133, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-134, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-135, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-136, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-137, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-138, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-139, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-140, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-141, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-142, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-143, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-144, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-145, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-146, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-147, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-148, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-149, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-150, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-151, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-152, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-153, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-155, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-155, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-157, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-157, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-158, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-159, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-160, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-162, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-163, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-164, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-165, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-166, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-167, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-168, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-169, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-170, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-172, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-172, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-173, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-174, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-175, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-175, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-178, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-245, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-245, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-246, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-246, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-247, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-247, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-248, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-248, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-249, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-249, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-250, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-250, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-251, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-251, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-252, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-252, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-253, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-253, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-254, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-254, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-255, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-255, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-256, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-256, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-257, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-257, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-258, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-258, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-259, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-259, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-260, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-260, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-261, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-261, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-262, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-262, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-263, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-263, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-264, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-264, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-265, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-265, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-266, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-266, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-267, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-267, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-268, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-268, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-269, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-269, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-270, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-270, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-271, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-271, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-272, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-272, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-273, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-273, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-274, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-274, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-275, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-275, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-276, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-276, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-277, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-277, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-278, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-278, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-279, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-279, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-280, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-280, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-281, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-281, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-282, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-282, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-283, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-283, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-284, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-284, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-285, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-285, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-286, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-286, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-287, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-287, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-288, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-288, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-289, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-289, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-290, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-290, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-291, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-291, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-292, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-292, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-293, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-293, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-294, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-294, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-295, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-295, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-296, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-296, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-297, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-297, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-298, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-298, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-299, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-299, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-300, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-300, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-301, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-301, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-302, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-302, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-303, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-303, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-304, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-304, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-305, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-305, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-306, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-306, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-307, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-307, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-308, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-308, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-309, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-309, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-310, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-310, verb: applies at, to: STG-admin-02-operations}
+- {op: remove_edge, from: REQ-014-311, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-311, verb: applies at, to: STG-admin-02-operations}
+- op: add_node
+  id: REQ-014-002
+  type: Rule
+  owner_fr: FR-014
+  title: Screen 1 time range filter
+  attrs: {statement: 'System MUST offer a time range filter in the Screen 1 header with options Today, This week, Last 4 weeks, Last 12 weeks and Custom, defaulting to Last 4 weeks', rationale: 'PRD Functional Requirements Summary, REQ-014-002 (Screen 1).'}
+- {op: add_edge, from: REQ-014-002, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-002, verb: applies to, to: SCR-014-01}
+- op: add_node
+  id: REQ-014-003
+  type: Rule
+  owner_fr: FR-014
+  title: Screen 1 country filter
+  attrs: {statement: 'System MUST offer a multi-select Country filter in the Screen 1 header, defaulting to all countries', rationale: 'PRD Functional Requirements Summary, REQ-014-003 (Screen 1).'}
+- {op: add_edge, from: REQ-014-003, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-003, verb: applies to, to: SCR-014-01}
+- op: add_node
+  id: REQ-014-004
+  type: Rule
+  owner_fr: FR-014
+  title: Screen 1 click cross-filters all sections
+  attrs: {statement: System MUST apply a single click on any Screen 1 widget element as a cross-filter on all sections, rationale: 'PRD Functional Requirements Summary, REQ-014-004 (Screen 1).'}
+- {op: add_edge, from: REQ-014-004, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-004, verb: applies to, to: SCR-014-01}
+- op: add_node
+  id: REQ-014-005
+  type: Rule
+  owner_fr: FR-014
+  title: Screen 1 operational list opens only from View list
+  attrs: {statement: System MUST open the operational list behind a Screen 1 element in a new context only from an explicit "View list" action in the element's tooltip or keyboard focus menu, rationale: 'PRD Functional Requirements Summary, REQ-014-005 (Screen 1).'}
+- {op: add_edge, from: REQ-014-005, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-005, verb: applies to, to: SCR-014-01}
+- op: add_node
+  id: REQ-014-006
+  type: Rule
+  owner_fr: FR-014
+  title: Screen 1 tooltip definition and localisation
+  attrs: {statement: 'System MUST show in each Screen 1 tooltip the metric definition, numerator and denominator, and time basis, and MUST localize dates, currencies and timezone', rationale: 'PRD Functional Requirements Summary, REQ-014-006 (Screen 1).'}
+- {op: add_edge, from: REQ-014-006, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-006, verb: applies to, to: SCR-014-01}
+- op: add_node
+  id: REQ-014-007
+  type: Rule
+  owner_fr: FR-014
+  title: Screen 1 loading, low-sample and error states
+  attrs: {statement: 'System MUST show skeletons while Screen 1 loads, helper copy with counts still rendered below 30 inquiries, non-blocking error banners with retry, and masked patient names throughout', rationale: 'PRD Functional Requirements Summary, REQ-014-007 (Screen 1).'}
+- {op: add_edge, from: REQ-014-007, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-007, verb: applies to, to: SCR-014-01}
+- op: add_node
+  id: REQ-014-008
+  type: Rule
+  owner_fr: FR-014
+  title: Screen 1 Tile 1 New Inquiries
+  attrs: {statement: 'System MUST display Tile 1 (New Inquiries) as Today and This week counts, opening the Inquiries list with the time filter applied', rationale: 'PRD Functional Requirements Summary, REQ-014-008 (Screen 1).'}
+- {op: add_edge, from: REQ-014-008, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-008, verb: applies to, to: SCR-014-01}
+- op: add_node
+  id: REQ-014-009
+  type: Rule
+  owner_fr: FR-014
+  title: Screen 1 Tile 2 TTFQ
+  attrs: {statement: 'System MUST display Tile 2 (TTFQ) as p50 and p90 against the SLA in a compact dual bullet, coloured Green, Amber or Red by the Tile 2 thresholds, opening the Inquiries list grouped by coordinator', rationale: 'PRD Functional Requirements Summary, REQ-014-009 (Screen 1).'}
+- {op: add_edge, from: REQ-014-009, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-009, verb: applies to, to: SCR-014-01}
+- op: add_node
+  id: REQ-014-010
+  type: Rule
+  owner_fr: FR-014
+  title: Screen 1 TTFQ measurement
+  attrs: {statement: 'System MUST measure TTFQ per the Tile 2 formula, from the inquiry''s distribution to the provider to the first send of the provider''s earliest parent quote, excluding auto-acknowledgements', rationale: 'PRD Functional Requirements Summary, REQ-014-010 (Screen 1).'}
+- {op: add_edge, from: REQ-014-010, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-010, verb: applies to, to: SCR-014-01}
+- op: add_node
+  id: REQ-014-011
+  type: Rule
+  owner_fr: FR-014
+  title: Screen 1 Inquiry Queue columns
+  attrs: {statement: 'System MUST display the Inquiry Queue with columns Received (relative time and SLA countdown), Patient (ID-masked), Age, Problem, Country and Actions (View link)', rationale: 'PRD Functional Requirements Summary, REQ-014-011 (Screen 1).'}
+- {op: add_edge, from: REQ-014-011, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-011, verb: applies to, to: SCR-014-01}
+- op: add_node
+  id: REQ-014-012
+  type: Rule
+  owner_fr: FR-014
+  title: Screen 1 Inquiry Queue New badge, sort and paging
+  attrs: {statement: 'System MUST mark Inquiry Queue rows with the `New` badge until the provider submits a parent quote, sort `New` rows first then by received time ascending, and show 10 rows per page', rationale: 'PRD Functional Requirements Summary, REQ-014-012 (Screen 1).'}
+- {op: add_edge, from: REQ-014-012, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-012, verb: applies to, to: SCR-014-01}
+- op: add_node
+  id: REQ-014-013
+  type: Rule
+  owner_fr: FR-014
+  title: Screen 1 B1 funnel
+  attrs: {statement: 'System MUST display B1 as a funnel (Inquiries, Quoted, Accepted, Confirmed booking) with count and step percentage per stage and overall booking conversion as footer', rationale: 'PRD Functional Requirements Summary, REQ-014-013 (Screen 1).'}
+- {op: add_edge, from: REQ-014-013, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-013, verb: applies to, to: SCR-014-01}
+- op: add_node
+  id: REQ-014-014
+  type: Rule
+  owner_fr: FR-014
+  title: Screen 1 B1 counting grain
+  attrs: {statement: 'System MUST count B1 as distinct inquiry/provider pairs in one inquiry cohort, cumulative through each reached stage, with Confirmed booking meaning a successful deposit or first installment confirms the FR-006 Booking; clicking a stage opens the filtered Inquiries list', rationale: 'PRD Functional Requirements Summary, REQ-014-014 (Screen 1).'}
+- {op: add_edge, from: REQ-014-014, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-014, verb: applies to, to: SCR-014-01}
+- op: add_node
+  id: REQ-014-015
+  type: Rule
+  owner_fr: FR-014
+  title: Screen 1 B2 TTFQ bullet chart
+  attrs: {statement: 'System MUST display B2 as a bullet chart of p50 and p90 with the SLA as target marker, coloured by the Tile 2 thresholds, opening the Inquiries list grouped by coordinator', rationale: 'PRD Functional Requirements Summary, REQ-014-015 (Screen 1).'}
+- {op: add_edge, from: REQ-014-015, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-015, verb: applies to, to: SCR-014-01}
+- op: add_node
+  id: REQ-014-016
+  type: Rule
+  owner_fr: FR-014
+  title: Screen 1 B3 booking intensity heatmap
+  attrs: {statement: 'System MUST display B3 as a 6-row by 7-column Monday-to-Sunday calendar heatmap for the next 6 weeks, coloured by the Intensity Index (bookings on the day divided by that month''s daily average, times 100)', rationale: 'PRD Functional Requirements Summary, REQ-014-016 (Screen 1).'}
+- {op: add_edge, from: REQ-014-016, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-016, verb: applies to, to: SCR-014-01}
+- op: add_node
+  id: REQ-014-017
+  type: Rule
+  owner_fr: FR-014
+  title: Screen 1 B3 booking count basis
+  attrs: {statement: System MUST count B3 bookings only per REQ-014-116 (Confirmed and In Progress by appointment date), rationale: 'PRD Functional Requirements Summary, REQ-014-017 (Screen 1).'}
+- {op: add_edge, from: REQ-014-017, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-017, verb: applies to, to: SCR-014-01}
+- op: add_node
+  id: REQ-014-018
+  type: Rule
+  owner_fr: FR-014
+  title: Screen 1 B3 colour bands and drill-down
+  attrs: {statement: 'System MUST colour B3 cells Cool (50% or less), Below avg (50 to 90%), Neutral (90 to 110%), Above avg (110 to 150%) or Hot (over 150%), show the Confirmed bookings, monthly average and index in the cell tooltip, and open the Schedule day view on click', rationale: 'PRD Functional Requirements Summary, REQ-014-018 (Screen 1).'}
+- {op: add_edge, from: REQ-014-018, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-018, verb: applies to, to: SCR-014-01}
+- op: add_node
+  id: REQ-014-019
+  type: Rule
+  owner_fr: FR-014
+  title: Screen 1 B3 baseline order and clamp
+  attrs: {statement: 'System MUST choose the B3 baseline in the order 12-month same-month average, current month to date, rolling 90 days, and clamp the colour index to 0 to 300% while showing the actual value in the tooltip', rationale: 'PRD Functional Requirements Summary, REQ-014-019 (Screen 1).'}
+- {op: add_edge, from: REQ-014-019, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-019, verb: applies to, to: SCR-014-01}
+- op: add_node
+  id: REQ-014-020
+  type: Rule
+  owner_fr: FR-014
+  title: Screen 1 B4 country donut
+  attrs: {statement: 'System MUST display B4 as a donut of the top 8 countries by inquiry share plus Other, with total inquiries in the centre and `CC (ISO-2) • %` slice labels', rationale: 'PRD Functional Requirements Summary, REQ-014-020 (Screen 1).'}
+- {op: add_edge, from: REQ-014-020, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-020, verb: applies to, to: SCR-014-01}
+- op: add_node
+  id: REQ-014-021
+  type: Rule
+  owner_fr: FR-014
+  title: Screen 1 B4 slice border by Confirmed booking rate
+  attrs: {statement: 'System MUST style B4 slice borders by confirmed booking rate (thin/neutral under 20%, medium/amber 20 to 40%, thick/green over 40%) and show country, inquiries, Confirmed bookings and Confirmed booking rate in the tooltip', rationale: 'PRD Functional Requirements Summary, REQ-014-021 (Screen 1).'}
+- {op: add_edge, from: REQ-014-021, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-021, verb: applies to, to: SCR-014-01}
+- op: add_node
+  id: REQ-014-022
+  type: Rule
+  owner_fr: FR-014
+  title: Screen 1 B4 cohort basis and drill-down
+  attrs: {statement: 'System MUST compute B4 Confirmed bookings and rate from the inquiry cohort and Confirmed booking stage in Analytics Counting & Time Basis, and open the filtered Inquiries list on slice click', rationale: 'PRD Functional Requirements Summary, REQ-014-022 (Screen 1).'}
+- {op: add_edge, from: REQ-014-022, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-022, verb: applies to, to: SCR-014-01}
+- op: add_node
+  id: REQ-014-023
+  type: Rule
+  owner_fr: FR-014
+  title: Screen 1 C1 weekly income chart
+  attrs: {statement: 'System MUST display C1 as a weekly area line chart of income only in the provider currency, opening the Earnings report for the clicked week', rationale: 'PRD Functional Requirements Summary, REQ-014-023 (Screen 1).'}
+- {op: add_edge, from: REQ-014-023, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-023, verb: applies to, to: SCR-014-01}
+- op: add_node
+  id: REQ-014-024
+  type: Rule
+  owner_fr: FR-014
+  title: Screen 1 C2 income by treatment Pareto
+  attrs: {statement: 'System MUST display C2 as a Pareto bar chart of income by treatment (top N plus Other, with cumulative percentage line), attributing treatment as Screen 4 Widget 2 does, opening the Cases list filtered by treatment', rationale: 'PRD Functional Requirements Summary, REQ-014-024 (Screen 1).'}
+- {op: add_edge, from: REQ-014-024, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-024, verb: applies to, to: SCR-014-01}
+- op: add_node
+  id: REQ-014-025
+  type: Rule
+  owner_fr: FR-014
+  title: Screen 1 C3 accepted-but-unpaid aging buckets
+  attrs: {statement: 'System MUST display C3 as a stacked horizontal bar of accepted selections awaiting initial payment in the buckets 0-24h, 1-3d, 4-7d, 8-14d and over 14d, with an optional legend by treatment (top 3) or country', rationale: 'PRD Functional Requirements Summary, REQ-014-025 (Screen 1).'}
+- {op: add_edge, from: REQ-014-025, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-025, verb: applies to, to: SCR-014-01}
+- op: add_node
+  id: REQ-014-026
+  type: Rule
+  owner_fr: FR-014
+  title: Screen 1 C3 age and eligibility basis
+  attrs: {statement: 'System MUST compute C3 age from the immutable acceptance time and count only pending bookings with a valid exclusive payment-window hold, excluding cancelled selections, superseded acceptance events, expired holds and Payment Window Expired bookings', rationale: 'PRD Functional Requirements Summary, REQ-014-026 (Screen 1).'}
+- {op: add_edge, from: REQ-014-026, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-026, verb: applies to, to: SCR-014-01}
+- op: add_node
+  id: REQ-014-027
+  type: Rule
+  owner_fr: FR-014
+  title: Screen 1 C3 drill-down to Accepted Quotes
+  attrs: {statement: 'System MUST open from a C3 bucket the Accepted Quotes list resolved to the exact accepted subquote and pending booking, using the actual configured hold deadline', rationale: 'PRD Functional Requirements Summary, REQ-014-027 (Screen 1).'}
+- {op: add_edge, from: REQ-014-027, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-027, verb: applies to, to: SCR-014-01}
+- op: add_node
+  id: REQ-014-028
+  type: Rule
+  owner_fr: FR-014
+  title: Screen 1 C4 payout chart and inline table
+  attrs: {statement: 'System MUST display C4 as a monthly column chart (last 6 to 12 months) with an inline table of 2 to 3 rows and columns Type, Period, Amount, Scheduled Date and Cadence', rationale: 'PRD Functional Requirements Summary, REQ-014-028 (Screen 1).'}
+- {op: add_edge, from: REQ-014-028, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-028, verb: applies to, to: SCR-014-01}
+- op: add_node
+  id: REQ-014-029
+  type: Rule
+  owner_fr: FR-014
+  title: Screen 1 C4 payout Type mapping
+  attrs: {statement: 'System MUST set the C4 Type to the provider display status from the Screen 4 Widget 8 FR-017 mapping (Upcoming, Processing, Paid, Failed; Voided never shown), listing the next Upcoming payout, any Processing or Failed payout, then the most recent Paid payout, up to 3 rows', rationale: 'PRD Functional Requirements Summary, REQ-014-029 (Screen 1).'}
+- {op: add_edge, from: REQ-014-029, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-029, verb: applies to, to: SCR-014-01}
+- op: add_node
+  id: REQ-014-030
+  type: Rule
+  owner_fr: FR-014
+  title: Screen 1 C4 scheduled date and drill-down
+  attrs: {statement: System MUST show in C4 the FR-017 scheduled payout date (the paid date for Paid rows) and open the Payout statements list (CSV/PDF export) on bar click, rationale: 'PRD Functional Requirements Summary, REQ-014-030 (Screen 1).'}
+- {op: add_edge, from: REQ-014-030, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-030, verb: applies to, to: SCR-014-01}
+- op: add_node
+  id: REQ-014-031
+  type: Rule
+  owner_fr: FR-014
+  title: Screen 1 single scrollable page order
+  attrs: {statement: 'System MUST present Screen 1 as one scrollable page without tabs, ordered header filters, Section A (Inbox), Section B (Performance), Section C (Financials)', rationale: 'PRD Functional Requirements Summary, REQ-014-031 (Screen 1).'}
+- {op: add_edge, from: REQ-014-031, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-031, verb: applies to, to: SCR-014-01}
+- op: add_node
+  id: REQ-014-032
+  type: Rule
+  owner_fr: FR-014
+  title: Screen 1 single column at 1024px and below
+  attrs: {statement: System MUST collapse Screen 1 to a single column at 1024px width and below, rationale: 'PRD Functional Requirements Summary, REQ-014-032 (Screen 1).'}
+- {op: add_edge, from: REQ-014-032, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: REQ-014-032, verb: applies to, to: SCR-014-01}
+- op: add_node
+  id: REQ-014-312
+  type: Rule
+  owner_fr: FR-014
+  title: Provider team size and role distribution (Screen 8 Widget 6)
+  attrs: {statement: 'System MUST display provider team size and role distribution across the platform (Screen 8 Widget 6), so admins can see how large each clinic team is and how team members are spread across the clinic roles', rationale: 'PRD Functional Requirements Summary, REQ-014-312 (Screen 8 Widget 6).'}
+- {op: add_edge, from: REQ-014-312, verb: applies at, to: STG-admin-02-operations}
+- {op: add_edge, from: REQ-014-312, verb: applies to, to: SCR-014-08}
+- op: update_node
+  id: REQ-014-001
+  attrs: {rationale: 'PRD Functional Requirements Summary, REQ-014-001. States the Screen 1 lock; the Screen 1 Rules REQ-014-002 to REQ-014-032 follow it individually. Restated by the Screen 1 lock notice (PO formula/metric-label-only exceptions, Qualified stage removed, TTFQ from distribution, only the New row badge kept).'}
+- op: update_node
+  id: REQ-014-066
+  attrs: {statement: 'System MUST display provider engagement rate, activity-based Dormant provider count, and separately labelled Non-responding provider count (0 first-submitted parent quotes within the Dormant threshold window)'}
+- op: update_node
+  id: REQ-014-095
+  attrs: {statement: 'System MUST display upcoming provider payout obligations table (amount, provider, date, cadence as defined in Assumption 5)'}
+- op: update_node
+  id: REQ-014-096
+  attrs: {statement: 'System MUST display installment plan health donut using FR-007B Plan Status labels (Active / Canceled / Completed / Defaulted); Overdue is a flag on a plan, not a status segment'}
+- op: update_node
+  id: REQ-014-111
+  attrs: {statement: 'System MUST preserve accepted price/currency/locked-rate provenance and historical reporting-conversion provenance; accepted historical prices MUST NOT be overwritten by library changes, cancellation, hold expiry, or later financial adjustments; missing canonical history MUST NOT be filled with an invented alternative price or today''s package/FX value.'}
+- op: update_node
+  id: REQ-014-153
+  attrs: {statement: 'All currency amounts converted using the daily FX rates (the Currency Exchange Rate record owned by FR-029: one fetched rate per pair per day) cached from the currency conversion API; rates locked at the transaction date for historical data. On API failure, fall back to the previous day''s cached rate up to a maximum of 48 hours; beyond 48 hours, affected widgets show "FX data unavailable" instead of rendering with stale rates; Accepted-price observations preserve the FR-005 acceptance snapshot''s original currency, total price, locked exchange rate, and acceptance time. If a different reporting currency needs an additional conversion, use a historical acceptance-date reporting rate and retain its provenance; do not replace the commercial locked rate with today''s rate. Payment/payout records retain their own existing historical financial FX basis. Missing historical provenance yields an unavailable affected amount metric, not an inferred currency, current package price, or current FX value.'}
+- op: update_node
+  id: REQ-014-161
+  attrs: {statement: 'Default provider-role access to the provider analytics screens, using the FR-009 roles. The matrix states the default data-domain grants only; actual visibility is always resolved through Rules 15A and 15B, so a role whose permissions are changed sees whatever its granted data domains allow. Screens or sections a role cannot see are hidden from navigation, not shown as locked. Screen 1 Main Dashboard — Sections A and B (inbox and performance): Owner: Full; Manager: Full; Billing Staff: Hidden; Clinical Staff: Hidden; Screen 1 Main Dashboard — Section C (financials): Owner: Full; Manager: Only with financial permission; Billing Staff: Full; Clinical Staff: Hidden; Screen 2 Performance & Conversion: Owner: Full; Manager: Full; Billing Staff: Hidden; Clinical Staff: Hidden; Screen 3 Patient Analytics: Owner: Full; Manager: Full; Billing Staff: Hidden; Clinical Staff: Satisfaction and aftercare widgets only; Screen 4 Finance & Payouts: Owner: Full; Manager: Only with financial permission; Billing Staff: Full; Clinical Staff: Hidden; Screen 5 Pricing & Benchmarks: Owner: Full; Manager: Full; Billing Staff: Full; Clinical Staff: Hidden; Screen 6 Export Report Configuration: Owner: Full; Manager: Exports limited to the screens and widgets the user can see; Billing Staff: Exports limited to the screens and widgets the user can see; Clinical Staff: Exports limited to the screens and widgets the user can see (Screen 3 exports contain only the satisfaction and aftercare widgets)'}
+- op: update_node
+  id: REQ-014-177
+  attrs: {statement: 'There is no per-clinic payout frequency. Payout cadence, wherever shown in this FR, means how the payout is released: automatic release on the Stripe Connect rail, or on the manual rail the single settlement-period setting owned by FR-029 (default weekly, Sunday cutoff, Wednesday payout) that applies to all manually paid clinics'}
+- op: update_node
+  id: REQ-014-193
+  attrs: {statement: 'Chart: Column bar (monthly, last 6–12 months) + inline table (2–3 rows); Inline table columns: Type, Period, Amount, Scheduled Date, Cadence; Type = the provider display status from the Screen 4 Widget 8 FR-017 mapping (Upcoming / Processing / Paid / Failed; Voided is never shown). Rows: the next Upcoming payout, any Processing or Failed payout, then the most recent Paid payout, up to 3 rows. Scheduled Date = FR-017 scheduled payout date; for Paid rows it shows the paid date. Cadence = how the payout is released (see Assumption 5), not a per-clinic frequency. Definition only; columns and layout unchanged; Drill-down: click bar → Payout statements list (CSV/PDF export)'}
+- op: update_node
+  id: REQ-014-216
+  attrs: {statement: 'Chart type: Donut + KPI summary; Segments: Installment payments · Full payments; KPI: Avg number of installments for installment plans; Trend: Monthly installment adoption rate = bookings first confirmed in the month whose payment is an FR-007B installment plan ÷ all bookings first confirmed in the month (one observation per booking); Drill-down: Click segment → Payments list filtered by payment type; Data source: the payment type (`payments.payment_type`, value `installment` versus full payment) for the payment split; FR-007B installment plan records for the average installment count and the adoption rate. The donut counts payment records; the adoption rate counts bookings, so the two values are not interchangeable.'}
+- op: update_node
+  id: REQ-014-218
+  attrs: {statement: 'Chart type: Column bar chart (monthly, full history) + paginated table below; Bar chart: Last 12 months of disbursed payouts; Table columns: Period · Amount · Status (Upcoming / Processing / Paid / Failed) · Paid date · Cadence (how the payout is released, see Assumption 5); All rows: Full history (not limited to the 2–3 rows shown in the Main Dashboard Section C4 inline table); Drill-down: Click bar or row → Payout statement detail (CSV/PDF export); Payout status mapping (FR-017): Upcoming: No statement yet for the period, or Pending Approval, Approved, or Overdue (internal admin review states are not shown to providers); Processing: Processing (Stripe transfer initiated); Paid: Paid (`transfer.paid`); Paid date = webhook time; Failed: Failed (`transfer.failed`); returns to Processing when admin retries; (not shown): Voided — excluded from the provider''s payout chart, table, totals, and exports. Voided is an internal admin audit state; the period appears as Upcoming again once FR-017 re-generates a statement on the next payout cycle'}
+- op: update_node
+  id: REQ-014-221
+  title: Payout history shows each payout period with its display status
+  attrs: {statement: 'Payout history shows each payout period with its provider display status (Upcoming, Processing, Paid or Failed) per the Payout status mapping above; future payouts beyond the next scheduled one are not projected'}
+- op: update_node
+  id: REQ-014-249
+  attrs: {statement: 'Value: % of active providers who first submitted at least 1 parent quote within the Dormant threshold window (FR-026 Analytics Configuration, default 30 days) ending at the period end. "Active providers" here means account `status = active` (the Tile 1 definition, FR-015), not the activity-based Active engagement status in Screen 8 Widget 3; Sub-values: Dormant providers (engagement status from Screen 8 Widget 3, based on provider activity) and Non-responding providers (0 first-submitted parent quotes within the same Dormant threshold window; drafts, child records, edits, and resends do not count as new submissions). These are separate counts; a provider can be active but non-responding. Tap → Screen 8 engagement section filtered to dormant'}
+- op: update_node
+  id: REQ-014-259
+  attrs: {statement: 'All three sections respect the time range filter. In Section A: Tile 1 shows providers with `status = active` at the end of the selected period plus those onboarded within it; Tiles 2 and 3 count records created within the period, compared with the prior equivalent period; Tile 4 tiers providers from TTFQ observations in the period; Tile 5 uses the trailing Dormant threshold window (default 30 days) ending at the period end, with engagement status as at the period end'}
+- op: update_node
+  id: REQ-014-286
+  attrs: {rationale: PRD Screen 11 Widget 6 (widget specification) and its Functional Requirements Summary line REQ-014-286.}
+- op: update_node
+  id: REQ-014-294
+  attrs: {statement: 'Chart type: KPI tile + table; KPI: Total upcoming payout amount (next 30 days); Table columns: Provider · Amount · Payout date · Cadence (how the payout is released, see Assumption 5) · Status (FR-017: Pending Approval / Approved / Overdue / Processing); Sort: Payout date ascending; Drill-down: Click row → provider payout detail in FR-017'}
+- op: update_node
+  id: REQ-014-295
+  attrs: {statement: 'Chart type: Donut + KPI; Segments: Active · Canceled · Completed · Defaulted (FR-007B Plan Status labels; Overdue is a flag on a plan, not a status segment); KPI: Total outstanding installment balance (Active plans, including those flagged Overdue, and Defaulted plans); Data source: `installment_plans` table status, using the FR-007B Plan Status values unchanged; Drill-down: Click segment → Installment plans list filtered by status'}
+- {op: remove_edge, from: REQ-014-161, verb: applies to, to: ACT-provider-custom-role}
+- {op: update_node, id: ENT-currency-exchange-rate, owner_fr: FR-029}
+- {op: update_node, id: ENT-currency-exchange-rate.base_currency, owner_fr: FR-029}
+- {op: update_node, id: ENT-currency-exchange-rate.date, owner_fr: FR-029}
+- {op: update_node, id: ENT-currency-exchange-rate.exchange_rate, owner_fr: FR-029}
+- {op: update_node, id: ENT-currency-exchange-rate.fetched_at, owner_fr: FR-029}
+- {op: update_node, id: ENT-currency-exchange-rate.target_currency, owner_fr: FR-029}
+- {op: add_edge, from: REQ-014-234, verb: applies to, to: EVT-analytics-export-ready}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-003-118}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-003-062}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-006-017}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-006-016}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-006-060}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-006-005}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-007-006}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-007-016}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-007-023}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-007B-033}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-007B-019}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-007B-095}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-009-002}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-009-011}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-009-163}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-009-028}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-010-079}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-010-006}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-010-033}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-010-076}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-011-017}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-011-001}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-011-016}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-016-002}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-016-038}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-001-010}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-017-068}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-017-040}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-018-051}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-018-013}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-029-085}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-029-056}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-029-058}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-031-110}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-031-064}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-030-105}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-002-024}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-004-025}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-004-084}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-004-086}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-029-044}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-013-023}
+- {op: add_edge, from: FR-014, verb: references, to: REQ-026-038}
