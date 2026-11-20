@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-20T08:24:35Z",
+  "generated_at": "2026-11-20T12:50:28Z",
   "schema_version": 10,
   "nodes": [
     {
@@ -38505,10 +38505,11 @@
       "owner_fr": "FR-001",
       "title": "Patient data retained at least 7 years",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Patient data retention follows the system PRD, Platform-Wide Rules: One 10-year retention period",
-        "rationale": "Functional Requirements Summary. Retention is the one platform-wide period carried by REQ-SYS-002."
+        "rationale": "Functional Requirements Summary. Retention is the one platform-wide period carried by REQ-SYS-002.",
+        "distinct_from": "REQ-010-013,REQ-023-011,REQ-029-027"
       }
     },
     {
@@ -40090,10 +40091,11 @@
       "owner_fr": "FR-001",
       "title": "Verification code input is numeric and needs all six digits",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "The verification code input accepts numeric characters only, and Continue is enabled only when all 6 digits are entered.",
-        "rationale": "Proposed from prd.md line 409-410 (table cells, not a PRD sentence)."
+        "rationale": "Proposed from prd.md line 409-410 (table cells, not a PRD sentence).",
+        "distinct_from": "REQ-001-147"
       }
     },
     {
@@ -44596,10 +44598,11 @@
       "owner_fr": "FR-006",
       "title": "Booking detail aggregates earlier stages in order",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "All sections display data from previous stages (inquiry → parent quote/subquote → acceptance → booking) in chronological order.",
-        "rationale": "Restated by Screen 6 business rules."
+        "rationale": "Restated by Screen 6 business rules.",
+        "distinct_from": "REQ-007-052"
       }
     },
     {
@@ -47108,10 +47111,11 @@
       "owner_fr": "FR-008",
       "title": "Automatic passport request at Confirmed (Path A)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "The system MUST automatically request passport details from the patient once when the linked FR-006 booking becomes **Confirmed** and the accepted option snapshot yields Path A. No provider or admin trigger is required.",
-        "rationale": "Restated by Main Flow 1 trigger and step A2, Patient Platform scope, Shared Services scope and Business Rules 'Automated Trigger on Confirmed Booking'."
+        "rationale": "Restated by Main Flow 1 trigger and step A2, Patient Platform scope, Shared Services scope and Business Rules 'Automated Trigger on Confirmed Booking'.",
+        "distinct_from": "REQ-008-034"
       }
     },
     {
@@ -47131,10 +47135,11 @@
       "owner_fr": "FR-008",
       "title": "Flight submitter follows the travel path",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "The system MUST allow the patient to submit flight records in Path B or the provider to submit them in Path A only when flight is included in the accepted option. It MUST reject mixed submitters for the same booking.",
-        "rationale": "No submitter mixing: Path A flight and hotel entries come from the provider only, Path B entries from the patient only; admin corrects in both paths (Travel Path Determination)."
+        "rationale": "No submitter mixing: Path A flight and hotel entries come from the provider only, Path B entries from the patient only; admin corrects in both paths (Travel Path Determination).",
+        "distinct_from": "REQ-008-011"
       }
     },
     {
@@ -47443,10 +47448,11 @@
       "owner_fr": "FR-008",
       "title": "Future phase: in-app flight search and booking",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "The system SHOULD integrate a flight search API (e.g. Amadeus) to enable in-app flight booking in a future phase.",
-        "aliases": "REQ-008-F01"
+        "aliases": "REQ-008-F01",
+        "distinct_from": "REQ-008-036"
       }
     },
     {
@@ -54709,10 +54715,11 @@
       "owner_fr": "FR-014",
       "title": "Funnel conversion trend chart (Screen 2)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "System MUST display cumulative distinct-inquiry funnel conversion trend ending in Confirmed booking as a multi-line chart with weekly/monthly toggle",
-        "rationale": "PRD line 1658 (Functional Requirements Summary, REQ-014-033)."
+        "rationale": "PRD line 1658 (Functional Requirements Summary, REQ-014-033).",
+        "distinct_from": "REQ-014-075"
       }
     },
     {
@@ -54817,10 +54824,11 @@
       "owner_fr": "FR-014",
       "title": "New vs returning patient rate (Screen 3)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "System MUST display new vs. returning patient rate as donut and monthly trend line",
-        "rationale": "PRD line 1670 (Functional Requirements Summary, REQ-014-042)."
+        "rationale": "PRD line 1670 (Functional Requirements Summary, REQ-014-042).",
+        "distinct_from": "REQ-014-076"
       }
     },
     {
@@ -56629,10 +56637,11 @@
       "owner_fr": "FR-014",
       "title": "Screen 2 Widget 3 Conversion by Patient Country",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "Chart type: Horizontal ranked bar chart; Y axis: Patient country (top 10 by inquiry volume); X axis: Booking conversion % (Inquiries → Confirmed booking); Secondary bar: Inquiry count (context for the rate); Drill-down: Click bar → filtered Inquiries list for that country; Data source: `inquiries.patient_id → patients.location_id → countries.name`, with temporary fallback to legacy `patients.location` only for unmigrated rows.",
-        "rationale": "PRD lines 298-304."
+        "rationale": "PRD lines 298-304.",
+        "distinct_from": "REQ-014-213"
       }
     },
     {
@@ -59266,9 +59275,10 @@
       "owner_fr": "FR-015",
       "title": "Commission and payout edits require admin re-authentication",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Admin can edit commission settings (requires re-authentication). In MVP this is implemented as password re-entry; once the shared MFA stack from FR-026 / FR-031 is delivered, these actions MUST use MFA-based re-authentication and any MFA references in this FR are to be understood as future (non-MVP) behavior."
+        "statement": "Admin can edit commission settings (requires re-authentication). In MVP this is implemented as password re-entry; once the shared MFA stack from FR-026 / FR-031 is delivered, these actions MUST use MFA-based re-authentication and any MFA references in this FR are to be understood as future (non-MVP) behavior.",
+        "distinct_from": "REQ-015-111"
       }
     },
     {
@@ -64227,10 +64237,11 @@
       "owner_fr": "FR-018",
       "title": "encrypt affiliate bank account details at rest using AES-256",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "System MUST encrypt affiliate bank account details at rest using AES-256",
-        "rationale": "PRD Functional Requirements Summary, prd.md line 1627"
+        "rationale": "PRD Functional Requirements Summary, prd.md line 1627",
+        "distinct_from": "REQ-032-018"
       }
     },
     {
@@ -64913,10 +64924,11 @@
       "owner_fr": "FR-018",
       "title": "Screen 1: Pagination",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "Pagination: Display 25 affiliates per page with pagination controls",
-        "rationale": "PRD Screen 1, prd.md line 347"
+        "rationale": "PRD Screen 1, prd.md line 347",
+        "distinct_from": "REQ-018-119"
       }
     },
     {
@@ -66509,10 +66521,11 @@
       "owner_fr": "FR-018",
       "title": "Total Referrals validation (Screen 1)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Read-only, system-calculated",
-        "rationale": "Screen 1, Total Referrals, Validation Rules column (PRD line 331, 332, 333, 334, 338, 339, 340, 430, 434, 530, 616, 617, 618, 619, 656, 657, 658, 659, 698, 699, 737, 739, 740, 787, 788, 861, 862, 863, 864, 865, 866, 904, 905, 906, 907, 908, 917, 918, 919, 920, 921, 954, 955, 963, 965, 975, 976, 977, 978)"
+        "rationale": "Screen 1, Total Referrals, Validation Rules column (PRD line 331, 332, 333, 334, 338, 339, 340, 430, 434, 530, 616, 617, 618, 619, 656, 657, 658, 659, 698, 699, 737, 739, 740, 787, 788, 861, 862, 863, 864, 865, 866, 904, 905, 906, 907, 908, 917, 918, 919, 920, 921, 954, 955, 963, 965, 975, 976, 977, 978)",
+        "distinct_from": "REQ-018-275"
       }
     },
     {
@@ -66653,10 +66666,11 @@
       "owner_fr": "FR-018",
       "title": "Activation Status validation (Screen 2)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Read-only, system-managed",
-        "rationale": "Screen 2, Activation Status, Validation Rules column (PRD line 395)"
+        "rationale": "Screen 2, Activation Status, Validation Rules column (PRD line 395)",
+        "distinct_from": "REQ-018-256,REQ-018-259"
       }
     },
     {
@@ -66701,10 +66715,11 @@
       "owner_fr": "FR-018",
       "title": "Assigned Promo Codes List validation (Screen 3)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Read-only; each row links to Screen 6",
-        "rationale": "Screen 3, Assigned Promo Codes List, Validation Rules column (PRD line 432)"
+        "rationale": "Screen 3, Assigned Promo Codes List, Validation Rules column (PRD line 432)",
+        "distinct_from": "REQ-018-232,REQ-018-255"
       }
     },
     {
@@ -66713,10 +66728,11 @@
       "owner_fr": "FR-018",
       "title": "Payout History List validation (Screen 3)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Read-only; each row links to Screen 8",
-        "rationale": "Screen 3, Payout History List, Validation Rules column (PRD line 433)"
+        "rationale": "Screen 3, Payout History List, Validation Rules column (PRD line 433)",
+        "distinct_from": "REQ-018-255"
       }
     },
     {
@@ -67013,10 +67029,11 @@
       "owner_fr": "FR-018",
       "title": "Actions validation (Screen 11)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Read-only/export actions only",
-        "rationale": "Screen 11, Actions, Validation Rules column (PRD line 746)"
+        "rationale": "Screen 11, Actions, Validation Rules column (PRD line 746)",
+        "aliases": "REQ-018-265"
       }
     },
     {
@@ -67029,18 +67046,6 @@
       "attrs": {
         "statement": "Read-only, shown only when Failed",
         "rationale": "Screen 12, Failure Reason, Validation Rules column (PRD line 793)"
-      }
-    },
-    {
-      "id": "REQ-018-265",
-      "type": "Rule",
-      "owner_fr": "FR-018",
-      "title": "Actions validation (Screen 12)",
-      "status": "active",
-      "version": 1,
-      "attrs": {
-        "statement": "Read-only/export action only",
-        "rationale": "Screen 12, Actions, Validation Rules column (PRD line 795)"
       }
     },
     {
@@ -68625,10 +68630,11 @@
       "owner_fr": "FR-020",
       "title": "Provider notification dropdown, infinite scroll, 20 per batch",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "System MUST provide notification dropdown in provider dashboard header with infinite scroll (loads 20 notifications per batch, no separate listing screen).",
-        "rationale": "Functional Requirements Summary, prd.md line 490. Screen: SCR-020-02. Screen Business Rules lines 227 to 231 repeat the infinite scroll behaviour."
+        "rationale": "Functional Requirements Summary, prd.md line 490. Screen: SCR-020-02. Screen Business Rules lines 227 to 231 repeat the infinite scroll behaviour.",
+        "distinct_from": "REQ-020-010"
       }
     },
     {
@@ -69142,10 +69148,11 @@
       "owner_fr": "FR-020",
       "title": "Event producers by FR; lead times set in FR-026",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "FR-004 produces `quote.submitted`, `quote.updated`, `quote.expiring_soon`, `quote.expired` and `quote.withdrawn`. FR-005 produces `quote.accepted` and its outcomes. FR-006 produces `booking.scheduled`, `booking.hold_expiring_soon`, `booking.payment_window_expired`, `booking.revived`, `booking.rescheduled` and `booking.provider_fault_replacement`. FR-010 produces `treatment.plan_changed`. Admin sets the quote-expiring-soon and hold-expiring-soon lead times in FR-026.",
-        "rationale": "prd.md line 307."
+        "rationale": "prd.md line 307.",
+        "aliases": "REQ-030-128"
       }
     },
     {
@@ -71659,10 +71666,11 @@
       "owner_fr": "FR-022",
       "title": "Patient searches providers by name and specialty [P2]",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "System MUST allow patients to search providers by name and specialty [P2 - Post-MVP]",
-        "rationale": "Restated by Multi-Tenant Breakdown Patient P-02 (line 44) and Main Flow 3 keyword node. Screen criteria: FR-003 / Screen 7a rule."
+        "rationale": "Restated by Multi-Tenant Breakdown Patient P-02 (line 44) and Main Flow 3 keyword node. Screen criteria: FR-003 / Screen 7a rule.",
+        "distinct_from": "REQ-022-014"
       }
     },
     {
@@ -71843,10 +71851,11 @@
       "owner_fr": "FR-022",
       "title": "100 concurrent admin searches without degradation",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "System MUST handle 100 concurrent admin searches without performance degradation",
-        "rationale": "Restated by SC-010 and Technology Assumption 4."
+        "rationale": "Restated by SC-010 and Technology Assumption 4.",
+        "distinct_from": "REQ-022-031"
       }
     },
     {
@@ -72311,10 +72320,11 @@
       "owner_fr": "FR-022",
       "title": "Search and filter criteria: Provider Quote List (FR-004 / Screen 2)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "FR-004 / Screen 2: Provider Quote List [P1 — MVP]. Provider searches for and filters their submitted quotes across all patient inquiries. Each list row and each counted result is one parent quote; its options and date ranges are shown as row attributes and are not counted as separate results. Search: Patient ID / inquiry / treatment / date / status / location (Type: text; Placeholder: \"Search quotes…\"; Debounce: 500ms; Notes: Case-insensitive; fuzzy match across all indexed fields; patient name field excluded until booking payment confirmed). Filters: Quote Status (Type: Multi-select; Options: Draft, Sent, Expired, Withdrawn, Archived, Accepted, Cancelled (Other Accepted), Cancelled (Inquiry Cancelled), Cancelled (Provider Status); Default: All; Logic: OR (within field)) / Date Range (Type: Date range picker; Options: Custom; Default: All dates; Logic: Filters by quote creation date) / Concern (Type: Multi-select; Options: Hair Transplant, Beard Transplant, Both; Default: All; Logic: OR (within field)) / Patient Location (Type: Dropdown; Options: All; country list from DB; Default: All; Logic: Exact match) / Medical Alerts (Type: Multi-select chips; Options: None, Standard, Critical; Default: All; Logic: OR (within field)).",
-        "rationale": "Screen Specifications (prd.md lines 613-636). Screen owned by FR-004 (Provider tenant, Master Reference Table). Search inputs and filter controls are UI controls, not Fields; FR-022 owns the criteria (Maintenance Convention, line 319). Graph screen: SCR-004-02."
+        "rationale": "Screen Specifications (prd.md lines 613-636). Screen owned by FR-004 (Provider tenant, Master Reference Table). Search inputs and filter controls are UI controls, not Fields; FR-022 owns the criteria (Maintenance Convention, line 319). Graph screen: SCR-004-02.",
+        "distinct_from": "REQ-022-088"
       }
     },
     {
@@ -72815,10 +72825,11 @@
       "owner_fr": "FR-022",
       "title": "Search and filter criteria: Article Management (FR-033 / Screen 3)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "FR-033 / Screen 3: Article Management [P1 — MVP]. Admin searches for and filters help articles. Search: Article title (Type: text; Placeholder: \"Search articles…\"; Debounce: 500ms; Notes: Fuzzy match on title). Filters: Article Type (Type: Dropdown; Options: All, Tutorial Guide, Troubleshooting Tip; Default: All; Logic: Exact match) / Category / Tags (Type: Multi-select; Options: Admin-defined article categories; Default: All; Logic: OR (within field)) / Status (Type: Multi-select; Options: Draft, Published, Archived; Default: All; Logic: OR (within field)) / Audience (Type: Dropdown; Options: All, Patient, Provider; Default: All; Logic: Exact match).",
-        "rationale": "Screen Specifications (prd.md lines 1660-1682). Screen owned by FR-033 (Admin tenant, Master Reference Table). Search inputs and filter controls are UI controls, not Fields; FR-022 owns the criteria (Maintenance Convention, line 319). No lifecycle stage fits this screen; applied at the FR-022 default stage (Batch A Inquiry) provisionally."
+        "rationale": "Screen Specifications (prd.md lines 1660-1682). Screen owned by FR-033 (Admin tenant, Master Reference Table). Search inputs and filter controls are UI controls, not Fields; FR-022 owns the criteria (Maintenance Convention, line 319). No lifecycle stage fits this screen; applied at the FR-022 default stage (Batch A Inquiry) provisionally.",
+        "distinct_from": "REQ-022-120"
       }
     },
     {
@@ -78975,10 +78986,11 @@
       "owner_fr": "FR-029",
       "title": "Validate deposit rate percentage is within allowed range",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "System MUST validate deposit rate percentage is within allowed range (20-30%) and display error if out of range",
-        "rationale": "Restated by Alternative flow B3 and Screen 3."
+        "rationale": "Restated by Alternative flow B3 and Screen 3.",
+        "distinct_from": "REQ-029-038"
       }
     },
     {
@@ -78987,9 +78999,10 @@
       "owner_fr": "FR-029",
       "title": "Validate markup percentage is within allowed range",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST validate markup percentage is within allowed range (0-20%) and display error if out of range"
+        "statement": "System MUST validate markup percentage is within allowed range (0-20%) and display error if out of range",
+        "distinct_from": "REQ-029-039"
       }
     },
     {
@@ -80009,10 +80022,11 @@
       "owner_fr": "FR-029",
       "title": "Stripe Publishable Key validation",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "Must start with \"pk_test_\" or \"pk_live_\", max 200 chars",
-        "rationale": "Screen 1, Publishable Key, Validation Rules column (PRD line 396)"
+        "rationale": "Screen 1, Publishable Key, Validation Rules column (PRD line 396)",
+        "distinct_from": "REQ-029-133"
       }
     },
     {
@@ -81756,18 +81770,6 @@
       "attrs": {
         "statement": "Hidden until enabled: SMS Delivery Enabled `channel.sms_enabled` SMS is future; not available in MVP; Medication / Washing / Activity Reminders `aftercare.medication_reminder` / `aftercare.washing_reminder` / `aftercare.activity_reminder` Scheduled reminders referenced in system PRD; enable when milestone engine supports schedules; Passport / Travel Document Required `travel.passport_required` Only show once travel module + event publishing exists; Flight / Hotel Itinerary Updates `travel.itinerary_updated` Post‑release travel roadmap; Quote Declined `quote.declined` Reserved for an explicit governed decline flow; no MVP producer exists because patients have no explicit decline action (FR-005). FR-005 sibling Not Selected and competing-parent cancellation outcomes do not use this event.",
         "rationale": "prd.md lines 221, 222, 223, 224, 225. None has a producer stage; no Event node created. Keys: channel.sms_enabled, aftercare.medication_reminder, aftercare.washing_reminder, aftercare.activity_reminder, travel.passport_required, travel.itinerary_updated, quote.declined."
-      }
-    },
-    {
-      "id": "REQ-030-128",
-      "type": "Rule",
-      "owner_fr": "FR-030",
-      "title": "Quote, booking and treatment events have named producer FRs",
-      "status": "active",
-      "version": 2,
-      "attrs": {
-        "statement": "Producers: FR-004 produces `quote.submitted`, `quote.updated`, `quote.expiring_soon`, `quote.expired` and `quote.withdrawn`. FR-005 produces `quote.accepted` and its outcomes. FR-006 produces `booking.scheduled`, `booking.hold_expiring_soon`, `booking.payment_window_expired`, `booking.revived`, `booking.rescheduled` and `booking.provider_fault_replacement`. FR-010 produces `treatment.plan_changed`.",
-        "rationale": "prd.md line 205"
       }
     },
     {
@@ -84069,10 +84071,11 @@
       "owner_fr": "FR-031",
       "title": "Admin permissions: Aftercare Management (A-03)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Permission category \"Aftercare Management\" (A-03) in the admin permission matrix offers: View Aftercare Cases (View aftercare patient list; Read); Manage Aftercare (Assign specialists, edit plans; Write); Chat with Patients (Access aftercare chat; Write); Schedule Consultations (Book video consultations; Write).",
-        "rationale": "Screen 4 permission matrix structure, admin platform categories. Rows copied from the PRD table (Permission, Description, Access Level). Stage placement for admin-side behaviour is provisional: the PRD names no stage and the model has no admin-configuration stage."
+        "rationale": "Screen 4 permission matrix structure, admin platform categories. Rows copied from the PRD table (Permission, Description, Access Level). Stage placement for admin-side behaviour is provisional: the PRD names no stage and the model has no admin-configuration stage.",
+        "distinct_from": "REQ-031-117"
       }
     },
     {
@@ -84837,10 +84840,11 @@
       "owner_fr": "FR-032",
       "title": "Language priority order",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "Chips support drag-and-drop reordering to prioritize languages (most important first)",
-        "rationale": "Screen: SCR-032-02."
+        "rationale": "Screen: SCR-032-02.",
+        "distinct_from": "REQ-032-047"
       }
     },
     {
@@ -85976,10 +85980,11 @@
       "owner_fr": "FR-033",
       "title": "REST API for provider platform content",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "System MUST provide REST API for provider platform (FR-032) to fetch provider-specific Help Centre content with authentication",
-        "rationale": "Integration Point 1 (JSON payload, endpoint, provider session token) is technical and not migrated."
+        "rationale": "Integration Point 1 (JSON payload, endpoint, provider session token) is technical and not migrated.",
+        "distinct_from": "REQ-033-026"
       }
     },
     {
@@ -86874,10 +86879,11 @@
       "owner_fr": "FR-034",
       "title": "Allow admins to link support cases to patient records by HPID, email, or",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "System MUST allow admins to link support cases to patient records by HPID, email, or phone number",
-        "rationale": "Functional Requirements Summary (prd.md line 1184). Restated at prd.md lines 86, 188 (Module Scope and Main Flow step 5)."
+        "rationale": "Functional Requirements Summary (prd.md line 1184). Restated at prd.md lines 86, 188 (Module Scope and Main Flow step 5).",
+        "distinct_from": "REQ-034-010"
       }
     },
     {
@@ -86898,10 +86904,11 @@
       "owner_fr": "FR-034",
       "title": "Provide deep-linking from support case to patient management module",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "System MUST provide deep-linking from support case to patient management module (A-01) for account interventions when case is linked to patient record",
-        "rationale": "Functional Requirements Summary (prd.md line 1186)."
+        "rationale": "Functional Requirements Summary (prd.md line 1186).",
+        "distinct_from": "REQ-034-012"
       }
     },
     {
@@ -86983,10 +86990,11 @@
       "owner_fr": "FR-034",
       "title": "Use centralized managed lists for case categories",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "System MUST use centralized managed lists for case categories to ensure consistency across all submissions",
-        "rationale": "Functional Requirements Summary (prd.md line 1193). Restated at prd.md lines 753 (Business Rule 7)."
+        "rationale": "Functional Requirements Summary (prd.md line 1193). Restated at prd.md lines 753 (Business Rule 7).",
+        "distinct_from": "REQ-034-019"
       }
     },
     {
@@ -87019,10 +87027,11 @@
       "owner_fr": "FR-034",
       "title": "Automatically create support cases",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST automatically create support cases when patients submit Contact Support or Feedback requests via patient app (FR-035)",
-        "rationale": "Functional Requirements Summary (prd.md line 1196). Restated at prd.md lines 156, 762, 272 (System-Triggered Entry, Business Rule 16 and alternative flow A5)."
+        "rationale": "Functional Requirements Summary (prd.md line 1196). Restated at prd.md lines 156, 762, 272 (System-Triggered Entry, Business Rule 16 and alternative flow A5).",
+        "distinct_from": "REQ-034-022"
       }
     },
     {
@@ -87031,10 +87040,11 @@
       "owner_fr": "FR-034",
       "title": "Automatically create support cases",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST automatically create support cases when providers submit Contact Support requests via Help Centre (FR-032 Screen 5.5)",
-        "rationale": "Functional Requirements Summary (prd.md line 1197). Restated at prd.md lines 157, 232 (System-Triggered Entry and alternative flow A3)."
+        "rationale": "Functional Requirements Summary (prd.md line 1197). Restated at prd.md lines 157, 232 (System-Triggered Entry and alternative flow A3).",
+        "distinct_from": "REQ-034-023"
       }
     },
     {
@@ -87055,10 +87065,11 @@
       "owner_fr": "FR-034",
       "title": "Automatically link patient-submitted cases to patient records",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST automatically link patient-submitted cases to patient records using logged-in patient session and set Ticket Source = \"Patient App\", Submitter Type = \"Patient\"",
-        "rationale": "Functional Requirements Summary (prd.md line 1199)."
+        "rationale": "Functional Requirements Summary (prd.md line 1199).",
+        "distinct_from": "REQ-034-025"
       }
     },
     {
@@ -87079,10 +87090,11 @@
       "owner_fr": "FR-034",
       "title": "Allow patients to view status, feedback resolution, communication thread, and",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST allow patients to view status, feedback resolution, communication thread, and reply to admin messages for their submitted support cases in patient app (FR-035)",
-        "rationale": "Functional Requirements Summary (prd.md line 1201). Restated at prd.md lines 58, 290 (Patient Platform breakdown and alternative flow A5 step 15)."
+        "rationale": "Functional Requirements Summary (prd.md line 1201). Restated at prd.md lines 58, 290 (Patient Platform breakdown and alternative flow A5 step 15).",
+        "distinct_from": "REQ-034-027"
       }
     },
     {
@@ -87103,10 +87115,11 @@
       "owner_fr": "FR-034",
       "title": "Send email notifications to patients",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST send email notifications to patients when admin responds to their submissions or updates case status (via S-03)",
-        "rationale": "Functional Requirements Summary (prd.md line 1203)."
+        "rationale": "Functional Requirements Summary (prd.md line 1203).",
+        "distinct_from": "REQ-034-029"
       }
     },
     {
@@ -88652,10 +88665,11 @@
       "owner_fr": "FR-034",
       "title": "Notify New Assignee defaults to checked",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "The Notify New Assignee checkbox is checked by default.",
-        "rationale": "Screen 5 (PRD line 611)."
+        "rationale": "Screen 5 (PRD line 611).",
+        "distinct_from": "REQ-034-163"
       }
     },
     {
@@ -164883,7 +164897,7 @@
       "verb": "active in",
       "to_id": "STG-main-05-payment",
       "attrs": {
-        "rules": 263
+        "rules": 262
       },
       "derived": true
     },
@@ -165087,7 +165101,7 @@
       "verb": "active in",
       "to_id": "STG-main-01-inquiry",
       "attrs": {
-        "rules": 31
+        "rules": 32
       },
       "derived": true
     },
@@ -166059,7 +166073,7 @@
       "verb": "active in",
       "to_id": "STG-main-01-inquiry",
       "attrs": {
-        "rules": 144
+        "rules": 143
       },
       "derived": true
     },
@@ -218981,6 +218995,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-018-263",
+      "verb": "applies to",
+      "to_id": "SCR-018-12",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-264",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
@@ -218994,18 +219014,6 @@
     },
     {
       "from_id": "REQ-018-264",
-      "verb": "applies to",
-      "to_id": "SCR-018-12",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-018-265",
-      "verb": "applies at",
-      "to_id": "STG-main-05-payment",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-018-265",
       "verb": "applies to",
       "to_id": "SCR-018-12",
       "attrs": {}
@@ -222481,6 +222489,12 @@
     {
       "from_id": "REQ-020-052",
       "verb": "applies at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-052",
+      "verb": "applies at",
       "to_id": "STG-main-02-quote",
       "attrs": {}
     },
@@ -222494,6 +222508,84 @@
       "from_id": "REQ-020-052",
       "verb": "applies at",
       "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-052",
+      "verb": "applies to",
+      "to_id": "EVT-booking-hold-expiring-soon",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-052",
+      "verb": "applies to",
+      "to_id": "EVT-booking-payment-window-expired",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-052",
+      "verb": "applies to",
+      "to_id": "EVT-booking-provider-fault-replacement",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-052",
+      "verb": "applies to",
+      "to_id": "EVT-booking-rescheduled",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-052",
+      "verb": "applies to",
+      "to_id": "EVT-booking-revived",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-052",
+      "verb": "applies to",
+      "to_id": "EVT-booking-scheduled",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-052",
+      "verb": "applies to",
+      "to_id": "EVT-quote-accepted",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-052",
+      "verb": "applies to",
+      "to_id": "EVT-quote-expired",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-052",
+      "verb": "applies to",
+      "to_id": "EVT-quote-expiring-soon",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-052",
+      "verb": "applies to",
+      "to_id": "EVT-quote-submitted",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-052",
+      "verb": "applies to",
+      "to_id": "EVT-quote-updated",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-052",
+      "verb": "applies to",
+      "to_id": "EVT-quote-withdrawn",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-052",
+      "verb": "applies to",
+      "to_id": "EVT-treatment-plan-changed",
       "attrs": {}
     },
     {
@@ -243968,90 +244060,6 @@
       "from_id": "REQ-030-127",
       "verb": "applies to",
       "to_id": "SCR-030-01",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-030-128",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-030-128",
-      "verb": "applies to",
-      "to_id": "EVT-booking-hold-expiring-soon",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-030-128",
-      "verb": "applies to",
-      "to_id": "EVT-booking-payment-window-expired",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-030-128",
-      "verb": "applies to",
-      "to_id": "EVT-booking-provider-fault-replacement",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-030-128",
-      "verb": "applies to",
-      "to_id": "EVT-booking-rescheduled",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-030-128",
-      "verb": "applies to",
-      "to_id": "EVT-booking-revived",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-030-128",
-      "verb": "applies to",
-      "to_id": "EVT-booking-scheduled",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-030-128",
-      "verb": "applies to",
-      "to_id": "EVT-quote-accepted",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-030-128",
-      "verb": "applies to",
-      "to_id": "EVT-quote-expired",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-030-128",
-      "verb": "applies to",
-      "to_id": "EVT-quote-expiring-soon",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-030-128",
-      "verb": "applies to",
-      "to_id": "EVT-quote-submitted",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-030-128",
-      "verb": "applies to",
-      "to_id": "EVT-quote-updated",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-030-128",
-      "verb": "applies to",
-      "to_id": "EVT-quote-withdrawn",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-030-128",
-      "verb": "applies to",
-      "to_id": "EVT-treatment-plan-changed",
       "attrs": {}
     },
     {
@@ -378268,6 +378276,59 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261120-124909-370e4d6a",
+      "at": "2026-11-20T12:49:09.435985+00:00",
+      "changed_by": "controller",
+      "reason": "Rule de-duplication: triage of the 76 L12 near-duplicate findings (2 merges, the rest reviewed and kept as different rules)",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-001-012",
+        "REQ-001-146",
+        "REQ-006-047",
+        "REQ-008-005",
+        "REQ-008-007",
+        "REQ-008-035",
+        "REQ-014-033",
+        "REQ-014-042",
+        "REQ-014-197",
+        "REQ-015-110",
+        "REQ-018-015",
+        "REQ-018-074",
+        "REQ-018-208",
+        "REQ-018-226",
+        "REQ-018-231",
+        "REQ-018-232",
+        "REQ-018-263",
+        "REQ-018-265",
+        "REQ-020-009",
+        "REQ-020-052",
+        "REQ-022-013",
+        "REQ-022-030",
+        "REQ-022-076",
+        "REQ-022-119",
+        "REQ-029-037",
+        "REQ-029-038",
+        "REQ-029-132",
+        "REQ-030-128",
+        "REQ-031-104",
+        "REQ-032-044",
+        "REQ-033-025",
+        "REQ-034-009",
+        "REQ-034-011",
+        "REQ-034-018",
+        "REQ-034-021",
+        "REQ-034-022",
+        "REQ-034-024",
+        "REQ-034-026",
+        "REQ-034-028",
+        "REQ-034-162"
+      ],
+      "edges_added": 15,
+      "edges_removed": 16,
+      "rows": 71
+    },
     {
       "id": "cs-20261120-082315-49852625",
       "at": "2026-11-20T08:23:15.419601+00:00",

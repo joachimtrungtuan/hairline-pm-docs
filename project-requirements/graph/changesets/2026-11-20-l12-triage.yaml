@@ -1,0 +1,41 @@
+reason: "Rule de-duplication: triage of the 76 L12 near-duplicate findings (2 merges, the rest reviewed and kept as different rules)"
+by: controller
+operations:
+  - {"op": "merge_node", "survivor": "REQ-020-052", "loser": "REQ-030-128"}
+  - {"op": "merge_node", "survivor": "REQ-018-263", "loser": "REQ-018-265"}
+  - {"op": "update_node", "id": "REQ-001-012", "attrs": {"distinct_from": "REQ-010-013,REQ-023-011,REQ-029-027"}}
+  - {"op": "update_node", "id": "REQ-001-146", "attrs": {"distinct_from": "REQ-001-147"}}
+  - {"op": "update_node", "id": "REQ-006-047", "attrs": {"distinct_from": "REQ-007-052"}}
+  - {"op": "update_node", "id": "REQ-008-005", "attrs": {"distinct_from": "REQ-008-034"}}
+  - {"op": "update_node", "id": "REQ-008-007", "attrs": {"distinct_from": "REQ-008-011"}}
+  - {"op": "update_node", "id": "REQ-008-035", "attrs": {"distinct_from": "REQ-008-036"}}
+  - {"op": "update_node", "id": "REQ-014-033", "attrs": {"distinct_from": "REQ-014-075"}}
+  - {"op": "update_node", "id": "REQ-014-042", "attrs": {"distinct_from": "REQ-014-076"}}
+  - {"op": "update_node", "id": "REQ-014-197", "attrs": {"distinct_from": "REQ-014-213"}}
+  - {"op": "update_node", "id": "REQ-015-110", "attrs": {"distinct_from": "REQ-015-111"}}
+  - {"op": "update_node", "id": "REQ-018-015", "attrs": {"distinct_from": "REQ-032-018"}}
+  - {"op": "update_node", "id": "REQ-018-074", "attrs": {"distinct_from": "REQ-018-119"}}
+  - {"op": "update_node", "id": "REQ-018-208", "attrs": {"distinct_from": "REQ-018-275"}}
+  - {"op": "update_node", "id": "REQ-018-226", "attrs": {"distinct_from": "REQ-018-256,REQ-018-259"}}
+  - {"op": "update_node", "id": "REQ-018-231", "attrs": {"distinct_from": "REQ-018-232,REQ-018-255"}}
+  - {"op": "update_node", "id": "REQ-018-232", "attrs": {"distinct_from": "REQ-018-255"}}
+  - {"op": "update_node", "id": "REQ-020-009", "attrs": {"distinct_from": "REQ-020-010"}}
+  - {"op": "update_node", "id": "REQ-022-013", "attrs": {"distinct_from": "REQ-022-014"}}
+  - {"op": "update_node", "id": "REQ-022-030", "attrs": {"distinct_from": "REQ-022-031"}}
+  - {"op": "update_node", "id": "REQ-022-076", "attrs": {"distinct_from": "REQ-022-088"}}
+  - {"op": "update_node", "id": "REQ-022-119", "attrs": {"distinct_from": "REQ-022-120"}}
+  - {"op": "update_node", "id": "REQ-029-037", "attrs": {"distinct_from": "REQ-029-038"}}
+  - {"op": "update_node", "id": "REQ-029-038", "attrs": {"distinct_from": "REQ-029-039"}}
+  - {"op": "update_node", "id": "REQ-029-132", "attrs": {"distinct_from": "REQ-029-133"}}
+  - {"op": "update_node", "id": "REQ-031-104", "attrs": {"distinct_from": "REQ-031-117"}}
+  - {"op": "update_node", "id": "REQ-032-044", "attrs": {"distinct_from": "REQ-032-047"}}
+  - {"op": "update_node", "id": "REQ-033-025", "attrs": {"distinct_from": "REQ-033-026"}}
+  - {"op": "update_node", "id": "REQ-034-009", "attrs": {"distinct_from": "REQ-034-010"}}
+  - {"op": "update_node", "id": "REQ-034-011", "attrs": {"distinct_from": "REQ-034-012"}}
+  - {"op": "update_node", "id": "REQ-034-018", "attrs": {"distinct_from": "REQ-034-019"}}
+  - {"op": "update_node", "id": "REQ-034-021", "attrs": {"distinct_from": "REQ-034-022"}}
+  - {"op": "update_node", "id": "REQ-034-022", "attrs": {"distinct_from": "REQ-034-023"}}
+  - {"op": "update_node", "id": "REQ-034-024", "attrs": {"distinct_from": "REQ-034-025"}}
+  - {"op": "update_node", "id": "REQ-034-026", "attrs": {"distinct_from": "REQ-034-027"}}
+  - {"op": "update_node", "id": "REQ-034-028", "attrs": {"distinct_from": "REQ-034-029"}}
+  - {"op": "update_node", "id": "REQ-034-162", "attrs": {"distinct_from": "REQ-034-163"}}

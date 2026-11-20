@@ -29,6 +29,10 @@ The owner's answers from the programme's question rounds were applied as the new
 - Lint on the final graph: 4,449 findings (L03 10, L10 4,274, L12 76, L18 89; L15 0), down from 4,516.
 - Test suites: 237 tests pass.
 
+## Follow-up the same day
+
+- Duplicate-rule lint (L12) triaged in `graph/changesets/2026-11-20-l12-triage.yaml`: `REQ-030-128` merged into `REQ-020-052`, `REQ-018-265` merged into `REQ-018-263`, and 40 similar pairs marked as different rules. Lint is now 4,371 findings (L03 10, L10 4,272, L18 89; L12 0); 237 tests pass; `graph.json` re-exported.
+
 ## Not done
 
 Items the inputs left open are listed per FR in `plans/reports/graph-result-261120-frNNN.md` and collected in the backlog file above.
