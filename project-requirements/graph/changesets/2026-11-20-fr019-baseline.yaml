@@ -1,0 +1,139 @@
+reason: "Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-019)"
+by: controller
+operations:
+  - {"op": "add_node", "id": "REQ-019-109", "type": "Rule", "owner_fr": "FR-019", "title": "An admin overrides a discount approval only for Hairline Only programs", "attrs": {"statement": "System MUST let an admin override a discount approval only for Hairline Only programs; an admin can never force a provider to take part in a program.", "rationale": "FR-019 PRD, Functional Requirements Summary and the module overview. Moved in from FR-017 (former REQ-017-145)."}}
+  - {"op": "add_edge", "from": "REQ-019-109", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "add_edge", "from": "REQ-019-109", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-019-109", "verb": "applies to", "to": "SCR-019-03"}
+  - {"op": "add_edge", "from": "REQ-019-109", "verb": "applies to", "to": "ENT-promotion-adoption"}
+  - {"op": "add_node", "id": "REQ-019-110", "type": "Rule", "owner_fr": "FR-019", "title": "Hairline and provider portions of a discount follow the commission effect; Both Fees adds a reimbursement", "attrs": {"statement": "System MUST record the Hairline portion and the provider portion of every Application's discount value according to the commission effect for every program type, and for a Both Fees program MUST add Hairline's reimbursement of the Hairline share % on top.", "rationale": "FR-019 PRD, Functional Requirements Summary, General Module Rules (funding split of each Application) and Screen 6 Funding Split."}}
+  - {"op": "add_edge", "from": "REQ-019-110", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-019-110", "verb": "applies to", "to": "ENT-promotion-application.hairline_portion"}
+  - {"op": "add_edge", "from": "REQ-019-110", "verb": "applies to", "to": "ENT-promotion-application.provider_portion"}
+  - {"op": "update_node", "id": "REQ-019-004", "title": "Priority and non-stacking apply to the whole platform; one automatic promotion per quote", "attrs": {"statement": "System MUST enforce priority and non‑stacking rules across the whole platform (patient-entered code > provider discount > Hairline-funded discount > affiliate discount when conflicts arise) and MUST attach at most one automatic promotion per quote."}}
+  - {"op": "update_node", "id": "REQ-019-010", "title": "Provider approval notice uses the FR-030 approval-requested event and the FR-020 notification service", "attrs": {"statement": "System MUST notify targeted providers when a platform discount awaits their approval, using the approval-requested event of the FR-030 notification catalogue and the notification service defined in FR-020.", "rationale": "Integration Requirements and Shared Services. The approval-requested event is one event in the FR-030 catalogue."}}
+  - {"op": "update_node", "id": "REQ-019-016", "attrs": {"statement": "System MUST calculate commission on the accepted price after the promotion, in the quote currency and read from the acceptance snapshot, for every discount type, including Hairline-funded programs; no program keeps commission on the price before the promotion. FR-029 carries the matching Rule REQ-029-054.", "rationale": "General Module Rules, Alternative Flows A2 and C1 and Core Requirements. FR-029 carries the matching Rule REQ-029-054; the owner kept both on purpose, so they are reviewed and kept as different Rules.", "distinct_from": "REQ-029-054"}}
+  - {"op": "update_node", "id": "REQ-019-023", "title": "Program lifecycle in scope: six states, with usage limits and date windows", "attrs": {"statement": "Discount code definition and lifecycle (draft, pending approval, active, paused, expired, archived), with usage limits and date windows.", "rationale": "Scope Boundaries. The Screen 2 lifecycle field lists five states without Pending Approval; the two are not reconciled in the PRD (open item)."}}
+  - {"op": "update_node", "id": "REQ-019-027", "attrs": {"statement": "Admin defines discount (type, value, Hairline share %, dates, usage limit, targeted providers). System saves discount as Pending Approval and notifies targeted providers (approval-requested event of the FR-030 notification catalogue)."}}
+  - {"op": "update_node", "id": "REQ-019-037", "attrs": {"statement": "Trigger: Admin issues a Hairline-funded code (open code, segment-bound, or affiliate-distributed) and the patient enters it on one named subquote before acceptance. Steps: System validates the code against issuance binding (open vs recipient-bound), records the redemption against the issuing channel (e.g., affiliate id), and calculates commission on the accepted price after the promotion, as for every discount type. For affiliate-bound codes, code generation and affiliate assignment are initiated from FR-018; FR-019 receives the registered code and manages redemption lifecycle. Outcome: Patient receives discount; the platform commission and the provider's payout are both reduced, with the provider bearing most of the discount; affiliate (if applicable) accrues the configured incentive (see FR-018), where a percentage affiliate commission is calculated on net revenue after discounts and refunds."}}
+  - {"op": "update_node", "id": "REQ-019-045", "attrs": {"statement": "Provider Self-Created programs appear here so admins can monitor and intervene; admins may pause or archive any program and may change a provider-owned definition only as a logged governance override (see Screen 4). Admin may open Screen 2 in read-only mode for provider self-created programs; editing is reserved for the provider unless an override is needed (governance action, logged in audit). Admin may pause or archive any provider self-created program via row action with mandatory reason text."}}
+  - {"op": "update_node", "id": "REQ-019-049", "title": "Program lifecycle state moves forward only, except Pause and Resume", "attrs": {"statement": "Lifecycle State: Draft → Active → Paused → Expired → Archived; Forward transitions only, except Pause and Resume.", "rationale": "Screen 2 common data fields. Pause and Resume on Screens 1 and 8 are the allowed exception; the Pending Approval state on Screen 1 is not in this field (open item)."}}
+  - {"op": "update_node", "id": "REQ-019-051", "attrs": {"statement": "For Admin-via-Provider, saving transitions the program to `Pending Approval` and notifies targeted providers (S-03; approval-requested event of the FR-030 notification catalogue)."}}
+  - {"op": "update_node", "id": "REQ-019-056", "title": "Admin and provider programs offer the same four Application Mode choices", "attrs": {"statement": "Admin programs and provider programs offer the same `Application Mode` list: `Auto-applied / List-selection / Code-only / Either`. A provider selects an admin program on a quote only from the list of programs the provider has adopted through the approval workflow (Screen 7), never before adoption. The existing limits stand: `Auto-applied` is only allowed for `Hairline Only` or `Provider Only` programs, and Hairline-Funded programs do not appear in provider selection UIs.", "rationale": "Screen 2 notes and Screen 9 Application Mode field (same four choices as Screen 2)."}}
+  - {"op": "update_node", "id": "REQ-019-067", "title": "Affiliate-bound code generation in FR-018 for 50 affiliates registers 50 unique codes, one per affiliate", "attrs": {"statement": "Given the admin starts affiliate-bound code generation in FR-018 for 50 selected affiliates and the program's channel = Affiliate-bound, when FR-018 completes generation, then 50 unique codes are registered with this program, each bound to exactly one affiliate, and each appears in the table with status = Unused.", "rationale": "Screen 5 acceptance criterion 1. FR-018 owns generation and one-affiliate-per-code assignment; FR-019 owns validation and redemption state."}}
+  - {"op": "update_node", "id": "REQ-019-071", "title": "Refund is logged with a reason, integrates with FR-017 and never changes the accepted price", "attrs": {"statement": "Refund actions are logged with mandatory reason and integrate with FR-017 (Billing & Finance) for monetary reconciliation. They never change the accepted price or the AcceptanceEvent snapshot.", "rationale": "Screen 6 business rules and acceptance criterion 2 (status Refunded, FR-017 receives a reconciliation event)."}}
+  - {"op": "update_node", "id": "REQ-019-083", "title": "A provider cannot refund a Completed redemption; that authority is admin's", "attrs": {"statement": "The provider cannot refund a Completed redemption; that authority sits with admin (Screen 6)."}}
+  - {"op": "update_node", "id": "REQ-019-093", "attrs": {"statement": "Discount categories, code format policy, the maximum discount value (one Setting; this PRD fixes no figure), and campaign dates. Targeting rules (all providers vs. subsets) and approval routing. Notification templates for approvals and status: managed in FR-030 (setting: promotion notification templates). Minimum number of quotes on each side before Conversion Lift is shown (launch default: 20 quotes on each side)."}}
+  - {"op": "update_node", "id": "REQ-019-094", "attrs": {"statement": "Maximum discount value per policy and region (the same single Setting as above). Auto‑decline window for unresponded provider approvals."}}
+  - {"op": "update_node", "id": "REQ-019-095", "attrs": {"statement": "Single‑discount rule and priority order (apply to the whole platform). Promotion terms fixed at send and frozen at acceptance. Calculation order of operations (base → discounts → taxes/fees)."}}
+  - {"op": "update_node", "id": "REQ-019-105", "title": "The Code-only application mode requires a Code; the other modes leave it optional", "attrs": {"statement": "An Application Mode of Code-only requires the Code(s) field to be filled; the field is optional for the other modes, on the admin form (Screen 2) and the provider form (Screen 9).", "rationale": "Screen 2 Code(s) field and Screen 9 Application Mode field (Code-only requires Code field)."}}
+  - {"op": "add_edge", "from": "REQ-019-105", "verb": "applies to", "to": "SCR-019-02"}
+  - {"op": "add_edge", "from": "REQ-019-105", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "add_edge", "from": "REQ-019-056", "verb": "applies to", "to": "SCR-019-09"}
+  - {"op": "add_edge", "from": "REQ-019-056", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "update_node", "id": "SET-promotion-max-discount-value", "attrs": {"description": "One maximum-discount-value Setting; it also carries the per policy and region limit. Admin Editability Rules. The PRD fixes no figure and the Setting has no default."}}
+  - {"op": "update_node", "id": "SET-promotion-notification-templates", "attrs": {"description": "Notification templates for approvals and status, managed in FR-030 (promotion notification templates)."}}
+  - {"op": "update_node", "id": "SET-promotion-notification-templates", "owner_fr": "FR-030"}
+  - {"op": "add_node", "id": "SET-promotion-conversion-lift-min-quotes", "type": "Setting", "owner_fr": "FR-019", "title": "Conversion Lift minimum quotes per side", "attrs": {"description": "Minimum number of quotes on each side (with and without the promotion) before Conversion Lift is shown; below it the lift is not shown. Admin Editability Rules and Screen 6 Analytics Definitions.", "default": "20", "unit": "quotes on each side"}}
+  - {"op": "add_edge", "from": "REQ-019-093", "verb": "governed by", "to": "SET-promotion-conversion-lift-min-quotes"}
+  - {"op": "update_node", "id": "EVT-promotion-discount-approval-requested", "title": "Promotion discount approval requested", "owner_fr": "FR-030", "attrs": {"description": "promotion.discount_approval_requested: FR-030 notification catalogue event. Targeted providers are notified that a Both Fees program awaits their approval, including on re-invite. Fires when the program enters Pending Approval (Screen 2 save, Screen 3 Re-invite); the one approval-requested event."}}
+  - {"op": "remove_edge", "from": "REQ-019-010", "verb": "applies to", "to": "EVT-promotion-approval-requested"}
+  - {"op": "add_edge", "from": "REQ-019-010", "verb": "applies to", "to": "EVT-promotion-discount-approval-requested"}
+  - {"op": "remove_edge", "from": "REQ-019-027", "verb": "applies to", "to": "EVT-promotion-approval-requested"}
+  - {"op": "add_edge", "from": "REQ-019-027", "verb": "applies to", "to": "EVT-promotion-discount-approval-requested"}
+  - {"op": "remove_edge", "from": "REQ-019-051", "verb": "applies to", "to": "EVT-promotion-approval-requested"}
+  - {"op": "add_edge", "from": "REQ-019-051", "verb": "applies to", "to": "EVT-promotion-discount-approval-requested"}
+  - {"op": "remove_edge", "from": "STG-main-02-quote", "verb": "emits", "to": "EVT-promotion-approval-requested"}
+  - {"op": "retire_node", "id": "EVT-promotion-approval-requested"}
+  - {"op": "retire_enum_value", "field_id": "ENT-promotion-application.status", "value": "reversed"}
+  - {"op": "remove_edge", "from": "SCR-019-01", "verb": "belongs to", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "SCR-019-01", "verb": "belongs to", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "SCR-019-02", "verb": "belongs to", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "SCR-019-02", "verb": "belongs to", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "SCR-019-03", "verb": "belongs to", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "SCR-019-03", "verb": "belongs to", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "SCR-019-05", "verb": "belongs to", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "SCR-019-05", "verb": "belongs to", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "SCR-019-06", "verb": "belongs to", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "SCR-019-06", "verb": "belongs to", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "REQ-019-022", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-019-022", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "REQ-019-027", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-019-027", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "REQ-019-044", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-019-044", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "REQ-019-046", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-019-046", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "REQ-019-047", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "remove_edge", "from": "REQ-019-047", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-019-047", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "REQ-019-051", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-019-051", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "REQ-019-052", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-019-052", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "REQ-019-053", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-019-053", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "REQ-019-054", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-019-054", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "REQ-019-057", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-019-057", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "REQ-019-058", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-019-058", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "REQ-019-059", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-019-059", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "REQ-019-060", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-019-060", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "REQ-019-061", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-019-061", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "REQ-019-062", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-019-062", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "REQ-019-063", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-019-063", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "REQ-019-064", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-019-064", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "REQ-019-065", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-019-065", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "REQ-019-066", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "REQ-019-066", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "REQ-019-067", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-019-067", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "REQ-019-069", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-019-069", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "REQ-019-070", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-019-070", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "REQ-019-071", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-019-071", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "REQ-019-072", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-019-072", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "REQ-019-101", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-019-101", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "REQ-019-102", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-019-102", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "REQ-019-103", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-019-103", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "REQ-019-104", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-019-104", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "REQ-019-107", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-019-107", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "REQ-019-108", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-019-108", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "SCR-019-03", "verb": "shows", "to": "ENT-provider.country"}
+  - {"op": "add_edge", "from": "SCR-019-03", "verb": "shows", "to": "ENT-provider.country", "attrs": {"provenance": "retrieved", "label": "Provider country"}}
+  - {"op": "remove_edge", "from": "SCR-019-04", "verb": "shows", "to": "ENT-provider.country"}
+  - {"op": "add_edge", "from": "SCR-019-04", "verb": "shows", "to": "ENT-provider.country", "attrs": {"provenance": "retrieved", "label": "Provider country"}}
+  - {"op": "remove_edge", "from": "SCR-019-04", "verb": "shows", "to": "ENT-promotion-report-snapshot.total_redemptions"}
+  - {"op": "add_edge", "from": "SCR-019-04", "verb": "shows", "to": "ENT-promotion-report-snapshot.total_redemptions", "attrs": {"provenance": "system calculated", "label": "Total Redemptions (last 7 / 30 / 90 / 365 days)"}}
+  - {"op": "remove_edge", "from": "SCR-019-10", "verb": "shows", "to": "ENT-patient.anonymized_id"}
+  - {"op": "add_edge", "from": "SCR-019-10", "verb": "shows", "to": "ENT-patient.anonymized_id", "attrs": {"provenance": "retrieved", "label": "Patient (masked patient code until the first payment succeeds)"}}
+  - {"op": "add_node", "id": "STP-019-019", "type": "Step", "owner_fr": "FR-019", "title": "Provider enters an invalid, expired or limit-reached code on a quote row", "attrs": {"prd_ref": "Alternative Flow B1"}}
+  - {"op": "add_node", "id": "STP-019-020", "type": "Step", "owner_fr": "FR-019", "title": "Provider enters or selects a second discount on a row that already has one", "attrs": {"prd_ref": "Alternative Flow B2"}}
+  - {"op": "add_edge", "from": "STP-019-019", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-019-019", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-019-019", "verb": "applies", "to": "REQ-019-033"}
+  - {"op": "add_edge", "from": "STP-019-019", "verb": "next", "to": "STP-019-011"}
+  - {"op": "add_edge", "from": "FLW-019-code-invalid", "verb": "starts at", "to": "STP-019-019"}
+  - {"op": "add_edge", "from": "STP-019-020", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-019-020", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-019-020", "verb": "applies", "to": "REQ-019-034"}
+  - {"op": "add_edge", "from": "STP-019-020", "verb": "next", "to": "STP-019-012"}
+  - {"op": "add_edge", "from": "FLW-019-user-conflict", "verb": "starts at", "to": "STP-019-020"}
