@@ -1,0 +1,390 @@
+reason: "Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-029)"
+by: controller
+operations:
+  - {"op": "add_node", "id": "SCR-029-08", "type": "Screen", "owner_fr": "FR-029", "title": "Refund, Fees and Settlement Settings", "attrs": {"platform": "admin", "description": "Admin Platform. One global record of the refund ladder, the late payment fee, the rescheduling fee, the deposit plan balance due days, the unpaid balance cancellation point, Hairline's share of a patient cancellation fee, the patient confirmation window and the settlement period, cutoff day and payout day for manually paid clinics (PRD Screen 7). Not set per provider, region or currency."}}
+  - {"op": "add_edge", "from": "SCR-029-08", "verb": "belongs to", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-029-08"}
+  - {"op": "add_node", "id": "SET-refund-ladder", "type": "Setting", "owner_fr": "FR-029", "title": "Refund ladder", "attrs": {"description": "Refund percentage by how many days before the procedure date the booking is cancelled; one global band table, percentage 0-100 per band, admin-editable on Screen 7. Read by FR-006, FR-007, FR-007B and FR-017. The base amount the percentage applies to is not defined in the PRD.", "default": "More than 30 days 90 percent; 15 to 30 days 50 percent; under 15 days 0 percent", "unit": "percent"}}
+  - {"op": "add_node", "id": "SET-late-payment-fee", "type": "Setting", "owner_fr": "FR-029", "title": "Late payment fee", "attrs": {"description": "Fee charged when the late payment grace period passes without the installment being paid: a type (fixed amount in the system default currency, or percentage 0-100) plus a value, admin-editable on Screen 7. Hairline keeps it; it changes no provider payout. The PRD gives no default."}}
+  - {"op": "add_node", "id": "SET-rescheduling-fee", "type": "Setting", "owner_fr": "FR-029", "title": "Rescheduling fee", "attrs": {"description": "Fee for rescheduling a booking: a type (fixed amount in the system default currency, or percentage 0-100) plus a value, admin-editable on Screen 7. Hairline keeps it; it changes no provider payout. The PRD gives no default; when it is charged and what a percentage is taken of are not ruled."}}
+  - {"op": "add_node", "id": "ENT-refund-fee-settings", "type": "Entity", "owner_fr": "FR-029", "title": "Refund ladder and fee settings", "attrs": {"description": "One global record (Screen 7): refund ladder bands, late payment fee, rescheduling fee, deposit plan balance due days, unpaid balance cancellation point, Hairline share of a patient cancellation fee, patient confirmation window, and the settlement period with its cutoff day and payout day for manually paid clinics. Read by FR-006, FR-007, FR-007B, FR-015 and FR-017."}}
+  - {"op": "add_edge", "from": "STG-admin-01-configuration", "verb": "writes", "to": "ENT-refund-fee-settings"}
+  - {"op": "add_field", "id": "ENT-refund-fee-settings.refund_ladder", "entity_id": "ENT-refund-fee-settings", "name": "refund_ladder", "data_type": "json", "title": "Refund ladder", "owner_fr": "FR-029", "required": true, "attrs": {"description": "Bands of days before the procedure date and the refund percentage for each (0-100). Launch default: more than 30 days 90, 15 to 30 days 50, under 15 days 0. Every number of days falls in exactly one band."}}
+  - {"op": "add_field", "id": "ENT-refund-fee-settings.late_payment_fee_type", "entity_id": "ENT-refund-fee-settings", "name": "late_payment_fee_type", "data_type": "enum", "title": "Late payment fee type", "owner_fr": "FR-029", "required": true, "attrs": {"description": "How the late payment fee is calculated: fixed amount or percentage."}}
+  - {"op": "add_field", "id": "ENT-refund-fee-settings.late_payment_fee_value", "entity_id": "ENT-refund-fee-settings", "name": "late_payment_fee_value", "data_type": "decimal", "title": "Late payment fee value", "owner_fr": "FR-029", "required": true, "attrs": {"description": "Value of the late payment fee. Fixed amount in the system default currency, precision per its minor units; percentage 0-100."}}
+  - {"op": "add_field", "id": "ENT-refund-fee-settings.rescheduling_fee_type", "entity_id": "ENT-refund-fee-settings", "name": "rescheduling_fee_type", "data_type": "enum", "title": "Rescheduling fee type", "owner_fr": "FR-029", "required": true, "attrs": {"description": "How the rescheduling fee is calculated: fixed amount or percentage."}}
+  - {"op": "add_field", "id": "ENT-refund-fee-settings.rescheduling_fee_value", "entity_id": "ENT-refund-fee-settings", "name": "rescheduling_fee_value", "data_type": "decimal", "title": "Rescheduling fee value", "owner_fr": "FR-029", "required": true, "attrs": {"description": "Value of the rescheduling fee. Fixed amount in the system default currency, precision per its minor units; percentage 0-100."}}
+  - {"op": "add_field", "id": "ENT-refund-fee-settings.deposit_plan_balance_due_days", "entity_id": "ENT-refund-fee-settings", "name": "deposit_plan_balance_due_days", "data_type": "int", "title": "Deposit plan balance due days", "owner_fr": "FR-029", "required": true, "attrs": {"description": "Days before the treatment date that the balance of a deposit plan is due. Default 7. Whole number of days."}}
+  - {"op": "add_field", "id": "ENT-refund-fee-settings.unpaid_balance_cancellation_point", "entity_id": "ENT-refund-fee-settings", "name": "unpaid_balance_cancellation_point", "data_type": "text", "title": "Unpaid balance cancellation point", "owner_fr": "FR-029", "required": true, "attrs": {"description": "The point at which an unpaid deposit plan balance cancels the booking. No default; an admin must set it before use."}}
+  - {"op": "add_field", "id": "ENT-refund-fee-settings.hairline_cancellation_fee_share", "entity_id": "ENT-refund-fee-settings", "name": "hairline_cancellation_fee_share", "data_type": "decimal", "title": "Hairline share of patient cancellation fee", "owner_fr": "FR-029", "required": true, "attrs": {"description": "Percentage 0-100 of a patient cancellation fee kept by Hairline; the rest goes to the clinic. No starting value; an admin must set it."}}
+  - {"op": "add_field", "id": "ENT-refund-fee-settings.patient_confirmation_window_days", "entity_id": "ENT-refund-fee-settings", "name": "patient_confirmation_window_days", "data_type": "int", "title": "Patient confirmation window", "owner_fr": "FR-029", "required": true, "attrs": {"description": "Days after a clinic marks a procedure complete during which the patient may raise a problem before the clinic share is released. Default 7; no minimum and no maximum."}}
+  - {"op": "add_field", "id": "ENT-refund-fee-settings.settlement_period", "entity_id": "ENT-refund-fee-settings", "name": "settlement_period", "data_type": "text", "title": "Settlement period", "owner_fr": "FR-029", "required": true, "attrs": {"description": "The one settlement period for all manually paid clinics. Default weekly; no per-clinic value exists."}}
+  - {"op": "add_field", "id": "ENT-refund-fee-settings.settlement_cutoff_day", "entity_id": "ENT-refund-fee-settings", "name": "settlement_cutoff_day", "data_type": "text", "title": "Settlement cutoff day", "owner_fr": "FR-029", "required": true, "attrs": {"description": "Day of the week the settlement period closes. Default Sunday."}}
+  - {"op": "add_field", "id": "ENT-refund-fee-settings.settlement_payout_day", "entity_id": "ENT-refund-fee-settings", "name": "settlement_payout_day", "data_type": "text", "title": "Settlement payout day", "owner_fr": "FR-029", "required": true, "attrs": {"description": "Day of the week the settlement statement is paid out. Default Wednesday."}}
+  - {"op": "add_field", "id": "ENT-refund-fee-settings.updated_date", "entity_id": "ENT-refund-fee-settings", "name": "updated_date", "data_type": "datetime", "title": "Last updated", "owner_fr": "FR-029", "required": false, "attrs": {"description": "When the record was last saved. Display-only on Screen 7."}}
+  - {"op": "add_field", "id": "ENT-refund-fee-settings.updated_by_admin_id", "entity_id": "ENT-refund-fee-settings", "name": "updated_by_admin_id", "data_type": "id", "title": "Updated by admin", "owner_fr": "FR-029", "required": false, "attrs": {"description": "The admin who last saved the record. Shown beside the last-updated time."}}
+  - {"op": "add_enum_value", "field_id": "ENT-refund-fee-settings.late_payment_fee_type", "value": "fixed_amount", "label": "Fixed amount", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-refund-fee-settings.late_payment_fee_type", "value": "percentage", "label": "Percentage", "sort_order": 1}
+  - {"op": "add_enum_value", "field_id": "ENT-refund-fee-settings.rescheduling_fee_type", "value": "fixed_amount", "label": "Fixed amount", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-refund-fee-settings.rescheduling_fee_type", "value": "percentage", "label": "Percentage", "sort_order": 1}
+  - {"op": "add_edge", "from": "SCR-029-08", "verb": "shows", "to": "ENT-refund-fee-settings.refund_ladder", "attrs": {"provenance": "user input", "label": "Refund ladder", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-029-08", "verb": "shows", "to": "ENT-refund-fee-settings.late_payment_fee_type", "attrs": {"provenance": "user input", "label": "Late payment fee type", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-029-08", "verb": "shows", "to": "ENT-refund-fee-settings.late_payment_fee_value", "attrs": {"provenance": "user input", "label": "Late payment fee value", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-029-08", "verb": "shows", "to": "ENT-refund-fee-settings.rescheduling_fee_type", "attrs": {"provenance": "user input", "label": "Rescheduling fee type", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-029-08", "verb": "shows", "to": "ENT-refund-fee-settings.rescheduling_fee_value", "attrs": {"provenance": "user input", "label": "Rescheduling fee value", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-029-08", "verb": "shows", "to": "ENT-refund-fee-settings.deposit_plan_balance_due_days", "attrs": {"provenance": "user input", "label": "Deposit plan balance due days", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-029-08", "verb": "shows", "to": "ENT-refund-fee-settings.unpaid_balance_cancellation_point", "attrs": {"provenance": "user input", "label": "Unpaid balance cancellation point", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-029-08", "verb": "shows", "to": "ENT-refund-fee-settings.hairline_cancellation_fee_share", "attrs": {"provenance": "user input", "label": "Hairline share of patient cancellation fee", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-029-08", "verb": "shows", "to": "ENT-refund-fee-settings.patient_confirmation_window_days", "attrs": {"provenance": "user input", "label": "Patient confirmation window", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-029-08", "verb": "shows", "to": "ENT-refund-fee-settings.settlement_period", "attrs": {"provenance": "user input", "label": "Settlement period", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-029-08", "verb": "shows", "to": "ENT-refund-fee-settings.settlement_cutoff_day", "attrs": {"provenance": "user input", "label": "Settlement cutoff day", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-029-08", "verb": "shows", "to": "ENT-refund-fee-settings.settlement_payout_day", "attrs": {"provenance": "user input", "label": "Settlement payout day", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-029-08", "verb": "shows", "to": "ENT-refund-fee-settings.updated_date", "attrs": {"provenance": "system calculated", "label": "Last updated"}}
+  - {"op": "update_node", "id": "ENT-split-payment-config.late_payment_grace_period_days", "attrs": {"description": "Days after a missed installment due date during which reminders are sent, before the late payment fee is charged. Range 0-14 days, integer only; 0 = no grace period. A missed installment never cancels the booking automatically."}}
+  - {"op": "add_node", "id": "REQ-029-140", "type": "Rule", "owner_fr": "FR-029", "title": "Booking total compared with the installment minimum in USD", "attrs": {"statement": "System MUST compare the booking total with the Minimum Booking Amount for installments in USD: a booking total in another currency is converted to USD at the conversion rate locked at FR-005 subquote acceptance before the comparison.", "rationale": "FR-029 PRD, Minimum Booking Conversion Rule; Screen 4."}}
+  - {"op": "add_edge", "from": "REQ-029-140", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-140", "verb": "applies to", "to": "SCR-029-05"}
+  - {"op": "add_edge", "from": "REQ-029-140", "verb": "applies to", "to": "ENT-split-payment-config.minimum_booking_amount"}
+  - {"op": "add_edge", "from": "REQ-029-140", "verb": "governed by", "to": "SET-split-payment-config"}
+  - {"op": "add_node", "id": "REQ-029-141", "type": "Rule", "owner_fr": "FR-029", "title": "Admins enable or disable payment methods per region and currency", "attrs": {"statement": "System MUST allow admins to enable or disable the payment methods offered to patients, per region and currency (Screen 1); FR-007 reads this setting, and FR-007B owns the payment-method records.", "rationale": "FR-029 PRD, Screen 1 Enabled Payment Methods."}}
+  - {"op": "add_edge", "from": "REQ-029-141", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-029-141", "verb": "applies to", "to": "SCR-029-01"}
+  - {"op": "add_edge", "from": "REQ-029-141", "verb": "governed by", "to": "SET-supported-payment-methods"}
+  - {"op": "add_node", "id": "REQ-029-142", "type": "Rule", "owner_fr": "FR-029", "title": "Admins edit the refund ladder", "attrs": {"statement": "System MUST allow admins to edit the refund ladder (refund percentage by how many days before the procedure date the booking is cancelled) on Screen 7. The launch default is: more than 30 days, 90 percent; 15 to 30 days, 50 percent; under 15 days, 0 percent. FR-006, FR-007, FR-007B and FR-017 read this setting.", "rationale": "FR-029 PRD, Screen 7 Refund Ladder; Refund Rule."}}
+  - {"op": "add_edge", "from": "REQ-029-142", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-029-142", "verb": "applies to", "to": "SCR-029-08"}
+  - {"op": "add_edge", "from": "REQ-029-142", "verb": "governed by", "to": "SET-refund-ladder"}
+  - {"op": "add_node", "id": "REQ-029-143", "type": "Rule", "owner_fr": "FR-029", "title": "Admins set the late payment fee and the rescheduling fee", "attrs": {"statement": "System MUST allow admins to set a late payment fee and a rescheduling fee on Screen 7. For each fee the admin chooses the type (fixed amount or percentage) and enters the value. Hairline keeps both fees; they change no provider payout.", "rationale": "FR-029 PRD, Screen 7; Late Fee Rule."}}
+  - {"op": "add_edge", "from": "REQ-029-143", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-029-143", "verb": "applies to", "to": "SCR-029-08"}
+  - {"op": "add_edge", "from": "REQ-029-143", "verb": "governed by", "to": "SET-late-payment-fee"}
+  - {"op": "add_edge", "from": "REQ-029-143", "verb": "governed by", "to": "SET-rescheduling-fee"}
+  - {"op": "add_node", "id": "REQ-029-144", "type": "Rule", "owner_fr": "FR-029", "title": "Late payment fee charged when the grace period passes unpaid", "attrs": {"statement": "System MUST charge the late payment fee when the late payment grace period has passed without the installment being paid.", "rationale": "FR-029 PRD, Late Fee Rule; Screen 4 grace period."}}
+  - {"op": "add_edge", "from": "REQ-029-144", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-144", "verb": "applies to", "to": "ENT-split-payment-config.late_payment_grace_period_days"}
+  - {"op": "add_edge", "from": "REQ-029-144", "verb": "governed by", "to": "SET-late-payment-fee"}
+  - {"op": "add_node", "id": "REQ-029-145", "type": "Rule", "owner_fr": "FR-029", "title": "One settlement period for all manually paid clinics", "attrs": {"statement": "System MUST allow admins to set one settlement period for all manually paid clinics on Screen 7. It defaults to weekly with a Sunday cutoff and a Wednesday payout, and an admin can edit the period, the cutoff day and the payout day. There is no per-clinic payout frequency; on the Stripe Connect rail release is automatic. FR-015 and FR-017 point to this setting.", "rationale": "FR-029 PRD, Screen 7 Settlement Period; Settlement Period Rule."}}
+  - {"op": "add_edge", "from": "REQ-029-145", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-029-145", "verb": "applies to", "to": "SCR-029-08"}
+  - {"op": "add_edge", "from": "REQ-029-145", "verb": "governed by", "to": "SET-payout-cutoff-day"}
+  - {"op": "add_edge", "from": "REQ-029-145", "verb": "governed by", "to": "SET-payout-day"}
+  - {"op": "add_node", "id": "REQ-029-146", "type": "Rule", "owner_fr": "FR-029", "title": "Deposit plan balance due 7 days before treatment by default", "attrs": {"statement": "System MUST treat the balance of a deposit plan as due 7 days before treatment by default, and MUST allow admins to edit it on Screen 7.", "rationale": "FR-029 PRD, Screen 7 Deposit Plan Balance Due Days."}}
+  - {"op": "add_edge", "from": "REQ-029-146", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-029-146", "verb": "applies to", "to": "SCR-029-08"}
+  - {"op": "add_node", "id": "REQ-029-147", "type": "Rule", "owner_fr": "FR-029", "title": "Unpaid balance cancellation point is its own setting with no default", "attrs": {"statement": "System MUST allow admins to set, on Screen 7, the point at which an unpaid deposit plan balance cancels the booking. It is its own setting, separate from the 7-day due date, and has no starting value; an admin must set it.", "rationale": "FR-029 PRD, Screen 7 Unpaid Balance Cancellation Point."}}
+  - {"op": "add_edge", "from": "REQ-029-147", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-029-147", "verb": "applies to", "to": "SCR-029-08"}
+  - {"op": "add_node", "id": "REQ-029-148", "type": "Rule", "owner_fr": "FR-029", "title": "Hairline's share of a patient cancellation fee has no starting value", "attrs": {"statement": "System MUST allow admins to set Hairline's share of a patient cancellation fee on Screen 7. It has no starting value; an admin must set it.", "rationale": "FR-029 PRD, Screen 7 Hairline Share of Patient Cancellation Fee."}}
+  - {"op": "add_edge", "from": "REQ-029-148", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-029-148", "verb": "applies to", "to": "SCR-029-08"}
+  - {"op": "add_edge", "from": "REQ-029-148", "verb": "governed by", "to": "SET-patient-cancellation-fee-split"}
+  - {"op": "add_node", "id": "REQ-029-149", "type": "Rule", "owner_fr": "FR-029", "title": "Patient confirmation window, default 7 days, no minimum or maximum", "attrs": {"statement": "System MUST allow admins to set the patient confirmation window on Screen 7 (default 7 days), with no minimum and no maximum.", "rationale": "FR-029 PRD, Screen 7 Patient Confirmation Window."}}
+  - {"op": "add_edge", "from": "REQ-029-149", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-029-149", "verb": "applies to", "to": "SCR-029-08"}
+  - {"op": "add_edge", "from": "REQ-029-149", "verb": "governed by", "to": "SET-patient-confirmation-window"}
+  - {"op": "update_node", "id": "SET-payout-cutoff-day", "owner_fr": "FR-029"}
+  - {"op": "update_node", "id": "SET-payout-day", "owner_fr": "FR-029"}
+  - {"op": "update_node", "id": "SET-patient-confirmation-window", "owner_fr": "FR-029"}
+  - {"op": "update_node", "id": "SET-patient-cancellation-fee-split", "owner_fr": "FR-029"}
+  - {"op": "update_node", "id": "SET-supported-payment-methods", "attrs": {"description": "Payment methods enabled or disabled by admin per region and currency (FR-029 Screen 1, Enabled Payment Methods). FR-007 reads it; FR-007B owns the payment-method records."}}
+  - {"op": "update_node", "id": "SET-installment-late-payment-grace-period", "attrs": {"description": "Late payment grace period (0-14 days, FR-029 Screen 4): the days after a missed installment due date during which reminders are sent before the late payment fee is charged. A missed installment never cancels the booking automatically."}}
+  - {"op": "update_node", "id": "REQ-029-004", "attrs": {"statement": "System MUST route payment transactions to the appropriate Stripe account based on the country on the patient's profile (not the patient's current physical location)", "rationale": "FR-029 PRD, Payment Rule 1 and the no-Stripe-account edge case: the profile country decides the Stripe account."}}
+  - {"op": "update_node", "id": "REQ-029-012", "attrs": {"statement": "System MUST gracefully handle per-pair rate source failures by keeping the last successfully fetched rate, marking the pair's status as red/error on the pair list, and alerting admin. Deleting a rate source MUST be blocked while any pair still references it; the admin must first reassign those pairs to another source or convert them to manual mode (with the last fetched rate pre-filled), and no pair switches to manual mode automatically.", "rationale": "FR-029 PRD, REQ-029-012 and Screen 2B: deleting a source is blocked while pairs use it; no automatic switch to manual mode."}}
+  - {"op": "update_node", "id": "REQ-029-015", "attrs": {"statement": "System MUST apply deposit rate changes to new bookings only (existing bookings retain original deposit rate). Once a booking has been confirmed, its installment settings are locked: later changes to installment configuration never alter that booking"}}
+  - {"op": "update_node", "id": "REQ-029-022", "attrs": {"statement": "System MUST generate installment payment schedules using equal-split amounts: booking total ÷ installment count (rounded to each currency's own minor units; last installment absorbs rounding difference)", "rationale": "Restated by Billing Rule 1 and Screen 4. Rounding follows each currency's own minor units."}}
+  - {"op": "update_node", "id": "REQ-029-023", "attrs": {"statement": "System MUST allow admins to configure the late payment grace period (0-14 days): the number of days after a missed installment due date during which reminders are sent and before the late fee is charged. A missed installment never cancels the booking automatically"}}
+  - {"op": "update_node", "id": "REQ-029-027", "attrs": {"statement": "System MUST retain payment configuration audit history; retention follows the system PRD, Platform-Wide Rules: One 10-year retention period", "rationale": "Retention follows REQ-SYS-002."}}
+  - {"op": "update_node", "id": "REQ-029-044", "attrs": {"statement": "System MUST lock currency conversion rates (including markup) at FR-005 subquote acceptance, store them with their timestamp in the acceptance snapshot, and copy them to the booking and its transactions (no rate fluctuation after subquote acceptance). If the cached rate is older than 24 hours, acceptance still proceeds and the snapshot records the rate and its timestamp", "rationale": "Restates Rule 1(a) and Currency Rule 2. Likely duplicate of REQ-005-017 (FR-005)."}}
+  - {"op": "update_node", "id": "REQ-029-051", "attrs": {"statement": "System MUST present any pre-confirmation commission (including the FR-004 quote screen) as an indicative model and value labelled \"indicative, final at booking confirmation\"; only the booking-confirmation snapshot is authoritative. The binding commission is fixed at booking confirmation on the accepted price after promotion, in the quote currency, from the acceptance snapshot"}}
+  - {"op": "update_node", "id": "REQ-029-053", "attrs": {"statement": "System MUST create a new FR-026 Quote Configuration version whenever the Default Currency changes; open quote drafts MUST keep their typed numbers, switch to the new currency without conversion, and require the provider to acknowledge a banner reading \"currency changed, check your prices\" (FR-004 quote screen) before send."}}
+  - {"op": "update_node", "id": "REQ-029-054", "attrs": {"statement": "System MUST calculate commission on the accepted price after the promotion, in the quote currency and read from the acceptance snapshot, for every discount type, including discounts funded only by Hairline; no program keeps commission on the price before the promotion."}}
+  - {"op": "update_node", "id": "REQ-029-087", "attrs": {"statement": "Status badges update automatically: green when last fetch succeeded and rate change is within threshold; yellow when the last sync breached the rate protection threshold or the source is degraded; red when last fetch failed or source is down. A yellow badge returns to green on the pair's next normal sync; there is no acknowledge action.", "rationale": "Status of a pair is calculated by this rule. A yellow badge returns to green on the next normal sync; there is no acknowledge action."}}
+  - {"op": "update_node", "id": "REQ-029-105", "title": "Missed installment never cancels the booking; reminders, retries, then an admin flag", "attrs": {"statement": "Payment Rule 6: A missed installment never cancels the booking automatically. The system sends reminders during the grace period and retries the payment three times (day 1, day 3 and day 7, as owned by FR-007B); when the retries have failed, an admin is flagged to follow up. The late payment fee is charged when the grace period passes without payment (Late Fee Rule)", "rationale": "FR-029 PRD, Payment Rule 6."}}
+  - {"op": "update_node", "id": "REQ-029-110", "title": "Refunds follow the refund ladder", "attrs": {"statement": "Refund Rule: Refunds on a cancelled booking follow the refund ladder set on Screen 7: the refund percentage depends on how many days before the procedure date the booking is cancelled. The launch default is more than 30 days, 90 percent; 15 to 30 days, 50 percent; under 15 days, 0 percent. It is one global setting that FR-006, FR-007, FR-007B and FR-017 read; each provider's own cancellation terms do not replace it", "rationale": "FR-029 PRD, Refund Rule; the ladder itself is REQ-029-142."}}
+  - {"op": "update_node", "id": "REQ-029-124", "attrs": {"statement": "If an admin attempts to disable a currency referenced only by configuration items (e.g., used in Stripe account supported currencies, location starting prices, or active pricing configs), the system MUST warn and provide a safe resolution path (e.g., update dependent configs first) before allowing the disable. A currency still used by quotes, bookings or instalment plans is not a warning case: it is blocked by the rule below.", "rationale": "Overlaps REQ-029-052 (blocked while in use). The warning covers configuration items only; records in use are blocked by REQ-029-052."}}
+  - {"op": "update_node", "id": "REQ-029-118", "attrs": {"statement": "Percentage model (global default or provider scope): commission amount = booking total (the accepted subquote price after promotion, in the quote currency, from the acceptance snapshot) × snapshotted commission percentage (rounded to the quote currency's own minor units; last payment absorbs rounding difference if needed)", "rationale": "Part of the commission calculation; see REQ-029-050 for the booking total. Rounding follows the quote currency's minor units."}}
+  - {"op": "update_node", "id": "REQ-029-097", "attrs": {"statement": "How does system handle rapid currency fluctuation exceeding rate protection threshold multiple times in single day for one pair (e.g., USD/EUR changes 3% at 8am, another 3% at 2pm, another 3% at 8pm)? System sends first alert at 8am when the pair's initial 3% threshold is crossed and marks the pair's status as yellow/warning on the pair list. System applies rate-limiting to alerts (maximum one alert per currency pair per 6 hours) to prevent alert fatigue. System accumulates rate changes and sends second alert at 2pm showing cumulative change: \"USD/EUR increased 6% in 6 hours.\" The pair's yellow/warning status returns to green on the pair's next normal sync (when the rate is back within the protection threshold); there is no acknowledge action. Admin receives summary of all rate changes across all pairs in daily digest email."}}
+  - {"op": "retire_node", "id": "REQ-029-090"}
+  - {"op": "retire_node", "id": "REQ-029-107"}
+  - {"op": "retire_node", "id": "REQ-029-111"}
+  - {"op": "retire_node", "id": "SET-payout-buffer-window"}
+  - {"op": "remove_edge", "from": "STP-029-001", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-001", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-003", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-003", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-004", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-004", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-006", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-006", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-007", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-007", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-008", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-008", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-009", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-009", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-014", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-014", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-016", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-016", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-017", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-017", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-019", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-019", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-020", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-020", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-021", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-021", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-022", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-022", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-024", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-024", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-028", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-028", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-030", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-030", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-031", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-031", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-032", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-032", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-033", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-033", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-034", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-034", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-041", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-041", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-043", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-043", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-044", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-044", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-046", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-046", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-048", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-048", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-049", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-049", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-051", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-051", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-057", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-057", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-059", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-059", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-060", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-060", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-061", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-061", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-062", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-062", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-063", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-063", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-064", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-064", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-072", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-072", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-074", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-074", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-075", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-075", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-079", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-079", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-080", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-080", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-081", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-081", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-082", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-082", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-084", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-084", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-087", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-087", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-088", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-088", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-090", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-090", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-094", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-094", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-095", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-095", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-097", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-097", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-098", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-098", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-101", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-101", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-110", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-110", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-115", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-115", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-116", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-116", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-126", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-126", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-127", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-127", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-128", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-128", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-132", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-132", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-133", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-133", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-135", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-135", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-136", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-136", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-139", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-139", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-140", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-140", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-147", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-147", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-148", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-148", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-149", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-149", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-029-150", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-029-150", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "SCR-029-01", "verb": "belongs to", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "SCR-029-01", "verb": "belongs to", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "SCR-029-02", "verb": "belongs to", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "SCR-029-02", "verb": "belongs to", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "SCR-029-03", "verb": "belongs to", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "SCR-029-03", "verb": "belongs to", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "SCR-029-04", "verb": "belongs to", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "SCR-029-04", "verb": "belongs to", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "SCR-029-05", "verb": "belongs to", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "SCR-029-05", "verb": "belongs to", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "SCR-029-06", "verb": "belongs to", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "SCR-029-06", "verb": "belongs to", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "SCR-029-07", "verb": "belongs to", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "SCR-029-07", "verb": "belongs to", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-001", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-001", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-029-002", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-029-003", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-005", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-005", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-029-006", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-007", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-007", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-009", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-009", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-029-010", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-029-011", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-029-013", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-029-014", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-015", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-015", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-017", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-017", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-018", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-018", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-019", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-019", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-020", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-020", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-022", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-022", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-023", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-023", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-029-025", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-029-037", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-038", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-038", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-029-042", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-029-043", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-029-047", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-029-056", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-029-057", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-058", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-058", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-029-059", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-029-065", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-029-066", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-029-067", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-029-068", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-029-069", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-071", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-071", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-072", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-072", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-073", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-073", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-078", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-078", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-083", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-083", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-084", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-084", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-085", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-085", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-086", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-086", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-089", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-089", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-091", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-091", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-029-092", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-029-093", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-094", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-094", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-099", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-099", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-029-108", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-029-117", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-121", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-121", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-124", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-124", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-126", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-126", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-029-129", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-131", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-131", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-132", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-132", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-133", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-133", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-134", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-134", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-135", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-135", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-136", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-136", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-137", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-137", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-138", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-138", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-029-139", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-029-139", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "FR-029", "verb": "references", "to": "REQ-028-006"}
+  - {"op": "add_edge", "from": "FR-029", "verb": "references", "to": "REQ-015-108"}
+  - {"op": "add_edge", "from": "FR-029", "verb": "references", "to": "REQ-007B-002"}
+  - {"op": "add_edge", "from": "FR-029", "verb": "references", "to": "REQ-021-053"}
+  - {"op": "add_edge", "from": "FR-029", "verb": "references", "to": "REQ-001-010"}
+  - {"op": "add_edge", "from": "FR-029", "verb": "references", "to": "REQ-006-030"}
+  - {"op": "add_edge", "from": "FR-029", "verb": "references", "to": "REQ-006-033"}
+  - {"op": "add_edge", "from": "FR-029", "verb": "references", "to": "REQ-006-063"}
+  - {"op": "add_edge", "from": "FR-029", "verb": "references", "to": "REQ-005-006"}
+  - {"op": "add_edge", "from": "FR-029", "verb": "references", "to": "REQ-007-034"}
+  - {"op": "add_edge", "from": "FR-029", "verb": "references", "to": "REQ-007-073"}
+  - {"op": "add_edge", "from": "FR-029", "verb": "references", "to": "REQ-007-014"}
+  - {"op": "add_edge", "from": "FR-029", "verb": "references", "to": "REQ-032-010"}
+  - {"op": "add_edge", "from": "FR-029", "verb": "references", "to": "REQ-032-029"}
+  - {"op": "add_edge", "from": "FR-029", "verb": "references", "to": "REQ-032-090"}
+  - {"op": "add_edge", "from": "FR-029", "verb": "references", "to": "REQ-017-002"}
+  - {"op": "add_edge", "from": "FR-029", "verb": "references", "to": "REQ-017-159"}
+  - {"op": "add_edge", "from": "FR-029", "verb": "references", "to": "REQ-017-023"}
+  - {"op": "add_edge", "from": "FR-029", "verb": "references", "to": "REQ-017-152"}
+  - {"op": "add_edge", "from": "FR-029", "verb": "references", "to": "REQ-SYS-008"}
+  - {"op": "add_edge", "from": "FR-029", "verb": "references", "to": "REQ-SYS-002"}
+  - {"op": "add_edge", "from": "REQ-004-011", "verb": "governed by", "to": "SET-default-currency"}
+  - {"op": "add_edge", "from": "REQ-004-025", "verb": "governed by", "to": "SET-default-currency"}
+  - {"op": "add_edge", "from": "REQ-004-036", "verb": "governed by", "to": "SET-default-currency"}
+  - {"op": "add_edge", "from": "REQ-004-041", "verb": "governed by", "to": "SET-default-currency"}
+  - {"op": "add_edge", "from": "REQ-004-066", "verb": "governed by", "to": "SET-default-currency"}
+  - {"op": "add_edge", "from": "REQ-004-082", "verb": "governed by", "to": "SET-default-currency"}
+  - {"op": "add_edge", "from": "REQ-024-032", "verb": "governed by", "to": "SET-default-currency"}
+  - {"op": "add_edge", "from": "REQ-026-026", "verb": "governed by", "to": "SET-default-currency"}
+  - {"op": "add_edge", "from": "REQ-026-027", "verb": "governed by", "to": "SET-default-currency"}
+  - {"op": "add_edge", "from": "REQ-026-037", "verb": "governed by", "to": "SET-default-currency"}
+  - {"op": "add_edge", "from": "REQ-026-063", "verb": "governed by", "to": "SET-default-currency"}
+  - {"op": "add_edge", "from": "REQ-026-097", "verb": "governed by", "to": "SET-default-currency"}
