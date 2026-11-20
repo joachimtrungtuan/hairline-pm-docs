@@ -1,0 +1,970 @@
+reason: "Owner ruling 2026-11-20 (the PRD a Rule came from is an acceptable deciding Source), extended to Rules with no PRD-line note whose statement matches a line of their own PRD (at least 80 percent of its words; the line is recorded in the rationale) and to Entities whose name or table appears in their owning PRD"
+by: controller
+operations:
+  - {"op": "add_source", "id": "SRC-PRD-SYS", "title": "FR-SYS PRD: System PRD", "kind": "document", "ref": "project-requirements/system-prd.md", "lifecycle": "incorporated", "date": "2026-11-20"}
+  - {"op": "add_edge", "from": "ENT-account-deletion-reason", "verb": "decided by", "to": "SRC-PRD-026"}
+  - {"op": "add_edge", "from": "ENT-admin-action", "verb": "decided by", "to": "SRC-PRD-013"}
+  - {"op": "add_edge", "from": "ENT-admin-action-log", "verb": "decided by", "to": "SRC-PRD-016"}
+  - {"op": "add_edge", "from": "ENT-admin-user-account", "verb": "decided by", "to": "SRC-PRD-031"}
+  - {"op": "add_edge", "from": "ENT-affiliate", "verb": "decided by", "to": "SRC-PRD-018"}
+  - {"op": "add_edge", "from": "ENT-affiliate-attribution", "verb": "decided by", "to": "SRC-PRD-018"}
+  - {"op": "add_edge", "from": "ENT-affiliate-code-batch", "verb": "decided by", "to": "SRC-PRD-018"}
+  - {"op": "add_edge", "from": "ENT-affiliate-commission", "verb": "decided by", "to": "SRC-PRD-017"}
+  - {"op": "add_edge", "from": "ENT-affiliate-discount-code", "verb": "decided by", "to": "SRC-PRD-018"}
+  - {"op": "add_edge", "from": "ENT-affiliate-payout", "verb": "decided by", "to": "SRC-PRD-018"}
+  - {"op": "add_edge", "from": "ENT-aftercare-milestone", "verb": "decided by", "to": "SRC-PRD-011"}
+  - {"op": "add_edge", "from": "ENT-aftercare-plan", "verb": "decided by", "to": "SRC-PRD-011"}
+  - {"op": "add_edge", "from": "ENT-aftercare-request", "verb": "decided by", "to": "SRC-PRD-011"}
+  - {"op": "add_edge", "from": "ENT-aftercare-task", "verb": "decided by", "to": "SRC-PRD-011"}
+  - {"op": "add_edge", "from": "ENT-aftercare-template", "verb": "decided by", "to": "SRC-PRD-011"}
+  - {"op": "add_edge", "from": "ENT-analytics-configuration", "verb": "decided by", "to": "SRC-PRD-026"}
+  - {"op": "add_edge", "from": "ENT-attachment", "verb": "decided by", "to": "SRC-PRD-012"}
+  - {"op": "add_edge", "from": "ENT-audit-log-entry", "verb": "decided by", "to": "SRC-PRD-023"}
+  - {"op": "add_edge", "from": "ENT-auth-throttling-policy", "verb": "decided by", "to": "SRC-PRD-026"}
+  - {"op": "add_edge", "from": "ENT-benchmark-segment", "verb": "decided by", "to": "SRC-PRD-014"}
+  - {"op": "add_edge", "from": "ENT-booking-intensity-record", "verb": "decided by", "to": "SRC-PRD-014"}
+  - {"op": "add_edge", "from": "ENT-commission", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "add_edge", "from": "ENT-commission-rate-config", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "add_edge", "from": "ENT-configuration-change-audit-log", "verb": "decided by", "to": "SRC-PRD-028"}
+  - {"op": "add_edge", "from": "ENT-content-analytics", "verb": "decided by", "to": "SRC-PRD-033"}
+  - {"op": "add_edge", "from": "ENT-content-version", "verb": "decided by", "to": "SRC-PRD-033"}
+  - {"op": "add_edge", "from": "ENT-conversation", "verb": "decided by", "to": "SRC-PRD-012"}
+  - {"op": "add_edge", "from": "ENT-country", "verb": "decided by", "to": "SRC-PRD-026"}
+  - {"op": "add_edge", "from": "ENT-currency", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "add_edge", "from": "ENT-currency-alert", "verb": "decided by", "to": "SRC-PRD-017"}
+  - {"op": "add_edge", "from": "ENT-currency-alert-decision", "verb": "decided by", "to": "SRC-PRD-017"}
+  - {"op": "add_edge", "from": "ENT-currency-config", "verb": "decided by", "to": "SRC-PRD-021"}
+  - {"op": "add_edge", "from": "ENT-currency-conversion-settings", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "add_edge", "from": "ENT-currency-exchange-rate", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "add_edge", "from": "ENT-currency-pair", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "add_edge", "from": "ENT-currency-rate-lock", "verb": "decided by", "to": "SRC-PRD-017"}
+  - {"op": "add_edge", "from": "ENT-deletion-request", "verb": "decided by", "to": "SRC-PRD-023"}
+  - {"op": "add_edge", "from": "ENT-discount-code", "verb": "decided by", "to": "SRC-PRD-019"}
+  - {"op": "add_edge", "from": "ENT-discovery-question-option", "verb": "decided by", "to": "SRC-PRD-026"}
+  - {"op": "add_edge", "from": "ENT-email-template", "verb": "decided by", "to": "SRC-PRD-026"}
+  - {"op": "add_edge", "from": "ENT-export-report-config", "verb": "decided by", "to": "SRC-PRD-014"}
+  - {"op": "add_edge", "from": "ENT-faq-topic", "verb": "decided by", "to": "SRC-PRD-033"}
+  - {"op": "add_edge", "from": "ENT-flag", "verb": "decided by", "to": "SRC-PRD-012"}
+  - {"op": "add_edge", "from": "ENT-flight-record", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "add_edge", "from": "ENT-help-centre-audit-entry", "verb": "decided by", "to": "SRC-PRD-033"}
+  - {"op": "add_edge", "from": "ENT-help-centre-category", "verb": "decided by", "to": "SRC-PRD-033"}
+  - {"op": "add_edge", "from": "ENT-help-centre-content", "verb": "decided by", "to": "SRC-PRD-033"}
+  - {"op": "add_edge", "from": "ENT-hotel-record", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "add_edge", "from": "ENT-incident-record", "verb": "decided by", "to": "SRC-PRD-033"}
+  - {"op": "add_edge", "from": "ENT-inquiry", "verb": "decided by", "to": "SRC-PRD-003"}
+  - {"op": "add_edge", "from": "ENT-inquiry-cancellation-reason", "verb": "decided by", "to": "SRC-PRD-026"}
+  - {"op": "add_edge", "from": "ENT-inquiry-date-range", "verb": "decided by", "to": "SRC-PRD-003"}
+  - {"op": "add_edge", "from": "ENT-inquiry-scheduling-policy", "verb": "decided by", "to": "SRC-PRD-026"}
+  - {"op": "add_edge", "from": "ENT-installment-payment", "verb": "decided by", "to": "SRC-PRD-007B"}
+  - {"op": "add_edge", "from": "ENT-intake-processing-request", "verb": "decided by", "to": "SRC-PRD-002"}
+  - {"op": "add_edge", "from": "ENT-invitation", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "add_edge", "from": "ENT-legal-document", "verb": "decided by", "to": "SRC-PRD-027"}
+  - {"op": "add_edge", "from": "ENT-legal-reminder", "verb": "decided by", "to": "SRC-PRD-027"}
+  - {"op": "add_edge", "from": "ENT-location-starting-price", "verb": "decided by", "to": "SRC-PRD-028"}
+  - {"op": "add_edge", "from": "ENT-maintenance-window", "verb": "decided by", "to": "SRC-PRD-033"}
+  - {"op": "add_edge", "from": "ENT-media-artifact", "verb": "decided by", "to": "SRC-PRD-002"}
+  - {"op": "add_edge", "from": "ENT-medical-data-access-log", "verb": "decided by", "to": "SRC-PRD-016"}
+  - {"op": "add_edge", "from": "ENT-medical-questionnaire-response", "verb": "decided by", "to": "SRC-PRD-003"}
+  - {"op": "add_edge", "from": "ENT-medication-instructions", "verb": "decided by", "to": "SRC-PRD-010"}
+  - {"op": "add_edge", "from": "ENT-message", "verb": "decided by", "to": "SRC-PRD-012"}
+  - {"op": "add_edge", "from": "ENT-monitoring-advice", "verb": "decided by", "to": "SRC-PRD-037"}
+  - {"op": "add_edge", "from": "ENT-monitoring-entry", "verb": "decided by", "to": "SRC-PRD-037"}
+  - {"op": "add_edge", "from": "ENT-mt-job", "verb": "decided by", "to": "SRC-PRD-021"}
+  - {"op": "add_edge", "from": "ENT-mt-provider-credential", "verb": "decided by", "to": "SRC-PRD-021"}
+  - {"op": "add_edge", "from": "ENT-notification-delivery-log", "verb": "decided by", "to": "SRC-PRD-030"}
+  - {"op": "add_edge", "from": "ENT-notification-engagement-metrics", "verb": "decided by", "to": "SRC-PRD-030"}
+  - {"op": "add_edge", "from": "ENT-notification-event", "verb": "decided by", "to": "SRC-PRD-020"}
+  - {"op": "add_edge", "from": "ENT-notification-record", "verb": "decided by", "to": "SRC-PRD-020"}
+  - {"op": "add_edge", "from": "ENT-notification-rule", "verb": "decided by", "to": "SRC-PRD-030"}
+  - {"op": "add_edge", "from": "ENT-notification-template", "verb": "decided by", "to": "SRC-PRD-030"}
+  - {"op": "add_edge", "from": "ENT-otp-code", "verb": "decided by", "to": "SRC-PRD-001"}
+  - {"op": "add_edge", "from": "ENT-otp-configuration", "verb": "decided by", "to": "SRC-PRD-026"}
+  - {"op": "add_edge", "from": "ENT-passport-record", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "add_edge", "from": "ENT-patient", "verb": "decided by", "to": "SRC-PRD-001"}
+  - {"op": "add_edge", "from": "ENT-patient-invoice", "verb": "decided by", "to": "SRC-PRD-017"}
+  - {"op": "add_edge", "from": "ENT-patient-notification-preferences", "verb": "decided by", "to": "SRC-PRD-030"}
+  - {"op": "add_edge", "from": "ENT-payment", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "add_edge", "from": "ENT-payment-config-audit-log", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "add_edge", "from": "ENT-payment-method", "verb": "decided by", "to": "SRC-PRD-007B"}
+  - {"op": "add_edge", "from": "ENT-payout", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "add_edge", "from": "ENT-payout-adjustment", "verb": "decided by", "to": "SRC-PRD-017"}
+  - {"op": "add_edge", "from": "ENT-pending-provider-status-change", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "add_edge", "from": "ENT-permission", "verb": "decided by", "to": "SRC-PRD-031"}
+  - {"op": "add_edge", "from": "ENT-platform-analytics-aggregate", "verb": "decided by", "to": "SRC-PRD-014"}
+  - {"op": "add_edge", "from": "ENT-promotion-usage-reservation", "verb": "decided by", "to": "SRC-PRD-019"}
+  - {"op": "add_edge", "from": "ENT-provider", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "add_edge", "from": "ENT-provider-account-settings", "verb": "decided by", "to": "SRC-PRD-032"}
+  - {"op": "add_edge", "from": "ENT-provider-billing-settings", "verb": "decided by", "to": "SRC-PRD-032"}
+  - {"op": "add_edge", "from": "ENT-provider-closure-request", "verb": "decided by", "to": "SRC-PRD-032"}
+  - {"op": "add_edge", "from": "ENT-provider-document", "verb": "decided by", "to": "SRC-PRD-032"}
+  - {"op": "add_edge", "from": "ENT-provider-engagement-snapshot", "verb": "decided by", "to": "SRC-PRD-014"}
+  - {"op": "add_edge", "from": "ENT-provider-inquiry", "verb": "decided by", "to": "SRC-PRD-003"}
+  - {"op": "add_edge", "from": "ENT-provider-notification-preferences", "verb": "decided by", "to": "SRC-PRD-030"}
+  - {"op": "add_edge", "from": "ENT-provider-payout", "verb": "decided by", "to": "SRC-PRD-017"}
+  - {"op": "add_edge", "from": "ENT-provider-profile", "verb": "decided by", "to": "SRC-PRD-032"}
+  - {"op": "add_edge", "from": "ENT-provider-response", "verb": "decided by", "to": "SRC-PRD-013"}
+  - {"op": "add_edge", "from": "ENT-provider-specialty", "verb": "decided by", "to": "SRC-PRD-026"}
+  - {"op": "add_edge", "from": "ENT-provider-status-event", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "add_edge", "from": "ENT-questionnaire-context-type", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "add_edge", "from": "ENT-questionnaire-set", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "add_edge", "from": "ENT-questionnaire-version", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "add_edge", "from": "ENT-rate-source", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "add_edge", "from": "ENT-refund", "verb": "decided by", "to": "SRC-PRD-017"}
+  - {"op": "add_edge", "from": "ENT-refund-fee-settings", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "add_edge", "from": "ENT-regional-grouping", "verb": "decided by", "to": "SRC-PRD-028"}
+  - {"op": "add_edge", "from": "ENT-retention-policy", "verb": "decided by", "to": "SRC-PRD-023"}
+  - {"op": "add_edge", "from": "ENT-review", "verb": "decided by", "to": "SRC-PRD-013"}
+  - {"op": "add_edge", "from": "ENT-review-photo", "verb": "decided by", "to": "SRC-PRD-013"}
+  - {"op": "add_edge", "from": "ENT-review-settings", "verb": "decided by", "to": "SRC-PRD-013"}
+  - {"op": "add_edge", "from": "ENT-risk-tag", "verb": "decided by", "to": "SRC-PRD-002"}
+  - {"op": "add_edge", "from": "ENT-scan", "verb": "decided by", "to": "SRC-PRD-003"}
+  - {"op": "add_edge", "from": "ENT-search-audit-log", "verb": "decided by", "to": "SRC-PRD-022"}
+  - {"op": "add_edge", "from": "ENT-service-component", "verb": "decided by", "to": "SRC-PRD-033"}
+  - {"op": "add_edge", "from": "ENT-service-status", "verb": "decided by", "to": "SRC-PRD-033"}
+  - {"op": "add_edge", "from": "ENT-setting-group", "verb": "decided by", "to": "SRC-PRD-026"}
+  - {"op": "add_edge", "from": "ENT-support-case", "verb": "decided by", "to": "SRC-PRD-034"}
+  - {"op": "add_edge", "from": "ENT-takedown-request", "verb": "decided by", "to": "SRC-PRD-013"}
+  - {"op": "add_edge", "from": "ENT-team-activity-audit-log", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "add_edge", "from": "ENT-team-member", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "add_edge", "from": "ENT-team-member-org-role", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "add_edge", "from": "ENT-translation-audit-log", "verb": "decided by", "to": "SRC-PRD-021"}
+  - {"op": "add_edge", "from": "ENT-translation-bundle", "verb": "decided by", "to": "SRC-PRD-021"}
+  - {"op": "add_edge", "from": "ENT-translation-key", "verb": "decided by", "to": "SRC-PRD-021"}
+  - {"op": "add_edge", "from": "ENT-translation-value", "verb": "decided by", "to": "SRC-PRD-021"}
+  - {"op": "add_edge", "from": "ENT-translation-version", "verb": "decided by", "to": "SRC-PRD-021"}
+  - {"op": "add_edge", "from": "ENT-transplant-progress-audit-entry", "verb": "decided by", "to": "SRC-PRD-038"}
+  - {"op": "add_edge", "from": "ENT-travel-context", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "add_edge", "from": "ENT-treatment-area", "verb": "decided by", "to": "SRC-PRD-026"}
+  - {"op": "add_edge", "from": "ENT-treatment-record", "verb": "decided by", "to": "SRC-PRD-010"}
+  - {"op": "update_node", "id": "REQ-003-007", "attrs": {"rationale": "prd.md line 1231 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-003-007", "verb": "decided by", "to": "SRC-PRD-003"}
+  - {"op": "update_node", "id": "REQ-003-010", "attrs": {"rationale": "prd.md line 1240 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-003-010", "verb": "decided by", "to": "SRC-PRD-003"}
+  - {"op": "update_node", "id": "REQ-003-011", "attrs": {"rationale": "prd.md line 1241 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-003-011", "verb": "decided by", "to": "SRC-PRD-003"}
+  - {"op": "update_node", "id": "REQ-003-015", "attrs": {"rationale": "prd.md line 1257 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-003-015", "verb": "decided by", "to": "SRC-PRD-003"}
+  - {"op": "update_node", "id": "REQ-003-023", "attrs": {"rationale": "prd.md line 65 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-003-023", "verb": "decided by", "to": "SRC-PRD-003"}
+  - {"op": "update_node", "id": "REQ-004-010", "attrs": {"rationale": "prd.md line 716 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-004-010", "verb": "decided by", "to": "SRC-PRD-004"}
+  - {"op": "update_node", "id": "REQ-004-052", "attrs": {"rationale": "prd.md line 683 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-004-052", "verb": "decided by", "to": "SRC-PRD-004"}
+  - {"op": "update_node", "id": "REQ-004-053", "attrs": {"rationale": "prd.md line 641 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-004-053", "verb": "decided by", "to": "SRC-PRD-004"}
+  - {"op": "update_node", "id": "REQ-004-054", "attrs": {"rationale": "prd.md line 642 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-004-054", "verb": "decided by", "to": "SRC-PRD-004"}
+  - {"op": "update_node", "id": "REQ-004-055", "attrs": {"rationale": "prd.md line 643 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-004-055", "verb": "decided by", "to": "SRC-PRD-004"}
+  - {"op": "update_node", "id": "REQ-004-070", "attrs": {"rationale": "prd.md line 145 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-004-070", "verb": "decided by", "to": "SRC-PRD-004"}
+  - {"op": "update_node", "id": "REQ-004-072", "attrs": {"rationale": "prd.md line 223 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-004-072", "verb": "decided by", "to": "SRC-PRD-004"}
+  - {"op": "update_node", "id": "REQ-004-073", "attrs": {"rationale": "prd.md line 150 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-004-073", "verb": "decided by", "to": "SRC-PRD-004"}
+  - {"op": "update_node", "id": "REQ-004-074", "attrs": {"rationale": "prd.md line 150 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-004-074", "verb": "decided by", "to": "SRC-PRD-004"}
+  - {"op": "update_node", "id": "REQ-004-075", "attrs": {"rationale": "prd.md line 224 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-004-075", "verb": "decided by", "to": "SRC-PRD-004"}
+  - {"op": "update_node", "id": "REQ-004-090", "attrs": {"rationale": "prd.md line 671 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-004-090", "verb": "decided by", "to": "SRC-PRD-004"}
+  - {"op": "update_node", "id": "REQ-004-091", "attrs": {"rationale": "prd.md line 674 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-004-091", "verb": "decided by", "to": "SRC-PRD-004"}
+  - {"op": "update_node", "id": "REQ-004-092", "attrs": {"rationale": "prd.md line 675 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-004-092", "verb": "decided by", "to": "SRC-PRD-004"}
+  - {"op": "update_node", "id": "REQ-004-094", "attrs": {"rationale": "prd.md line 215 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-004-094", "verb": "decided by", "to": "SRC-PRD-004"}
+  - {"op": "update_node", "id": "REQ-004-102", "attrs": {"rationale": "prd.md line 772 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-004-102", "verb": "decided by", "to": "SRC-PRD-004"}
+  - {"op": "update_node", "id": "REQ-004-103", "attrs": {"rationale": "prd.md line 773 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-004-103", "verb": "decided by", "to": "SRC-PRD-004"}
+  - {"op": "update_node", "id": "REQ-004-104", "attrs": {"rationale": "prd.md line 774 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-004-104", "verb": "decided by", "to": "SRC-PRD-004"}
+  - {"op": "update_node", "id": "REQ-004-105", "attrs": {"rationale": "prd.md line 775 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-004-105", "verb": "decided by", "to": "SRC-PRD-004"}
+  - {"op": "update_node", "id": "REQ-004-106", "attrs": {"rationale": "prd.md line 776 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-004-106", "verb": "decided by", "to": "SRC-PRD-004"}
+  - {"op": "update_node", "id": "REQ-004-107", "attrs": {"rationale": "prd.md line 777 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-004-107", "verb": "decided by", "to": "SRC-PRD-004"}
+  - {"op": "update_node", "id": "REQ-005-031", "attrs": {"rationale": "prd.md line 77 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-005-031", "verb": "decided by", "to": "SRC-PRD-005"}
+  - {"op": "update_node", "id": "REQ-005-051", "attrs": {"rationale": "prd.md line 214 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-005-051", "verb": "decided by", "to": "SRC-PRD-005"}
+  - {"op": "update_node", "id": "REQ-006-010", "attrs": {"rationale": "prd.md line 1143 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-006-010", "verb": "decided by", "to": "SRC-PRD-006"}
+  - {"op": "update_node", "id": "REQ-006-011", "attrs": {"rationale": "prd.md line 1144 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-006-011", "verb": "decided by", "to": "SRC-PRD-006"}
+  - {"op": "update_node", "id": "REQ-006-014", "attrs": {"rationale": "prd.md line 1150 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-006-014", "verb": "decided by", "to": "SRC-PRD-006"}
+  - {"op": "update_node", "id": "REQ-006-024", "attrs": {"rationale": "prd.md line 860 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-006-024", "verb": "decided by", "to": "SRC-PRD-006"}
+  - {"op": "update_node", "id": "REQ-006-025", "attrs": {"rationale": "prd.md line 861 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-006-025", "verb": "decided by", "to": "SRC-PRD-006"}
+  - {"op": "update_node", "id": "REQ-006-027", "attrs": {"rationale": "prd.md line 64 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-006-027", "verb": "decided by", "to": "SRC-PRD-006"}
+  - {"op": "update_node", "id": "REQ-006-032", "attrs": {"rationale": "prd.md line 837 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-006-032", "verb": "decided by", "to": "SRC-PRD-006"}
+  - {"op": "update_node", "id": "REQ-006-034", "attrs": {"rationale": "prd.md line 892 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-006-034", "verb": "decided by", "to": "SRC-PRD-006"}
+  - {"op": "update_node", "id": "REQ-006-036", "attrs": {"rationale": "prd.md line 894 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-006-036", "verb": "decided by", "to": "SRC-PRD-006"}
+  - {"op": "update_node", "id": "REQ-006-037", "attrs": {"rationale": "prd.md line 267 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-006-037", "verb": "decided by", "to": "SRC-PRD-006"}
+  - {"op": "update_node", "id": "REQ-006-038", "attrs": {"rationale": "prd.md line 269 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-006-038", "verb": "decided by", "to": "SRC-PRD-006"}
+  - {"op": "update_node", "id": "REQ-006-040", "attrs": {"rationale": "prd.md line 322 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-006-040", "verb": "decided by", "to": "SRC-PRD-006"}
+  - {"op": "update_node", "id": "REQ-006-041", "attrs": {"rationale": "prd.md line 315 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-006-041", "verb": "decided by", "to": "SRC-PRD-006"}
+  - {"op": "update_node", "id": "REQ-006-042", "attrs": {"rationale": "prd.md line 316 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-006-042", "verb": "decided by", "to": "SRC-PRD-006"}
+  - {"op": "update_node", "id": "REQ-006-048", "attrs": {"rationale": "prd.md line 683 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-006-048", "verb": "decided by", "to": "SRC-PRD-006"}
+  - {"op": "update_node", "id": "REQ-006-049", "attrs": {"rationale": "prd.md line 688 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-006-049", "verb": "decided by", "to": "SRC-PRD-006"}
+  - {"op": "update_node", "id": "REQ-006-052", "attrs": {"rationale": "prd.md line 142 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-006-052", "verb": "decided by", "to": "SRC-PRD-006"}
+  - {"op": "update_node", "id": "REQ-006-055", "attrs": {"rationale": "prd.md line 162 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-006-055", "verb": "decided by", "to": "SRC-PRD-006"}
+  - {"op": "update_node", "id": "REQ-006-057", "attrs": {"rationale": "prd.md line 177 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-006-057", "verb": "decided by", "to": "SRC-PRD-006"}
+  - {"op": "update_node", "id": "REQ-006-059", "attrs": {"rationale": "prd.md line 745 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-006-059", "verb": "decided by", "to": "SRC-PRD-006"}
+  - {"op": "update_node", "id": "REQ-006-060", "attrs": {"rationale": "prd.md line 1163 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-006-060", "verb": "decided by", "to": "SRC-PRD-006"}
+  - {"op": "update_node", "id": "REQ-006-061", "attrs": {"rationale": "prd.md line 1164 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-006-061", "verb": "decided by", "to": "SRC-PRD-006"}
+  - {"op": "update_node", "id": "REQ-006-062", "attrs": {"rationale": "prd.md line 1170 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-006-062", "verb": "decided by", "to": "SRC-PRD-006"}
+  - {"op": "update_node", "id": "REQ-006-065", "attrs": {"rationale": "prd.md line 854 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-006-065", "verb": "decided by", "to": "SRC-PRD-006"}
+  - {"op": "update_node", "id": "REQ-006-066", "attrs": {"rationale": "prd.md line 886 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-006-066", "verb": "decided by", "to": "SRC-PRD-006"}
+  - {"op": "update_node", "id": "REQ-006-069", "attrs": {"rationale": "prd.md line 1006 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-006-069", "verb": "decided by", "to": "SRC-PRD-006"}
+  - {"op": "update_node", "id": "REQ-006-071", "attrs": {"rationale": "prd.md line 1126 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-006-071", "verb": "decided by", "to": "SRC-PRD-006"}
+  - {"op": "update_node", "id": "REQ-006-072", "attrs": {"rationale": "prd.md line 1127 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-006-072", "verb": "decided by", "to": "SRC-PRD-006"}
+  - {"op": "update_node", "id": "REQ-006-073", "attrs": {"rationale": "prd.md line 1128 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-006-073", "verb": "decided by", "to": "SRC-PRD-006"}
+  - {"op": "update_node", "id": "REQ-006-074", "attrs": {"rationale": "prd.md line 1129 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-006-074", "verb": "decided by", "to": "SRC-PRD-006"}
+  - {"op": "update_node", "id": "REQ-007-001", "attrs": {"rationale": "prd.md line 1034 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-001", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-002", "attrs": {"rationale": "prd.md line 1035 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-002", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-003", "attrs": {"rationale": "prd.md line 1036 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-003", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-004", "attrs": {"rationale": "prd.md line 1037 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-004", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-006", "attrs": {"rationale": "prd.md line 1042 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-006", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-007", "attrs": {"rationale": "prd.md line 1043 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-007", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-010", "attrs": {"rationale": "prd.md line 1052 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-010", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-011", "attrs": {"rationale": "prd.md line 1056 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-011", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-012", "attrs": {"rationale": "prd.md line 1057 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-012", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-013", "attrs": {"rationale": "prd.md line 1071 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-013", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-026", "attrs": {"rationale": "prd.md line 37 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-026", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-028", "attrs": {"rationale": "prd.md line 78 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-028", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-030", "attrs": {"rationale": "prd.md line 857 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-030", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-031", "attrs": {"rationale": "prd.md line 103 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-031", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-032", "attrs": {"rationale": "prd.md line 104 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-032", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-037", "attrs": {"rationale": "prd.md line 226 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-037", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-047", "attrs": {"rationale": "prd.md line 200 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-047", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-049", "attrs": {"rationale": "prd.md line 191 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-049", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-052", "attrs": {"rationale": "prd.md line 622 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-052", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-053", "attrs": {"rationale": "prd.md line 629 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-053", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-054", "attrs": {"rationale": "prd.md line 440 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-054", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-055", "attrs": {"rationale": "prd.md line 442 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-055", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-057", "attrs": {"rationale": "prd.md line 443 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-057", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-059", "attrs": {"rationale": "prd.md line 792 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-059", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-062", "attrs": {"rationale": "prd.md line 623 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-062", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-065", "attrs": {"rationale": "prd.md line 728 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-065", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-066", "attrs": {"rationale": "prd.md line 729 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-066", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-067", "attrs": {"rationale": "prd.md line 730 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-067", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-068", "attrs": {"rationale": "prd.md line 697 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-068", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-073", "attrs": {"rationale": "prd.md line 775 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-073", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-074", "attrs": {"rationale": "prd.md line 776 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-074", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-078", "attrs": {"rationale": "prd.md line 938 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-078", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-079", "attrs": {"rationale": "prd.md line 1024 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-079", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-080", "attrs": {"rationale": "prd.md line 1018 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-080", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-081", "attrs": {"rationale": "prd.md line 219 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-081", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-083", "attrs": {"rationale": "prd.md line 109 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-083", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-086", "attrs": {"rationale": "prd.md line 1012 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-086", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-087", "attrs": {"rationale": "prd.md line 1046 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-087", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-088", "attrs": {"rationale": "prd.md line 1063 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-088", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-089", "attrs": {"rationale": "prd.md line 1064 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-089", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-090", "attrs": {"rationale": "prd.md line 1065 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-090", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-091", "attrs": {"rationale": "prd.md line 1066 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-091", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-092", "attrs": {"rationale": "prd.md line 1067 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-092", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-008-001", "attrs": {"rationale": "prd.md line 1028 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-001", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-003", "attrs": {"rationale": "prd.md line 1030 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-003", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-004", "attrs": {"rationale": "prd.md line 1031 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-004", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-006", "attrs": {"rationale": "prd.md line 1038 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-006", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-011", "attrs": {"rationale": "prd.md line 1046 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-011", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-012", "attrs": {"rationale": "prd.md line 1047 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-012", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-015", "attrs": {"rationale": "prd.md line 1053 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-015", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-019", "attrs": {"rationale": "prd.md line 1060 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-019", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-020", "attrs": {"rationale": "prd.md line 1064 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-020", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-021", "attrs": {"rationale": "prd.md line 1065 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-021", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-022", "attrs": {"rationale": "prd.md line 1066 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-022", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-024", "attrs": {"rationale": "prd.md line 1071 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-024", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-028", "attrs": {"rationale": "prd.md line 1078 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-028", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-029", "attrs": {"rationale": "prd.md line 1079 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-029", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-035", "attrs": {"rationale": "prd.md line 1087 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-035", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-036", "attrs": {"rationale": "prd.md line 1088 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-036", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-037", "attrs": {"rationale": "prd.md line 1089 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-037", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-038", "attrs": {"rationale": "prd.md line 1090 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-038", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-039", "attrs": {"rationale": "prd.md line 1091 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-039", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-051", "attrs": {"rationale": "prd.md line 305 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-051", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-060", "attrs": {"rationale": "prd.md line 647 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-060", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-065", "attrs": {"rationale": "prd.md line 462 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-065", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-067", "attrs": {"rationale": "prd.md line 767 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-067", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-069", "attrs": {"rationale": "prd.md line 856 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-069", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-073", "attrs": {"rationale": "prd.md line 251 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-073", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-009-001", "attrs": {"rationale": "prd.md line 1148 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-001", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-003", "attrs": {"rationale": "prd.md line 1150 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-003", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-004", "attrs": {"rationale": "prd.md line 1151 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-004", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-005", "attrs": {"rationale": "prd.md line 1152 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-005", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-006", "attrs": {"rationale": "prd.md line 1153 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-006", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-007", "attrs": {"rationale": "prd.md line 1154 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-007", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-009", "attrs": {"rationale": "prd.md line 1162 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-009", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-010", "attrs": {"rationale": "prd.md line 1163 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-010", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-012", "attrs": {"rationale": "prd.md line 1165 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-012", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-014", "attrs": {"rationale": "prd.md line 1172 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-014", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-017", "attrs": {"rationale": "prd.md line 1175 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-017", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-018", "attrs": {"rationale": "prd.md line 1176 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-018", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-019", "attrs": {"rationale": "prd.md line 1182 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-019", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-020", "attrs": {"rationale": "prd.md line 1183 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-020", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-021", "attrs": {"rationale": "prd.md line 1184 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-021", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-022", "attrs": {"rationale": "prd.md line 1185 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-022", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-026", "attrs": {"rationale": "prd.md line 34 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-026", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-028", "attrs": {"rationale": "prd.md line 52 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-028", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-031", "attrs": {"rationale": "prd.md line 65 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-031", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-032", "attrs": {"rationale": "prd.md line 66 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-032", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-033", "attrs": {"rationale": "prd.md line 67 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-033", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-034", "attrs": {"rationale": "prd.md line 68 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-034", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-038", "attrs": {"rationale": "prd.md line 108 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-038", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-039", "attrs": {"rationale": "prd.md line 109 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-039", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-040", "attrs": {"rationale": "prd.md line 112 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-040", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-041", "attrs": {"rationale": "prd.md line 113 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-041", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-044", "attrs": {"rationale": "prd.md line 117 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-044", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-046", "attrs": {"rationale": "prd.md line 121 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-046", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-047", "attrs": {"rationale": "prd.md line 123 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-047", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-052", "attrs": {"rationale": "prd.md line 354 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-052", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-053", "attrs": {"rationale": "prd.md line 171 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-053", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-055", "attrs": {"rationale": "prd.md line 184 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-055", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-058", "attrs": {"rationale": "prd.md line 207 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-058", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-059", "attrs": {"rationale": "prd.md line 384 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-059", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-068", "attrs": {"rationale": "prd.md line 250 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-068", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-069", "attrs": {"rationale": "prd.md line 253 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-069", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-070", "attrs": {"rationale": "prd.md line 254 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-070", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-071", "attrs": {"rationale": "prd.md line 255 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-071", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-072", "attrs": {"rationale": "prd.md line 256 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-072", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-073", "attrs": {"rationale": "prd.md line 257 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-073", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-074", "attrs": {"rationale": "prd.md line 259 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-074", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-078", "attrs": {"rationale": "prd.md line 1117 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-078", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-079", "attrs": {"rationale": "prd.md line 413 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-079", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-080", "attrs": {"rationale": "prd.md line 414 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-080", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-081", "attrs": {"rationale": "prd.md line 415 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-081", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-082", "attrs": {"rationale": "prd.md line 416 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-082", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-087", "attrs": {"rationale": "prd.md line 319 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-087", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-088", "attrs": {"rationale": "prd.md line 498 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-088", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-089", "attrs": {"rationale": "prd.md line 321 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-089", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-090", "attrs": {"rationale": "prd.md line 322 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-090", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-091", "attrs": {"rationale": "prd.md line 324 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-091", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-092", "attrs": {"rationale": "prd.md line 325 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-092", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-093", "attrs": {"rationale": "prd.md line 326 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-093", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-094", "attrs": {"rationale": "prd.md line 327 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-094", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-095", "attrs": {"rationale": "prd.md line 315 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-095", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-096", "attrs": {"rationale": "prd.md line 331 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-096", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-097", "attrs": {"rationale": "prd.md line 332 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-097", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-099", "attrs": {"rationale": "prd.md line 476 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-099", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-100", "attrs": {"rationale": "prd.md line 355 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-100", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-101", "attrs": {"rationale": "prd.md line 357 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-101", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-103", "attrs": {"rationale": "prd.md line 447 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-103", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-104", "attrs": {"rationale": "prd.md line 499 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-104", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-105", "attrs": {"rationale": "prd.md line 500 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-105", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-106", "attrs": {"rationale": "prd.md line 502 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-106", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-107", "attrs": {"rationale": "prd.md line 503 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-107", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-108", "attrs": {"rationale": "prd.md line 504 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-108", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-114", "attrs": {"rationale": "prd.md line 550 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-114", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-115", "attrs": {"rationale": "prd.md line 552 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-115", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-117", "attrs": {"rationale": "prd.md line 592 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-117", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-118", "attrs": {"rationale": "prd.md line 606 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-118", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-120", "attrs": {"rationale": "prd.md line 642 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-120", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-121", "attrs": {"rationale": "prd.md line 637 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-121", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-123", "attrs": {"rationale": "prd.md line 650 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-123", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-124", "attrs": {"rationale": "prd.md line 652 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-124", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-125", "attrs": {"rationale": "prd.md line 653 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-125", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-126", "attrs": {"rationale": "prd.md line 654 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-126", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-128", "attrs": {"rationale": "prd.md line 674 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-128", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-129", "attrs": {"rationale": "prd.md line 675 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-129", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-132", "attrs": {"rationale": "prd.md line 709 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-132", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-133", "attrs": {"rationale": "prd.md line 710 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-133", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-134", "attrs": {"rationale": "prd.md line 718 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-134", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-135", "attrs": {"rationale": "prd.md line 719 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-135", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-136", "attrs": {"rationale": "prd.md line 720 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-136", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-137", "attrs": {"rationale": "prd.md line 721 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-137", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-138", "attrs": {"rationale": "prd.md line 728 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-138", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-139", "attrs": {"rationale": "prd.md line 738 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-139", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-140", "attrs": {"rationale": "prd.md line 763 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-140", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-141", "attrs": {"rationale": "prd.md line 764 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-141", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-143", "attrs": {"rationale": "prd.md line 766 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-143", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-144", "attrs": {"rationale": "prd.md line 767 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-144", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-145", "attrs": {"rationale": "prd.md line 769 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-145", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-146", "attrs": {"rationale": "prd.md line 777 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-146", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-147", "attrs": {"rationale": "prd.md line 778 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-147", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-148", "attrs": {"rationale": "prd.md line 782 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-148", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-150", "attrs": {"rationale": "prd.md line 785 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-150", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-151", "attrs": {"rationale": "prd.md line 785 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-151", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-152", "attrs": {"rationale": "prd.md line 785 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-152", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-154", "attrs": {"rationale": "prd.md line 791 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-154", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-155", "attrs": {"rationale": "prd.md line 792 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-155", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-157", "attrs": {"rationale": "prd.md line 794 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-157", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-158", "attrs": {"rationale": "prd.md line 795 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-158", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-159", "attrs": {"rationale": "prd.md line 796 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-159", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-161", "attrs": {"rationale": "prd.md line 804 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-161", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-162", "attrs": {"rationale": "prd.md line 805 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-162", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-164", "attrs": {"rationale": "prd.md line 819 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-164", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-165", "attrs": {"rationale": "prd.md line 820 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-165", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-166", "attrs": {"rationale": "prd.md line 824 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-166", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-168", "attrs": {"rationale": "prd.md line 1108 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-168", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-169", "attrs": {"rationale": "prd.md line 1111 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-169", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-170", "attrs": {"rationale": "prd.md line 1114 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-170", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-171", "attrs": {"rationale": "prd.md line 1120 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-171", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-173", "attrs": {"rationale": "prd.md line 911 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-173", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-011-002", "attrs": {"rationale": "prd.md line 1610 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-011-002", "verb": "decided by", "to": "SRC-PRD-011"}
+  - {"op": "update_node", "id": "REQ-011-003", "attrs": {"rationale": "prd.md line 1611 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-011-003", "verb": "decided by", "to": "SRC-PRD-011"}
+  - {"op": "update_node", "id": "REQ-011-004", "attrs": {"rationale": "prd.md line 1612 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-011-004", "verb": "decided by", "to": "SRC-PRD-011"}
+  - {"op": "update_node", "id": "REQ-011-005", "attrs": {"rationale": "prd.md line 1619 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-011-005", "verb": "decided by", "to": "SRC-PRD-011"}
+  - {"op": "update_node", "id": "REQ-015-001", "attrs": {"rationale": "prd.md line 1193 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-001", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-009", "attrs": {"rationale": "prd.md line 1219 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-009", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-012", "attrs": {"rationale": "prd.md line 1228 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-012", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-013", "attrs": {"rationale": "prd.md line 1229 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-013", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-024", "attrs": {"rationale": "prd.md line 1224 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-024", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-028", "attrs": {"rationale": "prd.md line 1207 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-028", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-029", "attrs": {"rationale": "prd.md line 1208 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-029", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-037", "attrs": {"rationale": "prd.md line 789 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-037", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-040", "attrs": {"rationale": "prd.md line 828 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-040", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-041", "attrs": {"rationale": "prd.md line 829 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-041", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-044", "attrs": {"rationale": "prd.md line 833 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-044", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-049", "attrs": {"rationale": "prd.md line 732 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-049", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-055", "attrs": {"rationale": "prd.md line 1172 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-055", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-057", "attrs": {"rationale": "prd.md line 1177 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-057", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-060", "attrs": {"rationale": "prd.md line 606 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-060", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-061", "attrs": {"rationale": "prd.md line 616 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-061", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-062", "attrs": {"rationale": "prd.md line 605 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-062", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-065", "attrs": {"rationale": "prd.md line 1082 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-065", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-066", "attrs": {"rationale": "prd.md line 1081 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-066", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-067", "attrs": {"rationale": "prd.md line 1077 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-067", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-072", "attrs": {"rationale": "prd.md line 1182 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-072", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-073", "attrs": {"rationale": "prd.md line 1183 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-073", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-075", "attrs": {"rationale": "prd.md line 1184 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-075", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-076", "attrs": {"rationale": "prd.md line 722 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-076", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-090", "attrs": {"rationale": "prd.md line 281 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-090", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-091", "attrs": {"rationale": "prd.md line 284 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-091", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-092", "attrs": {"rationale": "prd.md line 285 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-092", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-099", "attrs": {"rationale": "prd.md line 369 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-099", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-102", "attrs": {"rationale": "prd.md line 647 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-102", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-103", "attrs": {"rationale": "prd.md line 652 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-103", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-104", "attrs": {"rationale": "prd.md line 655 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-104", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-106", "attrs": {"rationale": "prd.md line 656 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-106", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-107", "attrs": {"rationale": "prd.md line 654 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-107", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-108", "attrs": {"rationale": "prd.md line 649 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-108", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-110", "attrs": {"rationale": "prd.md line 648 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-110", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-111", "attrs": {"rationale": "prd.md line 458 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-111", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-113", "attrs": {"rationale": "prd.md line 451 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-113", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-115", "attrs": {"rationale": "prd.md line 1175 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-115", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-119", "attrs": {"rationale": "prd.md line 682 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-119", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-120", "attrs": {"rationale": "prd.md line 684 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-120", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-015-122", "attrs": {"rationale": "prd.md line 281 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-015-122", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "update_node", "id": "REQ-022-027", "attrs": {"rationale": "prd.md line 2153 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-022-027", "verb": "decided by", "to": "SRC-PRD-022"}
+  - {"op": "update_node", "id": "REQ-023-008", "attrs": {"rationale": "prd.md line 137 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-023-008", "verb": "decided by", "to": "SRC-PRD-023"}
+  - {"op": "update_node", "id": "REQ-023-009", "attrs": {"rationale": "prd.md line 141 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-023-009", "verb": "decided by", "to": "SRC-PRD-023"}
+  - {"op": "update_node", "id": "REQ-023-013", "attrs": {"rationale": "prd.md line 148 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-023-013", "verb": "decided by", "to": "SRC-PRD-023"}
+  - {"op": "update_node", "id": "REQ-023-014", "attrs": {"rationale": "prd.md line 149 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-023-014", "verb": "decided by", "to": "SRC-PRD-023"}
+  - {"op": "update_node", "id": "REQ-023-015", "attrs": {"rationale": "prd.md line 150 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-023-015", "verb": "decided by", "to": "SRC-PRD-023"}
+  - {"op": "update_node", "id": "REQ-023-017", "attrs": {"rationale": "prd.md line 155 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-023-017", "verb": "decided by", "to": "SRC-PRD-023"}
+  - {"op": "update_node", "id": "REQ-023-018", "attrs": {"rationale": "prd.md line 156 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-023-018", "verb": "decided by", "to": "SRC-PRD-023"}
+  - {"op": "update_node", "id": "REQ-023-020", "attrs": {"rationale": "prd.md line 30 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-023-020", "verb": "decided by", "to": "SRC-PRD-023"}
+  - {"op": "update_node", "id": "REQ-023-021", "attrs": {"rationale": "prd.md line 31 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-023-021", "verb": "decided by", "to": "SRC-PRD-023"}
+  - {"op": "update_node", "id": "REQ-023-022", "attrs": {"rationale": "prd.md line 31 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-023-022", "verb": "decided by", "to": "SRC-PRD-023"}
+  - {"op": "update_node", "id": "REQ-023-023", "attrs": {"rationale": "prd.md line 31 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-023-023", "verb": "decided by", "to": "SRC-PRD-023"}
+  - {"op": "update_node", "id": "REQ-023-029", "attrs": {"rationale": "prd.md line 40 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-023-029", "verb": "decided by", "to": "SRC-PRD-023"}
+  - {"op": "update_node", "id": "REQ-023-037", "attrs": {"rationale": "prd.md line 120 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-023-037", "verb": "decided by", "to": "SRC-PRD-023"}
+  - {"op": "update_node", "id": "REQ-023-038", "attrs": {"rationale": "prd.md line 121 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-023-038", "verb": "decided by", "to": "SRC-PRD-023"}
+  - {"op": "update_node", "id": "REQ-023-040", "attrs": {"rationale": "prd.md line 123 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-023-040", "verb": "decided by", "to": "SRC-PRD-023"}
+  - {"op": "update_node", "id": "REQ-025-002", "attrs": {"rationale": "prd.md line 427 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-002", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-003", "attrs": {"rationale": "prd.md line 45 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-003", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-005", "attrs": {"rationale": "prd.md line 502 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-005", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-006", "attrs": {"rationale": "prd.md line 503 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-006", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-009", "attrs": {"rationale": "prd.md line 318 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-009", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-022", "attrs": {"rationale": "prd.md line 587 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-022", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-027", "attrs": {"rationale": "prd.md line 398 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-027", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-028", "attrs": {"rationale": "prd.md line 400 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-028", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-030", "attrs": {"rationale": "prd.md line 593 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-030", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-033", "attrs": {"rationale": "prd.md line 319 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-033", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-034", "attrs": {"rationale": "prd.md line 541 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-034", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-036", "attrs": {"rationale": "prd.md line 538 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-036", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-037", "attrs": {"rationale": "prd.md line 540 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-037", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-039", "attrs": {"rationale": "prd.md line 495 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-039", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-042", "attrs": {"rationale": "prd.md line 546 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-042", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-043", "attrs": {"rationale": "prd.md line 547 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-043", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-045", "attrs": {"rationale": "prd.md line 267 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-045", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-046", "attrs": {"rationale": "prd.md line 273 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-046", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-047", "attrs": {"rationale": "prd.md line 266 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-047", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-048", "attrs": {"rationale": "prd.md line 268 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-048", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-057", "attrs": {"rationale": "prd.md line 558 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-057", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-058", "attrs": {"rationale": "prd.md line 164 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-058", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-059", "attrs": {"rationale": "prd.md line 181 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-059", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-060", "attrs": {"rationale": "prd.md line 559 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-060", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-061", "attrs": {"rationale": "prd.md line 560 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-061", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-062", "attrs": {"rationale": "prd.md line 561 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-062", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-067", "attrs": {"rationale": "prd.md line 568 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-067", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-068", "attrs": {"rationale": "prd.md line 569 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-068", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-069", "attrs": {"rationale": "prd.md line 573 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-069", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-070", "attrs": {"rationale": "prd.md line 574 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-070", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-074", "attrs": {"rationale": "prd.md line 454 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-074", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-075", "attrs": {"rationale": "prd.md line 455 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-075", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-076", "attrs": {"rationale": "prd.md line 456 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-076", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-077", "attrs": {"rationale": "prd.md line 578 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-077", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-079", "attrs": {"rationale": "prd.md line 325 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-079", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-080", "attrs": {"rationale": "prd.md line 371 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-080", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-081", "attrs": {"rationale": "prd.md line 402 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-081", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-082", "attrs": {"rationale": "prd.md line 364 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-082", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-025-083", "attrs": {"rationale": "prd.md line 669 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-025-083", "verb": "decided by", "to": "SRC-PRD-025"}
+  - {"op": "update_node", "id": "REQ-026-012", "attrs": {"rationale": "prd.md line 1339 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-026-012", "verb": "decided by", "to": "SRC-PRD-026"}
+  - {"op": "update_node", "id": "REQ-026-013", "attrs": {"rationale": "prd.md line 1348 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-026-013", "verb": "decided by", "to": "SRC-PRD-026"}
+  - {"op": "update_node", "id": "REQ-026-016", "attrs": {"rationale": "prd.md line 1354 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-026-016", "verb": "decided by", "to": "SRC-PRD-026"}
+  - {"op": "update_node", "id": "REQ-026-020", "attrs": {"rationale": "prd.md line 1358 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-026-020", "verb": "decided by", "to": "SRC-PRD-026"}
+  - {"op": "update_node", "id": "REQ-026-021", "attrs": {"rationale": "prd.md line 1362 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-026-021", "verb": "decided by", "to": "SRC-PRD-026"}
+  - {"op": "update_node", "id": "REQ-026-022", "attrs": {"rationale": "prd.md line 1363 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-026-022", "verb": "decided by", "to": "SRC-PRD-026"}
+  - {"op": "update_node", "id": "REQ-026-023", "attrs": {"rationale": "prd.md line 1364 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-026-023", "verb": "decided by", "to": "SRC-PRD-026"}
+  - {"op": "update_node", "id": "REQ-026-024", "attrs": {"rationale": "prd.md line 1365 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-026-024", "verb": "decided by", "to": "SRC-PRD-026"}
+  - {"op": "update_node", "id": "REQ-026-028", "attrs": {"rationale": "prd.md line 1369 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-026-028", "verb": "decided by", "to": "SRC-PRD-026"}
+  - {"op": "update_node", "id": "REQ-026-031", "attrs": {"rationale": "prd.md line 1372 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-026-031", "verb": "decided by", "to": "SRC-PRD-026"}
+  - {"op": "update_node", "id": "REQ-029-005", "attrs": {"rationale": "prd.md line 1195 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-005", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-008", "attrs": {"rationale": "prd.md line 1200 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-008", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-010", "attrs": {"rationale": "prd.md line 1202 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-010", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-011", "attrs": {"rationale": "prd.md line 1203 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-011", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-024", "attrs": {"rationale": "prd.md line 1224 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-024", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-033", "attrs": {"rationale": "prd.md line 1240 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-033", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-034", "attrs": {"rationale": "prd.md line 1241 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-034", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-035", "attrs": {"rationale": "prd.md line 1242 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-035", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-036", "attrs": {"rationale": "prd.md line 1243 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-036", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-038", "attrs": {"rationale": "prd.md line 1248 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-038", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-039", "attrs": {"rationale": "prd.md line 1249 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-039", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-043", "attrs": {"rationale": "prd.md line 1217 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-043", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-047", "attrs": {"rationale": "prd.md line 1253 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-047", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-056", "attrs": {"rationale": "prd.md line 1197 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-056", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-059", "attrs": {"rationale": "prd.md line 1218 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-059", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-072", "attrs": {"rationale": "prd.md line 405 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-072", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-076", "attrs": {"rationale": "prd.md line 933 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-076", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-078", "attrs": {"rationale": "prd.md line 457 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-078", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-079", "attrs": {"rationale": "prd.md line 459 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-079", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-083", "attrs": {"rationale": "prd.md line 494 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-083", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-084", "attrs": {"rationale": "prd.md line 535 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-084", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-085", "attrs": {"rationale": "prd.md line 493 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-085", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-088", "attrs": {"rationale": "prd.md line 496 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-088", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-089", "attrs": {"rationale": "prd.md line 489 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-089", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-094", "attrs": {"rationale": "prd.md line 552 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-094", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-097", "attrs": {"rationale": "prd.md line 1178 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-097", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-098", "attrs": {"rationale": "prd.md line 1170 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-098", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-099", "attrs": {"rationale": "prd.md line 560 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-099", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-102", "attrs": {"rationale": "prd.md line 766 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-102", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-103", "attrs": {"rationale": "prd.md line 820 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-103", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-108", "attrs": {"rationale": "prd.md line 626 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-108", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-109", "attrs": {"rationale": "prd.md line 619 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-109", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-113", "attrs": {"rationale": "prd.md line 661 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-113", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-114", "attrs": {"rationale": "prd.md line 664 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-114", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-115", "attrs": {"rationale": "prd.md line 666 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-115", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-117", "attrs": {"rationale": "prd.md line 197 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-117", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-119", "attrs": {"rationale": "prd.md line 670 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-119", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-120", "attrs": {"rationale": "prd.md line 671 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-120", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-122", "attrs": {"rationale": "prd.md line 701 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-122", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-125", "attrs": {"rationale": "prd.md line 705 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-125", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-128", "attrs": {"rationale": "prd.md line 943 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-128", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-033-013", "attrs": {"rationale": "prd.md line 1371 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-033-013", "verb": "decided by", "to": "SRC-PRD-033"}
+  - {"op": "update_node", "id": "REQ-033-028", "attrs": {"rationale": "prd.md line 1392 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-033-028", "verb": "decided by", "to": "SRC-PRD-033"}
+  - {"op": "update_node", "id": "REQ-033-029", "attrs": {"rationale": "prd.md line 1393 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-033-029", "verb": "decided by", "to": "SRC-PRD-033"}
+  - {"op": "update_node", "id": "REQ-038-022", "attrs": {"rationale": "prd.md line 369 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-038-022", "verb": "decided by", "to": "SRC-PRD-038"}
+  - {"op": "update_node", "id": "REQ-038-023", "attrs": {"rationale": "prd.md line 200 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-038-023", "verb": "decided by", "to": "SRC-PRD-038"}
+  - {"op": "update_node", "id": "REQ-038-030", "attrs": {"rationale": "prd.md line 555 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-038-030", "verb": "decided by", "to": "SRC-PRD-038"}
+  - {"op": "update_node", "id": "REQ-038-032", "attrs": {"rationale": "prd.md line 211 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-038-032", "verb": "decided by", "to": "SRC-PRD-038"}
+  - {"op": "update_node", "id": "REQ-038-035", "attrs": {"rationale": "prd.md line 301 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-038-035", "verb": "decided by", "to": "SRC-PRD-038"}
+  - {"op": "update_node", "id": "REQ-038-036", "attrs": {"rationale": "prd.md line 332 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-038-036", "verb": "decided by", "to": "SRC-PRD-038"}
+  - {"op": "update_node", "id": "REQ-038-037", "attrs": {"rationale": "prd.md line 333 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-038-037", "verb": "decided by", "to": "SRC-PRD-038"}
+  - {"op": "update_node", "id": "REQ-038-045", "attrs": {"rationale": "prd.md line 561 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-038-045", "verb": "decided by", "to": "SRC-PRD-038"}
+  - {"op": "update_node", "id": "REQ-038-048", "attrs": {"rationale": "prd.md line 256 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-038-048", "verb": "decided by", "to": "SRC-PRD-038"}
+  - {"op": "update_node", "id": "REQ-038-049", "attrs": {"rationale": "prd.md line 251 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-038-049", "verb": "decided by", "to": "SRC-PRD-038"}
+  - {"op": "update_node", "id": "REQ-038-056", "attrs": {"rationale": "prd.md line 354 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-038-056", "verb": "decided by", "to": "SRC-PRD-038"}
+  - {"op": "update_node", "id": "REQ-038-060", "attrs": {"rationale": "prd.md line 338 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-038-060", "verb": "decided by", "to": "SRC-PRD-038"}
+  - {"op": "update_node", "id": "REQ-038-069", "attrs": {"rationale": "prd.md line 559 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-038-069", "verb": "decided by", "to": "SRC-PRD-038"}
+  - {"op": "update_node", "id": "REQ-038-070", "attrs": {"rationale": "prd.md line 399 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-038-070", "verb": "decided by", "to": "SRC-PRD-038"}
+  - {"op": "update_node", "id": "REQ-038-071", "attrs": {"rationale": "prd.md line 398 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-038-071", "verb": "decided by", "to": "SRC-PRD-038"}
+  - {"op": "update_node", "id": "REQ-038-072", "attrs": {"rationale": "prd.md line 291 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-038-072", "verb": "decided by", "to": "SRC-PRD-038"}
+  - {"op": "update_node", "id": "REQ-038-073", "attrs": {"rationale": "prd.md line 400 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-038-073", "verb": "decided by", "to": "SRC-PRD-038"}
+  - {"op": "update_node", "id": "REQ-SYS-003", "attrs": {"rationale": "system-prd.md line 1940 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-SYS-003", "verb": "decided by", "to": "SRC-PRD-SYS"}
+  - {"op": "update_node", "id": "REQ-SYS-004", "attrs": {"rationale": "system-prd.md line 1945 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-SYS-004", "verb": "decided by", "to": "SRC-PRD-SYS"}
+  - {"op": "update_node", "id": "REQ-SYS-006", "attrs": {"rationale": "system-prd.md line 1955 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-SYS-006", "verb": "decided by", "to": "SRC-PRD-SYS"}
+  - {"op": "update_node", "id": "REQ-SYS-008", "attrs": {"rationale": "system-prd.md line 1964 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-SYS-008", "verb": "decided by", "to": "SRC-PRD-SYS"}
+  - {"op": "update_node", "id": "REQ-SYS-010", "attrs": {"rationale": "system-prd.md line 1974 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-SYS-010", "verb": "decided by", "to": "SRC-PRD-SYS"}
+  - {"op": "update_node", "id": "REQ-SYS-012", "attrs": {"rationale": "system-prd.md line 1984 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-SYS-012", "verb": "decided by", "to": "SRC-PRD-SYS"}
+  - {"op": "update_node", "id": "REQ-SYS-013", "attrs": {"rationale": "system-prd.md line 1988 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-SYS-013", "verb": "decided by", "to": "SRC-PRD-SYS"}
+  - {"op": "update_node", "id": "REQ-SYS-014", "attrs": {"rationale": "system-prd.md line 1992 (found by matching the rule statement to the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-SYS-014", "verb": "decided by", "to": "SRC-PRD-SYS"}
