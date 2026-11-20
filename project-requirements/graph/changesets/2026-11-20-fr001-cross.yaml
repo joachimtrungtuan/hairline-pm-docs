@@ -1,0 +1,13 @@
+reason: "Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-001)"
+by: controller
+operations:
+  - {"op": "add_edge", "from": "FR-001", "verb": "references", "to": "REQ-034-164"}
+  - {"op": "add_edge", "from": "FR-001", "verb": "references", "to": "REQ-020-152"}
+  - {"op": "add_edge", "from": "FR-023", "verb": "references", "to": "REQ-001-094"}
+  - {"op": "add_edge", "from": "REQ-023-019", "verb": "applies to", "to": "SCR-001-11"}
+  - {"op": "add_edge", "from": "REQ-023-019", "verb": "applies to", "to": "SCR-001-16"}
+  - {"op": "add_edge", "from": "REQ-023-019", "verb": "applies to", "to": "SCR-016-08"}
+  - {"op": "add_edge", "from": "REQ-023-030", "verb": "applies to", "to": "SCR-001-16"}
+  - {"op": "add_edge", "from": "REQ-023-028", "verb": "applies to", "to": "EVT-account-deletion-requested"}
+  - {"op": "add_edge", "from": "REQ-001-082", "verb": "governed by", "to": "SET-profile-photo-formats"}
+  - {"op": "add_edge", "from": "REQ-001-082", "verb": "governed by", "to": "SET-profile-photo-max-size"}
