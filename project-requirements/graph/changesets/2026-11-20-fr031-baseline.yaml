@@ -1,0 +1,526 @@
+reason: "Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-031)"
+by: controller
+operations:
+  - {"op": "add_node", "id": "SET-admin-repeated-denial-threshold", "type": "Setting", "owner_fr": "FR-031", "title": "Repeated access denial alert threshold", "attrs": {"description": "Refusals of one admin that trigger the Super Admin alert: 5 refusals within 10 minutes at launch; both the count and the 10-minute window are admin settings in A-09 (FR-031 Alternative Flow B5, Admin Editability).", "default": "5", "unit": "refusals"}}
+  - {"op": "add_node", "id": "ACT-finance-admin", "type": "Actor", "title": "Finance admin", "attrs": {"group": "admin", "description": "Admin team member who works the financial screens of the Admin Platform (payouts, billing, provider financial reports); the predefined role for this work is Billing Admin, and Super Admin also has full access (FR-031 Module Scope)."}}
+  - {"op": "add_field", "id": "ENT-admin-user-account.role_change_acknowledged_at", "entity_id": "ENT-admin-user-account", "name": "role_change_acknowledged_at", "data_type": "datetime", "title": "Role change acknowledged at", "owner_fr": "FR-031", "required": false, "attrs": {"description": "When the admin user acknowledged the latest role change; empty until then (Rule 10, REQ-031-124). Shown to Super Admins as Acknowledged or Awaiting acknowledgement."}}
+  - {"op": "add_node", "id": "REQ-031-124", "type": "Rule", "owner_fr": "FR-031", "title": "Role change must be acknowledged within 24 hours", "attrs": {"statement": "System MUST ask an admin user to acknowledge a role change within 24 hours; the acknowledgement time is stored on the account and shown to Super Admins", "rationale": "PRD Functional Requirements Summary, REQ-031-124; Business Rule 10; Alternative Flow A2 step 13 (Acknowledge role change action as a banner after sign-in and a link in the email); Tab 2 notes; Screen 5 field Role Change Acknowledged; Key Entity 1."}}
+  - {"op": "add_edge", "from": "REQ-031-124", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-031-124", "verb": "applies to", "to": "ENT-admin-user-account"}
+  - {"op": "add_edge", "from": "REQ-031-124", "verb": "applies to", "to": "ENT-admin-user-account.role_change_acknowledged_at"}
+  - {"op": "add_edge", "from": "REQ-031-124", "verb": "applies to", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "REQ-031-124", "verb": "applies to", "to": "SCR-031-05"}
+  - {"op": "add_edge", "from": "SCR-031-01", "verb": "shows", "to": "ENT-admin-user-account.role_change_acknowledged_at", "attrs": {"provenance": "retrieved", "label": "Role Change Acknowledged", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-031-05", "verb": "shows", "to": "ENT-admin-user-account.role_change_acknowledged_at", "attrs": {"provenance": "retrieved", "label": "Role Change Acknowledged", "editable": false}}
+  - {"op": "add_edge", "from": "REQ-031-012", "verb": "applies to", "to": "ENT-admin-user-account.role_change_acknowledged_at"}
+  - {"op": "add_edge", "from": "REQ-031-090", "verb": "governed by", "to": "SET-admin-repeated-denial-threshold"}
+  - {"op": "add_edge", "from": "REQ-031-099", "verb": "governed by", "to": "SET-max-login-attempts"}
+  - {"op": "add_edge", "from": "REQ-031-099", "verb": "governed by", "to": "SET-lockout-duration"}
+  - {"op": "add_edge", "from": "ACT-finance-admin", "verb": "acts in", "to": "STG-admin-02-operations"}
+  - {"op": "add_edge", "from": "ACT-finance-admin", "verb": "uses", "to": "SCR-014-12"}
+  - {"op": "retire_node", "id": "REQ-031-030"}
+  - {"op": "retire_node", "id": "REQ-031-059"}
+  - {"op": "retire_node", "id": "REQ-031-060"}
+  - {"op": "retire_node", "id": "REQ-031-061"}
+  - {"op": "retire_node", "id": "REQ-031-062"}
+  - {"op": "retire_node", "id": "REQ-031-063"}
+  - {"op": "retire_node", "id": "STP-031-501"}
+  - {"op": "retire_node", "id": "STP-031-502"}
+  - {"op": "retire_node", "id": "STP-031-503"}
+  - {"op": "retire_node", "id": "STP-031-504"}
+  - {"op": "retire_node", "id": "STP-031-505"}
+  - {"op": "retire_node", "id": "STP-031-506"}
+  - {"op": "retire_node", "id": "STP-031-601"}
+  - {"op": "retire_node", "id": "STP-031-602"}
+  - {"op": "retire_node", "id": "STP-031-603"}
+  - {"op": "retire_node", "id": "STP-031-604"}
+  - {"op": "retire_node", "id": "STP-031-605"}
+  - {"op": "retire_node", "id": "FLW-031-a5-custom-provider-role"}
+  - {"op": "retire_node", "id": "FLW-031-a6-clone-provider-role"}
+  - {"op": "remove_edge", "from": "SCR-031-01", "verb": "shows", "to": "ENT-role-permission-definition.base_type"}
+  - {"op": "remove_edge", "from": "SCR-031-04", "verb": "shows", "to": "ENT-role-permission-definition.base_type"}
+  - {"op": "retire_node", "id": "ENT-role-permission-definition.base_type"}
+  - {"op": "remove_edge", "from": "REQ-031-005", "verb": "applies to", "to": "ACT-provider-custom-role"}
+  - {"op": "update_node", "id": "ENT-role-permission-definition", "attrs": {"description": "Role definition for admin and provider roles, scoped by guard: system (protected) or custom (custom roles exist for admin roles only), with a permission matrix. Cloned admin roles keep an independent permission snapshot (PRD Key Entities, Entity 2). FR-009 created this as a provider-role stub; the PRD covers both guards."}}
+  - {"op": "update_node", "id": "ENT-admin-user-account", "attrs": {"description": "An admin team member's account: identity, one assigned role with its effective date, the time the user acknowledged the latest role change, status, login history and invitation state (PRD Key Entities, Entity 1). The invitation is recorded on the account; there is no separate invitation record."}}
+  - {"op": "update_node", "id": "SCR-031-01", "attrs": {"description": "Admin Platform, Settings > User Roles & Permissions, three tabs: Admin Roles, Admin Users, Provider Roles (PRD Screen 1). UI controls, not fields: tab switcher, role list action buttons (Edit Permissions, View Users, Clone Role; disabled for Super Admin), Create Custom Role, Invite Team Member, user action menu (Change Role, Suspend, View Audit), search bar and filters (Tab 2 specified in FR-022 REQ-022-115, Tab 1 in REQ-022-116), pending invitations sub-tab and notification dot, sync status indicator, warning banner when only one Super Admin exists. Tab 3 View Users links to FR-015. Tab 2 rows also show whether the user has acknowledged the latest role change (Acknowledged or Awaiting acknowledgement)."}}
+  - {"op": "update_node", "id": "SCR-031-05", "attrs": {"description": "Admin Platform page with an admin user's profile and audit trail (PRD Screen 5). UI controls: Send Password Reset, Load More, Export audit trail to CSV, security alerts, audit filters (specified in FR-022 REQ-022-117). Admin actions on a patient account (FR-016) appear in the acting admin's audit trail; the records stay separate. Shows the Role Change Acknowledged status."}}
+  - {"op": "update_node", "id": "STP-031-213", "attrs": {"prd_ref": "A2 step 14"}}
+  - {"op": "update_node", "id": "STP-031-733", "title": "System logs each failed delivery and retries under the FR-030 rule"}
+  - {"op": "update_node", "id": "STP-031-736", "title": "Invitation becomes Expired after 24 hours of failed sending"}
+  - {"op": "retire_node", "id": "REQ-031-018"}
+  - {"op": "add_edge", "from": "FR-031", "verb": "references", "to": "REQ-SYS-007"}
+  - {"op": "add_edge", "from": "FR-031", "verb": "references", "to": "REQ-SYS-002"}
+  - {"op": "add_edge", "from": "FR-031", "verb": "references", "to": "REQ-030-008"}
+  - {"op": "add_edge", "from": "FR-031", "verb": "references", "to": "REQ-020-152"}
+  - {"op": "add_edge", "from": "FR-031", "verb": "references", "to": "REQ-007-015"}
+  - {"op": "update_node", "id": "REQ-031-001", "attrs": {"statement": "System MUST allow Super Admins to invite new admin team members via email with role assignment; the invitation email is sent within 1 minute"}}
+  - {"op": "update_node", "id": "REQ-031-004", "attrs": {"statement": "System MUST provide predefined admin roles: Super Admin, Aftercare Specialist, Billing Admin, Support Staff"}}
+  - {"op": "update_node", "id": "REQ-031-005", "title": "Central configuration of provider role permissions", "attrs": {"statement": "System MUST provide centralized configuration for the permissions of the four provider roles (Owner, Manager, Clinical Staff, Billing Staff); no other provider roles exist", "rationale": "PRD Functional Requirements Summary, REQ-031-005; Tab 3 business rules. Provider-side application: Active stage."}}
+  - {"op": "update_node", "id": "REQ-031-006", "title": "Provider role permission changes sync to Provider Platform within 5 seconds", "attrs": {"statement": "System MUST automatically sync provider role permission changes to Provider Platform (FR-009) within 5 seconds"}}
+  - {"op": "update_node", "id": "REQ-031-007", "attrs": {"statement": "System MUST prevent modification of Owner role permissions that would remove full access to provider features, with the message: \"Owner role must maintain full access to all provider features\""}}
+  - {"op": "update_node", "id": "REQ-031-009", "title": "Super Admin accounts are never suspended, removed, demoted or self-deactivated in the product", "attrs": {"statement": "System MUST NOT allow a Super Admin account to be suspended by another user, or removed, demoted or self-deactivated inside the product (system protection; if ever needed, this is done outside the product), and MUST show a message saying so when it is attempted", "rationale": "PRD Functional Requirements Summary, REQ-031-009; Tab 2 business rules; Business Rule 7; User Story 6. Business Rule 4 (at least one active Super Admin must exist at all times, system protection against lockout) is merged here."}}
+  - {"op": "update_node", "id": "REQ-031-012", "attrs": {"statement": "System MUST maintain admin user accounts with: email, name, password hash, assigned role, role effective date/time, role change acknowledgement time, status (active/pending/suspended), creation date, last login timestamp", "rationale": "PRD Functional Requirements Summary, REQ-031-012; Key Entities, Entity 1. One admin user has one assigned role (Business Rule 1)."}}
+  - {"op": "update_node", "id": "REQ-031-013", "attrs": {"statement": "System MUST maintain role definitions with: guard-scoped role name, description, assigned permissions (as permission matrix), and system/custom status (custom roles exist for admin roles only)", "rationale": "PRD Functional Requirements Summary, REQ-031-013. Key Entities, Entity 2. Provider-side application: Active stage."}}
+  - {"op": "update_node", "id": "REQ-031-015", "title": "Audit trail retention follows the platform retention period", "attrs": {"distinct_from": "REQ-001-012,REQ-023-011,REQ-029-027", "statement": "Audit trail retention follows the system PRD, Platform-Wide Rules: One 10-year retention period", "rationale": "PRD Functional Requirements Summary, REQ-031-015; Privacy Rule 1; Admin Editability (fixed in codebase). The period is owned by the system Rule One 10-year retention period."}}
+  - {"op": "update_node", "id": "REQ-031-023", "attrs": {"statement": "System MUST send the admin invitation, role change and password reset emails through the platform notification service defined in FR-020", "rationale": "PRD Functional Requirements Summary, REQ-031-023. Cross-FR citation: FR-020 Notification Service (S-03); the general duty to send through the service is the FR-020 Rule."}}
+  - {"op": "update_node", "id": "REQ-031-035", "attrs": {"statement": "System checks the invitation email against all admin users (active, suspended, pending) and pending invitations; a duplicate is blocked with the error \"This email is already associated with an admin account. Please use a different email or check existing team members.\" and the system suggests \"View team member\" or, if pending, \"Resend invitation\". The existing record is kept.", "rationale": "Alternative Flow B2 and Screen 2 (one message in both places)."}}
+  - {"op": "update_node", "id": "REQ-031-036", "title": "Only active admin roles can be assigned", "attrs": {"statement": "The role dropdown on the invitation form is populated from active admin roles, including custom admin roles, and shows role name plus a brief description on hover; an expandable role permission summary is shown below it, and a role must be selected (\"Please select a role for this team member.\"). Only active roles can be assigned to new or existing users.", "rationale": "Screen 2 business rules and notes; Data Dependencies (State: Active Roles)."}}
+  - {"op": "update_node", "id": "REQ-031-039", "title": "Invitation status on the account", "attrs": {"statement": "When an invitation is sent, System records it on the new admin user's account with status \"Invited\", marks it \"Accepted\" when the account is created and shows it as \"Expired\" when the token has passed its expiry, when Cancel is used on Admin Account Setup, or when it still cannot be sent 24 hours after it was created. The pending invitations list shows each invitation's status.", "rationale": "Main Flow steps 12 and 21; Alternative Flows A1 and B4; Screen 3 Cancel. The account status before acceptance is \"Pending\"; \"Pending Send\" is the invitation status while sending fails (REQ-031-043)."}}
+  - {"op": "update_node", "id": "REQ-031-043", "title": "Invitation email delivery failure follows the FR-030 retry rule", "attrs": {"statement": "If the invitation email fails to send, System logs each failed delivery in the audit trail and retries under the notification retry rule owned by FR-030 (this flow sets no retry count or interval of its own). While sending fails the invitation shows \"Pending Send\" and the Super Admin is warned \"Invitation created but email failed. We'll retry automatically.\"; if the invitation still cannot be sent 24 hours after it was created, it becomes \"Expired\" and the system alerts the admin team. The Super Admin can resend the invitation.", "rationale": "Alternative Flow B4; Edge Case 3; External Dependencies (failure handling); Integration 2. The retry rule is FR-030 General Module Rule 7."}}
+  - {"op": "update_node", "id": "REQ-031-047", "attrs": {"statement": "Cancel on Admin Account Setup returns to the login page and invalidates the invitation token; the invitation then shows as \"Expired\".", "rationale": "Screen 3 actions. The Super Admin can resend the invitation (Alternative Flow A1)."}}
+  - {"op": "update_node", "id": "REQ-031-049", "attrs": {"rationale": "Main Flow steps 17 to 25; Screen 3 Success Flow. User Story 1 expects the invitation email within 1 minute and the account status \"Pending\" before acceptance."}}
+  - {"op": "update_node", "id": "REQ-031-050", "title": "Every admin user holds exactly one role", "attrs": {"statement": "All admin users MUST have exactly one role assigned (no \"roleless\" accounts).", "rationale": "Business Rule 1; Key Entities, Entity 1 (one admin user has one assigned role)."}}
+  - {"op": "update_node", "id": "REQ-031-052", "title": "Super Admin row actions", "attrs": {"statement": "Edit Permissions and Clone Role are disabled for the Super Admin role; View Users stays available.", "rationale": "Tab 1 data fields (Actions)."}}
+  - {"op": "update_node", "id": "REQ-031-053", "attrs": {"statement": "Suspended admin users cannot log in but their accounts remain in the system (soft suspension, not deletion); Super Admin accounts are never suspended inside the product. Super Admins can suspend and reactivate the other admin accounts.", "rationale": "Business Rule 7; Tab 2 business rules and actions; Admin Editability. REQ-031-021 covers rejection of API calls."}}
+  - {"op": "update_node", "id": "REQ-031-055", "attrs": {"statement": "Role names of system-defined roles (admin and provider) MUST be immutable (not editable or renamable); the system admin roles are Super Admin, Aftercare Specialist, Billing Admin and Support Staff, and the protected provider roles are Owner, Manager, Clinical Staff and Billing Staff. Only custom admin roles can be renamed."}}
+  - {"op": "update_node", "id": "REQ-031-056", "title": "System roles cannot be deleted", "attrs": {"statement": "System admin roles (Super Admin, Aftercare Specialist, Billing Admin, Support Staff) cannot be deleted; all of them except Super Admin can be edited. The four provider roles cannot be renamed or removed."}}
+  - {"op": "update_node", "id": "REQ-031-057", "attrs": {"rationale": "Tab 1 business rules and actions; Screen 4 data fields; Admin Editability. Custom roles exist for admin roles only; the four provider roles are fixed."}}
+  - {"op": "update_node", "id": "REQ-031-068", "title": "Provider permissions limited to named roles", "attrs": {"statement": "Provider permissions Manage Bank Details, Edit Settings and Remove Team Members are Owner only; Document Treatment is limited to Owner or Clinical Staff; Edit Team Member Roles (non-Owner) is limited to Owner or Manager."}}
+  - {"op": "update_node", "id": "REQ-031-069", "attrs": {"statement": "The admin permission Issue Refunds is a write permission that requires approval; any admin holding the permission may approve, no second person is required, and the approval step is defined in FR-007.", "rationale": "Screen 4 Billing & Financial category (A-05), access level \"Write (requires approval)\". FR-007 owns the approval rule (REQ-007-015)."}}
+  - {"op": "update_node", "id": "REQ-031-077", "attrs": {"statement": "The matrix view shows permissions as rows grouped by category/module and all roles of the same type (Admin or Provider, including custom admin roles) as columns, with checkboxes or access-level indicators. Super Admins can edit several roles at once and save all changes together; bulk actions are Select All on a column header, Select All on a row header, and Select Category; locked cells (Super Admin, Owner) show a lock icon and a disabled checkbox. The matrix can be filtered by category, searched by permission name, set to show only differences, sorted by role or permission, and exported to CSV or Excel."}}
+  - {"op": "update_node", "id": "REQ-031-090", "attrs": {"statement": "System sends an alert to Super Admin when one admin is refused access 5 times within 10 minutes (launch default; the count and the time window are admin settings in A-09; potential security issue).", "rationale": "Alternative Flow B5 step 6; Communication Structure (system notifications for access denial attempts); Admin Editability (Configurable with Restrictions)."}}
+  - {"op": "update_node", "id": "REQ-031-099", "attrs": {"statement": "The maximum failed login attempts before lockout (default 5 failed attempts with a 15-minute lockout, the same setting as FR-001), the session timeout duration (the admin inactivity timeout of A-09, default 30 minutes) and the number of concurrent sessions per admin user (default 3, range 1-5) are configurable in A-09 Authentication Settings.", "rationale": "Admin Editability (Configurable with Restrictions). The session timeout is the admin inactivity timeout SET-admin-inactivity-timeout (FR-026); the lockout default is the FR-001 / FR-026 lockout setting. The admin login rate limit (REQ-031-100) is a separate control."}}
+  - {"op": "update_node", "id": "REQ-031-107", "attrs": {"statement": "Permission category \"Billing & Financial\" (A-05) in the admin permission matrix offers: View Transactions (View patient and provider transactions; Read); Process Payouts (Initiate provider payouts; Write); Issue Refunds (Process patient refunds; Write (requires approval; any admin holding this permission may approve, no second person is required; approval step defined in FR-007)); View Financial Reports (Access revenue analytics; Read); View Patient Billing (View patient invoices and payment status; Read); Send Payment Reminders (Send payment reminders to patients; Write); Download Invoices (Download patient/provider invoices; Read)."}}
+  - {"op": "update_node", "id": "REQ-031-113", "attrs": {"statement": "Permission category \"System Settings\" (A-09) in the admin permission matrix offers: View Settings (View system configuration; Read); Edit Settings (Modify system settings; Write (Super Admin only)); Manage Users (Create/edit admin accounts; Write (Super Admin only)); Manage Roles (Create/edit roles and permissions; Write (Super Admin only)); Manage Terms & Conditions (Edit patient/provider terms and consent; Write); Manage App Data (Edit countries, discovery questions, location presentation; Write); Manage Treatment Catalog (Create/edit treatments and packages; Write); Manage Aftercare Templates (Create/edit aftercare milestone templates; Write); Manage Notification Templates (Edit email templates (OTP, confirmations); Write); Configure Payment Settings (Manage Stripe accounts, commission rates, split pay; Write); Manage Help Centre (Create/edit Help Centre content for providers; Write); View Sensitive Settings (View the full value of sensitive settings (for example API keys); Read); Manage Authentication Policies (Edit authentication policy settings (for example lockout and session timeout); Write)."}}
+  - {"op": "update_node", "id": "REQ-031-116", "attrs": {"statement": "Permission category \"Treatment & Procedures\" (PR-03) in the provider permission matrix offers: View In-Progress Cases (View patients currently in treatment; Read); Document Treatment (Add treatment notes, scans, photos; Write (Owner or Clinical Staff only)); Update Treatment Status (Change patient treatment stage; Write); View Treatment History (Access historical treatment records; Read)."}}
+  - {"op": "update_node", "id": "REQ-031-119", "attrs": {"statement": "Permission category \"Team Management\" (PR-01) in the provider permission matrix offers: View Team Members (View team member list; Read); Invite Team Members (Send team member invitations; Write); Edit Team Member Roles (Change team member roles (non-Owner); Write (Owner or Manager only)); Remove Team Members (Remove or suspend team members; Write (Owner only)); View Team Activity (Access team activity logs; Read)."}}
+  - {"op": "add_edge", "from": "STP-031-001", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-001", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-002", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-002", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-003", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-003", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-004", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-004", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-005", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-005", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-006", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-006", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-007", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-007", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-008", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-008", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-009", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-009", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-010", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-010", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-011", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-011", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-012", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-012", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-013", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-013", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-014", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-014", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-015", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-015", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-016", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-016", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-017", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-017", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-018", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-018", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-019", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-019", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-020", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-020", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-021", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-021", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-022", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-022", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-023", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-023", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-024", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-024", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-025", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-025", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-101", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-101", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-102", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-102", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-103", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-103", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-104", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-104", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-105", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-105", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-201", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-201", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-202", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-202", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-203", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-203", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-204", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-204", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-205", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-205", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-206", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-206", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-207", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-207", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-208", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-208", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-209", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-209", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-210", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-210", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-211", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-211", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-212", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-212", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-213", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-213", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-301", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-301", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-302", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-302", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-303", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-303", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-304", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-304", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-305", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-305", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-306", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-306", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-307", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-307", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-308", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-308", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-309", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-309", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-310", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-310", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-311", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-311", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-312", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-312", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-401", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-401", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-402", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-402", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-403", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-403", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-404", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-404", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-405", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-405", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-406", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-406", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-407", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-407", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-408", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-408", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-409", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-409", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-410", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-410", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-411", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-411", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-412", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-412", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-413", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-413", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-414", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-414", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-415", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-415", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-416", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-416", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-701", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-701", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-702", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-702", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-703", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-703", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-704", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-704", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-731", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-731", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-732", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-732", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-733", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-733", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-734", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-734", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-735", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-735", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-736", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-736", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-737", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-737", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-741", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-741", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-742", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-742", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-743", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-743", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-744", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-744", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-745", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-745", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-746", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-746", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-751", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-751", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-752", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-752", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-753", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-753", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-754", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-754", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-801", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-801", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-802", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-802", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-803", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-803", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-804", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-804", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-901", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-901", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-902", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-902", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-031-903", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "STP-031-903", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "SCR-031-01", "verb": "belongs to", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "SCR-031-01", "verb": "belongs to", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "SCR-031-02", "verb": "belongs to", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "SCR-031-02", "verb": "belongs to", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "SCR-031-03", "verb": "belongs to", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "SCR-031-03", "verb": "belongs to", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "SCR-031-04", "verb": "belongs to", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "SCR-031-04", "verb": "belongs to", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "SCR-031-05", "verb": "belongs to", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "SCR-031-05", "verb": "belongs to", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-001", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-001", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-002", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-002", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-003", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-003", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-031-003", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-031-004", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-004", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-005", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-005", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-031-005", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-031-006", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-006", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-031-006", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-031-008", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-008", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-009", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-009", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-010", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-010", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-011", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-011", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-012", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-012", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-013", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-013", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-031-013", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-031-014", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-014", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-015", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-015", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-016", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-016", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-017", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-017", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-019", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-019", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-020", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-020", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-031-020", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-031-021", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-021", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-022", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-022", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-023", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-023", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-024", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-024", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-025", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-025", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-026", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-026", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-027", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-027", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-028", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-028", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-029", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-029", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-031-031", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-031", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-032", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-032", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-033", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-033", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-034", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-034", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-035", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-035", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-036", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-036", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-037", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-037", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-038", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-038", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-039", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-039", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-040", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-040", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-041", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-041", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-042", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-042", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-043", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-043", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-044", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-044", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-045", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-045", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-046", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-046", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-047", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-047", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-048", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-048", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-049", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-049", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-050", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-050", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-051", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-051", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-052", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-052", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-053", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-053", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-054", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-054", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-055", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-055", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-031-055", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-031-056", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-056", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-031-056", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-031-057", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-057", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-058", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-058", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-064", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-064", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-031-065", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-065", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-067", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-067", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-069", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-069", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-070", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-070", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-031-070", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-031-071", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-071", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-031-071", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-031-072", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-072", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-031-072", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-031-073", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-073", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-031-073", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-031-074", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-074", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-031-074", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-031-075", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-075", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-031-075", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-031-076", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-076", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-031-076", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-031-077", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-077", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-031-077", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-031-078", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-078", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-031-078", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-031-080", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-080", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-031-080", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-031-081", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-081", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-031-081", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-031-082", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-082", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-083", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-083", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-084", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-084", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-085", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-085", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-086", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-086", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-087", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-087", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-088", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-088", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "remove_edge", "from": "REQ-031-088", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-031-089", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-089", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-090", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-090", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-091", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-091", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-092", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-092", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-093", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-093", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-094", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-094", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-095", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-095", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-096", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-096", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-097", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-097", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-098", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-098", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-099", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-099", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-100", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-100", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-101", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-101", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-102", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-102", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-103", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-103", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-104", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-104", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-105", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-105", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-106", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-106", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-107", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-107", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-108", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-108", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-109", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-109", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-110", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-110", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-111", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-111", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-112", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-112", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-113", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-113", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-121", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-121", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-122", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-122", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-031-123", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-031-123", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "ACT-admin-invitee", "verb": "acts in", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "ACT-email-provider", "verb": "acts in", "to": "STG-admin-01-configuration"}
