@@ -1,0 +1,23 @@
+reason: "Requirements graph programme baseline 2026-11-20: cleanup of duplicate Rules and Steps applying retired Rules"
+by: controller
+operations:
+  - {"op": "merge_node", "survivor": "REQ-030-052", "loser": "REQ-020-097"}
+  - {"op": "merge_node", "survivor": "REQ-021-020", "loser": "REQ-021-086"}
+  - {"op": "remove_edge", "from": "STP-032-090", "verb": "applies", "to": "REQ-032-066"}
+  - {"op": "add_edge", "from": "STP-032-090", "verb": "applies", "to": "REQ-SYS-007"}
+  - {"op": "remove_edge", "from": "STP-032-091", "verb": "applies", "to": "REQ-032-066"}
+  - {"op": "add_edge", "from": "STP-032-091", "verb": "applies", "to": "REQ-SYS-007"}
+  - {"op": "remove_edge", "from": "STP-032-123", "verb": "applies", "to": "REQ-032-066"}
+  - {"op": "add_edge", "from": "STP-032-123", "verb": "applies", "to": "REQ-SYS-007"}
+  - {"op": "remove_edge", "from": "STP-032-125", "verb": "applies", "to": "REQ-032-066"}
+  - {"op": "add_edge", "from": "STP-032-125", "verb": "applies", "to": "REQ-SYS-007"}
+  - {"op": "remove_edge", "from": "STP-032-126", "verb": "applies", "to": "REQ-032-066"}
+  - {"op": "add_edge", "from": "STP-032-126", "verb": "applies", "to": "REQ-SYS-007"}
+  - {"op": "remove_edge", "from": "STP-032-127", "verb": "applies", "to": "REQ-032-066"}
+  - {"op": "add_edge", "from": "STP-032-127", "verb": "applies", "to": "REQ-SYS-007"}
+  - {"op": "remove_edge", "from": "STP-032-128", "verb": "applies", "to": "REQ-032-066"}
+  - {"op": "add_edge", "from": "STP-032-128", "verb": "applies", "to": "REQ-SYS-007"}
+  - {"op": "remove_edge", "from": "STP-032-129", "verb": "applies", "to": "REQ-032-066"}
+  - {"op": "add_edge", "from": "STP-032-129", "verb": "applies", "to": "REQ-SYS-007"}
+  - {"op": "remove_edge", "from": "STP-032-236", "verb": "applies", "to": "REQ-032-091"}
+  - {"op": "add_edge", "from": "STP-032-236", "verb": "applies", "to": "REQ-022-081"}
