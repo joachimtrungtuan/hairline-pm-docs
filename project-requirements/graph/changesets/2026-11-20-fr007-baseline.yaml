@@ -1,0 +1,70 @@
+reason: "Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-007)"
+by: controller
+operations:
+  - {"op": "add_node", "id": "REQ-007-087", "type": "Rule", "owner_fr": "FR-007", "title": "Processor fee recorded on each payment or refund record", "attrs": {"statement": "A processor fee on a payment or a refund MUST be recorded on that payment's or refund's own record. Fees on transfers and payouts are recorded in FR-017, which shows both in its per-booking reconciliation view."}}
+  - {"op": "add_edge", "from": "REQ-007-087", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_node", "id": "REQ-007-088", "type": "Rule", "owner_fr": "FR-007", "title": "Standalone aftercare payment after provider assignment and plan configuration", "attrs": {"statement": "System MUST process the payment for a standalone aftercare plan (FR-011). The patient pays only after an admin has assigned a provider and that provider has configured the plan; the successful payment activates the aftercare."}}
+  - {"op": "add_edge", "from": "REQ-007-088", "verb": "applies at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_node", "id": "REQ-007-089", "type": "Rule", "owner_fr": "FR-007", "title": "Provider money released in two parts with a patient confirmation window", "attrs": {"statement": "Provider money MUST be released in two parts (see Fund Release & Money Routing Rules): release per booking at Treatment, after the patient's confirmation window with no problem raised (default 7 days, admin-editable) or after an admin resolves a problem case, then payout per provider (FR-017)."}}
+  - {"op": "add_edge", "from": "REQ-007-089", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "add_node", "id": "REQ-007-090", "type": "Rule", "owner_fr": "FR-007", "title": "Hairline is seller and holds the payment; clinic share moves before treatment", "attrs": {"statement": "Hairline MUST be the seller on the card payment and hold the payment; the clinic's share moves to the clinic's locked Stripe balance 60 days before the scheduled treatment date (30 days for an installment plan once fully paid), or right away when less time remains at payment, and is paid out at release. Hairline's balance pays refunds, chargebacks, and Stripe fees first and recovers the clinic's part afterwards."}}
+  - {"op": "add_edge", "from": "REQ-007-090", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-007-090", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "add_node", "id": "REQ-007-091", "type": "Rule", "owner_fr": "FR-007", "title": "Share pulled back on cancellation or reschedule after it has moved", "attrs": {"statement": "When a cancellation or a reschedule happens after the clinic's share has moved, the share MUST be pulled back (see Fund Release & Money Routing Rules): on cancellation the patient is refunded per the refund ladder and any shortfall is deducted from the clinic's next payout; on reschedule the share moves again 60 or 30 days before the new date."}}
+  - {"op": "add_edge", "from": "REQ-007-091", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_node", "id": "REQ-007-092", "type": "Rule", "owner_fr": "FR-007", "title": "Clinic withdrawal charge and patient cancellation fee split", "attrs": {"statement": "When a clinic withdraws or drops out after acceptance (FR-006 Alternative Flow B5), a fixed charge set in admin settings MUST be deducted from the clinic's next payout. A patient cancellation fee MUST be split between Hairline and the clinic by a percentage set in admin settings. Neither setting has a starting value; an admin sets it."}}
+  - {"op": "add_edge", "from": "REQ-007-092", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "update_node", "id": "REQ-007-012", "attrs": {"statement": "System MUST support release of the clinic's share and its payout with commission deduction and statement generation, per Fund Release & Money Routing Rules (payout execution is owned by FR-017)"}}
+  - {"op": "update_node", "id": "REQ-007-014", "attrs": {"statement": "Commission is calculated on the accepted price after promotion (the FR-029 booking total) using the commission type (Percentage or Flat Rate) and value from the snapshot taken at booking confirmation. Hairline keeps the commission first, before the clinic's share moves; only the net share moves to the clinic and is paid out at release after treatment completion; not pro‑rata across deposit/final", "rationale": "Hairline keeps the commission first, before the clinic's share moves; the commission type and value come from the snapshot taken at booking confirmation (FR-029), never from live configuration"}}
+  - {"op": "update_node", "id": "REQ-007-022", "attrs": {"statement": "When a provider fault after acceptance closes a booking (FR-006 Alternative Flow B5), System MUST block further payment against it. When the provider withdraws or drops out, the patient is refunded in full everything paid, with no patient fee, and the replacement booking takes a new payment. A suspension or deactivation keeps the FR-006 provider-status placeholder, which is not yet ruled. Detailed refund and fund-release mechanics are defined in FR-007B and FR-017.", "rationale": "Provider fault after acceptance follows FR-006 Alternative Flow B5 (Alternative Flow B4 above); refund and fund-release mechanics are defined in FR-007B and FR-017"}}
+  - {"op": "retire_node", "id": "REQ-007-025"}
+  - {"op": "retire_node", "id": "REQ-007-045"}
+  - {"op": "retire_node", "id": "REQ-007-072"}
+  - {"op": "merge_node", "survivor": "REQ-007-033", "loser": "REQ-006-039"}
+  - {"op": "remove_edge", "from": "STP-007-054", "verb": "applies", "to": "REQ-007-045"}
+  - {"op": "add_edge", "from": "STP-007-054", "verb": "applies", "to": "REQ-006-017"}
+  - {"op": "add_edge", "from": "FR-007", "verb": "references", "to": "REQ-006-003"}
+  - {"op": "add_edge", "from": "FR-007", "verb": "references", "to": "REQ-006-005"}
+  - {"op": "add_edge", "from": "FR-007", "verb": "references", "to": "REQ-006-018"}
+  - {"op": "add_edge", "from": "FR-007", "verb": "references", "to": "REQ-006-054"}
+  - {"op": "add_edge", "from": "FR-007", "verb": "references", "to": "REQ-006-002"}
+  - {"op": "add_edge", "from": "FR-007", "verb": "references", "to": "REQ-006-008"}
+  - {"op": "add_edge", "from": "FR-007", "verb": "references", "to": "REQ-006-048"}
+  - {"op": "add_edge", "from": "FR-007", "verb": "references", "to": "REQ-029-100"}
+  - {"op": "add_edge", "from": "FR-007", "verb": "references", "to": "REQ-017-004"}
+  - {"op": "add_edge", "from": "FR-007", "verb": "references", "to": "REQ-006-017"}
+  - {"op": "add_edge", "from": "FR-007", "verb": "references", "to": "REQ-017-008"}
+  - {"op": "add_edge", "from": "FR-007", "verb": "references", "to": "REQ-017-060"}
+  - {"op": "add_edge", "from": "STP-007-003", "verb": "next", "to": "STP-007-011", "attrs": {"label": "patient prefers to pay the full amount at booking"}}
+  - {"op": "add_edge", "from": "STP-007-003", "verb": "next", "to": "STP-007-051", "attrs": {"label": "initial payment requested for an ineligible selection or an expired hold"}}
+  - {"op": "add_edge", "from": "STP-007-004", "verb": "next", "to": "STP-007-031", "attrs": {"label": "additional authentication requested"}}
+  - {"op": "add_edge", "from": "STP-007-004", "verb": "next", "to": "STP-007-041", "attrs": {"label": "payment declined or fails"}}
+  - {"op": "retire_node", "id": "ENT-payment.is_installment"}
+  - {"op": "retire_node", "id": "ENT-payout.cadence"}
+  - {"op": "retire_node", "id": "ENT-payout.scheduled_date"}
+  - {"op": "retire_node", "id": "ENT-payout.period_start"}
+  - {"op": "retire_node", "id": "ENT-payout.period_end"}
+  - {"op": "retire_enum_value", "field_id": "ENT-payout.status", "value": "pending"}
+  - {"op": "retire_enum_value", "field_id": "ENT-payout.status", "value": "eligible"}
+  - {"op": "retire_enum_value", "field_id": "ENT-payout.status", "value": "processing"}
+  - {"op": "retire_enum_value", "field_id": "ENT-payout.status", "value": "executed"}
+  - {"op": "retire_enum_value", "field_id": "ENT-payout.status", "value": "on_hold"}
+  - {"op": "update_node", "id": "ENT-booking.payment_status", "owner_fr": "FR-007", "attrs": {"description": "The single payment status of a booking, one list owned by FR-007 and used on every screen that shows it. Overdue is not a status value; it is a separate flag, calculated and not stored."}}
+  - {"op": "add_enum_value", "field_id": "ENT-booking.payment_status", "value": "refunded", "label": "Refunded"}
+  - {"op": "add_enum_value", "field_id": "ENT-booking.payment_status", "value": "at_risk", "label": "At Risk"}
+  - {"op": "update_node", "id": "ENT-booking.refund_state", "owner_fr": "FR-007"}
+  - {"op": "remove_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-booking.installment_progress"}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-installment-plan.completion_percentage", "attrs": {"provenance": "inherited from another FR", "label": "Installment Progress"}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-installment-plan.installments_paid", "attrs": {"provenance": "inherited from another FR", "label": "Installment Progress"}}
+  - {"op": "remove_edge", "from": "SCR-007-05", "verb": "shows", "to": "ENT-booking.installment_progress"}
+  - {"op": "add_edge", "from": "SCR-007-05", "verb": "shows", "to": "ENT-installment-plan.completion_percentage", "attrs": {"provenance": "inherited from another FR", "label": "Installment Progress"}}
+  - {"op": "add_edge", "from": "SCR-007-05", "verb": "shows", "to": "ENT-installment-plan.installments_paid", "attrs": {"provenance": "inherited from another FR", "label": "Installment Progress"}}
+  - {"op": "remove_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-booking.installment_progress"}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-installment-plan.completion_percentage", "attrs": {"provenance": "inherited from another FR", "label": "Installment Progress"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-installment-plan.installments_paid", "attrs": {"provenance": "inherited from another FR", "label": "Installment Progress"}}
+  - {"op": "retire_node", "id": "ENT-booking.installment_progress"}
+  - {"op": "remove_edge", "from": "REQ-007-002", "verb": "applies to", "to": "ENT-payment.payment_method"}
+  - {"op": "add_edge", "from": "REQ-007-002", "verb": "applies to", "to": "ENT-payment-method"}
+  - {"op": "remove_edge", "from": "REQ-007-032", "verb": "applies to", "to": "ENT-payment.payment_method"}
+  - {"op": "add_edge", "from": "REQ-007-032", "verb": "applies to", "to": "ENT-payment-method"}
+  - {"op": "update_node", "id": "EVT-payout-executed", "owner_fr": "FR-017"}
