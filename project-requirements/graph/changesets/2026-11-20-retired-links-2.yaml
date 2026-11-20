@@ -1,0 +1,17 @@
+reason: "Re-point retired links where the screen shows a computed view of values held elsewhere: the FR-028 location display preview shows the regional grouping and starting price Fields it is computed from; links to a retired payout frequency Field and a retired emergency contact Entity are removed because the values are platform Settings already linked through their Rules"
+by: controller
+operations:
+  - {"op": "remove_edge", "from": "SCR-017-02", "verb": "shows", "to": "ENT-provider.payout_frequency"}
+  - {"op": "remove_edge", "from": "SCR-028-03", "verb": "shows", "to": "ENT-location-display-preview.applied_regional_grouping"}
+  - {"op": "remove_edge", "from": "SCR-028-03", "verb": "shows", "to": "ENT-location-display-preview.fallback_indicators"}
+  - {"op": "remove_edge", "from": "SCR-028-03", "verb": "shows", "to": "ENT-location-display-preview.location_list"}
+  - {"op": "remove_edge", "from": "SCR-028-03", "verb": "shows", "to": "ENT-location-display-preview.preview_currency"}
+  - {"op": "remove_edge", "from": "SCR-028-03", "verb": "shows", "to": "ENT-location-display-preview.preview_patient_location"}
+  - {"op": "remove_edge", "from": "SCR-028-03", "verb": "shows", "to": "ENT-location-display-preview.starting_prices"}
+  - {"op": "remove_edge", "from": "STG-patient-03-active", "verb": "reads", "to": "ENT-support-emergency-contact"}
+  - {"op": "add_edge", "from": "SCR-028-03", "verb": "shows", "to": "ENT-regional-grouping.grouping_name", "attrs": {"provenance": "system calculated", "label": "Applied Regional Grouping", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-028-03", "verb": "shows", "to": "ENT-regional-grouping.country_list", "attrs": {"provenance": "system calculated", "label": "Countries in Grouping", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-028-03", "verb": "shows", "to": "ENT-regional-grouping.location_order", "attrs": {"provenance": "system calculated", "label": "Location Display Order", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-028-03", "verb": "shows", "to": "ENT-location-starting-price.starting_price_amount", "attrs": {"provenance": "system calculated", "label": "Starting Price", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-028-03", "verb": "shows", "to": "ENT-location-starting-price.currency_code", "attrs": {"provenance": "system calculated", "label": "Currency", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-028-03", "verb": "shows", "to": "ENT-location-starting-price.is_fallback_price", "attrs": {"provenance": "system calculated", "label": "Fallback Indicators", "editable": false}}

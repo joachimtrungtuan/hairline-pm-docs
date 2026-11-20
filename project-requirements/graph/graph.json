@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-20T13:21:15Z",
+  "generated_at": "2026-11-20T13:48:58Z",
   "schema_version": 10,
   "nodes": [
     {
@@ -37917,7 +37917,7 @@
       "owner_fr": null,
       "title": "Quote Submission & Management",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "module": "fr004-quote-submission",
         "prd_path": "project-requirements/functional-requirements/fr004-quote-submission/prd.md",
@@ -38060,7 +38060,7 @@
       "owner_fr": null,
       "title": "Provider Analytics & Reporting",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "module": "fr014-provider-analytics-reporting",
         "prd_path": "project-requirements/functional-requirements/fr014-provider-analytics-reporting/prd.md",
@@ -38099,7 +38099,7 @@
       "owner_fr": null,
       "title": "Admin Billing & Financial Management",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "module": "fr017-admin-billing-finance",
         "prd_path": "project-requirements/functional-requirements/fr017-admin-billing-finance/prd.md",
@@ -46814,7 +46814,7 @@
       "owner_fr": "FR-007B",
       "title": "Admin views the plan configuration owned by FR-029",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "The admin views the installment plan configuration (managed in FR-029) and a link to the configuration screen for authorized users; enabled installment counts, cutoff days, minimum booking amount and the late payment grace period are configured in FR-029.",
         "rationale": "PRD prose rule, no id. prd.md line 48 (Multi-Tenant Breakdown)."
@@ -77640,7 +77640,7 @@
       "owner_fr": "FR-028",
       "title": "Admin previews configuration before saving",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "System MUST allow admins to preview how configurations will appear to patients from different regions before saving",
         "rationale": "Restated by Screen 2 Preview Mode (394), Screen 3 (419-448: Test Mode toggle) and User Story 5 (727-740: preview of unsaved changes, then Save and Apply turns the panel into Live Configuration)."
@@ -78351,7 +78351,7 @@
       "owner_fr": "FR-028",
       "title": "Preview shows which grouping and pricing rules were applied",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "The preview shows which regional grouping and which pricing rules were applied for the simulated patient.",
         "rationale": "Screen 3 Applied Config Display (437) and field Applied Regional Grouping (431)."
@@ -78363,7 +78363,7 @@
       "owner_fr": "FR-028",
       "title": "Preview highlights locations using fallback pricing",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "Locations using fallback pricing are visually distinguished in the preview (for example italic text or an info icon with the tooltip \"Using fallback pricing - AUD pricing not configured for this location\").",
         "rationale": "Screen 3 Fallback Highlighting (438), field Fallback Indicators (432) and User Story 3 scenario 3 (706)."
@@ -78411,7 +78411,7 @@
       "owner_fr": "FR-028",
       "title": "Preview inputs: a valid country and a currency defaulting to the location's currency",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "The preview requires a patient country that is valid in the system and a patient currency preference, which defaults to the location's default currency.",
         "rationale": "Screen 3 fields Preview Patient Location and Preview Currency (427-428)."
@@ -80931,7 +80931,7 @@
       "owner_fr": "FR-030",
       "title": "Catalog event: Provider Payout Processed",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Provider Payout Processed (payout.provider_processed) is an admin-configurable notification event. Primary recipients: Provider, Admin (optional). “They’ve been paid” notification to provider. Also sent when a manual statement is marked paid, not only for Stripe payouts; no separate event exists for manual statements",
         "rationale": "prd.md line 154. Category: Billing/Payouts. Event nodes: EVT-payout-executed (existing node); EVT-billing-provider-payout-processed (created by another FR migration not yet applied; not linked from here)."
@@ -93770,7 +93770,7 @@
       "owner_fr": "FR-016",
       "title": "Patient Detail View - Payments Tab",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
         "description": "Transactions, refunds, outstanding balances and installments. Controls: Issue Refund, Retry Payment, Send Payment Reminder, Export Transactions, Stripe link."
@@ -93842,7 +93842,7 @@
       "owner_fr": "FR-017",
       "title": "Provider Billing: Upcoming Payments List",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "admin",
         "description": "PRD prd.md lines 364-425. UI controls (no field): Select checkbox; Actions (View Details, Approve Payout, Unapprove, Void Statement, Add Note, Retry Payout); Batch Approval Toolbar (Selected Statements, Selected Net Total, Approve All Selected Payouts, Clear Selection); Unapprove and Void reason inputs; Filters, sort and CSV export."
@@ -94946,7 +94946,7 @@
       "owner_fr": "FR-028",
       "title": "Location Display Preview (Screen 3)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "admin",
         "description": "Admin previews how location recommendations and starting prices appear to patients from different regions."
@@ -99666,7 +99666,7 @@
       "owner_fr": null,
       "title": "In progress",
       "status": "active",
-      "version": 9,
+      "version": 10,
       "attrs": {
         "timeline": "main",
         "sequence": 6,
@@ -99784,7 +99784,7 @@
       "owner_fr": null,
       "title": "Active",
       "status": "active",
-      "version": 20,
+      "version": 21,
       "attrs": {
         "timeline": "patient-account",
         "sequence": 3,
@@ -99988,7 +99988,7 @@
       "owner_fr": "FR-001",
       "title": "Patient creates the account with email and password",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow Workflow 1 step 3"
       }
@@ -100120,7 +100120,7 @@
       "owner_fr": "FR-001",
       "title": "Patient enters and confirms the new password",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow Workflow 3 step 3"
       }
@@ -100131,7 +100131,7 @@
       "owner_fr": "FR-001",
       "title": "System validates password strength, updates the password, creates a session and redirects",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow Workflow 3 step 4"
       }
@@ -100230,7 +100230,7 @@
       "owner_fr": "FR-001",
       "title": "System displays specific error messages",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A3 step 1"
       }
@@ -100241,7 +100241,7 @@
       "owner_fr": "FR-001",
       "title": "Patient corrects the errors before proceeding",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A3 step 2"
       }
@@ -100585,7 +100585,7 @@
       "owner_fr": "FR-002",
       "title": "Provider consumes the read-only normalized payload and media",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 2 step 3",
         "handoff_to": "STP-003-027"
@@ -100652,7 +100652,7 @@
       "owner_fr": "FR-003",
       "title": "Patient captures the head scan photo set",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 1 (Patient Creates Inquiry)"
       }
@@ -100872,7 +100872,7 @@
       "owner_fr": "FR-003",
       "title": "Provider sees the anonymized inquiry",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 2 (Inquiry Distribution)"
       }
@@ -101016,7 +101016,7 @@
       "owner_fr": "FR-003",
       "title": "Admin soft-deletes the inquiry with a reason",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 4 (Admin Inquiry Management)"
       }
@@ -101984,7 +101984,7 @@
       "owner_fr": "FR-005",
       "title": "Patient sees Contact support instead of a cancel action after acceptance",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A4 (after acceptance)"
       }
@@ -102084,7 +102084,7 @@
       "owner_fr": "FR-006",
       "title": "System calculates the required deposit from FR-029 settings and presents the cancellation policy",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 3"
       }
@@ -109916,7 +109916,7 @@
       "owner_fr": "FR-023",
       "title": "Admin validates the verification and resumes processing",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A1 step 3"
       }
@@ -114994,7 +114994,7 @@
       "owner_fr": "FR-029",
       "title": "Admin investigates the source, fixes credentials or switches affected pairs to another source or manual mode",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Boundary Flow B2 step 9"
       }
@@ -116281,7 +116281,7 @@
       "owner_fr": "FR-031",
       "title": "Invitee completes account details",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow step 17"
       }
@@ -116303,7 +116303,7 @@
       "owner_fr": "FR-031",
       "title": "System validates password and terms",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow step 19"
       }
@@ -162823,6 +162823,12 @@
       "from_id": "FR-004",
       "verb": "references",
       "to_id": "REQ-003-013",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-004",
+      "verb": "references",
+      "to_id": "REQ-006-005",
       "attrs": {}
     },
     {
@@ -280910,6 +280916,24 @@
     {
       "from_id": "SCR-016-05",
       "verb": "shows",
+      "to_id": "ENT-installment-plan.installments_paid",
+      "attrs": {
+        "provenance": "inherited from another FR",
+        "label": "Installment plans"
+      }
+    },
+    {
+      "from_id": "SCR-016-05",
+      "verb": "shows",
+      "to_id": "ENT-installment-plan.installments_remaining",
+      "attrs": {
+        "provenance": "inherited from another FR",
+        "label": "Installment plans"
+      }
+    },
+    {
+      "from_id": "SCR-016-05",
+      "verb": "shows",
       "to_id": "ENT-payment-method.last_four_digits",
       "attrs": {
         "provenance": "inherited from another FR",
@@ -291089,6 +291113,66 @@
       "verb": "belongs to",
       "to_id": "STG-main-01-inquiry",
       "attrs": {}
+    },
+    {
+      "from_id": "SCR-028-03",
+      "verb": "shows",
+      "to_id": "ENT-location-starting-price.currency_code",
+      "attrs": {
+        "provenance": "system calculated",
+        "label": "Currency",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-028-03",
+      "verb": "shows",
+      "to_id": "ENT-location-starting-price.is_fallback_price",
+      "attrs": {
+        "provenance": "system calculated",
+        "label": "Fallback Indicators",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-028-03",
+      "verb": "shows",
+      "to_id": "ENT-location-starting-price.starting_price_amount",
+      "attrs": {
+        "provenance": "system calculated",
+        "label": "Starting Price",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-028-03",
+      "verb": "shows",
+      "to_id": "ENT-regional-grouping.country_list",
+      "attrs": {
+        "provenance": "system calculated",
+        "label": "Countries in Grouping",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-028-03",
+      "verb": "shows",
+      "to_id": "ENT-regional-grouping.grouping_name",
+      "attrs": {
+        "provenance": "system calculated",
+        "label": "Applied Regional Grouping",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-028-03",
+      "verb": "shows",
+      "to_id": "ENT-regional-grouping.location_order",
+      "attrs": {
+        "provenance": "system calculated",
+        "label": "Location Display Order",
+        "editable": false
+      }
     },
     {
       "from_id": "SCR-029-01",
@@ -305788,6 +305872,12 @@
     },
     {
       "from_id": "STP-001-003",
+      "verb": "applies",
+      "to_id": "REQ-SYS-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-003",
       "verb": "at",
       "to_id": "STG-patient-01-registered",
       "attrs": {}
@@ -306292,6 +306382,12 @@
     },
     {
       "from_id": "STP-001-023",
+      "verb": "applies",
+      "to_id": "REQ-SYS-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-023",
       "verb": "at",
       "to_id": "STG-patient-03-active",
       "attrs": {}
@@ -306324,6 +306420,12 @@
       "from_id": "STP-001-024",
       "verb": "applies",
       "to_id": "REQ-001-079",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-024",
+      "verb": "applies",
+      "to_id": "REQ-SYS-007",
       "attrs": {}
     },
     {
@@ -306580,6 +306682,12 @@
     },
     {
       "from_id": "STP-001-061",
+      "verb": "applies",
+      "to_id": "REQ-SYS-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-061",
       "verb": "at",
       "to_id": "STG-patient-01-registered",
       "attrs": {}
@@ -306606,6 +306714,12 @@
       "from_id": "STP-001-062",
       "verb": "applies",
       "to_id": "REQ-001-045",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-062",
+      "verb": "applies",
+      "to_id": "REQ-SYS-007",
       "attrs": {}
     },
     {
@@ -307516,6 +307630,12 @@
     },
     {
       "from_id": "STP-002-014",
+      "verb": "applies",
+      "to_id": "REQ-SYS-001",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-014",
       "verb": "at",
       "to_id": "STG-main-01-inquiry",
       "attrs": {}
@@ -307740,6 +307860,12 @@
       "from_id": "STP-003-006",
       "verb": "applies",
       "to_id": "REQ-003-039",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-003-006",
+      "verb": "applies",
+      "to_id": "REQ-SYS-002",
       "attrs": {}
     },
     {
@@ -308486,6 +308612,12 @@
     },
     {
       "from_id": "STP-003-026",
+      "verb": "applies",
+      "to_id": "REQ-SYS-001",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-003-026",
       "verb": "at",
       "to_id": "STG-main-01-inquiry",
       "attrs": {}
@@ -309004,6 +309136,12 @@
       "from_id": "STP-003-039",
       "verb": "applies",
       "to_id": "REQ-003-095",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-003-039",
+      "verb": "applies",
+      "to_id": "REQ-SYS-002",
       "attrs": {}
     },
     {
@@ -311645,6 +311783,12 @@
     {
       "from_id": "STP-005-010",
       "verb": "applies",
+      "to_id": "REQ-003-012",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-010",
+      "verb": "applies",
       "to_id": "REQ-005-042",
       "attrs": {}
     },
@@ -311928,6 +312072,18 @@
       "from_id": "STP-006-003",
       "verb": "applies",
       "to_id": "REQ-006-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-003",
+      "verb": "applies",
+      "to_id": "REQ-029-013",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-003",
+      "verb": "applies",
+      "to_id": "REQ-029-015",
       "attrs": {}
     },
     {
@@ -348786,6 +348942,12 @@
     },
     {
       "from_id": "STP-029-126",
+      "verb": "applies",
+      "to_id": "REQ-029-012",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-126",
       "verb": "at",
       "to_id": "STG-admin-01-configuration",
       "attrs": {}
@@ -352224,6 +352386,12 @@
     },
     {
       "from_id": "STP-031-017",
+      "verb": "applies",
+      "to_id": "REQ-SYS-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-017",
       "verb": "at",
       "to_id": "STG-admin-01-configuration",
       "attrs": {}
@@ -352292,6 +352460,12 @@
       "from_id": "STP-031-019",
       "verb": "applies",
       "to_id": "REQ-031-046",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-019",
+      "verb": "applies",
+      "to_id": "REQ-SYS-007",
       "attrs": {}
     },
     {
@@ -378264,6 +378438,61 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261120-134745-3046a8d3",
+      "at": "2026-11-20T13:47:45.254651+00:00",
+      "changed_by": "controller",
+      "reason": "Re-point retired links where the screen shows a computed view of values held elsewhere: the FR-028 location display preview shows the regional grouping and starting price Fields it is computed from; links to a retired payout frequency Field and a retired emergency contact Entity are removed because the values are platform Settings already linked through their Rules",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "SCR-017-02",
+        "SCR-028-03",
+        "STG-patient-03-active"
+      ],
+      "edges_added": 6,
+      "edges_removed": 8,
+      "rows": 14
+    },
+    {
+      "id": "cs-20261120-134730-90248f7a",
+      "at": "2026-11-20T13:47:30.223843+00:00",
+      "changed_by": "controller",
+      "reason": "Requirements graph programme baseline 2026-11-20: re-point or remove every edge from an active node to a retired node where the current PRD text settles the target",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "FR-004",
+        "FR-014",
+        "FR-017",
+        "REQ-007B-079",
+        "REQ-028-008",
+        "REQ-028-070",
+        "REQ-028-071",
+        "REQ-028-075",
+        "REQ-030-058",
+        "SCR-016-05",
+        "STG-main-06-treatment",
+        "STP-001-003",
+        "STP-001-023",
+        "STP-001-024",
+        "STP-001-061",
+        "STP-001-062",
+        "STP-002-014",
+        "STP-003-006",
+        "STP-003-026",
+        "STP-003-039",
+        "STP-005-010",
+        "STP-006-003",
+        "STP-023-013",
+        "STP-029-126",
+        "STP-031-017",
+        "STP-031-019"
+      ],
+      "edges_added": 18,
+      "edges_removed": 29,
+      "rows": 47
+    },
     {
       "id": "cs-20261120-132022-1bd9d0ae",
       "at": "2026-11-20T13:20:22.544605+00:00",

@@ -33,6 +33,7 @@ The owner's answers from the programme's question rounds were applied as the new
 
 - Duplicate-rule lint (L12) triaged in `graph/changesets/2026-11-20-l12-triage.yaml`: `REQ-030-128` merged into `REQ-020-052`, `REQ-018-265` merged into `REQ-018-263`, and 40 similar pairs marked as different rules. Lint is now 4,371 findings (L03 10, L10 4,272, L18 89; L12 0); 237 tests pass; `graph.json` re-exported.
 - After an independent verification of the triage (`graph/changesets/2026-11-20-l12-triage-followup.yaml`): FR-030 now references `REQ-020-052`, and `REQ-001-147` was merged into `REQ-001-146` (one six-digit code input rule on two screens). Lint is 4,370 findings (L03 10, L10 4,271, L18 89).
+- Links from live nodes to retired nodes cut from 45 to 8 (`graph/changesets/2026-11-20-retired-links.yaml`, `2026-11-20-retired-links-2.yaml`): Steps and FRs now point at the replacement Rules, and the FR-028 location preview Screen shows the grouping and starting-price Fields it is computed from. Lint is 4,369 findings (L03 9, L10 4,271, L18 89); 237 tests pass; `graph.json` re-exported. The 8 remaining links are in the backlog.
 
 ## Not done
 

@@ -1,0 +1,50 @@
+reason: "Requirements graph programme baseline 2026-11-20: re-point or remove every edge from an active node to a retired node where the current PRD text settles the target"
+by: controller
+operations:
+  - {"op": "remove_edge", "from": "FR-004", "verb": "references", "to": "REQ-005-025"}
+  - {"op": "add_edge", "from": "FR-004", "verb": "references", "to": "REQ-006-005"}
+  - {"op": "remove_edge", "from": "FR-014", "verb": "references", "to": "REQ-005-017"}
+  - {"op": "remove_edge", "from": "FR-017", "verb": "references", "to": "REQ-029-111"}
+  - {"op": "remove_edge", "from": "REQ-007B-079", "verb": "governed by", "to": "SET-installment-first-installment-type"}
+  - {"op": "remove_edge", "from": "REQ-028-008", "verb": "applies to", "to": "ENT-location-display-preview"}
+  - {"op": "remove_edge", "from": "REQ-028-070", "verb": "applies to", "to": "ENT-location-display-preview.applied_regional_grouping"}
+  - {"op": "remove_edge", "from": "REQ-028-071", "verb": "applies to", "to": "ENT-location-display-preview.fallback_indicators"}
+  - {"op": "remove_edge", "from": "REQ-028-075", "verb": "applies to", "to": "ENT-location-display-preview.preview_currency"}
+  - {"op": "remove_edge", "from": "REQ-028-075", "verb": "applies to", "to": "ENT-location-display-preview.preview_patient_location"}
+  - {"op": "remove_edge", "from": "REQ-030-058", "verb": "applies to", "to": "EVT-billing-provider-payout-processed"}
+  - {"op": "remove_edge", "from": "SCR-016-05", "verb": "shows", "to": "ENT-booking.installment_progress"}
+  - {"op": "add_edge", "from": "SCR-016-05", "verb": "shows", "to": "ENT-installment-plan.installments_paid", "attrs": {"provenance": "inherited from another FR", "label": "Installment plans"}}
+  - {"op": "add_edge", "from": "SCR-016-05", "verb": "shows", "to": "ENT-installment-plan.installments_remaining", "attrs": {"provenance": "inherited from another FR", "label": "Installment plans"}}
+  - {"op": "remove_edge", "from": "STG-main-06-treatment", "verb": "emits", "to": "EVT-billing-payout-schedule-updated"}
+  - {"op": "remove_edge", "from": "STP-001-003", "verb": "applies", "to": "REQ-001-006"}
+  - {"op": "add_edge", "from": "STP-001-003", "verb": "applies", "to": "REQ-SYS-007"}
+  - {"op": "remove_edge", "from": "STP-001-003", "verb": "applies", "to": "REQ-001-127"}
+  - {"op": "remove_edge", "from": "STP-001-023", "verb": "applies", "to": "REQ-001-006"}
+  - {"op": "add_edge", "from": "STP-001-023", "verb": "applies", "to": "REQ-SYS-007"}
+  - {"op": "remove_edge", "from": "STP-001-024", "verb": "applies", "to": "REQ-001-006"}
+  - {"op": "add_edge", "from": "STP-001-024", "verb": "applies", "to": "REQ-SYS-007"}
+  - {"op": "remove_edge", "from": "STP-001-061", "verb": "applies", "to": "REQ-001-006"}
+  - {"op": "add_edge", "from": "STP-001-061", "verb": "applies", "to": "REQ-SYS-007"}
+  - {"op": "remove_edge", "from": "STP-001-062", "verb": "applies", "to": "REQ-001-006"}
+  - {"op": "add_edge", "from": "STP-001-062", "verb": "applies", "to": "REQ-SYS-007"}
+  - {"op": "remove_edge", "from": "STP-002-014", "verb": "applies", "to": "REQ-002-018"}
+  - {"op": "add_edge", "from": "STP-002-014", "verb": "applies", "to": "REQ-SYS-001"}
+  - {"op": "remove_edge", "from": "STP-003-006", "verb": "applies", "to": "REQ-003-040"}
+  - {"op": "add_edge", "from": "STP-003-006", "verb": "applies", "to": "REQ-SYS-002"}
+  - {"op": "remove_edge", "from": "STP-003-026", "verb": "applies", "to": "REQ-003-008"}
+  - {"op": "add_edge", "from": "STP-003-026", "verb": "applies", "to": "REQ-SYS-001"}
+  - {"op": "remove_edge", "from": "STP-003-039", "verb": "applies", "to": "REQ-003-006"}
+  - {"op": "add_edge", "from": "STP-003-039", "verb": "applies", "to": "REQ-SYS-002"}
+  - {"op": "remove_edge", "from": "STP-005-010", "verb": "applies", "to": "REQ-005-030"}
+  - {"op": "add_edge", "from": "STP-005-010", "verb": "applies", "to": "REQ-003-012"}
+  - {"op": "remove_edge", "from": "STP-006-003", "verb": "applies", "to": "REQ-006-012"}
+  - {"op": "add_edge", "from": "STP-006-003", "verb": "applies", "to": "REQ-029-013"}
+  - {"op": "remove_edge", "from": "STP-006-003", "verb": "applies", "to": "REQ-006-031"}
+  - {"op": "add_edge", "from": "STP-006-003", "verb": "applies", "to": "REQ-029-015"}
+  - {"op": "remove_edge", "from": "STP-023-013", "verb": "applies", "to": "REQ-023-035"}
+  - {"op": "remove_edge", "from": "STP-029-126", "verb": "applies", "to": "REQ-029-090"}
+  - {"op": "add_edge", "from": "STP-029-126", "verb": "applies", "to": "REQ-029-012"}
+  - {"op": "remove_edge", "from": "STP-031-017", "verb": "applies", "to": "REQ-031-018"}
+  - {"op": "add_edge", "from": "STP-031-017", "verb": "applies", "to": "REQ-SYS-007"}
+  - {"op": "remove_edge", "from": "STP-031-019", "verb": "applies", "to": "REQ-031-018"}
+  - {"op": "add_edge", "from": "STP-031-019", "verb": "applies", "to": "REQ-SYS-007"}
