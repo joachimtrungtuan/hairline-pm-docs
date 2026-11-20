@@ -1,0 +1,4 @@
+reason: "Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-038)"
+by: controller
+operations:
+  - {"op": "add_enum_value", "field_id": "ENT-monitoring-case.status", "value": "converted_to_aftercare", "label": "Converted to aftercare"}
