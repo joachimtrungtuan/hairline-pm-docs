@@ -1,0 +1,6 @@
+# FR-012 references to Rules that other FR change-sets add on 2026-11-20. Apply after the FR-004 and FR-021 baseline change-sets.
+reason: "Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-012)"
+by: controller
+operations:
+  - {op: add_edge, from: FR-012, verb: references, to: REQ-004-107}
+  - {op: add_edge, from: FR-012, verb: references, to: REQ-021-119}
