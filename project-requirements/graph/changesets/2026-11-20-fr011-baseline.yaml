@@ -1,0 +1,289 @@
+reason: "Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-011)"
+by: controller
+operations:
+  # --- Event ownership: the three aftercare reminder events move to the notification FR ---
+  - {op: update_node, id: EVT-aftercare-milestone-due, owner_fr: FR-030}
+  - {op: update_node, id: EVT-aftercare-scan-missed, owner_fr: FR-030}
+  - {op: update_node, id: EVT-aftercare-questionnaire-missed, owner_fr: FR-030}
+
+  # --- Overdue is a flag, not a status ---
+  - {op: retire_enum_value, field_id: ENT-aftercare-plan.status, value: overdue}
+  - {op: retire_enum_value, field_id: ENT-aftercare-task.status, value: overdue}
+  - op: add_field
+    id: ENT-aftercare-plan.overdue_flag
+    entity_id: ENT-aftercare-plan
+    name: overdue_flag
+    data_type: bool
+    title: Overdue flag
+    owner_fr: FR-011
+    attrs: {description: "Set on a case that has overdue tasks; shown next to the case status, which is Active, Completed or Cancelled (Screen 13)."}
+  - op: add_field
+    id: ENT-aftercare-task.overdue_flag
+    entity_id: ENT-aftercare-task
+    name: overdue_flag
+    data_type: bool
+    title: Overdue flag
+    owner_fr: FR-011
+    attrs: {description: "Set 24 hours after the due date while the task is not completed; the task status stays Pending or Completed (Screens 3 and 12)."}
+  - {op: add_edge, from: SCR-011-13, verb: shows, to: ENT-aftercare-plan.overdue_flag, attrs: {provenance: system calculated, label: Overdue flag}}
+  - {op: add_edge, from: SCR-011-03, verb: shows, to: ENT-aftercare-task.overdue_flag, attrs: {provenance: system calculated, label: Overdue flag}}
+  - {op: add_edge, from: SCR-011-12, verb: shows, to: ENT-aftercare-task.overdue_flag, attrs: {provenance: system calculated, label: Overdue flag}}
+
+  # --- Pricing option is separate from payment method ---
+  - op: add_field
+    id: ENT-aftercare-request.pricing_option
+    entity_id: ENT-aftercare-request
+    name: pricing_option
+    data_type: enum
+    title: Pricing option
+    owner_fr: FR-011
+  - {op: add_enum_value, field_id: ENT-aftercare-request.pricing_option, value: fixed, label: Fixed price, sort_order: 0}
+  - {op: add_enum_value, field_id: ENT-aftercare-request.pricing_option, value: subscription, label: Monthly subscription, sort_order: 1}
+  - op: add_field
+    id: ENT-aftercare-request.payment_method
+    entity_id: ENT-aftercare-request
+    name: payment_method
+    data_type: enum
+    title: Payment method
+    owner_fr: FR-011
+  - {op: add_enum_value, field_id: ENT-aftercare-request.payment_method, value: card, label: Credit or debit card, sort_order: 0}
+  - {op: add_enum_value, field_id: ENT-aftercare-request.payment_method, value: paypal, label: PayPal, sort_order: 1}
+  - op: add_field
+    id: ENT-aftercare-template.default_pricing_option
+    entity_id: ENT-aftercare-template
+    name: default_pricing_option
+    data_type: enum
+    title: Default pricing option
+    owner_fr: FR-011
+  - {op: add_enum_value, field_id: ENT-aftercare-template.default_pricing_option, value: fixed, label: Fixed price, sort_order: 0}
+  - {op: add_enum_value, field_id: ENT-aftercare-template.default_pricing_option, value: subscription, label: Subscription, sort_order: 1}
+  - {op: remove_edge, from: SCR-011-06, verb: shows, to: ENT-aftercare-request.payment_plan_type}
+  - {op: remove_edge, from: SCR-011-07, verb: shows, to: ENT-aftercare-request.payment_plan_type}
+  - {op: remove_edge, from: SCR-011-15, verb: shows, to: ENT-aftercare-request.payment_plan_type}
+  - {op: remove_edge, from: SCR-011-07, verb: shows, to: ENT-aftercare-request.payment_instrument}
+  - {op: remove_edge, from: SCR-011-15, verb: shows, to: ENT-aftercare-request.payment_instrument}
+  - {op: remove_edge, from: SCR-011-16, verb: shows, to: ENT-aftercare-template.default_payment_method}
+  - {op: add_edge, from: SCR-011-06, verb: shows, to: ENT-aftercare-request.pricing_option, attrs: {provenance: user input, label: Pricing Option / Selected Pricing Option}}
+  - {op: add_edge, from: SCR-011-07, verb: shows, to: ENT-aftercare-request.pricing_option, attrs: {provenance: carried from previous screen, label: Pricing Option Selected}}
+  - {op: add_edge, from: SCR-011-15, verb: shows, to: ENT-aftercare-request.pricing_option, attrs: {provenance: retrieved, label: Pricing Option}}
+  - {op: add_edge, from: SCR-011-07, verb: shows, to: ENT-aftercare-request.payment_method, attrs: {provenance: user input, label: Payment Method Selection}}
+  - {op: add_edge, from: SCR-011-15, verb: shows, to: ENT-aftercare-request.payment_method, attrs: {provenance: retrieved, label: Payment Method}}
+  - {op: add_edge, from: SCR-011-16, verb: shows, to: ENT-aftercare-template.default_pricing_option, attrs: {provenance: user input, label: Default Pricing Option}}
+  - {op: retire_node, id: ENT-aftercare-request.payment_plan_type}
+  - {op: retire_node, id: ENT-aftercare-request.payment_instrument}
+  - {op: retire_node, id: ENT-aftercare-template.default_payment_method}
+
+  # --- One platform fee, taken from the price, never shown as an extra charge ---
+  - {op: remove_edge, from: SCR-011-07, verb: shows, to: ENT-aftercare-request.platform_fee}
+  - op: update_node
+    id: ENT-aftercare-request.platform_fee
+    attrs: {description: "The platform fee is one amount under the commission rate setting, taken out of the aftercare price and never added to the patient's total; Screen 7 does not show it."}
+
+  # --- Surgeon notes are read from the FR-010 conclusion notes ---
+  - {op: remove_edge, from: SCR-011-15, verb: shows, to: ENT-aftercare-request.surgeon_notes}
+  - {op: add_edge, from: SCR-011-15, verb: shows, to: ENT-aftercare-request.surgeon_notes, attrs: {provenance: inherited from another FR, label: Surgeon Notes}}
+
+  # --- Adherence period is calculated from the doses, so the stored scheduled_at goes ---
+  - {op: remove_edge, from: SCR-011-09, verb: shows, to: ENT-aftercare-dose.scheduled_at}
+  - {op: retire_node, id: ENT-aftercare-dose.scheduled_at}
+
+  # --- Standalone aftercare order: request, admin assigns, provider configures, payment activates ---
+  - op: update_node
+    id: STP-011-009
+    title: Patient requests the standalone service, picks a template and pricing option and submits the request without payment
+  - op: update_node
+    id: STP-011-010
+    title: Patient reviews the order summary, selects the payment method, enters payment details and submits payment
+    attrs: {prd_ref: "Workflow 2 Main Flow step 4"}
+  - op: update_node
+    id: STP-011-011
+    title: System processes the payment through FR-007 and activates the plan
+    attrs: {prd_ref: "Workflow 2 Main Flow step 4"}
+  - op: update_node
+    id: STP-011-012
+    attrs: {prd_ref: "Workflow 2 Main Flow step 2"}
+  - op: update_node
+    id: STP-011-013
+    attrs: {prd_ref: "Workflow 2b Main Flow step 4"}
+  - op: update_node
+    id: STP-011-019
+    title: System refunds any payment already taken automatically
+  - op: update_node
+    id: STP-011-036
+    title: System sends a reminder and sets the Overdue flag on the task after 24 hours
+  - op: add_node
+    id: STP-011-055
+    type: Step
+    owner_fr: FR-011
+    title: Assigned provider configures the aftercare plan and completes it; the plan is not active until payment succeeds
+    attrs: {prd_ref: "Workflow 2 Main Flow step 3"}
+  - op: add_node
+    id: STP-011-056
+    type: Step
+    owner_fr: FR-011
+    title: System notifies the patient that payment is now due
+    attrs: {prd_ref: "Workflow 2 Main Flow step 3"}
+  - {op: add_edge, from: STP-011-055, verb: at, to: STG-aftercare-01-recovery-plan}
+  - {op: add_edge, from: STP-011-055, verb: done by, to: ACT-provider}
+  - {op: add_edge, from: STP-011-055, verb: 'on', to: SCR-011-10}
+  - {op: add_edge, from: STP-011-055, verb: applies, to: REQ-011-049}
+  - {op: add_edge, from: STP-011-055, verb: applies, to: REQ-011-066}
+  - {op: add_edge, from: STP-011-056, verb: at, to: STG-aftercare-01-recovery-plan}
+  - {op: add_edge, from: STP-011-056, verb: done by, to: ACT-system}
+  - {op: add_edge, from: STP-011-056, verb: applies, to: REQ-011-018}
+  - {op: remove_edge, from: STP-011-009, verb: next, to: STP-011-010}
+  - {op: add_edge, from: STP-011-009, verb: next, to: STP-011-012}
+  - {op: remove_edge, from: STP-011-012, verb: next, to: STP-011-013}
+  - {op: add_edge, from: STP-011-012, verb: next, to: STP-011-055}
+  - {op: add_edge, from: STP-011-055, verb: next, to: STP-011-056}
+  - {op: add_edge, from: STP-011-056, verb: next, to: STP-011-010}
+  - {op: remove_edge, from: STP-011-011, verb: next, to: STP-011-012}
+  - {op: add_edge, from: STP-011-011, verb: next, to: STP-011-014}
+  - {op: remove_edge, from: STP-011-011, verb: applies, to: REQ-011-048}
+  - {op: add_edge, from: STP-011-011, verb: applies, to: REQ-011-018}
+  - {op: add_edge, from: STP-011-011, verb: applies, to: REQ-011-049}
+
+  # --- Retired Rule: the notification service is one FR-020 Rule ---
+  - {op: retire_node, id: REQ-011-011}
+
+  # --- Reworded Rules (statement copied from the PRD as it reads now) ---
+  - op: update_node
+    id: REQ-011-004
+    attrs:
+      statement: "Admin MUST be able to oversee cases, reassign providers, and override plans with full audit. Admin assignment of the aftercare specialist (provider or Hairline aftercare team member) is owned by FR-011"
+  - op: update_node
+    id: REQ-011-006
+    attrs:
+      rationale: "Retention periods follow the system PRD, Platform-Wide Rules: One 10-year retention period (Data and Privacy Rule 1)."
+  - op: update_node
+    id: REQ-011-007
+    attrs:
+      statement: "Progress MUST be derived deterministically from plan and task completion (completed tasks over total tasks)"
+      rationale: "The formula is stated in Milestone and Task Rule 3, on Screen 1 and in Workflow 3 step 4."
+  - op: update_node
+    id: REQ-011-015
+    attrs:
+      statement: "System MUST let an admin reassign the aftercare provider or team on Screen 19 with a mandatory reason, confirmation, audit entry, and the `aftercare.provider_reassigned` notice (recipients, content, and the mandatory status of the notice are defined by the FR-030 notification Rules REQ-030-026 and REQ-030-077); for a treatment-linked case the booking MUST stay `Aftercare` and the treatment record MUST stay unchanged, with no new quote, acceptance, or payment"
+  - op: update_node
+    id: REQ-011-018
+    attrs:
+      statement: "Standalone aftercare requires payment before activation: payment activates the service and, for a standalone request, comes last, after the admin has assigned a provider and the provider has configured the plan. A post-treatment add-on pays before automatic assignment."
+      rationale: "General Module Rule 1; Payment Rules 1 and 4 (payment timing); Workflow 2."
+  - op: update_node
+    id: REQ-011-025
+    attrs:
+      rationale: "Milestone and Task Rule 2. Workflow 3 C1: the Overdue flag is set at 24 hours and the task escalates at 48 hours."
+  - op: update_node
+    id: REQ-011-026
+    attrs:
+      statement: "When a patient misses a scheduled task, the system sends a reminder notification; after 24 hours the system sets the Overdue flag on the task (Overdue is a flag, not a status) and the aftercare team contacts the patient."
+  - op: update_node
+    id: REQ-011-027
+    attrs:
+      rationale: "Milestone and Task Rule 3; Screen 1 business rules add that tasks include scan uploads, questionnaires and medication adherence. Workflow 3 step 4 states progress as completed tasks over total tasks."
+  - op: update_node
+    id: REQ-011-032
+    title: Aftercare data retention follows the system retention rule
+    attrs:
+      statement: "Retention of aftercare data, scan media and communication logs follows the system PRD, Platform-Wide Rules: One 10-year retention period."
+      rationale: "Data and Privacy Rule 1."
+  - op: update_node
+    id: REQ-011-035
+    attrs:
+      statement: "Admin can edit aftercare plans (templates, milestones, medications, instructions), patient data (patient information, treatment details, contact info), provider data (assignments, customizations, settings), progress data (progress calculations, milestone completions), communication data (messages, escalations, notifications; the original text of an edited message is kept in the edit history) and template data (milestone templates, questionnaires, resources)."
+      rationale: "Admin Editability Rule 2."
+  - op: update_node
+    id: REQ-011-037
+    attrs:
+      statement: "Any payment already taken is refunded in full and automatically when a request is rejected by the admin or expires unassigned after 7 days. Rejection requires a reason."
+      rationale: "Payment Rule 1; Payment Rule 4 (refund policy); Screens 7 and 15 business rules; Workflow 2 alternative flow B2. Money movement is executed through FR-007."
+  - op: update_node
+    id: REQ-011-040
+    attrs:
+      statement: "Platform commission is deducted from standalone and post-treatment add-on aftercare payments. The commission rate is 15-25% (configurable); it is one amount under one setting, taken from the aftercare price and never added to the patient's total. Commission is calculated at time of payment."
+      rationale: "Platform Commission, Payment Rule 3; Screen 7 business rules."
+  - op: update_node
+    id: REQ-011-042
+    attrs:
+      statement: "If a template offers both fixed and subscription pricing, the patient chooses the pricing option at purchase time; the pricing option is separate from the payment method (card or PayPal)."
+  - op: update_node
+    id: REQ-011-048
+    title: Submitted standalone request goes to Pending Assignment, admin assigns provider
+    attrs:
+      statement: "After the patient submits a standalone request, with no payment taken, it appears as Pending Assignment in the admin dashboard (Screen 15); the admin reviews patient information and treatment details, assigns a suitable provider based on specialization and availability, and the system notifies the assigned provider."
+      rationale: "Workflow 2 steps 1-2; Screen 15 business rules."
+  - op: update_node
+    id: REQ-011-049
+    title: Assigned provider configures the plan; payment activates a standalone plan; patient onboarded
+    attrs:
+      statement: "The assigned provider reviews the patient case, selects the aftercare template (the purchased one or an alternative) and customizes the plan. For a standalone request the provider completes the plan, the plan is not active until payment succeeds and the system notifies the patient that payment is now due; for a post-treatment add-on the provider activates the plan. On activation the patient receives an activation notification and gains access to the aftercare dashboard (Screen 1) and the aftercare team begins monitoring."
+      rationale: "Workflow 2 steps 3-5 and Workflow 2b steps 4-5. Standalone order: request, admin assigns, provider configures, payment activates."
+  - op: update_node
+    id: REQ-011-053
+    attrs:
+      statement: "Requests expire after 7 days if not assigned; an expired request becomes Rejected with a system reason, and the refund rule applies."
+      rationale: "Screen 15 business rules."
+  - op: update_node
+    id: REQ-011-060
+    attrs:
+      statement: "All required questionnaire fields must be completed before submission. Drafts are saved automatically every 30 seconds. The patient may retake and resubmit the questionnaire while its task is open; the latest answer counts and earlier answers are kept in the history. The aftercare team reviews responses."
+  - op: update_node
+    id: REQ-011-063
+    attrs:
+      statement: "Payment is processed through FR-007 with multiple payment methods (credit or debit cards, PayPal, local payment methods) and PCI-compliant processing; terms and privacy policy must be accepted; payment confirmation activates the aftercare plan for a standalone request (Workflow 2, after the provider has configured the plan) and triggers automatic assignment for a post-treatment add-on (Workflow 2b), plus a confirmation email. Card number, expiry, CVV, cardholder name and billing address are entered in the payment form and are not stored by FR-011."
+  - op: update_node
+    id: REQ-011-077
+    attrs:
+      statement: "Provider performance scores are calculated monthly, poor performance triggers a review process and provider suspension requires admin approval. Retention of performance data follows the system PRD, Platform-Wide Rules: One 10-year retention period."
+
+  # --- New Rule and Setting: default patient progress reminder ---
+  - op: add_node
+    id: SET-aftercare-progress-reminder-default
+    type: Setting
+    owner_fr: FR-011
+    title: Default patient progress reminder
+    attrs:
+      description: "Default progress reminder sent to each patient once a month for 12 months after treatment. The patient may change the reminder or switch it off; the default is admin-editable (Communication Rule 4)."
+      default: "Once a month for 12 months after treatment"
+  - op: add_node
+    id: REQ-011-088
+    type: Rule
+    owner_fr: FR-011
+    title: Default patient progress reminder, monthly for 12 months
+    attrs:
+      statement: "By default System MUST send each patient a progress reminder once a month for 12 months after treatment; the patient MAY change or switch off the reminder, and the default is admin-editable"
+      rationale: "Communication Rule 4 (Default Patient Progress Reminder)."
+  - {op: add_edge, from: REQ-011-088, verb: applies at, to: STG-aftercare-02-follow-up}
+  - {op: add_edge, from: REQ-011-088, verb: applies to, to: ACT-patient}
+  - {op: add_edge, from: REQ-011-088, verb: governed by, to: SET-aftercare-progress-reminder-default}
+
+  # --- Citations: FR-011 cites Rules homed in other FRs or the system PRD ---
+  - {op: add_edge, from: FR-011, verb: references, to: REQ-SYS-002}
+  - {op: add_edge, from: FR-011, verb: references, to: REQ-010-006}
+  - {op: add_edge, from: FR-011, verb: references, to: REQ-010-009}
+  - {op: add_edge, from: FR-011, verb: references, to: REQ-010-023}
+  - {op: add_edge, from: FR-011, verb: references, to: REQ-010-086}
+  - {op: add_edge, from: FR-011, verb: references, to: REQ-002-034}
+  - {op: add_edge, from: FR-011, verb: references, to: REQ-002-024}
+  - {op: add_edge, from: FR-011, verb: references, to: REQ-002-023}
+  - {op: add_edge, from: FR-011, verb: references, to: REQ-002-036}
+  - {op: add_edge, from: FR-011, verb: references, to: REQ-020-117}
+  - {op: add_edge, from: FR-011, verb: references, to: REQ-020-118}
+  - {op: add_edge, from: FR-011, verb: references, to: REQ-020-119}
+  - {op: add_edge, from: FR-011, verb: references, to: REQ-020-120}
+  - {op: add_edge, from: FR-011, verb: references, to: REQ-030-072}
+  - {op: add_edge, from: FR-011, verb: references, to: REQ-030-073}
+  - {op: add_edge, from: FR-011, verb: references, to: REQ-030-074}
+  - {op: add_edge, from: FR-011, verb: references, to: REQ-030-075}
+  - {op: add_edge, from: FR-011, verb: references, to: REQ-030-026}
+  - {op: add_edge, from: FR-011, verb: references, to: REQ-030-077}
+
+  # --- Citations of FR-011 Rules by other FRs (their own PRD dependency lines) ---
+  - {op: add_edge, from: FR-010, verb: references, to: REQ-011-017}
+  - {op: add_edge, from: FR-010, verb: references, to: REQ-011-055}
+  - {op: add_edge, from: FR-010, verb: references, to: REQ-011-049}
+  - {op: add_edge, from: FR-010, verb: references, to: REQ-011-001}
+  - {op: add_edge, from: FR-016, verb: references, to: REQ-011-015}
+  - {op: add_edge, from: FR-016, verb: references, to: REQ-011-021}
+  - {op: add_edge, from: FR-016, verb: references, to: REQ-011-034}
+  - {op: add_edge, from: FR-016, verb: references, to: REQ-011-004}
