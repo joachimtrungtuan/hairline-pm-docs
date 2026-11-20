@@ -3,7 +3,7 @@
 **Module**: P-05: Aftercare & Progress Monitoring | PR-04: Aftercare Participation *(elevated to P1 scope for FR-011 delivery)* | A-03: Aftercare Team Management  
 **Feature Branch**: `fr011-aftercare-recovery-management`  
 **Created**: 2025-10-23  
-**Status**: 🟡 Revised 2026-10-28 (v1.7: aftercare entry routes and treatment-linked quote link clarified); previously revised 2026-10-26 (standalone aftercare reassignment on provider suspension/deactivation) — Pending Consolidated Verification  
+**Status**: 🟡 Revised 2026-11-20 (v1.8: requirements graph programme baseline, owner rulings applied); previously revised 2026-10-28 (v1.7: aftercare entry routes and treatment-linked quote link clarified); previously revised 2026-10-26 (standalone aftercare reassignment on provider suspension/deactivation) — Pending Consolidated Verification  
 **Source**: FR-011 from system-prd.md; FR-015 v1.9 provider-status cancellation cascade  
 **Change Request**: [CR-FR011-20261026-01 — Standalone aftercare reassignment](change-request-2026-10-26-standalone-aftercare-reassignment.md) (previous: [CR-FR011-20261016-01 — MTG-002 quote model alignment](change-request-2026-10-16-mtg002-quote-model-alignment.md), [CR-FR011-20261014-01 — Provider status cancellation cascade](change-request-2026-10-14-provider-status-cancellation-cascade.md))
 
@@ -20,7 +20,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - **Patient Platform (P-05)**: Aftercare & Progress Monitoring
 - **Provider Platform (PR-04)**: Aftercare Participation (P1 scope for FR-011)
 - **Admin Platform (A-03)**: Aftercare Team Management
-- **Shared Services (S-XX)**: Notifications & Alerts, Media Storage, Payment (Standalone), Messaging/Communication (if enabled)
+- **Shared Services (S-03: Notification Service, S-05: Media Storage Service, S-02: Payment Processing Service)**: Notifications & Alerts, Media Storage, Payment (Standalone), Messaging/Communication (if enabled)
 
 ### Multi-Tenant Breakdown
 
@@ -41,8 +41,9 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - Global oversight; case reassignment; plan overrides; escalations
 - Template management (milestones, questionnaires, resources)
 - Standalone aftercare request intake and assignment
+- Aftercare specialist assignment (who delivers a case: an aftercare provider or a Hairline aftercare team member). FR-011 owns it; other modules only cite it
 
-**Shared Services (S-XX)**:
+**Shared Services (S-03, S-05, S-02)**:
 
 - Notifications & alerts; media storage for scans/documents
 - Payment for standalone activation; secure messaging (if enabled)
@@ -58,7 +59,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 
 **Out of Scope**:
 
-- Direct patient ↔ provider chat (handled by FR-012 backlog)
+- Direct patient ↔ provider chat (handled by FR-012)
 - Payment flows beyond standalone activation (handled in Payment FR)
 
 ### Entry Points
@@ -123,9 +124,11 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 **Actors**: Patient, Admin, Assigned Provider, Aftercare Team
 
-**Trigger**: Patient requests standalone aftercare service and completes payment
+**Trigger**: Patient requests standalone aftercare service
 
-**Outcome**: Aftercare plan is assigned, configured, and activated for the patient
+**Outcome**: Aftercare plan is assigned, configured, paid for, and activated for the patient
+
+**Order**: Request, then admin assigns a provider, then the provider configures the plan, and payment activates the aftercare (assign first, pay last).
 
 **Main Flow**:
 
@@ -135,30 +138,32 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
    - Patient fills out treatment details form (treatment date, type, clinic)
    - Patient browses available aftercare templates marked "Available for Purchase"
    - Patient selects desired template and views pricing breakdown
-   - Patient chooses payment method (fixed or subscription, if both available)
-   - Patient proceeds to payment screen
+   - Patient chooses pricing option (fixed price or monthly subscription, if both available)
+   - Patient submits the request; no payment is taken at this point
+   - Request appears as "Pending Assignment"
 
-2. **Payment & Checkout**
-   - Patient reviews order summary with template details, fees, and total (Screen 7)
-   - Patient selects payment method (credit card, PayPal, etc.)
-   - Patient enters payment and billing information
-   - Patient accepts terms and conditions
-   - Patient submits payment
-   - System processes payment via FR-007 Payment Processing module
-   - On success: Payment confirmation displayed, email sent, request moves to "Pending Assignment"
-   - On failure: Error message displayed, retry option provided
-
-3. **Admin Review & Assignment**
+2. **Admin Review & Assignment**
    - Request appears in admin dashboard as "Pending Assignment" (Screen 15)
    - Admin reviews patient information and treatment details
    - Admin assigns suitable provider to oversee case
    - System notifies assigned provider
 
-4. **Provider Activation**
+3. **Provider Plan Configuration**
    - Assigned provider reviews patient case
-   - Provider selects appropriate aftercare template (same as purchased template or alternative if needed)
+   - Provider selects appropriate aftercare template (same as requested template or alternative if needed)
    - Provider customizes plan based on patient's specific situation
-   - Provider activates aftercare plan
+   - Provider completes the plan; the plan is not active until payment succeeds
+   - System notifies the patient that payment is now due
+
+4. **Payment & Activation**
+   - Patient reviews order summary with template details, pricing option, and total (Screen 7)
+   - Patient selects payment method (credit card, PayPal, etc.)
+   - Patient enters payment and billing information
+   - Patient accepts terms and conditions
+   - Patient submits payment
+   - System processes payment via FR-007 Payment Processing module
+   - On success: Payment confirmation displayed, email sent, and the aftercare plan is activated
+   - On failure: Error message displayed, retry option provided
 
 5. **Patient Onboarding**
    - Patient receives activation notification
@@ -175,7 +180,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 - **B2**: Admin rejects request
   - Admin marks request as "Not suitable for aftercare"
   - Patient receives rejection notification with reason
-  - Refund processed automatically
+  - Any payment already taken is refunded in full automatically
 
 - **B3**: No suitable provider available
   - Admin marks as "Awaiting provider availability"
@@ -200,7 +205,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
    - Patient selects service type (post-treatment add-on)
    - System auto-populates treatment information from patient's treatment history
    - Patient browses available aftercare templates (filtered by treatment type compatibility)
-   - Patient selects desired template and payment method
+   - Patient selects desired template and pricing option (fixed price or monthly subscription)
    - Patient proceeds to payment
 
 2. **Payment & Checkout**
@@ -267,10 +272,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
    - Aftercare team reviews responses
 
 4. **Progress Tracking**
-   - System automatically calculates overall recovery progress percentage based on:
-     - Milestone completion (timeframe-based)
-     - Task completion (scan uploads, questionnaires)
-     - Compliance rates (medication adherence, activity restrictions)
+   - System automatically calculates overall recovery progress percentage as completed tasks over total tasks
    - Patient views progress dashboard with real-time updates
    - System shows next upcoming tasks with countdown timers
 
@@ -278,7 +280,8 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 - **C1**: Patient misses scheduled task
   - System sends reminder notification
-  - After 24 hours, system flags as "Overdue"
+  - After 24 hours, system sets the Overdue flag on the task (Overdue is a flag, not a status)
+  - If still overdue after 48 hours, the task escalates
   - Aftercare team contacts patient
 
 - **C2**: Concerning symptoms reported
@@ -359,7 +362,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
   - The admin opens Screen 19 from Screen 14 or from the FR-006 admin booking detail and reassigns only the aftercare provider or team
   - The FR-006 booking stays `Aftercare` and the FR-010 treatment record stays unchanged; there is no new quote, acceptance, or payment
   - The aftercare plan, milestones, scans, questionnaire responses, medications, and communication history move with the case unchanged; the previous provider keeps read-only access to the history it recorded and loses all aftercare actions
-  - The reassignment needs a mandatory reason and confirmation, is recorded in the audit trail, resolves the `supportRequired` marker when one is set, and sends the mandatory `aftercare.provider_reassigned` notice to the patient and the new aftercare provider (or the assigned Hairline aftercare team member); no admin alert is sent because the admin is the actor, and the previous provider is not a recipient
+  - The reassignment needs a mandatory reason and confirmation, is recorded in the audit trail, resolves the `supportRequired` marker when one is set, and sends the `aftercare.provider_reassigned` notice (recipients, content, and the mandatory status of the notice are defined by the FR-030 notification Rule, not here)
   - Boundary: money effects, if any, follow the FR-006 payment placeholder; this flow never reassigns the treating provider of an earlier treatment stage
 
 ## Screen Specifications
@@ -448,7 +451,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 | Milestone Name | text | Yes | Current milestone and phase | Display only |
 | Questionnaire Set | text | Yes | Questionnaire set assigned to this milestone | Must exist in FR-025 catalog |
 | Due Date | datetime | Yes | Questionnaire due date | ISO 8601 format |
-| Completion Status | status | Yes | Completed/Pending/Overdue | Valid status enum |
+| Completion Status | status | Yes | Completed/Pending, plus an Overdue flag when past due | Valid status enum |
 | Questions | dynamic form | Yes | Full question list rendered from the assigned Questionnaire Set | Validation per question type (required fields, min/max ranges, option sets) |
 | Save Draft | action | No | Save progress without submitting | Always available |
 | Submit | action | Yes | Submit completed questionnaire | Enabled when all required fields complete |
@@ -459,7 +462,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 - All required fields must be completed
 - Concerning responses trigger urgent flag per milestone rules
 - Drafts saved automatically every 30 seconds
-- One submission per questionnaire allowed
+- Patient may retake and resubmit the questionnaire while its task is open; the latest answer counts and earlier answers are kept in the history
 
 **Notes**:
 
@@ -477,7 +480,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
-| Medication Name | text | Yes | Name of medication | Must exist in medication catalog |
+| Medication Name | text | Yes | Name of medication | Must be a medication template from the admin-managed list owned by FR-024 (see FR-024) |
 | Dosage | text | Yes | Dosage amount and unit | Valid dosage format |
 | Frequency | text | Yes | Frequency (e.g., "2x daily", "Every 8 hours") | Valid frequency format |
 | Special Instructions | text | No | Additional instructions from provider | Max 500 chars |
@@ -501,7 +504,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 **Notes**:
 
 - Medications defined during aftercare plan setup (Screen 8)
-- Push notifications for upcoming doses (configurable by patient)
+- Push notifications for upcoming doses follow the patient notification preferences owned by FR-030; FR-011 has no aftercare-specific setting for them
 - History view shows complete timeline of all medications and adherence
 - Visual indicators (colors/icons) for easy recognition of adherence status
 - Support for multiple medications with overlapping schedules
@@ -565,23 +568,23 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 | Milestones Included | list | Yes | Milestone summary | Display only |
 | Features Included | list | Yes | Features (scan uploads, questionnaires, etc.) | Display only |
 | Pricing Options | component | Yes | Available pricing for this template | Based on template configuration |
-| Payment Method | radio | Cond. | Fixed Price or Monthly Subscription | Based on template's pricing model |
+| Pricing Option | radio | Cond. | Fixed Price or Monthly Subscription | Based on template's pricing model |
 | Price (Fixed) | currency | Cond. | One-time payment amount | Shown if Fixed or Both |
 | Price (Monthly) | currency | Cond. | Monthly subscription amount | Shown if Subscription or Both |
-| Total Amount | currency | Yes | Total amount for selected payment method | Auto-calculated |
+| Total Amount | currency | Yes | Total amount for selected pricing option | Auto-calculated |
 | Currency | text | Yes | Patient's currency (auto-detected) | Based on location |
 | Selected Service | radio | Yes | User selection of template | Required before checkout |
-| Selected Payment Method | radio | Cond. | If template offers both pricing models | Required if Both available |
+| Selected Pricing Option | radio | Cond. | If template offers both pricing models | Required if Both available |
 | Current Concerns | textarea | No | Patient's current concerns or symptoms | Max 2000 chars |
 | Upload Photos | file[] | No | Optional photos of current condition | Max 5 files; 10MB each; JPG/PNG |
-| Proceed to Payment | action | Yes | Button to proceed to checkout | Enabled when service selected |
+| Proceed to Payment | action | Yes | Post-treatment add-on: button to proceed to checkout. Standalone: submits the request; the patient pays later, after the admin has assigned a provider and the provider has configured the plan (Workflow 2) | Enabled when service selected |
 
 **Business Rules**:
 
 - Only templates marked "Available for Purchase" are shown
 - Templates filtered by treatment type compatibility (FUE templates for FUE patients, etc.)
 - Pricing shown in patient's local currency (based on location detection)
-- If template offers both Fixed and Subscription, patient chooses preferred payment method
+- If template offers both Fixed and Subscription, patient chooses preferred pricing option
 - Service name uses template name for consistency across provider and patient views
 - Post-treatment add-on only available within 90 days of Hairline treatment completion
 - Treatment documentation optional but helps provider customize plan
@@ -592,7 +595,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 - Each template defines its own pricing, features, and duration
 - Visual presentation similar to treatment package selection for consistency
 - Pricing transparency with clear breakdown of what's included
-- Service type auto-detected based on patient's treatment history
+- The patient chooses the service type (post-treatment add-on or standalone); a Hairline-treated patient may also choose standalone. The post-treatment add-on is offered only within 90 days of Hairline treatment completion
 
 #### Screen 7: Aftercare Payment & Checkout
 
@@ -605,9 +608,8 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 | Order Summary | component | Yes | Selected aftercare service details | Display only |
 | Service Name | text | Yes | Selected template name | Display only |
 | Duration | text | Yes | Service duration | Display only |
-| Payment Method Selected | text | Yes | Fixed or Monthly Subscription | Display only |
-| Subtotal | currency | Yes | Base service price (from template) | Display only |
-| Platform Fee | currency | Yes | Platform service fee | Display only; 15-25% |
+| Pricing Option Selected | text | Yes | Fixed or Monthly Subscription | Display only |
+| Subtotal | currency | Yes | Service price (from template); the platform fee is taken out of this price and is not shown as an extra charge | Display only |
 | Tax | currency | Yes | Applicable tax | Display only; location-based |
 | Total Amount | currency | Yes | Final amount to pay | Display only |
 | Monthly Payment Details | component | Cond. | Breakdown of subscription payments | Shown if subscription selected |
@@ -635,9 +637,10 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 - Payment integration with FR-007 (Payment Processing module)
 - Support for multiple payment methods (credit/debit cards, PayPal, local payment methods)
 - Secure payment processing with PCI compliance
-- Payment confirmation triggers aftercare request workflow (Workflow 2 or 2b)
+- Payment confirmation activates the aftercare plan for a standalone request (Workflow 2, after the provider has configured the plan) and triggers automatic assignment for a post-treatment add-on (Workflow 2b)
+- The platform fee is one amount taken from the aftercare price; it is never added on top of the patient's total
 - Failed payments allow retry with different payment method
-- Refunds processed automatically if request is rejected by admin
+- Any payment already taken is refunded automatically if the request is rejected by admin
 - Subscription payments charged automatically on monthly basis
 - First subscription payment charged immediately; subsequent payments on monthly anniversary
 
@@ -719,7 +722,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 | Response Date | datetime | Yes | Date questionnaire was submitted | ISO 8601 format |
 | Questionnaire Set | text | Yes | Questionnaire set completed | Display only |
 | Medication Adherence History | list | Yes | Historical adherence data | Chronological order |
-| Adherence Period | date range | Yes | Date range for adherence period | Valid date range |
+| Adherence Period | date range | Yes | Start and end date of the adherence period, calculated from the medication doses | Calculated; valid date range |
 | Adherence Percentage | percent | Yes | Percentage for that period | 0-100% |
 | Communication Log | list | Yes | All communications with aftercare team | Chronological order |
 | Message Date | datetime | Yes | Date/time of message | ISO 8601 format |
@@ -779,7 +782,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 | Custom Instructions | text | No | Instructions specific to this milestone | Max 1000 chars |
 | Override Restrictions | action | No | Button to override activity restrictions | Always available |
 | **Step 3: Medication Setup** | | | | |
-| Medication Name | select | Yes | Medication from dropdown database | Must exist in medication catalog |
+| Medication Name | select | Yes | Medication picked only from the admin-managed medication list (the FR-024 medication templates); no free-text medication names | Must be a medication template owned by FR-024 (see FR-024) |
 | Dosage | text | Yes | Dosage amount and unit | Valid dosage format |
 | Frequency | text | Yes | Frequency (e.g., "2x daily") | Valid frequency format |
 | Start Date | date | Yes | Medication start date | ISO 8601 format; must be today or future |
@@ -879,9 +882,9 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 | Current Milestone Indicator | indicator | Yes | Blue indicator for current | Display only |
 | Upcoming Milestones | indicator | Yes | Gray indicators for upcoming | Display only |
 | Overdue Tasks Indicator | indicator | Yes | Red indicators for overdue | Display only |
-| 3D Scan Status | status | Yes | Completed/Pending/Overdue with dates | Valid status enum |
+| 3D Scan Status | status | Yes | Completed/Pending with dates, plus an Overdue flag when past due | Valid status enum |
 | Scan Due Date | datetime | Yes | Due date for scan | ISO 8601 format |
-| Questionnaire Status | status | Yes | Completed/Pending/Overdue with dates | Valid status enum |
+| Questionnaire Status | status | Yes | Completed/Pending with dates, plus an Overdue flag when past due | Valid status enum |
 | Questionnaire Due Date | datetime | Yes | Due date for questionnaire | ISO 8601 format |
 | Medication Adherence | percent | Yes | Adherence percentage | 0-100% |
 | Missed Doses | number | Yes | Count of missed doses | Non-negative integer |
@@ -934,7 +937,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 | Current Milestone | column | Yes | Current phase | Must exist in plan |
 | Progress | column | Yes | Visual progress bar | Derived; non-negative |
 | Med Alerts | column | Yes | Critical/Standard/None | Enum with color coding |
-| Status | column | Yes | Active/Overdue/Completed | Enum |
+| Status | column | Yes | Active/Completed/Cancelled, with a separate Overdue flag shown on cases that have overdue tasks | Enum plus flag |
 | Action | column | Yes | View/Edit/Reassign/Escalate | RBAC enforced |
 | Search/Filters | control | No | Provider/Milestone/Status/Date range/Risk Level/Specialist/Completion Rate | Valid enums/ranges |
 | Pagination | control | No | Page and size controls | Standard UX pattern |
@@ -1043,14 +1046,15 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 | Treatment Type | text | Yes | Type of treatment | Valid treatment type enum |
 | Treatment Clinic | text | Yes | Name of clinic where treatment performed | Display only |
 | Requested Duration | text | Yes | Duration requested (e.g., "12 months") | Valid duration enum |
-| Payment Method | text | Yes | Payment method selected | Valid payment method enum |
+| Pricing Option | text | Yes | Pricing option selected (Fixed price or Monthly subscription) | Valid pricing option enum |
+| Payment Method | text | Yes | Payment method selected (Card, PayPal, etc.) | Valid payment method enum |
 | Payment Status | status | Yes | Payment status (Paid/Pending/Failed) | Valid status enum |
-| Request Status | status | Yes | Status (Pending/Assigned/Active/Rejected) | Valid status enum |
+| Request Status | status | Yes | Status (Pending/Awaiting provider availability/Assigned/Active/Rejected) | Valid status enum |
 | Full Patient Information | component | Yes | Complete patient details | Display only |
 | Treatment Documentation | component | Yes | Treatment documentation files | Display/download |
 | Current Concerns | textarea | No | Patient's current concerns or issues | Max 2000 chars |
 | Uploaded Photos | list | Yes | Photos uploaded by patient | Display only |
-| Surgeon Notes | text | No | Notes from treating surgeon | Max 2000 chars |
+| Surgeon Notes | text | No | Conclusion notes read from the FR-010 Hairline treatment record; empty for standalone requests | Display only |
 | Available Providers | list | Yes | List of available providers | Display only |
 | Provider Name | text | Yes | Provider name | Display only |
 | Provider Specialization | text | Yes | Provider specialization areas | Display only |
@@ -1061,9 +1065,9 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 **Business Rules**:
 
-- Requests expire after 7 days if not assigned
+- Requests expire after 7 days if not assigned; an expired request becomes Rejected with a system reason, and the refund below applies
 - Provider assignment based on specialization and availability
-- Rejection requires reason and triggers refund
+- Rejection requires reason and triggers a full refund of any payment already taken
 - All actions logged for audit trail
 
 **Notes**:
@@ -1119,7 +1123,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 | Fixed Price | currency | Cond. | One-time payment amount | Required if "fixed" or "both" selected |
 | Monthly Subscription Price | currency | Cond. | Monthly payment amount | Required if "subscription" or "both" selected |
 | Add Currency | action | Yes | Button to add another currency | Always available |
-| Default Payment Method | radio | Cond. | Default shown to patient (if Both enabled) | Enum: "fixed", "subscription"; required if "both" selected |
+| Default Pricing Option | radio | Cond. | Default shown to patient (if Both enabled) | Enum: "fixed", "subscription"; required if "both" selected |
 | Enable Discounts | checkbox | No | Allow discount codes for this template | Boolean; default false |
 
 **Business Rules**:
@@ -1197,7 +1201,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 - Performance scores calculated monthly
 - Poor performance triggers review process
 - Provider suspension requires admin approval
-- All performance data retained for 2 years
+- Retention of performance data follows the system PRD, Platform-Wide Rules: One 10-year retention period
 - This screen is deferred to a later phase as it represents system-wide analytics beyond case operations covered by Screens 11–12.
 
 **Notes**:
@@ -1295,7 +1299,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 - The reassignment changes only the aftercare provider or team. For a treatment-linked case, the FR-006 booking stays `Aftercare` and the FR-010 treatment record stays unchanged; no quote, acceptance, or payment is created.
 - The aftercare plan, milestones, scans, questionnaire responses, medications, and communication history stay with the case. The new assignee gets the case's aftercare actions from the moment of confirmation; the previous provider loses them.
 - The change is saved only after confirmation, is recorded in the audit trail with admin identity, timestamp, reason, previous assignee, and new assignee, and, when selected, records the audited resolution of the `supportRequired` marker.
-- On save, System sends the mandatory `aftercare.provider_reassigned` notice to the patient and the new aftercare provider (or the assigned Hairline aftercare team member); no admin alert is sent because the admin is the actor, and the previous provider is not a recipient. FR-011 is the producer of this FR-030 event.
+- On save, System sends the `aftercare.provider_reassigned` notice. FR-011 is the producer of this FR-030 event; recipients, content, and the mandatory status of the notice are defined by the FR-030 notification Rule.
 - Money effects, if any, follow the FR-006 payment placeholder.
 
 ## Business Rules
@@ -1316,7 +1320,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
    - Patients can only access their own aftercare data
    - Providers can only access assigned patients
    - Admin has full access to all aftercare data
-   - Patient anonymization lifted after payment confirmation
+   - Hiding and unlocking patient identity around payment is one platform rule in the system PRD; it is not restated here
 
 4. **Provider Status Cancellation Rules**
    - An effective provider suspension/deactivation does not cancel that provider's non-terminal standalone aftercare cases; it marks them for Screen 19 reassignment with cause `ProviderSuspended` or `ProviderDeactivated` and an independent `supportRequired` marker (Workflow 4 D4; FR-015 A5/Screen 4)
@@ -1359,20 +1363,23 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
    - System-wide announcements sent to all relevant parties
    - Emergency communications bypass normal channels
 
+4. **Default Patient Progress Reminder**
+   - By default the patient receives a progress reminder once a month for 12 months after treatment
+   - The patient may change the reminder or switch it off
+   - The default is an admin-editable setting
+
 ### Data and Privacy Rules
 
 1. **Data Retention**
-   - Aftercare data retained for 7 years minimum
-   - Scan media retained for 2 years after aftercare completion
-   - Communication logs retained for 3 years
+   - Retention of aftercare data, scan media and communication logs follows the system PRD, Platform-Wide Rules: One 10-year retention period
 
 2. **Data Access**
-   - Patient data anonymized until payment confirmation
+   - Patient identity visibility before and after payment follows the system PRD, Platform-Wide Rules: Patient identity hidden until booking confirmation (REQ-011-022 is retired in favour of it)
    - Provider access limited to assigned patients
    - Admin access logged for audit trail
 
 3. **Data Security**
-   - All aftercare data encrypted at rest and in transit
+   - Encryption of aftercare data in transit and at rest follows the system PRD, Platform-Wide Rules: Encryption in transit and at rest
    - Scan media stored securely with access controls
    - Access attempts logged and monitored
 
@@ -1389,7 +1396,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
    - **Patient Data**: Edit patient information, treatment details, contact info
    - **Provider Data**: Modify provider assignments, customizations, settings
    - **Progress Data**: Override progress calculations, milestone completions
-   - **Communication Data**: Edit messages, escalations, notifications
+   - **Communication Data**: Edit messages, escalations, notifications; the original text of an edited message is kept in the edit history
    - **Template Data**: Modify milestone templates, questionnaires, resources
 
 3. **Edit Tracking**
@@ -1401,8 +1408,8 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 ### Payment and Billing Rules
 
 1. **Standalone Aftercare Payment**
-   - Payment required before service activation
-   - Refunds processed automatically for rejected requests
+   - Payment activates the service: for a standalone request it is taken last, after the admin has assigned a provider and the provider has configured the plan (Workflow 2)
+   - Any payment already taken is refunded automatically for rejected requests
    - Payment disputes handled by admin team
 
 2. **Provider Compensation**
@@ -1411,21 +1418,21 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
    - Payment processed monthly
 
 3. **Platform Commission**
-   - Platform commission deducted from standalone aftercare payments
-   - Commission rate: 15-25% (configurable)
+   - Platform commission deducted from standalone and post-treatment add-on aftercare payments
+   - Commission rate: 15-25% (configurable); it is one amount under one setting, taken from the aftercare price and never added to the patient's total
    - Commission calculated at time of payment
 
 4. **Aftercare Service Payment Rules**
    - **Template-based pricing**: Each aftercare template defines its own pricing (fixed, subscription, or both) in Screen 16
    - **Multi-currency support**: Pricing configured per currency; patient sees price in local currency based on location
-   - **Payment method selection**: If template offers both fixed and subscription, patient chooses at purchase time
+   - **Pricing option selection**: If template offers both fixed and subscription, patient chooses the pricing option at purchase time (the pricing option is separate from the payment method, such as card or PayPal)
    - **Subscription payments**: Monthly installments charged automatically for template duration; first payment immediate, subsequent on monthly anniversary
    - **Post-treatment add-on availability**: Available to Hairline-treated patients within 90 days of treatment completion
    - **Standalone service availability**: Available to all patients regardless of treatment source
    - **Template filtering**: Only templates marked "Available for Purchase" are shown; filtered by treatment type compatibility
    - **Pricing immutability**: Patients locked into price at time of purchase (future template price changes don't affect existing patients)
-   - **Payment timing**: Payment required before service activation for both standalone and post-treatment add-on
-   - **Refund policy**: Full refund if request rejected by admin; prorated refund for subscription cancellations based on unused months
+   - **Payment timing**: Payment activates the service for both standalone and post-treatment add-on; for a standalone request payment comes last, after provider assignment and plan configuration (Workflow 2), and for a post-treatment add-on it comes before automatic assignment (Workflow 2b)
+   - **Refund policy**: Full refund of any payment already taken if request rejected by admin or expired unassigned after 7 days; prorated refund for subscription cancellations based on unused months
 
 ## Success Criteria
 
@@ -1466,19 +1473,19 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 ### Internal Dependencies (Other FRs/Modules)
 
-- **FR-010 / Module PR-XX**: Treatment Execution & Documentation
+- **FR-010 / Module PR-03: Treatment Execution & Documentation** (cites REQ-010-006, REQ-010-009, REQ-010-023, REQ-010-086)
   - **Why needed**: Triggers automatic aftercare activation when treatment is marked as completed
   - **Integration point**: Treatment completion event triggers aftercare setup workflow; uses treatment details to pre-populate aftercare plan
 
-- **FR-002 / Module P-XX**: Medical History & 3D Scanning
+- **FR-002 / Modules P-07: 3D Scan Capture & Viewing, S-01: 3D Scan Processing Service, S-05: Media Storage Service**: Medical History & 3D Scanning (cites REQ-002-034, REQ-002-024, REQ-002-023, REQ-002-036)
   - **Why needed**: Provides head scan media validation/storage infrastructure for patient milestone scans (V1 photo set; V2 true 3D)
   - **Integration point**: Reuses scan quality validation and scan storage infrastructure
 
-- **FR-007 / Module S-XX**: Payment Processing
-  - **Why needed**: Processes standalone aftercare service payments before activation
-  - **Integration point**: Payment completion triggers aftercare request assignment; payment status determines service activation eligibility
+- **FR-007 / Modules P-03: Booking & Payment, A-01: Patient Management & Oversight, A-05: Billing & Financial Reconciliation, S-02: Payment Processing Service**: Payment Processing (cites REQ-007-088, the FR-007 Rule that processes the standalone aftercare payment)
+  - **Why needed**: Processes standalone and post-treatment add-on aftercare service payments; payment activates the service
+  - **Integration point**: Payment completion activates the aftercare plan for a standalone request (payment comes last, after provider assignment and plan configuration, Workflow 2) and triggers automatic assignment for a post-treatment add-on (Workflow 2b); payment status determines service activation eligibility
 
-- **FR-020 / Module S-XX**: Notifications & Alerts
+- **FR-020 / Module S-03: Notification Service**: Notifications & Alerts (cites the four aftercare events REQ-020-117, REQ-020-118, REQ-020-119, REQ-020-120, each reaching its FR-030 Rule: REQ-030-072, REQ-030-073, REQ-030-074, REQ-030-075)
   - **Why needed**: Sends task reminders, progress updates, and urgent alerts to patients, providers, and aftercare team
   - **Integration point**: Aftercare events (task due, milestone completion, escalations) trigger notification delivery; notification preferences managed per user
 
@@ -1584,12 +1591,12 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 - **Database Design**: Efficient querying for large numbers of aftercare cases
 - **File Storage**: Scalable storage solution for scan media (V1 photo sets; V2 true 3D) and documents
 - **Notification Delivery**: Reliable delivery of high-volume notifications
-- **Provider Assignment**: Automated assignment algorithms for standalone cases
+- **Provider Assignment**: Future phase: Automated assignment algorithms for standalone cases (manual admin assignment is the requirement)
 
 ### Security Considerations
 
-- **Data Encryption**: All aftercare data encrypted at rest and in transit
-- **Access Control**: Strict role-based access to aftercare data
+- **Data Encryption**: See the system PRD encryption record (aftercare data is encrypted in transit and at rest)
+- **Access Control**: Role-based, audited access follows the single role-based access rule in the system PRD
 - **Audit Logging**: Comprehensive logging of all aftercare activities
 - **Compliance**: Healthcare data protection regulations compliance
 
@@ -1602,25 +1609,26 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 - **REQ-011-001**: System MUST support treatment-linked and standalone aftercare activation paths
 - **REQ-011-002**: Patients MUST be able to complete milestone tasks (scan uploads, questionnaires) with reminders and quality validation
 - **REQ-011-003**: Providers MUST be able to configure and activate aftercare plans with template customization
-- **REQ-011-004**: Admin MUST be able to oversee cases, reassign providers, and override plans with full audit
+- **REQ-011-004**: Admin MUST be able to oversee cases, reassign providers, and override plans with full audit. Admin assignment of the aftercare specialist (provider or Hairline aftercare team member) is owned by FR-011
 - **REQ-011-014**: When a provider's suspension or deactivation becomes effective, System MUST NOT cancel that provider's non-terminal standalone aftercare cases; it MUST record cause `ProviderSuspended` or `ProviderDeactivated` and an independent `supportRequired` marker and route them to Screen 19 reassignment (treatment-linked cases follow REQ-011-015), retain the completion milestone and aftercare records, and route recovery continuity to admins for resolution through the existing reassignment/recovery workflow, without automatic reassignment or restoration on reactivation (Workflow 4 D4; FR-015 A5/Screen 4)
-- **REQ-011-015**: System MUST let an admin reassign the aftercare provider or team on Screen 19 with a mandatory reason, confirmation, audit entry, and the mandatory `aftercare.provider_reassigned` notice to the patient and the new aftercare provider or assigned team member (no admin alert); for a treatment-linked case the booking MUST stay `Aftercare` and the treatment record MUST stay unchanged, with no new quote, acceptance, or payment
+- **REQ-011-015**: System MUST let an admin reassign the aftercare provider or team on Screen 19 with a mandatory reason, confirmation, audit entry, and the `aftercare.provider_reassigned` notice (recipients, content, and the mandatory status of the notice are defined by the FR-030 notification Rules REQ-030-026 and REQ-030-077); for a treatment-linked case the booking MUST stay `Aftercare` and the treatment record MUST stay unchanged, with no new quote, acceptance, or payment
+- **REQ-011-088**: By default System MUST send each patient a progress reminder once a month for 12 months after treatment; the patient MAY change or switch off the reminder, and the default is admin-editable
 
 ### Data Requirements
 
 - **REQ-011-005**: System MUST track milestones, tasks, progress, and adherence as structured entities
 - **REQ-011-006**: System MUST retain all aftercare artifacts (scans, questionnaires, communications) per retention policy
-- **REQ-011-007**: Progress MUST be derived deterministically from plan and task completion
+- **REQ-011-007**: Progress MUST be derived deterministically from plan and task completion (completed tasks over total tasks)
 
 ### Security & Privacy Requirements
 
-- **REQ-011-008**: All aftercare data MUST be encrypted in transit and at rest
-- **REQ-011-009**: Access MUST be role-based (patient, provider, admin) and fully audited
-- **REQ-011-010**: PII visibility MUST follow payment-confirmation policy and admin exemptions
+- **REQ-011-008**: Aftercare data encryption in transit and at rest MUST follow the system PRD, Platform-Wide Rules: Encryption in transit and at rest
+- **REQ-011-009**: *Retired.* Role-based (patient, provider, admin) and audited access is one platform rule in the system PRD, Platform-Wide Rules: Role-based, audited access
+- **REQ-011-010**: PII visibility MUST follow payment-confirmation policy and admin exemptions. *(REQ-011-022, "identity hidden until payment", is retired in favour of the system PRD, Platform-Wide Rules: Patient identity hidden until booking confirmation.)*
 
 ### Integration Requirements
 
-- **REQ-011-011**: System MUST integrate with Notification Service for reminders/alerts
+- **REQ-011-011**: *Retired.* Every feature uses the notification service through the one FR-020 notification-service Rule
 - **REQ-011-012**: System MUST store media artifacts in secure storage with controlled access
 - **REQ-011-013**: System MUST reference questionnaires managed in FR-025 for aftercare context
 
@@ -1648,18 +1656,19 @@ Acceptance Scenarios:
 
 1. Given task due, When patient uploads scan meeting quality, Then task is completed and progress updates
 2. Given concerning questionnaire responses, When submitted, Then case is flagged urgent and team notified
-3. Given missed tasks, When overdue by 24 hours, Then status is Overdue and reminders/escalations trigger
+3. Given missed tasks, When overdue by 24 hours, Then the task carries the Overdue flag and reminders trigger; When still overdue at 48 hours, Then the task escalates
 
 ### User Story 3 - Standalone Aftercare Onboarding (Priority: P2)
 
 Why: Opens service to external clinic patients.
 
-Independent Test: Patient requests standalone service, payment completes, admin assigns provider, provider activates plan.
+Independent Test: Patient requests standalone service, admin assigns provider, provider configures plan, payment completes and activates the plan.
 
 Acceptance Scenarios:
 
-1. Given paid request, When admin assigns provider, Then provider configures and activates plan
-2. Given activation, When patient opens app, Then aftercare dashboard is available with schedule
+1. Given a submitted request, When admin assigns provider, Then provider configures the plan and the patient is asked to pay
+2. Given a configured plan, When payment succeeds, Then the plan is activated
+3. Given activation, When patient opens app, Then aftercare dashboard is available with schedule
 
 ### Edge Cases
 
@@ -1674,7 +1683,7 @@ Acceptance Scenarios:
   - Key attributes: plan status, schedule, customization
   - Relationships: belongsTo Patient; belongsTo Provider; references Template
 
-- Milestone: planId, name, durationDays, scanSchedule, questionnaireSchedule, resources[]
+- Milestone: planId, name, sequence (order in the plan), durationDays, scanSchedule, questionnaireSchedule, resources[]
   - Key attributes: schedule and required tasks
   - Relationships: belongsTo AftercarePlan
 
@@ -1714,6 +1723,7 @@ Acceptance Scenarios:
 | 2026-10-26 | 1.6 | Product Owner decision on FR-015 dev-team questions: Workflow 4 D4, General Module Rule 4, REQ-011-014, and the mid-aftercare edge case no longer cancel standalone aftercare on provider suspension/deactivation; standalone cases get the provider-status cause and `supportRequired` and move to Screen 19 reassignment, matching FR-015 v1.20/v1.21. Change Request: CR-FR011-20261026-01 | Claude (AI Assistant) |
 | 2026-10-18 | 1.5 | Final audit corrections (Q36, Q43): new Workflow 4 Alternative Flow D5 and Admin Screen 19 (Reassign Aftercare Provider) let an admin reassign only the aftercare provider or team for a provider fault during `Aftercare`, with fields, validation, mandatory reason, confirmation, audit entry and notice; the FR-006 booking stays `Aftercare` and the treatment record stays unchanged, with no new quote, acceptance or payment. D4, General Module Rule 4, the mid-aftercare suspension edge case and REQ-011-014 now cancel only standalone cases on provider suspension or deactivation; treatment-linked cases stay active for reassignment. Screen 14 Reassign Provider opens Screen 19. REQ-011-015 added. Round-two corrections (Q45, Q47): Screen 19, Alternative Flow D5 and REQ-011-015 now send the new mandatory FR-030 event `aftercare.provider_reassigned` (FR-011 producer) to the patient and the new aftercare provider, with no admin alert and no notice to the previous provider, replacing the note that the event was not registered; D5 and Screen 19 also accept a booking moved from `In Progress` to `Aftercare` by the FR-006 In-Progress provider-fault decision. See CR-FR011-20261016-01. | Product Owner / Documentation |
 | 2026-10-28 | 1.7 | Product Owner decision 2026-10-28 (FR-015 backend confirmations); clarification, no Change Request. Entry Points now list exactly two entry routes, treatment-linked (from an accepted and treated Hairline quote, including the Workflow 2b add-on) and standalone (outside-clinic patients, no inquiry or quote); admin assignment is described as a step inside those routes, not a third entry point. Workflow 2b states that the add-on creates treatment-linked aftercare linked to the accepted quote of the completed treatment. Matches system data schema v1.13.1 §13. Review follow-up (same day): header Status line updated to this revision | Claude (AI Assistant) |
+| 2026-11-20 | 1.8 | Requirements graph programme baseline: owner rulings applied. Main changes: standalone aftercare (Workflow 2) reordered to request, admin assigns provider, provider configures plan, payment activates (assign first, pay last), with refund wording limited to payments already taken and unassigned requests ending as Rejected after 7 days; one platform fee taken from the price and not added to the total, commission also applies to add-on payments; "Pricing option" (fixed price or monthly subscription) and "Payment method" (card, PayPal) separated everywhere, Screen 15 shows both; Overdue is a flag on tasks and plans, not a status, with escalation at 48 hours; progress is completed tasks over total tasks; questionnaire retake allowed while the task is open; patient chooses the service type; Adherence Period calculated from doses; milestone sequence kept; medication picked only from the admin list owned by FR-024; Surgeon Notes read from the FR-010 treatment record; default patient progress reminder added (REQ-011-088); REQ-011-009, REQ-011-011 and REQ-011-022 retired in favour of single system PRD and FR-020 rules, REQ-011-008 and REQ-011-015 now point to the owning records; aftercare specialist assignment owned by FR-011; real module codes and cited Rules filled in Dependencies; automated provider assignment marked Future phase; cross-document reconciliation (retention, system rule citations, medication list pointer to FR-024, standalone payment Rule cited as REQ-007-088) | Claude (AI Assistant) |
 
 ## Appendix: Approvals
 
@@ -1725,4 +1735,4 @@ Acceptance Scenarios:
 
 ---
 
-**Last Updated**: 2026-10-28
+**Last Updated**: 2026-11-20

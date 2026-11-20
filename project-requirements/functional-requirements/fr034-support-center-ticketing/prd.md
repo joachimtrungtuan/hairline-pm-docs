@@ -37,7 +37,6 @@ The Support Center & Ticketing System provides a unified formal support system f
 - **Unified Workflow**: Single consistent status workflow (Open → In Progress → Resolved → Closed) for all ticket types
 - **Feedback Management**: Optional Feedback Resolution tracking (Implemented, Planned, Declined, Under Review) for feature requests and suggestions
 - **Compliance & Audit Trail**: Immutable case history supports dispute resolution and regulatory compliance
-- **Data-Driven Improvements**: Case analytics identify recurring issues across both patient and provider experiences, informing product improvements
 
 ---
 
@@ -75,7 +74,7 @@ The Support Center & Ticketing System provides a unified formal support system f
 - Admin staff view and manage patient support requests submitted through patient app (FR-035)
 - Admin staff view and manage provider support requests submitted through Help Centre Contact Support form (FR-032 Screen 5.5)
 - Admin staff view and manage patient and provider feedback submissions (FR-035 and FR-032 Screen 5.6)
-- Admin staff categorize cases using centralized managed category list (Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry, Provider Support, Feature Request, Bug Report, Patient Support)
+- Admin staff categorize cases using centralized managed category list (Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry, Provider Support, Feature Request, Bug Report, Patient Support, Feedback)
 - Admin staff set case priority using centralized managed priority list (Low, Medium, High, Urgent)
 - Admin staff assign cases to specific support team members for informational purposes only (all admins can view and work on all cases regardless of assignment)
 - Admin staff track case lifecycle with **unified status workflow**: Open → In Progress → Resolved → Closed (consistent across all ticket types and sources)
@@ -87,7 +86,6 @@ The Support Center & Ticketing System provides a unified formal support system f
 - Admin staff can deep-link from linked cases to patient management module (A-01) or provider management module (A-02) for account interventions
 - Admin staff reassign cases to other team members with reason tracking
 - Admin staff reopen closed cases if patient/provider indicates issue not resolved
-- Admin staff view case analytics in reporting view (open case count, average resolution time, case volume by category, ticket source breakdown, feedback resolution status)
 
 **Admin Platform (A-01: Patient Management & Oversight)**:
 
@@ -98,14 +96,16 @@ The Support Center & Ticketing System provides a unified formal support system f
 **Shared Services (S-03: Notification Service)**:
 
 - Sends email notifications to patients when:
+  - Support case is created (optional confirmation)
   - Support case status changes (Open → In Progress, In Progress → Resolved)
   - Admin replies to patient inquiry
   - Case is closed with resolution summary
 - Sends email notifications to providers when:
   - Support case is created for their inquiry
+  - Support case status changes
   - Admin replies to provider question
   - Case is resolved
-- Notification preferences configurable per case category
+  - Case is closed
 
 ### Communication Structure
 
@@ -149,7 +149,7 @@ The Support Center & Ticketing System provides a unified formal support system f
 - All admin staff can view all cases regardless of assignment (assignment is informational only)
 - Admin receives email notification when new support case is created or assigned to them
 - Admin can create new support case manually from case listing screen via "Create New Case" button
-- Super Admin and authorized admin staff access Support Center Configuration via Settings > Support Center path to manage centralized lists (categories, priorities, resolution categories, root causes, tags)
+- Super Admin accesses Support Center Configuration via Settings > Support Center path to manage centralized lists (categories, priorities, resolution categories, root causes, tags)
 
 **System-Triggered Entry**:
 
@@ -183,7 +183,7 @@ The Support Center & Ticketing System provides a unified formal support system f
 4. **System** displays case creation form
 5. **Admin Staff** enters case details:
    - **Case Title**: Brief description (e.g., "Cannot login to account")
-   - **Category**: Selects from predefined categories (Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry)
+   - **Category**: Selects from the master category list of ten (for example Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry)
    - **Priority**: Sets priority level (Low, Medium, High, Urgent)
    - **Patient Identifier**: Links case to patient by HPID, email, or phone number
    - **Description**: Full details of patient's inquiry or issue
@@ -208,14 +208,14 @@ The Support Center & Ticketing System provides a unified formal support system f
 
 **A1: Case Requires Escalation**:
 
-- **Trigger**: Admin determines case requires senior staff or technical team involvement
+- **Trigger**: Admin determines case requires senior staff or technical team involvement (applies equally to patient-submitted and provider-submitted cases)
 - **Steps**:
-  1. Admin clicks "Escalate Case" button
-  2. System displays escalation form with reason field
-  3. Admin selects escalation recipient (senior admin or technical team)
-  4. System updates case priority to "High" or "Urgent"
-  5. System sends escalation notification to selected recipient
-  6. System logs escalation action in case timeline
+  1. Admin clicks "Reassign Case" (there is no separate escalation button or form)
+  2. System displays the Reassign Case modal (Screen 5)
+  3. Admin selects the new assignee, enters the required reassignment reason, and ticks "Escalate"
+  4. System raises case priority to "High" or "Urgent" as the admin chooses
+  5. System sends the escalation notice to the new assignee
+  6. System logs the reassignment in case timeline, marked as an escalation
 - **Outcome**: Case reassigned to higher-level support staff with increased priority
 
 **A2: Case Requires Patient Account Intervention**:
@@ -238,13 +238,13 @@ The Support Center & Ticketing System provides a unified formal support system f
   3. Provider completes form with support request details and submits
   4. System validates form fields and automatically creates support case with unique case ID (CASE-YYYY-#####)
   5. System links case to provider record (provider ID automatically linked from logged-in provider session)
-  6. System sets case category based on provider's selection (Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry, Provider Support)
+  6. System sets case category based on provider's selection (Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry, Provider Support: the six provider categories, a subset of the ten-category master list)
   7. System sets case priority based on provider's selection (Low, Medium, High, Urgent)
-  8. System sets case status to "Open" and assigns to default provider support team
+  8. System sets case status to "Open" and routes it to the Support Staff pool (team is a routing label only)
   9. System sets Ticket Source to "Provider Portal" and Submitter Type to "Provider"
   10. System displays confirmation to provider: "Support request submitted. Case #[number]. Our team will respond within 24 hours."
   11. System sends confirmation email to provider with case reference number (via S-03)
-  12. System sends notification to assigned admin team member
+  12. System sends notification to the Support Staff pool
   13. Admin reviews case in Support Center, updates status (Open → In Progress → Resolved → Closed), and responds
   14. Provider can view case status and admin responses in their Contact Support subscreen (FR-032 Screen 5.5)
 - **Outcome**: Provider support request automatically creates support case, tracked and managed in FR-034 with unified status workflow
@@ -258,13 +258,13 @@ The Support Center & Ticketing System provides a unified formal support system f
   3. Provider completes form with feedback details and submits
   4. System validates form fields and automatically creates support case with unique case ID (CASE-YYYY-#####)
   5. System links case to provider record (provider ID automatically linked from logged-in provider session)
-  6. System sets case category based on feedback type (Feature Request, Bug Report, Suggestion, Other)
+  6. System sets case category from the feedback type: Feature Request and Bug Report keep their own categories; Suggestion and Other are filed under category Feedback (no new categories)
   7. System sets case priority based on provider's suggested priority (Low, Medium, High, Urgent)
-  8. System sets case status to "Open" and assigns to product/feedback team
+  8. System sets case status to "Open" and routes it to the Support Staff pool (team is a routing label only)
   9. System sets Ticket Source to "Provider Portal" and Submitter Type to "Provider"
   10. System displays confirmation to provider: "Thank you for your feedback! Case #[number]. We'll review your submission."
   11. System sends confirmation email to provider with case reference number (via S-03)
-  12. System sends notification to assigned admin team member
+  12. System sends notification to the Support Staff pool
   13. Admin reviews feedback in Support Center, updates status (Open → In Progress → Resolved → Closed), sets Feedback Resolution (Implemented, Planned, Declined, Under Review), and optionally responds
   14. Provider can view submission status and feedback resolution in their Feedback & Suggestions subscreen (FR-032 Screen 5.6)
 - **Outcome**: Provider feedback automatically creates support case, tracked and managed in FR-034 with unified status workflow and feedback resolution tracking
@@ -278,13 +278,13 @@ The Support Center & Ticketing System provides a unified formal support system f
   3. Patient completes form with support request or feedback details and submits
   4. System validates form fields and automatically creates support case with unique case ID (CASE-YYYY-#####)
   5. System links case to patient record (patient ID automatically linked from logged-in patient session)
-  6. System sets case category based on patient's selection (Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry, Feature Request, Bug Report, Feedback)
+  6. System sets case category based on patient's selection (Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry, Feature Request, Bug Report, Feedback: the eight patient categories, a subset of the ten-category master list)
   7. System sets case priority based on patient's selection (Low, Medium, High, Urgent)
-  8. System sets case status to "Open" and assigns to patient support team
+  8. System sets case status to "Open" and routes it to the Support Staff pool (team is a routing label only)
   9. System sets Ticket Source to "Patient App" and Submitter Type to "Patient"
   10. System displays confirmation to patient: "Support request submitted. Case #[number]. Our team will respond within 24 hours."
   11. System sends confirmation email to patient with case reference number (via S-03)
-  12. System sends notification to assigned admin team member
+  12. System sends notification to the Support Staff pool
   13. Admin reviews case in Support Center, updates status (Open → In Progress → Resolved → Closed), and responds to patient
   14. For feedback submissions, admin sets Feedback Resolution (Implemented, Planned, Declined, Under Review) as appropriate
   15. Patient can view case status, feedback resolution, and admin responses in their Help Center (FR-035)
@@ -318,7 +318,7 @@ The Support Center & Ticketing System provides a unified formal support system f
 - **Steps**:
   1. Admin manager or colleague opens case
   2. Admin clicks "Reassign Case" button
-  3. System displays team member list with availability indicators
+  3. System displays team member list
   4. Admin selects new assignee and enters reassignment reason
   5. System updates case assignment and notifies new assignee
   6. System logs reassignment action in case timeline
@@ -361,8 +361,8 @@ The Support Center & Ticketing System provides a unified formal support system f
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
 | Create New Case Button | button | N/A | Initiates case creation flow (opens Screen 2) | Click action |
-| Search Bar | text input | No | Search cases by case ID, patient name, provider name, email, keywords in title/description | Min 3 chars to trigger search, real-time search |
-| Filter Bar (grouped) | filter group | No | Comprehensive filtering controls including: **Status Filter** (multi-select dropdown: Open, In Progress, Resolved, Closed; Default: Open + In Progress), **Priority Filter** (multi-select dropdown: Low, Medium, High, Urgent; Default: All priorities), **Category Filter** (multi-select dropdown from centralized category list; Default: All categories), **Ticket Source Filter** (multi-select dropdown: Patient App, Provider Portal, Manual Admin Entry; Default: All sources), **Submitter Type Filter** (multi-select dropdown: Patient, Provider, Admin; Default: All types), **Date Range Filter** (date picker for creation date range; Default: Last 30 days), **Assigned To Filter** (dropdown select: All Users, specific user; Default: All Users) | All filters are cumulative (AND logic); Filter selections persist during session |
+| Search Bar | text input | No | Search cases by case ID, patient name, provider name, email, phone, keywords in title/description | Min 3 chars to trigger search, real-time search |
+| Filter Bar (grouped) | filter group | No | Comprehensive filtering controls including: **Status Filter** (multi-select dropdown: Open, In Progress, Resolved, Closed; Default: Open + In Progress), **Priority Filter** (multi-select dropdown: Low, Medium, High, Urgent; Default: All priorities), **Category Filter** (multi-select dropdown from centralized category list; Default: All categories), **Ticket Source Filter** (multi-select dropdown: Patient App, Provider Portal, Manual Admin Entry; Default: All sources), **Submitter Type Filter** (multi-select dropdown: Patient, Provider, Admin; Default: All types), **Date Range Filter** (date picker for creation date range; Default: Last 90 days), **Assigned To Filter** (dropdown select: All Users, specific user; Default: All Users) | All filters are cumulative (AND logic); Filter selections persist during session |
 | Quick Stats Bar | stats component | N/A | Displays summary metrics: Open (X), In Progress (X), Urgent (X), Unassigned (X) | Display only, updates based on current filters |
 | Case List Table | data table | N/A | Displays cases matching filters with 13 columns (see below); 50 cases per page default | Sortable columns, paginated; default sort by Last Updated descending |
 | **Table Column 1**: Selection Checkbox | checkbox | No | Checkbox for bulk action selection | Multi-select enabled; used for bulk operations |
@@ -385,20 +385,20 @@ The Support Center & Ticketing System provides a unified formal support system f
 **Quick Actions (per row)**:
 
 - **View**: Opens case detail view (Screen 3)
-- **Reassign**: Opens reassignment modal (Screen 6) - only for Open/In Progress cases
-- **Resolve**: Opens resolution modal (Screen 5) - only for In Progress cases
+- **Reassign**: Opens reassignment modal (Screen 5) - only for Open/In Progress cases
+- **Resolve**: Opens resolution modal (Screen 4) - only for In Progress cases
 - **Reopen**: Reopens case (changes status from Closed to Open) - only for Closed cases
 - **Close**: Closes case - only for Resolved cases
 
 **Business Rules**:
 
-- Default view shows Open and In Progress cases from last 30 days, sorted by Last Updated descending
+- Default view shows Open and In Progress cases from last 90 days, sorted by Last Updated descending; the provider My Support Cases list (FR-032 Screen 5.7) uses this same default and refers to this rule, while its 20-cases-per-page detail is a separate rule in FR-032
 - All admin staff see all cases regardless of assignment (assignment is informational only)
 - Clicking case ID or row navigates to Case Detail View (Screen 3)
 - Status badges color-coded (Open=blue, In Progress=yellow, Resolved=green, Closed=gray)
 - Priority badges color-coded (Low=gray, Medium=blue, High=orange, Urgent=red)
 - Urgent cases always sorted to top of list regardless of other sort order
-- Cases with >7 days since last update marked with warning icon
+- Cases with no activity for longer than the Case Inactivity Threshold (Screen 7, default 14 days) marked with warning icon
 - Search is real-time and searches across: Case ID, Case Title, Description, Patient Name, Provider Name, Email, Phone
 - Filters are cumulative (AND logic between different filter types)
 - Filter selections persist during session
@@ -426,11 +426,11 @@ The Support Center & Ticketing System provides a unified formal support system f
 | Priority | dropdown select | Yes | Urgency level from centralized priority list | Options: Low, Medium, High, Urgent |
 | Ticket Source | dropdown select (readonly if auto-created) | Yes | Origin of support case | Options: Patient App, Provider Portal, Manual Admin Entry; Auto-populated for app-submitted tickets, editable for manual entries |
 | Submitter Type | dropdown select (readonly if auto-created) | Yes | Type of user who submitted case | Options: Patient, Provider, Admin; Auto-populated for app-submitted tickets, editable for manual entries |
-| Patient Identifier | text input with autocomplete | No | HPID, email, or phone to link case to patient record | Must match existing patient if provided; optional field; Required if Submitter Type = Patient |
+| Patient Identifier | text input with autocomplete | No | HPID, email, or phone to link case to patient record | Must match existing patient if provided; optional field; Required if Submitter Type = Patient, unless No Patient Link is chosen |
 | Provider Identifier | text input with autocomplete | No | Provider ID or clinic name (if case is provider-related) | Must match existing provider if provided; optional field; Required if Submitter Type = Provider |
 | Description | textarea | Yes | Full details of inquiry or issue | Min 20 chars, max 5000 chars, supports plain text |
 | Internal Notes | textarea | No | Admin-only notes not visible to patient/provider | Max 2000 chars per note entry |
-| Attachments | file upload | No | Supporting documents, screenshots, emails | Max 5 files, 10MB per file, formats: JPG, PNG, PDF, DOC, DOCX |
+| Attachments | file upload | No | Supporting documents, screenshots, emails | Max 5 files per message, 10MB per file, formats: JPG, PNG, PDF, DOC, DOCX |
 | Assigned To | dropdown select (admin users) | No | Admin staff member responsible for case (informational only) | List of active admin users with "Support Staff" role |
 | Status | dropdown select | Yes | Current case lifecycle stage | Options: Open (default), In Progress, Resolved, Closed |
 | Feedback Resolution | dropdown select | No | Resolution outcome for feedback/feature request tickets (optional) | Options: Implemented, Planned, Declined, Under Review; Only applicable for Category = Feature Request, Bug Report, or Feedback |
@@ -439,7 +439,7 @@ The Support Center & Ticketing System provides a unified formal support system f
 **Business Rules**:
 
 - **Case Title is ALWAYS REQUIRED** - no auto-generation from Description
-- Patient Identifier field shows autocomplete suggestions as admin types (match by name, email, HPID); Required if Submitter Type = Patient
+- Patient Identifier field shows autocomplete suggestions as admin types (match by name, email, HPID); Required if Submitter Type = Patient, unless No Patient Link is chosen
 - Provider Identifier field shows autocomplete suggestions as admin types (match by name, clinic ID); Required if Submitter Type = Provider
 - If patient identifier provided, system displays patient name and HPID for confirmation
 - If provider identifier provided, system displays provider clinic name and ID for confirmation
@@ -447,7 +447,7 @@ The Support Center & Ticketing System provides a unified formal support system f
 - Ticket Source automatically set based on submission origin: Patient App (FR-035), Provider Portal (FR-032), or Manual Admin Entry; readonly for auto-created tickets, editable for manual entries
 - Submitter Type automatically set based on submission origin (Patient, Provider, or Admin); readonly for auto-created tickets, editable for manual entries
 - Attachments scanned for viruses before upload completes
-- Internal Notes section only visible to admin staff with appropriate permissions
+- Internal Notes section visible to every admin who has the "View Support Center" permission
 - Status defaults to "Open" for new cases
 - Status follows unified workflow: Open → In Progress → Resolved → Closed (cannot skip stages except for case reopening)
 - Priority defaults to "Medium" for new cases
@@ -459,11 +459,9 @@ The Support Center & Ticketing System provides a unified formal support system f
 
 **Notes**:
 
-- Use rich text editor for Description field to support formatting (bold, lists, links)
 - Display character count for Title and Description fields
 - Show "Link to Patient Record" button if patient identifier matched
 - Show "Link to Provider Record" button if provider identifier matched
-- Provide "Save as Draft" option to allow admins to partially complete case and return later
 
 ---
 
@@ -494,8 +492,8 @@ The Support Center & Ticketing System provides a unified formal support system f
 | Add Internal Note Button | button | N/A | Allows admin to add internal note to case (not visible to patient/provider) | Opens note entry modal |
 | Reply to Patient/Provider Button | button | N/A | Allows admin to send message in communication thread (visible to patient/provider) | Opens message composition modal; sends notification email |
 | Update Status Button | button | N/A | Changes case status (Open → In Progress → Resolved → Closed) | Opens status change modal |
-| Resolve Case Button | button | N/A | Marks case as Resolved with resolution summary | Opens resolution modal (Screen 5); only enabled for In Progress cases |
-| Reassign Case Button | button | N/A | Transfers case to another admin (informational only) | Opens reassignment modal (Screen 6) |
+| Resolve Case Button | button | N/A | Marks case as Resolved with resolution summary | Opens resolution modal (Screen 4); only enabled for In Progress cases |
+| Reassign Case Button | button | N/A | Transfers case to another admin (informational only) | Opens reassignment modal (Screen 5) |
 | Reopen Case Button | button | N/A | Reopens closed case (changes status from Closed to Open) | Opens reopen reason modal; only visible for Closed cases |
 | Close Case Button | button | N/A | Marks case as Closed (only enabled if status is Resolved) | Confirmation required |
 | Edit Case Button | button | N/A | Opens case edit form (Screen 2) to modify case details | Enabled for all statuses |
@@ -509,7 +507,7 @@ Each message in the thread displays:
 - **Timestamp**: Date and time of message
 - **Message Content**: Full message text with formatting support
 - **Attachments**: If any, displayed as downloadable links/thumbnails
-- **Read Status**: Indicates if patient/provider has viewed the message (future enhancement)
+- **Read Status**: A read flag is stored for each message now, and the unread badge (see Notes) is required; an admin-facing display of whether the patient/provider has viewed a message is a future enhancement
 
 **Timeline Event Types with Full Context**:
 
@@ -524,8 +522,11 @@ Each message in the thread displays:
 - **Attachment Uploaded**: Shows attachment name, size, who uploaded it, download link
 - **Account Intervention**: Shows what intervention was performed (password reset, account unlock, etc.), who performed it, link to patient/provider record
 - **Case Resolved**: Shows resolution summary, resolution category, feedback resolution (if applicable), who resolved it
-- **Case Reopened**: Shows who reopened it, reason for reopening, previous resolution summary
+- **Case Reopened**: Shows who reopened it (an admin, or System for an automatic reopen), reason for reopening, previous resolution summary
 - **Case Closed**: Shows who closed it, auto-close vs manual close indicator
+- **Case Escalated**: Shows the reassignment marked as an escalation, the reason, and the raised priority
+- **Notification Sent / Notification Failed**: Shows the notification, its recipient, and its delivery result
+- **Admin Deactivated**: Shows that the assigned admin account was deactivated and the case became unassigned
 
 **Business Rules**:
 
@@ -535,7 +536,7 @@ Each message in the thread displays:
 - Patient and provider can reply to admin messages from their apps (FR-035, FR-032), creating two-way conversation
 - When patient/provider replies, message appears in Communication Thread and timeline logged as "Message Received from [Patient/Provider]"
 - Admin messages sent via "Reply to Patient/Provider" button appear in Communication Thread and trigger email notification via S-03
-- Internal Notes only visible to admin staff with appropriate permissions (not shown in Communication Thread, only in Timeline with "Admin Only" badge)
+- Internal Notes visible to every admin who has the "View Support Center" permission (not shown in Communication Thread, only in Timeline with "Admin Only" badge)
 - Messages to patient/provider logged in both Communication Thread and Timeline
 - Status transitions follow lifecycle: Open → In Progress → Resolved → Closed (cannot skip stages except for reopening)
 - System prevents closing case unless status is "Resolved" first
@@ -550,8 +551,8 @@ Each message in the thread displays:
 - Use expandable/collapsible timeline entries for long notes, messages, or intervention details
 - Display attachment thumbnails in timeline and communication thread with download links
 - Highlight urgent cases with red border and alert icon
-- Display warning if case has been open for >7 days without status update
-- Show unread message count badge if patient/provider has sent new messages since last admin view
+- Display warning if case has had no activity for longer than the Case Inactivity Threshold (Screen 7, default 14 days)
+- Show unread message count badge (required) if patient/provider has sent new messages since last admin view
 - Use different visual styling for admin messages vs patient/provider messages in Communication Thread (similar to chat interface)
 - Consider implementing @ mentions for internal notes to notify specific admin team members (future enhancement)
 
@@ -583,7 +584,8 @@ Each message in the thread displays:
 - Feedback Resolution included in resolution email to submitter if populated
 - Internal Resolution Notes only visible to admin staff (not included in patient/provider-facing communications)
 - System automatically closes case after specified auto-close period if patient/provider doesn't respond
-- If patient/provider responds before auto-close period expires, case reopened automatically
+- If patient/provider replies while the case is Resolved (before the auto-close period expires), the case is reopened automatically and the system records a Reopening by System with the reason "User replied"
+- A reply to a Closed case does not reopen it automatically; it goes to an admin, who decides whether to reopen it (Screen 6)
 - Resolution Category and Root Cause captured for analytics and trend identification
 - System logs resolution timestamp, feedback resolution (if applicable), and admin user who marked case resolved
 - Case cannot be marked Resolved without entering Resolution Summary
@@ -607,7 +609,8 @@ Each message in the thread displays:
 |------------|------|----------|-------------|------------------|
 | Current Assignee | text (readonly) | N/A | Current admin user assigned to case (or "Unassigned") | Display only |
 | New Assignee | dropdown select | Yes | Admin user to reassign case to | List of active admin users with "Support Staff" role; cannot select current assignee |
-| Reassignment Reason | textarea | Yes | Reason for reassigning case | Min 10 chars, max 500 chars |
+| Reassignment Reason | textarea | Yes | Reason for reassigning case (also the reason recorded for an escalation) | Min 10 chars, max 500 chars |
+| Escalate | checkbox | No | Marks the reassignment as an escalation: raises the case priority to High or Urgent and sends the escalation notice to the new assignee | Default: unchecked; when ticked, the admin chooses High or Urgent as the new priority |
 | Notify New Assignee | checkbox | Yes | Send email notification to new assignee | Default: checked |
 | Reassign Case Button | button | Yes | Confirms reassignment and updates case | Saves and closes modal |
 | Cancel Button | button | Yes | Closes modal without saving | No changes made |
@@ -618,6 +621,7 @@ Each message in the thread displays:
 - System logs reassignment in case timeline with timestamp, old assignee, new assignee, reason, and admin who performed reassignment
 - If "Notify New Assignee" checked, system sends email notification via S-03 with case details and reassignment reason
 - Reassignment does not change case status or restrict access for other admins
+- Escalation has no separate screen or form: it is the Escalate tick in this modal, with the reassignment reason required. The timeline marks the reassignment as an escalation. This applies equally to patient-submitted and provider-submitted cases
 - Admin can reassign case to themselves or to another team member
 - System displays reassignment history in case timeline to track case ownership changes
 
@@ -625,7 +629,7 @@ Each message in the thread displays:
 
 - Display new assignee's current case load (number of Open/In Progress cases) to help with workload balancing
 - Consider adding "Reassign to Team" option for assigning to a team rather than individual (future enhancement)
-- Show assignee availability status if integrated with admin calendar (future enhancement)
+- Showing assignee availability status is out of scope
 
 ---
 
@@ -659,40 +663,40 @@ Each message in the thread displays:
 **Notes**:
 
 - Display previous communication thread and resolution summary above form for context
-- Consider adding "Reopen Reason Templates" for common scenarios (e.g., "Issue persists", "New information received", "Resolution did not work") (future enhancement)
+- Offer "Reopen Reason Templates" for common scenarios (e.g., "Issue persists", "New information received", "Resolution did not work") as an optional feature managed in Screen 7 (Section 7); admins can always type a custom reason
 - Show time elapsed since case was closed (e.g., "Closed 3 days ago")
 
 ---
 
 ### Screen 7: Support Center Configuration (Settings Path)
 
-**Purpose**: Allows Super Admin and authorized admin staff to manage centralized lists and configuration options for Support Center module (accessed via Settings > Support Center)
+**Purpose**: Allows Super Admin to manage centralized lists and configuration options for Support Center module (accessed via Settings > Support Center)
 
 **Data Fields**:
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
 | **Section 1: Case Categories** | section header | N/A | Manage centralized case category list | N/A |
-| Category List Table | data table | N/A | Displays all case categories with columns: Category Name, Display Order, Status (Active/Inactive), Used Count, Actions (Edit, Deactivate/Activate, Delete) | Sortable by display order; cannot delete categories with active cases |
-| Add Category Button | button | N/A | Opens modal to add new case category | Click action |
-| Category Name (in modal) | text input | Yes | Name of case category | Max 50 chars; must be unique; Examples: Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry, Provider Support, Patient Support, Feature Request, Bug Report, Feedback |
+| Category List Table | data table | N/A | Displays all case categories with columns: Category Name, Display Order, Status (Active/Inactive), Used Count, Actions (Edit) | Sortable by display order; built-in categories cannot be deleted or switched off, so Deactivate/Activate and Delete are not offered for them; the only edits offered are the category label and display order |
+| Add Category Button | button | N/A | Not offered: categories cannot be added to the built-in list | N/A |
+| Category Label (in modal) | text input | Yes | Label shown for a built-in case category (the label is what stays editable) | Max 50 chars; must be unique; Built-in labels: Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry, Provider Support, Patient Support, Feature Request, Bug Report, Feedback |
 | Category Display Order (in modal) | number input | Yes | Sort order for dropdown display (1-100) | Must be positive integer; determines order in dropdown lists |
-| Category Status (in modal) | toggle | Yes | Active or Inactive | Inactive categories hidden from new case creation but preserved for existing cases |
+| Category Status (in modal) | toggle | Yes | Always Active for built-in categories | Built-in categories cannot be switched off |
 | **Section 2: Case Priorities** | section header | N/A | Manage centralized case priority list | N/A |
-| Priority List Table | data table | N/A | Displays all priorities with columns: Priority Name, Color Code, Display Order, Status (Active/Inactive), Used Count, Actions (Edit, Deactivate/Activate, Delete) | Sortable by display order; cannot delete priorities with active cases |
-| Add Priority Button | button | N/A | Opens modal to add new priority level | Click action |
-| Priority Name (in modal) | text input | Yes | Name of priority level | Max 20 chars; must be unique; Examples: Low, Medium, High, Urgent |
+| Priority List Table | data table | N/A | Displays all priorities with columns: Priority Name, Color Code, Display Order, Status (Active/Inactive), Used Count, Actions (Edit, Deactivate/Activate, Delete) | Sortable by display order; cannot delete priorities with active cases; Low, Medium, High and Urgent cannot be renamed, switched off or deleted |
+| Add Priority Button | button | N/A | Opens modal to add new priority level | Click action; an added priority carries no escalation or resolution-time rule unless one is defined |
+| Priority Name (in modal) | text input | Yes | Name of priority level | Max 20 chars; must be unique; the four built-in names (Low, Medium, High, Urgent) cannot be changed |
 | Priority Color Code (in modal) | color picker | Yes | Badge color for priority display | Options: gray, blue, orange, red, green, purple |
 | Priority Display Order (in modal) | number input | Yes | Sort order for dropdown display (1-10) | Must be positive integer |
-| Priority Status (in modal) | toggle | Yes | Active or Inactive | Inactive priorities hidden from new case creation |
+| Priority Status (in modal) | toggle | Yes | Active or Inactive | Inactive priorities hidden from new case creation; the four built-in priorities cannot be switched off |
 | **Section 3: Resolution Categories** | section header | N/A | Manage resolution category options | N/A |
-| Resolution Category List Table | data table | N/A | Displays all resolution categories with columns: Category Name, Display Order, Status (Active/Inactive), Used Count, Actions (Edit, Deactivate/Activate, Delete) | Sortable by display order |
+| Resolution Category List Table | data table | N/A | Displays all resolution categories with columns: Category Name, Display Order, Status (Active/Inactive), Used Count, Actions (Edit, Deactivate/Activate, Delete) | Sortable by display order; cannot be deleted while in use (Deactivate is offered instead) |
 | Add Resolution Category Button | button | N/A | Opens modal to add new resolution category | Click action |
 | Resolution Category Name (in modal) | text input | Yes | Name of resolution category | Max 50 chars; must be unique; Examples: Issue Fixed, Information Provided, Account Intervention, Escalated to Provider, User Error, Cannot Reproduce, Duplicate Case, Other |
 | Resolution Category Display Order (in modal) | number input | Yes | Sort order for dropdown display (1-100) | Must be positive integer |
 | Resolution Category Status (in modal) | toggle | Yes | Active or Inactive | Inactive categories hidden from resolution modal |
 | **Section 4: Root Cause Options** | section header | N/A | Manage root cause options for analytics | N/A |
-| Root Cause List Table | data table | N/A | Displays all root cause options with columns: Root Cause Name, Display Order, Status (Active/Inactive), Used Count, Actions (Edit, Deactivate/Activate, Delete) | Sortable by display order |
+| Root Cause List Table | data table | N/A | Displays all root cause options with columns: Root Cause Name, Display Order, Status (Active/Inactive), Used Count, Actions (Edit, Deactivate/Activate, Delete) | Sortable by display order; cannot be deleted while in use (Deactivate is offered instead) |
 | Add Root Cause Button | button | N/A | Opens modal to add new root cause option | Click action |
 | Root Cause Name (in modal) | text input | Yes | Name of root cause | Max 50 chars; must be unique; Examples: User Confusion, Technical Bug, Account Configuration, Payment Gateway Issue, Provider Error, System Outage, Other |
 | Root Cause Display Order (in modal) | number input | Yes | Sort order for dropdown display (1-100) | Must be positive integer |
@@ -703,11 +707,11 @@ Each message in the thread displays:
 | Tag Name (in modal) | text input | Yes | Name of tag | Max 30 chars; must be unique; Examples: Bug, Feature Request, Urgent, VIP |
 | Tag Color (in modal) | color picker | Yes | Badge color for tag display | Options: gray, blue, orange, red, green, purple, yellow, pink |
 | **Section 6: Auto-Escalation Rules** | section header | N/A | Configure automatic case escalation thresholds | N/A |
-| Urgent Case Unassigned Threshold | number input | Yes | Hours before urgent unassigned case auto-escalates to support manager | Min: 1, Max: 48, Default: 24 hours |
+| Urgent Case Unassigned Threshold | number input | Yes | Hours before an urgent case that is still unassigned auto-escalates to Super Admin (a fixed alert email goes to admins after 1 hour first) | Min: 1, Max: 48, Default: 24 hours |
 | High Priority Case Threshold | number input | Yes | Hours before high priority case auto-escalates if no status change | Min: 12, Max: 72, Default: 48 hours |
-| Case Inactivity Threshold | number input | Yes | Days before case with no activity flagged for admin review | Min: 7, Max: 90, Default: 14 days |
+| Case Inactivity Threshold | number input | Yes | Days before case with no activity flagged for admin review; also the one clock behind the inactivity warnings in the case list and case detail view | Min: 7, Max: 90, Default: 14 days |
 | **Section 7: Reopen Reason Templates** | section header | N/A | Manage reopening reason templates for quick selection (optional) | N/A |
-| Reopen Reason Templates Table | data table | N/A | Displays templates with columns: Template Text, Used Count, Actions (Edit, Delete) | Optional feature; admins can also enter custom reasons |
+| Reopen Reason Templates Table | data table | N/A | Displays templates with columns: Template Text, Used Count, Actions (Edit, Deactivate/Activate, Delete) | Optional feature; admins can also enter custom reasons; a template cannot be deleted while in use (Deactivate is offered instead) |
 | Add Template Button | button | N/A | Opens modal to add new template | Click action |
 | Template Text (in modal) | text input | Yes | Pre-written reopening reason text | Max 200 chars; Examples: "Issue persists", "New information received", "Resolution did not work", "Patient reported problem still occurring" |
 | Save Configuration Button | button | Yes | Saves all changes to configuration | Validates all fields; updates centralized lists immediately |
@@ -715,10 +719,12 @@ Each message in the thread displays:
 
 **Business Rules**:
 
-- Only Super Admin and admin users with "Manage Support Configuration" permission can access this screen
+- Only Super Admin can access this screen; there is no Support Manager role and no "Manage Support Configuration" permission
 - Configuration screen accessible via Settings > Support Center path in admin navigation
 - All changes to centralized lists take effect immediately for new case creation and case updates
-- Cannot delete categories, priorities, or resolution categories that are currently used by active cases (status = Open or In Progress)
+- Cannot delete categories, priorities, or resolution categories that are currently used by active cases (status = Open or In Progress); resolution categories, root causes, and reopen reason templates also cannot be deleted while in use, and Deactivate is offered instead. Case tags stay freely deletable
+- The four built-in priorities (Low, Medium, High, Urgent) cannot be renamed, switched off, or deleted; admins may add other priorities, which have no escalation or resolution-time rule unless one is defined
+- Built-in case categories are fixed for patients: categories cannot be added to the list, deleted, or switched off; the label and display order remain editable
 - Can deactivate items instead of deleting; deactivated items hidden from dropdowns but preserved for historical data
 - Used Count shows number of cases currently using each option (helps prevent accidental deletion of important items)
 - Display Order determines the sequence items appear in dropdown lists throughout Support Center
@@ -750,28 +756,31 @@ Each message in the thread displays:
 - **Rule 4**: **Ticket Source Tracking**: All cases must have Ticket Source (Patient App, Provider Portal, Manual Admin Entry) to identify submission origin
 - **Rule 5**: **Submitter Type Tracking**: All cases must have Submitter Type (Patient, Provider, Admin) to identify who submitted the case
 - **Rule 6**: **Feedback Resolution Tracking**: Cases with Category = Feature Request, Bug Report, or Feedback can optionally track Feedback Resolution (Implemented, Planned, Declined, Under Review) independently of case status
-- **Rule 7**: **Centralized Category Management**: Case categories managed in centralized list (Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry, Provider Support, Patient Support, Feature Request, Bug Report, Feedback) to ensure consistency across all case submissions
-- **Rule 8**: **Centralized Priority Management**: Case priorities managed in centralized list (Low, Medium, High, Urgent) to ensure consistent prioritization across system
+- **Rule 7**: **Centralized Category Management**: FR-034 owns the support-case categories (Help Centre content categories belong to FR-033). The ten names (Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry, Provider Support, Patient Support, Feature Request, Bug Report, Feedback) are the master list to ensure consistency across all case submissions; the patient and provider submission forms show subsets of it. The built-in categories are fixed for patients: they cannot be added to, deleted or switched off
+- **Rule 8**: **Centralized Priority Management**: Case priorities managed in centralized list (Low, Medium, High, Urgent) to ensure consistent prioritization across system; the four built-in priorities cannot be renamed, switched off or deleted, and admins may add further priorities
 - **Rule 9**: **Assignment is Informational Only**: All admin staff can view and work on all cases regardless of assignment; assignment field is for informational/organizational purposes only and does not restrict access
 - **Rule 10**: **Two-Way Communication Support**: Patients and providers can reply to admin messages from their apps (FR-035, FR-032), creating threaded conversation within case
 - **Rule 11**: **Comprehensive Timeline with Full Context**: Case timeline shows all events with complete details and context (not just milestones), including full message content, intervention details, status change reasons, etc.
-- **Rule 12**: Maximum case resolution time target: 48 hours for Urgent, 5 business days for High, 10 business days for Medium/Low priority
-- **Rule 13**: Cases with no activity for >14 days flagged for admin review and potential closure
+- **Rule 12**: Maximum case resolution time (a limit for any single case, separate from the success-criteria goals): 48 hours for Urgent, 5 business days for High, 10 business days for Medium/Low priority
+- **Rule 13**: Cases with no activity for longer than the Case Inactivity Threshold (Screen 7, default 14 days) flagged for admin review and potential closure; the same threshold drives the warning shown in the case list and case detail view
 - **Rule 14**: Support cases distinct from aftercare communications (FR-011) and provider-patient messaging (FR-012)
 - **Rule 15**: Admin staff can link multiple cases to same patient/provider for trend analysis
 - **Rule 16**: Support cases support patient submissions (FR-035), provider submissions (FR-032), and manual admin entries in single unified system
 - **Rule 17**: When patient/provider replies to case, message appears in Communication Thread and triggers email notification to assigned admin (or all support staff if unassigned)
+- **Rule 18**: **Report a problem**: FR-034 owns the Report a problem rule for the patient app; FR-035 and FR-001 point to it (see REQ-034-164)
+- **Rule 19**: **Provider-caused cancellation link**: A support case can be linked to a provider-caused cancellation; the system does not create a ticket automatically (see REQ-034-166)
+- **Rule 20**: **Booking request values**: FR-034 owns request type, request status, decline reason and outcome for booking cancellation and change requests; FR-016 only shows them (see REQ-034-167 to REQ-034-170)
 
 ### Data & Privacy Rules
 
 - **Privacy Rule 1**: Patient full names, contact details, and medical information visible to admin users granted Support Center access via RBAC; within Support Center, all cases are visible regardless of assignment
 - **Privacy Rule 2**: Support case data encrypted at rest (AES-256) and in transit (TLS 1.3)
 - **Privacy Rule 3**: Case timeline and all messages logged with immutable audit trail (cannot be deleted, only appended)
-- **Privacy Rule 4**: Internal Notes visible only to admin staff with "View Internal Notes" permission (not visible to patients/providers)
-- **Privacy Rule 5**: Patient/provider can request case data export for GDPR compliance via data subject access request
+- **Privacy Rule 4**: Internal Notes visible to every admin who has the "View Support Center" permission (not visible to patients/providers)
+- **Privacy Rule 5**: FR-034 provides no case-data export
 - **Audit Rule**: All access to support cases logged with timestamp, admin user ID, IP address, and action performed
 - **HIPAA/GDPR**: Support cases may contain medical information; handle as PHI with healthcare-grade security
-- **Data Retention**: Support cases retained for minimum 10 years (meets 7-year healthcare minimum and aligns with audit-trail retention requirements); archive after closure, do not hard delete
+- **Data Retention**: Support case retention follows the system PRD, Platform-Wide Rules: One 10-year retention period; archive after closure, do not hard delete
 
 ### Admin Editability Rules
 
@@ -783,7 +792,7 @@ Each message in the thread displays:
 - Patient/provider linkage (add, modify, or remove linked records in Screen 2)
 - Case tags and labels (per-case in Screen 2)
 - Resolution summary and resolution category (in Screen 4)
-- Auto-close period (3, 7, or 14 days after resolution in Screen 4)
+- Auto-close period (Immediately, 3, 7, or 14 days after resolution in Screen 4)
 
 **Configurable by Super Admin (via Settings > Support Center - Screen 7)**:
 
@@ -831,14 +840,17 @@ Each message in the thread displays:
   - Case closed
 - **Notification Rule 2**: Providers receive email notifications when:
   - Support case created for their inquiry
+  - Case status changes
   - Admin sends message/reply to provider
   - Case marked "Resolved" with resolution summary
+  - Case closed
 - **Notification Rule 3**: Admin staff receive email notifications when:
   - Case assigned to them
-  - Case escalated to them
-  - Patient/provider responds to case (reopens closed case)
-  - Urgent case created and unassigned for >1 hour
-- **Notification Rule 4**: All notifications sent via S-03 Notification Service with retry logic for failed sends
+  - Case escalated to them (escalations go to Super Admin)
+  - Patient/provider replies to a case (one email per reply)
+  - A case is reopened (a separate reopening notice, in addition to the reply email)
+  - Urgent case created and still unassigned after 1 hour (a fixed alert email to admins; if the case is still unassigned at the Urgent Case Unassigned Threshold in Screen 7, default 24 hours, it escalates to Super Admin)
+- **Notification Rule 4**: All notifications sent via S-03 Notification Service; failed sends are retried following the FR-030 retry rule
 - **Notification Rule 5**: Email notifications include case ID, title, status, and direct link to admin case view (for admin recipients)
 
 ---
@@ -848,20 +860,20 @@ Each message in the thread displays:
 ### Patient Experience Metrics
 
 - **SC-001**: Patients receive confirmation that their support inquiry was received within 1 hour of contacting Hairline
-- **SC-002**: 80% of patient support cases resolved within 48 hours for urgent issues, 5 business days for non-urgent issues
+- **SC-002**: Goal: 80% of patient support cases resolved within 48 hours for urgent issues, 5 business days for non-urgent issues
 - **SC-003**: Patients receive at least one status update within 24 hours of case creation
 - **SC-004**: 90% of patients report satisfaction with support response time and resolution quality (future: post-resolution survey)
 
 ### Provider Efficiency Metrics
 
 - **SC-005**: Providers receive response to operational questions within 24 hours for 90% of inquiries
-- **SC-006**: Provider support cases resolved within 48 hours for technical issues, 5 business days for operational questions
+- **SC-006**: Goal: provider support cases resolved within 48 hours for technical issues, 5 business days for operational questions
 
 ### Admin Management Metrics
 
 - **SC-007**: Admins can create and assign new support case within 2 minutes
 - **SC-008**: Admins can view complete case history and timeline in single screen without needing to navigate multiple views
-- **SC-009**: Support managers can view real-time dashboard of open, urgent, and unassigned cases
+- **SC-009**: Admins can view real-time dashboard of open, urgent, and unassigned cases
 - **SC-010**: 100% of support cases linked to patient or provider records for traceability
 
 ### System Performance Metrics
@@ -876,7 +888,6 @@ Each message in the thread displays:
 ### Business Impact Metrics
 
 - **SC-018**: Support case system reduces average resolution time by 40% compared to email-only support
-- **SC-019**: Support case analytics identify top 5 recurring issues within first 30 days of launch
 - **SC-020**: Admin staff handle 50% more support inquiries per day with structured case management
 - **SC-021**: Patient support-related inquiries organized and trackable with zero lost or forgotten cases
 - **SC-022**: Audit trail completeness: 100% of support interactions logged with timestamp and admin attribution
@@ -900,7 +911,7 @@ Each message in the thread displays:
   - **Integration point**: Support Center does not directly integrate with FR-033; FR-033 provides content displayed in FR-032 and FR-035 Help Centres
 
 - **FR-031 / Module A-10: Admin Access Control & Permissions**
-  - **Why needed**: Support staff roles and permissions (View Cases, Edit Cases, Reassign Cases, View Internal Notes) managed via RBAC system
+  - **Why needed**: Support staff roles and permissions (View Cases, Edit Cases, Reassign Cases) managed via RBAC system; internal notes are visible to every admin who has the "View Support Center" permission
   - **Integration point**: Support Center enforces permission checks before allowing admin users to access or modify cases
 
 - **FR-016 / Module A-01: Patient Management & Oversight**
@@ -969,11 +980,11 @@ Each message in the thread displays:
 
 ### Business Process Assumptions
 
-- **Assumption 1**: Hairline employs dedicated support staff with "Support Agent" role to handle cases
+- **Assumption 1**: Hairline employs dedicated support staff with "Support Staff" role to handle cases
 - **Assumption 2**: Support staff available during business hours (8am-6pm UTC) for case assignment and resolution
-- **Assumption 3**: Urgent cases escalated to support manager if unresolved after 24 hours
+- **Assumption 3**: Urgent cases still unassigned after 24 hours (the default of the Urgent Case Unassigned Threshold setting) are escalated to Super Admin
 - **Assumption 4**: Resolved cases auto-close after 7 days if patient doesn't respond (configurable)
-- **Assumption 5**: Support case data retained for 10 years minimum for compliance and dispute resolution
+- **Assumption 5**: Support case retention follows the system PRD, Platform-Wide Rules: One 10-year retention period
 
 ---
 
@@ -983,7 +994,7 @@ Each message in the thread displays:
 
 - **Architecture**: Support Center requires real-time case status updates; consider using WebSocket or Server-Sent Events (SSE) for live dashboard updates to avoid polling
 - **Performance**: Case timeline with hundreds of events requires pagination or lazy loading to prevent slow page loads
-- **Search**: Implement full-text search index on case title, description, notes, and patient/provider names for fast keyword searches
+- **Search**: Implement full-text search index on case ID, title, description, patient/provider names, email, and phone for fast keyword searches (internal notes are not indexed for search)
 - **Storage**: Case attachments stored in cloud object storage (S3) with pre-signed URLs for secure, time-limited access
 - **Audit Trail**: Use append-only database table or event sourcing pattern for immutable case timeline history
 
@@ -1002,7 +1013,7 @@ Each message in the thread displays:
 - **Integration 3: Notification Service (S-03)**
   - **Data format**: JSON payload with case ID, recipient email, notification type, case details
   - **Authentication**: Internal service-to-service authentication (API key or mutual TLS)
-  - **Error handling**: If notification fails, log error and retry up to 3 times with exponential backoff; mark notification as failed in case timeline
+  - **Error handling**: If notification fails, log error and retry following the FR-030 retry rule; mark notification as failed in case timeline
 
 ### Scalability Considerations
 
@@ -1016,13 +1027,13 @@ Each message in the thread displays:
 
 - **Authentication**: Admin staff authenticate via FR-031 (Admin Access Control). MFA is enforced once the shared MFA stack (FR-026 / FR-031) is delivered; until then, implement strong password policies, throttling, and re-authentication flows per Constitution.
 - **Authorization**: Role-Based Access Control (RBAC) enforces granular permissions:
-  - Support Agent: Create, view, edit, and resolve cases (assignment is informational only and does not restrict access)
-  - Support Manager: View all cases, reassign cases, access case analytics
-  - Super Admin: Full access including configuration management and audit log export (no hard delete; archive only)
+  - Support Staff: Create, view, edit, reassign, and resolve cases (assignment is informational only and does not restrict access)
+  - Super Admin: Full access including Support Center configuration management, receipt of escalations, and audit log export (no hard delete; archive only)
+  - There is no Support Manager role and no "Manage Support Configuration" permission
 - **Encryption**: All case data encrypted at rest (AES-256) and in transit (TLS 1.3)
 - **Audit trail**: Every case access, modification, and status change logged with timestamp, admin user ID, IP address, and action
 - **Threat mitigation**: Rate limiting on case creation API (max 60 cases/hour per admin user) to prevent abuse
-- **Compliance**: HIPAA-compliant handling of patient medical information in case descriptions and attachments; GDPR data export support for patient right to access
+- **Compliance**: HIPAA-compliant handling of patient medical information in case descriptions and attachments
 
 ---
 
@@ -1065,7 +1076,7 @@ Support staff investigates "cannot login" case, resets patient password, documen
 
 ### User Story 3 - Admin Searches and Filters Cases (Priority: P1)
 
-Support manager searches for all urgent cases assigned to specific team member to ensure timely resolution.
+An admin searches for all urgent cases assigned to specific team member to ensure timely resolution.
 
 **Why this priority**: Essential for support management and oversight - managers must be able to monitor workload and prioritize urgent issues
 
@@ -1073,9 +1084,9 @@ Support manager searches for all urgent cases assigned to specific team member t
 
 **Acceptance Scenarios**:
 
-1. **Given** support manager is on Support Center dashboard, **When** manager navigates to "All Cases" view, **Then** system displays case list with default filters (Open + In Progress cases from last 30 days)
-2. **Given** manager is viewing case list, **When** manager selects "Urgent" priority filter and specific admin user from "Assigned To" filter, **Then** system displays only urgent cases assigned to that user
-3. **Given** filtered case list is displayed, **When** manager clicks case row, **Then** system navigates to case detail view with full timeline
+1. **Given** an admin is on Support Center dashboard, **When** the admin navigates to "All Cases" view, **Then** system displays case list with default filters (Open + In Progress cases from last 90 days)
+2. **Given** the admin is viewing case list, **When** the admin selects "Urgent" priority filter and specific admin user from "Assigned To" filter, **Then** system displays only urgent cases assigned to that user
+3. **Given** filtered case list is displayed, **When** the admin clicks case row, **Then** system navigates to case detail view with full timeline
 
 ---
 
@@ -1115,18 +1126,18 @@ Patient responds to case closure email stating issue not fully resolved; admin r
 
 ### User Story 6 - Admin Escalates Urgent Case (Priority: P2)
 
-Support agent encounters complex technical issue requiring senior staff; escalates case to technical team.
+Support staff member encounters complex technical issue requiring more senior attention; escalates the case by reassigning it with the Escalate option.
 
 **Why this priority**: Important for handling complex cases but less frequent than standard support workflows
 
-**Independent Test**: Can be tested by creating case, then escalating it to verify priority increase and notification
+**Independent Test**: Can be tested by creating case, then escalating it through the Reassign Case modal to verify priority increase and notification
 
 **Acceptance Scenarios**:
 
-1. **Given** support agent is reviewing case involving system outage, **When** agent determines escalation needed, **Then** agent clicks "Escalate Case" button
-2. **Given** escalation modal is displayed, **When** agent selects "Technical Team" as escalation recipient and enters escalation reason "Database connection errors", **Then** system updates case priority to "Urgent"
-3. **Given** case is escalated, **When** system processes escalation, **Then** system sends email notification to technical team and logs escalation in case timeline
-4. **Given** technical team receives notification, **When** team member opens case, **Then** case displays escalation badge and full escalation context
+1. **Given** support staff member is reviewing case involving system outage, **When** the staff member determines escalation needed, **Then** the staff member clicks "Reassign Case" (there is no separate escalation form)
+2. **Given** the Reassign Case modal is displayed, **When** the staff member selects the new assignee, enters reassignment reason "Database connection errors", and ticks "Escalate" with priority "Urgent", **Then** system updates case priority to "Urgent"
+3. **Given** case is escalated, **When** system processes the reassignment, **Then** system sends the escalation notice to the new assignee and logs the reassignment in case timeline marked as an escalation
+4. **Given** the new assignee receives the notice, **When** the new assignee opens the case, **Then** case shows the escalation in its timeline with the full reason
 
 ---
 
@@ -1138,7 +1149,7 @@ Support agent encounters complex technical issue requiring senior staff; escalat
 
 - **How does system handle case assignment when assigned admin is deactivated or leaves organization?**
   - System automatically detects deactivated admin accounts and marks their assigned cases as "Unassigned"
-  - Support manager receives notification to reassign orphaned cases
+  - Support Staff receive notification to reassign orphaned cases
   - Case timeline logs admin account deactivation event
 
 - **What occurs if patient deletes their account while support case is open?**
@@ -1162,10 +1173,10 @@ Support agent encounters complex technical issue requiring senior staff; escalat
   - Search limited to alphanumeric characters, spaces, and common punctuation
 
 - **What occurs if S-03 Notification Service is down and cannot send case notification emails?**
-  - System queues notification for retry with exponential backoff (retry at 1 min, 5 min, 15 min)
+  - System queues the notification for retry following the FR-030 retry rule (FR-030 owns the retry schedule and count)
   - Case timeline logs notification failure with timestamp
   - Admin dashboard displays notification status indicator (sent, pending, failed)
-  - If notification fails after 3 retries, admin receives alert to manually contact patient/provider
+  - If the notification still fails once the FR-030 retry rule is exhausted, admin receives alert to manually contact patient/provider
 
 ---
 
@@ -1202,6 +1213,7 @@ Support agent encounters complex technical issue requiring senior staff; escalat
 - **REQ-034-027**: System MUST allow providers to view status, feedback resolution, communication thread, and reply to admin messages for their submitted support cases and feedback in Help Centre (FR-032 Screen 5.5 and 5.6)
 - **REQ-034-028**: System MUST send email notifications to patients when admin responds to their submissions or updates case status (via S-03)
 - **REQ-034-029**: System MUST send email notifications to providers when admin responds to their submissions or updates case status (via S-03)
+- **REQ-034-164**: **Report a problem**: FR-034 owns the Report a problem rule for the patient app (FR-035 and FR-001 point to it). A problem report MUST create a support case with the device, operating system, app version, and report timestamp attached, and problem report submissions MUST be throttled
 
 ### Data Requirements
 
@@ -1211,16 +1223,21 @@ Support agent encounters complex technical issue requiring senior staff; escalat
 - **REQ-034-033**: System MUST support Submitter Type options: Patient, Provider, Admin
 - **REQ-034-034**: System MUST support Feedback Resolution options: Implemented, Planned, Declined, Under Review (optional field for feedback/feature request tickets)
 - **REQ-034-035**: System MUST store case description with minimum 20 characters and maximum 5000 characters
-- **REQ-034-036**: System MUST support file attachments up to 10MB per file, maximum 5 files per case
+- **REQ-034-036**: System MUST support file attachments up to 10MB per file, with up to 5 files per message (replies included)
 - **REQ-034-037**: System MUST support attachment formats: JPG, PNG, PDF, DOC, DOCX
-- **REQ-034-038**: System MUST retain all case data for minimum 10 years for compliance (archive after closure, do not hard delete)
+- **REQ-034-038**: System MUST retain all case data per the system PRD, Platform-Wide Rules: One 10-year retention period (archive after closure, do not hard delete)
 - **REQ-034-039**: System MUST capture resolution details: resolution summary, resolution category, feedback resolution (optional), root cause (optional), and resolution timestamp
+- **REQ-034-167**: A support case raised for a booking cancellation or booking change MUST carry a request type: booking cancellation or booking change (shown in FR-016 as Cancellation or Appointment Change)
+- **REQ-034-168**: Such a case MUST carry a request status of Open, Resolved, or Declined. The request status describes what happened to the patient's request; the case status (Open, In Progress, Resolved, Closed) describes the support work on the case. Both are kept and shown, and neither replaces the other
+- **REQ-034-169**: When an admin declines a request, the system MUST require a decline reason of at least 20 characters
+- **REQ-034-170**: For a Resolved or Declined request, the system MUST record the outcome: the action taken, the admin who took it, the time, and a link to the audit entry
+- **FR-034 owns these four values** (request type, request status, decline reason, outcome); FR-016 Screen 9 only shows them
 
 ### Security & Privacy Requirements
 
 - **REQ-034-040**: System MUST encrypt all case data at rest using AES-256 encryption
 - **REQ-034-041**: System MUST encrypt all case data in transit using TLS 1.3
-- **REQ-034-042**: System MUST enforce RBAC permissions for case access (Support Agent, Support Manager, Super Admin roles)
+- **REQ-034-042**: System MUST enforce RBAC permissions for case access (Support Staff and Super Admin roles)
 - **REQ-034-043**: System MUST log all case access and modifications with timestamp, admin user ID, IP address, and action performed
 - **REQ-034-044**: System MUST scan uploaded attachments for viruses/malware before accepting
 - **REQ-034-045**: System MUST prevent case deletion (soft delete/archive only) to maintain immutable audit trail
@@ -1235,6 +1252,7 @@ Support agent encounters complex technical issue requiring senior staff; escalat
 - **REQ-034-051**: System MUST rely on S-03 retry logic for failed notification deliveries (retry logic configured in FR-030, not FR-034)
 - **REQ-034-052**: System MUST log notification events in case timeline (notification sent, delivery status) for audit trail
 - **REQ-034-053**: System MUST provide RESTful API for case creation, retrieval, update, and search operations
+- **REQ-034-166**: System MUST allow an admin to link a support case to a provider-caused cancellation (FR-015 A5 impact shown in FR-016 Provider-Caused Impacts); the system MUST NOT create a support case automatically when a provider-caused cancellation happens
 
 **Note**: Notification templates, delivery timing, channel preferences, and recipient rules for all support case notifications are managed centrally in FR-030 (Notification Rules & Configuration), not in FR-034. Admin configures these via Settings → Alerts & Notifications → Messaging/Support category.
 
@@ -1242,18 +1260,19 @@ Support agent encounters complex technical issue requiring senior staff; escalat
 
 - **REQ-034-054**: System MUST provide Support Center case listing screen as primary view with quick stats bar displaying: open cases count, in progress count, urgent cases count, unassigned cases count
 - **REQ-034-055**: System MUST display case list with comprehensive filters: status, priority, category, ticket source, submitter type, date range, assigned admin, and search functionality
-- **REQ-034-056**: System MUST support keyword search across case title, description, notes, and patient/provider names
+- **REQ-034-056**: System MUST support keyword search across case ID, case title, description, patient name, provider name, email address, and phone number (internal notes are not searched)
 - **REQ-034-057**: System MUST highlight urgent cases in dashboard and case lists with visual indicators (red badges, alert icons)
-- **REQ-034-058**: System MUST display warning for cases open >7 days without status update
+- **REQ-034-058**: System MUST display warning for cases with no activity for longer than the Case Inactivity Threshold (Screen 7, default 14 days)
 
 ### Case Resolution & Closure Requirements
 
 - **REQ-034-059**: System MUST require resolution summary (min 20 chars, max 1000 chars) before case can be marked Resolved
 - **REQ-034-060**: System MUST send resolution email to patient/provider when case marked Resolved (if "Send Resolution Email" option enabled)
-- **REQ-034-061**: System MUST support auto-closure period: 3, 7, or 14 days after case marked Resolved (default 7 days)
+- **REQ-034-061**: System MUST support auto-closure period: Immediately, 3, 7, or 14 days after case marked Resolved (default 7 days)
 - **REQ-034-062**: System MUST automatically close case after auto-closure period expires if patient/provider doesn't respond
-- **REQ-034-063**: System MUST allow admins to reopen closed cases if patient/provider indicates issue not fully resolved
+- **REQ-034-063**: Merged into REQ-034-017 (one rule: admins reopen closed cases, and a reopening reason is required)
 - **REQ-034-064**: System MUST log reopening reason in case timeline when case is reopened
+- **REQ-034-165**: System MUST record an automatic reopen (a patient or provider reply to a Resolved case) as a Reopening record reopened by System with the reason "User replied"
 
 ### Performance & Scalability Requirements
 
@@ -1268,7 +1287,7 @@ Support agent encounters complex technical issue requiring senior staff; escalat
 ## Key Entities
 
 - **Entity 1 - Support Case**:
-  - **Key attributes**: Case ID (unique), case title (required, no auto-generation), category (from centralized managed list), priority (from centralized managed list), status, ticket source, submitter type, feedback resolution (optional), created date, last updated date, assigned admin user ID (informational only), linked patient HPID (optional), linked provider ID (optional), description, resolution summary (when resolved), resolution category, auto-close period
+  - **Key attributes**: Case ID (unique), case title (required, no auto-generation), category (from centralized managed list), priority (from centralized managed list), status, ticket source, submitter type, feedback resolution (optional), created date, last updated date, assigned admin user ID (informational only), linked patient HPID (optional), linked provider ID (optional), description; for booking cancellation or change requests raised through Contact Support: request type, request status, decline reason (when declined), outcome. Resolution details (summary, category, auto-close period) are kept on the case resolution record only (Entity 6)
   - **Relationships**: One support case belongs to one patient (optional); one support case belongs to one provider (optional); one support case assigned to one admin user (optional, informational only); one support case has many timeline events; one support case has many messages; one support case has many attachments; patient-submitted cases automatically linked to patient record; provider-submitted cases automatically linked to provider record
 
 - **Entity 2 - Case Message**:
@@ -1276,7 +1295,7 @@ Support agent encounters complex technical issue requiring senior staff; escalat
   - **Relationships**: Many messages belong to one support case; one message sent by one user (admin, patient, or provider); messages form threaded conversation
 
 - **Entity 3 - Case Timeline Event**:
-  - **Key attributes**: Event ID, case ID, event type (case created, status changed, feedback resolution changed, note added, message sent, message received, attachment uploaded, case assigned, case reassigned, account intervention performed, case resolved, case reopened, case closed), event timestamp, actor user ID (admin, patient, or provider who performed action), actor type (Admin, Patient, Provider), event description with full context, internal note flag (true if admin-only note), related message ID (if event is message-related), related attachment ID (if event is attachment-related)
+  - **Key attributes**: Event ID, case ID, event type (case created, status changed, feedback resolution changed, note added, message sent, message received, attachment uploaded, case assigned, case reassigned, account intervention performed, case resolved, case reopened, case closed, case escalated, notification sent, notification failed, admin deactivated — 17 values), event timestamp, actor user ID (admin, patient, or provider who performed action), actor type (Admin, Patient, Provider), event description with full context, internal note flag (true if admin-only note), related message ID (if event is message-related), related attachment ID (if event is attachment-related)
   - **Relationships**: Many timeline events belong to one support case; one timeline event created by one actor (admin, patient, or provider)
 
 - **Entity 4 - Case Attachment**:
@@ -1288,12 +1307,12 @@ Support agent encounters complex technical issue requiring senior staff; escalat
   - **Relationships**: Many assignments belong to one support case (tracks reassignment history); one assignment references one admin user (assignee) and one admin user (assigner); assignment is informational only and does not restrict case access
 
 - **Entity 6 - Case Resolution**:
-  - **Key attributes**: Resolution ID, case ID, resolution summary, resolution category (issue fixed, information provided, account intervention, etc.), feedback resolution (optional: Implemented, Planned, Declined, Under Review), root cause (optional), resolved timestamp, resolved by admin user ID, auto-close period (days), closure timestamp (when auto-closed or manually closed), closed by admin user ID (if manually closed)
+  - **Key attributes**: Resolution ID, case ID, resolution summary, resolution category (issue fixed, information provided, account intervention, etc.), feedback resolution (optional: Implemented, Planned, Declined, Under Review), root cause (optional), resolved timestamp, resolved by admin user ID, auto-close period (Immediately, 3, 7 or 14 days), closure timestamp (when auto-closed or manually closed), closed by admin user ID (if manually closed)
   - **Relationships**: One resolution belongs to one support case; one resolution created by one admin user
 
 - **Entity 7 - Case Reopening**:
-  - **Key attributes**: Reopening ID, case ID, reopening reason, reopening timestamp, reopened by admin user ID, previous resolution reference, new priority (if changed), new assignee (if changed)
-  - **Relationships**: Many reopenings belong to one support case (tracks reopening history); one reopening performed by one admin user
+  - **Key attributes**: Reopening ID, case ID, reopening reason (20 to 1000 characters; stored here only, not repeated on the case), reopening timestamp, reopened by (an admin user, or System for an automatic reopen after a patient/provider reply, with reason "User replied"), previous resolution reference, new priority (if changed), new assignee (if changed)
+  - **Relationships**: Many reopenings belong to one support case (tracks reopening history); one reopening performed by one admin user or by System
 
 ---
 
@@ -1308,6 +1327,7 @@ Support agent encounters complex technical issue requiring senior staff; escalat
 | 2026-01-26 | 2.2 | **Removed Case export functionality:** Removed Export Case Button from Screen 3 (Support Case Detail View); Removed Export Filtered Cases Button from Screen 1 (All Cases Listing); Removed Business Scenario B5 (Case Export Failure); Removed User Story 7 (Admin Exports Cases for Compliance Audit); Removed export-related business rules, constraints, and performance metrics (SC-011); Removed REQ-034-034 (case export requirement); Updated REQ-034-024 to focus on internal notes being admin-only without export reference; Removed Export Cases permission from RBAC integration point; Removed maximum case export limit from technical constraints; Case export feature was accidentally included and is now removed from both admin-facing (FR-034) and provider-facing (FR-032) specifications | AI Assistant |
 | 2026-01-26 | 2.3 | Constitution alignment updates: Set support case retention to **10 years** (aligns with audit-trail retention; exceeds 7-year minimum); clarified Support Center access semantics (visibility is not restricted by assignment); aligned Provider module naming to **PR-06** (per FR-032); clarified MFA language as dependent on shared MFA stack delivery (FR-026 / FR-031). | AI Assistant |
 | 2026-01-26 | 2.4 | Naming alignment: Updated patient Help/Support module references from **P-XX** to **P-08** to match Constitution module breakdown (Help Center & Support Access). | AI Assistant |
+| 2026-11-20 | 2.5 | Requirements graph programme baseline: owner rulings applied. Main changes: (1) No Support Manager role and no "Manage Support Configuration" permission: the Support Center settings screen is Super Admin only, escalations go to Super Admin, all other support work is Support Staff; (2) Escalate is a tick inside the Reassign Case modal (reason required, priority raised to High or Urgent, escalation notice sent), with no separate escalation form; (3) automatic reopen when a patient or provider replies to a Resolved case is recorded as a Reopening by System with reason "User replied"; replies to Closed cases go to an admin; (4) urgent unassigned cases get a fixed 1-hour alert email to admins, then escalate to Super Admin at the configured threshold; (5) auto-close options are Immediately, 3, 7 or 14 days; (6) Low, Medium, High and Urgent are locked, resolution categories, root causes and reopen reason templates cannot be deleted while in use, and built-in case categories are fixed; (7) default case list view is the last 90 days and is shared with the provider My Support Cases list (FR-032); (8) one inactivity clock: the Case Inactivity Threshold replaces the fixed 7-day warning; (9) up to 5 files per message; plain-text description; search covers email and phone but not internal notes; (10) internal notes visible to every admin with "View Support Center"; (11) retired: Save as Draft, case analytics reporting view, notification preferences per category, case-data export, repeated resolution details on the case; (12) added: Report a problem rule (FR-034 owns it), booking request type, request status, decline reason and outcome (moved in from FR-016), link from a case to a provider-caused cancellation, 17 timeline event types, "support case created" and provider status-change and closure emails; (13) notification retry numbers now come only from the FR-030 retry rule; (14) the ten category names are the master list, with per-form subsets; Suggestion and Other are filed under Feedback; cross-document reconciliation (retention, case analytics mentions removed) | AI Assistant |
 
 ---
 
@@ -1324,4 +1344,4 @@ Support agent encounters complex technical issue requiring senior staff; escalat
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (PRD Standards & Requirements)  
 **Based on**: FR-011 Aftercare & Recovery Management PRD
-**Last Updated**: 2026-01-26
+**Last Updated**: 2026-11-20

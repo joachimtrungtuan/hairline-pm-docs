@@ -3,7 +3,7 @@
 **Module**: A-09: System Settings & Configuration
 **Feature Branch**: `fr031-admin-access-control`
 **Created**: 2025-11-14
-**Status**: Proposed revision (v1.1); v1.0.2 baseline verified and approved
+**Status**: Revision v1.2 (requirements graph programme baseline); v1.0.2 baseline verified and approved
 **Source**: FR-031 from system-prd.md
 
 ---
@@ -12,13 +12,13 @@
 
 The Admin Access Control & Permissions module is a **Super Admin-only configuration tool** that serves as the **single source of truth** for all role definitions and permission matrices across the entire Hairline platform. This module enables Super Admins to:
 
-1. **Define Admin Platform Role Permissions**: Configure what permissions each admin role has (Super Admin, Aftercare Specialist, Billing Staff, Support Staff)
-2. **Define Provider Platform Roles and Permissions**: Configure the four protected provider roles and create custom provider roles for staff needs shared across provider organizations
+1. **Define Admin Platform Role Permissions**: Configure what permissions each admin role has (Super Admin, Aftercare Specialist, Billing Admin, Support Staff)
+2. **Define Provider Platform Roles and Permissions**: Configure the permissions of the four provider roles (Owner, Manager, Clinical Staff, Billing Staff)
 3. **Manage Admin Team Members**: Invite admin users and assign them roles (team member invitation/management for providers is handled separately in FR-009)
 
 **Key Distinction**: This module is exclusively for **Super Admins to configure RBAC rules**. Regular admin users and providers do not have access to this module. Provider owners can assign roles to their team members (FR-009), but only Super Admins can define what permissions those roles have.
 
-This centralized approach ensures consistent security policies across all platforms, enables Super Admins to configure and update role permissions from a single interface, and maintains full auditability and compliance with healthcare data security requirements. Custom provider roles are global definitions; provider organizations may assign them to staff but cannot create or edit their permission definitions.
+This centralized approach ensures consistent security policies across all platforms, enables Super Admins to configure and update role permissions from a single interface, and maintains full auditability and compliance with healthcare data security requirements.
 
 This module directly supports Principle II (Medical Data Privacy & Security) and Principle VI (Data Integrity & Audit Trail) from the Hairline Platform Constitution by enforcing the principle of least privilege and maintaining comprehensive audit trails of all permission changes and administrative actions.
 
@@ -48,9 +48,10 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 
 **Admin Platform (A-09)** (Super Admin Only):
 
-- **Admin role permission configuration**: Super Admins define what permissions each admin role has (Super Admin, Aftercare Specialist, Billing Staff, Support Staff)
-- **Provider role configuration**: Super Admins define permissions for the four protected provider roles and create, clone, and edit global custom provider roles
+- **Admin role permission configuration**: Super Admins define what permissions each admin role has (Super Admin, Aftercare Specialist, Billing Admin, Support Staff)
+- **Provider role configuration**: Super Admins define permissions for the four provider roles (Owner, Manager, Clinical Staff, Billing Staff)
 - **Admin team member management**: Super Admins invite admin users and assign them predefined roles
+- **Finance admin (actor)**: the admin team member who works the financial screens of the Admin Platform (payouts, billing, provider financial reports). The predefined admin role for this work is Billing Admin; Super Admin also has full access. Which financial screens an admin can reach follows the Billing & Financial permissions in Screen 4
 - Permission matrix definition and editing for both admin and provider roles
 - Centralized RBAC configuration interface accessible only to Super Admins
 - Audit trail of all permission changes and role assignments
@@ -106,12 +107,12 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 4. System displays current admin team members with their roles and status
 5. Super Admin clicks "Invite Team Member" button
 6. System presents invitation form with fields: email address, first name, last name, role selection
-7. Super Admin enters admin user details and selects role (Super Admin, Aftercare Specialist, Billing Staff, Support Staff)
+7. Super Admin enters admin user details and selects role (Super Admin, Aftercare Specialist, Billing Admin, Support Staff)
 8. System validates email format and checks for duplicate email within admin team
 9. Super Admin reviews invitation details and clicks "Send Invitation"
 10. System generates secure invitation token (expires in 7 days)
-11. System sends email to invitee with invitation link, Hairline Admin Platform branding, and role being offered
-12. System creates pending invitation record with status "Invited"
+11. System sends email to invitee with invitation link, Hairline Admin Platform branding, and role being offered (sent within 1 minute of the Super Admin clicking Send Invitation)
+12. System records the invitation on the new admin user's account with status "Invited"
 13. System displays confirmation message to Super Admin
 14. New Admin User receives email and clicks invitation link
 15. System validates invitation token (not expired, not already used)
@@ -155,7 +156,8 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
   10. System updates user's role assignment with Effective From timestamp
   11. System logs role change in audit trail (who changed, old role, new role, effective_from, timestamp)
   12. System sends email notification to affected user about role change (includes effective date/time)
-  13. System enforces new role permissions on the first API call at or after Effective From
+  13. System shows the affected user an "Acknowledge role change" action (banner after sign-in and a link in the email); the acknowledgement time is stored on the account (Rule 10)
+  14. System enforces new role permissions on the first API call at or after Effective From
 - **Outcome**: Admin user's permissions updated to match new role
 
 **A3: Create Custom Admin Role**:
@@ -178,10 +180,10 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 
 **A4: Configure Provider Role Permissions**:
 
-- **Trigger**: Super Admin needs to modify permissions for a protected or custom provider role
+- **Trigger**: Super Admin needs to modify permissions for a provider role
 - **Steps**:
   1. Super Admin navigates to Settings > User Roles & Permissions > Provider Roles tab
-  2. System displays protected and custom provider roles with user counts
+  2. System displays the four provider roles with user counts
   3. Super Admin clicks "Edit Permissions" on target provider role (e.g., "Clinical Staff")
   4. System opens Permission Matrix Modal (Screen 4) with provider permissions
   5. System displays current permissions checked and shows user count: "Currently assigned to [X] users across [Y] providers"
@@ -194,32 +196,9 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
   12. System saves updated permission matrix
   13. System logs permission change in audit trail with before/after comparison
   14. System syncs permission changes to Provider Platform (FR-009) within 5 seconds
-  15. System displays confirmation: "Provider role permissions updated. Changes will take effect for all [Role] members on next page load."
+  15. System displays confirmation: "Provider role permissions updated. Changes reach all [Role] members within 5 seconds and apply on their next request."
   16. All provider team members with this role receive updated permissions on their next API call
 - **Outcome**: Provider role permissions updated and automatically propagated to all provider organizations; changes enforced immediately
-
-**A5: Create Custom Provider Role**:
-
-- **Trigger**: Super Admin needs a reusable provider staff role beyond the four protected roles.
-- **Steps**:
-  1. Super Admin opens Provider Roles and chooses Create New Role.
-  2. Super Admin enters a unique role name and description, then selects a non-Owner base type: Manager, Clinical Staff, or Billing Staff.
-  3. System opens the provider permission matrix. Super Admin selects at least one permission and reviews the effective access and sensitive-permission warnings.
-  4. System rejects Owner-only permissions and any protected action unavailable to the selected base type. The base type defines eligibility for existing role-limited actions; selected permissions may narrow access but cannot bypass those protections.
-  5. Super Admin reviews the organization-wide impact and confirms creation.
-  6. System saves a global custom provider role, records the actor, base type, and permission grants in the audit trail, and makes it available for non-Owner staff assignment in FR-009.
-- **Outcome**: Every provider organization can assign the new role to eligible non-Owner team members; no provider organization can change the role definition.
-
-**A6: Clone Provider Role**:
-
-- **Trigger**: Super Admin needs a new provider role based on an existing non-Owner role.
-- **Steps**:
-  1. Super Admin chooses Clone Role on a system or custom provider role other than Owner.
-  2. System shows the source role's base type and current permission snapshot. Super Admin supplies a unique new name and description.
-  3. System copies the base type and eligible permissions into an editable draft, then validates the same protected-action, dependency, and sensitive-permission rules as role creation.
-  4. Super Admin reviews the resulting access and confirms creation.
-  5. System creates a separate global custom role with `is_system_role = false` and logs the source role, copied permissions, actor, and timestamp. Later edits to either role do not change the other.
-- **Outcome**: The cloned role can be assigned to non-Owner provider staff through FR-009. Cloning never creates a second Owner role or changes the source role.
 
 **B1: Invalid Email Address**:
 
@@ -236,7 +215,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 - **Trigger**: Super Admin invites email that already exists as admin user or pending invitation
 - **Steps**:
   1. System checks email against existing admin team members and pending invitations
-  2. System displays error: "This email is already part of the admin team"
+  2. System displays error: "This email is already associated with an admin account. Please use a different email or check existing team members."
   3. System suggests: "View team member" or "Resend invitation" if pending
   4. Super Admin either cancels or takes suggested action
 - **Outcome**: Duplicate prevented, existing record maintained
@@ -256,12 +235,12 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 - **Steps**:
   1. System attempts to send invitation email
   2. Email service returns error
-  3. System logs error and retries up to 3 times with exponential backoff
-  4. If all retries fail, system marks invitation as "Pending Send"
+  3. System logs each failed delivery in the audit trail and retries according to the notification retry rule owned by FR-030 (this flow sets no retry count or interval of its own)
+  4. If all retries under that rule fail, system marks invitation as "Pending Send"
   5. System displays warning to Super Admin: "Invitation created but email failed. We'll retry automatically."
-  6. Background job retries sending every 10 minutes for 24 hours
-  7. If still failing after 24 hours, system alerts admin team
-- **Outcome**: Invitation record created, email eventually delivered or admin intervenes
+  6. If the invitation still cannot be sent 24 hours after it was created, the invitation becomes "Expired"
+  7. System alerts the admin team; Super Admin can resend the invitation (A1)
+- **Outcome**: Invitation record created; email delivered through the retry rule, or the invitation expires and the Super Admin resends it
 
 **B5: Unauthorized Access Attempt**:
 
@@ -272,7 +251,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
   3. System checks user's permissions against required permission
   4. System denies access and displays message: "Access Denied: You do not have permission to access this feature. Contact your administrator if you need access."
   5. System logs access denial attempt in audit trail (user, feature, timestamp, IP address)
-  6. System sends alert to Super Admin if multiple failed attempts detected (potential security issue)
+  6. System sends alert to Super Admin when one admin is refused 5 times within 10 minutes (launch default; the count and the time window are admin settings in A-09; potential security issue)
 - **Outcome**: Unauthorized features hidden from UI; access blocked if directly accessed; security event logged
 
 **Note**: The system follows "hide first, deny second" approach:
@@ -312,7 +291,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 
 #### Tab 1: Admin Roles
 
-**Purpose**: Define and configure permission matrices for admin platform roles (Super Admin, Aftercare Specialist, Billing Staff, Support Staff)
+**Purpose**: Define and configure permission matrices for admin platform roles (Super Admin, Aftercare Specialist, Billing Admin, Support Staff)
 
 **Data Fields**:
 
@@ -321,7 +300,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 | Role List | table | N/A | List of all admin roles | Display: Role Name, Description, # Users, Actions |
 | Role Name | text | N/A | Name of role | Read-only for system roles |
 | Users Count | number | N/A | Number of admin users with this role | Display only, clickable to filter Tab 2 |
-| Actions | button group | N/A | Edit Permissions, View Users, Clone Role | Disabled for Super Admin role |
+| Actions | button group | N/A | Edit Permissions, View Users, Clone Role | Edit Permissions and Clone Role are disabled for the Super Admin role; View Users stays available |
 
 **Actions**:
 
@@ -333,7 +312,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 **Business Rules**:
 
 - Super Admin role permissions cannot be edited (locked, full access)
-- System roles (Super Admin, Aftercare Specialist, Billing Staff, Support Staff) can be edited but not deleted
+- System roles (Super Admin, Aftercare Specialist, Billing Admin, Support Staff) cannot be deleted; all of them except Super Admin can be edited
 - Custom roles can be created, edited, and deleted (if no users assigned)
 - Permission changes take effect on the next API call after propagation (≤ 5 seconds) for all users with that role
 
@@ -348,7 +327,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
 | Search Bar | text input | No | Search users by name or email | Real-time filtering |
-| Filter: Role | dropdown | No | Filter users by assigned role | All Roles, Super Admin, Aftercare Specialist, Billing Staff, Support Staff |
+| Filter: Role | dropdown | No | Filter users by assigned role | All Roles, then every active admin role including custom roles (predefined: Super Admin, Aftercare Specialist, Billing Admin, Support Staff) |
 | Filter: Status | dropdown | No | Filter by user status | All, Active, Suspended, Pending Invitation |
 | User Name | Display (text) | N/A | Full name of admin user | Display only |
 | Email | Display (email) | N/A | Admin user's email address | Display only |
@@ -362,12 +341,12 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 
 - **Invite Team Member**: Opens invitation form (Screen 2)
 - **Change Role**: Opens role assignment modal
-- **Suspend/Activate**: Suspend or reactivate admin user
+- **Suspend/Activate**: Suspend or reactivate admin user (not available for Super Admin accounts)
 - **View Audit**: Opens user detail page with audit trail (Screen 5)
 
 **Business Rules**:
 
-- Super Admin accounts cannot be suspended by other users (system protection)
+- A Super Admin account cannot be suspended by any other user, and cannot be removed, demoted or deactivated by anyone inside the product, including its holder; if ever needed, this is done outside the product (system protection)
 - At least one active Super Admin must exist at all times (prevent lockout)
 - Suspended users cannot log in but accounts remain in system (soft suspension)
 - Search filters users in real-time without page reload
@@ -379,37 +358,34 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 - Display warning banner if only one Super Admin exists: "Warning: Only one Super Admin account. Consider adding backup admin."
 - Show notification dot on Pending Invitations sub-tab if invitations are about to expire (< 24 hours)
 - Export user list to CSV with all columns and applied filters
+- Each user row shows whether the user has acknowledged the latest role change (Acknowledged or Awaiting acknowledgement)
 
 ---
 
 #### Tab 3: Provider Roles
 
-**Purpose**: Define and configure permission matrices for the protected provider roles (Owner, Manager, Clinical Staff, Billing Staff) and global custom provider roles.
+**Purpose**: Define and configure permission matrices for the four provider roles (Owner, Manager, Clinical Staff, Billing Staff).
 
 **Data Fields**:
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
 | Role List | table | N/A | List of provider roles | Display: Role Name, Description, Total Users Across All Providers, Actions |
-| Role Name | text | N/A | Name of provider role | Protected names read-only; custom names editable by Super Admin and unique within provider roles |
-| Base Type | badge/select | Conditional | Manager, Clinical Staff, or Billing Staff eligibility for custom roles | Required for custom roles; fixed after creation; never Owner |
+| Role Name | text | N/A | Name of provider role | Read-only; the four provider role names are fixed |
 | Total Users | number | N/A | Count of provider team members with this role across all providers | Display only, informational |
 | Last Modified | datetime | N/A | When permissions were last updated | Display only |
-| Actions | button group | N/A | Edit Permissions, View Users, Clone Role | Owner role has lock icon and no Clone Role action |
+| Actions | button group | N/A | Edit Permissions, View Users | Owner role has a lock icon |
 
 **Actions**:
 
 - **Edit Permissions**: Opens permission matrix modal/panel for selected role (Provider Platform permissions)
 - **View Users**: Links to FR-015 (Provider Management) to view providers and their team members with this role
-- **Create New Role**: Creates a global custom provider role with a non-Owner base type and selected permissions
-- **Clone Role**: Copies a non-Owner role's base type and current eligible permissions into a separately editable custom role
 
 **Business Rules**:
 
 - Owner role must always have full access to all provider features (cannot be restricted)
-- The four system-defined provider roles cannot be renamed or removed; custom provider roles can be created and cloned only by Super Admins. Custom-role deletion is outside this revision's scope.
-- Custom roles are global across provider organizations. Provider users may assign an available custom role to non-Owner staff in FR-009, but cannot create, clone, or edit role definitions.
-- A custom role cannot use the Owner base type, replace the primary Owner, or receive Owner-only permissions. Existing role-limited actions require both the applicable base type and the explicit permission grant.
+- The four provider roles (Owner, Manager, Clinical Staff, Billing Staff) cannot be renamed or removed, and no other provider roles can be created or cloned; Super Admins configure only their permissions
+- Actions limited to named roles (for example Owner only) stay limited to those roles even if the permission is granted to another role
 - Permission changes sync to Provider Platform (FR-009) within 5 seconds
 - Permission changes affect all provider team members with that role across all providers
 - System shows warning when editing: "This will affect [count] provider team members across all provider organizations"
@@ -433,7 +409,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 | Last Name | text | Yes | Admin user's last name | Max 50 characters; letters, spaces, hyphens only |
 | Email Address | email input | Yes | New admin user's email | Valid email format; unique (not already in use); lowercase conversion |
 | Phone Number | tel input | No | Admin user's phone number | E.164 format validation; optional for now (MFA implementation planned for future) |
-| Assigned Role | select (dropdown) | Yes | Role to assign to new user | Must select from available admin roles (Super Admin, Aftercare Specialist, Billing Staff, Support Staff) |
+| Assigned Role | select (dropdown) | Yes | Role to assign to new user | Must select from the active admin roles, including custom roles (predefined: Super Admin, Aftercare Specialist, Billing Admin, Support Staff) |
 | Personal Message | textarea | No | Optional welcome message from Super Admin | Max 500 characters; included in invitation email |
 
 **Actions**:
@@ -446,7 +422,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 
 - Email validation occurs on blur (field loses focus) for immediate feedback
 - System checks for duplicate email across all admin users (active, suspended, pending)
-- Role dropdown populated from active admin roles only (archived roles excluded)
+- Role dropdown populated from active admin roles, including custom admin roles
 - Role dropdown displays: role name + brief description on hover
 - Form cannot be submitted until all required fields pass validation
 - Invitation token expires after 7 days (168 hours)
@@ -483,25 +459,20 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 | First Name | text | Yes | Editable first name (pre-filled from invitation) | 2-50 characters; letters, spaces, hyphens only |
 | Last Name | text | Yes | Editable last name (pre-filled from invitation) | 2-50 characters; letters, spaces, hyphens only |
 | Phone Number | tel input | No | Primary contact phone for admin user | E.164 format (e.g., +1234567890); optional for now (MFA planned for future) |
-| Password | password | Yes | Account password | Must satisfy password policy: min 12 chars, uppercase, lowercase, number, special char from !@#$%^&(),.?\":{}&#124;<> |
+| Password | password | Yes | Account password | Must satisfy the password policy (see system PRD, Platform-Wide Rules: Password and one-time-code policy) |
 | Confirm Password | password | Yes | Re-enter password | Must match Password field exactly |
 | Accept Terms | checkbox | Yes | Confirm platform terms & privacy policy | Must be checked before submission |
 
 **Actions**:
 
 - **Create Account**: Submits form and creates admin account
-- **Cancel**: Returns to login page (invalidates invitation token if clicked)
+- **Cancel**: Returns to login page (invalidates the invitation token if clicked; the invitation then shows as "Expired")
 
 **Business Rules**:
 
 - Email field is pre-filled from invitation token and cannot be edited
 - First Name and Last Name are pre-filled from invitation but can be edited
-- Password must meet system security policy (defined in FR-026):
-  - Minimum 12 characters
-  - At least one uppercase letter
-  - At least one lowercase letter
-  - At least one number
-  - At least one special character from !@#$%^&(),.?":{}|<>
+- Password must meet the password policy: see system PRD, Platform-Wide Rules: Password and one-time-code policy
 - "Create Account" button disabled until all required fields are valid and terms are accepted
 - Phone number is optional for now (MFA enrollment will be added in future enhancement)
 - Invitation token validated before displaying form
@@ -567,9 +538,8 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
-| Role Name | text | Yes | Name of role (e.g., "Aftercare Specialist") | **Locked for system-defined roles**. Editable for custom roles. When editable: max 50 chars; unique within the role's guard. |
+| Role Name | text | Yes | Name of role (e.g., "Aftercare Specialist") | **Locked for system-defined roles**. Editable for custom admin roles only. When editable: max 50 chars; unique within the role's guard. |
 | Role Description | textarea | Yes | Purpose and responsibilities of role | Max 500 chars |
-| Provider Base Type | select/display | Conditional | Eligibility for role-limited provider actions | Required for custom provider roles; Manager, Clinical Staff, or Billing Staff; fixed after creation |
 | Permission Categories | accordion | Yes | Grouped permissions by feature area | At least one permission required |
 
 **Permission Matrix Structure** (Expandable Categories):
@@ -631,7 +601,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 |------------|-------------|--------------|
 | View Transactions | View patient and provider transactions | ☐ Read |
 | Process Payouts | Initiate provider payouts | ☐ Write |
-| Issue Refunds | Process patient refunds | ☐ Write (requires approval) |
+| Issue Refunds | Process patient refunds | ☐ Write (requires approval; any admin holding this permission may approve, no second person is required; approval step defined in FR-007) |
 | View Financial Reports | Access revenue analytics | ☐ Read |
 | View Patient Billing | View patient invoices and payment status | ☐ Read |
 | Send Payment Reminders | Send payment reminders to patients | ☐ Write |
@@ -700,8 +670,12 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 | Manage Notification Templates | Edit email templates (OTP, confirmations) | ☐ Write |
 | Configure Payment Settings | Manage Stripe accounts, commission rates, split pay | ☐ Write |
 | Manage Help Centre | Create/edit Help Centre content for providers | ☐ Write |
+| View Sensitive Settings | View the full value of sensitive settings (for example API keys) | ☐ Read |
+| Manage Authentication Policies | Edit authentication policy settings (for example lockout and session timeout) | ☐ Write |
 
-**Provider Platform Permission Categories** (for configuring protected and custom provider roles):
+FR-026 refers to these permission names for its screens: View Settings, Edit Settings, View Sensitive Settings, Manage Authentication Policies, Manage App Data and Manage Notification Templates.
+
+**Provider Platform Permission Categories** (for configuring the four provider roles):
 
 **Category: Patient Inquiries & Quotes (PR-02)**:
 
@@ -730,7 +704,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 | Permission | Description | Access Level |
 |------------|-------------|--------------|
 | View In-Progress Cases | View patients currently in treatment | ☐ Read |
-| Document Treatment | Add treatment notes, scans, photos | ☐ Write (Owner or Clinical Staff base type only) |
+| Document Treatment | Add treatment notes, scans, photos | ☐ Write (Owner or Clinical Staff only) |
 | Update Treatment Status | Change patient treatment stage | ☐ Write |
 | View Treatment History | Access historical treatment records | ☐ Read |
 
@@ -759,7 +733,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 |------------|-------------|--------------|
 | View Team Members | View team member list | ☐ Read |
 | Invite Team Members | Send team member invitations | ☐ Write |
-| Edit Team Member Roles | Change team member roles (non-Owner) | ☐ Write (Owner or Manager base type only) |
+| Edit Team Member Roles | Change team member roles (non-Owner) | ☐ Write (Owner or Manager only) |
 | Remove Team Members | Remove or suspend team members | ☐ Write (Owner only) |
 | View Team Activity | Access team activity logs | ☐ Read |
 
@@ -792,7 +766,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 **Layout**: 2-axis table where:
 
 - **Rows** = Permissions (grouped by category/module)
-- **Columns** = Roles (all roles of the same type: Admin or Provider, including custom roles)
+- **Columns** = Roles (all roles of the same type: Admin or Provider, including custom admin roles)
 - **Cell Values** = Checkboxes (☐ = unchecked, ☑ = checked) or access level indicators (Read/Write/Delete/None)
 
 **Data Fields**:
@@ -805,43 +779,43 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 
 **Matrix Table Structure**:
 
-**Example for Admin Roles**:
+**Example for Admin Roles** (default permissions of the predefined roles):
 
-| Permission | Category | Super Admin | Aftercare Specialist | Billing Staff | Support Staff | Custom Role 1 |
-|------------|----------|-------------|---------------------|---------------|---------------|---------------|
-| View Dashboard | A-01 | ☑ | ☑ | ☑ | ☑ | ☑ |
-| View Patient Overview | A-01 | ☑ | ☑ | ☑ | ☑ | ☑ |
-| View Patients | A-01 | ☑ | ☑ | ☑ | ☑ | ☑ |
-| Edit Patients | A-01 | ☑ | ☐ | ☐ | ☐ | ☐ |
-| Delete Patients | A-01 | ☑ | ☐ | ☐ | ☐ | ☐ |
-| View Quotes & Inquiries | A-01 | ☑ | ☐ | ☐ | ☐ | ☐ |
-| Edit Quotes | A-01 | ☑ | ☐ | ☐ | ☐ | ☐ |
-| View Reviews | A-01 | ☑ | ☑ | ☐ | ☐ | ☐ |
-| Moderate Reviews | A-01 | ☑ | ☐ | ☐ | ☐ | ☐ |
-| View Providers | A-02 | ☑ | ☑ | ☑ | ☑ | ☑ |
-| Edit Providers | A-02 | ☑ | ☐ | ☐ | ☐ | ☐ |
-| Onboard Providers | A-02 | ☑ | ☐ | ☐ | ☐ | ☐ |
-| Suspend Providers | A-02 | ☑ | ☐ | ☐ | ☐ | ☐ |
-| View Aftercare Cases | A-03 | ☑ | ☑ | ☐ | ☐ | ☐ |
-| Manage Aftercare | A-03 | ☑ | ☑ | ☐ | ☐ | ☐ |
-| Chat with Patients (Aftercare) | A-03 | ☑ | ☑ | ☐ | ☐ | ☐ |
-| Schedule Consultations | A-03 | ☑ | ☑ | ☐ | ☐ | ☐ |
-| View Transactions | A-05 | ☑ | ☐ | ☑ | ☐ | ☐ |
-| Process Payouts | A-05 | ☑ | ☐ | ☑ | ☐ | ☐ |
-| Issue Refunds | A-05 | ☑ | ☐ | ☐ | ☐ | ☐ |
-| View Patient Billing | A-05 | ☑ | ☐ | ☑ | ☐ | ☐ |
-| View Discounts | A-06 | ☑ | ☐ | ☑ | ☐ | ☐ |
-| Create Discounts | A-06 | ☑ | ☐ | ☐ | ☐ | ☐ |
-| View Affiliates | A-07 | ☑ | ☐ | ☐ | ☐ | ☐ |
-| View Analytics | A-08 | ☑ | ☑ | ☑ | ☐ | ☐ |
-| View Support Center | A-10 | ☑ | ☑ | ☐ | ☑ | ☐ |
-| Respond to Support | A-10 | ☑ | ☑ | ☐ | ☑ | ☐ |
-| View Settings | A-09 | ☑ | ☑ | ☑ | ☑ | ☑ |
-| Edit Settings | A-09 | ☑ | ☐ | ☐ | ☐ | ☐ |
-| Manage Users | A-09 | ☑ | ☐ | ☐ | ☐ | ☐ |
-| Manage Roles | A-09 | ☑ | ☐ | ☐ | ☐ | ☐ |
+| Permission | Category | Super Admin | Aftercare Specialist | Billing Admin | Support Staff |
+|------------|----------|-------------|---------------------|---------------|---------------|
+| View Dashboard | A-01 | ☑ | ☑ | ☑ | ☑ |
+| View Patient Overview | A-01 | ☑ | ☑ | ☑ | ☑ |
+| View Patients | A-01 | ☑ | ☑ | ☑ | ☑ |
+| Edit Patients | A-01 | ☑ | ☐ | ☐ | ☐ |
+| Delete Patients | A-01 | ☑ | ☐ | ☐ | ☐ |
+| View Quotes & Inquiries | A-01 | ☑ | ☐ | ☐ | ☐ |
+| Edit Quotes | A-01 | ☑ | ☐ | ☐ | ☐ |
+| View Reviews | A-01 | ☑ | ☑ | ☐ | ☐ |
+| Moderate Reviews | A-01 | ☑ | ☐ | ☐ | ☐ |
+| View Providers | A-02 | ☑ | ☑ | ☑ | ☑ |
+| Edit Providers | A-02 | ☑ | ☐ | ☐ | ☐ |
+| Onboard Providers | A-02 | ☑ | ☐ | ☐ | ☐ |
+| Suspend Providers | A-02 | ☑ | ☐ | ☐ | ☐ |
+| View Aftercare Cases | A-03 | ☑ | ☑ | ☐ | ☐ |
+| Manage Aftercare | A-03 | ☑ | ☑ | ☐ | ☐ |
+| Chat with Patients (Aftercare) | A-03 | ☑ | ☑ | ☐ | ☐ |
+| Schedule Consultations | A-03 | ☑ | ☑ | ☐ | ☐ |
+| View Transactions | A-05 | ☑ | ☐ | ☑ | ☐ |
+| Process Payouts | A-05 | ☑ | ☐ | ☑ | ☐ |
+| Issue Refunds | A-05 | ☑ | ☐ | ☐ | ☐ |
+| View Patient Billing | A-05 | ☑ | ☐ | ☑ | ☐ |
+| View Discounts | A-06 | ☑ | ☐ | ☑ | ☐ |
+| Create Discounts | A-06 | ☑ | ☐ | ☐ | ☐ |
+| View Affiliates | A-07 | ☑ | ☐ | ☐ | ☐ |
+| View Analytics | A-08 | ☑ | ☑ | ☑ | ☐ |
+| View Support Center | A-10 | ☑ | ☑ | ☐ | ☑ |
+| Respond to Support | A-10 | ☑ | ☑ | ☐ | ☑ |
+| View Settings | A-09 | ☑ | ☑ | ☑ | ☑ |
+| Edit Settings | A-09 | ☑ | ☐ | ☐ | ☐ |
+| Manage Users | A-09 | ☑ | ☐ | ☐ | ☐ |
+| Manage Roles | A-09 | ☑ | ☐ | ☐ | ☐ |
 
-**Example for Provider Roles**:
+**Example for Provider Roles** (default permissions of the four provider roles):
 
 | Permission | Category | Owner | Manager | Clinical Staff | Billing Staff |
 |------------|----------|-------|---------|----------------|---------------|
@@ -903,7 +877,6 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 - System prevents saving role with zero permissions
 - **Admin Role Protection**: Super Admin permissions cannot be removed from Super Admin role (system protection, checkboxes disabled)
 - **Provider Role Protection**: Owner role must always have full access to all provider features (cannot be restricted, checkboxes disabled for critical permissions)
-- **Custom Provider Role Protection**: Custom provider roles cannot receive Owner-only permissions. For actions restricted to Manager or Clinical Staff, both the matching base type and the permission grant are required. Cloning copies eligible grants without creating Owner-equivalent access.
 - Permission changes take effect for all users with that role on the next API call after propagation (≤ 5 seconds)
 - **Provider Permission Propagation**: Changes to provider role permissions automatically sync to Provider Platform (FR-009) within 5 seconds
 - Role edits logged in audit trail with before/after permission comparison
@@ -953,6 +926,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 | User Profile | section (read-only) | N/A | Name, email, role, status, created date | - |
 | Current Role | badge | N/A | Currently assigned role with color coding | - |
 | Role Effective From | datetime | N/A | When the current role became (or will become) active | - |
+| Role Change Acknowledged | datetime / badge | N/A | When the user acknowledged the latest role change, or Awaiting acknowledgement | Display only |
 | Last Login | datetime | N/A | Most recent successful login | - |
 | Login Count | number | N/A | Total number of logins since account creation | - |
 | Account Status | badge | N/A | Active/Suspended/Pending | - |
@@ -976,6 +950,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 - Access denial attempts logged with requested feature/endpoint
 - Audit trail exportable to CSV for compliance reporting
 - Sensitive actions (role changes, permission grants) highlighted in audit trail
+- Admin actions on a patient account (managed in FR-016) appear in the acting admin's audit trail on this screen; patient accounts and admin accounts remain separate records
 
 **Notes**:
 
@@ -989,19 +964,20 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 
 ### General Module Rules
 
-- **Rule 1**: All admin users MUST have at least one role assigned (no "roleless" accounts)
+- **Rule 1**: Every admin user MUST have exactly one role assigned (no "roleless" accounts)
 - **Rule 2**: Super Admin role MUST always have full system access (cannot be restricted)
 - **Rule 3**: Authorization MUST be evaluated server-side on every API call using the latest role assignment and permission matrix. Server-side caching is allowed only if invalidated/updated within 5 seconds of a role/permission change; enforcement MUST reflect changes on the next API call after cache invalidation.
 - **Rule 4**: At least one active Super Admin account MUST exist at all times (system protection against lockout)
 - **Rule 5**: All administrative actions (role changes, permission grants, user suspensions) MUST be logged in audit trail
 - **Rule 6**: Invitation tokens expire after 7 days (configurable via A-09 settings; range 1-30 days)
-- **Rule 7**: Suspended admin users cannot log in but accounts remain in system (soft suspension, not deletion)
+- **Rule 7**: Suspended admin users cannot log in but accounts remain in system (soft suspension, not deletion); Super Admin accounts are never suspended inside the product
 - **Rule 8**: Role assignments MUST be stored with an **Effective From** timestamp; enforcement MUST respect that effective date/time on authorization checks
 - **Rule 9**: Role names for system-defined roles (admin + provider) MUST be immutable (not editable/renamable); only custom admin roles can be renamed.
+- **Rule 10**: After an admin user's role changes, the user MUST acknowledge the change within 24 hours; the acknowledgement time is stored on the account and shown to Super Admins (REQ-031-124)
 
 ### Data & Privacy Rules
 
-- **Privacy Rule 1**: Audit trail entries are immutable and retained for 10 years (compliance requirement per Constitution Principle VI)
+- **Privacy Rule 1**: Audit trail entries are immutable; retention follows the system PRD, Platform-Wide Rules: One 10-year retention period
 - **Privacy Rule 2**: IP addresses logged for security audit purposes (GDPR-compliant logging)
 - **Privacy Rule 3**: Password reset requests logged in audit trail with requester identity
 - **Audit Rule**: All access to sensitive features (billing, patient medical data, provider financial data) MUST be logged with: timestamp, user ID, action, IP address, outcome
@@ -1016,29 +992,29 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 **Editable by Super Admin**:
 
 - Create, edit, delete custom admin roles
-- Create, clone, and edit global custom provider roles; select a non-Owner base type at creation
 - Assign/change roles for any admin user
 - Suspend/activate admin accounts
 - Configure invitation token expiry time (default 7 days, range 1-30 days)
-- Create permission matrix for custom roles
+- Create permission matrix for custom admin roles
 - Re-send invitation emails for pending accounts
 
 **Fixed in Codebase (Not Editable)**:
 
 - Super Admin role permissions (always full access)
-- System role names (Super Admin, Aftercare Specialist, Billing Staff, Support Staff) and the four protected provider role names (Owner, Manager, Clinical Staff, Billing Staff)
-- Owner-only provider capabilities and the custom provider role's base type after creation
+- System role names (Super Admin, Aftercare Specialist, Billing Admin, Support Staff) and the four protected provider role names (Owner, Manager, Clinical Staff, Billing Staff)
+- Owner-only provider capabilities
 - Core permission categories (cannot rename or remove: Patient Management, Provider Management, Billing, etc.)
-- Audit trail retention period (10 years, per Constitution)
+- Audit trail retention period (retention follows the system PRD, Platform-Wide Rules: One 10-year retention period)
 - Password hashing algorithm (bcrypt, cost factor 12)
-- Password requirements (12 chars minimum, 1 upper, 1 lower, 1 digit, 1 special char)
+- Password requirements (see system PRD, Platform-Wide Rules: Password and one-time-code policy)
 
 **Configurable with Restrictions**:
 
 - Invitation token expiry (configurable within 1-30 day range)
-- Maximum failed login attempts before lockout (configurable in A-09: Authentication Settings)
-- Session timeout duration (configurable in A-09: Authentication Settings)
+- Maximum failed login attempts before lockout (configurable in A-09: Authentication Settings; default 5 failed attempts with a 15-minute lockout, the same setting as FR-001; the admin login rate limit in Security Considerations is a separate control and stays)
+- Session timeout duration: the admin inactivity timeout set in A-09 (FR-026; default 30 minutes)
 - Number of concurrent sessions per admin user (default: 3, range: 1-5)
+- Repeated access denial alert threshold (default 5 refusals for one admin within 10 minutes; configurable in A-09)
 
 ---
 
@@ -1055,7 +1031,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 
 - **SC-005**: 100% of administrative actions (role changes, permission grants, suspensions) are logged in audit trail
 - **SC-006**: Zero unauthorized access to restricted admin features (all access attempts properly validated)
-- **SC-007**: Audit trail entries are immutable and retained for 10 years per compliance requirements
+- **SC-007**: Audit trail entries are immutable; retention follows the system PRD, Platform-Wide Rules: One 10-year retention period
 - **SC-008**: System architecture supports MFA integration (MFA is a planned Post-MVP requirement and will be enforced platform-wide once the shared MFA stack is delivered per Constitution Principle II)
 - **SC-009**: Password reset requests are processed and logged within 2 minutes
 
@@ -1088,10 +1064,10 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 - **FR-009 / Module PR-01**: Provider Team & Role Management
   - **Why needed**: FR-009 handles provider team member invitation, assignment, and management. FR-031 provides the **centralized permission configuration** for provider roles that FR-009 consumes and enforces.
   - **Integration point**:
-    - **FR-031 defines and configures** provider role permission matrices, including global custom provider roles and their base types
+    - **FR-031 defines and configures** provider role permission matrices
     - **FR-009 consumes** these permission definitions from FR-031 and enforces them when provider team members access features
     - Permission changes made in FR-031 automatically propagate to FR-009 enforcement
-    - Both modules share the underlying authorization infrastructure while keeping **admin roles** (Super Admin, Aftercare Specialist, Billing Staff, Support Staff) separate from **provider roles** in terms of management, but unified in terms of permission configuration
+    - Both modules share the underlying authorization infrastructure while keeping **admin roles** (Super Admin, Aftercare Specialist, Billing Admin, Support Staff) separate from **provider roles** in terms of management, but unified in terms of permission configuration
 
 - **FR-015**: Provider Management
   - **Why needed**: FR-015 handles provider organization management and provides oversight of provider team members
@@ -1126,7 +1102,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 - **External Service: Email Delivery Service** (Twilio SendGrid / AWS SES)
   - **Purpose**: Delivers invitation emails, role change notifications, password reset emails
   - **Integration**: RESTful API calls for email sending
-  - **Failure handling**: Queue emails for retry if delivery fails; log failures in audit trail; admin notification if emails fail for 24+ hours
+  - **Failure handling**: Retries follow the notification retry rule owned by FR-030; log failures in audit trail; admin notification if emails fail for 24+ hours
 
 - **External Service: System Clock / Time Service**
   - **Purpose**: Accurate timestamps for audit trail entries and token expiration
@@ -1141,10 +1117,10 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 
 - **Entity: Role Definitions**
   - **Why needed**: Cannot assign roles to users without predefined or custom roles
-  - **Source**: System ships with default roles (Super Admin, Aftercare Specialist, Billing Staff, Support Staff); custom roles created via this module
+  - **Source**: System ships with default roles (Super Admin, Aftercare Specialist, Billing Admin, Support Staff); custom roles created via this module
 
 - **State: Active Roles**
-  - **Why needed**: Only active (non-archived) roles can be assigned to new or existing users
+  - **Why needed**: Only active roles can be assigned to new or existing users
   - **Source**: Role management within this module (FR-031)
 
 ---
@@ -1169,9 +1145,9 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 
 - **Assumption 1**: Super Admin role assigned to senior operations staff (CEO, CTO, Operations Manager)
 - **Assumption 2**: Aftercare specialists check aftercare cases at least twice daily during business hours
-- **Assumption 3**: Billing staff process payouts on scheduled basis (weekly, bi-weekly, or monthly)
+- **Assumption 3**: Billing Admins process payouts on scheduled basis (weekly, bi-weekly, or monthly)
 - **Assumption 4**: Support staff respond to patient and provider inquiries within 24 hours
-- **Assumption 5**: Admin team members notified of role changes via email and acknowledge changes within 24 hours
+- **Assumption 5**: Admin team members are notified of role changes via email and acknowledge the change within 24 hours (REQ-031-124)
 
 ---
 
@@ -1195,7 +1171,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 - **Integration 2**: Notification Service for invitation and role change emails
   - **Data format**: JSON payload with email template ID, recipient email, template variables
   - **Authentication**: Internal service-to-service authentication (API key)
-  - **Error handling**: Queue failed emails for retry; log failures in audit trail
+  - **Error handling**: Retry follows the notification retry rule owned by FR-030; log failures in audit trail
 
 - **Integration 3**: Audit trail writes for all admin actions
   - **Data format**: Structured log entries (timestamp, user_id, action_type, details, IP address, outcome)
@@ -1217,7 +1193,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 - **Encryption**: JWT tokens signed with RS256 (asymmetric encryption) to prevent token tampering
 - **Audit trail**: All permission changes, role assignments, and admin actions logged with timestamp, user, IP address
 - **Threat mitigation**: Rate limiting on admin login endpoint to prevent brute-force attacks (max 5 attempts per 15 minutes)
-- **Compliance**: GDPR-compliant audit logging; PII anonymization on account deletion request; audit trail immutable and retained 10 years
+- **Compliance**: GDPR-compliant audit logging; PII anonymization on account deletion request; audit trail immutable; retention follows the system PRD, Platform-Wide Rules: One 10-year retention period
 
 ---
 
@@ -1233,7 +1209,7 @@ As a Super Admin, I need to invite a new aftercare nurse to the admin platform s
 
 **Acceptance Scenarios**:
 
-1. **Given** Super Admin is logged into admin platform, **When** Super Admin invites new user with email "<nurse@hairline.com>" and role "Aftercare Specialist", **Then** invitation email sent within 1 minute and new account created with status "Pending Activation"
+1. **Given** Super Admin is logged into admin platform, **When** Super Admin invites new user with email "<nurse@hairline.com>" and role "Aftercare Specialist", **Then** invitation email sent within 1 minute and new account created with status "Pending"
 
 2. **Given** new aftercare nurse receives invitation email, **When** nurse clicks activation link and sets password, **Then** account activated and nurse can log in with aftercare dashboard access
 
@@ -1261,7 +1237,7 @@ As a Super Admin, I need to create a custom "Analytics Viewer" role with read-on
 
 ### User Story 3 - Configure Provider Role Permissions (Priority: P1)
 
-As a Super Admin, I need to configure protected provider roles and create or clone global custom provider roles so that provider team members have appropriate access to platform features based on their role, and these permissions are consistently enforced across all provider organizations.
+As a Super Admin, I need to configure the permissions of the four provider roles so that provider team members have appropriate access to platform features based on their role, and these permissions are consistently enforced across all provider organizations.
 
 **Why this priority**: Centralized RBAC configuration ensures consistent security policies; provider role permissions must be configurable from Admin Platform; changes must propagate to Provider Platform automatically
 
@@ -1276,12 +1252,6 @@ As a Super Admin, I need to configure protected provider roles and create or clo
 3. **Given** Super Admin attempts to remove critical permissions from Owner role, **When** Super Admin tries to save changes, **Then** system blocks action with error: "Owner role must maintain full access to all provider features"
 
 4. **Given** provider role permission change has been made, **When** Super Admin views audit trail, **Then** change is logged with: role name, permissions added/removed, affected provider count, timestamp, and actor
-
-5. **Given** Super Admin creates a custom provider role with a non-Owner base type and at least one eligible permission, **When** the role is saved, **Then** it appears in the Provider Roles tab and FR-009 non-Owner assignment choices across provider organizations
-
-6. **Given** Super Admin clones a non-Owner provider role, **When** the clone is saved with a unique name and description, **Then** it is a separate non-system role with the source's base type and eligible permission snapshot; subsequent source changes do not alter the clone
-
-7. **Given** Super Admin attempts to clone Owner or grant an Owner-only permission to a custom role, **When** the request is submitted, **Then** the system rejects it and keeps the single primary Owner invariant
 
 ---
 
@@ -1317,25 +1287,25 @@ As an admin user, I need to be notified immediately when my role or permissions 
 
 2. **Given** role change notification received, **When** user logs in after role change, **Then** dashboard reflects new role permissions (aftercare features visible, support features hidden)
 
-3. **Given** user's role changed from "Billing Staff" to "Support Staff", **When** user attempts to access previously permitted billing feature, **Then** access denied and user informed: "Your permissions have changed. You no longer have access to this feature."
+3. **Given** user's role changed from "Billing Admin" to "Support Staff", **When** user attempts to access previously permitted billing feature, **Then** access denied and user informed: "Your permissions have changed. You no longer have access to this feature."
 
 ---
 
 ### User Story 6 - Prevent System Lockout (Priority: P1)
 
-As a platform administrator, I need the system to prevent the last Super Admin account from being suspended or deleted, so the platform always has at least one admin with full access.
+As a platform administrator, I need the system to prevent any Super Admin account from being suspended by another user, removed, demoted or self-deactivated inside the product, so the platform always has an admin with full access.
 
 **Why this priority**: Critical system protection; prevents complete lockout requiring database intervention
 
-**Independent Test**: Can be tested by attempting to suspend or delete the only Super Admin account and verifying action blocked
+**Independent Test**: Can be tested by attempting to suspend, demote or deactivate a Super Admin account and verifying the action is blocked
 
 **Acceptance Scenarios**:
 
-1. **Given** only one Super Admin account exists ("<admin@hairline.com>"), **When** another admin attempts to suspend this account, **Then** action blocked with error message: "Cannot suspend the last Super Admin account. Add another Super Admin first."
+1. **Given** a Super Admin account exists ("<admin@hairline.com>"), **When** another admin attempts to suspend this account, **Then** action blocked with error message: "A Super Admin account cannot be suspended. Super Admin accounts can only be changed outside the product."
 
-2. **Given** two Super Admin accounts exist, **When** Super Admin suspends one of the two Super Admin accounts, **Then** suspension succeeds and remaining Super Admin can continue managing platform
+2. **Given** two Super Admin accounts exist, **When** one Super Admin attempts to suspend the other, **Then** action blocked with the same message and both accounts stay active
 
-3. **Given** only one Super Admin exists, **When** Super Admin attempts to change own role to non-Super Admin role, **Then** action blocked with warning: "You are the last Super Admin. Assign Super Admin role to another user before changing your role."
+3. **Given** a Super Admin is signed in, **When** they attempt to change their own role or deactivate their own account, **Then** action blocked with message: "A Super Admin account cannot be demoted or deactivated in the product. This can only be done outside the product."
 
 ---
 
@@ -1348,7 +1318,7 @@ As a platform administrator, I need the system to prevent the last Super Admin a
   - **Handling**: Database-level locking prevents concurrent updates; second Super Admin receives error: "Role change failed - this user's role was just updated by another admin. Refresh and try again." Audit trail logs both attempts with outcomes (success, conflict)
 
 - **Edge Case 3**: What occurs if invitation email delivery fails (email service down)?
-  - **Handling**: System queues invitation email for retry (3 attempts with exponential backoff); if all retries fail, invitation marked "Delivery Failed" and Super Admin notified; Super Admin can manually re-send invitation once email service restored
+  - **Handling**: System retries the invitation email according to the FR-030 notification retry rule; while sending keeps failing the invitation shows "Pending Send" and the Super Admin is notified; if the email still cannot be sent 24 hours after the invitation was created, the invitation becomes "Expired"; Super Admin can re-send the invitation once the email service is restored
 
 - **Edge Case 4**: How to manage admin user who forgets password before activating account?
   - **Handling**: Pending activation accounts do not support password reset (no password set yet); user must request new invitation from Super Admin; original invitation token invalidated to prevent duplicate accounts
@@ -1362,30 +1332,31 @@ As a platform administrator, I need the system to prevent the last Super Admin a
 
 ### Core Requirements
 
-- **REQ-031-001**: System MUST allow Super Admins to invite new admin team members via email with role assignment
+- **REQ-031-001**: System MUST allow Super Admins to invite new admin team members via email with role assignment; the invitation email is sent within 1 minute
 - **REQ-031-002**: System MUST support creation of custom roles with granular permission assignment per admin module (A-01 through A-10)
 - **REQ-031-003**: System MUST enforce role-based access control on all admin API endpoints and UI components
-- **REQ-031-004**: System MUST provide predefined admin roles: Super Admin, Aftercare Specialist, Billing Staff, Support Staff
-- **REQ-031-005**: System MUST provide centralized configuration for the four protected provider roles and for global custom provider roles created or cloned by Super Admins; custom roles require a non-Owner base type and cannot gain Owner-only capabilities
-- **REQ-031-006**: System MUST automatically sync provider role creation, cloning, and permission changes to Provider Platform (FR-009) within 5 seconds
-- **REQ-031-007**: System MUST prevent modification of Owner role permissions that would remove full access to provider features
+- **REQ-031-004**: System MUST provide predefined admin roles: Super Admin, Aftercare Specialist, Billing Admin, Support Staff
+- **REQ-031-005**: System MUST provide centralized configuration for the permissions of the four provider roles (Owner, Manager, Clinical Staff, Billing Staff); no other provider roles exist
+- **REQ-031-006**: System MUST automatically sync provider role permission changes to Provider Platform (FR-009) within 5 seconds
+- **REQ-031-007**: System MUST prevent modification of Owner role permissions that would remove full access to provider features, with the message: "Owner role must maintain full access to all provider features"
 - **REQ-031-008**: System MUST log all administrative actions (role changes, permission grants, user suspensions, access denials) in immutable audit trail
-- **REQ-031-009**: System MUST prevent suspension or deletion of the last Super Admin account (system protection)
+- **REQ-031-009**: System MUST NOT allow a Super Admin account to be suspended by another user, or removed, demoted or self-deactivated inside the product (system protection; if ever needed, this is done outside the product), and MUST show a message saying so when it is attempted
 - **REQ-031-010**: System MUST send email notifications for: new invitations, role changes, password resets, repeated access denials
 - **REQ-031-011**: System MUST support role assignment changes with **Effective From** date/time tracking (stored and auditable)
+- **REQ-031-124**: System MUST ask an admin user to acknowledge a role change within 24 hours; the acknowledgement time is stored on the account and shown to Super Admins
 
 ### Data Requirements
 
-- **REQ-031-012**: System MUST maintain admin user accounts with: email, name, password hash, assigned role(s), role effective date/time, status (active/pending/suspended), creation date, last login timestamp
-- **REQ-031-013**: System MUST maintain role definitions with: guard-scoped role name, description, assigned permissions (as permission matrix), system/custom status, and non-Owner base type for custom provider roles
+- **REQ-031-012**: System MUST maintain admin user accounts with: email, name, password hash, assigned role, role effective date/time, role change acknowledgement time, status (active/pending/suspended), creation date, last login timestamp
+- **REQ-031-013**: System MUST maintain role definitions with: guard-scoped role name, description, assigned permissions (as permission matrix), and system/custom status (custom roles exist for admin roles only)
 - **REQ-031-014**: System MUST maintain audit trail entries with: timestamp, user ID, action type, action details, IP address, outcome (success/failed/denied)
-- **REQ-031-015**: System MUST retain audit trail for minimum 10 years per compliance requirements (Constitution Principle VI)
+- **REQ-031-015**: Audit trail retention follows the system PRD, Platform-Wide Rules: One 10-year retention period
 
 ### Security & Privacy Requirements
 
 - **REQ-031-016**: System MUST be architected to support Multi-Factor Authentication (MFA) integration as a planned Post-MVP requirement (per Constitution Principle II)
 - **REQ-031-017**: System MUST use bcrypt (cost factor 12+) for password hashing
-- **REQ-031-018**: System MUST enforce password requirements: minimum 12 characters, 1 uppercase, 1 lowercase, 1 digit, 1 special character
+- **REQ-031-018**: Retired. Password requirements follow the system PRD, Platform-Wide Rules: Password and one-time-code policy.
 - **REQ-031-019**: System MUST sign JWT tokens with RS256 (asymmetric encryption) to prevent tampering
 - **REQ-031-020**: System MUST perform server-side authorization evaluation on each API call based on current role assignments and permission matrices; JWT tokens MUST NOT be the authoritative source of permissions
 - **REQ-031-021**: System MUST invalidate active sessions (and/or reject access tokens) immediately upon account suspension; at minimum, all API calls MUST be rejected for suspended accounts starting with the next request
@@ -1393,7 +1364,7 @@ As a platform administrator, I need the system to prevent the last Super Admin a
 
 ### Integration Requirements
 
-- **REQ-031-023**: System MUST integrate with Notification Service (S-03) for email delivery (invitations, role changes, password resets)
+- **REQ-031-023**: System MUST send the admin invitation, role change and password reset emails through the platform notification service defined in FR-020
 - **REQ-031-024**: System MUST provide permission check API for all admin modules to enforce access control
 - **REQ-031-025**: System MUST cache permission matrix in memory for fast authorization checks (< 50ms per check)
 - **REQ-031-026**: System MUST invalidate permission cache within 5 seconds of role or permission changes
@@ -1403,19 +1374,19 @@ As a platform administrator, I need the system to prevent the last Super Admin a
 ## Key Entities
 
 - **Entity 1 - Admin User Account**
-  - **Key attributes**: user_id (UUID), email (unique), name, password_hash, assigned_role_id (foreign key), role_effective_from (timestamp), status (active/pending/suspended), created_at (timestamp), last_login_at (timestamp), MFA_enabled (boolean), invitation_token (nullable, expires after 7 days)
+  - **Key attributes**: user_id (UUID), email (unique), name, password_hash, assigned_role_id (foreign key), role_effective_from (timestamp), role_change_acknowledged_at (timestamp, nullable), status (active/pending/suspended), created_at (timestamp), last_login_at (timestamp), MFA_enabled (boolean), invitation_token (nullable, expires after 7 days)
   - **Relationships**: One admin user has one assigned role; one role can be assigned to many admin users; one admin user has many audit trail entries
 
 - **Entity 2 - Role Definition**
-  - **Key attributes**: role_id (UUID), role_name (unique within guard), guard, description, is_system_role (boolean - true for protected roles), base_type (Manager/Clinical Staff/Billing Staff for custom provider roles), permissions (permission matrix), created_at (timestamp), updated_at (timestamp), created_by (admin user ID)
-  - **Relationships**: An admin role may be assigned to admin users; a provider role may be assigned across provider organizations. Each role has permission grants; cloned roles retain an independent permission snapshot.
+  - **Key attributes**: role_id (UUID), role_name (unique within guard), guard, description, is_system_role (boolean - true for protected roles), permissions (permission matrix), created_at (timestamp), updated_at (timestamp), created_by (admin user ID)
+  - **Relationships**: An admin role may be assigned to admin users; a provider role may be assigned across provider organizations. Each role has permission grants; cloned admin roles retain an independent permission snapshot.
 
 - **Entity 3 - Audit Trail Entry**
   - **Key attributes**: audit_id (UUID), timestamp (indexed), user_id (foreign key), action_type (enum: login, role_change, permission_grant, access_denied, user_suspended, password_reset), action_details (JSON object with context), ip_address, outcome (enum: success, failed, denied), session_id (for tracking related actions)
   - **Relationships**: One admin user has many audit trail entries; audit entries are immutable (no updates or deletes)
 
 - **Entity 4 - Permission**
-  - **Key attributes**: permission_id (UUID), permission_name (unique), module_code (e.g., A-01, A-02), permission_category (read/write/delete), description, is_super_admin_only (boolean)
+  - **Key attributes**: permission_id (UUID), permission_name (unique), module_code (e.g., A-01, A-02), feature_area (the category heading the permission is listed under, e.g., Patient Management), access_level (read/write/delete), description, is_super_admin_only (boolean)
   - **Relationships**: Permissions are assigned to roles via permission matrix (many-to-many through role permissions JSON)
 
 ---
@@ -1428,6 +1399,7 @@ As a platform administrator, I need the system to prevent the last Super Admin a
 | 2026-01-04 | 1.0.1 | Lock system/provider role names (Issue #3 option 1); mark status + approvals as ✅ Verified & Approved | GPT-5.2 (AI) |
 | 2026-05-14 | 1.0.2 | Renamed A-06 permission `Approve Provider Discounts` to `Manage Admin Campaign Adoptions` to align with FR-019: provider self-created discounts do not require admin approval; admins manage adoption/override for admin-created both-fees campaigns. | Codex |
 | 2026-09-29 | 1.1 (proposed) | Added global custom provider role creation and cloning with non-Owner base types; aligned FR-009 assignment contract. See [CR-FR031-20260929-01](change-request-2026-09-29-global-custom-provider-roles.md). | Codex |
+| 2026-11-20 | 1.2 | Requirements graph programme baseline: owner rulings applied. Main changes: global custom provider roles rejected and removed (custom roles remain for admin roles only; the four provider roles are fixed); admin finance role named Billing Admin (Billing Staff now names only the clinic role) and Finance admin actor added; one role per admin user; Super Admin accounts never suspended by another user and never removed, demoted or self-deactivated inside the product; role filter and invite dropdown list all active admin roles; Super Admin row has Edit Permissions and Clone Role off; invitation retry refers to the FR-030 retry rule, 24 hours of failed sending or Cancel on setup makes the invitation Expired, status label Pending; duplicate-email message unified; invitation email within 1 minute; repeated-denial alert default 5 refusals in 10 minutes as an admin setting; 24-hour role-change acknowledgement Rule added (REQ-031-124); lockout default 5 attempts and 15 minutes; refund approval by any permitted admin; admin actions on patient accounts shown in the audit trail; FR-026 permission names added; default permission grids confirmed; Key Entity 4 fields corrected; cross-document reconciliation (retention and password policy pointers to the system PRD). | Claude AI |
 
 ---
 
@@ -1444,4 +1416,4 @@ As a platform administrator, I need the system to prevent the last Super Admin a
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-011 Aftercare & Recovery Management PRD
-**Last Updated**: 2026-09-29 (proposed revision; prior approval dated 2026-01-04)
+**Last Updated**: 2026-11-20 (requirements graph programme baseline; prior approval dated 2026-01-04)

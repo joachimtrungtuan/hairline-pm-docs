@@ -65,7 +65,7 @@ The Affiliate Management module enables Hairline to partner with external entiti
 **In Scope**:
 
 - Email notifications to affiliates when discount codes are created or updated
-- Email notifications to affiliates when monthly payouts are processed
+- Email notifications to affiliates when monthly payouts are processed (sent on status Paid, from FR-017)
 - Admin-to-affiliate communication via notes in admin dashboard (internal only)
 - System-generated payout confirmations with transaction breakdown
 - Read-only access to externally hosted affiliate marketing materials (banners, templates, and campaign assets) from the affiliate portal
@@ -82,7 +82,7 @@ The Affiliate Management module enables Hairline to partner with external entiti
 - **Admin bulk action**: Admins select affiliates manually or through filters, then generate one unique affiliate-bound promo code per selected affiliate
 - **Affiliate-initiated**: After the admin creates their account, affiliates complete a one-time activation link to set their password, then log into the dedicated affiliate portal to view their performance dashboard
 - **Patient-triggered**: Patients enter affiliate codes during booking checkout, triggering tracking and commission calculation
-- **System-scheduled**: Automated monthly job generates payout reports on the 7th of each month (fixed schedule)
+- **System-scheduled**: Automated monthly job generates payout reports on the affiliate payout day each month (platform setting, default the 7th)
 
 ---
 
@@ -101,8 +101,8 @@ The Affiliate Management module enables Hairline to partner with external entiti
    - Affiliate name (organization/individual name)
    - Contact email (for login and payout notifications)
    - Bank account details for payouts (account holder name, bank name, account number, routing/SWIFT code, optional IBAN) — mirroring the provider bank details collected in FR-032; payouts are executed as Stripe transfers
-   - Commission structure (percentage of booking revenue OR fixed amount per booking)
-   - Payout schedule (fixed: monthly on the 7th — not configurable, per business policy)
+   - Commission structure (percentage of net booking revenue after discounts and refunds OR fixed amount per booking)
+   - Payout schedule (monthly, on the affiliate payout day set in the platform setting, default the 7th — not chosen per affiliate)
 3. System validates inputs (unique email, valid payment details format)
 4. Admin submits affiliate onboarding form
 5. System creates affiliate account with:
@@ -191,7 +191,7 @@ The Affiliate Management module enables Hairline to partner with external entiti
      - Campaign name
      - Code prefix or naming pattern
      - Discount amount type and value
-     - Active date window
+     - Expiration date
      - Total usage cap per generated code
      - Per-patient usage limit
      - Application method (code-based or auto-apply link)
@@ -264,7 +264,7 @@ The Affiliate Management module enables Hairline to partner with external entiti
   5. System updates affiliate status to "Suspended"
   6. System disables all discount codes associated with affiliate (codes no longer valid at checkout)
   7. System sends email notification to affiliate about suspension with reason
-  8. System retains historical data (referrals, commissions, payouts) but prevents new activity (audit trail retained 10 years; financial records 7 years minimum)
+  8. System retains historical data (referrals, commissions, payouts) but prevents new activity (retention follows the system PRD, Platform-Wide Rules: One 10-year retention period)
   9. Pending unpaid commissions are held pending investigation
   10. Admin can reinstate account later by changing status to "Active"
 - **Outcome**: Affiliate account suspended; discount codes deactivated; pending payouts held; full audit trail maintained
@@ -295,9 +295,23 @@ The Affiliate Management module enables Hairline to partner with external entiti
   5. Admin confirms; system sets affiliate `Status: Inactive`
   6. System disables all of the affiliate's discount codes (invalid at checkout), consistent with suspension
   7. System converts the affiliate's portal access to **read-only**: the affiliate can still log in to view historical performance, codes, and payout history, but cannot transact or trigger any new activity
-  8. System retains all historical data (referrals, commissions, payouts, audit trail); the audit trail is retained 10 years and financial/payout records 7 years minimum
+  8. System retains all historical data (referrals, commissions, payouts, audit trail); retention follows the system PRD, Platform-Wide Rules: One 10-year retention period
   9. System sends the affiliate an offboarding notification (with final-settlement outcome) and records the action in the audit log
 - **Outcome**: Affiliate moved to the terminal Inactive state with codes disabled, final balance settled / forfeited / written off explicitly, portal access read-only, and a complete audit trail. Reinstating an Inactive affiliate is **not** the normal path; if a partnership resumes, the admin re-onboards (new activation) rather than silently reactivating, to keep settlement boundaries clean.
+
+**B6: Affiliate Permanent Ban (Punitive End of Partnership)**
+
+- **Trigger**: Admin decides the affiliate must be permanently removed as a punishment (distinct from B3 Suspension, which is temporary, and from B5 voluntary offboarding, which settles the balance). See Rule 16.
+- **Actors**: Admin (only an admin who may offboard an affiliate), System
+- **Steps**:
+  1. Admin navigates to the affiliate profile (Screen 3) and clicks "Deactivate / Offboard"
+  2. System opens Screen 3.3 and requires a reason; admin records the reason as "banned"
+  3. System shows the whole pending balance as forfeited (Settlement Outcome: Forfeit whole balance), whatever its size
+  4. Admin confirms; system sets affiliate `Status: Inactive` (there is no separate Banned status)
+  5. System forfeits the whole pending balance and records the forfeiture and the reason in the audit log
+  6. System disables all of the affiliate's discount codes and converts portal access to read-only, as in B5
+  7. System retains all historical data and sends the affiliate an offboarding notification
+- **Outcome**: Affiliate ends at Inactive with reason "banned", nothing from the pending balance is paid out, and the audit trail records who banned the affiliate and why. Reinstating is not the normal path (re-onboarding applies, as in B5).
 
 ---
 
@@ -332,7 +346,7 @@ The Affiliate Management module enables Hairline to partner with external entiti
 | Total Revenue | currency | N/A | Total booking value from affiliate referrals | Read-only, system-calculated |
 | Total Commissions Paid | currency | N/A | Sum of all commissions paid to date | Read-only, system-calculated |
 | Pending Payout | currency | N/A | Commission amount awaiting next payout cycle | Read-only, system-calculated |
-| Status | select | Yes | Account status: Active, Suspended, Inactive (admin-selectable). "Pending" is a system-set initial state shown until activation and is not manually selectable | Admin dropdown: Active / Suspended / Inactive; Pending is read-only/system-set |
+| Status | status | N/A | Account status: Pending, Active, Suspended, Inactive. "Pending" is a system-set initial state shown until activation | Read-only in this list; Suspend and Reinstate are done only through the Screen 3.1 modal, and Inactive is reached only through the Screen 3.3 Deactivate / Offboard modal; Pending is system-set |
 | Country/Region | select | No | Affiliate operating country or region | Uses supported country/region list |
 | Affiliate Type | select | No | Influencer, clinic partner, organization, other | Dropdown with configured options |
 | Performance Tier | status | N/A | System-calculated tier band (e.g., by revenue) | Read-only, system-calculated |
@@ -387,10 +401,10 @@ The Affiliate Management module enables Hairline to partner with external entiti
 | Account Number | text | Yes | Affiliate bank account number | Required, format valid for selected country, masked in UI (last 4 digits), encrypted at rest |
 | Routing / SWIFT Code | text | Yes | Routing or SWIFT/BIC code | Required, SWIFT/routing format validated |
 | IBAN | text | Conditional | IBAN where applicable | Valid IBAN format if provided |
-| Commission Type | radio | Yes | Percentage of Booking Revenue OR Fixed Amount | One option must be selected |
-| Commission Percentage | number | Conditional | % of booking revenue paid to affiliate | Required if "Percentage" selected, range 5-25% |
+| Commission Type | radio | Yes | Percentage of Net Booking Revenue (after discounts and refunds) OR Fixed Amount | One option must be selected |
+| Commission Percentage | number | Conditional | % of net booking revenue (after discounts and refunds) paid to affiliate | Required if "Percentage" selected, range 5-25% |
 | Commission Fixed Amount | currency | Conditional | Fixed $ amount per completed booking | Required if "Fixed Amount" selected, min $50 |
-| Payout Schedule | display | N/A | Monthly on the 7th (fixed) | Read-only; fixed schedule, not configurable |
+| Payout Schedule | display | N/A | Monthly, on the affiliate payout day (platform setting, default the 7th) | Read-only here; the payout day is changed in the platform setting, not per affiliate |
 | Performance Tier | status | N/A | System-calculated tier band (read-only) | Read-only, system-calculated, not admin-entered |
 | Activation Status | status | N/A | Invited (password not set) / Active (password set) | Read-only, system-managed |
 | Last Login | datetime | N/A | Timestamp of affiliate's last portal login | Read-only, system-recorded |
@@ -401,8 +415,8 @@ The Affiliate Management module enables Hairline to partner with external entiti
 - **Email Uniqueness**: System validates email is not already registered as affiliate or admin user
 - **Payment Masking**: Bank account number masked in UI after initial entry (show last 4 digits only) and encrypted at rest; S-02 validates bank-detail format on save (same handling as provider bank details in FR-032)
 - **Stripe Payouts**: All affiliate payouts are executed as Stripe transfers to this bank account; there is no PayPal or other payout method (consistent with the rest of the system)
-- **Commission Validation**: If percentage type, system calculates preview of commission for an example booking (e.g., "For a $1,000 booking at 15% of booking revenue, affiliate earns $150")
-- **Default Values**: Payout schedule is fixed at "Monthly on the 7th" (not editable); commission type defaults to "Percentage"
+- **Commission Validation**: If percentage type, system calculates preview of commission for an example booking (e.g., "For a $1,000 booking with no discount or refund at 15% of net revenue, affiliate earns $150; if the patient received a 10% discount, net revenue is $900 and the affiliate earns $135")
+- **Default Values**: Payout schedule follows the platform payout day setting (default "Monthly on the 7th"; not set per affiliate); commission type defaults to "Percentage"
 - **Edit Restrictions**: Email cannot be changed after account creation (must create new account if email change needed)
 - **Performance Tier**: Displayed read-only on edit; computed by the system (e.g., revenue band) and never set manually
 - **Activation State**: On create, Status is "Pending" and Activation Status is "Invited" until the affiliate completes the set-password flow; completing it flips Status to "Active" and Activation Status to "Active" together (per Rule 12). An admin "Resend Activation Email" action is available while Activation Status is "Invited"
@@ -496,8 +510,8 @@ The Affiliate Management module enables Hairline to partner with external entiti
 
 | Field Name | Type | Required | Description | Validation Rules |
 | --- | --- | --- | --- | --- |
-| Commission Type | radio | Yes | Percentage of Booking Revenue OR Fixed Amount | One option must be selected |
-| Commission Percentage | number | Conditional | New % of booking revenue | Required if "Percentage", range 5-25% |
+| Commission Type | radio | Yes | Percentage of Net Booking Revenue (after discounts and refunds) OR Fixed Amount | One option must be selected |
+| Commission Percentage | number | Conditional | New % of net booking revenue (after discounts and refunds) | Required if "Percentage", range 5-25% |
 | Commission Fixed Amount | currency | Conditional | New fixed $ amount per booking | Required if "Fixed Amount", min $50 |
 | Effective Date | date | Yes | Date the new structure applies from | Must be today or future (not in the past) |
 | Confirm | checkbox | Yes | "I confirm this commission change" | Must be checked to enable Submit |
@@ -527,7 +541,7 @@ The Affiliate Management module enables Hairline to partner with external entiti
 | --- | --- | --- | --- | --- |
 | Reason | textarea | Yes | Admin reason for offboarding | Min 20 chars, max 500 chars |
 | Final Balance Summary | display | N/A | Gross pending, reversals/refunds, and net final balance (USD), system-computed | Read-only |
-| Settlement Outcome | display | N/A | System-determined: Pay final balance / Forfeit (below $50) / Write off (negative) | Read-only, system-calculated |
+| Settlement Outcome | display | N/A | System-determined: Pay final balance / Forfeit (below $50) / Write off (negative) / Forfeit whole balance (ban) | Read-only, system-calculated |
 | Confirm Checkbox | checkbox | Yes | "I confirm this affiliate will be permanently deactivated" | Must be checked to enable Submit |
 
 **Business Rules**:
@@ -537,6 +551,7 @@ The Affiliate Management module enables Hairline to partner with external entiti
 - **Code Disablement**: All of the affiliate's codes are disabled (invalid at checkout)
 - **Portal Access**: Affiliate retains read-only portal access (historical views only); no new activity is possible
 - **Data Retention**: Historical referrals, commissions, payouts, and audit trail are retained for the audit-retention period
+- **Ban**: When the reason is recorded as "banned" (Rule 16), the affiliate still ends at Inactive, but the whole pending balance is forfeited with an audit entry instead of being settled as above; only admins who may offboard an affiliate may do this
 - **No Silent Reactivation**: An Inactive affiliate is not reinstated via Screen 3.1; resuming a partnership requires re-onboarding (new activation)
 - **Confirmation Gate**: "Submit" is disabled until the reason is valid and the confirmation checkbox is checked
 
@@ -679,7 +694,7 @@ The Affiliate Management module enables Hairline to partner with external entiti
 
 **Notes**:
 
-- Color-code status: Active (green), Expired (gray), usage-limit-reached (orange), Revoked (red)
+- Color-code the four code statuses: Active (green), Inactive (orange), Expired (gray), Revoked (red); a code that reaches its usage cap is deactivated automatically and shows as Inactive
 - Display usage statistics inline, e.g., "125 applied / 87 completed (69.6% conversion rate)"
 
 ---
@@ -727,7 +742,7 @@ The Affiliate Management module enables Hairline to partner with external entiti
 
 **Purpose**: Read-only admin workspace to review affiliate payout status, payout history, and reconciliation data calculated in FR-018 and executed in FR-017 / A-05. FR-018 does **not** initiate Stripe transfers or process payouts; affiliate billing and payout execution remain owned by FR-017 Screen 6.
 
-**Sub-views**: Overview (overall performance) · Current Cycle (read-only payout status) · Billing History (audit, 7-year retention, CSV export).
+**Sub-views**: Overview (overall performance) · Current Cycle (read-only payout status) · Billing History (audit, 10-year retention, CSV export).
 
 **Data Fields**:
 
@@ -747,11 +762,11 @@ The Affiliate Management module enables Hairline to partner with external entiti
 
 **Business Rules**:
 
-- **Automated Generation**: System automatically generates the payout list on the 7th of each month for the previous month's completed bookings and exposes the calculated amounts to FR-017 / A-05 for payout execution
+- **Automated Generation**: System automatically generates the payout list on the affiliate payout day (platform setting, default the 7th of the month) for the previous month's completed bookings and exposes the calculated amounts to FR-017 / A-05 for payout execution
 - **Overview Sub-view**: Shows overall performance for the selected month (total owed, total paid, affiliate count, failed count) at the top
 - **Current Cycle Sub-view**: Current cycle list is read-only in FR-018; payout processing actions are performed in FR-017 Screen 6 (Affiliate Billing - Commission Payouts)
 - **Stripe Execution**: Payouts are executed by FR-017 / A-05 as Stripe transfers to each affiliate's stored bank account, using the Stripe accounts configured in FR-029 and the payout execution path shared with provider payouts; FR-018 displays the resulting status updates
-- **Billing History Sub-view**: Permanent audit log of all payouts (affiliate, amount, date, transaction ID, final status) with full-text search, filter by affiliate/date/status, and CSV export; records retained for 7 years minimum
+- **Billing History Sub-view**: Permanent audit log of all payouts (affiliate, amount, date, transaction ID, final status) with full-text search, filter by affiliate/date/status, and CSV export; retention follows the system PRD, Platform-Wide Rules: One 10-year retention period
 - **Status Workflow**: Pending → Processing (payment initiated by FR-017) → Paid (payment confirmed) OR Failed (payment error)
 - **Retry Logic**: If a payout fails, retry is handled in FR-017 Screen 6; FR-018 displays the latest failed/retried status and failure reason
 - **Email Notifications**: System automatically sends a payout confirmation email when status changes to "Paid" based on FR-017 payout status
@@ -759,10 +774,10 @@ The Affiliate Management module enables Hairline to partner with external entiti
 
 **Acceptance Criteria**:
 
-1. Given it is the 7th of the month, when the automated payout calculation runs, then the Current Cycle sub-view lists all affiliates with completed bookings in the previous month and the Overview shows the cycle totals.
+1. Given it is the affiliate payout day (default the 7th of the month), when the automated payout calculation runs, then the Current Cycle sub-view lists all affiliates with completed bookings in the previous month and the Overview shows the cycle totals.
 2. Given payout data is generated in FR-018, when FR-017 reads the payout cycle, then the same affiliate count, amounts, threshold exclusions, and payout readiness data are available for A-05 execution.
 3. Given a payout fails in FR-017, when FR-018 refreshes the Current Cycle sub-view, then the row is marked "Failed", surfaced in red, and the failure reason is visible.
-4. Given admin opens the Billing History sub-view, then historical payouts are searchable, filterable, and exportable to CSV, with 7-year retention.
+4. Given admin opens the Billing History sub-view, then historical payouts are searchable, filterable, and exportable to CSV, with 10-year retention.
 5. Given admin clicks "View Detail" on any payout row, then the shared Screen 8 opens for that payout.
 
 **Notes**:
@@ -864,7 +879,7 @@ The Affiliate Management module enables Hairline to partner with external entiti
 | Total Commissions Earned | currency | N/A | Sum of all commissions earned to date | Read-only, system-calculated |
 | Commissions Paid | currency | N/A | Sum of commissions already paid out | Read-only, system-calculated |
 | Pending Payout | currency | N/A | Commission awaiting next payout (unpaid balance) | Read-only, system-calculated |
-| Next Payout Date | date | N/A | Date of next scheduled payout | Read-only, system-set (fixed: 7th of month) |
+| Next Payout Date | date | N/A | Date of next scheduled payout | Read-only, system-set (payout day per the platform setting, default the 7th of the month) |
 | Referral Link | text | N/A | Affiliate's unique auto-apply referral URL | Read-only, one-click copy |
 
 **Business Rules**:
@@ -898,7 +913,7 @@ _List row (one per assigned code)_:
 | Discount Code | text | N/A | The code patients enter at checkout | Read-only; one-click copy |
 | Campaign Name | text | N/A | Campaign the code belongs to | Read-only |
 | Status | status | N/A | Active / Inactive / Expired / Revoked | Read-only badge |
-| Active Window | date range | N/A | Start and end dates the code is valid | Read-only |
+| Expiration Date | date | N/A | Date after which the code is no longer valid (codes have an expiration date only, no start date) | Read-only |
 | Discount | text | N/A | Discount type and value (e.g., "10%" or "$50") | Read-only |
 | Application Method | text | N/A | Auto-apply or Code-based | Read-only |
 | Applied Count | number | N/A | Times the code was applied at checkout | Read-only, system-calculated |
@@ -912,7 +927,7 @@ _Per-code detail (on selecting a row)_:
 
 | Field Name | Type | Required | Description | Validation Rules |
 | --- | --- | --- | --- | --- |
-| Code Header | composite | N/A | Code text, campaign, status, active window | Read-only |
+| Code Header | composite | N/A | Code text, campaign, status, expiration date | Read-only |
 | Discount Terms | text | N/A | Discount type/value, application method, per-patient limit, max usage | Read-only |
 | Usage Over Time | chart | N/A | Applications and completions trend | Read-only, system-calculated |
 | Applied / Completed | text | N/A | Applied count vs. completed count | Read-only, system-calculated |
@@ -924,7 +939,7 @@ _Per-code detail (on selecting a row)_:
 
 **Business Rules**:
 
-- **Issued Code Visibility**: All active codes generated for the affiliate through single or bulk admin actions appear here with campaign name, active window, and status
+- **Issued Code Visibility**: All active codes generated for the affiliate through single or bulk admin actions appear here with campaign name, expiration date, and status
 - **Historical Codes**: Expired or revoked codes remain visible with status labels but cannot be copied as active promotional codes
 - **Read-Only Stats**: Applied/completed, conversion, revenue, and commission figures are sourced from FR-019 redemption lifecycle and commission calculation; affiliates cannot edit code parameters
 - **Marketing Materials Access**: If a campaign has externally hosted marketing materials, affiliates can view/download those links from the relevant code detail. Asset creation, editing, approval, and hosting remain outside FR-018 scope.
@@ -932,7 +947,7 @@ _Per-code detail (on selecting a row)_:
 
 **Acceptance Criteria**:
 
-1. Given admin generates a new active code for an affiliate, when the affiliate refreshes this tab, then the code appears with campaign name, status, active window, and zero-referral initial state.
+1. Given admin generates a new active code for an affiliate, when the affiliate refreshes this tab, then the code appears with campaign name, status, expiration date, and zero-referral initial state.
 2. Given an affiliate has multiple active codes, when affiliate clicks one code, then per-code applied count, completed count, conversion rate, revenue, commission earned, usage-over-time, and last-used date are shown.
 3. Given an affiliate has expired or revoked codes, when affiliate opens the historical code view, then those codes remain visible with status labels but cannot be copied as active promotional codes.
 4. Given an affiliate clicks copy on an active code, then the code text (or auto-apply referral link) is copied to the clipboard.
@@ -950,7 +965,7 @@ _Upcoming payout panel (top of tab)_:
 
 | Field Name | Type | Required | Description | Validation Rules |
 | --- | --- | --- | --- | --- |
-| Next Payout Date | date | N/A | Date of the next scheduled payout | Read-only, system-set (fixed: 7th of month) |
+| Next Payout Date | date | N/A | Date of the next scheduled payout | Read-only, system-set (payout day per the platform setting, default the 7th of the month) |
 | Pending Amount | currency | N/A | Commission awaiting the next payout (unpaid balance) | Read-only, system-calculated |
 | Included Bookings Count | number | N/A | Completed bookings contributing to the pending payout | Read-only, system-calculated |
 | Minimum Threshold Note | display | N/A | Note shown when pending is below the $50 threshold (rolls over) | Read-only, shown when applicable |
@@ -1161,10 +1176,10 @@ _Account security (affiliate-managed)_:
 ### General Module Rules
 
 - **Rule 1**: Affiliate commissions are ONLY calculated for completed bookings where payment is confirmed (not for quote requests or pending bookings)
-- **Rule 2**: Affiliate discount codes apply ONLY to Hairline's commission (does NOT reduce provider payout)
+- **Rule 2**: Affiliate discount codes and affiliate commissions are both funded ONLY from Hairline's commission: the patient-facing affiliate discount applies only to Hairline's commission, and the affiliate commission is deducted from Hairline's commission. Neither reduces the provider's payout
 - **Rule 3**: Only ONE discount code can be applied per booking (priority: Patient code > Provider code > Affiliate code)
-- **Rule 4**: Affiliate commissions are deducted from Hairline's commission, NOT from provider's payout
-- **Rule 5**: Payout processing occurs monthly on the 7th of each month (**fixed** schedule, per client policy — not admin-configurable) for the previous month's completed bookings
+- **Rule 4**: Merged into Rule 2 (the number is kept so other Rule references stay stable)
+- **Rule 5**: Payout processing occurs monthly, on the affiliate payout day, for the previous month's completed bookings. The payout day is a platform setting that admins can change; its default is the 7th of the month. The payout stays monthly. This payout day setting is owned by FR-018
 - **Rule 6**: Affiliates can have multiple active discount codes simultaneously for different campaigns
 - **Rule 7**: FR-018 is the source of truth for affiliate-specific promo code generation and assignment; FR-019 provides the shared promotion rules, validation, redemption state lifecycle, and financial-impact logging
 - **Rule 8**: Bulk affiliate code generation MUST create one distinct code per affiliate; assigning the same affiliate payout code to multiple affiliates is not supported
@@ -1173,12 +1188,13 @@ _Account security (affiliate-managed)_:
 - **Rule 11 (Affiliate referral attribution is preserved separately from price discount priority)**: Affiliate commission and referral credit are earned when a valid affiliate-bound code or affiliate auto-apply referral link is captured for the patient's booking journey and the booking completes with payment confirmation, even if the final price discount applied at checkout is a higher-priority patient or provider promotion under Rule 3. The single-discount rule still controls the patient's price and provider/Hairline discount impact; it does **not** erase affiliate referral attribution. This protects affiliates from losing commission because a provider-side promotion is applied outside the patient's knowledge. FR-017 and FR-019 MUST consume the FR-018/FR-019 attribution result separately from the final applied discount line.
 - **Rule 12 (Affiliate lifecycle states)**: An affiliate moves through **Pending** (account created, password not yet set) → **Active** (password set, transacting) and may then be **Suspended** (temporary, reversible, codes disabled, pending commissions held pending investigation — B3) or **Inactive** (permanent terminal end-of-partnership, codes disabled, portal read-only, final balance settled/forfeited/written off — B5). Active ⇄ Suspended is reversible via Screen 3.1; Active → Inactive is terminal via Screen 3.3 and is not silently reversed (resuming requires re-onboarding).
 - **Rule 13 (Usage-limit basis)**: A code's `Maximum Usage Count` and `Per-Patient Usage Limit` are decremented on **"completed" (paid) redemptions only**, never on "applied" events — so abandoned or abusive checkouts cannot exhaust a code's cap. A separate soft anti-abuse **rate limit on "applied" events** (per patient / per IP / per time window) guards against application spam without consuming the usage cap.
-- **Rule 14 (Commission base)**: Percentage commissions are calculated as a percentage of the **completed booking's revenue (booking total, in USD per the Currency Rule)** — **not** as a percentage of Hairline's net commission. Fixed-amount commissions are a flat USD amount per completed booking, independent of booking value. In both cases the commission is **funded from (deducted from) Hairline's commission, never the provider's payout** (Rule 4). The patient-facing affiliate discount (also Hairline-funded, Rule 2) and the affiliate commission are separate Hairline-borne costs against the same booking.
+- **Rule 14 (Commission base)**: Percentage commissions are calculated as a percentage of the **completed booking's net revenue (the booking total after discounts and refunds, in USD per the Currency Rule)** — **not** as a percentage of Hairline's net commission. Fixed-amount commissions are a flat USD amount per completed booking, independent of booking value. In both cases the commission is **funded from (deducted from) Hairline's commission, never the provider's payout** (Rule 2). The patient-facing affiliate discount (also Hairline-funded, Rule 2) and the affiliate commission are separate Hairline-borne costs against the same booking.
 - **Rule 15 (Hairline-funded cost ceiling)**: On any single booking, the combined Hairline-funded cost — the patient-facing affiliate discount (Rule 2) plus the affiliate commission (Rule 14) — MUST NOT exceed Hairline's own commission earned on that booking; the affiliate program never makes a booking net-negative for Hairline. The system enforces this at affiliate code creation/generation (Screen 4): when both the discount and the commission are percentage-based, it validates that `discount % + commission % ≤ Hairline's commission % on the booking` and **blocks** the save with the shortfall shown; an admin with documented business approval may override with an audited confirmation. Fixed-amount configurations (where the ceiling depends on booking value) raise a **review warning** rather than a hard block, since the breach can only be evaluated per booking. This rule complements Assumption 4 (aggregate program cost ≤ 10% of Hairline commission revenue) by preventing per-booking negative margin.
+- **Rule 16 (Permanent ban)**: A permanent ban is the punitive way to end an affiliate partnership It is carried out through the Deactivate / Offboard action (Screen 3.3) with the reason recorded as "banned". The affiliate ends at **Inactive**; there is no separate Banned status. Unlike a normal offboarding (B5), the **whole pending balance is forfeited** whatever its size, and the forfeiture is recorded with an audit entry. Only admins who are permitted to offboard an affiliate may ban. Codes are disabled and portal access becomes read-only as for any Inactive affiliate (Rule 12).
 
 ### Affiliate Segmentation Rules (Performance Tier & Campaign Eligibility)
 
-- **Performance Tier** (system-calculated, read-only): a band derived from the affiliate's **trailing-12-month revenue generated** (USD) by completed referrals, recalculated monthly. Default bands (admin-tunable): **Bronze** < $5,000 · **Silver** $5,000–$24,999 · **Gold** $25,000–$99,999 · **Platinum** ≥ $100,000. Tier is used for filtering/segmentation only and never changes commission automatically.
+- **Performance Tier** (system-calculated, read-only): a band derived from the affiliate's **trailing-12-month revenue generated** (USD) by completed referrals, recalculated monthly. Default bands (admin-editable setting): **Bronze** < $5,000 · **Silver** $5,000–$24,999 · **Gold** $25,000–$99,999 · **Platinum** ≥ $100,000. Tier is used for filtering/segmentation only and never changes commission automatically.
 - **Campaign Eligibility** (system-calculated, read-only): an affiliate is **Eligible** for bulk/campaign code generation only when **all** of the following hold — Status = Active (not Pending, Suspended, or Inactive); Activation Status = Active (password set); and complete bank/payout details on file. Otherwise the affiliate is **Ineligible** and the specific failing reason is surfaced (e.g., "Pending activation", "Incomplete payout setup", "Suspended/Inactive"). These reasons are the same ones reported per row in bulk generation (B4) and drive Screen 1's eligibility gating.
 
 ### Data & Privacy Rules
@@ -1186,7 +1202,7 @@ _Account security (affiliate-managed)_:
 - **Privacy Rule 1**: Patient identity is NEVER shared with affiliates (affiliates see only aggregated statistics, not individual patient names)
 - **Privacy Rule 2**: Affiliate bank account numbers are masked in UI (show last 4 digits only)
 - **Privacy Rule 3**: Affiliate dashboard access requires secure login (username/password + optional MFA — future / non-MVP, pending the shared MFA stack FR-026 / FR-031 per constitution Principle II)
-- **Audit Rule**: All affiliate actions logged with timestamp, user ID, and action type (code usage, commission calculation, payout-cycle generation, payout status synchronization). The audit trail is immutable (append-only) and retained for **10 years** per the platform constitution (financial/payout records are retained 7 years minimum)
+- **Audit Rule**: All affiliate actions logged with timestamp, user ID, and action type (code usage, commission calculation, payout-cycle generation, payout status synchronization). The audit trail is immutable (append-only); retention follows the system PRD, Platform-Wide Rules: One 10-year retention period
 - **GDPR**: Affiliate personal data (contact info, payment details) can be deleted upon request (historical commission data retained for accounting)
 
 ### Admin Editability Rules
@@ -1197,7 +1213,9 @@ _Account security (affiliate-managed)_:
 - Discount code parameters (expiration date, usage limits, active/inactive status)
 - Bulk code generation criteria (selected affiliates, filtered segment, code pattern, campaign settings)
 - Commission percentage/fixed amount per affiliate (with effective date for changes, via Screen 3.2)
-- Affiliate status (Active/Suspended/Inactive, via Screen 3.1)
+- Affiliate status (Suspend and Reinstate via the Screen 3.1 modal; Inactive only via the Screen 3.3 Deactivate / Offboard modal)
+- Affiliate payout day of the month (platform setting owned by FR-018, default the 7th; the payout stays monthly)
+- Performance tier bands (platform setting; default values in Affiliate Segmentation Rules)
 
 **Editable by Affiliate (Self-Service)**:
 
@@ -1206,13 +1224,13 @@ _Account security (affiliate-managed)_:
 
 **Fixed in Codebase (Not Editable)**:
 
-- Affiliate commission calculation logic (percentage of booking revenue OR fixed amount per booking)
+- Affiliate commission calculation logic (percentage of net booking revenue after discounts and refunds OR fixed amount per booking)
 - One-affiliate-per-code attribution model
 - Discount code uniqueness validation rules
 - Payout workflow status transitions (Pending → Processing → Paid/Failed)
-- Audit trail retention period (10 years, per constitution); financial/payout records retained 7 years minimum
+- Retention period (one period for everything; see the system PRD, Platform-Wide Rules: One 10-year retention period)
 - Activation link expiry (24 hours) and resend rate limit (3 per hour per email)
-- Payout schedule (monthly on the 7th — fixed per client business policy; frequency and date are not configurable)
+- Payout frequency (monthly; only the payout day is configurable, see Editable by Admin)
 
 **Configurable with Restrictions**:
 
@@ -1248,7 +1266,7 @@ _Account security (affiliate-managed)_:
 - **SC-006**: Admins can onboard new affiliates (account creation + discount code) in under 5 minutes per affiliate
 - **SC-007**: Admins can bulk-generate distinct affiliate-bound codes for 100 selected affiliates in under 5 minutes
 - **SC-008**: Automated payout-cycle calculation and FR-017 / A-05 handoff reduces admin preparation time by 80% compared to manual payout workflows
-- **SC-009**: 100% of monthly payout-cycle data is generated and available to FR-017 / A-05 within 24 hours of the scheduled date (7th of month)
+- **SC-009**: 100% of monthly payout-cycle data is generated and available to FR-017 / A-05 within 24 hours of the scheduled payout day (default the 7th of the month)
 - **SC-010**: Admin support tickets related to affiliate payouts reduced by 70% through self-service affiliate dashboard
 
 ### Affiliate Experience Metrics
@@ -1293,7 +1311,7 @@ _Account security (affiliate-managed)_:
 
 - **FR-019 / Module A-06: Discount & Promotion Management**
   - **Why needed**: Affiliate discount codes are a subset of platform-wide discount system
-  - **Integration point**: FR-018 owns affiliate-specific code generation and assignment; generated codes are registered into FR-019 promotion services for validation, active windows, usage limits, applied/completed redemption lifecycle, and financial-impact logging
+  - **Integration point**: FR-018 owns affiliate-specific code generation and assignment; generated codes are registered into FR-019 promotion services for validation, expiration dates, usage limits, applied/completed redemption lifecycle, and financial-impact logging
 
 - **FR-029 / Module S-02: Payment System Configuration (Currency & FX)**
   - **Why needed**: Affiliate amounts are denominated in USD (platform base currency) and bookings may be transacted in other currencies; FR-029 is the single owner of the supported-currency list, base currency, conversion-rate sources, markup, and locked exchange rates
@@ -1368,7 +1386,7 @@ _Account security (affiliate-managed)_:
 ### Business Process Assumptions
 
 - **Assumption 1**: Hairline will manually vet and approve affiliate partners before onboarding (no self-service affiliate signup)
-- **Assumption 2**: Affiliate commission structure will remain stable (5-25% of booking revenue or $50-$200 fixed per booking)
+- **Assumption 2**: Affiliate commission structure will remain stable (5-25% of net booking revenue after discounts and refunds, or a fixed amount of at least $50 per booking with no upper cap)
 - **Assumption 3**: Finance team will reconcile affiliate payouts within 48 hours of processing to detect errors
 - **Assumption 4**: Affiliate program will not exceed 10% of Hairline's total commission revenue within first 12 months (cost control)
 
@@ -1393,12 +1411,12 @@ _Account security (affiliate-managed)_:
   - **Error handling**: If validation service unavailable, allow checkout to proceed without discount (prevent checkout failure)
 
 - **Integration 1a: FR-018 Affiliate Code Generation → FR-019 Promotion Registration**
-  - **Data format**: JSON payload with campaign name, affiliate ID, generated code text, discount type/value, active window, usage limits, application method, and attribution metadata
+  - **Data format**: JSON payload with campaign name, affiliate ID, generated code text, discount type/value, expiration date, usage limits, application method, and attribution metadata
   - **Authentication**: Internal service-to-service API with admin user context for audit
   - **Error handling**: If FR-019 registration fails for a generated code, mark that affiliate row as failed and allow admin to retry without duplicating successful rows
 
 - **Integration 2: Booking Completion Event → Commission Calculation**
-  - **Data format**: Event payload with booking ID, affiliate attribution code/link (if captured), final discount applied, final payment amount, Hairline commission amount
+  - **Data format**: Event payload with booking ID, affiliate attribution code/link (if captured), final discount applied, final payment amount, Hairline commission amount; the event is FR-018's own booking-completed event and is produced from the booking's final payment event
   - **Authentication**: Internal event bus with message authentication
   - **Error handling**: If commission calculation fails, retry 3 times with exponential backoff; alert admin if all retries fail
 
@@ -1456,8 +1474,8 @@ Admin generates unique promo codes for a filtered group of affiliates without cr
 **Acceptance Scenarios**:
 
 1. **Given** admin filters Affiliate Management by country "United Kingdom" and status "Active", **When** admin selects all results and clicks "Generate Codes", **Then** system opens a bulk generation form with the selected affiliate count
-2. **Given** admin enters campaign name, code pattern, discount value, active window, and usage limits, **When** admin confirms generation, **Then** system creates one unique affiliate-bound code per selected affiliate and links each code to exactly one affiliate
-3. **Given** generated codes are active, **When** each affiliate logs into the dashboard, **Then** that affiliate sees only their own generated code(s), campaign name, status, active window, and zero-referral initial stats
+2. **Given** admin enters campaign name, code pattern, discount value, expiration date, and usage limits, **When** admin confirms generation, **Then** system creates one unique affiliate-bound code per selected affiliate and links each code to exactly one affiliate
+3. **Given** generated codes are active, **When** each affiliate logs into the dashboard, **Then** that affiliate sees only their own generated code(s), campaign name, status, expiration date, and zero-referral initial stats
 4. **Given** one selected affiliate is no longer eligible during generation, **When** the batch runs, **Then** system skips that affiliate, reports the reason in the Code Generation Results screen, and does not block successful code creation for other affiliates
 
 ---
@@ -1506,7 +1524,7 @@ Affiliate logs into dashboard to check referral count, commission earnings, and 
 
 **Acceptance Scenarios**:
 
-1. **Given** affiliate has 10 completed referrals generating $5000 total revenue, **When** affiliate logs into dashboard, **Then** system displays accurate statistics: 10 referrals, $5000 revenue, $750 commission earned (15% of the $5000 booking revenue)
+1. **Given** affiliate has 10 completed referrals generating $5000 total revenue, **When** affiliate logs into dashboard, **Then** system displays accurate statistics: 10 referrals, $5000 revenue, $750 commission earned (15% of the $5000 net revenue after discounts and refunds)
 2. **Given** affiliate has pending payout of $750, **When** affiliate views dashboard, **Then** system displays "Next payout: $750 on December 7, 2025"
 3. **Given** affiliate has multiple discount codes, **When** affiliate clicks on individual code, **Then** system displays per-code breakdown: usage count, conversion rate, revenue, commission earned
 4. **Given** affiliate wants performance report, **When** affiliate clicks "Download Report", **Then** system generates PDF report with all-time statistics and payout history
@@ -1515,7 +1533,7 @@ Affiliate logs into dashboard to check referral count, commission earnings, and 
 
 ### User Story 4 - Admin Reviews Monthly Affiliate Payout Data for A-05 Execution (Priority: P1)
 
-Admin reviews the automatically generated affiliate payout cycle on the 7th of the month and verifies that the calculated commission data is available to FR-017 / A-05 for payout execution.
+Admin reviews the automatically generated affiliate payout cycle on the payout day (default the 7th of the month) and verifies that the calculated commission data is available to FR-017 / A-05 for payout execution.
 
 **Why this priority**: Core handoff required to fulfill affiliate commission obligations; FR-018 calculates and exposes the payout data, while FR-017 / A-05 executes the money movement.
 
@@ -1540,10 +1558,10 @@ System automatically calculates affiliate commission when patient completes book
 
 **Acceptance Scenarios**:
 
-1. **Given** patient books $1000 treatment using affiliate code "PARTNER10" (10% discount), **When** patient completes payment of $900, **Then** system calculates the affiliate commission as 15% of the $1000 booking revenue = $150, funded from Hairline's commission (not the provider payout)
+1. **Given** patient books $1000 treatment using affiliate code "PARTNER10" (10% discount), **When** patient completes payment of $900, **Then** system calculates the affiliate commission as 15% of the $900 net revenue (booking revenue after the discount) = $135, funded from Hairline's commission (not the provider payout)
 2. **Given** affiliate has fixed commission structure of $50 per booking, **When** patient completes booking using affiliate code, **Then** system credits affiliate account with $50 commission regardless of booking value
 3. **Given** booking is completed with affiliate code, **When** commission calculation completes, **Then** system updates affiliate dashboard with new referral count and commission earned in real-time
-4. **Given** patient refunds booking after completion, **When** refund is processed, **Then** system reverses affiliate commission and deducts the $150 from affiliate's pending payout
+4. **Given** patient refunds booking after completion, **When** refund is processed, **Then** system reverses affiliate commission and deducts the $135 from affiliate's pending payout
 
 ---
 
@@ -1571,9 +1589,9 @@ Business negotiates new commission terms with affiliate; admin updates commissio
 - What happens if **admin tries to assign the same code to multiple affiliates**? System blocks the action and requires one unique code per affiliate, or redirects admin to create a non-attributed open marketing code in FR-019.
 - What happens if **bulk generation filter results change after code generation**? Existing generated codes remain tied to the original selected affiliates; admin must run a new bulk generation action for newly eligible affiliates.
 - What occurs if **patient applies affiliate code but cancels booking before payment**? System tracks code as "applied" but NOT "completed"; no commission credited to affiliate.
-- How to manage **affiliate account suspension while pending payout exists**? Pending commission is held pending investigation; if suspension is lifted, payout processes normally; if permanent ban, pending commission is forfeited.
-- What happens when **the Stripe transfer API is down during payout processing**? System retries 3 times with exponential backoff; if all retries fail, marks payouts as "Failed" and alerts admin to retry manually next day.
-- How does system handle **booking refund after affiliate payout has been processed**? System tracks negative balance for affiliate; deducts refunded commission from next payout (if next payout insufficient, carries negative balance forward).
+- How to manage **affiliate account suspension while pending payout exists**? Pending commission is held pending investigation; if suspension is lifted, payout processes normally; if the affiliate is permanently banned (B6, Rule 16), the affiliate ends at Inactive with reason "banned" and the whole pending balance is forfeited, with an audit entry.
+- What happens when **the Stripe transfer API is down during payout processing**? The affiliate Stripe retry is owned by FR-017 / A-05 (see B2 and the FR-017 retry rules); FR-018 shows the resulting payout status and failure reason read-only.
+- How does system handle **booking refund after affiliate payout has been processed**? System tracks negative balance for affiliate; deducts refunded commission from next payout (if next payout insufficient, carries negative balance forward). The reversal is shown on Screen 8 (Payout / Transaction Detail).
 - What happens when **affiliate's activation link expires before use**? Affiliate (or admin) requests a resend; the old link is invalidated and a fresh 24-hour link is sent, rate-limited to 3 per hour per email.
 - What happens when **a partnership ends (affiliate offboarded)**? Admin deactivates via Screen 3.3 (B5): status → Inactive (terminal), codes disabled, portal read-only, historical data retained, and the net final balance is settled if ≥ $50, forfeited if below $50, or written off if negative — each audited.
 - What happens when **an affiliate is offboarded while carrying a negative balance** (reversals exceeded accrued commission)? The unrecoverable negative balance is written off on deactivation with an audit entry, since no future payouts exist to net against.
@@ -1591,7 +1609,7 @@ Business negotiates new commission terms with affiliate; admin updates commissio
 - **REQ-018-004**: System MUST track discount code applications separately as "applied" (code entered) and "completed" (booking paid), and MUST decrement code usage caps (Maximum Usage Count, Per-Patient Usage Limit) on "completed" redemptions only, with a separate soft rate limit guarding "applied" events against spam
 - **REQ-018-005**: System MUST calculate affiliate commission automatically when booking completes with payment confirmation
 - **REQ-018-006**: System MUST provide affiliates with real-time dashboard showing referral count, revenue generated, commission earned, and pending payout
-- **REQ-018-007**: System MUST generate monthly payout list automatically on 7th of each month for previous month's completed bookings
+- **REQ-018-007**: System MUST generate monthly payout list automatically on the affiliate payout day (an admin-editable setting owned by FR-018, default the 7th of the month) for previous month's completed bookings
 - **REQ-018-008**: System MUST expose affiliate commission payout data to FR-017 / A-05 for Stripe transfer execution to the affiliate's bank account (no PayPal or other payout method)
 - **REQ-018-009**: System MUST send payout confirmation emails to affiliates with transaction details within 24 hours of payment processing
 - **REQ-018-010**: System MUST enforce single discount code per booking rule for the patient's final price (priority: Patient code > Provider code > Affiliate code) while preserving valid affiliate referral attribution separately for commission and reporting when a provider-side or other higher-priority promotion supersedes the affiliate discount line
@@ -1612,13 +1630,14 @@ Business negotiates new commission terms with affiliate; admin updates commissio
 - **REQ-018-040**: System MUST denominate all affiliate amounts (commission, balances, thresholds, payouts) in USD (platform base currency) and MUST source every non-USD-to-USD conversion and exchange rate exclusively from FR-029 (Payment System Configuration) using the rate locked for the underlying booking — FR-018 MUST NOT define, cache, or override its own FX rate
 - **REQ-018-041**: System MUST validate at affiliate code creation/generation that the combined Hairline-funded cost on a booking (patient-facing affiliate discount + affiliate commission) does not exceed Hairline's own commission on that booking (Rule 15); percentage breaches MUST be blocked (override requires documented, audited business approval) and fixed-amount configurations MUST raise a review warning
 - **REQ-018-042**: System MUST provide affiliates read-only access to externally hosted marketing materials (banners, templates, campaign assets) linked to assigned codes/campaigns, while creation, editing, approval, and hosting of those materials remain outside FR-018 scope
+- **REQ-018-297**: System MUST support a permanent ban of an affiliate as a punitive end of partnership (workflow B6, Rule 16): the affiliate ends at Inactive with the reason recorded as "banned", there is no separate Banned status, the whole pending balance is forfeited, and only admins who may offboard an affiliate may ban
 
 ### Data Requirements
 
 - **REQ-018-011**: System MUST maintain affiliate account records with contact details, payment information (encrypted), commission structure, and status
 - **REQ-018-012**: System MUST link discount codes to affiliate accounts with one-to-many relationship (one affiliate can have multiple codes)
 - **REQ-018-013**: System MUST store booking records with affiliate code reference for commission tracking
-- **REQ-018-014**: System MUST maintain payout history with transaction ID, date, amount, status for minimum 7 years (audit compliance)
+- **REQ-018-014**: System MUST maintain payout history with transaction ID, date, amount, status; retention follows the system PRD, Platform-Wide Rules: One 10-year retention period
 - **REQ-018-036**: System MUST record affiliate activation state (Invited until password set, Active after) and last login timestamp
 - **REQ-018-037**: System MUST collect affiliate bank details for payouts (account holder name, bank name, account number, routing/SWIFT code, optional IBAN), mirroring provider billing details (FR-032), with format validation via S-02, encryption at rest, and last-4 masking in the UI
 
@@ -1627,7 +1646,7 @@ Business negotiates new commission terms with affiliate; admin updates commissio
 - **REQ-018-015**: System MUST encrypt affiliate bank account details at rest using AES-256
 - **REQ-018-016**: System MUST mask affiliate bank account numbers in UI (display last 4 digits only)
 - **REQ-018-017**: System MUST anonymize patient identity in affiliate dashboard (affiliates see only aggregated statistics, not patient names)
-- **REQ-018-018**: System MUST log all affiliate-related transactions (code usage, commission calculations, payouts) with timestamp, user ID, and action type, in an immutable (append-only) audit trail retained for a minimum of 10 years (per constitution)
+- **REQ-018-018**: System MUST log all affiliate-related transactions (code usage, commission calculations, payouts) with timestamp, user ID, and action type, in an immutable (append-only) audit trail with retention following the system PRD, Platform-Wide Rules: One 10-year retention period
 - **REQ-018-019**: System MUST require secure authentication for affiliate dashboard access (username/password with optional MFA — MFA is a future / non-MVP control pending the shared MFA stack FR-026 / FR-031 per constitution Principle II)
 
 ### Integration Requirements
@@ -1635,7 +1654,7 @@ Business negotiates new commission terms with affiliate; admin updates commissio
 - **REQ-018-020**: System MUST expose API for discount code validation during patient checkout (response time <500ms)
 - **REQ-018-021**: System MUST integrate with FR-017 / A-05 payout execution status so FR-018 read-only payout views reflect Stripe transfer status, transaction references, and failure reasons without initiating transfers directly
 - **REQ-018-022**: System MUST integrate with email service provider to send affiliate notifications (activation, onboarding, payouts, code creation)
-- **REQ-018-023**: System MUST emit booking completion events to trigger affiliate commission calculation asynchronously
+- **REQ-018-023**: System MUST emit booking completion events to trigger affiliate commission calculation asynchronously; FR-018 keeps its own booking-completed event for this purpose, and that event is produced from the booking's final payment event
 
 ---
 
@@ -1686,6 +1705,7 @@ Business negotiates new commission terms with affiliate; admin updates commissio
 | 2026-06-23 | 2.2 | Verification-fix pass (FR-018 verify-fr): (1) marked every MFA reference as a future / non-MVP control pending the shared MFA stack (FR-026 / FR-031) per constitution Principle II — Screen 9, Screen 9.4 toggle + self-service rule, Privacy Rule 3, Security Considerations, REQ-018-019; (2) corrected the FR-015 dependency module from A-04 to A-02 (Provider Management & Onboarding); (3) repointed the mislabeled "FR-003 / Booking & Payment Processing" dependency to FR-006 (Booking & Scheduling) / FR-007 (Payment Processing) under module P-03; (4) aligned Screen 1 "Total Referrals" to completed bookings (consistent with Screen 9.1 and Rule 11); (5) resequenced REQ-018-042 to follow REQ-018-041 | Claude (Opus 4.8) |
 | 2026-06-23 | 2.3 | Product Owner decision after FR-018 verification: separated final discount priority from affiliate referral attribution. A higher-priority patient/provider discount can control the patient's price, but a valid captured affiliate-bound code/link still earns affiliate referral credit and commission after payment-confirmed booking completion. Updated Rule 11, referral-count wording, REQ-018-010, the edge case, and Booking with Affiliate Attribution entity. | Codex |
 | 2026-06-23 | 2.4 | Marked PRD status as ✅ Verified & Approved after final `verify-fr FR-018` pass; updated approvals table to template-aligned verified approval state | Codex |
+| 2026-11-20 | 2.5 | Requirements graph programme baseline: owner rulings applied. Main changes: (1) percentage commission is now calculated on net revenue after discounts and refunds (Main Flow, Screens 2 and 3.2, Rule 14, Assumption 2, worked examples); fixed-amount commission has a minimum of $50 and no upper cap; (2) the monthly payout day is an admin-editable setting with default the 7th (replaces the fixed 7th schedule in Rule 5, Screens 2/7/9.1/9.3, and REQ-018-007); (3) performance tier bands confirmed as admin-editable; (4) added permanent ban path (workflow B6, Rule 16, REQ-018-297): ends at Inactive with reason "banned", whole pending balance forfeited, only admins who may offboard an affiliate may ban; (5) affiliate status changes only through the Suspend/Reinstate modal and the offboard modal (Screen 1 Status field, Admin Editability Rules); (6) promo code status list corrected to Active, Inactive, Expired, Revoked (Screen 5 note); (7) promo codes carry an expiration date only (no start date); (8) Rules 2 and 4 merged into one Hairline-funded Rule; (9) commission event note, FR-017 ownership of the affiliate Stripe retry, payout-confirmation trigger and refund-reversal screen pointers; cross-document reconciliation (retention, affiliate payout day ownership) | Claude (AI) |
 
 ---
 
@@ -1702,4 +1722,4 @@ Business negotiates new commission terms with affiliate; admin updates commissio
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-017 Admin Billing & Financial Management PRD
-**Last Updated**: 2026-06-23
+**Last Updated**: 2026-11-20

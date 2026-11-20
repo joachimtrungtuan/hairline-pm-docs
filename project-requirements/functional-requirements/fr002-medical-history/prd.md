@@ -33,18 +33,18 @@ For V1, "3D scan" capture is implemented as a standardized head scan photo set (
 
 - Providers consume read-only processed artifacts (normalized questionnaire, alerts, processed media)
 - Provider review UI is handled by FR-003/PR-02; engine remains passive after initial processing
-- Providers see anonymized artifacts until payment confirmation (per system PRD)
+- See system PRD, Platform-Wide Rules: Patient identity hidden until booking confirmation
 
 **Admin Platform (A-09)**:
 
 - Admin manages questionnaire templates, sections, fields, and risk-tag rules via FR-025
-- Admin configures validation rules, media constraints, and alert thresholds
+- Admin configures validation rules and media constraints (head scan photo limits are fixed; see Media Rules). Alert severity is driven by the severity flags admins set on questionnaire answers in FR-025; there is no separate alert threshold setting
 - Admin cannot modify fixed security constraints (encryption, retention policies)
 - Template versioning and publishing managed through FR-025; engine consumes published versions
 
 **Shared Services (S-01, S-05)**:
 
-- **S-01: 3D Media Processing Service**: Validates head scan media (V1 photo set) and handles media transformations
+- **S-01: 3D Media Processing Service**: Validates head scan media (V1 photo set) and handles media transformations (the original file stays unmodified; see Media Rules)
 - **S-05: Media Storage Service**: Stores processed media artifacts with secure access controls
 - **Medical Intake Engine**: Validates questionnaire responses, computes severity alerts, normalizes data, manages versioning
 - Engine operations are stateless between calls except for persisted artifacts
@@ -109,14 +109,14 @@ flowchart TD
 
 **A2: Template version mismatch**:
 
-- **Trigger**: Submitted templateVersion differs from currently published version
-- **Outcome**: Engine records used version and returns policy-compliant response (or requests resubmission per FR-025 rules)
+- **Trigger**: Submitted templateVersion is older than the currently published version
+- **Outcome**: Engine accepts the submission and records the version used
 - **Flow Diagram**:
 
 ```mermaid
 flowchart TD
   A2S1["1. Engine detects templateVersion mismatch"] --> A2S2["2. Engine records templateVersionUsed in audit log"]
-  A2S2 --> A2S3["3. Engine returns policy-compliant response or requests resubmission per FR-025 rules"]
+  A2S2 --> A2S3["3. Engine accepts the submission on the older version"]
 ```
 
 ---
@@ -140,32 +140,15 @@ flowchart TD
 
 ### Workflow 3: Admin Template Management (Management)
 
-**Actors**: Admin, System  
-**Trigger**: Admin publishes or deprecates questionnaire templates/rules in FR-025  
-**Outcome**: Engine consumes the published version and applies to new submissions
+Template creation, editing, publishing and deprecation are owned by FR-025 (Medical Questionnaire Management); FR-002 defines no admin template Steps of its own.
 
-**Flow Diagram**:
-
-```mermaid
-flowchart TD
-  S1["1. Admin opens Medical Questionnaire Templates in settings"] --> S2["2. Admin creates/edits templates: sections, fields, required/optional, help text, and risk-tag rules"]
-  S2 --> S3["3. Admin publishes a template version"]
-  S3 --> S4["4. System versions templates and applies to new inquiries only"]
-```
+**Outcome**: Engine consumes the published version and applies it to new submissions only; prior versions are kept for existing inquiries.
 
 ### Alternative Flows
 
 **C1: Admin deprecates a template**:
 
-- **Trigger**: Admin deprecates an existing template version
-- **Outcome**: System keeps prior versions for existing inquiries; new inquiries use the latest published version
-- **Flow Diagram**:
-
-```mermaid
-flowchart TD
-  C1S1["1. Admin deprecates a template version"] --> C1S2["2. System marks template as deprecated but preserves for existing inquiries"]
-  C1S2 --> C1S3["3. New inquiries automatically use the latest published version"]
-```
+- Owned by FR-025. FR-002 only consumes the result: prior versions are kept for existing inquiries and new inquiries use the latest published version.
 
 ---
 
@@ -194,7 +177,7 @@ Backend-only: This FR provides integration contracts used by FR-003 (patient cap
 
 - Enforce FR-025 required fields and media constraints; stamp templateVersionUsed/rulesetVersion.
 - Store media under anonymizedPatientId; no PII in payloads.
-- Providers see anonymized artifacts until payment confirmation (system PRD alignment).
+- See system PRD, Platform-Wide Rules: Patient identity hidden until booking confirmation.
 - On validation failure, return structured error codes and remediation guidance; do not persist artifacts.
 
 ## Business Rules
@@ -203,23 +186,24 @@ Backend-only: This FR provides integration contracts used by FR-003 (patient cap
 
 1. Engine operations are fully auditable (timestamps, actor/service, reasons on overrides).
 2. Draft/submit/edit UX is defined in FR-003; engine is stateless between calls except persisted artifacts.
-3. All processing includes configuration version stamping (templateVersion, rulesetVersion).
+3. All processing includes configuration version stamping (templateVersion, rulesetVersion). rulesetVersion is the FR-025 questionnaire set version.
 
 ### Data & Privacy Rules
 
-1. Patient PII is hidden from providers until booking payment is confirmed; providers see anonymized ID only.
-2. Medical records retained minimum 7 years; deletion requests result in archival/anonymization (no hard deletes).
+1. See system PRD, Platform-Wide Rules: Patient identity hidden until booking confirmation (this FR does not restate it).
+2. Retention follows the system PRD, Platform-Wide Rules: One 10-year retention period; deletion requests result in archival/anonymization (no hard deletes).
 3. All access is role-based; admin access is logged with justification for sensitive views.
 4. Intake payloads and media artifacts processed under this FR are encrypted in transit (TLS 1.3) and at rest (AES-256), in alignment with the Constitution and FR-026.
 
 ### Media Rules (Head Scan Media Intake)
 
 1. For V1, head media is a standardized **photo set** captured in the patient app and uploaded to the system (not a true 3D model).
-2. Photo set MUST include required viewpoints (e.g., front/top/left/right/back) as defined by policy (A-09).
-3. Allowed formats: JPG/PNG; maximum per-file size and maximum total size MUST be enforced via policy (A-09).
+2. The head scan offers five views (front, top, left, right, back). At least one photo is required; no single view is compulsory.
+3. Allowed formats: JPG/PNG. A head scan holds up to 5 photos of at most 2 MB each, counted on its own (separate from the FR-003 visual evidence limit, which has its own count).
 4. Basic quality checks (e.g., brightness/blur) MUST be enforced and actionable guidance returned on failure.
 5. If `headVideo` is accepted (optional fallback/future), duration constraints (min/max) apply via policy (A-09).
 6. On validation failure, engine returns structured error codes and guidance to the caller (FR-003); no artifacts persisted.
+7. The original media file is kept unmodified; any transformation creates a separate copy.
 
 ### Admin Editability
 
@@ -249,14 +233,14 @@ Independent Test: Submit payloads violating media completeness/size/quality (and
 
 Acceptance Scenarios:
 
-1. Given required viewpoints are missing, When processed, Then engine returns MEDIA_INCOMPLETE_VIEW_SET with guidance; no storage
+1. Given no head scan photo is supplied, When processed, Then engine returns MEDIA_INCOMPLETE_VIEW_SET with guidance; no storage
 2. Given file size exceeds limit, When processed, Then engine returns MEDIA_SIZE_EXCEEDED with compression guidance; no storage
 3. Given brightness/blur below threshold, When processed, Then engine returns MEDIA_QUALITY_INSUFFICIENT with retake instructions; no storage
 
 ### Edge Cases
 
 - Media too short or poor lighting: engine rejects with specific error codes and guidance.
-- Template version mismatch: engine records used version and returns policy-compliant response.
+- Template version mismatch: engine accepts the submission on the older version and records the version used.
 - Oversize file: engine rejects with size error and suggested compression guidance.
 
 ## Success Criteria
@@ -338,7 +322,7 @@ Acceptance Scenarios:
   - Relationships: references published questionnaire template (FR-025)
 
 - IntakeProcessingResult: normalizedPayload, alerts[], mediaRef, audit
-  - Key attributes: templateVersionUsed, rulesetVersion, processingId, processedAt
+  - Key attributes: templateVersionUsed, rulesetVersion (the FR-025 questionnaire set version), processingId, processedAt
   - Relationships: links to stored media artifact and audit log
 
 - RiskTag: code, label, severity(critical|standard|none), rationale, derivedFrom
@@ -374,7 +358,7 @@ Acceptance Scenarios:
 - Stateless processing per request; artifacts persisted in storage with references returned
 - Deterministic normalization and alert derivation based on versioned rules
 - Media validation includes duration, size, brightness/blur heuristics
-  - V1: validate photo set completeness (required views) + file constraints; duration applies only if video is accepted
+  - V1: validate that at least one head scan photo is present + file constraints; duration applies only if video is accepted
 
 ### Integration Points
 
@@ -403,6 +387,7 @@ Acceptance Scenarios:
 | 2025-10-30 | 1.0 | Initial PRD creation | Product & Engineering |
 | 2025-11-04 | 1.1 | Template alignment: workflows metadata, assumptions, implementation notes, user scenarios, FR summary, key entities, external deps, status blocks | Product & Engineering |
 | 2026-03-03 | 1.2 | Clarified that V1 head scan capture is a standardized photo set (multiple 2D views), with true 3D capture deferred to V2. Updated integration contract and media validation rules accordingly. | AI |
+| 2026-11-20 | 1.3 | Requirements graph programme baseline: owner rulings applied. Main changes: alert severity driven by FR-025 severity flags (no alert threshold setting); head scan photo limits fixed (up to 5 photos, JPG or PNG, 2 MB each, counted on its own); head scan offers five views with at least one photo required and no single view compulsory; original media file kept unmodified, transformations create a separate copy; engine accepts a submission on an older template version and records the version used; rulesetVersion is the FR-025 questionnaire set version; admin template Steps removed from Workflow 3 and C1 (owned by FR-025); identity-until-payment rule now cites the system PRD; medical record retention follows the single 10-year system retention Rule (no hard deletes unchanged); cross-document reconciliation (system rule citations, retention pointer). | AI |
 
 ## Appendix: Approvals
 

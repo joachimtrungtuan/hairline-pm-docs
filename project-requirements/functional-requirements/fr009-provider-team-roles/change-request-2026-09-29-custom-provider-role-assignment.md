@@ -3,12 +3,14 @@
 **Change Request ID**: CR-FR009-20260929-01  
 **Primary FR**: FR-009  
 **Triggering FR / Event**: Proposed FR-031 provider role creation and cloning  
-**Decision Status**: Proposed  
+**Decision Status**: Rejected  
 **Implementation Reconciliation**: Required  
 **Requested Date**: 2026-09-29  
 **Decision Date**: Pending  
 **PRD Version Change**: v1.2 to proposed v1.3  
 **Related Commit(s)**: Pending
+
+Rejected 2026-11-20: the owner ruled that custom provider roles do not exist (requirements graph programme baseline).
 
 ## Decision Summary
 

@@ -10,13 +10,13 @@
 
 ## Executive Summary
 
-Establish organization-wide data retention, auditability, and privacy controls to meet healthcare and financial record-keeping obligations while honoring user privacy rights. This feature defines retention policies (minimum 7 years for medical and financial records), enforces soft-deletion only for critical data, provides GDPR-compliant deletion request handling (right to erasure), anonymizes patient data used in analytics, and maintains comprehensive audit logs for all data access and modification events. The outcome is a compliant, transparent, and testable framework applicable across Patient, Provider, and Admin applications.
+Establish organization-wide data retention, auditability, and privacy controls to meet healthcare and financial record-keeping obligations while honoring user privacy rights. This feature defines retention policies (one retention period for medical records, financial records and audit logs; see system PRD, Platform-Wide Rules: One 10-year retention period), enforces soft-deletion only for critical data, provides GDPR-compliant deletion request handling (right to erasure), anonymizes patient data used in analytics, and maintains comprehensive audit logs for all data access and modification events. The outcome is a compliant, transparent, and testable framework applicable across Patient, Provider, and Admin applications.
 
 ---
 
 ## Success Criteria
 
-- 100% of valid deletion requests processed within 30 calendar days, with legally retained records restricted appropriately (no anonymization for retained medical/financial records).
+- 100% of valid deletion requests processed within 30 calendar days, with legally retained records restricted appropriately (retained medical/financial records are kept in anonymised form).
 - 0% of critical records (medical, financial) hard-deleted before end-of-retention period.
 - 100% of read/write access to protected records captured in audit logs with who/when/what.
 - 0% personally identifiable patient attributes present in analytics dashboards or reports.
@@ -29,7 +29,7 @@ Establish organization-wide data retention, auditability, and privacy controls t
 
 - **Patient Platform**: View retention policy; request account/data deletion; receive status updates and outcomes.
 - **Provider Platform**: View applicable retention/privacy policy; cannot permanently delete protected records; access read-only audit trail for activity by their users.
-- **Admin Platform (A-09)**: Configure retention settings (by data category/region), triage and fulfill deletion requests, review audit trails, approve exceptions.
+- **Admin Platform (A-09)**: Configure retention settings (by data category/region), triage and fulfill deletion requests, review audit trails.
 - **Shared Services**: Cross-cutting job scheduling for retention enforcement; audit logging; anonymization pipeline; notification templates.
 
 ### Communication Structure
@@ -37,7 +37,7 @@ Establish organization-wide data retention, auditability, and privacy controls t
 **In Scope**:
 
 - User notifications for DSR (Data Subject Request) status changes (submission, verification required, in progress, fulfilled).
-- Admin notifications for new DSRs and approaching deadlines.
+- Admin notifications for new DSRs and approaching deadlines. The submission notice to the Patient and the new-request notice to Admins use the same account-deletion-requested event (FR-001).
 - Compliance reporting exports (downloadable by Admin).
 
 **Out of Scope**:
@@ -48,7 +48,7 @@ Establish organization-wide data retention, auditability, and privacy controls t
 
 ### Entry Points
 
-- Patient: Profile/Privacy screen → Request Deletion.
+- Patient: Profile > Delete Account.
 - Provider: Settings → Data Policy (read-only); Activity Logs.
 - Admin: Compliance dashboard → Retention Settings; DSR Queue; Audit Logs; Reports.
 
@@ -59,15 +59,15 @@ Establish organization-wide data retention, auditability, and privacy controls t
 ### Main Flow: Deletion Request (Right to Erasure)
 
 **Actors**: Patient, Admin, System  
-**Trigger**: Patient requests deletion from Privacy screen  
-**Outcome**: Non-legally-required data deleted or anonymized; protected data retained with access restrictions; audit logged
+**Trigger**: Patient requests deletion from Profile > Delete Account  
+**Outcome**: Non-legally-required data deleted or anonymized; protected data retained in anonymised form with access restrictions; audit logged
 
 **Steps**:
 
 1. Patient submits deletion request and completes verification.
 2. System classifies data by category and applicable retention/jurisdiction.
 3. Admin reviews classification and approves action.
-4. System performs deletion/anonymization for non-protected data; restricts access to protected records.
+4. System performs deletion/anonymization for non-protected data; anonymises and restricts access to protected records.
 5. System records actions in audit log and notifies Patient of outcome and legal basis.
 
 ### Alternative Flows
@@ -79,8 +79,7 @@ Establish organization-wide data retention, auditability, and privacy controls t
   1. System flags request as Verification Required and notifies Patient.
   2. Patient provides additional verification.
   3. Admin validates and resumes processing.
-- Outcome: Export/deletion proceeds; SLA clock pauses during verification.
-- Outcome: Deletion request processing proceeds; SLA clock pauses during verification.
+- Outcome: Deletion request processing proceeds; the 30-day deadline always runs from submission and does not pause during verification.
 
 **A2: Exclusion of Legally Retained Data**
 
@@ -118,10 +117,10 @@ As an Admin, I need a complete audit trail of access and modifications to protec
 
 ### Edge Cases
 
-- Patient submits multiple DSRs concurrently → System merges or queues with clear status; SLA applies per consolidated request.
+- Patient submits multiple DSRs concurrently → System merges them into one request with clear status; SLA applies per consolidated request.
 - Patient requests deletion while active booking exists → System pauses deletion until booking resolves; communicates timeline.
 - Jurisdiction conflict (e.g., EU vs non-EU residency) → Default to stricter retention; flag for Admin review.
-- Patient requests data deletion after cancelling their inquiry → Cancelled inquiry is a terminal state with no active obligation; deletion request should proceed normally. Cancelled inquiry records, cascaded cancelled quotes, and associated audit entries are retained per REQ-023-003 retention rules (7-year minimum for medical/financial data) even after PII anonymization — the anonymization applies to profile data, not to the retained medical/financial records themselves.
+- Patient requests data deletion after cancelling their inquiry → Cancelled inquiry is a terminal state with no active obligation; deletion request should proceed normally. Cancelled inquiry records, cascaded cancelled quotes, and associated audit entries are retained per the system PRD, Platform-Wide Rules: One 10-year retention period and REQ-023-003 even after the deletion request is fulfilled — retained records are kept in anonymised form.
 
 ---
 
@@ -129,10 +128,9 @@ As an Admin, I need a complete audit trail of access and modifications to protec
 
 ### Core Requirements
 
-- **REQ-023-001**: System MUST retain patient medical records for a minimum of 7 years; hard-deletion is prohibited before expiry.
-- **REQ-023-002**: System MUST retain financial transaction records for a minimum of 7 years; hard-deletion is prohibited before expiry.
-- **REQ-023-003**: System MUST support soft-deletes only for protected categories (medical, financial, identity), preserving recoverability and auditability. Patient-cancelled inquiries (FR-003 Workflow 5) and all records generated from the cancellation cascade — including auto-cancelled quotes with status "Cancelled (Inquiry Cancelled)" per FR-004 — are subject to the same retention rules as completed inquiries and quotes. They are soft-deleted/archived, never hard-deleted before the retention period expires. This applies to inquiry records, quote records, acceptance events (including superseded AcceptanceEvents per FR-005), and associated audit trail entries.
-- **REQ-023-004**: System MUST allow patients to request data deletion (erasure); non-protected data is deleted or anonymized; protected medical/financial records are retained without anonymization but with strict access restrictions and documented legal basis.
+- **REQ-023-001**: Retired. Retention of medical records (including head-scan media), financial transaction records and audit logs, and the ban on hard-deletion before expiry, follow the system PRD, Platform-Wide Rules: One 10-year retention period.
+- **REQ-023-003**: System MUST support soft-deletes only for protected categories (Medical Records, Financial Records, Account Profile), preserving recoverability and auditability. Patient-cancelled inquiries (FR-003 Workflow 5) and all records generated from the cancellation cascade — including auto-cancelled quotes with status "Cancelled (Inquiry Cancelled)" per FR-004 — are subject to the same retention rules as completed inquiries and quotes. They are soft-deleted/archived, never hard-deleted before the retention period expires. This applies to inquiry records, quote records, acceptance events (including superseded AcceptanceEvents per FR-005), and associated audit trail entries.
+- **REQ-023-004**: System MUST allow patients to request data deletion (erasure); non-protected data is deleted or anonymized; protected records (Medical Records, Financial Records, Account Profile) are retained in anonymised form, with strict access restrictions and documented legal basis.
 - **REQ-023-005**: System MUST anonymize patient data in analytics and reports (no direct identifiers, quasi-identifiers masked or aggregated).
 - **REQ-023-006**: System MUST maintain audit logs for all read and write access to protected records, including actor, timestamp, object, action, outcome.
 - **REQ-023-007**: System MUST provide Admin views to configure retention by data category and jurisdiction and to manage DSR queues.
@@ -142,7 +140,7 @@ As an Admin, I need a complete audit trail of access and modifications to protec
 
 - **REQ-023-009**: System MUST classify data into categories: Medical Records, Financial Records, Communications, Media, Account Profile, Analytics.
 - **REQ-023-010**: Each category MUST have an assigned retention policy and legal basis (with jurisdiction overrides).
-- **REQ-023-011**: Audit log entries MUST be immutable and retained for at least 7 years.
+- **REQ-023-011**: Audit log entries MUST be immutable; their retention follows the system PRD, Platform-Wide Rules: One 10-year retention period.
 - **REQ-023-012**: Backups MUST occur at least every 6 hours with 30-day retention (per system PRD) and exclude already-deleted personal data beyond backup windows.
 
 ### Security & Privacy Requirements
@@ -159,15 +157,15 @@ As an Admin, I need a complete audit trail of access and modifications to protec
 
 ### Clarifications (Resolved)
 
-- CL-1: Erasure handling for medical/financial records — Retain without anonymization but fully restrict access during the legal retention period; document legal basis in outcomes.
-- CL-3: Audit log retention — Retain audit logs for 7 years; logs are immutable and included in compliance reporting (summaries unless otherwise requested).
+- CL-1: Erasure handling for medical/financial records — Retain in anonymised form and fully restrict access during the legal retention period; document legal basis in outcomes.
+- CL-3: Audit log retention — Audit log retention follows the system PRD, Platform-Wide Rules: One 10-year retention period; logs are immutable and included in compliance reporting (summaries unless otherwise requested).
 
 ---
 
 ## Key Entities
 
-- Data Subject Request (DSR): id, type (deletion), requester, verification status, submitted/updated dates, outcome  
-  Relationships: belongs to Patient; processed by Admin; linked to actions taken
+- Data Subject Request (DSR): id (the request reference shown to the patient), type (deletion), requester, optional reason picked by the patient, verification status, submitted/updated dates, outcome  
+  Relationships: belongs to Patient; processed by Admin; linked to actions taken. This is the single deletion-request record of the platform: the patient Delete Account screen (FR-001) and the Admin deletion requests queue (FR-016) both use it, and this FR owns it.
 
 - Retention Policy: id, data category, default retention, legal basis, jurisdiction overrides  
   Relationships: applied to records via category mapping; referenced by enforcement jobs
@@ -192,7 +190,7 @@ As an Admin, I need a complete audit trail of access and modifications to protec
 
 ## Assumptions
 
-- Retention minimums (7 years) apply to medical and financial records platform-wide unless stricter jurisdictional rules exist.
+- Retention follows the system PRD, Platform-Wide Rules: One 10-year retention period, unless stricter jurisdictional rules exist. The retention, audit-log and anonymisation rules of this module apply to the whole platform (Patient, Provider and Admin applications), not to one module only.
 - Backups run every 6 hours with 30-day retention per system PRD; deleted data may persist in backups until window expiry.
 - Patients are willing and able to complete identity verification for DSRs via standard methods.
 
@@ -207,6 +205,7 @@ As an Admin, I need a complete audit trail of access and modifications to protec
 | 2026-02-05 | 1.2     | Cancel Inquiry flow (FR-003 Workflow 5): Clarified that cancelled inquiries are subject to the same retention rules as completed inquiries (REQ-023-003) | AI     |
 | 2026-02-06 | 1.3     | Removed patient data export request requirements from Patient Platform scope; updated workflows, user stories, and requirements to focus on deletion DSR only; aligned entry points with updated patient Settings (FR-001). | AI     |
 | 2026-02-09 | 1.4     | Cancellation cascade retention: Extended REQ-023-003 to explicitly cover all cascade records (auto-cancelled quotes, superseded AcceptanceEvents, audit entries) under same retention rules. Added edge case for DSR after inquiry cancellation (cancelled = terminal, no active obligation, deletion proceeds normally). | AI     |
+| 2026-11-20 | 1.5     | Requirements graph programme baseline: owner rulings applied. Main changes: one retention period of 10 years for medical records, financial records and audit logs, in one Rule (REQ-023-001 now covers REQ-023-002 and the audit-log period of REQ-023-011); retained protected records are kept anonymised; Account Profile joins Medical Records and Financial Records as a protected category; the 30-day deadline no longer pauses during identity verification; concurrent deletion requests are merged into one request; "approve exceptions" removed from the Admin scope; patient entry point reads Profile > Delete Account; one deletion-request record owned by this FR; retention, audit and anonymisation Rules apply to the whole platform; cross-document reconciliation (retention, system rule citations). | AI     |
 
 ---
 
@@ -223,4 +222,4 @@ As an Admin, I need a complete audit trail of access and modifications to protec
 **Template Version**: 2.0.0 (Constitution-Compliant)  
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)  
 **Based on**: FR-023 Data Retention & Compliance  
-**Last Updated**: 2026-02-09
+**Last Updated**: 2026-11-20

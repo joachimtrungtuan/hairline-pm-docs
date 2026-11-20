@@ -216,7 +216,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
    - **Section A: Notification Types** (individual toggles)
    - **Section B: Global Channel Preferences** (email, push)
 3. Provider reviews current settings (all loaded from database)
-4. Provider toggles individual notification types:
+4. Provider toggles individual notification types (all six are on by default; the unchecked Aftercare line below is only an example):
    - ☑ Quote Notifications (new inquiry received, quote expiring soon). This toggle does not cover mandatory quote notices (the inquiry-cancelled quote notice and the quote-accepted outcomes), which have no toggle
    - ☑ Schedule Notifications (appointment confirmed, appointment reminder). This toggle does not cover mandatory booking notices (payment window expired, booking revived, booking rescheduled), which have no toggle
    - ☑ Treatment Start Notifications (patient checked in, procedure started)
@@ -256,7 +256,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 
 - **Trigger**: Provider unchecks all notification type toggles
 - **Steps**:
-  1. Provider disables all five notification types
+  1. Provider disables all six notification types
   2. Provider clicks "Save Preferences"
   3. System displays confirmation dialog "Warning: You have disabled all notifications. You may miss important updates about inquiries, appointments, and reviews. Are you sure?"
   4. Provider confirms or cancels
@@ -311,7 +311,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 16. Provider enters current password and new password (following password policy from FR-026)
 17. System validates:
     - Current password matches database
-    - New password meets security policy (≥12 chars, 1 uppercase, 1 lowercase, 1 digit, 1 special char)
+    - New password meets the password policy. See system PRD, Platform-Wide Rules: Password and one-time-code policy
     - New password matches confirmation
 18. System hashes new password using bcrypt (cost factor 12+)
 19. System saves new password hash
@@ -538,11 +538,13 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 19. Provider clicks "Contact Support"
 20. System displays support contact form:
     - Subject: [text field]
+    - Category: [dropdown - optional]
     - Message: [textarea]
+    - Priority: [dropdown - optional, default Medium]
     - Attachment: [file upload - optional]
 21. Provider fills form and submits support request
 22. System sends support request to admin team
-23. System displays confirmation "Support request submitted. Our team will respond within 24 hours."
+23. System displays confirmation "Support request submitted. Case #[number]. Our team will respond within 24 hours."
 
 ### Alternative Flows
 
@@ -695,8 +697,8 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
   4. Provider clicks "Request Reopen" button
   5. System opens reopen request modal with fields:
      - Reopening Reason (required textarea: "The issue is still occurring. After clearing cache, I still can't access the dashboard.")
-     - Priority Update (dropdown: Keep Current / Change to High / Change to Urgent)
-  6. Provider fills reopening reason and selects "Change to High" priority
+     - Priority Update (dropdown: Keep Current / Low / Medium / High / Urgent)
+  6. Provider fills reopening reason and selects "High" priority
   7. Provider clicks "Submit Reopen Request"
   8. System validates reason (min 20 chars) and sends request to FR-034
   9. FR-034 creates reopen request notification to admin (support.case_reopened event)
@@ -759,7 +761,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 7. Provider clicks "Submit Closure Request"
 8. System creates account closure request record with status "Pending Admin Review" (only one pending request per provider; no booking or payout check blocks submission)
 9. System logs closure request in audit trail (user, timestamp, reason)
-10. System sends the FR-020 `provider.closure_requested` notification to admins (mandatory), and FR-015 Screen 1 shows the provider with the Closure Requested marker and filter
+10. System notifies admins of the request (FR-020 `provider.closure_requested`, a mandatory notice; recipients and content are defined by the notification Rules REQ-020-016 and REQ-030-101), and FR-015 Screen 1 shows the provider with the Closure Requested marker and filter
 11. System displays confirmation to provider "Account closure request submitted. Our team will review and process your request within 5 business days. You will receive an email once your account is deactivated."
 12. Provider account remains Active until admin processes the request. If the admin schedules the deactivation for a future date, the request stays "Pending Admin Review" until the deactivation takes effect; if the scheduled deactivation is cancelled, the request stays "Pending Admin Review" and no rejection email is sent
 13. Admin reviews the closure request in FR-015 (A-02: Provider Management) and processes it per FR-015 Alternative Flow A7: deactivates the provider via FR-015 Screen 4 (immediate or scheduled), with a reason that references the request
@@ -768,7 +770,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
     - Provider login blocked with the Rule 6 deactivation message
     - Provider profile hidden from patients and new inquiries
     - All non-terminal inquiries, quotes, and bookings cancelled under the FR-015 Screen 4 cascade, with patient and admin-support notifications (FR-020); captured payments reconciled by FR-017
-    - All provider data retained in archive (per FR-023 data retention: minimum 7 years)
+    - All provider data retained in archive (retention follows the system PRD, Platform-Wide Rules: One 10-year retention period)
     - Bank account details encrypted and archived
 15. When the deactivation takes effect, the system sets the closure request status to "Approved", links it to the FR-015 deactivation status event, and sends the FR-015 deactivation email (`provider.deactivated`, FR-020). FR-015 locks "Notify Provider" on for closure deactivations, so this email is always sent, as step 11 promises
 16. If the admin rejects the request instead (e.g., the provider asks to withdraw it), the system sets the request status to "Rejected" with review notes, the provider account remains Active, and the provider receives the FR-020 `provider.closure_rejected` email with the review notes (mandatory). The provider may submit a new request later
@@ -931,7 +933,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 - Providers may post a public response to any published review via the inline response composer defined in FR-013 Screen 6; see FR-013 for response rules and immutability
 - Overall rating displays average (e.g., "4.8/5.0") with total count (e.g., "Based on 127 reviews")
 - Rating distribution shows bar chart with counts/percentages for each star rating
-- Filters and sort selections persist per user session
+- Rating filter and sort options, defaults and per-session persistence are defined by FR-022 (REQ-022-084)
 - Clicking a review notification (from notifications) opens this tab with relevant review auto-highlighted
 - Data sourced from Reviews service; loading/empty/error states handled
 - Reviews update automatically when new reviews are posted
@@ -1029,14 +1031,14 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 | Field Name | Type | Required | Description | Validation Rules | Role-Based Behavior |
 |------------|------|----------|-------------|------------------|-------------------|
 | Account Name | text/display | Yes | Display name for the account | Max 200 chars | **Owner**: Unified with clinic name (read-only, synced from Tab 1: Basic Information); **Staff**: Editable display name (defaults to First Name + Last Name, can be customized) |
-| First Name | text | Yes | User's first name | Max 50 chars, letters and spaces only | Editable by all roles (Owner and Staff) |
-| Last Name | text | Yes | User's last name | Max 50 chars, letters and spaces only | Editable by all roles (Owner and Staff) |
+| First Name | text | Yes | User's first name | 2-50 characters, letters, spaces, hyphens (same as FR-009) | Editable by all roles (Owner and Staff) |
+| Last Name | text | Yes | User's last name | 2-50 characters, letters, spaces, hyphens (same as FR-009) | Editable by all roles (Owner and Staff) |
 | Account Email | email | Yes | Email address for login and communications | Valid email format, unique in system | Editable by all roles (Owner and Staff) |
 | Phone Number - Country Code | dropdown | Yes (if phone provided) | Worldwide country calling code | Consumes FR-026 country calling codes list (e.g., +1, +44, +90, +234) | Editable by all roles |
 | Phone Number - Number | text | No | Provider phone number | Numeric only, length validated per country code format | Editable by all roles |
 | Timezone | dropdown | Yes | Provider's local timezone for date/time display | Multiple timezone options (GMT-12 to GMT+14) | Editable by all roles |
 | Current Password | password | Yes (for password change) | Current password for verification | Must match existing password hash | Editable by all roles |
-| New Password | password | Yes (for password change) | New password | Min 12 chars, 1 uppercase, 1 lowercase, 1 digit, 1 special char (!@#$%^&(),.?\":{}<>) per FR-026 | Editable by all roles |
+| New Password | password | Yes (for password change) | New password | See system PRD, Platform-Wide Rules: Password and one-time-code policy | Editable by all roles |
 | Confirm New Password | password | Yes (for password change) | Confirm new password | Must match New Password field | Editable by all roles |
 
 **Business Rules**:
@@ -1060,7 +1062,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 - Timezone preference applies to all date/time displays in provider dashboard
 - Existing timestamps in database remain in UTC, converted to provider's timezone for display
 - Password change requires correct current password (security measure)
-- New password must meet password policy from FR-026 (FIXED in codebase, not admin-editable)
+- New password must meet the password policy. See system PRD, Platform-Wide Rules: Password and one-time-code policy
 - Password change event logged in audit trail (timestamp, user ID, IP address)
 - Email notification sent to provider email address after successful password change (security alert)
 - All account-level fields (account name, first name, last name, account email, phone number, timezone, password) are provider-editable by the logged-in user, subject to role-based restrictions (Account Name read-only for Owner) and FR-026 security rules and FR-009 role permissions
@@ -1111,7 +1113,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 - Each tab (Profile, Account Information, Notification Preferences, Billing) can be saved independently; system displays unsaved changes indicator (e.g., dot or asterisk) on tabs with unsaved edits
 - When provider attempts to navigate away or quit, system displays reminder dialog "You have unsaved changes. Are you sure you want to leave?" with options to save, discard, or cancel
 - Critical system alerts (e.g., payment failure, security breach) bypass preferences and always sent via all available channels
-- Every mandatory provider notice is exempt from these preferences: the inquiry-cancelled quote notice (FR-020 `quote.cancelled_inquiry`), the selected-provider and not-selected-provider outcomes of `quote.accepted`, `booking.payment_window_expired`, `booking.revived`, `booking.rescheduled` and the aftercare reassignment notice (FR-020 `aftercare.provider_reassigned`, sent to the new aftercare provider) (FR-030 Non-Disableable by Default). This screen offers no toggle for them, and neither the Quote or Schedule Notifications toggles, "Disable All" nor the channel preferences can suppress them
+- Mandatory provider notices (defined in FR-030 Non-Disableable by Default; for the inquiry-cancelled quote notice, FR-020 REQ-020-020) are exempt from these preferences. This screen offers no toggle for them, and neither the Quote or Schedule Notifications toggles, "Disable All" nor the channel preferences can suppress them
 - Preference changes logged in audit trail
 - Preference updates propagate to S-03 within 1 minute
 - All notification type and channel toggles are provider-editable from the `Settings → Notification Preferences` tab in the provider dashboard
@@ -1150,7 +1152,9 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 | Commission Value | display | N/A | e.g., "15%" or "£200 per completed procedure" | Retrieved from FR-015 Tab 7; Flat Rate shown with its Flat Rate Currency; read-only |
 | Effective Date | display | N/A | Date from which the current configuration applies to newly confirmed bookings | Retrieved from FR-015 Tab 7 (FR-029 `effective_date`); format DD-MM-YYYY; read-only |
 | Scheduled Configuration | display | N/A | Next configuration and its Effective Date, if an admin has set a future-dated change. At most one pending configuration exists per provider; a newer future-dated edit by an admin replaces it (FR-015 Tab 7, FR-029) | Retrieved from FR-015 Tab 7; hidden when none is pending; read-only |
-| Payout Frequency | display | N/A | "Weekly" (Mon–Sun), "2x a Month" (1st–15th, 16th–last day), or "Monthly" (calendar month) | Retrieved from FR-015 Tab 7; read-only |
+| Payout Method | display | N/A | "Stripe Connect" or "Manual bank transfer"; chosen by the admin when the clinic is created in FR-015 | Read-only; the provider cannot change it |
+| Payout Readiness | display | N/A | Whether the clinic's payout set-up is ready; for Stripe Connect the clinic completes Stripe's own sign-up itself | Read-only |
+| Payout Timing | display | N/A | Stripe Connect: "Released automatically after completion" (FR-017). Manual bank transfer: follows the one platform-wide settlement period set in FR-029 (default weekly, Sunday cutoff, Wednesday payout). There is no per-clinic payout frequency | Read-only; shown according to the clinic's payout method |
 
 **Business Rules**:
 
@@ -1163,6 +1167,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 - Email confirmation sent to Owner after bank account details updated
 - Bank account details used by FR-017 billing workflow for provider payouts
 - **Commission & Payout panel**: Read-only; values are set by admins in FR-015 Tab 7 and synchronized with FR-029. Providers cannot edit them and must contact support to discuss changes. The panel notes that existing confirmed bookings keep the commission snapshot taken at their confirmation (FR-029)
+- **Payout method and readiness**: The admin chooses the payout method (Stripe Connect or manual bank transfer) when creating the clinic in FR-015. The Owner sees the method and the readiness read-only and cannot change the method
 - If bank account validation fails, display error message from S-02 and prevent saving
 
 **Notes**:
@@ -1196,7 +1201,8 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 **Business Rules**:
 
 - All Help Centre content is read-only for providers (content managed exclusively by admins via FR-033)
-- Search functionality searches across all content types (FAQs, articles, resources, videos)
+- Help Centre search behaviour (content types searched, 200-character limit, autocomplete) is defined by FR-022 (REQ-022-081)
+- When a Help Centre search returns no results, the system shows "No results for '[query]'. Try different keywords or Contact Support." (same message as the patient Help Centre, FR-035)
 - Help Centre content updates (from admin) propagate to providers within 1 minute
 - Breadcrumb navigation available on all subscreens for easy return to home
 
@@ -1354,16 +1360,16 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 |------------|------|----------|-------------|------------------|
 | Support Request Form - Subject | text | Yes | Support request subject line | Max 200 chars |
 | Support Request Form - Category | dropdown | No | Request category (Technical Issue, Payment Question, Feature Request, etc.) | Pre-defined categories |
-| Support Request Form - Message | textarea | Yes | Detailed support request message | Max 2000 chars, min 20 chars |
+| Support Request Form - Message | textarea | Yes | Detailed support request message | Max 5000 chars, min 20 chars |
 | Support Request Form - Priority | dropdown | No | Request priority (Low, Medium, High, Urgent) | Default: Medium |
 | Support Request Form - Attachment | file upload | No | Optional screenshot or document | Max 10MB, common file types (PDF, PNG, JPG, DOCX) |
-| Submission Tracking | list | No | List of submitted support requests with status | Each request: subject, category, status (Open, In Progress, Resolved, Closed), submitted date, last updated, ticket number |
+| Submission Tracking | list | No | List of submitted support requests with status | Each request: subject, category, status (Open, In Progress, Resolved, Closed), submitted date, last updated, case number |
 
 **Business Rules**:
 
 - Support contact form auto-populates provider contact information (name, email, clinic name)
-- Form submission creates support ticket with unique ticket number
-- Support request confirmation displayed: "Support request submitted. Ticket #[number]. Our team will respond within 24 hours."
+- Form submission creates a support case with a unique case number
+- Support request confirmation displayed: "Support request submitted. Case #[number]. Our team will respond within 24 hours."
 - Form submissions automatically create support cases in FR-034 Support Center & Ticketing System with status 'Open'; case management, admin responses, and status updates are handled in FR-034
 - Submission tracking shows all user's support requests with status updates
 - Status updates: Open → In Progress → Resolved → Closed
@@ -1392,7 +1398,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 |------------|------|----------|-------------|------------------|
 | Feedback Form - Type | dropdown | Yes | Feedback type (Feature Request, Bug Report, Suggestion, Other) | Pre-defined types |
 | Feedback Form - Title | text | Yes | Brief title for feedback | Max 100 chars |
-| Feedback Form - Description | textarea | Yes | Detailed feedback description | Max 2000 chars, min 20 chars |
+| Feedback Form - Description | textarea | Yes | Detailed feedback description | Max 5000 chars, min 20 chars |
 | Feedback Form - Priority | dropdown | No | Suggested priority (Low, Medium, High) | Default: Low |
 | Submission Tracking | list | No | List of submitted feedback with status | Each submission: title, type, status (Open, In Progress, Resolved, Closed), feedback resolution (if applicable: Implemented, Planned, Declined), submitted date, admin response |
 
@@ -1444,7 +1450,8 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 
 **Business Rules**:
 
-- Default view shows Open and In Progress cases from last 90 days, sorted by Last Updated descending
+- Default view shows Open and In Progress cases from last 90 days, sorted by Last Updated descending (one shared Rule with the admin case list: FR-034 REQ-034-114)
+- The case list shows 20 cases per page by default
 - Providers can view all their submitted cases (both support requests from Screen 5.5 and feedback from Screen 5.6)
 - Clicking case row or Case ID opens Screen 5.8 (Support Case Detail View)
 - Status badges color-coded (Open=blue, In Progress=yellow, Resolved=green, Closed=gray)
@@ -1454,6 +1461,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 - Cases with unread messages highlighted with subtle background color or bold text
 - Search is real-time and searches across: Case ID, Case Title, Original Description, Message content
 - Filters are cumulative (AND logic between different filter types)
+- Filter options: Status (Open, In Progress, Resolved, Closed; default Open and In Progress), Type (Support Request, Feedback; default all types), Date Range (custom range on the case creation date; default last 90 days); several selections within one filter combine as OR
 - Filter selections persist during session
 - Quick Stats bar shows counts based on current filters
 - If case has new admin messages since last view, "New Reply" badge shown prominently
@@ -1489,8 +1497,8 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 | Last Updated | datetime (readonly) | N/A | Most recent modification | Display only |
 | Original Description | text block | N/A | Initial submission description | Display only, expandable if long |
 | Communication Thread | threaded conversation | N/A | Two-way conversation showing all messages from admin and provider with full context | Scrollable, chronological (oldest first), shows sender name, sender type badge, timestamp, message content, attachments |
-| Reply Message Box | textarea | No | Message composer for replying to admin | Max 2000 chars; only enabled for Open and In Progress cases; Character counter displayed |
-| Attach Files Button | file upload | No | Attach files to reply message | Max 3 files, 10MB per file, formats: JPG, PNG, PDF, DOC, DOCX |
+| Reply Message Box | textarea | No | Message composer for replying to admin | Max 5000 chars; only enabled for Open and In Progress cases; Character counter displayed |
+| Attach Files Button | file upload | No | Attach files to reply message | Max 5 files, 10MB per file, formats: JPG, PNG, PDF, DOC, DOCX |
 | Send Reply Button | button | N/A | Sends reply message to admin | Enabled only if message box has content; disabled for Resolved/Closed cases |
 | Request Reopen Button | button | N/A | Request to reopen closed case | Only visible for Closed cases; opens reopen request modal (Screen 5.9) |
 | Case Timeline | vertical timeline | N/A | Shows all case events with full context | Displays: case created, status changes, feedback resolution updates, messages sent/received, case resolved, case closed; Readonly, scrollable, reverse chronological (newest first) |
@@ -1512,8 +1520,7 @@ Each message in the thread displays:
 - Case detail view shows complete communication thread with all messages from admin and provider
 - Providers can reply to admin messages for Open and In Progress cases via Reply Message Box
 - When provider replies, message is sent to FR-034 system and appears in admin's case view (FR-034 Screen 3)
-- Admin reply notifications trigger email to provider via S-03 (support.case_admin_reply event)
-- Provider reply notifications trigger email to assigned admin via S-03 (support.case_user_reply event)
+- An admin reply notifies the provider (support.case_admin_reply) and a provider reply notifies the assigned admin, or all support staff if unassigned (support.case_user_reply); recipients, content and channels are defined by the notification catalogue (FR-030 REQ-030-065 and REQ-030-066)
 - System marks messages as read when provider opens case detail view
 - Unread admin messages marked with "New" badge until provider views case
 - For Resolved cases, Reply Message Box is read-only with message: "This case has been marked as resolved. If the issue persists, click 'Request Reopen'."
@@ -1531,7 +1538,7 @@ Each message in the thread displays:
 - Use sticky header for case detail when scrolling through long communication threads
 - Show typing indicator when admin is composing reply (future enhancement via WebSocket)
 - Consider implementing desktop notifications for new admin replies (future enhancement)
-- Show character count below Reply Message Box: "X / 2000 characters"
+- Show character count below Reply Message Box: "X / 5000 characters"
 - Display file upload progress bar when attaching files
 - For attached images, show inline preview thumbnails in communication thread
 
@@ -1550,7 +1557,7 @@ Each message in the thread displays:
 | Previous Resolution Summary | text (readonly) | N/A | Resolution summary from when case was previously resolved | Display only, helps provider provide context |
 | Previous Closure Date | datetime (readonly) | N/A | Date when case was closed | Display only |
 | Reopening Reason | textarea | Yes | Reason for reopening case | Min 20 chars, max 500 chars; Example: "The issue is still occurring after following all troubleshooting steps" |
-| Priority Update | dropdown select | No | Adjust priority for reopened case | Options: Keep Current, Change to Low, Change to Medium, Change to High, Change to Urgent; Default: Keep Current |
+| Priority Update | dropdown select | No | Adjust priority for reopened case | Options: Keep Current, Low, Medium, High, Urgent; Default: Keep Current |
 | Submit Reopen Request Button | button | Yes | Submits reopen request to admin | Validates reason length; Sends notification to admin via S-03 |
 | Cancel Button | button | Yes | Closes modal without reopening case | No changes made |
 
@@ -1619,7 +1626,7 @@ Each message in the thread displays:
 ### General Module Rules
 
 - **Rule 1**: All provider profile changes (logo, name, description, languages, awards) propagate to patient-facing quote comparison view within 1 minute
-- **Rule 2**: Provider notification preferences enforced by S-03 Notification Service for all platform notifications (except critical system alerts and every mandatory provider notice in FR-030 Non-Disableable by Default, namely the inquiry-cancelled quote notice (FR-020 `quote.cancelled_inquiry`), the selected-provider and not-selected-provider outcomes of `quote.accepted`, `booking.payment_window_expired`, `booking.revived`, `booking.rescheduled` and the aftercare reassignment notice (FR-020 `aftercare.provider_reassigned`, sent to the new aftercare provider), which bypass preferences)
+- **Rule 2**: Provider notification preferences enforced by S-03 Notification Service for all platform notifications, except critical system alerts and mandatory provider notices, which bypass preferences. Which notices are mandatory, their recipients and their content are defined by the notification Rules (FR-020 REQ-020-020 and FR-030 Non-Disableable by Default)
 - **Rule 3**: All account settings changes (phone, timezone, password) logged in audit trail with timestamp, user ID, and IP address
 - **Rule 4**: Billing settings accessible ONLY to Owner role; non-owner roles cannot see or access billing settings (tab hidden from navigation)
 - **Rule 5**: All profile, language, awards, account, and notification fields documented in this FR are provider-editable within the Provider Dashboard (subject to role restrictions noted); reviews content and Help Centre articles are read-only views fed by their respective modules (staff roster managed by FR-009); providers may post responses to reviews via FR-013 Screen 6 response composer but cannot edit or delete review records
@@ -1632,8 +1639,8 @@ Each message in the thread displays:
 
 - **Privacy Rule 1**: Bank account details encrypted at rest using AES-256 and masked in UI (e.g., ●●●●●●1234)
 - **Privacy Rule 2**: Password stored as bcrypt hash (cost factor 12+), never stored in plain text
-- **Privacy Rule 3**: Approved account-closure requests result in FR-015 deactivation (account status = "Deactivated"; there is no separate "Deleted" status), with data archived per FR-023 data retention: minimum 7 years
-- **Audit Rule**: All profile changes, account settings changes, billing settings changes, and account closure requests logged in audit trail with: timestamp, user ID, IP address, action, old value, new value
+- **Privacy Rule 3**: Approved account-closure requests result in FR-015 deactivation (account status = "Deactivated"; there is no separate "Deleted" status), with data archived (retention follows the system PRD, Platform-Wide Rules: One 10-year retention period)
+- **Audit Rule**: All profile changes, account settings changes, billing settings changes, and account closure requests logged in audit trail with: timestamp, user ID, IP address, action, old value, new value (bank details, password, phone and email values are masked)
 - **GDPR Compliance**: Provider account closure request gives the provider a path to request erasure (FR-015 deactivation with data archival per FR-023, not permanent deletion)
 - **Unsaved Changes Rule**: System displays unsaved changes indicator (e.g., dot or asterisk) on tabs with unsaved edits; when provider attempts to navigate away or quit, system displays reminder dialog "You have unsaved changes. Are you sure you want to leave?" with options to save, discard, or cancel
 - **Concurrent Edits Rule**: Provider profile saves are last-save-wins. If a provider user and an admin (FR-015), or two provider users, edit the same fields at the same time, the later save overwrites the earlier one; there is no conflict check and no conflict message. A save applies only the fields the user changed; untouched fields are not rewritten, so last save wins only when two people change the same field. Every save is logged in the audit trail with old and new values
@@ -1646,15 +1653,15 @@ Each message in the thread displays:
 - System language options available in profile language selection (owned by FR-021 and surfaced through settings)
 - Country calling codes available in phone number selection (FR-026)
 - Timezone options available in account settings (FR-026)
-- Password policy parameters (configurable: max login attempts, lockout duration, OTP expiry, resend cooldown; FIXED in codebase: password complexity rules) (FR-026)
+- Password policy parameters (configurable: max login attempts, lockout duration, OTP expiry, resend cooldown; password complexity is fixed, see system PRD, Platform-Wide Rules: Password and one-time-code policy) (FR-026)
 
 **Fixed in Codebase (Not Editable)**:
 
-- Password policy complexity requirements: min 12 chars, 1 uppercase, 1 lowercase, 1 digit, 1 special char (!@#$%^&(),.?\":{}|<>) (FR-026)
+- Password complexity requirements: see system PRD, Platform-Wide Rules: Password and one-time-code policy (FR-026)
 - Encryption algorithms: AES-256 for data at rest, TLS 1.3 for data in transit
 - Role-based access control rules: billing settings accessible only to Owner role (FR-009)
 - Password hash algorithm: bcrypt with cost factor 12+
-- Account closure workflow: admin deactivation through FR-015 only (no "Deleted" status), data retained per FR-023 (minimum 7 years)
+- Account closure workflow: admin deactivation through FR-015 only (no "Deleted" status), data retained (retention follows the system PRD, Platform-Wide Rules: One 10-year retention period)
 
 **Configurable with Restrictions**:
 
@@ -1710,7 +1717,7 @@ Each message in the thread displays:
 ### Internal Dependencies (Other FRs/Modules)
 
 - **FR-015: Provider Management (Admin-Initiated) / Module A-02**: Commission display and account status
-  - **Why needed**: Admins set commission, payout frequency, and provider status in FR-015
+  - **Why needed**: Admins set commission, payout method, and provider status in FR-015
   - **Integration point**: Screen 4 Commission & Payout panel reads FR-015 Tab 7 values (FR-029 configuration); Rule 6 reads provider status and the latest suspension reason from FR-015 Screens 4-5
 
 - **FR-020 / S-03: Notification Service**: Notification preferences integration
@@ -1915,7 +1922,7 @@ A provider searches Help Centre for answer to question "How do I edit a quote af
 **Acceptance Scenarios**:
 
 1. **Given** provider has question about editing quotes, **When** provider navigates to Help Centre, clicks "FAQs" category, selects topic "Quote Management", clicks question "How do I edit a quote after submission?", **Then** system expands answer with detailed instructions, provider reads answer, clicks "Was this helpful? Yes", system records feedback for admin analytics
-2. **Given** provider needs to contact support, **When** provider navigates to Help Centre, clicks "Contact Support", fills support form (Subject: "Payment issue", Message: "I haven't received my payout for last week", uploads screenshot 2MB PNG), submits request, **Then** system validates form, sends support request to admin team, displays confirmation "Support request submitted. Our team will respond within 24 hours.", and admin receives support request in admin dashboard
+2. **Given** provider needs to contact support, **When** provider navigates to Help Centre, clicks "Contact Support", fills support form (Subject: "Payment issue", Message: "I haven't received my payout for last week", uploads screenshot 2MB PNG), submits request, **Then** system validates form, sends support request to admin team, displays confirmation "Support request submitted. Case #[number]. Our team will respond within 24 hours.", and admin receives support request in admin dashboard
 3. **Given** provider wants to download quote template, **When** provider navigates to Help Centre, clicks "Resource Library", clicks "Download Quote Template" (PDF file), **Then** system initiates file download, provider saves file to local device
 
 ---
@@ -2007,10 +2014,10 @@ A provider closing their clinic permanently requests account closure, and an adm
 
 - **REQ-032-018**: System MUST encrypt bank account details at rest using AES-256
 - **REQ-032-019**: System MUST hash passwords using bcrypt (cost factor 12+) and never store plain text passwords
-- **REQ-032-020**: System MUST log all profile changes, account settings changes, billing settings changes, and account closure requests in audit trail (timestamp, user ID, IP address, action, and appropriately masked old/new values where sensitive data is involved)
+- **REQ-032-020**: System MUST log all profile changes, account settings changes, billing settings changes, and account closure requests in audit trail (timestamp, user ID, IP address, action, and old/new values; bank details, password, phone and email values are masked)
 - **REQ-032-021**: System MUST send email notification to provider after password change (security alert)
 - **REQ-032-022**: System MUST enforce role-based access control for billing settings (Owner role only; non-owners cannot see or access billing settings tab)
-- **REQ-032-023**: System MUST process approved account-closure requests as FR-015 deactivation (account status = "Deactivated", standard FR-015 cascade, data archived per FR-023 minimum 7 years)
+- **REQ-032-023**: System MUST process approved account-closure requests as FR-015 deactivation (account status = "Deactivated", standard FR-015 cascade, data archived; retention follows the system PRD, Platform-Wide Rules: One 10-year retention period)
 
 ### Integration Requirements
 
@@ -2019,9 +2026,9 @@ A provider closing their clinic permanently requests account closure, and an adm
 - **REQ-032-026**: System MUST integrate with FR-026/FR-021 language configuration to provide centrally managed language options in profile language selection (FR-021 is canonical for supported locales; FR-026 surfaces these via App Settings)
 - **REQ-032-027**: System MUST integrate with FR-026 to provide country codes and timezone options in account settings
 - **REQ-032-028**: System MUST integrate with FR-033 to display admin-managed Help Centre content
-- **REQ-032-029**: System MUST show provider Owners a read-only Commission & Payout panel in Screen 4 with commission model, value, Flat Rate Currency, Effective Date, any scheduled configuration, and payout frequency sourced from FR-015 Tab 7 / FR-029
+- **REQ-032-029**: System MUST show provider Owners a read-only Commission & Payout panel in Screen 4 with commission model, value, Flat Rate Currency, Effective Date, any scheduled configuration, and payout timing (automatic release on the Stripe Connect rail; the one platform-wide settlement period owned by FR-029 on the manual rail; there is no per-clinic payout frequency), plus the payout method (chosen by the admin when the clinic is created in FR-015) and payout readiness
 - **REQ-032-030**: System MUST apply Rule 6: show a persistent Account Suspended banner with the admin reason to all provider users while suspended, restrict editing to the listed exceptions, and block login with a deactivation message once deactivated
-- **REQ-032-031**: System MUST NOT offer a provider notification preference toggle for the inquiry-cancelled quote notice (FR-020 `quote.cancelled_inquiry`) and MUST deliver that notice to each affected provider regardless of notification type and channel preferences. The same applies to every other mandatory provider notice in FR-030 Non-Disableable by Default: the selected-provider and not-selected-provider outcomes of `quote.accepted`, `booking.payment_window_expired`, `booking.revived`, `booking.rescheduled` and the aftercare reassignment notice (FR-020 `aftercare.provider_reassigned`, sent to the new aftercare provider)
+- **REQ-032-031**: System MUST NOT offer a provider notification preference toggle for any mandatory provider notice, and MUST deliver each mandatory notice to the affected provider regardless of notification type and channel preferences. Which notices are mandatory, to whom they go and what they say is defined by the notification Rules: FR-020 REQ-020-020 for the inquiry-cancelled quote notice (`quote.cancelled_inquiry`) and FR-030 Non-Disableable by Default for the others
 
 ---
 
@@ -2035,9 +2042,7 @@ A provider closing their clinic permanently requests account closure, and an adm
   - **Key attributes**: provider ID, phone number (international format), country code, timezone, password hash, last password change date, password change history (timestamps), last updated timestamp
   - **Relationships**: One provider has one account settings record; account settings linked to provider profile
 
-- **Entity 3 - Provider Notification Preferences**: Represents provider notification configuration
-  - **Key attributes**: provider ID, quote notifications (boolean), schedule notifications (boolean), treatment start notifications (boolean), aftercare notifications (boolean), review notifications (boolean), email enabled (boolean), push enabled (boolean), last updated timestamp
-  - **Relationships**: One provider has one notification preferences record; notification preferences enforced by S-03 Notification Service
+- **Entity 3 - Provider Notification Preferences**: Owned by FR-030 (Notification Rules & Configuration). Screen 3 shows and edits it: six notification type toggles (quote, schedule, treatment start, aftercare, review, promotion/discount) and the email and push channels, one record per provider organization.
 
 - **Entity 4 - Provider Billing Settings**: Represents provider bank account details for payouts
   - **Key attributes**: provider ID, account holder name, bank name, account number (encrypted), routing/SWIFT code, IBAN (if applicable), last updated timestamp, updated by user ID (Owner role), S-02 validation status
@@ -2048,7 +2053,7 @@ A provider closing their clinic permanently requests account closure, and an adm
   - **Relationships**: One provider can have multiple closure requests (but only one "Pending" at a time); closure request reviewed by one admin; an approved request links to one FR-015 deactivation status event
 
 - **Entity 6 - Help Centre Content (Admin-Managed)**: Represents help resources displayed to providers
-  - **Key attributes**: content ID, category (FAQ / Tutorial Guide / Troubleshooting / Resource Library / Video Tutorial), title, body (HTML/Markdown), attachments (file URLs), created date, created by admin ID, last updated date, updated by admin ID
+  - **Key attributes**: content ID, category (FAQ / Tutorial Guide / Troubleshooting / Policy Information / Resource Library / Video Tutorial), title, body (HTML/Markdown), attachments (file URLs), created date, created by admin ID, last updated date, updated by admin ID
   - **Relationships**: Help Centre content created and managed by admins (FR-033); one provider can view many help centre content items (read-only)
 
 - **Entity 7 - Provider Reviews View**: Represents aggregated reviews and list data shown in Tab 5 (Reviews tab) within Screen 1 (Provider Profile)
@@ -2076,6 +2081,7 @@ A provider closing their clinic permanently requests account closure, and an adm
 | 2026-10-18 | 1.12 | Final audit corrections via [CR-FR032-20261016-01](change-request-2026-10-16-mtg002-quote-model-alignment.md): the preference exemption now covers every mandatory provider notice (`quote.cancelled_inquiry`, the `quote.accepted` outcomes, `booking.payment_window_expired`, `booking.revived` and the new mandatory `booking.rescheduled`, Q42), not only the inquiry-cancelled notice, in Main Flow step 4, Screen 3 fields and rules, Rule 2 and REQ-032-031. Later the same day (decision Q47): the mandatory FR-011 aftercare reassignment notice `aftercare.provider_reassigned` is added to the mandatory provider notices that preferences cannot suppress (Screen 3 rules, Rule 2, REQ-032-031). | Product Owner / Documentation |
 | 2026-10-27 | 1.13 | FR-015 v1.22 alignment (Product Owner decisions, 2026-10-27): added the Concurrent Edits Rule (provider profile saves are last-save-wins, no conflict check), mentioned in [CR-FR015-20261027-01](../fr015-provider-management/change-request-2026-10-27-save-conflict-encryption-seat-usage.md); Rule 6 Suspended now keeps chat with patients on open In Progress and Aftercare cases while clinical notes, photos, and aftercare actions stay blocked until the admin decides; Request Account Closure steps 12 and 15: a request with a scheduled deactivation stays Pending Admin Review until the deactivation takes effect, and stays pending if the scheduled change is cancelled. Open bookings and pending payouts already never block a closure request (step 8, User Story 7 scenario 3); no change | Product Owner / Documentation |
 | 2026-10-28 | 1.14 | Product Owner decision 2026-10-28 (FR-015 backend confirmations); clarification, no new Change Request. Concurrent Edits Rule: a save applies only the fields the user changed and does not rewrite untouched fields, so last save wins only when two people change the same field; no conflict check or message (unchanged). Matches FR-015 v1.23 and the 2026-10-28 note in CR-FR015-20261027-01 | Product Owner / Documentation |
+| 2026-11-20 | 1.15 | Requirements graph programme baseline: owner rulings applied. Main changes: Provider Notification Preferences record is now owned by FR-030 (Entity 3 is a pointer; Screen 3 still shows and edits it); Screen 4 Commission & Payout panel also shows the payout method (set by the admin when the clinic is created in FR-015) and payout readiness, read-only; audit rule names the masked values (bank details, password, phone, email); mandatory-notice, closure-notice and support-reply Rules shortened to point to the notification Rules (FR-020, FR-030); Help Centre search and Reviews filter/sort rules moved to FR-022 (REQ-022-081, REQ-022-084); default My Support Cases view now shares one Rule with FR-034 (REQ-034-114) and the case list filter options are stated here (REQ-022-086 retired); empty Help Centre search message added; confirmation message uses Case #; promotion toggle added to the six-toggle list and all toggles default on; reopen priority options and Contact Support fields corrected; staff first and last name rules follow FR-009; support reply and feedback limits follow FR-034 (5000 characters, 5 attachments); Policy Information added to Help Centre content categories; cross-document reconciliation (retention, system rule citations, payout wording) | Product Owner / Documentation |
 
 ---
 
@@ -2094,4 +2100,4 @@ A provider closing their clinic permanently requests account closure, and an adm
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B
 **Based on**: FR-032 from system-prd.md, Provider Platform Transcriptions Part 1 & 2
-**Last Updated**: 2026-10-28
+**Last Updated**: 2026-11-20

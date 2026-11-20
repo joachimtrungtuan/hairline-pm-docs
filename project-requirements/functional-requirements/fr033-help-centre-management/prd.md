@@ -158,7 +158,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 11. Admin reviews preview and clicks "Save as Draft" or "Publish"
 12. System saves content with status (Draft/Published) and timestamps
 13. System logs content creation in audit trail (admin name, timestamp, action)
-14. If published, system makes content immediately available in the provider Help Centre category
+14. If published, system makes content available in the provider Help Centre category within 1 minute
 15. System displays success confirmation with link to view published content
 
 ### Alternative Flows
@@ -172,11 +172,11 @@ The Help Centre Content Management module provides a centralized knowledge base 
   3. Admin clicks "Edit" on target content item
   4. System loads content editor pre-filled with existing content
   5. System creates new version of content in version control
-  6. Admin makes changes to title, body, attachments, or category
+  6. Admin makes changes to title, body, attachments, or content kind (a change of kind also moves the content to the matching section)
   7. Admin previews changes to verify formatting and accuracy
   8. Admin saves changes with optional "Version note" describing what changed
   9. System updates content version and logs change in audit trail
-  10. If content is published, system immediately updates provider-facing content
+  10. If content is published, system updates provider-facing content within 1 minute
   11. System sends notification to admins who subscribed to content change alerts (future enhancement)
 - **Outcome**: Content updated with new version and change tracked in audit trail
 
@@ -194,7 +194,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
   8. Admin previews FAQ accordion layout to verify organization
   9. Admin saves organization structure
   10. System updates FAQ navigation structure for provider Help Centre (FR-032 Screen 5.1)
-  11. Provider Help Centre immediately reflects new organization in accordion layout
+  11. Provider Help Centre reflects new organization in accordion layout within 1 minute
 - **Outcome**: FAQ content organized into logical topic sections displayed in accordion layout for easier provider navigation
 
 **A4: Admin Uploads Video Tutorial**:
@@ -227,7 +227,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
   4. Admin enters reason (e.g., "Content outdated, new version coming soon")
   5. Admin confirms unpublish
   6. System changes content status from "Published" to "Unpublished"
-  7. System immediately removes content from provider Help Centre view
+  7. System removes content from provider Help Centre view within 1 minute
   8. System logs unpublish action in audit trail with reason
   9. Content remains in admin view as "Unpublished" for future editing or re-publishing
 - **Outcome**: Content removed from provider view but preserved in admin system for future use
@@ -262,16 +262,16 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 - **Trigger**: Admin needs to update platform service status or create incident report
 - **Steps**:
-  1. Admin navigates to Settings > Help Centre Management > Service Status Management (Screen 8)
+  1. Admin navigates to Settings > Help Centre Management > Service Status Management (Screen 6)
   2. System displays current overall status, service components list, incident history, maintenance schedule
   3. Admin updates service component status (e.g., "API Service" → Degraded)
-  4. System automatically recalculates overall status based on component statuses
+  4. System automatically recalculates overall status based on component statuses (unless an admin has set the overall status by hand)
   5. Admin creates new incident: enters title, description, selects affected services, sets status (Investigating)
   6. System creates incident record and adds to incident history timeline
   7. Admin updates incident status as investigation progresses (Investigating → Identified → Monitoring → Resolved)
   8. System updates incident timeline with each status change
   9. Status updates propagate to provider Service Status subscreen (FR-032 Screen 5.7) within 1 minute
-  10. Providers see updated status in real-time status page interface
+  10. Providers see the updated status in the status page interface within 1 minute
 - **Outcome**: Service status updated and displayed to providers in status page interface
 
 ---
@@ -328,7 +328,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 |------------|------|----------|-------------|------------------|
 | Category List | table/list | Yes | Provider categories with ordering and visibility controls | Categories are predefined; cannot be deleted |
 | Display Order | number / drag-drop | Yes | Order categories appear in provider Help Centre navigation | Integer; drag-and-drop supported |
-| Visibility Toggle | toggle | Yes | Show/Hide category in provider Help Centre navigation | Cannot hide required MVP categories without admin confirmation |
+| Visibility Toggle | toggle | Yes | Show/Hide category in provider Help Centre navigation | Every hide (any of the 10 categories) asks the admin for confirmation |
 | Category Label | text | Yes | Display label per category | Max 50 chars |
 | Category Description | textarea | No | Short description shown on category tile/landing | Max 200 chars |
 | Routing Type | dropdown | Yes | How the category behaves in provider UX | Content List, Ticket Form, External Link, Coming Soon |
@@ -429,15 +429,16 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 ---
 
-### Screen 2.2: Provider FAQ Topic Management
+### Screen 2.2: FAQ Topic Management
 
-**Purpose**: Manage FAQ topics used to group FAQ items for provider Help Centre (FR-032 Screen 5.1). Admin can create, edit, delete, and reorder topics, and see which FAQs belong to each topic.
+**Purpose**: Manage FAQ topics used to group FAQ items for the provider Help Centre (FR-032 Screen 5.1) and the patient Help Centre (FR-035). One screen serves both audiences; an audience switch selects whether Provider or Patient topics are shown and edited. Admin can create, edit, delete, and reorder topics, and see which FAQs belong to each topic.
 
 **Data Fields**:
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
-| Topic List | table/list | Yes | List of all FAQ topics | Each row: topic name, description (optional), number of FAQs, display order, actions (Edit, Delete) |
+| Audience Switch | toggle | Yes | Selects whether Provider or Patient topics are shown and edited | Provider or Patient; starts on the audience of the FAQ screen it was opened from |
+| Topic List | table/list | Yes | List of all FAQ topics of the selected audience | Each row: topic name, description (optional), number of FAQs, display order, actions (Edit, Delete) |
 | Topic Name | text | Yes | Name of topic section (e.g., "Quote Submission", "Payment Processing") | Max 100 chars, unique per audience (Provider/Patient) |
 | Topic Description | textarea | No | Optional description for internal/admin context | Max 250 chars |
 | Display Order | number | Yes | Order in which topic appears in FAQ accordion | Integer, required; supports drag-and-drop reordering |
@@ -446,16 +447,16 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 **Business Rules**:
 
-- Screen opened from Screen 2 (FAQ Management) when admin clicks "Manage Topics".
-- Topic list shows all topics for the selected audience (Provider or Patient, depending on context) with current display order.
+- Screen opened from Screen 2 (Provider FAQ Management) or Screen 9 (Patient FAQ Management) when admin clicks "Manage Topics".
+- Topic list shows all topics for the selected audience (Provider or Patient, chosen with the audience switch) with current display order.
 - "Add New Topic" opens inline row or modal with fields: Topic Name, Topic Description, Display Order (auto-suggested as last).
 - "Edit" opens topic edit form (inline or modal) allowing admin to change name, description, and display order.
 - "Delete" prompts confirmation; topics with assigned FAQs cannot be hard-deleted:
   - If topic has FAQs, system blocks deletion and prompts admin to reassign or remove FAQs first.
   - Implementation may soft-delete topic only when no FAQs are assigned.
 - Topics support drag-and-drop reordering; moving rows updates Display Order values.
-- "Save Order" persists new topic ordering; provider Help Centre FAQ accordion (FR-032 Screen 5.1) reflects updated topic order.
-- "Cancel" discards unsaved changes to ordering or edits and returns admin to Screen 2 (FAQ Management).
+- "Save Order" persists new topic ordering; the FAQ accordion of the selected audience (FR-032 Screen 5.1 for providers, FR-035 for patients) reflects updated topic order.
+- "Cancel" discards unsaved changes to ordering or edits and returns admin to the FAQ management screen it was opened from.
 - Validation ensures Topic Name is required and unique within the audience; Display Order must be a positive integer.
 
 **Notes**:
@@ -748,9 +749,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
     - Video Embed URL becomes required.
     - System validates URL format and that domain is in the allowed provider list (e.g., YouTube, Vimeo).
     - No video file is uploaded; Video Duration may be fetched from provider API or left manual/optional (implementation detail).
-- For existing videos, a "Change Source Type" flow may be implemented as either:
-  - Simple change with required new file/URL and confirmation that old file/URL is replaced; or
-  - Restricted to avoid data loss (implementation decision to be finalized at design time).
+- For existing videos, admin can change the source type (Upload File or Embed from Third-Party) by providing the new file or URL and confirming that the old file or URL is replaced; the video keeps its view counts.
 - Thumbnail generation:
   - For uploaded videos, system auto-generates from frame at 10% mark, with option to override via custom thumbnail upload.
   - For embedded videos, system may pull provider thumbnail (if supported) or allow only custom thumbnail upload.
@@ -786,7 +785,8 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
-| Overall Status | dropdown | Yes | All Systems Operational, Partial Outage, Major Outage | Pre-defined statuses |
+| Overall Status | dropdown | Yes | All Systems Operational, Partial Outage, Major Outage. Calculated by the system from component statuses; admin may pick another value | Pre-defined statuses; a value set by hand stays until an admin switches back to automatic |
+| Return to Automatic | button | No | Switches the overall status back to the calculated value; shown only while the overall status was set by hand | N/A |
 | Service Components List | table | No | List of service components | Each row: component name, status (Operational/Degraded/Down), last updated |
 | Component Name | text | Yes | Service component name | Max 100 chars |
 | Component Status | dropdown | Yes | Operational, Degraded, Down | Pre-defined statuses |
@@ -798,7 +798,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 | Maintenance Schedule | table | No | List of scheduled maintenance windows | Each maintenance: title, description, scheduled start/end time, affected services |
 | Maintenance Title | text | Yes | Brief maintenance title | Max 200 chars |
 | Maintenance Description | textarea | Yes | Detailed maintenance description | Max 2000 chars |
-| Scheduled Start Time | datetime | Yes | Planned maintenance start time | Valid datetime, future date |
+| Scheduled Start Time | datetime | Yes | Planned maintenance start time | Valid datetime; future date for new windows |
 | Scheduled End Time | datetime | Yes | Planned maintenance end time | Valid datetime, after start time |
 
 **Business Rules**:
@@ -806,14 +806,16 @@ The Help Centre Content Management module provides a centralized knowledge base 
 - Service Status overview displays: overall status, service components list, incident history, maintenance schedule
 - "Add Component" button allows admin to create new service components
 - "Edit" button on each component allows admin to edit component name and status
-- "Delete" button on each component prompts confirmation before deletion
+- "Delete" button on each component prompts confirmation before deletion (soft delete: the component is archived, not permanently erased)
 - "Create Incident" button opens incident creation form
 - "Edit" button on each incident allows admin to update incident details and status
-- "Delete" button on each incident prompts confirmation before deletion
+- "Delete" button on each incident prompts confirmation before deletion (soft delete: the incident is archived, not permanently erased)
 - "Schedule Maintenance" button opens maintenance scheduling form
 - "Edit" button on each maintenance allows admin to update maintenance details
 - "Cancel" button on each maintenance allows admin to cancel scheduled maintenance
-- Overall status automatically calculated from service component statuses (if any component is Down → Partial/Major Outage)
+- Overall status is calculated automatically from service component statuses. Degraded components do not count: if no component is Down, overall status is All Systems Operational; if some components are Down, Partial Outage; if all components are Down, Major Outage
+- Admin may override the calculated overall status by picking another value in the Overall Status dropdown
+- A hand-set overall status stays until an admin switches it back to automatic with the "Return to Automatic" control; it is not reset when component statuses change
 - Service components: create, edit, delete components; update status in real-time
 - Incident management: create new incidents, update status, add timeline updates, mark as resolved
 - Maintenance schedule: create scheduled maintenance, edit, cancel, mark as completed
@@ -828,8 +830,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 - Status badges: color-coded (Operational: green, Degraded: yellow, Down: red)
 - Incident editor: form with timeline view showing status progression, action buttons (Edit, Delete, Resolve)
 - Maintenance scheduler: calendar interface for scheduling maintenance windows, action buttons (Edit, Cancel, Complete)
-- Real-time updates: status changes reflect immediately in provider view
-- Notification settings: admins can configure email notifications for status changes (if implemented)
+- Status changes reflect in provider view within 1 minute
 - Historical data: past incidents and completed maintenance retained for historical reference
 - Breadcrumb navigation: Settings > Help Centre Management > Service Status
 
@@ -853,7 +854,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 - Form opens in modal or separate screen when "Add Component" or "Edit" is clicked from Screen 6
 - If editing existing component, form is pre-filled with current component data
 - If creating new component, form starts empty with default status "Operational"
-- Component status affects overall platform status calculation
+- Component status affects overall platform status calculation (a Down component counts; a Degraded component does not)
 - On save, component is created/updated and admin returns to Screen 6 with updated component list
 - On cancel, changes are discarded and admin returns to Screen 6
 
@@ -890,7 +891,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 - If creating new incident, form starts empty with default status "Investigating" and current time as start time
 - Affected services multi-select shows all available service components
 - Incident status changes are logged in incident timeline automatically
-- Overall status automatically recalculated based on affected service components
+- Overall status is recalculated from the component statuses (unless set by hand)
 - On save, incident is created/updated and admin returns to Screen 6 with updated incident history
 - On cancel, changes are discarded and admin returns to Screen 6
 
@@ -914,7 +915,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 |------------|------|----------|-------------|------------------|
 | Maintenance Title | text | Yes | Brief maintenance title | Max 200 chars, required |
 | Maintenance Description | textarea | Yes | Detailed maintenance description | Max 2000 chars, required |
-| Scheduled Start Time | datetime | Yes | Planned maintenance start time | Valid datetime, future date, required |
+| Scheduled Start Time | datetime | Yes | Planned maintenance start time | Valid datetime; future date for new windows; required |
 | Scheduled End Time | datetime | Yes | Planned maintenance end time | Valid datetime, after start time, required |
 | Affected Services | multi-select | Yes | Service components affected by maintenance | References to service components, at least one required |
 | Status | dropdown | Yes | Scheduled, In Progress, Completed, Cancelled | Pre-defined statuses, defaults to Scheduled |
@@ -979,9 +980,10 @@ The Help Centre Content Management module provides a centralized knowledge base 
 **Note**: The following Patient Help Centre content management screens (Screen 8 through Screen 13) are **admin-only screens on the Admin Platform**. They mirror the provider content management screens (Screen 1 through Screen 7) in structure and functionality, with the following key differences:
 
 - **Audience**: Content managed here is displayed to patients via FR-035 (Patient Help Center & Support Submission module) instead of providers
-- **Screen 8**: Patient Help Centre Management Dashboard (mirrors Screen 1)
+- **Screen 8**: Patient Help Centre Management Dashboard (mirrors Screen 1; there is no patient version of Screen 1.1 because the four patient sections are fixed)
 - **Screen 9**: Patient FAQ Management (mirrors Screen 2)
 - **Screen 9.1**: Patient FAQ Add/Edit Form (mirrors Screen 2.1)
+- **Patient FAQ topics**: managed in Screen 2.2 (FAQ Topic Management) through its audience switch; there is no separate patient topic screen
 - **Screen 10**: Patient Article Management (mirrors Screen 3)
 - **Screen 10.1**: Patient Article Add/Edit Form (mirrors Screen 3.1)
 - **Screen 11**: Patient Resource Library Management (mirrors Screen 4)
@@ -1010,11 +1012,12 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 - **Rule 1**: Help Centre content managed for TWO distinct audiences: Providers and Patients; content repositories completely separated by audience type
 - **Rule 2**: Only admins can create, edit, or delete Help Centre content; providers and patients have read-only access to their respective content
-- **Rule 3**: Content must be tagged with audience type (Provider or Patient) and assigned to exactly one of the predefined categories for that audience
-- **Rule 4**: Content can exist in three states: Draft (admin-only), Published (audience-visible), Unpublished (admin-only, previously published)
+- **Rule 3**: Content must be tagged with audience type (Provider or Patient) and with its kind (FAQ, Tutorial Guide, Troubleshooting Tip, Video Tutorial, Resource Document, Policy Document); the kind decides the Help Centre section the content appears in, and admins do not pick a section separately
+- **Rule 4**: Content can exist in four states: Draft (admin-only), Published (audience-visible), Unpublished (admin-only, previously published), Archived (admin-only, set when content is deleted)
 - **Rule 5**: All content changes logged in audit trail with admin identity, timestamp, audience type, and action type
 - **Rule 6**: Content deletion is soft-delete (archived) not permanent deletion to support recovery and audit compliance
 - **Rule 7**: Admin must explicitly select audience (Provider or Patient) when creating content; content cannot be shared across audiences without manual re-creation
+- **Rule 8**: When content is deleted (archived), Related Content links that point to it are removed from other items
 
 ### Data & Privacy Rules
 
@@ -1028,7 +1031,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 **Editable by Admin**:
 
-- All Help Centre content for both Provider and Patient audiences (title, body, attachments, category assignment, publish status, audience type)
+- All Help Centre content for both Provider and Patient audiences (title, body, attachments, content kind which decides its section, publish status, audience type)
 - **Provider Content**:
   - FAQ content with accordion/topic organization (for FR-032 Screen 5.1)
   - Article content (Tutorial Guides, Troubleshooting Tips, Policies) with article layout formatting (for FR-032 Screen 5.2)
@@ -1058,7 +1061,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 **Configurable with Restrictions**:
 
-- Category visibility (admin can show/hide categories but cannot delete predefined categories; applies separately to provider and patient content)
+- Category visibility (admin can show/hide provider categories but cannot delete predefined categories; every hide asks for confirmation; applies to provider content only, because the four patient sections are fixed and have no category configuration screen)
 - Content versioning (enabled by default, admin cannot disable version control; applies to both provider and patient content)
 - Audience targeting (admin must select Provider or Patient when creating content; content cannot be shared across audiences without manual re-creation)
 
@@ -1096,7 +1099,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 - **SC-009**: Help Centre landing page loads in under 2 seconds for 95% of requests (both provider and patient platforms)
 - **SC-010**: Content search returns results in under 1 second for 90% of queries (P1 requirement for both audiences)
 - **SC-011**: File downloads (PDFs, videos) begin within 3 seconds of user click (both provider and patient)
-- **SC-012**: System supports 1000 concurrent provider accesses and 5000 concurrent patient accesses to Help Centre without performance degradation
+- **SC-012**: System capacity: supports up to 1000 concurrent provider accesses and 5000 concurrent patient accesses to Help Centre without performance degradation (the expected peak for providers is 500, see Scalability Considerations)
 
 ### Business Impact Metrics
 
@@ -1137,17 +1140,14 @@ The Help Centre Content Management module provides a centralized knowledge base 
 - **External Service 1**: Media Storage Service (S-05)
   - **Purpose**: Store uploaded tutorial guides, videos, images, PDF documents
   - **Integration**: RESTful API calls for file upload, retrieval, deletion
-  - **Failure handling**: If media storage unavailable, queue uploads for retry; display cached content to providers; notify admin of storage issues
 
 - **External Service 2**: Rich Text Editor Library (e.g., Quill, TinyMCE, CKEditor)
   - **Purpose**: Provide WYSIWYG editing for Help Centre content creation
   - **Integration**: JavaScript library integrated into admin content creation form
-  - **Failure handling**: If editor library fails to load, fall back to plain textarea with markdown support
 
 - **External Service 3**: Virus Scanning Service (e.g., ClamAV, cloud-based scanner)
   - **Purpose**: Scan uploaded files for viruses and malware before storage
   - **Integration**: API call during file upload process
-  - **Failure handling**: If virus scanner unavailable, quarantine uploads and notify admin; do not make files available to providers until scan completes
 
 ### Data Dependencies
 
@@ -1233,7 +1233,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 - **Current scale**: Expect 200 Help Centre content items at launch (100 provider content items + 100 patient content items; 50 FAQs + 30 guides + 20 videos per audience)
 - **Growth projection**: Plan for 1000+ content items within 12 months as platform features expand and user base grows (500 provider + 500 patient)
-- **Peak load**: Handle 500 concurrent provider accesses and 5000 concurrent patient accesses to Help Centre during major feature launches or platform incidents
+- **Expected peak load**: 500 concurrent provider accesses and 5000 concurrent patient accesses to Help Centre during major feature launches or platform incidents
 - **Data volume**: Expect 20GB media storage for videos and PDFs within first year (200 videos @ 50MB average, 400 PDFs @ 5MB average across both audiences)
 - **Scaling strategy**: Horizontal scaling of web servers serving Help Centre API; CDN for media file delivery; database read replicas for content queries; cache layer (Redis/Memcached) for frequently accessed content with separate cache namespaces for provider and patient content
 
@@ -1242,10 +1242,10 @@ The Help Centre Content Management module provides a centralized knowledge base 
 - **Authentication**: Help Centre content accessible only to authenticated users (providers and patients access their respective content); admin content management accessible only to authenticated admin users with Help Centre management permissions
 - **Authorization**: Role-based access control enforced at API level (providers: read-only provider content, patients: read-only patient content, admins: read-write both content repositories based on permissions)
 - **Audience Separation**: Providers cannot access patient content; patients cannot access provider content; API endpoints enforce audience-based access control to prevent cross-audience data exposure
-- **File Upload Security**: All uploaded files scanned for viruses before storage; file type validation (whitelist: PDF, MP4, MOV, JPG, PNG); file size limits enforced; uploaded files stored outside web root with access-controlled URLs; files tagged with audience type for access control
+- **File Upload Security**: All uploaded files scanned for viruses before storage; file type validation (one allowed-file list per upload kind: resources PDF, DOCX, XLSX, PNG, JPG; videos MP4, MOV; images such as thumbnails PNG, JPG); file size limits enforced; uploaded files stored outside web root with access-controlled URLs; files tagged with audience type for access control
 - **Content Injection**: Rich text editor sanitizes HTML input to prevent XSS attacks; strip dangerous tags (script, iframe) before saving; use Content Security Policy (CSP) headers
 - **Audit trail**: All content changes logged with admin identity, timestamp, IP address, audience type, and action for security audit compliance
-- **Data Privacy**: User feedback on content (helpfulness ratings) logged with user identity for analytics but not publicly displayed; support requests encrypted in transit (HTTPS)
+- **Data Privacy**: User feedback on content (helpfulness ratings) is kept as Yes/No counts only and no user identity is stored (patients are anonymous; providers are counted at clinic level at most); ratings are not publicly displayed; support requests encrypted in transit (HTTPS)
 
 ---
 
@@ -1283,13 +1283,13 @@ An admin content manager needs to add a new FAQ item to address a common provide
 2. **Given** admin is on Content List screen, **When** admin clicks "FAQs" category or navigates to FAQ Management (Screen 2), **Then** FAQ Management screen loads showing all existing FAQs organized by topics
 3. **Given** admin is on FAQ Management screen, **When** admin clicks "Add New FAQ" button, **Then** FAQ creation form opens with fields for question, answer, topic, and publish status
 4. **Given** admin has completed FAQ form with question "How do I process patient payments?" and detailed answer, **When** admin selects "Payment Processing" topic and clicks "Preview", **Then** system displays FAQ in accordion layout exactly as providers will see it (matching FR-032 Screen 5.1)
-5. **Given** admin has reviewed preview and verified formatting, **When** admin clicks "Publish", **Then** system saves FAQ with "Published" status, logs creation in audit trail, and makes FAQ immediately available in provider Help Centre
+5. **Given** admin has reviewed preview and verified formatting, **When** admin clicks "Publish", **Then** system saves FAQ with "Published" status, logs creation in audit trail, and makes FAQ available in provider Help Centre within 1 minute
 
 ---
 
 ### User Story 3 - Admin Updates Service Status During Platform Incident (Priority: P1)
 
-An admin operations staff member needs to update the platform service status when a database outage occurs. They navigate to Service Status Management, create a new incident record, update affected service components, and ensure providers can see the status update in real-time.
+An admin operations staff member needs to update the platform service status when a database outage occurs. They navigate to Service Status Management, create a new incident record, update affected service components, and ensure providers can see the status update within 1 minute.
 
 **Why this priority**: Critical operational functionality for communicating platform status to providers during outages
 
@@ -1299,8 +1299,8 @@ An admin operations staff member needs to update the platform service status whe
 
 1. **Given** admin is logged into admin platform, **When** admin navigates to Settings > Help Centre Management > Service Status Management (Screen 6), **Then** Service Status Management screen loads showing overall status, service components list, incident history, and maintenance schedule
 2. **Given** admin detects database outage affecting multiple services, **When** admin clicks "Create Incident" button, **Then** incident creation form opens with fields for title, description, affected services, and status
-3. **Given** admin has entered incident details "Database Connection Issues" with description and selected affected services, **When** admin sets status to "Investigating" and saves, **Then** system creates incident record, updates overall status to "Partial Outage", and adds incident to timeline
-4. **Given** incident is created and status updated, **When** admin updates affected service components to "Degraded" or "Down", **Then** system recalculates overall status and updates provider-facing Service Status page (FR-032 Screen 5.7) within 1 minute
+3. **Given** admin has entered incident details "Database Connection Issues" with description and selected affected services, **When** admin sets status to "Investigating" and saves, **Then** system creates incident record and adds incident to timeline
+4. **Given** incident is created and status updated, **When** admin sets one or more affected service components to "Down" (a "Degraded" component does not change the overall status), **Then** system recalculates overall status (Partial Outage if some components are Down, Major Outage if all are Down) and updates provider-facing Service Status page (FR-032 Screen 5.7) within 1 minute
 5. **Given** database issue is resolved, **When** admin updates incident status to "Resolved" and updates service components to "Operational", **Then** system updates overall status to "All Systems Operational" and displays resolution in incident timeline
 
 ---
@@ -1337,14 +1337,13 @@ An admin content manager needs to reorganize existing FAQ items into logical top
 2. **Given** admin wants to create new topic "Account Settings", **When** admin clicks "Manage Topics" button, **Then** topic management interface opens showing all existing topics with options to create, edit, delete, and reorder topics
 3. **Given** admin is in topic management interface, **When** admin clicks "Create New Topic" and enters "Account Settings", **Then** system creates new topic and adds it to topic list
 4. **Given** admin has created "Account Settings" topic, **When** admin assigns multiple FAQ items to this topic by dragging FAQs into topic group, **Then** system updates FAQ organization and displays FAQs grouped under "Account Settings" topic
-5. **Given** FAQs are organized into topics, **When** admin reorders FAQs within topic using drag-and-drop and saves, **Then** system updates display order and provider Help Centre (FR-032 Screen 5.1) immediately reflects new organization in accordion layout
+5. **Given** FAQs are organized into topics, **When** admin reorders FAQs within topic using drag-and-drop and saves, **Then** system updates display order and provider Help Centre (FR-032 Screen 5.1) reflects new organization in accordion layout within 1 minute
 
 ### Edge Cases
 
 - What happens when admin attempts to publish content with missing required fields?
-- How does system handle concurrent edits by multiple admins to the same Help Centre content?
-- What occurs if provider attempts to download large video tutorial but network connection is unstable?
-- How to manage Help Centre content when admin deletes content that is linked as "Related Content" from other items?
+- How does system handle concurrent edits by multiple admins to the same Help Centre content? Platform-wide rule: the second admin is warned that the item changed since they opened it; if they continue, the last save wins.
+- How to manage Help Centre content when admin deletes content that is linked as "Related Content" from other items? The links to the deleted (archived) item are removed from the other items.
 - What happens when file upload exceeds maximum size limit (video > 500MB, PDF > 50MB)?
 - How does system handle Help Centre content search when search query returns zero results?
 
@@ -1357,7 +1356,7 @@ An admin content manager needs to reorganize existing FAQ items into logical top
 - **REQ-033-001**: System MUST provide Help Centre content management for TWO distinct audiences: Providers and Patients, with completely separated content repositories
 - **REQ-033-002**: System MUST support the 10-category provider Help Centre taxonomy (FAQ's, Tutorial Guides, Contact Support, Troubleshooting Tips, Resource Library, Community Forum, Feedback & Suggestions, Service Status, Policy Information, Video Tutorials) aligned with FR-032, backed by underlying content types and integrations (Contact Support/Feedback routed to FR-034)
 - **REQ-033-003**: System MUST support 4 Help Centre content types for patients (FAQs, Articles, Resources, Videos - NO Service Status) displayed via FR-035 patient app
-- **REQ-033-004**: Admins MUST be able to create Help Centre content with audience selection (Provider or Patient), category assignment, content type, title, rich text body, file attachments, tags, and publish status
+- **REQ-033-004**: Admins MUST be able to create Help Centre content with audience selection (Provider or Patient), content kind (which decides the Help Centre section it appears in), title, rich text body, file attachments, tags, and publish status
 - **REQ-033-005**: System MUST support multiple content types (FAQ, Tutorial Guide, Troubleshooting Tip, Video Tutorial, Resource Document, Policy Document) applicable to both audiences
 - **REQ-033-006**: Admins MUST be able to organize FAQ content into collapsible topic sections with drag-and-drop reordering for both provider and patient FAQs separately
 - **REQ-033-007**: Providers MUST be able to access provider-specific Help Centre categories in read-only mode via FR-032 with category-appropriate layouts (accordion FAQs, article views, file viewer, video player, status page)
@@ -1372,7 +1371,7 @@ An admin content manager needs to reorganize existing FAQ items into logical top
 - **REQ-033-013**: System MUST store Help Centre content with metadata including audience type (Provider/Patient), content type, title, body, tags, publish status, created date, updated date, created by admin, updated by admin
 - **REQ-033-014**: System MUST store provider-specific Service Status data with metadata (overall status, service components with statuses, incidents with timeline, maintenance windows with schedules) - NOT applicable to patient content
 - **REQ-033-015**: System MUST maintain audit trail logging all content creation, editing, publishing, unpublishing, and deletion actions with admin identity, audience type, and timestamp
-- **REQ-033-016**: System MUST support soft-delete for content (move to "Archived" status) not permanent deletion for both audiences
+- **REQ-033-016**: System MUST support soft-delete for content (move to "Archived" status) not permanent deletion for both audiences; service components and incidents are also soft-deleted
 - **REQ-033-017**: System MUST store file attachments in media storage service (S-05) with references in Help Centre content records and audience type tags
 - **REQ-033-018**: System MUST track content view analytics (total views per content item, views over time) separately for provider and patient audiences
 
@@ -1383,7 +1382,7 @@ An admin content manager needs to reorganize existing FAQ items into logical top
 - **REQ-033-021**: System MUST enforce audience-based access control preventing providers from accessing patient content and patients from accessing provider content
 - **REQ-033-022**: System MUST scan all uploaded files for viruses before making available to users
 - **REQ-033-023**: System MUST sanitize rich text HTML input to prevent XSS attacks (strip dangerous tags: script, iframe, object)
-- **REQ-033-024**: System MUST enforce file type whitelist for uploads (PDF, MP4, MOV, JPG, PNG only) rejecting all other file types
+- **REQ-033-024**: System MUST enforce one allowed-file list per upload kind, rejecting all other file types: resources (PDF, DOCX, XLSX, PNG, JPG), videos (MP4, MOV), and images such as thumbnails (PNG, JPG)
 
 ### Integration Requirements
 
@@ -1393,33 +1392,28 @@ An admin content manager needs to reorganize existing FAQ items into logical top
 - **REQ-033-028**: System MUST integrate with rich text editor library (Quill/TinyMCE/CKEditor) for content creation interface
 - **REQ-033-029**: System MUST integrate with virus scanning service for file upload security validation
 - **REQ-033-030**: Admins MUST be able to manage Service Status components, incidents, and maintenance windows for provider audience only (not applicable to patient audience)
+- **REQ-033-092**: When Help Centre content is deleted (archived), System MUST remove the Related Content links that point to it from other items
+- **REQ-033-093**: When an admin sets the overall service status by hand, System MUST keep that value until an admin switches the overall status back to automatic; Service Status Management MUST provide a control to switch back to automatic
+- **REQ-033-094**: Admins MUST be able to change the source type of an existing video (uploaded file or third-party link) by providing the new file or URL and confirming that the old one is replaced; the video keeps its view counts
 
 ---
 
 ## Key Entities
 
-[10 detailed entities as specified in complete PRD]
+What the module must keep, in business terms (no storage design):
 
-- **Entity 1 - Help Centre Content**
-- **Entity 2 - Help Centre Category**
-- **Entity 3 - FAQ Topic**
-- **Entity 4 - Content File Attachment**
-- **Entity 5 - Content Version History**
-- **Entity 6 - Service Status Component**: Represents individual service components for status monitoring
-  - **Key attributes**: component ID, component name, status (Operational, Degraded, Down), last updated timestamp, last updated by admin ID
-  - **Relationships**: Many components contribute to overall platform status; components affected by incidents
-
-- **Entity 7 - Incident Record**: Represents platform incidents and outages
-  - **Key attributes**: incident ID, title, description, status (Investigating, Identified, Monitoring, Resolved), start time, end time, affected services (array of component IDs), timeline updates (array of status changes with timestamps), created by admin ID
-  - **Relationships**: One incident affects many service components; incidents displayed in FR-032 Screen 5.7
-
-- **Entity 8 - Maintenance Window**: Represents scheduled maintenance periods
-  - **Key attributes**: maintenance ID, title, description, scheduled start time, scheduled end time, affected services (array of component IDs), status (Scheduled, In Progress, Completed, Cancelled), created by admin ID
-  - **Relationships**: One maintenance window affects many service components; maintenance displayed in FR-032 Screen 5.7
-
-- **Entity 9 - Content Analytics**: Represents content performance metrics
-  - **Key attributes**: content ID, view count, helpfulness rating (Yes/No counts), average time spent, last viewed timestamp
-  - **Relationships**: One content item has one analytics record; analytics used for content optimization
+- **Help Centre content item**: the audience (Provider or Patient); its kind (FAQ, Tutorial Guide, Troubleshooting Tip, Video Tutorial, Resource Document, Policy Document), which decides the section it appears in; title; short description; body text; attachments; tags; the topic (FAQs) or resource grouping (resources); related content links; display order; publish status (Draft, Published, Unpublished, Archived); when it was created, last updated and published, and which admin created and last updated it. By kind: articles keep a table of contents; resources keep file type, file size and download count; videos keep source (uploaded file or third-party link), the link, thumbnail, duration, transcript and processing progress. View count and helpfulness counts are shown with the item.
+- **Help Centre category (provider)**: label, description, display order, shown or hidden, routing type, external link, and the intro copy shown above Contact Support and Feedback & Suggestions.
+- **FAQ topic**: audience, name, description, display order, and the number of FAQs in it.
+- **Content file attachment**: the file, its name, the audience it belongs to, and its virus-scan result.
+- **Content version history**: for every saved version, the version number, the optional version note, which admin saved it, when, and the audience.
+- **Platform service status (provider only)**: the overall status, whether it is calculated automatically or was set by hand, the service components, the incident history, and the maintenance schedule.
+- **Service component**: name, status (Operational, Degraded, Down), when it was last updated and by which admin.
+- **Incident**: title, description, status (Investigating, Identified, Monitoring, Resolved), start and end time, the service components affected, the timeline of status changes, and which admin created it.
+- **Maintenance window**: title, description, scheduled start and end time, the service components affected, status (Scheduled, In Progress, Completed, Cancelled), and which admin created it.
+- **Content analytics (kept separately per audience)**: view counts, helpfulness counts (Yes and No, counts only, no user identity), average time spent, video watch time and completion rate, and when the item was last viewed.
+- **Help Centre audit entry**: which admin, when, what action, the audience, the item affected, the old and new value for configuration changes, the reason where one is required (for example unpublish), and the IP address.
+- **Dashboard statistics**: total, published and draft content and total views, calculated from the items above rather than kept separately.
 
 ---
 
@@ -1432,6 +1426,7 @@ An admin content manager needs to reorganize existing FAQ items into logical top
 | 2026-01-11 | 1.2 | Moved provider Contact Support and Feedback management to FR-034: Removed Contact Support and Feedback submission management from FR-033 (moved to FR-034 Support Center & Ticketing); Updated to 5 subscreen types (removed Contact Support and Feedback, kept FAQs, Articles, Resources, Videos, Service Status); Removed Screen 6 (Contact Support Management) and Screen 7 (Feedback Management); Removed workflows A1 and A2 for provider submissions; Removed related functional requirements and entities; Provider submissions now managed through FR-034 unified ticketing system | AI Assistant |
 | 2026-01-16 | 2.0 | Major scope extension to support both Provider and Patient audiences: Extended module to manage Help Centre content for TWO distinct audiences (Providers and Patients) with completely separated content repositories; Added Patient Help Centre Content Management section (Screens A-8 through A-13 mirroring provider screens A-1 through A-7, excluding Service Status); Updated Executive Summary, Multi-Tenant Architecture, and Module Scope to reflect dual-audience support; Reorganized Screen Specifications with tenant headers and proper screen numbering (A-1 through A-13); Updated Business Rules for multi-tenant support (General Module Rules, Data & Privacy Rules, Admin Editability Rules, Configurable with Restrictions); Added Patient Experience Metrics to Success Criteria; Updated Dependencies to include FR-035 (Patient Help Center & Support Submission); Updated Assumptions for both provider and patient users; Enhanced Implementation Notes with multi-tenant architecture details (separate API endpoints, database separation, audience-based caching); Updated Integration Points to specify provider and patient API endpoints; Updated Scalability, Security Considerations for both audiences; Completely revised Functional Requirements Summary to specify provider AND patient content requirements with audience separation and access control | AI Assistant |
 | 2026-01-19 | 2.1 | Verification and finalization: Moved provider-facing Help Centre access flows from FR-033 to FR-032 (provider UX flows belong in FR-032, not content management PRD); Added Screen 2.2 for FAQ Topic Management (create/edit topics, drag-and-drop reordering); Enhanced video management to support both file uploads and third-party embeds (YouTube, Vimeo) with conditional validation; Clarified that Patient Help Centre content management screens are admin-only (not patient app screens); Updated module references to include P-08 (Patient Help Center & Support Access); Updated status to Verified & Approved | AI Assistant |
+| 2026-11-20 | 2.2 | Requirements graph programme baseline: owner rulings applied. Main changes: overall service status mapping (Degraded does not count; some Down is Partial Outage; all Down is Major Outage), admin override that stays until switched back to automatic; Screen 2.2 renamed FAQ Topic Management and serves both audiences through an audience switch; no patient category configuration (four fixed patient sections); every category hide asks for confirmation; content kind decides section (category and content type merged); video source type can be changed with a replace confirmation; Related Content links removed when content is deleted; Archived added as a fourth content state; one allowed-file list per upload kind; publish and update effects stated as within 1 minute; future start time applies to new maintenance windows only; service components and incidents are soft-deleted; helpfulness ratings are counts only with no identity stored; expected peak load (500 providers) and capacity (1000 providers) labelled; three failure-handling requirements retired; Key Entities rewritten as a plain-word list; three open edge-case questions settled or removed | AI Assistant |
 
 ---
 
@@ -1448,4 +1443,4 @@ An admin content manager needs to reorganize existing FAQ items into logical top
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-011 Aftercare & Recovery Management PRD Template
-**Last Updated**: 2026-01-19
+**Last Updated**: 2026-11-20

@@ -82,14 +82,14 @@ The Patient Help Center & Support Submission module provides the patient-facing 
 
 **Out of Scope**:
 
-- Help Center content creation, editing, publishing (handled by FR-033: Help Centre Content Management)
-- Support case management, assignment, escalation, resolution (handled by FR-034: Support Center & Ticketing)
-- Real-time in-app chat between patient and admin (future enhancement)
-- Service Status page (provider-only feature per FR-033)
-- Aftercare-specific communications (handled by FR-011: Aftercare & Recovery Management)
-- Provider-to-patient secure messaging (handled by FR-012: Secure Messaging)
-- Automated chatbot responses (future enhancement)
-- Community forum (future enhancement)
+- **REQ-035-078**: Out of scope: Help Center content creation, editing, publishing (handled by FR-033: Help Centre Content Management)
+- **REQ-035-079**: Out of scope: Support case management, assignment, escalation, resolution (handled by FR-034: Support Center & Ticketing)
+- **REQ-035-080**: Out of scope: Real-time in-app chat between patient and admin (future enhancement)
+- **REQ-035-081**: Out of scope: Service Status page (provider-only feature per FR-033)
+- **REQ-035-082**: Out of scope: Aftercare-specific communications (handled by FR-011: Aftercare & Recovery Management)
+- **REQ-035-083**: Out of scope: Provider-to-patient secure messaging (handled by FR-012: Secure Messaging)
+- **REQ-035-084**: Out of scope: Automated chatbot responses (future enhancement)
+- **REQ-035-085**: Out of scope: Community forum (future enhancement)
 
 ### Entry Points
 
@@ -195,16 +195,16 @@ flowchart TD
     A5S6 --> A5S7["7. Admin receives support.case_user_reply notification via FR-020"]
 ```
 
-**B1: Contact Support Form Validation Fails**
+**B1: Server Finds a Problem After Submit**
 
-- **Trigger**: Patient attempts to submit Contact Support form with missing or invalid fields
-- **Outcome**: Patient corrects errors and resubmits
+- **Trigger**: Patient taps Submit on a Contact Support form that passed every on-screen check (Submit is enabled only when every field is valid), and the server finds a problem with the submission
+- **Outcome**: Patient corrects the reported fields and resubmits
 
 ```mermaid
 flowchart TD
-    B1S1["1. Patient taps Submit on Contact Support form with incomplete data"] --> B1S2["2. System validates required fields: title (min 10 chars), category, description (min 20 chars), priority"]
-    B1S2 --> B1S3["3. System highlights invalid fields with inline error messages"]
-    B1S3 --> B1S4["4. Patient corrects validation errors and resubmits"]
+    B1S1["1. Patient taps Submit with every field valid"] --> B1S2["2. System checks the submission on the server and finds a failure"]
+    B1S2 --> B1S3["3. System highlights the affected fields with inline error messages"]
+    B1S3 --> B1S4["4. Patient corrects the reported errors and resubmits"]
 ```
 
 **B2: Help Center Content Unavailable**
@@ -233,7 +233,7 @@ flowchart TD
 |------------|------|----------|-------------|------------------|
 | Screen Title | text | Yes | "Help & Support" | Displayed at top of screen |
 | Back Navigation | action | Yes | Back arrow to return to Settings or previous screen | Top-left corner |
-| Search Bar | text | Yes | "Search help articles..." placeholder; full-text search across all published patient-audience FAQ and article content | Results appear inline or on a separate results screen; scoped to patient audience only (FR-033 Rule 3); relevance-ranked results are required for P1 |
+| Search Bar | text | Yes | "Search help articles..." placeholder; full-text search across all published patient-audience Help Center content (FAQs, Articles, Resources, Videos) | Results appear inline or on a separate results screen; scoped to patient audience only (FR-033 Rule 3); relevance-ranked results are required for P1 |
 | Browse Help Center | link | Yes | Row with book/article icon + "Help Center" label + chevron | Navigates to Screen 2; covers 4 content types: FAQs, Articles (Tutorial Guides + Troubleshooting Tips), Resources, Videos (FR-033 REQ-033-003) |
 | Contact Support | link | Yes | Row with headset/message icon + "Contact Support" label + chevron | Opens Contact Support form (Screen 5), creating new ticket via FR-034 |
 | My Support Tickets | link | Yes | Row with ticket icon + "My Support Tickets" label + chevron + open ticket count badge | Navigates to Screen 3; badge shows count of open/in-progress tickets |
@@ -244,8 +244,8 @@ flowchart TD
 **Business Rules**:
 
 - All Help Center content is read-only for patients; it is managed exclusively by admins via FR-033 and scoped to the patient audience (FR-033 REQ-033-008)
-- Search covers all published patient-audience articles and FAQs; results are ranked by relevance; if no results match, show a "Contact Support" prompt. Full-text search is required for P1 and must not be downgraded to browse-only behavior.
-- **[Design Addition — not in FR-033/FR-034]** Emergency contact section is a healthcare UX best practice for post-procedure patient safety; it must always be visible — it cannot be hidden or require scrolling past it. Emergency phone and email values should be configurable by admin via FR-026 (App Settings) or a future dedicated FR.
+- Search covers all published patient-audience Help Center content (FAQs, Articles, Resources, Videos); results are ranked by relevance; if no results match, show a "Contact Support" prompt. Full-text search is required for P1 and must not be downgraded to browse-only behavior.
+- **[Design Addition — not in FR-033/FR-034]** Emergency contact section is a healthcare UX best practice for post-procedure patient safety; it must always be visible — it cannot be hidden or require scrolling past it. Emergency phone and email values are two App Settings owned by FR-026 (support emergency contact phone and email); this screen displays them.
 - Support ticket creation follows FR-034 Workflow A5; submissions automatically create cases with Ticket Source = "Patient App" and Submitter Type = "Patient" (FR-034 REQ-034-024)
 - "My Support Tickets" badge count reflects open + in-progress tickets only; hidden when count is 0
 
@@ -267,7 +267,7 @@ flowchart TD
 | — Content Type Label | text | Yes | Content type name | Read-only |
 | — Item Count Badge | badge | No | Number of published items in the content type | Read-only; hidden if count is 0 |
 | — Empty Content Type State | group | Conditional | Shown when a content type has 0 published items | Content type card is shown but greyed out / disabled with label "No content available yet"; tapping shows empty state message |
-| Featured / Popular Articles | list | No | **[Design Addition]** Curated shortlist of popular or featured articles | Not defined in FR-033; requires admin curation mechanism or auto-generation based on view analytics (FR-033 REQ-033-018). Up to 5 items. |
+| Featured / Popular Articles | list | No | **[Design Addition]** Automatic shortlist of the five patient articles with the most views in the past 30 days | Not defined in FR-033; generated automatically from view analytics (FR-033 REQ-033-018), not curated by admins. Up to 5 items. |
 | Content Unavailable State | group | Conditional | Shown when Help Center content cannot be loaded (API unavailable) | "Help Center temporarily unavailable. Please try again later." with retry button. Alternatively, display cached content if available. |
 
 **Content Type: FAQs (FR-033 REQ-033-006)**
@@ -355,7 +355,7 @@ flowchart TD
 | Screen Title | text | Yes | "My Support Tickets" | Displayed at top of screen |
 | Back Navigation | action | Yes | Back arrow to return to Help & Support Hub (Screen 1) | Top-left corner |
 | Create New Ticket Button | action | Yes | Primary CTA to submit a new support request | Opens Contact Support Form (Screen 5); on successful submission, displays confirmation then returns to this ticket list (Screen 3); always visible |
-| Filter Chips | chips | Yes | Filter ticket list: All, Open, In Progress, Resolved, Closed | "All" is default; tapping a chip filters the list. Resolved and Closed are **separate** chips because Resolved cases still accept patient replies (7-day auto-closure window), while Closed cases are read-only (FR-034 REQ-034-003). |
+| Filter Chips | chips | Yes | Filter ticket list: All, Open, In Progress, Resolved, Closed | "All" is default; tapping a chip filters the list. Resolved and Closed are **separate** chips because Resolved cases still accept patient replies (7-day auto-closure window), while Closed cases are read-only (FR-034 REQ-034-003). Filter criteria are owned by FR-022 REQ-022-073. |
 | Ticket Card | group | Yes | Individual support case summary row (tappable) | Tapping navigates to Ticket Detail view (Screen 4) |
 | — Case ID | text | Yes | Unique case reference (format: CASE-YYYY-#####) | Read-only; displayed in subdued style |
 | — Title | text | Yes | Case title of the support request (FR-034 REQ-034-020) | Bold; truncated to 1-2 lines |
@@ -391,7 +391,7 @@ flowchart TD
 | Priority Badge | badge | Yes | Priority level: Low, Medium, High, Urgent | Color-coded: Low (grey), Medium (blue), High (orange), Urgent (red); read-only |
 | Case Category | badge | Yes | Selected category (e.g., "Account Access", "Payment Question") | Read-only |
 | Submitted Date | datetime | Yes | Date and time case was submitted | Read-only |
-| Auto-Closure Countdown | text | Conditional | "This case will close in X days if no further reply" | Shown only when status = Resolved; displays remaining days in auto-closure window (FR-034 REQ-034-061, configurable: 3/7/14 days, default 7). Helps patient understand the urgency of replying if their issue persists. Hidden for Open, In Progress, and Closed statuses. |
+| Auto-Closure Countdown | text | Conditional | "This case will close in X days if no further reply" | Shown only when status = Resolved; displays remaining days in auto-closure window (FR-034 REQ-034-061, configurable: Immediately, 3, 7, or 14 days, default 7). Helps patient understand the urgency of replying if their issue persists. Hidden for Open, In Progress, and Closed statuses. |
 | Resolution Summary | text | Conditional | Admin-provided resolution summary displayed when case is resolved or closed (FR-034 REQ-034-059, REQ-034-060) | Read-only; shown only when status = Resolved or Closed and admin has entered a resolution summary. Displayed prominently above the communication thread with a "Resolution" header. The resolution summary is also sent to the patient via email notification on status change to Resolved. |
 | Feedback Resolution | badge | Conditional | For feedback/feature request cases only: Implemented, Planned, Declined, Under Review | Read-only; shown only when admin has set a feedback resolution value (FR-034 REQ-034-006) |
 | Communication Thread | list | Yes | Chronological list of all messages (admin replies + patient messages) | Scrollable; newest message at bottom; messages marked with sender label (You / Support Team) |
@@ -400,7 +400,7 @@ flowchart TD
 | — Message Timestamp | datetime | Yes | Date and time message was sent | Relative or absolute format |
 | — Attachment | file | Conditional | Attached screenshot or document within message | Read-only; tap to view full-size or download; max 10 MB per file, formats: JPG, PNG, PDF, DOC, DOCX (FR-034 REQ-034-036/037) |
 | Reply Input Field | text | Conditional | Multi-line text input for patient to reply to admin | Shown when case is Open, In Progress, or **Resolved** (FR-034 REQ-034-026); hidden **only** for Closed cases. Replying to a Resolved case triggers automatic reopening to Open status. |
-| Attachment Button | action | Conditional | Button to attach files to reply | Shown alongside Reply Input Field; max 10 MB per file, formats: JPG/PNG/PDF/DOC/DOCX. **[Clarification Needed]** FR-034 REQ-034-036 specifies "maximum 5 files per case" — confirm whether the limit is per-submission or per-case-lifetime. |
+| Attachment Button | action | Conditional | Button to attach files to reply | Shown alongside Reply Input Field; max 10 MB per file, formats: JPG/PNG/PDF/DOC/DOCX; max 5 files per message. |
 | Send Reply Button | action | Conditional | Submits patient reply to the case thread | Enabled when reply input is non-empty; hidden for Closed cases; admin notified on send via FR-020 (support.case_user_reply) |
 | Closed Case Banner | group | Conditional | Informational banner shown when case is Closed | "This case is closed. If you still need help, you can create a new ticket or contact support to request this case be reopened." with "Create New Ticket" link to Screen 5 and "Contact Support" link (email/phone from Emergency Contact Section in Screen 1). Provides both paths: new ticket creation (in-app) and case reopening via admin (FR-034 Workflow B3, REQ-034-063, REQ-034-017). |
 | Empty Thread State | text | Conditional | Shown when no messages exist yet (case just created) | "Your case has been submitted. Our team will respond within 24 hours." (aligns with FR-034 SC-003) |
@@ -409,8 +409,8 @@ flowchart TD
 
 - Patients can reply to admin messages when the case is Open, In Progress, or **Resolved** (FR-034 REQ-034-026); **only Closed** cases are fully read-only. This is critical for healthcare — patients must be able to report that a resolved issue has recurred (e.g., post-treatment complications) during the auto-closure window.
 - Replying to a Resolved case automatically reopens it to Open status; the patient sees the status badge update immediately and the admin receives a support.case_user_reply notification via FR-020
-- Cases auto-close after 7 days in Resolved status if no patient reply (configurable: 3/7/14 days per FR-034 REQ-034-061/062); the patient receives a support.case_closed notification. The auto-closure countdown is visible in the Ticket Detail to set clear expectations.
-- Patient replies are added to the shared communication thread and the assigned admin receives a notification via FR-020 (support.case_user_reply event)
+- Cases auto-close after 7 days in Resolved status if no patient reply (configurable: Immediately, 3, 7, or 14 days per FR-034 REQ-034-061/062); the patient receives a support.case_closed notification. The auto-closure countdown is visible in the Ticket Detail to set clear expectations.
+- Patient replies are added to the shared communication thread; the assigned admin notification for each reply (recipients, content, and whether it can be switched off) is defined in FR-020 REQ-020-111 (support.case_user_reply event)
 - Internal admin notes are never shown to the patient — only messages explicitly sent to the patient are visible in the thread (FR-034 REQ-034-013, REQ-034-046)
 - Feedback resolution field is only shown for feedback, feature request, or bug report case categories (FR-034 REQ-034-006); values: Implemented, Planned, Declined, Under Review
 - Status changes (Open -> In Progress, In Progress -> Resolved, Resolved -> Closed) trigger push/email notifications to the patient per FR-020 (support.case_status_changed, support.case_resolved, support.case_closed)
@@ -431,7 +431,7 @@ flowchart TD
 | Category Picker | dropdown | Yes | Support case category selection | Options: Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry, Feature Request, Bug Report, Feedback (FR-034 REQ-034-030). "Provider Support" and "Patient Support" are admin-internal categories and are not shown to patients. Brief inline description per category to help patients select correctly: Feature Request = "Suggest a new feature or improvement", Bug Report = "Report something that is broken or not working as expected", Feedback = "Share general feedback about your experience". |
 | Description | text | Yes | Detailed description of the issue or feedback | Multi-line input; min 20 characters, max 5000 characters (FR-034 REQ-034-035); placeholder: "Describe your issue in detail so we can help you faster" |
 | Priority Picker | dropdown | Yes | Patient-selected priority level | Options: Low, Medium, High, Urgent (FR-034 REQ-034-031); default: Medium. Brief inline descriptions help patients self-triage: Low = "General question", Medium = "Something isn't working right", High = "Blocking my care or booking", Urgent = "Critical issue needing immediate attention" |
-| Attachments | file | No | Optional file attachments (screenshots, documents) | Max 5 files per submission, max 10 MB per file; accepted formats: JPG, PNG, PDF, DOC, DOCX (FR-034 REQ-034-036/037); tap to add; shows thumbnail preview with remove option; virus-scanned before acceptance. **[Clarification Needed]** FR-034 REQ-034-036 says "maximum 5 files per case" — confirm whether this is per-submission or cumulative across the case lifecycle. |
+| Attachments | file | No | Optional file attachments (screenshots, documents) | Max 5 files per submission, max 10 MB per file; accepted formats: JPG, PNG, PDF, DOC, DOCX (FR-034 REQ-034-036/037); tap to add; shows thumbnail preview with remove option; virus-scanned before acceptance. |
 | Submit Button | action | Yes | Submits the support request | Disabled until all required fields pass validation; on tap: creates case (CASE-YYYY-#####), links to patient record via session (FR-034 REQ-034-024), sets Ticket Source = "Patient App" and Submitter Type = "Patient", sends confirmation email (FR-034 A5 step 11) |
 | Cancel / Discard | action | Yes | Cancels form and returns to previous screen | Prompts "Discard this request?" if any field has input; no data saved on cancel |
 
@@ -470,16 +470,16 @@ flowchart TD
 
 - Help Center content (FAQs, articles, resources, videos) — managed via FR-033
 - Support case status, assignment, resolution — managed via FR-034
-- Auto-closure period for resolved cases (3/7/14 days, default 7 days) — configured via FR-034
-- Emergency contact phone number and email — configurable via FR-026 (App Settings)
-- Patient-facing category descriptions and category visibility — managed via FR-033
+- Auto-closure period for resolved cases (Immediately, 3, 7, or 14 days, default 7 days) — configured via FR-034
+- Emergency contact phone number and email — two App Settings owned by FR-026
+- Help Centre content category descriptions shown to patients — managed via FR-033
 
 **Fixed in Codebase (Not Editable)**:
 
 - 4 content types for patient platform: FAQs, Articles, Resources, Videos (FR-033 REQ-033-003)
 - Support case lifecycle workflow: Open -> In Progress -> Resolved -> Closed
 - Case ID format: CASE-YYYY-#####
-- File attachment limits: max 10 MB per file, max 5 files per case, formats: JPG/PNG/PDF/DOC/DOCX
+- File attachment limits: max 10 MB per file, max 5 files per message, formats: JPG/PNG/PDF/DOC/DOCX
 - Contact Support form validation: title min 10 chars, description min 20 chars
 
 **Configurable with Restrictions**:
@@ -545,7 +545,7 @@ flowchart TD
   - **Integration point**: Patient session provides patient ID for automatic case linking (FR-034 REQ-034-024)
 
 - **FR-026 / Module P-01**: App Settings & Security
-  - **Why needed**: Help & Support is accessed from Settings screen; emergency contact details may be configurable via App Settings
+  - **Why needed**: Help & Support is accessed from Settings screen; emergency contact details are App Settings owned by FR-026
   - **Integration point**: Settings screen navigation includes "Help & Support" menu item linking to Screen 1
 
 ### External Dependencies (APIs, Services)
@@ -558,7 +558,6 @@ flowchart TD
 - **External Service 2**: Virus Scanning Service
   - **Purpose**: Scan patient-uploaded attachments for viruses and malware before storage
   - **Integration**: API call during file upload in Contact Support form and ticket replies
-  - **Failure handling**: Quarantine uploads and notify admin; do not attach files to case until scan completes
 
 ### Data Dependencies
 
@@ -638,9 +637,9 @@ flowchart TD
 
 - **Authentication**: Patient must be authenticated to access Help Center content, submit support requests, and view tickets
 - **Authorization**: Patients can only view their own support cases — no access to other patients' cases
-- **Encryption**: All patient data encrypted in transit (TLS 1.3) and at rest; file attachments encrypted at rest
+- **Encryption**: Follows the encryption in transit and at rest recorded once in the system PRD security requirements; file attachments are encrypted at rest
 - **Audit trail**: All support case lifecycle events logged with timestamp, patient ID, and action type (managed by FR-034)
-- **Threat mitigation**: Rate limiting on ticket submission and reply endpoints (max 10 submissions/hour/patient); file upload virus scanning; input sanitization for all text fields
+- **Threat mitigation**: Rate limiting on new ticket submissions (max 10 new tickets per hour per patient); replies are not counted by this limit; file upload virus scanning; input sanitization for all text fields
 - **Compliance**: Patient support data handling follows the same HIPAA/GDPR compliance requirements as all patient data in the platform
 
 ---
@@ -758,13 +757,13 @@ A patient preparing for their upcoming procedure browses the Help Center for edu
 - **REQ-035-010**: System MUST automatically create support cases in FR-034 with Ticket Source = "Patient App" and Submitter Type = "Patient" on form submission (FR-034 REQ-034-021, REQ-034-024)
 - **REQ-035-011**: System MUST link patient-submitted cases to patient records using logged-in patient session (FR-034 REQ-034-024)
 - **REQ-035-012**: System MUST display 8 patient-visible categories: Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry, Feature Request, Bug Report, Feedback (FR-034 REQ-034-030; "Provider Support" and "Patient Support" excluded as admin-internal)
-- **REQ-035-013**: System MUST support file attachments up to 10 MB per file, maximum 5 files per case, formats: JPG, PNG, PDF, DOC, DOCX (FR-034 REQ-034-036/037)
+- **REQ-035-013**: System MUST support file attachments up to 10 MB per file, maximum 5 files per message (the initial request and each reply may each carry up to 5 files), formats: JPG, PNG, PDF, DOC, DOCX (FR-034 REQ-034-036/037)
 - **REQ-035-014**: System MUST virus-scan all patient-uploaded files before acceptance
 
 ### Ticket Management Requirements
 
 - **REQ-035-015**: System MUST display patient's submitted support tickets with case ID, title, status (Open/In Progress/Resolved/Closed), priority, submitted date, and last updated timestamp
-- **REQ-035-016**: System MUST support ticket filtering by status: All, Open, In Progress, Resolved, Closed
+- **REQ-035-016**: Retired. The patient ticket status filter (All, Open, In Progress, Resolved, Closed) is owned by FR-022 REQ-022-073
 - **REQ-035-017**: System MUST display full communication thread for each ticket showing all messages from patient and admin with sender labels and timestamps
 - **REQ-035-018**: System MUST allow patients to reply to admin messages when case is Open, In Progress, or Resolved (FR-034 REQ-034-026); reply input hidden only for Closed cases
 - **REQ-035-019**: System MUST automatically reopen Resolved cases to Open status when patient sends a reply
@@ -777,7 +776,7 @@ A patient preparing for their upcoming procedure browses the Help Center for edu
 
 - **REQ-035-024**: System MUST require patient authentication to access Help Center content, submit support requests, and view tickets
 - **REQ-035-025**: System MUST ensure patients can only view their own support cases — no access to other patients' cases
-- **REQ-035-026**: System MUST encrypt all patient data in transit (TLS 1.3) and at rest
+- **REQ-035-026**: Retired. Encryption in transit and at rest (TLS 1.3, AES-256) is recorded once in the system PRD security requirements, which this module follows
 - **REQ-035-027**: System MUST aggregate "Was this helpful?" feedback without storing individual patient identity (FR-033 Privacy Rule 2)
 
 ### Integration Requirements
@@ -789,7 +788,7 @@ A patient preparing for their upcoming procedure browses the Help Center for edu
 
 ### Marking Unclear Requirements
 
-- **REQ-035-032**: System MUST support file attachments with [NEEDS CLARIFICATION: FR-034 REQ-034-036 specifies "maximum 5 files per case" — confirm whether the 5-file limit is per-submission or cumulative across the entire case lifecycle (initial submission + all replies)]
+- **REQ-035-032**: Retired. The attachment limit is settled in REQ-035-013: up to 5 files per message, replies included.
 
 ---
 
@@ -814,6 +813,7 @@ A patient preparing for their upcoming procedure browses the Help Center for edu
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2026-03-06 | 1.0 | Initial PRD creation based on system-prd.md FR-035 definition, FR-033 content management integration, FR-034 ticketing integration, missing-mobile-flows-design-complement.md (Flow P08.1), and client transcriptions | Claude Code |
+| 2026-11-20 | 1.1 | Requirements graph programme baseline: owner rulings applied. Main changes: help search covers all four patient content types; Contact Support flow B1 is now a failure found by the server after submitting; popular articles are the five most viewed in the past 30 days; auto-closure period gains an Immediately option; reply and per-message attachment limit settled at 5 files per message (open clarification removed); rate limit counts new tickets only; virus-scan service failure handling removed; patient ticket status filter and encryption now cite their owning requirements (FR-022 REQ-022-073 and the system PRD); notification detail for patient replies points to FR-020 REQ-020-111; support emergency contact values are App Settings owned by FR-026; Help Centre content category wording aligned to FR-033; eight out-of-scope statements numbered REQ-035-078 to REQ-035-085 | Claude Code |
 
 ---
 
@@ -830,4 +830,4 @@ A patient preparing for their upcoming procedure browses the Help Center for edu
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-035 from system-prd.md, FR-033 Help Centre Content Management, FR-034 Support Center & Ticketing System
-**Last Updated**: 2026-03-06
+**Last Updated**: 2026-11-20

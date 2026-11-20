@@ -1,10 +1,10 @@
 # Hairline Platform - Product Requirements Document (PRD)
 
-**Version**: 1.2.0  
+**Version**: 1.3.0  
 **Document Type**: System-Level PRD  
 **Created**: 2025-10-23  
-**Status**: Active  
-**Last Updated**: 2026-10-18
+**Status**: Revised, pending verification  
+**Last Updated**: 2026-11-20
 
 ---
 
@@ -239,7 +239,7 @@ The Hairline Platform consists of four distinct applications serving different u
    - Attends pre-procedure consultation
 
 8. **Procedure Day - Treatment Execution**
-   - Arrives at clinic (status moves to "In Progress")
+   - Arrives at clinic (status moves to "In progress")
    - Provider documents patient arrival and pre-procedure notes
    - Undergoes hair transplant procedure
    - Provider updates treatment progress in real-time
@@ -256,7 +256,7 @@ The Hairline Platform consists of four distinct applications serving different u
    - Completes recovery questionnaires
    - Submits final review and rating (status moves to "Completed")
 
-**Exception - provider fault after acceptance**: If the selected provider withdraws the accepted quote, drops out before or during treatment, or is suspended or deactivated after acceptance, a booking in Accepted or Confirmed is cancelled with a provider-fault cause and the inquiry stays open and is flagged for admin support. For such a booking, an admin authors a replacement quote on behalf of a replacement provider in the same inquiry; when the patient accepts it, the original acceptance is superseded by a single linked record and the patient re-enters nothing. A booking in In Progress is not cancelled automatically: it stays In Progress, is flagged for admin support, and an admin either moves it to Aftercare and reassigns the aftercare provider or cancels it with a reason. During Aftercare the booking is not cancelled; an admin reassigns the aftercare provider instead (FR-003, FR-006, FR-015).
+**Exception - provider fault after acceptance**: If the selected provider withdraws the accepted quote, drops out before or during treatment, or is suspended or deactivated after acceptance, a booking in Accepted or Confirmed is cancelled with a provider-fault cause and the inquiry stays open and is flagged for admin support. For such a booking, an admin authors a replacement quote on behalf of a replacement provider in the same inquiry; when the patient accepts it, the original acceptance is superseded by a single linked record and the patient re-enters nothing. A booking in In progress is not cancelled automatically: it stays In progress, is flagged for admin support, and an admin either moves it to Aftercare and reassigns the aftercare provider or cancels it with a reason. During Aftercare the booking is not cancelled; an admin reassigns the aftercare provider instead (FR-003, FR-006, FR-015).
 
 ---
 
@@ -403,7 +403,7 @@ For V1, the system implements "3D scan" capture as a standardized head scan **ph
 - System MUST support upload of additional photos/videos as supplemental evidence
 - System MUST validate scan quality and provide feedback
 - Medical history MUST include allergies, medications, previous procedures, health conditions
-- System MUST anonymize patient data in provider-facing views until payment completion
+- System MUST hide patient identity in provider-facing views until booking confirmation, as set by the Platform-Wide Rules "Patient identity hidden until booking confirmation"
 
 **Medical Condition Alert System**:
 
@@ -441,7 +441,7 @@ For V1, the system implements "3D scan" capture as a standardized head scan **ph
 - Providers MUST receive inquiry notification within 5 minutes
 - System MUST track inquiry expiration (72 hours for quote submission)
 - System MUST allow patients to close or cancel an inquiry only in the Inquiry or Quoted stages (FR-003 Workflow 5); after acceptance the patient contacts support, and only an admin can cancel the booking, from any booking state, with a mandatory reason and an audit entry. The inquiry then moves to Cancelled and the accepted quote stays accepted
-- When the accepted provider withdraws or drops out after acceptance, or its suspension or deactivation takes effect, the inquiry MUST NOT be cancelled: it keeps its stage, is flagged `supportRequired`, and an admin resolves it through FR-006: a transfer to a replacement provider in the same inquiry for a booking in `Accepted` or `Confirmed`, a case-by-case decision (move to `Aftercare` with aftercare-provider reassignment, or cancellation with a reason) for a booking in `In Progress`, and aftercare-provider reassignment for a booking in `Aftercare`
+- When the accepted provider withdraws or drops out after acceptance, or its suspension or deactivation takes effect, the inquiry MUST NOT be cancelled: it keeps its stage, is flagged `supportRequired`, and an admin resolves it through FR-006: a transfer to a replacement provider in the same inquiry for a booking in `Accepted` or `Confirmed`, a case-by-case decision (move to `Aftercare` with aftercare-provider reassignment, or cancellation with a reason) for a booking in `In progress`, and aftercare-provider reassignment for a booking in `Aftercare`
 - System MUST support secondary service options: Monitor Hair Loss, Aftercare services
 - System MUST generate unique inquiry IDs in HPID format (HPID + YY + MM + 4-digit sequence)
 
@@ -452,7 +452,7 @@ For V1, the system implements "3D scan" capture as a standardized head scan **ph
 - Inquiry MUST NOT include: patient name, exact location, contact information (until booking)
 - System MUST allow patients to search/filter providers by country, rating, and specialty, then explicitly select providers for inquiry distribution (see FR-022 / FR-003 / Screen 7a for full search/filter criteria)
 - Provider suggestions MUST be based on: positive reviews, admin curation
-- Patient names MUST be partially masked for providers until booking/payment confirmation (full identity only visible after successful payment, per Constitution)
+- Patient identity MUST be hidden from providers until booking confirmation (the first successful payment), as set by the Platform-Wide Rules "Patient identity hidden until booking confirmation"
 - Admins MAY see full patient identity (unmasked) in A-01 views for compliance and support purposes
 - Medical alerts MUST be color-coded: red (critical), yellow (standard), green (no alerts)
 - Date ranges MUST display primary range prominently with tooltip for additional ranges
@@ -484,7 +484,7 @@ For V1, the system implements "3D scan" capture as a standardized head scan **ph
 - Quote expiry MUST be captured at first send from the FR-026 Quote Expiry Window (default: 48 hours, admin-configurable); drafts carry no expiry and there is no per-quote extension
 - Quote statuses are: draft, sent, expired, withdrawn, archived, accepted, cancelled_other_accepted, cancelled_inquiry_cancelled, and cancelled_provider_status (unaccepted quotes only). `Confirmed` is a booking status, not a quote status
 - Re-sending a new version of a sent quote MUST emit `quote.updated` ("quote revised (new version)"); FR-004 owns this event
-- After a subquote is accepted, System MUST block every FR-004 quote edit by providers and admins; treatment-detail changes (plan, clinicians, grafts) go through FR-010. An accepted parent quote is never reopened, including after `Payment Window Expired`
+- After a subquote is accepted, System MUST block every FR-004 quote edit by providers, and their treatment-detail changes (plan, clinicians, grafts) go through FR-010; an admin may still edit the quote, with a mandatory reason and an audit entry, within the limits FR-004 sets (the acceptance snapshot, price, currency, and promotion never change). An accepted parent quote is never reopened, including after `Payment Window Expired`
 - A provider withdrawal of an accepted quote moves it to `withdrawn` and hands the case to the FR-006 provider-fault transfer
 
 **Subquote Acceptance Handoff**:
@@ -573,12 +573,12 @@ Each option is a quote-local copy of one package version that the patient can co
 
 - Booking uses an **auto-scheduled** model: provider pre-schedules appointment slots on FR-004 Option/date-price records; patient accepts one complete subquote in FR-005, and FR-006 consumes that accepted subquote plus its immutable inherited parent context without package, date, appointment, or price reselection.
 - Every pending or confirmed Booking MUST link to exactly one FR-005 AcceptanceEvent, accepted parent quote identifier/version, accepted subquote identifier/version, immutable acceptance snapshot, and provider calendar slot; accepted parent and subquote versions MUST identify the same FR-004 aggregate `QuoteVersion`.
-- Booking statuses are: `Accepted` (slot held pending first payment; shown to the patient as "Booking Accepted — Slot Held (Pending Payment)"), `Payment Window Expired`, `Confirmed`, `In Progress`, `Aftercare`, `Completed`, and `Cancelled`. Apart from the automatic transitions, payment, Check In and the audited admin revive, the only manual status changes are an admin cancellation, allowed from any booking state with a mandatory reason and an audit entry, and the admin move of an `In Progress` booking to `Aftercare` with aftercare-provider reassignment after a provider fault.
+- Booking statuses are: `Accepted` (slot held pending first payment; shown to the patient as "Booking Accepted — Slot Held (Pending Payment)"), `Payment Window Expired`, `Confirmed`, `In progress`, `Aftercare`, `Completed`, and `Cancelled`. Apart from the automatic transitions, payment, Check In and the audited admin revive, the only manual status changes are an admin cancellation, allowed from any booking state with a mandatory reason and an audit entry, and the admin move of an `In progress` booking to `Aftercare` with aftercare-provider reassignment after a provider fault.
 - Acceptance places one fixed exclusive hold keyed by provider, appointment date/time, and time zone for the FR-026 slot-hold duration (default 48 hours), starting at acceptance; payment failure or retry never extends or restarts it. FR-006 MUST verify that the AcceptanceEvent owns the slot's valid exclusive hold before payment initiation. Successful deposit or first-installment payment moves the booking to `Confirmed`, creates the appointment record, and converts that hold into the confirmed calendar block.
 - If the payment window expires, the Booking MUST transition to `Payment Window Expired` (final except for the audited admin revive), release the slot, block payment against that accepted selection unless an admin revives the booking, preserve the immutable AcceptanceEvent/snapshot, and MUST NOT reopen the parent quote or accepted subquote. `Payment Window Expired` applies only to the first payment step; a missed later installment or final payment never causes it.
-- Admin MAY revive a `Payment Window Expired` booking to `Accepted` only with a mandatory reason, a slot availability re-check, a new hold of the FR-026 duration, the promotion use taken again for an automatic promotion or reserved again for a provider-selected promotion or patient code (the revive is rejected if the limit has no room), an audit entry, an unchanged AcceptanceEvent, and a mandatory "booking revived" notice to patient and provider. No other manual status change is allowed apart from the admin cancellation and the provider-fault move from `In Progress` to `Aftercare`.
+- Admin MAY revive a `Payment Window Expired` booking to `Accepted` only with a mandatory reason, a slot availability re-check, a new hold of the FR-026 duration, the promotion use taken again for an automatic promotion or reserved again for a provider-selected promotion or patient code (the revive is rejected if the limit has no room), an audit entry, an unchanged AcceptanceEvent, and a mandatory "booking revived" notice to patient and provider. No other manual status change is allowed apart from the admin cancellation and the provider-fault move from `In progress` to `Aftercare`.
 - An admin appointment change MUST move the booking's current appointment and send the mandatory `booking.rescheduled` to patient and provider. Booking notices MUST read the booking's current appointment, while the acceptance snapshot keeps the accepted appointment as the baseline and is never edited.
-- When the provider withdraws or drops out after acceptance, or its suspension or deactivation takes effect, a booking in `Accepted` or `Confirmed` MUST be cancelled with cause `ProviderFault`, `ProviderSuspended`, or `ProviderDeactivated` and a `supportRequired` marker, the hold or calendar block released, and the AcceptanceEvent kept unchanged. For a booking in `Accepted` or `Confirmed`, an admin authors a replacement quote on behalf of a replacement provider in the same inquiry; when the patient accepts it, a new admin-authored acceptance record is created and a single supersession record linking it to the original is inserted in the same transaction. No automatic promotion attaches to the replacement quote and no promotion use is reserved for it; the admin sets the replacement price directly. A replacement quote that is not accepted expires normally; the inquiry stays `supportRequired` and is not cancelled automatically, and the admin may author another replacement quote or cancel the inquiry and booking. In `In Progress` the booking MUST NOT be cancelled automatically: it stays `In Progress` with `supportRequired`, and an admin either moves it to `Aftercare` and reassigns the aftercare provider, or cancels it with a mandatory reason; no replacement acceptance is created. In `Aftercare` the booking is not cancelled; an admin reassigns the aftercare provider, which sends the mandatory `aftercare.provider_reassigned` to the patient and the new aftercare provider. Paid amounts move with the patient as credit toward the replacement booking, any unused part is refunded, and the patient pays no cancellation fee; exact mechanics are defined in FR-007, FR-007B, and FR-017.
+- When the provider withdraws or drops out after acceptance, or its suspension or deactivation takes effect, a booking in `Accepted` or `Confirmed` MUST be cancelled with cause `ProviderFault`, `ProviderSuspended`, or `ProviderDeactivated` and a `supportRequired` marker, the hold or calendar block released, and the AcceptanceEvent kept unchanged. For a booking in `Accepted` or `Confirmed`, an admin authors a replacement quote on behalf of a replacement provider in the same inquiry; when the patient accepts it, a new admin-authored acceptance record is created and a single supersession record linking it to the original is inserted in the same transaction. No automatic promotion attaches to the replacement quote and no promotion use is reserved for it; the admin sets the replacement price directly. A replacement quote that is not accepted expires normally; the inquiry stays `supportRequired` and is not cancelled automatically, and the admin may author another replacement quote or cancel the inquiry and booking. In `In progress` the booking MUST NOT be cancelled automatically: it stays `In progress` with `supportRequired`, and an admin either moves it to `Aftercare` and reassigns the aftercare provider, or cancels it with a mandatory reason; no replacement acceptance is created. In `Aftercare` the booking is not cancelled; an admin reassigns the aftercare provider, which sends the mandatory `aftercare.provider_reassigned` to the patient and the new aftercare provider. Paid amounts move with the patient as credit toward the replacement booking, any unused part is refunded, and the patient pays no cancellation fee; exact mechanics are defined in FR-007, FR-007B, and FR-017.
 - System MUST integrate with provider's calendar to validate availability at quote creation time and to block the slot upon payment-confirmed booking
 - Patients MUST confirm booking by paying deposit (admin-configurable percentage, default 20-30% of the booking total, configured via FR-029); the booking total is the accepted subquote price after promotion, in the quote currency, read from the acceptance snapshot
 - System MUST generate booking confirmation with reference number
@@ -615,9 +615,10 @@ Each option is a quote-local copy of one package version that the patient can co
 **Payment Flow** (V1 - Direct Payment):
 
 - Payments processed directly through Stripe
-- Provider payouts initiated after treatment completion (admin-triggered)
+- Provider money is released per booking only after treatment completion: the provider marks the procedure complete, the patient may raise a problem through support within the confirmation window, and with no problem the clinic's share is released automatically (a problem case pauses the release until an admin resolves it)
+- A released share is paid to the clinic automatically on the Stripe Connect rail (an admin acts only on a problem case), or, for a manually paid clinic, through the next settlement statement that an admin approves and marks as paid
 - Platform commission deducted at time of payout
-- **Future Enhancement**: Escrow/fund holding (V2) - funds held until procedure completion
+- Until release the clinic's share stays locked: in the clinic's locked Stripe balance on the Stripe Connect rail, or in Hairline's balance for a manually paid clinic
 
 **Payment Security**:
 
@@ -631,7 +632,7 @@ Each option is a quote-local copy of one package version that the patient can co
 - Platform commission: the provider's FR-029 model, either a Percentage (0 to 100%) or a Flat Rate per completed procedure (global percentage default 15-25%), applied to the booking total, which is the accepted price after promotion from the acceptance record; the deposit percentage, instalment amounts and commission all use this same booking total
 - Commission MUST be deducted from provider payout
 - System MUST generate commission reports for accounting
-- Admin triggers provider payout after treatment completion
+- Admin approves settlement statements and marks them as paid for manually paid clinics; Stripe Connect payouts need no admin step after release
 
 ---
 
@@ -1090,7 +1091,7 @@ Each option is a quote-local copy of one package version that the patient can co
 - Admins MUST be able to suspend providers for policy violations
 - System MUST set provider commission rate per provider using configurable Percentage or Flat Rate models; a Flat Rate MUST record its currency (from the FR-029 enabled currency list). The Commission Start Date is the FR-029 Effective Date of the rate; later edits set their own Effective Date, and payout cycles follow the provider's Payout Frequency (tier-based commission structures are out of scope for MVP and may be defined in a future FR).
 - Admins MUST be able to mark providers as featured (flag and 10-provider cap are MVP); the patient-facing featured display is **P2 (Post-MVP)** and ships with FR-022 patient provider search
-- System MUST track provider status (active, suspended, deactivated); there is no draft status. Suspension or deactivation automatically cancels the provider's `Accepted` and `Confirmed` bookings for admin support, keeps `In Progress` bookings open with `supportRequired` for an admin decision (move to `Aftercare` with aftercare-provider reassignment, or cancellation with a reason), and an admin reassigns the aftercare provider for bookings in `Aftercare`, while the inquiry stays open so that an admin can transfer the patient to another provider, and reactivation of a suspended provider restores nothing (see FR-015)
+- System MUST track provider status (active, suspended, deactivated); there is no draft status. Suspension or deactivation automatically cancels the provider's `Accepted` and `Confirmed` bookings for admin support, keeps `In progress` bookings open with `supportRequired` for an admin decision (move to `Aftercare` with aftercare-provider reassignment, or cancellation with a reason), and an admin reassigns the aftercare provider for bookings in `Aftercare`, while the inquiry stays open so that an admin can transfer the patient to another provider, and reactivation of a suspended provider restores nothing (see FR-015)
 - Admins MUST be able to schedule a suspension or deactivation for a future Effective Date (at most one pending change per provider, shown as "Scheduled" and applied automatically on that date) and cancel it with a reason and password re-authentication before it takes effect
 
 **Admin Workflow**:
@@ -1271,9 +1272,8 @@ Provider notification preferences are managed in FR-032 (Provider Dashboard Sett
 
 **Requirements**:
 
-- System MUST retain patient medical records for minimum 7 years (healthcare compliance)
-- System MUST retain financial transaction records for minimum 7 years (tax/audit compliance)
-- System MUST support soft-deletes only (no hard deletion of critical data)
+- System MUST apply one retention period of 10 years to everything it keeps (medical records, inquiry data, head and monitoring scan media, financial transaction records, audit logs), as set by the Platform-Wide Rules "One 10-year retention period"
+- System MUST support soft-deletes only (no hard deletion), as set by the Platform-Wide Rules "Soft deletes only"
 - System MUST anonymize patient data in analytics and reports
 - System MUST provide data export functionality for GDPR compliance
 - System MUST allow patients to request data deletion (GDPR right to be forgotten)
@@ -1891,12 +1891,9 @@ All Hairline engines and platform APIs MUST return structured errors complying w
 
 ### NFR-003: Security
 
-- All data in transit MUST be encrypted using TLS 1.3
-- All sensitive data at rest MUST be encrypted using AES-256
-- System MUST implement role-based access control (RBAC)
+- Encryption in transit and at rest, role-based audited access, and GDPR and HIPAA-equivalent compliance are Platform-Wide Rules (see **Platform-Wide Rules**)
 - System MUST log all security events (login attempts, permission changes, data access)
 - System MUST support multi-factor authentication for providers and admins
-- System MUST comply with GDPR and equivalent healthcare data protection regulations
 - System MUST pass quarterly penetration testing
 
 ### NFR-004: Availability
@@ -1922,6 +1919,80 @@ All Hairline engines and platform APIs MUST return structured errors complying w
 
 ---
 
+## Platform-Wide Rules
+
+These rules bind every module, screen, and Functional Requirement. The system PRD owns each one; a Functional Requirement cites it by its title instead of restating it. A Functional Requirement may add detail on top of a rule but never weakens it.
+
+### Patient identity hidden until booking confirmation
+
+- Providers MUST see only the anonymized patient ID, shown in the display form "Mark P." followed by the ID, until booking confirmation (the first successful payment)
+- At booking confirmation the patient's name and contact details (phone number and email address) unlock for the provider
+- The rule does not apply to admins, who see the full patient identity for compliance and support
+
+### One 10-year retention period
+
+- System MUST keep every record for 10 years: audit logs, financial transaction and payment records, booking records, discount records, medical records, inquiry data, and head and monitoring scan media; no record type has a shorter period
+- A patient deletion request does not shorten the period: the patient's personal data stays archived and anonymised (no hard deletion)
+- Backup copies follow the separate backup retention in NFR-004
+
+### Soft deletes only
+
+- Every delete MUST be a soft delete (the record is archived); hard deletion is prohibited
+
+### Encryption in transit and at rest
+
+- All data in transit MUST be encrypted using TLS 1.3
+- All sensitive data at rest MUST be encrypted using AES-256, including personal and medical data, payment-related personal data, messages, and media
+
+### No card numbers stored
+
+- System MUST NOT store card numbers; only the payment processor handles them
+- System MUST be PCI DSS compliant through the payment processor
+- System MUST verify the signature of every payment webhook before acting on it
+
+### Core security controls fixed in code
+
+- Core security controls, encryption standards, the audit scope for financial events, and duplicate-charge protections are fixed in the product and MUST NOT be editable in the Admin Platform
+
+### Password and one-time-code policy
+
+- Passwords MUST have at least 12 characters, including at least one uppercase letter, one lowercase letter, one digit, and one special character; the policy is fixed and not editable in the Admin Platform
+- One-time codes (email verification and password reset) MUST have 6 digits (fixed); their expiry time and resend limits MUST be configurable in FR-026
+
+### Admin API rate limit
+
+- System MUST rate-limit the admin configuration and settings APIs, including the payment configuration API, to 100 requests per minute per admin to prevent abuse
+
+### Role-based, audited access
+
+- Access to platform data MUST be granted by role (patient, provider, admin, and the permissions inside each)
+- Every access to personal, medical, financial, and conversation data MUST be audited with who accessed it and when; a feature adds the reason where one is required
+- Audit log entries MUST be immutable: read-only, with no editing or deletion
+
+### Times shown in the user's local time zone
+
+- System MUST display every date and time on every screen in the user's local time zone; admin views MAY switch to UTC for audits
+
+### GDPR and HIPAA-equivalent compliance
+
+- System MUST follow GDPR and HIPAA-equivalent practices for personal and medical data
+- Patient consent MUST be respected for any data sharing, and data residency MUST be honored
+- Tenants MUST NOT share a database directly with each other
+
+### Concurrent admin edits: warn, then last save wins
+
+- When two admins edit the same item at the same time on an admin screen, the second admin MUST be warned that the item was changed since they opened it, with who changed it and when, and MAY continue; the last save wins and overwrites the earlier change
+
+### Setting and policy changes apply to new cases only
+
+- A change to any setting, configuration, or policy MUST NOT affect a case that is already ongoing; it affects only a new case from the point the new setting or policy goes into effect
+
+### Download links expire and check permission
+
+- Links to downloadable files (PDF reports and media) MUST expire and MUST check the requester's permission every time they are opened
+
+---
+
 ## Edge Cases & Exception Handling
 
 ### EC-001: Payment Failures
@@ -1944,7 +2015,7 @@ All Hairline engines and platform APIs MUST return structured errors complying w
 
 **Handling**:
 
-- System MUST cancel a booking in `Accepted` or `Confirmed` with cause `ProviderFault` (or `ProviderSuspended` / `ProviderDeactivated`) and a `supportRequired` marker, release the hold or calendar block, and keep the AcceptanceEvent unchanged; in `In Progress` the booking is not cancelled automatically, stays flagged `supportRequired`, and an admin either moves it to `Aftercare` with aftercare-provider reassignment or cancels it with a reason; in `Aftercare` the booking is not cancelled and an admin reassigns the aftercare provider
+- System MUST cancel a booking in `Accepted` or `Confirmed` with cause `ProviderFault` (or `ProviderSuspended` / `ProviderDeactivated`) and a `supportRequired` marker, release the hold or calendar block, and keep the AcceptanceEvent unchanged; in `In progress` the booking is not cancelled automatically, stays flagged `supportRequired`, and an admin either moves it to `Aftercare` with aftercare-provider reassignment or cancels it with a reason; in `Aftercare` the booking is not cancelled and an admin reassigns the aftercare provider
 - The inquiry MUST stay open; for a booking in `Accepted` or `Confirmed`, an admin authors a replacement quote on behalf of a replacement provider in the same inquiry, and its acceptance creates a new admin-authored acceptance record with a single supersession record linking it to the original (FR-006 provider-fault transfer); a replacement quote that is not accepted expires normally and the inquiry stays `supportRequired` without automatic cancellation
 - Amounts already paid move with the patient as credit toward the replacement booking, any unused part is refunded, and the patient pays no cancellation fee; exact mechanics are defined in FR-007, FR-007B, and FR-017
 - System MUST notify the patient and both providers of the transfer
@@ -2170,10 +2241,11 @@ All Hairline engines and platform APIs MUST return structured errors complying w
 | 1.0.0 | 2026-10-16 | Vân Tay Media | MTG-002 quote model alignment and Product Owner Q-series follow-up (decisions D1 to D24, M2 to M18, Q2 to Q30; Q26 and Q27 deferred; recorded here retrospectively, as the version was not bumped at the time): parent quote, quote option and subquote model; acceptance record and booking with a fixed slot hold, `Payment Window Expired` and audited admin revive; provider-fault transfer; offered prices greater than 0 and `quote.updated` on re-send; commission, deposit and instalments on one booking total after promotion for every discount type; promotion use reservations; acceptance notifications; Quote Configuration and currency disable guard; approximate cross-currency price sort; itinerary read view and travel-record carry-over; treatment-detail changes through FR-010 |
 | 1.1.0 | 2026-10-18 | Vân Tay Media | Consolidated verification corrections (Q2, Q5, Q17, Q18, Q20, Q34; D2, D11, D12, M18; no Change Request, system document): Workflow 1 treatment-detail changes bounded to `Confirmed` until Check In with admin-only appointment changes; FR-006 admin revive takes an automatic promotion use again or reserves a provider-selected or patient-code use again, rejected when the limit has no room; FR-008 travel records stored against the booking's travel context; FR-015 provider status change cancels bookings and the inquiry stays open for transfer; FR-019 reservation released when the quote is cancelled before acceptance, and a provider discount reduces the commission base like every discount type; FR-024 treatment pricing is a non-binding reference; glossary Commission and Booking entries updated; version bumped and change log added |
 | 1.2.0 | 2026-10-18 | Vân Tay Media | Final audit corrections (Q31, Q35 to Q44; f1 F5, F8, F10; f2 F2, F4, F5, F8, F10; f3 F5; no Change Request, system document): commission described as the FR-029 Percentage (0 to 100%) or Flat Rate models with a 15 to 25% global percentage default; patients cancel only in Inquiry or Quoted and contact support after acceptance, including after Payment Window Expired; after acceptance only an admin cancels a booking, from any state, the inquiry becomes Cancelled and the quote stays accepted; provider-fault transfer limited to Accepted and Confirmed, with aftercare provider reassignment in Aftercare; replacement quote authored by an admin with one supersession record inserted at the replacement acceptance; treatment-detail changes by the clinic until Check In and by an admin at any time from Confirmed; promotion priority adds Hairline-funded promotions, one automatic promotion per quote, `not_applied` release, limit-full sends proceed without the promotion, Both Fees uses the Hairline share percentage; `booking.scheduled` is patient-only and also fires at the replacement acceptance, new `booking.rescheduled`, and `quote.withdrawn` after acceptance added to admin exception alerts; round-2 additions (Q45 to Q49, Q42 check): a provider fault, suspension, or deactivation on an In Progress booking keeps it In Progress with `supportRequired` for an admin decision (Aftercare with aftercare-provider reassignment, or cancellation with reason) instead of cancelling it; FR-010 treatment record created at confirmation in Awaiting Check In; new mandatory `aftercare.provider_reassigned` for patient and new aftercare provider; no automatic promotion or reservation on an admin-authored replacement quote; an unaccepted replacement quote expires normally with the inquiry staying support-required; booking notices and FR-010 read the booking's current appointment while the acceptance snapshot keeps the accepted baseline |
+| 1.3.0 | 2026-11-20 | Vân Tay Media | Requirements graph programme baseline: owner rulings applied (no Change Request, system document): new **Platform-Wide Rules** section owned by the system PRD with fourteen rules, each cited by title from the Functional Requirements (patient identity hidden until booking confirmation; one 10-year retention period for everything; soft deletes only; encryption in transit and at rest; no card numbers stored; core security controls fixed in code; password and one-time-code policy; admin API rate limit; role-based, audited access; times in the user's local time zone; GDPR and HIPAA-equivalent compliance; concurrent admin edits warn then last save wins; setting and policy changes apply to new cases only; download links expire and check permission); NFR-003 points to the rules instead of restating them; FR-023 and FR-002 and FR-003 summaries follow the 10-year period and the identity rule, leftover 7-year wording removed; payment flow lines follow the fund-release rulings (release per booking after completion and the confirmation window, then payout by Stripe Connect or settlement statement); booking status written as `In progress` (stored value unchanged); status line set to pending verification; cross-document reconciliation (admin quote edits after acceptance) |
 
 ---
 
-**Document Status**: ✅ Complete  
+**Document Status**: Revised, pending verification  
 **Next Steps**: Create Technical Specification and Data Schema documents  
 **Maintained By**: Product Team  
 **Review Cycle**: Quarterly or upon major feature changes

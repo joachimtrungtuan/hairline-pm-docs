@@ -31,12 +31,10 @@ Provide centralized management of legal content (Terms & Conditions, Privacy Pol
 
 - View latest Terms & Conditions, Privacy Policy, Cancellation Policy, and relevant Consent forms
 - Accept latest versions when prompted; acceptance recorded with timestamp and version ID
-- View prior acceptances (history) for personal reference
 
 **Provider Platform (PR-01/PR-06)**:
 
 - View and accept latest legal content as a provider user
-- Review acceptance status for their organization’s users (read-only)
 
 **Admin Platform (A-09)**:
 
@@ -85,7 +83,7 @@ Provide centralized management of legal content (Terms & Conditions, Privacy Pol
 1. Admin drafts or edits legal content (select document type and locale)
 2. Admin previews content and reviews change summary
 3. Admin sets publication details (effective date, acceptance requirement scope)
-4. System publishes new version and marks it current; previous version archived
+4. System publishes the new version; it becomes current on its effective date (until then it is Scheduled and the previous version stays current), and the previous version is then archived
 5. System records audit entry (who/when/what changed) and notifies Admin
 6. System triggers user acceptance prompts based on configured scope
 
@@ -108,17 +106,18 @@ Provide centralized management of legal content (Terms & Conditions, Privacy Pol
 
 - Trigger: Admin sets a future effective date
 - Steps:
-  1. System schedules activation
-  2. On effective date, new version becomes current; prompts begin
+  1. System marks the new version Scheduled; the previous version stays Current until the effective date
+  2. On effective date, new version becomes current and the previous version is archived; prompts begin
 - Outcome: Controlled rollout with clear timing
 
-**B1: Publication Reversion**:
+**B1: Restoring an Earlier Version**:
 
-- Trigger: Admin needs to revert to previous version due to error
+- Trigger: Admin needs to go back to the text of an earlier version due to error
 - Steps:
-  1. System marks previous version current again
-  2. Prompts update accordingly; audit entry recorded
-- Outcome: Rapid recovery with traceability
+  1. There is no revert button; Admin creates a new draft from the old version
+  2. Admin publishes the restored text as a new version through the normal publishing flow
+  3. Prompts update accordingly; audit entry recorded
+- Outcome: Rapid recovery with traceability; users who accepted only the replaced version are asked to accept the restored one
 
 ---
 
@@ -135,23 +134,23 @@ Provide centralized management of legal content (Terms & Conditions, Privacy Pol
 | Document Type | select | Yes | T&C, Privacy, Consent, Cancellation Policy | Must be one of supported types |
 | Locale | select | Yes | Display locale for translation; global content only | Must be supported locale |
 | Version | text | Yes | Version identifier | Must be unique per document type |
-| Status | badge | Yes | Draft / Current / Archived | Only one Current per type |
+| Status | badge | Yes | Draft / Scheduled / Current / Archived | Only one Current per type; a published version with a future effective date is Scheduled until then |
 | Effective Date | date | Yes | Scheduled go-live date | Must be today or future |
 | Requires Acceptance | boolean | Yes | Indicates if material change gating applies | Tied to Material flag from draft |
 | Last Updated By/At | text | Yes | Audit info | Read-only |
-| Actions | buttons | Yes | Draft new version, Edit draft, View history, Preview, Publish (if draft ready) | Edit shown for Draft/Archived versions; Publish disabled unless draft passes validation |
+| Actions | buttons | Yes | Draft new version, Edit draft, View history, Preview, Publish (if draft ready) | Edit shown for Draft versions only; Publish disabled unless draft passes validation |
 
 **Business Rules**:
 
 - Only authorized Admin roles can access this list.
-- Only one Current version per document type at a time; publishing a new version auto-archives the prior Current.
+- Only one Current version per document type at a time; when a newly published version becomes Current, the prior Current is auto-archived.
 - Publish action is global (no region targeting); locale is for translation display only.
 - Edit action opens the Draft/Edit screen for Draft versions; Current/Archived versions are view-only (preview/history).
 
 **Notes**:
 
 - Provide filters by Document Type, Status, and Locale.
-- Show warning banners for pending acceptance coverage below threshold.
+- Show warning banners for pending acceptance coverage below the Admin-set threshold.
 
 ---
 
@@ -163,7 +162,7 @@ Provide centralized management of legal content (Terms & Conditions, Privacy Pol
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
-| Document Type | select | Yes | T&C, Privacy, Consent | Locked after version creation |
+| Document Type | select | Yes | T&C, Privacy, Consent, Cancellation Policy | Locked after version creation |
 | Locale | select | Yes | Translation locale for the current version's content. Multiple locales can exist for a single version. | Must be supported locale |
 | Content | rich text editor with Markdown toggle | Yes | Full legal text | Min 200 chars; max 50k chars |
 | Change Summary | textarea | Yes | Human-readable summary of changes | Max 500 chars |
@@ -204,7 +203,7 @@ Provide centralized management of legal content (Terms & Conditions, Privacy Pol
 - Publish sets status to Current on Effective Date; prior Current auto-archives.
 - Publishing logs an audit entry (who/when/what) and triggers acceptance prompts if Material Change=true.
 - Publication is global; no regional/locale targeting.
-- When a version is published globally, the system validates that at least the English (en-US) locale content is complete. If other locales are configured for this version, the Admin UI will provide a summary of their completeness, but publishing will proceed using the English (en-US) version as the mandatory default fallback if a specific locale is missing or incomplete (as per CL-3).
+- When a version is published globally, the system validates that at least the English (en-US) locale content is complete. If other locales are configured for this version, the Admin UI will provide a summary of their completeness, but publishing will proceed using the platform default language (English, en-US) version as the single fallback if a specific locale is missing or incomplete (as per CL-3).
 
 **Notes**:
 
@@ -225,13 +224,13 @@ Provide centralized management of legal content (Terms & Conditions, Privacy Pol
 | Version | select | Yes | Target version for coverage view | Must exist |
 | Published/Eff. Dates | text | Yes | Publication and activation timestamps | Read-only |
 | Material Change | badge | Yes | Indicates gating requirement | Read-only |
-| Acceptance Rate | metric | Yes | % accepted | Computed from acceptance ledger |
+| Acceptance Rate | metric | Yes | % accepted, out of the users who must accept that document | Computed from acceptance ledger |
 | Pending Users | list/count | Yes | Users who haven’t accepted | Supports pagination/export |
 | Reminders Sent | count | Yes | Reminder notifications issued | Read-only |
 
 **Business Rules**:
 
-- Data is read-only; reminders respect rate limits.
+- Data is read-only; reminders respect the Admin-set reminder limit.
 - Filters by document type and version; supports date range for trend.
 
 **Notes**:
@@ -310,8 +309,8 @@ As an Admin, I can view acceptance coverage (who has accepted which version) and
 
 - Minor updates vs. material changes: non‑material edits may not require re‑acceptance; material changes do — rules configurable
 - Existing users with pending procedures: allow read‑only access until acceptance; surface prompts at safe checkpoints
-- Locale mismatch: default to primary language if localized version not available; log gaps for Admin
-- Rollback after partial acceptance: reverting version preserves existing acceptance records; users accepted to reverted version remain valid per policy
+- Locale mismatch: fall back to the platform default language (English) if a localized version is not available; log gaps for Admin
+- Restoring an earlier text after partial acceptance: the restored text is published as a new version; existing acceptance records are preserved; users who accepted only the version that was replaced are asked to accept the restored version
 
 ---
 
@@ -335,7 +334,7 @@ As an Admin, I can view acceptance coverage (who has accepted which version) and
 
 ### Security & Privacy Requirements
 
-- **REQ-027-011**: Only authorized Admin roles can create/edit/publish legal documents; publication actions require explicit confirmation
+- **REQ-027-011**: Only authorized Admin roles can access the Legal Documents list and create/edit/publish legal documents; publication actions require explicit confirmation
 - **REQ-027-012**: Users MUST have clear access to read the full content prior to acceptance; records are retained to demonstrate consent
 - **REQ-027-013**: Audit trail MUST be immutable and reviewable by authorized Admins
 
@@ -348,21 +347,25 @@ As an Admin, I can view acceptance coverage (who has accepted which version) and
 
 - CL‑1: Enforcement for existing users — Block core actions until acceptance; allow read‑only access where safe. Show rate‑limited reminders. Gating occurs at sign‑in and before core transactional flows.
 - CL‑2: Material vs. minor changes — Material includes changes to obligations, data use/sharing, user rights, or liability; Minor includes formatting, typo fixes, or clarifications without policy change. Only material changes require re‑acceptance; Admin marks the publish accordingly.
-- CL‑3: Locale handling — If a localized version is unavailable, default to the primary language and display a discreet notice. Log a task to add the missing locale. Acceptance using the fallback is considered valid.
+- CL‑3: Locale handling — If a localized version is unavailable, fall back to the platform default language (English) and display a discreet notice. Log a task to add the missing locale. Acceptance using the fallback is considered valid.
 - CL‑4: Regional customization — Legal content is uniform globally; no location‑based variants or region‑specific publication paths are required.
+- CL‑5: Admin-set limits — The acceptance coverage warning threshold, the reminder limit and the export limit are set by Admin; none has a default value. FR-027 owns the acceptance rules setting (who must accept and when enforcement applies) and the acceptance coverage threshold setting.
 
 ---
 
 ## Key Entities
 
 - Legal Document: type (T&C, Privacy, Consent, Cancellation Policy), locale, version, status, effective date, content, change summary  
-  Relationships: has many versions; current version per locale  
+  Relationships: has many versions; one Current version per document type  
   Note: Cancellation Policy type has `Requires Acceptance` = No (read-only informational document)
 
 - Acceptance Record: user reference, document type, version, locale, timestamp, channel  
   Relationships: belongs to user and document type/version
 
-- Audit Entry: actor, action (create/edit/publish/revert), timestamp, object reference, summary  
+- Legal Acceptance Reminder: user reference, document type, version, sent at  
+  Relationships: belongs to user and document type/version; one record per reminder sent, shown as Reminders Sent (Screen 4) and Reminder Status (Screen 4A)
+
+- Audit Entry: actor, action (create/edit/publish), timestamp, object reference, summary  
   Relationships: references Admin actor and document version
 
 ---
@@ -372,7 +375,7 @@ As an Admin, I can view acceptance coverage (who has accepted which version) and
 ### Internal Dependencies
 
 - P-01: Auth & Profile — for gating and acceptance at sign‑in and profile areas
-- PR-01/PR-06: Provider Auth/Settings — provider user acceptance and settings visibility
+- PR-01/PR-06: Provider Auth/Settings — provider user acceptance and settings visibility; FR-009 (Provider Team & Role Management) owns provider team and role management
 - A-09: System Settings — legal content management and publication
 
 ### Transcription References
@@ -386,7 +389,7 @@ As an Admin, I can view acceptance coverage (who has accepted which version) and
 - 100% of legal content publish actions captured in audit logs with who/when/what
 - ≥ 95% of active users accept required versions within 14 days of publication
 - 0% access to core actions for users with pending required acceptance (when enforcement enabled)
-- Version rollback completes in ≤ 5 minutes with prompts updated accordingly
+- Restoring an earlier text (new draft published as a new version) completes in ≤ 5 minutes with prompts updated accordingly
 - Acceptance coverage report matches user totals with ≤ 0.5% variance
 
 ---
@@ -395,7 +398,7 @@ As an Admin, I can view acceptance coverage (who has accepted which version) and
 
 - Admins will manage all legal content centrally within A‑09 settings
 - Users will accept legal content on sign‑in or when accessing core flows after a new required version is published
-- Locale coverage will follow product language availability; missing locales default to primary language until added
+- Locale coverage will follow product language availability; missing locales fall back to the platform default language (English) until added
 
 ---
 
@@ -407,6 +410,7 @@ As an Admin, I can view acceptance coverage (who has accepted which version) and
 | 2025-12-11 | 1.1     | Marked Verified & Approved; added locale clarifications and screen specs | AI Assistant |
 | 2026-02-06 | 1.2     | Updated Patient Platform entry points to match patient Settings IA (FR-001): Settings → Terms & Conditions and Settings → Privacy & Security → Privacy Policy. | AI Assistant |
 | 2026-02-11 | 1.3     | Added "Cancellation Policy" as a 4th supported document type. Cancellation Policy is a read-only informational document (Requires Acceptance = No) surfaced to patients in the quote acceptance context (FR-005). Updated description, Screen 1/2/4/5 Document Type enums, REQ-027-001, Key Entities, and Patient Platform scope. | AI |
+| 2026-11-20 | 1.4     | Requirements graph programme baseline: owner rulings applied. Main changes: new Scheduled status (the previous version stays Current until the effective date); no revert button, an earlier text is restored as a new draft published as a new version, and users who accepted only the replaced version are asked again; one fallback for a missing translation (the platform default language, English); removed the patient prior-acceptance history and the provider read-only view of their organization's acceptance status; Acceptance Rate counts only users who must accept that document; coverage warning threshold, reminder limit and export limit are Admin-set with no default, and FR-027 owns the acceptance rules and coverage threshold settings; added Legal Acceptance Reminder key entity; Cancellation Policy added to Screen 2 document types; only Draft versions are editable; FR-009 named as a dependency; REQ-027-011 covers access to the Legal Documents list. | AI |
 
 ---
 
@@ -423,4 +427,4 @@ As an Admin, I can view acceptance coverage (who has accepted which version) and
 **Template Version**: 2.0.0 (Constitution-Compliant)  
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)  
 **Based on**: FR-027 Legal Content Management  
-**Last Updated**: 2026-02-06
+**Last Updated**: 2026-11-20

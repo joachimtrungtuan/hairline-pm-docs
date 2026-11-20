@@ -42,7 +42,6 @@ This module extends the foundational OTP template management capabilities from F
 
 - Providers receive notifications for inquiries, quote responses, booking confirmations, payment receipts, patient arrivals, aftercare escalations
 - Providers can manage team notification routing (which staff members receive which notification types)
-- Providers can set business hours for non-urgent notifications
 - Notifications delivered via email and web push notifications
 
 **Admin Platform (A-09)**:
@@ -53,6 +52,7 @@ This module extends the foundational OTP template management capabilities from F
 - Admins test notification rules before activation
 - Admins monitor notification delivery metrics and troubleshoot failed deliveries
 - Admins manage notification escalation rules for time-sensitive events
+- Admins set one platform-wide quiet-hours period for non-urgent notifications
 
 **Shared Services (S-03)**:
 
@@ -78,6 +78,7 @@ This module extends the foundational OTP template management capabilities from F
 - Notification testing and preview capabilities
 - Delivery status tracking and retry management
 - Notification analytics and delivery metrics
+- Notification preference records: patient preferences (including messaging notification preferences), provider preferences and provider team routing; the profile screens in FR-001 and FR-032 show and edit them
 
 **Out of Scope**:
 
@@ -92,11 +93,10 @@ This module extends the foundational OTP template management capabilities from F
 Admins access notification configuration through:
 
 1. **Admin Dashboard → Settings → Alerts & Notifications**: Primary entry point for notification rule management and notification template setup
-2. **Admin Dashboard → Settings → Alerts & Notifications**: Dedicated area for managing notification templates (email, push, SMS in future)
-3. **Event-driven**: System events automatically trigger notification evaluation based on configured rules (S-03)
-4. **Template Testing**: Admins can send test notifications to themselves before activating rules
+2. **Event-driven**: System events automatically trigger notification evaluation based on configured rules (S-03)
+3. **Template Testing**: Admins can send test notifications to themselves before activating rules
 
-Activation method: Notification rules activate immediately upon saving (with confirmation prompt). Template changes apply to new notifications immediately; in-flight notifications use the template version active at creation time.
+Activation method: A new notification rule starts as Draft and is not executed until an admin activates it; activation takes effect immediately after the confirmation prompt. Changes saved to an already active rule apply immediately to future events. Template changes apply to new notifications immediately; in-flight notifications use the template version active at creation time.
 
 ---
 
@@ -108,6 +108,7 @@ Activation method: Notification rules activate immediately upon saving (with con
 - Admins can **only configure events that appear in this catalog UI** (enable/disable, channels, timing, templates, retries, escalation).
 - **If an event does not appear in the catalog UI, it cannot be configured** (it is either not implemented, not enabled for the current environment, or intentionally not exposed).
 - Event payloads are recipient-scoped. Configurable templates may reference only the allowlisted variables exposed for that event, outcome, and recipient type.
+- **Event ownership**: every event that produces a notification is owned by FR-030 and listed in this catalog, including events triggered by other features (the producing feature is named in the Notes). An event that produces no notification is owned by the feature that triggers it and is not listed here.
 
 ### MVP: Admin-Configurable Event Types (Shown in UI)
 
@@ -115,24 +116,25 @@ Below is the platform-wide set of events that MUST be configurable by admins in 
 
 Notes:
 
-- **Backend event keys** below are **illustrative**. The backend owns the final canonical keys, but they MUST be stable identifiers exposed via the event catalog API.
+- **Backend event keys** below are the **final canonical keys**. They MUST remain stable identifiers exposed via the event catalog API.
 - If an event is not present in this table, it should **not appear** in `Settings → Alerts & Notifications` and therefore **cannot be configured**.
 
-| Category | Event (Display Name) | Example Backend Event Key | Primary Recipients | Notes |
+| Category | Event (Display Name) | Backend Event Key | Primary Recipients | Notes |
 |----------|-----------------------|---------------------------|--------------------|-------|
 | Account/Auth | Email Verification / OTP Code | `account.email_verification_code` | Patient, Provider, Admin | Extends FR-026 OTP templates; **security-critical** and non-disableable by default |
 | Account/Auth | Password Reset Code / Link | `account.password_reset` | Patient, Provider, Admin | **Security-critical** and non-disableable by default |
 | Account/Auth | New Account Created (Welcome / Onboarding) | `account.created` | Patient | Optional; can be disabled if not needed. Provider onboarding uses `provider.activation` instead |
 | Inquiry | Inquiry Submitted (Provider notified) | `inquiry.submitted` | Provider | “New inquiry matching clinic/location” |
-| Inquiry | Inquiry Cancelled | `inquiry.cancelled` | Patient, Provider, Admin (optional) | Patient-initiated inquiry cancellation (FR-003 Workflow 5). Fires when patient cancels inquiry in Inquiry, Quoted, or Accepted stages. Patient receives mandatory cancellation confirmation (aligns with FR-003 Workflow 5 step 4 and Screen 8b). Cancellation reason is patient-private — provider notification says only "Inquiry cancelled by patient". **MVP default channels: Email + Push.** Available template variables differ by recipient: Patient receives `inquiry.id`, `inquiry.cancellation_reason`, `inquiry.cancelled_at`; Provider receives `inquiry.id`, `inquiry.cancelled_at` only (reason excluded per privacy rule). |
+| Inquiry | Inquiry Cancelled | `inquiry.cancelled` | Patient, Provider, Admin (optional) | Patient-initiated inquiry cancellation (FR-003 Workflow 5). Fires when patient cancels inquiry in Inquiry, Quoted, or Accepted stages. Patient receives mandatory cancellation confirmation (aligns with FR-003 Workflow 5 step 4 and Screen 8b). Cancellation reason is patient-private — provider notification says only "Inquiry cancelled by patient". **MVP default channels: Email + Push.** Available template variables differ by recipient: Patient receives `inquiry.id`, `inquiry.cancellation_reason`, `inquiry.cancelled_at`; Provider receives `inquiry.id`, `inquiry.cancelled_at` only (reason excluded per privacy rule). **Provider exclusion**: a provider that has a live quote on the inquiry does not receive `inquiry.cancelled`; that provider receives only `quote.cancelled_inquiry`. A provider without a quote on the inquiry still receives `inquiry.cancelled`. |
 | Inquiry | Inquiry Response SLA Breached | `inquiry.ttfq_sla_breached` | Provider | FR-014 REQ-014-113. Fires once per distributed inquiry/provider pair when the provider has not submitted a parent quote within the FR-026 Analytics Configuration TTFQ SLA target (default 120 minutes) from distribution. Recipients: provider users permitted to respond to inquiries (FR-009). Not sent if the inquiry is cancelled, the distribution is withdrawn, or the provider responds first; never repeated for the same pair. MVP default channel: in-app only; email/push off by default and admin-configurable |
 | Quote | Quote Submitted / Ready (Patient notified) | `quote.submitted` | Patient | Fired by FR-004 when the provider sends the parent quote; the quote expiry is set and governed by FR-004. The notice shows the "From" price (the lowest subquote price in the parent quote, in the quote currency), the option count, the treatment and the expiry date. Exact subquote prices are not shown before acceptance (see Quote, Booking and Treatment-Change Event Rules) |
 | Quote | Quote Revised (New Version) | `quote.updated` | Patient, Provider | Fired by FR-004 when a new version of an already-sent parent quote is re-sent to the patient. The notice describes the quote as revised (new version). Drafts that were never sent do not fire this event |
 | Quote | Quote Expiring Soon | `quote.expiring_soon` | Patient, Provider | Fired by FR-004 once per sent parent quote when the time left before expiry reaches the quote-expiring-soon lead time set by admin in FR-026. Never fired for drafts or for accepted, withdrawn or cancelled quotes. Admin-configurable |
 | Quote | Quote Expired | `quote.expired` | Patient, Provider | Sent on expiry processing completion |
+| Quote | Quote Restored | `quote.restored` | Patient, Provider | Fired by FR-004 when an admin restores an expired quote (a reason is required). The quote returns to sent status with a fresh full expiry window: the restore time plus the FR-026 quote validity window in force. The patient is told the quote is available again with its new expiry date; the provider is told the quote was restored and its new expiry date. Admin-configurable; MVP default channels: Email + Push |
 | Quote | Quote Withdrawn | `quote.withdrawn` | Patient, Admin (only when the quote was already accepted) | Fired by FR-004 when a provider withdraws a sent parent quote, before or after acceptance. The patient is always told. Admins receive it as an exception alert only when the withdrawn quote was already accepted; a withdrawal before acceptance is a normal provider action and does not alert admins. After acceptance, FR-006 hands the case to the provider-fault transfer and the patient also receives `booking.provider_fault_replacement`. **Mandatory before and after acceptance — admin cannot disable this event** (see Non-Disableable by Default section) |
 | Quote | Quote Accepted / Subquote Outcomes | `quote.accepted` | Provider | FR-005 uses the existing event with `outcome` = `selected_subquote_accepted`, `sibling_subquote_not_selected`, or `competing_parent_cancelled_other_subquote_accepted`. Selected-provider templates may use accepted-subquote details. Non-selected-provider templates are restricted to that provider's own parent quote/subquote references, outcome, and reason; selected provider identity and accepted price are unavailable. Each provider receives one notice per sent parent quote: the provider of the accepted parent quote receives `selected_subquote_accepted`, with that parent's sibling subquotes listed in the same notice as `sibling_subquote_not_selected`; each other sent parent quote produces one not-selected notice (`competing_parent_cancelled_other_subquote_accepted`) to its provider, including another parent quote of the selected provider. Unsent drafts cancelled by FR-004 produce no notice. **The selected-provider and not-selected-provider outcomes are mandatory — admin cannot disable them** (see Non-Disableable by Default section). The patient is not a recipient: at acceptance the patient receives only `booking.scheduled`. No admin notification is sent for an acceptance; admins follow acceptances on their dashboards |
-| Quote | Quote Cancelled (Inquiry Cancelled) | `quote.cancelled_inquiry` | Provider | Auto-cancelled quote due to patient inquiry cancellation (FR-003 Workflow 5). **Provider receipt is mandatory — admin cannot disable this event** (see Non-Disableable by Default section). Cancellation reason is patient-private; provider notification says only "Inquiry cancelled by patient". **MVP default channels: Email + Push.** Not subject to FR-032 provider notification preferences; FR-032 offers no toggle for this event. Available template variables: `quote.id`, `quote.provider_id`, `inquiry.id`, `inquiry.cancelled_at`; `inquiry.cancellation_reason` is excluded per privacy rule. |
+| Quote | Quote Cancelled (Inquiry Cancelled) | `quote.cancelled_inquiry` | Provider | Auto-cancelled quote due to patient inquiry cancellation (FR-003 Workflow 5). **Provider receipt is mandatory — admin cannot disable this event** (see Non-Disableable by Default section). Cancellation reason is patient-private; provider notification says only "Inquiry cancelled by patient". **MVP default channels: Email + Push.** Not subject to FR-032 provider notification preferences; FR-032 offers no toggle for this event. Available template variables: `quote.id`, `quote.provider_id`, `inquiry.id`, `inquiry.cancelled_at`; `inquiry.cancellation_reason` is excluded per privacy rule. A provider with a live quote receives this notice only, never also `inquiry.cancelled`; a provider without a quote still receives `inquiry.cancelled`. |
 | Booking/Schedule | Booking Accepted — Slot Held (Pending Payment) | `booking.scheduled` | Patient | Fired by FR-006 when subquote acceptance creates the slot hold, or when an admin-authored replacement acceptance in the FR-006 provider-fault transfer creates the replacement booking, before the first payment is confirmed; states the payment deadline (hold expiry). The provider is not a recipient: the accepted or replacement provider learns of the booking through `quote.accepted` (`selected_subquote_accepted`). **Mandatory — admin cannot disable this event** |
 | Booking/Schedule | Hold Expiring Soon (Payment Reminder) | `booking.hold_expiring_soon` | Patient, Admin | Fired by FR-006 once per slot hold when the time left before the hold expires reaches the hold-expiring-soon lead time set by admin in FR-026 and the first payment is still outstanding. Reminds the patient to pay before the slot is released; admins receive it as an exception alert (slot hold expiring while unpaid). Admin-configurable |
 | Booking/Schedule | Payment Window Expired | `booking.payment_window_expired` | Patient, Provider, Admin | Fired by FR-006 when the slot hold expires before the first payment (deposit or first instalment) succeeds; applies only to that first payment step. Patient is told the booking lapsed and given the recovery routes (cancel and start a new inquiry, or contact support); provider is told the slot is free; admins receive it as an exception alert. **Mandatory — admin cannot disable this event** |
@@ -145,15 +147,18 @@ Notes:
 | Treatment | Treatment Start / Day-1 Starting | `treatment.started` | Patient, Provider | “Treatment start notifications” |
 | Treatment | Treatment Details Changed After Acceptance | `treatment.plan_changed` | Patient | Fired by FR-010 when the clinic or an admin makes an audited change to the treatment plan, assigned clinicians or graft count from booking confirmation (`Confirmed`) onward. States what changed; price, currency and other money terms never change through this path. **Mandatory — admin cannot disable this event** |
 | Treatment | Treatment Cancelled | `treatment.cancelled` | Patient, Provider, Admin (optional) | Used when treatment is cancelled after scheduling/confirmation |
-| Treatment | Treatment Completed (Post‑Op Instructions) | `treatment.completed` | Patient, Provider, Admin (optional) | Completion confirmation; triggers post-op and aftercare next steps |
+| Treatment | Treatment Completed (Post‑Op Instructions) | `treatment.completed` | Patient, Provider, Admin (optional) | Completion confirmation; triggers post-op and aftercare next steps. The patient copy also states the deadline to raise a problem with the treatment and links to the support request; the provider and admin copies keep their wording without the deadline. No separate event is created for this |
 | Treatment | Treatment Documentation Completed | `treatment.documentation_completed` | Provider | Sent when treatment documentation is successfully saved |
 | Treatment | Task In Progress Reminder | `treatment.task_in_progress_reminder` | Provider | Reminder for incomplete treatment tasks or documentation |
 | Payment | Payment Received / Receipt | `payment.received` | Patient, Provider, Admin (optional) | Critical |
 | Payment | Payment Failed | `payment.failed` | Patient, Admin (optional) | Critical |
-| Payment | Payment Due Reminder (Installment / Balance) | `payment.due_reminder` | Patient | “Installment reminder” (split-pay compatible) |
-| Billing/Payouts | Provider Payout Processed | `payout.provider_processed` | Provider, Admin (optional) | “They’ve been paid” notification to provider |
+| Payment | Payment Due Reminder (Installment / Balance) | `payment.due_reminder` | Patient | “Installment reminder” (split-pay compatible). When the reminder goes out is the single payment reminder timing setting owned by FR-007; this entry does not keep a second reminder schedule |
+| Billing/Payouts | Provider Payout Processed | `payout.provider_processed` | Provider, Admin (optional) | “They’ve been paid” notification to provider. Also sent when a manual statement is marked paid, not only for Stripe payouts; no separate event exists for manual statements |
 | Billing/Payouts | Affiliate Payout Processed | `payout.affiliate_processed` | Affiliate, Admin (optional) | If affiliate program is enabled |
 | Billing/Payouts | Payout Failed | `payout.failed` | Admin, Provider (optional), Affiliate (optional) | Failure processing payout; recipients depend on payout type |
+| Billing/Payouts | Payout Paused — Problem Raised | `payout.paused_problem_raised` | Admin | Fired when a problem is raised on a completed treatment and the clinic's money for that booking is paused; tells admins which booking and clinic are affected, with a link to the support request. MVP default channels: Email + Push |
+| Billing/Payouts | Funds Released to Clinic | `payout.funds_released` | Provider | Fired when money held for a booking is released to the clinic; states the booking and the amount released. MVP default channels: Email + Push |
+| Billing/Payouts | Cancellation Charge Deducted | `payout.cancellation_charge_deducted` | Provider | Fired when a cancellation charge is deducted from the clinic's money; states the booking, the amount deducted and that the reason is a cancellation. MVP default channels: Email + Push |
 | Messaging/Support | New Message Received | `message.received` | Patient, Provider, Admin (optional) | Real-time notification for new messages |
 | Messaging/Support | Support Case Created | `support.case_created` | Patient, Provider, Admin | Sent to submitter confirming case creation with case ID; Admin notification if case is urgent or unassigned |
 | Messaging/Support | Support Case Assigned | `support.case_assigned` | Admin | Sent to assigned admin when case is assigned to them |
@@ -178,15 +183,17 @@ Notes:
 | Monitoring | Monitoring Advice Posted | `monitoring.advice_posted` | Patient | Provider submits or edits the one advice-window paragraph for the current window (FR-037/FR-038) |
 | Monitoring | Monitoring Case Completed | `monitoring.completed` | Patient | Patient completes the active monitoring case (FR-037/FR-038) |
 | Monitoring | Monitoring PDF Export Ready | `monitoring.export_ready` | Patient | Date-to-date summary PDF has finished generating and is downloadable (FR-037/FR-038) |
-| Monitoring | Monitoring Converted to Inquiry | `monitoring.converted` | Patient | Monitoring case successfully converts into a distinct FR-003 inquiry (FR-037/FR-038) |
-| Reviews | Review Request | `review.requested` | Patient | “Review notifications” (typically post-treatment) |
+| Monitoring | Monitoring Converted to Inquiry | `monitoring.converted_to_inquiry` | Patient | Monitoring case successfully converts into a distinct FR-003 inquiry (FR-037/FR-038) |
+| Monitoring | Monitoring Aftercare Conversion Started | `monitoring.aftercare_conversion_started` | Patient | Fired by FR-038 when the patient selects Switch to Aftercare Package on a transplant-progress case, before the aftercare request is created; tells the patient the switch has started. Patient only; sent immediately |
+| Monitoring | Monitoring Converted to Aftercare | `monitoring.converted_to_aftercare` | Patient | Fired by FR-038 when the standalone aftercare request from the Switch to Aftercare Package flow is successfully created; tells the patient the switch is complete. Patient only (FR-037/FR-038) |
+| Reviews | Review Request | `review.requested` | Patient | “Review notifications” (typically post-treatment). The admin sets when the review invitation and any reminder are sent through this event's delivery timing; FR-013 does not set its own invitation timing |
 | Reviews | Review Published / New Review Posted | `review.published` | Provider | Notifies provider when a new published review appears on their profile; subject to provider Review Notifications preference in FR-032 |
 | Reviews | Provider Response Posted | `review.response_posted` | Patient | Notifies reviewer when provider posts a public response to their review |
 | Reviews | Review Removed by Admin | `review.removed_by_admin` | Patient | Notifies reviewer when admin removes their published review for policy/compliance reasons |
 | Reviews | Takedown Request Decided | `review.takedown_decided` | Patient | Notifies patient of admin approve/reject decision on their takedown request |
 | Promotions/Discounts | Provider Approval Needed for Platform Discount | `promotion.discount_approval_requested` | Provider | “Approval notifications to providers when new platform discount is created” |
-| Provider/Compliance | Provider Onboarding Requested | `provider.onboarding_requested` | Admin | New provider onboarding request awaiting review/approval |
-| Provider/Compliance | Provider Document Expiration Warning | `provider.document_expiration_warning` | Admin, Provider (optional) | License/credential expiry warnings; timing is policy-driven |
+| Provider/Compliance | Provider Onboarding Requested | `provider.onboarding_requested` | Admin | New provider onboarding request awaiting review/approval. Not triggered at launch (future) |
+| Provider/Compliance | Provider Document Expiration Warning | `provider.document_expiration_warning` | Admin, Provider (optional) | License/credential expiry warnings; timing is policy-driven. Not triggered at launch (future) |
 | Provider/Compliance | Provider-Caused Cancellation / Offer Unavailable | `provider.status_cancellation_patient` | Patient | FR-015 Alternative Flow A5 / Screen 4 (FR-020 REQ-020-013). One per affected inquiry/case when provider suspension (`ProviderSuspended`) or deactivation (`ProviderDeactivated`) cancels the patient's case or the provider's offer before acceptance. For a case already accepted, the patient instead receives `booking.provider_fault_replacement`. Before acceptance, three variants apply (FR-003 Workflow 2 Alternative Flow B4, REQ-003-021): when other offers remain open, the notice says "[Clinic] is no longer available. Your other offers are still open."; when no other live offer remains and the inquiry is redistributed automatically, the notice says "[Clinic] is no longer available. We are finding new offers for you."; when the patient had explicitly selected the affected provider, the notice asks the patient to confirm the redistribution first. Includes inquiry/case reference and a Contact Admin/Support action. MUST NOT say the patient cancelled, instruct payment against the cancelled selection, or expose confidential suspension/deactivation reasons. **Mandatory — admin cannot disable this event** (see Non-Disableable by Default section); sent regardless of FR-015's "Notify Provider" checkbox. **MVP default channels: Email + Push + in-app** (global patient toggles still apply to Email/Push; in-app record always created). Retries de-duplicated per provider-status event + affected record + recipient |
 | Provider/Compliance | Provider-Caused Cancellation — Admin Support Required | `provider.status_cancellation_admin_support` | Admin | Same trigger (FR-020 REQ-020-013), and also when a provider-status event leaves an `In Progress` booking open and flagged `supportRequired` for an admin decision (move the booking to `Aftercare` with aftercare reassignment, or cancel it with a reason), or leaves an `Aftercare` booking or FR-011 standalone aftercare case flagged for admin aftercare reassignment (FR-006 Alternative Flow B6). Mandatory admin-support alert per affected inquiry/case with patient, inquiry/case reference, prior stage, cause, and FR-016 deep link (Admin Support Required filter). Sent to admins with the FR-031 Respond to Support permission (default roles Super Admin, Aftercare Specialist, and Support Staff); opening the FR-016 list also requires View Patients. **Mandatory — admin cannot disable this event**; sent regardless of "Notify Provider"; pinned as critical in the admin dropdown. No FR-034 ticket is auto-created. Retries de-duplicated per provider-status event + affected record + recipient |
 | Provider/Compliance | Provider Suspended / Deactivated | `provider.suspended` / `provider.deactivated` | Provider (Owner only) | FR-015 Screen 4 (FR-020 REQ-020-014). Sent only when "Notify Provider" is checked (default); always sent for a deactivation that processes an FR-032 account-closure request (FR-015 A7 locks Notify Provider on; FR-020 REQ-020-016). For a scheduled change it is sent when the scheduled change is created (with the effective date) and again when it takes effect; with "Notify Provider" unchecked it is sent at neither point. Team members are not emailed. Email with action taken, admin-provided reason, effective date (if scheduled), and admin support contact. Unaffected by provider FR-032 category preferences (account notice) |
@@ -202,7 +209,7 @@ Notes:
 
 ### Quote, Booking and Treatment-Change Event Rules
 
-- **Producers**: FR-004 produces `quote.submitted`, `quote.updated`, `quote.expiring_soon`, `quote.expired` and `quote.withdrawn`. FR-005 produces `quote.accepted` and its outcomes. FR-006 produces `booking.scheduled`, `booking.hold_expiring_soon`, `booking.payment_window_expired`, `booking.revived`, `booking.rescheduled` and `booking.provider_fault_replacement`. FR-010 produces `treatment.plan_changed`.
+- **Producers**: FR-004 produces `quote.submitted`, `quote.updated`, `quote.expiring_soon`, `quote.expired`, `quote.restored` and `quote.withdrawn`. FR-005 produces `quote.accepted` and its outcomes. FR-006 produces `booking.scheduled`, `booking.hold_expiring_soon`, `booking.payment_window_expired`, `booking.revived`, `booking.rescheduled` and `booking.provider_fault_replacement`. FR-010 produces `treatment.plan_changed`.
 - **Recipient grain for `quote.accepted`**: one provider notice per sent parent quote, never one per subquote. The de-duplication key is acceptance record + parent quote + recipient. Drafts produce no notice.
 - **Pre-acceptance price variables**: `quote.submitted`, `quote.updated`, `quote.expiring_soon`, `quote.expired` and `quote.withdrawn` may use only parent-level variables: the "From" price (lowest subquote price in the parent quote) with its currency, option count, treatment, expiry date, provider name and the parent quote reference. A single quote total does not exist and MUST NOT be offered as a variable.
 - **Post-acceptance money variables**: on `quote.accepted` (selected-provider outcome) and on every `booking.*` event, price, currency, date range and promotion variables resolve from the accepted snapshot recorded at acceptance, never from the live parent quote, Quote Option or package. Appointment variables on `booking.*` events resolve from the booking's current appointment, which an admin may change through FR-006; the snapshot keeps the accepted appointment as the baseline. `booking.rescheduled` carries both the previous and the new appointment. Allowed references are the parent quote, accepted subquote, quote version and acceptance record identifiers.
@@ -216,7 +223,7 @@ Notes:
 
 These event types may exist in backend roadmap but MUST NOT appear in admin UI until the backend supports them end-to-end and product enables them.
 
-| Category | Event (Display Name) | Example Backend Event Key | Notes |
+| Category | Event (Display Name) | Backend Event Key | Notes |
 |----------|-----------------------|---------------------------|-------|
 | Channels | SMS Delivery Enabled | `channel.sms_enabled` | SMS is future; **not available in MVP** |
 | Aftercare | Medication / Washing / Activity Reminders | `aftercare.medication_reminder` / `aftercare.washing_reminder` / `aftercare.activity_reminder` | Scheduled reminders referenced in system PRD; enable when milestone engine supports schedules |
@@ -254,9 +261,9 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
    - Push template: "Payment Due Soon"
    - SMS template: "Payment Reminder" (if enabled in a later phase)
 10. Admin configures delivery timing:
-    - Trigger: 3 days (72 hours) before installment due date
+    - Trigger: 3 days (72 hours) before installment due date (example only; the payment reminder schedule itself is the single payment reminder timing setting owned by FR-007)
     - Delivery time: 9:00 AM in recipient's local timezone
-    - Retry logic: Retry once after 1 hour if email delivery fails
+    - Retry logic: the platform default retry rule (retry on, up to 3 retries, 1 hour apart), or different values set for this notification
 11. Admin configures escalation rules (optional):
     - If payment still not received 24 hours after reminder, escalate to admin billing team
 12. Admin previews notification templates with sample data
@@ -299,6 +306,7 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
   5. System pauses rule and stops triggering notifications for this event
   6. Admin reactivates rule when ready by toggling status back to "Active"
 - **Outcome**: Notifications paused temporarily; no notifications lost (system queues events and evaluates when rule reactivated if within retry window)
+- **Note**: A rule for an event on the Non-Disableable list cannot be paused; its toggle is locked. Rules are never deleted, only switched off
 
 **A3: Admin Creates Multi-Language Notification Template**:
 
@@ -325,8 +333,8 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
   2. Email server returns bounce error (invalid address or mailbox full)
   3. System logs failed delivery with error code and timestamp
   4. System evaluates retry configuration for this notification type
-  5. If retry enabled, system queues retry attempt for 1 hour later
-  6. After retry attempts exhausted (max 3 retries), system marks notification as "Failed - Permanent"
+  5. If retry enabled, system queues a retry after the retry interval (platform default 1 hour; see General Module Rule 7)
+  6. After retries are exhausted (platform default 3; an admin may set 1 to 5), system marks notification as "Failed - Permanent"
   7. System flags patient account with "Email delivery issue" indicator
   8. Admin receives alert if event is critical (e.g., payment confirmation)
   9. Admin contacts patient via alternative channel (phone, in-app message) to update email address
@@ -345,15 +353,16 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
   7. System validates successfully and saves template
 - **Outcome**: Template validation prevents runtime errors; admin corrects variable before activation
 
-**B3: Duplicate Rules for Same Event (Not Possible in Catalog-Based UI)**:
+**B3: Admin Adds Another Rule for the Same Event**:
 
-- **Trigger**: Admin attempts to create a second rule for the same event type
+- **Trigger**: Admin wants a second rule for an event that already has one (e.g., different recipients, channels or timing)
 - **Steps**:
   1. Admin navigates to `Settings → Alerts & Notifications`
-  2. System displays one canonical configuration entry per backend event type (event catalog row)
-  3. Admin selects the event (e.g., "Quote Submitted") and clicks "Configure"
-  4. System opens the existing configuration for that event; there is no "create duplicate rule" action
-- **Outcome**: Conflicting duplicate rules cannot exist because configuration is **one-per-event** in the admin UI
+  2. Admin clicks "Add Rule" and selects the event from the event catalog (e.g., "Quote Submitted")
+  3. System opens the Rule Editor with a new rule in Draft status for that event
+  4. Admin enters a Rule Name; if another rule for the same event already uses that name, system shows an error and does not save
+  5. Admin saves the rule and, when ready, activates it
+- **Outcome**: An event can have several rules, each switched on and off separately. Rule Name is unique per event. Rules are never deleted, only switched off
 
 ---
 
@@ -376,14 +385,21 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 | Rules List – Rule Row: Channels | icon set | Yes | Enabled channels (email icon, push icon; SMS icon shown only post‑MVP when SMS is enabled) | Display only |
 | Rules List – Rule Row: Status | badge | Yes | Active (green), Paused (yellow), Draft (gray) | Display only |
 | Rules List – Rule Row: Last Modified | datetime | Yes | Timestamp of last modification | Display in admin's local timezone |
-| Rules List – Rule Row: Actions | button group | Yes | Configure, Test, Deactivate/Activate (and Delete if permitted) | Permission-based visibility |
+| Rules List – Rule Row: Actions | button group | Yes | Configure, Test, Pause/Activate. There is no Delete action; a rule is only switched off | Permission-based visibility; Pause is not offered for events on the Non-Disableable list |
+| Add Rule | button | Yes | Starts a new rule in Draft status for a chosen event from the event catalog, including an event that already has a rule (see Workflow B3) | Permission-based visibility; Rule Name must be unique for that event |
+| Notification Analytics | dashboard panel | Yes | Delivery metrics for the selected period: total sent, delivered, failed, opened (email) and clicked (email), grouped by event type, channel and recipient type (REQ-030-010) | Display only; date range filter; read from the delivery logs |
+| Failed Deliveries | drill-down list | No | Opens from the failed count in Notification Analytics and lists each failed delivery with masked recipient, event type, channel, failure reason, status (Failed - Permanent or Failed - Service Outage) and timestamp; admin can filter by failure reason and export to CSV | Recipient contact masked per Privacy Rule 1 |
+| Quiet Hours | time range | Yes | The one platform-wide period during which non-urgent notifications are held and sent after it ends. Set only here by an admin; recipients and providers cannot set their own | Default: 10 PM to 7 AM in the recipient's local time; start and end must differ; critical notifications are not held |
+| Notification Rate Limit | number | Yes | Maximum number of notifications one recipient receives per hour (critical notifications exempt) | Whole number, min 1; default 10 |
+| Transplant Progress Reminder Schedule | number + unit | Yes | How often the default patient progress reminder is sent after treatment, and for how long. The patient may change or switch off their own reminders; FR-038 refers to this schedule | Default: once a month for 12 months after treatment |
 
 **Business Rules**:
 
 - Rules grouped by event category (Booking, Payment, Aftercare, etc.) for easier navigation
 - Active rules displayed with green status badge; paused rules with yellow badge
-- Critical event rules (payment confirmations, procedure reminders) cannot be deleted, only paused
-- Deleting a rule requires confirmation prompt: "This will stop notifications for this event. Continue?"
+- Rules are never deleted; an admin switches a rule off (Pause) and on again (Activate). A rule for an event on the Non-Disableable list (Business Rules, Admin Editability Rules) cannot be paused and its toggle is locked
+- Pausing a rule requires confirmation prompt: "This will stop notifications for this event. Continue?"
+- An event can have several rules; "Add Rule" creates another one for the same event
 - Testing a rule sends sample notification to admin's registered email/phone immediately
 - Clicking a rule row (or the Event Name link / "Configure" action) opens **Screen 2: Alerts & Notifications (Rule Editor)** for that event
 - Rule Editor MUST include a clear "Back to list" / breadcrumb link returning to the Rules Dashboard with the previous filters preserved
@@ -413,7 +429,7 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 | Email Template | select (dropdown) | Conditional | Template to use for email (required if email enabled) | Must select template if channel enabled |
 | Push Notification Channel | toggle (on/off) | No | Enable push notification delivery | Default: on for patients/providers |
 | Push Template | select (dropdown) | Conditional | Template for push notification (required if push enabled) | Must select template if channel enabled |
-| SMS Channel | toggle (on/off) | No | Enable SMS delivery (premium feature). **Hidden/disabled in MVP**; only shown when SMS delivery is enabled in S-03 in a post‑MVP phase | Default: off; admin approval required |
+| SMS Channel | toggle (on/off) | No | Enable SMS delivery (premium feature). **Hidden/disabled in MVP**; only shown when SMS delivery is enabled in S-03 in a post‑MVP phase. **Future phase:** this channel is kept in the rule design but is not offered until that phase | Default: off; admin approval required |
 | SMS Template | select (dropdown) | Conditional | Template for SMS (required if SMS enabled in a future phase) | Must select template if channel enabled |
 | Delivery Timing | select (dropdown) | Yes | When to send notification (Immediate, Scheduled, Delayed) | Predefined options |
 | Schedule Time | datetime picker | Conditional | Specific time to send (required if Scheduled selected) | Future datetime only |
@@ -421,22 +437,24 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 | Delivery Timezone | select (dropdown) | Yes | Timezone for delivery (Recipient Local Time, UTC, Specific Timezone) | Default: Recipient Local Time |
 | Retry Configuration | toggle (on/off) | No | Enable automatic retry for failed deliveries | Default: on |
 | Max Retry Attempts | number | Conditional | Maximum retry attempts (required if retry enabled) | Min 1, max 5, default 3 |
-| Retry Interval | number + unit | Conditional | Time between retries (e.g., "1 hour", "6 hours") | Min 1 hour, max 24 hours |
+| Retry Interval | number + unit | Conditional | One fixed time between retries (e.g., "1 hour", "6 hours") | Min 1 hour, max 24 hours, default 1 hour |
 | Escalation Rules | toggle (on/off) | No | Enable escalation if condition not met | Default: off for non-critical events |
 | Escalation Condition | textarea | Conditional | Condition for escalation (e.g., "Payment not received within 24 hours") | Max 500 chars |
 | Escalation Recipients | multi-select | Conditional | Admin roles to notify on escalation | Required if escalation enabled |
-| Rule Status | select (dropdown) | Yes | Active, Paused, Draft | Default: Draft for new rules |
+| Critical - Cannot Opt Out | toggle (on/off) | No | Marks this notification type as critical: it is delivered through at least one channel even when the recipient has opted out | Default: off; admin only |
+| Rule Status | select (dropdown) | Yes | Active, Paused, Draft | Default: Draft for new rules; Paused is not allowed for events on the Non-Disableable list |
 
 **Business Rules**:
 
 - **MVP**: At least one delivery channel (email or push) must be enabled (SMS is hidden/disabled)
 - **Post‑MVP**: SMS may be enabled where available, but at least one channel must be enabled overall
-- If event is time-sensitive (payment reminder, appointment reminder), admin must configure retry logic
+- Retry follows the platform default (General Module Rule 7) unless the admin sets different values for this notification
+- A rule for an event on the Non-Disableable list cannot be set to Paused
 - SMS channel requires admin approval and incurs additional cost per message
 - Template selection filtered by channel type (only email templates shown for email channel)
 - Delivery timezone "Recipient Local Time" automatically adjusts delivery time based on recipient's profile timezone
 - Escalation rules only available for critical event types (payment, booking, medical concerns)
-- Draft rules not executed by system until status changed to Active
+- Draft rules not executed by system until status changed to Active; a new rule always starts as Draft
 - Paused rules can be reactivated without losing configuration
 
 **Notes**:
@@ -457,7 +475,7 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
-| Template Name | text | Yes | Internal name for template | Max 100 chars, unique per event + channel |
+| Template Name | text | Yes | Internal name for template | Max 100 chars, unique per event, channel and language |
 | Event Type | select (dropdown) | Yes | Event this template applies to | Predefined event list |
 | Channel Type | select (dropdown) | Yes | Delivery channel (Email, Push Notification; SMS post‑MVP only) | Fixed at creation (cannot change) |
 | Language | select (dropdown) | Yes | Template language (locale) | Must be in supported locales list (FR-021); can create multiple language versions |
@@ -495,13 +513,13 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 
 ### General Module Rules
 
-- **Rule 1**: All notification rule changes logged in audit trail with admin user ID, timestamp, old configuration, and new configuration
-- **Rule 2**: Critical event notifications (payment confirmations, procedure reminders, medical escalations) cannot be deleted, only paused temporarily
-- **Rule 3**: Exactly **one** notification rule configuration exists per event type (one row per backend event in the catalog UI); duplicate rules for the same event type are not supported
+- **Rule 1**: Every change to a notification rule is recorded in the audit trail as set out in REQ-030-020
+- **Rule 2**: Notification rules are never deleted, only switched off (paused). A rule for an event on the Non-Disableable list (see Admin Editability Rules) cannot be paused
+- **Rule 3**: An event type can have **several** notification rules. Rule Name must be unique among the rules of one event; an admin adds another rule for an event with "Add Rule"
 - **Rule 4**: Notification templates must be activated before they can be selected in notification rules
 - **Rule 5**: All timestamps in notifications displayed in recipient's local timezone (derived from profile settings)
-- **Rule 6**: System enforces rate limiting per recipient to prevent notification spam: maximum 10 notifications per hour per recipient (critical notifications exempt)
-- **Rule 7**: Notification delivery retries follow exponential backoff: 1st retry after 1 hour, 2nd retry after 3 hours, 3rd retry after 6 hours (configurable per rule)
+- **Rule 6**: System enforces rate limiting per recipient to prevent notification spam: a maximum number of notifications per hour per recipient (critical notifications exempt); the admin sets the limit and the default is 10
+- **Rule 7**: **General retry rule for every notification.** An email, push or in-app notification that fails to deliver is retried using the platform default: retry on, up to 3 retries, one fixed interval of 1 hour between attempts. An admin may set different values for an individual notification (1 to 5 retries, interval 1 to 24 hours). This rule is written once, here; every other feature states only that its notification retries follow it. Retries of work that is not a notification (for example failed payments, report generation or saving settings) are not covered
 
 ### Data & Privacy Rules
 
@@ -511,7 +529,6 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 - **Privacy Rule 4**: Recipients can opt out of non-critical notifications via profile preferences; system must respect opt-out for all non-critical notification types
 - **Privacy Rule 5**: **Provider-facing notifications MUST follow the existing patient-identity masking rules used across the platform**: until treatment is confirmed via completed payment, patient identifiers remain masked/hidden (examples in FR-003 and FR-006). Provider templates MUST NOT be able to reference unmasked patient name/email/phone pre-confirmation; they may only use the same masked display fields used elsewhere (e.g., `patient.display_name` which renders masked pre-confirmation and unmasked post-confirmation).
 - **Privacy Rule 6**: Notification logs retained for 90 days for operational purposes; then archived (immutable) for audit/compliance retention. **No hard deletes** of notification logs; when a user requests deletion, the system must **anonymize/redact personal identifiers** in archived logs per platform retention/compliance policy (see FR-023).
-- **Audit Rule**: All notification rule modifications logged with admin user ID, timestamp, change summary, and reason (if provided)
 - **GDPR**: Recipients can request export of all notifications sent to them; system provides notification history in machine-readable format (JSON/CSV)
 
 ### Admin Editability Rules
@@ -523,16 +540,17 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 - Recipient targeting rules (who receives notifications based on role, relationship, event context)
 - Channel preferences per event type (enable/disable email, push, SMS)
 - Delivery timing configuration (immediate, scheduled, delayed)
-- Retry logic parameters (max attempts, interval between retries)
+- Retry logic parameters (max attempts, interval between retries) for an individual notification, overriding the platform default
+- Notification rate limit per recipient (default 10 per hour; critical notifications exempt)
+- Transplant progress reminder schedule (default once a month for 12 months after treatment)
 - Escalation rules for time-sensitive notifications
-- Notification delivery hours (e.g., no non-urgent notifications between 10 PM - 7 AM recipient local time)
+- Quiet hours: one platform-wide period for non-urgent notifications (default 10 PM to 7 AM recipient local time), set by admins only
 
 **Fixed in Codebase (Not Editable)**:
 
 - Core event definitions (system events that can trigger notifications - e.g., "Quote Submitted / Ready", "Payment Received / Receipt")
 - Variable schema per event type (which variables available in notification templates per event)
 - Maximum retry attempts (hard limit: 5 retries to prevent infinite loops)
-- Rate limiting thresholds (max 10 notifications per hour per recipient)
 - Encryption algorithms for notification content (AES-256 at rest, TLS 1.3 in transit)
 - Delivery channel integrations (SMTP provider, push notification service, SMS gateway API)
 
@@ -566,7 +584,7 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 
 **Configurable with Restrictions**:
 
-- SMS channel availability: Admin can enable SMS for specific event types, but each SMS incurs cost; requires budget approval for high-volume events
+- **Future phase:** SMS channel availability: Admin can enable SMS for specific event types, but each SMS incurs cost; requires budget approval for high-volume events
 - Notification testing: Admins can send test notifications to themselves or designated test accounts; cannot send to production recipients without rule activation
 - Template versioning: Admins can create new template versions; system retains previous versions for audit; “revert” creates a **new** version copied from a selected prior version and requires admin confirmation
 
@@ -601,7 +619,7 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 - **SC-014**: Push notification delivery initiated within 1 minute of notification trigger for 95% of push notifications
 - **SC-015**: System processes 1,000+ concurrent notification deliveries without performance degradation
 - **SC-016**: Notification delivery success rate: 95%+ for email, 98%+ for push
-- **SC-017**: Failed notification retries executed within configured intervals (e.g., 1 hour, 3 hours, 6 hours) with 98%+ punctuality
+- **SC-017**: Failed notification retries executed within the configured retry interval (platform default 1 hour) with 98%+ punctuality
 
 ### Business Impact Metrics
 
@@ -625,11 +643,19 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 
 - **FR-001 / Module P-01**: Auth & Profile Management (Patient)
   - **Why needed**: Requires patient profile data for notification personalization (name, email, phone, language preference, timezone)
-  - **Integration point**: S-03 Notification Service queries P-01 APIs to retrieve recipient profile data before rendering templates
+  - **Integration point**: S-03 Notification Service queries P-01 APIs to retrieve recipient profile data before rendering templates; the patient profile screens show and edit the patient notification preferences owned by FR-030
 
 - **FR-009 / Module PR-01**: Auth & Team Management (Provider)
   - **Why needed**: Requires provider profile and team member data for notification routing
   - **Integration point**: S-03 queries PR-01 APIs to determine which provider team members receive notifications based on roles
+
+- **FR-020 / Module S-03**: Notification Service
+  - **Why needed**: FR-020 delivers and lists the notifications that the rules, templates, quiet hours, rate limit and retry rule configured here produce
+  - **Integration point**: S-03 reads the active rules and templates from FR-030 for every event; FR-020 follows the general retry rule (General Module Rule 7)
+
+- **FR-032 / Module PR-06**: Profile & Settings Management
+  - **Why needed**: Provider notification preferences and provider team routing are owned by FR-030
+  - **Integration point**: The provider profile and settings screens show and edit those records; mandatory provider events are never suppressed by them
 
 - **FR-031 / Module A-09**: Admin Access Control & Permissions
   - **Why needed**: Notification configuration requires granular admin permissions (some admins configure rules, others only view analytics)
@@ -640,7 +666,7 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
   - **Integration point**: P-02 publishes inquiry events to S-03 Notification Service for evaluation against notification rules
 
 - **FR-004 / FR-005 / Module PR-02, P-02**: Quote Submission; Quote Comparison & Acceptance
-  - **Why needed**: FR-004 produces the quote lifecycle events (`quote.submitted`, `quote.updated`, `quote.expiring_soon`, `quote.expired`, `quote.withdrawn`); FR-005 produces `quote.accepted` with its outcomes and records the acceptance and accepted snapshot that post-acceptance money variables read
+  - **Why needed**: FR-004 produces the quote lifecycle events (`quote.submitted`, `quote.updated`, `quote.expiring_soon`, `quote.expired`, `quote.restored`, `quote.withdrawn`); FR-005 produces `quote.accepted` with its outcomes and records the acceptance and accepted snapshot that post-acceptance money variables read
   - **Integration point**: Quote and acceptance events are published to S-03 with parent quote, subquote, quote version and acceptance record identifiers
 
 - **FR-006 / Module P-03**: Booking & Scheduling
@@ -660,8 +686,8 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
   - **Integration point**: P-05 publishes aftercare events to S-03 Notification Service for notification triggering
 
 - **FR-037 / FR-038 / Module P-05**: Monitor Your Hair Loss / Monitor Your Transplant Progress
-  - **Why needed**: Monitoring case events trigger notifications (assignment pending, provider assigned, provider withdrawn, provider reassigned, advice posted, completed, export ready, converted)
-  - **Integration point**: P-05 publishes `monitoring.*` events to S-03 Notification Service for notification triggering
+  - **Why needed**: Monitoring case events trigger notifications (assignment pending, provider assigned, provider withdrawn, provider reassigned, advice posted, completed, export ready, converted to inquiry, aftercare conversion started, converted to aftercare)
+  - **Integration point**: P-05 publishes `monitoring.*` events to S-03 Notification Service for notification triggering; the transplant progress reminder schedule is set in FR-030 and FR-038 only refers to it
 
 - **FR-015 / FR-016 / Modules A-02, A-01**: Provider Management & Onboarding; Patient Management & Oversight
   - **Why needed**: Provider suspension/deactivation (FR-015 Alternative Flow A5 / Screen 4) cancels affected inquiries/cases and triggers patient, admin-support, and provider status notifications; admin-support alerts deep-link to FR-016's Admin Support Required filter
@@ -763,7 +789,7 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 - **Integration 3**: S-03 Notification Service integrates with external SMTP, push, and SMS services via RESTful APIs
   - **Data format**: JSON payloads conforming to external service API specifications
   - **Authentication**: API keys stored in secure vault (AWS Secrets Manager, HashiCorp Vault)
-  - **Error handling**: If external service returns 5xx error, retry with exponential backoff (max 3 retries); if all retries fail, mark notification as failed and alert admin
+  - **Error handling**: If external service returns 5xx error, retry following the general retry rule (General Module Rule 7); if all retries fail, mark notification as failed and alert admin
 
 ### Scalability Considerations
 
@@ -783,12 +809,12 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 - **Authorization**: Granular permission checks enforced via FR-031 permission matrix; some admins can configure rules, others only view analytics
 - **PII Redaction (Provider Pre-Confirmation)**: When the recipient is a provider and treatment is not yet confirmed via completed payment, S-03 MUST apply the same patient-identity masking rules used elsewhere in the platform (e.g., FR-003/FR-006) and MUST NOT include unmasked patient identifiers (full name, email, phone) in the provider recipient payload.
 - **Encryption**: Notification templates stored encrypted at rest (AES-256); decrypted only during template rendering in S-03 Notification Service
-- **Audit trail**: All notification rule modifications logged with admin user ID, timestamp, change summary, IP address; logs retained for 10 years for compliance
+- **Audit trail**: Notification rule changes are audited as set out in REQ-030-020
 - **Threat mitigation**:
-  - Rate limiting on notification delivery to prevent abuse (max 10 notifications per hour per recipient)
+  - Rate limiting on notification delivery to prevent abuse (admin-set limit per recipient, default 10 per hour)
   - Template validation to prevent XSS attacks (variables HTML-escaped during rendering)
   - SMTP authentication and SPF/DKIM/DMARC configured to prevent email spoofing
-  - Webhook signature verification for delivery status updates to prevent spoofed bounce notifications
+  - Webhook signature verification: See system PRD, Platform-Wide Rules: No card numbers stored
 - **Compliance**:
   - GDPR: Recipients can opt out of non-critical notifications; system respects opt-out preferences
   - CAN-SPAM: Email notifications include unsubscribe link for marketing emails (transactional emails exempt)
@@ -809,11 +835,11 @@ Admin needs to configure automated payment reminder notifications to reduce over
 **Acceptance Scenarios**:
 
 1. **Given** admin is logged into Admin Platform → Settings → Alerts & Notifications, **When** admin selects the "Payment Due Reminder" event from the event catalog and clicks "Configure", **Then** system displays the event configuration form with event-specific configuration options
-2. **Given** admin configures rule with email and push channels enabled, delivery timing "3 days before due date at 9:00 AM recipient local time", retry enabled (max 3 attempts), **When** admin clicks "Save Draft", **Then** system validates rule configuration and saves as draft status
+2. **Given** admin configures rule with email and push channels enabled, delivery timing "3 days before due date at 9:00 AM recipient local time", retry enabled (platform default of 3 retries, or different values the admin sets), **When** admin clicks "Save Draft", **Then** system validates rule configuration and saves as draft status
 3. **Given** admin clicks "Test Rule", **When** system generates test notification with sample payment data (patient name "Test Patient", amount due "$200", due date "2025-11-16"), **Then** admin receives test email and push notification within 2 minutes with correct personalized content
 4. **Given** admin reviews test notification and verifies content correct, **When** admin clicks "Activate Rule", **Then** system prompts for confirmation, activates rule upon confirmation, and displays success message "Notification rule activated successfully"
 5. **Given** notification rule active, **When** patient has installment payment due in 3 days (due date 2025-11-16, current date 2025-11-13), **Then** system triggers notification at 9:00 AM patient local time on 2025-11-13 and delivers email and push notification to patient
-6. **Given** email delivery fails due to invalid email address, **When** system detects bounce error, **Then** system logs failed delivery, queues retry attempt for 1 hour later, and alerts admin if retry also fails
+6. **Given** email delivery fails due to invalid email address, **When** system detects bounce error, **Then** system logs failed delivery, queues a retry after the retry interval (platform default 1 hour), and alerts admin if the retries also fail
 
 ---
 
@@ -886,8 +912,11 @@ Admin needs to monitor notification delivery performance to identify and resolve
   - For critical notifications (payment confirmations, appointment reminders), system overrides opt-out and delivers via at least one channel (displays banner in-app explaining why critical notification delivered despite opt-out)
   - Admin can designate notification types as "Critical - Cannot Opt Out" in rule configuration
 
+- What happens when a recipient has **both Email and Push switched off**?
+  - Nothing is sent by email or push, and the in-app entry is still always created
+
 - What occurs if **external notification service (SMTP, push, SMS) experiences prolonged outage** (e.g., 24 hours)?
-  - System queues notifications for retry with exponential backoff (up to 24-hour window)
+  - System queues notifications for retry at the retry interval (up to 24-hour window)
   - If service restored within 24 hours, queued notifications delivered (may result in burst of deliveries)
   - If outage exceeds 24 hours, system marks notifications as "Failed - Service Outage" and alerts admin
   - Admin can manually re-trigger notifications after service restored or switch to backup notification provider if configured
@@ -905,7 +934,7 @@ Admin needs to monitor notification delivery performance to identify and resolve
 - **REQ-030-005**: System MUST support optional SMS notifications for critical events (payment reminders, appointment alerts) with admin approval and cost tracking in post‑MVP phases; **MVP does not send SMS**.
 - **REQ-030-006**: System MUST provide notification template editor supporting rich text (email), plain text (push, SMS), dynamic variables, and multi-language content. SMS templates, if configured, are only used when SMS delivery is enabled in a later phase.
 - **REQ-030-007**: System MUST validate notification templates before activation to ensure all variables exist in event payload and template syntax is valid
-- **REQ-030-008**: System MUST automatically retry failed notification deliveries according to configured retry logic (max 3-5 attempts with exponential backoff)
+- **REQ-030-008**: System MUST automatically retry failed notification deliveries using the general retry rule (General Module Rule 7): by default up to 3 retries at one interval of 1 hour; an admin may set 1 to 5 attempts and a different interval for an individual notification
 - **REQ-030-009**: System MUST log all notification deliveries (successful and failed) with recipient (masked), event, channel, timestamp, delivery status, and failure reason (if applicable)
 - **REQ-030-010**: System MUST provide real-time notification delivery analytics dashboard with metrics: total sent, delivered, failed, opened (email), clicked (email), grouped by event type, channel, recipient type
 
@@ -920,17 +949,17 @@ Admin needs to monitor notification delivery performance to identify and resolve
 
 - **REQ-030-015**: System MUST encrypt notification templates at rest using AES-256; decrypt only during template rendering in S-03 Notification Service
 - **REQ-030-016**: System MUST mask recipient contact information (email, phone) in admin interfaces to protect privacy (e.g., "mar***@example.com", "+44***1234")
-- **REQ-030-017**: System MUST enforce rate limiting to prevent notification spam: maximum 10 notifications per hour per recipient (critical notifications exempt from rate limiting)
+- **REQ-030-017**: System MUST enforce rate limiting to prevent notification spam: a maximum number of notifications per hour per recipient, set by admins with a default of 10 (critical notifications exempt from rate limiting)
 - **REQ-030-018**: System MUST HTML-escape all template variables during rendering to prevent XSS attacks from user-generated content
 - **REQ-030-019**: System MUST respect recipient opt-out preferences for non-critical notifications (marketing, general updates); critical notifications (payment, appointment) override opt-out with in-app explanation
-- **REQ-030-020**: System MUST log all notification rule modifications with admin user ID, timestamp, change summary, IP address; logs retained for 10 years for audit compliance
+- **REQ-030-020**: System MUST record every notification rule change in the audit trail with admin user ID, timestamp, change summary, old and new configuration, IP address and reason (if provided); audit log retention follows the system PRD, Platform-Wide Rules: One 10-year retention period
 
 ### Integration Requirements
 
 - **REQ-030-021**: System MUST integrate with SMTP service (SendGrid, Amazon SES, Mailgun) for email delivery via RESTful API or SMTP protocol
 - **REQ-030-022**: System MUST integrate with push notification services (Firebase Cloud Messaging for mobile, Web Push API for web) for push notification delivery
 - **REQ-030-023**: System MUST integrate with SMS gateway (Twilio, Vonage) for SMS delivery via RESTful API (optional, admin-enabled)
-- **REQ-030-024**: System MUST receive delivery status updates (bounces, opens, clicks) from external services via webhooks with signature verification to prevent spoofing
+- **REQ-030-024**: System MUST receive delivery status updates (bounces, opens, clicks) from external services via webhooks; webhook signature verification: See system PRD, Platform-Wide Rules: No card numbers stored
 - **REQ-030-025**: System MUST publish notification events to audit log service (Elasticsearch, CloudWatch Logs) for compliance and troubleshooting
 - **REQ-030-026**: System MUST list `aftercare.provider_reassigned` (FR-011 producer; Patient and new aftercare provider) as a locked mandatory event that FR-032 preferences cannot suppress, and MUST raise `provider.status_cancellation_admin_support`, never `booking.provider_fault_replacement`, when a provider-status event leaves an `In Progress` booking open with `supportRequired` for an admin decision
 
@@ -939,20 +968,28 @@ Admin needs to monitor notification delivery performance to identify and resolve
 ## Key Entities
 
 - **Entity 1 - Notification Rule**: Represents configuration for triggering notifications based on system events
-  - **Key attributes**: rule_id (unique), rule_name, event_type, event_category, recipient_targeting_rules (JSON), channel_preferences (email/push/SMS enabled), email_template_id, push_template_id, sms_template_id, delivery_timing (immediate/scheduled/delayed), delivery_timezone, retry_enabled, max_retry_attempts, retry_interval, escalation_enabled, escalation_conditions (JSON), escalation_recipients (admin role IDs), rule_status (active/paused/draft), created_by (admin_user_id), created_at, updated_at, activated_at
-  - **Relationships**: One notification rule maps to one event type; one rule references one template per enabled channel; one rule can trigger many notification deliveries; many rules can be created by one admin user
+  - **Key attributes**: rule_id (unique), rule_name, event_type, event_category, recipient_targeting_rules (JSON), channel_preferences (email/push/SMS enabled), email_template_id, push_template_id, sms_template_id, delivery_timing (immediate/scheduled/delayed), delivery_timezone, retry_enabled, max_retry_attempts, retry_interval, escalation_enabled, escalation_conditions (free text, max 500 characters), escalation_recipients (admin role IDs), rule_status (active/paused/draft), created_by (admin_user_id), created_at, updated_at, activated_at
+  - **Relationships**: One notification rule maps to one event type, and one event type can have several rules (rule_name unique per event); one rule references one template per enabled channel; one rule can trigger many notification deliveries; many rules can be created by one admin user
 
 - **Entity 2 - Notification Template**: Represents reusable content template for notifications
   - **Key attributes**: template_id (unique), template_name, event_type, channel_type (email/push/SMS), language (en-US/tr-TR/etc.), content (JSON: subject, body, formatting), variables (array of variable names used in template), status (active/draft/archived), version_number, previous_version_id (for versioning), created_by (admin_user_id), created_at, updated_at, activated_at
   - **Relationships**: One template maps to one event type and one channel type; one template can have multiple language versions (sibling templates); one template can be referenced by many notification rules; many templates can be created by one admin user
 
 - **Entity 3 - Notification Delivery Log**: Represents record of individual notification delivery attempt
-  - **Key attributes**: delivery_id (unique), rule_id, template_id, recipient_type (patient/provider/admin), recipient_id (user_id), recipient_contact (email/phone - masked in admin interface), event_type, event_id (e.g., booking_id, payment_id), channel_type (email/push/SMS), delivery_status (sent/delivered/opened/clicked/failed), failure_reason (if failed), retry_count, delivered_at, opened_at (email only), clicked_at (email only), notification_content_snapshot (rendered template for audit), created_at
+  - **Key attributes**: delivery_id (unique), rule_id, template_id, recipient_type (patient/provider/admin), recipient_id (user_id), recipient_contact (email/phone - masked in admin interface), event_type, event_id (e.g., booking_id, payment_id), channel_type (email/push/SMS), delivery_status (sent/delivered/opened/clicked/failed/failed - permanent/failed - service outage), failure_reason (if failed), retry_count, delivered_at, opened_at (email only), clicked_at (email only), notification_content_snapshot (rendered template for audit), created_at
   - **Relationships**: One delivery log maps to one notification rule and one template; one delivery log maps to one recipient (user); many delivery logs can be created for one event (if multiple notification rules apply); one recipient can have many delivery logs
 
 - **Entity 4 - Notification Engagement Metrics**: Aggregated metrics for notification delivery performance
   - **Key attributes**: metric_id (unique), date_period (daily/weekly/monthly), event_type, channel_type, recipient_type, total_sent, total_delivered, total_failed, total_opened (email only), total_clicked (email only), delivery_rate (percentage), open_rate (percentage, email only), click_rate (percentage, email only), avg_delivery_time_seconds, failure_reasons_breakdown (JSON: count per failure reason), created_at
   - **Relationships**: Metrics aggregated from many notification delivery logs; one metric record per date period + event type + channel type + recipient type combination
+
+- **Entity 5 - Patient Notification Preferences**: One record per patient holding the global Email and Push choices (default on for new accounts); security notifications are not affected. Owned here; the patient profile screens in FR-001 show and edit it. Messaging notification preferences are part of this configuration
+  - **Key attributes**: patient_id, email_enabled, push_enabled
+
+- **Entity 6 - Provider Notification Preferences**: One record per provider with on/off choices per category (quote, schedule, treatment start, aftercare, review, promotion/discount) and for email and in-app delivery. Mandatory provider events are never suppressed by it. Owned here; the provider profile and settings screens in FR-032 show and edit it
+  - **Key attributes**: provider_id, quote_notifications, schedule_notifications, treatment_start_notifications, aftercare_notifications, review_notifications, promotion_notifications, email_enabled, push_enabled, last_updated_at
+
+- **Entity 7 - Provider Team Notification Routing**: Which provider team members receive which notifications, based on their role (team roles come from FR-009). Owned here; provider team screens show and edit it
 
 ---
 
@@ -978,6 +1015,7 @@ Admin needs to monitor notification delivery performance to identify and resolve
 | 2026-10-18 | 1.15 | Final audit corrections ([CR-FR030-20261016-01](./change-request-2026-10-16-mtg002-quote-model-alignment.md)): added `booking.rescheduled` as a mandatory FR-006 event to the patient and provider for the admin appointment change (Q42); `booking.scheduled` now goes to the patient only, is mandatory (added to the Non-Disableable list) and also fires for an admin-authored replacement acceptance (Q42); booking notices read the booking's current appointment while the snapshot keeps the accepted baseline (Q42); the Non-Disableable list now exempts every mandatory provider event from FR-032 preferences, not only `quote.cancelled_inquiry`; `provider.status_cancellation_admin_support` also covers Aftercare cases flagged for aftercare reassignment (Q36). Later the same day (decisions Q45, Q47): added the mandatory FR-011 event `aftercare.provider_reassigned` (Patient and new aftercare provider, locked, no admin alert, exempt from FR-032 preferences); an `In Progress` booking under a provider-status event stays `In Progress` with `supportRequired` and raises `provider.status_cancellation_admin_support`, and `booking.provider_fault_replacement` applies only before treatment starts; added REQ-030-026. | Product Owner / Documentation |
 | 2026-10-27 | 1.16 | Catalog sync with FR-020 v2.12 ([CR-FR020-20261027-01](../fr020-notifications-alerts/change-request-2026-10-27-admin-support-recipients-status-email-timing.md) and [CR-FR003-20261027-02](../fr003-inquiry-submission/change-request-2026-10-27-pre-acceptance-redistribution.md)): `provider.status_cancellation_patient` adds the two pre-acceptance variants ("We are finding new offers for you." when the inquiry is redistributed automatically, and a confirmation request when the patient had explicitly selected the affected provider); `provider.status_cancellation_admin_support` goes to admins with the FR-031 Respond to Support permission; `provider.suspended` / `provider.deactivated` go to the provider Owner only and, for a scheduled change with "Notify Provider" checked, are sent when the change is created (with the effective date) and again when it takes effect, with no email at either point when unchecked; `provider.reactivated` and `provider.scheduled_change_cancelled` go to the provider Owner only. Updated the catalog rows, the Non-Disableable rules, and the FR-015 / FR-016 integration point. | Product Owner / Documentation |
 | 2026-10-28 | 1.17 | Product Owner decision 2026-10-28 (FR-015 backend confirmations); no Change Request. Catalog sync with FR-020 v2.13: new Provider/Compliance entry `provider.login_email_changed` (admin changes the Owner login email in FR-015; email to the old and the new address; mandatory security notice, toggle locked), added to the non-disableable provider events and the FR-015 integration point. Follow-up the same day: catalog sync with the FR-020 v2.13 follow-up, the pre-acceptance `provider.status_cancellation_patient` text names the clinic ("[Clinic] is no longer available. Your other offers are still open." or "[Clinic] is no longer available. We are finding new offers for you.") | Claude (AI Assistant) |
+| 2026-11-20 | 1.18 | Requirements graph programme baseline: owner rulings applied. Main changes: FR-030 owns all notification preference records (patient, provider, team routing, messaging) and every event that produces a notification; event keys are final; one platform-wide quiet-hours setting replaces provider business hours; rate limit is admin-editable (default 10 per hour); one general retry rule (platform default 3 retries at 1 hour, admin may override per notification) replaces the 1/3/6 hour sequence; several rules per event with Add Rule and no Delete (rules are only switched off, locked events cannot be paused); new rules start as Draft; template names unique per event, channel and language; escalation condition is free text; Screen 1 gains analytics, failed-deliveries, quiet-hours, rate-limit and transplant-reminder fields and Screen 2 gains Critical - Cannot Opt Out; two new delivery statuses; audit Rules merged into REQ-030-020; new events quote.restored, monitoring.aftercare_conversion_started, payout.paused_problem_raised, payout.funds_released, payout.cancellation_charge_deducted; inquiry.cancelled excluded for providers with a live quote; treatment.completed patient copy gains the problem deadline and support link; provider.onboarding_requested and provider.document_expiration_warning marked not triggered at launch; monitoring.converted renamed monitoring.converted_to_inquiry; SMS rules marked future phase; Entry Point 2 dropped; FR-020 and FR-032 added as dependencies; added monitoring.converted_to_aftercare to the catalogue; cross-document reconciliation (retention, system rule citations). No Change Request | Claude (AI Assistant) |
 
 ---
 
@@ -996,4 +1034,4 @@ Admin needs to monitor notification delivery performance to identify and resolve
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-011 Aftercare & Recovery Management PRD
-**Last Updated**: 2026-10-28
+**Last Updated**: 2026-11-20

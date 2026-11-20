@@ -3,7 +3,7 @@
 **Module**: A-09: System Settings & Configuration
 **Feature Branch**: `fr029-payment-system-config`
 **Created**: 2025-11-13
-**Version**: 1.14
+**Version**: 1.15
 **Status**: 🟡 Revised — Pending Consolidated Verification
 **Source**: FR-029 from system-prd.md (lines 1427-1455) + Hairline-AdminPlatformPart2.txt (lines 128-230)
 **Change Request**: [CR-FR029-20261014-01 — Provider-specific Flat Rate commission alignment with FR-015](change-request-2026-10-14-provider-flat-rate-commission.md)
@@ -54,7 +54,7 @@ The module delivers value by:
 - Patient payments are collected into the Stripe account mapped to the patient’s region; provider payouts are later executed in FR-017 using those funds (provider bank details in FR-032). Providers do not configure Stripe accounts here.
 - Providers have no direct interaction with payment system configuration
 - Providers see booking payments processed according to deposit rates and installment rules
-- Provider payout schedules follow the Stripe account’s settlement rules, but payout processing is handled in FR-017 (Admin Billing & Financial Management)
+- Payout to a clinic follows its payout rail: automatic release on the Stripe Connect rail, or the one platform-wide settlement period set in this module for manually paid clinics; payout processing is handled in FR-017 (Admin Billing & Financial Management)
 
 **Admin Platform (A-09: System Settings & Configuration)**:
 
@@ -66,12 +66,13 @@ The module delivers value by:
 - Admins configure deposit rate percentage (20-30%) globally or per provider
 - Admins configure commission settings: a platform global default percentage (15-25%) plus provider-specific commission scopes for selected providers using either the Percentage model (0-100%) or the Flat Rate model (fixed amount > 0 per completed procedure); FR-015 exposes the same provider-specific commission data inside the provider profile for single-provider management
 - Admins define split payment options (2-9 installments) and cutoff rules (e.g., 30 days before procedure)
+- Admins set the refund ladder (refund percentage by days before the procedure date), the late payment fee and the rescheduling fee, the deposit plan balance due and cancellation points, Hairline's share of a patient cancellation fee, the patient confirmation window and the settlement period for manually paid clinics, and turn payment methods on or off per region and currency
 - Admins monitor payment configuration health and receive alerts for rate protection thresholds
 - Admins audit configuration change history for compliance
 
 **Shared Services (S-02: Payment Processing Service)**:
 
-- Payment Processing Service routes patient payment transactions (deposits/installments/finals) to the appropriate Stripe account based on patient location
+- Payment Processing Service routes patient payment transactions (deposits/installments/finals) to the appropriate Stripe account based on the country on the patient's profile
 - Currency conversion service fetches real-time rates and applies admin-configured markup
 - Deposit calculation service applies configured deposit rate to booking totals
 - Commission calculation service applies the effective commission snapshot captured at booking confirmation, using an active provider-specific commission configuration when one exists for the provider or the FR-029 global default otherwise
@@ -214,7 +215,7 @@ The module delivers value by:
 3. Admin enables or disables specific installment options (checkboxes for 2, 3, 4, 5, 6, 7, 8, 9 installments)
 4. Admin configures cutoff date rule (e.g., "Full payment must be completed 30 days before procedure date")
 5. Admin sets minimum booking amount eligible for split payments (e.g., minimum $500 booking for installments)
-6. Admin configures late payment grace period (0-14 days) before booking cancellation (i.e., how many days after a missed installment due date the system waits before canceling the booking for non-payment)
+6. Admin configures late payment grace period (0-14 days), i.e., how many days after a missed installment due date the patient receives reminders before the late fee is charged; a missed installment never cancels the booking automatically
 7. Admin reviews preview showing example installment schedules for different booking amounts and dates
 8. Admin clicks "Save Split Payment Configuration"
 9. System validates cutoff date is reasonable (e.g., minimum 30 days, maximum 90 days)
@@ -238,7 +239,7 @@ The module delivers value by:
   5. System updates country-to-account mappings, replacing prior assignment with the new account
   6. System propagates updated mappings to Payment Processing Service
   7. System logs conflict resolution to audit trail
-- **Outcome**: New Stripe account assigned to region, replacing or supplementing previous assignment
+- **Outcome**: New Stripe account assigned to region, replacing the previous assignment
 
 **A2: Configure Provider-Specific Deposit Rate**:
 
@@ -281,19 +282,6 @@ The module delivers value by:
   5. Admin adjusts the manual rate if needed and clicks "Save"
   6. System removes the sync schedule for this pair, stores updated configuration, and logs change to audit trail
 - **Outcome**: Currency pair is now manually managed; rate only changes when admin edits it
-
-**A4: Configure Different Installment Options for Different Booking Amounts**:
-
-- **Trigger**: Admin wants to offer more installment options for higher-value bookings
-- **Steps**:
-  1. Admin creates multiple split payment rule tiers based on booking amount ranges
-  2. Admin sets tier 1: Bookings $500-$2,000 can use 2-4 installments
-  3. Admin sets tier 2: Bookings $2,001-$5,000 can use 2-6 installments
-  4. Admin sets tier 3: Bookings $5,001+ can use 2-9 installments
-  5. System validates tier ranges don't overlap and are logically ordered
-  6. System stores tiered split payment rules
-  7. System applies appropriate installment options based on booking amount during checkout
-- **Outcome**: Patients see installment options appropriate for their booking amount
 
 **B1: Stripe API Credential Validation Fails**:
 
@@ -372,7 +360,7 @@ The module delivers value by:
 - **Trigger**: Patient from country with no assigned Stripe account attempts booking
 - **Steps**:
   1. Patient selects country during booking flow (e.g., patient in South Africa)
-  2. Payment Processing Service queries payment configuration for patient's country
+  2. Payment Processing Service queries payment configuration for the country on the patient's profile
   3. System finds no Stripe account assigned to South Africa
   4. System checks for a Stripe account marked as "Global Fallback"
   5. If Global Fallback exists: System uses that Stripe account and logs warning to admin
@@ -402,9 +390,11 @@ The module delivers value by:
 | Supported Currencies | multi-select | Yes | Currencies this Stripe account can process (e.g., USD, EUR, GBP) | Must select at least one currency |
 | Default Currency | select | Yes | Default currency for this account | Must be one of selected supported currencies |
 | Account Status | toggle | Yes | Active or Inactive | Boolean (active = enabled for processing) |
+| Enabled Payment Methods | multi-select | Yes | Payment methods offered to patients for the regions and currencies this account serves. The method records are owned by FR-007B; this setting only turns each method on or off | Must select at least one method; a method can be offered only in a currency the account supports |
 
 **Business Rules**:
 
+- Payment methods are enabled or disabled per region and currency; FR-007 offers a patient only the methods enabled for the patient's region and the booking currency
 - Stripe API credentials must be validated before account can be activated (test connection to Stripe API)
 - One account per country/regional grouping (from FR-028); reassignments require explicit override
 - Country-level assignment supersedes group-level assignment for any country already in that group (most-specific mapping wins)
@@ -504,7 +494,7 @@ The module delivers value by:
 - Currency pairs must reference currencies that are enabled in the Currency Management screen (Screen 6)
 - If a pair is deleted or not configured for a target currency, the system collects payment in USD for transactions involving that currency (no conversion attempted). A note on this screen states: "Currency pairs not listed here will default to USD for payment collection."
 - Each pair independently tracks its own status. A source failure affects only pairs using that source; manual pairs are unaffected.
-- Status badges update automatically: green when last fetch succeeded and rate change is within threshold; yellow when rate protection threshold was breached in last 7 days or source is degraded; red when last fetch failed or source is down.
+- Status badges update automatically: green when last fetch succeeded and rate change is within threshold; yellow when the last sync breached the rate protection threshold or the source is degraded; red when last fetch failed or source is down. A yellow badge returns to green on the pair's next normal sync; there is no acknowledge action.
 
 **Notes**:
 
@@ -548,7 +538,7 @@ The module delivers value by:
   - Admin **must run "Test Connection & Fetch Rate" before saving** to verify the source can provide a rate for this pair. Save button is disabled until test succeeds.
   - After the initial save, the system schedules recurring syncs. The schedule is calculated from the time the pair is saved: if saved at 12:36 with a 6-hour interval, the next sync runs at 18:36, then 00:36, etc.
   - If a scheduled fetch fails, the system keeps the last successfully fetched rate, marks the pair status as red/error on the list, and sends an alert notification to the admin
-  - If the source assigned to this pair is later deleted, the pair gracefully switches to manual mode with the last fetched rate pre-filled as the manual base rate. Admin is notified of this change.
+  - A source assigned to this pair cannot be deleted while the pair references it. To remove the source, the admin first reassigns the pair to another source or converts it to manual mode, which pre-fills the last fetched rate as the manual base rate. No pair switches to manual mode automatically.
 - **Manual mode**:
   - Admin enters the base rate directly in the Manual Base Rate field
   - No sync schedule is created; rate only changes when admin manually edits and saves
@@ -620,16 +610,17 @@ The module delivers value by:
 | Cutoff Days | number | Yes | Days before procedure date that full payment must be completed | Range: 30-90 days, integer only |
 | Minimum Booking Amount | number | Yes | Minimum booking total required to qualify for installments (in USD) | Range: $100-$10,000, integer only |
 | Installment Frequency | display-only | N/A | Payment schedule frequency | Fixed: Monthly (30-day intervals) |
-| Late Payment Grace Period | number | Yes | Days after missed payment before booking cancellation | Range: 0-14 days, integer only |
+| Late Payment Grace Period | number | Yes | Days after a missed installment due date during which reminders are sent before the late fee is charged (the booking is never cancelled automatically) | Range: 0-14 days, integer only |
 
 **Business Rules**:
 
 - Cutoff days ensures patients complete full payment before procedure date (default: 30 days)
 - System automatically calculates available installment options based on booking date and procedure date
 - If time between booking and procedure is insufficient for selected installments given cutoff, system offers fewer installments
-- Installment amount calculation is always equal-split: booking total ÷ installment count (rounded to 2 decimal places; last installment absorbs rounding difference)
-- Minimum booking amount prevents installments for low-value bookings (reduces administrative overhead)
-- Late payment grace period allows patients short extension before booking cancellation (0 = no grace period)
+- Installment amount calculation is always equal-split: booking total ÷ installment count (rounded to each currency's own minor units; last installment absorbs rounding difference)
+- Minimum booking amount prevents installments for low-value bookings (reduces administrative overhead); it is stated in USD, and a booking total in another currency is converted to USD at the rate locked at FR-005 subquote acceptance before the comparison
+- Late payment grace period is the number of days after a missed installment due date during which the patient receives reminders and is not yet charged the late fee (0 = no grace period); when it passes without payment, the late payment fee set on Screen 7 is charged. A missed installment never cancels the booking automatically
+- This is one global configuration: there are no tiers, and no separate installment plan by booking amount or by region
 - Split payment configuration propagates to Payment Processing Service within 5 minutes (cache TTL)
 - Cannot modify split payment rules for bookings with active installment plans (changes apply to new bookings only)
 - System enforces a minimum 30-day cutoff before procedure date (per system booking/payment rules); admins may increase the cutoff up to 90 days
@@ -675,7 +666,7 @@ The module delivers value by:
 - **Single-provider edit from FR-015**: When an admin edits commission in FR-015 Tab 7 for a provider covered by a scope shared with other providers, the system removes that provider from the shared scope and creates a single-provider scope for it with the new values; the shared scope and its other providers are unchanged. The split is audit-logged with before/after state.
 - **Scheduled configuration**: Each provider has at most one pending future-dated configuration. Saving another future-dated configuration for the same provider replaces the pending one (logged); on its Effective Date the pending configuration becomes the active one automatically. Screen 5 and FR-015 Tab 7 show the same pending configuration, which FR-032 Screen 4 displays read-only to the provider.
 - The global default is percentage-only; the Flat Rate model is available for provider-specific scopes only
-- **Percentage model** (global default or provider scope): commission amount = booking total (the accepted subquote price after promotion, in the quote currency, from the acceptance snapshot) × snapshotted commission percentage (rounded to 2 decimal places; last payment absorbs rounding difference if needed)
+- **Percentage model** (global default or provider scope): commission amount = booking total (the accepted subquote price after promotion, in the quote currency, from the acceptance snapshot) × snapshotted commission percentage (rounded to the quote currency's own minor units; last payment absorbs rounding difference if needed)
 - **Flat Rate model** (provider scope only): commission amount = the snapshotted fixed amount, deducted once per completed procedure (FR-010 completion milestone), regardless of procedure price; it is not charged per package, per Subquote, or per installment
 - Flat Rate amounts are stored and snapshotted in their configured currency; this screen introduces no new currency conversion rule, and any conversion follows the existing FR-029 currency configuration and downstream FR-017 reconciliation handling
 - Commission configuration propagates to Payment Processing Service within 5 minutes (cache TTL)
@@ -685,7 +676,7 @@ The module delivers value by:
 
 - Display preview calculation per model: Percentage — "For $2,000 booking, 20% commission = $400"; Flat Rate — "$200 per completed procedure, regardless of booking total"
 - Provide "Add new provider scope", "Edit", and "Archive" actions matching the admin commission-screen design
-- Use FR-029 for global and bulk provider-scope updates; use FR-015 when the admin is already working inside a single provider profile alongside payout frequency
+- Use FR-029 for global and bulk provider-scope updates; use FR-015 when the admin is already working inside a single provider profile
 
 ---
 
@@ -710,7 +701,7 @@ The module delivers value by:
 - Currency codes are immutable and come from a system-maintained catalog; admins cannot add non-ISO or custom codes.
 - At least one currency must remain enabled at all times.
 - Exactly one enabled currency must be set as the system default.
-- If an admin attempts to disable a currency currently referenced by system configuration (e.g., used in Stripe account supported currencies, location starting prices, or active pricing configs), the system MUST warn and provide a safe resolution path (e.g., update dependent configs first) before allowing the disable.
+- If an admin attempts to disable a currency referenced only by configuration items (e.g., used in Stripe account supported currencies, location starting prices, or active pricing configs), the system MUST warn and provide a safe resolution path (e.g., update dependent configs first) before allowing the disable. A currency still used by quotes, bookings or instalment plans is not a warning case: it is blocked by the rule below.
 - Enabling/disabling currencies affects new configuration choices immediately; existing records retain their stored currency codes.
 - Disabling a currency is blocked while any sent quote that is not yet in a terminal state, any accepted booking that is not yet paid, or any open booking or instalment plan uses that currency. The admin sees the count of records still using it, and can disable the currency only when that count reaches zero.
 - Changing the Default Currency creates a new FR-026 Quote Configuration version, so the configuration version recorded on a quote identifies both the quote hours and the currency used. Quotes already sent keep the currency copied onto them at first send.
@@ -721,6 +712,47 @@ The module delivers value by:
 - This screen is the source of truth for currency dropdowns across Admin/Provider/Patient experiences (where applicable).
 - FR-017 Screen 1 ("Financial Reporting - Revenue Dashboard") initializes its reporting currency selector from this system default currency; the MVP seed value is USD unless an admin changes it later.
 - Provide quick actions: “Enable common set” (e.g., USD/EUR/GBP) and “Set Default” for an enabled currency.
+
+---
+
+### Screen 7: Refund, Fees and Settlement Settings
+
+**Purpose**: Allows admins to set the platform's refund ladder, the late payment fee, the rescheduling fee, the balance due and cancellation points for deposit plans, Hairline's share of a patient cancellation fee, the patient confirmation window and the settlement period for manually paid clinics in one place. These are one global record, not set per provider, per region or per currency. FR-006, FR-007, FR-007B, FR-015 and FR-017 read this record; the late payment grace period stays on Screen 4.
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|------------|------|----------|-------------|------------------|
+| Refund Ladder | band table | Yes | Refund percentage by how many days before the procedure date the booking is cancelled. Launch default: more than 30 days, 90 percent; 15 to 30 days, 50 percent; under 15 days, 0 percent | Percentage 0-100 per band; every number of days before the procedure date falls in exactly one band |
+| Late Payment Fee Type | radio | Yes | How the late payment fee is calculated: fixed amount or percentage | Fixed amount / Percentage |
+| Late Payment Fee Value | number | Yes | Value of the late payment fee, charged when the late payment grace period (Screen 4) passes without the installment being paid | Fixed amount: in the system default currency, precision per its minor units. Percentage: 0-100 percent |
+| Rescheduling Fee Type | radio | Yes | How the fee for rescheduling a booking is calculated: fixed amount or percentage | Fixed amount / Percentage |
+| Rescheduling Fee Value | number | Yes | Value of the rescheduling fee | Fixed amount: in the system default currency, precision per its minor units. Percentage: 0-100 percent |
+| Deposit Plan Balance Due Days | number | Yes | How many days before the treatment date the balance of a deposit plan is due. Default: 7 days | Whole number of days |
+| Unpaid Balance Cancellation Point | number | Yes | The point at which a deposit plan balance that is still unpaid cancels the booking (FR-006 Boundary). A separate setting from the balance due date; it has no default and an admin must set it | Set by an admin before use; no starting value |
+| Hairline Share of Patient Cancellation Fee | number | Yes | The percentage of a patient cancellation fee kept by Hairline; the rest goes to the clinic (FR-007 REQ-007-092). It has no starting value and an admin must set it | Percentage 0-100; set by an admin before use; no starting value |
+| Patient Confirmation Window | number | Yes | Days after a clinic marks a procedure complete during which the patient may raise a problem before the clinic share is released (FR-007 Fund Release & Money Routing Rules). Default: 7 days | Whole number of days; no minimum and no maximum |
+| Settlement Period | selection | Yes | The one settlement period that applies to all manually paid clinics (manual bank transfer rail). Default: weekly | No per-clinic value exists |
+| Settlement Cutoff Day | selection | Yes | The day the settlement period closes. Default: Sunday | Day of the week |
+| Settlement Payout Day | selection | Yes | The day the settlement statement is paid out. Default: Wednesday | Day of the week |
+| Last Updated | display-only | N/A | When the record was last saved and by which admin | Auto-populated |
+
+**Business Rules**:
+
+- Changes apply to new cancellations, new late payments and new reschedules only; a booking keeps the values locked at its confirmation (General Module Rule 1)
+- Hairline keeps the late payment fee and the rescheduling fee; neither changes a provider payout
+- The settlement period is one setting for all manually paid clinics: there is no per-clinic payout frequency. On the Stripe Connect rail release to the clinic is automatic, so the settlement period does not apply. FR-015 and FR-017 point to this setting; affiliate payouts are a separate matter owned by FR-018
+- The settlement period defaults to weekly with a Sunday cutoff and a Wednesday payout; an admin can edit the period, the cutoff day and the payout day
+- The balance of a deposit plan is due 7 days before treatment by default; an admin can edit it. The point at which an unpaid balance cancels the booking is its own setting with no default, separate from the due date
+- Hairline's share of a patient cancellation fee has no starting value; an admin must set it
+- The patient confirmation window has no minimum and no maximum
+- Every save is logged to the audit trail with before/after state
+- Configuration propagates to Payment Processing Service within 5 minutes (cache TTL)
+
+**Notes**:
+
+- Show a preview of the ladder with an example booking total so the admin sees the refund amount for each band
+- The base amount the refund percentage is applied to is not defined here (see the Refund Rule)
 
 ---
 
@@ -739,10 +771,10 @@ The module delivers value by:
 - **Privacy Rule 1**: Stripe API secret keys and webhook secrets must be encrypted at rest using AES-256 encryption
 - **Privacy Rule 2**: Stripe secret keys must never be logged in plain text to audit logs or error logs (mask all but last 4 characters)
 - **Privacy Rule 3**: Admin access to payment configuration must require elevated permissions (not available to standard admin users)
-- **Privacy Rule 4**: Stripe webhook signatures must be verified for all incoming webhook events using the configured webhook secret
+- **Privacy Rule 4**: Moved to the system PRD. See system PRD, Platform-Wide Rules: No card numbers stored (includes webhook signature verification)
 - **Audit Rule**: All payment configuration changes must be logged with before/after state for audit compliance
-- **Compliance Rule**: Payment data handling must comply with PCI DSS requirements (no storage of full card numbers, CVVs, or PINs)
-- **Data Retention**: Payment configuration audit history retained for 10 years for financial audit and compliance purposes
+- **Compliance Rule**: See system PRD, Platform-Wide Rules: No card numbers stored (PCI DSS compliance through the payment processor)
+- **Data Retention**: Payment configuration audit history is kept; retention follows the system PRD, Platform-Wide Rules: One 10-year retention period
 
 ### Admin Editability Rules
 
@@ -759,7 +791,9 @@ The module delivers value by:
 - Split payment available installment options (2-9), cutoff days (30-90), minimum booking amount ($100-$10,000)
 - Late payment grace period for split payments (0-14 days)
 - Rate protection alert threshold (global) for currency conversion monitoring
-- Payout buffer window (number of days before a scheduled payout date that the system auto-generates payout statements for admin review; default: 3 days; range: 1–7 days). This setting is consumed by FR-017 / A-05: Admin Billing & Financial Management to determine when provider and affiliate payout statements are created. For example, a Friday payout with a 3-day buffer means statements are generated on Tuesday.
+- Refund ladder (refund percentage by days before the procedure date; default 90, 50 and 0 percent), late payment fee and rescheduling fee (each a fixed amount or a percentage, plus the value), all on Screen 7
+- Enabled payment methods per region and currency (Screen 1)
+- Deposit plan balance due days (default 7), the unpaid balance cancellation point (no default), Hairline's share of a patient cancellation fee (no default), the patient confirmation window (default 7 days, no minimum and no maximum), and the one settlement period, cutoff day and payout day for manually paid clinics (default weekly, Sunday cutoff, Wednesday payout), all on Screen 7
 
 **Fixed in Codebase (Not Editable)**:
 
@@ -777,24 +811,26 @@ The module delivers value by:
 - Global and per-pair markup percentage for currency conversion (range: 0-20%, requires validation)
 - Global and per-pair sync frequency for auto-fetch currency pairs (options: 1h, 3h, 6h, 12h, 24h)
 - Rate protection threshold (range: 1-50%, requires validation); alerts always active for auto-fetch pairs
-- Minimum booking amount for split payments (range: $100-$10,000, requires validation)
+- Minimum booking amount for split payments (range: $100-$10,000 in USD, requires validation; compared in USD per the Minimum Booking Conversion Rule)
 
 ### Payment & Billing Rules
 
-- **Payment Rule 1**: Payment Processing Service routes transactions to appropriate Stripe account based on patient's country location
+- **Payment Rule 1**: Payment Processing Service routes transactions to the appropriate Stripe account based on the country on the patient's profile (not the patient's current physical location)
 - **Payment Rule 2**: If patient's country has no assigned Stripe account, system uses the Stripe account marked as Global Fallback (if configured) or blocks payment
 - **Payment Rule 3**: Currency conversion markup applies to all transactions involving currency conversion (protects against bank rate differences)
 - **Booking Total Rule**: Throughout this FR, "booking total" means the accepted subquote price after any promotion, in the quote currency, read from the FR-005 acceptance snapshot. The same rule applies to every discount type, including discounts funded only by Hairline: commission is always calculated on the price after promotion. It is never recomputed from the live quote, option, or date-range price. This single figure is the base for the Percentage commission, the deposit amount, and the installment split; any display or charge in another currency uses the rate locked under Currency Rule 2.
-- **Payment Rule 4**: Deposit amount calculated by multiplying booking total by configured deposit rate percentage (rounded to 2 decimal places)
+- **Payment Rule 4**: Deposit amount calculated by multiplying booking total by configured deposit rate percentage (rounded to each currency's own minor units)
 - **Payment Rule 5**: Installment payment schedules calculated based on booking date, procedure date, cutoff days, and selected installment count
-- **Payout Rule 1**: Payout buffer window determines when payout statements are auto-generated before a scheduled payout date. The buffer window is a global setting (default: 3 days, range: 1–7 days). FR-017 / A-05 reads this value to schedule statement creation for provider and affiliate payouts.
-- **Payment Rule 6**: If patient misses installment payment deadline, system sends reminder notification during grace period, then cancels booking if not paid
-- **Billing Rule 1**: Installments are equal-split: booking total ÷ installment count (rounded to 2 decimal places; last installment absorbs rounding difference)
+- **Settlement Period Rule**: There is no per-clinic payout frequency. On the manual bank transfer rail, one settlement-period setting owned by FR-029 (default weekly, Sunday cutoff, Wednesday payout, admin-editable) applies to all manually paid clinics; on the Stripe Connect rail release is automatic. FR-015 and FR-017 point to this setting
+- **Payment Rule 6**: A missed installment never cancels the booking automatically. The system sends reminders during the grace period and retries the payment three times (day 1, day 3 and day 7, as owned by FR-007B); when the retries have failed, an admin is flagged to follow up. The late payment fee is charged when the grace period passes without payment (Late Fee Rule)
+- **Billing Rule 1**: Installments are equal-split: booking total ÷ installment count (rounded to each currency's own minor units; last installment absorbs rounding difference)
 - **Currency Rule 1**: Prices always displayed to patients in their selected currency using admin-configured conversion rates with markup
-- **Currency Rule 2**: Currency conversion rate (including markup) MUST be locked at FR-005 subquote acceptance and stored in that acceptance snapshot, then copied to the booking and its transactions; subsequent displays and deposit/installment/final payments use the locked rate (no rate fluctuation after subquote acceptance). The parent quote never owns a locked rate.
+- **Currency Rule 2**: Currency conversion rate (including markup) MUST be locked at FR-005 subquote acceptance and stored in that acceptance snapshot, then copied to the booking and its transactions; subsequent displays and deposit/installment/final payments use the locked rate (no rate fluctuation after subquote acceptance). The parent quote never owns a locked rate. The snapshot records the rate together with its timestamp; if the cached rate is older than 24 hours, acceptance still proceeds.
 - **Commission Rule**: The effective commission configuration (global default or provider-specific) MUST be resolved at FR-006 booking confirmation and its model (Percentage or Flat Rate), value, currency (Flat Rate), source configuration ID, and scope type (global or provider-specific) stored per booking/transaction for payout and reconciliation consistency; a Flat Rate snapshot is deducted once at the FR-010 completed-procedure milestone, not per package, Subquote, or installment. The Percentage model applies to the booking total defined in the Booking Total Rule. An accepted-but-unpaid subquote has not yet fixed its commission, so a configuration that becomes effective before booking confirmation applies to it.
 - **Indicative Commission Rule**: Any commission shown before booking confirmation, including the FR-004 quote screen, is indicative only. It shows the model and value (percentage or flat amount) from the configuration effective at the time of display, labelled "indicative, final at booking confirmation". Only the booking-confirmation snapshot is authoritative for payout, invoicing, and reconciliation.
-- **Refund Rule**: Deposit refunds follow provider-specific cancellation policies (separate from payment configuration)
+- **Refund Rule**: Refunds on a cancelled booking follow the refund ladder set on Screen 7: the refund percentage depends on how many days before the procedure date the booking is cancelled. The launch default is more than 30 days, 90 percent; 15 to 30 days, 50 percent; under 15 days, 0 percent. It is one global setting that FR-006, FR-007, FR-007B and FR-017 read; each provider's own cancellation terms do not replace it
+- **Minimum Booking Conversion Rule**: The Minimum Booking Amount for installments is stated in USD. A booking total in another currency is converted to USD at the conversion rate locked at FR-005 subquote acceptance (Currency Rule 2) before it is compared with the minimum
+- **Late Fee Rule**: When the late payment grace period passes without the installment being paid, the late payment fee set on Screen 7 is charged. Hairline keeps the late payment fee and the rescheduling fee; neither changes a provider payout
 
 ---
 
@@ -826,7 +862,7 @@ The module delivers value by:
 
 - **SC-014**: Payment configuration changes propagate to Payment Processing Service within 5 minutes for 99% of updates
 - **SC-015**: Currency conversion rate sync completes within 30 seconds for 95% of scheduled syncs
-- **SC-016**: System routes payment to correct regional Stripe account based on patient location with 99.9% accuracy
+- **SC-016**: System routes payment to correct regional Stripe account based on the country on the patient's profile with 99.9% accuracy
 - **SC-017**: Payment Processing Service applies correct deposit rate (global or provider-specific) with 100% accuracy
 - **SC-018**: Installment schedule calculations account for cutoff date constraints with zero calculation errors
 - **SC-019**: System handles currency conversion API failures gracefully by using cached rates with 100% uptime (no payment blocking)
@@ -863,18 +899,22 @@ The module delivers value by:
 
 - **FR-015 / Module A-02**: Provider Management & Onboarding
   - **Why needed**: FR-015 exposes the single-provider commission edit surface used by admins inside the provider profile
-  - **Integration point**: FR-015 Commission & Financials reads and writes the same provider-specific commission records surfaced in Screen 5; payout frequency remains owned by FR-015
+  - **Integration point**: FR-015 Commission & Financials reads and writes the same provider-specific commission records surfaced in Screen 5; there is no per-clinic payout frequency (one settlement-period setting for manually paid clinics is owned here, Screen 7)
+
+- **FR-017 / Module A-04**: Provider Payouts
+  - **Why needed**: FR-029 owns the one settlement-period setting (default weekly, Sunday cutoff, Wednesday payout) for all manually paid clinics; FR-029 no longer holds a payout buffer setting
+  - **Integration point**: FR-017 reads the refund ladder and the settlement period (Screen 7); the refund ladder decides how much of a cancelled booking is paid out
 
 - **FR-007 / Module S-02**: Payment Processing
   - **Why needed**: Payment Processing Service implements all payment configuration rules for transaction routing
   - **Integration point**: Payment service queries Payment Configuration API for Stripe account, currency pair effective rates, deposit rates, effective commission settings, and split payment rules; provider-specific commission changes made in FR-015 and FR-029 are consumed through the same resolved configuration response
 
 - **FR-007B / Module S-02**: Split Payment / Installment Plans
-  - **Why needed**: Installment calculation logic uses configured installment options, cutoff days, and schedule rules
-  - **Integration point**: Installment service queries Payment Configuration API for split payment rules
+  - **Why needed**: Installment calculation logic uses configured installment options, cutoff days, and schedule rules; the late payment grace period and late fee set here drive what FR-007B does when an installment is missed
+  - **Integration point**: Installment service queries Payment Configuration API for split payment rules, the late payment grace period, the late fee, and the enabled payment methods. FR-029 owns these settings; FR-007B owns the installment charging, the payment-method records and the retry and reminder behavior (reminders, three retries, then an admin flag), and never cancels a booking automatically
 
 - **FR-001 / Module P-01**: Patient Authentication & Profile Management
-  - **Why needed**: Patient location (country) from profile determines which Stripe account processes payments
+  - **Why needed**: The country on the patient's profile (not the patient's current physical location) determines which Stripe account processes payments
   - **Integration point**: Payment service queries patient profile for country to route payment to correct Stripe account
 
 - **FR-032 / Module PR-06**: Provider Dashboard Settings & Profile Management
@@ -916,8 +956,8 @@ The module delivers value by:
   - **Why needed**: Cannot calculate installment schedules without knowing booking date and procedure date
   - **Source**: Booking & Scheduling module (FR-006 / P-03)
 
-- **State 1**: Patient Country/Location Data
-  - **Why needed**: Cannot route payments to correct regional Stripe account without patient location
+- **State 1**: Patient Profile Country
+  - **Why needed**: Cannot route payments to correct regional Stripe account without the country on the patient's profile
   - **Source**: Patient Authentication & Profile Management module (FR-001 / P-01)
 
 ---
@@ -957,8 +997,8 @@ The module delivers value by:
 - **Architecture**: Payment configuration data must be cached with 5-minute TTL to minimize database queries during high-volume payment processing
 - **Technology**: Stripe API credentials (secret keys) must be encrypted at rest using AES-256 and never logged in plain text
 - **Performance**: Currency conversion rate sync should run as background job on scheduled intervals (not synchronous during payment processing)
-- **Storage**: Payment configuration history requires time-series storage for audit trail (10-year retention for financial compliance)
-- **Concurrency**: Payment configuration updates must use optimistic locking to prevent race conditions when multiple admins edit simultaneously
+- **Storage**: Payment configuration history requires time-series storage for audit trail (retention follows the system PRD, Platform-Wide Rules: One 10-year retention period)
+- **Concurrency**: See system PRD, Platform-Wide Rules: Concurrent admin edits: warn, then last save wins
 
 ### Integration Points
 
@@ -996,9 +1036,9 @@ The module delivers value by:
 - **Authorization**: Only admins with "PaymentConfigAdmin" role can modify Stripe accounts, rate sources, currency pairs, deposit rates, split payment rules
 - **Encryption**: Stripe secret keys and webhook secrets encrypted at rest using AES-256, decrypted only in memory during API calls
 - **Audit trail**: All payment configuration changes logged with admin ID, timestamp, IP address, before/after state
-- **Threat mitigation**: Rate limiting on Payment Configuration API (max 100 requests/minute per admin user) to prevent abuse
-- **Compliance**: PCI DSS Level 1 compliance for payment data handling (no storage of full card numbers, CVVs, or PINs)
-- **API security**: Payment Configuration API requires TLS 1.3 for all connections, no plain HTTP allowed
+- **Threat mitigation**: See system PRD, Platform-Wide Rules: Admin API rate limit
+- **Compliance**: See system PRD, Platform-Wide Rules: No card numbers stored
+- **API security**: See system PRD, Platform-Wide Rules: Encryption in transit and at rest
 - **Secret rotation**: Support for Stripe API key rotation without downtime (configure new keys, test, then deactivate old keys)
 
 ---
@@ -1066,7 +1106,7 @@ As a platform administrator aiming to increase booking conversion rates, I need 
 5. **Given** patient selects 3 installments for $2,000 booking, **When** patient completes booking, **Then** system calculates payment schedule:
    - 3 installments: $666.67 each (rounded; last installment absorbs rounding difference), due monthly (every ~30 days)
    - Final installment due: 30 days before procedure date
-6. **Given** patient has active installment plan, **When** patient misses second installment payment deadline, **Then** system sends reminder notification during grace period, then cancels booking if not paid within grace period
+6. **Given** patient has active installment plan, **When** patient misses second installment payment deadline, **Then** system sends reminder notifications during the grace period and charges the late payment fee when the grace period passes without payment; the booking is never cancelled automatically (an admin is flagged to follow up after the retries)
 
 ---
 
@@ -1131,11 +1171,11 @@ As a platform administrator managing provider commission, I need the commission 
 
 - What occurs if admin configures cutoff date (e.g., 60 days) that prevents any installment options from being offered for most bookings? **System displays warning during configuration: "Current cutoff date [60 days] may prevent installment options for most bookings. Only bookings made 75+ days in advance will see installments."** Admin can choose to proceed with restrictive cutoff or adjust to more reasonable value (e.g., 30 days). System logs warning to admin activity log.
 
-- How to manage patient attempting payment from country with no assigned Stripe account and no Global Fallback configured? **System checks patient country, finds no Stripe account assigned, checks for Global Fallback, finds none. System displays error to patient: "Payment processing not available for your location. Please contact support."** System sends urgent alert to admin: "Payment blocked for [Country]: No Stripe account configured. Expand regional coverage."** Payment attempt logged to admin dashboard for follow-up.
+- How to manage patient attempting payment from country with no assigned Stripe account and no Global Fallback configured? **System checks the country on the patient's profile, finds no Stripe account assigned, checks for Global Fallback, finds none. System displays error to patient: "Payment processing not available for your location. Please contact support."** System sends urgent alert to admin: "Payment blocked for [Country]: No Stripe account configured. Expand regional coverage."** Payment attempt logged to admin dashboard for follow-up.
 
 - What happens when patient books procedure 35 days before procedure date with 30-day cutoff enabled, and selects 3 installments? **System calculates time between booking date (35 days before) and cutoff date (30 days before) = 5 days available for installments. System determines 3 installments not feasible (would require payments every 1.67 days). System displays error: "Insufficient time for 3 installments. Please select 2 installments or pay in full."** Patient must select fewer installments or pay deposit + remaining balance immediately.
 
-- How does system handle rapid currency fluctuation exceeding rate protection threshold multiple times in single day for one pair (e.g., USD/EUR changes 3% at 8am, another 3% at 2pm, another 3% at 8pm)? **System sends first alert at 8am when the pair's initial 3% threshold is crossed and marks the pair's status as yellow/warning on the pair list. System applies rate-limiting to alerts (maximum one alert per currency pair per 6 hours) to prevent alert fatigue. System accumulates rate changes and sends second alert at 2pm showing cumulative change: "USD/EUR increased 6% in 6 hours."** The pair's yellow/warning status persists on Screen 2A until the admin reviews and acknowledges. Admin receives summary of all rate changes across all pairs in daily digest email.
+- How does system handle rapid currency fluctuation exceeding rate protection threshold multiple times in single day for one pair (e.g., USD/EUR changes 3% at 8am, another 3% at 2pm, another 3% at 8pm)? **System sends first alert at 8am when the pair's initial 3% threshold is crossed and marks the pair's status as yellow/warning on the pair list. System applies rate-limiting to alerts (maximum one alert per currency pair per 6 hours) to prevent alert fatigue. System accumulates rate changes and sends second alert at 2pm showing cumulative change: "USD/EUR increased 6% in 6 hours."** The pair's yellow/warning status returns to green on the pair's next normal sync (when the rate is back within the protection threshold); there is no acknowledge action. Admin receives summary of all rate changes across all pairs in daily digest email.
 
 - What occurs if admin configures two different Stripe accounts for overlapping countries (e.g., Account A for US/Canada/Mexico, Account B for US/UK)? **System detects country overlap (US) during configuration and displays warning: "US is already assigned to Account A. Override assignment?"** Admin selects: "Override" (US moves to Account B, no longer uses Account A) or "Cancel" (keep current assignment). System logs conflict resolution to audit trail. If admin overrides, system uses most recently configured account for overlapping country (Account B for US in this example).
 
@@ -1162,21 +1202,21 @@ As a platform administrator managing provider commission, I need the commission 
 - **REQ-029-010**: System MUST allow admins to configure a global rate protection threshold (1-50% range). System monitors each auto-fetch pair independently and marks the pair's status as yellow/warning and sends an alert notification when the pair's rate changes more than the threshold within 24 hours.
 - **REQ-029-011**: System MUST require a successful "Test Connection & Fetch Rate" action before saving any new auto-fetch currency pair. The Save button is disabled until this test succeeds.
 - **REQ-029-011b**: For any currency not configured as a pair, the system MUST fall back to collecting payment in USD (no conversion attempted). The admin dashboard MUST display a note informing admins of this fallback behavior.
-- **REQ-029-012**: System MUST gracefully handle per-pair rate source failures by keeping the last successfully fetched rate, marking the pair's status as red/error on the pair list, and alerting admin. If a source is deleted, all pairs referencing it MUST gracefully switch to manual mode with the last fetched rate pre-filled.
+- **REQ-029-012**: System MUST gracefully handle per-pair rate source failures by keeping the last successfully fetched rate, marking the pair's status as red/error on the pair list, and alerting admin. Deleting a rate source MUST be blocked while any pair still references it; the admin must first reassign those pairs to another source or convert them to manual mode (with the last fetched rate pre-filled), and no pair switches to manual mode automatically.
 - **REQ-029-013**: System MUST allow admins to configure deposit rate percentage (20-30% range) globally for all providers
 - **REQ-029-014**: System MUST allow admins to configure provider-specific deposit rates that override global default for selected providers
-- **REQ-029-015**: System MUST apply deposit rate changes to new bookings only (existing bookings retain original deposit rate)
+- **REQ-029-015**: System MUST apply deposit rate changes to new bookings only (existing bookings retain original deposit rate). Once a booking has been confirmed, its installment settings are locked: later changes to installment configuration never alter that booking
 - **REQ-029-016**: System MUST calculate deposit amount by multiplying booking total by configured deposit rate percentage
 - **REQ-029-017**: System MUST allow admins to enable or disable split payment (installment) feature globally
 - **REQ-029-018**: System MUST allow admins to select available installment options (2-9 installments) via multi-select checkboxes
 - **REQ-029-019**: System MUST allow admins to configure cutoff days (30-90 day range) requiring full payment completion before procedure date
 - **REQ-029-020**: System MUST allow admins to configure minimum booking amount ($100-$10,000 range) required to qualify for installments
 - **REQ-029-021**: System MUST automatically calculate available installment options based on booking date, procedure date, and cutoff days
-- **REQ-029-022**: System MUST generate installment payment schedules using equal-split amounts: booking total ÷ installment count (rounded to 2 decimal places; last installment absorbs rounding difference)
-- **REQ-029-023**: System MUST allow admins to configure late payment grace period (0-14 days) before booking cancellation
+- **REQ-029-022**: System MUST generate installment payment schedules using equal-split amounts: booking total ÷ installment count (rounded to each currency's own minor units; last installment absorbs rounding difference)
+- **REQ-029-023**: System MUST allow admins to configure the late payment grace period (0-14 days): the number of days after a missed installment due date during which reminders are sent and before the late fee is charged. A missed installment never cancels the booking automatically
 - **REQ-029-043**: System MUST allow admins to configure both the platform commission global default (percentage only, allowed range 15-25%) and provider-specific commission scopes (Percentage model 0-100% or Flat Rate model with a fixed amount > 0 per completed procedure) in Screen 5; changes apply to new bookings only and existing bookings retain the commission snapshot captured at booking confirmation
 - **REQ-029-043b**: System MUST keep provider-specific commission models and values synchronized between FR-029 Screen 5 and FR-015 Tab 7 because both screens are valid admin management surfaces for the same provider-specific commission data
-- **REQ-029-044**: System MUST lock currency conversion rates (including markup) at FR-005 subquote acceptance, store them in the acceptance snapshot, and copy them to the booking and its transactions (no rate fluctuation after subquote acceptance)
+- **REQ-029-044**: System MUST lock currency conversion rates (including markup) at FR-005 subquote acceptance, store them with their timestamp in the acceptance snapshot, and copy them to the booking and its transactions (no rate fluctuation after subquote acceptance). If the cached rate is older than 24 hours, acceptance still proceeds and the snapshot records the rate and its timestamp
 - **REQ-029-045**: System MUST snapshot the effective commission model and value (and Flat Rate currency), with the source configuration ID and scope type, at booking confirmation and store it per booking/transaction for payout and reconciliation consistency; Flat Rate snapshots are deducted once per completed procedure
 
 ### Data Requirements
@@ -1184,16 +1224,16 @@ As a platform administrator managing provider commission, I need the commission 
 - **REQ-029-024**: System MUST persist all payment configuration data (Stripe accounts, rate sources, currency pairs, global conversion settings, deposit rates, commission global default, provider-specific commission scopes, split payment rules) with full audit history
 - **REQ-029-025**: System MUST log all payment configuration changes to audit trail with admin ID, timestamp, IP address, and before/after state
 - **REQ-029-026**: System MUST cache payment configuration data with 5-minute TTL to minimize database queries during payment processing
-- **REQ-029-027**: System MUST retain payment configuration audit history for minimum 10 years for financial compliance
+- **REQ-029-027**: System MUST retain payment configuration audit history; retention follows the system PRD, Platform-Wide Rules: One 10-year retention period
 
 ### Security & Privacy Requirements
 
 - **REQ-029-028**: System MUST encrypt Stripe API secret keys and webhook secrets at rest using AES-256 encryption
 - **REQ-029-029**: System MUST never log Stripe secret keys in plain text to audit logs or error logs (mask all but last 4 characters)
 - **REQ-029-030**: System MUST require elevated admin permissions ("PaymentConfigAdmin" role) to access payment configuration functionality
-- **REQ-029-031**: System MUST use TLS 1.3 for all connections to Payment Configuration API (no plain HTTP allowed)
-- **REQ-029-032**: System MUST comply with PCI DSS Level 1 requirements for payment data handling
-- **REQ-029-046**: System MUST verify Stripe webhook signatures for all incoming webhook events using the configured webhook secret
+- **REQ-029-031**: Moved to the system PRD. See system PRD, Platform-Wide Rules: Encryption in transit and at rest; TLS 1.3 for connections to the Payment Configuration API is recorded once in the [system PRD](../../system-prd.md), which this module follows
+- **REQ-029-032**: Moved to the system PRD. See system PRD, Platform-Wide Rules: No card numbers stored; PCI DSS compliance for payment data handling is recorded once in the [system PRD](../../system-prd.md), which this module follows
+- **REQ-029-046**: Retired. Moved to the system PRD. See system PRD, Platform-Wide Rules: No card numbers stored (includes webhook signature verification), which this module follows
 
 ### Integration Requirements
 
@@ -1214,10 +1254,20 @@ As a platform administrator managing provider commission, I need the commission 
 - **REQ-029-048**: System MUST keep each provider in at most one active provider-specific commission scope with at most one pending future-dated configuration (a new one replaces it); an FR-015 Tab 7 edit to a provider in a shared scope MUST split that provider into its own single-provider scope without changing the other providers
 - **REQ-029-049**: System MUST lock payment configuration only at its named lock points: the currency conversion rate at FR-005 subquote acceptance; the commission configuration, deposit rate, and split payment settings at FR-006 booking confirmation; nothing at quote creation or sending
 - **REQ-029-050**: System MUST calculate the Percentage commission, deposit amount, and installment split from the booking total, defined as the accepted subquote price after promotion, in the quote currency, read from the acceptance snapshot and never recomputed from the live quote
-- **REQ-029-051**: System MUST present any pre-confirmation commission (including the FR-004 quote screen) as an indicative model and value labelled "indicative, final at booking confirmation"; only the booking-confirmation snapshot is authoritative
+- **REQ-029-051**: System MUST present any pre-confirmation commission (including the FR-004 quote screen) as an indicative model and value labelled "indicative, final at booking confirmation"; only the booking-confirmation snapshot is authoritative. The binding commission is fixed at booking confirmation on the accepted price after promotion, in the quote currency, from the acceptance snapshot
 - **REQ-029-052**: System MUST block disabling a currency while any non-terminal sent quote, unpaid accepted booking, or open booking or instalment plan uses it, and MUST show the admin the count of records still using that currency.
-- **REQ-029-053**: System MUST create a new FR-026 Quote Configuration version whenever the Default Currency changes; open quote drafts MUST keep their typed numbers, switch to the new currency without conversion, and require the provider to acknowledge a currency-change banner (FR-004 quote screen) before send.
-- **REQ-029-054**: System MUST calculate commission on the price after promotion for every discount type, including discounts funded only by Hairline.
+- **REQ-029-053**: System MUST create a new FR-026 Quote Configuration version whenever the Default Currency changes; open quote drafts MUST keep their typed numbers, switch to the new currency without conversion, and require the provider to acknowledge a banner reading "currency changed, check your prices" (FR-004 quote screen) before send.
+- **REQ-029-054**: System MUST calculate commission on the accepted price after the promotion, in the quote currency and read from the acceptance snapshot, for every discount type, including discounts funded only by Hairline; no program keeps commission on the price before the promotion.
+- **REQ-029-140**: System MUST compare the booking total with the Minimum Booking Amount for installments in USD: a booking total in another currency is converted to USD at the conversion rate locked at FR-005 subquote acceptance before the comparison.
+- **REQ-029-141**: System MUST allow admins to enable or disable the payment methods offered to patients, per region and currency (Screen 1); FR-007 reads this setting, and FR-007B owns the payment-method records.
+- **REQ-029-142**: System MUST allow admins to edit the refund ladder (refund percentage by how many days before the procedure date the booking is cancelled) on Screen 7. The launch default is: more than 30 days, 90 percent; 15 to 30 days, 50 percent; under 15 days, 0 percent. FR-006, FR-007, FR-007B and FR-017 read this setting.
+- **REQ-029-143**: System MUST allow admins to set a late payment fee and a rescheduling fee on Screen 7. For each fee the admin chooses the type (fixed amount or percentage) and enters the value. Hairline keeps both fees; they change no provider payout.
+- **REQ-029-144**: System MUST charge the late payment fee when the late payment grace period has passed without the installment being paid.
+- **REQ-029-145**: System MUST allow admins to set one settlement period for all manually paid clinics on Screen 7. It defaults to weekly with a Sunday cutoff and a Wednesday payout, and an admin can edit the period, the cutoff day and the payout day. There is no per-clinic payout frequency; on the Stripe Connect rail release is automatic. FR-015 and FR-017 point to this setting.
+- **REQ-029-146**: System MUST treat the balance of a deposit plan as due 7 days before treatment by default, and MUST allow admins to edit it on Screen 7.
+- **REQ-029-147**: System MUST allow admins to set, on Screen 7, the point at which an unpaid deposit plan balance cancels the booking. It is its own setting, separate from the 7-day due date, and has no starting value; an admin must set it.
+- **REQ-029-148**: System MUST allow admins to set Hairline's share of a patient cancellation fee on Screen 7. It has no starting value; an admin must set it.
+- **REQ-029-149**: System MUST allow admins to set the patient confirmation window on Screen 7 (default 7 days), with no minimum and no maximum.
 
 ---
 
@@ -1248,12 +1298,20 @@ As a platform administrator managing provider commission, I need the commission 
   - **Relationships**: One split payment configuration (global); many bookings reference split payment rules; many installment schedules generated based on configuration
 
 - **Entity 5 - Payment Configuration Audit Log**:
-  - **Key attributes**: audit_id, config_type (stripe_account/currency_conversion/deposit_rate/commission_rate/split_payment), action (create/update/delete/archive), admin_id, timestamp, ip_address, before_state_json, after_state_json, change_summary
+  - **Key attributes**: audit_id, config_type (stripe_account/currency_conversion/deposit_rate/commission_rate/split_payment/rate_source/currency_management), action (create/update/delete/archive), admin_id, timestamp, ip_address, before_state_json, after_state_json, change_summary
   - **Relationships**: Many audit log entries per payment configuration entity; one admin user creates many audit log entries
 
 - **Entity 6 - Commission Rate Configuration**:
   - **Key attributes**: config_id, scope (global/provider_specific), provider_ids[] (nullable for global), commission_model (percentage/flat_rate; global is always percentage), commission_percentage (nullable when flat_rate), flat_rate_amount (nullable when percentage), flat_rate_currency (nullable when percentage), effective_date, status (active/archived), created_by_admin_id, created_date, updated_date
   - **Relationships**: One active global commission default configuration; many provider-specific commission scope records; FR-015 Tab 7 reads/writes the same provider-specific commission data for single-provider management; bookings and payouts reference the commission model/value snapshot captured at booking confirmation, which records this record's config_id and scope
+
+- **Entity 7 - Currency Exchange Rate**:
+  - **Key attributes**: date, base_currency, target_currency, exchange_rate, fetched_at
+  - **Relationships**: Rates are recorded by date and currency pair. FR-029 owns this entity (moved in from FR-014); FR-014 reads the daily rates and does not define the entity.
+
+- **Entity 8 - Refund Ladder and Fee Settings**:
+  - **Key attributes**: refund ladder bands (days before the procedure date, refund percentage), late fee (type fixed amount or percentage, value), rescheduling fee (type fixed amount or percentage, value), deposit plan balance due days (default 7), unpaid balance cancellation point (no default), Hairline share of patient cancellation fee (no default), patient confirmation window (default 7 days, no minimum or maximum), settlement period (default weekly), settlement cutoff day (default Sunday), settlement payout day (default Wednesday), updated_date, updated_by_admin_id
+  - **Relationships**: One global record (Screen 7); FR-006, FR-007, FR-007B, FR-015 and FR-017 read it for cancellations, late installments, rescheduling, balance due dates, the confirmation window and the settlement period of manually paid clinics
 
 ---
 
@@ -1276,6 +1334,7 @@ As a platform administrator managing provider commission, I need the commission 
 | 2026-10-16 | 1.12 | Product Owner follow-up decisions (CR-FR029-20261016-01): disabling a currency is blocked while any non-terminal sent quote, unpaid accepted booking, or open booking or instalment plan uses it, with the blocking-record count shown (Q7); a Default Currency change creates a new FR-026 Quote Configuration version (Q14) and open drafts keep typed numbers, switch currency, and need a must-acknowledge banner before send, FR-004 owning the screen (Q4); commission is on the price after promotion for every discount type, including Hairline-funded discounts (Q5). Booking total as the single base for deposit, instalments and commission confirmed already compliant (Q25). Updated Screen 6 (Enabled validation and business rules), Booking Total Rule, and new REQ-029-052 to REQ-029-054. | Product Owner / Documentation |
 | 2026-10-18 | 1.13 | Consolidated verification corrections (CR-FR029-20261016-01): User Story 6 scenario 3 now describes an admin revive of a Payment Window Expired booking, which resolves commission, deposit rate and split payment settings at the later confirmation and keeps the exchange rate from the original acceptance snapshot; a new inquiry gets its own acceptance rate. There is no second acceptance on the same inquiry (D1, D2). | Product Owner / Documentation |
 | 2026-10-18 | 1.14 | Final audit corrections (CR-FR029-20261016-01): Rule 1 states that the FR-019 conversion of a fixed-amount promotion into the quote currency at quote send uses the rate in effect at send and does not move the payment rate lock from acceptance (final audit money finding F11); Product Owner approval row added. Rule 1(b) wording on deposit and instalment settings is unchanged; their storage belongs to the schema. | Product Owner / Documentation |
+| 2026-11-20 | 1.15 | Requirements graph programme baseline: owner rulings applied. Main changes: deleting a rate source is blocked until its pairs are reassigned or converted to manual (no automatic switch); a pair's yellow badge returns to green on the next normal sync with no acknowledge action; the country on the patient's profile decides the Stripe account; the minimum booking amount for installments is compared in USD at the locked rate (new REQ-029-140); deposit, installment and commission amounts are rounded to each currency's minor units; installments are never cancelled automatically (reminders, retries, then an admin flag) and the late payment grace period now sets when a late fee is charged; one global split payment configuration (tiered installment flow A4 and its Rule removed); new admin settings for supported payment methods (REQ-029-141), the refund ladder (REQ-029-142, default 90 / 50 / 0) and the late fee and rescheduling fee (REQ-029-143, REQ-029-144) on new Screen 7; payout buffer window setting removed (replaced by the one settlement-period setting with its cutoff day and payout day); REQ-029-044 gains the timestamp and cached-rate-older-than-24-hours rule; REQ-029-015, REQ-029-051, REQ-029-053 and REQ-029-054 carry the merged wording; currency disable warning narrowed to configuration items beside the block for records; Stripe account override replaces (never supplements); concurrent edits follow the platform-wide warn-then-last-save-wins Rule; TLS 1.3 and PCI DSS point to the system PRD; Currency Exchange Rate entity moved in from FR-014; audit types rate_source and currency_management added; cross-document reconciliation (retention, system rule citations, payout wording, settlement-period and fund-release settings). | Product Owner / Documentation |
 
 ---
 
@@ -1293,4 +1352,4 @@ As a platform administrator managing provider commission, I need the commission 
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-029 from system-prd.md + Hairline-AdminPlatformPart2.txt transcription
-**Last Updated**: 2026-10-18
+**Last Updated**: 2026-11-20

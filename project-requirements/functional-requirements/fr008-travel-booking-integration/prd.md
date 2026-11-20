@@ -3,7 +3,7 @@
 **Module**: P-04: Travel & Logistics | A-04: Travel Management | S-04: Travel API Gateway (future phase)
 **Feature Branch**: `fr008-travel-booking-integration`
 **Created**: 2025-11-10
-**Last Updated**: 2026-10-18
+**Last Updated**: 2026-11-20
 **Status**: 🟡 Revised — Pending Consolidated Verification
 **Source**: FR-008 from system-prd.md; cross-checked with transcriptions (HairlineApp-Part1/2, ProviderPlatformPart1, AdminPlatformPart1/2, HairlineOverview); SRC-MTG-002, CR-FR008-20260929-01, CR-FR008-20261016-01, and Product Owner binary-path decision of 2026-09-29
 **Change Request**: [CR-FR008-20261016-01 — MTG-002 quote model alignment](change-request-2026-10-16-mtg002-quote-model-alignment.md)
@@ -31,7 +31,7 @@ In both paths, the platform captures, stores, and surfaces travel details to all
 - Package travel inclusion: provider configures flight/hotel/transport within each FR-004 Quote Option; FR-008 uses only the accepted option snapshot
 - Itinerary aggregation: unified view of all confirmed travel per appointment (read-only for admin)
 - Round-trip flight support: two separate flight records (outbound + return) per appointment
-- Admin oversight: view and manage all travel records linked to appointments
+- Admin oversight: view and correct the travel records of each confirmed booking from its Travel section (no cross-booking travel list)
 - Email notifications for travel record submission and updates
 
 ### Out of Scope (MVP — Future Phase)
@@ -74,7 +74,7 @@ In both paths, the platform captures, stores, and surfaces travel details to all
 - Monitor automated travel request status per appointment (whether requests were sent, what is pending) from within each booking's Travel section.
 - Manually re-trigger patient-owned pending travel requests from the Travel section: passport in Path A, or flight/hotel in Path B when travel is required.
 - Edit or override any travel record via Screen 12, reached from the Travel section of the booking detail screen; all corrections require a mandatory audit log entry.
-- Manage travel settings and future API configurations.
+- Future phase: manage travel API configuration once API booking is live. There are no travel settings in the first release.
 - Future: configure commission parameters and per-country enablement once API booking is live.
 
 ### Shared Services
@@ -301,8 +301,8 @@ flowchart TD
 - Passport photo is stored in compliant secure storage as a reference document only. It is **not parsed or processed automatically** — all passport fields must be filled in manually by the patient via the form.
 - Passport photo upload MUST run an on-device quality check before submission is allowed (lighting conditions, focus, blurriness). Use the app's standard Flutter implementation (Google ML Kit) for this quality gate. If the check fails, the app blocks submission and provides an actionable error (e.g., "Too blurry — retake in better light"). This is a **quality gate only** (no OCR / data extraction).
 - The stored image is accessible to the assigned provider and admin for manual verification purposes; it is not shown in any list or itinerary view.
-- Once submitted, the passport record is **locked** and cannot be edited, deleted, or re-submitted by the patient or provider. Corrections must be requested through admin (Screen 12 replacement + audit reason).
-- If passport details were previously submitted for an earlier appointment, the patient may reuse them through a new booking-linked locked record; the earlier record is not edited. If the passport has since changed (e.g. renewed), admin must correct the applicable record.
+- Once submitted, the passport record is **locked** and cannot be edited, deleted, or re-submitted by the patient or provider. Corrections must be requested through admin (Screen 12 replacement + audit reason). Exception: if an admin soft-deletes the passport record, the status returns to Awaiting and the patient may submit one new passport (REQ-008-076); the deleted record stays in the travel audit trail.
+- If passport details were previously submitted for an earlier appointment, the passport request is still sent as usual. The patient either confirms the earlier details or enters new ones, and the result is a new booking-linked locked record; the earlier record is not edited.
 - All passport fields are treated as PII and subject to GDPR/data protection rules.
 
 **Notes**:
@@ -459,7 +459,7 @@ flowchart TD
 - For **Path A** appointments, "Enter Flight" and "Enter Hotel" action buttons appear only for travel services in the accepted option snapshot. Services not included show "Not included" — no entry action is rendered, and the patient is not asked to submit them in MVP.
 - For **Path B** appointments, only "View Travel Details" is shown (read-only). Provider cannot enter or modify patient-submitted records.
 - Provider can contact admin if a patient-submitted record (Path B) needs review; admin resolves the dispute through Screen 12.
-- "Incomplete" is an admin-managed status used when a submitted passport record is deemed unusable/incorrect and is pending admin correction (Screen 12). Patients/providers cannot "re-submit" to change a locked record.
+- "Incomplete" is an admin-managed status used when a submitted passport record is deemed unusable/incorrect and is pending admin correction (Screen 12). Patients/providers cannot "re-submit" to change a locked record, except after an admin soft-delete returns the passport to Awaiting (REQ-008-076).
 - Each action button navigates to the relevant screen: View Passport → Screen 7; Enter Flight → Screen 8; Enter Hotel → Screen 9; View Travel Details → Screen 10.
 - While the TravelContext is in travel-date review, the section shows "Travel dates under admin review". When the TravelContext is closed (booking cancelled after confirmation), "Enter Flight" and "Enter Hotel" are not rendered and all records are read-only.
 - When a return flight departs, or the hotel check-out falls, before the last treatment plan day, the related status badge shows a "Leaves before last treatment day" flag together with the time the submitter acknowledged the warning.
@@ -638,6 +638,7 @@ Return flight uses the same fields, shown as a separate sub-section. If no retur
 | Return Flight Status | Badge | Not included / Awaiting / Submitted |
 | Hotel Status | Badge | Not included / Awaiting / Submitted |
 | Travel Context Status | Badge | Active / Travel-date review required / Closed; review state shows the accepted appointment baseline, the current booking appointment and the flagged flight and hotel dates |
+| Initial Request Sent | Read-only | Whether the first automatic travel request has been sent (yes / no) and the time it was sent |
 | Actions | Buttons | Re-notify patient (eligible patient-owned pending record only) · Apply Correction (→ Screen 12) · Confirm Travel Dates (travel-date review only) |
 
 **Business Rules**:
@@ -763,7 +764,8 @@ Same fields as Outbound Flight. Displayed as a separate sub-section below. If no
 
 **General Business Rules (Screen 12)**:
 
-- Admin can soft-delete any record with a mandatory reason; deletion is not permanent and is retained in the system's backend audit trail.
+- Admin can soft-delete any record with a mandatory reason; deletion is not permanent and is retained in the system's backend audit trail. After a passport soft-delete the passport status is Awaiting and the patient may submit one new passport (REQ-008-076).
+- Overall Status is worked out as follows. **Pending**: nothing has been submitted. **Partially submitted**: some required items are in, or an item is marked Incomplete by an admin. **Complete**: all required items are in and none is marked Incomplete. Required items are the passport, flight and hotel for Path A, and the flight and hotel for Path B, counting only items the accepted option includes.
 - Every admin correction requires a mandatory "Reason for correction" note before saving.
 - All corrections notify both the patient and the provider automatically.
 - Passport tab is hidden entirely for Path B appointments (no passport is captured).
@@ -813,7 +815,7 @@ Same fields as Outbound Flight. Displayed as a separate sub-section below. If no
 - Passport submission is **required** for all **Path A** appointments (provider-included travel).
 - Passport submission is **not required and not requested** when the patient self-books travel (Path B). The patient manages their own passport for their independent bookings.
 - Passport number is always masked in the patient's display view; stored encrypted at rest; shown in full to the assigned provider and admin only.
-- Once submitted, the passport record is **locked** and cannot be edited by the patient or provider. Admin correction only, with a mandatory audit log entry.
+- Once submitted, the passport record is **locked** and cannot be edited by the patient or provider. Admin correction only, with a mandatory audit log entry. The one exception is an admin soft-delete, after which the patient may submit one new passport (REQ-008-076).
 
 ### Flight Records
 
@@ -851,7 +853,7 @@ Same fields as Outbound Flight. Displayed as a separate sub-section below. If no
 
 - Passport data (especially `passport_number` and `passport_image`) is PII and must be encrypted at rest and in transit.
 - Access to passport data is restricted to: the patient (own record), the assigned provider, and admin.
-- Booking confirmation data (flight/hotel) retained for 7 years (aligned with medical data retention per constitution). All audit log entries for travel record mutations retained for 10 years per constitution Section VI.
+- Travel records (passport, flight, hotel) and travel audit entries (TravelAuditEntry) follow the one retention period: retention follows the system PRD, Platform-Wide Rules: One 10-year retention period. At account deletion the passport number and passport photo are removed, not kept in anonymised form.
 - All access and modification events logged with timestamp, user ID, and IP.
 
 ---
@@ -872,7 +874,7 @@ Same fields as Outbound Flight. Displayed as a separate sub-section below. If no
 
 ### Admin Oversight
 
-- **SC-007**: 100% of travel records accessible and filterable in admin oversight view.
+- **SC-007**: 100% of a confirmed booking's travel records are viewable by admin from that booking's Travel section.
 - **SC-008**: 100% of travel record mutations logged for audit.
 - **SC-009**: Admin can resolve any travel data dispute and update a record with full audit trail.
 
@@ -1005,7 +1007,7 @@ Note: `total_price` is excluded. `baggages_allowance` corrected to `baggage_allo
 
 ### Security
 
-- `passport_number` and `passport_image`: encrypted at rest (AES-256); access-controlled; masked in all display views.
+- `passport_number` and `passport_image`: encrypted at rest (AES-256); access-controlled. The passport number is masked for the patient and shown in full to the assigned provider and admin staff.
 - All travel record endpoints require valid auth token (patient or provider role).
 - Admin endpoints require admin role with audit logging on all writes.
 - TLS 1.3 for all data in transit.
@@ -1028,7 +1030,8 @@ Note: `total_price` is excluded. `baggages_allowance` corrected to `baggage_allo
 - **REQ-008-003**: The system MUST restrict passport data access to the submitting patient, their assigned provider, and admin.
 - **REQ-008-004**: The system MUST notify the provider when a patient submits passport details or admin corrects the record.
 - **REQ-008-005**: The system MUST automatically request passport details from the patient once when the linked FR-006 booking becomes **Confirmed** and the accepted option snapshot yields Path A. No provider or admin trigger is required.
-- **REQ-008-005b**: The system MUST automatically request flight and hotel details (no passport) from the patient once when the linked FR-006 booking becomes **Confirmed** and the accepted option snapshot yields Path B. No provider or admin trigger is required.
+- **REQ-008-034**: The system MUST automatically request flight and hotel details (no passport) from the patient once when the linked FR-006 booking becomes **Confirmed** and the accepted option snapshot yields Path B. No provider or admin trigger is required.
+- **REQ-008-076**: After an admin soft-deletes a passport record, the system MUST set the passport status back to Awaiting and allow exactly one new submission by the patient. The deleted record stays in the travel audit trail.
 
 ### Flight Records
 
@@ -1064,7 +1067,7 @@ Note: `total_price` is excluded. `baggages_allowance` corrected to `baggage_allo
 
 ### Admin
 
-- **REQ-008-023**: Admin MUST be able to view, filter, and drill into all travel records across all appointments.
+- Retired: there is no cross-booking admin travel list. Admin reaches travel records only through a confirmed booking's Travel section (Screen 11).
 - **REQ-008-024**: Admin MUST be able to edit any travel record with a mandatory audit log entry.
 
 ### Confirmed Booking Linkage
@@ -1076,16 +1079,16 @@ Note: `total_price` is excluded. `baggages_allowance` corrected to `baggage_allo
 - **REQ-008-029**: Travel record APIs MUST accept a confirmed `booking_id`, resolve TravelContext and acceptance provenance server-side, enforce the Path A / Path B submitter and inclusion rules, and reject client-supplied changes to accepted quote, subquote, option, date-price, path, or inclusion values. Travel record APIs and patient re-notification MUST also reject any write against a closed TravelContext.
 - **REQ-008-030**: Only an admin MAY clear `travel-date-review-required`, by confirming that the existing flight and hotel dates still fit the current booking appointment or by correcting the affected records. Either action MUST return the TravelContext to `active` and record the admin, time, reason and outcome in the audit log.
 - **REQ-008-031**: When a return flight departs, or the hotel check-out date falls, before the last treatment plan day (current booking appointment date plus the plan day count minus one), the system MUST show the submitter a soft warning that must be acknowledged before saving, MUST still allow the record to be saved, MUST record who acknowledged it and when, and MUST show the provider an early-departure flag on the booking.
-- **REQ-008-032**: When FR-006 Alternative Flow B5 transfers a patient to a replacement booking, the system MUST keep the original TravelContext closed with its records read-only, MUST carry the passport record over to the replacement TravelContext as a new locked booking-linked record, MUST copy the current flight and hotel records to it with a copy-source reference and the flag "travel-date review required", and MUST set the replacement TravelContext to `travel-date-review-required` until an admin clears the review under REQ-008-030.
+- **REQ-008-032**: When FR-006 Alternative Flow B5 transfers a patient to a replacement booking, the system MUST keep the original TravelContext closed with its records read-only, MUST carry the passport record over to the replacement TravelContext as a new locked booking-linked record, MUST copy the current flight and hotel records to it with a copy-source reference and the flag "travel-date review required", and MUST set the replacement TravelContext to `travel-date-review-required` until an admin clears the review under REQ-008-030. Each copied record (passport, flight, hotel) keeps its original submitter plus the copy-source reference; any correction to a copy goes through the admin.
 - **REQ-008-033**: The itinerary MUST be a read view assembled from the TravelContext, the current passport, flight, and hotel records, and the Booking; no itinerary table or stored itinerary record MAY exist.
 
 ### Future Phase (Out of Scope for MVP)
 
-- **REQ-008-F01**: The system SHOULD integrate a flight search API (e.g. Amadeus) to enable in-app flight booking in a future phase.
-- **REQ-008-F02**: The system SHOULD integrate a hotel search API (e.g. Booking.com) to enable in-app hotel booking in a future phase.
-- **REQ-008-F03**: The system SHOULD support commission tracking on platform-facilitated bookings once API booking is live.
-- **REQ-008-F04**: The system SHOULD support a dedicated transport record entity when Hairline operates its own driver network.
-- **REQ-008-F05**: The system SHOULD display real-time flight price estimates during inquiry date selection once a flight API is integrated.
+- **REQ-008-035**: Future phase: The system SHOULD integrate a flight search API (e.g. Amadeus) to enable in-app flight booking in a future phase.
+- **REQ-008-036**: Future phase: The system SHOULD integrate a hotel search API (e.g. Booking.com) to enable in-app hotel booking in a future phase.
+- **REQ-008-037**: Future phase: The system SHOULD support commission tracking on platform-facilitated bookings once API booking is live.
+- **REQ-008-038**: Future phase: The system SHOULD support a dedicated transport record entity when Hairline operates its own driver network.
+- **REQ-008-039**: Future phase: The system SHOULD display real-time flight price estimates during inquiry date selection once a flight API is integrated.
 
 ---
 
@@ -1098,8 +1101,8 @@ Note: `total_price` is excluded. `baggages_allowance` corrected to `baggage_allo
 
 ### PassportRecord
 
-**Key attributes**: `patient_id`, `travel_context_id`, `passport_name`, `passport_number` (encrypted), `passport_dob`, `gender`, `location`, `place_of_birth`, `passport_issue`, `passport_expiry`, `passport_image` (file reference), `submitted_by`, `submitted_at`, `status` (pending / complete / incomplete), `version`
-**Relationships**: One current booking-linked passport record per Path A TravelContext; eligible prior details may be copied into a new locked booking-linked record without changing the earlier source record. Accessible by patient, assigned provider, admin.
+**Key attributes**: `patient_id`, `travel_context_id`, `passport_name`, `passport_number` (encrypted), `passport_dob`, `gender`, `location`, `place_of_birth`, `passport_issue`, `passport_expiry`, `passport_image` (file reference), `submitted_by`, `submitted_at`, `status` (awaiting / submitted / incomplete), `version`, `copied_from_passport_id` (set when the record is a copy of earlier details)
+**Relationships**: One current booking-linked passport record per Path A TravelContext; when the patient confirms earlier details they are saved as a new locked booking-linked record without changing the earlier source record, and a copy keeps the original submitter plus its copy-source reference. Accessible by patient, assigned provider, admin.
 
 ### FlightRecord
 
@@ -1115,6 +1118,11 @@ Note: `total_price` is excluded. `baggages_allowance` corrected to `baggage_allo
 
 **Stored**: No. The itinerary is a read view, not a table or stored record.
 **Composition**: Assembled at read time from TravelContext, the current PassportRecord (Path A), FlightRecord(s), HotelRecord, and the Booking's current appointment; one active itinerary view per confirmed booking/appointment; visible to patient, provider, admin. Inclusion and path data come from TravelContext rather than a mutable package-library record.
+
+### TravelAuditEntry
+
+**Key attributes**: `id`, `travel_context_id`, the acting user and role, the action (submission, correction, soft-delete, re-notification, travel-date review outcome, record access), the affected record and version, the reason (mandatory for corrections and soft-deletes), timestamp, and IP address.
+**Relationships**: Travel has its own audit entity, owned by FR-008 and not shared with another feature's audit log. Entries belong to a TravelContext, are never edited or removed, and retention follows the system PRD, Platform-Wide Rules: One 10-year retention period.
 
 ---
 
@@ -1134,6 +1142,7 @@ Note: `total_price` is excluded. `baggages_allowance` corrected to `baggage_allo
 | 2026-10-16 | 2.7 | Product Owner Q-series follow-up (Q17, Q18, Q21): return flight or hotel check-out before the last treatment plan day now raises a soft warning that must be acknowledged, the record still saves and the provider sees an early-departure flag (REQ-008-008 amended, REQ-008-031); provider-fault transfer through FR-006 Alternative Flow B5 carries the passport over and copies flight and hotel records to the replacement booking flagged "travel-date review required", originals read-only on the closed booking (new Alternative Flow B2, REQ-008-032); itinerary is a read view assembled from TravelContext, travel records and Booking with no stored table (Itinerary Rules, Screen 5, REQ-008-014, REQ-008-025, REQ-008-033, Itinerary entity). Lifecycle rules, Screen 6 rules, acceptance scenarios 8 to 10, and FlightRecord and HotelRecord attributes updated. See [CR-FR008-20261016-01](./change-request-2026-10-16-mtg002-quote-model-alignment.md). Consolidated verification pending. | Product Owner / Documentation |
 | 2026-10-18 | 2.8 | Consolidated verification corrections (CR record only, no PRD requirement change): CR-FR008-20261016-01 Out of Scope no longer excludes the provider-fault travel carry-over that its Approved State and REQ-008-032 include (Q18); the CR now counts ten acceptance scenarios and lists REQ-008-031 to REQ-008-033 and Alternative Flow B2 in Affected Contracts. | Product Owner / Documentation |
 | 2026-10-18 | 2.9 | Final audit corrections (Q35, Q36): Alternative Flow B2 applies to a provider fault before treatment starts; FR-006 closes the original booking with the provider-fault cause, an admin authors a replacement quote in the same inquiry, and the replacement TravelContext is created from the replacement quote's acceptance snapshot when the replacement booking is confirmed. FlightRecord and HotelRecord copy-source attributes renamed to `copied_from_flight_id` and `copied_from_hotel_id` to match the data schema. Approvals row recorded. See [CR-FR008-20261016-01](./change-request-2026-10-16-mtg002-quote-model-alignment.md). | Product Owner / Documentation |
+| 2026-11-20 | 3.0 | Requirements graph programme baseline: owner rulings applied. Main changes: requirement ids renumbered in order (REQ-008-005b is now REQ-008-034; future-phase items REQ-008-F01 to F05 are now REQ-008-035 to 039, each marked "Future phase:"); new REQ-008-076 (after an admin soft-delete the passport returns to Awaiting and one new submission is allowed); passport reuse needs the patient to confirm earlier details or enter new ones; copied records keep the original submitter plus a copy-source reference; passport status values are Awaiting, Submitted, Incomplete and the Overall Status is worked out by a stated rule; Screen 11 shows whether and when the first travel request was sent; travel has its own travel audit entity; retention follows the single 10-year rule and passport number and photo are removed at account deletion; passport number masked for the patient and full for provider and admin staff; no cross-booking admin travel list (REQ-008-023 retired, SC-007 and scope line reworded); travel settings and API configuration marked "Future phase:" with no travel settings in MVP; cross-document reconciliation (retention pointer). | Product Owner decision / documentation alignment |
 
 ---
 
@@ -1154,4 +1163,4 @@ The 2026-02-23 verification approvals apply to the earlier baseline, not to the 
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-011 Aftercare & Recovery Management PRD
-**Last Updated**: 2026-10-18
+**Last Updated**: 2026-11-20

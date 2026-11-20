@@ -15,14 +15,14 @@ Search and filtering capabilities are critical for enabling users to efficiently
 
 The feature spans all three tenants:
 
-- **Patient Platform**: Provider discovery during quote request flow; help center content browsing; support ticket filtering; messaging inbox search/filtering in the later FR-012 phase
-- **Provider Platform**: Inquiry and quote list management; treatment and aftercare case navigation; analytics filtering; package/settings catalog management; support case tracking; messaging list search/filtering in the later FR-012 phase
+- **Patient Platform**: Provider discovery during quote request flow; help center content browsing; support ticket filtering; messaging inbox search/filtering
+- **Provider Platform**: Inquiry and quote list management; treatment and aftercare case navigation; analytics filtering; package/settings catalog management; support case tracking; messaging list search/filtering
 - **Admin Platform**: Comprehensive patient, provider, and transaction search with advanced filtering across all operational modules
 
 **Priority breakdown**:
 
-- **P1 (MVP)**: Provider Platform operational modules (PR-01 through PR-06, excluding FR-012 messaging) and Admin Platform (A-01, A-02, A-03, A-05, A-06, A-07, A-09, A-10) — these are essential for platform operations and day-to-day provider and admin workflows
-- **P2 (Post-MVP)**: Patient-facing provider search (P-02 provider selection) and FR-012 patient/provider messaging search surfaces (P-06 / PR-07) — deferred until their source FR scope is scheduled.
+- **P1 (MVP)**: Provider Platform operational modules (PR-01 through PR-07, including FR-012 messaging search and filtering), the patient messaging inbox (P-06) and Admin Platform (A-01, A-02, A-03, A-05, A-06, A-07, A-09, A-10) — these are essential for platform operations and day-to-day provider and admin workflows
+- **P2 (Post-MVP)**: Patient-facing provider search (P-02 provider selection) — deferred until its source FR scope is scheduled.
 
 > **Maintenance Convention**: This FR is the single source of truth for all search and filter criteria across the platform. When any source FR updates its filter or search field list, this document must be updated accordingly. See the Master Reference Table in the Screen Specifications section for the full inventory.
 
@@ -32,8 +32,8 @@ The feature spans all three tenants:
 
 ### Multi-Tenant Architecture
 
-- **Patient Platform (P-02, P-06, P-08)**: Provider search for quote request (P2); help center and support ticket filtering (P1 - MVP); messaging inbox search/filtering deferred with FR-012 (P2). _(Patient booking list search/filter is pending FR-006 update — see deferred items below.)_
-- **Provider Platform (PR-01, PR-02, PR-03, PR-04, PR-05, PR-06, PR-07)**: Search and filtering across provider workflows — team directory, inquiries, quotes, treatment cases, aftercare cases, analytics, packages, reviews, and support cases (P1 - MVP); provider messaging list search/filtering is deferred with FR-012 (PR-07, P2)
+- **Patient Platform (P-02, P-06, P-08)**: Provider search for quote request (P2); help center and support ticket filtering (P1 - MVP); messaging inbox search/filtering (P1 - MVP). _(Patient booking list search/filter is pending FR-006 update — see deferred items below.)_
+- **Provider Platform (PR-01, PR-02, PR-03, PR-04, PR-05, PR-06, PR-07)**: Search and filtering across provider workflows — team directory, inquiries, quotes, treatment cases, aftercare cases, analytics, packages, reviews, and support cases (P1 - MVP); provider messaging list search/filtering (PR-07, P1 - MVP)
 - **Admin Platform (A-01, A-02, A-03, A-05, A-06, A-07, A-09, A-10)**: Comprehensive search and filtering across all admin operations — patient management, provider management, aftercare oversight, billing, affiliates, discount codes, system settings, help centre, and communication monitoring (P1 - MVP)
 - **Shared Services**: None (search logic implemented within each tenant's backend)
 
@@ -42,7 +42,7 @@ The feature spans all three tenants:
 **Patient Platform** [Mixed Priority]:
 
 - **P2 — Post-MVP**: Search providers by name and specialty; filter by country and rating (P-02 quote request flow, per FR-003 Screen 7a)
-- **P2 — Post-MVP**: Search and filter messages inbox by provider/content and read status (P-06, per FR-012)
+- **P1 — MVP**: Search and filter messages inbox by provider/content and read status (P-06, per FR-012)
 - **P1 — MVP**: Search help center content; filter support tickets by status (P-08)
 
 **Provider Platform** [Mixed Priority]:
@@ -53,19 +53,18 @@ The feature spans all three tenants:
 - **P1 — MVP / Aftercare Participation (PR-04)**: Search and filter aftercare cases by patient; filter by milestone, status, and date
 - **P1 — MVP / Financial Management (PR-05)**: Filter analytics dashboard by date range and treatment type
 - **P1 — MVP / Profile & Settings (PR-06)**: Search Help Centre content globally; filter provider FAQs by topic; filter Resource Library content by category and file type; filter reviews by rating; search and filter support cases by case ID, keywords, status, type, and date range
-- **P2 — Post-MVP / Communication & Messaging (PR-07)**: Search and filter provider message threads via FR-012 secure messaging
+- **P1 — MVP / Communication & Messaging (PR-07)**: Search and filter provider message threads via FR-012 secure messaging
 
 **Admin Platform (A-01, A-02, A-03, A-05, A-06, A-07, A-09, A-10)** [P1 - MVP]:
 
 - **Patient Search & Filtering (A-01)**: Search patients by name, email, phone, patient ID (HPID format); filter by status, location, registration date
 - **Provider Search & Filtering (A-02)**: Search providers by provider name, clinic name, email, and license number; filter by status, featured designation, commission type, and creation/last activity date
-- **Aftercare Team Management (A-03)**: Search and filter aftercare cases by patient, milestone status, risk level, specialist assignment, completion rate
-- **Billing & Financial Reconciliation (A-05)**: Search and filter transactions, payouts, invoices by date range, amount, provider, status, currency; filter discount codes by usage, ROI, status
+- **Aftercare Team Management (A-03)**: Search aftercare cases by case ID; filter by provider, milestone, case status, date range, risk level, specialist assignment, completion rate (FR-011 / Screen 13)
+- **Billing & Financial Reconciliation (A-05)**: Search and filter invoices, transactions, the billing audit log, installment plans and affiliate payouts as set out on their owning screens (FR-017 / Screens 4 and 7, FR-007b / Screen 5, FR-018 / Screen 7)
 - **Discount & Promotion Management (A-06)**: Search and filter discount codes by code, provider participation, status, usage, date range, ROI
-- **Affiliate Program Management (A-07)**: Search and filter affiliates by name, email, country/region, affiliate type, status, campaign eligibility, payout setup completeness, code, referral count, commission amount, payout status, and performance metrics
-- ~~**Analytics & Reporting (A-08)**~~: _Deferred — no admin analytics FR exists yet. Remove from FR-022 scope until an Admin Analytics FR is created and can define the screen-level search/filter spec. TODO: revisit when FR for Admin Analytics is authored._
-- **System Settings & Configuration (A-09)**: Search and filter settings by category, version, change history, admin user; filter configurations by module, status, effective date
-- **Communication Monitoring & Support (A-10)**: Search and filter conversations by participant, tag, severity, date range, agent assignment, status
+- **Affiliate Program Management (A-07)**: Search affiliates by name and email; filter by status, country/region, affiliate type, language, performance tier, campaign eligibility, payout setup (FR-018 / Screen 1); affiliate payout history has its own search and filters (FR-018 / Screen 7)
+- **System Settings & Configuration (A-09)**: Search and filter settings by category, version, admin user; filter configurations by module, status, effective date. Change history is read in the admin audit trail (FR-031 / Screen 5, Admin Activity Audit Trail)
+- **Communication Monitoring & Support (A-10)**: Search and filter conversations (FR-012 / Screen 5) and support cases (FR-034 / Screen 1) as set out on those screens
 
 **Shared Services**:
 
@@ -90,7 +89,7 @@ The feature spans all three tenants:
 - **P2 / Provider Search**: Accessed when patient begins quote request flow and needs to select destination/providers
 - **P2 / Provider Search**: Triggered from "Choose Destination" or "Select Providers" screens
 - **P2 / Provider Search**: Available throughout quote request journey for comparison
-- **P2 / Messaging**: Accessed from the patient communications inbox once FR-012 messaging is scheduled
+- **P1 / Messaging**: Accessed from the patient communications inbox
 - **P1 / Help & Support**: Accessed from the Help & Support hub, Help Center, and My Support Tickets screens
 
 **Provider Platform** [Mixed Priority]:
@@ -101,7 +100,7 @@ The feature spans all three tenants:
 - **PR-04 (Aftercare)**: Accessed from Provider Dashboard → Aftercare tab → Aftercare Cases List (FR-011/Screen 8)
 - **PR-05 (Analytics)**: Accessed from Provider Dashboard → Analytics tab → Analytics Dashboard (FR-014/Screen 1)
 - **PR-06 (Profile/Settings)**: Accessed from Provider Dashboard → Profile/Settings section — Packages (FR-024/Screen 4), Help Centre (FR-032/Screen 5), Reviews (FR-032/Screen 1 Tab 5), Support Cases (FR-032/Screen 5.7)
-- **PR-07 (Messaging) [P2 - Post-MVP]**: Accessed from the provider secure messaging inbox once FR-012 is scheduled
+- **PR-07 (Messaging) [P1 - MVP]**: Accessed from the provider secure messaging inbox
 
 **Admin Platform** [P1 - MVP]:
 
@@ -274,6 +273,7 @@ flowchart TD
 
 **B1: Search returns no results**
 
+- **Actors**: Patient, clinic user, or admin (any one of them; each searches on their own and none depends on another), System
 - **Trigger**: Search term or filter combination matches no records
 - **Outcome**: Clear feedback guides user to refine or reset criteria
 - **Flow Diagram**:
@@ -286,7 +286,6 @@ flowchart TD
   FOUND -- "No" --> EMPTY["System displays 'No results found' with refinement guidance"]
   EMPTY --> OPT1["Check spelling or try different keywords"]
   EMPTY --> OPT2["Remove one or more filters"]
-  EMPTY --> OPT3["Contact support (admin platform only)"]
   OPT1 --> UPDATE["User updates search term"]
   OPT2 --> CLEARFILT["User removes filters"]
   UPDATE --> SEARCH
@@ -295,6 +294,7 @@ flowchart TD
 
 **B2: Search system unavailable (database connection failure)**
 
+- **Actors**: Patient, clinic user, or admin (any one of them; each searches on their own and none depends on another), System
 - **Trigger**: Backend database connection fails during a search query
 - **Outcome**: Graceful error handling with retry capability and engineering alert
 - **Flow Diagram**:
@@ -309,7 +309,8 @@ flowchart TD
   LOG --> WAIT["User waits briefly"]
   WAIT --> RETRY{"Retry?"}
   RETRY -- "Yes" --> ATTEMPT
-  RETRY -- "No" --> ABANDON["User abandons search or contacts support"]
+  RETRY -- "No" --> ABANDON["Patient, clinic user, or admin abandons search (any one of them)"]
+  RETRY -- "No" --> SUPPORT["Patient or clinic user contacts support"]
 ```
 
 ---
@@ -328,7 +329,7 @@ The table below maps every platform screen that requires search and/or filter fu
 |--------|--------|----|-------------|-------------|--------|--------|----------|
 | Patient | P-02 | FR-003 | Provider Selection | `FR-003 / Screen 7a` | ✓ | ✓ | P2 |
 | Patient | P-02 | FR-005 | Quote Comparison List | `FR-005 / Screen 1` | — | ✓ | P1 |
-| Patient | P-06 | FR-012 | Patient Messages Inbox | `FR-012 / Screen 1` | ✓ | ✓ | P2 |
+| Patient | P-06 | FR-012 | Patient Messages Inbox | `FR-012 / Screen 1` | ✓ | ✓ | P1 |
 | Patient | P-08 | FR-035 | Help & Support Hub | `FR-035 / Screen 1` | ✓ | — | P1 |
 | Patient | P-08 | FR-035 | Help Center | `FR-035 / Screen 2` | ✓ | ✓ | P1 |
 | Patient | P-08 | FR-035 | My Support Tickets | `FR-035 / Screen 3` | — | ✓ | P1 |
@@ -343,7 +344,7 @@ The table below maps every platform screen that requires search and/or filter fu
 | Provider | PR-06 | FR-032 | FAQs | `FR-032 / Screen 5.1` | — | ✓ | P1 |
 | Provider | PR-06 | FR-032 | Resource Library | `FR-032 / Screen 5.3` | — | ✓ | P1 |
 | Provider | PR-06 | FR-032 | Reviews Tab | `FR-032 / Screen 1 / Tab 5` | — | ✓ | P1 |
-| Provider | PR-07 | FR-012 | Provider Messages List | `FR-012 / Screen 3` | ✓ | ✓ | P2 |
+| Provider | PR-07 | FR-012 | Provider Messages List | `FR-012 / Screen 3` | ✓ | ✓ | P1 |
 | Provider | PR-06 | FR-032 | My Support Cases | `FR-032 / Screen 5.7` | ✓ | ✓ | P1 |
 | Admin | A-01 | FR-003 | Hairline Overview Dashboard | `FR-003 / Screen 11` | ✓ | ✓ | P1 |
 | Admin | A-01 | FR-004 | Global Quote Table | `FR-004 / Screen 5` | ✓ | ✓ | P1 |
@@ -464,7 +465,7 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ---
 
-###### FR-012 / Screen 1: Patient Messages Inbox [P2 — Post-MVP]
+###### FR-012 / Screen 1: Patient Messages Inbox [P1 — MVP]
 
 **Purpose**: Patient searches and filters their conversation inbox to find specific messages or providers.
 
@@ -707,7 +708,7 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 | Filter | Type | Options | Default | Logic |
 |--------|------|---------|---------|-------|
-| Date Range | Segmented + custom picker | Last 7 days, Last 30 days, Last 90 days, Last 12 months, Custom | Last 30 days | Single selection |
+| Date Range | Segmented + custom picker | Today, This week, Last 4 weeks, Last 12 weeks, Custom | Last 4 weeks | Single selection |
 | Treatment Type | Multi-select | All, FUE, FUT, DHI, Sapphire FUE, and other admin-defined types | All | OR (within field) |
 | Benchmarks Toggle | Toggle | Show industry benchmarks overlay | Off | Single flag |
 
@@ -753,7 +754,7 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 | Field | Type | Placeholder | Max Length | Notes |
 |-------|------|-------------|------------|-------|
-| Search Bar | text | Global Help Centre search | 200 chars | Global search across provider Help Centre content with autocomplete suggestions |
+| Search Bar | text | Global Help Centre search | 200 chars | Global search across all provider Help Centre content types (FAQs, articles, resources, and videos) with autocomplete suggestions |
 
 > No additional filter controls on this landing screen — topic and content-specific filtering occurs in the relevant Help Centre sub-screens.
 
@@ -807,6 +808,8 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 | Rating | Multi-select star chips | 5★, 4★, 3★, 2★, 1★ | All ratings | OR (within field) |
 | Sort | Dropdown | Most recent, Highest rated, Lowest rated, Oldest first | Most recent | Single selection |
 
+Filter and sort selections on this screen persist for the session.
+
 ---
 
 #### Module PR-07 — Communication & Messaging
@@ -815,7 +818,7 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ---
 
-###### FR-012 / Screen 3: Provider Messages List [P2 — Post-MVP]
+###### FR-012 / Screen 3: Provider Messages List [P1 — MVP]
 
 **Purpose**: Provider searches for and filters their patient conversations from the header messages list.
 
@@ -841,21 +844,7 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 **Purpose**: Provider searches for and filters support cases they have submitted.
 
-_For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
-
-**Search View**
-
-| Field | Type | Placeholder | Min Length | Debounce | Notes |
-|-------|------|-------------|-----------|----------|-------|
-| Case ID / title / keywords | text | "Search cases…" | 3 chars | 300ms | Real-time search across Case ID, Title, Description, Message content |
-
-**Filter View**
-
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Status | Multi-select | Open, In Progress, Resolved, Closed | Open + In Progress | OR (within field) |
-| Type | Multi-select | Support Request, Feedback | All types | OR (within field) |
-| Date Range | Date range picker | Custom | Last 90 days | Filters by case creation date |
+The search and filter criteria for this screen are owned by FR-032 (REQ-032-106 and REQ-032-107), not by FR-022.
 
 ---
 
@@ -938,7 +927,7 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 | Filter | Type | Options | Default | Logic |
 |--------|------|---------|---------|-------|
-| Acceptance Status | Multi-select | Active, Superseded by Cancellation | Active | OR (within field) |
+| Acceptance Status | Multi-select | Active, Booking Cancelled, Superseded — Provider Fault | Active | OR (within field) |
 
 ---
 
@@ -1588,7 +1577,7 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 | Filter | Type | Options | Default | Logic |
 |--------|------|---------|---------|-------|
 | Role | Dropdown | All Roles, Super Admin, Aftercare Specialist, Billing Staff, Support Staff | All Roles | Exact match |
-| Status | Multi-select | Active, Suspended, Pending Activation, Inactive | All | OR (within field) |
+| Status | Multi-select | All, Active, Suspended, Pending Invitation | All | OR (within field) |
 
 ---
 
@@ -1757,6 +1746,8 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 | Flag Type | Multi-select | Keyword Flagged, Manually Flagged, Intervened, No Flags | All | OR (within field) |
 | Conversation Status | Multi-select | Active, Resolved, Escalated | All | OR (within field) |
 
+Active filters combine, and the filters are remembered.
+
 ---
 
 ##### FR-034 Support Center Ticketing
@@ -1779,7 +1770,7 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 | Filter | Type | Options | Default | Logic |
 |--------|------|---------|---------|-------|
-| Status | Multi-select | Open, In Progress, Closed, On Hold, Escalated | Open + In Progress | OR (within field) |
+| Status | Multi-select | Open, In Progress, Resolved, Closed | Open + In Progress | OR (within field) |
 | Priority | Multi-select | High, Medium, Low | All | OR (within field) |
 | Category | Dropdown | All; admin-defined ticket categories | All | Exact match |
 | Ticket Source | Dropdown | All, Patient App, Provider App, Admin Portal | All | Exact match |
@@ -1794,18 +1785,19 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 ### General Module Rules
 
 - **Rule 1**: All search queries MUST be case-insensitive to improve match rate
-- **Rule 2**: Search functionality MUST support fuzzy matching via database full-text indexes (e.g., "Mark P" matches "Mark Patterson"; "Mehmet" matches "Mehmet Yilmaz"; accent-insensitive matching, e.g., "Jose" matches "José")
+- **Rule 2**: Search functionality MUST support fuzzy matching (e.g., "Mark P" matches "Mark Patterson"; "Mehmet" matches "Mehmet Yilmaz"; accent-insensitive matching, e.g., "Jose" matches "José")
 - **Rule 3**: Search results MUST be paginated to prevent performance degradation with large datasets
 - **Rule 4**: Filter selections MUST persist during user session (cleared on logout)
-- **Rule 5**: Admin search results MUST display patient/provider status prominently for quick context
+- **Rule 5**: Admin search results SHOULD display patient/provider status for quick context (a design hint only; REQ-022-010 and REQ-022-011 carry the requirement)
 - **Rule 6**: Search input fields MUST have debounce (300–500ms depending on screen type — see REQ-022-012) to reduce server load from rapid typing
 - **Rule 7**: Autocomplete suggestions MUST be limited to 10 results to avoid overwhelming user
-- **Rule 8**: Search history MUST NOT be stored (privacy consideration for admin platform)
-- **Rule 9**: Any patient-facing price sort or price filter across items priced in different currencies MUST convert each price to the patient's display currency at the current rate for ordering and filtering only; each card MUST still show its own quote currency, and when the listed items use more than one currency the price order MUST be labelled approximate
+- **Rule 8**: No user-facing search history is offered (no recent-searches list or saved searches); the admin audit log of admin searches stays (see Audit Rule)
+- **Rule 9**: Any patient-facing price sort or price filter across items priced in different currencies MUST convert each price to the patient's display currency at the current rate for ordering and filtering only; each card carrying a quote MUST still show its own quote currency, and when the listed items use more than one currency the price order MUST be labelled approximate
+- **Rule 10**: A provider card that carries no quote MUST show its starting price converted to the patient's currency [P2 - Post-MVP]
 
 ### Data & Privacy Rules
 
-- **Privacy Rule 1**: Patient names MUST be excluded from provider-facing search fields and results until booking is confirmed and paid. Provider search for inquiries and quotes is restricted to Patient ID as the only patient identifier prior to payment confirmation (see FR-003/Screen 9 and FR-004/Screen 2)
+- **Privacy Rule 1**: Until the booking is confirmed and paid, provider-facing results show the Patient ID plus a masked patient name, never the full name, and patient names MUST be excluded from provider-facing search fields. Provider search for inquiries and quotes is restricted to Patient ID as the only patient identifier prior to payment confirmation (see FR-003/Screen 9 and FR-004/Screen 2)
 - **Privacy Rule 2**: Admin search logs MUST be retained for audit purposes (who searched for whom, when)
 - **Privacy Rule 3**: Patient contact information MUST NOT be indexed for public search (admin only)
 - **Privacy Rule 4**: Provider financial data MUST NOT be searchable by other providers (admin only)
@@ -1815,21 +1807,22 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 **Editable by Admin**:
 
-- Maximum search results per page (default: 25, range: 10-100)
+- Maximum search results per page for admin and provider lists (default: 25, range: 10-100)
 - Default sort order for provider search (Recommended, Rating, Price, Experience)
 - Featured provider designation (manually curated list)
-- Provider visibility status (active providers appear in search, suspended do not)
+- Provider visibility status (active providers appear in patient provider search, suspended do not)
 
 **Fixed in Codebase (Not Editable)**:
 
 - Search debounce timing (per REQ-022-012: 300ms for local filters, 500ms for server-query searches)
 - Autocomplete result limit (10 suggestions)
 - Maximum providers selectable per quote request (5 providers)
-- Search query max length (200 chars for admin, 200 chars for provider, 50 chars for patient)
+- Search results per page in the patient app (10)
+- Search query max length (200 chars for admin, 200 chars for provider, 50 chars for patient, unless the screen states less)
 
 **Configurable with Restrictions**:
 
-- Admin can temporarily disable provider from search results (suspension) but cannot delete provider record
+- Admin can temporarily disable provider from patient provider search results (suspension) but cannot delete provider record
 - Admin can feature/unfeature providers in patient search, affecting "Recommended" sort order
 
 ### Search Performance Rules
@@ -1838,7 +1831,6 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 - **Performance Rule 2**: Database indexes MUST exist on all searchable fields (name, email, phone, location, status)
 - **Performance Rule 3**: Search results MUST use pagination to prevent loading excessive data to client
 - **Performance Rule 4**: Autocomplete queries MUST be cached for 5 minutes to reduce database load
-- **Performance Rule 5**: Complex filters (multi-criteria) MUST execute in single database query (no N+1 queries)
 
 ---
 
@@ -1887,20 +1879,17 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 ### Internal Dependencies (Other FRs/Modules)
 
 - **FR-031 / Module A-09**: Requires admin authentication from A-09: Admin Access Control
-  - **Why needed**: All search endpoints require a valid admin JWT session before displaying patient or provider PII
-  - **Integration point**: Admin JWT bearer token verified on every search API request; role-based access control enforced per FR-031
+  - **Why needed**: All search endpoints require a signed-in admin session before displaying patient or provider PII
+  - **Integration point**: Role-based access control enforced per FR-031
 
 - **FR-015 / Module A-02**: Depends on A-02: Provider Management & Onboarding for provider data
   - **Why needed**: Provider search queries provider profiles, credentials, and status
-  - **Integration point**: Searches provider database table with joins to staff, certifications, reviews
 
 - **FR-016 / Module A-01**: Depends on A-01: Patient Management & Oversight for patient data
   - **Why needed**: Patient search queries patient profiles, medical history, and booking status
-  - **Integration point**: Searches patient database table with joins to inquiries, quotes, bookings
 
 - **FR-003 / Module P-02**: Integrates with P-02: Quote Request & Management for provider selection [P2]
   - **Why needed**: Selected providers from search are added to quote request recipients
-  - **Integration point**: Patient app sends selected provider IDs to quote request API
 
 - **Source FR Maintenance Dependencies**: FR-022 is the single source of truth for search/filter specifications across all source FRs listed below. Any screen-level change to a search field or filter criterion in a source FR **must** trigger an update to the FR-022 Master Reference Table and the corresponding screen spec entry here.
 
@@ -1918,7 +1907,7 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
   | Provider | FR-012 | Screen 3 (Provider Messages List) |
   | Provider | FR-014 | Screen 1 (Provider Analytics Dashboard) |
   | Provider | FR-024 | Screen 4 (Provider Package List) |
-  | Provider | FR-032 | Screens 5, 5.1, 5.3, 1/Tab 5, 5.7 (Help Centre, FAQs, Resource Library, Reviews Tab, My Support Cases) |
+  | Provider | FR-032 | Screens 5, 5.1, 5.3, 1/Tab 5 (Help Centre, FAQs, Resource Library, Reviews Tab) |
   | Admin (A-01) | FR-003 | Screen 11 (Hairline Overview Dashboard) |
   | Admin (A-01) | FR-004 | Screen 5 (Global Quote Table) |
   | Admin (A-01) | FR-005 | Screen 5 (Quote Acceptance Table) |
@@ -1945,13 +1934,6 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 ### External Dependencies (APIs, Services)
 
 - **External Service 1**: None required for MVP
-  - Admin search operates entirely on internal database
-  - No third-party search engines (Elasticsearch, Algolia) required for initial launch
-
-- **Future Enhancement**: Elasticsearch or Algolia integration for advanced search [P3]
-  - **Purpose**: Enhance beyond MVP fuzzy matching with synonym expansion, advanced typo tolerance (edit-distance algorithms), and relevance ranking — basic fuzzy matching via database full-text indexes is the MVP standard
-  - **Integration**: Sync patient/provider data to search index, query search engine instead of database
-  - **Failure handling**: Fallback to database fuzzy search if search service unavailable
 
 ### Data Dependencies
 
@@ -1962,10 +1944,6 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 - **Entity 2**: Active provider records with complete profiles, credentials, and performance data
   - **Why needed**: Cannot search providers if no provider data exists
   - **Source**: Provider onboarding module (A-02)
-
-- **Entity 3**: Database indexes on searchable fields
-  - **Why needed**: Search performance degrades without indexes on large tables
-  - **Source**: Database migration scripts (create indexes on patients.name, patients.email, providers.clinic_name, etc.)
 
 ---
 
@@ -1983,9 +1961,8 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 - **Assumption 1**: Admin platform accessed via modern browsers (Chrome, Firefox, Safari - last 2 versions)
 - **Assumption 2**: Patient mobile app has stable internet connection for search queries [P2 - Post-MVP]
-- **Assumption 3**: Database supports full-text search indexes (MySQL FULLTEXT — system uses MySQL 8.0+)
-- **Assumption 4**: Backend API can handle 100 concurrent search queries without performance degradation
-- **Assumption 5**: Client-side pagination and infinite scroll supported by mobile app framework [P2 - Post-MVP]
+- **Assumption 3**: Backend API can handle 100 concurrent search queries without performance degradation
+- **Assumption 4**: Client-side pagination and infinite scroll supported by mobile app framework [P2 - Post-MVP]
 
 ### Business Process Assumptions
 
@@ -1993,50 +1970,6 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 - **Assumption 2**: Provider data is kept up-to-date by providers and verified by admin (search reflects accurate info)
 - **Assumption 3**: Patient searches for providers occur during quote request flow, not as standalone exploration [P2]
 - **Assumption 4**: Provider "Featured" status manually curated by admin based on performance, quality, and partnerships
-
----
-
-## Implementation Notes
-
-### Technical Considerations
-
-- **Database Indexing**: Create indexes on all searchable fields to ensure query performance:
-  - `patients`: name, email, phone, patient_id, status, location, created_at
-  - `providers`: clinic_name, location, status, specialty, rating, years_experience
-- **Query Optimization**: Use query builder with prepared statements to prevent SQL injection
-- **Pagination**: Implement cursor-based or offset-based pagination depending on dataset size
-- **Caching**: Cache autocomplete results and frequently accessed search queries (5-minute TTL)
-- **Debouncing**: Implement client-side debounce (300–500ms per screen type, per REQ-022-012) to reduce server load from rapid typing
-- **Full-Text Search**: Implement MySQL FULLTEXT indexes (system uses MySQL 8.0+) — fuzzy matching via database full-text search is the MVP standard for all search fields. Advanced fuzzy features (synonym expansion, edit-distance algorithms, relevance scoring) are deferred to a P3 Elasticsearch/Algolia integration
-
-### Integration Points
-
-- **Integration 1**: Admin web app sends search queries to backend API via REST
-  - **Data format**: JSON payload with search term, filters, pagination params
-  - **Authentication**: Admin JWT bearer token in Authorization header
-  - **Error handling**: Display user-friendly error messages, retry on network failure
-
-- **Integration 2**: Patient mobile app sends provider search queries to backend API via REST [P2 - Post-MVP]
-  - **Data format**: JSON payload with location, filters, sort order, pagination cursor
-  - **Authentication**: Patient JWT bearer token
-  - **Error handling**: Display loading state, retry on failure, cache results for offline viewing
-
-### Scalability Considerations
-
-- **Current scale**: Expected 50-100 admin searches per day at launch
-- **Growth projection**: Anticipate 500+ searches per day within 6 months (as platform grows)
-- **Peak load**: Handle 50 concurrent admin searches during business hours
-- **Data volume**: Patient database may grow to 100,000+ records within 12 months; provider database to 500+ records
-- **Scaling strategy**: Database read replicas for search queries, application-level caching, consider Elasticsearch for >100k records
-
-### Security Considerations
-
-- **Authentication**: All search endpoints require valid JWT authentication (admin or patient session)
-- **Authorization**: Role-based access control enforces admin-only access to patient/provider search
-- **Audit trail**: Log all admin searches with user ID, timestamp, search terms, and result count
-- **Input validation**: Sanitize all search inputs to prevent SQL injection, XSS attacks
-- **Rate limiting**: Limit search queries to 100 per hour per user to prevent abuse/scraping
-- **Data masking**: Patient PII (email, phone) displayed only to authorized admins with proper permissions
 
 ---
 
@@ -2071,7 +2004,7 @@ An admin needs to verify a new provider's credentials during onboarding. They se
 **Acceptance Scenarios**:
 
 1. **Given** an admin is reviewing pending provider onboarding applications, **When** they search for a provider by clinic name, **Then** the system returns matching provider(s) with location, status, and onboarding progress
-2. **Given** an admin needs to find all providers in a specific country, **When** they select "Turkey" from the Location filter, **Then** the system returns only providers whose location matches Turkey
+2. **Given** an admin needs to find all providers on a flat-rate commission, **When** they select "Flat Rate" from the Commission Type filter, **Then** the system returns only providers on a flat-rate commission
 3. **Given** an admin applies a status filter "Suspended", **When** they perform a search, **Then** the system returns only providers whose accounts are Suspended. Providers are created Active per FR-015; there is no Draft status
 4. **Given** search returns a provider, **When** admin clicks on the provider row, **Then** the system displays full provider details including credentials, certifications, staff, and documents
 5. **Given** an admin opens a provider from search results, **When** the provider detail view loads, **Then** the admin can reach the FR-015 status actions (Suspend, Reactivate, Deactivate) from it; there is no separate Approve action
@@ -2139,18 +2072,15 @@ A patient has received two parent quotes from two providers. Each parent quote o
   - **Handling**: Display the first page of results (25 per page, per REQ-022-006) with total result count shown (e.g., "500+ results found"). System shows an informational banner: "Many results found. Use filters to narrow down by location, status, or patient ID."
 
 - **Edge Case 3**: What occurs if a patient's search query contains special characters or SQL syntax?
-  - **Handling**: Input sanitization removes/escapes special characters; query runs safely without SQL injection risk; user sees results or "No matches found."
+  - **Handling**: Input sanitization removes/escapes special characters; query runs safely without SQL injection risk; user sees results or "No results found."
 
 - **Edge Case 4**: How does search handle diacritics or accented characters (e.g., "José" vs "Jose")?
-  - **Handling**: Search performs accent-insensitive matching (José matches Jose); database collation set to utf8mb4_unicode_ci (MySQL 8.0+).
+  - **Handling**: Search performs accent-insensitive matching (José matches Jose).
 
 - **Edge Case 5**: What happens if database index is missing on a searchable field, causing slow queries?
   - **Handling**: Search times out after 10 seconds; error message displayed: "Search taking too long. Please try again or contact support."; error logged for engineering team to investigate.
 
-- **Edge Case 6**: How does the system handle concurrent searches from multiple admins querying the same patient?
-  - **Handling**: Database read locks prevent conflicts; each admin sees consistent snapshot of patient data; audit logs capture each admin's search independently.
-
-- **Edge Case 7**: What happens if a patient has multiple accounts with same name/email?
+- **Edge Case 6**: What happens if a patient has multiple accounts with same name/email?
   - **Handling**: Search returns all matching accounts; admin reviews each record to identify correct patient using patient ID, location, or registration date; duplicate account detection flagged in results.
 
 ---
@@ -2180,16 +2110,16 @@ A patient has received two parent quotes from two providers. Each parent quote o
 - **REQ-022-040**: System MUST allow providers to filter their analytics dashboard by date range and treatment type
 - **REQ-022-041**: System MUST allow providers to search their package list by name and filter it by package status (Active or Inactive)
 - **REQ-022-042**: System MUST allow providers to filter their reviews by star rating
-- **REQ-022-043**: System MUST allow providers to search and filter support cases by case ID, keywords, status, type, and date range
+- **REQ-022-043**: System MUST allow providers to search and filter support cases by case ID, keywords, status, type, and date range (criteria owned by FR-032: REQ-032-106 and REQ-032-107)
 - **REQ-022-044**: System MUST allow providers to search team members by name, email, role, and status
 
 #### Patient Platform (P1 Screens)
 
 - **REQ-022-051**: System MUST allow patients to search help center content with full-text search and auto-suggest
 - **REQ-022-052**: System MUST allow patients to filter help center by content type (FAQs, Articles, Resources, Videos)
-- **REQ-022-053**: System MUST allow patients to filter their support tickets by status
+- **REQ-022-070**: System MUST allow patients to search their messages inbox by provider name and message content and to filter it by read status (All, Unread, Read); this is the one statement for the inbox search and filter
 - **REQ-022-057**: System MUST allow patients to sort FR-005 subquotes by price, inherited graft count, inherited provider rating, appointment date, or parent quote date and to filter them by the patient-submitted date range selected by each subquote.
-- **REQ-022-058**: System MUST order any patient-facing price sort or price filter by each price converted to the patient's display currency at the current rate, for ordering and filtering only; each card MUST keep showing its own quote currency, and the price order MUST be labelled approximate when the listed items use more than one currency.
+- **REQ-022-058**: System MUST order any patient-facing price sort or price filter by each price converted to the patient's display currency at the current rate, for ordering and filtering only; each card carrying a quote MUST keep showing its own quote currency, and the price order MUST be labelled approximate when the listed items use more than one currency.
 
 #### Shared Behavior Rules
 
@@ -2204,15 +2134,13 @@ A patient has received two parent quotes from two providers. Each parent quote o
 
 ### Enhanced Requirements (P2 - Post-MVP)
 
-- **REQ-022-009**: System MUST allow admins to export search results to CSV or Excel format where applicable [P2 — spec incomplete; requires screen-level spec defining button placement, output columns, full-set vs. page-only behavior, and which screens support export before scheduling for development]
 - **REQ-022-013**: System MUST allow patients to search providers by name and specialty [P2 - Post-MVP]
 - **REQ-022-014**: System MUST allow patients to filter providers by country, rating, and specialty [P2 - Post-MVP]
 - **REQ-022-015**: System MUST support autocomplete suggestions for location searches (max 10 suggestions) [P2 - Post-MVP]
 - **REQ-022-017**: System MUST limit patient provider selection to maximum 5 providers per quote request [P2 - Post-MVP]
 - **REQ-022-018**: System MUST display provider card with name, location, rating, starting price, before/after photo [P2 - Post-MVP]
 - **REQ-022-019**: System MUST support infinite scroll pagination for patient mobile app (10 results per page) [P2 - Post-MVP]
-- **REQ-022-049**: System MUST allow patients to search their messages inbox by provider name and message content [P2 - Post-MVP]
-- **REQ-022-050**: System MUST allow patients to filter their messages inbox by read/unread status [P2 - Post-MVP]
+- **REQ-022-143**: System MUST show the starting price on a provider card that carries no quote converted to the patient's currency [P2 - Post-MVP]
 
 ### Security & Privacy Requirements
 
@@ -2221,7 +2149,7 @@ A patient has received two parent quotes from two providers. Each parent quote o
 - **REQ-022-023**: System MUST log all admin searches with user ID, timestamp, search terms, and result count
 - **REQ-022-024**: System MUST sanitize all search inputs to prevent SQL injection and XSS attacks
 - **REQ-022-025**: System MUST rate-limit search queries to 100 per hour per user
-- **REQ-022-026**: System MUST anonymize patient names in search results if patient has not confirmed payment
+- **REQ-022-026**: System MUST show providers only the Patient ID and a masked patient name in search results until the patient has confirmed payment; search itself stays by Patient ID only
 - **REQ-022-027**: System MUST encrypt audit logs containing patient/provider search history
 
 ### Performance Requirements
@@ -2236,21 +2164,15 @@ A patient has received two parent quotes from two providers. Each parent quote o
 
 ## Key Entities
 
-- **Entity 1 - Patient Search Record**:
-  - **Key attributes**: patient_id (HPID), name, email, phone, status, location, registration_date, last_activity_date, treatment_type
-  - **Relationships**: Patient record links to inquiries, quotes, bookings, payments
+- **Entity 1 - Patient and Provider Records** (owned by FR-001 and FR-015; no separate search records):
+  - Admin search reads the Patient record (FR-001) and the Provider record (FR-015) directly
+  - **Patient fields the search uses beyond what the Patient record lists**: patient ID (HPID), name, phone, status, location, registration date, last activity date, treatment type
+  - **Provider fields the search uses beyond what the Provider record lists**: clinic name, location (city, country), specialties, rating, review count, years of experience, active patients, total procedures
+  - **Relationships**: Patient record links to inquiries, quotes, bookings, payments; Provider record links to staff, certifications, reviews, treatments, bookings
 
-- **Entity 2 - Provider Search Record**:
-  - **Key attributes**: provider_id, clinic_name, location (city, country), status, specialties, rating, review_count, years_experience, active_patients, total_procedures
-  - **Relationships**: Provider record links to staff, certifications, reviews, treatments, bookings
-
-- **Entity 3 - Search Audit Log**:
+- **Entity 2 - Search Audit Log**:
   - **Key attributes**: log_id, admin_user_id, search_type (patient/provider), search_term, filters_applied, result_count, timestamp
   - **Relationships**: Audit log links to admin user who performed search
-
-- **Entity 4 - Database Index** (Technical Entity):
-  - **Key attributes**: table_name, indexed_column, index_type (BTREE, FULLTEXT, etc.)
-  - **Relationships**: Indexes applied to patient and provider tables to optimize search queries
 
 ---
 
@@ -2278,6 +2200,7 @@ A patient has received two parent quotes from two providers. Each parent quote o
 | 2026-10-18 | 2.16 | Consolidated verification corrections (CR-FR022-20261016-01): Approvals row refreshed to record Product Owner documentation approval through v2.15 via the MTG-002 decision log. No requirement change. | AI |
 | 2026-10-18 | 2.17 | Final audit corrections (CR-FR022-20261016-01): the 2026-04-13 change log rows for versions 2.4 and 2.5 are now listed in version order. No requirement change; the provider and admin Quote Status filters keep the FR-004 status label Cancelled (Provider Status), while FR-004 owns the patient-facing label Offer Unavailable. | Product Owner |
 | 2026-10-22 | 2.18 | FR-015 alignment for A-02 provider search (B01 manual test findings): FR-015 / Screen 1 Status filter drops the non-existent Draft status and defaults to Active, matching FR-015 Screen 1 Default View; Main Flow 2 and User Story 2 scenarios 3 and 5 no longer reference Draft providers or an Approve action, since FR-015 creates providers Active. Product decision 2026-10-22. | AI |
+| 2026-11-20 | 2.19 | Requirements graph programme baseline: owner rulings applied. Main changes: (1) messaging inbox and provider messages search and filters move from P2 to P1, with REQ-022-070 as the one statement for the patient inbox (REQ-022-049, REQ-022-050 retired); (2) provider-facing results show Patient ID plus a masked name before payment (Privacy Rule 1, REQ-022-026); (3) new REQ-022-143 and Rule 10 for provider card starting price converted to the patient's currency, with REQ-022-058 and Rule 9 limited to cards carrying a quote; (4) REQ-022-009 (export), REQ-022-053 and REQ-022-086 (My Support Cases criteria, now owned by FR-032) retired; REQ-022-139 and REQ-022-142 retired and technical notes dropped (database joins, search engine notes, MySQL FULLTEXT, scaling strategy, collation clause); (5) admin settings search points to FR-031 Screen 5 for change history, Admin Analytics deferral line removed, A-03/A-05/A-07/A-10 lines trimmed to the owning screens; (6) option lists corrected to the owning FRs (FR-014 time range, FR-005 acceptance status, FR-031 admin status, FR-034 ticket status), page size setting covers admin and provider only, Help Centre search lists its content types, reviews and monitoring filters remembered; (7) B1 and B2 name patient, clinic user and admin as any-one-of doers, B1 drops the contact-support suggestion, B2 separates abandoning (all three) from contacting support (patient and clinic user); (8) Key Entities fold the search records into the Patient and Provider records; cross-document reconciliation (leftover technical notes removed: search engine and database dependency notes, Implementation Notes section, Database Index entity, database wording in Rule 2). | Product Owner / Documentation |
 
 ---
 
@@ -2297,4 +2220,4 @@ A patient has received two parent quotes from two providers. Each parent quote o
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-022 from system-prd.md
-**Last Updated**: 2026-10-22
+**Last Updated**: 2026-11-20

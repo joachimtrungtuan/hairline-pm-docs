@@ -29,14 +29,13 @@ The Patient Authentication & Profile Management module enables patients to secur
 - Update profile image and preferences
 - Reset password via email OTP
 - Manage notification preferences and privacy settings
-- View and manage active device sessions
 - Request account deletion (soft-delete handled by admin)
 - Access profile overview, settings, and account management features
 
 **Provider Platform**:
 
 - Access anonymized patient data only (no direct patient communication)
-- View patient identifiers and basic profile information for assigned cases
+- View anonymised patient identifiers and basic profile information for assigned cases
 - No authentication or profile management capabilities for providers
 - Patient data remains anonymized until payment confirmation (per system PRD)
 
@@ -93,9 +92,9 @@ The Patient Authentication & Profile Management module enables patients to secur
 
 ```mermaid
 flowchart TD
-   subgraph W1S1["1. App Launch & Service Selection"]
+   subgraph W1S1["1. App Launch & Introduction"]
      direction TB
-     W1S1_1["Patient opens Hairline mobile app"] --> W1S1_2["Patient sees splash screen with Hairline branding"] --> W1S1_3["Patient navigates to landing screen with &quot;Get Started&quot; option"] --> W1S1_4["Patient taps &quot;Get Started&quot; to begin registration"]
+     W1S1_1["Patient opens Hairline mobile app"] --> W1S1_2["Patient sees splash screen (new visual)"] --> W1S1_2b["Patient sees two explanation screens of what Hairline offers"] --> W1S1_3["Patient navigates to landing screen with &quot;Get Started&quot; option"] --> W1S1_4["Patient taps &quot;Get Started&quot; to begin registration"]
    end
 
    subgraph W1S2["2. Name Collection"]
@@ -120,7 +119,12 @@ flowchart TD
 
    subgraph W1S6["6. Discovery Question"]
      direction TB
-     W1S6_1["System displays &quot;How did you find out about us?&quot; screen"] --> W1S6_2["Patient selects from centrally-managed options configured in Admin Settings (A-09)"] --> W1S6_3["Patient taps &quot;Continue&quot; to proceed to main app"]
+     W1S6_1["System displays &quot;How did you find out about us?&quot; screen"] --> W1S6_2["Patient selects from centrally-managed options configured in Admin Settings (A-09)"] --> W1S6_3["Patient taps &quot;Continue&quot; to proceed to service selection"]
+   end
+
+   subgraph W1S7["7. Service Selection"]
+     direction TB
+     W1S7_1["System displays the four Hairline services"] --> W1S7_2["Patient picks one of the four services"] --> W1S7_3["System lands the patient in the chosen service"]
    end
 
   W1S1_4 --> W1S2_1
@@ -128,6 +132,7 @@ flowchart TD
   W1S3_6 --> W1S4_1
   W1S4_4 --> W1S5_1
   W1S5_6 --> W1S6_1
+  W1S6_3 --> W1S7_1
 ```
 
 **Alternative Flows**:
@@ -294,8 +299,8 @@ flowchart TD
 ```mermaid
 flowchart TD
   W4D1_1["Admin can edit patient profiles through admin platform"] --> W4D1_2["System logs all admin changes with reason"]
-  W4D1_2 --> W4D1_3["Patient receives notification of changes"]
-  W4D1_3 --> W4D1_4["Patient can review and accept/reject changes"]
+  W4D1_2 --> W4D1_3["Patient receives notification of every change"]
+  W4D1_3 --> W4D1_4["Patient can review the changes (the admin edit is final; the patient does not accept or reject it)"]
 ```
 
 ---
@@ -321,6 +326,23 @@ flowchart TD
 - Splash screen displays for maximum 3 seconds
 - Loading animation provides visual feedback
 - Branding consistent across all platforms
+- The splash screen uses a new visual
+- On first start the app language is the phone's language; if the app does not offer that language, it falls back to English. The patient can change the language later.
+
+#### Screen 1a: Explanation Screens
+
+**Purpose**: Explain what Hairline offers before the patient registers
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|---|---|---|---|---|
+| Explanation Content | display | Yes | Two screens explaining what Hairline offers | Display-only; shown after the splash screen and before the Landing Screen (Screen 2) |
+
+**Business Rules**:
+
+- Two explanation screens follow the splash screen, then the patient reaches the Landing Screen where "Get Started" begins registration
+- Explanation screens are display-only and collect no data
 
 #### Screen 2: Landing Screen
 
@@ -330,7 +352,7 @@ flowchart TD
 
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
-| Background Image | image | Yes | Background image of satisfied patient | Rotates based on admin configuration |
+| Background Image | image | Yes | Background image of satisfied patient | Rotates based on admin configuration (landing background is a platform setting managed in FR-026) |
 | Background Overlay | display | Yes | Semi-transparent overlay for text readability | Static styling element |
 | Headline Text | text | Yes | "Begin Your Transformation Journey with Hairline" | Static marketing copy |
 | Get Started Button | button | Yes | Primary CTA (green) | Leads to registration flow (Screen 3) |
@@ -338,7 +360,7 @@ flowchart TD
 
 **Business Rules**:
 
-- Background image rotates based on admin configuration
+- Background image rotates based on admin configuration (FR-026 platform setting)
 - Primary CTA leads to registration flow
 - Secondary link leads to login flow
 - Screen responsive to different device sizes
@@ -387,7 +409,7 @@ flowchart TD
 **Business Rules**:
 
 - Email must be valid format
-- Password minimum 12 characters, at least one uppercase, one lowercase, one digit, and one special character from !@#$%^&(),.?":{}|<> (fixed in codebase, not editable in Admin)
+- Password policy: see system PRD, Platform-Wide Rules: Password and one-time-code policy
 - Password confirmation must match
 - Create account button disabled until all fields valid
 - Real-time password strength validation
@@ -430,7 +452,7 @@ flowchart TD
 | Gender | select | Yes | Dropdown for gender selection | Options: Male, Female, Other, Prefer not to say |
 | Date of Birth | date | Yes | Date picker for patient's date of birth | Opens Screen 7 (Calendar Picker); minimum age 18; maximum age 100 |
 | Phone Number | text | Yes | Phone number input with country code dropdown | Country code list centrally managed in Admin Settings (A-09); format validated per selected country code |
-| Country | select | Yes | Dropdown for country selection | Centrally managed list (Admin Settings A-09); selection affects currency and language preferences |
+| Country | select | Yes | Dropdown for country selection | Centrally managed list (Admin Settings A-09); selection sets the currency preference only (language is independent of country) |
 | Create Account Button | button | Yes | Primary CTA (green) | Disabled until all required fields are complete |
 
 **Business Rules**:
@@ -439,7 +461,7 @@ flowchart TD
 - Date of birth required (minimum age 18)
 - Phone number with country code validation
 - Country and country code lists are centrally managed in Admin Settings (A-09)
-- Country selection affects currency and language preferences
+- Country selection sets the currency preference only; language is independent of country
 - All fields required to complete registration
 
 #### Screen 7: Calendar Picker Overlay
@@ -473,7 +495,7 @@ flowchart TD
 | Screen Title | text | Yes | "How did you find out about us?" | Displayed at top |
 | Back Navigation | action | Yes | Back arrow to return to previous screen | Top-left corner |
 | Discovery Source | select | Yes | "Select an option" dropdown | Options centrally managed in Admin Settings (A-09); selection required before Continue is enabled |
-| Continue Button | button | Yes | Primary CTA (green) | Disabled until an option is selected; proceeds to main app on tap |
+| Continue Button | button | Yes | Primary CTA (green) | Disabled until an option is selected; proceeds to service selection (Screen 8a) on tap |
 
 **Business Rules**:
 
@@ -481,7 +503,24 @@ flowchart TD
 - Selection required before proceeding (per client transcription: discovery question is part of the mandatory registration flow)
 - Data used for marketing analytics
 - Continue button disabled until an option is selected
-- Continue button proceeds to main app
+- Continue button proceeds to service selection (Screen 8a)
+
+#### Screen 8a: Service Selection Screen
+
+**Purpose**: Let the newly registered patient pick the Hairline service to start with
+
+**Data Fields**:
+
+| Field Name | Type | Required | Description | Validation Rules |
+|---|---|---|---|---|
+| Screen Title | text | Yes | Prompt asking the patient which service to start with | Displayed at top |
+| Service Options | select | Yes | The four Hairline services, one option each | Exactly one service is picked; the four services are defined in the platform requirements, not in this module |
+| Continue Button | button | Yes | Primary CTA (green) | Disabled until a service is picked; lands the patient in the chosen service |
+
+**Business Rules**:
+
+- Shown directly after the discovery question (Screen 8), as the last step of the new-patient entry flow
+- The patient picks one of the four services and lands in the chosen service
 
 #### Screen 9: Login Screen
 
@@ -627,13 +666,14 @@ flowchart TD
 | Phone Number | text | Yes | Phone number input with country code dropdown | Country code list centrally managed (Admin A-09); format validated per country code |
 | Date of Birth | date | Yes | Date of birth picker | Minimum age 18; uses date picker overlay |
 | Gender | select | Yes | Gender selection dropdown | Options: Male, Female, Other, Prefer not to say |
-| Country | select | Yes | Country selection dropdown | Centrally managed list (Admin A-09); affects currency and language preferences |
+| Country | select | Yes | Country selection dropdown | Centrally managed list (Admin A-09); sets the currency preference only (language is independent of country) |
 | Save and Update Button | button | Yes | Primary CTA: "Save and update" | Disabled until all required fields are valid; persists changes |
 
 **Business Rules**:
 
 - Validation applied per field; back navigation available
 - Email change triggers re-verification via 6-digit OTP
+- Profile completion is the share of required profile fields that are filled, shown as a percentage from 0 to 100, with equal weight per field. The required fields are: First Name, Last Name, Email Address, Phone Number, Date of Birth, Gender and Country. The Avatar is optional and does not count.
 
 #### Screen 15: Settings Main Screen
 
@@ -691,6 +731,7 @@ flowchart TD
 - System event notifications (inquiry stage changes including Inquiry Cancelled, quote received, booking confirmed, payment events, aftercare reminders) are automatically sent per FR-020; user cannot disable individual events in MVP
 - Changes auto-save immediately upon toggle (no explicit "Save" button); preference changes effective within 1 minute; default for new accounts: both Email and Push toggles ON
 - Marketing notifications are OFF by default unless explicit consent is stored (applies when V2 categories ship)
+- Notification preference records are owned by FR-030; this screen shows and edits them
 - If save fails, UI MUST revert to previous toggle state and show actionable error with Retry option
 
 **Acceptance Scenarios**:
@@ -782,7 +823,7 @@ flowchart TD
 
 **Help & Support Acceptance Scenario**:
 
-1. Given user opens Help and support → Report a problem, When submitting feedback, Then device/os/app version and timestamp are attached; submissions are throttled to prevent spam.
+1. Report a problem is owned by the support-ticket feature (FR-034, Report-a-problem Rule); Help and Support from Settings routes there (see Screen 15 rules).
 
 **Data/Validation & Audit Acceptance Scenarios**:
 
@@ -801,7 +842,7 @@ flowchart TD
 | Warning Header | display | Yes | Warning icon + "Delete your account" title | Displayed at top; signals destructive action |
 | Blocking Message | text | Conditional | Shown if active treatment/aftercare or payment in progress; includes "Contact support" link | Blocks request submission until blocking condition is resolved |
 | Consequences Section | text | Yes | Lists items that may be deleted/anonymized: PII, preferences, messages, reviews, uploaded media where not legally retained | Read-only informational text |
-| Retained Data Section | text | Yes | Explains what will be retained and why: medical + financial records retained ≥ 7 years; restricted access | Read-only informational text |
+| Retained Data Section | text | Yes | Explains what will be retained and why: medical + financial records retained for the one 10-year retention period (retention follows the system PRD, Platform-Wide Rules: One 10-year retention period); restricted access | Read-only informational text |
 | Processing Timeline Notice | text | Yes | "Verified deletion requests completed within 30 calendar days (SLA)" | Read-only informational text |
 | Reason for Deletion | select | No | Optional reason selector for account deletion | Optional; does not block submission; `deleteAccountRequest { reason? }`; options centrally managed in Admin Settings (FR-026, App Data → Account Deletion Reasons) |
 | Request Deletion Button | button | Yes | Primary CTA: "Request deletion" | Triggers identity re-verification (Screen 18) if last auth > 5 minutes; else shows confirmation modal |
@@ -818,7 +859,8 @@ flowchart TD
 - Sensitive action re-auth required when last successful auth > 5 minutes; re-auth via Screen 18 (Identity Re-verification) using password or 6-digit email OTP
 - Deletion reason is optional and must not block request submission (`deleteAccountRequest { reason? }`)
 - Verification failures and throttling/lockout behavior follow configured authentication security policy (do not hardcode attempt counts in UI copy)
-- On submission: system creates deletion request record, sends confirmation, and later sends status updates and outcome (including legal basis for any retained records)
+- On submission: system creates the one deletion request record (owned by FR-023), sends confirmation to the patient, and later sends status updates and outcome (including legal basis for any retained records)
+- The Admin is told of the new request through the same "account deletion requested" event the patient confirmation uses, with the Admin added as a recipient (FR-023 handles the request)
 
 #### Screen 17: Change Password
 
@@ -889,7 +931,7 @@ flowchart TD
 
 **Business Rules**:
 
-- Re-verification is required when last successful auth > 5 minutes (configurable threshold)
+- Re-verification is required when last successful auth > 5 minutes (threshold is a platform setting managed in FR-026)
 - Selecting "Email OTP" sends a 6-digit code to the registered email; code expires in 15 minutes; resend is rate-limited
 - Verification failures, throttling, and any lockout behavior follow the configured authentication security policy (do not hardcode attempt counts in UI copy)
 - Successful verification returns the patient to the calling screen's next step (e.g., final confirmation modal for Delete Account)
@@ -907,10 +949,10 @@ flowchart TD
 | Field Name | Type | Required | Description | Validation Rules |
 |---|---|---|---|---|
 | Patient List | list | Yes | Searchable and filterable list of all patient accounts | Supports search by name/email; filter by status |
-| Status Indicator | display | Yes | Patient account status badge: Active, Inactive, Pending Verification | Colour-coded for quick visual scan |
-| Profile Completion | display | Yes | Profile completion status per patient | Read-only; reflects required field completion |
+| Status Indicator | display | Yes | Patient account status badge: Active, Suspended, Deactivated, Locked | Colour-coded for quick visual scan |
+| Profile Completion | display | Yes | Profile completion per patient, shown as a percentage from 0 to 100 | Read-only; share of required profile fields filled, equal weight per field (fields listed on Screen 14) |
 | Last Login | display | Yes | Timestamp of the patient's most recent login | Read-only; displayed in admin-configured timezone |
-| Action Buttons | button | Yes | Per-row action set: Edit, View, Suspend | Edit: modifies patient data with audit trail; View: read-only; Suspend: deactivates account |
+| Action Buttons | button | Yes | Per-row action set: Edit, View, Suspend | Edit: modifies patient data with audit trail; View: read-only; Suspend: suspends account (status Suspended) |
 
 **Business Rules**:
 
@@ -926,7 +968,7 @@ flowchart TD
 1. **Registration Rules**
    - Email addresses must be unique across the platform
    - Password must meet minimum security requirements
-   - Email verification required for full account access
+   - Email verification required for account activation; the patient has no access until the email is verified
    - Profile completion required before inquiry submission
 
 2. **Login Rules**
@@ -936,8 +978,7 @@ flowchart TD
    - Successful logins logged for security monitoring
 
 3. **Password Rules**
-   - Minimum 12 characters
-   - Must contain at least one uppercase, one lowercase, one digit, and one special character from !@#$%^&(),.?":{}|<>
+   - Password strength: see system PRD, Platform-Wide Rules: Password and one-time-code policy
    - Cannot reuse last 5 passwords
    - Email verification and password reset use 6-digit OTP codes
    - OTP validity windows and resend rate limits are configurable (Admin Settings A-09)
@@ -954,12 +995,12 @@ flowchart TD
    - Patients can only access their own profile data
    - Admin can access all patient data with justification logging
    - Provider platform receives anonymized patient data only
-   - Data retention follows 7-year healthcare compliance requirement
+   - Retention follows the system PRD, Platform-Wide Rules: One 10-year retention period
 
 3. **Data Security**
    - All authentication attempts logged
    - Failed login attempts monitored for security threats
-   - Profile changes require re-authentication for sensitive fields
+   - Changing the email address on the profile requires re-authentication (the email address is the only sensitive profile field)
    - Account lockout prevents brute force attacks
 
 ### Admin Editability Rules
@@ -972,14 +1013,14 @@ flowchart TD
 
 2. **Edit Capabilities**
    - **Profile Data**: Modify name, email, phone, address, preferences
-   - **Account Status**: Change active/inactive status, verification status
+   - **Account Status**: Change account status (Active, Suspended, Deactivated, Locked), verification status
    - **Security**: Reset passwords, unlock accounts, modify security settings
    - **Preferences**: Update language, currency, notification settings
 
 3. **Edit Tracking**
    - All admin edits logged with timestamp and admin identification
    - Change reason required for all modifications
-   - Patient notified of significant changes via email
+   - Patient notified of every admin edit via email
    - Edit history maintained for audit trail
 
 ### UI/UX Display Rules
@@ -989,12 +1030,11 @@ flowchart TD
    - Clear error messages for invalid inputs
    - Visual indicators for required fields
    - Progress indicators for multi-step processes
+   - Clear error messages, required-field indicators and progress indicators apply in every Hairline app (patient, provider and admin), not only the patient app
 
 2. **Error Handling**
-   - User-friendly error messages
-   - Specific guidance for password requirements
-   - Clear instructions for email verification
-   - Graceful handling of network errors
+   - Patient app: specific guidance for password requirements; clear instructions for email verification
+   - Every app (platform-wide Rule): user-friendly error messages; graceful handling of network errors
 
 3. **Accessibility**
    - Support for screen readers and assistive technologies
@@ -1060,8 +1100,7 @@ flowchart TD
 
 - **FR-003**: Inquiry Submission & Distribution (requires completed profile)
 - **FR-020**: Notifications & Alerts (email verification, password reset)
-- **FR-025**: Medical Questionnaire Management (profile integration)
-- **FR-026**: App Settings & Security Policies (OTP + throttling config; centrally managed lists including account deletion reason options for Screen 16)
+- **FR-026**: App Settings & Security Policies (OTP + throttling config; re-verification threshold; landing background; centrally managed lists including account deletion reason options for Screen 16)
 - **FR-027**: Legal Content Management (Terms/Privacy content + acceptance tracking)
 - **FR-023**: Data Retention & Compliance (DSR deletion request handling)
 - **Future FR**: Multi-Factor Authentication (security enhancement)
@@ -1151,7 +1190,8 @@ A new patient successfully registers an account through the mobile app, complete
 2. **Given** patient enters name and email/password, **When** patient submits account creation form, **Then** system validates inputs and sends OTP email
 3. **Given** patient receives OTP email, **When** patient enters correct 6-digit code, **Then** system verifies email and proceeds to profile completion
 4. **Given** patient completes profile with all required fields, **When** patient submits profile, **Then** system creates account and redirects to discovery question
-5. **Given** patient answers discovery question, **When** patient taps Continue, **Then** system completes registration and redirects to main app dashboard
+5. **Given** patient answers discovery question, **When** patient taps Continue, **Then** system completes registration and shows service selection (Screen 8a)
+6. **Given** patient is on service selection, **When** patient picks one of the four services, **Then** system lands the patient in the chosen service
 
 ---
 
@@ -1210,13 +1250,17 @@ A patient successfully updates their profile information and manages account set
 
 - What happens when patient attempts to register with an email that already exists?
 - How does system handle OTP delivery failure or email service unavailability?
+  - **Ruling**: The patient sees a message and can tap Resend. When the resend limit is reached (the existing resend rate limit; no new setting) or the email service is still down, the app shows the Help and Support entry.
 - What occurs if patient's device loses internet connection during registration process?
+  - **Ruling**: The app shows a "no connection" message and lets the patient retry. If the app is closed, the abandoned-registration flow (A1) applies: the local draft is kept for 7 days. No new rule beyond the message.
 - How to manage concurrent login attempts from multiple devices?
+  - **Ruling**: Several devices are allowed. Each device has its own session; there is no limit on the number of devices.
 - What happens when patient attempts to reset password for non-existent email?
 - How does system handle account lockout expiration and unlock process?
 - What occurs if patient tries to delete account with active treatment/aftercare case?
 - How to manage session timeout and automatic logout behavior?
 - What happens when admin modifies patient profile while patient is viewing it?
+  - **Ruling**: The patient sees the new data on the next load. There is no live update and no message. Known risk: a patient save made from an older view can overwrite the admin's change.
 - How does system handle password reset OTP expiration mid-flow?
 
 ---
@@ -1230,7 +1274,7 @@ A patient successfully updates their profile information and manages account set
 - **REQ-001-003**: System MUST authenticate patients with email and password credentials
 - **REQ-001-004**: System MUST support password reset via email OTP verification
 - **REQ-001-005**: System MUST allow patients to view and edit their profile information
-- **REQ-001-006**: System MUST enforce password strength requirements (12+ chars, mixed case, numbers, special chars)
+- **REQ-001-006**: Retired. Password strength follows the system PRD, Platform-Wide Rules: Password and one-time-code policy.
 - **REQ-001-007**: System MUST track and lock accounts after configurable max failed login attempts (default: 5; per Admin Settings A-09 / FR-026)
 - **REQ-001-008**: System MUST log all authentication events for audit trail
 
@@ -1239,28 +1283,33 @@ A patient successfully updates their profile information and manages account set
 - **REQ-001-009**: System MUST maintain unique email addresses across all patient accounts
 - **REQ-001-010**: System MUST store patient profile data (name, email, phone, DOB, gender, country)
 - **REQ-001-011**: System MUST maintain session management for authenticated users
-- **REQ-001-012**: System MUST retain patient data for minimum 7 years per healthcare compliance
+- **REQ-001-012**: Patient data retention follows the system PRD, Platform-Wide Rules: One 10-year retention period
 
 ### Security & Privacy Requirements
 
 - **REQ-001-013**: System MUST hash passwords using bcrypt (cost factor 12+)
 - **REQ-001-014**: System MUST encrypt patient data at rest and in transit
 - **REQ-001-015**: System MUST anonymize patient data when shared with providers (until payment confirmation)
-- **REQ-001-016**: System MUST require re-authentication for sensitive actions (delete account, password change)
+- **REQ-001-016**: System MUST require re-authentication for sensitive actions (delete account, password change) and when the patient changes the email address on the profile (the email address is the only sensitive profile field)
 - **REQ-001-017**: System MUST log all admin profile modifications with reason and timestamp
 
 ### Integration Requirements
 
 - **REQ-001-018**: System MUST integrate with email service for OTP delivery and notifications
 - **REQ-001-019**: System MUST expose APIs for profile management and authentication
-- **REQ-001-020**: System MUST integrate with notification service (FR-020) for account-related alerts
+- **REQ-001-020**: Retired. Use of the notification service for account-related alerts follows the single platform-wide notification-service Rule owned by FR-020.
 
 ---
 
 ## Key Entities
 
-- **Patient**: patientId, email (unique), firstName, lastName, phoneNumber, dateOfBirth, gender, country, profileImageUrl, emailVerified, accountStatus, createdAt, updatedAt
-  - **Key attributes**: Unique email address, encrypted password, profile completion status, account verification state
+- **Patient**: patientId, email (unique), firstName, lastName, phoneNumber, dateOfBirth, gender, country, city, age, profileImageUrl (the patient's profile picture), emailVerified, accountStatus, profileCompletionStatus, anonymizedId, registrationDate, analyticsConsent, emailDeliveryIssue, createdAt, updatedAt
+  - **Key attributes**: Unique email address, encrypted password, account verification state
+  - **accountStatus values**: Active, Suspended, Deactivated, Locked
+  - **profileCompletionStatus**: percentage from 0 to 100 (share of required profile fields filled; see Screen 14)
+  - **analyticsConsent**: yes/no consent for analytics, kept on the patient record; the compliance feature (FR-023) reads it
+  - **emailDeliveryIssue**: flag on the patient account set when an email to the patient bounces; the notification feature (FR-030) sets it
+  - **Not kept here**: flags and alerts (owned by FR-016) and preferred region (owned by FR-021); notification preference records are owned by FR-030
   - **Relationships**: One patient has many sessions; one patient has one profile; one patient has many audit logs
 
 - **PatientSession**: sessionId, patientId, deviceInfo, ipAddress, userAgent, expiresAt, createdAt, lastActivityAt
@@ -1287,6 +1336,7 @@ A patient successfully updates their profile information and manages account set
 | 2026-02-06 | 1.3 | Settings (Screen 15): Added Terms & Conditions entry; refactored Privacy & Security into a 2-item menu (Change Password, Privacy Policy); removed device sessions and data export from patient settings. Added Change Password (Screen 17) with "Forgot your password?" link to Password Reset (Screens 10–12). Added Delete Account DSR request screen (Screen 16) and clarified DSR submission behavior. | AI     |
 | 2026-02-06 | 1.4 | Integrity fixes aligned with design complement (P01.2/P01.3). Expanded Screen 15 into sub-screens (16, 16a–16d) with formal 5-column field tables. Added Screen 17a (Password Changed Confirmation) with token-revocation resilience rule. Added Screen 18 (Identity Re-verification shared component) for sensitive actions requiring re-auth. Added error/throttle/lockout states to Screen 17. Added version metadata and error/loading states to legal content screens (16c, 16d). Added audit privacy constraint for legal content views. Clarified Screen 13 navigation structure (action buttons vs menu items). Updated Screen 16 to reference Screen 18 for identity re-verification. | AI     |
 | 2026-02-10 | 1.5 | Verification fixes: (1) Unified password reset OTP expiry from 1 hour to 15 min configurable, aligning with FR-026 system-level OTP policy. (2) Replaced hardcoded lockout values (5 attempts, 15-min lockout) with configurable references per FR-026. (3) Added design decision note on Screen 4 explaining OTP verification replaces confirm-email field per client transcription. (4) Made discovery question required on Screen 8 per client transcription. Password reuse rule (last 5) also added to system-prd.md and constitution. | AI     |
+| 2026-11-20 | 1.6 | Requirements graph programme baseline: owner rulings applied. Main changes: (1) New entry flow: new splash visual, explanation screens, "Get Started" into registration, then the patient picks one of the four services and lands in it (Screens 1a and 8a added; Workflow 1 and Screen 8 updated). (2) Account status values are Active, Suspended, Deactivated, Locked (Screen 19, Admin Editability, Key Entities). (3) Country sets currency only; language is independent, first language is the phone language with English fallback. (4) Admin edits are final and the patient is notified of every edit; only the email address needs re-authentication. (5) Profile completion is a 0 to 100 percentage over the required fields (listed on Screen 14). (6) Re-verification threshold and landing background are FR-026 platform settings. (7) Report a problem moved to FR-034 and notification preference records to FR-030; the deletion request record is owned by FR-023 and the admin is told through the same event as the patient. (8) REQ-001-020 retired in favour of one FR-020 notification-service Rule; REQ-001-063 split into a platform-wide and a patient Rule; REQ-001-062 applies to every app. (9) Edge cases answered (OTP delivery failure, lost connection, several devices, admin edit while patient views). (10) Removed device sessions from patient scope and the FR-025 mention; provider view wording says anonymised until payment; Patient entity gains anonymizedId, age, city, registrationDate, analyticsConsent, emailDeliveryIssue; cross-document reconciliation (retention, system rule citations) | AI     |
 
 ## Appendix: Approvals
 

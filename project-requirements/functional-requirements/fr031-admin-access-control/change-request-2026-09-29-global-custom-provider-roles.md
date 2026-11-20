@@ -3,7 +3,8 @@
 **Change Request ID**: CR-FR031-20260929-01  
 **Primary FR**: FR-031  
 **Triggering Event**: Product request to add provider role creation and cloning  
-**Decision Status**: Proposed  
+**Decision Status**: Rejected  
+Rejected 2026-11-20: the owner ruled that custom provider roles do not exist (requirements graph programme baseline).  
 **Implementation Reconciliation**: Required  
 **Requested Date**: 2026-09-29  
 **Decision Date**: Pending  

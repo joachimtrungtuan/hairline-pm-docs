@@ -43,7 +43,7 @@ Initial supported languages are English (`en`) and Turkish (`tr`). Additional la
 - Patient language preference persists across sessions/devices where account sync exists.
 - Patient App loads the latest published patient-app translation bundle for the selected locale.
 - Patient App displays fallback text when a selected-locale value is missing.
-- Patient App continues to show user-generated content in the language originally entered by the user.
+- Patient App continues to show user-generated content in the language originally entered by the user; when free-text translation is on, free text written by others is shown translated into the patient's own language (General Module Rule 15).
 
 **Provider Platform (PR-06)**:
 
@@ -59,6 +59,7 @@ Initial supported languages are English (`en`) and Turkish (`tr`). Additional la
 - Admin can view and edit translation keys/values through registry and key-detail screens.
 - Admin can import/export translation JSON files by locale, tenant/surface, group, and version.
 - Admin can manage machine-translation provider API credentials and run controlled machine-translation jobs for a selected non-English language.
+- Admin can switch free-text translation on or off for the platform and set its monthly budget.
 - Admin can publish draft changes into versioned bundles and roll back to prior published versions.
 - Admin can inspect coverage, missing keys, review-needed keys, and version history.
 
@@ -78,13 +79,14 @@ Initial supported languages are English (`en`) and Turkish (`tr`). Additional la
 - Missing-translation logging and admin-facing coverage reporting.
 - Admin publish/rollback audit records and import history.
 - Admin-managed machine-translation provider configuration and draft generation for non-English target languages.
+- Machine translation of free text written by one user for another, shown to the reader when the Admin switch is on (General Module Rules 15 and 16).
 
 **Out of Scope**:
 
-- Automatic translation of patient/provider messages, reviews, support-ticket messages, notes, uploaded documents, or any other user-generated content.
-- Full notification-template authoring, variable management, and channel-specific template preview; these remain in FR-030.
-- Legal document versioning and acceptance tracking; these remain in FR-027.
-- Machine translation as an automatic runtime translator or direct-to-production publishing path.
+- Machine translation of uploaded documents, and of any user-generated content other than the free text listed in General Module Rule 15.
+- Full notification-template authoring, variable management, and channel-specific template preview; these remain in FR-030 (see REQ-030-006 and REQ-030-152).
+- Legal document versioning and acceptance tracking; these remain in FR-027 (see REQ-027-036, REQ-027-002, and REQ-027-029).
+- Machine translation of system-controlled text as an automatic runtime translator or direct-to-production publishing path; the reader-facing translation of free text is the separate case in General Module Rule 15.
 - Full RTL layout delivery in V1.
 
 ### Entry Points
@@ -107,7 +109,7 @@ Initial supported languages are English (`en`) and Turkish (`tr`). Additional la
 
 ### Main Flow: Admin Updates and Publishes Translation Version
 
-**Actors**: Admin, System
+**Actors**: Admin, Super Admin (English source edits, publish, and rollback), System
 **Trigger**: Admin needs to update translations through either individual text patching or JSON package import, then make those changes live
 **Outcome**: System validates the selected update mode, saves individual patches as draft, either imports JSON packages as draft or publishes them as a version, and makes published bundles available to runtime clients
 
@@ -233,24 +235,25 @@ flowchart TD
 | --- | --- | --- | --- | --- |
 | Language | select | Yes | Patient's preferred app language | Must be an active supported locale |
 | Region/Locale | select | No | Regional formatting context for dates, numbers, and currency display | Must be a supported locale/region option when exposed |
-| Timezone | select | No | Patient's preferred timezone for appointment and treatment schedule display | Must be a valid IANA timezone |
-| Fallback notice | read-only text | No | Explains that some text may appear in the default language when translation is missing | Display only when fallback has occurred or product chooses persistent notice |
+| Timezone | select | No | Patient's preferred timezone for appointment and treatment schedule display | Must be a value from the FR-026 GMT list; fixed offsets do not follow daylight saving |
+| Fallback notice | read-only text | No | Explains that some text may appear in the default language when translation is missing | Display only when fallback has occurred |
 
 **Business Rules**:
 
 - Language selection is stored on the patient profile/account preference.
-- Patient App uses the latest published patient-app translation bundle for the selected locale.
+- Bundle loading for the Patient App follows General Module Rule 14.
 - Draft translations are never served to the Patient App.
 - If the selected locale has missing keys, the app displays fallback text from the configured fallback chain.
 - If a locale is deactivated, patients who previously selected it are moved to fallback behavior without deleting their historical preference.
 - The language selector must not include inactive locales.
+- The fallback notice is shown only when a fallback has occurred.
 - When timezone preference is null or unset, the Patient App uses the device/browser-detected timezone; if unavailable, it falls back to UTC and displays a visible timezone indicator so the patient knows which timezone is in use.
 
 **Notes**:
 
 - The language control lives inside the Settings menu, not in primary navigation.
 - The selected language applies to navigation labels, button labels, validation messages, empty states, system-controlled status labels, and static UI guidance.
-- User-generated content remains in the language originally entered by the user.
+- User-generated content remains in the language originally entered by the user; when free-text translation is on, free text written by others is shown translated into the reader's own language (General Module Rule 15).
 
 ---
 
@@ -270,7 +273,7 @@ flowchart TD
 
 **Business Rules**:
 
-- Provider Dashboard uses the latest published provider-dashboard translation bundle for the selected locale.
+- Bundle loading for the Provider Dashboard follows General Module Rule 14.
 - Language selection applies to dashboard UI, system labels, validation messages, and provider-facing system notifications where FR-030 templates exist.
 - Provider profile spoken languages are separate from Provider Dashboard UI language.
 - Draft translations are never served to Provider Dashboard users.
@@ -300,7 +303,7 @@ flowchart TD
 
 **Business Rules**:
 
-- Admin Platform uses the latest published admin-platform translation bundle for the selected locale.
+- Bundle loading for the Admin Platform follows General Module Rule 14.
 - Localization-management screens may show translation values in multiple languages at once, regardless of the admin user's current UI language.
 - Admin UI language preference does not change the default/source locale of the translation registry.
 - Draft translation changes are visible inside localization-management screens but are not used to localize the Admin Platform UI until published.
@@ -337,7 +340,7 @@ flowchart TD
 - This is the admin landing screen for localization.
 - Admin can add new languages/locales from this screen.
 - Admin can deactivate languages; deactivation hides the language from user-facing selectors but preserves translations, versions, and audit history.
-- Hard deletion of a language is not allowed once translation history or published versions exist; use inactive/archived state instead.
+- Hard deletion of a language is not allowed once translation history or published versions exist; use Inactive state instead.
 - English (`en`) is the initial default/source locale unless changed through approved governance.
 - New languages should start in Preparation state until required tenant bundles are ready.
 - Only Active locales appear in user-facing language selectors; Inactive and Preparation locales are hidden from all patient, provider, and admin language selector controls.
@@ -368,7 +371,7 @@ flowchart TD
 | Import JSON route | action card/button | Yes | Opens Screen 8 for this language | Must preserve selected language context |
 | Export JSON action | button | No | Exports this language by tenant/surface/group/version | Must identify draft vs published export |
 | Version history route | action card/button | Yes | Opens Screen 9 filtered to this language | Must preserve selected language context |
-| Machine translation route | action card/button | Conditional | Opens Screen 10 for this language | Available only for non-English target languages and authorized admins |
+| Machine translation route | action card/button | Conditional | Opens Screen 10 for this language | Available only for non-English target languages and only to Platform Admin and Super Admin |
 
 **Business Rules**:
 
@@ -401,9 +404,9 @@ flowchart TD
 | Screen/context | table column | No | Product surface where key appears | Recommended for design/dev setup |
 | English source value | table column | Conditional | Canonical source text for implemented keys | Required for active keys |
 | Selected-language value | table column | Conditional | Value for selected language when a language filter is applied | Must preserve placeholders and ICU syntax |
-| Coverage/status | badge/filter | Yes | Published, Draft, Missing, Review Needed, Deprecated, Orphaned | System-controlled where possible |
+| Coverage/status | badge/filter | Yes | Published, Draft, Pending Publish, Missing, Review Needed, Deprecated, Orphaned | System-controlled where possible |
 | Source value owner | table column | No | Owning module/FR/team | Recommended |
-| Required at launch | badge | Yes | P1/P2/Future or Required/Optional | Must be reviewable before release |
+| Required at launch | badge | Yes | Required or Optional | Must be reviewable before release |
 | Flexibility status | badge | Yes | Baseline, implementation-discovered, deprecated, future | System/design governance field |
 | Open key action | row click/button | Yes | Opens Screen 7 for the selected key | Must preserve tenant and selected language context where available |
 
@@ -502,7 +505,7 @@ flowchart TD
 | Locale values | textarea per active language | Conditional | Translation value for each active language | Must preserve placeholders and ICU syntax |
 | Selected language highlight | read-only state | No | Highlights the language filter used when opened from Language Detail | Must not hide other active language values |
 | Character guidance | read-only text | No | Optional display length guidance for constrained UI | Non-blocking unless a screen-specific limit exists |
-| Change reason | textarea | Conditional | Required when editing English source or publishing sensitive changes | Required for protected edits |
+| Change reason | textarea | Conditional | Required when editing English source and on every publish | Required for English source edits and for every publish |
 | History panel | read-only log | No | Prior changes, imports, publishes, and rollback references | System-generated |
 | Save draft action | button | Yes | Saves edited values as draft | Does not affect runtime bundles |
 
@@ -621,13 +624,14 @@ flowchart TD
 
 **Business Rules**:
 
-- Machine translation is a draft-generation tool, not a runtime translation path.
+- Machine translation of system-controlled text is a draft-generation tool, not a runtime translation path. Free-text translation for the reader is the separate case in General Module Rule 15.
+- Only Platform Admin and Super Admin may use the machine-translation route.
 - Machine translation can only target non-English locales; English/source values remain human-authored and governed by source-edit protections.
 - Prefill Missing Keys generates draft values only where the selected target language has no value.
 - Replace Entire Language generates replacement draft values for all selected target-language keys in the selected scope, except protected source values.
 - All machine-generated values are marked Review Needed until reviewed or explicitly accepted by Admin.
 - Generated values must pass the same placeholder, ICU syntax, key-existence, target-locale compatibility, and publish validation rules as JSON imports.
-- Machine translation must not process patient/provider messages, reviews, support-ticket messages, notes, uploaded documents, legal content, or other user-generated/private content unless the owning FR explicitly permits it.
+- Machine translation for translation drafts must not process patient/provider messages, reviews, support-ticket messages, notes, uploaded documents, legal content, or other user-generated/private content unless the owning FR explicitly permits it. Free-text translation for the reader (General Module Rule 15) is a separate case.
 - API credentials must be encrypted at rest, masked in UI after save, and never exported in JSON files or audit detail.
 - Every provider configuration change and machine-translation job must be audited with actor, timestamp, provider, target language, mode, scope, counts, and reason.
 
@@ -656,12 +660,15 @@ flowchart TD
 - **Rule 11**: Machine-generated translations save as draft only, must be marked Review Needed, and cannot be served to runtime clients until published.
 - **Rule 12**: Machine translation generation can target a whole non-English language by missing keys or full-language replacement scope; English/source locale is never replaced by machine translation.
 - **Rule 13**: Clients MUST revalidate translation bundles against version metadata (ETag/hash or equivalent) on each fetch cycle. After a publish or rollback, the maximum acceptable stale window is a platform-configurable interval, recommended at 5 minutes or less, ensuring clients do not serve outdated bundles for an indeterminate period after a version change.
+- **Rule 14**: Each runtime surface loads the latest published bundle for the user's selected locale and for its own surface: the Patient App loads the patient-app bundle, the Provider Dashboard the provider-dashboard bundle, and the Admin Platform the admin-platform bundle.
+- **Rule 15**: When free-text translation is switched on, free text written by one user for another is machine-translated into the reader's own language. The covered free text is messages, free-text fields in an inquiry, support messages and notes, and reviews. Uploaded documents are not translated. The switch is one platform-wide setting that Admin controls and it is off by default.
+- **Rule 16**: Admin configures a monthly budget for free-text translation; the budget has no default figure. When the monthly limit is reached, free text is shown untranslated.
 
 ### Data & Privacy Rules
 
 - **Privacy Rule 1**: Translation bundles must not include patient/provider private data or user-generated content.
 - **Privacy Rule 2**: Import/export files must contain system-controlled text only unless another owning FR explicitly permits additional metadata.
-- **Privacy Rule 3**: Machine translation requests must contain system-controlled source text only and must exclude private data, medical data, user-generated content, legal content, uploaded documents, and support messages unless explicitly permitted by the owning FR.
+- **Privacy Rule 3**: Machine translation requests for translation drafts must contain system-controlled source text only and must exclude private data, medical data, user-generated content, legal content, uploaded documents, and support messages unless explicitly permitted by the owning FR. Free-text translation for the reader (General Module Rule 15) is a separate case and is not covered by this rule.
 - **Audit Rule**: System must log locale changes, protected source edits, imports, publishes, rollbacks, and missing-translation events with actor, timestamp, scope, and reason where applicable.
 - **Data Retention Rule**: Published version history and audit trail must be retained according to platform audit-retention policy.
 - **Data Integrity Rule**: Published versions are immutable and must remain inspectable after rollback.
@@ -675,6 +682,7 @@ flowchart TD
 - Translation key metadata such as description/context and group where allowed.
 - Draft translation changes, import confirmations, publish actions, and rollback actions.
 - Machine-translation provider credentials, provider activation state, and machine-translation draft generation jobs.
+- The free-text translation switch (one platform-wide setting, off by default) and its monthly translation budget (no default figure).
 - Currency display configuration where already owned by A-09/S-02.
 
 **Fixed in Codebase (Not Editable)**:
@@ -687,9 +695,9 @@ flowchart TD
 
 **Configurable with Restrictions**:
 
-- English source values require elevated authorization, reason capture, audit logging, and review-needed marking for dependent locale values.
+- English source values require elevated authorization, reason capture, audit logging, and review-needed marking for dependent locale values, unless Admin explicitly confirms the source change is non-semantic.
 - Translation key identifiers after first publish require controlled migration rather than casual editing.
-- Default locale changes require governance approval and must not deactivate the source locale.
+- Default locale changes require approval by the Super Admin alone (no second approver) and must not deactivate the source locale.
 - Machine translation full-language replacement requires explicit confirmation because it can overwrite many target-language draft values.
 - Historical versions and audit records cannot be deleted through normal admin controls.
 
@@ -755,7 +763,7 @@ flowchart TD
 
 - **FR-027 / Legal Content Management**:
   - **Why needed**: Legal documents may have localized versions.
-  - **Integration point**: FR-027 owns legal content versioning and acceptance; FR-021 supplies locale/fallback principles.
+  - **Integration point**: FR-027 owns legal content versioning and acceptance (see FR-027 REQ-027-036 for the missing-localized-version fallback, and REQ-027-002 and REQ-027-029 for versioning); FR-021 supplies locale/fallback principles.
 
 - **FR-024 / Treatment Package Management**:
   - **Why needed**: Treatment/package names, descriptions, and patient-facing package copy require translation readiness.
@@ -1049,13 +1057,17 @@ Admin configures a machine-translation provider and uses it to prepare a non-Eng
 - **REQ-021-007**: Admin MUST be able to edit translation values in a table/grid registry and key-detail editor.
 - **REQ-021-008**: Admin translation edits MUST save as draft and MUST NOT affect live clients until published.
 - **REQ-021-009**: Admin MUST be able to import locale JSON files with validation preview and import history, choosing either Import as Draft or controlled Import and Publish Version.
-- **REQ-021-010**: Admin MUST be able to export translation JSON files by locale, tenant/surface, group, version, and format.
+- **REQ-021-010**: Admin MUST be able to export translation JSON files by locale, tenant/surface, group, and version, and MUST identify whether the export is draft or published.
 - **REQ-021-011**: System MUST package published translation changes into immutable versioned bundles.
 - **REQ-021-012**: System MUST allow Admin to roll back to a prior published translation bundle by creating a new rollback version.
 - **REQ-021-013**: Published bundles MUST be the only translation source served to Patient, Provider, and Admin runtime clients.
 - **REQ-021-013a**: Admin MUST be able to configure machine-translation provider credentials for draft generation, with notable provider options including Google Cloud Translation, DeepL, Microsoft Azure Translator, and Amazon Translate.
 - **REQ-021-013b**: Admin MUST be able to prefill all missing keys for a selected non-English language using machine translation, saving generated values as Review Needed drafts.
 - **REQ-021-013c**: Admin MUST be able to replace an entire selected non-English language with machine-generated draft values, excluding English/source values and requiring explicit confirmation.
+- **REQ-021-118**: The fallback notice on Patient App Language & Region Settings MUST be shown only when a fallback has occurred.
+- **REQ-021-119**: When free-text translation is switched on, free text written by one user for another (messages, free-text fields in an inquiry, support messages and notes, and reviews) MUST be machine-translated into the reader's own language. Uploaded documents MUST NOT be translated. The switch is one platform-wide setting controlled by Admin and MUST be off by default.
+- **REQ-021-120**: Admin MUST be able to configure a monthly budget for free-text translation (no default figure); when the monthly limit is reached, free text MUST be shown untranslated.
+- **REQ-021-121**: Only Platform Admin and Super Admin MUST be able to use the machine-translation route for translation drafts.
 
 ### Data Requirements
 
@@ -1068,10 +1080,10 @@ Admin configures a machine-translation provider and uses it to prepare a non-Eng
 
 ### Security & Privacy Requirements
 
-- **REQ-021-020**: English source value edits MUST require elevated authorization, reason capture, audit logging, and review-needed marking for dependent locale values.
+- **REQ-021-020**: English source value edits MUST require elevated authorization, reason capture, audit logging, and review-needed marking for dependent locale values, unless Admin explicitly confirms the source change is non-semantic.
 - **REQ-021-021**: System MUST audit locale changes, import confirmations, publish actions, rollback actions, protected source edits, and missing-translation events.
 - **REQ-021-022**: Translation bundles and import/export files MUST NOT include patient medical data, private account data, or user-generated free text.
-- **REQ-021-022a**: Machine translation requests MUST exclude patient medical data, private account data, user-generated free text, legal content, support messages, and uploaded documents unless another owning FR explicitly permits the content.
+- **REQ-021-022a**: Machine translation requests for translation drafts MUST exclude patient medical data, private account data, user-generated free text, legal content, support messages, and uploaded documents unless another owning FR explicitly permits the content. Free-text translation for the reader follows REQ-021-119 instead.
 - **REQ-021-022b**: Machine-translation API credentials MUST be encrypted at rest, masked after save, access-controlled, and excluded from exports and audit payload details.
 
 ### Integration Requirements
@@ -1137,6 +1149,7 @@ Admin configures a machine-translation provider and uses it to prepare a non-Eng
 | 2026-05-25 | 1.3 | Verification fixes: defined "elevated authorization" as Super Admin role (FR-031); assigned locale-aware number formatting ownership to S-02 shared service in Currency Rule 2; added timezone fallback rule to Screen 1 (device/browser-detected → UTC); added Rule 13 for max cache stale window after publish/rollback (≤5 min recommended); added rule to Screen 4 excluding Inactive and Preparation locales from user-facing selectors. | AI |
 | 2026-05-25 | 1.4 | Verification fixes: added FR-031 as formal internal dependency with integration point description; removed "preview only" from Screen 8 Import mode options (redundant with auto-generated validation preview); corrected SC-002 wording from "within 2 seconds" to "< 2 seconds" to match constitution Principle IV; added HTTP 403 error-handling requirement to Admin Platform localization management integration point. | AI |
 | 2026-05-25 | 1.5 | Verification passed (verify-fr): no critical, medium, or minor issues found. Status updated to Verified & Approved. | AI |
+| 2026-11-20 | 1.6 | Requirements graph programme baseline: owner rulings applied. Main changes: free-text between users is machine-translated for the reader, off by default, with an Admin switch, a monthly budget and a covered-field list (new General Module Rules 15 and 16; out-of-scope lines, Screen 1 note, Privacy Rule 3 and the machine-translation exclusions now apply to translation drafts only); only Platform Admin and Super Admin may use the machine-translation draft route; the fallback notice shows only when fallback occurred; three per-surface bundle-loading rules merged into General Module Rule 14; patient timezone follows the FR-026 GMT list; non-semantic English source edit exception stated in the editability rules and REQ-021-020; a reason is required on every publish; default-locale changes are approved by the Super Admin alone; key status gains Pending Publish and Required at launch is Required or Optional; locale status has three values (Active, Inactive, Preparation); export has no format field; main-flow actors name the Super Admin; template-authoring and legal-versioning dependencies cite the owning FR-030 and FR-027 Rules. | AI |
 
 ---
 
@@ -1154,4 +1167,4 @@ Admin configures a machine-translation provider and uses it to prepare a non-Eng
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-011 Aftercare & Recovery Management PRD
-**Last Updated**: 2026-05-19
+**Last Updated**: 2026-11-20

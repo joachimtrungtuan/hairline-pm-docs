@@ -20,7 +20,7 @@ Enable secure, auditable, real-time messaging and audio/video communication betw
 
 - **Patient Platform (P-06)**: In-app chat with providers for quote questions, procedure clarifications, and coordination; audio/video calls for live consultations; notifications for new messages and calls; view conversation history; send text and media.
 - **Provider Platform (PR-07)**: Direct messaging with patients for quote clarification, procedure coordination, and post-booking questions; audio/video call capability for consultations; view conversation history; send text and media responses.
-- **Admin Platform (A-10)**: Communication monitoring center for oversight, keyword flagging, and compliance logging; read-only monitoring with emergency-only intervention capability for critical situations (serious policy violations, urgent disputes, patient safety emergencies); can request scan/photo set updates (V1) or schedule reviews.
+- **Admin Platform (A-10)**: Communication monitoring center for oversight, keyword flagging, and compliance logging; read-only monitoring with emergency-only intervention capability for critical situations (serious policy violations, urgent disputes, patient safety emergencies).
 - **Shared Services (S-03, S-05)**: Notification Service for push/email alerts; Media Storage Service for secure handling of images/videos attached to messages; Twilio integration for audio/video calls.
 
 ### Multi-Tenant Breakdown
@@ -59,7 +59,7 @@ Enable secure, auditable, real-time messaging and audio/video communication betw
 - Flag history tracking: view all flag events, status changes, and admin notes for each conversation.
 - Select conversation to open detailed Message Thread View for full conversation history, participant info, flag management, and actions.
 - **Emergency intervention capability**: Admin can send messages ONLY in critical situations (serious policy violations, urgent disputes, patient safety emergencies).
-- Intervention actions: flag for observation, resolve flags, export conversation logs (with flag history), request scan/photo set, schedule review.
+- Intervention actions: flag for observation, resolve flags. Conversation export is deferred to a future phase.
 - Configure moderation rules and automatic keyword flags; maintain compliance audit trail.
 - Admin emergency messages clearly identified with "Hairline Admin" badge; logged with mandatory reason.
 
@@ -244,8 +244,9 @@ Enable secure, auditable, real-time messaging and audio/video communication betw
 
 | Field Name | Type | Required | Description | Validation Rules |
 |------------|------|----------|-------------|------------------|
-| Message text | text | Yes | Core message body | Max 2000 chars, no prohibited terms |
-| Attachment | image/video/pdf | No | Optional media to support the message | Images: JPG/PNG max 5MB; Video: MP4 max 10MB; PDF: max 10MB; Max 5 attachments per message |
+| Message text | text | No | Core message body; text or at least one attachment is needed to send | Max 2000 chars; a message with flagged terms warns the patient but is not blocked: it is sent and raises an automatic keyword flag |
+| Attachment | image/video/pdf | No | Optional media to support the message; a message may be attachment-only | Images: JPG/PNG max 5MB; Video: MP4 max 10MB; PDF: max 10MB; Max 5 attachments per message |
+| Translation switch | toggle | No | On/off switch for machine translation of messages for the reader | Behavior owned by FR-021 (REQ-012-108) |
 | Provider name | display | Yes | Shows provider name and clinic | Read-only; contextual to conversation |
 | Audio Call button | action | Yes | Initiates audio call via Twilio | Icon button in header; disabled if provider offline (optional) |
 | Video Call button | action | Yes | Initiates video call via Twilio | Icon button in header; disabled if provider offline (optional) |
@@ -296,7 +297,7 @@ Enable secure, auditable, real-time messaging and audio/video communication betw
 | Last message preview | text | Yes | Preview of last message (truncated) | Max 50 chars; shows "You: " prefix if provider sent |
 | Unread badge | indicator | N/A | Shows unread message count | Red badge with count; hidden if 0 |
 | Timestamp | text | Yes | Time of last message | Relative (e.g., "1h ago") |
-| View All Messages | link | Yes | Link to full messages page if needed | Opens expanded view (future enhancement) |
+| Future phase: View All Messages | link | No | Link to full messages page if needed | Opens expanded view (future enhancement) |
 
 **Business Rules**:
 
@@ -348,8 +349,9 @@ Enable secure, auditable, real-time messaging and audio/video communication betw
 | Message attachments | thumbnails/links | No | Images, videos, PDFs in messages | Clickable to view/download | Center |
 | Read status | indicator | N/A | Shows if message was read by patient | Checkmark or "Read" indicator per message | Center |
 | Admin badge | indicator | N/A | "Hairline Admin" badge on admin messages | Visible if admin intervened | Center |
-| Compose message area | textarea | Yes | Provider response to patient questions | Max 2000 chars; at bottom of center panel | Center |
+| Compose message area | textarea | Yes | Provider response to patient questions | Max 2000 chars; at bottom of center panel; a message may be attachment-only | Center |
 | Attachment upload | file upload | No | Add supporting media | Images: JPG/PNG max 5MB; Video: MP4 max 10MB; PDF: max 10MB; Max 5 attachments per message | Center |
+| Translation switch | toggle | No | On/off switch for machine translation of messages for the reader | Behavior owned by FR-021 (REQ-012-108) | Center |
 | Send button | action | Yes | Submits message | Disabled until text or attachment present | Center |
 | **RIGHT PANEL: Conversation Info & Tools** ||||||
 | Patient identifier | display | Yes | Patient name and ID (anonymized until payment per FR-003) | Read-only; contextual header | Right |
@@ -361,7 +363,7 @@ Enable secure, auditable, real-time messaging and audio/video communication betw
 | Conversation started | datetime | Yes | When conversation was created | Read-only | Right |
 | Message count | number | Yes | Total messages in thread | Read-only; updates live | Right |
 | Flag indicator | badge | N/A | Shows if conversation has been flagged by admin | Warning icon if keyword-flagged | Right |
-| Actions menu | buttons | No | Additional conversation actions | Options: Archive (future), Export conversation, View patient profile | Right |
+| Actions menu | buttons | No | Additional conversation actions | Options: Archive (future), View patient profile; Export conversation is deferred to a future phase | Right |
 
 **Business Rules**:
 
@@ -387,7 +389,7 @@ Enable secure, auditable, real-time messaging and audio/video communication betw
 - Providers can attach treatment plans (PDF), facility photos (JPG/PNG), or before/after examples (JPG/PNG/MP4) to build trust.
 - Attachment guidance: Images (JPG/PNG, max 5MB), Video (MP4, max 10MB), PDF (max 10MB); maximum 5 attachments per message.
 - Providers should reference specific quote ID in messages when discussing different treatments (e.g., "Regarding your hair transplant quote #123...").
-- Clear indication when message contains flagged keywords (warning shown to provider before sending).
+- Clear indication when message contains flagged keywords (warning shown to provider before sending); the message is not blocked, it is sent and raises an automatic keyword flag.
 - Admin emergency intervention is rare and only for critical situations (policy violations, urgent disputes, safety concerns).
 
 ---
@@ -408,7 +410,7 @@ Enable secure, auditable, real-time messaging and audio/video communication betw
 | Clear Filters | button | No | Reset all filters to default | Restores full conversation list |
 | Sort By | dropdown | No | Sort conversation list | Options: Latest Activity / Oldest First / Most Flagged / Provider Name / Patient Name |
 | Conversation list | list | Yes | Shows all conversations with preview, participants, flags, timestamps | Paginated; 20 per page |
-| Patient name | text | Yes | Patient identifier (anonymized per FR-003) | Read-only; displayed in list |
+| Patient name | text | Yes | Real patient name (admins see the unmasked name) | Read-only; displayed in list |
 | Provider name | text | Yes | Provider/clinic name | Read-only; displayed in list |
 | Inquiry ID | text | No | Associated inquiry reference | Displayed if available |
 | Last message preview | text | Yes | Preview of last message | Max 100 chars |
@@ -422,8 +424,7 @@ Enable secure, auditable, real-time messaging and audio/video communication betw
 
 - Accessible from Admin platform main navigation as primary monitoring interface.
 - Shows ALL patient-provider conversations (and any admin-patient communications) by default; filters narrow the view.
-- All filters applied simultaneously with AND logic (e.g., Filter by Provider A AND Inquiry ID 12345 AND Date Range Last 7 Days).
-- **Comprehensive filtering**: Patient, Provider, Service Type, Quote ID, Inquiry ID, Date Range, Flag Type, Conversation Status - all can be combined.
+- Filters, how they combine, and that they are remembered are stated once in REQ-022-122 (FR-022); the filter fields are listed in the data fields above.
 - **Inquiry ID filtering**: Admin can filter by inquiry ID to view all conversations related to a specific case (one inquiry may generate multiple provider quotes → multiple conversations).
 - Conversation list updates in real-time when new messages arrive or flags are added.
 - Keyword flags (red badges) automatically appear when policy violation terms detected.
@@ -467,7 +468,7 @@ Enable secure, auditable, real-time messaging and audio/video communication betw
 | Active indicator | highlight | Yes | Shows currently selected conversation | Highlighted background for selected conversation | Left |
 | **CENTER PANEL: Message Thread** ||||||
 | Conversation header | group | Yes | Shows participants, inquiry/quote IDs, service types, timestamps | Read-only; at top of center panel | Center |
-| Patient name | text | Yes | Patient identifier (anonymized per FR-003) | Read-only; in header | Center |
+| Patient name | text | Yes | Real patient name (admins see the unmasked name) | Read-only; in header | Center |
 | Provider name | text | Yes | Provider/clinic name | Read-only; in header | Center |
 | Message thread | scrollable panel | Yes | Full conversation history with all messages | Read-only; chronological order; main center content | Center |
 | Message sender | indicator | Yes | Shows if patient, provider, or admin sent message | Color-coded or icon-based per message | Center |
@@ -491,7 +492,7 @@ Enable secure, auditable, real-time messaging and audio/video communication betw
 | Flag notes | textarea | No | Internal admin notes about flag | Max 500 chars; NOT visible to users | Right (in dialog) |
 | Resolve Flag | button | No | Mark flag as resolved | Button next to each flag; confirmation required | Right |
 | Enable Emergency Intervention | button | No | Activate emergency intervention mode (Screen 6B) | Prominent button with warning styling; opens confirmation dialog | Right |
-| Actions menu | dropdown | No | Additional admin actions | Options: Export conversation, Request scan/photo set, Schedule review | Right |
+| Actions menu | dropdown | No | Additional admin actions | Future phase: Export conversation is deferred; no other actions in this menu | Right |
 
 **Business Rules**:
 
@@ -500,11 +501,11 @@ Enable secure, auditable, real-time messaging and audio/video communication betw
 - Full conversation history displayed in chronological order; auto-scroll to latest message.
 - All flags (keyword and manual) displayed prominently in dedicated panels.
 - Flag history shows complete audit trail: who added, when, type, status changes.
-- Manual flagging available without leaving thread view; flag appears immediately and silently (no user notification).
+- Manual flagging available without leaving thread view; flag appears immediately and silently (no user notification). Exception: the provider's conversation screen (Screen 4) shows the flag indicator; the patient is still not notified.
 - Conversation header shows ALL inquiry/quote IDs if patient-provider pair has multiple treatments.
 - "Enable Emergency Intervention" button only visible to admins with intervention permissions.
 - All admin view actions logged with timestamp, admin user, and action type.
-- Export conversation: Includes full message history, attachments metadata, flag history, intervention logs.
+- Future phase: Export conversation (full message history, attachments metadata, flag history, intervention logs) is deferred.
 
 **Notes**:
 
@@ -601,7 +602,7 @@ Enable secure, auditable, real-time messaging and audio/video communication betw
 
 - All conversations and message events (sent, delivered, read) are logged with timestamps and participants.
 - Message content size and attachment limits enforced to ensure reliable delivery and storage.
-- All timestamps displayed in the user's local timezone; admin views can toggle UTC for audits.
+- Timestamp display (the user's local timezone, admin UTC toggle) is stated once in the system PRD and applies to every screen of this module.
 - Admin emergency interventions are logged with mandatory reason, timestamp, and admin user for compliance oversight.
 
 ### Data & Privacy Rules
@@ -609,13 +610,13 @@ Enable secure, auditable, real-time messaging and audio/video communication betw
   Reference Principle II from constitution: Medical Data Privacy & Security
 
 - Provider identities are visible to patients in messaging (patients chat directly with providers who have sent them quotes).
-- Patient identity is partially anonymized (e.g., "Mark P." + ID) until payment confirmation per FR-003 business rules.
-- Patient PII and media are protected; all data encrypted in transit and at rest per policy.
-- Medical communications retained for minimum 7 years; deletion requests result in archival with access restrictions.
-- All access to conversations is auditable with user, timestamp, and reason when required.
+- Patient identity masking until payment confirmation is stated once in the system PRD masking Rule; it applies to what the provider sees, and admins see the real patient name.
+- Patient PII and media are protected; encryption in transit and at rest follows the encryption record in the system PRD.
+- Medical communications retention follows the system PRD, Platform-Wide Rules: One 10-year retention period; deletion requests result in archival with access restrictions.
+- Role-based access to conversations and the audit of that access are stated once in the system PRD (retired here); the reason for access is recorded when required.
 - Admin has monitoring access to all patient-provider conversations with emergency-only intervention capability.
 - Admin emergency interventions logged with timestamp, admin user, emergency reason, and full message content.
-- Compliance with GDPR and HIPAA-equivalent practices; patient consent respected for data sharing.
+- GDPR and HIPAA-equivalent compliance, patient consent, and data residency are stated once in the system PRD (moved from this module).
 
 ### Admin Editability Rules
 
@@ -624,14 +625,14 @@ Enable secure, auditable, real-time messaging and audio/video communication betw
 **Editable by Admin**:
 
 - Keyword/phrase flags that trigger moderation or escalation cues.
-- Notification preferences and quiet hours policy.
-- Emergency intervention reason options (Policy Violation / Urgent Dispute / Patient Safety / Other).
+- Notification preferences and quiet hours policy are configured in FR-030 (moved from this module).
+- Emergency intervention reason options (Policy Violation / Urgent Dispute / Patient Safety).
 
 **Fixed in Codebase (Not Editable)**:
 
 - Cryptographic standards and security controls.
 - Read receipt semantics and audit logging requirements.
-- Minimum retention periods mandated by compliance.
+- The retention period (system PRD, Platform-Wide Rules: One 10-year retention period).
 - Attachment type and size limits: Images (JPG/PNG max 5MB), Video (MP4 max 10MB), PDF (max 10MB).
 - Maximum number of attachments per message (5).
 - Message character limits (2000 chars).
@@ -639,7 +640,7 @@ Enable secure, auditable, real-time messaging and audio/video communication betw
 **Configurable with Restrictions**:
 
 - Escalation routing rules (allowed destinations/roles only).
-- Conversation export controls (available to specific admin roles).
+- Future phase: Conversation export controls (admin conversation export is deferred).
 - Emergency intervention permissions (restricted to authorized admin roles only).
 
 ### Payment & Billing Rules *(if applicable)*
@@ -697,27 +698,31 @@ Not applicable to messaging scope; no payment flows in this module.
 
 - P-01: Auth & Profile Management
   - Why needed: Identity and access control for participants.
-  - Integration point: Use authenticated user context and roles for conversation access.
+  - Integration point: Use authenticated user context and roles for conversation access (sign-in and sessions per REQ-001-011; provider roles per REQ-009-002).
 
 - FR-003: Inquiry Submission & Distribution
   - Why needed: Defines patient anonymization/masking rules and pseudonymous identifiers used across patient/provider views.
-  - Integration point: Apply FR-003 anonymization rules to participant display fields until payment confirmation.
+  - Integration point: Apply the system-PRD masking Rule (the one statement that replaced FR-003's masking Rule) to participant display fields until payment confirmation.
 
 - FR-004: Quote Submission & Management
   - Why needed: Enable patient-provider chat only when provider has sent quote to patient.
-  - Integration point: Check quote existence before allowing conversation creation.
+  - Integration point: Check quote existence before allowing conversation creation. FR-004 owns the Rule that a sent quote opens the patient-provider chat; this line cites it.
 
 - FR-007: Payment Processing
   - Why needed: Lift patient anonymization when payment is confirmed per FR-003.
-  - Integration point: Subscribe to payment confirmation events to update patient visibility.
+  - Integration point: Subscribe to payment confirmation events to update patient visibility. Booking confirmation follows REQ-006-002 and REQ-007-020; masking until payment follows REQ-006-008 and the system-PRD masking Rule.
 
 - S-03: Notification Service
   - Why needed: Deliver real-time alerts for new messages and admin emergency interventions.
-  - Integration point: Publish notification events on message state changes.
+  - Integration point: Publish notification events on message state changes; the events themselves (for example `message.received`) are defined and catalogued in FR-030. Catalogue event and channel Rules: REQ-030-061, REQ-020-028, REQ-020-033.
 
 - S-05: Media Storage Service
   - Why needed: Secure storage and retrieval of attachments.
-  - Integration point: Generate secure media links and metadata for threads.
+  - Integration point: Generate secure media links and metadata for threads. Secure storage and access: REQ-002-024.
+
+- FR-021: Multi-Language & Localization
+  - Why needed: Owns the machine translation of messages between patient and clinic (free text is machine-translated for the reader, with an on/off switch).
+  - Integration point: The thread switch (REQ-012-108) turns that translation on or off; the behavior itself is defined in FR-021.
 
 ### External Dependencies (APIs, Services)
 
@@ -783,7 +788,7 @@ Not applicable to messaging scope; no payment flows in this module.
 - Audio/Video Calls: Twilio integration for real-time audio and video calls between patients and providers.
 - Technology: Media handling supports JPG/PNG images (max 5MB), MP4 videos (max 10MB), and PDF files (max 10MB); client-side validation before upload; background upload for larger files with progress indication.
 - Performance: Degrade gracefully on poor connectivity with retries and clear status; optimize video compression on mobile devices.
-- Storage: Medical communications retained per compliance with fast retrieval for care contexts; efficient media storage with thumbnail generation for images/videos.
+- Storage: Medical communications retained per the system PRD, Platform-Wide Rules: One 10-year retention period, with fast retrieval for care contexts; efficient media storage with thumbnail generation for images/videos.
 - Admin intervention: Emergency-only mode with mandatory reason tracking and audit logging.
 
 ### Integration Points
@@ -815,10 +820,10 @@ Not applicable to messaging scope; no payment flows in this module.
 
 - Authentication: Strong session controls; MFA is a planned mandatory control for Admin/Provider and will be enforced platform-wide once the shared MFA stack (FR-026 / FR-031) is delivered; until then enforce strong passwords, throttling, and re-authentication flows per policy.
 - Authorization: Role-based access; least-privilege visibility to conversations.
-- Encryption: All content encrypted in transit (TLS 1.3) and at rest (AES-256); media links protected.
-- Audit trail: Immutable logs of access and message events retained per policy; admin interventions specially flagged.
+- Encryption: Content and media encryption in transit and at rest follows the encryption record in the system PRD; media links protected.
+- Audit trail: Immutable logs of access and message events retained per the system PRD, Platform-Wide Rules: One 10-year retention period; admin interventions specially flagged.
 - Threat mitigation: Abuse prevention on messaging and media uploads; keyword moderation and rate controls; emergency intervention tracking.
-- Compliance: Align with GDPR and HIPAA-equivalent standards; data residency honored.
+- Compliance: GDPR and HIPAA-equivalent practices, consent, and data residency are stated once in the system PRD (moved from this module).
 - Admin intervention controls: Mandatory reason tracking; limited to authorized roles; full audit logging; performance monitoring to ensure <5% usage rate.
 
 ---
@@ -873,7 +878,7 @@ Acceptance Scenarios:
 2. Given admin selects flag type "Off-Platform Risk" and adds note "Provider mentioned 'better pricing outside app'", when admin confirms, then conversation is marked with orange flag badge in admin dashboard.
 3. Given conversation is flagged, when admin views conversation list with "Flagged" filter, then flagged conversation appears with flag type indicator.
 4. Given conversation is flagged, when admin opens conversation, then flag history panel shows flag type, timestamp, admin user, and internal notes.
-5. Given conversation is flagged for observation, when patient or provider opens their messages, then NO indication of flag is visible (silent monitoring).
+5. Given conversation is flagged for observation, when patient or provider opens their messages, then neither party is notified and the patient sees NO indication of the flag; the provider's chat screen (Screen 4) shows the flag indicator.
 
 ---
 
@@ -911,9 +916,9 @@ Acceptance Scenarios:
 ### Edge Cases
 
 - **Excessive attachments**: Enforce 5 attachments max per message; display clear error "Maximum 5 attachments per message" if exceeded.
-- **Oversized attachments**: Block upload and show specific error based on type (e.g., "Image must be under 5MB", "Video must be under 10MB", "PDF must be under 10MB").
+- **Oversized attachments**: Block upload and show the specific error for the type; the exact messages are those in Alternative Flow B1.
 - **Unsupported file types**: Block upload and show "Only JPG/PNG images (max 5MB), MP4 videos (max 10MB), and PDF files (max 10MB) are allowed."
-- **No provider response within 48 hours**: Auto-remind provider; if still no response after 72 hours, system escalates to an admin follow-up queue (e.g., manual observation flag "Follow-Up Needed") and sends additional provider reminders via notifications. Admin messaging remains emergency-only.
+- **No provider response within 48 hours**: Auto-remind provider; if still no response after 72 hours, the system itself creates a "Follow-Up Needed" flag on the conversation (no admin is named on it) for the admin follow-up queue and sends additional provider reminders via notifications. Admin messaging remains emergency-only.
 - **Account deletion request with open conversations**: Archive conversations; restrict access per policy; admin emergency messages preserved in archive.
 - **Simultaneous sends**: Maintain message ordering and idempotency safeguards; admin emergency messages sorted chronologically with patient/provider messages.
 - **Provider persistent off-platform solicitation**: Admin intervenes with warning via emergency mode; repeated violations may trigger provider review/suspension.
@@ -931,40 +936,42 @@ Acceptance Scenarios:
 ### Core Requirements
 
 - **REQ-012-001**: System MUST automatically create a new conversation between patient and provider when provider submits their **first** quote for patient inquiry; subsequent quotes from same provider to same patient MUST add inquiry/quote IDs to existing conversation (one conversation per patient-provider pair).
-- **REQ-012-002**: System MUST provide a Messages Inbox view for patients showing all conversations with filtering (read/unread status), search (provider name, message content), and sorting (latest activity, provider name, date created) capabilities.
+- **REQ-012-002**: System MUST provide a Messages Inbox view for patients showing all conversations, sortable by latest activity, provider name, or date created. Search and filtering of the inbox is stated once in REQ-022-070 (first release).
 - **REQ-012-003**: System MUST provide a Messages popup/submenu in header navigation for providers showing recent conversations (max 10) with unread counts and quick access to patient chats.
-- **REQ-012-004**: System MUST provide a Communication Monitoring Center for admins as comprehensive message list with advanced filtering (patient, provider, service type, quote ID, inquiry ID, date range, flag type, conversation status) applied simultaneously.
+- **REQ-012-004**: System MUST provide a Communication Monitoring Center for admins as the message list of all conversations. Its filters, how they combine, and that they are remembered are stated once in REQ-022-122.
 - **REQ-012-005**: System MUST provide a detailed Message Thread View for admins with two states: Screen 6A (default monitoring/flagging state with read-only access) and Screen 6B (activated emergency intervention state with message composition), accessible when conversation is selected from monitoring center.
 - **REQ-012-006**: System MUST enable in-app messaging for Patient ↔ Provider with text and media, accessible ONLY through dedicated Messages/Inbox screens (not through quote detail screens).
-- **REQ-012-007**: System MUST deliver real-time notifications for new messages to intended recipients (patients, providers, and both parties when admin intervenes); update unread badges in inbox views and header popup menus.
+- **REQ-012-007**: System MUST deliver real-time notifications for new messages to intended recipients (patients, providers, and both parties when admin intervenes); update unread badges in inbox views and header popup menus. The notification events are defined in the FR-030 event catalogue.
 - **REQ-012-008**: Users MUST be able to view complete conversation history with timestamps and read receipts.
 - **REQ-012-009**: System MUST enforce attachment type and size limits (Images: JPG/PNG max 5MB; Video: MP4 max 10MB; PDF: max 10MB; max 5 attachments per message) and provide specific user feedback on violations.
 - **REQ-012-010**: System MUST log message lifecycle events (sent, delivered, read) and admin emergency interventions for audit.
 - **REQ-012-011**: System MUST allow admins to manually flag conversations for observation with flag type selection (Off-Platform Risk / Potential Dispute / Quality Concern / Follow-Up Needed / Other) and optional internal notes.
-- **REQ-012-012**: System MUST distinguish between automatic keyword flags (red) and manual observation flags (orange) in admin monitoring center and thread detail view; flagging must NOT notify patient or provider.
+- **REQ-012-012**: System MUST distinguish between automatic keyword flags (red) and manual observation flags (orange) in admin monitoring center and thread detail view; flagging must NOT notify patient or provider. Exception for the provider's view: the provider's conversation screen still shows both admin flags and keyword flags (the patient is still not notified).
 - **REQ-012-013**: System MUST allow admins to send messages in patient-provider conversations ONLY for emergency situations with mandatory reason tracking (Policy Violation / Urgent Dispute / Patient Safety).
 - **REQ-012-014**: System MUST clearly identify admin messages with "Hairline Admin" badge visible to both patient and provider.
+- **REQ-012-108**: Patient and provider chat screens MUST offer an on/off switch for machine translation of messages for the reader. The translation behavior itself is owned by FR-021; this module owns only the switch in the conversation thread.
+- **REQ-012-109**: Conversation status MUST be calculated from the conversation's flags, with no manual control: Escalated while an admin intervention is under way (a flag is escalated_to_intervention), Resolved when all flags are closed (resolved or intervention_completed), otherwise Active.
 
 ### Data Requirements
 
 - **REQ-012-015**: System MUST maintain conversations per patient-provider pair with searchable metadata (patient ID, provider ID, inquiry ID, quote reference, status, unread_count, keyword flags, manual observation flags, admin_intervened flag, emergency_reason, last_message_at).
-- **REQ-012-016**: System MUST store flag history for each conversation including flag type, timestamp, admin user, status (active/resolved), and internal notes.
+- **REQ-012-016**: System MUST store flag history for each conversation including flag type, timestamp, admin user, status (active / resolved / escalated_to_intervention / intervention_completed; "Resolved - No Action Needed" shows as resolved), and internal notes.
 - **REQ-012-017**: System MUST store attachments securely with links to their parent messages, access controls, and metadata (file type, size, upload timestamp, thumbnail URLs for images/videos).
 
 ### Security & Privacy Requirements
 
 - **REQ-012-018**: System MUST enable patient-provider messaging only when provider has sent a quote to patient.
-- **REQ-012-019**: System MUST encrypt all message content and media in transit and at rest and protect access by role.
-- **REQ-012-020**: System MUST retain medical communications for at least 7 years and support audit export for compliance.
+- **REQ-012-019**: Encryption of message content and media in transit and at rest follows the encryption record in the system PRD. The role-based access part is retired and is covered by the one system-PRD Rule on role-based, audited access.
+- **REQ-012-020**: System MUST retain medical communications as set by the system PRD, Platform-Wide Rules: One 10-year retention period, and support audit export for compliance.
 - **REQ-012-021**: Admin MUST have monitoring access to all patient-provider conversations with manual flagging capability and EMERGENCY-ONLY intervention capability.
-- **REQ-012-022**: System MUST maintain patient anonymization (e.g., "Mark P." + ID) until payment confirmation per FR-003.
+- **REQ-012-022**: Retired. Patient anonymization until payment is stated once in the system PRD masking Rule. Providers see the masked form; admins see the real patient name.
 - **REQ-012-023**: System MUST log all admin actions (manual flags, flag status changes, emergency interventions) with timestamp, admin user, reason/notes, and action type for compliance audit.
 - **REQ-012-024**: System MUST restrict admin intervention to authorized admin roles only; track intervention frequency to ensure <5% threshold; manual observation flags can be used more liberally for proactive monitoring.
 
 ### Integration Requirements
 
 - **REQ-012-025**: System MUST integrate with Quote Management (FR-004) to automatically create or update conversation when quote is submitted (create new if first quote from provider to patient; add quote/inquiry ID to existing if subsequent); conversation must reference all inquiry IDs (array) for admin filtering and case tracking; conversation appears or updates in both inboxes immediately.
-- **REQ-012-026**: System MUST integrate with Notification Service (S-03) to send alerts on message events (including admin emergency interventions to both parties) and update unread badges; manual observation flags must NOT trigger notifications.
+- **REQ-012-026**: Manual observation flags MUST NOT trigger notifications. Delivery of message-event alerts (including admin emergency interventions to both parties) and unread-badge updates follows the notification-service Rule in FR-020 (REQ-020-028).
 - **REQ-012-027**: System MUST integrate with Media Storage Service (S-05) for attachments with secure retrieval.
 - **REQ-012-028**: System MUST integrate with Payment Processing (FR-007) to lift patient anonymization upon payment confirmation.
 
@@ -980,6 +987,8 @@ No unresolved clarifications remain for this scope. Patient ↔ Provider messagi
   - Key attributes: patient_id, provider_id, inquiry_ids (array), quote_references (array), status, keyword_flags (array), manual_observation_flags (array), admin_intervened (boolean), emergency_reason (if admin intervened), created/updated times, last_message_at.
   - Relationships: Has many messages; has many flags; belongs to one patient and one provider; belongs to multiple inquiries (array); references multiple quotes (array); may include admin emergency messages.
   - Note: Arrays store chronologically ordered IDs as patient-provider pair may have multiple treatment inquiries/quotes over time.
+  - Status is calculated from the conversation's flags and has no manual control (see REQ-012-109).
+  - The conversation partner (the other party's name) and the flag indicators shown in lists are shown values, worked out from the provider name and the conversation's flags; they are not stored separately.
 
 - Entity 2 - Message: Single unit of communication within a conversation.
   - Key attributes: sender (patient/provider/admin), sender_type, text, attachments, timestamps (sent/read), delivery/read status, admin_badge (boolean), emergency_reason (if sender is admin).
@@ -991,7 +1000,7 @@ No unresolved clarifications remain for this scope. Patient ↔ Provider messagi
   - Relationships: Belongs to one message; access controlled by conversation permissions.
 
 - Entity 4 - Flag: Admin observation flag or automatic keyword flag for a conversation.
-  - Key attributes: conversation_id, flag_type (automatic_keyword / manual_observation), category (for manual: Off-Platform Risk / Potential Dispute / Quality Concern / Follow-Up Needed / Other; for automatic: keyword matched), status (active / resolved / escalated_to_intervention), admin_user (for manual flags), internal_notes (for manual flags), created_timestamp, updated_timestamp, resolved_timestamp.
+  - Key attributes: conversation_id, flag_type (automatic_keyword / manual_observation), category (manual flags only: Off-Platform Risk / Potential Dispute / Quality Concern / Follow-Up Needed / Other), matched_keyword (automatic flags only: the keyword that matched), status (active / resolved / escalated_to_intervention / intervention_completed; a flag marked "Resolved - No Action Needed" shows as resolved), admin_user (for manual flags; empty on the Follow-Up Needed flag the system creates after 72 hours without a provider response), internal_notes (for manual flags), created_timestamp, updated_timestamp, resolved_timestamp.
   - Relationships: Belongs to one conversation; created by one admin user (for manual flags); may trigger admin actions.
 
 ---
@@ -1015,6 +1024,7 @@ No unresolved clarifications remain for this scope. Patient ↔ Provider messagi
 | 2025-12-19 | 2.10 | Added explicit 3-panel layout structure to Provider (Screen 4) and Admin (Screens 6A/6B) message detail views: LEFT panel (conversation list synchronized with inbox/monitoring center), CENTER panel (message thread with compose area for provider or read-only for admin monitoring), RIGHT panel (conversation info, tools, quote references for provider; flag management and intervention controls for admin); documented responsive behavior for desktop/tablet/mobile; updated data fields tables to include panel location column; enhanced notes sections with layout specifications | AI |
 | 2025-12-22 | 2.11 | Verified & aligned with system PRD updates: patient ↔ provider is V1 messaging channel; support/aftercare messaging deferred; standardized patient identity reveal to post-payment only; marked MFA as planned control per Constitution; fixed duplicate REQ IDs in summary | AI |
 | 2026-04-13 | 2.12 | Removed Communication Monitoring Center export behavior from Screen 5 to keep admin conversation export deferred until a dedicated export requirement is re-specified in the search/filter catalog. | Codex |
+| 2026-11-20 | 2.13 | Requirements graph programme baseline: owner rulings applied. Main changes: encryption, role-based access, access audit, timezone, and GDPR/HIPAA-equivalent compliance now point to the system PRD (REQ-012-019, REQ-012-099, REQ-012-101 and REQ-012-103 retired or moved); identity masking until payment points to the one system-PRD Rule (REQ-012-022 retired) and admins see the real patient name; flag states now active, resolved, escalated_to_intervention, intervention_completed; conversation status is calculated from the flags (REQ-012-109); flag category holds the five manual values only, with a separate matched-keyword value for automatic flags; provider sees both admin and keyword flags; at 72 hours the system creates the Follow-Up Needed flag; flagged-keyword messages are warned, sent, and raise an automatic flag; attachment-only messages allowed; emergency reasons are three (Other dropped); admin actions Request scan/photo set and Schedule review removed; conversation export deferred; View All Messages marked future phase; inbox search and filters now owned by REQ-022-070 and monitoring center filters by REQ-022-122; notification delivery points to FR-020 and notification preferences move to FR-030; thread switch for machine translation added with FR-021 owning the Rule (REQ-012-108); dependency lines cite the owning Rules; cross-document reconciliation (retention, system rule citations, notification event pointer) | AI |
 
 ---
 
@@ -1031,4 +1041,4 @@ No unresolved clarifications remain for this scope. Patient ↔ Provider messagi
 **Template Version**: 2.0.0 (Constitution-Compliant)  
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Governance → PRD Standards & Requirements (NON-NEGOTIABLE)  
 **Based on**: FR-011 Aftercare & Recovery Management PRD  
-**Last Updated**: 2026-04-13
+**Last Updated**: 2026-11-20

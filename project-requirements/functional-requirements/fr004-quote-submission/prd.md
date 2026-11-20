@@ -55,7 +55,8 @@ The Parent Quote is versioned as one aggregate. Every derived subquote uses that
 **Admin Platform (A-01)**:
 
 - Oversight of all quotes; inline edit (policy-bound), soft delete/restore; full audit trail
-- Configure expiry window and manage exceptional withdrawals
+- Configure expiry window. Only the provider withdraws a quote; an admin never withdraws one
+- Restore an expired quote with a fresh window and a reason (REQ-004-105)
 
 **Shared Services (S-XX)**:
 
@@ -67,7 +68,8 @@ The Parent Quote is versioned as one aggregate. Every derived subquote uses that
 
 - System → Provider: New inquiry notifications and time-bound updates
 - Provider → System: Draft, edit, status transitions, soft delete/archive
-- System → Patient: Quote creation/expiry/status notifications (FR-004 produces `quote.submitted`, `quote.updated`, `quote.expiring_soon`, `quote.expired` and `quote.withdrawn`)
+- System → Patient: Quote creation/expiry/status notifications (FR-004 produces `quote.submitted`, `quote.updated`, `quote.expiring_soon`, `quote.expired`, `quote.withdrawn` and `quote.restored`)
+- System → Provider: `quote.cancelled_inquiry`, sent only to the providers whose quotes the inquiry-cancellation cascade cancelled; `quote.restored` also reaches the provider of a restored quote
 - Admin → All Parties: Oversight, intervention, audit logging
 
 **Out of Scope**:
@@ -77,7 +79,7 @@ The Parent Quote is versioned as one aggregate. Every derived subquote uses that
 ### Entry Points
 
 1. Provider receives auto-distributed inquiry from FR-003
-2. Provider opens Quote Management dashboard (new, draft, sent, history, archive bins)
+2. Provider opens the unified Quote List (Screen 2; one list, no tabs)
 3. Provider creates and edits a quote by selecting the shared treatment, then configuring one to five package options
 4. Patient receives parent quote(s) and views their complete subquotes in the patient app
 5. Admin can access, search, or override quote status from admin platform
@@ -110,10 +112,11 @@ The Parent Quote is versioned as one aggregate. Every derived subquote uses that
 - On every send, System copies the terms of each attached promotion into the sent quote version and attaches at most one automatic FR-019 promotion per quote to each eligible option/date-price row; when several automatic promotions qualify, the FR-019 priority order picks one (see Business Rules, "Promotions on quotes"). A sent quote carrying an automatic promotion holds exactly one reserved use of that promotion's usage limit, and a re-send of a new version keeps that reservation rather than adding a second one
 - System delivers the parent quote and its ordered options to the patient and records one atomic version/audit snapshot of the aggregate
 - On first send only, System emits `quote.submitted` for FR-020 notification; a re-send of a new version emits `quote.updated` instead (Workflow 2)
+- A sent quote opens the FR-012 conversation between that provider and the patient when it is the provider's first quote for the inquiry, and otherwise adds to the existing conversation (REQ-004-107)
 
 ### Workflow 2: Quote Editing
 
-**Actors**: Provider, System, Admin (editor while the quote is draft or sent, through Screen 7)
+**Actors**: Provider, System, Admin (editor through Screen 7 while the quote is draft or sent, and after acceptance within the limits below)
 
 **Trigger**: Provider opens an existing draft or sent (pre-expiry) quote to modify fields
 
@@ -121,9 +124,10 @@ The Parent Quote is versioned as one aggregate. Every derived subquote uses that
 
 - Provider may edit draft or sent (pre-expiry) quotes, including shared fields, options, option-local inclusions, date-price combinations, and option-specific plans
 - Admin may edit draft or sent quotes through Screen 7 with a mandatory reason; an admin edit of a sent quote creates a new version and emits `quote.updated` when that version is re-sent
+- After acceptance an admin may change any quote field except price, currency, and promotion, with a mandatory reason and full history. The change is stored as a new version beside the acceptance snapshot, which stays unchanged, and payment records never change
 - Package-library changes made after an option was created do not alter the quote snapshot
 - All parent and option changes are versioned/audited as one quote aggregate
-- Edits on accepted, expired, withdrawn, archived, or cancelled quotes are prohibited for providers and admins. After acceptance, treatment details (plan, clinicians, grafts) change only through FR-010; price, currency, date range, and promotion never change; the booking's appointment changes only through the FR-006 admin appointment change, which emits `booking.rescheduled`, while the acceptance snapshot keeps the accepted appointment as the baseline
+- Edits on expired, withdrawn, archived, or cancelled quotes are prohibited for providers and admins. After acceptance providers are blocked from every quote edit, and their treatment-detail changes (plan, clinicians, grafts) go only through FR-010; price, currency, and promotion never change; the booking's appointment changes only through the FR-006 admin appointment change, which emits `booking.rescheduled`, while the acceptance snapshot keeps the accepted appointment as the baseline
 - When a new version of an already-sent quote is re-sent, System emits `quote.updated` (described as "quote revised (new version)") for FR-020 notification; FR-004 is the only producer of this event. Saving draft edits without re-sending emits nothing
 - A re-send or new version never changes the quote's first-send timestamp or its expiry
 
@@ -135,13 +139,14 @@ The Parent Quote is versioned as one aggregate. Every derived subquote uses that
 
 **Outcome**: Quote transitions to correct status; notifications sent; audit recorded
 
-- Expiry is captured at first send: the system copies the quote expiry setting from the active FR-026 quote configuration (default 48 hours) read-only onto the quote and computes the expiry timestamp from the first send time. Drafts have no expiry. Later edits and re-sends do not reset it, later setting changes never affect a sent quote, and there is no per-quote extension. Providers cannot modify the window and only see the computed expiry timestamp.
-- Expiry applies only to `sent` parent quotes. Upon expiry, system updates the parent quote to `expired`, emits `quote.expired` once for that parent quote (FR-030), and every child subquote becomes ineligible for acceptance. `accepted` quotes and every cancelled, withdrawn, or archived quote are never moved to `expired`.
+- Expiry is captured at first send: the system copies the quote expiry setting from the active FR-026 quote configuration (default 48 hours) read-only onto the quote and computes the expiry timestamp from the first send time. Drafts have no expiry. Later edits and re-sends do not reset it, later setting changes never affect a sent quote, and there is no per-quote extension, except that an admin who restores an expired quote gives it a fresh full window (REQ-004-105). Providers cannot modify the window and only see the computed expiry timestamp.
+- Expiry applies only to `sent` parent quotes. Upon expiry, system updates the parent quote to `expired`, emits `quote.expired` once for that parent quote (FR-030, REQ-030-036), and every child subquote becomes ineligible for acceptance. `accepted` quotes and every cancelled, withdrawn, or archived quote are never moved to `expired`.
 - When a sent parent quote reaches the "quote expiring soon" lead time set by admin in FR-026, the system emits `quote.expiring_soon` once for that parent quote (FR-030). It is never emitted for drafts or for accepted or terminal quotes.
 - Provider may withdraw or archive quotes pre-acceptance. The `quote.withdrawn` notification is always mandatory, before and after acceptance. FR-004 is its only producer. The patient is always notified; the admin is notified only when the withdrawn quote was already accepted (Workflow 6), because a withdrawal before acceptance is a normal provider action.
 - FR-005 subquote acceptance moves the selected subquote and its parent quote to `accepted`, marks sibling subquotes `not_selected`, and moves every other parent quote for the inquiry, from any provider, to `cancelled_other_accepted`; the parent quote, Quote Option, and Option/Date-Price Record are never direct acceptance targets. Each sent parent quote that is cancelled this way produces one not-selected notice per parent quote. Unsent draft parent quotes are cancelled silently with the same status and no notice.
 - An accepted parent quote stays `accepted` and is never reopened for acceptance or moved to `expired`, including after FR-006 moves the booking to `Payment Window Expired`; its status changes only through provider withdrawal (Workflow 6). An admin booking cancellation in FR-006 moves the booking and inquiry to `Cancelled` but leaves the accepted parent quote `accepted`. Competing parent quotes stay cancelled, and no new parent quote can be created or sent for an inquiry that has an accepted subquote; the only exception is the admin-authored replacement quote for an FR-006 provider-fault transfer (Workflow 7). The patient cannot cancel the inquiry after acceptance; through "Contact support" the patient reaches an admin, who performs the audited FR-006 revive or an FR-006 booking cancellation, after which the patient may start a new inquiry.
-- **Patient cancels parent inquiry**: The patient can cancel only in the Inquiry or Quoted stage, before any subquote is accepted. Only quotes for that inquiry in draft, sent, or expired status transition to "Cancelled (Inquiry Cancelled)"; quotes in any other status (for example Cancelled (Provider Status), Withdrawn, Cancelled (Other Accepted), Accepted, or Archived) keep their status and cause. This is a system-initiated cascade, not a provider or patient action on the quote itself. Only providers whose quotes were cancelled by this cascade are notified via `quote.cancelled_inquiry` event (FR-020).
+- **Admin restores an expired quote**: An admin may restore an `expired` quote to `sent` with a fresh full window (restore time plus the FR-026 window in force) and a mandatory reason, unless the inquiry already has an accepted subquote. The patient and the provider are notified through `quote.restored` (REQ-004-105, REQ-004-106).
+- **Patient cancels parent inquiry**: The patient can cancel only in the Inquiry or Quoted stage, before any subquote is accepted. Only quotes for that inquiry in draft, sent, or expired status transition to "Cancelled (Inquiry Cancelled)"; quotes in any other status (for example Cancelled (Provider Status), Withdrawn, Cancelled (Other Accepted), Accepted, or Archived) keep their status and cause. This is a system-initiated cascade owned by FR-003 (REQ-003-013), not a provider or patient action on the quote itself. Only providers whose quotes were cancelled by this cascade are notified via `quote.cancelled_inquiry` event (FR-020).
 - **Provider becomes Suspended or Deactivated**: At the effective time, the system cancels every unaccepted draft or sent parent quote of that provider with status `cancelled_provider_status` and `cancellationProvenance` = `ProviderSuspended` or `ProviderDeactivated`. Cancelling an unsent draft is silent to the patient: the patient never saw it, so it triggers no `provider.status_cancellation_patient` notice on its own (admin support alerts still follow FR-020). Cancellation is recorded once per parent quote; its Quote Options and option/date-price alternatives become unavailable with the parent and are not cancelled or counted separately. `cancelled_provider_status` never applies to an accepted parent quote: if the provider's quote was already accepted, the parent quote keeps `accepted` and the FR-005 AcceptanceEvent stays unchanged. FR-006 Alternative Flow B4 records the closure on the booking as its cause, and no supersession record is written at that point. FR-005 writes the single linked supersession record only when the admin accepts the replacement quote in the FR-006 provider-fault transfer (FR-006 Alternative Flow B5). The FR-005 AcceptanceEvent, accepted IDs/versions, and quote-local package snapshots are not rewritten. Quotes already expired, withdrawn, archived, or otherwise terminal are not reclassified. Other providers' quotes are unaffected. Later reactivation does not restore cancelled quotes.
 - All state transitions are logged and result in notifications as appropriate
 
@@ -154,6 +159,7 @@ The Parent Quote is versioned as one aggregate. Every derived subquote uses that
 **Outcome**: Quote becomes Archived with rationale; remains visible in audit/archive; only admin can restore
 
 - Provider may soft-delete a quote before acceptance (removes from provider listing, not from audit/archive or patient record)
+- Drafts and archived quotes are never shown to patients
 - Quotes in terminal states (accepted, expired, withdrawn, cancelled_other_accepted, cancelled_inquiry_cancelled, cancelled_provider_status) cannot be soft-deleted by provider — these are already terminal
 - System sets status = Archived with rationale
 - Soft-deletes are fully auditable and revertible only by admin
@@ -168,6 +174,7 @@ The Parent Quote is versioned as one aggregate. Every derived subquote uses that
 
 - Admin dashboard lists all provider quotes, searchable/filterable by state/date/provider/inquiry
 - Admin can perform soft delete or restore and view the immutable audit trail and full quote history; soft delete and restore are unavailable for a quote in `accepted` status, which is never deleted or restored
+- Admin can restore an expired quote to `sent` with a fresh window and a mandatory reason, unless the inquiry already has an accepted subquote (Workflow 3, REQ-004-105)
 - Admin authors a quote only as the replacement quote of an FR-006 provider-fault transfer (Workflow 7, Screen 8)
 
 ### Workflow 6: Provider Withdrawal After Acceptance
@@ -236,7 +243,7 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 | Treatment ID and version | Provider-selected relationship | Tab 1 | References the exact immutable FR-024 Treatment version shared by every option; the quote does not copy treatment-owned data |
 | Technique details | Database/API retrieved from Treatment | Tabs 1 and 7 | Loaded read-only through the exact Treatment-version relationship; never separate provider input or duplicated quote data |
 | Estimated grafts | Provider-edited parent field | Tab 3 | Positive integer shared by every option |
-| Graft description | System-derived parent field | Tab 3 | Generated from the approved template and estimated grafts; read-only |
+| Graft description | System-derived parent field | Tab 3 | Generated from the fixed template (Business Rules, Graft Description template) and estimated grafts; read-only |
 | Visual treatment plan / graft markup | Provider-edited parent field | Tab 3 | Optional shared drawing/media snapshot |
 | Clinician IDs | Provider-edited parent field | Tab 6 | One or more eligible clinicians shared by every option |
 | Common notes | Provider-edited parent field | Tab 6 | Optional text applying to every option |
@@ -247,12 +254,12 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 | Expiry | System-derived parent field | Tab 7 | Captured read-only at first send from the FR-026 quote expiry setting; drafts carry none; no per-quote extension |
 | Calculated price range / accepted total | System-derived parent summary | Tabs 4 and 7 | Price range is derived from all option/date prices; accepted total is written only at FR-005 acceptance from the acceptance snapshot (price after promotion) and is a read-only copy; neither is entered separately |
 | Commission | System-derived financial field | Tab 7 subject to permissions | Shows the commission model and value (percentage or flat rate) from the active FR-029 configuration, labelled "indicative, final at booking confirmation"; the binding commission is fixed at booking confirmation on the accepted price after promotion (FR-029); never provider input |
-| Affiliate attribution reference | System-captured financial provenance | Tab 7 subject to permissions | Inherited from validated referral context; never provider input |
+| Affiliate attribution reference | System-captured financial provenance | Tab 7 subject to permissions | Inherited from validated referral context; never provider input; display-only here, data owned by FR-018 |
 | Terms acknowledged timestamp | System-owned FR-005 acceptance field | Tab 7 after acceptance | Null during quote creation; read-only copy of the FR-005 acceptance snapshot value |
 | Locked exchange-rate value and pair | System-owned FR-005/FR-029 acceptance snapshot | Tab 7 subject to permissions | Null before acceptance; read-only copy of the FR-005 acceptance snapshot value when conversion is required |
 | Cancellation and supersession provenance | System-owned lifecycle fields | Tab 7 / Audit | Records inquiry cancellation, another accepted quote, or provider suspension/deactivation of an unaccepted quote; never provider input |
-| Travel-responsibility state and declaration metadata | System-owned FR-008 downstream fields | Tab 7 after applicable workflow action | Derived from the accepted option or recorded by the governed travel flow; not edited during quote creation |
-| Created, updated, and last-edited metadata | System-owned audit metadata | Tab 7 / Audit | Generated from authenticated actions; read-only |
+| Travel path | System-owned FR-008 downstream field | Tab 7 after applicable workflow action | Derived from the accepted option (FR-008); display-only; not edited during quote creation |
+| Created and updated timestamps | System-owned audit metadata | Tab 7 / Audit | System-generated; read-only |
 | Quote Option ID and parent Quote ID | System-owned | Tabs 2, 4, 5, and 7 | Stable identifiers; read-only |
 | Source Package ID and version | System-captured option provenance | Tab 2 and Sub-screen 2A | Captured when selected (the exact FR-024 package version); read-only after snapshot creation |
 | Option display order | Provider-edited option field | Tab 2 | Unique consecutive patient-facing order |
@@ -303,6 +310,7 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 **Behavior**:
 
 - Tab 2 is unavailable until an active treatment is selected.
+- If an admin has deactivated the treatment held by a draft, the provider must pick another treatment before the draft can be sent. Sent quotes and bookings that use the treatment are unaffected.
 - The system persists the exact Treatment ID/version relationship and loads technique details through that relationship for display and API responses.
 - Changing the treatment after options exist requires confirmation. The system must identify incompatible options and must not silently retain or discard dependent package, pricing, or plan data.
 
@@ -353,7 +361,7 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 | Field Name | Scope | Type | Required | Description | Validation Rules |
 | --- | --- | --- | --- | --- | --- |
 | Estimated Grafts | Quote | number | Yes | Provider-entered estimate shared by every option | Provider may enter and revise a positive integer |
-| Graft Description | Quote | read-only text | Yes | System-generated explanation based on the approved template and the current Estimated Grafts value | Regenerated whenever Estimated Grafts changes; providers cannot edit it directly; retained in aggregate versions |
+| Graft Description | Quote | read-only text | Yes | System-generated explanation based on the fixed template (see Business Rules) and the current Estimated Grafts value | Regenerated whenever Estimated Grafts changes; providers cannot edit it directly; retained in aggregate versions |
 | Visual Treatment Plan / 3D Markup | Quote | drawing/upload | No | Shared visual plan or markup | Supported file/media rules; stored in the aggregate version |
 
 ##### Tab 4: Dates & Pricing
@@ -377,7 +385,7 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 - Every range marked applicable must have its own appointment slot and offered price; unavailable combinations are omitted rather than priced. Each priced pairing becomes one subquote for FR-005.
 - Every option/date price must be greater than 0. A zero price is blocked with an inline error on that row; a date range the clinic cannot serve is left out of that option instead of being priced at zero.
 - The FR-024 treatment Base Price is a reference-only, non-binding "starting from" value. It may prefill a new row only where no other standard value exists, such as a package standard price, and it is never read after the quote is sent.
-- If the FR-029 Default Currency changes while a draft holds prices, the draft switches to the new currency, every typed number is kept unchanged, and a "currency changed, check your prices" banner is shown. The provider must acknowledge the banner before the quote can be sent.
+- If the FR-029 Default Currency changes while a draft holds prices (REQ-029-053), the draft switches to the new currency, every typed number is kept unchanged, and a "currency changed, check your prices" banner is shown. The provider must acknowledge the banner before the quote can be sent.
 - `included_services` comes from the corresponding Tab 2 option snapshot. After FR-005 acceptance, FR-008 derives `travel_path` from the accepted option.
 
 ##### Tab 5: Option Treatment Plans
@@ -421,9 +429,9 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 | Commission | Quote | read-only model and value (percentage or flat rate) | Conditional | Commission model and value shown only to authorized roles, labelled "indicative, final at booking confirmation" | From the active FR-029 configuration; never provider input; the binding commission is fixed at booking confirmation |
 | Quote Status | Quote | read-only badge | Yes | Current governed lifecycle state | System-owned enum |
 | Expiry | Quote | read-only datetime | Yes | Deadline for the complete quote; shown as "set on first send" while drafting | Captured at first send from the FR-026 quote expiry setting |
-| Created, Updated, and Last Edited | Quote | read-only metadata | Yes | System timestamps and last authenticated editor | System-generated |
+| Created and Updated | Quote | read-only metadata | Yes | System timestamps for creation and last update | System-generated |
 | Option Customization State | Option | read-only badge | Yes | Shows the source package and version and whether each option has been customised inline; warns when the source package has since been edited or deactivated | System-derived from option-item changes and the FR-024 package state |
-| Downstream Acceptance and Lifecycle Metadata | Quote | read-only group | Conditional | Terms acknowledgment, exchange-rate lock, cancellation/supersession provenance, affiliate attribution, and travel-responsibility state | Visible only when populated and authorized; never edited in Screen 1 |
+| Downstream Acceptance and Lifecycle Metadata | Quote | read-only group | Conditional | Terms acknowledgment, exchange-rate lock, cancellation/supersession provenance, affiliate attribution (data owned by FR-018), and the travel path derived from the accepted option (FR-008) | Display-only; visible only when populated and authorized; never edited in Screen 1 |
 | Version and Audit Summary | Quote aggregate | read-only links | Yes | Current version and immutable change history | Must cover parent and all option-owned records |
 | Validation Summary | Quote aggregate | read-only checklist | Yes | Shows complete tabs and links each issue to its owning tab | No unresolved blocking issue |
 | Submit Quote | Quote aggregate | action | Yes | Submits parent and options as one transaction | Revalidate inquiry, authorization, option count, and every tab gate; blocked while any option/date price is not greater than 0 or an unacknowledged "currency changed, check your prices" banner is shown |
@@ -573,7 +581,7 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 
 #### Screen 7: Admin Inline Quote Edit
 
-**Purpose**: Admin performs limited inline edits with audit on draft or sent quotes only
+**Purpose**: Admin performs inline edits with audit on draft, sent, and accepted quotes (price, currency, and promotion stay read-only once accepted)
 
 **Data Fields**:
 
@@ -583,7 +591,7 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 | Quote Option | selector | Yes | Select the package option being edited | Must belong to the selected quote |
 | Option/Date Price | matrix | Cond. | Edit applicability, appointment slot, or price for an option/date combination | Reason required; matrix must remain complete |
 | Package Inclusions | inline option editor | Cond. | Edit the option snapshot without changing the package library | Reason required |
-| Estimated Grafts | number | Cond. | Adjust graft count. Saving a new value regenerates Graft Description from the approved template; the prior text is not preserved | Positive integer; reason required |
+| Estimated Grafts | number | Cond. | Adjust graft count. Saving a new value regenerates Graft Description from the fixed template (see Business Rules); the prior text stays in quote history | Positive integer; reason required |
 | Option Items | repeater | Cond. | Add/edit/remove items within the selected option snapshot | Same fields as Sub-screen 2A — Item Name, Item Type, Included flag, Item Order, and Item Price (optional); item order consecutive with no gaps; reason required |
 | Treatment Plan (per-day) | repeater | Cond. | Edit the selected option's relative day plan | Consecutive day numbers; reason required |
 | Promotion | select-or-create | Cond. | Add, replace, or remove the structured promotion on an option/date price of a draft or sent quote. Inline create permitted with `scope = AD_HOC_QUOTE_BOUND` per FR-019 Screen 9 Mode 2 | Must resolve to a valid PromotionProgram id or null; reason required; the change creates a new quote version into which the current promotion terms are copied |
@@ -595,7 +603,7 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 **Notes**:
 
 - All inline edits auditable (who/when/before/after, reason). An admin edit of a sent quote creates a new quote version and emits `quote.updated` when that version is re-sent; draft edits emit nothing
-- Screen 7 is available only for `draft` and `sent` quotes. Once a subquote of the quote is accepted, every Screen 7 edit is blocked; the accepted snapshot is the record, and later treatment-detail changes (plan, clinicians, grafts) are made only through FR-010 with audit and patient notice. Accepted, expired, withdrawn, archived, and cancelled quotes are read-only.
+- Screen 7 is available for `draft`, `sent`, and accepted quotes. After acceptance, price, currency, and promotion are read-only; every other field can be changed, each change needs a mandatory reason, and it is stored as a new version beside the acceptance snapshot, which stays unchanged. Payment records are never changed. A provider cannot edit an accepted quote; the provider's treatment-detail changes (plan, clinicians, grafts) are made only through FR-010 with audit and patient notice. Expired, withdrawn, archived, and cancelled quotes are read-only.
 
 #### Screen 8: Admin Replacement Quote Authoring
 
@@ -639,31 +647,33 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 - Every Quote Option MUST originate from a package that is active in the authenticated provider's package library when it is selected. If the source package is later edited or deactivated, existing draft and sent options keep their snapshot; a draft may still be submitted, and Tab 7 shows a warning that the source package has changed or is inactive
 - Each selected package seeds exactly one alternative Quote Option, up to five per parent quote; packages are never summed or merged into one option. The package seeds services and their pricing, included travel services, the standard price, and the relative day-by-day plan; date ranges, additional notes, and documents are entered per quote
 - Package selection occurs after the shared treatment is selected; every option in the quote MUST use that parent treatment
+- If an admin deactivates a treatment while a draft quote holds it, the draft cannot be sent until the provider picks another treatment. Sent quotes and bookings that use the treatment are unaffected
 - Selecting a package MUST create a quote-owned snapshot. Inline option customization MUST NOT update or create reusable package-library records
-- Package-library changes after snapshot creation MUST NOT alter existing draft or sent options unless the provider explicitly replaces the source package and confirms a new snapshot
+- Package-library changes after snapshot creation MUST NOT alter existing draft or sent options unless the provider explicitly replaces the source package and confirms a new snapshot. Patients see only the option's own copy of the package content, never the live library package
 - **Package library edits and quote inline edits**: There are two distinct edit paths. (1) Editing a package in the FR-024 package management screen changes the reusable library package: each saved edit creates a new package version, earlier versions stay read-only, and existing quotes never change. (2) Editing a package inside quote creation (Sub-screen 2A, Tab 5, and Tab 4 prices) changes only a quote-local copy saved on that Quote Option; it is never written back to the library and never creates a package version. Each Quote Option records its source package ID, source package version, and whether it was customised inline
 - Each option MUST identify at least one applicable patient-requested date range and provide a price and appointment slot for every applicable option/date combination. The provider MAY leave out any option/date pairing it cannot offer, so a parent quote yields up to (options × date ranges) subquotes. Each pairing MAY appear only once per option, and the package standard price prefills each applicable row
 - Estimated grafts, graft description, visual treatment plan, clinicians, common notes, and common requirements belong to the parent quote and MUST NOT be duplicated as option-specific facts
 - Quote-level attachments apply to every option and MUST follow platform file-access, audit, and retention rules
-- Quote currency MUST come from the active FR-026 quote configuration, whose currency is the FR-029 Default Currency; it MUST be captured onto the quote at first send, kept for historical integrity, and displayed read-only. Drafts carry no captured currency. Packages carry no currency of their own. Providers MUST NOT enter or change it in the quote. If the Default Currency changes while a draft holds prices, the draft switches to the new currency, the typed numbers are kept, and a "currency changed, check your prices" banner must be acknowledged before the quote can be sent
+- Quote currency MUST come from the active FR-026 quote configuration, whose currency is the FR-029 Default Currency; it MUST be captured onto the quote at first send, kept for historical integrity, and displayed read-only. Drafts carry no captured currency. Packages carry no currency of their own. Providers MUST NOT enter or change it in the quote. If the Default Currency changes while a draft holds prices, FR-029 (REQ-029-053) governs: the draft switches to the new currency, the typed numbers are kept, and a "currency changed, check your prices" banner must be acknowledged before the quote can be sent
 - The parent quote MUST record its first-send timestamp (`firstSentAt`) when it is first sent; a re-send or new version never changes it
 - The FR-024 treatment Base Price is a reference-only, non-binding "starting from" value. It MAY prefill a new option/date-price row only where no other standard value exists, and it is never read after the quote is sent
-- Quote expiry MUST be captured at first send by copying the FR-026 quote expiry setting read-only onto the quote. Drafts carry no expiry; later setting changes never affect sent quotes; there is no per-quote extension
-- Providers MAY enter and revise the Estimated Grafts value. The system MUST automatically generate and regenerate the Graft Description from the approved system template and the current Estimated Grafts value. Providers MUST NOT directly edit the Graft Description.
+- Quote expiry MUST be captured at first send by copying the FR-026 quote expiry setting read-only onto the quote. Drafts carry no expiry; later setting changes never affect sent quotes; there is no per-quote extension, except that an admin who restores an expired quote gives it a fresh full window (REQ-004-105)
+- Providers MAY enter and revise the Estimated Grafts value. The system MUST automatically generate and regenerate the Graft Description from the fixed template text below and the current Estimated Grafts value. Providers MUST NOT directly edit the Graft Description. Earlier Graft Description text is kept in quote history.
+- **Graft Description template**: The text is written once here, with no admin setting and no admin screen: "The provider estimates about {Estimated Grafts} grafts for this treatment. This is an estimate, not a final count." The placeholder is replaced by the current Estimated Grafts value.
 - Included services, custom services, date applicability/pricing, promotions, and the day-to-day plan belong to the Quote Option or its option/date price record
 - Analytics MUST distinguish parent quote responses from Quote Options so option counts do not inflate quote-response or conversion metrics
 - Quote-amount analytics MUST use only the accepted option/date price. A quote with no acceptance has a price range rather than an amount and MUST be excluded from amount metrics, while still counting as one response in volume and conversion metrics
 - Quotes CANNOT be hard deleted (only archived/soft deleted)
 - All state transitions (draft→sent→expired, etc.) MUST be fully auditable
-- Providers and admins may edit a quote only while it is `draft` or `sent`. Once a subquote is accepted, FR-004 blocks every quote edit; treatment details (plan, clinicians, grafts) change only through FR-010 with audit and patient notice; price, currency, date range, and promotion never change; and the booking's appointment changes only through the FR-006 admin appointment change, with the acceptance snapshot keeping the accepted appointment as the baseline
+- Providers may edit a quote only while it is `draft` or `sent`; admins may edit `draft` and `sent` quotes. Once a subquote is accepted, FR-004 blocks every provider quote edit and the provider's treatment-detail changes (plan, clinicians, grafts) go only through FR-010 with audit and patient notice. After acceptance an admin may change any quote field except price, currency, and promotion, which never change; the date range and treatment details can be changed. Every such admin change needs a mandatory reason, is kept with full before and after history, and is stored as a new version beside the acceptance snapshot (FR-005), which stays unchanged; payment records never change. The booking's appointment changes only through the FR-006 admin appointment change, with the acceptance snapshot keeping the accepted appointment as the baseline
 - `sent` quotes MUST expire automatically on reaching their expiry timestamp; `accepted`, withdrawn, archived, and cancelled quotes are never expired
 - Each inquiry may have multiple parent quotes from multiple providers or from the same provider. Package alternatives within a parent quote are Quote Options, not independent quote responses
 - Discounts are provider-managed (reviewed by admin if above configured threshold)
 - **Promotions on quotes**: The offered price is stored as entered by the provider, and any promotion discount is stored and shown separately. At each send, the system copies the terms and discount value of every attached promotion into the sent quote version; later edits to the FR-019 promotion never change a sent quote. At send, the system also attaches at most one automatic FR-019 promotion per quote to each eligible option/date-price row; when several automatic promotions qualify, the FR-019 priority order picks one. The accepted price is the price after promotion, which FR-005 freezes into the acceptance snapshot; FR-004 never changes it after acceptance. A sent quote carrying an automatic promotion holds exactly one reserved use of that promotion's usage limit, and a re-send of a new version keeps that reservation rather than adding a second one; the reservation is released when the quote expires, is withdrawn, or ends not selected or cancelled, or when the accepted row does not carry the promotion (`not_applied`), and the use is consumed when the accepted row carries it, so the usage limit can never be exceeded. An automatic promotion with no uses left is not eligible and is not attached
-- **Commission display**: The quote shows the commission model and value (percentage or flat rate) only as an indicative figure labelled "indicative, final at booking confirmation"; the binding commission is fixed at booking confirmation on the accepted price after promotion, in the quote currency, read from the acceptance snapshot (FR-029)
+- **Commission display**: Owned by FR-029 (REQ-029-051), including the binding commission fixed at booking confirmation. The quote only displays the commission model and value (percentage or flat rate) as an indicative figure labelled "indicative, final at booking confirmation"
 - All notifications MUST comply with platform notfication/audit/logging rules
-- GDPR/data compliance: all quote objects are archived for ≥7 years
-- Patient information remains censored at this stage until payment confirmation; only anonymized identifiers and allowed fields are visible to providers.
+- GDPR/data compliance: all quote objects are archived; retention follows the system PRD, Platform-Wide Rules: One 10-year retention period
+- Patient information remains censored at this stage until payment confirmation; only anonymized identifiers and allowed fields are visible to providers (see the system PRD identity-protection Rule that replaces REQ-004-008).
 - Providers must select option applicability from patient-requested date ranges; each applicable option/date combination must have a specific price and appointment slot.
 - Only a provider in `Active` status may create, edit, or submit quotes. A provider's effective `Suspended` or `Deactivated` status revokes quote submission and cancels that provider's unaccepted parent quotes under Workflow 3 and FR-015 A5/Screen 4; the provider-caused cause is distinct from patient inquiry cancellation and Payment Window Expired. An already-accepted quote is never cancelled this way; FR-006 handles it through the provider-fault transfer.
 - Provider withdrawal after acceptance moves the parent quote from `accepted` to `withdrawn` and hands the case to the FR-006 provider-fault transfer (Workflow 6); FR-004 never re-routes, reopens, or edits the accepted quote.
@@ -678,7 +688,7 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 - **SC-002**: 100% of quote edits and deletions reflected in version/audit history
 - **SC-003**: 95% of subquote acceptance actions complete with the correct selected-parent, sibling, and competing-parent status updates and notifications
 - **SC-004**: <5% of provider quote rejections due to missing/invalid fields
-- **SC-005**: 0 hard deletes of quotes; 100% retrievable from archive for ≥7 years
+- **SC-005**: 0 hard deletes of quotes; 100% retrievable from archive for the full retention period (system PRD, Platform-Wide Rules: One 10-year retention period)
 - **SC-006**: 100% of submitted quotes contain one to five complete options, with no quote-local customization written into the reusable package library
 
 ## Functional Requirements Summary
@@ -686,10 +696,10 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 ### Core Requirements
 
 - **REQ-004-001**: Providers MUST create, edit, and submit parent quotes with one shared immutable Treatment-version relationship and one to five package-based Quote Options. Technique details MUST be loaded read-only through that relationship and MUST NOT be duplicated as provider-entered Quote data.
-- **REQ-004-002**: System MUST enforce the admin-controlled FR-026 expiry window (default 48h), captured at first send, and compute the deadline per sent quote.
+- **REQ-004-002**: System MUST enforce the admin-controlled FR-026 expiry window (default 48h), captured at first send, and compute the deadline per sent quote. The only renewal is the admin restore of an expired quote (REQ-004-105).
 - **REQ-004-003**: System MUST cancel every other parent quote for the same inquiry as `cancelled_other_accepted` upon one subquote acceptance. Each sent parent quote MUST produce one not-selected notice per parent quote; unsent drafts MUST be cancelled silently without notice.
 - **REQ-004-004**: System MUST support provider withdrawal after acceptance by moving the parent quote to `withdrawn`, keeping the AcceptanceEvent and snapshot unchanged, and handing the case to the FR-006 provider-fault transfer, with full audit and the mandatory `quote.withdrawn` notice.
-- **REQ-004-005**: Admin MUST be able to inline edit policy-bound fields of `draft` and `sent` quotes with required reason and re-notifications; admin edits MUST be blocked once a subquote is accepted.
+- **REQ-004-005**: Admin MUST be able to inline edit policy-bound fields of `draft` and `sent` quotes with required reason and re-notifications. After a subquote is accepted, an admin MUST still be able to change any quote field except price, currency, and promotion (the date range and treatment details can be changed), with a mandatory reason and full before and after history; the change MUST be stored as a new version beside the acceptance snapshot, which stays unchanged, and payment records MUST NOT change.
 
 ### Data Requirements
 
@@ -698,7 +708,7 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 
 ### Security & Privacy Requirements
 
-- **REQ-004-008**: Patient identifiers MUST remain anonymized to providers until payment confirmation.
+- **REQ-004-008** (retired): Hiding patient identity from providers until payment confirmation is owned by the single platform-wide identity-protection Rule in the system PRD (id to be set when that Rule is created). FR-004 cites it.
 - **REQ-004-009**: All quote data MUST be encrypted at rest and in transit; soft deletes only.
 
 ### Integration Requirements
@@ -712,7 +722,7 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 
 ### Cancellation Cascade Requirements
 
-- **REQ-004-013**: System MUST auto-cancel only the draft, sent, and expired quotes for an inquiry when that inquiry is cancelled by the patient (FR-003 Workflow 5), with distinct status "Cancelled (Inquiry Cancelled)"; quotes in any other status MUST keep their status and cause; `quote.cancelled_inquiry` (FR-020) MUST go only to providers whose quotes were cancelled by this cascade.
+- **REQ-004-013** (retired): The inquiry cancellation cascade onto draft, sent, and expired quotes is owned by FR-003 (REQ-003-013). FR-004 applies it as described in Workflow 3 and produces `quote.cancelled_inquiry` at the Quote Stage.
 - **REQ-004-031**: System MUST revalidate provider status at quote creation and submission and MUST reject quote submission by a `Suspended` or `Deactivated` provider from the effective time, including in-flight requests.
 - **REQ-004-032**: When a provider becomes `Suspended` or `Deactivated`, System MUST cancel that provider's unaccepted parent quotes with status `cancelled_provider_status` and `cancellationProvenance` `ProviderSuspended` or `ProviderDeactivated`, once per parent quote rather than per option or option/date alternative, without rewriting the AcceptanceEvent, accepted IDs/versions, or quote-local package snapshots, and without reclassifying terminal or completed history. An accepted parent quote MUST NOT receive `cancelled_provider_status`; it keeps `accepted` and is handled by the FR-006 provider-fault transfer. Processing MUST be deduplicated per provider-status event and quote.
 
@@ -720,8 +730,8 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 
 - **REQ-004-014**: System MUST allow the same provider to create multiple parent quotes for one active inquiry; every quote retains an independent lifecycle, expiry, version history, and audit history.
 - **REQ-004-015**: Each quote MUST contain between one and five ordered Quote Options, and submission MUST be blocked outside that range.
-- **REQ-004-016**: Each Quote Option MUST retain the selected provider package ID/version and a stable, versioned quote-owned snapshot of its inclusions and standard values.
-- **REQ-004-017**: Providers MUST be able to customize every selected package inline for the current quote without updating or creating reusable package-library records.
+- **REQ-004-016**: Each Quote Option MUST retain the selected provider package ID/version and a stable, versioned quote-owned snapshot of its inclusions and standard values. The parent quote MUST retain the Treatment ID/version that every option belongs to.
+- **REQ-004-017**: Providers MUST be able to customize every selected package inline for the current quote without updating or creating reusable package-library records, and without creating a new package version.
 - **REQ-004-018**: Each Quote Option MUST define at least one applicable patient-requested date range and a price, appointment date/time, timezone, and optional structured promotion for every applicable option/date combination. Pairings the provider cannot offer MAY be left out.
 - **REQ-004-019**: Each Quote Option MUST own a separate ordered day-to-day treatment plan using consecutive relative day numbers.
 - **REQ-004-020**: Estimated grafts, graft description, visual treatment plan, clinicians, common notes, and common requirements MUST remain shared parent-quote fields.
@@ -732,30 +742,39 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 - **REQ-004-025**: Quote currency MUST come from the active FR-026 quote configuration (the FR-029 Default Currency), MUST NOT be provider input, and MUST be captured on the quote at first send so historical prices retain their original currency.
 - **REQ-004-026**: Providers MUST be able to attach quote-level supporting files that apply to every option; file security, access, audit, and retention rules MUST be enforced.
 - **REQ-004-027**: A quote MUST support one or more eligible clinician assignments shared across every option.
-- **REQ-004-028**: Graft description MUST be generated from the approved system template and estimated graft count, displayed read-only, and versioned with the quote.
+- **REQ-004-028**: Graft description MUST be generated from the fixed template text written in this PRD (Business Rules, "Graft Description template") and the estimated graft count, displayed read-only, and versioned with the quote. There is no admin setting for the template.
 - **REQ-004-029**: System-owned identifiers, lifecycle status, price summaries, commission, timestamps, customization state, and version/audit metadata MUST be visible only where authorized and MUST NOT be provider-editable.
-- **REQ-004-030**: Quote-amount analytics MUST be computed from the accepted option/date price only. Unaccepted quotes MUST be excluded from amount metrics and counted once as a parent response in volume and conversion metrics; Quote Options MUST NOT be counted as responses.
+- **REQ-004-030**: Quote-amount analytics MUST be computed from the accepted option/date price only. Unaccepted quotes MUST be excluded from amount metrics and counted once as a parent response in volume and conversion metrics; Quote Options MUST NOT be counted as responses. The counting boundary is the parent quote: each submitted parent quote MUST be counted once, on its first successful submission; several parent quotes from one provider are separate responses; and drafts, edits, re-sends, aggregate versions, Quote Options, and option/date-price records MUST NOT add responses. Response, option, subquote, acceptance, and confirmed-booking counts are different grains and MUST NOT be interchanged. FR-014 reads this Rule and keeps its references to it.
 
 ### Quote Lifecycle and Pricing Requirements
 
-- **REQ-004-033**: Each selected package MUST seed exactly one alternative Quote Option (maximum five per parent quote), never summed with another package. The package standard price MUST prefill each applicable option/date-price row, and the package's relative day plan MUST prefill the option plan.
+- **REQ-004-033**: A quote MUST be built from one treatment plus one to five Active packages. Each selected Active package MUST seed exactly one alternative Quote Option (maximum five per parent quote), never summed with another package. The package standard price MUST prefill each applicable option/date-price row, and the package's relative day plan MUST prefill the option plan.
 - **REQ-004-034**: Editing a package in the FR-024 package management screen MUST change only the library (as a new package version), and editing inside quote creation MUST change only a quote-local copy that is never written back. Each Quote Option MUST record its source package ID, source package version, and an inline-customised flag.
 - **REQ-004-035**: System MUST store the offered price as entered and any promotion discount separately, MUST copy the terms of every attached promotion into the sent quote version at send, and MUST attach at most one automatic FR-019 promotion per quote to each eligible option/date-price row at send, chosen by the FR-019 priority order when several qualify. Later FR-019 promotion edits MUST NOT change a sent quote.
-- **REQ-004-036**: System MUST capture the quote expiry and quote currency read-only at first send from the FR-026 quote configuration. Drafts MUST carry neither, and there MUST be no per-quote expiry extension.
-- **REQ-004-037**: After a subquote is accepted, System MUST block every FR-004 quote edit by providers and admins. Treatment-detail changes (plan, clinicians, grafts) MUST go through FR-010. An accepted parent quote MUST never be reopened, expired, or restored to an acceptable state, including after `Payment Window Expired`, and no new parent quote MAY be created or sent for an inquiry with an accepted subquote, except the admin-authored replacement quote of REQ-004-048.
+- **REQ-004-036**: System MUST capture the quote expiry and quote currency read-only at first send from the FR-026 quote configuration. Drafts MUST carry neither, and there MUST be no per-quote expiry extension other than the admin restore of an expired quote (REQ-004-105).
+- **REQ-004-037**: After a subquote is accepted, System MUST block every FR-004 quote edit by providers; their treatment-detail changes (plan, clinicians, grafts) MUST go through FR-010. Admin edits after acceptance follow REQ-004-005. Price, currency, and promotion MUST never change after acceptance. An accepted parent quote MUST never be reopened, expired, or restored to an acceptable state, including after `Payment Window Expired`, and no new parent quote MAY be created or sent for an inquiry with an accepted subquote, except the admin-authored replacement quote of REQ-004-048.
 - **REQ-004-038**: The Quote Option appointment date/time and time zone, together with the provider, MUST be the key FR-006 uses for the slot hold placed at acceptance; FR-004 MUST NOT create an appointment record.
 - **REQ-004-039**: System MUST emit `quote.expiring_soon` once per sent parent quote when it reaches the FR-026 quote-expiring-soon lead time, and MUST NOT emit it for draft, accepted, or terminal quotes.
 - **REQ-004-040**: Every option/date price MUST be greater than 0 before send, and a zero price MUST block send. A date range the clinic cannot serve MUST be left out of that option rather than priced.
-- **REQ-004-041**: If the FR-029 Default Currency changes while a draft holds prices, System MUST switch the draft to the new currency, keep every typed number unchanged, and show a "currency changed, check your prices" banner that the provider MUST acknowledge before send.
+- **REQ-004-041** (retired): The Default Currency change on a draft that holds prices is owned by FR-029 (REQ-029-053), including the "currency changed, check your prices" banner. FR-004 only applies it on Tab 4 and Tab 7.
 - **REQ-004-042**: A sent quote carrying an automatic FR-019 promotion MUST hold exactly one reserved use of that promotion's usage limit. A re-send of a new version MUST keep the existing reservation, create one only if the new version newly qualifies, and release it if the new version no longer carries the promotion. The reservation MUST be released when the quote expires, is withdrawn, or ends not selected or cancelled, MUST be released with reason `not_applied` when the accepted row does not carry the promotion, and MUST be consumed at acceptance when the accepted row carries it, so the usage limit is never exceeded. If the booking later ends in `Payment Window Expired` or is cancelled before the first payment, FR-005 and FR-019 own the return of the consumed use to the limit.
 - **REQ-004-043**: System MUST set the parent quote's `firstSentAt` on its first send, and a re-send or new version MUST NOT change it.
 - **REQ-004-044**: The FR-024 treatment Base Price MAY prefill a new option/date-price row only where no other standard value exists; it MUST be treated as a non-binding reference and MUST NOT be read after the quote is sent.
 - **REQ-004-045**: FR-004 MUST be the producer of `quote.updated` and MUST emit it when a new version of an already-sent quote is re-sent, described as "quote revised (new version)".
-- **REQ-004-046**: System MUST emit `quote.submitted` on the first send of a parent quote and `quote.expired` when expiry processing moves a sent parent quote to `expired` (FR-030).
+- **REQ-004-046**: System MUST emit `quote.submitted` on the first send of a parent quote and `quote.expired` when expiry processing moves a sent parent quote to `expired`. Recipients, content, and whether the notice can be switched off are set in the FR-030 notification Rules (REQ-030-033 and REQ-030-036).
 - **REQ-004-047**: FR-004 MUST be the only producer of `quote.withdrawn`. The notice MUST go to the patient for every withdrawal and to the admin only when the withdrawn quote was already accepted.
 - **REQ-004-048**: During an FR-006 provider-fault transfer before treatment starts, System MUST let an admin author a replacement quote for the replacement provider inside the same inquiry through Screen 8, with a mandatory reason and full audit. The quote MUST be marked admin-authored for a replacement and linked to the closed AcceptanceEvent, MUST NOT be offered for patient comparison or emit `quote.submitted`, and MUST be the target of the FR-005 admin-authored replacement acceptance.
 - **REQ-004-049**: An admin edit of a sent quote through Screen 7 MUST create a new quote version and MUST emit `quote.updated` when that version is re-sent.
 - **REQ-004-050**: System MUST NOT attach an automatic FR-019 promotion to an admin-authored replacement quote or take a promotion usage reservation for it; the admin sets the replacement price directly. A replacement quote that is not accepted MUST expire under the normal quote expiry, MUST leave the inquiry flagged `supportRequired` without cancelling it automatically, and MUST allow the admin to author another replacement quote or cancel the inquiry and booking.
+
+### Display, Restore, and Messaging Requirements
+
+- **REQ-004-102**: Tab 7 (Review & Submit) MUST show a read-only Validation Summary checklist of every tab's completion, linking each unresolved issue to its owning tab; Submit Quote MUST stay blocked while any blocking issue is unresolved.
+- **REQ-004-103**: The patient Quote Review screen MUST show read-only indicators that a quote is new, updated, or expired.
+- **REQ-004-104**: The admin Quote List MUST show a badge or icon, with a count or indicator, on an inquiry that holds more than one quote.
+- **REQ-004-105**: Only an admin, with a mandatory reason, MAY restore an expired quote, and not when the inquiry already has an accepted subquote. The restored quote MUST return to `sent` with a fresh full window: its new expiry is the restore time plus the FR-026 quote expiry window in force at that time. This is the only case in which a quote's expiry is renewed.
+- **REQ-004-106**: When an admin restores an expired quote, System MUST notify both the patient and the provider through `quote.restored`; FR-004 is the only producer. Drafted default channels are Email and Push; recipients, content, and whether the notice can be switched off are set in the FR-030 catalogue, where the event is to be added.
+- **REQ-004-107**: When a provider sends a quote, the patient and that provider MUST be able to message each other: the first quote from a provider to a patient opens their FR-012 conversation, and a later quote from the same provider is added to it. FR-012 owns the conversation itself.
 
 ## Key Entities
 
@@ -769,6 +788,7 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
   - `treatmentId` identifies the exact immutable FR-024 Treatment record, while `treatmentVersion` retains its version metadata. Treatment name, type, and technique details are resolved through the relationship rather than copied onto Quote.
   - Relationships: belongsTo Inquiry; belongsTo exact Treatment version; belongsTo Provider; hasMany QuoteOption; hasMany QuoteVersion; hasMany QuoteAudit
   - Status enum includes: draft, sent, expired, withdrawn, archived, accepted, cancelled_other_accepted, **cancelled_inquiry_cancelled**, **cancelled_provider_status**. `confirmed` is not a quote status; booking confirmation is an FR-006 booking status.
+  - `cancellationProvenance` takes one of four causes: `InquiryCancelled`, `OtherQuoteAccepted`, `ProviderSuspended`, or `ProviderDeactivated`.
   - For `cancelled_provider_status`, `cancellationProvenance` records `ProviderSuspended` or `ProviderDeactivated` and the triggering provider-status event (FR-015 A5/Screen 4). This status applies only to quotes that were not accepted.
 - **QuoteOption**: id, quoteId, sourcePackageId, sourcePackageVersion, displayOrder, packageNameSnapshot, packageDescriptionSnapshot, standardPriceSnapshot, includedServices[], isCustomized, createdAt, updatedAt
   - `sourcePackageId` and `sourcePackageVersion` identify the exact FR-024 package version that seeded the option; `isCustomized` is the inline-customised flag. The option is a quote-local copy and is never written back to the library.
@@ -802,6 +822,7 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 - FR-010: Treatment Progress Management (accepted-option plan handoff)
 - FR-024: Treatment Package Management (provider package presets and source versions)
 - FR-020: Notifications & Alerts (quote distribution/updates)
+- FR-012: Messaging (conversation opened or updated when a quote is sent; REQ-004-107)
 - FR-026 / A-09: Quote configuration supplies the quote currency (seeded from the FR-029 Default Currency), the expiry window, and the quote-expiring-soon lead time, all captured at first send
 - FR-006: Booking & Scheduling (slot hold keyed by the option/date appointment fields; provider-fault transfer after acceptance, including withdrawal)
 - FR-029: Payment System Configuration (indicative commission model and value; binding commission at booking confirmation)
@@ -878,11 +899,12 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 
 ## Edge Cases
 
-- Provider starts, then abandons, a draft: auto-archive to Drafts after 7 days
+- Provider starts, then abandons, a draft: the draft is retained for 7 days and then auto-archived
 - Patient does not respond: quote expires, status auto-updated, provider notified
 - Admin must audit archived/soft-deleted quote: accessible in "Archived" tab, audit trail modal enabled
-- Provider attempts deletion post-acceptance: disallowed; only admin can archive with rationale
-- Recovery from expired state: only admin can restore expired/archived quotes if justified (GDPR-compliant log); restore to an acceptable state is blocked when the inquiry already has an accepted subquote
+- Provider or admin attempts deletion, archive, or restore of an accepted quote: disallowed; an accepted quote is never deleted, archived, or restored
+- Recovery from expired state: only admin can restore expired/archived quotes if justified (GDPR-compliant log); restore to an acceptable state is blocked when the inquiry already has an accepted subquote. A restored expired quote returns to `sent` with a fresh full window (restore time plus the FR-026 window in force), a reason is required, and the patient and provider are notified through `quote.restored`
+- Treatment deactivated while a draft holds it: the draft cannot be sent until the provider picks another treatment; sent quotes and bookings with that treatment are unaffected
 - Provider opens quote creation for an inquiry that was just cancelled: system blocks with "Inquiry no longer active" error; no draft created
 - Provider is mid-draft when inquiry is cancelled (race condition): on next save/refresh, system locks draft with "Inquiry Cancelled" banner; submission blocked; draft retained for provider reference but cannot be submitted
 - Provider attempts to edit a quote in "Cancelled (Inquiry Cancelled)" status: system blocks with "This quote was cancelled because the patient cancelled their inquiry" message; all edit actions disabled
@@ -1001,7 +1023,7 @@ Acceptance Scenarios:
 5. Given a promotion is attached to an option/date row, When the quote is sent and the FR-019 promotion is later edited, Then the sent quote keeps the copied terms and the offered price stays as entered with the discount shown separately
 6. Given an automatic FR-019 promotion is eligible for some option/date rows, When the quote is sent, Then it is attached to every eligible row and to no other row
 7. Given an authorized role views Tab 7, When the commission is shown, Then it shows the model and value (percentage or flat rate) labelled "indicative, final at booking confirmation"
-8. Given a subquote is accepted, When a provider or admin attempts any FR-004 edit, Then the edit is blocked and treatment-detail changes are directed to FR-010
+8. Given a subquote is accepted, When a provider attempts any FR-004 edit, Then the edit is blocked and treatment-detail changes are directed to FR-010; When an admin edits any field except price, currency, and promotion with a reason, Then the change is saved as a new version beside the unchanged acceptance snapshot with full before and after history, and an attempt to change price, currency, or promotion is blocked
 9. Given a subquote is accepted, When the provider withdraws, Then the parent quote moves to `withdrawn`, the AcceptanceEvent is unchanged, the mandatory `quote.withdrawn` notice is sent, and the case is handed to the FR-006 provider-fault transfer without FR-004 re-routing
 10. Given a provider with one accepted and one sent quote is suspended, When the suspension takes effect, Then only the sent quote becomes `cancelled_provider_status` and the accepted quote keeps `accepted` for the FR-006 provider-fault transfer
 11. Given the booking reaches `Payment Window Expired`, When anyone tries to accept again or create a new quote for the inquiry, Then the accepted quote is not reopened and no new parent quote can be created or sent
@@ -1014,12 +1036,15 @@ Acceptance Scenarios:
 18. Given two automatic promotions qualify for the same quote, When the quote is sent, Then only the one ranked first by the FR-019 priority order is attached
 19. Given an admin authors a replacement quote on Screen 8, When it is saved, Then no automatic promotion is attached, no promotion usage reservation is taken, and the price is the one the admin entered
 20. Given a replacement quote that is not accepted, When its expiry is reached, Then it moves to `expired`, the inquiry stays `supportRequired`, and the admin can author another replacement quote or cancel the inquiry and booking
+21. Given an expired quote on an inquiry with no accepted subquote, When an admin restores it with a reason, Then the quote returns to `sent` with a fresh full window (restore time plus the FR-026 window in force) and the patient and provider receive `quote.restored`
+22. Given a provider sends a quote to a patient, When the quote is sent, Then the patient and that provider can message each other in the FR-012 conversation, and a later quote from the same provider is added to that conversation
+23. Given a draft quote whose treatment an admin has since deactivated, When the provider tries to send it, Then the provider must first pick another treatment; sent quotes and bookings with that treatment are unaffected
 
 ### Edge Cases (User Scenarios)
 
 - Provider starts draft then abandons: auto-archive after 7 days
 - Patient does not respond: quote expires and provider notified
-- Provider attempts deletion post-acceptance: disallowed; admin-only archive with rationale
+- Provider or admin attempts deletion, archive, or restore of an accepted quote: disallowed; an accepted quote is never deleted, archived, or restored
 - Admin audits archived/soft-deleted quote: available in Archived view with full audit trail
 - Provider removes options until none remain: submission blocked until at least one valid option exists
 - One option has no applicable date range or an incomplete option/date price: submission blocked for that option
@@ -1069,6 +1094,7 @@ Acceptance Scenarios:
 | 2026-10-26 | 3.5 | Product Owner decision on FR-015 dev-team questions (Q9): a draft quote cancelled by provider suspension or deactivation is silent to the patient; admin support alerts follow FR-020 | Claude (AI Assistant) |
 | 2026-10-27 | 3.6 | Clarification on the FR-015 follow-up questions (F4): Workflow 3 "Provider becomes Suspended or Deactivated" now states that an accepted parent quote keeps `accepted`, the AcceptanceEvent stays unchanged, and FR-005 writes the linked supersession record only when the admin accepts the replacement quote in FR-006 Alternative Flow B5, matching FR-006 B4 and B5. No behaviour change. The legacy quote status value migration is recorded in [CR-FR004-20261027-01](./change-request-2026-10-27-legacy-status-value-migration.md); the requirement values are unchanged. | Product Owner |
 | 2026-10-28 | 3.7 | Clarification after the FR-015 backend confirmations (V9, review fix): inquiry cancellation cancels only quotes in draft, sent, or expired status to "Cancelled (Inquiry Cancelled)"; quotes in any other status keep their status and cause, and `quote.cancelled_inquiry` goes only to providers whose quotes were cancelled by this cascade (Workflow 3 "Patient cancels parent inquiry", Alternative Flows, REQ-004-013). Matches system data schema v1.13.1 §7 Status Triggers. No Change Request | Claude (AI Assistant) |
+| 2026-11-20 | 3.8 | Requirements graph programme baseline: owner rulings applied. Main changes: (1) after acceptance an admin may edit any quote field except price, currency, and promotion, with a mandatory reason and full before/after history, stored as a new version beside the unchanged acceptance snapshot; providers stay blocked (Workflow 2, Screen 7, Business Rules, REQ-004-005, REQ-004-037); (2) an admin may restore an expired quote, which returns to `sent` with a fresh full window and notifies the patient and provider through the new `quote.restored` event (Workflow 3, Edge Cases, new REQ-004-105 and REQ-004-106); (3) new Rules for the sent-quote chat (REQ-004-107), the Validation Summary checklist (REQ-004-102), the patient Notifications indicator (REQ-004-103), and the admin Multi-Quote Cue (REQ-004-104); (4) REQ-004-008, REQ-004-013, and REQ-004-041 retired into the system PRD identity Rule, REQ-003-013, and REQ-029-053; the indicative-commission Business Rule now points to REQ-029-051; (5) REQ-004-016, REQ-004-017, REQ-004-030, REQ-004-033, and the library-change rule gain the owner wording from the FR-024 and FR-014 merges; (6) Graft Description uses one fixed template text written in this PRD, and the prior text stays in quote history; (7) a draft whose treatment was deactivated must pick another treatment; (8) `quote.cancelled_inquiry` listed as an FR-004 event; `cancellationProvenance` has four values; drafts and archived quotes are never shown to patients; the admin withdrawal wording, the unified quote list, accepted-quote edge cases, and display-only fields in Screen 1 corrected. Ids stay stable: FR-004 ids are already gap-free, so the renumbering map is the identity. No Change Request; cross-document reconciliation (retention, system rule citations) | Claude (AI Assistant) |
 
 ## Appendix: Approvals
 
@@ -1085,4 +1111,4 @@ Acceptance Scenarios:
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-004 from system-prd.md
-**Last Updated**: 2026-10-28
+**Last Updated**: 2026-11-20
