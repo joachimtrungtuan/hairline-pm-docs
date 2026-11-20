@@ -1,0 +1,142 @@
+reason: "Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-003)"
+by: controller
+operations:
+  - {"op": "add_source", "id": "SRC-CR-003-20261027", "title": "FR-003 change request: pre-acceptance redistribution", "kind": "document", "ref": "project-requirements/functional-requirements/fr003-inquiry-submission/change-request-2026-10-27-pre-acceptance-redistribution.md", "lifecycle": "incorporated", "date": "2026-10-27", "attrs": {"summary": "FR-003 change request recording automatic redistribution before acceptance, its patient confirmation step and the redistribution state fields. Linked to REQ-003-021 as a documented exception to the rule that decided-by Sources are meeting and decision items."}}
+  - {"op": "add_edge", "from": "REQ-003-021", "verb": "decided by", "to": "SRC-CR-003-20261027"}
+  - {"op": "add_field", "id": "ENT-inquiry.redistribution_state", "entity_id": "ENT-inquiry", "name": "redistribution_state", "data_type": "enum", "title": "Redistribution state", "owner_fr": "FR-003", "required": false, "attrs": {"description": "none, awaiting_patient_confirmation or confirmed: whether a redistribution waits for the patient to confirm (REQ-003-021)."}}
+  - {"op": "add_field", "id": "ENT-inquiry.redistribution_state_at", "entity_id": "ENT-inquiry", "name": "redistribution_state_at", "data_type": "datetime", "title": "Redistribution state changed at", "owner_fr": "FR-003", "required": false, "attrs": {"description": "UTC time the redistribution state last changed."}}
+  - {"op": "add_field", "id": "ENT-inquiry.redistribution_provider_status_event_id", "entity_id": "ENT-inquiry", "name": "redistribution_provider_status_event_id", "data_type": "id", "title": "Redistribution provider-status event ID", "owner_fr": "FR-003", "required": false, "attrs": {"description": "The provider-status event that caused the redistribution, so a replayed event never redistributes twice."}}
+  - {"op": "add_field", "id": "ENT-inquiry.questionnaire_version", "entity_id": "ENT-inquiry", "name": "questionnaire_version", "data_type": "text", "title": "Questionnaire version", "owner_fr": "FR-003", "required": false, "attrs": {"description": "Version of the medical questionnaire (FR-025) the patient answered, stamped when the inquiry is submitted; kept in addition to FR-002's template_version_used stamp."}}
+  - {"op": "add_enum_value", "field_id": "ENT-inquiry.redistribution_state", "value": "none", "label": "None"}
+  - {"op": "add_enum_value", "field_id": "ENT-inquiry.redistribution_state", "value": "awaiting_patient_confirmation", "label": "Awaiting patient confirmation"}
+  - {"op": "add_enum_value", "field_id": "ENT-inquiry.redistribution_state", "value": "confirmed", "label": "Confirmed"}
+  - {"op": "add_edge", "from": "REQ-003-021", "verb": "applies to", "to": "ENT-inquiry.redistribution_state"}
+  - {"op": "add_edge", "from": "REQ-003-021", "verb": "applies to", "to": "ENT-inquiry.redistribution_state_at"}
+  - {"op": "add_edge", "from": "REQ-003-021", "verb": "applies to", "to": "ENT-inquiry.redistribution_provider_status_event_id"}
+  - {"op": "add_edge", "from": "REQ-003-046", "verb": "applies to", "to": "ENT-inquiry.questionnaire_version"}
+  - {"op": "update_node", "id": "ENT-provider-inquiry.status", "attrs": {"description": "Distributed (received, not yet opened), Viewed (opened by the provider), Quoted (the provider has created a quote in FR-004), Declined (the exclusive monitoring-conversion provider declined), Expired (no quote before the response window or inquiry expiry), Cancelled (the cause is kept on cancellation_cause)."}}
+  - {"op": "add_enum_value", "field_id": "ENT-provider-inquiry.status", "value": "distributed", "label": "Distributed"}
+  - {"op": "add_enum_value", "field_id": "ENT-provider-inquiry.status", "value": "viewed", "label": "Viewed"}
+  - {"op": "add_enum_value", "field_id": "ENT-provider-inquiry.status", "value": "quoted", "label": "Quoted"}
+  - {"op": "add_enum_value", "field_id": "ENT-provider-inquiry.status", "value": "declined", "label": "Declined"}
+  - {"op": "add_enum_value", "field_id": "ENT-provider-inquiry.status", "value": "expired", "label": "Expired"}
+  - {"op": "retire_enum_value", "field_id": "ENT-inquiry.stage", "value": "in_progress"}
+  - {"op": "add_enum_value", "field_id": "ENT-inquiry.stage", "value": "in_progress", "label": "In progress", "sort_order": 1}
+  - {"op": "update_node", "id": "ENT-inquiry.responses_count", "attrs": {"description": "Number of providers that have responded to the inquiry, counted per provider and shown on the patient dashboard; separate from the quote count on the admin overview."}}
+  - {"op": "update_node", "id": "ENT-inquiry.quotes_count", "attrs": {"description": "Number of quotes on the inquiry, counted per quote and shown on the admin overview; separate from the provider responses count on the patient dashboard."}}
+  - {"op": "update_node", "id": "REQ-003-003", "attrs": {"statement": "Providers MUST see anonymized patient data and tiered medical alerts until payment confirmation per system PRD."}}
+  - {"op": "update_node", "id": "REQ-003-020", "attrs": {"statement": "When a provider becomes `Suspended` or `Deactivated`, System MUST NOT cancel an inquiry whose accepted treatment belongs to that provider; it MUST keep the inquiry open with `supportRequired = true` while FR-006 Alternative Flow B4 records cause `ProviderSuspended` or `ProviderDeactivated` on the booking; before treatment starts, B4 closes the booking and an admin rehomes the patient through FR-006 Alternative Flow B5, an `In progress` booking stays `In progress` for the admin decision in FR-006 Alternative Flow B7, and an `Aftercare` booking follows FR-006 Alternative Flow B6; for inquiries still comparing providers, System MUST cancel only that provider's ProviderInquiry participation and quotes, keep the inquiry stage, flag it `supportRequired = true`, and preserve other providers' offers. Before acceptance, patients MUST receive the offer-unavailability message with Contact Admin/Support; after acceptance and before treatment starts, they MUST receive the `booking.provider_fault_replacement` notice that an admin will arrange a replacement provider within the same inquiry. Patients MUST NOT receive the patient-cancellation message in either case (FR-015 A5/Screen 4)."}}
+  - {"op": "update_node", "id": "REQ-003-034", "attrs": {"statement": "All required fields must be completed: nature of concern (text), duration (a choice from the Admin-managed problem-duration list), previous treatments (text) and symptom severity (integer 1-10 slider). Lifestyle factors and additional notes are optional. Text fields have character limits."}}
+  - {"op": "update_node", "id": "REQ-003-035", "attrs": {"statement": "Visual evidence limited to 5 files total, photos and videos together; the head scan photo set is counted separately. Photos: JPG/PNG <= 2MB each. Videos: MP4 <= 30s, <= 20MB each. File size and format validation enforced; invalid media is blocked with actionable guidance.", "rationale": "PRD Screen 3 rules, Validation and Constraints 1, Workflow 1 upload step, Edge Cases. The 5-file total covers the inquiry's photos and videos together; the head scan photo set (Screen 4) is counted on its own."}}
+  - {"op": "update_node", "id": "REQ-003-036", "attrs": {"statement": "Head scan photo set must meet minimum completeness/quality thresholds required by FR-002. Head scan media quality validation applies. The photo set holds up to 5 photos, JPG or PNG, 2 MB each, counted on its own and separate from the 5-file visual-evidence limit on Screen 3."}}
+  - {"op": "update_node", "id": "REQ-003-072", "attrs": {"statement": "For an FR-037 exclusive inquiry, redistribution removes the exclusive restriction in the same way as the explicit-decline fallback (REQ-037-029). The supportRequired marker stays on the inquiry."}}
+  - {"op": "update_node", "id": "REQ-003-118", "attrs": {"statement": "distributed_at (timestamp, UTC) is set once per provider when the inquiry is distributed to that provider, including when an inquiry is released to normal distribution after an exclusive provider declines (REQ-037-029). Distribution retries or re-sends to the same provider never overwrite it. It is the start point for FR-014 time to first quote (TTFQ) and response rate, and for the FR-020/FR-030 inquiry.ttfq_sla_breached alert."}}
+  - {"op": "update_node", "id": "REQ-003-100", "title": "Providers whose quotes were cancelled are notified within 5 minutes, without the reason", "attrs": {"statement": "Only providers whose quotes were cancelled receive notification of the cancellation; cancellation reason is NOT shared with providers (patient-private analytics data). Send/enqueue notifications (target <= 5 minutes); if enqueue/send fails, queue/retry notifications and log attempts (do not roll back cancellation). When no quote was cancelled, no provider is notified."}}
+  - {"op": "update_node", "id": "REQ-003-103", "attrs": {"statement": "System MAY cancel an eligible inquiry as a consequence of a patient account deletion request (FR-001). In that case, the system MUST set a system-generated cancellation reason for audit (e.g., \"Account Deleted (System)\") and MUST NOT prompt the patient for a cancellation reason. Draft, sent, and expired quotes are auto-cancelled as in Workflow 5, other quotes keep their status and cause; only providers whose quotes were cancelled are notified and MUST NOT see the cancellation reason; inquiry becomes read-only."}}
+  - {"op": "update_node", "id": "REQ-003-106", "attrs": {"statement": "\"Cancel Inquiry\" is visible only in Inquiry or Quoted stages and hidden when stage is Accepted, Confirmed, In progress, Aftercare, Completed, or Cancelled. \"Contact support\" is shown in place of \"Cancel Inquiry\" from the Accepted stage onward (Accepted, Confirmed, In progress or Aftercare) and opens Help & Support so an admin can act on the request."}}
+  - {"op": "add_node", "id": "REQ-003-120", "type": "Rule", "owner_fr": "FR-003", "title": "Treatment-area options are an Admin-managed list seeded with Hair, Beard and Both", "attrs": {"statement": "Treatment-area options come from the Admin-managed catalog; Hair, Beard, and Both remain the default seeded options and are not a fixed client-side enum.", "rationale": "PRD Screen 1 Treatment Area Selection notes."}}
+  - {"op": "add_edge", "from": "REQ-003-120", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-003-120", "verb": "applies to", "to": "SCR-003-01"}
+  - {"op": "add_edge", "from": "REQ-003-120", "verb": "applies to", "to": "ENT-inquiry.treatment_area_id"}
+  - {"op": "add_node", "id": "REQ-003-121", "type": "Rule", "owner_fr": "FR-003", "title": "Patient receives notifications for status changes", "attrs": {"statement": "Patient receives notifications for status changes.", "rationale": "PRD Screen 8 Business Rules; kept general."}}
+  - {"op": "add_edge", "from": "REQ-003-121", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-003-121", "verb": "applies to", "to": "SCR-003-09"}
+  - {"op": "add_node", "id": "REQ-003-122", "type": "Rule", "owner_fr": "FR-003", "title": "Problem-duration choices come from an Admin-managed list owned by FR-026", "attrs": {"statement": "Problem-duration choices come from an Admin-managed problem-duration list retrieved from the backend, not a fixed client-side enum; the list is managed with the other inquiry configuration owned by FR-026. Starting values, editable by Admin: Less than 6 months; 6 to 12 months; 1 to 2 years; 2 to 5 years; More than 5 years. The patient must select one active option.", "rationale": "PRD Screen 3 Duration row and Duration Options notes."}}
+  - {"op": "add_edge", "from": "REQ-003-122", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-003-122", "verb": "applies to", "to": "SCR-003-03"}
+  - {"op": "add_edge", "from": "REQ-003-122", "verb": "applies to", "to": "ENT-inquiry.problem_duration"}
+  - {"op": "retire_node", "id": "REQ-003-016"}
+  - {"op": "retire_node", "id": "REQ-003-048"}
+  - {"op": "retire_node", "id": "REQ-003-068"}
+  - {"op": "retire_node", "id": "REQ-003-032"}
+  - {"op": "retire_node", "id": "REQ-003-094"}
+  - {"op": "update_node", "id": "REQ-SYS-002", "attrs": {"aliases": "REQ-023-001,REQ-023-002,REQ-006-006,REQ-016-167,REQ-026-019,REQ-003-006,REQ-003-040,REQ-038-053,REQ-019-092,REQ-003-094"}}
+  - {"op": "add_edge", "from": "FR-003", "verb": "references", "to": "REQ-025-064"}
+  - {"op": "add_edge", "from": "FR-003", "verb": "references", "to": "REQ-028-035"}
+  - {"op": "add_edge", "from": "FR-003", "verb": "references", "to": "REQ-028-036"}
+  - {"op": "remove_edge", "from": "STP-003-030", "verb": "applies", "to": "REQ-003-016"}
+  - {"op": "add_edge", "from": "STP-003-030", "verb": "applies", "to": "REQ-037-029"}
+  - {"op": "remove_edge", "from": "STP-003-078", "verb": "applies", "to": "REQ-003-016"}
+  - {"op": "add_edge", "from": "STP-003-078", "verb": "applies", "to": "REQ-037-029"}
+  - {"op": "remove_edge", "from": "STP-003-033", "verb": "applies", "to": "REQ-003-016"}
+  - {"op": "add_edge", "from": "STP-003-033", "verb": "applies", "to": "REQ-037-029"}
+  - {"op": "remove_edge", "from": "STP-003-080", "verb": "applies", "to": "REQ-003-016"}
+  - {"op": "add_edge", "from": "STP-003-080", "verb": "applies", "to": "REQ-037-029"}
+  - {"op": "remove_edge", "from": "STP-003-065", "verb": "applies", "to": "REQ-003-068"}
+  - {"op": "add_edge", "from": "STP-003-065", "verb": "applies", "to": "REQ-037-029"}
+  - {"op": "remove_edge", "from": "STP-003-019", "verb": "applies", "to": "REQ-003-068"}
+  - {"op": "add_edge", "from": "STP-003-019", "verb": "applies", "to": "REQ-037-029"}
+  - {"op": "remove_edge", "from": "STP-003-066", "verb": "applies", "to": "REQ-003-068"}
+  - {"op": "add_edge", "from": "STP-003-066", "verb": "applies", "to": "REQ-037-029"}
+  - {"op": "remove_edge", "from": "STP-003-003", "verb": "applies", "to": "REQ-003-032"}
+  - {"op": "add_edge", "from": "STP-003-003", "verb": "applies", "to": "REQ-028-035"}
+  - {"op": "add_edge", "from": "STP-003-003", "verb": "applies", "to": "REQ-028-036"}
+  - {"op": "remove_edge", "from": "STP-003-028", "verb": "applies", "to": "REQ-003-048"}
+  - {"op": "add_edge", "from": "STP-003-028", "verb": "applies", "to": "REQ-025-064"}
+  - {"op": "remove_edge", "from": "STP-003-010", "verb": "applies", "to": "REQ-003-048"}
+  - {"op": "add_edge", "from": "STP-003-010", "verb": "applies", "to": "REQ-025-064"}
+  - {"op": "remove_edge", "from": "STP-003-056", "verb": "applies", "to": "REQ-003-048"}
+  - {"op": "add_edge", "from": "STP-003-056", "verb": "applies", "to": "REQ-025-064"}
+  - {"op": "update_field", "id": "ENT-inquiry.medical_alerts", "calculated_by": null}
+  - {"op": "remove_edge", "from": "SCR-004-02", "verb": "shows", "to": "ENT-inquiry.medical_alerts"}
+  - {"op": "add_edge", "from": "SCR-004-02", "verb": "shows", "to": "ENT-risk-tag.severity", "attrs": {"provenance": "inherited from another FR", "label": "Medical Alerts"}}
+  - {"op": "remove_edge", "from": "SCR-004-03", "verb": "shows", "to": "ENT-inquiry.medical_alerts"}
+  - {"op": "add_edge", "from": "SCR-004-03", "verb": "shows", "to": "ENT-risk-tag.severity", "attrs": {"provenance": "inherited from another FR", "label": "Inquiry Context: Medical Alerts"}}
+  - {"op": "remove_edge", "from": "SCR-004-05", "verb": "shows", "to": "ENT-inquiry.medical_alerts"}
+  - {"op": "add_edge", "from": "SCR-004-05", "verb": "shows", "to": "ENT-risk-tag.severity", "attrs": {"provenance": "inherited from another FR", "label": "Medical Alerts"}}
+  - {"op": "remove_edge", "from": "SCR-004-06", "verb": "shows", "to": "ENT-inquiry.medical_alerts"}
+  - {"op": "add_edge", "from": "SCR-004-06", "verb": "shows", "to": "ENT-risk-tag.severity", "attrs": {"provenance": "inherited from another FR", "label": "Inquiry Context: Medical Alerts"}}
+  - {"op": "remove_edge", "from": "SCR-005-01", "verb": "shows", "to": "ENT-inquiry.medical_alerts"}
+  - {"op": "add_edge", "from": "SCR-005-01", "verb": "shows", "to": "ENT-risk-tag.severity", "attrs": {"provenance": "inherited from another FR", "label": "Medical Alerts"}}
+  - {"op": "remove_edge", "from": "SCR-003-09", "verb": "shows", "to": "ENT-inquiry.medical_alerts"}
+  - {"op": "add_edge", "from": "SCR-003-09", "verb": "shows", "to": "ENT-risk-tag.severity", "attrs": {"provenance": "retrieved", "label": "Inquiry Summary"}}
+  - {"op": "remove_edge", "from": "SCR-003-12", "verb": "shows", "to": "ENT-inquiry.medical_alerts"}
+  - {"op": "add_edge", "from": "SCR-003-12", "verb": "shows", "to": "ENT-risk-tag.severity", "attrs": {"provenance": "retrieved", "label": "Medical Alerts"}}
+  - {"op": "remove_edge", "from": "SCR-003-13", "verb": "shows", "to": "ENT-inquiry.medical_alerts"}
+  - {"op": "add_edge", "from": "SCR-003-13", "verb": "shows", "to": "ENT-risk-tag.severity", "attrs": {"provenance": "retrieved", "label": "Medical Alerts"}}
+  - {"op": "remove_edge", "from": "SCR-003-14", "verb": "shows", "to": "ENT-inquiry.medical_alerts"}
+  - {"op": "add_edge", "from": "SCR-003-14", "verb": "shows", "to": "ENT-risk-tag.severity", "attrs": {"provenance": "retrieved", "label": "Medical Alerts"}}
+  - {"op": "remove_edge", "from": "SCR-006-04", "verb": "shows", "to": "ENT-inquiry.medical_alerts"}
+  - {"op": "add_edge", "from": "SCR-006-04", "verb": "shows", "to": "ENT-risk-tag.severity", "attrs": {"provenance": "inherited from another FR", "label": "Medical Alerts"}}
+  - {"op": "remove_edge", "from": "SCR-006-06", "verb": "shows", "to": "ENT-inquiry.medical_alerts"}
+  - {"op": "add_edge", "from": "SCR-006-06", "verb": "shows", "to": "ENT-risk-tag.severity", "attrs": {"provenance": "inherited from another FR", "label": "Medical Alerts"}}
+  - {"op": "remove_edge", "from": "SCR-003-15", "verb": "shows", "to": "ENT-inquiry.medical_alerts"}
+  - {"op": "add_edge", "from": "SCR-003-15", "verb": "shows", "to": "ENT-risk-tag.severity", "attrs": {"provenance": "retrieved"}}
+  - {"op": "remove_edge", "from": "REQ-003-003", "verb": "applies to", "to": "ENT-inquiry.medical_alerts"}
+  - {"op": "add_edge", "from": "REQ-003-003", "verb": "applies to", "to": "ENT-risk-tag.severity"}
+  - {"op": "remove_edge", "from": "REQ-003-049", "verb": "applies to", "to": "ENT-inquiry.medical_alerts"}
+  - {"op": "add_edge", "from": "REQ-003-049", "verb": "applies to", "to": "ENT-risk-tag.severity"}
+  - {"op": "remove_edge", "from": "REQ-003-050", "verb": "applies to", "to": "ENT-inquiry.medical_alerts"}
+  - {"op": "add_edge", "from": "REQ-003-050", "verb": "applies to", "to": "ENT-risk-tag.severity"}
+  - {"op": "update_field", "id": "ENT-medical-alert.level", "calculated_by": null}
+  - {"op": "remove_edge", "from": "SCR-003-06", "verb": "shows", "to": "ENT-medical-alert.level"}
+  - {"op": "add_edge", "from": "SCR-003-06", "verb": "shows", "to": "ENT-risk-tag.severity", "attrs": {"provenance": "inherited from another FR", "label": "Alert Level"}}
+  - {"op": "remove_edge", "from": "SCR-016-01", "verb": "shows", "to": "ENT-medical-alert.level"}
+  - {"op": "add_edge", "from": "SCR-016-01", "verb": "shows", "to": "ENT-risk-tag.severity", "attrs": {"provenance": "inherited from another FR", "label": "Med Alerts"}}
+  - {"op": "remove_edge", "from": "SCR-016-04", "verb": "shows", "to": "ENT-medical-alert.level"}
+  - {"op": "add_edge", "from": "SCR-016-04", "verb": "shows", "to": "ENT-risk-tag.severity", "attrs": {"provenance": "inherited from another FR", "label": "Medical Questionnaire"}}
+  - {"op": "remove_edge", "from": "REQ-003-049", "verb": "applies to", "to": "ENT-medical-alert.level"}
+  - {"op": "remove_edge", "from": "REQ-003-050", "verb": "applies to", "to": "ENT-medical-alert.level"}
+  - {"op": "remove_edge", "from": "STG-main-01-inquiry", "verb": "writes", "to": "ENT-medical-alert"}
+  - {"op": "remove_edge", "from": "STG-patient-03-active", "verb": "reads", "to": "ENT-medical-alert"}
+  - {"op": "add_edge", "from": "STG-patient-03-active", "verb": "reads", "to": "ENT-risk-tag"}
+  - {"op": "retire_node", "id": "ENT-medical-alert.inquiry_id"}
+  - {"op": "retire_node", "id": "ENT-medical-alert.level"}
+  - {"op": "retire_node", "id": "ENT-medical-alert.reason"}
+  - {"op": "retire_node", "id": "ENT-inquiry.medical_alerts"}
+  - {"op": "retire_node", "id": "ENT-medical-alert"}
+  - {"op": "remove_edge", "from": "SCR-006-04", "verb": "shows", "to": "ENT-inquiry.budget_range"}
+  - {"op": "remove_edge", "from": "SCR-006-06", "verb": "shows", "to": "ENT-inquiry.budget_range"}
+  - {"op": "retire_node", "id": "ENT-inquiry.budget_range"}
+  - {"op": "add_edge", "from": "SCR-003-09", "verb": "shows", "to": "ENT-inquiry.treatment_area_id", "attrs": {"provenance": "retrieved", "label": "Inquiry Summary"}}
+  - {"op": "add_edge", "from": "SCR-003-09", "verb": "shows", "to": "ENT-inquiry.problem_duration", "attrs": {"provenance": "retrieved", "label": "Inquiry Summary"}}
+  - {"op": "add_edge", "from": "SCR-003-09", "verb": "shows", "to": "ENT-inquiry.previous_treatments", "attrs": {"provenance": "retrieved", "label": "Inquiry Summary"}}
+  - {"op": "add_edge", "from": "SCR-003-09", "verb": "shows", "to": "ENT-inquiry.symptom_severity", "attrs": {"provenance": "retrieved", "label": "Inquiry Summary"}}
+  - {"op": "add_edge", "from": "SCR-003-09", "verb": "shows", "to": "ENT-inquiry.media", "attrs": {"provenance": "retrieved", "label": "Inquiry Summary"}}
+  - {"op": "add_edge", "from": "SCR-003-09", "verb": "shows", "to": "ENT-inquiry.scan_ref", "attrs": {"provenance": "retrieved", "label": "Inquiry Summary"}}
+  - {"op": "add_edge", "from": "SCR-003-09", "verb": "shows", "to": "ENT-inquiry-date-range.start_date", "attrs": {"provenance": "retrieved", "label": "Inquiry Summary"}}
+  - {"op": "add_edge", "from": "SCR-003-09", "verb": "shows", "to": "ENT-inquiry-date-range.end_date", "attrs": {"provenance": "retrieved", "label": "Inquiry Summary"}}
+  - {"op": "add_edge", "from": "SCR-003-09", "verb": "shows", "to": "ENT-inquiry.questionnaire_summary", "attrs": {"provenance": "retrieved", "label": "Inquiry Summary"}}
+  - {"op": "add_edge", "from": "SCR-003-09", "verb": "shows", "to": "ENT-inquiry.selected_provider_ids", "attrs": {"provenance": "retrieved", "label": "Inquiry Summary"}}
+  - {"op": "add_edge", "from": "REQ-003-054", "verb": "applies to", "to": "ENT-legal-acceptance"}
+  - {"op": "add_edge", "from": "SCR-003-09", "verb": "shows", "to": "ENT-quote.id", "attrs": {"provenance": "inherited from another FR", "label": "Quotes Received"}}
