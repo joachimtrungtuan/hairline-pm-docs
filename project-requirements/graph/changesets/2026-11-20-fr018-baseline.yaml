@@ -1,0 +1,105 @@
+reason: "Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-018)"
+by: controller
+operations:
+  - {"op": "remove_edge", "from": "STP-018-006", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-006", "verb": "at", "to": "STG-affiliate-01-pending"}
+  - {"op": "remove_edge", "from": "STP-018-007", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-007", "verb": "at", "to": "STG-affiliate-01-pending"}
+  - {"op": "remove_edge", "from": "STP-018-008", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-008", "verb": "at", "to": "STG-affiliate-01-pending"}
+  - {"op": "remove_edge", "from": "STP-018-012", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-012", "verb": "at", "to": "STG-affiliate-01-pending"}
+  - {"op": "remove_edge", "from": "STP-018-110", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-018-110", "verb": "at", "to": "STG-affiliate-03-suspended"}
+  - {"op": "update_node", "id": "ACT-affiliate", "attrs": {"group": "external", "description": "External referral partner who uses the affiliate portal operated within the Admin Platform (PRD Module Scope)."}}
+  - {"op": "update_node", "id": "SET-affiliate-payout-day", "owner_fr": "FR-018", "attrs": {"description": "Day of the month on which monthly affiliate payouts are processed. Admin-editable platform setting owned by FR-018 (PRD General Module Rules, Rule 5); the payout stays monthly. The PRD names no owning configuration screen."}}
+  - {"op": "add_edge", "from": "REQ-018-266", "verb": "governed by", "to": "SET-affiliate-payout-day"}
+  - {"op": "add_edge", "from": "REQ-018-007", "verb": "governed by", "to": "SET-affiliate-payout-day"}
+  - {"op": "add_edge", "from": "REQ-018-046", "verb": "governed by", "to": "SET-affiliate-payout-day"}
+  - {"op": "update_node", "id": "SET-affiliate-performance-tier-bands", "attrs": {"description": "Revenue bands (trailing 12 months, USD) that set an affiliate's performance tier; the PRD calls them an admin-editable platform setting but names no screen that edits them."}}
+  - {"op": "update_node", "id": "REQ-018-007", "title": "generate monthly payout list automatically on the affiliate payout day for previous month's completed bookings", "attrs": {"statement": "System MUST generate monthly payout list automatically on the affiliate payout day (an admin-editable setting owned by FR-018, default the 7th of the month) for previous month's completed bookings"}}
+  - {"op": "update_node", "id": "REQ-018-014", "title": "maintain payout history with transaction ID, date, amount, status (retention per the system PRD)", "attrs": {"statement": "System MUST maintain payout history with transaction ID, date, amount, status; retention follows the system PRD, Platform-Wide Rules: One 10-year retention period"}}
+  - {"op": "update_node", "id": "REQ-018-018", "attrs": {"statement": "System MUST log all affiliate-related transactions (code usage, commission calculations, payouts) with timestamp, user ID, and action type, in an immutable (append-only) audit trail with retention following the system PRD, Platform-Wide Rules: One 10-year retention period"}}
+  - {"op": "update_node", "id": "REQ-018-023", "attrs": {"statement": "System MUST emit booking completion events to trigger affiliate commission calculation asynchronously; FR-018 keeps its own booking-completed event for this purpose, and that event is produced from the booking's final payment event"}}
+  - {"op": "update_node", "id": "REQ-018-044", "title": "Affiliate discounts and commissions are funded only from Hairline's commission", "attrs": {"statement": "Affiliate discount codes and affiliate commissions are both funded ONLY from Hairline's commission: the patient-facing affiliate discount applies only to Hairline's commission, and the affiliate commission is deducted from Hairline's commission. Neither reduces the provider's payout"}}
+  - {"op": "update_node", "id": "REQ-018-046", "title": "Payout processing occurs monthly on the affiliate payout day (platform setting, default the 7th)", "attrs": {"statement": "Payout processing occurs monthly, on the affiliate payout day, for the previous month's completed bookings. The payout day is a platform setting that admins can change; its default is the 7th of the month. The payout stays monthly. This payout day setting is owned by FR-018"}}
+  - {"op": "update_node", "id": "REQ-018-054", "attrs": {"statement": "Percentage commissions are calculated as a percentage of the completed booking's net revenue (the booking total after discounts and refunds, in USD per the Currency Rule) — not as a percentage of Hairline's net commission. Fixed-amount commissions are a flat USD amount per completed booking, independent of booking value. In both cases the commission is funded from (deducted from) Hairline's commission, never the provider's payout (Rule 2). The patient-facing affiliate discount (also Hairline-funded, Rule 2) and the affiliate commission are separate Hairline-borne costs against the same booking."}}
+  - {"op": "update_node", "id": "REQ-018-056", "attrs": {"statement": "Performance Tier (system-calculated, read-only): a band derived from the affiliate's trailing-12-month revenue generated (USD) by completed referrals, recalculated monthly. Default bands (admin-editable setting): Bronze < $5,000 · Silver $5,000–$24,999 · Gold $25,000–$99,999 · Platinum ≥ $100,000. Tier is used for filtering/segmentation only and never changes commission automatically."}}
+  - {"op": "update_node", "id": "REQ-018-061", "title": "Affiliate actions audit-logged, append-only; retention per the system PRD", "attrs": {"statement": "Audit Rule: All affiliate actions logged with timestamp, user ID, and action type (code usage, commission calculation, payout-cycle generation, payout status synchronization). The audit trail is immutable (append-only); retention follows the system PRD, Platform-Wide Rules: One 10-year retention period"}}
+  - {"op": "update_node", "id": "REQ-018-063", "attrs": {"statement": "Editable by Admin: Affiliate account details (name, email, phone, language, country, type, tax/VAT ID, bank account details, commission structure); Discount code parameters (expiration date, usage limits, active/inactive status); Bulk code generation criteria (selected affiliates, filtered segment, code pattern, campaign settings); Commission percentage/fixed amount per affiliate (with effective date for changes, via Screen 3.2); Affiliate status (Suspend and Reinstate via the Screen 3.1 modal; Inactive only via the Screen 3.3 Deactivate / Offboard modal); Affiliate payout day of the month (platform setting owned by FR-018, default the 7th; the payout stays monthly); Performance tier bands (platform setting; default values in Affiliate Segmentation Rules)"}}
+  - {"op": "update_node", "id": "REQ-018-065", "attrs": {"statement": "Fixed in Codebase (Not Editable): Affiliate commission calculation logic (percentage of net booking revenue after discounts and refunds OR fixed amount per booking); One-affiliate-per-code attribution model; Discount code uniqueness validation rules; Payout workflow status transitions (Pending → Processing → Paid/Failed); Retention period (one period for everything; see the system PRD, Platform-Wide Rules: One 10-year retention period); Activation link expiry (24 hours) and resend rate limit (3 per hour per email); Payout frequency (monthly; only the payout day is configurable, see Editable by Admin)"}}
+  - {"op": "update_node", "id": "REQ-018-080", "attrs": {"statement": "If percentage type, system calculates preview of commission for an example booking (e.g., \"For a $1,000 booking with no discount or refund at 15% of net revenue, affiliate earns $150; if the patient received a 10% discount, net revenue is $900 and the affiliate earns $135\")"}}
+  - {"op": "update_node", "id": "REQ-018-081", "attrs": {"statement": "Payout schedule follows the platform payout day setting (default \"Monthly on the 7th\"; not set per affiliate); commission type defaults to \"Percentage\""}}
+  - {"op": "update_node", "id": "REQ-018-126", "attrs": {"statement": "System automatically generates the payout list on the affiliate payout day (platform setting, default the 7th of the month) for the previous month's completed bookings and exposes the calculated amounts to FR-017 / A-05 for payout execution"}}
+  - {"op": "update_node", "id": "REQ-018-129", "attrs": {"statement": "Permanent audit log of all payouts (affiliate, amount, date, transaction ID, final status) with full-text search, filter by affiliate/date/status, and CSV export; retention follows the system PRD, Platform-Wide Rules: One 10-year retention period"}}
+  - {"op": "update_node", "id": "REQ-018-140", "attrs": {"statement": "All active codes generated for the affiliate through single or bulk admin actions appear here with campaign name, expiration date, and status"}}
+  - {"op": "update_node", "id": "REQ-018-170", "attrs": {"statement": "System retains historical data (referrals, commissions, payouts) but prevents new activity (retention follows the system PRD, Platform-Wide Rules: One 10-year retention period)"}}
+  - {"op": "update_node", "id": "REQ-018-188", "attrs": {"statement": "Email notifications to affiliates when monthly payouts are processed (sent on status Paid, from FR-017)"}}
+  - {"op": "update_node", "id": "REQ-018-176", "attrs": {"statement": "How does system handle booking refund after affiliate payout has been processed? System tracks negative balance for affiliate; deducts refunded commission from next payout (if next payout insufficient, carries negative balance forward). The reversal is shown on Screen 8 (Payout / Transaction Detail)."}}
+  - {"op": "update_node", "id": "REQ-018-196", "attrs": {"statement": "Discount type: Hairline fees only (deducted from Hairline's commission); future phase: Both Fees"}}
+  - {"op": "update_node", "id": "REQ-018-193", "attrs": {"statement": "Entry Points: Admins access Affiliate Management section in admin dashboard to onboard new affiliates; Admins select affiliates manually or through filters, then generate one unique affiliate-bound promo code per selected affiliate; After the admin creates their account, affiliates complete a one-time activation link to set their password, then log into the dedicated affiliate portal to view their performance dashboard; Patients enter affiliate codes during booking checkout, triggering tracking and commission calculation; Automated monthly job generates payout reports on the affiliate payout day each month (platform setting, default the 7th)"}}
+  - {"op": "update_node", "id": "REQ-018-209", "attrs": {"statement": "Read-only in this list; Suspend and Reinstate are done only through the Screen 3.1 modal, and Inactive is reached only through the Screen 3.3 Deactivate / Offboard modal; Pending is system-set"}}
+  - {"op": "update_node", "id": "REQ-018-266", "attrs": {"statement": "Read-only, system-set (payout day per the platform setting, default the 7th of the month)"}}
+  - {"op": "remove_edge", "from": "SCR-018-01", "verb": "shows", "to": "ENT-affiliate.status"}
+  - {"op": "add_edge", "from": "SCR-018-01", "verb": "shows", "to": "ENT-affiliate.status", "attrs": {"provenance": "retrieved", "label": "Status", "editable": false}}
+  - {"op": "remove_edge", "from": "SCR-018-15", "verb": "shows", "to": "ENT-affiliate-discount-code.expiration_date"}
+  - {"op": "add_edge", "from": "SCR-018-15", "verb": "shows", "to": "ENT-affiliate-discount-code.expiration_date", "attrs": {"provenance": "retrieved", "label": "Expiration Date (codes have an expiration date only, no start date)", "editable": false}}
+  - {"op": "merge_node", "survivor": "REQ-018-044", "loser": "REQ-018-045"}
+  - {"op": "merge_node", "survivor": "REQ-018-016", "loser": "REQ-018-059"}
+  - {"op": "add_enum_value", "field_id": "ENT-affiliate.settlement_outcome", "value": "forfeit_whole_balance", "label": "Forfeit whole balance (ban)"}
+  - {"op": "add_node", "id": "REQ-018-297", "type": "Rule", "owner_fr": "FR-018", "title": "Permanent ban of an affiliate ends at Inactive and forfeits the whole pending balance", "attrs": {"statement": "System MUST support a permanent ban of an affiliate as a punitive end of partnership (workflow B6, Rule 16): the affiliate ends at Inactive with the reason recorded as \"banned\", there is no separate Banned status, the whole pending balance is forfeited, and only admins who may offboard an affiliate may ban", "rationale": "PRD Functional Requirements Summary, prd.md line 1633; Business Rules, Rule 16; workflow B6"}}
+  - {"op": "add_edge", "from": "REQ-018-297", "verb": "applies at", "to": "STG-affiliate-04-inactive"}
+  - {"op": "add_edge", "from": "REQ-018-297", "verb": "applies to", "to": "ENT-affiliate.status"}
+  - {"op": "add_edge", "from": "REQ-018-297", "verb": "applies to", "to": "ENT-affiliate.settlement_outcome"}
+  - {"op": "add_edge", "from": "REQ-018-297", "verb": "applies to", "to": "SCR-018-06"}
+  - {"op": "add_node", "id": "FLW-018-b6", "type": "Flow", "title": "Admin permanently bans an affiliate", "attrs": {"kind": "alternative", "description": "B6: Affiliate Permanent Ban (Punitive End of Partnership)", "prd_ref": "B6"}}
+  - {"op": "add_node", "id": "STP-018-130", "type": "Step", "owner_fr": "FR-018", "title": "Admin opens the affiliate profile and clicks Deactivate / Offboard", "attrs": {"prd_ref": "B6 step 1"}}
+  - {"op": "add_node", "id": "STP-018-131", "type": "Step", "owner_fr": "FR-018", "title": "System opens Screen 3.3 and the admin records the reason as banned", "attrs": {"prd_ref": "B6 step 2"}}
+  - {"op": "add_node", "id": "STP-018-132", "type": "Step", "owner_fr": "FR-018", "title": "System shows the whole pending balance as forfeited", "attrs": {"prd_ref": "B6 step 3"}}
+  - {"op": "add_node", "id": "STP-018-133", "type": "Step", "owner_fr": "FR-018", "title": "Admin confirms and the status becomes Inactive", "attrs": {"prd_ref": "B6 step 4"}}
+  - {"op": "add_node", "id": "STP-018-134", "type": "Step", "owner_fr": "FR-018", "title": "System forfeits the whole pending balance and records the forfeiture and reason in the audit log", "attrs": {"prd_ref": "B6 step 5"}}
+  - {"op": "add_node", "id": "STP-018-135", "type": "Step", "owner_fr": "FR-018", "title": "System disables all of the affiliate codes and makes the portal access read-only", "attrs": {"prd_ref": "B6 step 6"}}
+  - {"op": "add_node", "id": "STP-018-136", "type": "Step", "owner_fr": "FR-018", "title": "System retains all historical data and sends the offboarding notification", "attrs": {"prd_ref": "B6 step 7"}}
+  - {"op": "add_edge", "from": "STP-018-130", "verb": "at", "to": "STG-affiliate-04-inactive"}
+  - {"op": "add_edge", "from": "STP-018-130", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-018-130", "verb": "on", "to": "SCR-018-03"}
+  - {"op": "add_edge", "from": "STP-018-130", "verb": "applies", "to": "REQ-018-039"}
+  - {"op": "add_edge", "from": "STP-018-130", "verb": "applies", "to": "REQ-018-297"}
+  - {"op": "add_edge", "from": "STP-018-131", "verb": "at", "to": "STG-affiliate-04-inactive"}
+  - {"op": "add_edge", "from": "STP-018-131", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-131", "verb": "on", "to": "SCR-018-06"}
+  - {"op": "add_edge", "from": "STP-018-131", "verb": "applies", "to": "REQ-018-102"}
+  - {"op": "add_edge", "from": "STP-018-131", "verb": "applies", "to": "REQ-018-297"}
+  - {"op": "add_edge", "from": "STP-018-132", "verb": "at", "to": "STG-affiliate-04-inactive"}
+  - {"op": "add_edge", "from": "STP-018-132", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-132", "verb": "on", "to": "SCR-018-06"}
+  - {"op": "add_edge", "from": "STP-018-132", "verb": "applies", "to": "REQ-018-297"}
+  - {"op": "add_edge", "from": "STP-018-133", "verb": "at", "to": "STG-affiliate-04-inactive"}
+  - {"op": "add_edge", "from": "STP-018-133", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-018-133", "verb": "on", "to": "SCR-018-06"}
+  - {"op": "add_edge", "from": "STP-018-133", "verb": "applies", "to": "REQ-018-096"}
+  - {"op": "add_edge", "from": "STP-018-133", "verb": "applies", "to": "REQ-018-102"}
+  - {"op": "add_edge", "from": "STP-018-133", "verb": "applies", "to": "REQ-018-297"}
+  - {"op": "add_edge", "from": "STP-018-134", "verb": "at", "to": "STG-affiliate-04-inactive"}
+  - {"op": "add_edge", "from": "STP-018-134", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-134", "verb": "on", "to": "SCR-018-06"}
+  - {"op": "add_edge", "from": "STP-018-134", "verb": "applies", "to": "REQ-018-061"}
+  - {"op": "add_edge", "from": "STP-018-134", "verb": "applies", "to": "REQ-018-297"}
+  - {"op": "add_edge", "from": "STP-018-135", "verb": "at", "to": "STG-affiliate-04-inactive"}
+  - {"op": "add_edge", "from": "STP-018-135", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-135", "verb": "on", "to": "SCR-018-06"}
+  - {"op": "add_edge", "from": "STP-018-135", "verb": "applies", "to": "REQ-018-098"}
+  - {"op": "add_edge", "from": "STP-018-135", "verb": "applies", "to": "REQ-018-099"}
+  - {"op": "add_edge", "from": "STP-018-136", "verb": "at", "to": "STG-affiliate-04-inactive"}
+  - {"op": "add_edge", "from": "STP-018-136", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-018-136", "verb": "on", "to": "SCR-018-06"}
+  - {"op": "add_edge", "from": "STP-018-136", "verb": "applies", "to": "REQ-018-100"}
+  - {"op": "add_edge", "from": "STP-018-136", "verb": "applies", "to": "REQ-018-170"}
+  - {"op": "add_edge", "from": "STP-018-136", "verb": "applies", "to": "REQ-018-172"}
+  - {"op": "add_edge", "from": "STP-018-130", "verb": "next", "to": "STP-018-131", "attrs": {"label": "then"}}
+  - {"op": "add_edge", "from": "STP-018-131", "verb": "next", "to": "STP-018-132", "attrs": {"label": "then"}}
+  - {"op": "add_edge", "from": "STP-018-132", "verb": "next", "to": "STP-018-133", "attrs": {"label": "then"}}
+  - {"op": "add_edge", "from": "STP-018-133", "verb": "next", "to": "STP-018-134", "attrs": {"label": "then"}}
+  - {"op": "add_edge", "from": "STP-018-134", "verb": "next", "to": "STP-018-135", "attrs": {"label": "then"}}
+  - {"op": "add_edge", "from": "STP-018-135", "verb": "next", "to": "STP-018-136", "attrs": {"label": "then"}}
+  - {"op": "add_edge", "from": "FLW-018-b6", "verb": "starts at", "to": "STP-018-130"}
