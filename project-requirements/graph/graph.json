@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-20T12:50:28Z",
+  "generated_at": "2026-11-20T13:21:15Z",
   "schema_version": 10,
   "nodes": [
     {
@@ -38268,7 +38268,7 @@
       "owner_fr": null,
       "title": "Notification Rules & Configuration",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "module": "fr030-notification-rules-config",
         "prd_path": "project-requirements/functional-requirements/fr030-notification-rules-config/prd.md",
@@ -40089,25 +40089,13 @@
       "id": "REQ-001-146",
       "type": "Rule",
       "owner_fr": "FR-001",
-      "title": "Verification code input is numeric and needs all six digits",
+      "title": "Code input is numeric and needs all six digits",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "The verification code input accepts numeric characters only, and Continue is enabled only when all 6 digits are entered.",
+        "statement": "The verification code input and the reset code input accept numeric characters only, and Continue is enabled only when all 6 digits are entered.",
         "rationale": "Proposed from prd.md line 409-410 (table cells, not a PRD sentence).",
-        "distinct_from": "REQ-001-147"
-      }
-    },
-    {
-      "id": "REQ-001-147",
-      "type": "Rule",
-      "owner_fr": "FR-001",
-      "title": "Reset code input is numeric and needs all six digits",
-      "status": "active",
-      "version": 1,
-      "attrs": {
-        "statement": "The reset code input accepts numeric characters only, and Continue is enabled only when all 6 digits are entered.",
-        "rationale": "Proposed from prd.md line 543-544 (table cells, not a PRD sentence)."
+        "aliases": "REQ-001-147"
       }
     },
     {
@@ -166368,6 +166356,12 @@
     {
       "from_id": "FR-030",
       "verb": "references",
+      "to_id": "REQ-020-052",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-030",
+      "verb": "references",
       "to_id": "REQ-021-024",
       "attrs": {}
     },
@@ -169580,6 +169574,12 @@
     },
     {
       "from_id": "REQ-001-146",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-146",
       "verb": "applies to",
       "to_id": "ENT-otp-code.code",
       "attrs": {}
@@ -169591,19 +169591,7 @@
       "attrs": {}
     },
     {
-      "from_id": "REQ-001-147",
-      "verb": "applies at",
-      "to_id": "STG-patient-03-active",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-001-147",
-      "verb": "applies to",
-      "to_id": "ENT-otp-code.code",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-001-147",
+      "from_id": "REQ-001-146",
       "verb": "applies to",
       "to_id": "SCR-001-09",
       "attrs": {}
@@ -378276,6 +378264,22 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261120-132022-1bd9d0ae",
+      "at": "2026-11-20T13:20:22.544605+00:00",
+      "changed_by": "controller",
+      "reason": "Rule de-duplication follow-up after independent verification: FR-030 references the merged notification producer Rule (FR-020 keeps ownership because it held the fuller wording and the governing settings); the two six-digit code input Rules become one Rule on two screens",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "FR-030",
+        "REQ-001-146",
+        "REQ-001-147"
+      ],
+      "edges_added": 3,
+      "edges_removed": 3,
+      "rows": 11
+    },
     {
       "id": "cs-20261120-124909-370e4d6a",
       "at": "2026-11-20T12:49:09.435985+00:00",

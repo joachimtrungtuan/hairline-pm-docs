@@ -1,0 +1,6 @@
+reason: "Rule de-duplication follow-up after independent verification: FR-030 references the merged notification producer Rule (FR-020 keeps ownership because it held the fuller wording and the governing settings); the two six-digit code input Rules become one Rule on two screens"
+by: controller
+operations:
+  - {"op": "add_edge", "from": "FR-030", "verb": "references", "to": "REQ-020-052"}
+  - {"op": "update_node", "id": "REQ-001-146", "title": "Code input is numeric and needs all six digits", "attrs": {"statement": "The verification code input and the reset code input accept numeric characters only, and Continue is enabled only when all 6 digits are entered.", "distinct_from": null}}
+  - {"op": "merge_node", "survivor": "REQ-001-146", "loser": "REQ-001-147"}
