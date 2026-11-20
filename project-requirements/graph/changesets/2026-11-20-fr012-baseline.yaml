@@ -1,0 +1,92 @@
+# FR-012 Secure Messaging: owner rulings of 2026-11-20 applied to the graph.
+# Inputs: plans/reports/apply-result-261120-fr012.md and reconcile-result-261120-fr012.md. Edges to Rules that other FR change-sets add go in 2026-11-20-fr012-cross.yaml.
+reason: "Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-012)"
+by: controller
+operations:
+  # --- Rules that now point to the system PRD or to another FR (PRD lines 939 to 974) ---
+  - {op: update_node, id: REQ-012-019, title: "Message and media encryption follows the system PRD", attrs: {statement: "Encryption of message content and media in transit and at rest follows the encryption record in the system PRD.", rationale: "Functional Requirements Summary. Encryption is stated once in REQ-SYS-004; the role-based access part is retired into REQ-SYS-009."}}
+  - {op: update_node, id: REQ-012-101, title: "Reason for access to a conversation is recorded when required", attrs: {statement: "The reason for access to a conversation is recorded when required; who accessed it and when is stated once in the system PRD rule on role-based, audited access.", rationale: "prd.md Data & Privacy Rules. The access and audit halves are retired into REQ-SYS-009; FR-012 keeps the reason when required."}}
+  - {op: update_node, id: REQ-012-020, title: "Medical communications retained for the system retention period with audit export", attrs: {statement: "System MUST retain medical communications as set by the system PRD, Platform-Wide Rules: One 10-year retention period, and support audit export for compliance.", rationale: "Functional Requirements Summary. The retention period is stated once in REQ-SYS-002. Admin conversation export is deferred; see REQ-012-076."}}
+  - {op: update_node, id: REQ-012-002, title: "Patient Messages Inbox sortable by latest activity, provider name or date created", attrs: {statement: "System MUST provide a Messages Inbox view for patients showing all conversations, sortable by latest activity, provider name, or date created. Search and filtering of the inbox is stated once in REQ-022-070 (first release).", rationale: "Functional Requirements Summary. Search and filtering moved to REQ-022-070."}}
+  - {op: update_node, id: REQ-012-004, title: "Admin Communication Monitoring Center lists all conversations", attrs: {statement: "System MUST provide a Communication Monitoring Center for admins as the message list of all conversations. Its filters, how they combine, and that they are remembered are stated once in REQ-022-122.", rationale: "Functional Requirements Summary. Filters moved to REQ-022-122."}}
+  - {op: update_node, id: REQ-012-064, title: "Monitoring Center shows all conversations by default", attrs: {statement: "Shows ALL patient-provider conversations (and any admin-patient communications) by default; filters narrow the view.", rationale: "prd.md Screen 5 business rules. Filters and AND logic are stated once in REQ-022-122."}}
+  - {op: update_node, id: REQ-012-026, title: "Manual flags never notify; message alerts follow the Notification Service", attrs: {statement: "Manual observation flags MUST NOT trigger notifications. Delivery of message-event alerts (including admin emergency interventions to both parties) and unread-badge updates follows the notification-service Rule in FR-020 (REQ-020-028).", rationale: "Functional Requirements Summary. Delivery moved to REQ-020-028."}}
+  - {op: update_node, id: REQ-012-007, attrs: {statement: "System MUST deliver real-time notifications for new messages to intended recipients (patients, providers, and both parties when admin intervenes); update unread badges in inbox views and header popup menus. The notification events are defined in the FR-030 event catalogue.", rationale: "Functional Requirements Summary. The events are catalogued in FR-030 (REQ-030-061)."}}
+  - {op: retire_node, id: REQ-012-045}
+
+  # --- Flags, conversation status, keyword warning (PRD lines 247, 392, 921, 949 to 958) ---
+  - {op: update_node, id: REQ-012-012, attrs: {statement: "System MUST distinguish between automatic keyword flags (red) and manual observation flags (orange) in admin monitoring center and thread detail view; flagging must NOT notify patient or provider. Exception for the provider's view: the provider's conversation screen still shows both admin flags and keyword flags (the patient is still not notified).", rationale: "Functional Requirements Summary. The provider sees the flag indicator on Screen 4."}}
+  - {op: update_node, id: REQ-012-072, attrs: {statement: "Manual flagging available without leaving thread view; flag appears immediately and silently (no user notification; the provider's conversation screen shows the flag indicator, the patient is still not notified); Max 500 chars; NOT visible to users", rationale: "prd.md Screen 6A business rules, Flag for Observation, Flag notes. The flag type dialog options are in REQ-012-011."}}
+  - {op: update_node, id: REQ-012-016, attrs: {statement: "System MUST store flag history for each conversation including flag type, timestamp, admin user, status (active / resolved / escalated_to_intervention / intervention_completed; \"Resolved - No Action Needed\" shows as resolved), and internal notes.", rationale: "Functional Requirements Summary."}}
+  - {op: update_node, id: REQ-012-097, attrs: {rationale: "prd.md Edge Cases. A flag marked Resolved - No Action Needed shows as resolved."}}
+  - {op: update_node, id: REQ-012-035, title: "Message text limited to 2000 characters; flagged terms warn but do not block", attrs: {statement: "Max 2000 chars; a message with flagged terms warns the patient but is not blocked: it is sent and raises an automatic keyword flag; Message character limits (2000 chars).", rationale: "prd.md Screen 2 Message text; Admin Editability fixed-in-codebase. Provider compose (Screen 4) and admin compose (Screen 6B) also state Max 2000 chars. Fixed in the codebase, not admin-editable."}}
+  - {op: update_node, id: REQ-012-036, attrs: {statement: "Clear indication when message contains flagged keywords (warning shown to provider before sending); the message is not blocked, it is sent and raises an automatic keyword flag.", rationale: "prd.md Screen 4 notes; Integration Points (keyword flag warnings). The send is not blocked."}}
+  - {op: update_node, id: REQ-012-098, attrs: {statement: "No provider response within 48 hours: Auto-remind provider; if still no response after 72 hours, the system itself creates a \"Follow-Up Needed\" flag on the conversation (no admin is named on it) for the admin follow-up queue and sends additional provider reminders via notifications. Admin messaging remains emergency-only.", rationale: "prd.md Edge Cases. Business Process Assumptions: respond within 24-48 hours."}}
+  - {op: add_node, id: REQ-012-109, type: Rule, owner_fr: FR-012, title: "Conversation status is calculated from its flags", attrs: {statement: "Conversation status MUST be calculated from the conversation's flags, with no manual control: Escalated while an admin intervention is under way (a flag is escalated_to_intervention), Resolved when all flags are closed (resolved or intervention_completed), otherwise Active.", rationale: "prd.md Functional Requirements Summary and Key Entities, Conversation. Added 2026-11-20."}}
+  - {op: add_edge, from: REQ-012-109, verb: applies at, to: STG-main-02-quote}
+  - {op: add_edge, from: REQ-012-109, verb: applies to, to: ENT-conversation}
+  - {op: add_edge, from: REQ-012-109, verb: applies to, to: ENT-conversation.status}
+  - {op: add_edge, from: REQ-012-109, verb: applies to, to: SCR-012-05}
+  - {op: update_field, id: ENT-conversation.status, calculated_by: REQ-012-109}
+  - {op: update_node, id: ENT-conversation.status, attrs: {description: "Calculated from the conversation's flags, with no manual control: Escalated while a flag is escalated to intervention, Resolved when all flags are closed, otherwise Active (REQ-012-109). Used by the Monitoring Center filter."}}
+  - {op: update_node, id: ENT-conversation.partner, attrs: {description: "The other party's name, worked out from the provider name; a shown value, not stored separately."}}
+  - {op: update_node, id: ENT-flag.status, attrs: {description: "Active, resolved, escalated to intervention, or intervention completed; a flag marked Resolved - No Action Needed shows as resolved."}}
+  - {op: add_enum_value, field_id: ENT-flag.status, value: intervention_completed, label: Intervention completed}
+  - {op: update_node, id: ENT-flag.category, attrs: {description: "Manual flags only: Off-Platform Risk, Potential Dispute, Quality Concern, Follow-Up Needed or Other. Automatic keyword flags carry matched_keyword instead."}}
+  - {op: add_field, id: ENT-flag.matched_keyword, entity_id: ENT-flag, name: matched_keyword, data_type: text, title: Matched keyword, owner_fr: FR-012, required: false, attrs: {description: "The keyword that matched; set on automatic keyword flags only."}}
+  - {op: update_node, id: ENT-flag.admin_user, attrs: {description: "Admin who created a manual flag; empty on the Follow-Up Needed flag the system creates after 72 hours without a provider response."}}
+  - {op: update_node, id: ENT-message.text, attrs: {description: "Message body, max 2000 characters; optional, because text or at least one attachment is needed to send (a message may be attachment-only)."}}
+  - {op: add_edge, from: SCR-012-04, verb: shows, to: ENT-conversation.keyword_flags, attrs: {provenance: retrieved, label: "Flag indicator (warning icon if keyword-flagged)"}}
+  - {op: add_edge, from: REQ-012-012, verb: applies to, to: SCR-012-04}
+
+  # --- Conversation open at every Stage of the treatment case: reminder and escalation (REQ-012-031 Stage set) ---
+  - {op: add_edge, from: REQ-012-098, verb: applies at, to: STG-main-03-acceptance}
+  - {op: add_edge, from: REQ-012-098, verb: applies at, to: STG-main-04-booking}
+  - {op: add_edge, from: REQ-012-098, verb: applies at, to: STG-main-05-payment}
+  - {op: add_edge, from: REQ-012-098, verb: applies at, to: STG-main-06-treatment}
+  - {op: add_edge, from: REQ-012-098, verb: applies at, to: STG-main-07-aftercare}
+  - {op: add_edge, from: STG-main-03-acceptance, verb: emits, to: EVT-provider-response-reminder}
+  - {op: add_edge, from: STG-main-04-booking, verb: emits, to: EVT-provider-response-reminder}
+  - {op: add_edge, from: STG-main-05-payment, verb: emits, to: EVT-provider-response-reminder}
+  - {op: add_edge, from: STG-main-06-treatment, verb: emits, to: EVT-provider-response-reminder}
+  - {op: add_edge, from: STG-main-07-aftercare, verb: emits, to: EVT-provider-response-reminder}
+  - {op: add_edge, from: STG-main-03-acceptance, verb: emits, to: EVT-provider-response-escalated}
+  - {op: add_edge, from: STG-main-04-booking, verb: emits, to: EVT-provider-response-escalated}
+  - {op: add_edge, from: STG-main-05-payment, verb: emits, to: EVT-provider-response-escalated}
+  - {op: add_edge, from: STG-main-06-treatment, verb: emits, to: EVT-provider-response-escalated}
+  - {op: add_edge, from: STG-main-07-aftercare, verb: emits, to: EVT-provider-response-escalated}
+
+  # --- Machine translation switch (owned by FR-021; FR-012 owns only the switch) ---
+  - {op: add_node, id: REQ-012-108, type: Rule, owner_fr: FR-012, title: "Chat screens offer a machine-translation switch", attrs: {statement: "Patient and provider chat screens MUST offer an on/off switch for machine translation of messages for the reader. The translation behavior itself is owned by FR-021; this module owns only the switch in the conversation thread.", rationale: "prd.md Screens 2 and 4, Translation switch. Added 2026-11-20."}}
+  - {op: add_edge, from: REQ-012-108, verb: applies at, to: STG-main-02-quote}
+  - {op: add_edge, from: REQ-012-108, verb: applies to, to: SCR-012-02}
+  - {op: add_edge, from: REQ-012-108, verb: applies to, to: SCR-012-04}
+
+  # --- Settings and deferred admin actions (PRD lines 62, 494 to 508, 625 to 643) ---
+  - {op: update_node, id: SET-messaging-notification-preferences, owner_fr: FR-030}
+  - {op: remove_edge, from: REQ-012-105, verb: governed by, to: SET-messaging-notification-preferences}
+  - {op: remove_edge, from: REQ-012-026, verb: governed by, to: SET-messaging-notification-preferences}
+  - {op: update_node, id: REQ-012-105, title: "Admin can edit keyword flags and emergency reasons", attrs: {statement: "Configure moderation rules and automatic keyword flags; maintain compliance audit trail; Keyword/phrase flags that trigger moderation or escalation cues; Emergency intervention reason options (Policy Violation / Urgent Dispute / Patient Safety).", rationale: "prd.md Admin scope; Admin Editability, Editable by Admin. Notification preferences and quiet hours moved to FR-030. The reason options list has three values."}}
+  - {op: update_node, id: REQ-012-013, attrs: {rationale: "Functional Requirements Summary, prd.md Screen 6B. The reason options are Policy Violation, Urgent Dispute and Patient Safety."}}
+  - {op: update_node, id: SET-emergency-reason-options, attrs: {description: "Admin-editable list of reasons an admin can choose when sending an emergency intervention message: Policy Violation, Urgent Dispute, Patient Safety (Screen 6B, REQ-012-013, Admin Editability)."}}
+  - {op: update_node, id: REQ-012-076, title: "Future phase: Conversation export contents", attrs: {statement: "Future phase: Export conversation (full message history, attachments metadata, flag history, intervention logs) is deferred.", rationale: "prd.md Screen 6A business rules. Admin conversation export is deferred."}}
+  - {op: update_node, id: REQ-012-077, title: "Admin thread actions: flag for observation and resolve flags", attrs: {statement: "Intervention actions: flag for observation, resolve flags. Conversation export is deferred to a future phase.", rationale: "prd.md Admin scope; Screen 6A Actions menu. Request scan/photo set and Schedule review are removed."}}
+  - {op: update_node, id: REQ-012-107, title: "Configurable only within restrictions: escalation routing, intervention permissions, export controls (future phase)", attrs: {statement: "Escalation routing rules (allowed destinations/roles only); Future phase: Conversation export controls (admin conversation export is deferred); Emergency intervention permissions (restricted to authorized admin roles only).", rationale: "prd.md Admin Editability, Configurable with Restrictions."}}
+  - {op: update_node, id: SET-conversation-export-controls, title: "Future phase: Conversation export controls", attrs: {description: "Future phase: which admin roles may export conversations, configurable only within restrictions; admin conversation export is deferred (Admin Editability, Configurable with Restrictions)."}}
+  - {op: update_node, id: REQ-012-057, title: "Future phase: View All Messages link opens an expanded view", attrs: {statement: "Future phase: Link to full messages page if needed; Opens expanded view (future enhancement)", rationale: "prd.md Screen 3 View All Messages (Required: No)."}}
+
+  # --- FR-012 cites Rules homed elsewhere instead of restating them ---
+  - {op: add_edge, from: FR-012, verb: references, to: REQ-SYS-002}
+  - {op: add_edge, from: FR-012, verb: references, to: REQ-SYS-004}
+  - {op: add_edge, from: FR-012, verb: references, to: REQ-SYS-009}
+  - {op: add_edge, from: FR-012, verb: references, to: REQ-022-070}
+  - {op: add_edge, from: FR-012, verb: references, to: REQ-022-122}
+  - {op: add_edge, from: FR-012, verb: references, to: REQ-020-028}
+  - {op: add_edge, from: FR-012, verb: references, to: REQ-001-011}
+  - {op: add_edge, from: FR-012, verb: references, to: REQ-009-002}
+  - {op: add_edge, from: FR-012, verb: references, to: REQ-006-002}
+  - {op: add_edge, from: FR-012, verb: references, to: REQ-006-008}
+  - {op: add_edge, from: FR-012, verb: references, to: REQ-007-020}
+  - {op: add_edge, from: FR-012, verb: references, to: REQ-030-061}
+  - {op: add_edge, from: FR-012, verb: references, to: REQ-020-033}
+  - {op: add_edge, from: FR-012, verb: references, to: REQ-002-024}
