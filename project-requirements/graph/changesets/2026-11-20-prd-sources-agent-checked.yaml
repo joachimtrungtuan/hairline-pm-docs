@@ -1,0 +1,176 @@
+reason: "Link the Rules an agent checked line by line against their own PRD to the PRD Source, and bring nine Rule texts in line with the PRD wording where they differed."
+by: controller
+operations:
+  - {"op": "update_node", "id": "REQ-007-023", "attrs": {"rationale": "prd.md lines 42-45 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-023", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-029", "attrs": {"rationale": "prd.md lines 83-85 (rule text brought in line with the PRD).", "statement": "Patient initiates payment in booking confirmation flow (deposit required); Patient initiates final payment from booking details prior to procedure date; Admin processes refunds per cancellation policy (refund amounts per the FR-029 refund ladder and FR-006 policy)"}}
+  - {"op": "add_edge", "from": "REQ-007-029", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-048", "attrs": {"rationale": "prd.md lines 198, 205-206 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-048", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-050", "attrs": {"rationale": "prd.md lines 343, 345, 445 (rule text brought in line with the PRD).", "statement": "Provider can see payment progress but cannot modify payment information; All payment data is read-only for provider; All payout data is read-only for provider (payout execution is owned by FR-017: automatic on the Stripe Connect rail after release; on the manual rail an admin approves the settlement statement and marks it paid)"}}
+  - {"op": "add_edge", "from": "REQ-007-050", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-056", "attrs": {"rationale": "prd.md lines 403 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-056", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-058", "attrs": {"rationale": "prd.md lines 1026 (rule text brought in line with the PRD).", "statement": "Payout blocked while the provider has not marked the procedure complete or a problem case is open; release waits until completion is marked or an admin resolves the case"}, "title": "Payout blocked until completion is marked or the open case is resolved"}
+  - {"op": "add_edge", "from": "REQ-007-058", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-060", "attrs": {"rationale": "prd.md lines 486-487 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-060", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-076", "attrs": {"rationale": "prd.md lines 783-784 (rule text brought in line with the PRD).", "statement": "Configurable with Restrictions: Payment reminder timing (e.g., 3 days before due date): the single payment-reminder setting, owned by this module and read by FR-030. The payout execution timing window is owned by FR-017 (not in this module)."}}
+  - {"op": "add_edge", "from": "REQ-007-076", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-082", "attrs": {"rationale": "prd.md lines 307, 392, 575 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-082", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-007-084", "attrs": {"rationale": "prd.md lines 118-119 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-007-084", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "update_node", "id": "REQ-008-042", "attrs": {"rationale": "prd.md lines 301, 303, 310, 486, 679 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-042", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-044", "attrs": {"rationale": "prd.md lines 419, 794, 796 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-044", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-045", "attrs": {"rationale": "prd.md lines 401, 406, 615, 801, 832 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-045", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-046", "attrs": {"rationale": "prd.md lines 299, 330, 815-816 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-046", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-047", "attrs": {"rationale": "prd.md lines 184-185, 193 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-047", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-049", "attrs": {"rationale": "prd.md lines 854, 1009 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-049", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-050", "attrs": {"rationale": "prd.md lines 490-493 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-050", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-053", "attrs": {"rationale": "prd.md lines 822-823 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-053", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-055", "attrs": {"rationale": "prd.md lines 558, 830 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-055", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-056", "attrs": {"rationale": "prd.md lines 420, 422, 429-430 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-056", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-057", "attrs": {"rationale": "prd.md lines 427, 458, 617, 646 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-057", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-058", "attrs": {"rationale": "prd.md lines 330-332 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-058", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-059", "attrs": {"rationale": "prd.md lines 333-335 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-059", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-061", "attrs": {"rationale": "prd.md lines 464, 650, 807 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-061", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-062", "attrs": {"rationale": "prd.md lines 431, 464, 808-809 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-062", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-064", "attrs": {"rationale": "prd.md lines 449-452, 457, 459-460, 786 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-064", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-066", "attrs": {"rationale": "prd.md lines 679, 696-697, 732-733, 762-763, 769 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-066", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-068", "attrs": {"rationale": "prd.md lines 449, 636, 675, 771 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-068", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-070", "attrs": {"rationale": "prd.md lines 857 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-070", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-071", "attrs": {"rationale": "prd.md lines 850 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-071", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-009-027", "attrs": {"rationale": "prd.md lines 48-51, 53 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-027", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-029", "attrs": {"rationale": "prd.md lines 38-44 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-029", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-030", "attrs": {"rationale": "prd.md lines 57-59 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-030", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-035", "attrs": {"rationale": "prd.md lines 74-77 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-035", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-036", "attrs": {"rationale": "prd.md lines 81-83 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-036", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-037", "attrs": {"rationale": "prd.md lines 87-90 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-037", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-042", "attrs": {"rationale": "prd.md lines 114, 358 (rule text brought in line with the PRD).", "statement": "System displays confirmation message to the Provider Owner or Manager who sent the invitation. SSE updates show send status; success toast: \"Invitation sent to [email] (expires in 7 days).\""}}
+  - {"op": "add_edge", "from": "REQ-009-042", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-043", "attrs": {"rationale": "prd.md lines 116, 522 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-043", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-045", "attrs": {"rationale": "prd.md lines 118-120 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-045", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-048", "attrs": {"rationale": "prd.md lines 134-136 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-048", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-049", "attrs": {"rationale": "prd.md lines 140-144 (rule text brought in line with the PRD).", "statement": "Trigger: Invitee email address already belongs to another provider organization as Owner, team member, or pending invitation (global provider email identity rule, REQ-009-008). Memberships and pending invitations of a Deactivated provider (FR-015) do not count System displays blocking error: \"This email already belongs to another provider team. Remove the member from their current provider team before inviting them here.\" Outcome: Cross-provider duplication prevented; invitee must first be removed from their current provider team before they can be invited here"}}
+  - {"op": "add_edge", "from": "REQ-009-049", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-050", "attrs": {"rationale": "prd.md lines 150-154 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-050", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-051", "attrs": {"rationale": "prd.md lines 160-164 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-051", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-054", "attrs": {"rationale": "prd.md lines 181-185 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-054", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-056", "attrs": {"rationale": "prd.md lines 202, 387 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-056", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-057", "attrs": {"rationale": "prd.md lines 205-206, 210 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-057", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-061", "attrs": {"rationale": "prd.md lines 386 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-061", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-062", "attrs": {"rationale": "prd.md lines 388, 392-393 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-062", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-063", "attrs": {"rationale": "prd.md lines 378, 380 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-063", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-065", "attrs": {"rationale": "prd.md lines 219-221 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-065", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-066", "attrs": {"rationale": "prd.md lines 227-230 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-066", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-067", "attrs": {"rationale": "prd.md lines 244-249 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-067", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-075", "attrs": {"rationale": "prd.md lines 267-270 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-075", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-076", "attrs": {"rationale": "prd.md lines 275-279 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-076", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-077", "attrs": {"rationale": "prd.md lines 285-290 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-077", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-083", "attrs": {"rationale": "prd.md lines 406-408 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-083", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-084", "attrs": {"rationale": "prd.md lines 420-421 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-084", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-085", "attrs": {"rationale": "prd.md lines 431-433 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-085", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-086", "attrs": {"rationale": "prd.md lines 437-439 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-086", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-098", "attrs": {"rationale": "prd.md lines 333 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-098", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-102", "attrs": {"rationale": "prd.md lines 362-364 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-102", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-109", "attrs": {"rationale": "prd.md lines 474-475 (rule text brought in line with the PRD).", "statement": "Screen 6 Department/Specialty: Optional organizational label (e.g., Surgeon, Reception), max 50 chars; editable by Owner/Admin. Phone Number: Contact phone (required at account setup, Screen 8), masked for privacy."}}
+  - {"op": "add_edge", "from": "REQ-009-109", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-110", "attrs": {"rationale": "prd.md lines 483-484 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-110", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-111", "attrs": {"rationale": "prd.md lines 492, 494 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-111", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-112", "attrs": {"rationale": "prd.md lines 516-518 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-112", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-113", "attrs": {"rationale": "prd.md lines 534-540 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-113", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-116", "attrs": {"rationale": "prd.md lines 568-569 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-116", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-119", "attrs": {"rationale": "prd.md lines 626, 628 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-119", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-122", "attrs": {"rationale": "prd.md lines 648-649, 655 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-122", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-127", "attrs": {"rationale": "prd.md lines 672-673, 676-677 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-127", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-130", "attrs": {"rationale": "prd.md lines 667-668 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-130", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-131", "attrs": {"rationale": "prd.md lines 679-681, 695-697 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-131", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-142", "attrs": {"rationale": "prd.md lines 759, 765 (rule text brought in line with the PRD).", "statement": "Admins cannot assign the Owner role in the invite form. The Owner role changes hands only through the Hairline admin Owner handover (REQ-009-174), a separate admin action that is not part of invitations."}}
+  - {"op": "add_edge", "from": "REQ-009-142", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-160", "attrs": {"rationale": "prd.md lines 802-803 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-160", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-163", "attrs": {"rationale": "prd.md lines 810-815 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-163", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-009-167", "attrs": {"rationale": "prd.md lines 1128-1138 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-009-167", "verb": "decided by", "to": "SRC-PRD-009"}
+  - {"op": "update_node", "id": "REQ-029-061", "attrs": {"rationale": "prd.md lines 49, 55 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-061", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-063", "attrs": {"rationale": "prd.md lines 87-90 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-063", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-064", "attrs": {"rationale": "prd.md lines 94-97 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-064", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-066", "attrs": {"rationale": "prd.md lines 176, 201, 225 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-066", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-067", "attrs": {"rationale": "prd.md lines 293-294 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-067", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-073", "attrs": {"rationale": "prd.md lines 403, 411, 418 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-073", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-092", "attrs": {"rationale": "prd.md lines 149, 543-544 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-092", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-093", "attrs": {"rationale": "prd.md lines 548-549 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-093", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-123", "attrs": {"rationale": "prd.md lines 702-703 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-123", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-029-126", "attrs": {"rationale": "prd.md lines 712-713 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-029-126", "verb": "decided by", "to": "SRC-PRD-029"}
+  - {"op": "update_node", "id": "REQ-004-101", "title": "Admin grafts change regenerates description; prior text stays in quote history", "attrs": {"statement": "When an admin saves a new Estimated Grafts value through Screen 7, Graft Description is regenerated from the approved template; the prior text stays in quote history.", "rationale": "prd.md lines 364, 594 (rule text brought in line with the PRD)."}}

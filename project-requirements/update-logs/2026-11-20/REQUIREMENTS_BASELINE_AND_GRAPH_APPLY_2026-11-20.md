@@ -38,6 +38,8 @@ The owner's answers from the programme's question rounds were applied as the new
 - Sources: the 23 cited "pending review" Sources are now "incorporated" (`2026-11-20-pending-sources-incorporated.yaml`); 63 uncited ones stay pending. By owner ruling the PRD a Rule came from is an acceptable deciding Source: 38 Sources `SRC-PRD-NNN` added and 3,531 Rules linked to their own PRD (`2026-11-20-prd-sources.yaml`).
 - Lint after these: 836 findings (L03 6, L10 741, L18 89), down from 4,369; 245 tests pass; `graph.json` re-exported.
 - A further 420 Rules whose statement matches a line of their own PRD (line recorded in the rationale) and 134 Entities named in their owning PRD were linked to the PRD Source (`2026-11-20-prd-sources-matched.yaml`; `SRC-PRD-SYS` added for the system PRD). 120 Rules and 67 Entities remain without a Source.
+- The remainder was closed: 38 Rules and the 67 Entities linked to their owning PRD (`2026-11-20-prd-sources-checked.yaml`), and the last 86 Rules (FR-007, FR-008, FR-009, FR-029) checked line by line against their PRD and linked (`2026-11-20-prd-sources-agent-checked.yaml`). Nine Rule texts that differed from the PRD were brought in line with it: `REQ-004-101`, `REQ-007-029`, `REQ-007-050`, `REQ-007-058`, `REQ-007-076`, `REQ-009-042`, `REQ-009-049`, `REQ-009-109`, `REQ-009-142`.
+- Final lint: 95 findings (L03 6, L18 89; L10 0). Every active Rule now has a deciding Source. `graph.json` re-exported (11,194 nodes, 38,746 edges).
 
 ## Not done
 

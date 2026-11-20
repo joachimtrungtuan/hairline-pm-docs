@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-20T14:00:40Z",
+  "generated_at": "2026-11-20T16:51:04Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -1320,7 +1320,7 @@
       "owner_fr": "FR-031",
       "title": "Admin audit trail entry",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Immutable record of one administrative or access event (login, role change, permission grant, access denied, user suspended, password reset); no updates or deletes (PRD Key Entities, Entity 3)."
       }
@@ -1775,7 +1775,7 @@
       "owner_fr": "FR-018",
       "title": "Affiliate transaction log entry",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "PRD Key Entities, Entity 5. Append-only audit entry for affiliate lifecycle and money events."
       }
@@ -1862,7 +1862,7 @@
       "owner_fr": "FR-018",
       "title": "Affiliate code generation result row",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "PRD Screen 4.1 Result Rows and Alternative Flow B4: per-affiliate outcome of a bulk generation, with the reason when skipped or failed."
       }
@@ -3032,7 +3032,7 @@
       "owner_fr": "FR-011",
       "title": "Aftercare audit entry",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Append-only record of a plan change, reassignment or admin edit."
       }
@@ -3151,7 +3151,7 @@
       "owner_fr": "FR-011",
       "title": "Aftercare communication entry",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "A message, escalation or system notification in the aftercare communication log."
       }
@@ -3198,7 +3198,7 @@
       "owner_fr": "FR-024",
       "title": "Aftercare content template",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "An admin-managed medication template (a common post-op medication preset) or post-op instruction template (standard instruction text providers can customize), kept in one list that providers pick from. FR-024 Screen 8 and REQ-024-085."
       }
@@ -3262,7 +3262,7 @@
       "owner_fr": "FR-011",
       "title": "Aftercare dose",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "One scheduled dose of a medication and whether the patient marked it taken."
       }
@@ -3309,7 +3309,7 @@
       "owner_fr": "FR-011",
       "title": "Aftercare medication",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "A medication the provider prescribes in the plan."
       }
@@ -3830,7 +3830,7 @@
       "owner_fr": "FR-011",
       "title": "Aftercare questionnaire response",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "A patient answer set for one milestone questionnaire; the questions come from FR-025."
       }
@@ -4214,7 +4214,7 @@
       "owner_fr": "FR-011",
       "title": "Aftercare educational resource",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "A video, guide, FAQ or help item attached to a milestone."
       }
@@ -4225,7 +4225,7 @@
       "owner_fr": "FR-011",
       "title": "Aftercare resource view",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Records that a patient viewed a resource."
       }
@@ -4344,7 +4344,7 @@
       "owner_fr": "FR-011",
       "title": "Aftercare scan artifact",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "A head scan photo set uploaded for a scheduled scan task (V1)."
       }
@@ -4523,7 +4523,7 @@
       "owner_fr": "FR-011",
       "title": "Aftercare template price",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "One currency row of a template pricing table."
       }
@@ -4788,7 +4788,7 @@
       "owner_fr": "FR-014",
       "title": "Analytics generated report",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Generated export report (Screen 6 Report History Tab 1). Generated reports additionally retain the metric definitions/cohorts, reporting cutoff/data-as-of, sample sizes, currency/FX provenance, and authorized accepted-selection IDs/versions for detailed rows. Configuration and scheduling do not change screen metric semantics."
       }
@@ -6928,7 +6928,7 @@
       "owner_fr": "FR-033",
       "title": "Content attachment",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "File attached to Help Centre content, stored in media storage with an audience tag (REQ-033-017; Key Entities, Entity 4, named only)."
       }
@@ -8403,7 +8403,7 @@
       "owner_fr": "FR-017",
       "title": "Discount usage summary",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Screen 5 Discount Usage Overview per-code aggregates (prd.md lines 756-771). Derived from FR-019 discount data and bookings; read-only."
       }
@@ -8894,7 +8894,7 @@
       "owner_fr": "FR-017",
       "title": "Financial dashboard report",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Screen 1 Revenue Dashboard aggregates (prd.md lines 315-338). Derived from invoices, payouts, affiliate commissions and FR-003 inquiry counts."
       }
@@ -10011,7 +10011,7 @@
       "owner_fr": "FR-033",
       "title": "Help Centre dashboard statistics",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Computed aggregate behind the dashboard quick stats cards (PRD Screen 1 and Screen 8). Not stored; created so the screen fields have an owner."
       }
@@ -10405,7 +10405,7 @@
       "owner_fr": "FR-003",
       "title": "Inquiry audit entry",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Immutable audit record of an admin change to an inquiry: who, when, field, old and new value, reason, IP."
       }
@@ -11244,7 +11244,7 @@
       "owner_fr": "FR-007B",
       "title": "Installment plan metrics",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Aggregate figures the admin dashboard shows across all plans. Not a stored record: created because the screen fields have no other owning entity; each value is calculated by the dashboard rule."
       }
@@ -11528,7 +11528,7 @@
       "owner_fr": "FR-002",
       "title": "Intake audit entry",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Audit record of one intake processing run: processing id and time, actor or service, reason on overrides and the template version used. Not listed in Key Entities; modelled from REQ-002-007, General Rule 1 and Alternative Flow A2."
       }
@@ -11671,7 +11671,7 @@
       "owner_fr": "FR-002",
       "title": "Intake processing result",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "What the intake engine returns for one request: normalized payload, alerts, media reference and audit identifiers. Links to the stored media artifact and the audit entry. Carries the template and ruleset versions used."
       }
@@ -11923,7 +11923,7 @@
       "owner_fr": "FR-017",
       "title": "Invoice payment reminder",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Screen 4a Reminder History table (prd.md lines 673-680) and the Send Reminder modal (lines 568-577)."
       }
@@ -11981,7 +11981,7 @@
       "owner_fr": "FR-027",
       "title": "Legal acceptance record",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "description": "Acceptance Record (Key Entities, prd.md lines 362-363): user reference, document type, version, locale, timestamp, channel. Belongs to a user and a document type/version. Stub from the FR-001 migration, now filled."
       }
@@ -12058,7 +12058,7 @@
       "owner_fr": "FR-027",
       "title": "Legal audit entry",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Audit Entry (Key Entities, prd.md lines 365-366): actor, action (create, edit, publish, revert), timestamp, object reference, summary. References the Admin actor and the document version. Immutable (REQ-027-013)."
       }
@@ -13138,7 +13138,7 @@
       "owner_fr": "FR-012",
       "title": "Messaging audit entry",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Immutable audit record of a message lifecycle event, an admin view, or an admin action (manual flag, flag status change, emergency intervention). Not named in Key Entities; added to hold the logging REQ-012-010, REQ-012-023 and the view-action rule require. Provisional, see the open question."
       }
@@ -13248,7 +13248,7 @@
       "owner_fr": "FR-037",
       "title": "Monitoring advice window",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Key Entities 5 (MonitoringAdviceWindow): case, cadence snapshot, calculated start date, available, submitted or expired state, superseded-window link and linked advice record."
       }
@@ -13429,7 +13429,7 @@
       "owner_fr": "FR-037",
       "title": "Monitoring audit entry",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Not in Key Entities. Added so Screens 13, 14A and 14B have a record to show: Admin correction audit and version history (before and after values, actor, reason, time) required by Admin Editability and the Screen 13/14A/14B Audit History and Version History fields."
       }
@@ -13534,7 +13534,7 @@
       "owner_fr": "FR-037",
       "title": "Monitoring case preview",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Key Entities 7 (MonitoringCasePreview): Admin-shared read-only pre-assignment preview with candidate provider, dataset version, token digest, expiry, access events, revocation state and assignment-neutral outcome."
       }
@@ -14319,7 +14319,7 @@
       "owner_fr": "FR-037",
       "title": "Monitoring export",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Key Entities 8 (MonitoringExport): case, report version, covered date range, metrics, PDF media reference and generation state."
       }
@@ -14782,7 +14782,7 @@
       "owner_fr": "FR-020",
       "title": "Notification attempt",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "One delivery attempt on one channel, with its status (PRD Key Entities; REQ-020-007; one notification record per attempt)."
       }
@@ -16643,7 +16643,7 @@
       "owner_fr": "FR-001",
       "title": "Patient audit log entry",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Immutable log entry of authentication events and profile changes, including admin modifications with reason. Belongs to a Patient."
       }
@@ -17019,7 +17019,7 @@
       "owner_fr": "FR-001",
       "title": "Patient session",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "An authenticated patient session. Belongs to a Patient; can be revoked independently. Key attributes: authentication token, session expiration, device information."
       }
@@ -18031,7 +18031,7 @@
       "owner_fr": "FR-017",
       "title": "Payout dispute resolution",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Screen 7 Dispute Resolution Panel (prd.md lines 944-958), Workflow B1."
       }
@@ -19296,7 +19296,7 @@
       "owner_fr": "FR-019",
       "title": "Promotion adoption",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "A targeted provider's decision on an Admin-via-Provider program, with who decided, when and the comment. PRD line 949."
       }
@@ -20067,7 +20067,7 @@
       "owner_fr": "FR-019",
       "title": "Promotion report snapshot",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Optional aggregated usage and impact metrics for exports and the analytics tabs. PRD line 952 marks it optional."
       }
@@ -20455,7 +20455,7 @@
       "owner_fr": "FR-015",
       "title": "Provider activity log entry",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "One entry of the provider Activity Log shown in Screen 3 Tab 8 (profile edits, status changes, document actions, logins, commission changes). Not listed under Key Entities; modelled from Tab 8 and the Audit Rule."
       }
@@ -20547,7 +20547,7 @@
       "owner_fr": "FR-032",
       "title": "Provider award",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "One award on a provider profile (the \"awards (array of award objects)\" attribute of Entity 1). One profile has many awards (PRD Key Entities, Entity 1; Screen 1 Tab 4)."
       }
@@ -20990,7 +20990,7 @@
       "owner_fr": "FR-017",
       "title": "Provider earning per treatment",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Per-treatment income record shown in Screen 3 treatment sub-table, Screen 9 and the Screen 10 treatment breakdown (prd.md lines 455-466, 1078-1089, 1143-1151). No Key Entity covers it."
       }
@@ -21101,7 +21101,7 @@
       "owner_fr": "FR-017",
       "title": "Provider earnings summary",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Screen 9 summary bar (prd.md lines 1091-1097): derived totals for the provider's current payout cycle."
       }
@@ -21989,7 +21989,7 @@
       "owner_fr": "FR-013",
       "title": "Provider review summary",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "description": "Per-provider aggregate of Published reviews: average rating, count and distribution, recalculated on every publish, edit republish, removal and approved takedown, with caching. Shown read-only on the provider profile review section, the provider review list and the FR-005 quote comparison."
       }
@@ -22239,7 +22239,7 @@
       "owner_fr": "FR-009",
       "title": "Provider team summary",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Seat usage and member counts of one provider team shown on Screens 1 and 12. Counts are calculated, not stored by the PRD."
       }
@@ -22310,7 +22310,7 @@
       "owner_fr": "FR-013",
       "title": "Provider treatment review summary",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Per-provider, per-treatment aggregate of Published reviews (average sub-scores, count, distribution). Data contract consumed by FR-014 review sub-scores per treatment analytics."
       }
@@ -22790,7 +22790,7 @@
       "owner_fr": "FR-025",
       "title": "Questionnaire audit entry",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "One audit-trail row per admin action on a questionnaire set."
       }
@@ -22867,7 +22867,7 @@
       "owner_fr": "FR-025",
       "title": "Questionnaire category",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Global category used to organise and filter the Questionnaire Catalog; each set belongs to exactly one."
       }
@@ -22988,7 +22988,7 @@
       "owner_fr": "FR-025",
       "title": "Questionnaire question",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "One question inside a questionnaire set, of a system-defined type, with patient-app and provider-app appearance overrides and, in Inquiry and Multi-Context sets, a severity flag."
       }
@@ -25325,7 +25325,7 @@
       "owner_fr": "FR-013",
       "title": "Review source metadata",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Structured provenance payload persisted to Review.source_metadata for admin-seeded reviews: platform, URL, evidence files, capture date, permission record with admin attestation, and the admin-entered reviewer display name."
       }
@@ -25809,7 +25809,7 @@
       "owner_fr": "FR-031",
       "title": "Role permission definition",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "description": "Role definition for admin and provider roles, scoped by guard: system (protected) or custom (custom roles exist for admin roles only), with a permission matrix. Cloned admin roles keep an independent permission snapshot (PRD Key Entities, Entity 2). FR-009 created this as a provider-role stub; the PRD covers both guards."
       }
@@ -26236,7 +26236,7 @@
       "owner_fr": "FR-026",
       "title": "Setting version",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "One saved version of a setting group configuration, with the change reason."
       }
@@ -26319,7 +26319,7 @@
       "owner_fr": "FR-026",
       "title": "Settings audit log entry",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Immutable record of one setting change, kept at least 10 years."
       }
@@ -26959,7 +26959,7 @@
       "owner_fr": "FR-034",
       "title": "Support case assignment",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "One assignment of a case to an admin user. Informational only: it does not restrict who can work on the case. Many per case, so reassignment history is kept."
       }
@@ -27047,7 +27047,7 @@
       "owner_fr": "FR-034",
       "title": "Support case attachment",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "A file attached to a case or message. Scanned for viruses before it is accepted; JPG, PNG, PDF, DOC and DOCX, up to 10MB per file and 5 files per case."
       }
@@ -27168,7 +27168,7 @@
       "owner_fr": "FR-034",
       "title": "Support case category",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Managed list of case categories on Screen 7. Super Admin adds, edits, deactivates and reorders items."
       }
@@ -27223,7 +27223,7 @@
       "owner_fr": "FR-034",
       "title": "Support case message",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "description": "One message in the two-way thread of a case, from an admin, a patient or a provider. Messages are append-only, shown oldest first, may carry attachments, and can reference a parent message for threading."
       }
@@ -27344,7 +27344,7 @@
       "owner_fr": "FR-034",
       "title": "Support case priority",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Managed list of case priorities on Screen 7, with a badge colour. Super Admin adds, edits, deactivates and reorders items."
       }
@@ -27410,7 +27410,7 @@
       "owner_fr": "FR-034",
       "title": "Support case reopening",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "One reopening of a closed case: reason, who reopened it, a reference to the previous resolution, and the new priority and assignee when changed. Many per case."
       }
@@ -27509,7 +27509,7 @@
       "owner_fr": "FR-034",
       "title": "Support case resolution",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "How a case was resolved and closed: summary, category, optional feedback resolution and root cause, resolver, auto-close period and closure details. One per resolution of a case."
       }
@@ -27641,7 +27641,7 @@
       "owner_fr": "FR-034",
       "title": "Support case tag",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Master list of case tags with a badge colour (Screen 7). Tags may be deleted even when used; the tag is then removed from cases."
       }
@@ -27685,7 +27685,7 @@
       "owner_fr": "FR-034",
       "title": "Support case timeline event",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "One immutable event in the case timeline: creation, status change, feedback resolution change, note, message, attachment, assignment, reassignment, account intervention, resolution, reopening or closure. Stores full context, not only milestones. Admin-only notes carry the internal flag. Append-only."
       }
@@ -28055,7 +28055,7 @@
       "owner_fr": "FR-034",
       "title": "Support reopen reason template",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Optional pre-written reopening reasons that admins can pick on Screen 6; admins can always enter a custom reason (Screen 7)."
       }
@@ -28088,7 +28088,7 @@
       "owner_fr": "FR-034",
       "title": "Support resolution category",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Managed list of resolution categories offered when a case is resolved (Screen 7)."
       }
@@ -28143,7 +28143,7 @@
       "owner_fr": "FR-034",
       "title": "Support root cause",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Managed list of root cause options used for analytics when a case is resolved (Screen 7)."
       }
@@ -28902,7 +28902,7 @@
       "owner_fr": "FR-017",
       "title": "Transaction audit log entry",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Key Entity 5 (prd.md lines 1818-1820). One admin action generates one entry; one invoice or payout can have many entries."
       }
@@ -29719,7 +29719,7 @@
       "owner_fr": "FR-008",
       "title": "Travel audit entry",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "FR-008's own travel audit entity, not shared with another feature's audit log. Entries belong to a TravelContext and are never edited or removed; retention follows the system retention rule."
       }
@@ -30222,7 +30222,7 @@
       "owner_fr": "FR-010",
       "title": "Treatment audit entry",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Audit log entry for a treatment documentation action: who, what changed, when, from which IP address, with the reason for admin edits. Not a Key Entities entity; derived from REQ-010-014, the Audit Rule and the Audit Trail on Screen 8."
       }
@@ -30307,7 +30307,7 @@
       "owner_fr": "FR-010",
       "title": "Treatment day record",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "One record per treatment day of the case's current treatment plan: relative day number, description, status, provider-only note. Never consolidated into a multi-day record. The PRD folds day records under Entity 1; modelled as a separate Entity here."
       }
@@ -30536,7 +30536,7 @@
       "owner_fr": "FR-010",
       "title": "Treatment photo or head scan photo set",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "A media asset on a treatment record: head scan photo set before or after (V1) or a treatment photo. Key Entities, Entity 2."
       }
@@ -42890,9 +42890,10 @@
       "owner_fr": "FR-004",
       "title": "Inquiry must be active to create or submit",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System MUST verify parent inquiry is not in Cancelled status before accepting quote creation or submission. If inquiry is cancelled mid-draft (race condition), system rejects submission with error \"Inquiry no longer active\" and locks the draft with \"Inquiry Cancelled\" banner. Opening quote creation for a cancelled inquiry is blocked with \"Inquiry no longer active — this inquiry was cancelled by the patient.\" and no draft is created; a drafting provider sees the banner \"This inquiry was cancelled by the patient. Your draft can no longer be submitted.\" on next save or refresh, and the draft is retained for reference but cannot be submitted."
+        "statement": "System MUST verify parent inquiry is not in Cancelled status before accepting quote creation or submission. If inquiry is cancelled mid-draft (race condition), system rejects submission with error \"Inquiry no longer active\" and locks the draft with \"Inquiry Cancelled\" banner. Opening quote creation for a cancelled inquiry is blocked with \"Inquiry no longer active — this inquiry was cancelled by the patient.\" and no draft is created; a drafting provider sees the banner \"This inquiry was cancelled by the patient. Your draft can no longer be submitted.\" on next save or refresh, and the draft is retained for reference but cannot be submitted.",
+        "rationale": "prd.md lines 682."
       }
     },
     {
@@ -43177,9 +43178,10 @@
       "owner_fr": "FR-004",
       "title": "Provider soft delete before acceptance",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Provider may soft-delete a quote before acceptance (removes from provider listing, not from audit/archive or patient record); the system sets status = Archived with rationale. Quotes in terminal states (accepted, expired, withdrawn, cancelled_other_accepted, cancelled_inquiry_cancelled, cancelled_provider_status) cannot be soft-deleted by provider."
+        "statement": "Provider may soft-delete a quote before acceptance (removes from provider listing, not from audit/archive or patient record); the system sets status = Archived with rationale. Quotes in terminal states (accepted, expired, withdrawn, cancelled_other_accepted, cancelled_inquiry_cancelled, cancelled_provider_status) cannot be soft-deleted by provider.",
+        "rationale": "prd.md lines 70, 153 (Workflow 4: Quote Deletion)."
       }
     },
     {
@@ -43188,9 +43190,10 @@
       "owner_fr": "FR-004",
       "title": "Admin soft delete and restore",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Soft-deletes are fully auditable and revertible only by admin. Admin can perform soft delete or restore and view the immutable audit trail and full quote history; soft delete and restore are unavailable for a quote in `accepted` status, which is never deleted or restored. Only admin can restore expired/archived quotes if justified (GDPR-compliant log); restore to an acceptable state is blocked when the inquiry already has an accepted subquote."
+        "statement": "Soft-deletes are fully auditable and revertible only by admin. Admin can perform soft delete or restore and view the immutable audit trail and full quote history; soft delete and restore are unavailable for a quote in `accepted` status, which is never deleted or restored. Only admin can restore expired/archived quotes if justified (GDPR-compliant log); restore to an acceptable state is blocked when the inquiry already has an accepted subquote.",
+        "rationale": "prd.md lines 57, 906."
       }
     },
     {
@@ -43412,9 +43415,10 @@
       "owner_fr": "FR-004",
       "title": "Cancelled quotes are read-only with badge and banner",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Quotes with status \"Cancelled (Inquiry Cancelled)\" are displayed with greyed-out row styling and an \"Inquiry Cancelled\" badge, show a prominent \"Inquiry Cancelled\" banner on the detail view, have all edit and delete actions disabled, and remain read-only for reference; an edit attempt is blocked with the message \"This quote was cancelled because the patient cancelled their inquiry\". Quotes with status \"cancelled (other accepted)\" are similarly greyed out with an \"Another Quote Accepted\" badge."
+        "statement": "Quotes with status \"Cancelled (Inquiry Cancelled)\" are displayed with greyed-out row styling and an \"Inquiry Cancelled\" badge, show a prominent \"Inquiry Cancelled\" banner on the detail view, have all edit and delete actions disabled, and remain read-only for reference; an edit attempt is blocked with the message \"This quote was cancelled because the patient cancelled their inquiry\". Quotes with status \"cancelled (other accepted)\" are similarly greyed out with an \"Another Quote Accepted\" badge.",
+        "rationale": "prd.md lines 500."
       }
     },
     {
@@ -43443,11 +43447,12 @@
       "id": "REQ-004-101",
       "type": "Rule",
       "owner_fr": "FR-004",
-      "title": "Admin grafts change regenerates description without keeping prior text",
+      "title": "Admin grafts change regenerates description; prior text stays in quote history",
       "status": "active",
-      "version": 2,
+      "version": 4,
       "attrs": {
-        "statement": "When an admin saves a new Estimated Grafts value through Screen 7, Graft Description is regenerated from the approved template; the prior text is not preserved."
+        "statement": "When an admin saves a new Estimated Grafts value through Screen 7, Graft Description is regenerated from the approved template; the prior text stays in quote history.",
+        "rationale": "prd.md lines 364, 594 (rule text brought in line with the PRD)."
       }
     },
     {
@@ -43828,9 +43833,10 @@
       "owner_fr": "FR-005",
       "title": "Providers see acceptance outcomes read-only",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Providers have read-only visibility of the accepted or non-selected outcome for their parent quotes and subquotes; the provider platform is read-only in this module."
+        "statement": "Providers have read-only visibility of the accepted or non-selected outcome for their parent quotes and subquotes; the provider platform is read-only in this module.",
+        "rationale": "prd.md lines 41."
       }
     },
     {
@@ -44422,9 +44428,10 @@
       "owner_fr": "FR-006",
       "title": "Entry points to booking",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Patient-initiated via mobile from the Accepted Subquote detail view. Activation: Becomes available immediately after FR-005 subquote acceptance. Confirmation: Occurs after successful deposit (or first installment) per FR-007/FR-007B, which also unmask patient identity and blocks provider calendar."
+        "statement": "Patient-initiated via mobile from the Accepted Subquote detail view. Activation: Becomes available immediately after FR-005 subquote acceptance. Confirmation: Occurs after successful deposit (or first installment) per FR-007/FR-007B, which also unmask patient identity and blocks provider calendar.",
+        "rationale": "prd.md lines 71."
       }
     },
     {
@@ -44481,9 +44488,10 @@
       "owner_fr": "FR-006",
       "title": "Booking notice channels",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Email/push confirmations for booking creation, payment receipt, reminders, reschedule outcomes, cancellation outcomes. In-app notifications for booking state changes and reminders."
+        "statement": "Email/push confirmations for booking creation, payment receipt, reminders, reschedule outcomes, cancellation outcomes. In-app notifications for booking state changes and reminders.",
+        "rationale": "prd.md lines 59."
       }
     },
     {
@@ -44526,9 +44534,10 @@
       "owner_fr": "FR-006",
       "title": "Deposit comes from the FR-029 calculation",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System uses the FR-029 calculation (REQ-029-016) for the first payment and presents the cancellation policy; FR-006 does not restate the percentage or the formula."
+        "statement": "System uses the FR-029 calculation (REQ-029-016) for the first payment and presents the cancellation policy; FR-006 does not restate the percentage or the formula.",
+        "rationale": "prd.md lines 94."
       }
     },
     {
@@ -44657,9 +44666,10 @@
       "owner_fr": "FR-006",
       "title": "Provider booking filter and sort",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Filtering options: Status, Date Range, Treatment Type, Payment Status. Sorting options: Date, Amount, Status, Created Date."
+        "statement": "Filtering options: Status, Date Range, Treatment Type, Payment Status. Sorting options: Date, Amount, Status, Created Date.",
+        "rationale": "prd.md lines 359."
       }
     },
     {
@@ -44668,9 +44678,10 @@
       "owner_fr": "FR-006",
       "title": "Admin booking search and filter",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Search functionality: by booking reference, patient name, patient email, provider name. Filtering: Status, Provider, Date Range, Treatment Type, Payment Status."
+        "statement": "Search functionality: by booking reference, patient name, patient email, provider name. Filtering: Status, Provider, Date Range, Treatment Type, Payment Status.",
+        "rationale": "prd.md lines 527."
       }
     },
     {
@@ -44728,9 +44739,10 @@
       "owner_fr": "FR-006",
       "title": "Mandatory reason of 10 to 500 characters for admin actions",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Reason (Screens 7 to 11): \"Mandatory; 10 to 500 characters\""
+        "statement": "Reason (Screens 7 to 11): \"Mandatory; 10 to 500 characters\"",
+        "rationale": "prd.md lines 713, 737, 763."
       }
     },
     {
@@ -44798,9 +44810,10 @@
       "owner_fr": "FR-006",
       "title": "Aftercare provider fault keeps the booking in Aftercare",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "The booking stays `Aftercare` and the treatment record stays unchanged. No new quote, no new acceptance, and no new payment are created, and the AcceptanceEvent is not superseded. When entered from B4, the booking carries the provider-status cause and the `supportRequired` marker; the original provider loses aftercare actions on the case."
+        "statement": "The booking stays `Aftercare` and the treatment record stays unchanged. No new quote, no new acceptance, and no new payment are created, and the AcceptanceEvent is not superseded. When entered from B4, the booking carries the provider-status cause and the `supportRequired` marker; the original provider loses aftercare actions on the case.",
+        "rationale": "prd.md lines 187."
       }
     },
     {
@@ -45275,9 +45288,10 @@
       "owner_fr": "FR-007",
       "title": "Provider sees booking payment status, progress, payouts and statements",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "View booking payment status (unpaid/deposit paid/final paid/refunded); View patient payment progress (deposit status, installment progress, final payment status); View upcoming and completed payouts with commission deducted (payout execution managed in FR-017); Access payout statements for accounting (generated in FR-017)"
+        "statement": "View booking payment status (unpaid/deposit paid/final paid/refunded); View patient payment progress (deposit status, installment progress, final payment status); View upcoming and completed payouts with commission deducted (payout execution managed in FR-017); Access payout statements for accounting (generated in FR-017)",
+        "rationale": "prd.md lines 42-45 (checked against the PRD text)."
       }
     },
     {
@@ -45334,9 +45348,10 @@
       "owner_fr": "FR-007",
       "title": "Entry points to payment and refund",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Patient initiates payment in booking confirmation flow (deposit required); Patient initiates final payment from booking details prior to procedure date; Admin processes refunds per cancellation policy (refund amounts per FR-006)"
+        "statement": "Patient initiates payment in booking confirmation flow (deposit required); Patient initiates final payment from booking details prior to procedure date; Admin processes refunds per cancellation policy (refund amounts per the FR-029 refund ladder and FR-006 policy)",
+        "rationale": "prd.md lines 83-85 (rule text brought in line with the PRD)."
       }
     },
     {
@@ -45547,9 +45562,10 @@
       "owner_fr": "FR-007",
       "title": "Checkout gives processing feedback, keeps entered details and blocks payment until fields are valid",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Disable payment button until all required fields are valid; Show progress indicator during processing; avoid blocking UI for more than a few seconds without feedback; Preserve entered details if payment attempt fails to allow quick retry"
+        "statement": "Disable payment button until all required fields are valid; Show progress indicator during processing; avoid blocking UI for more than a few seconds without feedback; Preserve entered details if payment attempt fails to allow quick retry",
+        "rationale": "prd.md lines 198, 205-206 (checked against the PRD text)."
       }
     },
     {
@@ -45570,9 +45586,10 @@
       "owner_fr": "FR-007",
       "title": "Payment and payout data is read-only for the provider",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Provider can see payment progress but cannot modify payment information; All payment data is read-only for provider; All payout data is read-only for provider (payout execution is admin-controlled in FR-017)"
+        "statement": "Provider can see payment progress but cannot modify payment information; All payment data is read-only for provider; All payout data is read-only for provider (payout execution is owned by FR-017: automatic on the Stripe Connect rail after release; on the manual rail an admin approves the settlement statement and marks it paid)",
+        "rationale": "prd.md lines 343, 345, 445 (rule text brought in line with the PRD)."
       }
     },
     {
@@ -45641,9 +45658,10 @@
       "owner_fr": "FR-007",
       "title": "Net payout is gross minus commission",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Gross minus commission"
+        "statement": "Gross minus commission",
+        "rationale": "prd.md lines 403 (checked against the PRD text)."
       }
     },
     {
@@ -45662,11 +45680,12 @@
       "id": "REQ-007-058",
       "type": "Rule",
       "owner_fr": "FR-007",
-      "title": "Payout blocked until completion status is resolved by admin",
+      "title": "Payout blocked until completion is marked or the open case is resolved",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Payout blocked due to missing completion status; admin resolves before execution"
+        "statement": "Payout blocked while the provider has not marked the procedure complete or a problem case is open; release waits until completion is marked or an admin resolves the case",
+        "rationale": "prd.md lines 1026 (rule text brought in line with the PRD)."
       }
     },
     {
@@ -45687,9 +45706,10 @@
       "owner_fr": "FR-007",
       "title": "Admin dashboard lists payment progress for all bookings and providers with filters",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Admin can view payment progress for all bookings across all providers; Filtering options: Payment Status, Provider, Date Range, Overdue Payments"
+        "statement": "Admin can view payment progress for all bookings across all providers; Filtering options: Payment Status, Provider, Date Range, Overdue Payments",
+        "rationale": "prd.md lines 486-487 (checked against the PRD text)."
       }
     },
     {
@@ -45842,9 +45862,10 @@
       "owner_fr": "FR-007",
       "title": "Reminder timing and payout execution windows configurable with restrictions",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Configurable with Restrictions: Payment reminder timing templates (e.g., 3 days before due date); Payout execution timing windows (e.g., business days)"
+        "statement": "Configurable with Restrictions: Payment reminder timing (e.g., 3 days before due date): the single payment-reminder setting, owned by this module and read by FR-030. The payout execution timing window is owned by FR-017 (not in this module).",
+        "rationale": "prd.md lines 783-784 (rule text brought in line with the PRD)."
       }
     },
     {
@@ -45912,9 +45933,10 @@
       "owner_fr": "FR-007",
       "title": "Total paid is the sum of all payments made",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Sum of all payments made"
+        "statement": "Sum of all payments made",
+        "rationale": "prd.md lines 307, 392, 575 (checked against the PRD text)."
       }
     },
     {
@@ -45935,9 +45957,10 @@
       "owner_fr": "FR-007",
       "title": "Full payment confirms the same booking and marks it fully paid",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Patient selects full payment for the same accepted subquote's booking; the Initial Payment Guard still applies. System processes that booking's payable full amount and marks the same booking Confirmed and fully paid."
+        "statement": "Patient selects full payment for the same accepted subquote's booking; the Initial Payment Guard still applies. System processes that booking's payable full amount and marks the same booking Confirmed and fully paid.",
+        "rationale": "prd.md lines 118-119 (checked against the PRD text)."
       }
     },
     {
@@ -47704,9 +47727,10 @@
       "owner_fr": "FR-008",
       "title": "Passport photo is a reference document only",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "The passport photo MUST be stored in compliant secure storage as a reference document only. It MUST NOT be parsed or processed automatically, is viewable but not downloadable by the assigned provider and admin, and is not shown in any list, itinerary view or the patient's confirmation view. All passport fields are entered manually by the patient."
+        "statement": "The passport photo MUST be stored in compliant secure storage as a reference document only. It MUST NOT be parsed or processed automatically, is viewable but not downloadable by the assigned provider and admin, and is not shown in any list, itinerary view or the patient's confirmation view. All passport fields are entered manually by the patient.",
+        "rationale": "prd.md lines 301, 303, 310, 486, 679 (checked against the PRD text)."
       }
     },
     {
@@ -47726,9 +47750,10 @@
       "owner_fr": "FR-008",
       "title": "Included travel items listed on the patient itinerary",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Included travel items of the accepted option (for example hotel, airport transfer, or another travel service such as a city tour) MUST be listed as Package Travel Items on the patient itinerary whenever they exist, in Path A or Path B. Services not included are shown as Not included and are not collected in MVP."
+        "statement": "Included travel items of the accepted option (for example hotel, airport transfer, or another travel service such as a city tour) MUST be listed as Package Travel Items on the patient itinerary whenever they exist, in Path A or Path B. Services not included are shown as Not included and are not collected in MVP.",
+        "rationale": "prd.md lines 419, 794, 796 (checked against the PRD text)."
       }
     },
     {
@@ -47737,9 +47762,10 @@
       "owner_fr": "FR-008",
       "title": "Transport is provider-arranged and has no separate record",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Transport (airport pickup) MUST always be provider-arranged when included in the accepted option and MUST NOT be tracked as a separate record or form in MVP; it is captured through the Transportation Details notes of the hotel record. Providers may use those notes to plan clinic-side logistics such as verifying arrival times for pickup."
+        "statement": "Transport (airport pickup) MUST always be provider-arranged when included in the accepted option and MUST NOT be tracked as a separate record or form in MVP; it is captured through the Transportation Details notes of the hotel record. Providers may use those notes to plan clinic-side logistics such as verifying arrival times for pickup.",
+        "rationale": "prd.md lines 401, 406, 615, 801, 832 (checked against the PRD text)."
       }
     },
     {
@@ -47748,9 +47774,10 @@
       "owner_fr": "FR-008",
       "title": "Passport required for Path A only",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Passport submission MUST be required for every Path A appointment and MUST NOT be required or requested for Path B, where the patient manages their own passport for independent bookings. The passport submission screen is never shown for Path B."
+        "statement": "Passport submission MUST be required for every Path A appointment and MUST NOT be required or requested for Path B, where the patient manages their own passport for independent bookings. The passport submission screen is never shown for Path B.",
+        "rationale": "prd.md lines 299, 330, 815-816 (checked against the PRD text)."
       }
     },
     {
@@ -47759,9 +47786,10 @@
       "owner_fr": "FR-008",
       "title": "Invalid passport submission rejected, nothing stored",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "A passport submission that fails validation (missing required fields, invalid dates, or failed photo quality check) MUST be rejected with field-level errors; no passport record is created or updated and the passport status remains Awaiting until a successful submission."
+        "statement": "A passport submission that fails validation (missing required fields, invalid dates, or failed photo quality check) MUST be rejected with field-level errors; no passport record is created or updated and the passport status remains Awaiting until a successful submission.",
+        "rationale": "prd.md lines 184-185, 193 (checked against the PRD text)."
       }
     },
     {
@@ -47782,9 +47810,10 @@
       "owner_fr": "FR-008",
       "title": "Passport data is PII, encrypted at rest and in transit",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Passport data (especially passport_number and passport_image) MUST be treated as PII under GDPR and data protection rules and MUST be encrypted at rest and in transit."
+        "statement": "Passport data (especially passport_number and passport_image) MUST be treated as PII under GDPR and data protection rules and MUST be encrypted at rest and in transit.",
+        "rationale": "prd.md lines 854, 1009 (checked against the PRD text)."
       }
     },
     {
@@ -47793,9 +47822,10 @@
       "owner_fr": "FR-008",
       "title": "Provider passport access logged and limited to assigned clinic",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Provider access to passport data MUST be logged (timestamp, provider user ID), and a provider MUST NOT be able to view passport data of patients not assigned to its clinic. The provider sees the passport number in full and the passport view is read-only; incorrect data is corrected by contacting admin."
+        "statement": "Provider access to passport data MUST be logged (timestamp, provider user ID), and a provider MUST NOT be able to view passport data of patients not assigned to its clinic. The provider sees the passport number in full and the passport view is read-only; incorrect data is corrected by contacting admin.",
+        "rationale": "prd.md lines 490-493 (checked against the PRD text)."
       }
     },
     {
@@ -47828,9 +47858,10 @@
       "owner_fr": "FR-008",
       "title": "At most two current flight records per booking",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "A confirmed booking MUST have at most two current flight records (outbound and return); superseded admin-correction versions remain in history. Both legs use the same form and the leg type is set at creation."
+        "statement": "A confirmed booking MUST have at most two current flight records (outbound and return); superseded admin-correction versions remain in history. Both legs use the same form and the leg type is set at creation.",
+        "rationale": "prd.md lines 822-823 (checked against the PRD text)."
       }
     },
     {
@@ -47851,9 +47882,10 @@
       "owner_fr": "FR-008",
       "title": "At most one current hotel record per booking",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "A confirmed booking MUST have at most one current hotel record in MVP (no multi-hotel or multi-city case); superseded admin-correction versions remain in history. Provider hotel entry is enabled only while no hotel record has been submitted for the appointment."
+        "statement": "A confirmed booking MUST have at most one current hotel record in MVP (no multi-hotel or multi-city case); superseded admin-correction versions remain in history. Provider hotel entry is enabled only while no hotel record has been submitted for the appointment.",
+        "rationale": "prd.md lines 558, 830 (checked against the PRD text)."
       }
     },
     {
@@ -47862,9 +47894,10 @@
       "owner_fr": "FR-008",
       "title": "Itinerary sections show submitter, timestamp and pending state",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Each itinerary section MUST show the submission timestamp and the submitter (patient or provider). A pending item shows an 'Awaiting submission' state, and a submission link appears only when the patient owns that item (Path B, or the Path A passport). The passport section (full name, masked passport number, date of expiry) appears only for Path A, and the return flight section only if a return record exists."
+        "statement": "Each itinerary section MUST show the submission timestamp and the submitter (patient or provider). A pending item shows an 'Awaiting submission' state, and a submission link appears only when the patient owns that item (Path B, or the Path A passport). The passport section (full name, masked passport number, date of expiry) appears only for Path A, and the return flight section only if a return record exists.",
+        "rationale": "prd.md lines 420, 422, 429-430 (checked against the PRD text)."
       }
     },
     {
@@ -47873,9 +47906,10 @@
       "owner_fr": "FR-008",
       "title": "Record visibility limited to owner, assigned clinic and admin",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "A patient MUST see only their own travel records; a provider MUST see only bookings assigned to its clinic and only the booking currently open (no cross-patient or cross-clinic access); admin sees all travel records without restriction."
+        "statement": "A patient MUST see only their own travel records; a provider MUST see only bookings assigned to its clinic and only the booking currently open (no cross-patient or cross-clinic access); admin sees all travel records without restriction.",
+        "rationale": "prd.md lines 427, 458, 617, 646 (checked against the PRD text)."
       }
     },
     {
@@ -47884,9 +47918,10 @@
       "owner_fr": "FR-008",
       "title": "No-travel declaration by a Path B patient",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "On the travel requirement check (Path B only), the patient MUST state whether travel is needed. Yes leads to flight and then hotel submission. No MUST set the TravelContext travel_required flag to false (no_travel_required), suppress further travel submission reminders for the booking, skip the flight and hotel steps, and show the itinerary as 'No travel required'. The check is not shown for Path A."
+        "statement": "On the travel requirement check (Path B only), the patient MUST state whether travel is needed. Yes leads to flight and then hotel submission. No MUST set the TravelContext travel_required flag to false (no_travel_required), suppress further travel submission reminders for the booking, skip the flight and hotel steps, and show the itinerary as 'No travel required'. The check is not shown for Path A.",
+        "rationale": "prd.md lines 330-332 (checked against the PRD text)."
       }
     },
     {
@@ -47895,9 +47930,10 @@
       "owner_fr": "FR-008",
       "title": "No-travel declaration reversed by admin only",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "A patient MUST NOT be able to reverse a no-travel declaration and contacts admin instead. Admin MAY override no_travel_required from the Travel section and re-send the travel submission request. The declaration and any admin override MUST be recorded on the TravelContext with timestamp and actor ID."
+        "statement": "A patient MUST NOT be able to reverse a no-travel declaration and contacts admin instead. Admin MAY override no_travel_required from the Travel section and re-send the travel submission request. The declaration and any admin override MUST be recorded on the TravelContext with timestamp and actor ID.",
+        "rationale": "prd.md lines 333-335 (checked against the PRD text)."
       }
     },
     {
@@ -47918,9 +47954,10 @@
       "owner_fr": "FR-008",
       "title": "Closed TravelContext is read-only; refunds are out of scope",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "A closed TravelContext MUST reject new passport, flight and hotel records, patient re-notification and admin corrections; its records stay read-only with their audit history, and Enter Flight, Enter Hotel, Re-notify patient, Confirm Travel Dates and Apply Correction are not available. Any external flight or hotel cancellation is coordinated outside the platform under the governing booking policy; FR-008 MUST NOT calculate refunds or cancellation fees."
+        "statement": "A closed TravelContext MUST reject new passport, flight and hotel records, patient re-notification and admin corrections; its records stay read-only with their audit history, and Enter Flight, Enter Hotel, Re-notify patient, Confirm Travel Dates and Apply Correction are not available. Any external flight or hotel cancellation is coordinated outside the platform under the governing booking policy; FR-008 MUST NOT calculate refunds or cancellation fees.",
+        "rationale": "prd.md lines 464, 650, 807 (checked against the PRD text)."
       }
     },
     {
@@ -47929,9 +47966,10 @@
       "owner_fr": "FR-008",
       "title": "Appointment change keeps the accepted baseline visible",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "When an approved admin intervention changes the appointment date after confirmation, the system MUST preserve the immutable accepted appointment baseline, show the current booking appointment alongside it, and revalidate the existing flight and hotel dates before the itinerary is treated as current. Patients and providers see 'Travel dates under admin review' on the affected sections but cannot clear it. FR-008 MUST NOT automatically rebook external travel."
+        "statement": "When an approved admin intervention changes the appointment date after confirmation, the system MUST preserve the immutable accepted appointment baseline, show the current booking appointment alongside it, and revalidate the existing flight and hotel dates before the itinerary is treated as current. Patients and providers see 'Travel dates under admin review' on the affected sections but cannot clear it. FR-008 MUST NOT automatically rebook external travel.",
+        "rationale": "prd.md lines 431, 464, 808-809 (checked against the PRD text)."
       }
     },
     {
@@ -47951,9 +47989,10 @@
       "owner_fr": "FR-008",
       "title": "Provider status badges and entry actions follow path and inclusion",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "The provider Travel section MUST show status badges for passport (Path A only), outbound flight, return flight and hotel (Not included, Awaiting or Submitted), updated in real time on submission and on admin correction, and MUST show the Awaiting states immediately when the booking becomes Confirmed. In Path A, Enter Flight and Enter Hotel appear only for included services; services not included show 'Not included' with no entry action. In Path B only View Travel Details (read-only) is shown and the provider cannot enter or modify records."
+        "statement": "The provider Travel section MUST show status badges for passport (Path A only), outbound flight, return flight and hotel (Not included, Awaiting or Submitted), updated in real time on submission and on admin correction, and MUST show the Awaiting states immediately when the booking becomes Confirmed. In Path A, Enter Flight and Enter Hotel appear only for included services; services not included show 'Not included' with no entry action. In Path B only View Travel Details (read-only) is shown and the provider cannot enter or modify records.",
+        "rationale": "prd.md lines 449-452, 457, 459-460, 786 (checked against the PRD text)."
       }
     },
     {
@@ -47974,9 +48013,10 @@
       "owner_fr": "FR-008",
       "title": "Admin corrections need a mandatory reason note",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Every admin correction of a travel record MUST require a mandatory 'Reason for correction' note before saving. Admin photo replacement and field edits create a new locked version, and the previous version stays in the backend records."
+        "statement": "Every admin correction of a travel record MUST require a mandatory 'Reason for correction' note before saving. Admin photo replacement and field edits create a new locked version, and the previous version stays in the backend records.",
+        "rationale": "prd.md lines 679, 696-697, 732-733, 762-763, 769 (checked against the PRD text)."
       }
     },
     {
@@ -47997,9 +48037,10 @@
       "owner_fr": "FR-008",
       "title": "Passport tab hidden for Path B",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "The passport tab and passport status MUST be hidden entirely for Path B appointments because no passport is captured."
+        "statement": "The passport tab and passport status MUST be hidden entirely for Path B appointments because no passport is captured.",
+        "rationale": "prd.md lines 449, 636, 675, 771 (checked against the PRD text)."
       }
     },
     {
@@ -48020,9 +48061,10 @@
       "owner_fr": "FR-008",
       "title": "Access and modification events logged with IP",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "All access and modification events on travel records MUST be logged with timestamp, user ID and IP."
+        "statement": "All access and modification events on travel records MUST be logged with timestamp, user ID and IP.",
+        "rationale": "prd.md lines 857 (checked against the PRD text)."
       }
     },
     {
@@ -48031,9 +48073,10 @@
       "owner_fr": "FR-008",
       "title": "Travel notifications go by email and in-app",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "All travel notifications MUST be sent by email and in-app."
+        "statement": "All travel notifications MUST be sent by email and in-app.",
+        "rationale": "prd.md lines 850 (checked against the PRD text)."
       }
     },
     {
@@ -48414,9 +48457,10 @@
       "owner_fr": "FR-009",
       "title": "Admin platform oversight of provider teams",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System-wide view of all provider teams Ability to view team composition for any provider Audit log access for compliance investigations Capability to suspend individual team members or entire teams Override capability for emergency access removal"
+        "statement": "System-wide view of all provider teams Ability to view team composition for any provider Audit log access for compliance investigations Capability to suspend individual team members or entire teams Override capability for emergency access removal",
+        "rationale": "prd.md lines 48-51, 53 (checked against the PRD text)."
       }
     },
     {
@@ -48437,9 +48481,10 @@
       "owner_fr": "FR-009",
       "title": "Provider platform team management capabilities",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Team dashboard showing all active team members with roles Invite team member flow with email invitation Role assignment and modification interface Permission management screen Team member removal/suspension capability Activity log viewer showing team member actions Profile management for each team member"
+        "statement": "Team dashboard showing all active team members with roles Invite team member flow with email invitation Role assignment and modification interface Permission management screen Team member removal/suspension capability Activity log viewer showing team member actions Profile management for each team member",
+        "rationale": "prd.md lines 38-44 (checked against the PRD text)."
       }
     },
     {
@@ -48448,9 +48493,10 @@
       "owner_fr": "FR-009",
       "title": "Notification, authentication and audit services used by team management",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "S-03: Notification Service sends invitation and team-management emails with secure signup links Provider Auth Service (PR-01) handles team member account creation, login, password reset, and session management while enforcing PR-01/FR-031 permission checks S-06: Audit Log Service records all team management actions for compliance"
+        "statement": "S-03: Notification Service sends invitation and team-management emails with secure signup links Provider Auth Service (PR-01) handles team member account creation, login, password reset, and session management while enforcing PR-01/FR-031 permission checks S-06: Audit Log Service records all team management actions for compliance",
+        "rationale": "prd.md lines 57-59 (checked against the PRD text)."
       }
     },
     {
@@ -48507,9 +48553,10 @@
       "owner_fr": "FR-009",
       "title": "Communication in scope: emails and in-platform notifications",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Email invitations to new team members with secure signup link Email notifications when team member role changes Email notifications when team member is removed or suspended In-platform notifications for team management events"
+        "statement": "Email invitations to new team members with secure signup link Email notifications when team member role changes Email notifications when team member is removed or suspended In-platform notifications for team management events",
+        "rationale": "prd.md lines 74-77 (checked against the PRD text)."
       }
     },
     {
@@ -48518,9 +48565,10 @@
       "owner_fr": "FR-009",
       "title": "Communication out of scope: SMS, tutorials, team chat",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "SMS notifications for team management (handled by S-03: Notification Service if needed; no SMS is sent in MVP and this channel is reserved for future phases) Video tutorials for team onboarding (handled by separate content module) Chat/messaging between team members (separate collaboration feature)"
+        "statement": "SMS notifications for team management (handled by S-03: Notification Service if needed; no SMS is sent in MVP and this channel is reserved for future phases) Video tutorials for team onboarding (handled by separate content module) Chat/messaging between team members (separate collaboration feature)",
+        "rationale": "prd.md lines 81-83 (checked against the PRD text)."
       }
     },
     {
@@ -48529,9 +48577,10 @@
       "owner_fr": "FR-009",
       "title": "Entry points to team management by actor",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Provider Owner: Accesses team management from provider dashboard main navigation (\"Team\" tab) Provider Manager: Accesses operational team management features from settings menu (within Owner-defined limits) New Team Member: Receives email invitation with signup link, creates account, automatically assigned to provider organization with specified role Admin Platform: System administrators access team management oversight from admin dashboard provider detail view"
+        "statement": "Provider Owner: Accesses team management from provider dashboard main navigation (\"Team\" tab) Provider Manager: Accesses operational team management features from settings menu (within Owner-defined limits) New Team Member: Receives email invitation with signup link, creates account, automatically assigned to provider organization with specified role Admin Platform: System administrators access team management oversight from admin dashboard provider detail view",
+        "rationale": "prd.md lines 87-90 (checked against the PRD text)."
       }
     },
     {
@@ -48588,9 +48637,10 @@
       "owner_fr": "FR-009",
       "title": "Invite: confirmation to sender and send status",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System displays confirmation message to Provider Owner SSE updates show send status; success toast: \"Invitation sent to [email] (expires in 7 days).\""
+        "statement": "System displays confirmation message to the Provider Owner or Manager who sent the invitation. SSE updates show send status; success toast: \"Invitation sent to [email] (expires in 7 days).\"",
+        "rationale": "prd.md lines 114, 358 (rule text brought in line with the PRD)."
       }
     },
     {
@@ -48599,9 +48649,10 @@
       "owner_fr": "FR-009",
       "title": "Invitation link validated for token, seat and status",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System validates invitation token (not expired, not already used) Token validity, seat availability (double-check), invitation status (Pending and not past expires_at only)."
+        "statement": "System validates invitation token (not expired, not already used) Token validity, seat availability (double-check), invitation status (Pending and not past expires_at only).",
+        "rationale": "prd.md lines 116, 522 (checked against the PRD text)."
       }
     },
     {
@@ -48622,9 +48673,10 @@
       "owner_fr": "FR-009",
       "title": "Acceptance creates the team member and marks invitation Accepted",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "New Team Member sets password and accepts terms of service System creates the team member record (status Active) and links it to the provider organization with the assigned role. This is the first point at which the invitee becomes a team member System marks invitation as \"Accepted\""
+        "statement": "New Team Member sets password and accepts terms of service System creates the team member record (status Active) and links it to the provider organization with the assigned role. This is the first point at which the invitee becomes a team member System marks invitation as \"Accepted\"",
+        "rationale": "prd.md lines 118-120 (checked against the PRD text)."
       }
     },
     {
@@ -48657,9 +48709,10 @@
       "owner_fr": "FR-009",
       "title": "A2: expired invitation resent with new token and expiry",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System generates new invitation token and sends new email Old invitation token invalidated Outcome: Team member receives fresh invitation with new 7-day expiry"
+        "statement": "System generates new invitation token and sends new email Old invitation token invalidated Outcome: Team member receives fresh invitation with new 7-day expiry",
+        "rationale": "prd.md lines 134-136 (checked against the PRD text)."
       }
     },
     {
@@ -48668,9 +48721,10 @@
       "owner_fr": "FR-009",
       "title": "A3: email already in another provider team blocks the invitation",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Trigger: Invitee email address already belongs to another provider organization as Owner, team member, or pending invitation (global provider email identity rule, REQ-009-008). Memberships and pending invitations of a Deactivated provider (FR-015) do not count System displays blocking error: \"This email already belongs to another provider team. Remove the member from their current provider or invite them with a different email.\" Outcome: Cross-provider duplication prevented; invitee must first be removed from their current provider team before they can be invited here"
+        "statement": "Trigger: Invitee email address already belongs to another provider organization as Owner, team member, or pending invitation (global provider email identity rule, REQ-009-008). Memberships and pending invitations of a Deactivated provider (FR-015) do not count System displays blocking error: \"This email already belongs to another provider team. Remove the member from their current provider team before inviting them here.\" Outcome: Cross-provider duplication prevented; invitee must first be removed from their current provider team before they can be invited here",
+        "rationale": "prd.md lines 140-144 (rule text brought in line with the PRD)."
       }
     },
     {
@@ -48679,9 +48733,10 @@
       "owner_fr": "FR-009",
       "title": "B1: invalid email address rejected inline",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System validates email format on blur or submit System displays inline error message: \"Please enter a valid email address\" Outcome: Only valid email addresses accepted"
+        "statement": "System validates email format on blur or submit System displays inline error message: \"Please enter a valid email address\" Outcome: Only valid email addresses accepted",
+        "rationale": "prd.md lines 150-154 (checked against the PRD text)."
       }
     },
     {
@@ -48690,9 +48745,10 @@
       "owner_fr": "FR-009",
       "title": "B2: duplicate email in same organization blocked with suggestions",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System checks email against existing team members and pending invitations System displays error: \"This email is already part of your team\" System suggests: \"View team member\" or \"Resend invitation\" if pending"
+        "statement": "System checks email against existing team members and pending invitations System displays error: \"This email is already part of your team\" System suggests: \"View team member\" or \"Resend invitation\" if pending",
+        "rationale": "prd.md lines 160-164 (checked against the PRD text)."
       }
     },
     {
@@ -48725,9 +48781,10 @@
       "owner_fr": "FR-009",
       "title": "B4: failed send retries then stays Pending Send and holds a seat",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System logs the error and retries sending under the FR-030 notification retry rule. If all retries fail, the invitation stays Pending and the system sets its delivery state to \"Pending Send\". \"Pending Send\" is a delivery state, not an invitation status, and the invitation takes a seat while it is Pending (Rule 6). System displays warning to Provider Owner: \"Invitation created but email failed. We'll retry automatically.\" If sending still fails when the FR-030 retry rule is exhausted, system alerts admin team"
+        "statement": "System logs the error and retries sending under the FR-030 notification retry rule. If all retries fail, the invitation stays Pending and the system sets its delivery state to \"Pending Send\". \"Pending Send\" is a delivery state, not an invitation status, and the invitation takes a seat while it is Pending (Rule 6). System displays warning to Provider Owner: \"Invitation created but email failed. We'll retry automatically.\" If sending still fails when the FR-030 retry rule is exhausted, system alerts admin team",
+        "rationale": "prd.md lines 181-185 (checked against the PRD text)."
       }
     },
     {
@@ -48748,9 +48805,10 @@
       "owner_fr": "FR-009",
       "title": "Role change: permission comparison before confirming",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System displays permission comparison: \"Current permissions\" vs \"New permissions\" Permissions diff highlights removals (red) and additions (green)."
+        "statement": "System displays permission comparison: \"Current permissions\" vs \"New permissions\" Permissions diff highlights removals (red) and additions (green).",
+        "rationale": "prd.md lines 202, 387 (checked against the PRD text)."
       }
     },
     {
@@ -48759,9 +48817,10 @@
       "owner_fr": "FR-009",
       "title": "Role change: update applies to active sessions, next page load refreshes",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System updates team member's role in database System immediately applies new permissions to any active sessions Affected team member's next page load reflects new permissions"
+        "statement": "System updates team member's role in database System immediately applies new permissions to any active sessions Affected team member's next page load reflects new permissions",
+        "rationale": "prd.md lines 205-206, 210 (checked against the PRD text)."
       }
     },
     {
@@ -48794,9 +48853,10 @@
       "owner_fr": "FR-009",
       "title": "Cannot change own role",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Cannot change own role."
+        "statement": "Cannot change own role.",
+        "rationale": "prd.md lines 386 (checked against the PRD text)."
       }
     },
     {
@@ -48805,9 +48865,10 @@
       "owner_fr": "FR-009",
       "title": "Role dialog: confirmation modal summarises risk; impact and last change shown",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Confirmation modal summarises risk (e.g., losing billing access). Provide impact summary (# of inquiries/quotes affected). Display last role change timestamp + actor."
+        "statement": "Confirmation modal summarises risk (e.g., losing billing access). Provide impact summary (# of inquiries/quotes affected). Display last role change timestamp + actor.",
+        "rationale": "prd.md lines 388, 392-393 (checked against the PRD text)."
       }
     },
     {
@@ -48816,9 +48877,10 @@
       "owner_fr": "FR-009",
       "title": "Role dialog: new role must differ; Owner option disabled; optional reason",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Screen 3 New Role: Must differ from current; Owner option disabled. Reason for Change: Optional audit note, max 250 chars."
+        "statement": "Screen 3 New Role: Must differ from current; Owner option disabled. Reason for Change: Optional audit note, max 250 chars.",
+        "rationale": "prd.md lines 378, 380 (checked against the PRD text)."
       }
     },
     {
@@ -48827,9 +48889,10 @@
       "owner_fr": "FR-009",
       "title": "A4: attempt to modify the Owner role is rejected",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System displays error: \"The primary Owner role is fixed and cannot be changed.\" Outcome: Owner role remains unchanged; no provider-facing workflow can reassign the primary Owner role"
+        "statement": "System displays error: \"The primary Owner role is fixed and cannot be changed.\" Outcome: Owner role remains unchanged; no provider-facing workflow can reassign the primary Owner role",
+        "rationale": "prd.md lines 219-221 (checked against the PRD text)."
       }
     },
     {
@@ -48838,9 +48901,10 @@
       "owner_fr": "FR-009",
       "title": "B5: in-flight action completes with old permissions",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System allows in-progress action to complete with old permissions Next action uses new permissions System logs that in-flight action completed with previous permission set"
+        "statement": "System allows in-progress action to complete with old permissions Next action uses new permissions System logs that in-flight action completed with previous permission set",
+        "rationale": "prd.md lines 227-230 (checked against the PRD text)."
       }
     },
     {
@@ -48849,9 +48913,10 @@
       "owner_fr": "FR-009",
       "title": "Removal: confirmation warns and lists responsibilities and reassign prompt",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System presents confirmation dialog with warning about data reassignment System displays list of team member's current responsibilities: Active inquiries assigned to them Draft quotes in progress Upcoming scheduled appointments System prompts: \"Reassign to:\" with dropdown of remaining team members"
+        "statement": "System presents confirmation dialog with warning about data reassignment System displays list of team member's current responsibilities: Active inquiries assigned to them Draft quotes in progress Upcoming scheduled appointments System prompts: \"Reassign to:\" with dropdown of remaining team members",
+        "rationale": "prd.md lines 244-249 (checked against the PRD text)."
       }
     },
     {
@@ -48944,9 +49009,10 @@
       "owner_fr": "FR-009",
       "title": "A6: Owner cannot remove their own account",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System immediately blocks request with error: \"Owners cannot remove their own accounts.\" Error is logged in audit trail for compliance Outcome: Self-removal is blocked"
+        "statement": "System immediately blocks request with error: \"Owners cannot remove their own accounts.\" Error is logged in audit trail for compliance Outcome: Self-removal is blocked",
+        "rationale": "prd.md lines 267-270 (checked against the PRD text)."
       }
     },
     {
@@ -48955,9 +49021,10 @@
       "owner_fr": "FR-009",
       "title": "A7: removal without active work skips reassignment",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System detects no active work items System skips reassignment step Removal proceeds immediately after confirmation"
+        "statement": "System detects no active work items System skips reassignment step Removal proceeds immediately after confirmation",
+        "rationale": "prd.md lines 275-279 (checked against the PRD text)."
       }
     },
     {
@@ -48966,9 +49033,10 @@
       "owner_fr": "FR-009",
       "title": "B6: active patient conversations rerouted with patient message",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System displays warning: \"This member has active patient conversations\" System prompts: \"New messages from patients will be routed to [reassigned team member]\" System updates message routing System sends automated message to patients: \"Your inquiry is now being handled by [new team member]\""
+        "statement": "System displays warning: \"This member has active patient conversations\" System prompts: \"New messages from patients will be routed to [reassigned team member]\" System updates message routing System sends automated message to patients: \"Your inquiry is now being handled by [new team member]\"",
+        "rationale": "prd.md lines 285-290 (checked against the PRD text)."
       }
     },
     {
@@ -49037,9 +49105,10 @@
       "owner_fr": "FR-009",
       "title": "Remove modal: removal reason required; session revocation locked on",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Screen 4 Removal Reason: Categorized reason + optional notes, required, predefined reasons. Session Revocation Toggle: Force logout all sessions, required, locked to true. Reassignment Dropdown: Select team member for outstanding work, required if outstanding work, filters by role compatibility."
+        "statement": "Screen 4 Removal Reason: Categorized reason + optional notes, required, predefined reasons. Session Revocation Toggle: Force logout all sessions, required, locked to true. Reassignment Dropdown: Select team member for outstanding work, required if outstanding work, filters by role compatibility.",
+        "rationale": "prd.md lines 406-408 (checked against the PRD text)."
       }
     },
     {
@@ -49048,9 +49117,10 @@
       "owner_fr": "FR-009",
       "title": "Remove modal: bulk reassignment over 10 inquiries and transfer SLA",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Provide bulk reassignment for >10 inquiries (wizard launches Screen 5). Show SLA: \"Transfers must complete before confirming removal.\""
+        "statement": "Provide bulk reassignment for >10 inquiries (wizard launches Screen 5). Show SLA: \"Transfers must complete before confirming removal.\"",
+        "rationale": "prd.md lines 420-421 (checked against the PRD text)."
       }
     },
     {
@@ -49059,9 +49129,10 @@
       "owner_fr": "FR-009",
       "title": "Task Transfer Wizard steps",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Select Workloads: Breakdown by entity type with counts (inquiries, quotes, appointments, messages). Assign Targets: Map each workload type to a target member (supports split assignments). Review & Confirm: Summary of transfers, notifications to recipients, and audit preview."
+        "statement": "Select Workloads: Breakdown by entity type with counts (inquiries, quotes, appointments, messages). Assign Targets: Map each workload type to a target member (supports split assignments). Review & Confirm: Summary of transfers, notifications to recipients, and audit preview.",
+        "rationale": "prd.md lines 431-433 (checked against the PRD text)."
       }
     },
     {
@@ -49070,9 +49141,10 @@
       "owner_fr": "FR-009",
       "title": "Task Transfer Wizard: auto-suggest, permission check, completion before removal",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Wizard auto-suggests targets based on role + current workload. Transfers blocked if target lacks required permissions; prompts to update role first. Completion required before removal modal allows final confirmation."
+        "statement": "Wizard auto-suggests targets based on role + current workload. Transfers blocked if target lacks required permissions; prompts to update role first. Completion required before removal modal allows final confirmation.",
+        "rationale": "prd.md lines 437-439 (checked against the PRD text)."
       }
     },
     {
@@ -49213,9 +49285,10 @@
       "owner_fr": "FR-009",
       "title": "Dashboard CSV export for audit",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "CSV export for audit."
+        "statement": "CSV export for audit.",
+        "rationale": "prd.md lines 333 (checked against the PRD text)."
       }
     },
     {
@@ -49260,9 +49333,10 @@
       "owner_fr": "FR-009",
       "title": "Invite form future items: photo upload, CSV bulk invite, draft invitations",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Optional profile photo upload (future). CSV bulk invite (future). Draft invitations backlog (future)."
+        "statement": "Optional profile photo upload (future). CSV bulk invite (future). Draft invitations backlog (future).",
+        "rationale": "prd.md lines 362-364 (checked against the PRD text)."
       }
     },
     {
@@ -49343,9 +49417,10 @@
       "owner_fr": "FR-009",
       "title": "Department editable by Owner or Admin; phone number masked",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Screen 6 Department/Specialty: Optional organizational label (e.g., Surgeon, Reception), max 50 chars; editable by Owner/Admin. Phone Number: Contact phone (if provided during setup), masked for privacy."
+        "statement": "Screen 6 Department/Specialty: Optional organizational label (e.g., Surgeon, Reception), max 50 chars; editable by Owner/Admin. Phone Number: Contact phone (required at account setup, Screen 8), masked for privacy.",
+        "rationale": "prd.md lines 474-475 (rule text brought in line with the PRD)."
       }
     },
     {
@@ -49354,9 +49429,10 @@
       "owner_fr": "FR-009",
       "title": "Provider activity log defaults to the last 30 days",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Screen 6 Activity Log Date Range Filter: Filter by start/end date, defaults to last 30 days. Action Type Filter categories: Login, Inquiry, Quote, Treatment, Patient Communication, Settings."
+        "statement": "Screen 6 Activity Log Date Range Filter: Filter by start/end date, defaults to last 30 days. Action Type Filter categories: Login, Inquiry, Quote, Treatment, Patient Communication, Settings.",
+        "rationale": "prd.md lines 483-484 (checked against the PRD text)."
       }
     },
     {
@@ -49365,9 +49441,10 @@
       "owner_fr": "FR-009",
       "title": "Assigned Work bulk reassign opens the Task Transfer Wizard",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Screen 6 Tab 3 Assigned Work: Inquiries, Quotes, Appointments, Messages sub-tabs with counts. Bulk Reassign: Select multiple items and reassign to another member; opens Screen 5 (Task Transfer Wizard)."
+        "statement": "Screen 6 Tab 3 Assigned Work: Inquiries, Quotes, Appointments, Messages sub-tabs with counts. Bulk Reassign: Select multiple items and reassign to another member; opens Screen 5 (Task Transfer Wizard).",
+        "rationale": "prd.md lines 492, 494 (checked against the PRD text)."
       }
     },
     {
@@ -49376,9 +49453,10 @@
       "owner_fr": "FR-009",
       "title": "Invitation landing content and call to action",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Provider branding (name, logo), role summary, invitation expiry countdown. CTA: \"Accept & Create Account\" (new user) with secondary link \"Already have an account with this provider? Log in to continue.\" Security notice referencing central policies (strong password requirements, audit logging; MFA to be introduced in a future release—see Future Improvements: MFA/2FA)."
+        "statement": "Provider branding (name, logo), role summary, invitation expiry countdown. CTA: \"Accept & Create Account\" (new user) with secondary link \"Already have an account with this provider? Log in to continue.\" Security notice referencing central policies (strong password requirements, audit logging; MFA to be introduced in a future release—see Future Improvements: MFA/2FA).",
+        "rationale": "prd.md lines 516-518 (checked against the PRD text)."
       }
     },
     {
@@ -49387,9 +49465,10 @@
       "owner_fr": "FR-009",
       "title": "Account setup field validation",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Screen 8 Account Setup: Email pre-filled from invitation, locked, must match invitation token. First Name and Last Name required, 2-50 characters, letters/spaces/hyphen. Phone Number required, E.164 format, uniqueness per user within provider, must be verified via one-time code where possible. Password required, must satisfy FR-026 policy (length + complexity). Confirm Password must match Password. Accept Terms required, must be checked before submission."
+        "statement": "Screen 8 Account Setup: Email pre-filled from invitation, locked, must match invitation token. First Name and Last Name required, 2-50 characters, letters/spaces/hyphen. Phone Number required, E.164 format, uniqueness per user within provider, must be verified via one-time code where possible. Password required, must satisfy FR-026 policy (length + complexity). Confirm Password must match Password. Accept Terms required, must be checked before submission.",
+        "rationale": "prd.md lines 534-540 (checked against the PRD text)."
       }
     },
     {
@@ -49422,9 +49501,10 @@
       "owner_fr": "FR-009",
       "title": "First-login permission tour must be acknowledged and is logged",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Tour must be acknowledged before hitting dashboard. Logs acceptance in audit trail."
+        "statement": "Tour must be acknowledged before hitting dashboard. Logs acceptance in audit trail.",
+        "rationale": "prd.md lines 568-569 (checked against the PRD text)."
       }
     },
     {
@@ -49457,9 +49537,10 @@
       "owner_fr": "FR-009",
       "title": "Flagged status when a compliance alert exists; inactivity highlight",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Screen 11 Status Indicator: Active / Suspended / Flagged for team members; Flagged shown if compliance alert exists. Last Active: highlight if >30 days inactive."
+        "statement": "Screen 11 Status Indicator: Active / Suspended / Flagged for team members; Flagged shown if compliance alert exists. Last Active: highlight if >30 days inactive.",
+        "rationale": "prd.md lines 626, 628 (checked against the PRD text)."
       }
     },
     {
@@ -49492,9 +49573,10 @@
       "owner_fr": "FR-009",
       "title": "Admin audit log defaults to 90 days, up to 10 years, 100 events per page",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Screen 11 Tab 2 Date Range Filter: Defaults to last 90 days; can query up to 10 years (global audit-log retention). Pagination: Server-side pagination, 100 events per page. Action Type Filter categories: Login, Patient Access, Data Export, Settings Change, Communication, Treatment."
+        "statement": "Screen 11 Tab 2 Date Range Filter: Defaults to last 90 days; can query up to 10 years (global audit-log retention). Pagination: Server-side pagination, 100 events per page. Action Type Filter categories: Login, Patient Access, Data Export, Settings Change, Communication, Treatment.",
+        "rationale": "prd.md lines 648-649, 655 (checked against the PRD text)."
       }
     },
     {
@@ -49551,9 +49633,10 @@
       "owner_fr": "FR-009",
       "title": "Admins view assigned work during investigations",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Admins can view assigned work to understand team member's current responsibilities during investigations All work items link to relevant patient/inquiry/quote records with proper permissions Work item access respects admin permissions defined in FR-031 (Admin Access Control) Provides context for questions like: \"Why did this member access Patient X's data?\" → Check if Patient X is in their assigned work"
+        "statement": "Admins can view assigned work to understand team member's current responsibilities during investigations All work items link to relevant patient/inquiry/quote records with proper permissions Work item access respects admin permissions defined in FR-031 (Admin Access Control) Provides context for questions like: \"Why did this member access Patient X's data?\" → Check if Patient X is in their assigned work",
+        "rationale": "prd.md lines 672-673, 676-677 (checked against the PRD text)."
       }
     },
     {
@@ -49586,9 +49669,10 @@
       "owner_fr": "FR-009",
       "title": "Admin workload metrics: total items, overdue count, average response time",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Screen 11 Tab 3 Workload Metrics: Summary stats: Total items, Overdue count, Avg response time. Filter by Priority: Auto-calculated based on SLA deadlines."
+        "statement": "Screen 11 Tab 3 Workload Metrics: Summary stats: Total items, Overdue count, Avg response time. Filter by Priority: Auto-calculated based on SLA deadlines.",
+        "rationale": "prd.md lines 667-668 (checked against the PRD text)."
       }
     },
     {
@@ -49597,9 +49681,10 @@
       "owner_fr": "FR-009",
       "title": "Screen 11 Tabs 4 and 5 deferred",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Screen 11 Tab 4 (Security & Sessions) and Tab 5 (Provider Relationship): Implementation of these tabs is deferred for a later improvement phase and is not required for the current build."
+        "statement": "Screen 11 Tab 4 (Security & Sessions) and Tab 5 (Provider Relationship): Implementation of these tabs is deferred for a later improvement phase and is not required for the current build.",
+        "rationale": "prd.md lines 679-681, 695-697 (checked against the PRD text)."
       }
     },
     {
@@ -49728,9 +49813,10 @@
       "owner_fr": "FR-009",
       "title": "Admins cannot assign Owner in the admin invite form",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Admins cannot assign the Owner role here. Ownership transfer stays in FR-009's existing Owner flow."
+        "statement": "Admins cannot assign the Owner role in the invite form. The Owner role changes hands only through the Hairline admin Owner handover (REQ-009-174), a separate admin action that is not part of invitations.",
+        "rationale": "prd.md lines 759, 765 (rule text brought in line with the PRD)."
       }
     },
     {
@@ -49931,9 +50017,10 @@
       "owner_fr": "FR-009",
       "title": "Admin-editable limits: team size and invitation expiry",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Maximum team size limit per provider (default 100, adjustable 1-500) Invitation expiry period (default 7 days, range 1-30 days)"
+        "statement": "Maximum team size limit per provider (default 100, adjustable 1-500) Invitation expiry period (default 7 days, range 1-30 days)",
+        "rationale": "prd.md lines 802-803 (checked against the PRD text)."
       }
     },
     {
@@ -49966,9 +50053,10 @@
       "owner_fr": "FR-009",
       "title": "Fixed in codebase: protected roles, one Owner minimum, audit structure, template structure, session security",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Protected role identities and primary Owner rule. Role permissions are configured centrally in FR-031, not by provider organizations. Number of Owners (always exactly 1) Team activity log retention: the global audit-log rule applies (10 years); there is no FR-009 retention setting Audit log structure and required fields Email invitation template structure (content editable, structure fixed) Session management security parameters"
+        "statement": "Protected role identities and primary Owner rule. Role permissions are configured centrally in FR-031, not by provider organizations. Number of Owners (always exactly 1) Team activity log retention: the global audit-log rule applies (10 years); there is no FR-009 retention setting Audit log structure and required fields Email invitation template structure (content editable, structure fixed) Session management security parameters",
+        "rationale": "prd.md lines 810-815 (checked against the PRD text)."
       }
     },
     {
@@ -50013,9 +50101,10 @@
       "owner_fr": "FR-009",
       "title": "MFA and device re-authentication deferred and non-blocking",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "MFA enrollment during team member account setup (Screen 8): phone number capture for MFA, MFA factor selection, and enforcement that \"password + MFA\" must succeed before activation. MFA-gated actions in Screen 11 (Admin Team Member Detail): export full audit requiring MFA, session actions requiring MFA re-auth, MFA Status and MFA Reset controls, and admin-force removal/reset flows that currently mention MFA. Device-level MFA concepts such as \"Linked Devices\" are documented as placeholders only. Where this PRD currently mentions \"re-authentication\" for high-privilege actions, the initial implementation will rely on password-based re-auth only. Upgrading these flows to MFA-backed re-auth is a future enhancement aligned with the platform-wide MFA rollout. Implementation teams MUST treat the above as non-blocking, non-MVP requirements for FR-009 and track them against the corresponding security/MFA epics instead of this feature’s delivery scope."
+        "statement": "MFA enrollment during team member account setup (Screen 8): phone number capture for MFA, MFA factor selection, and enforcement that \"password + MFA\" must succeed before activation. MFA-gated actions in Screen 11 (Admin Team Member Detail): export full audit requiring MFA, session actions requiring MFA re-auth, MFA Status and MFA Reset controls, and admin-force removal/reset flows that currently mention MFA. Device-level MFA concepts such as \"Linked Devices\" are documented as placeholders only. Where this PRD currently mentions \"re-authentication\" for high-privilege actions, the initial implementation will rely on password-based re-auth only. Upgrading these flows to MFA-backed re-auth is a future enhancement aligned with the platform-wide MFA rollout. Implementation teams MUST treat the above as non-blocking, non-MVP requirements for FR-009 and track them against the corresponding security/MFA epics instead of this feature’s delivery scope.",
+        "rationale": "prd.md lines 1128-1138 (checked against the PRD text)."
       }
     },
     {
@@ -53953,9 +54042,10 @@
       "owner_fr": "FR-013",
       "title": "Entry points to reviews, takedown requests and review settings",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Time-gated invite after confirmed procedure completion (≥ 3 months) triggers review flow. Patient navigates to “Write a Review” from provider history. Patient views published reviews from provider profile/offer evaluation surfaces. Patient navigates to “Submitted Reviews” to view review history and request takedown from detail page. Providers access “Reviews” in dashboard to list/filter/detail reviews and respond. Admins access “Review Management”, “Takedown Requests”, and “Review Settings” from Admin platform navigation."
+        "statement": "Time-gated invite after confirmed procedure completion (≥ 3 months) triggers review flow. Patient navigates to “Write a Review” from provider history. Patient views published reviews from provider profile/offer evaluation surfaces. Patient navigates to “Submitted Reviews” to view review history and request takedown from detail page. Providers access “Reviews” in dashboard to list/filter/detail reviews and respond. Admins access “Review Management”, “Takedown Requests”, and “Review Settings” from Admin platform navigation.",
+        "rationale": "prd.md lines 56, 57."
       }
     },
     {
@@ -58922,9 +59012,10 @@
       "owner_fr": "FR-015",
       "title": "Entry points for provider management",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Admin accesses \"Provider Management\" section in Admin Platform dashboard → selects \"Add New Provider\" to initiate provider creation workflow Admin opens \"Providers\" list view to see all providers across all statuses (active, suspended, deactivated) with filtering and search Provider logs into Provider Platform → views account status (FR-032 Rule 6 banner when Suspended), uploaded documents (FR-032 Tab 6: Documents), and commission configuration read-only in FR-032 Screen 4: Billing Settings (Commission & Payout panel, Owner role only)"
+        "statement": "Admin accesses \"Provider Management\" section in Admin Platform dashboard → selects \"Add New Provider\" to initiate provider creation workflow Admin opens \"Providers\" list view to see all providers across all statuses (active, suspended, deactivated) with filtering and search Provider logs into Provider Platform → views account status (FR-032 Rule 6 banner when Suspended), uploaded documents (FR-032 Tab 6: Documents), and commission configuration read-only in FR-032 Screen 4: Billing Settings (Commission & Payout panel, Owner role only)",
+        "rationale": "prd.md lines 96, 113."
       }
     },
     {
@@ -59077,9 +59168,10 @@
       "owner_fr": "FR-015",
       "title": "Upload errors show a specific inline message and save nothing",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Every admin file upload in this FR (wizard Steps 1, 2 and 4, the profile images and award images on the provider detail tabs, and the Tab 6 Upload Document modal and Replace) validates the file before saving it and shows one inline message under the field. The file is not saved. Wrong format: \"Unsupported file type. Allowed: {types}.\" ({types} is the field's list, e.g. \"JPEG, PNG\" or \"PDF, JPG, PNG, DOCX, XLSX\") Too large: \"File is too large. Maximum size is {limit} MB.\" ({limit}: Profile Picture / Logo 5, Cover Image 10, award image 2, documents 10) Below the minimum dimensions (Profile Picture / Logo only): \"Image is too small. Minimum size is 200 × 200 pixels.\""
+        "statement": "Every admin file upload in this FR (wizard Steps 1, 2 and 4, the profile images and award images on the provider detail tabs, and the Tab 6 Upload Document modal and Replace) validates the file before saving it and shows one inline message under the field. The file is not saved. Wrong format: \"Unsupported file type. Allowed: {types}.\" ({types} is the field's list, e.g. \"JPEG, PNG\" or \"PDF, JPG, PNG, DOCX, XLSX\") Too large: \"File is too large. Maximum size is {limit} MB.\" ({limit}: Profile Picture / Logo 5, Cover Image 10, award image 2, documents 10) Below the minimum dimensions (Profile Picture / Logo only): \"Image is too small. Minimum size is 200 × 200 pixels.\"",
+        "rationale": "prd.md lines 371."
       }
     },
     {
@@ -59447,9 +59539,10 @@
       "owner_fr": "FR-015",
       "title": "Dashboard badges, featured star and pagination",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Active (green), Suspended (yellow), Deactivated (red) Gold star icon displayed next to provider name if featured = true Display 50 providers per page, with page navigation controls"
+        "statement": "Active (green), Suspended (yellow), Deactivated (red) Gold star icon displayed next to provider name if featured = true Display 50 providers per page, with page navigation controls",
+        "rationale": "prd.md lines 280."
       }
     },
     {
@@ -59651,9 +59744,10 @@
       "owner_fr": "FR-015",
       "title": "Owner login email change",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Changing the Email Address (the Owner's login ID) requires admin password re-authentication and a reason (the admin change reason above). The new address is validated against the FR-009 global provider email identity rule (REQ-015-014) before saving. The Owner does not confirm the new address. On save, the system: sends FR-020 `provider.login_email_changed` (mandatory security notice) to the old address, saying the login email was changed to the new address (partly masked) by a Hairline admin, with the date and time and a prompt to contact support if unexpected, and to the new address, saying it is now the login email for the clinic; signs the Owner out of all sessions and revokes the Owner's tokens; if `password_set` is false, invalidates the pending activation link and sends a new activation email (FR-020 `provider.activation`) to the new address."
+        "statement": "Changing the Email Address (the Owner's login ID) requires admin password re-authentication and a reason (the admin change reason above). The new address is validated against the FR-009 global provider email identity rule (REQ-015-014) before saving. The Owner does not confirm the new address. On save, the system: sends FR-020 `provider.login_email_changed` (mandatory security notice) to the old address, saying the login email was changed to the new address (partly masked) by a Hairline admin, with the date and time and a prompt to contact support if unexpected, and to the new address, saying it is now the login email for the clinic; signs the Owner out of all sessions and revokes the Owner's tokens; if `password_set` is false, invalidates the pending activation link and sends a new activation email (FR-020 `provider.activation`) to the new address.",
+        "rationale": "prd.md lines 454."
       }
     },
     {
@@ -73729,10 +73823,11 @@
       "owner_fr": "FR-023",
       "title": "Module boundary: no chat or video, no payment flow changes, no DPO tooling",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "Out of scope for this module: real-time chat/video features (managed by other modules), payment flow changes beyond record retention, and third-party DPO/legal tooling integrations (future consideration).",
-        "scope": "global"
+        "scope": "global",
+        "rationale": "prd.md lines 45."
       }
     },
     {
@@ -73741,9 +73836,10 @@
       "owner_fr": "FR-023",
       "title": "Patient notified at each DSR status change",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Patients are notified of each DSR status change: submission, verification required, in progress, and fulfilled."
+        "statement": "Patients are notified of each DSR status change: submission, verification required, in progress, and fulfilled.",
+        "rationale": "prd.md lines 39."
       }
     },
     {
@@ -73776,9 +73872,10 @@
       "owner_fr": "FR-023",
       "title": "System classifies the patient's data by category, retention and jurisdiction",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System classifies the patient's data by category and applicable retention/jurisdiction when a deletion request is processed."
+        "statement": "System classifies the patient's data by category and applicable retention/jurisdiction when a deletion request is processed.",
+        "rationale": "prd.md lines 68."
       }
     },
     {
@@ -73811,9 +73908,10 @@
       "owner_fr": "FR-023",
       "title": "Insufficient identity proof flags the request Verification Required",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "A deletion request that lacks sufficient identity proof is flagged Verification Required and the patient is notified; the patient provides additional verification and an Admin validates it and resumes processing."
+        "statement": "A deletion request that lacks sufficient identity proof is flagged Verification Required and the patient is notified; the patient provides additional verification and an Admin validates it and resumes processing.",
+        "rationale": "prd.md lines 75, 79."
       }
     },
     {
@@ -73822,9 +73920,10 @@
       "owner_fr": "FR-023",
       "title": "Admin confirms exclusion of protected medical and financial records",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "When data categories include records subject to mandatory retention, an Admin confirms the exclusion of protected medical/financial records; deletion/anonymization completes for the non-protected data."
+        "statement": "When data categories include records subject to mandatory retention, an Admin confirms the exclusion of protected medical/financial records; deletion/anonymization completes for the non-protected data.",
+        "rationale": "prd.md lines 88."
       }
     },
     {
@@ -74998,9 +75097,10 @@
       "owner_fr": "FR-025",
       "title": "Severity flag definitions",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Critical questions: High-risk conditions (HIV, hepatitis, blood disorders, heart conditions) Standard questions: Moderate concerns (allergies, medications, chronic conditions) No Alert questions: General health status, lifestyle factors"
+        "statement": "Critical questions: High-risk conditions (HIV, hepatitis, blood disorders, heart conditions) Standard questions: Moderate concerns (allergies, medications, chronic conditions) No Alert questions: General health status, lifestyle factors",
+        "rationale": "prd.md lines 521."
       }
     },
     {
@@ -75417,9 +75517,10 @@
       "owner_fr": "FR-025",
       "title": "Entry points to questionnaire management and delivery",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Admin-Initiated: Primary flow through the Questionnaire Catalog (Screen 1) System-Triggered (Inquiry): The admin-designated active Inquiry-context questionnaire set is delivered automatically during patient inquiry submission (FR-003). The active set is selected explicitly by the admin via the \"Set as Active for Inquiry\" toggle on the Questionnaire Catalog — publishing alone does not activate a set for the inquiry flow System-Triggered (Aftercare): Questionnaire set assigned to a milestone delivered according to the milestone schedule (FR-011) System-Triggered (Monitoring Advice): The same admin-designated active Inquiry-context questionnaire set is delivered when a patient activates provider-advice mode on a hair-loss monitoring case (FR-037), gating provider access rather than inquiry submission. No separate context type or admin toggle is introduced; FR-037 reuses the existing active Inquiry-context set as-is Provider-Viewed: Inquiry alert summaries and aftercare response data displayed in provider platform"
+        "statement": "Admin-Initiated: Primary flow through the Questionnaire Catalog (Screen 1) System-Triggered (Inquiry): The admin-designated active Inquiry-context questionnaire set is delivered automatically during patient inquiry submission (FR-003). The active set is selected explicitly by the admin via the \"Set as Active for Inquiry\" toggle on the Questionnaire Catalog — publishing alone does not activate a set for the inquiry flow System-Triggered (Aftercare): Questionnaire set assigned to a milestone delivered according to the milestone schedule (FR-011) System-Triggered (Monitoring Advice): The same admin-designated active Inquiry-context questionnaire set is delivered when a patient activates provider-advice mode on a hair-loss monitoring case (FR-037), gating provider access rather than inquiry submission. No separate context type or admin toggle is introduced; FR-037 reuses the existing active Inquiry-context set as-is Provider-Viewed: Inquiry alert summaries and aftercare response data displayed in provider platform",
+        "rationale": "prd.md lines 30."
       }
     },
     {
@@ -75632,9 +75733,10 @@
       "owner_fr": "FR-025",
       "title": "Concurrent admin modifications handled gracefully",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System must handle concurrent admin modifications gracefully; question order must be maintained during updates"
+        "statement": "System must handle concurrent admin modifications gracefully; question order must be maintained during updates",
+        "rationale": "prd.md lines 595."
       }
     },
     {
@@ -75691,10 +75793,11 @@
       "owner_fr": "FR-025",
       "title": "Questionnaire Catalog field limits (set name 100 characters, unique)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Questionnaire Catalog (Screen 1) field limits: Set Name is at most 100 characters and unique",
-        "distinct_from": "REQ-025-079"
+        "distinct_from": "REQ-025-079",
+        "rationale": "prd.md lines 248."
       }
     },
     {
@@ -79669,9 +79772,10 @@
       "owner_fr": "FR-029",
       "title": "Patients and providers cannot configure payments",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Patients cannot view or modify payment system configuration settings Providers have no direct interaction with payment system configuration"
+        "statement": "Patients cannot view or modify payment system configuration settings Providers have no direct interaction with payment system configuration",
+        "rationale": "prd.md lines 49, 55 (checked against the PRD text)."
       }
     },
     {
@@ -79692,9 +79796,10 @@
       "owner_fr": "FR-029",
       "title": "Communications in scope",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Email notifications to admins when payment configuration changes are published System alerts when currency conversion rates exceed configured thresholds (rate protection) Admin dashboard notifications for Stripe account connection failures or API errors Audit log notifications for payment configuration changes requiring compliance review"
+        "statement": "Email notifications to admins when payment configuration changes are published System alerts when currency conversion rates exceed configured thresholds (rate protection) Admin dashboard notifications for Stripe account connection failures or API errors Audit log notifications for payment configuration changes requiring compliance review",
+        "rationale": "prd.md lines 87-90 (checked against the PRD text)."
       }
     },
     {
@@ -79703,9 +79808,10 @@
       "owner_fr": "FR-029",
       "title": "Communications out of scope",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Patient notifications about payment configuration changes (handled by P-03: Booking & Payment module) Provider notifications about payout schedule changes (handled by separate provider payout module) SMS notifications for payment failures or processing issues (handled by S-03: Notification Service; no SMS is sent in MVP and this channel is reserved for future implementation once S-03 SMS delivery is enabled) In-app chat or support messaging (handled by separate support module)"
+        "statement": "Patient notifications about payment configuration changes (handled by P-03: Booking & Payment module) Provider notifications about payout schedule changes (handled by separate provider payout module) SMS notifications for payment failures or processing issues (handled by S-03: Notification Service; no SMS is sent in MVP and this channel is reserved for future implementation once S-03 SMS delivery is enabled) In-app chat or support messaging (handled by separate support module)",
+        "rationale": "prd.md lines 94-97 (checked against the PRD text)."
       }
     },
     {
@@ -79725,9 +79831,10 @@
       "owner_fr": "FR-029",
       "title": "Save confirmation messages",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System displays confirmation message: \"Deposit rate updated. New bookings will use [X]% deposit rate.\" System displays confirmation message: \"Commission settings updated. New bookings will use the new effective commission configuration.\" System displays confirmation message: \"Split payment options updated. Patients will see [X] installment options.\""
+        "statement": "System displays confirmation message: \"Deposit rate updated. New bookings will use [X]% deposit rate.\" System displays confirmation message: \"Commission settings updated. New bookings will use the new effective commission configuration.\" System displays confirmation message: \"Split payment options updated. Patients will see [X] installment options.\"",
+        "rationale": "prd.md lines 176, 201, 225 (checked against the PRD text)."
       }
     },
     {
@@ -79736,9 +79843,10 @@
       "owner_fr": "FR-029",
       "title": "Stripe credential failure shows error and highlights fields",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System displays error message: \"Unable to connect to Stripe. Please verify API keys are correct and your Stripe account is active.\" System highlights fields with credential errors (publishable key, secret key, webhook secret)"
+        "statement": "System displays error message: \"Unable to connect to Stripe. Please verify API keys are correct and your Stripe account is active.\" System highlights fields with credential errors (publishable key, secret key, webhook secret)",
+        "rationale": "prd.md lines 293-294 (checked against the PRD text)."
       }
     },
     {
@@ -79806,9 +79914,10 @@
       "owner_fr": "FR-029",
       "title": "Stripe connection can be tested at any time",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Admin can test Stripe connection at any time by clicking \"Test Connection\" button Show warning icon if Stripe account hasn't been tested in over 30 days Logs test attempt (admin, timestamp, result) and updates \"Last Tested\" timestamp/status badge"
+        "statement": "Admin can test Stripe connection at any time by clicking \"Test Connection\" button Show warning icon if Stripe account hasn't been tested in over 30 days Logs test attempt (admin, timestamp, result) and updates \"Last Tested\" timestamp/status badge",
+        "rationale": "prd.md lines 403, 411, 418 (checked against the PRD text)."
       }
     },
     {
@@ -80021,9 +80130,10 @@
       "owner_fr": "FR-029",
       "title": "Manual mode pairs have no sync schedule",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Admin enters the base rate directly in the Manual Base Rate field No sync schedule is created; rate only changes when admin manually edits and saves"
+        "statement": "Admin enters the base rate directly in the Manual Base Rate field No sync schedule is created; rate only changes when admin manually edits and saves",
+        "rationale": "prd.md lines 149, 543-544 (checked against the PRD text)."
       }
     },
     {
@@ -80032,9 +80142,10 @@
       "owner_fr": "FR-029",
       "title": "Switching a pair between auto-fetch and manual",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Auto → Manual: System pre-fills Manual Base Rate with the last fetched rate so admin doesn't start from zero. Sync schedule is removed. Manual → Auto: System requires admin to select a source and run \"Test Connection & Fetch Rate\" before saving. The fetched rate replaces the manual rate."
+        "statement": "Auto → Manual: System pre-fills Manual Base Rate with the last fetched rate so admin doesn't start from zero. Sync schedule is removed. Manual → Auto: System requires admin to select a source and run \"Test Connection & Fetch Rate\" before saving. The fetched rate replaces the manual rate.",
+        "rationale": "prd.md lines 548-549 (checked against the PRD text)."
       }
     },
     {
@@ -80368,9 +80479,10 @@
       "owner_fr": "FR-029",
       "title": "One default currency and at least one enabled",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "At least one currency must remain enabled at all times. Exactly one enabled currency must be set as the system default."
+        "statement": "At least one currency must remain enabled at all times. Exactly one enabled currency must be set as the system default.",
+        "rationale": "prd.md lines 702-703 (checked against the PRD text)."
       }
     },
     {
@@ -80403,9 +80515,10 @@
       "owner_fr": "FR-029",
       "title": "Currency management is the source of truth for dropdowns",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "This screen is the source of truth for currency dropdowns across Admin/Provider/Patient experiences (where applicable). FR-017 Screen 1 (\"Financial Reporting - Revenue Dashboard\") initializes its reporting currency selector from this system default currency; the MVP seed value is USD unless an admin changes it later."
+        "statement": "This screen is the source of truth for currency dropdowns across Admin/Provider/Patient experiences (where applicable). FR-017 Screen 1 (\"Financial Reporting - Revenue Dashboard\") initializes its reporting currency selector from this system default currency; the MVP seed value is USD unless an admin changes it later.",
+        "rationale": "prd.md lines 712-713 (checked against the PRD text)."
       }
     },
     {
@@ -91362,9 +91475,10 @@
       "owner_fr": "FR-038",
       "title": "Duplicate creation blocked; Resume Monitoring or End Existing Case offered",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "When an active transplant-progress case already exists, System blocks duplicate creation and the patient can Resume Monitoring or End Existing Case."
+        "statement": "When an active transplant-progress case already exists, System blocks duplicate creation and the patient can Resume Monitoring or End Existing Case.",
+        "rationale": "prd.md lines 153."
       }
     },
     {
@@ -91506,10 +91620,11 @@
       "owner_fr": "FR-038",
       "title": "Add Log, Switch to Aftercare Package and End Monitoring need an active case",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Add Log, Switch to Aftercare Package, and End Monitoring are available on an active case only.",
-        "distinct_from": "REQ-037-080"
+        "distinct_from": "REQ-037-080",
+        "rationale": "prd.md lines 214."
       }
     },
     {
@@ -91653,9 +91768,10 @@
       "owner_fr": "FR-038",
       "title": "Capture guidance and quality and completeness checks",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Scan capture shows front, top, left, and right guidance, and the standardized multi-view photo set must pass quality and completeness checks under the FR-002 V1 contract."
+        "statement": "Scan capture shows front, top, left, and right guidance, and the standardized multi-view photo set must pass quality and completeness checks under the FR-002 V1 contract.",
+        "rationale": "prd.md lines 249."
       }
     },
     {
@@ -91796,9 +91912,10 @@
       "owner_fr": "FR-038",
       "title": "No FR-012 messaging; no FR-011 milestone communications before activation",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "FR-038 includes no FR-012 secure messaging, and FR-011 milestone/task communications do not begin before standalone aftercare is purchased, assigned, and activated."
+        "statement": "FR-038 includes no FR-012 secure messaging, and FR-011 milestone/task communications do not begin before standalone aftercare is purchased, assigned, and activated.",
+        "rationale": "prd.md lines 71."
       }
     },
     {
@@ -91831,9 +91948,10 @@
       "owner_fr": "FR-038",
       "title": "Package selected and fields valid before checkout",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Patient selects an available aftercare package and continues to FR-011 checkout only when a package is selected and the fields are valid."
+        "statement": "Patient selects an available aftercare package and continues to FR-011 checkout only when a package is selected and the fields are valid.",
+        "rationale": "prd.md lines 129."
       }
     },
     {
@@ -92022,11 +92140,12 @@
       "owner_fr": "FR-SYS",
       "title": "Patient identity hidden until booking confirmation",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Providers MUST see only the anonymized patient ID, shown in the display form \"Mark P.\" followed by the ID, until booking confirmation (the first successful payment). At booking confirmation the patient's name and contact details (phone number and email address) unlock for the provider. The rule does not apply to admins, who see the full patient identity for compliance and support.",
         "scope": "global",
-        "aliases": "REQ-002-018,REQ-003-008,REQ-004-008,REQ-005-008,REQ-010-045,REQ-011-022,REQ-012-022"
+        "aliases": "REQ-002-018,REQ-003-008,REQ-004-008,REQ-005-008,REQ-010-045,REQ-011-022,REQ-012-022",
+        "rationale": "system-prd.md lines 1928."
       }
     },
     {
@@ -92035,11 +92154,12 @@
       "owner_fr": "FR-SYS",
       "title": "One 10-year retention period",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "System MUST keep every record for 10 years: audit logs, financial transaction and payment records, booking records, discount records, medical records, inquiry data, and head and monitoring scan media; no record type has a shorter period. A patient deletion request does not shorten the period: the patient's personal data stays archived and anonymised (no hard deletion). Backup copies follow the separate backup retention in NFR-004.",
         "scope": "global",
-        "aliases": "REQ-023-001,REQ-023-002,REQ-006-006,REQ-016-167,REQ-026-019,REQ-003-006,REQ-003-040,REQ-038-053,REQ-019-092,REQ-003-094"
+        "aliases": "REQ-023-001,REQ-023-002,REQ-006-006,REQ-016-167,REQ-026-019,REQ-003-006,REQ-003-040,REQ-038-053,REQ-019-092,REQ-003-094",
+        "rationale": "system-prd.md lines 1934."
       }
     },
     {
@@ -92076,11 +92196,12 @@
       "owner_fr": "FR-SYS",
       "title": "No card numbers stored",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST NOT store card numbers; only the payment processor handles them. System MUST be PCI DSS compliant through the payment processor. System MUST verify the signature of every payment webhook before acting on it.",
         "scope": "global",
-        "aliases": "REQ-007-008,REQ-029-032,REQ-029-046"
+        "aliases": "REQ-007-008,REQ-029-032,REQ-029-046",
+        "rationale": "system-prd.md lines 1949."
       }
     },
     {
@@ -92103,10 +92224,11 @@
       "owner_fr": "FR-SYS",
       "title": "Password and one-time-code policy",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Passwords MUST have at least 12 characters, including at least one uppercase letter, one lowercase letter, one digit, and one special character; the policy is fixed and not editable in the Admin Platform. One-time codes (email verification and password reset) MUST have 6 digits (fixed); their expiry time and resend limits MUST be configurable in FR-026.",
-        "scope": "global"
+        "scope": "global",
+        "rationale": "system-prd.md lines 1959."
       }
     },
     {
@@ -92129,11 +92251,12 @@
       "owner_fr": "FR-SYS",
       "title": "Role-based, audited access",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Access to platform data MUST be granted by role (patient, provider, admin, and the permissions inside each). Every access to personal, medical, financial, and conversation data MUST be audited with who accessed it and when; a feature adds the reason where one is required. Audit log entries MUST be immutable: read-only, with no editing or deletion.",
         "scope": "global",
-        "aliases": "REQ-011-009"
+        "aliases": "REQ-011-009",
+        "rationale": "system-prd.md lines 1969."
       }
     },
     {
@@ -92156,11 +92279,12 @@
       "owner_fr": "FR-SYS",
       "title": "GDPR and HIPAA-equivalent compliance",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "System MUST follow GDPR and HIPAA-equivalent practices for personal and medical data. Patient consent MUST be respected for any data sharing, and data residency MUST be honored. Tenants MUST NOT share a database directly with each other.",
         "scope": "global",
-        "aliases": "REQ-012-103"
+        "aliases": "REQ-012-103",
+        "rationale": "system-prd.md lines 1978."
       }
     },
     {
@@ -158409,6 +158533,12 @@
       "attrs": {}
     },
     {
+      "from_id": "ENT-admin-audit-trail-entry",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-031",
+      "attrs": {}
+    },
+    {
       "from_id": "ENT-admin-user-account",
       "verb": "decided by",
       "to_id": "SRC-PRD-031",
@@ -158439,7 +158569,19 @@
       "attrs": {}
     },
     {
+      "from_id": "ENT-affiliate-audit-entry",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-018",
+      "attrs": {}
+    },
+    {
       "from_id": "ENT-affiliate-code-batch",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-018",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-affiliate-code-batch-result",
       "verb": "decided by",
       "to_id": "SRC-PRD-018",
       "attrs": {}
@@ -158667,6 +158809,36 @@
       "attrs": {}
     },
     {
+      "from_id": "ENT-aftercare-audit-entry",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-011",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-aftercare-communication-entry",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-011",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-aftercare-content-template",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-024",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-aftercare-dose",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-011",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-aftercare-medication",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-011",
+      "attrs": {}
+    },
+    {
       "from_id": "ENT-aftercare-milestone",
       "verb": "decided by",
       "to_id": "SRC-PRD-011",
@@ -158697,7 +158869,31 @@
       "attrs": {}
     },
     {
+      "from_id": "ENT-aftercare-questionnaire-response",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-011",
+      "attrs": {}
+    },
+    {
       "from_id": "ENT-aftercare-request",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-011",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-aftercare-resource",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-011",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-aftercare-resource-view",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-011",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-aftercare-scan-artifact",
       "verb": "decided by",
       "to_id": "SRC-PRD-011",
       "attrs": {}
@@ -158715,6 +158911,12 @@
       "attrs": {}
     },
     {
+      "from_id": "ENT-aftercare-template-price",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-011",
+      "attrs": {}
+    },
+    {
       "from_id": "ENT-analytics-configuration",
       "verb": "decided by",
       "to_id": "SRC-PRD-026",
@@ -158724,6 +158926,12 @@
       "from_id": "ENT-analytics-configuration.version_number",
       "verb": "calculated by",
       "to_id": "REQ-026-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-analytics-generated-report",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-014",
       "attrs": {}
     },
     {
@@ -159195,6 +159403,12 @@
       "attrs": {}
     },
     {
+      "from_id": "ENT-content-attachment",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-033",
+      "attrs": {}
+    },
+    {
       "from_id": "ENT-content-version",
       "verb": "decided by",
       "to_id": "SRC-PRD-033",
@@ -159333,6 +159547,12 @@
       "attrs": {}
     },
     {
+      "from_id": "ENT-discount-usage-summary",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-017",
+      "attrs": {}
+    },
+    {
       "from_id": "ENT-discount-usage-summary.hairline_cost",
       "verb": "calculated by",
       "to_id": "REQ-017-099",
@@ -159390,6 +159610,12 @@
       "from_id": "ENT-faq-topic.faq_count",
       "verb": "calculated by",
       "to_id": "REQ-033-068",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-financial-report",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-017",
       "attrs": {}
     },
     {
@@ -159531,6 +159757,12 @@
       "attrs": {}
     },
     {
+      "from_id": "ENT-help-centre-stats",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-033",
+      "attrs": {}
+    },
+    {
       "from_id": "ENT-help-centre-stats.draft_content_count",
       "verb": "calculated by",
       "to_id": "REQ-033-050",
@@ -159574,6 +159806,12 @@
     },
     {
       "from_id": "ENT-inquiry",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-inquiry-audit-entry",
       "verb": "decided by",
       "to_id": "SRC-PRD-003",
       "attrs": {}
@@ -159648,6 +159886,12 @@
       "from_id": "ENT-installment-plan",
       "verb": "decided by",
       "to_id": "SRC-MTG-002-O04",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-installment-plan-metrics",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-007B",
       "attrs": {}
     },
     {
@@ -159759,6 +160003,12 @@
       "attrs": {}
     },
     {
+      "from_id": "ENT-intake-audit-entry",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-002",
+      "attrs": {}
+    },
+    {
       "from_id": "ENT-intake-processing-request",
       "verb": "decided by",
       "to_id": "SRC-PRD-002",
@@ -159768,6 +160018,12 @@
       "from_id": "ENT-intake-processing-request.required_fields_complete",
       "verb": "calculated by",
       "to_id": "REQ-002-001",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-intake-processing-result",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-002",
       "attrs": {}
     },
     {
@@ -159810,6 +160066,24 @@
       "from_id": "ENT-invitation",
       "verb": "decided by",
       "to_id": "SRC-PRD-009",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-invoice-reminder",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-legal-acceptance",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-027",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-legal-audit-entry",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-027",
       "attrs": {}
     },
     {
@@ -159939,7 +160213,19 @@
       "attrs": {}
     },
     {
+      "from_id": "ENT-messaging-audit-entry",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-012",
+      "attrs": {}
+    },
+    {
       "from_id": "ENT-monitoring-advice",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-037",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-monitoring-advice-window",
       "verb": "decided by",
       "to_id": "SRC-PRD-037",
       "attrs": {}
@@ -159957,9 +160243,21 @@
       "attrs": {}
     },
     {
+      "from_id": "ENT-monitoring-audit-entry",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-037",
+      "attrs": {}
+    },
+    {
       "from_id": "ENT-monitoring-case",
       "verb": "decided by",
       "to_id": "SRC-MTG-001-W01",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-monitoring-case-preview",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-037",
       "attrs": {}
     },
     {
@@ -160047,6 +160345,12 @@
       "attrs": {}
     },
     {
+      "from_id": "ENT-monitoring-export",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-037",
+      "attrs": {}
+    },
+    {
       "from_id": "ENT-monitoring-provider-assignment",
       "verb": "decided by",
       "to_id": "SRC-MTG-001-W01",
@@ -160074,6 +160378,12 @@
       "from_id": "ENT-mt-provider-credential",
       "verb": "decided by",
       "to_id": "SRC-PRD-021",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-notification-attempt",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-020",
       "attrs": {}
     },
     {
@@ -160215,6 +160525,12 @@
       "attrs": {}
     },
     {
+      "from_id": "ENT-patient-audit-log",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-001",
+      "attrs": {}
+    },
+    {
       "from_id": "ENT-patient-invoice",
       "verb": "decided by",
       "to_id": "SRC-PRD-017",
@@ -160230,6 +160546,12 @@
       "from_id": "ENT-patient-notification-preferences",
       "verb": "decided by",
       "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-patient-session",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-001",
       "attrs": {}
     },
     {
@@ -160282,6 +160604,12 @@
     },
     {
       "from_id": "ENT-payout-adjustment",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-payout-dispute-resolution",
       "verb": "decided by",
       "to_id": "SRC-PRD-017",
       "attrs": {}
@@ -160827,6 +161155,12 @@
       "attrs": {}
     },
     {
+      "from_id": "ENT-promotion-adoption",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-019",
+      "attrs": {}
+    },
+    {
       "from_id": "ENT-promotion-adoption.redemption_count",
       "verb": "calculated by",
       "to_id": "REQ-019-005",
@@ -160884,6 +161218,12 @@
       "from_id": "ENT-promotion-program.usage_count",
       "verb": "calculated by",
       "to_id": "REQ-019-088",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-promotion-report-snapshot",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-019",
       "attrs": {}
     },
     {
@@ -160983,6 +161323,18 @@
       "attrs": {}
     },
     {
+      "from_id": "ENT-provider-activity-log-entry",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-015",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-provider-award",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-032",
+      "attrs": {}
+    },
+    {
       "from_id": "ENT-provider-billing-settings",
       "verb": "decided by",
       "to_id": "SRC-PRD-032",
@@ -161001,6 +161353,12 @@
       "attrs": {}
     },
     {
+      "from_id": "ENT-provider-earning",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-017",
+      "attrs": {}
+    },
+    {
       "from_id": "ENT-provider-earning.commission_deducted",
       "verb": "calculated by",
       "to_id": "REQ-017-155",
@@ -161010,6 +161368,12 @@
       "from_id": "ENT-provider-earning.net_earning",
       "verb": "calculated by",
       "to_id": "REQ-017-006",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-provider-earnings-summary",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-017",
       "attrs": {}
     },
     {
@@ -161133,6 +161497,12 @@
       "attrs": {}
     },
     {
+      "from_id": "ENT-provider-review-summary",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-013",
+      "attrs": {}
+    },
+    {
       "from_id": "ENT-provider-review-summary.average_rating",
       "verb": "calculated by",
       "to_id": "REQ-013-008",
@@ -161160,6 +161530,12 @@
       "from_id": "ENT-provider-status-event",
       "verb": "decided by",
       "to_id": "SRC-PRD-015",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-provider-team-summary",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
       "attrs": {}
     },
     {
@@ -161196,6 +161572,12 @@
       "from_id": "ENT-provider-team-summary.total_members",
       "verb": "calculated by",
       "to_id": "REQ-009-097",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-provider-treatment-review-summary",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-013",
       "attrs": {}
     },
     {
@@ -161259,7 +161641,25 @@
       "attrs": {}
     },
     {
+      "from_id": "ENT-questionnaire-audit-entry",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-025",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-questionnaire-category",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-025",
+      "attrs": {}
+    },
+    {
       "from_id": "ENT-questionnaire-context-type",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-025",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-questionnaire-question",
       "verb": "decided by",
       "to_id": "SRC-PRD-025",
       "attrs": {}
@@ -161469,6 +161869,12 @@
       "attrs": {}
     },
     {
+      "from_id": "ENT-review-source-metadata",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-013",
+      "attrs": {}
+    },
+    {
       "from_id": "ENT-review.edit_count",
       "verb": "calculated by",
       "to_id": "REQ-013-032",
@@ -161523,6 +161929,12 @@
       "attrs": {}
     },
     {
+      "from_id": "ENT-role-permission-definition",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-031",
+      "attrs": {}
+    },
+    {
       "from_id": "ENT-role-permission-definition.user_count",
       "verb": "calculated by",
       "to_id": "REQ-031-080",
@@ -161565,9 +161977,21 @@
       "attrs": {}
     },
     {
+      "from_id": "ENT-setting-version",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-026",
+      "attrs": {}
+    },
+    {
       "from_id": "ENT-setting-version.version_number",
       "verb": "calculated by",
       "to_id": "REQ-026-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-settings-audit-entry",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-026",
       "attrs": {}
     },
     {
@@ -161661,9 +162085,33 @@
       "attrs": {}
     },
     {
+      "from_id": "ENT-support-case-assignment",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-034",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-support-case-attachment",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-034",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-support-case-category",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-034",
+      "attrs": {}
+    },
+    {
       "from_id": "ENT-support-case-category.used_count",
       "verb": "calculated by",
       "to_id": "REQ-034-152",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-support-case-message",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-034",
       "attrs": {}
     },
     {
@@ -161673,9 +162121,33 @@
       "attrs": {}
     },
     {
+      "from_id": "ENT-support-case-priority",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-034",
+      "attrs": {}
+    },
+    {
       "from_id": "ENT-support-case-priority.used_count",
       "verb": "calculated by",
       "to_id": "REQ-034-152",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-support-case-reopening",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-034",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-support-case-resolution",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-034",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-support-case-tag",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-034",
       "attrs": {}
     },
     {
@@ -161685,15 +162157,39 @@
       "attrs": {}
     },
     {
+      "from_id": "ENT-support-case-timeline-event",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-034",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-support-reopen-template",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-034",
+      "attrs": {}
+    },
+    {
       "from_id": "ENT-support-reopen-template.used_count",
       "verb": "calculated by",
       "to_id": "REQ-034-152",
       "attrs": {}
     },
     {
+      "from_id": "ENT-support-resolution-category",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-034",
+      "attrs": {}
+    },
+    {
       "from_id": "ENT-support-resolution-category.used_count",
       "verb": "calculated by",
       "to_id": "REQ-034-152",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-support-root-cause",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-034",
       "attrs": {}
     },
     {
@@ -161775,6 +162271,12 @@
       "attrs": {}
     },
     {
+      "from_id": "ENT-transaction-audit-log",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-017",
+      "attrs": {}
+    },
+    {
       "from_id": "ENT-translation-audit-log",
       "verb": "decided by",
       "to_id": "SRC-PRD-021",
@@ -161841,6 +162343,12 @@
       "attrs": {}
     },
     {
+      "from_id": "ENT-travel-audit-entry",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-008",
+      "attrs": {}
+    },
+    {
       "from_id": "ENT-travel-context",
       "verb": "decided by",
       "to_id": "SRC-PRD-008",
@@ -161889,6 +162397,18 @@
       "attrs": {}
     },
     {
+      "from_id": "ENT-treatment-audit-entry",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-010",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-treatment-day-record",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-010",
+      "attrs": {}
+    },
+    {
       "from_id": "ENT-treatment-day-record.plan_day_position",
       "verb": "calculated by",
       "to_id": "REQ-010-101",
@@ -161898,6 +162418,12 @@
       "from_id": "ENT-treatment-detail-change",
       "verb": "decided by",
       "to_id": "SRC-MTG-002-O01",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-treatment-media",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-010",
       "attrs": {}
     },
     {
@@ -178194,6 +178720,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-004-051",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-004",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-004-052",
       "verb": "applies at",
       "to_id": "STG-main-02-quote",
@@ -178974,6 +179506,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-004-076",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-004",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-004-077",
       "verb": "applies at",
       "to_id": "STG-main-02-quote",
@@ -178995,6 +179533,12 @@
       "from_id": "REQ-004-077",
       "verb": "applies to",
       "to_id": "ENT-quote-audit",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-077",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-004",
       "attrs": {}
     },
     {
@@ -179640,6 +180184,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-004-098",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-004",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-004-099",
       "verb": "applies at",
       "to_id": "STG-main-02-quote",
@@ -179715,6 +180265,12 @@
       "from_id": "REQ-004-101",
       "verb": "applies to",
       "to_id": "SCR-004-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-101",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-004",
       "attrs": {}
     },
     {
@@ -180501,6 +181057,12 @@
       "from_id": "REQ-005-032",
       "verb": "applies to",
       "to_id": "SCR-005-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-005-032",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-005",
       "attrs": {}
     },
     {
@@ -181728,6 +182290,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-006-021",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-006",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-006-022",
       "verb": "applies at",
       "to_id": "STG-main-04-booking",
@@ -181854,6 +182422,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-006-026",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-006",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-006-027",
       "verb": "applies at",
       "to_id": "STG-main-04-booking",
@@ -181941,6 +182515,12 @@
       "from_id": "REQ-006-030",
       "verb": "applies to",
       "to_id": "SCR-006-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-030",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-006",
       "attrs": {}
     },
     {
@@ -182190,6 +182770,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-006-044",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-006",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-006-045",
       "verb": "applies at",
       "to_id": "STG-main-04-booking",
@@ -182199,6 +182785,12 @@
       "from_id": "REQ-006-045",
       "verb": "applies to",
       "to_id": "SCR-006-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-045",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-006",
       "attrs": {}
     },
     {
@@ -182331,6 +182923,12 @@
       "from_id": "REQ-006-050",
       "verb": "applies to",
       "to_id": "SCR-006-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-050",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-006",
       "attrs": {}
     },
     {
@@ -182475,6 +183073,12 @@
       "from_id": "REQ-006-056",
       "verb": "applies to",
       "to_id": "ENT-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-056",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-006",
       "attrs": {}
     },
     {
@@ -183696,6 +184300,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-007-023",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-007",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-007-024",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
@@ -183903,6 +184513,12 @@
       "from_id": "REQ-007-029",
       "verb": "applies to",
       "to_id": "SCR-007-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007-029",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-007",
       "attrs": {}
     },
     {
@@ -184464,6 +185080,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-007-048",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-007",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-007-049",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
@@ -184521,6 +185143,12 @@
       "from_id": "REQ-007-050",
       "verb": "applies to",
       "to_id": "SCR-007-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007-050",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-007",
       "attrs": {}
     },
     {
@@ -184698,6 +185326,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-007-056",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-007",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-007-057",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
@@ -184752,6 +185386,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-007-058",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-007",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-007-059",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
@@ -184791,6 +185431,12 @@
       "from_id": "REQ-007-060",
       "verb": "applies to",
       "to_id": "SCR-007-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007-060",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-007",
       "attrs": {}
     },
     {
@@ -185179,6 +185825,12 @@
     },
     {
       "from_id": "REQ-007-076",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007-076",
       "verb": "governed by",
       "to_id": "SET-payment-reminder-timing",
       "attrs": {}
@@ -185322,6 +185974,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-007-082",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-007",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-007-083",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
@@ -185379,6 +186037,12 @@
       "from_id": "REQ-007-084",
       "verb": "applies to",
       "to_id": "ENT-booking.status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007-084",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-007",
       "attrs": {}
     },
     {
@@ -188952,6 +189616,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-008-042",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-008",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-008-043",
       "verb": "applies at",
       "to_id": "STG-main-04-booking",
@@ -189000,6 +189670,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-008-044",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-008",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-008-045",
       "verb": "applies at",
       "to_id": "STG-main-04-booking",
@@ -189009,6 +189685,12 @@
       "from_id": "REQ-008-045",
       "verb": "applies to",
       "to_id": "ENT-hotel-record.transportation",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-008-045",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-008",
       "attrs": {}
     },
     {
@@ -189036,6 +189718,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-008-046",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-008",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-008-047",
       "verb": "applies at",
       "to_id": "STG-main-04-booking",
@@ -189051,6 +189739,12 @@
       "from_id": "REQ-008-047",
       "verb": "applies to",
       "to_id": "SCR-008-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-008-047",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-008",
       "attrs": {}
     },
     {
@@ -189096,6 +189790,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-008-049",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-008",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-008-050",
       "verb": "applies at",
       "to_id": "STG-main-04-booking",
@@ -189117,6 +189817,12 @@
       "from_id": "REQ-008-050",
       "verb": "applies to",
       "to_id": "SCR-008-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-008-050",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-008",
       "attrs": {}
     },
     {
@@ -189195,6 +189901,12 @@
       "from_id": "REQ-008-053",
       "verb": "applies to",
       "to_id": "ENT-flight-record",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-008-053",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-008",
       "attrs": {}
     },
     {
@@ -189246,6 +189958,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-008-055",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-008",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-008-056",
       "verb": "applies at",
       "to_id": "STG-main-04-booking",
@@ -189261,6 +189979,12 @@
       "from_id": "REQ-008-056",
       "verb": "applies to",
       "to_id": "SCR-008-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-008-056",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-008",
       "attrs": {}
     },
     {
@@ -189288,6 +190012,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-008-057",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-008",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-008-058",
       "verb": "applies at",
       "to_id": "STG-main-04-booking",
@@ -189309,6 +190039,12 @@
       "from_id": "REQ-008-058",
       "verb": "applies to",
       "to_id": "SCR-008-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-008-058",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-008",
       "attrs": {}
     },
     {
@@ -189345,6 +190081,12 @@
       "from_id": "REQ-008-059",
       "verb": "applies to",
       "to_id": "ENT-travel-context.travel_required_set_by",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-008-059",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-008",
       "attrs": {}
     },
     {
@@ -189396,6 +190138,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-008-061",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-008",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-008-062",
       "verb": "applies at",
       "to_id": "STG-main-04-booking",
@@ -189435,6 +190183,12 @@
       "from_id": "REQ-008-062",
       "verb": "applies to",
       "to_id": "SCR-008-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-008-062",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-008",
       "attrs": {}
     },
     {
@@ -189498,6 +190252,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-008-064",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-008",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-008-065",
       "verb": "applies at",
       "to_id": "STG-main-04-booking",
@@ -189546,6 +190306,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-008-066",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-008",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-008-067",
       "verb": "applies at",
       "to_id": "STG-main-04-booking",
@@ -189591,6 +190357,12 @@
       "from_id": "REQ-008-068",
       "verb": "applies to",
       "to_id": "SCR-008-12",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-008-068",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-008",
       "attrs": {}
     },
     {
@@ -189654,6 +190426,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-008-070",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-008",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-008-071",
       "verb": "applies at",
       "to_id": "STG-main-04-booking",
@@ -189687,6 +190465,12 @@
       "from_id": "REQ-008-071",
       "verb": "applies to",
       "to_id": "EVT-travel-request-sent",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-008-071",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-008",
       "attrs": {}
     },
     {
@@ -190548,6 +191332,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-009-027",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-009-028",
       "verb": "applies at",
       "to_id": "STG-provider-03-active",
@@ -190590,6 +191380,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-009-029",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-009-030",
       "verb": "applies at",
       "to_id": "STG-provider-03-active",
@@ -190599,6 +191395,12 @@
       "from_id": "REQ-009-030",
       "verb": "applies to",
       "to_id": "ENT-team-activity-audit-log",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-030",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
       "attrs": {}
     },
     {
@@ -190692,6 +191494,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-009-035",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-009-036",
       "verb": "applies at",
       "to_id": "STG-provider-03-active",
@@ -190701,6 +191509,12 @@
       "from_id": "REQ-009-036",
       "verb": "applies to",
       "to_id": "ENT-team-member",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-036",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
       "attrs": {}
     },
     {
@@ -190749,6 +191563,12 @@
       "from_id": "REQ-009-037",
       "verb": "applies to",
       "to_id": "SCR-009-10",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-037",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
       "attrs": {}
     },
     {
@@ -190878,6 +191698,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-009-042",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-009-043",
       "verb": "applies at",
       "to_id": "STG-provider-03-active",
@@ -190899,6 +191725,12 @@
       "from_id": "REQ-009-043",
       "verb": "applies to",
       "to_id": "SCR-009-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-043",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
       "attrs": {}
     },
     {
@@ -190947,6 +191779,12 @@
       "from_id": "REQ-009-045",
       "verb": "applies to",
       "to_id": "EVT-team-invitation-accepted",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-045",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
       "attrs": {}
     },
     {
@@ -191034,6 +191872,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-009-048",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-009-049",
       "verb": "applies at",
       "to_id": "STG-provider-03-active",
@@ -191049,6 +191893,12 @@
       "from_id": "REQ-009-049",
       "verb": "applies to",
       "to_id": "SCR-009-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-049",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
       "attrs": {}
     },
     {
@@ -191070,6 +191920,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-009-050",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-009-051",
       "verb": "applies at",
       "to_id": "STG-provider-03-active",
@@ -191085,6 +191941,12 @@
       "from_id": "REQ-009-051",
       "verb": "applies to",
       "to_id": "SCR-009-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-051",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
       "attrs": {}
     },
     {
@@ -191160,6 +192022,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-009-054",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-009-055",
       "verb": "applies at",
       "to_id": "STG-provider-03-active",
@@ -191202,6 +192070,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-009-056",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-009-057",
       "verb": "applies at",
       "to_id": "STG-provider-03-active",
@@ -191217,6 +192091,12 @@
       "from_id": "REQ-009-057",
       "verb": "applies to",
       "to_id": "SCR-009-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-057",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
       "attrs": {}
     },
     {
@@ -191286,6 +192166,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-009-061",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-009-062",
       "verb": "applies at",
       "to_id": "STG-provider-03-active",
@@ -191295,6 +192181,12 @@
       "from_id": "REQ-009-062",
       "verb": "applies to",
       "to_id": "SCR-009-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-062",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
       "attrs": {}
     },
     {
@@ -191316,6 +192208,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-009-063",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-009-065",
       "verb": "applies at",
       "to_id": "STG-provider-03-active",
@@ -191334,6 +192232,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-009-065",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-009-066",
       "verb": "applies at",
       "to_id": "STG-provider-03-active",
@@ -191346,6 +192250,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-009-066",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-009-067",
       "verb": "applies at",
       "to_id": "STG-provider-03-active",
@@ -191355,6 +192265,12 @@
       "from_id": "REQ-009-067",
       "verb": "applies to",
       "to_id": "SCR-009-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-067",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
       "attrs": {}
     },
     {
@@ -191526,6 +192442,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-009-075",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-009-076",
       "verb": "applies at",
       "to_id": "STG-provider-03-active",
@@ -191535,6 +192457,12 @@
       "from_id": "REQ-009-076",
       "verb": "applies to",
       "to_id": "SCR-009-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-076",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
       "attrs": {}
     },
     {
@@ -191553,6 +192481,12 @@
       "from_id": "REQ-009-077",
       "verb": "applies to",
       "to_id": "SCR-009-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-077",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
       "attrs": {}
     },
     {
@@ -191688,6 +192622,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-009-083",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-009-084",
       "verb": "applies at",
       "to_id": "STG-provider-03-active",
@@ -191697,6 +192637,12 @@
       "from_id": "REQ-009-084",
       "verb": "applies to",
       "to_id": "SCR-009-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-084",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
       "attrs": {}
     },
     {
@@ -191712,6 +192658,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-009-085",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-009-086",
       "verb": "applies at",
       "to_id": "STG-provider-03-active",
@@ -191721,6 +192673,12 @@
       "from_id": "REQ-009-086",
       "verb": "applies to",
       "to_id": "SCR-009-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-086",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
       "attrs": {}
     },
     {
@@ -191982,6 +192940,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-009-098",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-009-099",
       "verb": "applies at",
       "to_id": "STG-provider-03-active",
@@ -192057,6 +193021,12 @@
       "from_id": "REQ-009-102",
       "verb": "applies to",
       "to_id": "SCR-009-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-102",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
       "attrs": {}
     },
     {
@@ -192210,6 +193180,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-009-109",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-009-110",
       "verb": "applies at",
       "to_id": "STG-provider-03-active",
@@ -192225,6 +193201,12 @@
       "from_id": "REQ-009-110",
       "verb": "applies to",
       "to_id": "SCR-009-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-110",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
       "attrs": {}
     },
     {
@@ -192246,6 +193228,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-009-111",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-009-112",
       "verb": "applies at",
       "to_id": "STG-provider-03-active",
@@ -192258,6 +193246,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-009-112",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-009-113",
       "verb": "applies at",
       "to_id": "STG-provider-03-active",
@@ -192267,6 +193261,12 @@
       "from_id": "REQ-009-113",
       "verb": "applies to",
       "to_id": "SCR-009-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-113",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
       "attrs": {}
     },
     {
@@ -192336,6 +193336,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-009-116",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-009-117",
       "verb": "applies at",
       "to_id": "STG-provider-03-active",
@@ -192399,6 +193405,12 @@
       "from_id": "REQ-009-119",
       "verb": "applies to",
       "to_id": "SCR-009-10",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-119",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
       "attrs": {}
     },
     {
@@ -192471,6 +193483,12 @@
       "from_id": "REQ-009-122",
       "verb": "applies to",
       "to_id": "SCR-009-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-122",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
       "attrs": {}
     },
     {
@@ -192582,6 +193600,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-009-127",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-009-128",
       "verb": "applies at",
       "to_id": "STG-provider-03-active",
@@ -192642,6 +193666,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-009-130",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-009-131",
       "verb": "applies at",
       "to_id": "STG-provider-03-active",
@@ -192651,6 +193681,12 @@
       "from_id": "REQ-009-131",
       "verb": "applies to",
       "to_id": "SCR-009-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-131",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
       "attrs": {}
     },
     {
@@ -192885,6 +193921,12 @@
       "from_id": "REQ-009-142",
       "verb": "applies to",
       "to_id": "SCR-009-13",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-142",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
       "attrs": {}
     },
     {
@@ -193279,6 +194321,12 @@
     },
     {
       "from_id": "REQ-009-160",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-160",
       "verb": "governed by",
       "to_id": "SET-default-seat-limit",
       "attrs": {}
@@ -193359,6 +194407,12 @@
       "from_id": "REQ-009-163",
       "verb": "applies to",
       "to_id": "ENT-team-member-org-role",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-163",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
       "attrs": {}
     },
     {
@@ -193449,6 +194503,12 @@
       "from_id": "REQ-009-167",
       "verb": "applies to",
       "to_id": "ENT-team-member.mfa_status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-167",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
       "attrs": {}
     },
     {
@@ -200973,6 +202033,12 @@
       "from_id": "REQ-013-024",
       "verb": "applies to",
       "to_id": "SCR-013-10",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-013-024",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-013",
       "attrs": {}
     },
     {
@@ -215622,6 +216688,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-015-051",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-015",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-015-052",
       "verb": "applies at",
       "to_id": "STG-provider-01-invited",
@@ -215955,6 +217027,12 @@
       "from_id": "REQ-015-064",
       "verb": "applies to",
       "to_id": "SCR-015-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-064",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-015",
       "attrs": {}
     },
     {
@@ -216948,6 +218026,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-015-095",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-015",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-015-096",
       "verb": "applies at",
       "to_id": "STG-provider-01-invited",
@@ -217449,6 +218533,12 @@
       "from_id": "REQ-015-114",
       "verb": "applies to",
       "to_id": "SCR-015-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-114",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-015",
       "attrs": {}
     },
     {
@@ -246264,6 +247354,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-023-027",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-023",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-023-028",
       "verb": "applies at",
       "to_id": "STG-patient-03-active",
@@ -246303,6 +247399,12 @@
       "from_id": "REQ-023-028",
       "verb": "applies to",
       "to_id": "EVT-dsr-verification-required",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-023-028",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-023",
       "attrs": {}
     },
     {
@@ -246396,6 +247498,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-023-031",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-023",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-023-032",
       "verb": "applies at",
       "to_id": "STG-patient-05-deleted",
@@ -246480,6 +247588,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-023-034",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-023",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-023-036",
       "verb": "applies at",
       "to_id": "STG-patient-05-deleted",
@@ -246495,6 +247609,12 @@
       "from_id": "REQ-023-036",
       "verb": "applies to",
       "to_id": "ENT-deletion-request",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-023-036",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-023",
       "attrs": {}
     },
     {
@@ -249246,6 +250366,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-025-018",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-025",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-025-019",
       "verb": "applies at",
       "to_id": "STG-aftercare-01-recovery-plan",
@@ -250206,6 +251332,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-025-054",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-025",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-025-056",
       "verb": "applies at",
       "to_id": "STG-aftercare-01-recovery-plan",
@@ -250572,6 +251704,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-025-073",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-025",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-025-074",
       "verb": "applies at",
       "to_id": "STG-aftercare-01-recovery-plan",
@@ -250695,6 +251833,12 @@
       "from_id": "REQ-025-078",
       "verb": "applies to",
       "to_id": "SCR-025-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-025-078",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-025",
       "attrs": {}
     },
     {
@@ -260178,6 +261322,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-029-061",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-029",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-029-062",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
@@ -260220,6 +261370,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-029-063",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-029",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-029-064",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
@@ -260235,6 +261391,12 @@
       "from_id": "REQ-029-064",
       "verb": "applies to",
       "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-029-064",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-029",
       "attrs": {}
     },
     {
@@ -260298,6 +261460,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-029-066",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-029",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-029-067",
       "verb": "applies at",
       "to_id": "STG-admin-01-configuration",
@@ -260313,6 +261481,12 @@
       "from_id": "REQ-029-067",
       "verb": "applies to",
       "to_id": "SCR-029-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-029-067",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-029",
       "attrs": {}
     },
     {
@@ -260439,6 +261613,12 @@
       "from_id": "REQ-029-073",
       "verb": "applies to",
       "to_id": "SCR-029-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-029-073",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-029",
       "attrs": {}
     },
     {
@@ -260790,6 +261970,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-029-092",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-029",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-029-093",
       "verb": "applies at",
       "to_id": "STG-admin-01-configuration",
@@ -260805,6 +261991,12 @@
       "from_id": "REQ-029-093",
       "verb": "applies to",
       "to_id": "ENT-currency-pair.rate_mode",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-029-093",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-029",
       "attrs": {}
     },
     {
@@ -261529,6 +262721,12 @@
     },
     {
       "from_id": "REQ-029-123",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-029",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-029-123",
       "verb": "governed by",
       "to_id": "SET-default-currency",
       "attrs": {}
@@ -261591,6 +262789,12 @@
       "from_id": "REQ-029-126",
       "verb": "applies to",
       "to_id": "SCR-029-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-029-126",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-029",
       "attrs": {}
     },
     {
@@ -282276,6 +283480,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-038-019",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-038",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-038-020",
       "verb": "applies at",
       "to_id": "STG-monitoring-01-baseline",
@@ -282537,6 +283747,12 @@
       "from_id": "REQ-038-033",
       "verb": "applies to",
       "to_id": "SCR-038-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-038-033",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-038",
       "attrs": {}
     },
     {
@@ -282837,6 +284053,12 @@
       "from_id": "REQ-038-047",
       "verb": "applies to",
       "to_id": "SCR-038-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-038-047",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-038",
       "attrs": {}
     },
     {
@@ -283224,6 +284446,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-038-063",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-038",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-038-064",
       "verb": "applies at",
       "to_id": "STG-monitoring-03-conversion",
@@ -283287,6 +284515,12 @@
       "from_id": "REQ-038-066",
       "verb": "applies to",
       "to_id": "SCR-038-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-038-066",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-038",
       "attrs": {}
     },
     {
@@ -283608,9 +284842,21 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-SYS-001",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-SYS",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-SYS-002",
       "verb": "applies at",
       "to_id": "STG-platform-01-all-stages",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-SYS-002",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-SYS",
       "attrs": {}
     },
     {
@@ -283644,6 +284890,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-SYS-005",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-SYS",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-SYS-006",
       "verb": "applies at",
       "to_id": "STG-platform-01-all-stages",
@@ -283659,6 +284911,12 @@
       "from_id": "REQ-SYS-007",
       "verb": "applies at",
       "to_id": "STG-platform-01-all-stages",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-SYS-007",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-SYS",
       "attrs": {}
     },
     {
@@ -283680,6 +284938,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-SYS-009",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-SYS",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-SYS-010",
       "verb": "applies at",
       "to_id": "STG-platform-01-all-stages",
@@ -283695,6 +284959,12 @@
       "from_id": "REQ-SYS-011",
       "verb": "applies at",
       "to_id": "STG-platform-01-all-stages",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-SYS-011",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-SYS",
       "attrs": {}
     },
     {
@@ -404175,6 +405445,224 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261120-165003-eeaf0402",
+      "at": "2026-11-20T16:50:03.967813+00:00",
+      "changed_by": "controller",
+      "reason": "Link the Rules an agent checked line by line against their own PRD to the PRD Source, and bring nine Rule texts in line with the PRD wording where they differed.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-004-101",
+        "REQ-007-023",
+        "REQ-007-029",
+        "REQ-007-048",
+        "REQ-007-050",
+        "REQ-007-056",
+        "REQ-007-058",
+        "REQ-007-060",
+        "REQ-007-076",
+        "REQ-007-082",
+        "REQ-007-084",
+        "REQ-008-042",
+        "REQ-008-044",
+        "REQ-008-045",
+        "REQ-008-046",
+        "REQ-008-047",
+        "REQ-008-049",
+        "REQ-008-050",
+        "REQ-008-053",
+        "REQ-008-055",
+        "REQ-008-056",
+        "REQ-008-057",
+        "REQ-008-058",
+        "REQ-008-059",
+        "REQ-008-061",
+        "REQ-008-062",
+        "REQ-008-064",
+        "REQ-008-066",
+        "REQ-008-068",
+        "REQ-008-070",
+        "REQ-008-071",
+        "REQ-009-027",
+        "REQ-009-029",
+        "REQ-009-030",
+        "REQ-009-035",
+        "REQ-009-036",
+        "REQ-009-037",
+        "REQ-009-042",
+        "REQ-009-043",
+        "REQ-009-045",
+        "REQ-009-048",
+        "REQ-009-049",
+        "REQ-009-050",
+        "REQ-009-051",
+        "REQ-009-054",
+        "REQ-009-056",
+        "REQ-009-057",
+        "REQ-009-061",
+        "REQ-009-062",
+        "REQ-009-063",
+        "REQ-009-065",
+        "REQ-009-066",
+        "REQ-009-067",
+        "REQ-009-075",
+        "REQ-009-076",
+        "REQ-009-077",
+        "REQ-009-083",
+        "REQ-009-084",
+        "REQ-009-085",
+        "REQ-009-086",
+        "REQ-009-098",
+        "REQ-009-102",
+        "REQ-009-109",
+        "REQ-009-110",
+        "REQ-009-111",
+        "REQ-009-112",
+        "REQ-009-113",
+        "REQ-009-116",
+        "REQ-009-119",
+        "REQ-009-122",
+        "REQ-009-127",
+        "REQ-009-130",
+        "REQ-009-131",
+        "REQ-009-142",
+        "REQ-009-160",
+        "REQ-009-163",
+        "REQ-009-167",
+        "REQ-029-061",
+        "REQ-029-063",
+        "REQ-029-064",
+        "REQ-029-066",
+        "REQ-029-067",
+        "REQ-029-073",
+        "REQ-029-092",
+        "REQ-029-093",
+        "REQ-029-123",
+        "REQ-029-126"
+      ],
+      "edges_added": 86,
+      "edges_removed": 0,
+      "rows": 184
+    },
+    {
+      "id": "cs-20261120-164718-5017cc50",
+      "at": "2026-11-20T16:47:18.471540+00:00",
+      "changed_by": "controller",
+      "reason": "Owner ruling 2026-11-20 (the PRD is an acceptable deciding Source): 38 Rules checked one by one against their PRD (lines in the rationale), and the remaining Entities, which are record types modelled from their owning PRD and used by that FR's Rules and Screens, linked to that PRD",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "ENT-admin-audit-trail-entry",
+        "ENT-affiliate-audit-entry",
+        "ENT-affiliate-code-batch-result",
+        "ENT-aftercare-audit-entry",
+        "ENT-aftercare-communication-entry",
+        "ENT-aftercare-content-template",
+        "ENT-aftercare-dose",
+        "ENT-aftercare-medication",
+        "ENT-aftercare-questionnaire-response",
+        "ENT-aftercare-resource",
+        "ENT-aftercare-resource-view",
+        "ENT-aftercare-scan-artifact",
+        "ENT-aftercare-template-price",
+        "ENT-analytics-generated-report",
+        "ENT-content-attachment",
+        "ENT-discount-usage-summary",
+        "ENT-financial-report",
+        "ENT-help-centre-stats",
+        "ENT-inquiry-audit-entry",
+        "ENT-installment-plan-metrics",
+        "ENT-intake-audit-entry",
+        "ENT-intake-processing-result",
+        "ENT-invoice-reminder",
+        "ENT-legal-acceptance",
+        "ENT-legal-audit-entry",
+        "ENT-messaging-audit-entry",
+        "ENT-monitoring-advice-window",
+        "ENT-monitoring-audit-entry",
+        "ENT-monitoring-case-preview",
+        "ENT-monitoring-export",
+        "ENT-notification-attempt",
+        "ENT-patient-audit-log",
+        "ENT-patient-session",
+        "ENT-payout-dispute-resolution",
+        "ENT-promotion-adoption",
+        "ENT-promotion-report-snapshot",
+        "ENT-provider-activity-log-entry",
+        "ENT-provider-award",
+        "ENT-provider-earning",
+        "ENT-provider-earnings-summary",
+        "ENT-provider-review-summary",
+        "ENT-provider-team-summary",
+        "ENT-provider-treatment-review-summary",
+        "ENT-questionnaire-audit-entry",
+        "ENT-questionnaire-category",
+        "ENT-questionnaire-question",
+        "ENT-review-source-metadata",
+        "ENT-role-permission-definition",
+        "ENT-setting-version",
+        "ENT-settings-audit-entry",
+        "ENT-support-case-assignment",
+        "ENT-support-case-attachment",
+        "ENT-support-case-category",
+        "ENT-support-case-message",
+        "ENT-support-case-priority",
+        "ENT-support-case-reopening",
+        "ENT-support-case-resolution",
+        "ENT-support-case-tag",
+        "ENT-support-case-timeline-event",
+        "ENT-support-reopen-template",
+        "ENT-support-resolution-category",
+        "ENT-support-root-cause",
+        "ENT-transaction-audit-log",
+        "ENT-travel-audit-entry",
+        "ENT-treatment-audit-entry",
+        "ENT-treatment-day-record",
+        "ENT-treatment-media",
+        "REQ-004-051",
+        "REQ-004-076",
+        "REQ-004-077",
+        "REQ-004-098",
+        "REQ-004-101",
+        "REQ-005-032",
+        "REQ-006-021",
+        "REQ-006-026",
+        "REQ-006-030",
+        "REQ-006-044",
+        "REQ-006-045",
+        "REQ-006-050",
+        "REQ-006-056",
+        "REQ-013-024",
+        "REQ-015-051",
+        "REQ-015-064",
+        "REQ-015-095",
+        "REQ-015-114",
+        "REQ-023-027",
+        "REQ-023-028",
+        "REQ-023-031",
+        "REQ-023-034",
+        "REQ-023-036",
+        "REQ-025-018",
+        "REQ-025-054",
+        "REQ-025-073",
+        "REQ-025-078",
+        "REQ-038-019",
+        "REQ-038-033",
+        "REQ-038-047",
+        "REQ-038-063",
+        "REQ-038-066",
+        "REQ-SYS-001",
+        "REQ-SYS-002",
+        "REQ-SYS-005",
+        "REQ-SYS-007",
+        "REQ-SYS-009",
+        "REQ-SYS-011"
+      ],
+      "edges_added": 105,
+      "edges_removed": 0,
+      "rows": 143
+    },
     {
       "id": "cs-20261120-135932-8ec1ec66",
       "at": "2026-11-20T13:59:32.503573+00:00",
