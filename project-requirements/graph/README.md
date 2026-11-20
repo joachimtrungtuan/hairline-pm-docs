@@ -14,6 +14,7 @@ This folder holds the requirements graph. It stores FRs, stages, actors, entitie
 - `scripts/migrate_schema_v7.py`: moves a version 6 `graph.db` to schema version 7 (see "Schema version 7" below).
 - `scripts/migrate_schema_v8.py`: moves a version 7 `graph.db` to schema version 8 (see "Schema version 8" below).
 - `scripts/migrate_schema_v9.py`: moves a version 8 `graph.db` to schema version 9 (see "Schema version 9" below).
+- `scripts/migrate_schema_v10.py`: moves a version 9 `graph.db` to schema version 10 (see "Schema version 10" below).
 - `scripts/check_crs.py`: checks that every Approved Change Request ID appears in its PRD's Appendix: Change Log (exit 1 when one does not; Proposed CRs are listed, not checked, and stay out of the graph, D42).
 - `scripts/headless_review.sh`: runs one checklist review through a headless OpenCode model (see "Headless review wrapper" below).
 - `backups/`: dated copies of `graph.db`, written before it is replaced.
@@ -186,6 +187,23 @@ Version 9 (D49, applied 2026-11-10) adds the value `platform-admin` to the `time
 
 ```bash
 /usr/bin/python3 scripts/migrate_schema_v9.py      # backs up graph.db to backups/ first; --db PATH for another file
+```
+
+## Schema version 10
+
+Version 10 (applied 2026-11-20, requirements graph programme baseline) adds four values to the `timeline` enum:
+
+- `provider-configuration`: a clinic's own set-up work, outside the provider account lifecycle. One Stage, `STG-provider-config-01-configuration`.
+- `affiliate-account`: the affiliate account lifecycle. Stages `STG-affiliate-01-pending`, `-02-active`, `-03-suspended`, `-04-inactive`.
+- `provider-payout`: the settlement run for clinics. Stages `STG-payout-01-statement`, `-02-approval`, `-03-transfer`.
+- `platform`: rules that hold at every stage. One Stage, `STG-platform-01-all-stages`, where the system Rules `REQ-SYS-001` to `REQ-SYS-014` (owner `FR-SYS`, stated in the system PRD section "Platform-Wide Rules") apply.
+
+Timelines are now `main`, `aftercare`, `monitoring`, `provider-account`, `patient-account`, `platform-admin`, `provider-configuration`, `affiliate-account`, `provider-payout` and `platform`.
+
+As in versions 7 to 9, `timeline` lives only in the JSON attrs of Stage nodes, so only `PRAGMA user_version` changes. The migration checks the DDL, backs up `graph.db`, and sets `PRAGMA user_version` to 10:
+
+```bash
+/usr/bin/python3 scripts/migrate_schema_v10.py     # backs up graph.db to backups/ first; --db PATH for another file
 ```
 
 ## Run the tests

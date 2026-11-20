@@ -25,6 +25,7 @@ import migrate_schema_v6
 import migrate_schema_v7
 import migrate_schema_v8
 import migrate_schema_v9
+import migrate_schema_v10
 import query
 import write
 from common import SCHEMA_PATH, connect, parse_schema
@@ -236,9 +237,18 @@ class TestQueryDuplicates(DedupTestCase):
         self.assertIn("non-empty", err)
 
 
+def v9_raw():
+    """schema.yaml as it was before version 10: none of the four timelines added on 2026-11-20."""
+    raw = copy.deepcopy(yaml.safe_load(SCHEMA_PATH.read_text(encoding="utf-8")))
+    raw["version"] = 9
+    for timeline in migrate_schema_v10.NEW_TIMELINES:
+        raw["enums"]["timeline"].remove(timeline)
+    return raw
+
+
 def v8_raw():
     """schema.yaml as it was before version 9: no 'platform-admin' timeline."""
-    raw = copy.deepcopy(yaml.safe_load(SCHEMA_PATH.read_text(encoding="utf-8")))
+    raw = v9_raw()
     raw["version"] = 8
     raw["enums"]["timeline"].remove(migrate_schema_v9.NEW_TIMELINE)
     return raw
@@ -289,6 +299,10 @@ def v8_schema():
 
 
 def v9_schema():
+    return parse_schema(v9_raw())
+
+
+def v10_schema():
     return parse_schema(yaml.safe_load(SCHEMA_PATH.read_text(encoding="utf-8")))
 
 
@@ -669,12 +683,54 @@ class TestMigrateV9(unittest.TestCase):
         self.assertFalse((self.db.parent / "backups").exists())
 
     def test_cli_migrates_and_reports_missing_db(self) -> None:
-        code, out, _ = run_cli(migrate_schema_v9, "--db", str(self.db))
-        self.assertEqual(code, 0)
-        self.assertIn("schema version 9", out)
-        code, _, err = run_cli(migrate_schema_v9, "--db", str(Path(self._tmp.name) / "missing.db"))
-        self.assertEqual(code, 1)
-        self.assertIn("does not exist", err)
+        with mock.patch.object(migrate_schema_v9, "load_schema", v9_schema):
+            code, out, _ = run_cli(migrate_schema_v9, "--db", str(self.db))
+            self.assertEqual(code, 0)
+            self.assertIn("schema version 9", out)
+            code, _, err = run_cli(migrate_schema_v9, "--db", str(Path(self._tmp.name) / "missing.db"))
+            self.assertEqual(code, 1)
+            self.assertIn("does not exist", err)
+
+
+class TestMigrateV10(unittest.TestCase):
+    """Version 10 adds four timelines; only user_version changes."""
+
+    def setUp(self) -> None:
+        self._tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self._tmp.cleanup)
+        self.db = Path(self._tmp.name) / "graph.db"
+        init_db.init_db(self.db, schema=v9_schema())
+        self.payout_stage = {"reason": "payout timeline", "by": "test", "operations": [
+            {"op": "add_node", "id": "STG-payout-01-statement", "type": "Stage", "title": "Statement",
+             "attrs": {"timeline": "provider-payout", "sequence": 1}}]}
+
+    def test_old_schema_refuses_new_timeline(self) -> None:
+        conn = connect(self.db)
+        try:
+            with self.assertRaises(write.ChangeSetError):
+                write.apply_changeset(conn, v9_schema(), self.payout_stage)
+        finally:
+            conn.close()
+
+    def test_migrates_and_accepts_new_timeline(self) -> None:
+        backup = migrate_schema_v10.migrate(self.db, v10_schema())
+        self.assertTrue(backup.is_file())
+        conn = connect(self.db)
+        try:
+            self.assertEqual(conn.execute("PRAGMA user_version").fetchone()[0], 10)
+            write.apply_changeset(conn, v10_schema(), self.payout_stage)
+            self.assertEqual(conn.execute(
+                "SELECT json_extract(attrs, '$.timeline') FROM nodes WHERE id = 'STG-payout-01-statement'"
+            ).fetchone()[0], "provider-payout")
+        finally:
+            conn.close()
+
+    def test_refuses_wrong_schema_or_db_version(self) -> None:
+        with self.assertRaises(migrate_schema_v10.MigrationError):
+            migrate_schema_v10.migrate(self.db, v9_schema())
+        migrate_schema_v10.migrate(self.db, v10_schema())
+        with self.assertRaises(migrate_schema_v10.MigrationError):
+            migrate_schema_v10.migrate(self.db, v10_schema())
 
 
 if __name__ == "__main__":
