@@ -1,0 +1,112 @@
+reason: "Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-025)"
+by: controller
+operations:
+
+  # New Rules 077 to 083
+  - {"op": "add_node", "id": "REQ-025-077", "type": "Rule", "owner_fr": "FR-025", "title": "Only published sets can be assigned to an aftercare milestone", "attrs": {"statement": "Only a published set (Status = Active) can be assigned to an aftercare milestone; a Draft set cannot be assigned. The system blocks the assignment and tells the admin that only published sets can be assigned"}}
+  - {"op": "add_node", "id": "REQ-025-078", "type": "Rule", "owner_fr": "FR-025", "title": "Questionnaire Catalog field limits (set name 100 characters, unique)", "attrs": {"statement": "Questionnaire Catalog (Screen 1) field limits: Set Name is at most 100 characters and unique", "distinct_from": "REQ-025-079"}}
+  - {"op": "add_node", "id": "REQ-025-079", "type": "Rule", "owner_fr": "FR-025", "title": "Set Details field limits (set name, description 500, display number)", "attrs": {"statement": "Set Details (Screen 2) field limits: Set Name is at most 100 characters and unique; Description is at most 500 characters; a question's display number is a whole number of at least 1 and unique within the set", "distinct_from": "REQ-025-078"}}
+  - {"op": "add_node", "id": "REQ-025-080", "type": "Rule", "owner_fr": "FR-025", "title": "Question Editor field limits (help text 300, display labels 200, max characters)", "attrs": {"statement": "Question Editor (Screen 3) field limits: Help Text is at most 300 characters; Patient App Display Label and Provider App Display Label are each at most 200 characters; Max Characters is a whole number greater than 0"}}
+  - {"op": "add_node", "id": "REQ-025-081", "type": "Rule", "owner_fr": "FR-025", "title": "Category Management field limits (name 100 unique, description 300)", "attrs": {"statement": "Category Management (Screen 4) field limits: Category Name is at most 100 characters and unique; Description is at most 300 characters"}}
+  - {"op": "add_node", "id": "REQ-025-082", "type": "Rule", "owner_fr": "FR-025", "title": "Question type list shown with a short description of each type", "attrs": {"statement": "Question Type selection is presented as a list with a short description of each type to help admin choose correctly before locking in"}}
+  - {"op": "add_node", "id": "REQ-025-083", "type": "Rule", "owner_fr": "FR-025", "title": "All changes atomic and consistent across platforms", "attrs": {"statement": "All changes must be atomic and consistent across platforms"}}
+
+  # Placement and links of the new Rules (the Screens belong to the Recovery plan and Inquiry Stages, as for the existing Rules)
+  - {"op": "add_edge", "from": "REQ-025-077", "verb": "applies at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "REQ-025-077", "verb": "applies to", "to": "ENT-questionnaire-set.status"}
+  - {"op": "add_edge", "from": "REQ-025-078", "verb": "applies at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "REQ-025-078", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-025-078", "verb": "applies to", "to": "SCR-025-01"}
+  - {"op": "add_edge", "from": "REQ-025-078", "verb": "applies to", "to": "ENT-questionnaire-set.name"}
+  - {"op": "add_edge", "from": "REQ-025-079", "verb": "applies at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "REQ-025-079", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-025-079", "verb": "applies to", "to": "SCR-025-02"}
+  - {"op": "add_edge", "from": "REQ-025-079", "verb": "applies to", "to": "ENT-questionnaire-set.name"}
+  - {"op": "add_edge", "from": "REQ-025-079", "verb": "applies to", "to": "ENT-questionnaire-set.description"}
+  - {"op": "add_edge", "from": "REQ-025-079", "verb": "applies to", "to": "ENT-questionnaire-question.display_order"}
+  - {"op": "add_edge", "from": "REQ-025-080", "verb": "applies at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "REQ-025-080", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-025-080", "verb": "applies to", "to": "SCR-025-03"}
+  - {"op": "add_edge", "from": "REQ-025-080", "verb": "applies to", "to": "ENT-questionnaire-question.help_text"}
+  - {"op": "add_edge", "from": "REQ-025-080", "verb": "applies to", "to": "ENT-questionnaire-question.patient_display_label"}
+  - {"op": "add_edge", "from": "REQ-025-080", "verb": "applies to", "to": "ENT-questionnaire-question.provider_display_label"}
+  - {"op": "add_edge", "from": "REQ-025-080", "verb": "applies to", "to": "ENT-questionnaire-question.max_characters"}
+  - {"op": "add_edge", "from": "REQ-025-081", "verb": "applies at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "REQ-025-081", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-025-081", "verb": "applies to", "to": "SCR-025-04"}
+  - {"op": "add_edge", "from": "REQ-025-081", "verb": "applies to", "to": "ENT-questionnaire-category.name"}
+  - {"op": "add_edge", "from": "REQ-025-081", "verb": "applies to", "to": "ENT-questionnaire-category.description"}
+  - {"op": "add_edge", "from": "REQ-025-082", "verb": "applies at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "REQ-025-082", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-025-082", "verb": "applies to", "to": "SCR-025-03"}
+  - {"op": "add_edge", "from": "REQ-025-082", "verb": "applies to", "to": "ENT-questionnaire-question.question_type"}
+  - {"op": "add_edge", "from": "REQ-025-083", "verb": "applies at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "REQ-025-083", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-025-083", "verb": "applies to", "to": "ENT-questionnaire-set"}
+
+  # Aftercare assignment of a Draft set: new Step and alternative flow beside STP-025-047
+  - {"op": "add_node", "id": "STP-025-050", "type": "Step", "owner_fr": "FR-025", "title": "Admin is told only published sets can be assigned to aftercare milestones", "attrs": {"prd_ref": "Workflow 4 alternative flow A5"}}
+  - {"op": "add_node", "id": "FLW-025-draft-set-blocked-from-milestone", "type": "Flow", "title": "Workflow 4 alternative flow A5: Draft set blocked from a milestone", "attrs": {"kind": "alternative", "description": "Workflow 4 alternative flow A5: Draft set blocked from a milestone", "prd_ref": "Workflow 4 A5"}}
+  - {"op": "add_edge", "from": "STP-025-050", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-025-050", "verb": "at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "STP-025-050", "verb": "applies", "to": "REQ-025-077"}
+  - {"op": "add_edge", "from": "STP-025-046", "verb": "applies", "to": "REQ-025-077"}
+  - {"op": "add_edge", "from": "STP-025-046", "verb": "next", "to": "STP-025-050", "attrs": {"label": "Draft set", "condition": "REQ-025-077"}}
+  - {"op": "add_edge", "from": "STP-025-050", "verb": "next", "to": "STP-025-046"}
+  - {"op": "add_edge", "from": "FLW-025-draft-set-blocked-from-milestone", "verb": "starts at", "to": "STP-025-050"}
+
+  # Publish blocked by incomplete questions: the held Step and Flow, now settled (an incomplete question blocks publishing)
+  - {"op": "add_node", "id": "STP-025-015", "type": "Step", "owner_fr": "FR-025", "title": "Admin is told publish is blocked and sees the list of incomplete questions", "attrs": {"prd_ref": "Workflow 1 alternative flow A4"}}
+  - {"op": "add_node", "id": "FLW-025-publish-blocked", "type": "Flow", "title": "Workflow 1 alternative flow A4: publish blocked by incomplete questions", "attrs": {"kind": "alternative", "description": "Workflow 1 alternative flow A4: publish blocked by incomplete questions", "prd_ref": "Workflow 1 A4"}}
+  - {"op": "add_edge", "from": "STP-025-015", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-025-015", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-025-015", "verb": "on", "to": "SCR-025-02"}
+  - {"op": "add_edge", "from": "STP-025-015", "verb": "applies", "to": "REQ-025-006"}
+  - {"op": "add_edge", "from": "STP-025-015", "verb": "applies", "to": "REQ-025-013"}
+  - {"op": "add_edge", "from": "STP-025-015", "verb": "applies", "to": "REQ-025-014"}
+  - {"op": "add_edge", "from": "STP-025-015", "verb": "applies", "to": "REQ-025-024"}
+  - {"op": "add_edge", "from": "STP-025-010", "verb": "next", "to": "STP-025-015", "attrs": {"label": "Incomplete questions found", "condition": "REQ-025-024"}}
+  - {"op": "add_edge", "from": "STP-025-015", "verb": "next", "to": "STP-025-003", "attrs": {"label": "Admin fixes the questions"}}
+  - {"op": "add_edge", "from": "FLW-025-publish-blocked", "verb": "starts at", "to": "STP-025-015"}
+
+  # Version-published event emitted at the Recovery plan and Baseline Stages too (Inquiry emission already in the base)
+  - {"op": "add_edge", "from": "STG-aftercare-01-recovery-plan", "verb": "emits", "to": "EVT-questionnaire-version-published"}
+  - {"op": "add_edge", "from": "STG-monitoring-01-baseline", "verb": "emits", "to": "EVT-questionnaire-version-published"}
+
+  # FR-025 cites the FR-037 Rule that owns the advice-mode gate
+  - {"op": "add_edge", "from": "FR-025", "verb": "references", "to": "REQ-037-005"}
+
+  # Retired Rules: incomplete questions now block publishing; the monitoring-advice gate belongs to FR-037
+  - {"op": "remove_edge", "from": "STP-025-007", "verb": "applies", "to": "REQ-025-023"}
+  - {"op": "retire_node", "id": "REQ-025-023"}
+  - {"op": "retire_node", "id": "REQ-025-055"}
+
+  # Inquiry designation is only replaced or ended by archiving the set
+  - {"op": "update_node", "id": "STP-025-045", "title": "Admin archives the active Inquiry set; the Inquiry flow is flagged unconfigured and the admin is notified"}
+  - {"op": "update_node", "id": "FLW-025-inquiry-unconfigured", "title": "Workflow 4 alternative flow A2: active set archived", "attrs": {"description": "Workflow 4 alternative flow A2: active set archived"}}
+  - {"op": "retire_enum_value", "field_id": "ENT-questionnaire-audit-entry.action_type", "value": "Remove Inquiry Designation"}
+
+  # Version mismatch: a patient in progress is not made to start over; the version used is recorded
+  - {"op": "update_node", "id": "STP-025-034", "title": "Patient app loads the updated questionnaire for new use; a patient already in progress is not made to start over"}
+  - {"op": "add_edge", "from": "STP-025-034", "verb": "applies", "to": "REQ-025-058"}
+  - {"op": "update_node", "id": "REQ-025-057", "title": "Version mismatch pushes the current Active version; older version accepted and recorded", "attrs": {"statement": "When the patient platform holds an older questionnaire version than the current Active version, the system pushes the current Active version; a patient already in progress is not made to start over, the submission is accepted on the older version, and the version used is recorded against the inquiry"}}
+  - {"op": "update_node", "id": "REQ-025-058", "attrs": {"statement": "System records the questionnaire set version number on the inquiry record itself, in addition to the template version stamp kept by FR-002."}}
+  - {"op": "update_node", "id": "REQ-025-059", "attrs": {"statement": "System logs all responses, alert outcome, and the questionnaire version recorded on the inquiry to audit trail."}}
+
+  # Restore as a new Draft instead of rollback
+  - {"op": "update_node", "id": "REQ-025-038", "title": "Earlier versions restorable as a new Draft, then published", "attrs": {"statement": "Any earlier version must be restorable as a new Draft, which is then published; there is no one-step rollback, and the Active version is unaffected until the restored Draft is published"}}
+
+  # Alert tier stated in the Severity Flagging Rules
+  - {"op": "update_node", "id": "REQ-025-064", "attrs": {"statement": "Alert tier for each submitted Inquiry questionnaire: Red if any Critical question is answered Yes; otherwise Amber if any Standard question is answered Yes; otherwise Green (all answered No). The provider sees the tier on the inquiry record"}}
+
+  # Facts that were only in screen tables or diagrams, now stated as rule text in the PRD
+  - {"op": "update_node", "id": "REQ-025-001", "attrs": {"statement": "Context types are system-defined (fixed in source code). Admins cannot create, rename or delete context types; they assign one to each questionnaire set they create. Changes to context type definitions require a code deployment."}}
+  - {"op": "update_node", "id": "REQ-025-016", "attrs": {"statement": "Aftercare-only questionnaire sets do not have severity flags and do not generate inquiry-style alerts; they support all system-defined question types"}}
+  - {"op": "update_node", "id": "REQ-025-017", "attrs": {"statement": "Severity flags drive the automatic provider alert system for the inquiry flow only. Severity Flag and Alert Description are shown only on questions in Inquiry or Multi-Context sets; response colour-coding in the provider view follows the flag automatically with no extra configuration"}}
+  - {"op": "update_node", "id": "REQ-025-020", "attrs": {"statement": "Conditional fields (Detail Prompt, Scale Labels, Options, Placeholder, Max Characters) are shown or hidden dynamically based on the selected Question Type. Type-specific fields follow the selected type: Visual Scale 1-10 requires a label for each scale point; Numeric Scale 1-10 requires minimum and maximum end labels; Multi-select requires at least 2 options; Free Text may have a placeholder text and an optional maximum character limit"}}
+  - {"op": "update_node", "id": "REQ-025-021", "attrs": {"statement": "Question text must be at least 10 characters"}}
+  - {"op": "update_node", "id": "REQ-025-025", "attrs": {"statement": "Every questionnaire set must be assigned a category before it can be published; the category must exist and be Active"}}
+  - {"op": "update_node", "id": "REQ-025-041", "attrs": {"statement": "All admin actions on the set — including metadata edits, question changes, and publish/archive events — are captured in the audit trail, each with a timestamp and the identity of the admin"}}
+  - {"op": "update_node", "id": "REQ-025-050", "attrs": {"statement": "At most one set may be designated as the active Inquiry questionnaire at a time. Clicking \"Set as Active for Inquiry\" on a second set shows a confirmation dialog and, upon confirmation, transfers the designation from the previous set to the new one; all new patient inquiry submissions use the new set immediately"}}
+  - {"op": "update_node", "id": "REQ-025-066", "attrs": {"statement": "Alert display must be consistent with color-coding standards; providers must be able to quickly scan alerts (red/amber/green) in-portal"}}
+  - {"op": "update_node", "id": "REQ-025-073", "attrs": {"statement": "System must handle concurrent admin modifications gracefully; question order must be maintained during updates"}}
