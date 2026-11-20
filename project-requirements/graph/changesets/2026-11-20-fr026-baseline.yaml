@@ -1,0 +1,257 @@
+reason: "Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-026)"
+by: controller
+operations:
+  - {"op": "remove_edge", "from": "SCR-026-01", "verb": "belongs to", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "SCR-026-01", "verb": "belongs to", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "SCR-026-01", "verb": "belongs to", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "SCR-026-13", "verb": "belongs to", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "SCR-026-13", "verb": "belongs to", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "SCR-026-13", "verb": "belongs to", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-026-001", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-026-001", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-001", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-026-002", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-026-002", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-002", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-026-003", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-026-003", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-003", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-026-004", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-026-004", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-004", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-026-005", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-026-005", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-005", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-026-006", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-026-006", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-006", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-026-007", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-026-007", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-007", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-026-008", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-026-008", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-008", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-026-014", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-026-014", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-014", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-026-015", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-026-015", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-015", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-026-016", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-026-016", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-016", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-026-017", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-026-017", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-017", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-026-020", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-026-020", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-020", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-026-021", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-026-021", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-021", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-026-022", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-026-022", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-022", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-026-023", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-026-023", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-023", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-026-024", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "remove_edge", "from": "REQ-026-024", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-024", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "retire_node", "id": "REQ-026-055"}
+  - {"op": "add_edge", "from": "FR-026", "verb": "references", "to": "REQ-SYS-007"}
+  - {"op": "update_node", "id": "REQ-026-074", "attrs": {"statement": "The system enforces BOTH resend constraints simultaneously (whichever is more restrictive applies): the user must wait at least Resend Cooldown seconds between consecutive resend requests, and cannot exceed Max Resend Attempts resend requests within a rolling 60-minute window. A user can resend an OTP if and only if the cooldown has elapsed since the last resend AND the hourly limit is not exceeded."}}
+  - {"op": "update_node", "id": "REQ-026-085", "attrs": {"distinct_from": "REQ-026-090"}}
+  - {"op": "update_node", "id": "REQ-026-086", "attrs": {"distinct_from": "REQ-026-091"}}
+  - {"op": "update_node", "id": "REQ-026-032", "attrs": {"distinct_from": "REQ-026-033"}}
+  - {"op": "update_node", "id": "REQ-026-083", "attrs": {"distinct_from": "REQ-026-088"}}
+  - {"op": "update_node", "id": "REQ-026-084", "attrs": {"distinct_from": "REQ-026-089"}}
+  - {"op": "remove_edge", "from": "REQ-001-007", "verb": "governed by", "to": "SET-account-lockout-duration"}
+  - {"op": "add_edge", "from": "REQ-001-007", "verb": "governed by", "to": "SET-lockout-duration"}
+  - {"op": "remove_edge", "from": "REQ-001-066", "verb": "governed by", "to": "SET-account-lockout-duration"}
+  - {"op": "add_edge", "from": "REQ-001-066", "verb": "governed by", "to": "SET-lockout-duration"}
+  - {"op": "remove_edge", "from": "REQ-001-097", "verb": "governed by", "to": "SET-account-lockout-duration"}
+  - {"op": "add_edge", "from": "REQ-001-097", "verb": "governed by", "to": "SET-lockout-duration"}
+  - {"op": "retire_node", "id": "SET-account-lockout-duration"}
+  - {"op": "remove_edge", "from": "REQ-001-007", "verb": "governed by", "to": "SET-max-failed-login-attempts"}
+  - {"op": "add_edge", "from": "REQ-001-007", "verb": "governed by", "to": "SET-max-login-attempts"}
+  - {"op": "remove_edge", "from": "REQ-001-097", "verb": "governed by", "to": "SET-max-failed-login-attempts"}
+  - {"op": "add_edge", "from": "REQ-001-097", "verb": "governed by", "to": "SET-max-login-attempts"}
+  - {"op": "retire_node", "id": "SET-max-failed-login-attempts"}
+  - {"op": "remove_edge", "from": "REQ-001-002", "verb": "governed by", "to": "SET-otp-validity-window"}
+  - {"op": "add_edge", "from": "REQ-001-002", "verb": "governed by", "to": "SET-otp-expiry-time"}
+  - {"op": "remove_edge", "from": "REQ-001-004", "verb": "governed by", "to": "SET-otp-validity-window"}
+  - {"op": "add_edge", "from": "REQ-001-004", "verb": "governed by", "to": "SET-otp-expiry-time"}
+  - {"op": "remove_edge", "from": "REQ-001-048", "verb": "governed by", "to": "SET-otp-validity-window"}
+  - {"op": "add_edge", "from": "REQ-001-048", "verb": "governed by", "to": "SET-otp-expiry-time"}
+  - {"op": "remove_edge", "from": "REQ-001-075", "verb": "governed by", "to": "SET-otp-validity-window"}
+  - {"op": "add_edge", "from": "REQ-001-075", "verb": "governed by", "to": "SET-otp-expiry-time"}
+  - {"op": "remove_edge", "from": "REQ-001-098", "verb": "governed by", "to": "SET-otp-validity-window"}
+  - {"op": "add_edge", "from": "REQ-001-098", "verb": "governed by", "to": "SET-otp-expiry-time"}
+  - {"op": "retire_node", "id": "SET-otp-validity-window"}
+  - {"op": "retire_node", "id": "SET-otp-resend-rate-limit"}
+  - {"op": "remove_edge", "from": "REQ-004-011", "verb": "governed by", "to": "SET-quote-currency"}
+  - {"op": "remove_edge", "from": "REQ-004-025", "verb": "governed by", "to": "SET-quote-currency"}
+  - {"op": "remove_edge", "from": "REQ-004-036", "verb": "governed by", "to": "SET-quote-currency"}
+  - {"op": "remove_edge", "from": "REQ-004-041", "verb": "governed by", "to": "SET-quote-currency"}
+  - {"op": "remove_edge", "from": "REQ-004-066", "verb": "governed by", "to": "SET-quote-currency"}
+  - {"op": "remove_edge", "from": "REQ-004-082", "verb": "governed by", "to": "SET-quote-currency"}
+  - {"op": "remove_edge", "from": "REQ-024-032", "verb": "governed by", "to": "SET-quote-currency"}
+  - {"op": "remove_edge", "from": "REQ-026-026", "verb": "governed by", "to": "SET-quote-currency"}
+  - {"op": "remove_edge", "from": "REQ-026-027", "verb": "governed by", "to": "SET-quote-currency"}
+  - {"op": "remove_edge", "from": "REQ-026-037", "verb": "governed by", "to": "SET-quote-currency"}
+  - {"op": "remove_edge", "from": "REQ-026-063", "verb": "governed by", "to": "SET-quote-currency"}
+  - {"op": "remove_edge", "from": "REQ-026-097", "verb": "governed by", "to": "SET-quote-currency"}
+  - {"op": "retire_node", "id": "SET-quote-currency"}
+  - {"op": "update_node", "id": "SET-otp-max-resend-attempts", "attrs": {"unit": "per rolling 60 minutes"}}
+  - {"op": "add_node", "id": "SET-reverification-threshold", "type": "Setting", "owner_fr": "FR-026", "title": "Re-verification threshold", "attrs": {"description": "How long after a patient's last successful sign-in the patient must confirm identity again before a sensitive action (FR-001 Screens 16 and 18). Edited on FR-026 Screen 8.", "default": "5", "unit": "minutes"}}
+  - {"op": "add_node", "id": "SET-landing-background", "type": "Setting", "owner_fr": "FR-026", "title": "Landing background images", "attrs": {"description": "Background images that rotate behind the patient landing screen (FR-001). Image assets only; rotation follows the admin configuration. Edited on FR-026 Screen 8."}}
+  - {"op": "add_node", "id": "SET-profile-photo-formats", "type": "Setting", "owner_fr": "FR-026", "title": "Profile photo accepted formats", "attrs": {"description": "File formats a patient may upload as a profile photo (read by FR-001 REQ-001-082). Edited on FR-026 Screen 8.", "default": "JPG and PNG"}}
+  - {"op": "add_node", "id": "SET-profile-photo-max-size", "type": "Setting", "owner_fr": "FR-026", "title": "Profile photo maximum size", "attrs": {"description": "Largest profile photo a patient may upload (read by FR-001 REQ-001-082). Edited on FR-026 Screen 8.", "default": "5", "unit": "MB"}}
+  - {"op": "add_edge", "from": "REQ-001-142", "verb": "governed by", "to": "SET-reverification-threshold"}
+  - {"op": "add_edge", "from": "REQ-001-040", "verb": "governed by", "to": "SET-landing-background"}
+  - {"op": "update_node", "id": "SET-admin-concurrent-sessions", "attrs": {"description": "Number of concurrent sessions allowed for one admin user (consumer: FR-031). Whole number from 1 to 5. Edited on FR-026 Screen 8."}}
+  - {"op": "update_node", "id": "SET-admin-inactivity-timeout", "attrs": {"description": "The single standard admin inactivity timeout; it also ends a Login as Provider session (consumers: FR-031, FR-015). Edited on FR-026 Screen 8."}}
+  - {"op": "update_node", "id": "SET-admin-max-failed-logins", "attrs": {"description": "Failed admin sign-in attempts allowed before the admin account is locked; a separate Setting from the patient and provider Max Login Attempts (consumer: FR-031). Edited on FR-026 Screen 8; the PRD fixes no default or range."}}
+  - {"op": "update_node", "id": "SET-head-scan-max-file-size", "attrs": {"description": "Largest single head scan file accepted at intake (consumer: FR-002 REQ-002-033). Edited on FR-026 Screen 8; the PRD fixes no value."}}
+  - {"op": "update_node", "id": "SET-head-scan-max-total-size", "attrs": {"description": "Largest total head scan upload accepted at intake (consumer: FR-002 REQ-002-033). Edited on FR-026 Screen 8; the PRD fixes no value."}}
+  - {"op": "update_node", "id": "SET-head-scan-quality-thresholds", "attrs": {"description": "Brightness and blur thresholds below which head scan media fails the basic quality check (consumer: FR-002 REQ-002-034). Edited on FR-026 Screen 8; the PRD fixes no value."}}
+  - {"op": "update_node", "id": "SET-head-scan-required-views", "attrs": {"description": "Viewpoints a head scan photo set must include, for example front, top, left, right and back (consumer: FR-002 REQ-002-032). The examples are not a final list. Edited on FR-026 Screen 8; the PRD fixes no final list."}}
+  - {"op": "update_node", "id": "SET-head-video-duration-limits", "attrs": {"description": "Minimum and maximum duration of a head video, applied only where a head video is accepted (consumer: FR-002 REQ-002-035). Edited on FR-026 Screen 8; the PRD fixes no value."}}
+  - {"op": "update_node", "id": "SET-acceptance-terms-text", "attrs": {"description": "Legal copy and terms acknowledgment text shown at quote acceptance (consumer: FR-005). Versioned and edited on FR-026 Screen 8; Terms and Conditions, Privacy Policy and consent forms stay in FR-027."}}
+  - {"op": "update_node", "id": "SET-timezone-options", "attrs": {"description": "Timezone choices from GMT-12 to GMT+14, each with its offset and a city example such as \"(GMT+3) Istanbul\" (consumer: FR-032). Edited on FR-026 Screen 8."}}
+  - {"op": "update_node", "id": "SET-provider-notification-types", "attrs": {"description": "Notification types offered in provider notification preferences (consumers: FR-032, FR-020). Core types quote, schedule, treatment, aftercare and review cannot be removed. Edited on FR-026 Screen 8."}}
+  - {"op": "update_node", "id": "SET-support-emergency-contact-phone", "attrs": {"description": "Emergency phone number shown read-only with tap-to-call on the patient Help & Support Hub (FR-035 Screen 1). No default; FR-035 assumes the admin sets it before go-live. Edited on FR-026 Screen 8."}}
+  - {"op": "update_node", "id": "SET-support-emergency-contact-email", "attrs": {"description": "Emergency email address shown read-only with tap-to-compose on the patient Help & Support Hub (FR-035 Screen 1). No default; FR-035 assumes the admin sets it before go-live. Edited on FR-026 Screen 8."}}
+  - {"op": "add_node", "id": "SCR-026-14", "type": "Screen", "owner_fr": "FR-026", "title": "Platform Settings Editor (Screen 8)", "attrs": {"platform": "admin", "description": "Admin views and changes the platform Settings that other modules read and that Screens 2 to 7 do not edit: re-verification threshold, admin session policy, landing background images, profile photo limits, head scan intake limits, acceptance terms text, timezone options, provider notification types and the support emergency contact. Each Setting sits in one of the Screen 1 setting groups."}}
+  - {"op": "add_edge", "from": "SCR-026-14", "verb": "belongs to", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-026-14"}
+  - {"op": "add_node", "id": "REQ-026-112", "type": "Rule", "owner_fr": "FR-026", "title": "Re-verification threshold Setting", "attrs": {"statement": "System MUST store a Re-Verification Threshold Setting (whole minutes, default 5), the time after a patient's last successful sign-in beyond which FR-001 asks the patient to confirm identity again before a sensitive action. Consumer: FR-001 Screens 16 and 18.", "rationale": "FR-026 PRD, section Platform Settings Requirements."}}
+  - {"op": "add_edge", "from": "REQ-026-112", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-026-112", "verb": "applies to", "to": "SCR-026-14"}
+  - {"op": "add_edge", "from": "REQ-026-112", "verb": "governed by", "to": "SET-reverification-threshold"}
+  - {"op": "add_node", "id": "REQ-026-113", "type": "Rule", "owner_fr": "FR-026", "title": "Landing background images Setting", "attrs": {"statement": "System MUST let an admin manage the Landing Background Images Setting, the set of background images that rotate behind the patient landing screen. Consumer: FR-001.", "rationale": "FR-026 PRD, section Platform Settings Requirements."}}
+  - {"op": "add_edge", "from": "REQ-026-113", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-026-113", "verb": "applies to", "to": "SCR-026-14"}
+  - {"op": "add_edge", "from": "REQ-026-113", "verb": "governed by", "to": "SET-landing-background"}
+  - {"op": "add_node", "id": "REQ-026-114", "type": "Rule", "owner_fr": "FR-026", "title": "Profile photo formats and maximum size Settings", "attrs": {"statement": "System MUST store Profile Photo Accepted Formats (default JPG and PNG) and Profile Photo Maximum Size (default 5 MB) as admin-changeable Settings. Consumer: FR-001 REQ-001-082.", "rationale": "FR-026 PRD, section Platform Settings Requirements."}}
+  - {"op": "add_edge", "from": "REQ-026-114", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-026-114", "verb": "applies to", "to": "SCR-026-14"}
+  - {"op": "add_edge", "from": "REQ-026-114", "verb": "governed by", "to": "SET-profile-photo-formats"}
+  - {"op": "add_edge", "from": "REQ-026-114", "verb": "governed by", "to": "SET-profile-photo-max-size"}
+  - {"op": "add_node", "id": "REQ-026-115", "type": "Rule", "owner_fr": "FR-026", "title": "Support emergency contact phone and email Settings", "attrs": {"statement": "System MUST store the Support Emergency Contact Phone and Support Emergency Contact Email Settings, with no default, for display read-only on the patient Help & Support Hub. Consumer: FR-035 Screen 1.", "rationale": "FR-026 PRD, section Platform Settings Requirements."}}
+  - {"op": "add_edge", "from": "REQ-026-115", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-026-115", "verb": "applies to", "to": "SCR-026-14"}
+  - {"op": "add_edge", "from": "REQ-026-115", "verb": "governed by", "to": "SET-support-emergency-contact-phone"}
+  - {"op": "add_edge", "from": "REQ-026-115", "verb": "governed by", "to": "SET-support-emergency-contact-email"}
+  - {"op": "add_node", "id": "REQ-026-116", "type": "Rule", "owner_fr": "FR-026", "title": "Admin session Settings", "attrs": {"statement": "System MUST store the admin session Settings: concurrent sessions per admin user (1 to 5, default 3), the admin inactivity timeout (default 30 minutes, which also ends a Login as Provider session), and Admin Maximum Failed Logins as its own Setting, separate from Max Login Attempts. Consumers: FR-031, FR-015.", "rationale": "FR-026 PRD, section Platform Settings Requirements."}}
+  - {"op": "add_edge", "from": "REQ-026-116", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-026-116", "verb": "applies to", "to": "SCR-026-14"}
+  - {"op": "add_edge", "from": "REQ-026-116", "verb": "governed by", "to": "SET-admin-concurrent-sessions"}
+  - {"op": "add_edge", "from": "REQ-026-116", "verb": "governed by", "to": "SET-admin-inactivity-timeout"}
+  - {"op": "add_edge", "from": "REQ-026-116", "verb": "governed by", "to": "SET-admin-max-failed-logins"}
+  - {"op": "add_node", "id": "REQ-026-117", "type": "Rule", "owner_fr": "FR-026", "title": "Head scan intake Settings", "attrs": {"statement": "System MUST store the head scan intake Settings: maximum file size, maximum total size, quality thresholds, required views, and head video duration limits. This document fixes no values for them. Consumer: FR-002 REQ-002-032 to REQ-002-035.", "rationale": "FR-026 PRD, section Platform Settings Requirements."}}
+  - {"op": "add_edge", "from": "REQ-026-117", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-026-117", "verb": "applies to", "to": "SCR-026-14"}
+  - {"op": "add_edge", "from": "REQ-026-117", "verb": "governed by", "to": "SET-head-scan-max-file-size"}
+  - {"op": "add_edge", "from": "REQ-026-117", "verb": "governed by", "to": "SET-head-scan-max-total-size"}
+  - {"op": "add_edge", "from": "REQ-026-117", "verb": "governed by", "to": "SET-head-scan-quality-thresholds"}
+  - {"op": "add_edge", "from": "REQ-026-117", "verb": "governed by", "to": "SET-head-scan-required-views"}
+  - {"op": "add_edge", "from": "REQ-026-117", "verb": "governed by", "to": "SET-head-video-duration-limits"}
+  - {"op": "add_node", "id": "REQ-026-118", "type": "Rule", "owner_fr": "FR-026", "title": "Acceptance terms text Setting", "attrs": {"statement": "System MUST store the acceptance legal copy and terms acknowledgment text shown at quote acceptance as a versioned Setting. Consumer: FR-005.", "rationale": "FR-026 PRD, section Platform Settings Requirements."}}
+  - {"op": "add_edge", "from": "REQ-026-118", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-026-118", "verb": "applies to", "to": "SCR-026-14"}
+  - {"op": "add_edge", "from": "REQ-026-118", "verb": "governed by", "to": "SET-acceptance-terms-text"}
+  - {"op": "add_node", "id": "REQ-026-119", "type": "Rule", "owner_fr": "FR-026", "title": "Discovery source options come from Screen 5", "attrs": {"statement": "System MUST offer the registration question \"How did you find out about us?\" from the Discovery Questions options managed on Screen 5. Consumer: FR-001.", "rationale": "FR-026 PRD, section Platform Settings Requirements."}}
+  - {"op": "add_edge", "from": "REQ-026-119", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-026-119", "verb": "applies to", "to": "SCR-026-05"}
+  - {"op": "add_edge", "from": "REQ-026-119", "verb": "applies to", "to": "SCR-026-14"}
+  - {"op": "add_edge", "from": "REQ-026-119", "verb": "governed by", "to": "SET-discovery-question-options"}
+  - {"op": "add_node", "id": "REQ-026-120", "type": "Rule", "owner_fr": "FR-026", "title": "Provider notification types Setting", "attrs": {"statement": "System MUST store the provider notification types offered in provider notification preferences. Admins can add or remove types, but the core types (quote, schedule, treatment, aftercare, review) cannot be removed. Consumers: FR-032, FR-020.", "rationale": "FR-026 PRD, section Platform Settings Requirements."}}
+  - {"op": "add_edge", "from": "REQ-026-120", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-026-120", "verb": "applies to", "to": "SCR-026-14"}
+  - {"op": "add_edge", "from": "REQ-026-120", "verb": "governed by", "to": "SET-provider-notification-types"}
+  - {"op": "add_node", "id": "REQ-026-121", "type": "Rule", "owner_fr": "FR-026", "title": "Timezone options Setting", "attrs": {"statement": "System MUST store the timezone options (GMT-12 to GMT+14, each with its offset and a city example). Consumer: FR-032.", "rationale": "FR-026 PRD, section Platform Settings Requirements."}}
+  - {"op": "add_edge", "from": "REQ-026-121", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-026-121", "verb": "applies to", "to": "SCR-026-14"}
+  - {"op": "add_edge", "from": "REQ-026-121", "verb": "governed by", "to": "SET-timezone-options"}
+  - {"op": "add_node", "id": "REQ-026-122", "type": "Rule", "owner_fr": "FR-026", "title": "Screen 4 field limits", "attrs": {"statement": "On Screen 4, Country Name MUST be at most 100 characters and unique; ISO Code MUST be exactly 2 uppercase letters and unique; Calling Code MUST be \"+\" followed by 1 to 4 digits; Display Order MUST be a whole number (default 999); Country Flag MUST be an SVG or PNG file of at most 1 MB.", "rationale": "FR-026 PRD, section Screen Field Limits and Behaviours."}}
+  - {"op": "add_edge", "from": "REQ-026-122", "verb": "applies at", "to": "STG-patient-02-profile-complete"}
+  - {"op": "add_edge", "from": "REQ-026-122", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-122", "verb": "applies to", "to": "SCR-026-04"}
+  - {"op": "add_edge", "from": "REQ-026-122", "verb": "applies to", "to": "ENT-country.country_name"}
+  - {"op": "add_edge", "from": "REQ-026-122", "verb": "applies to", "to": "ENT-country.iso_code"}
+  - {"op": "add_edge", "from": "REQ-026-122", "verb": "applies to", "to": "ENT-country.calling_code"}
+  - {"op": "add_edge", "from": "REQ-026-122", "verb": "applies to", "to": "ENT-country.display_order"}
+  - {"op": "add_edge", "from": "REQ-026-122", "verb": "applies to", "to": "ENT-country.flag_url"}
+  - {"op": "add_edge", "from": "REQ-026-122", "verb": "governed by", "to": "SET-country-list"}
+  - {"op": "add_node", "id": "REQ-026-123", "type": "Rule", "owner_fr": "FR-026", "title": "Screen 5 field limits", "attrs": {"statement": "On Screen 5, Answer Option MUST be at most 100 characters and unique; Display Order MUST be a whole number (default 999).", "rationale": "FR-026 PRD, section Screen Field Limits and Behaviours."}}
+  - {"op": "add_edge", "from": "REQ-026-123", "verb": "applies at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "REQ-026-123", "verb": "applies to", "to": "SCR-026-05"}
+  - {"op": "add_edge", "from": "REQ-026-123", "verb": "applies to", "to": "ENT-discovery-question-option.option_text"}
+  - {"op": "add_edge", "from": "REQ-026-123", "verb": "applies to", "to": "ENT-discovery-question-option.display_order"}
+  - {"op": "add_edge", "from": "REQ-026-123", "verb": "governed by", "to": "SET-discovery-question-options"}
+  - {"op": "add_node", "id": "REQ-026-124", "type": "Rule", "owner_fr": "FR-026", "title": "Screen 5a field limits", "attrs": {"statement": "On Screen 5a, Reason Label MUST be at most 100 characters and unique; Display Order MUST be a whole number (default 999); \"Other\" always requires an explanation.", "rationale": "FR-026 PRD, section Screen Field Limits and Behaviours."}}
+  - {"op": "add_edge", "from": "REQ-026-124", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-026-124", "verb": "applies to", "to": "SCR-026-06"}
+  - {"op": "add_edge", "from": "REQ-026-124", "verb": "applies to", "to": "ENT-inquiry-cancellation-reason.reason_label"}
+  - {"op": "add_edge", "from": "REQ-026-124", "verb": "applies to", "to": "ENT-inquiry-cancellation-reason.display_order"}
+  - {"op": "add_edge", "from": "REQ-026-124", "verb": "applies to", "to": "ENT-inquiry-cancellation-reason.requires_explanation"}
+  - {"op": "add_edge", "from": "REQ-026-124", "verb": "governed by", "to": "SET-inquiry-cancellation-reasons"}
+  - {"op": "add_node", "id": "REQ-026-125", "type": "Rule", "owner_fr": "FR-026", "title": "Screen 5b field limits", "attrs": {"statement": "On Screen 5b, Reason Label MUST be at most 100 characters and unique; Display Order MUST be a whole number (default 999); \"Others\" always requires an explanation.", "rationale": "FR-026 PRD, section Screen Field Limits and Behaviours."}}
+  - {"op": "add_edge", "from": "REQ-026-125", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-125", "verb": "applies to", "to": "SCR-026-07"}
+  - {"op": "add_edge", "from": "REQ-026-125", "verb": "applies to", "to": "ENT-account-deletion-reason.reason_label"}
+  - {"op": "add_edge", "from": "REQ-026-125", "verb": "applies to", "to": "ENT-account-deletion-reason.display_order"}
+  - {"op": "add_edge", "from": "REQ-026-125", "verb": "applies to", "to": "ENT-account-deletion-reason.requires_explanation"}
+  - {"op": "add_edge", "from": "REQ-026-125", "verb": "governed by", "to": "SET-account-deletion-reasons"}
+  - {"op": "add_node", "id": "REQ-026-126", "type": "Rule", "owner_fr": "FR-026", "title": "Screen 5c field limits", "attrs": {"statement": "On Screen 5c, Treatment Area Label MUST be at most 100 characters and unique among active options; Display Order MUST be a unique whole number.", "rationale": "FR-026 PRD, section Screen Field Limits and Behaviours."}}
+  - {"op": "add_edge", "from": "REQ-026-126", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-026-126", "verb": "applies to", "to": "SCR-026-08"}
+  - {"op": "add_edge", "from": "REQ-026-126", "verb": "applies to", "to": "ENT-treatment-area.label"}
+  - {"op": "add_edge", "from": "REQ-026-126", "verb": "applies to", "to": "ENT-treatment-area.display_order"}
+  - {"op": "add_edge", "from": "REQ-026-126", "verb": "governed by", "to": "SET-treatment-area-options"}
+  - {"op": "add_node", "id": "REQ-026-127", "type": "Rule", "owner_fr": "FR-026", "title": "Screen 6 field limits", "attrs": {"statement": "On Screen 6, Subject Line MUST be at most 200 characters, Email Body (HTML) at most 50,000 characters, and Email Body (Plain Text) at most 10,000 characters.", "rationale": "FR-026 PRD, section Screen Field Limits and Behaviours."}}
+  - {"op": "add_edge", "from": "REQ-026-127", "verb": "applies at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "REQ-026-127", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-127", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-127", "verb": "applies to", "to": "SCR-026-12"}
+  - {"op": "add_edge", "from": "REQ-026-127", "verb": "applies to", "to": "ENT-email-template.subject_line"}
+  - {"op": "add_edge", "from": "REQ-026-127", "verb": "applies to", "to": "ENT-email-template.html_body"}
+  - {"op": "add_edge", "from": "REQ-026-127", "verb": "applies to", "to": "ENT-email-template.plain_text_body"}
+  - {"op": "add_edge", "from": "REQ-026-127", "verb": "governed by", "to": "SET-otp-email-templates"}
+  - {"op": "add_node", "id": "REQ-026-128", "type": "Rule", "owner_fr": "FR-026", "title": "Country CSV bulk import", "attrs": {"statement": "Screen 4 MUST offer bulk import of countries from a CSV file, with validation of every row before anything is saved.", "rationale": "FR-026 PRD, section Screen Field Limits and Behaviours."}}
+  - {"op": "add_edge", "from": "REQ-026-128", "verb": "applies at", "to": "STG-patient-02-profile-complete"}
+  - {"op": "add_edge", "from": "REQ-026-128", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-128", "verb": "applies to", "to": "SCR-026-04"}
+  - {"op": "add_edge", "from": "REQ-026-128", "verb": "applies to", "to": "ENT-country"}
+  - {"op": "add_edge", "from": "REQ-026-128", "verb": "governed by", "to": "SET-country-list"}
+  - {"op": "add_node", "id": "REQ-026-129", "type": "Rule", "owner_fr": "FR-026", "title": "Warning before deactivating an in-use value", "attrs": {"statement": "Before an admin deactivates a country that active users have selected, a discovery option, cancellation reason, or deletion reason that patients frequently select, or a provider specialty that providers currently hold, the system MUST warn the admin.", "rationale": "FR-026 PRD, section Screen Field Limits and Behaviours."}}
+  - {"op": "add_edge", "from": "REQ-026-129", "verb": "applies at", "to": "STG-patient-02-profile-complete"}
+  - {"op": "add_edge", "from": "REQ-026-129", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-129", "verb": "applies at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "REQ-026-129", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-026-129", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-129", "verb": "applies at", "to": "STG-provider-01-invited"}
+  - {"op": "add_edge", "from": "REQ-026-129", "verb": "applies to", "to": "SCR-026-04"}
+  - {"op": "add_edge", "from": "REQ-026-129", "verb": "applies to", "to": "SCR-026-05"}
+  - {"op": "add_edge", "from": "REQ-026-129", "verb": "applies to", "to": "SCR-026-06"}
+  - {"op": "add_edge", "from": "REQ-026-129", "verb": "applies to", "to": "SCR-026-07"}
+  - {"op": "add_edge", "from": "REQ-026-129", "verb": "applies to", "to": "SCR-026-11"}
+  - {"op": "add_node", "id": "REQ-026-130", "type": "Rule", "owner_fr": "FR-026", "title": "Version history filters and page size", "attrs": {"statement": "Screen 7 MUST let an admin filter version history by date range, admin, and change type, and MUST show 50 entries per page.", "rationale": "FR-026 PRD, section Screen Field Limits and Behaviours."}}
+  - {"op": "add_edge", "from": "REQ-026-130", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-026-130", "verb": "applies to", "to": "SCR-026-13"}
+  - {"op": "add_node", "id": "REQ-026-131", "type": "Rule", "owner_fr": "FR-026", "title": "Template selector on Screen 6", "attrs": {"statement": "Screen 6 MUST let an admin switch between the Verification Email and Password Reset Email templates without leaving the screen.", "rationale": "FR-026 PRD, section Screen Field Limits and Behaviours."}}
+  - {"op": "add_edge", "from": "REQ-026-131", "verb": "applies at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "REQ-026-131", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-131", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-131", "verb": "applies to", "to": "SCR-026-12"}
+  - {"op": "add_edge", "from": "REQ-026-131", "verb": "applies to", "to": "ENT-email-template"}
+  - {"op": "add_edge", "from": "REQ-026-131", "verb": "governed by", "to": "SET-otp-email-templates"}
+  - {"op": "add_node", "id": "REQ-026-132", "type": "Rule", "owner_fr": "FR-026", "title": "Warning when a throttling change reduces security", "attrs": {"statement": "Screen 2 MUST show an admin a warning when a change reduces security (more attempts allowed or a shorter lockout).", "rationale": "FR-026 PRD, section Screen Field Limits and Behaviours."}}
+  - {"op": "add_edge", "from": "REQ-026-132", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-132", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-132", "verb": "applies to", "to": "SCR-026-02"}
+  - {"op": "add_edge", "from": "REQ-026-132", "verb": "governed by", "to": "SET-max-login-attempts"}
+  - {"op": "add_edge", "from": "REQ-026-132", "verb": "governed by", "to": "SET-lockout-duration"}
+  - {"op": "update_node", "id": "REQ-026-124", "attrs": {"distinct_from": "REQ-026-125"}}
