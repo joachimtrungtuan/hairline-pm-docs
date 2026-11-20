@@ -1,0 +1,7 @@
+reason: "Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-013)"
+by: controller
+operations:
+- op: add_edge
+  from: FR-013
+  verb: references
+  to: REQ-020-152
