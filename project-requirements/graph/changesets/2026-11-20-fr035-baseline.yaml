@@ -1,0 +1,52 @@
+reason: "Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-035)"
+by: controller
+operations:
+  # Reworded Rules (statement copied from the PRD as it reads now)
+  - {"op": "update_node", "id": "REQ-035-013", "attrs": {"statement": "System MUST support file attachments up to 10 MB per file, maximum 5 files per message (the initial request and each reply may each carry up to 5 files), formats: JPG, PNG, PDF, DOC, DOCX (FR-034 REQ-034-036/037)", "rationale": "Fixed in the codebase (482). Screen 5 Attachments (434: thumbnail preview with remove option) and Screen 4 Attachment Button (403) carry the same limits. The limit counts per message, replies included."}}
+  - {"op": "update_node", "id": "REQ-035-036", "attrs": {"statement": "Search covers all published patient-audience Help Center content (FAQs, Articles, Resources, Videos); results are ranked by relevance; if no results match, show a \"Contact Support\" prompt. Full-text search is required for P1 and must not be downgraded to browse-only behavior.", "rationale": "Screen 1 rules (247), Screen 1 Search Bar (236), Screen 2 rules (338), Alternative Flow A1 (134-136). Search covers all four patient content types on Screen 1 and Screen 2."}}
+  - {"op": "update_node", "id": "REQ-035-040", "title": "Emergency phone and email are two App Settings owned by FR-026", "attrs": {"statement": "Emergency phone and email values are two App Settings owned by FR-026 (support emergency contact phone and email); this screen displays them.", "rationale": "Screen 1 rules (248), Admin Editability (474: two App Settings owned by FR-026) and Business Process Assumption 3 (599: values are configured by admin before FR-035 goes live)."}}
+  - {"op": "update_node", "id": "REQ-035-044", "title": "Featured / Popular Articles: five most viewed patient articles in the past 30 days", "attrs": {"statement": "Featured / Popular Articles [Design Addition]: automatic shortlist of the five patient articles with the most views in the past 30 days, up to 5 items; not defined in FR-033; generated automatically from view analytics (FR-033 REQ-033-018), not curated by admins.", "rationale": "Screen 2 field Featured / Popular Articles (270), optional (Required: No). Generated from view analytics, not admin-curated."}}
+  - {"op": "update_node", "id": "REQ-035-050", "title": "Server-found problems highlighted inline after Submit", "attrs": {"statement": "Patient taps Submit with every field valid; System checks the submission on the server and finds a failure; System highlights the affected fields with inline error messages; Patient corrects the reported errors and resubmits.", "rationale": "Alternative Flow B1 (198-208). Submit is enabled only when every field is valid (REQ-035-049), so this flow covers a failure found by the server after submitting."}}
+  - {"op": "update_node", "id": "REQ-035-063", "title": "Rate limit on new ticket submissions", "attrs": {"statement": "Rate limiting on new ticket submissions (max 10 new tickets per hour per patient); replies are not counted by this limit.", "rationale": "Security Considerations Threat mitigation (643), promoted."}}
+  - {"op": "update_node", "id": "REQ-035-065", "attrs": {"statement": "Patient replies are added to the shared communication thread; the assigned admin notification for each reply (recipients, content, and whether it can be switched off) is defined in FR-020 REQ-020-111 (support.case_user_reply event)", "rationale": "Screen 4 rules (413), A4 steps 6-7 (179-181) and Send Reply Button (404). The notification itself is owned by FR-020 REQ-020-111."}}
+  - {"op": "update_node", "id": "REQ-035-067", "attrs": {"statement": "Cases auto-close after 7 days in Resolved status if no patient reply (configurable: Immediately, 3, 7, or 14 days per FR-034 REQ-034-061/062); the patient receives a support.case_closed notification."}}
+  # Retired Rules
+  - {"op": "retire_node", "id": "REQ-035-016"}
+  - {"op": "retire_node", "id": "REQ-035-032"}
+  - {"op": "retire_node", "id": "REQ-035-060"}
+  # Steps that applied a retired Rule follow the owning Rule
+  - {"op": "remove_edge", "from": "STP-035-042", "verb": "applies", "to": "REQ-035-016"}
+  - {"op": "add_edge", "from": "STP-035-042", "verb": "applies", "to": "REQ-022-073"}
+  # Alternative flow B1 Steps follow the rewritten flow
+  - {"op": "update_node", "id": "STP-035-061", "title": "Patient taps Submit with every field valid"}
+  - {"op": "update_node", "id": "STP-035-062", "title": "System checks the submission on the server and finds a failure"}
+  - {"op": "update_node", "id": "STP-035-063", "title": "System highlights the affected fields with inline error messages"}
+  - {"op": "update_node", "id": "STP-035-064", "title": "Patient corrects the reported errors and resubmits"}
+  # New Out of scope Rules (PRD Module Scope list), placed at the Stage every FR-035 Rule uses
+  - {"op": "add_node", "id": "REQ-035-078", "type": "Rule", "owner_fr": "FR-035", "title": "Out of scope: Help Center content creation, editing, publishing", "attrs": {"statement": "Out of scope: Help Center content creation, editing, publishing (handled by FR-033: Help Centre Content Management)", "rationale": "Module Scope, Out of Scope list (85)."}}
+  - {"op": "add_node", "id": "REQ-035-079", "type": "Rule", "owner_fr": "FR-035", "title": "Out of scope: Support case management, assignment, escalation, resolution", "attrs": {"statement": "Out of scope: Support case management, assignment, escalation, resolution (handled by FR-034: Support Center & Ticketing)", "rationale": "Module Scope, Out of Scope list (86)."}}
+  - {"op": "add_node", "id": "REQ-035-080", "type": "Rule", "owner_fr": "FR-035", "title": "Out of scope: Real-time in-app chat between patient and admin", "attrs": {"statement": "Out of scope: Real-time in-app chat between patient and admin (future enhancement)", "rationale": "Module Scope, Out of Scope list (87)."}}
+  - {"op": "add_node", "id": "REQ-035-081", "type": "Rule", "owner_fr": "FR-035", "title": "Out of scope: Service Status page", "attrs": {"statement": "Out of scope: Service Status page (provider-only feature per FR-033)", "rationale": "Module Scope, Out of Scope list (88)."}}
+  - {"op": "add_node", "id": "REQ-035-082", "type": "Rule", "owner_fr": "FR-035", "title": "Out of scope: Aftercare-specific communications", "attrs": {"statement": "Out of scope: Aftercare-specific communications (handled by FR-011: Aftercare & Recovery Management)", "rationale": "Module Scope, Out of Scope list (89)."}}
+  - {"op": "add_node", "id": "REQ-035-083", "type": "Rule", "owner_fr": "FR-035", "title": "Out of scope: Provider-to-patient secure messaging", "attrs": {"statement": "Out of scope: Provider-to-patient secure messaging (handled by FR-012: Secure Messaging)", "rationale": "Module Scope, Out of Scope list (90)."}}
+  - {"op": "add_node", "id": "REQ-035-084", "type": "Rule", "owner_fr": "FR-035", "title": "Out of scope: Automated chatbot responses", "attrs": {"statement": "Out of scope: Automated chatbot responses (future enhancement)", "rationale": "Module Scope, Out of Scope list (91)."}}
+  - {"op": "add_node", "id": "REQ-035-085", "type": "Rule", "owner_fr": "FR-035", "title": "Out of scope: Community forum", "attrs": {"statement": "Out of scope: Community forum (future enhancement)", "rationale": "Module Scope, Out of Scope list (92)."}}
+  - {"op": "add_edge", "from": "REQ-035-078", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-035-079", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-035-080", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-035-081", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-035-082", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-035-083", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-035-084", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-035-085", "verb": "applies at", "to": "STG-patient-03-active"}
+  # Emergency contact: Hub reads two FR-026 App Settings; the retired Entity and its Fields are no longer shown or constrained
+  - {"op": "remove_edge", "from": "SCR-035-01", "verb": "shows", "to": "ENT-support-emergency-contact.email"}
+  - {"op": "remove_edge", "from": "SCR-035-01", "verb": "shows", "to": "ENT-support-emergency-contact.phone"}
+  - {"op": "remove_edge", "from": "REQ-035-039", "verb": "applies to", "to": "ENT-support-emergency-contact"}
+  - {"op": "remove_edge", "from": "REQ-035-040", "verb": "applies to", "to": "ENT-support-emergency-contact"}
+  - {"op": "add_edge", "from": "REQ-035-040", "verb": "applies to", "to": "SCR-035-01"}
+  # Links to Rules owned elsewhere
+  - {"op": "add_edge", "from": "FR-035", "verb": "references", "to": "REQ-034-164"}
+  - {"op": "add_edge", "from": "FR-035", "verb": "references", "to": "REQ-022-073"}
+  - {"op": "add_edge", "from": "FR-035", "verb": "references", "to": "REQ-020-111"}
+  - {"op": "add_edge", "from": "REQ-035-055", "verb": "applies to", "to": "EVT-support-case-created"}
