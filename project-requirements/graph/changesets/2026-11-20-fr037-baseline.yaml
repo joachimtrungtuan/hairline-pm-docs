@@ -1,0 +1,94 @@
+reason: "Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-037)"
+by: controller
+operations:
+  # Reworded Rules (statement copied from the PRD as it reads now)
+  - {"op": "update_node", "id": "REQ-037-005", "attrs": {"statement": "Advice mode MUST require the active FR-025 Inquiry medical questionnaire before provider access. It MUST reuse the same Admin-designated active Inquiry-context set, with no separate questionnaire context type and no separate Admin toggle for monitoring advice."}}
+  - {"op": "update_node", "id": "REQ-037-008", "attrs": {"statement": "System MUST enforce a single global Admin-configurable weekly or bi-weekly advice cadence. Each case MUST capture the active cadence at creation and keep it for the case lifetime; a cadence change MUST apply only to cases created after the change. The default cadence MUST be weekly (7 days)."}}
+  - {"op": "update_node", "id": "REQ-037-009", "attrs": {"statement": "Patient MUST be able to complete the case and export a date-to-date PDF summary, which for advice-mode cases MUST include the provider advice. Provider advice appears in the completion PDF only."}}
+  - {"op": "update_node", "id": "REQ-037-013", "attrs": {"statement": "Each advice window MUST open on its calculated start date and remain actionable without an ordinary deadline until its single advice is submitted or a successor window opens; a successor MUST expire only the older unsubmitted window and become the sole actionable window. The first window MUST open one cadence period (7 or 14 days) after the provider is first assigned, and after a reassignment the replacement provider MUST continue the existing window schedule and receive its next window date."}}
+  - {"op": "update_node", "id": "REQ-037-018", "title": "Admin read-only pre-assignment preview link, revocable, expiry chosen at share time up to 14 days", "attrs": {"statement": "Admin MUST be able to generate and revoke a read-only pre-assignment case-preview link for a candidate provider, MUST select its expiry at share time (any time up to 14 days), and preview access MUST NOT create an assignment or ongoing case access."}}
+  - {"op": "update_node", "id": "REQ-037-024", "title": "Previous monitoring history links to its destination only through conversion", "attrs": {"statement": "Previous monitoring history MUST NOT be attached to a newly created monitoring case, for hair-loss monitoring (FR-037) or transplant-progress monitoring (FR-038). History MUST link to its destination only through conversion: the FR-003 inquiry for hair-loss monitoring and the FR-011 standalone aftercare request for transplant-progress monitoring.", "rationale": "Restated by Business Rule 3 and Screen 1 business rules (a new monitoring case starts with its own intake; previous monitoring-case history is not attached to it). Covers FR-037 and FR-038."}}
+  - {"op": "update_node", "id": "REQ-037-029", "attrs": {"statement": "If an assigned advice provider exists at conversion, only that provider MUST initially be selected to quote. If that provider explicitly declines before quote creation, FR-003 MUST audit the reason, remove exclusive routing, and execute normal distribution exactly once. If no provider is assigned at conversion, or the assigned provider has withdrawn or is not eligible at conversion, conversion MUST continue and FR-003 normal distribution MUST apply immediately. Exclusive routing MUST bypass only FR-003 country and provider-selection matching and the 10-provider cap; anonymization, notification timing, and provider dashboard behavior MUST remain unchanged. Expiry MUST remain governed by FR-003/FR-004 rather than this decline fallback."}}
+  - {"op": "update_node", "id": "REQ-037-044", "attrs": {"statement": "Scan capture opens the head scan capture screen and links the resulting scan to the log date. The capture shows front, top, left, right, and back guidance, offers five views with at least one view required and no single view mandatory, validates quality, and lets the patient retake a failed-quality scan before saving."}}
+  - {"op": "update_node", "id": "REQ-037-054", "title": "Completed or converted case is read-only except Admin audited correction", "attrs": {"statement": "A completed or converted case is read-only except for Admin audited correction."}}
+  - {"op": "update_node", "id": "REQ-037-068", "attrs": {"statement": "Assignment eligibility and Admin permissions are validated before an assignment is saved. An eligible provider is one that is Active under FR-015 with setup complete; providers do not opt in separately to advice cases.", "rationale": "Screen 12 business rules; Marking Unclear Requirements (eligible provider means FR-015 Active with setup complete)."}}
+  - {"op": "update_node", "id": "REQ-037-069", "title": "Provider assigned at conversion eligible; otherwise normal distribution", "attrs": {"statement": "The provider assigned at conversion is eligible to receive the inquiry; if that provider has withdrawn or is not eligible, conversion continues and the case follows the no-assigned-provider path.", "rationale": "Business Process Assumptions, promoted because it states a business path; Marking Unclear Requirements (eligible provider means FR-015 Active with setup complete)."}}
+  # New Rules (one statement each; Screen rules have no inline id in the PRD)
+  - {"op": "add_node", "id": "REQ-037-086", "type": "Rule", "owner_fr": "FR-037", "title": "Advice mode cannot be chosen while no Inquiry questionnaire set is active", "attrs": {"statement": "System MUST NOT allow provider-advice mode to be chosen while no Inquiry-context questionnaire set is active, MUST show Admin the same system-level warning FR-025 defines for a missing active Inquiry set, and MUST keep self-monitoring available.", "rationale": "Business Rule 10 and the Admin Platform scope; reuses the FR-025 warning for a missing active Inquiry set."}}
+  - {"op": "add_node", "id": "REQ-037-087", "type": "Rule", "owner_fr": "FR-037", "title": "Provider queue search, filters and sort", "attrs": {"statement": "The provider can search by anonymized patient ID or case ID; filter by status, advice availability, and assignment type; and sort by last patient log, advice availability, assignment date, or anonymized patient ID.", "rationale": "Screen 8 (Provider Monitoring Advice Queue) Business Rules."}}
+  - {"op": "add_node", "id": "REQ-037-088", "type": "Rule", "owner_fr": "FR-037", "title": "Admin case list search, filters and sort", "attrs": {"statement": "Admin can search by patient name, patient ID, case ID, assigned provider, or candidate provider; filter by status, provider, advice state, and date; and sort by updated date, start date, last patient log, advice availability, patient, or provider.", "rationale": "Screen 12 (Admin Monitoring Cases and Assignment Queue) Business Rules."}}
+  - {"op": "add_node", "id": "REQ-037-089", "type": "Rule", "owner_fr": "FR-037", "title": "Withdrawal reason is 1 to 1000 characters", "attrs": {"statement": "The provider must enter a withdrawal reason of 1 to 1000 characters before the withdrawal is saved.", "rationale": "Screen 11 (Provider Withdrawal Confirmation) Business Rules."}}
+  - {"op": "add_node", "id": "REQ-037-090", "type": "Rule", "owner_fr": "FR-037", "title": "Withdrawal confirmation must be ticked", "attrs": {"statement": "The provider must tick the confirmation that access ends immediately before the withdrawal is saved.", "rationale": "Screen 11 (Provider Withdrawal Confirmation) Business Rules."}}
+  - {"op": "add_edge", "from": "REQ-037-086", "verb": "applies at", "to": "STG-monitoring-01-baseline"}
+  - {"op": "add_edge", "from": "REQ-037-087", "verb": "applies at", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "REQ-037-088", "verb": "applies at", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "REQ-037-089", "verb": "applies at", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "REQ-037-090", "verb": "applies at", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "REQ-037-086", "verb": "applies to", "to": "SCR-037-01"}
+  - {"op": "add_edge", "from": "REQ-037-086", "verb": "applies to", "to": "ENT-monitoring-case.mode"}
+  - {"op": "add_edge", "from": "REQ-037-087", "verb": "applies to", "to": "SCR-037-09"}
+  - {"op": "add_edge", "from": "REQ-037-088", "verb": "applies to", "to": "SCR-037-14"}
+  - {"op": "add_edge", "from": "REQ-037-089", "verb": "applies to", "to": "SCR-037-13"}
+  - {"op": "add_edge", "from": "REQ-037-089", "verb": "applies to", "to": "ENT-monitoring-provider-assignment.withdrawal_reason"}
+  - {"op": "add_edge", "from": "REQ-037-090", "verb": "applies to", "to": "SCR-037-13"}
+  - {"op": "add_edge", "from": "STP-037-002", "verb": "applies", "to": "REQ-037-086"}
+  - {"op": "add_edge", "from": "STP-037-009", "verb": "applies", "to": "REQ-037-087"}
+  - {"op": "add_edge", "from": "STP-037-014", "verb": "applies", "to": "REQ-037-088"}
+  - {"op": "add_edge", "from": "STP-037-013", "verb": "applies", "to": "REQ-037-089"}
+  - {"op": "add_edge", "from": "STP-037-013", "verb": "applies", "to": "REQ-037-090"}
+  # Retired Rules: retention and fixed-in-code moved to the system PRD (REQ-SYS-002, REQ-SYS-006); FR-037 cites them
+  - {"op": "retire_node", "id": "REQ-037-048"}
+  - {"op": "retire_node", "id": "REQ-037-049"}
+  - {"op": "retire_node", "id": "REQ-037-073"}
+  - {"op": "add_edge", "from": "FR-037", "verb": "references", "to": "REQ-SYS-002"}
+  - {"op": "add_edge", "from": "FR-037", "verb": "references", "to": "REQ-SYS-006"}
+  # Step re-pointed from the retired download-link Rule to the system Rule
+  - {"op": "remove_edge", "from": "STP-037-035", "verb": "applies", "to": "REQ-037-050"}
+  - {"op": "add_edge", "from": "STP-037-035", "verb": "applies", "to": "REQ-SYS-014"}
+  # Pairs kept distinct on purpose
+  - {"op": "update_node", "id": "REQ-037-030", "attrs": {"distinct_from": "REQ-038-015"}}
+  - {"op": "update_node", "id": "REQ-037-001", "attrs": {"distinct_from": "REQ-038-001"}}
+  - {"op": "update_node", "id": "REQ-037-080", "attrs": {"distinct_from": "REQ-038-033"}}
+  - {"op": "update_node", "id": "REQ-037-023", "attrs": {"distinct_from": "REQ-038-010"}}
+  # Setting, Event, Fields
+  - {"op": "update_node", "id": "SET-advice-cadence", "attrs": {"default": "7", "description": "Single global advice cadence selected by Admin on Screen 13: weekly (7 days, the default) or bi-weekly (14 days). Applies to cases created after a change; each case keeps the cadence captured at creation. Placed under FR-037 because the PRD defines the control on its own Screen 13."}}
+  - {"op": "update_node", "id": "EVT-monitoring-converted", "title": "monitoring.converted_to_inquiry", "attrs": {"description": "monitoring.converted_to_inquiry: The FR-003 inquiry is submitted and the case converts (REQ-037-030, REQ-037-079)."}}
+  - {"op": "update_node", "id": "ENT-monitoring-advice-window.start_date", "attrs": {"description": "The first window starts one cadence period (7 or 14 days) after the provider is first assigned; after a reassignment the schedule carries on and the replacement provider receives the next window date."}}
+  - {"op": "update_node", "id": "ENT-monitoring-scan.quality_state", "attrs": {"description": "Quality validation result. The PRD names the state but lists no values."}}
+  # Shared monitoring case: FR-038 case type and its transplant-specific fields (FR-037 owns the entity)
+  - {"op": "add_enum_value", "field_id": "ENT-monitoring-case.case_type", "value": "transplant_progress", "label": "Transplant progress"}
+  - {"op": "update_node", "id": "ENT-monitoring-case.case_type", "attrs": {"description": "Key Entities: type hair_loss (FR-037) or transplant_progress (FR-038). Shared with FR-038 by this discriminator."}}
+  - {"op": "update_node", "id": "ENT-monitoring-case", "attrs": {"description": "Key Entities 1 (MonitoringCase): one patient monitoring case with its mode, status, dates, intake snapshot, creation-time cadence and conversion link. FR-037 owns it; FR-038 shares it through the case type and extends it with transplant-specific fields."}}
+  - {"op": "add_field", "id": "ENT-monitoring-case.treating_clinic", "entity_id": "ENT-monitoring-case", "name": "treating_clinic", "data_type": "text", "title": "Treating clinic", "owner_fr": "FR-037", "required": false, "attrs": {"description": "Transplant-progress cases only (FR-038); empty on hair-loss cases."}}
+  - {"op": "add_field", "id": "ENT-monitoring-case.treating_country", "entity_id": "ENT-monitoring-case", "name": "treating_country", "data_type": "text", "title": "Treating country", "owner_fr": "FR-037", "required": false, "attrs": {"description": "Transplant-progress cases only (FR-038); empty on hair-loss cases."}}
+  - {"op": "add_field", "id": "ENT-monitoring-case.treatment_date", "entity_id": "ENT-monitoring-case", "name": "treatment_date", "data_type": "date", "title": "Treatment date", "owner_fr": "FR-037", "required": false, "attrs": {"description": "Transplant-progress cases only (FR-038); empty on hair-loss cases."}}
+  - {"op": "add_field", "id": "ENT-monitoring-case.treatment_type", "entity_id": "ENT-monitoring-case", "name": "treatment_type", "data_type": "text", "title": "Treatment type", "owner_fr": "FR-037", "required": false, "attrs": {"description": "Transplant-progress cases only (FR-038); empty on hair-loss cases."}}
+  - {"op": "add_field", "id": "ENT-monitoring-case.treatment_documentation", "entity_id": "ENT-monitoring-case", "name": "treatment_documentation", "data_type": "file", "title": "Treatment documentation", "owner_fr": "FR-037", "required": false, "attrs": {"description": "Transplant-progress cases only (FR-038); empty on hair-loss cases."}}
+  - {"op": "add_field", "id": "ENT-monitoring-case.self_service_acknowledged", "entity_id": "ENT-monitoring-case", "name": "self_service_acknowledged", "data_type": "bool", "title": "Self-service acknowledged", "owner_fr": "FR-037", "required": false, "attrs": {"description": "Transplant-progress cases only (FR-038); empty on hair-loss cases."}}
+  # Screens: anonymized patient ID on the provider headers, patient name on the admin headers
+  - {"op": "add_edge", "from": "SCR-037-11", "verb": "shows", "to": "ENT-patient.anonymized_id", "attrs": {"provenance": "inherited from another FR", "label": "Case and Date Context"}}
+  - {"op": "add_edge", "from": "SCR-037-12", "verb": "shows", "to": "ENT-patient.anonymized_id", "attrs": {"provenance": "inherited from another FR", "label": "Case and Window Context"}}
+  - {"op": "add_edge", "from": "SCR-037-16", "verb": "shows", "to": "ENT-patient.name", "attrs": {"provenance": "inherited from another FR", "label": "Case and Date Context"}}
+  - {"op": "add_edge", "from": "SCR-037-17", "verb": "shows", "to": "ENT-patient.name", "attrs": {"provenance": "inherited from another FR", "label": "Case and Window Context"}}
+  # references edges from FR-037 to Rules of other FRs
+  - {"op": "add_edge", "from": "FR-037", "verb": "references", "to": "REQ-002-031"}
+  - {"op": "add_edge", "from": "FR-037", "verb": "references", "to": "REQ-002-034"}
+  - {"op": "add_edge", "from": "FR-037", "verb": "references", "to": "REQ-002-023"}
+  - {"op": "add_edge", "from": "FR-037", "verb": "references", "to": "REQ-002-033"}
+  - {"op": "add_edge", "from": "FR-037", "verb": "references", "to": "REQ-003-025"}
+  - {"op": "add_edge", "from": "FR-037", "verb": "references", "to": "REQ-003-056"}
+  - {"op": "add_edge", "from": "FR-037", "verb": "references", "to": "REQ-004-052"}
+  - {"op": "add_edge", "from": "FR-037", "verb": "references", "to": "REQ-020-123"}
+  - {"op": "add_edge", "from": "FR-037", "verb": "references", "to": "REQ-020-124"}
+  - {"op": "add_edge", "from": "FR-037", "verb": "references", "to": "REQ-020-125"}
+  - {"op": "add_edge", "from": "FR-037", "verb": "references", "to": "REQ-030-081"}
+  - {"op": "add_edge", "from": "FR-037", "verb": "references", "to": "REQ-020-127"}
+  - {"op": "add_edge", "from": "FR-037", "verb": "references", "to": "REQ-020-128"}
+  - {"op": "add_edge", "from": "FR-037", "verb": "references", "to": "REQ-020-129"}
+  - {"op": "add_edge", "from": "FR-037", "verb": "references", "to": "REQ-020-130"}
+  - {"op": "add_edge", "from": "FR-037", "verb": "references", "to": "REQ-020-004"}
+  - {"op": "add_edge", "from": "FR-037", "verb": "references", "to": "REQ-020-031"}
+  - {"op": "add_edge", "from": "FR-037", "verb": "references", "to": "REQ-020-023"}
+  - {"op": "add_edge", "from": "FR-037", "verb": "references", "to": "REQ-020-035"}
+  - {"op": "add_edge", "from": "FR-037", "verb": "references", "to": "REQ-020-038"}
+  - {"op": "add_edge", "from": "FR-037", "verb": "references", "to": "REQ-038-018"}
