@@ -1,0 +1,413 @@
+reason: "Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-038)"
+by: controller
+operations:
+  - {"op": "add_field", "id": "ENT-monitoring-case.current_concerns", "entity_id": "ENT-monitoring-case", "name": "current_concerns", "data_type": "text", "title": "Current concerns", "owner_fr": "FR-038", "required": false, "attrs": {"description": "Optional free-text concerns entered at intake. FR-038 only: used for transplant_progress cases."}}
+  - {"op": "add_field", "id": "ENT-monitoring-case.conversion_id", "entity_id": "ENT-monitoring-case", "name": "conversion_id", "data_type": "id", "title": "Conversion link", "owner_fr": "FR-038", "required": false, "attrs": {"description": "Link to the conversion record that leads to an FR-011 standalone-aftercare request. FR-038 only: used for transplant_progress cases."}}
+  - {"op": "add_field", "id": "ENT-monitoring-case.conversion_state", "entity_id": "ENT-monitoring-case", "name": "conversion_state", "data_type": "enum", "title": "Conversion state", "owner_fr": "FR-038", "required": false, "attrs": {"description": "Conversion state of the case. FR-038 only: used for transplant_progress cases."}, "calculated_by": "REQ-038-037"}
+  - {"op": "add_field", "id": "ENT-monitoring-conversion.destination_request_id", "entity_id": "ENT-monitoring-conversion", "name": "destination_request_id", "data_type": "id", "title": "Destination standalone-aftercare request ID", "owner_fr": "FR-038", "required": false, "attrs": {"description": "FR-011 standalone-aftercare request created by the conversion. FR-038 only: the destination of a transplant_progress case."}}
+  - {"op": "add_field", "id": "ENT-monitoring-conversion.treatment_details_draft", "entity_id": "ENT-monitoring-conversion", "name": "treatment_details_draft", "data_type": "json", "title": "Treatment details draft", "owner_fr": "FR-038", "required": false, "attrs": {"description": "Draft of the FR-011 external-treatment details while the patient reviews the conversion. FR-038 only: used for transplant_progress cases."}}
+  - {"op": "add_enum_value", "field_id": "ENT-monitoring-case.conversion_state", "value": "none", "label": "None", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-monitoring-case.conversion_state", "value": "draft", "label": "Draft", "sort_order": 1}
+  - {"op": "add_enum_value", "field_id": "ENT-monitoring-case.conversion_state", "value": "converted", "label": "Converted to FR-011", "sort_order": 2}
+  - {"op": "add_node", "id": "REQ-038-074", "type": "Rule", "owner_fr": "FR-038", "title": "Package unavailable during conversion: sending stopped, draft kept, patient picks another", "attrs": {"statement": "If the selected aftercare package becomes unavailable while the conversion draft is open, sending MUST be stopped with a message, the rest of the draft MUST be kept, and the patient MUST pick another package.", "rationale": "Screen 6 Business Rules and Edge Cases."}}
+  - {"op": "add_edge", "from": "REQ-038-074", "verb": "applies at", "to": "STG-monitoring-03-conversion"}
+  - {"op": "add_edge", "from": "REQ-038-074", "verb": "applies to", "to": "SCR-038-06"}
+  - {"op": "add_node", "id": "REQ-038-075", "type": "Rule", "owner_fr": "FR-038", "title": "Log Timeline in chronological order", "attrs": {"statement": "The Log Timeline MUST list entries in chronological order.", "rationale": "Screen 7 Business Rules."}}
+  - {"op": "add_edge", "from": "REQ-038-075", "verb": "applies at", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "REQ-038-075", "verb": "applies to", "to": "SCR-038-07"}
+  - {"op": "add_node", "id": "REQ-038-076", "type": "Rule", "owner_fr": "FR-038", "title": "Download PDF only when the report is ready, through a signed access link", "attrs": {"statement": "Download PDF MUST be available only when the report is ready, through a signed access link.", "rationale": "Screen 7 Business Rules."}}
+  - {"op": "add_edge", "from": "REQ-038-076", "verb": "applies at", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "REQ-038-076", "verb": "applies to", "to": "SCR-038-07"}
+  - {"op": "add_node", "id": "REQ-038-077", "type": "Rule", "owner_fr": "FR-038", "title": "Malware scan of uploaded documentation and generated PDFs", "attrs": {"statement": "System MUST scan uploaded treatment documentation and generated PDFs for malware.", "rationale": "Functional Requirements, Display and Processing Requirements."}}
+  - {"op": "add_edge", "from": "REQ-038-077", "verb": "applies at", "to": "STG-monitoring-01-baseline"}
+  - {"op": "add_edge", "from": "REQ-038-077", "verb": "applies at", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "REQ-038-077", "verb": "applies at", "to": "STG-monitoring-03-conversion"}
+  - {"op": "add_edge", "from": "REQ-038-077", "verb": "applies to", "to": "SCR-038-01"}
+  - {"op": "add_edge", "from": "REQ-038-077", "verb": "applies to", "to": "ENT-monitoring-export"}
+  - {"op": "add_node", "id": "REQ-038-078", "type": "Rule", "owner_fr": "FR-038", "title": "Out-of-scope statements: no advice, assignment, chat, review, diagnosis or prescriptions", "attrs": {"statement": "System MUST NOT provide provider advice, provider assignment, provider chat, clinic review, diagnosis, prescriptions, FR-012 secure messaging, FR-011 milestone communications before standalone aftercare is purchased, assigned, and activated, or automated clinical interpretation of severity or scan changes.", "rationale": "Functional Requirements, Display and Processing Requirements."}}
+  - {"op": "add_edge", "from": "REQ-038-078", "verb": "applies at", "to": "STG-monitoring-01-baseline"}
+  - {"op": "add_edge", "from": "REQ-038-078", "verb": "applies at", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "REQ-038-078", "verb": "applies at", "to": "STG-monitoring-03-conversion"}
+  - {"op": "add_edge", "from": "REQ-038-078", "verb": "applies to", "to": "ENT-monitoring-case"}
+  - {"op": "add_node", "id": "REQ-038-079", "type": "Rule", "owner_fr": "FR-038", "title": "Asynchronous PDF generation with patient notification when ready", "attrs": {"statement": "System MUST generate PDF summaries asynchronously and notify the patient when the PDF is ready.", "rationale": "Functional Requirements, Display and Processing Requirements; Integration Points and Technology Assumptions (applies to the completion PDF and the conversion PDF)."}}
+  - {"op": "add_edge", "from": "REQ-038-079", "verb": "applies at", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "REQ-038-079", "verb": "applies at", "to": "STG-monitoring-03-conversion"}
+  - {"op": "add_edge", "from": "REQ-038-079", "verb": "applies to", "to": "ENT-monitoring-export"}
+  - {"op": "add_node", "id": "REQ-038-080", "type": "Rule", "owner_fr": "FR-038", "title": "Completion choice required, single selection", "attrs": {"statement": "Completion Choice (Screen 5) is required and allows a single selection: Complete and export, or Switch to Aftercare Package.", "rationale": "Screen 5 field table (Completion Choice: required, single selection)."}}
+  - {"op": "add_edge", "from": "REQ-038-080", "verb": "applies at", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "REQ-038-080", "verb": "applies to", "to": "SCR-038-05"}
+  - {"op": "add_node", "id": "REQ-038-081", "type": "Rule", "owner_fr": "FR-038", "title": "Confirmation checkbox required", "attrs": {"statement": "Confirmation (Screen 5) is required and MUST be selected: it acknowledges that the current monitoring case will end.", "rationale": "Screen 5 field table (Confirmation: required, must be selected)."}}
+  - {"op": "add_edge", "from": "REQ-038-081", "verb": "applies at", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "REQ-038-081", "verb": "applies to", "to": "SCR-038-05"}
+  - {"op": "retire_node", "id": "REQ-038-003"}
+  - {"op": "add_edge", "from": "FR-038", "verb": "references", "to": "REQ-037-003"}
+  - {"op": "retire_node", "id": "REQ-038-005"}
+  - {"op": "add_edge", "from": "FR-038", "verb": "references", "to": "REQ-037-009"}
+  - {"op": "retire_node", "id": "REQ-038-008"}
+  - {"op": "add_edge", "from": "FR-038", "verb": "references", "to": "REQ-037-021"}
+  - {"op": "retire_node", "id": "REQ-038-009"}
+  - {"op": "add_edge", "from": "FR-038", "verb": "references", "to": "REQ-037-022"}
+  - {"op": "retire_node", "id": "REQ-038-014"}
+  - {"op": "add_edge", "from": "FR-038", "verb": "references", "to": "REQ-037-027"}
+  - {"op": "retire_node", "id": "REQ-038-027"}
+  - {"op": "add_edge", "from": "FR-038", "verb": "references", "to": "REQ-037-040"}
+  - {"op": "retire_node", "id": "REQ-038-028"}
+  - {"op": "add_edge", "from": "FR-038", "verb": "references", "to": "REQ-037-041"}
+  - {"op": "retire_node", "id": "REQ-038-046"}
+  - {"op": "add_edge", "from": "FR-038", "verb": "references", "to": "REQ-037-045"}
+  - {"op": "retire_node", "id": "REQ-038-043"}
+  - {"op": "add_edge", "from": "FR-038", "verb": "references", "to": "REQ-037-054"}
+  - {"op": "retire_node", "id": "REQ-038-011"}
+  - {"op": "add_edge", "from": "FR-038", "verb": "references", "to": "REQ-037-024"}
+  - {"op": "retire_node", "id": "REQ-038-052"}
+  - {"op": "remove_edge", "from": "STP-038-006", "verb": "applies", "to": "REQ-038-003"}
+  - {"op": "add_edge", "from": "STP-038-006", "verb": "applies", "to": "REQ-037-003"}
+  - {"op": "remove_edge", "from": "STP-038-007", "verb": "applies", "to": "REQ-038-003"}
+  - {"op": "add_edge", "from": "STP-038-007", "verb": "applies", "to": "REQ-037-003"}
+  - {"op": "remove_edge", "from": "STP-038-014", "verb": "applies", "to": "REQ-038-043"}
+  - {"op": "add_edge", "from": "STP-038-014", "verb": "applies", "to": "REQ-037-054"}
+  - {"op": "remove_edge", "from": "STP-038-016", "verb": "applies", "to": "REQ-038-005"}
+  - {"op": "add_edge", "from": "STP-038-016", "verb": "applies", "to": "REQ-037-009"}
+  - {"op": "remove_edge", "from": "STP-038-023", "verb": "applies", "to": "REQ-038-008"}
+  - {"op": "add_edge", "from": "STP-038-023", "verb": "applies", "to": "REQ-037-021"}
+  - {"op": "remove_edge", "from": "STP-038-032", "verb": "applies", "to": "REQ-038-014"}
+  - {"op": "add_edge", "from": "STP-038-032", "verb": "applies", "to": "REQ-037-027"}
+  - {"op": "remove_edge", "from": "STP-038-016", "verb": "applies", "to": "REQ-038-054"}
+  - {"op": "add_edge", "from": "STP-038-016", "verb": "applies", "to": "REQ-SYS-014"}
+  - {"op": "add_node", "id": "STP-038-024", "type": "Step", "owner_fr": "FR-038", "title": "System selects the latest valid scan by default", "attrs": {"prd_ref": "A2 step 4"}}
+  - {"op": "add_node", "id": "STP-038-025", "type": "Step", "owner_fr": "FR-038", "title": "Patient may choose another scan or retake", "attrs": {"prd_ref": "A2 step 4"}}
+  - {"op": "add_edge", "from": "STP-038-024", "verb": "at", "to": "STG-monitoring-03-conversion"}
+  - {"op": "add_edge", "from": "STP-038-024", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-038-024", "verb": "on", "to": "SCR-038-06"}
+  - {"op": "add_edge", "from": "STP-038-024", "verb": "applies", "to": "REQ-037-022"}
+  - {"op": "add_edge", "from": "STP-038-025", "verb": "at", "to": "STG-monitoring-03-conversion"}
+  - {"op": "add_edge", "from": "STP-038-025", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-038-025", "verb": "on", "to": "SCR-038-06"}
+  - {"op": "add_edge", "from": "STP-038-025", "verb": "applies", "to": "REQ-037-022"}
+  - {"op": "add_edge", "from": "STP-038-023", "verb": "next", "to": "STP-038-024"}
+  - {"op": "add_edge", "from": "STP-038-024", "verb": "next", "to": "STP-038-025"}
+  - {"op": "remove_edge", "from": "REQ-038-001", "verb": "applies to", "to": "ENT-transplant-progress-case"}
+  - {"op": "add_edge", "from": "REQ-038-001", "verb": "applies to", "to": "ENT-monitoring-case"}
+  - {"op": "remove_edge", "from": "REQ-038-002", "verb": "applies to", "to": "ENT-transplant-progress-case"}
+  - {"op": "add_edge", "from": "REQ-038-002", "verb": "applies to", "to": "ENT-monitoring-case"}
+  - {"op": "remove_edge", "from": "REQ-038-004", "verb": "applies to", "to": "ENT-transplant-progress-case"}
+  - {"op": "add_edge", "from": "REQ-038-004", "verb": "applies to", "to": "ENT-monitoring-case"}
+  - {"op": "remove_edge", "from": "REQ-038-006", "verb": "applies to", "to": "ENT-transplant-progress-conversion"}
+  - {"op": "add_edge", "from": "REQ-038-006", "verb": "applies to", "to": "ENT-monitoring-conversion"}
+  - {"op": "remove_edge", "from": "REQ-038-007", "verb": "applies to", "to": "ENT-transplant-progress-case"}
+  - {"op": "add_edge", "from": "REQ-038-007", "verb": "applies to", "to": "ENT-monitoring-case"}
+  - {"op": "remove_edge", "from": "REQ-038-010", "verb": "applies to", "to": "ENT-transplant-progress-conversion.export_id"}
+  - {"op": "add_edge", "from": "REQ-038-010", "verb": "applies to", "to": "ENT-monitoring-conversion.export_id"}
+  - {"op": "remove_edge", "from": "REQ-038-010", "verb": "applies to", "to": "ENT-transplant-progress-export"}
+  - {"op": "add_edge", "from": "REQ-038-010", "verb": "applies to", "to": "ENT-monitoring-export"}
+  - {"op": "remove_edge", "from": "REQ-038-015", "verb": "applies to", "to": "ENT-transplant-progress-case"}
+  - {"op": "add_edge", "from": "REQ-038-015", "verb": "applies to", "to": "ENT-monitoring-case"}
+  - {"op": "remove_edge", "from": "REQ-038-015", "verb": "applies to", "to": "ENT-transplant-progress-conversion"}
+  - {"op": "add_edge", "from": "REQ-038-015", "verb": "applies to", "to": "ENT-monitoring-conversion"}
+  - {"op": "remove_edge", "from": "REQ-038-016", "verb": "applies to", "to": "ENT-transplant-progress-conversion"}
+  - {"op": "add_edge", "from": "REQ-038-016", "verb": "applies to", "to": "ENT-monitoring-conversion"}
+  - {"op": "remove_edge", "from": "REQ-038-016", "verb": "applies to", "to": "ENT-transplant-progress-conversion.idempotency_key"}
+  - {"op": "add_edge", "from": "REQ-038-016", "verb": "applies to", "to": "ENT-monitoring-conversion.idempotency_key"}
+  - {"op": "remove_edge", "from": "REQ-038-018", "verb": "applies to", "to": "ENT-transplant-progress-case"}
+  - {"op": "add_edge", "from": "REQ-038-018", "verb": "applies to", "to": "ENT-monitoring-case"}
+  - {"op": "remove_edge", "from": "REQ-038-019", "verb": "applies to", "to": "ENT-transplant-progress-case"}
+  - {"op": "add_edge", "from": "REQ-038-019", "verb": "applies to", "to": "ENT-monitoring-case"}
+  - {"op": "remove_edge", "from": "REQ-038-020", "verb": "applies to", "to": "ENT-transplant-progress-case"}
+  - {"op": "add_edge", "from": "REQ-038-020", "verb": "applies to", "to": "ENT-monitoring-case"}
+  - {"op": "remove_edge", "from": "REQ-038-021", "verb": "applies to", "to": "ENT-transplant-progress-case.self_service_acknowledged"}
+  - {"op": "add_edge", "from": "REQ-038-021", "verb": "applies to", "to": "ENT-monitoring-case.self_service_acknowledged"}
+  - {"op": "remove_edge", "from": "REQ-038-024", "verb": "applies to", "to": "ENT-transplant-progress-case"}
+  - {"op": "add_edge", "from": "REQ-038-024", "verb": "applies to", "to": "ENT-monitoring-case"}
+  - {"op": "remove_edge", "from": "REQ-038-025", "verb": "applies to", "to": "ENT-transplant-progress-case.initial_severity"}
+  - {"op": "add_edge", "from": "REQ-038-025", "verb": "applies to", "to": "ENT-monitoring-case.starting_severity"}
+  - {"op": "remove_edge", "from": "REQ-038-025", "verb": "applies to", "to": "ENT-transplant-progress-entry.severity"}
+  - {"op": "add_edge", "from": "REQ-038-025", "verb": "applies to", "to": "ENT-monitoring-entry.severity"}
+  - {"op": "remove_edge", "from": "REQ-038-026", "verb": "applies to", "to": "ENT-transplant-progress-entry"}
+  - {"op": "add_edge", "from": "REQ-038-026", "verb": "applies to", "to": "ENT-monitoring-entry"}
+  - {"op": "remove_edge", "from": "REQ-038-030", "verb": "applies to", "to": "ENT-transplant-progress-case.treatment_date"}
+  - {"op": "add_edge", "from": "REQ-038-030", "verb": "applies to", "to": "ENT-monitoring-case.treatment_date"}
+  - {"op": "remove_edge", "from": "REQ-038-030", "verb": "applies to", "to": "ENT-transplant-progress-entry.log_date"}
+  - {"op": "add_edge", "from": "REQ-038-030", "verb": "applies to", "to": "ENT-monitoring-entry.log_date"}
+  - {"op": "remove_edge", "from": "REQ-038-035", "verb": "applies to", "to": "ENT-transplant-progress-case.monitoring_period"}
+  - {"op": "add_edge", "from": "REQ-038-035", "verb": "applies to", "to": "ENT-monitoring-case.monitoring_period"}
+  - {"op": "remove_edge", "from": "REQ-038-036", "verb": "applies to", "to": "ENT-transplant-progress-case.last_log_date"}
+  - {"op": "add_edge", "from": "REQ-038-036", "verb": "applies to", "to": "ENT-monitoring-case.last_patient_log_at"}
+  - {"op": "remove_edge", "from": "REQ-038-037", "verb": "applies to", "to": "ENT-transplant-progress-case.conversion_state"}
+  - {"op": "add_edge", "from": "REQ-038-037", "verb": "applies to", "to": "ENT-monitoring-case.conversion_state"}
+  - {"op": "remove_edge", "from": "REQ-038-038", "verb": "applies to", "to": "ENT-transplant-progress-case.scan_count"}
+  - {"op": "add_edge", "from": "REQ-038-038", "verb": "applies to", "to": "ENT-monitoring-case.scan_count"}
+  - {"op": "remove_edge", "from": "REQ-038-039", "verb": "applies to", "to": "ENT-transplant-progress-case"}
+  - {"op": "add_edge", "from": "REQ-038-039", "verb": "applies to", "to": "ENT-monitoring-case"}
+  - {"op": "remove_edge", "from": "REQ-038-040", "verb": "applies to", "to": "ENT-transplant-progress-export"}
+  - {"op": "add_edge", "from": "REQ-038-040", "verb": "applies to", "to": "ENT-monitoring-export"}
+  - {"op": "remove_edge", "from": "REQ-038-041", "verb": "applies to", "to": "ENT-transplant-progress-export.generation_state"}
+  - {"op": "add_edge", "from": "REQ-038-041", "verb": "applies to", "to": "ENT-monitoring-export.generation_state"}
+  - {"op": "remove_edge", "from": "REQ-038-044", "verb": "applies to", "to": "ENT-transplant-progress-case"}
+  - {"op": "add_edge", "from": "REQ-038-044", "verb": "applies to", "to": "ENT-monitoring-case"}
+  - {"op": "remove_edge", "from": "REQ-038-044", "verb": "applies to", "to": "ENT-transplant-progress-conversion"}
+  - {"op": "add_edge", "from": "REQ-038-044", "verb": "applies to", "to": "ENT-monitoring-conversion"}
+  - {"op": "remove_edge", "from": "REQ-038-045", "verb": "applies to", "to": "ENT-transplant-progress-export"}
+  - {"op": "add_edge", "from": "REQ-038-045", "verb": "applies to", "to": "ENT-monitoring-export"}
+  - {"op": "remove_edge", "from": "REQ-038-047", "verb": "applies to", "to": "ENT-transplant-progress-scan.photo_set"}
+  - {"op": "add_edge", "from": "REQ-038-047", "verb": "applies to", "to": "ENT-monitoring-scan.photo_set"}
+  - {"op": "remove_edge", "from": "REQ-038-048", "verb": "applies to", "to": "ENT-transplant-progress-scan"}
+  - {"op": "add_edge", "from": "REQ-038-048", "verb": "applies to", "to": "ENT-monitoring-scan"}
+  - {"op": "remove_edge", "from": "REQ-038-049", "verb": "applies to", "to": "ENT-transplant-progress-scan"}
+  - {"op": "add_edge", "from": "REQ-038-049", "verb": "applies to", "to": "ENT-monitoring-scan"}
+  - {"op": "remove_edge", "from": "REQ-038-055", "verb": "applies to", "to": "ENT-transplant-progress-case"}
+  - {"op": "add_edge", "from": "REQ-038-055", "verb": "applies to", "to": "ENT-monitoring-case"}
+  - {"op": "remove_edge", "from": "REQ-038-055", "verb": "applies to", "to": "ENT-transplant-progress-conversion"}
+  - {"op": "add_edge", "from": "REQ-038-055", "verb": "applies to", "to": "ENT-monitoring-conversion"}
+  - {"op": "remove_edge", "from": "REQ-038-055", "verb": "applies to", "to": "ENT-transplant-progress-entry"}
+  - {"op": "add_edge", "from": "REQ-038-055", "verb": "applies to", "to": "ENT-monitoring-entry"}
+  - {"op": "remove_edge", "from": "REQ-038-055", "verb": "applies to", "to": "ENT-transplant-progress-export"}
+  - {"op": "add_edge", "from": "REQ-038-055", "verb": "applies to", "to": "ENT-monitoring-export"}
+  - {"op": "remove_edge", "from": "REQ-038-055", "verb": "applies to", "to": "ENT-transplant-progress-scan"}
+  - {"op": "add_edge", "from": "REQ-038-055", "verb": "applies to", "to": "ENT-monitoring-scan"}
+  - {"op": "remove_edge", "from": "REQ-038-056", "verb": "applies to", "to": "ENT-transplant-progress-conversion"}
+  - {"op": "add_edge", "from": "REQ-038-056", "verb": "applies to", "to": "ENT-monitoring-conversion"}
+  - {"op": "remove_edge", "from": "REQ-038-056", "verb": "applies to", "to": "ENT-transplant-progress-export"}
+  - {"op": "add_edge", "from": "REQ-038-056", "verb": "applies to", "to": "ENT-monitoring-export"}
+  - {"op": "remove_edge", "from": "REQ-038-057", "verb": "applies to", "to": "ENT-transplant-progress-case"}
+  - {"op": "add_edge", "from": "REQ-038-057", "verb": "applies to", "to": "ENT-monitoring-case"}
+  - {"op": "remove_edge", "from": "REQ-038-064", "verb": "applies to", "to": "ENT-transplant-progress-export"}
+  - {"op": "add_edge", "from": "REQ-038-064", "verb": "applies to", "to": "ENT-monitoring-export"}
+  - {"op": "remove_edge", "from": "REQ-038-067", "verb": "applies to", "to": "ENT-transplant-progress-conversion.treatment_details_draft"}
+  - {"op": "add_edge", "from": "REQ-038-067", "verb": "applies to", "to": "ENT-monitoring-conversion.treatment_details_draft"}
+  - {"op": "remove_edge", "from": "REQ-038-068", "verb": "applies to", "to": "ENT-transplant-progress-case"}
+  - {"op": "add_edge", "from": "REQ-038-068", "verb": "applies to", "to": "ENT-monitoring-case"}
+  - {"op": "remove_edge", "from": "REQ-038-068", "verb": "applies to", "to": "ENT-transplant-progress-conversion.treatment_details_draft"}
+  - {"op": "add_edge", "from": "REQ-038-068", "verb": "applies to", "to": "ENT-monitoring-conversion.treatment_details_draft"}
+  - {"op": "remove_edge", "from": "REQ-038-069", "verb": "applies to", "to": "ENT-transplant-progress-conversion.destination_request_id"}
+  - {"op": "add_edge", "from": "REQ-038-069", "verb": "applies to", "to": "ENT-monitoring-conversion.destination_request_id"}
+  - {"op": "remove_edge", "from": "SCR-038-01", "verb": "shows", "to": "ENT-transplant-progress-case.current_concerns"}
+  - {"op": "add_edge", "from": "SCR-038-01", "verb": "shows", "to": "ENT-monitoring-case.current_concerns", "attrs": {"provenance": "user input", "label": "Current Concerns", "editable": true}}
+  - {"op": "remove_edge", "from": "SCR-038-01", "verb": "shows", "to": "ENT-transplant-progress-case.initial_photos"}
+  - {"op": "add_edge", "from": "SCR-038-01", "verb": "shows", "to": "ENT-monitoring-case.initial_photos", "attrs": {"provenance": "user input", "label": "Initial Photos", "editable": true}}
+  - {"op": "remove_edge", "from": "SCR-038-01", "verb": "shows", "to": "ENT-transplant-progress-case.initial_severity"}
+  - {"op": "add_edge", "from": "SCR-038-01", "verb": "shows", "to": "ENT-monitoring-case.starting_severity", "attrs": {"provenance": "user input", "label": "Initial Severity", "editable": true}}
+  - {"op": "remove_edge", "from": "SCR-038-01", "verb": "shows", "to": "ENT-transplant-progress-case.self_service_acknowledged"}
+  - {"op": "add_edge", "from": "SCR-038-01", "verb": "shows", "to": "ENT-monitoring-case.self_service_acknowledged", "attrs": {"provenance": "user input", "label": "Self-Service Acknowledgment", "editable": true}}
+  - {"op": "remove_edge", "from": "SCR-038-01", "verb": "shows", "to": "ENT-transplant-progress-case.treating_clinic"}
+  - {"op": "add_edge", "from": "SCR-038-01", "verb": "shows", "to": "ENT-monitoring-case.treating_clinic", "attrs": {"provenance": "user input", "label": "Treating Clinic", "editable": true}}
+  - {"op": "remove_edge", "from": "SCR-038-01", "verb": "shows", "to": "ENT-transplant-progress-case.treating_country"}
+  - {"op": "add_edge", "from": "SCR-038-01", "verb": "shows", "to": "ENT-monitoring-case.treating_country", "attrs": {"provenance": "user input", "label": "Treating Country", "editable": true}}
+  - {"op": "remove_edge", "from": "SCR-038-01", "verb": "shows", "to": "ENT-transplant-progress-case.treatment_date"}
+  - {"op": "add_edge", "from": "SCR-038-01", "verb": "shows", "to": "ENT-monitoring-case.treatment_date", "attrs": {"provenance": "user input", "label": "Treatment Date", "editable": true}}
+  - {"op": "remove_edge", "from": "SCR-038-01", "verb": "shows", "to": "ENT-transplant-progress-case.treatment_documentation"}
+  - {"op": "add_edge", "from": "SCR-038-01", "verb": "shows", "to": "ENT-monitoring-case.treatment_documentation", "attrs": {"provenance": "user input", "label": "Treatment Documentation", "editable": true}}
+  - {"op": "remove_edge", "from": "SCR-038-01", "verb": "shows", "to": "ENT-transplant-progress-case.treatment_type"}
+  - {"op": "add_edge", "from": "SCR-038-01", "verb": "shows", "to": "ENT-monitoring-case.treatment_type", "attrs": {"provenance": "user input", "label": "Treatment Type", "editable": true}}
+  - {"op": "remove_edge", "from": "SCR-038-01", "verb": "shows", "to": "ENT-transplant-progress-scan.photo_set"}
+  - {"op": "add_edge", "from": "SCR-038-01", "verb": "shows", "to": "ENT-monitoring-scan.photo_set", "attrs": {"provenance": "user input", "label": "Initial Head Scan", "editable": true}}
+  - {"op": "remove_edge", "from": "SCR-038-02", "verb": "shows", "to": "ENT-transplant-progress-case.logged_days"}
+  - {"op": "add_edge", "from": "SCR-038-02", "verb": "shows", "to": "ENT-monitoring-case.logged_days", "attrs": {"provenance": "system calculated", "label": "Logged Days"}}
+  - {"op": "remove_edge", "from": "SCR-038-02", "verb": "shows", "to": "ENT-transplant-progress-case.severity_trend"}
+  - {"op": "add_edge", "from": "SCR-038-02", "verb": "shows", "to": "ENT-monitoring-case.severity_trend", "attrs": {"provenance": "system calculated", "label": "Severity Trend"}}
+  - {"op": "remove_edge", "from": "SCR-038-02", "verb": "shows", "to": "ENT-transplant-progress-case.status"}
+  - {"op": "add_edge", "from": "SCR-038-02", "verb": "shows", "to": "ENT-monitoring-case.status", "attrs": {"provenance": "retrieved", "label": "Case Status"}}
+  - {"op": "remove_edge", "from": "SCR-038-02", "verb": "shows", "to": "ENT-transplant-progress-case.treating_clinic"}
+  - {"op": "add_edge", "from": "SCR-038-02", "verb": "shows", "to": "ENT-monitoring-case.treating_clinic", "attrs": {"provenance": "retrieved", "label": "Treatment Summary (clinic)"}}
+  - {"op": "remove_edge", "from": "SCR-038-02", "verb": "shows", "to": "ENT-transplant-progress-case.treatment_date"}
+  - {"op": "add_edge", "from": "SCR-038-02", "verb": "shows", "to": "ENT-monitoring-case.treatment_date", "attrs": {"provenance": "retrieved", "label": "Treatment Summary (date)"}}
+  - {"op": "remove_edge", "from": "SCR-038-02", "verb": "shows", "to": "ENT-transplant-progress-case.treatment_type"}
+  - {"op": "add_edge", "from": "SCR-038-02", "verb": "shows", "to": "ENT-monitoring-case.treatment_type", "attrs": {"provenance": "retrieved", "label": "Treatment Summary (type)"}}
+  - {"op": "remove_edge", "from": "SCR-038-02", "verb": "shows", "to": "ENT-transplant-progress-entry.log_date"}
+  - {"op": "add_edge", "from": "SCR-038-02", "verb": "shows", "to": "ENT-monitoring-entry.log_date", "attrs": {"provenance": "retrieved", "label": "Calendar"}}
+  - {"op": "remove_edge", "from": "SCR-038-03", "verb": "shows", "to": "ENT-transplant-progress-entry.log_date"}
+  - {"op": "add_edge", "from": "SCR-038-03", "verb": "shows", "to": "ENT-monitoring-entry.log_date", "attrs": {"provenance": "user input", "label": "Log Date", "editable": true}}
+  - {"op": "remove_edge", "from": "SCR-038-03", "verb": "shows", "to": "ENT-transplant-progress-entry.notes"}
+  - {"op": "add_edge", "from": "SCR-038-03", "verb": "shows", "to": "ENT-monitoring-entry.notes", "attrs": {"provenance": "user input", "label": "Notes", "editable": true}}
+  - {"op": "remove_edge", "from": "SCR-038-03", "verb": "shows", "to": "ENT-transplant-progress-entry.photos"}
+  - {"op": "add_edge", "from": "SCR-038-03", "verb": "shows", "to": "ENT-monitoring-entry.photos", "attrs": {"provenance": "user input", "label": "Photos", "editable": true}}
+  - {"op": "remove_edge", "from": "SCR-038-03", "verb": "shows", "to": "ENT-transplant-progress-entry.severity"}
+  - {"op": "add_edge", "from": "SCR-038-03", "verb": "shows", "to": "ENT-monitoring-entry.severity", "attrs": {"provenance": "user input", "label": "Severity", "editable": true}}
+  - {"op": "remove_edge", "from": "SCR-038-03", "verb": "shows", "to": "ENT-transplant-progress-scan.photo_set"}
+  - {"op": "add_edge", "from": "SCR-038-03", "verb": "shows", "to": "ENT-monitoring-scan.photo_set", "attrs": {"provenance": "user input", "label": "Head Scan", "editable": true}}
+  - {"op": "remove_edge", "from": "SCR-038-04", "verb": "shows", "to": "ENT-transplant-progress-scan.captured_at"}
+  - {"op": "add_edge", "from": "SCR-038-04", "verb": "shows", "to": "ENT-monitoring-scan.captured_at", "attrs": {"provenance": "system calculated", "label": "Captured At"}}
+  - {"op": "remove_edge", "from": "SCR-038-04", "verb": "shows", "to": "ENT-transplant-progress-scan.case_id"}
+  - {"op": "add_edge", "from": "SCR-038-04", "verb": "shows", "to": "ENT-monitoring-scan.case_id", "attrs": {"provenance": "retrieved", "label": "Scan History"}}
+  - {"op": "remove_edge", "from": "SCR-038-04", "verb": "shows", "to": "ENT-transplant-progress-scan.photo_set"}
+  - {"op": "add_edge", "from": "SCR-038-04", "verb": "shows", "to": "ENT-monitoring-scan.photo_set", "attrs": {"provenance": "user input", "label": "Photo Set", "editable": true}}
+  - {"op": "remove_edge", "from": "SCR-038-05", "verb": "shows", "to": "ENT-transplant-progress-case.logged_days"}
+  - {"op": "add_edge", "from": "SCR-038-05", "verb": "shows", "to": "ENT-monitoring-case.logged_days", "attrs": {"provenance": "system calculated", "label": "Case Summary (logged days)"}}
+  - {"op": "remove_edge", "from": "SCR-038-05", "verb": "shows", "to": "ENT-transplant-progress-case.monitoring_period"}
+  - {"op": "add_edge", "from": "SCR-038-05", "verb": "shows", "to": "ENT-monitoring-case.monitoring_period", "attrs": {"provenance": "system calculated", "label": "Case Summary (date range)"}}
+  - {"op": "remove_edge", "from": "SCR-038-05", "verb": "shows", "to": "ENT-transplant-progress-case.scan_count"}
+  - {"op": "add_edge", "from": "SCR-038-05", "verb": "shows", "to": "ENT-monitoring-case.scan_count", "attrs": {"provenance": "system calculated", "label": "Case Summary (scans)"}}
+  - {"op": "remove_edge", "from": "SCR-038-05", "verb": "shows", "to": "ENT-transplant-progress-case.severity_trend"}
+  - {"op": "add_edge", "from": "SCR-038-05", "verb": "shows", "to": "ENT-monitoring-case.severity_trend", "attrs": {"provenance": "system calculated", "label": "Case Summary (severity trend)"}}
+  - {"op": "remove_edge", "from": "SCR-038-06", "verb": "shows", "to": "ENT-transplant-progress-conversion.export_id"}
+  - {"op": "add_edge", "from": "SCR-038-06", "verb": "shows", "to": "ENT-monitoring-conversion.export_id", "attrs": {"provenance": "system calculated", "label": "Monitoring Summary PDF"}}
+  - {"op": "remove_edge", "from": "SCR-038-06", "verb": "shows", "to": "ENT-transplant-progress-conversion.selected_scan_id"}
+  - {"op": "add_edge", "from": "SCR-038-06", "verb": "shows", "to": "ENT-monitoring-conversion.selected_scan_id", "attrs": {"provenance": "default", "label": "Selected Head Scan", "editable": true}}
+  - {"op": "remove_edge", "from": "SCR-038-06", "verb": "shows", "to": "ENT-transplant-progress-conversion.treatment_details_draft"}
+  - {"op": "add_edge", "from": "SCR-038-06", "verb": "shows", "to": "ENT-monitoring-conversion.treatment_details_draft", "attrs": {"provenance": "retrieved", "label": "External Treatment Details", "editable": true}}
+  - {"op": "remove_edge", "from": "SCR-038-07", "verb": "shows", "to": "ENT-transplant-progress-case.logged_days"}
+  - {"op": "add_edge", "from": "SCR-038-07", "verb": "shows", "to": "ENT-monitoring-case.logged_days", "attrs": {"provenance": "system calculated", "label": "Logged Days"}}
+  - {"op": "remove_edge", "from": "SCR-038-07", "verb": "shows", "to": "ENT-transplant-progress-case.monitoring_period"}
+  - {"op": "add_edge", "from": "SCR-038-07", "verb": "shows", "to": "ENT-monitoring-case.monitoring_period", "attrs": {"provenance": "system calculated", "label": "Monitoring Period"}}
+  - {"op": "remove_edge", "from": "SCR-038-07", "verb": "shows", "to": "ENT-transplant-progress-case.severity_average"}
+  - {"op": "add_edge", "from": "SCR-038-07", "verb": "shows", "to": "ENT-monitoring-case.severity_summary", "attrs": {"provenance": "system calculated", "label": "Severity Summary (average)"}}
+  - {"op": "remove_edge", "from": "SCR-038-07", "verb": "shows", "to": "ENT-transplant-progress-case.severity_first"}
+  - {"op": "remove_edge", "from": "SCR-038-07", "verb": "shows", "to": "ENT-transplant-progress-case.severity_latest"}
+  - {"op": "add_edge", "from": "SCR-038-07", "verb": "shows", "to": "ENT-monitoring-case.latest_severity", "attrs": {"provenance": "system calculated", "label": "Severity Summary (latest)"}}
+  - {"op": "remove_edge", "from": "SCR-038-07", "verb": "shows", "to": "ENT-transplant-progress-case.severity_max"}
+  - {"op": "remove_edge", "from": "SCR-038-07", "verb": "shows", "to": "ENT-transplant-progress-case.severity_min"}
+  - {"op": "remove_edge", "from": "SCR-038-07", "verb": "shows", "to": "ENT-transplant-progress-case.severity_trend"}
+  - {"op": "add_edge", "from": "SCR-038-07", "verb": "shows", "to": "ENT-monitoring-case.severity_trend", "attrs": {"provenance": "system calculated", "label": "Severity Summary (trend)"}}
+  - {"op": "remove_edge", "from": "SCR-038-07", "verb": "shows", "to": "ENT-transplant-progress-case.treating_clinic"}
+  - {"op": "add_edge", "from": "SCR-038-07", "verb": "shows", "to": "ENT-monitoring-case.treating_clinic", "attrs": {"provenance": "retrieved", "label": "Treatment Summary (clinic)"}}
+  - {"op": "remove_edge", "from": "SCR-038-07", "verb": "shows", "to": "ENT-transplant-progress-case.treatment_date"}
+  - {"op": "add_edge", "from": "SCR-038-07", "verb": "shows", "to": "ENT-monitoring-case.treatment_date", "attrs": {"provenance": "retrieved", "label": "Treatment Summary (date)"}}
+  - {"op": "remove_edge", "from": "SCR-038-07", "verb": "shows", "to": "ENT-transplant-progress-case.treatment_type"}
+  - {"op": "add_edge", "from": "SCR-038-07", "verb": "shows", "to": "ENT-monitoring-case.treatment_type", "attrs": {"provenance": "retrieved", "label": "Treatment Summary (type)"}}
+  - {"op": "remove_edge", "from": "SCR-038-07", "verb": "shows", "to": "ENT-transplant-progress-entry.log_date"}
+  - {"op": "add_edge", "from": "SCR-038-07", "verb": "shows", "to": "ENT-monitoring-entry.log_date", "attrs": {"provenance": "retrieved", "label": "Log Timeline (date)"}}
+  - {"op": "remove_edge", "from": "SCR-038-07", "verb": "shows", "to": "ENT-transplant-progress-entry.notes"}
+  - {"op": "add_edge", "from": "SCR-038-07", "verb": "shows", "to": "ENT-monitoring-entry.notes", "attrs": {"provenance": "retrieved", "label": "Log Timeline (notes)"}}
+  - {"op": "remove_edge", "from": "SCR-038-07", "verb": "shows", "to": "ENT-transplant-progress-export.generation_state"}
+  - {"op": "add_edge", "from": "SCR-038-07", "verb": "shows", "to": "ENT-monitoring-export.generation_state", "attrs": {"provenance": "system calculated", "label": "PDF Status"}}
+  - {"op": "remove_edge", "from": "SCR-038-07", "verb": "shows", "to": "ENT-transplant-progress-scan.photo_set"}
+  - {"op": "add_edge", "from": "SCR-038-07", "verb": "shows", "to": "ENT-monitoring-scan.photo_set", "attrs": {"provenance": "retrieved", "label": "Head Scan Photos"}}
+  - {"op": "remove_edge", "from": "SCR-038-08", "verb": "shows", "to": "ENT-transplant-progress-case.conversion_state"}
+  - {"op": "add_edge", "from": "SCR-038-08", "verb": "shows", "to": "ENT-monitoring-case.conversion_state", "attrs": {"provenance": "system calculated", "label": "Conversion State"}}
+  - {"op": "remove_edge", "from": "SCR-038-08", "verb": "shows", "to": "ENT-transplant-progress-case.last_log_date"}
+  - {"op": "add_edge", "from": "SCR-038-08", "verb": "shows", "to": "ENT-monitoring-case.last_patient_log_at", "attrs": {"provenance": "system calculated", "label": "Last Log Date"}}
+  - {"op": "remove_edge", "from": "SCR-038-08", "verb": "shows", "to": "ENT-transplant-progress-case.patient_id"}
+  - {"op": "add_edge", "from": "SCR-038-08", "verb": "shows", "to": "ENT-monitoring-case.patient_id", "attrs": {"provenance": "retrieved", "label": "Case List"}}
+  - {"op": "remove_edge", "from": "SCR-038-08", "verb": "shows", "to": "ENT-transplant-progress-case.status"}
+  - {"op": "add_edge", "from": "SCR-038-08", "verb": "shows", "to": "ENT-monitoring-case.status", "attrs": {"provenance": "retrieved", "label": "Status Filter"}}
+  - {"op": "remove_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-transplant-progress-case.conversion_id"}
+  - {"op": "add_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-monitoring-case.conversion_id", "attrs": {"provenance": "retrieved", "label": "Case Data (conversion link)", "editable": true}}
+  - {"op": "remove_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-transplant-progress-case.current_concerns"}
+  - {"op": "add_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-monitoring-case.current_concerns", "attrs": {"provenance": "retrieved", "label": "Case Data (current concerns)", "editable": true}}
+  - {"op": "remove_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-transplant-progress-case.initial_photos"}
+  - {"op": "add_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-monitoring-case.initial_photos", "attrs": {"provenance": "retrieved", "label": "Case Data (initial photos)", "editable": true}}
+  - {"op": "remove_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-transplant-progress-case.initial_severity"}
+  - {"op": "add_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-monitoring-case.starting_severity", "attrs": {"provenance": "retrieved", "label": "Case Data (initial severity)", "editable": true}}
+  - {"op": "remove_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-transplant-progress-case.status"}
+  - {"op": "add_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-monitoring-case.status", "attrs": {"provenance": "retrieved", "label": "Case Data (status)", "editable": true}}
+  - {"op": "remove_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-transplant-progress-case.treating_clinic"}
+  - {"op": "add_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-monitoring-case.treating_clinic", "attrs": {"provenance": "retrieved", "label": "Case Data (treating clinic)", "editable": true}}
+  - {"op": "remove_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-transplant-progress-case.treating_country"}
+  - {"op": "add_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-monitoring-case.treating_country", "attrs": {"provenance": "retrieved", "label": "Case Data (treating country)", "editable": true}}
+  - {"op": "remove_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-transplant-progress-case.treatment_date"}
+  - {"op": "add_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-monitoring-case.treatment_date", "attrs": {"provenance": "retrieved", "label": "Case Data (treatment date)", "editable": true}}
+  - {"op": "remove_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-transplant-progress-case.treatment_documentation"}
+  - {"op": "add_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-monitoring-case.treatment_documentation", "attrs": {"provenance": "retrieved", "label": "Case Data (treatment documentation)", "editable": true}}
+  - {"op": "remove_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-transplant-progress-case.treatment_type"}
+  - {"op": "add_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-monitoring-case.treatment_type", "attrs": {"provenance": "retrieved", "label": "Case Data (treatment type)", "editable": true}}
+  - {"op": "remove_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-transplant-progress-conversion.destination_request_id"}
+  - {"op": "add_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-monitoring-conversion.destination_request_id", "attrs": {"provenance": "retrieved", "label": "Conversion Link"}}
+  - {"op": "remove_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-transplant-progress-entry.log_date"}
+  - {"op": "add_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-monitoring-entry.log_date", "attrs": {"provenance": "retrieved", "label": "Case Data (log date)", "editable": true}}
+  - {"op": "remove_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-transplant-progress-entry.notes"}
+  - {"op": "add_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-monitoring-entry.notes", "attrs": {"provenance": "retrieved", "label": "Case Data (notes)", "editable": true}}
+  - {"op": "remove_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-transplant-progress-entry.photos"}
+  - {"op": "add_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-monitoring-entry.photos", "attrs": {"provenance": "retrieved", "label": "Case Data (photos)", "editable": true}}
+  - {"op": "remove_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-transplant-progress-entry.severity"}
+  - {"op": "add_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-monitoring-entry.severity", "attrs": {"provenance": "retrieved", "label": "Case Data (severity)", "editable": true}}
+  - {"op": "remove_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-transplant-progress-export.generation_state"}
+  - {"op": "add_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-monitoring-export.generation_state", "attrs": {"provenance": "retrieved", "label": "Export History (generation state)"}}
+  - {"op": "remove_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-transplant-progress-export.report_version"}
+  - {"op": "add_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-monitoring-export.report_version", "attrs": {"provenance": "retrieved", "label": "Export History (version)"}}
+  - {"op": "remove_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-transplant-progress-scan.photo_set"}
+  - {"op": "add_edge", "from": "SCR-038-09", "verb": "shows", "to": "ENT-monitoring-scan.photo_set", "attrs": {"provenance": "retrieved", "label": "Case Data (scan photo set)", "editable": true}}
+  - {"op": "remove_edge", "from": "STG-monitoring-01-baseline", "verb": "writes", "to": "ENT-transplant-progress-case"}
+  - {"op": "remove_edge", "from": "STG-monitoring-01-baseline", "verb": "writes", "to": "ENT-transplant-progress-scan"}
+  - {"op": "remove_edge", "from": "STG-monitoring-02-tracking", "verb": "reads", "to": "ENT-transplant-progress-case"}
+  - {"op": "remove_edge", "from": "STG-monitoring-02-tracking", "verb": "reads", "to": "ENT-transplant-progress-entry"}
+  - {"op": "remove_edge", "from": "STG-monitoring-02-tracking", "verb": "reads", "to": "ENT-transplant-progress-scan"}
+  - {"op": "remove_edge", "from": "STG-monitoring-02-tracking", "verb": "writes", "to": "ENT-transplant-progress-case"}
+  - {"op": "remove_edge", "from": "STG-monitoring-02-tracking", "verb": "writes", "to": "ENT-transplant-progress-entry"}
+  - {"op": "remove_edge", "from": "STG-monitoring-02-tracking", "verb": "writes", "to": "ENT-transplant-progress-export"}
+  - {"op": "remove_edge", "from": "STG-monitoring-02-tracking", "verb": "writes", "to": "ENT-transplant-progress-scan"}
+  - {"op": "remove_edge", "from": "STG-monitoring-03-conversion", "verb": "reads", "to": "ENT-transplant-progress-case"}
+  - {"op": "remove_edge", "from": "STG-monitoring-03-conversion", "verb": "reads", "to": "ENT-transplant-progress-entry"}
+  - {"op": "remove_edge", "from": "STG-monitoring-03-conversion", "verb": "reads", "to": "ENT-transplant-progress-export"}
+  - {"op": "remove_edge", "from": "STG-monitoring-03-conversion", "verb": "reads", "to": "ENT-transplant-progress-scan"}
+  - {"op": "remove_edge", "from": "STG-monitoring-03-conversion", "verb": "writes", "to": "ENT-transplant-progress-case"}
+  - {"op": "remove_edge", "from": "STG-monitoring-03-conversion", "verb": "writes", "to": "ENT-transplant-progress-conversion"}
+  - {"op": "remove_edge", "from": "STG-monitoring-03-conversion", "verb": "writes", "to": "ENT-transplant-progress-export"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-case.patient_id"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-case.case_type"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-case.status"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-case.initial_photos"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-case.logged_days"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-case.scan_count"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-case.monitoring_period"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-case.severity_trend"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-case.start_date"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-case.completion_date"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-case.initial_severity"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-case.severity_latest"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-case.severity_first"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-case.severity_min"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-case.severity_max"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-case.severity_average"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-case.last_log_date"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-entry.case_id"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-entry.created_by"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-entry.log_date"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-entry.notes"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-entry.photos"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-entry.severity"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-entry.version_number"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-scan.case_id"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-scan.entry_id"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-scan.photo_set"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-scan.quality_state"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-scan.captured_at"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-export.case_id"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-export.report_version"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-export.metrics"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-export.pdf_media"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-export.generation_state"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-export.covered_date_range"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-conversion.source_case_id"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-conversion.selected_scan_id"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-conversion.field_mapping_version"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-conversion.export_id"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-conversion.idempotency_key"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-case.treatment_date"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-case.treatment_type"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-case.treating_clinic"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-case.treating_country"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-case.treatment_documentation"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-case.current_concerns"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-case.self_service_acknowledged"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-case.conversion_id"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-case.conversion_state"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-conversion.destination_request_id"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-conversion.treatment_details_draft"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-case"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-entry"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-scan"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-export"}
+  - {"op": "retire_node", "id": "ENT-transplant-progress-conversion"}
+  - {"op": "remove_edge", "from": "STG-monitoring-02-tracking", "verb": "emits", "to": "EVT-transplant-progress-completed"}
+  - {"op": "add_edge", "from": "REQ-038-042", "verb": "applies to", "to": "EVT-monitoring-completed"}
+  - {"op": "remove_edge", "from": "REQ-038-042", "verb": "applies to", "to": "EVT-transplant-progress-completed"}
+  - {"op": "retire_node", "id": "EVT-transplant-progress-completed"}
+  - {"op": "remove_edge", "from": "STG-monitoring-02-tracking", "verb": "emits", "to": "EVT-transplant-progress-export-ready"}
+  - {"op": "add_edge", "from": "REQ-038-042", "verb": "applies to", "to": "EVT-monitoring-export-ready"}
+  - {"op": "remove_edge", "from": "REQ-038-042", "verb": "applies to", "to": "EVT-transplant-progress-export-ready"}
+  - {"op": "retire_node", "id": "EVT-transplant-progress-export-ready"}
+  - {"op": "remove_edge", "from": "STG-monitoring-03-conversion", "verb": "emits", "to": "EVT-transplant-progress-conversion-started"}
+  - {"op": "add_edge", "from": "STG-monitoring-02-tracking", "verb": "emits", "to": "EVT-transplant-progress-conversion-started"}
+  - {"op": "add_edge", "from": "STG-monitoring-03-conversion", "verb": "emits", "to": "EVT-monitoring-export-ready"}
+  - {"op": "update_node", "id": "REQ-038-055", "attrs": {"statement": "Admin may edit all monitoring intake information, entries, severity ratings, scan metadata, status, exports, and conversion metadata when operational correction is required. No edit may erase historical values or provenance.", "distinct_from": "REQ-037-072"}}
+  - {"op": "update_node", "id": "REQ-038-056", "title": "Admin edits may not erase historical values or provenance", "attrs": {"statement": "Admin may edit any information for operational correction, but no edit may erase historical values or provenance: version history, exports, and conversion provenance remain."}}
+  - {"op": "update_node", "id": "REQ-038-001", "attrs": {"distinct_from": "REQ-037-001"}}
+  - {"op": "update_node", "id": "REQ-038-015", "attrs": {"distinct_from": "REQ-037-030"}}
+  - {"op": "update_node", "id": "REQ-038-033", "attrs": {"distinct_from": "REQ-037-080"}}
+  - {"op": "update_node", "id": "REQ-038-010", "attrs": {"distinct_from": "REQ-037-023"}}
+  - {"op": "update_node", "id": "REQ-038-013", "attrs": {"distinct_from": "REQ-037-026"}}
+  - {"op": "update_node", "id": "REQ-038-018", "attrs": {"distinct_from": "REQ-037-032"}}
+  - {"op": "update_node", "id": "REQ-038-032", "attrs": {"distinct_from": "REQ-037-042"}}
+  - {"op": "update_node", "id": "REQ-038-038", "attrs": {"distinct_from": "REQ-037-052"}}
+  - {"op": "update_node", "id": "REQ-038-041", "attrs": {"distinct_from": "REQ-037-055"}}
+  - {"op": "update_node", "id": "REQ-038-045", "attrs": {"distinct_from": "REQ-037-056"}}
+  - {"op": "update_node", "id": "SCR-038-06", "attrs": {"description": "Reviews pre-filled information before continuing into FR-011 Screen 7."}}
