@@ -1,0 +1,10 @@
+reason: "Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-007B)"
+by: controller
+operations:
+  # Edges to Settings that the FR-029 change-set adds today (names as proposed in the FR-029 apply result). Apply after the FR-029 baseline.
+  - {"op": "add_edge", "from": "REQ-007B-054", "verb": "governed by", "to": "SET-refund-ladder"}
+  - {"op": "add_edge", "from": "REQ-007B-055", "verb": "governed by", "to": "SET-refund-ladder"}
+  - {"op": "add_edge", "from": "REQ-007B-056", "verb": "governed by", "to": "SET-refund-ladder"}
+  - {"op": "add_edge", "from": "REQ-007B-050", "verb": "governed by", "to": "SET-late-payment-fee"}
+  - {"op": "add_edge", "from": "REQ-007B-050", "verb": "governed by", "to": "SET-rescheduling-fee"}
+  - {"op": "add_edge", "from": "REQ-007B-099", "verb": "governed by", "to": "SET-late-payment-fee"}
