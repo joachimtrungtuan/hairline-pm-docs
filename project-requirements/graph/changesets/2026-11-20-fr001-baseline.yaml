@@ -1,0 +1,143 @@
+reason: "Requirements graph programme baseline 2026-11-20: owner rulings applied (FR-001)"
+by: controller
+operations:
+  - {"op": "add_source", "id": "SRC-TRN-001", "title": "Client transcription: Hairline overview", "kind": "transcript", "ref": "project-requirements/transcriptions/HairlineOverview.txt", "lifecycle": "pending review"}
+  - {"op": "add_source", "id": "SRC-TRN-002", "title": "Client transcription: Hairline mobile app, part 1", "kind": "transcript", "ref": "project-requirements/transcriptions/HairlineApp-Part1.txt", "lifecycle": "pending review"}
+  - {"op": "add_source", "id": "SRC-TRN-003", "title": "Client transcription: Hairline mobile app, part 2", "kind": "transcript", "ref": "project-requirements/transcriptions/HairlineApp-Part2.txt", "lifecycle": "pending review"}
+  - {"op": "add_source", "id": "SRC-TRN-004", "title": "Client transcription: provider platform, part 1", "kind": "transcript", "ref": "project-requirements/transcriptions/Hairline-ProviderPlatformPart1.txt", "lifecycle": "pending review"}
+  - {"op": "add_source", "id": "SRC-TRN-005", "title": "Client transcription: provider platform, part 2", "kind": "transcript", "ref": "project-requirements/transcriptions/Hairline-ProviderPlatformPart2.txt", "lifecycle": "pending review"}
+  - {"op": "add_source", "id": "SRC-TRN-006", "title": "Client transcription: admin platform, part 1", "kind": "transcript", "ref": "project-requirements/transcriptions/Hairline-AdminPlatform-Part1.txt", "lifecycle": "pending review"}
+  - {"op": "add_source", "id": "SRC-TRN-007", "title": "Client transcription: admin platform, part 2", "kind": "transcript", "ref": "project-requirements/transcriptions/Hairline-AdminPlatformPart2.txt", "lifecycle": "pending review"}
+  - {"op": "add_edge", "from": "REQ-001-001", "verb": "decided by", "to": "SRC-TRN-002"}
+  - {"op": "add_edge", "from": "REQ-001-002", "verb": "decided by", "to": "SRC-TRN-002"}
+  - {"op": "add_edge", "from": "REQ-001-058", "verb": "decided by", "to": "SRC-TRN-002"}
+  - {"op": "add_edge", "from": "REQ-001-059", "verb": "decided by", "to": "SRC-TRN-002"}
+  - {"op": "add_node", "id": "SCR-001-20", "type": "Screen", "owner_fr": "FR-001", "title": "Splash", "attrs": {"platform": "patient", "description": "PRD Screen 1. Purpose: Initial app loading and branding display. Display-only: shows and collects no data Field."}}
+  - {"op": "add_edge", "from": "SCR-001-20", "verb": "belongs to", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "ACT-patient", "verb": "uses", "to": "SCR-001-20"}
+  - {"op": "add_node", "id": "SCR-001-21", "type": "Screen", "owner_fr": "FR-001", "title": "Explanation Screens", "attrs": {"platform": "patient", "description": "PRD Screen 1a. Purpose: Explain what Hairline offers before the patient registers. Two screens shown after the splash screen and before the Landing Screen. Display-only: shows and collects no data Field."}}
+  - {"op": "add_edge", "from": "SCR-001-21", "verb": "belongs to", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "ACT-patient", "verb": "uses", "to": "SCR-001-21"}
+  - {"op": "add_node", "id": "SCR-001-22", "type": "Screen", "owner_fr": "FR-001", "title": "Landing", "attrs": {"platform": "patient", "description": "PRD Screen 2. Purpose: Welcome screen with call-to-action for new and returning users. Display-only: shows and collects no data Field."}}
+  - {"op": "add_edge", "from": "SCR-001-22", "verb": "belongs to", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "ACT-patient", "verb": "uses", "to": "SCR-001-22"}
+  - {"op": "add_node", "id": "SCR-001-23", "type": "Screen", "owner_fr": "FR-001", "title": "Service Selection", "attrs": {"platform": "patient", "description": "PRD Screen 8a. Purpose: Let the newly registered patient pick the Hairline service to start with. Shown directly after the discovery question (Screen 8)."}}
+  - {"op": "add_edge", "from": "SCR-001-23", "verb": "belongs to", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "ACT-patient", "verb": "uses", "to": "SCR-001-23"}
+  - {"op": "add_node", "id": "SCR-001-24", "type": "Screen", "owner_fr": "FR-001", "title": "Settings Main", "attrs": {"platform": "patient", "description": "PRD Screen 15. Purpose: Top-level settings navigation hub. Display-only: shows and collects no data Field."}}
+  - {"op": "add_edge", "from": "SCR-001-24", "verb": "belongs to", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "ACT-patient", "verb": "uses", "to": "SCR-001-24"}
+  - {"op": "add_node", "id": "SCR-001-25", "type": "Screen", "owner_fr": "FR-001", "title": "Privacy and Security Menu", "attrs": {"platform": "patient", "description": "PRD Screen 15b. Purpose: Provide access to security and privacy items. Display-only: shows and collects no data Field."}}
+  - {"op": "add_edge", "from": "SCR-001-25", "verb": "belongs to", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "ACT-patient", "verb": "uses", "to": "SCR-001-25"}
+  - {"op": "add_node", "id": "SCR-001-26", "type": "Screen", "owner_fr": "FR-001", "title": "Password Changed Confirmation", "attrs": {"platform": "patient", "description": "PRD Screen 17a. Purpose: Confirm password change succeeded and return user back to settings. Display-only: shows and collects no data Field."}}
+  - {"op": "add_edge", "from": "SCR-001-26", "verb": "belongs to", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "ACT-patient", "verb": "uses", "to": "SCR-001-26"}
+  - {"op": "add_node", "id": "REQ-001-163", "type": "Rule", "owner_fr": "FR-001", "title": "Profile creation screen shows an avatar placeholder", "attrs": {"statement": "The profile creation screen shows an avatar placeholder: a large green circular icon with a person silhouette. It is decorative and can be updated after account creation via Edit Profile.", "rationale": "FR-001 PRD, Screen 6 (Avatar Placeholder row)."}}
+  - {"op": "add_edge", "from": "REQ-001-163", "verb": "applies at", "to": "STG-patient-02-profile-complete"}
+  - {"op": "add_edge", "from": "REQ-001-163", "verb": "applies to", "to": "SCR-001-04"}
+  - {"op": "add_node", "id": "REQ-001-164", "type": "Rule", "owner_fr": "FR-001", "title": "Every app shows friendly error messages and handles network errors", "attrs": {"statement": "Every Hairline app (patient, provider and admin) shows user-friendly error messages and handles network errors gracefully.", "rationale": "FR-001 PRD, UI/UX Display Rules, Error Handling (platform-wide Rule, split from REQ-001-063).", "scope": "global"}}
+  - {"op": "add_edge", "from": "REQ-001-164", "verb": "applies at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "REQ-001-164", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_node", "id": "REQ-001-165", "type": "Rule", "owner_fr": "FR-001", "title": "First app language is the phone's language", "attrs": {"statement": "On first start the app language is the phone's language; if the app does not offer that language, it falls back to English. The patient can change the language later.", "rationale": "FR-001 PRD, Screen 1 rules."}}
+  - {"op": "add_edge", "from": "REQ-001-165", "verb": "applies at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "REQ-001-165", "verb": "applies to", "to": "SCR-001-20"}
+  - {"op": "add_edge", "from": "REQ-001-165", "verb": "applies to", "to": "ENT-patient.preferred_language"}
+  - {"op": "add_node", "id": "REQ-001-166", "type": "Rule", "owner_fr": "FR-001", "title": "Profile completion is the share of required fields filled", "attrs": {"statement": "Profile completion is the share of required profile fields that are filled, shown as a percentage from 0 to 100, with equal weight per field. The required fields are: First Name, Last Name, Email Address, Phone Number, Date of Birth, Gender and Country. The Avatar is optional and does not count.", "rationale": "FR-001 PRD, Screen 14 rules."}}
+  - {"op": "add_edge", "from": "REQ-001-166", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-001-166", "verb": "applies to", "to": "SCR-001-12"}
+  - {"op": "add_edge", "from": "REQ-001-166", "verb": "applies to", "to": "ENT-patient.profile_completion_status"}
+  - {"op": "add_node", "id": "REQ-001-167", "type": "Rule", "owner_fr": "FR-001", "title": "Two explanation screens follow the splash screen", "attrs": {"statement": "Two explanation screens follow the splash screen, then the patient reaches the Landing Screen where Get Started begins registration. The explanation screens are display-only and collect no data.", "rationale": "FR-001 PRD, Screen 1a."}}
+  - {"op": "add_edge", "from": "REQ-001-167", "verb": "applies at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "REQ-001-167", "verb": "applies to", "to": "SCR-001-21"}
+  - {"op": "add_node", "id": "REQ-001-168", "type": "Rule", "owner_fr": "FR-001", "title": "Splash screen uses a new visual", "attrs": {"statement": "The splash screen uses a new visual.", "rationale": "FR-001 PRD, Screen 1 rules."}}
+  - {"op": "add_edge", "from": "REQ-001-168", "verb": "applies at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "REQ-001-168", "verb": "applies to", "to": "SCR-001-20"}
+  - {"op": "add_node", "id": "REQ-001-169", "type": "Rule", "owner_fr": "FR-001", "title": "Patient picks one of the four services after the discovery question", "attrs": {"statement": "After the discovery question, the patient picks one of the four Hairline services on the Service Selection screen and lands in the chosen service.", "rationale": "FR-001 PRD, Screen 8a and Workflow 1 step 7."}}
+  - {"op": "add_edge", "from": "REQ-001-169", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-001-169", "verb": "applies to", "to": "SCR-001-23"}
+  - {"op": "add_node", "id": "REQ-001-170", "type": "Rule", "owner_fr": "FR-001", "title": "OTP delivery failure shows a message, Resend and Help and Support", "attrs": {"statement": "When a one-time code email is not delivered or the email service is unavailable, the app shows a message and the patient can tap Resend. When the resend limit is reached or the email service is still down, the app shows the Help and Support entry.", "rationale": "FR-001 PRD, Edge Cases (OTP delivery failure)."}}
+  - {"op": "add_edge", "from": "REQ-001-170", "verb": "applies at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "REQ-001-170", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-001-170", "verb": "applies to", "to": "ENT-otp-code"}
+  - {"op": "add_edge", "from": "REQ-001-170", "verb": "applies to", "to": "SCR-001-03"}
+  - {"op": "add_edge", "from": "REQ-001-170", "verb": "applies to", "to": "SCR-001-09"}
+  - {"op": "add_node", "id": "REQ-001-171", "type": "Rule", "owner_fr": "FR-001", "title": "Lost connection during registration shows a no-connection message", "attrs": {"statement": "If the device loses its internet connection during registration, the app shows a no-connection message and lets the patient retry. If the app is closed, the abandoned-registration flow applies and the local draft is kept for 7 days.", "rationale": "FR-001 PRD, Edge Cases (lost connection during registration)."}}
+  - {"op": "add_edge", "from": "REQ-001-171", "verb": "applies at", "to": "STG-patient-01-registered"}
+  - {"op": "add_node", "id": "REQ-001-172", "type": "Rule", "owner_fr": "FR-001", "title": "Several devices allowed, each with its own session", "attrs": {"statement": "A patient can be signed in on several devices at once. Each device has its own session and there is no limit on the number of devices.", "rationale": "FR-001 PRD, Edge Cases (several devices)."}}
+  - {"op": "add_edge", "from": "REQ-001-172", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-001-172", "verb": "applies to", "to": "ENT-patient-session"}
+  - {"op": "add_node", "id": "REQ-001-173", "type": "Rule", "owner_fr": "FR-001", "title": "Patient sees admin changes on the next load", "attrs": {"statement": "When an admin edits a patient profile while the patient is viewing it, the patient sees the new data on the next load; there is no live update and no message.", "rationale": "FR-001 PRD, Edge Cases (admin edit while the patient views the profile)."}}
+  - {"op": "add_edge", "from": "REQ-001-173", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-001-173", "verb": "applies to", "to": "SCR-001-11"}
+  - {"op": "add_edge", "from": "REQ-001-173", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_node", "id": "REQ-001-174", "type": "Rule", "owner_fr": "FR-001", "title": "Admin is told of a new deletion request through the same event", "attrs": {"statement": "The Admin is told of a new account deletion request through the same account-deletion-requested event that sends the patient confirmation, with the Admin added as a recipient (FR-023 handles the request).", "rationale": "FR-001 PRD, Screen 16 rules."}}
+  - {"op": "add_edge", "from": "REQ-001-174", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-001-174", "verb": "applies to", "to": "EVT-account-deletion-requested"}
+  - {"op": "add_edge", "from": "REQ-001-174", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-001-174", "verb": "applies to", "to": "SCR-001-16"}
+  - {"op": "add_node", "id": "STP-001-007", "type": "Step", "owner_fr": "FR-001", "title": "System displays the four Hairline services", "attrs": {"prd_ref": "Main Flow Workflow 1 step 7"}}
+  - {"op": "add_edge", "from": "STP-001-007", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-001-007", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-001-007", "verb": "on", "to": "SCR-001-23"}
+  - {"op": "add_edge", "from": "STP-001-007", "verb": "applies", "to": "REQ-001-169"}
+  - {"op": "add_node", "id": "STP-001-008", "type": "Step", "owner_fr": "FR-001", "title": "Patient picks one of the four services", "attrs": {"prd_ref": "Main Flow Workflow 1 step 7"}}
+  - {"op": "add_edge", "from": "STP-001-008", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-001-008", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-001-008", "verb": "on", "to": "SCR-001-23"}
+  - {"op": "add_edge", "from": "STP-001-008", "verb": "applies", "to": "REQ-001-169"}
+  - {"op": "add_node", "id": "STP-001-009", "type": "Step", "owner_fr": "FR-001", "title": "System lands the patient in the chosen service", "attrs": {"prd_ref": "Main Flow Workflow 1 step 7"}}
+  - {"op": "add_edge", "from": "STP-001-009", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-001-009", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-001-009", "verb": "on", "to": "SCR-001-23"}
+  - {"op": "add_edge", "from": "STP-001-009", "verb": "applies", "to": "REQ-001-169"}
+  - {"op": "add_edge", "from": "STP-001-006", "verb": "next", "to": "STP-001-007"}
+  - {"op": "add_edge", "from": "STP-001-007", "verb": "next", "to": "STP-001-008"}
+  - {"op": "add_edge", "from": "STP-001-008", "verb": "next", "to": "STP-001-009"}
+  - {"op": "add_edge", "from": "STP-001-001", "verb": "on", "to": "SCR-001-22"}
+  - {"op": "update_node", "id": "STP-001-124", "title": "Patient reviews the changes (the admin edit is final)"}
+  - {"op": "update_node", "id": "REQ-001-012", "attrs": {"statement": "Patient data retention follows the system PRD, Platform-Wide Rules: One 10-year retention period", "rationale": "Functional Requirements Summary. Retention is the one platform-wide period carried by REQ-SYS-002."}}
+  - {"op": "update_node", "id": "REQ-001-016", "attrs": {"statement": "System MUST require re-authentication for sensitive actions (delete account, password change) and when the patient changes the email address on the profile (the email address is the only sensitive profile field)"}}
+  - {"op": "update_node", "id": "REQ-001-131", "attrs": {"statement": "Changing the email address on the profile requires re-authentication (the email address is the only sensitive profile field)"}}
+  - {"op": "update_node", "id": "REQ-001-029", "attrs": {"statement": "Profile Data: Modify name, email, phone, address, preferences Account Status: Change account status (Active, Suspended, Deactivated, Locked), verification status Security: Reset passwords, unlock accounts, modify security settings Preferences: Update language, currency, notification settings"}}
+  - {"op": "update_node", "id": "REQ-001-034", "attrs": {"statement": "Patient notified of every admin edit via email"}}
+  - {"op": "update_node", "id": "REQ-001-035", "attrs": {"statement": "Patient can review the changes (the admin edit is final; the patient does not accept or reject it)"}}
+  - {"op": "update_node", "id": "REQ-001-036", "attrs": {"statement": "Out of scope: direct patient-provider communication (handled by FR-012, future); social authentication (Google, Apple, Facebook OAuth - future enhancement); multi-factor authentication beyond email OTP (future enhancement)"}}
+  - {"op": "update_node", "id": "REQ-001-055", "attrs": {"statement": "Country selection sets the currency preference only; language is independent of country"}}
+  - {"op": "add_edge", "from": "REQ-001-055", "verb": "decided by", "to": "SRC-MTG-003-D06"}
+  - {"op": "update_node", "id": "REQ-001-062", "attrs": {"scope": "global"}}
+  - {"op": "update_node", "id": "REQ-001-063", "attrs": {"statement": "Specific guidance for password requirements; clear instructions for email verification"}}
+  - {"op": "update_node", "id": "REQ-001-124", "attrs": {"statement": "Read-only; share of required profile fields filled, equal weight per field (fields listed on Screen 14)"}}
+  - {"op": "update_node", "id": "REQ-001-140", "attrs": {"statement": "Continue button proceeds to service selection (Screen 8a)"}}
+  - {"op": "update_node", "id": "REQ-001-142", "attrs": {"statement": "Re-verification is required when last successful auth > 5 minutes (threshold is a platform setting managed in FR-026)"}}
+  - {"op": "add_edge", "from": "REQ-001-125", "verb": "governed by", "to": "SET-timezone-options"}
+  - {"op": "remove_edge", "from": "REQ-001-002", "verb": "governed by", "to": "SET-otp-resend-rate-limit"}
+  - {"op": "add_edge", "from": "REQ-001-002", "verb": "governed by", "to": "SET-otp-max-resend-attempts"}
+  - {"op": "remove_edge", "from": "REQ-001-048", "verb": "governed by", "to": "SET-otp-resend-rate-limit"}
+  - {"op": "add_edge", "from": "REQ-001-048", "verb": "governed by", "to": "SET-otp-max-resend-attempts"}
+  - {"op": "remove_edge", "from": "REQ-001-049", "verb": "governed by", "to": "SET-otp-resend-rate-limit"}
+  - {"op": "add_edge", "from": "REQ-001-049", "verb": "governed by", "to": "SET-otp-max-resend-attempts"}
+  - {"op": "remove_edge", "from": "REQ-001-098", "verb": "governed by", "to": "SET-otp-resend-rate-limit"}
+  - {"op": "add_edge", "from": "REQ-001-098", "verb": "governed by", "to": "SET-otp-max-resend-attempts"}
+  - {"op": "add_edge", "from": "REQ-001-006", "verb": "governed by", "to": "SET-password-policy"}
+  - {"op": "retire_node", "id": "REQ-001-006"}
+  - {"op": "retire_node", "id": "REQ-001-127"}
+  - {"op": "retire_node", "id": "REQ-001-020"}
+  - {"op": "add_edge", "from": "FR-001", "verb": "references", "to": "REQ-SYS-002"}
+  - {"op": "add_edge", "from": "FR-001", "verb": "references", "to": "REQ-SYS-007"}
+  - {"op": "update_node", "id": "ENT-patient", "attrs": {"description": "The patient account and profile. Key attributes: unique email address, encrypted password, account verification state. One patient has many sessions, one profile, many audit logs."}}
+  - {"op": "add_field", "id": "ENT-patient.analytics_consent", "entity_id": "ENT-patient", "name": "analytics_consent", "data_type": "bool", "title": "Analytics consent", "owner_fr": "FR-001", "required": false, "attrs": {"description": "Yes/no consent for analytics, kept on the patient record; the compliance feature (FR-023) reads it."}}
+  - {"op": "add_field", "id": "ENT-patient.email_delivery_issue", "entity_id": "ENT-patient", "name": "email_delivery_issue", "data_type": "bool", "title": "Email delivery issue", "owner_fr": "FR-001", "required": false, "attrs": {"description": "Flag on the patient account set when an email to the patient bounces; the notification feature (FR-030) sets it."}}
+  - {"op": "add_enum_value", "field_id": "ENT-patient.account_status", "value": "locked", "label": "Locked"}
+  - {"op": "update_node", "id": "ENT-patient.account_status", "attrs": {"description": "Account status shown as a badge: Active, Suspended, Deactivated or Locked."}}
+  - {"op": "update_field", "id": "ENT-patient.profile_completion_status", "data_type": "int"}
+  - {"op": "update_node", "id": "ENT-patient.profile_completion_status", "attrs": {"description": "Per-patient profile completion as a percentage from 0 to 100: the share of required profile fields filled, equal weight per field (fields listed on Screen 14)."}}
+  - {"op": "update_node", "id": "ENT-patient.preferred_currency", "attrs": {"description": "Currency preference; country selection sets it and admin can update it. Added for the PRD preference statements."}}
+  - {"op": "update_node", "id": "ENT-patient.preferred_language", "attrs": {"description": "Language preference; independent of country selection (the first app language is the phone's language, English if unavailable). Admin can update it. Added for the PRD preference statements."}}
+  - {"op": "update_node", "id": "EVT-patient-profile-changed-by-admin", "attrs": {"description": "admin edit: patient is notified by email of every admin edit and can review the changes; the admin edit is final (prd.md Admin Editability Rules, Workflow 4 alternative D1)."}}
+  - {"op": "update_node", "id": "EVT-account-deletion-requested", "attrs": {"description": "deletion request: system creates the one deletion request record (owned by FR-023) and sends a confirmation to the patient; the Admin is told through the same event as an added recipient; status updates and outcome follow later (prd.md Screen 16)."}}
+  - {"op": "update_node", "id": "EVT-account-created", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "ENT-patient-notification-preferences", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "ENT-patient-notification-preferences.patient_id", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "ENT-patient-notification-preferences.email_enabled", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "ENT-patient-notification-preferences.push_enabled", "owner_fr": "FR-030"}
