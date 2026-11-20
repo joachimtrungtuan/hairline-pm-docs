@@ -203,6 +203,35 @@ class TestLint(GraphTestCase):
         self.drop_edge("SCR-004-01", "shows", "ENT-quote.status")
         self.assertIn("L03:SCR-004-01", self.finding_ids())
 
+    def test_l03_skips_display_only_screen_with_reason(self) -> None:
+        self.drop_edge("SCR-004-01", "shows", "ENT-quote.status")
+        self.sql("""UPDATE nodes SET attrs = '{"display_only": true, "display_only_reason": "Menu of links; shows no stored data."}'
+                    WHERE id = 'SCR-004-01'""")
+        self.assertNotIn("L03:SCR-004-01", self.finding_ids())
+
+    def test_l03_display_only_without_reason_still_fires(self) -> None:
+        self.drop_edge("SCR-004-01", "shows", "ENT-quote.status")
+        for attrs in ('{"display_only": true}', '{"display_only": true, "display_only_reason": "  "}'):
+            self.sql("UPDATE nodes SET attrs = ? WHERE id = 'SCR-004-01'", (attrs,))
+            findings = [f for f in lint.lint(self.conn, SCHEMA, None) if f.id == "L03:SCR-004-01"]
+            self.assertEqual(len(findings), 1)
+            self.assertIn("display_only_reason", findings[0].message)
+
+    def test_l03_display_only_screen_needs_a_step(self) -> None:
+        self.drop_edge("SCR-004-01", "shows", "ENT-quote.status")
+        self.sql("""UPDATE nodes SET attrs = '{"display_only": true, "display_only_reason": "Menu of links."}' WHERE id = 'SCR-004-01'""")
+        self.sql("DELETE FROM edges WHERE verb = 'on' AND to_id = 'SCR-004-01'")
+        self.assertIn("L03:SCR-004-01>no-step", self.finding_ids())
+
+    def test_l03_display_only_screen_must_not_show_a_field(self) -> None:
+        self.sql("""UPDATE nodes SET attrs = '{"display_only": true, "display_only_reason": "Menu of links."}' WHERE id = 'SCR-004-01'""")
+        self.assertIn("L03:SCR-004-01>display-only-shows", self.finding_ids())
+
+    def test_l03_display_only_false_still_fires(self) -> None:
+        self.drop_edge("SCR-004-01", "shows", "ENT-quote.status")
+        self.sql("""UPDATE nodes SET attrs = '{"display_only": false, "display_only_reason": "x"}' WHERE id = 'SCR-004-01'""")
+        self.assertIn("L03:SCR-004-01", self.finding_ids())
+
     def test_l03_screen_shows_non_field(self) -> None:
         self.add_edge("SCR-004-01", "shows", "ENT-quote", '{"provenance": "retrieved"}')
         self.assertIn("L03:SCR-004-01>ENT-quote", self.finding_ids())

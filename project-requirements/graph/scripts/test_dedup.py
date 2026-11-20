@@ -26,6 +26,7 @@ import migrate_schema_v7
 import migrate_schema_v8
 import migrate_schema_v9
 import migrate_schema_v10
+import migrate_schema_v11
 import query
 import write
 from common import SCHEMA_PATH, connect, parse_schema
@@ -237,9 +238,18 @@ class TestQueryDuplicates(DedupTestCase):
         self.assertIn("non-empty", err)
 
 
+def v10_raw():
+    """schema.yaml as it was before version 11: no display_only attributes on Screen."""
+    raw = copy.deepcopy(yaml.safe_load(SCHEMA_PATH.read_text(encoding="utf-8")))
+    raw["version"] = 10
+    for attr in migrate_schema_v11.NEW_SCREEN_ATTRS:
+        del raw["node_types"]["Screen"]["attrs"]["optional"][attr]
+    return raw
+
+
 def v9_raw():
     """schema.yaml as it was before version 10: none of the four timelines added on 2026-11-20."""
-    raw = copy.deepcopy(yaml.safe_load(SCHEMA_PATH.read_text(encoding="utf-8")))
+    raw = v10_raw()
     raw["version"] = 9
     for timeline in migrate_schema_v10.NEW_TIMELINES:
         raw["enums"]["timeline"].remove(timeline)
@@ -303,6 +313,10 @@ def v9_schema():
 
 
 def v10_schema():
+    return parse_schema(v10_raw())
+
+
+def v11_schema():
     return parse_schema(yaml.safe_load(SCHEMA_PATH.read_text(encoding="utf-8")))
 
 
@@ -731,6 +745,48 @@ class TestMigrateV10(unittest.TestCase):
         migrate_schema_v10.migrate(self.db, v10_schema())
         with self.assertRaises(migrate_schema_v10.MigrationError):
             migrate_schema_v10.migrate(self.db, v10_schema())
+
+
+class TestMigrateV11(unittest.TestCase):
+    """Version 11 adds the display_only Screen attributes; only user_version changes."""
+
+    def setUp(self) -> None:
+        self._tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self._tmp.cleanup)
+        self.db = Path(self._tmp.name) / "graph.db"
+        init_db.init_db(self.db, schema=v10_schema())
+        self.marked_screen = {"reason": "mark a screen", "by": "test", "operations": [
+            {"op": "add_node", "id": "FR-001", "type": "FR", "title": "Registration"},
+            {"op": "add_node", "id": "SCR-001-01", "type": "Screen", "title": "Splash", "owner_fr": "FR-001",
+             "attrs": {"display_only": True, "display_only_reason": "Brand splash; shows no stored data."}}]}
+
+    def test_old_schema_refuses_display_only(self) -> None:
+        conn = connect(self.db)
+        try:
+            with self.assertRaises(write.ChangeSetError):
+                write.apply_changeset(conn, v10_schema(), self.marked_screen)
+        finally:
+            conn.close()
+
+    def test_migrates_and_accepts_display_only(self) -> None:
+        backup = migrate_schema_v11.migrate(self.db, v11_schema())
+        self.assertTrue(backup.is_file())
+        conn = connect(self.db)
+        try:
+            self.assertEqual(conn.execute("PRAGMA user_version").fetchone()[0], 11)
+            write.apply_changeset(conn, v11_schema(), self.marked_screen)
+            self.assertEqual(conn.execute(
+                "SELECT json_extract(attrs, '$.display_only') FROM nodes WHERE id = 'SCR-001-01'"
+            ).fetchone()[0], 1)
+        finally:
+            conn.close()
+
+    def test_refuses_wrong_schema_or_db_version(self) -> None:
+        with self.assertRaises(migrate_schema_v11.MigrationError):
+            migrate_schema_v11.migrate(self.db, v10_schema())
+        migrate_schema_v11.migrate(self.db, v11_schema())
+        with self.assertRaises(migrate_schema_v11.MigrationError):
+            migrate_schema_v11.migrate(self.db, v11_schema())
 
 
 if __name__ == "__main__":

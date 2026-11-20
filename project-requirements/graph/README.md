@@ -15,6 +15,7 @@ This folder holds the requirements graph. It stores FRs, stages, actors, entitie
 - `scripts/migrate_schema_v8.py`: moves a version 7 `graph.db` to schema version 8 (see "Schema version 8" below).
 - `scripts/migrate_schema_v9.py`: moves a version 8 `graph.db` to schema version 9 (see "Schema version 9" below).
 - `scripts/migrate_schema_v10.py`: moves a version 9 `graph.db` to schema version 10 (see "Schema version 10" below).
+- `scripts/migrate_schema_v11.py`: moves a version 10 `graph.db` to schema version 11 (see "Schema version 11" below).
 - `scripts/check_crs.py`: checks that every Approved Change Request ID appears in its PRD's Appendix: Change Log (exit 1 when one does not; Proposed CRs are listed, not checked, and stay out of the graph, D42).
 - `scripts/headless_review.sh`: runs one checklist review through a headless OpenCode model (see "Headless review wrapper" below).
 - `backups/`: dated copies of `graph.db`, written before it is replaced.
@@ -204,6 +205,16 @@ As in versions 7 to 9, `timeline` lives only in the JSON attrs of Stage nodes, s
 
 ```bash
 /usr/bin/python3 scripts/migrate_schema_v10.py     # backs up graph.db to backups/ first; --db PATH for another file
+```
+
+## Schema version 11
+
+Version 11 (display-only Screens) adds two optional attributes to Screen: `display_only` (bool) and `display_only_reason` (text). A Screen that legitimately shows no stored Field (a splash, landing, menu, confirmation or picker Screen) is marked `display_only: true` with a non-empty `display_only_reason`, and lint L03 then skips it. `display_only` true with no reason leaves L03 firing, and a marked Screen that has a `shows` edge to a non-Field is still reported.
+
+The attributes live only in the JSON attrs of Screen nodes, so only `PRAGMA user_version` changes. The migration checks the DDL, backs up `graph.db`, and sets `PRAGMA user_version` to 11:
+
+```bash
+/usr/bin/python3 scripts/migrate_schema_v11.py     # backs up graph.db to backups/ first; --db PATH for another file
 ```
 
 ## Run the tests

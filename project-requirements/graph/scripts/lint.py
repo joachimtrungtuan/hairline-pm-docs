@@ -43,7 +43,7 @@ from common import DEFAULT_DB_PATH, Edge, Graph, Node, Schema, SchemaError, load
 RULES: dict[str, str] = {
     "L01": "node lacks an owning FR or an attribute that its type requires in schema.yaml",
     "L02": "Rule that is not global has 'applies at' or 'applies to' edges, but none ends at an active node",
-    "L03": "Screen shows a non-Field, or shows nothing",
+    "L03": "Screen shows a non-Field, or shows nothing (unless display_only with a display_only_reason); a display_only Screen has no Step on it, or shows a Field",
     "L04": "Event has no producer Stage (several are allowed)",
     "L05": "Field calculated_by column and 'calculated by' edge disagree",
     "L06": "edge verb not allowed for its node-type pair",
@@ -128,10 +128,25 @@ def check_l02(g: Graph) -> list[Finding]:
 
 def check_l03(g: Graph) -> list[Finding]:
     shows = g.out("shows")
+    on = g.into("on")
     out = []
     for n in g.of_type("Screen"):
         edges = shows.get(n.id, [])
+        if n.attrs.get("display_only") is True:
+            # A display-only Screen must still appear in a flow, and must not show a Field.
+            if not on.get(n.id):
+                out.append(Finding("L03", f"{n.id}>no-step", n.id, f"Screen {n.id} is marked display_only but no Step is 'on' it"))
+            if edges:
+                out.append(Finding("L03", f"{n.id}>display-only-shows", n.id,
+                                   f"Screen {n.id} is marked display_only but has 'shows' edges"))
         if not edges:
+            if n.attrs.get("display_only") is True:
+                reason = n.attrs.get("display_only_reason")
+                if isinstance(reason, str) and reason.strip():
+                    continue
+                out.append(Finding("L03", n.id, n.id,
+                                   f"Screen {n.id} is marked display_only but has no display_only_reason, and has no 'shows' edges"))
+                continue
             out.append(Finding("L03", n.id, n.id, f"Screen {n.id} has no 'shows' edges"))
         for e in edges:
             target = g.active[e.to_id]

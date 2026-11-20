@@ -2,7 +2,7 @@
 # Changing node types, verbs or enum values is a schema migration: back up graph.db first.
 
 # Schema version, stored in graph.db as PRAGMA user_version.
-version: 10
+version: 11
 
 # Closed value lists. Attribute specs below may name one of these as their type.
 enums:
@@ -99,7 +99,10 @@ node_types:
     owner_fr: required
     attrs:
       required: {}
-      optional: {platform: text, description: text}
+      # display_only marks a Screen that legitimately shows no stored Field (splash, landing, menu,
+      # confirmation, picker). Lint L03 then skips it, but only when display_only_reason is also a non-empty text
+      # saying why; display_only true with no reason leaves L03 firing.
+      optional: {platform: text, description: text, display_only: bool, display_only_reason: text}
   Step:
     # One action in a flow, owned by the FR whose PRD describes it. Each Step needs a 'done by' Actor and an
     # 'at' Stage (lint L17). handoff_to / handoff_from name a step in another FR that this one continues to or
