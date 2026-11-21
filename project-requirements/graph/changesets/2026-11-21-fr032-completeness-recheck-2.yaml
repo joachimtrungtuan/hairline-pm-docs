@@ -1,0 +1,27 @@
+reason: "Follow-up to the FR-032 completeness re-check: add the six PRD behaviours seen outside the open rows (Documents empty state, reply confirmation, reopen confirmation, recently-closed warning, reopen response-time note, Share article)"
+by: controller
+operations:
+  - {"op": "add_node", "id": "REQ-032-135", "type": "Rule", "owner_fr": "FR-032", "title": "If no documents have been uploaded yet, the Documents tab shows the message \"No documents ", "attrs": {"statement": "If no documents have been uploaded yet, the Documents tab shows the message \"No documents on file. Upload your clinic documents (medical license, certifications, insurance) to get started.\" together with a prominent Upload Document button.", "rationale": "prd.md line 977 (Tab 6 Business Rules, empty state). Screen: SCR-032-05."}}
+  - {"op": "add_edge", "from": "REQ-032-135", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-032-135", "verb": "applies to", "to": "SCR-032-05"}
+  - {"op": "add_edge", "from": "REQ-032-135", "verb": "decided by", "to": "SRC-PRD-032"}
+  - {"op": "add_node", "id": "REQ-032-136", "type": "Rule", "owner_fr": "FR-032", "title": "After a successful reply the system shows the confirmation \"Reply sent. The support team w", "attrs": {"statement": "After a successful reply the system shows the confirmation \"Reply sent. The support team will respond soon.\"", "rationale": "prd.md lines 682, 1531 (main flow step 22 and Screen 5.8 Business Rules). Screen: SCR-032-17."}}
+  - {"op": "add_edge", "from": "REQ-032-136", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-032-136", "verb": "applies to", "to": "SCR-032-17"}
+  - {"op": "add_edge", "from": "REQ-032-136", "verb": "decided by", "to": "SRC-PRD-032"}
+  - {"op": "add_node", "id": "REQ-032-137", "type": "Rule", "owner_fr": "FR-032", "title": "After a reopen request is submitted the system shows the confirmation \"Reopen request subm", "attrs": {"statement": "After a reopen request is submitted the system shows the confirmation \"Reopen request submitted. We'll review your case shortly.\"", "rationale": "prd.md lines 705, 1576 (alternative flow A1 step 10 and Screen 5.9 Business Rules). Screen: SCR-032-18."}}
+  - {"op": "add_edge", "from": "REQ-032-137", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-032-137", "verb": "applies to", "to": "SCR-032-18"}
+  - {"op": "add_edge", "from": "REQ-032-137", "verb": "decided by", "to": "SRC-PRD-032"}
+  - {"op": "add_node", "id": "REQ-032-138", "type": "Rule", "owner_fr": "FR-032", "title": "If the case was recently closed (for example within 24 hours), the reopen dialog shows the", "attrs": {"statement": "If the case was recently closed (for example within 24 hours), the reopen dialog shows the warning \"This case was recently closed. Are you sure the issue persists?\"", "rationale": "prd.md line 1582 (Screen 5.9 Notes). Screen: SCR-032-18."}}
+  - {"op": "add_edge", "from": "REQ-032-138", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-032-138", "verb": "applies to", "to": "SCR-032-18"}
+  - {"op": "add_edge", "from": "REQ-032-138", "verb": "decided by", "to": "SRC-PRD-032"}
+  - {"op": "add_node", "id": "REQ-032-139", "type": "Rule", "owner_fr": "FR-032", "title": "The reopen dialog shows the estimated response time \"Our team typically responds to reopen", "attrs": {"statement": "The reopen dialog shows the estimated response time \"Our team typically responds to reopen requests within 4 hours.\"", "rationale": "prd.md line 1583 (Screen 5.9 Notes). Screen: SCR-032-18."}}
+  - {"op": "add_edge", "from": "REQ-032-139", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-032-139", "verb": "applies to", "to": "SCR-032-18"}
+  - {"op": "add_edge", "from": "REQ-032-139", "verb": "decided by", "to": "SRC-PRD-032"}
+  - {"op": "add_node", "id": "REQ-032-140", "type": "Rule", "owner_fr": "FR-032", "title": "An article offers share options: the provider can copy the article link or email the link.", "attrs": {"statement": "An article offers share options: the provider can copy the article link or email the link.", "rationale": "prd.md line 1276 (Screen 5.2 Business Rules). Screen: SCR-032-11."}}
+  - {"op": "add_edge", "from": "REQ-032-140", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-032-140", "verb": "applies to", "to": "SCR-032-11"}
+  - {"op": "add_edge", "from": "REQ-032-140", "verb": "decided by", "to": "SRC-PRD-032"}

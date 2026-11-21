@@ -1,0 +1,85 @@
+reason: "Completeness re-check of FR-032 against the 2026-11-20 PRD: add the screen-note behaviours the graph still lacked (bulk edit, empty states, review paging, document error and drag-and-drop, conditional country code, Enable All and Test Notification, billing country selector and Verify button, Help Centre empty search, resource preview, Back to List, case list empty states and total count), show four existing timestamp Fields on their Screens, link the FR-033 table of contents Rule to Articles, put exact message text and the Quick Stats counts into four existing Rules, and set the eight notification toggle Fields optional as the PRD Required column says No"
+by: controller
+operations:
+  - {"op": "add_node", "id": "REQ-032-119", "type": "Rule", "owner_fr": "FR-032", "title": "The Edit Profile button on the Basic Information tab switches every editable field in the ", "attrs": {"statement": "The Edit Profile button on the Basic Information tab switches every editable field in the tab into edit mode at once; while edit mode is on the button reads \"Cancel Edit\", and the provider can edit several fields and then save them all together with the Save All button.", "rationale": "prd.md lines 813, 839 (Tab 1 Edit Profile Button row and Bulk Edit Mode note). Screen: SCR-032-01."}}
+  - {"op": "add_edge", "from": "REQ-032-119", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-032-119", "verb": "applies to", "to": "SCR-032-01"}
+  - {"op": "add_edge", "from": "REQ-032-119", "verb": "decided by", "to": "SRC-PRD-032"}
+  - {"op": "add_node", "id": "REQ-032-120", "type": "Rule", "owner_fr": "FR-032", "title": "When the provider has no awards, the Awards tab shows the message \"No awards added yet. Cl", "attrs": {"statement": "When the provider has no awards, the Awards tab shows the message \"No awards added yet. Click '+ Add Award' to showcase your achievements.\"", "rationale": "prd.md line 911 (Tab 4 Notes, empty state). Screen: SCR-032-03."}}
+  - {"op": "add_edge", "from": "REQ-032-120", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-032-120", "verb": "applies to", "to": "SCR-032-03"}
+  - {"op": "add_edge", "from": "REQ-032-120", "verb": "decided by", "to": "SRC-PRD-032"}
+  - {"op": "add_node", "id": "REQ-032-121", "type": "Rule", "owner_fr": "FR-032", "title": "When the provider has no reviews, the Reviews tab shows the message \"No reviews yet. Revie", "attrs": {"statement": "When the provider has no reviews, the Reviews tab shows the message \"No reviews yet. Reviews will appear here once patients leave feedback.\"", "rationale": "prd.md line 946 (Tab 5 Notes, empty state). Screen: SCR-032-04."}}
+  - {"op": "add_edge", "from": "REQ-032-121", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-032-121", "verb": "applies to", "to": "SCR-032-04"}
+  - {"op": "add_edge", "from": "REQ-032-121", "verb": "decided by", "to": "SRC-PRD-032"}
+  - {"op": "add_node", "id": "REQ-032-122", "type": "Rule", "owner_fr": "FR-032", "title": "The review list on the Reviews tab is paged: the provider moves between pages with page nu", "attrs": {"statement": "The review list on the Reviews tab is paged: the provider moves between pages with page numbers and next and previous buttons, and can choose a page size of 10, 20 or 50 reviews; the chosen page and page size persist during the session.", "rationale": "prd.md lines 928, 945 (Tab 5 Pagination Controls row and Notes). Screen: SCR-032-04."}}
+  - {"op": "add_edge", "from": "REQ-032-122", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-032-122", "verb": "applies to", "to": "SCR-032-04"}
+  - {"op": "add_edge", "from": "REQ-032-122", "verb": "decided by", "to": "SRC-PRD-032"}
+  - {"op": "add_node", "id": "REQ-032-123", "type": "Rule", "owner_fr": "FR-032", "title": "If the document list cannot be loaded, the Documents tab shows the message \"Unable to load", "attrs": {"statement": "If the document list cannot be loaded, the Documents tab shows the message \"Unable to load documents. Please refresh or contact support.\"", "rationale": "prd.md line 1004 (Tab 6 Notes, error state). Screen: SCR-032-05."}}
+  - {"op": "add_edge", "from": "REQ-032-123", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-032-123", "verb": "applies to", "to": "SCR-032-05"}
+  - {"op": "add_edge", "from": "REQ-032-123", "verb": "decided by", "to": "SRC-PRD-032"}
+  - {"op": "add_node", "id": "REQ-032-124", "type": "Rule", "owner_fr": "FR-032", "title": "The provider can drag files onto the Documents tab to upload them", "attrs": {"statement": "The provider can drag files onto the Documents tab to upload them; the upload dialog then opens with the dropped file already selected.", "rationale": "prd.md line 1006 (Tab 6 Notes, drag-and-drop upload). Screen: SCR-032-05."}}
+  - {"op": "add_edge", "from": "REQ-032-124", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-032-124", "verb": "applies to", "to": "SCR-032-05"}
+  - {"op": "add_edge", "from": "REQ-032-124", "verb": "decided by", "to": "SRC-PRD-032"}
+  - {"op": "add_node", "id": "REQ-032-125", "type": "Rule", "owner_fr": "FR-032", "title": "A phone number country code is required when a phone number is entered", "attrs": {"statement": "A phone number country code is required when a phone number is entered; with no phone number the country code is not needed.", "rationale": "prd.md line 1037 (Screen 2 Phone Number - Country Code row, Required \"Yes (if phone provided)\"). Screen: SCR-032-06."}}
+  - {"op": "add_edge", "from": "REQ-032-125", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-032-125", "verb": "applies to", "to": "SCR-032-06"}
+  - {"op": "add_edge", "from": "REQ-032-125", "verb": "applies to", "to": "ENT-provider-account-settings.country_code"}
+  - {"op": "add_edge", "from": "REQ-032-125", "verb": "decided by", "to": "SRC-PRD-032"}
+  - {"op": "add_node", "id": "REQ-032-126", "type": "Rule", "owner_fr": "FR-032", "title": "The Notification Preferences tab offers Enable All and Disable All buttons that turn all n", "attrs": {"statement": "The Notification Preferences tab offers Enable All and Disable All buttons that turn all notification-type toggles on or off in one action.", "rationale": "prd.md line 1124 (Screen 3 Notes). Screen: SCR-032-07."}}
+  - {"op": "add_edge", "from": "REQ-032-126", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-032-126", "verb": "applies to", "to": "SCR-032-07"}
+  - {"op": "add_edge", "from": "REQ-032-126", "verb": "decided by", "to": "SRC-PRD-032"}
+  - {"op": "add_node", "id": "REQ-032-127", "type": "Rule", "owner_fr": "FR-032", "title": "The Notification Preferences tab offers a Test Notification button that sends the provider", "attrs": {"statement": "The Notification Preferences tab offers a Test Notification button that sends the provider a sample notification so the provider can check that the settings work.", "rationale": "prd.md line 1127 (Screen 3 Notes). Screen: SCR-032-07."}}
+  - {"op": "add_edge", "from": "REQ-032-127", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-032-127", "verb": "applies to", "to": "SCR-032-07"}
+  - {"op": "add_edge", "from": "REQ-032-127", "verb": "decided by", "to": "SRC-PRD-032"}
+  - {"op": "add_node", "id": "REQ-032-128", "type": "Rule", "owner_fr": "FR-032", "title": "The Billing tab has a country selector", "attrs": {"statement": "The Billing tab has a country selector; the selected country decides which bank fields are required, for example an IBAN for EU countries and a routing number for the USA.", "rationale": "prd.md line 1175 (Screen 4 Notes). Screen: SCR-032-08."}}
+  - {"op": "add_edge", "from": "REQ-032-128", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-032-128", "verb": "applies to", "to": "SCR-032-08"}
+  - {"op": "add_edge", "from": "REQ-032-128", "verb": "decided by", "to": "SRC-PRD-032"}
+  - {"op": "add_node", "id": "REQ-032-129", "type": "Rule", "owner_fr": "FR-032", "title": "The Billing tab has a Verify Bank Account button that tests the entered bank details with ", "attrs": {"statement": "The Billing tab has a Verify Bank Account button that tests the entered bank details with the S-02 Payment Service before the provider saves them.", "rationale": "prd.md line 1177 (Screen 4 Notes). Screen: SCR-032-08."}}
+  - {"op": "add_edge", "from": "REQ-032-129", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-032-129", "verb": "applies to", "to": "SCR-032-08"}
+  - {"op": "add_edge", "from": "REQ-032-129", "verb": "decided by", "to": "SRC-PRD-032"}
+  - {"op": "add_node", "id": "REQ-032-130", "type": "Rule", "owner_fr": "FR-032", "title": "When a Help Centre search returns no results, the system shows \"No results for '[query]'. ", "attrs": {"statement": "When a Help Centre search returns no results, the system shows \"No results for '[query]'. Try different keywords or Contact Support.\" (the same message as the patient Help Centre, FR-035).", "rationale": "prd.md line 1205 (Screen 5 Business Rules). Screen: SCR-032-09."}}
+  - {"op": "add_edge", "from": "REQ-032-130", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-032-130", "verb": "applies to", "to": "SCR-032-09"}
+  - {"op": "add_edge", "from": "REQ-032-130", "verb": "decided by", "to": "SRC-PRD-032"}
+  - {"op": "add_node", "id": "REQ-032-131", "type": "Rule", "owner_fr": "FR-032", "title": "The Resource Library offers a Preview button for PDF and image files", "attrs": {"statement": "The Resource Library offers a Preview button for PDF and image files; the preview opens in a modal or in a new tab.", "rationale": "prd.md lines 1293, 1300 (Screen 5.3 Preview Button row and Business Rules). Screen: SCR-032-12."}}
+  - {"op": "add_edge", "from": "REQ-032-131", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-032-131", "verb": "applies to", "to": "SCR-032-12"}
+  - {"op": "add_edge", "from": "REQ-032-131", "verb": "decided by", "to": "SRC-PRD-032"}
+  - {"op": "add_node", "id": "REQ-032-132", "type": "Rule", "owner_fr": "FR-032", "title": "The Back to List button on Case Detail returns the provider to My Support Cases with the p", "attrs": {"statement": "The Back to List button on Case Detail returns the provider to My Support Cases with the provider's filter selections still applied.", "rationale": "prd.md line 1505 (Screen 5.8 Back to List Button row). Screen: SCR-032-17."}}
+  - {"op": "add_edge", "from": "REQ-032-132", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-032-132", "verb": "applies to", "to": "SCR-032-17"}
+  - {"op": "add_edge", "from": "REQ-032-132", "verb": "decided by", "to": "SRC-PRD-032"}
+  - {"op": "add_node", "id": "REQ-032-133", "type": "Rule", "owner_fr": "FR-032", "title": "When no case matches the current filters, My Support Cases shows \"No cases found. Try adju", "attrs": {"statement": "When no case matches the current filters, My Support Cases shows \"No cases found. Try adjusting your filters or submit a new request via Contact Support.\"; when the provider has no cases at all it shows \"You haven't submitted any support cases yet. Visit Contact Support or Feedback & Suggestions to get help.\"", "rationale": "prd.md lines 1472, 1473 (Screen 5.7 Notes, empty states). Screen: SCR-032-16."}}
+  - {"op": "add_edge", "from": "REQ-032-133", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-032-133", "verb": "applies to", "to": "SCR-032-16"}
+  - {"op": "add_edge", "from": "REQ-032-133", "verb": "decided by", "to": "SRC-PRD-032"}
+  - {"op": "add_node", "id": "REQ-032-134", "type": "Rule", "owner_fr": "FR-032", "title": "My Support Cases shows the number of cases that match the current filters at the top of th", "attrs": {"statement": "My Support Cases shows the number of cases that match the current filters at the top of the table, in the form \"Showing X cases\".", "rationale": "prd.md line 1474 (Screen 5.7 Notes, total count). Screen: SCR-032-16."}}
+  - {"op": "add_edge", "from": "REQ-032-134", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-032-134", "verb": "applies to", "to": "SCR-032-16"}
+  - {"op": "add_edge", "from": "REQ-032-134", "verb": "decided by", "to": "SRC-PRD-032"}
+  - {"op": "add_edge", "from": "REQ-033-071", "verb": "applies to", "to": "SCR-032-11"}
+  - {"op": "add_edge", "from": "SCR-032-04", "verb": "shows", "to": "ENT-provider-review-summary.last_synced_at", "attrs": {"provenance": "inherited from another FR", "label": "Last sync", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-032-06", "verb": "shows", "to": "ENT-provider-account-settings.password_changed_at", "attrs": {"provenance": "retrieved", "label": "Last password change date", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-032-07", "verb": "shows", "to": "ENT-provider-notification-preferences.last_updated_at", "attrs": {"provenance": "retrieved", "label": "Last preference update", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-032-08", "verb": "shows", "to": "ENT-provider-billing-settings.last_updated_at", "attrs": {"provenance": "retrieved", "label": "Last bank account update", "editable": false}}
+  - {"op": "update_node", "id": "REQ-032-001", "attrs": {"statement": "System MUST allow providers to upload and update clinic logo/profile picture (max 5MB, JPEG/PNG, min 200x200px); an image over 5MB is rejected with the message \"Image too large. Maximum size is 5MB. Please compress or choose a smaller image.\" and the upload is prevented until a valid image is selected"}}
+  - {"op": "update_node", "id": "REQ-032-079", "attrs": {"statement": "If all notification types are disabled, the system shows a confirmation dialog \"Warning: You have disabled all notifications. You may miss important updates about inquiries, appointments, and reviews. Are you sure?\" before saving"}}
+  - {"op": "update_node", "id": "REQ-032-107", "attrs": {"statement": "Search Bar: Min 3 chars to trigger search, real-time search; searches across Case ID, Title, Description, Message content; Filters are cumulative (AND logic between different filter types); Filter options: Status (Open, In Progress, Resolved, Closed; default Open and In Progress), Type (Support Request, Feedback; default all types), Date Range (custom range on the case creation date; default last 90 days); several selections within one filter combine as OR; filter selections persist during the session"}}
+  - {"op": "update_node", "id": "REQ-032-117", "attrs": {"statement": "Quick Stats bar shows the counts Open, In Progress, Resolved and Unread Messages, based on current filters"}}
+  - {"op": "update_field", "id": "ENT-provider-notification-preferences.quote_notifications", "required": false}
+  - {"op": "update_field", "id": "ENT-provider-notification-preferences.schedule_notifications", "required": false}
+  - {"op": "update_field", "id": "ENT-provider-notification-preferences.treatment_start_notifications", "required": false}
+  - {"op": "update_field", "id": "ENT-provider-notification-preferences.aftercare_notifications", "required": false}
+  - {"op": "update_field", "id": "ENT-provider-notification-preferences.review_notifications", "required": false}
+  - {"op": "update_field", "id": "ENT-provider-notification-preferences.promotion_notifications", "required": false}
+  - {"op": "update_field", "id": "ENT-provider-notification-preferences.email_enabled", "required": false}
+  - {"op": "update_field", "id": "ENT-provider-notification-preferences.push_enabled", "required": false}

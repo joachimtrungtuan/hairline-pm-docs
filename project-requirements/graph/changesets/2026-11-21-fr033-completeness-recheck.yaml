@@ -1,0 +1,60 @@
+reason: "FR-033 completeness re-check 2026-11-21: helpfulness counts-only Rule, editable overall status on the service status screen, provider preview Flow and provider video source Steps that the 2026-11-20 PRD states and the graph lacked, and four Rule rationales that still described resolved contradictions"
+by: controller
+operations:
+  - {"op": "add_node", "id": "REQ-033-095", "type": "Rule", "owner_fr": "FR-033", "title": "Helpfulness ratings are kept as counts only, with no user identity", "attrs": {"statement": "Helpfulness ratings on Help Centre content (Yes and No) are kept as counts only: no user identity is stored (patients are anonymous; providers are counted at clinic level at most), and the ratings are not publicly displayed.", "rationale": "prd.md lines 1248 (Security Considerations, Data Privacy: ratings kept as Yes/No counts only, no user identity stored, not publicly displayed), 1414 (content analytics: Yes and No counts only, no user identity)."}}
+  - {"op": "add_edge", "from": "REQ-033-095", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-033-095", "verb": "applies to", "to": "ENT-content-analytics.helpful_yes_count"}
+  - {"op": "add_edge", "from": "REQ-033-095", "verb": "applies to", "to": "ENT-content-analytics.helpful_no_count"}
+  - {"op": "add_edge", "from": "REQ-033-095", "verb": "decided by", "to": "SRC-PRD-033"}
+  - {"op": "remove_edge", "from": "SCR-033-12", "verb": "shows", "to": "ENT-service-status.overall_status"}
+  - {"op": "add_edge", "from": "SCR-033-12", "verb": "shows", "to": "ENT-service-status.overall_status", "attrs": {"provenance": "system calculated", "label": "Overall Status", "editable": true}}
+  - {"op": "update_node", "id": "REQ-033-039", "attrs": {"rationale": "Privacy Rule 2. prd.md lines 1025 (Data & Privacy Rules, Privacy Rule 2)."}}
+  - {"op": "update_node", "id": "REQ-033-043", "attrs": {"rationale": "Screen 1.1 rules and Admin Editability (category visibility applies to provider content only; the four patient sections are fixed). prd.md lines 329, 341, 1064."}}
+  - {"op": "update_node", "id": "REQ-033-072", "attrs": {"rationale": "Screens 4 and 4.1. The resource whitelist is the same list as REQ-033-024. prd.md lines 575, 622, 638, 1245."}}
+  - {"op": "update_node", "id": "REQ-033-084", "attrs": {"rationale": "Screens 6 and 6.3. Screen 6 and 6.3 data fields and rules limit the future start time to new windows. prd.md lines 801, 816-818, 918-921, 930."}}
+  - {"op": "add_node", "id": "FLW-033-preview-provider-content", "type": "Flow", "title": "Alternative Flow: Admin previews provider content", "attrs": {"kind": "alternative", "description": "Alternative Flow: Admin previews provider content", "prd_ref": "Screen 7 (Provider Content Preview)"}}
+  - {"op": "add_node", "id": "STP-033-156", "type": "Step", "owner_fr": "FR-033", "title": "Admin selects the preview mode (FAQs, Articles, Resources, Videos or Service Status)", "attrs": {"prd_ref": "Screen 7 (Provider Content Preview)"}}
+  - {"op": "add_edge", "from": "STP-033-156", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-156", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-033-156", "verb": "on", "to": "SCR-033-16"}
+  - {"op": "add_node", "id": "STP-033-157", "type": "Step", "owner_fr": "FR-033", "title": "System renders the content in the layout providers see for the selected mode", "attrs": {"prd_ref": "Screen 7 (Provider Content Preview)"}}
+  - {"op": "add_edge", "from": "STP-033-157", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-033-157", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-033-157", "verb": "on", "to": "SCR-033-16"}
+  - {"op": "add_edge", "from": "STP-033-157", "verb": "applies", "to": "REQ-033-086"}
+  - {"op": "add_node", "id": "STP-033-158", "type": "Step", "owner_fr": "FR-033", "title": "System updates the preview in real time as the admin edits the content", "attrs": {"prd_ref": "Screen 7 (Provider Content Preview)"}}
+  - {"op": "add_edge", "from": "STP-033-158", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-033-158", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-033-158", "verb": "on", "to": "SCR-033-16"}
+  - {"op": "add_edge", "from": "STP-033-158", "verb": "applies", "to": "REQ-033-086"}
+  - {"op": "add_node", "id": "STP-033-159", "type": "Step", "owner_fr": "FR-033", "title": "Admin toggles between desktop, tablet and mobile views", "attrs": {"prd_ref": "Screen 7 (Provider Content Preview)"}}
+  - {"op": "add_edge", "from": "STP-033-159", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-159", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-033-159", "verb": "on", "to": "SCR-033-16"}
+  - {"op": "add_node", "id": "STP-033-160", "type": "Step", "owner_fr": "FR-033", "title": "Admin opens the print preview of an article", "attrs": {"prd_ref": "Screen 7 (Provider Content Preview)"}}
+  - {"op": "add_edge", "from": "STP-033-160", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-160", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-033-160", "verb": "on", "to": "SCR-033-16"}
+  - {"op": "add_node", "id": "STP-033-161", "type": "Step", "owner_fr": "FR-033", "title": "Admin tests the interactive elements, such as expand and collapse, video playback and file download", "attrs": {"prd_ref": "Screen 7 (Provider Content Preview)"}}
+  - {"op": "add_edge", "from": "STP-033-161", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-161", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-033-161", "verb": "on", "to": "SCR-033-16"}
+  - {"op": "add_edge", "from": "FLW-033-preview-provider-content", "verb": "starts at", "to": "STP-033-156"}
+  - {"op": "add_edge", "from": "STP-033-156", "verb": "next", "to": "STP-033-157"}
+  - {"op": "add_edge", "from": "STP-033-157", "verb": "next", "to": "STP-033-158"}
+  - {"op": "add_edge", "from": "STP-033-158", "verb": "next", "to": "STP-033-159"}
+  - {"op": "add_edge", "from": "STP-033-159", "verb": "next", "to": "STP-033-160"}
+  - {"op": "add_edge", "from": "STP-033-160", "verb": "next", "to": "STP-033-161"}
+  - {"op": "add_node", "id": "STP-033-162", "type": "Step", "owner_fr": "FR-033", "title": "Admin chooses the video source type, Upload File or Embed from Third-Party (provider)", "attrs": {"prd_ref": "Screen 5.1 (Provider Video Add/Edit Form)"}}
+  - {"op": "add_edge", "from": "STP-033-162", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-162", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-033-162", "verb": "on", "to": "SCR-033-11"}
+  - {"op": "add_edge", "from": "STP-033-162", "verb": "applies", "to": "REQ-033-076"}
+  - {"op": "add_node", "id": "STP-033-163", "type": "Step", "owner_fr": "FR-033", "title": "Admin enters the third-party video URL (provider)", "attrs": {"prd_ref": "Screen 5.1 (Provider Video Add/Edit Form)"}}
+  - {"op": "add_edge", "from": "STP-033-163", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-163", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-033-163", "verb": "on", "to": "SCR-033-11"}
+  - {"op": "add_edge", "from": "STP-033-163", "verb": "applies", "to": "REQ-033-078"}
+  - {"op": "add_edge", "from": "STP-033-040", "verb": "next", "to": "STP-033-162"}
+  - {"op": "add_edge", "from": "STP-033-162", "verb": "next", "to": "STP-033-163"}
+  - {"op": "add_edge", "from": "STP-033-163", "verb": "next", "to": "STP-033-045"}

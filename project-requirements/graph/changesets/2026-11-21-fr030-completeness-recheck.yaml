@@ -1,0 +1,60 @@
+reason: "FR-030 completeness re-check 2026-11-21: Workflow B3 re-drafted to the PRD (Admin Adds Another Rule for the Same Event); General Module Rule 2, the Screen 1 pause prompt, Save Draft and Save and Activate, the Event ownership Core Rule and the both-channels-off edge case added as Rules; Entity 7 (Provider Team Notification Routing) added; the retry interval Field and the two Screen descriptions brought in line with the PRD; SET-messaging-notification-preferences linked to the Rules that govern it."
+by: controller
+operations:
+  - {"op": "update_node", "id": "FLW-030-duplicate-rules", "title": "B3: admin adds another rule for the same event", "attrs": {"description": "B3: admin adds another rule for the same event (Rule Name unique per event; rules are never deleted, only switched off)", "prd_ref": "B3: Admin Adds Another Rule for the Same Event"}}
+  - {"op": "update_node", "id": "STP-030-065", "attrs": {"prd_ref": "B3: Admin Adds Another Rule for the Same Event step 1"}}
+  - {"op": "update_node", "id": "STP-030-066", "title": "Admin clicks Add Rule and selects the event from the event catalog", "attrs": {"prd_ref": "B3: Admin Adds Another Rule for the Same Event step 2"}}
+  - {"op": "remove_edge", "from": "STP-030-066", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-030-066", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-066", "verb": "applies", "to": "REQ-030-228", "attrs": {}}
+  - {"op": "update_node", "id": "STP-030-067", "title": "System opens the Rule Editor with a new rule in Draft status for that event", "attrs": {"prd_ref": "B3: Admin Adds Another Rule for the Same Event step 3"}}
+  - {"op": "remove_edge", "from": "STP-030-067", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-030-067", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  - {"op": "remove_edge", "from": "STP-030-067", "verb": "on", "to": "SCR-030-01"}
+  - {"op": "add_edge", "from": "STP-030-067", "verb": "on", "to": "SCR-030-02", "attrs": {}}
+  - {"op": "update_node", "id": "STP-030-068", "title": "Admin enters a Rule Name for the new rule", "attrs": {"prd_ref": "B3: Admin Adds Another Rule for the Same Event step 4"}}
+  - {"op": "remove_edge", "from": "STP-030-068", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-030-068", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_node", "id": "STP-030-069", "type": "Step", "title": "If another rule for the same event already uses that Rule Name, system shows an error and does not save", "owner_fr": "FR-030", "attrs": {"prd_ref": "B3: Admin Adds Another Rule for the Same Event step 4"}}
+  - {"op": "add_edge", "from": "STP-030-069", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-069", "verb": "at", "to": "STG-admin-01-configuration", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-069", "verb": "on", "to": "SCR-030-02", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-069", "verb": "applies", "to": "REQ-030-159", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-068", "verb": "next", "to": "STP-030-069", "attrs": {}}
+  - {"op": "add_node", "id": "STP-030-070", "type": "Step", "title": "Admin saves the rule and, when ready, activates it", "owner_fr": "FR-030", "attrs": {"prd_ref": "B3: Admin Adds Another Rule for the Same Event step 5"}}
+  - {"op": "add_edge", "from": "STP-030-070", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-070", "verb": "at", "to": "STG-admin-01-configuration", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-070", "verb": "on", "to": "SCR-030-02", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-069", "verb": "next", "to": "STP-030-070", "attrs": {}}
+  - {"op": "add_node", "id": "REQ-030-230", "type": "Rule", "title": "Rules are never deleted, only switched off", "owner_fr": "FR-030", "attrs": {"statement": "Notification rules are never deleted, only switched off (paused). A rule for an event on the Non-Disableable list cannot be paused", "rationale": "prd.md line 517 (General Module Rule 2)."}}
+  - {"op": "add_edge", "from": "REQ-030-230", "verb": "applies at", "to": "STG-main-01-inquiry", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-230", "verb": "applies to", "to": "SCR-030-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-230", "verb": "decided by", "to": "SRC-PRD-030", "attrs": {}}
+  - {"op": "add_node", "id": "REQ-030-231", "type": "Rule", "title": "Save Draft saves without activating, Save and Activate activates immediately", "owner_fr": "FR-030", "attrs": {"statement": "In the Rule Editor, Save Draft saves a rule without activating it; Save & Activate activates it immediately", "rationale": "prd.md line 464 (Screen 2 Notes). Activation still follows the confirmation prompt of the Entry Points activation method."}}
+  - {"op": "add_edge", "from": "REQ-030-231", "verb": "applies at", "to": "STG-main-01-inquiry", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-231", "verb": "applies to", "to": "SCR-030-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-231", "verb": "decided by", "to": "SRC-PRD-030", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-030-070", "verb": "applies", "to": "REQ-030-231", "attrs": {}}
+  - {"op": "add_node", "id": "REQ-030-232", "type": "Rule", "title": "Pausing a rule on the dashboard needs a confirmation prompt", "owner_fr": "FR-030", "attrs": {"statement": "Pausing a rule requires a confirmation prompt: \"This will stop notifications for this event. Continue?\"", "rationale": "prd.md line 401 (Screen 1 Business Rules). Workflow A2 step 3 (prd.md line 304) words its pause prompt differently: \"Paused rules will not trigger notifications. Reactivate when ready.\" (REQ-030-151)."}}
+  - {"op": "add_edge", "from": "REQ-030-232", "verb": "applies at", "to": "STG-main-01-inquiry", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-232", "verb": "applies to", "to": "SCR-030-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-232", "verb": "decided by", "to": "SRC-PRD-030", "attrs": {}}
+  - {"op": "add_node", "id": "REQ-030-233", "type": "Rule", "title": "Every event that produces a notification is owned by FR-030", "owner_fr": "FR-030", "attrs": {"statement": "Event ownership: every event that produces a notification is owned by FR-030 and listed in this catalog, including events triggered by other features (the producing feature is named in the Notes). An event that produces no notification is owned by the feature that triggers it and is not listed here.", "rationale": "prd.md line 111 (Core Rule, Event ownership)."}}
+  - {"op": "add_edge", "from": "REQ-030-233", "verb": "applies at", "to": "STG-main-01-inquiry", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-233", "verb": "applies to", "to": "SCR-030-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-233", "verb": "decided by", "to": "SRC-PRD-030", "attrs": {}}
+  - {"op": "add_node", "id": "REQ-030-234", "type": "Rule", "title": "With Email and Push both off, only the in-app entry is created", "owner_fr": "FR-030", "attrs": {"statement": "When a recipient has both Email and Push switched off, nothing is sent by email or push, and the in-app entry is still always created", "rationale": "prd.md lines 915, 916 (Edge Cases). The owning FR was unconfirmed in the 2026-11-20 apply result; the line is in this PRD."}}
+  - {"op": "add_edge", "from": "REQ-030-234", "verb": "applies at", "to": "STG-main-01-inquiry", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-234", "verb": "applies to", "to": "ENT-patient-notification-preferences", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-234", "verb": "applies to", "to": "ENT-provider-notification-preferences", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-234", "verb": "decided by", "to": "SRC-PRD-030", "attrs": {}}
+  - {"op": "add_node", "id": "ENT-provider-team-notification-routing", "type": "Entity", "title": "Provider team notification routing", "owner_fr": "FR-030", "attrs": {"description": "Which provider team members receive which notifications, based on their role (team roles come from FR-009). Owned by FR-030; the provider team screens show and edit it (PRD Key Entities, Entity 7). The PRD names no attributes."}}
+  - {"op": "add_edge", "from": "ENT-provider-team-notification-routing", "verb": "decided by", "to": "SRC-PRD-030", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-109", "verb": "applies to", "to": "ENT-provider-team-notification-routing", "attrs": {}}
+  - {"op": "update_node", "id": "REQ-030-109", "attrs": {"rationale": "prd.md lines 44, 992 (Entity 7). Routing depends on FR-009 team data; the routing record is owned by FR-030 and the provider team screens show and edit it."}}
+  - {"op": "update_node", "id": "REQ-030-106", "attrs": {"rationale": "prd.md line 38. Also prd.md line 27: patients cannot modify system-level rules but can manage personal preferences. The patient preference record is owned by FR-030 (prd.md line 986, Entity 5); the FR-001 profile screens show and edit it."}}
+  - {"op": "update_node", "id": "ENT-notification-rule.retry_interval", "attrs": {"description": "Key Entities: retry_interval. Screen 2: one fixed interval between retries, minimum 1 hour, maximum 24 hours, default 1 hour."}}
+  - {"op": "update_node", "id": "SCR-030-01", "attrs": {"description": "Admin Platform (A-09), Settings, Alerts & Notifications. Overview of every catalog event and its rules, grouped by category, with quick access to Configure, Test and Pause/Activate (PRD Screen 1). UI controls, not fields: Search Rules box, the Rules List table, the Rule Row Actions button group (Configure, Test, Pause/Activate; there is no Delete action), the Add Rule button, CSV export, pagination, back link."}}
+  - {"op": "update_node", "id": "SCR-030-02", "attrs": {"description": "Admin Platform (A-09). Create or edit a rule for a catalog event (an event can have several rules): recipients, channels, templates, timing, retry, escalation, status (PRD Screen 2). UI controls, not fields: preview pane, Test Rule, Save Draft, Save & Activate, change log panel, breadcrumb and Back to list."}}
+  - {"op": "add_edge", "from": "REQ-030-224", "verb": "governed by", "to": "SET-messaging-notification-preferences", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-030-106", "verb": "governed by", "to": "SET-messaging-notification-preferences", "attrs": {}}

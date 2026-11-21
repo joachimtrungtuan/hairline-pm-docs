@@ -1,0 +1,118 @@
+reason: "FR-031 completeness re-check 2026-11-21: the A2 step 13 Acknowledge Step, Rule wording that now matches the PRD (Super Admin protection messages, required Screen 3 fields, personal message advice), the stale admin-stage note removed from Rule rationales, and the FR-031 Events and Entities moved from the patient inquiry Stage to the admin configuration Stage (including the reads and writes of the admin audit trail entry)."
+by: controller
+operations:
+  - {"op": "add_node", "id": "STP-031-214", "type": "Step", "title": "System shows the Acknowledge role change action", "owner_fr": "FR-031", "attrs": {"prd_ref": "A2 step 13"}}
+  - {"op": "add_edge", "from": "STP-031-214", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-031-214", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-031-214", "verb": "on", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "STP-031-214", "verb": "applies", "to": "REQ-031-124"}
+  - {"op": "remove_edge", "from": "STP-031-212", "verb": "next", "to": "STP-031-213"}
+  - {"op": "add_edge", "from": "STP-031-212", "verb": "next", "to": "STP-031-214"}
+  - {"op": "add_edge", "from": "STP-031-214", "verb": "next", "to": "STP-031-213"}
+  - {"op": "update_node", "id": "REQ-031-001", "attrs": {"rationale": "PRD Functional Requirements Summary, REQ-031-001."}}
+  - {"op": "update_node", "id": "REQ-031-002", "attrs": {"rationale": "PRD Functional Requirements Summary, REQ-031-002."}}
+  - {"op": "update_node", "id": "REQ-031-003", "attrs": {"rationale": "PRD Functional Requirements Summary, REQ-031-003."}}
+  - {"op": "update_node", "id": "REQ-031-004", "attrs": {"rationale": "PRD Functional Requirements Summary, REQ-031-004."}}
+  - {"op": "update_node", "id": "REQ-031-005", "attrs": {"rationale": "PRD Functional Requirements Summary, REQ-031-005; Tab 3 business rules."}}
+  - {"op": "update_node", "id": "REQ-031-006", "attrs": {"rationale": "PRD Functional Requirements Summary, REQ-031-006. Sync indicator and timing wording: see the sync and propagation rules; other propagation wordings conflict (migration report decision list)."}}
+  - {"op": "update_node", "id": "REQ-031-008", "attrs": {"rationale": "PRD Functional Requirements Summary, REQ-031-008. Business Rule 5 repeats this requirement (role changes, permission grants, user suspensions logged in the audit trail); merged here."}}
+  - {"op": "update_node", "id": "REQ-031-009", "attrs": {"statement": "System MUST NOT allow a Super Admin account to be suspended by another user, or removed, demoted or self-deactivated inside the product (system protection; if ever needed, this is done outside the product). When another admin tries to suspend one, including one Super Admin trying to suspend another, the action is blocked with \"A Super Admin account cannot be suspended. Super Admin accounts can only be changed outside the product.\" and both accounts stay active; when a Super Admin tries to change their own role or deactivate their own account, the action is blocked with \"A Super Admin account cannot be demoted or deactivated in the product. This can only be done outside the product.\"", "rationale": "PRD Functional Requirements Summary, REQ-031-009; Tab 2 business rules; Business Rule 7; User Story 6. Business Rule 4 (at least one active Super Admin must exist at all times, system protection against lockout) is merged here. prd.md lines 1304-1310 (User Story 6 scenarios 1 to 3 give the two messages)."}}
+  - {"op": "update_node", "id": "REQ-031-010", "attrs": {"rationale": "PRD Functional Requirements Summary, REQ-031-010."}}
+  - {"op": "update_node", "id": "REQ-031-011", "attrs": {"rationale": "PRD Functional Requirements Summary, REQ-031-011. Business Rule 8 repeats this (role assignments stored with an Effective From timestamp; enforcement respects that date/time on authorization checks); merged here."}}
+  - {"op": "update_node", "id": "REQ-031-013", "attrs": {"rationale": "PRD Functional Requirements Summary, REQ-031-013. Key Entities, Entity 2."}}
+  - {"op": "update_node", "id": "REQ-031-014", "attrs": {"rationale": "PRD Functional Requirements Summary, REQ-031-014. Privacy Rule 2 (IP addresses logged for security audit purposes, GDPR-compliant logging) merged here. Key Entities, Entity 3."}}
+  - {"op": "update_node", "id": "REQ-031-016", "attrs": {"rationale": "PRD Functional Requirements Summary, REQ-031-016."}}
+  - {"op": "update_node", "id": "REQ-031-017", "attrs": {"rationale": "PRD Functional Requirements Summary, REQ-031-017. Technical requirement, kept because the PRD numbers it; Admin Editability lists the algorithm as fixed in codebase."}}
+  - {"op": "update_node", "id": "REQ-031-019", "attrs": {"rationale": "PRD Functional Requirements Summary, REQ-031-019. Technical requirement, kept because the PRD numbers it."}}
+  - {"op": "update_node", "id": "REQ-031-020", "attrs": {"rationale": "PRD Functional Requirements Summary, REQ-031-020. Business Rule 3 repeats this (latest role assignment and permission matrix evaluated on every API call; caching allowed only if invalidated within 5 seconds; enforcement reflects changes on the next API call after invalidation); merged here."}}
+  - {"op": "update_node", "id": "REQ-031-021", "attrs": {"rationale": "PRD Functional Requirements Summary, REQ-031-021."}}
+  - {"op": "update_node", "id": "REQ-031-022", "attrs": {"rationale": "PRD Functional Requirements Summary, REQ-031-022. The GDPR Compliance line in Data and Privacy Rules (email and name anonymised, audit trail preserved with anonymised identifiers) is merged here."}}
+  - {"op": "update_node", "id": "REQ-031-024", "attrs": {"rationale": "PRD Functional Requirements Summary, REQ-031-024. Technical requirement, kept because the PRD numbers it."}}
+  - {"op": "update_node", "id": "REQ-031-025", "attrs": {"rationale": "PRD Functional Requirements Summary, REQ-031-025. Technical requirement, kept because the PRD numbers it."}}
+  - {"op": "update_node", "id": "REQ-031-026", "attrs": {"rationale": "PRD Functional Requirements Summary, REQ-031-026. Business Rule 3 also states the 5-second invalidation limit."}}
+  - {"op": "update_node", "id": "REQ-031-027", "attrs": {"rationale": "Entry Points section; Data Dependencies (Admin User Accounts)."}}
+  - {"op": "update_node", "id": "REQ-031-028", "attrs": {"rationale": "Stated in the Executive Summary, Admin Platform scope, Entry Points and Screen 4 Access Control."}}
+  - {"op": "update_node", "id": "REQ-031-031", "attrs": {"rationale": "Communication Structure, Out of Scope."}}
+  - {"op": "update_node", "id": "REQ-031-032", "attrs": {"rationale": "Communication Structure lists permission-change email as in scope; REQ-031-010 names invitations, role changes, password resets and repeated access denials but not permission changes."}}
+  - {"op": "update_node", "id": "REQ-031-033", "attrs": {"statement": "The invitation form requires first name, last name, email address and an assigned role. First and last name are max 50 characters (letters, spaces, hyphens only); the email is converted to lowercase; phone number is optional (E.164 format); personal message is optional but recommended for first-time team setup (max 500 characters, included in the invitation email). The form cannot be submitted until all required fields pass validation.", "rationale": "Screen 2 data fields and business rules; Main Flow steps 6 to 7. prd.md lines 429 (personal message is optional but recommended for first-time team setup)."}}
+  - {"op": "update_node", "id": "REQ-031-034", "attrs": {"rationale": "Alternative Flow B1; Screen 2 validation messages."}}
+  - {"op": "update_node", "id": "REQ-031-037", "attrs": {"rationale": "Business Rule 6; Screen 2; Admin Editability (Editable and Configurable with Restrictions); Main Flow step 10."}}
+  - {"op": "update_node", "id": "REQ-031-038", "attrs": {"rationale": "Main Flow steps 10 to 13; Screen 2 actions and notes."}}
+  - {"op": "update_node", "id": "REQ-031-040", "attrs": {"rationale": "Main Flow steps 15 to 16; Screen 3 business rules."}}
+  - {"op": "update_node", "id": "REQ-031-041", "attrs": {"rationale": "Alternative Flow B3."}}
+  - {"op": "update_node", "id": "REQ-031-042", "attrs": {"rationale": "Alternative Flow A1; Admin Editability (re-send invitation emails for pending accounts); Screen 2 B2 suggestion; Screen 1 Tab 2 notes."}}
+  - {"op": "update_node", "id": "REQ-031-044", "attrs": {"statement": "On Admin Account Setup, the email is pre-filled from the invitation and cannot be edited; first and last name are required, pre-filled but editable (2-50 characters; letters, spaces, hyphens only). The screen shows the assigned role (\"You've been invited as [Role Name]\"), the Super Admin's personal message when provided, and an invitation expiry countdown when less than 24 hours remain.", "rationale": "Screen 3 data fields, business rules and notes. The invitation form (Screen 2) allows names up to 50 characters without a 2-character minimum. prd.md lines 459-460 (First Name and Last Name: Required Yes)."}}
+  - {"op": "update_node", "id": "REQ-031-045", "attrs": {"statement": "On Admin Account Setup, Password and Confirm Password are required and Confirm Password must match Password exactly (\"Passwords do not match.\"). A password that does not meet the policy is rejected with \"Password must be at least 12 characters with uppercase, lowercase, number, and special character from !@#$%^&(),.?\\\":{}|<>.\"", "rationale": "Screen 3 data fields and validation messages. The password policy itself is REQ-031-018 (defined in FR-026). prd.md lines 462-463 (Password and Confirm Password: Required Yes)."}}
+  - {"op": "update_node", "id": "REQ-031-046", "attrs": {"rationale": "Screen 3 data fields and business rules; Main Flow step 17 and 19."}}
+  - {"op": "update_node", "id": "REQ-031-048", "attrs": {"rationale": "Screen 2 and Screen 3 business rules and notes. Related to REQ-031-016."}}
+  - {"op": "update_node", "id": "REQ-031-051", "attrs": {"rationale": "Business Rule 2; Screen 1 Tab 1 rules; Screen 4 Admin Role Protection and Matrix Mode rules; Admin Editability (fixed in codebase)."}}
+  - {"op": "update_node", "id": "REQ-031-054", "attrs": {"rationale": "Admin Editability (Editable by Super Admin); Alternative Flow A2."}}
+  - {"op": "update_node", "id": "REQ-031-055", "attrs": {"rationale": "Business Rule 9; Screen 4 role name field (locked for system-defined roles); Admin Editability (fixed in codebase); Tab 1 and Tab 3 role name rules."}}
+  - {"op": "update_node", "id": "REQ-031-056", "attrs": {"rationale": "Tab 1 and Tab 3 business rules."}}
+  - {"op": "update_node", "id": "REQ-031-058", "attrs": {"rationale": "Alternative Flow A3."}}
+  - {"op": "update_node", "id": "REQ-031-065", "attrs": {"rationale": "Admin Editability (fixed in codebase)."}}
+  - {"op": "update_node", "id": "REQ-031-067", "attrs": {"rationale": "Screen 4 System Settings category (A-09); permission field is_super_admin_only."}}
+  - {"op": "update_node", "id": "REQ-031-070", "attrs": {"rationale": "Screen 4 Both Modes and Validation; Matrix Mode business rules; Alternative Flow A6 (dependency validation)."}}
+  - {"op": "update_node", "id": "REQ-031-071", "attrs": {"rationale": "Screen 4 Both Modes; Single Role data fields (Permission Categories)."}}
+  - {"op": "update_node", "id": "REQ-031-072", "attrs": {"rationale": "Screen 4 Both Modes."}}
+  - {"op": "update_node", "id": "REQ-031-073", "attrs": {"rationale": "Alternative Flow B6; Screen 4 Validation. Key Entities Permission has no sensitive flag; ENT-permission.is_sensitive was added (orphan field)."}}
+  - {"op": "update_node", "id": "REQ-031-074", "attrs": {"rationale": "Alternative Flow A4 steps 8, 9; Screen 4 Validation and header; Tab 3 business rules and notes (\"This change will affect [X] providers and [Y] team members\"); Matrix Mode business rules."}}
+  - {"op": "update_node", "id": "REQ-031-075", "attrs": {"rationale": "Alternative Flows A2 step 7 and A4 steps 7 and 15. The \"next page load\" wording conflicts with next API call and 5 seconds elsewhere; see the migration report decision list."}}
+  - {"op": "update_node", "id": "REQ-031-076", "attrs": {"rationale": "Screen 4 modal actions (both modes)."}}
+  - {"op": "update_node", "id": "REQ-031-077", "attrs": {"rationale": "Screen 4 View Mode 2 (layout, features, modal actions, business rules). The example matrices are illustrative; see the migration report decision list."}}
+  - {"op": "update_node", "id": "REQ-031-078", "attrs": {"rationale": "Screen 4 Unsaved Changes Protection."}}
+  - {"op": "update_node", "id": "REQ-031-080", "attrs": {"rationale": "Tab 1 and Tab 3 data fields and actions."}}
+  - {"op": "update_node", "id": "REQ-031-081", "attrs": {"rationale": "Screen 4 Both Modes; Alternative Flow A4 step 13; User Story 3 scenario 4."}}
+  - {"op": "update_node", "id": "REQ-031-082", "attrs": {"rationale": "Alternative Flow A2; Business Rule 8 and REQ-031-011."}}
+  - {"op": "update_node", "id": "REQ-031-083", "attrs": {"rationale": "Alternative Flow A2 step 11."}}
+  - {"op": "update_node", "id": "REQ-031-084", "attrs": {"rationale": "Alternative Flow A2 step 12; User Story 5 scenarios 1 and 3."}}
+  - {"op": "update_node", "id": "REQ-031-085", "attrs": {"rationale": "User Story 6 scenario 3; Tab 2 notes."}}
+  - {"op": "update_node", "id": "REQ-031-086", "attrs": {"rationale": "Edge Case 2."}}
+  - {"op": "update_node", "id": "REQ-031-087", "attrs": {"rationale": "Edge Case 1."}}
+  - {"op": "update_node", "id": "REQ-031-088", "attrs": {"rationale": "Alternative Flow B5 step 1, 2 and Note; Screen 4 UI Enforcement."}}
+  - {"op": "update_node", "id": "REQ-031-089", "attrs": {"rationale": "Alternative Flow B5 steps 4 and 5; Screen 5 business rules (requested feature/endpoint). User Story 4 scenario 2 lists the same fields."}}
+  - {"op": "update_node", "id": "REQ-031-091", "attrs": {"rationale": "Data & Privacy Rules (Audit Rule)."}}
+  - {"op": "update_node", "id": "REQ-031-092", "attrs": {"rationale": "Data & Privacy Rules (Privacy Rule 3)."}}
+  - {"op": "update_node", "id": "REQ-031-093", "attrs": {"rationale": "Screen 5 notes; Edge Case 4."}}
+  - {"op": "update_node", "id": "REQ-031-094", "attrs": {"rationale": "Screen 5. Filtering by action type, date range and outcome is specified in FR-022 REQ-022-117 (cited, not restated). The PRD names six action types in Key Entities but four on the screen."}}
+  - {"op": "update_node", "id": "REQ-031-095", "attrs": {"rationale": "Screen 5 business rules; User Story 4 scenario 3."}}
+  - {"op": "update_node", "id": "REQ-031-096", "attrs": {"rationale": "Screen 5 notes. No thresholds are defined."}}
+  - {"op": "update_node", "id": "REQ-031-097", "attrs": {"rationale": "Edge Case 5; Implementation Notes (audit writes buffered, alert on audit write failure)."}}
+  - {"op": "update_node", "id": "REQ-031-098", "attrs": {"rationale": "Tab 2 business rules and notes."}}
+  - {"op": "update_node", "id": "REQ-031-100", "attrs": {"rationale": "Implementation Notes, Security Considerations (threat mitigation). Promoted as a business rule because it states a numeric limit. How it relates to the configurable lockout threshold is unstated; see the migration report decision list."}}
+  - {"op": "update_node", "id": "REQ-031-101", "attrs": {"rationale": "Screen 4 permission matrix structure, admin platform categories. Rows copied from the PRD table (Permission, Description, Access Level)."}}
+  - {"op": "update_node", "id": "REQ-031-102", "attrs": {"rationale": "Screen 4 permission matrix structure, admin platform categories. Rows copied from the PRD table (Permission, Description, Access Level)."}}
+  - {"op": "update_node", "id": "REQ-031-103", "attrs": {"rationale": "Screen 4 permission matrix structure, admin platform categories. Rows copied from the PRD table (Permission, Description, Access Level)."}}
+  - {"op": "update_node", "id": "REQ-031-104", "attrs": {"rationale": "Screen 4 permission matrix structure, admin platform categories. Rows copied from the PRD table (Permission, Description, Access Level)."}}
+  - {"op": "update_node", "id": "REQ-031-105", "attrs": {"rationale": "Screen 4 permission matrix structure, admin platform categories. Rows copied from the PRD table (Permission, Description, Access Level)."}}
+  - {"op": "update_node", "id": "REQ-031-106", "attrs": {"rationale": "Screen 4 permission matrix structure, admin platform categories. Rows copied from the PRD table (Permission, Description, Access Level)."}}
+  - {"op": "update_node", "id": "REQ-031-107", "attrs": {"rationale": "Screen 4 permission matrix structure, admin platform categories. Rows copied from the PRD table (Permission, Description, Access Level)."}}
+  - {"op": "update_node", "id": "REQ-031-108", "attrs": {"rationale": "Screen 4 permission matrix structure, admin platform categories. Rows copied from the PRD table (Permission, Description, Access Level)."}}
+  - {"op": "update_node", "id": "REQ-031-109", "attrs": {"rationale": "Screen 4 permission matrix structure, admin platform categories. Rows copied from the PRD table (Permission, Description, Access Level)."}}
+  - {"op": "update_node", "id": "REQ-031-110", "attrs": {"rationale": "Screen 4 permission matrix structure, admin platform categories. Rows copied from the PRD table (Permission, Description, Access Level)."}}
+  - {"op": "update_node", "id": "REQ-031-111", "attrs": {"rationale": "Screen 4 permission matrix structure, admin platform categories. Rows copied from the PRD table (Permission, Description, Access Level)."}}
+  - {"op": "update_node", "id": "REQ-031-112", "attrs": {"rationale": "Screen 4 permission matrix structure, admin platform categories. Rows copied from the PRD table (Permission, Description, Access Level)."}}
+  - {"op": "update_node", "id": "REQ-031-113", "attrs": {"rationale": "Screen 4 permission matrix structure, admin platform categories. Rows copied from the PRD table (Permission, Description, Access Level)."}}
+  - {"op": "update_node", "id": "REQ-031-123", "attrs": {"rationale": "prd.md Screen 3 Notes, line 535, verbatim."}}
+  - {"op": "add_edge", "from": "STG-admin-01-configuration", "verb": "emits", "to": "EVT-admin-invitation-sent"}
+  - {"op": "add_edge", "from": "STG-admin-01-configuration", "verb": "emits", "to": "EVT-admin-invitation-delivery-failed"}
+  - {"op": "add_edge", "from": "STG-admin-01-configuration", "verb": "emits", "to": "EVT-admin-account-created"}
+  - {"op": "add_edge", "from": "STG-admin-01-configuration", "verb": "emits", "to": "EVT-admin-role-changed"}
+  - {"op": "add_edge", "from": "STG-admin-01-configuration", "verb": "emits", "to": "EVT-admin-role-permissions-changed"}
+  - {"op": "add_edge", "from": "STG-admin-01-configuration", "verb": "emits", "to": "EVT-admin-repeated-access-denial"}
+  - {"op": "add_edge", "from": "STG-admin-01-configuration", "verb": "emits", "to": "EVT-admin-password-reset-sent"}
+  - {"op": "remove_edge", "from": "STG-main-01-inquiry", "verb": "emits", "to": "EVT-admin-invitation-sent"}
+  - {"op": "remove_edge", "from": "STG-main-01-inquiry", "verb": "emits", "to": "EVT-admin-invitation-delivery-failed"}
+  - {"op": "remove_edge", "from": "STG-main-01-inquiry", "verb": "emits", "to": "EVT-admin-account-created"}
+  - {"op": "remove_edge", "from": "STG-main-01-inquiry", "verb": "emits", "to": "EVT-admin-role-changed"}
+  - {"op": "remove_edge", "from": "STG-main-01-inquiry", "verb": "emits", "to": "EVT-admin-role-permissions-changed"}
+  - {"op": "remove_edge", "from": "STG-main-01-inquiry", "verb": "emits", "to": "EVT-admin-repeated-access-denial"}
+  - {"op": "remove_edge", "from": "STG-main-01-inquiry", "verb": "emits", "to": "EVT-admin-password-reset-sent"}
+  - {"op": "add_edge", "from": "STG-admin-01-configuration", "verb": "reads", "to": "ENT-admin-user-account"}
+  - {"op": "add_edge", "from": "STG-admin-01-configuration", "verb": "writes", "to": "ENT-admin-user-account"}
+  - {"op": "add_edge", "from": "STG-admin-01-configuration", "verb": "reads", "to": "ENT-role-permission-definition"}
+  - {"op": "add_edge", "from": "STG-admin-01-configuration", "verb": "writes", "to": "ENT-role-permission-definition"}
+  - {"op": "add_edge", "from": "STG-admin-01-configuration", "verb": "reads", "to": "ENT-permission"}
+  - {"op": "add_edge", "from": "STG-admin-01-configuration", "verb": "reads", "to": "ENT-admin-audit-trail-entry"}
+  - {"op": "add_edge", "from": "STG-admin-01-configuration", "verb": "writes", "to": "ENT-admin-audit-trail-entry"}
+  - {"op": "remove_edge", "from": "STG-main-01-inquiry", "verb": "writes", "to": "ENT-admin-user-account"}
