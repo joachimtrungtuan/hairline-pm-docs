@@ -1,0 +1,11 @@
+reason: "FR-023 completeness re-check 2026-11-21: A1 outcome line (30-day deadline runs from submission and does not pause during verification) has no FR-023 Rule since REQ-023-035 was retired; REQ-023-005 linked to the two FR-014 analytics entities (held op not yet in the graph)."
+by: controller
+operations:
+  - {"op": "add_node", "id": "REQ-023-041", "type": "Rule", "owner_fr": "FR-023", "title": "Deletion request deadline runs from submission and does not pause during verification", "attrs": {"statement": "The 30-day deadline of a deletion request always runs from submission and does not pause during verification.", "rationale": "prd.md lines 82 (A1 outcome: the 30-day deadline always runs from submission and does not pause during verification)."}}
+  - {"op": "add_edge", "from": "REQ-023-041", "verb": "applies to", "to": "ENT-deletion-request"}
+  - {"op": "add_edge", "from": "REQ-023-041", "verb": "applies to", "to": "ENT-deletion-request.sla_due_by"}
+  - {"op": "add_edge", "from": "REQ-023-041", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-023-041", "verb": "decided by", "to": "SRC-PRD-023"}
+  - {"op": "add_edge", "from": "STP-023-013", "verb": "applies", "to": "REQ-023-041"}
+  - {"op": "add_edge", "from": "REQ-023-005", "verb": "applies to", "to": "ENT-analytics-generated-report"}
+  - {"op": "add_edge", "from": "REQ-023-005", "verb": "applies to", "to": "ENT-platform-analytics-aggregate"}

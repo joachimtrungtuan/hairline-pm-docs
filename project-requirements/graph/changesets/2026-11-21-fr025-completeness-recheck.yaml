@@ -1,0 +1,62 @@
+reason: "FR-025 completeness re-check 2026-11-21: system Steps that change data (save set as Draft, publish a version, record the version on the inquiry, generate the alert, write the audit log), three Rule statements aligned to the PRD (designation ended only by archiving, changes propagate immediately, Test Mode default and conditions), and the Stage reads edges for the read-only Context Type entity."
+by: controller
+operations:
+
+  # Workflow 1: the system saves a new set as Draft with an auto-generated Set ID (prd.md line 65, 262)
+  - {"op": "add_node", "id": "STP-025-051", "type": "Step", "title": "System saves the new set as Draft with an auto-generated Set ID", "owner_fr": "FR-025", "attrs": {"prd_ref": "Workflow 1 flow diagram: System saves set as Draft with auto-generated Set ID"}}
+  - {"op": "add_edge", "from": "STP-025-051", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-025-051", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-025-051", "verb": "on", "to": "SCR-025-01"}
+  - {"op": "add_edge", "from": "STP-025-051", "verb": "applies", "to": "REQ-025-005"}
+  - {"op": "remove_edge", "from": "STP-025-002", "verb": "next", "to": "STP-025-003"}
+  - {"op": "add_edge", "from": "STP-025-002", "verb": "next", "to": "STP-025-051"}
+  - {"op": "add_edge", "from": "STP-025-051", "verb": "next", "to": "STP-025-003"}
+
+  # Workflow 1: on publish the system increments the version, marks the set Active and archives the previous Active version (prd.md line 97)
+  - {"op": "add_node", "id": "STP-025-052", "type": "Step", "title": "System increments the version, marks the set Active and archives the previous Active version", "owner_fr": "FR-025", "attrs": {"prd_ref": "Workflow 1 flow diagram: System increments version, marks set as Active, archives previous Active version"}}
+  - {"op": "add_edge", "from": "STP-025-052", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-025-052", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-025-052", "verb": "on", "to": "SCR-025-02"}
+  - {"op": "add_edge", "from": "STP-025-052", "verb": "applies", "to": "REQ-025-031"}
+  - {"op": "add_edge", "from": "STP-025-052", "verb": "applies", "to": "REQ-025-037"}
+  - {"op": "remove_edge", "from": "STP-025-010", "verb": "next", "to": "STP-025-011"}
+  - {"op": "add_edge", "from": "STP-025-010", "verb": "next", "to": "STP-025-052", "attrs": {"label": "All questions complete", "condition": "REQ-025-024"}}
+  - {"op": "add_edge", "from": "STP-025-052", "verb": "next", "to": "STP-025-011"}
+
+  # Workflow 3: the system records the questionnaire version on the inquiry record (prd.md line 164)
+  - {"op": "add_node", "id": "STP-025-053", "type": "Step", "title": "System records the questionnaire set version number on the inquiry record", "owner_fr": "FR-025", "attrs": {"prd_ref": "Workflow 3 flow diagram: System records the questionnaire set version number on the inquiry record itself"}}
+  - {"op": "add_edge", "from": "STP-025-053", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-025-053", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-025-053", "verb": "applies", "to": "REQ-025-058"}
+  - {"op": "remove_edge", "from": "STP-025-030", "verb": "next", "to": "STP-025-031"}
+  - {"op": "remove_edge", "from": "STP-025-034", "verb": "next", "to": "STP-025-031"}
+  - {"op": "add_edge", "from": "STP-025-030", "verb": "next", "to": "STP-025-053", "attrs": {"label": "Version consistent"}}
+  - {"op": "add_edge", "from": "STP-025-034", "verb": "next", "to": "STP-025-053"}
+  - {"op": "add_edge", "from": "STP-025-053", "verb": "next", "to": "STP-025-031"}
+
+  # Workflow 2 and 3: the system turns the Yes/No answers into a Red, Amber or Green alert (prd.md lines 129-139, 167-175)
+  - {"op": "add_node", "id": "STP-025-054", "type": "Step", "title": "System generates the Red, Amber or Green alert from the answers and the severity flags", "owner_fr": "FR-025", "attrs": {"prd_ref": "Workflow 3 flow diagram: System processes each Yes/No response against configured Severity Flags; Generate Red, Amber or Green alert"}}
+  - {"op": "add_edge", "from": "STP-025-054", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-025-054", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-025-054", "verb": "applies", "to": "REQ-025-063"}
+  - {"op": "add_edge", "from": "STP-025-054", "verb": "applies", "to": "REQ-025-064"}
+  - {"op": "add_edge", "from": "STP-025-054", "verb": "applies", "to": "REQ-025-065"}
+  - {"op": "remove_edge", "from": "STP-025-031", "verb": "next", "to": "STP-025-032"}
+  - {"op": "add_edge", "from": "STP-025-031", "verb": "next", "to": "STP-025-054"}
+  - {"op": "add_edge", "from": "STP-025-054", "verb": "next", "to": "STP-025-032"}
+
+  # Workflow 3: the system writes responses, alert outcome and version to the audit trail (prd.md line 181)
+  - {"op": "add_node", "id": "STP-025-055", "type": "Step", "title": "System logs the responses, the alert outcome and the questionnaire version to the audit trail", "owner_fr": "FR-025", "attrs": {"prd_ref": "Workflow 3 flow diagram: System logs all responses, alert outcome, and the questionnaire version recorded on the inquiry to audit trail"}}
+  - {"op": "add_edge", "from": "STP-025-055", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-025-055", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-025-055", "verb": "applies", "to": "REQ-025-059"}
+  - {"op": "add_edge", "from": "STP-025-032", "verb": "next", "to": "STP-025-055"}
+
+  # Rule statements aligned to the PRD (the PRD wins)
+  - {"op": "update_node", "id": "REQ-025-048", "attrs": {"statement": "Archiving a set that is currently designated as the active Inquiry questionnaire removes the designation and flags the inquiry flow as unconfigured; system notifies admin. The Inquiry designation can only be replaced (by designating another set) or ended by archiving the set; there is no control to remove the designation on its own", "rationale": "prd.md lines 268, 275 (archiving removes the designation and flags the flow unconfigured; the designation is only replaced or ended by archiving, with no standalone remove control)."}}
+  - {"op": "update_node", "id": "REQ-025-056", "attrs": {"statement": "Version consistency must be maintained across all platforms; questionnaire changes must propagate immediately to the patient platform", "rationale": "prd.md lines 557, 591, 667 (version consistency across platforms; changes propagate immediately to the patient platform)."}}
+  - {"op": "update_node", "id": "REQ-025-075", "attrs": {"statement": "Test Mode is off by default. Sample Response Inputs are enabled only while Test Mode is on, and the Provider Summary Render is shown only in the Provider Summary tab with Test Mode on. Test Mode submissions do not create any records; all inputs are discarded on exit", "rationale": "prd.md lines 441, 443, 444, 455 (Test Mode default and conditions; no records created, inputs discarded on exit)."}}
+
+  # Context Type entity: read-only reference data shown on Screen 5, used when an admin picks a context type for a set. The schema has only Stage reads/writes, so the read sits on the Stages Screen 5 belongs to; nothing writes it (fixed in source code).
+  - {"op": "add_edge", "from": "STG-main-01-inquiry", "verb": "reads", "to": "ENT-questionnaire-context-type"}
+  - {"op": "add_edge", "from": "STG-aftercare-01-recovery-plan", "verb": "reads", "to": "ENT-questionnaire-context-type"}

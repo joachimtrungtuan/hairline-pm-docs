@@ -1,0 +1,119 @@
+reason: "FR-022 completeness re-check 2026-11-21: Alternative Flows B1 (no results) and B2 (search unavailable) as Flows and Steps with patient, clinic user and admin as any-one-of doers (ruling A2) and Hairline system Steps; references edges to the FR-032 provider support case search criteria; REQ-022-063 wording follows the PRD (contact support is for patient and clinic user only)"
+by: controller
+operations:
+  - {"op": "add_edge", "from": "FR-022", "verb": "references", "to": "REQ-032-107"}
+  - {"op": "add_edge", "from": "FR-022", "verb": "references", "to": "REQ-034-114"}
+  - {"op": "add_edge", "from": "ACT-system", "verb": "acts in", "to": "STG-admin-02-operations"}
+  - {"op": "update_node", "id": "REQ-022-063", "attrs": {"statement": "If the backend database connection fails during a search query, the System displays 'Search temporarily unavailable. Please try again.', logs the error and alerts the engineering team; the user (patient, clinic user or admin) can retry or abandon the search, and a patient or clinic user can also contact support.", "rationale": "Alternative Flow B2 (prd.md lines 295-314): abandoning is open to patient, clinic user and admin; contacting support is for patient and clinic user only."}}
+  - {"op": "add_node", "id": "FLW-022-alt-b1", "type": "Flow", "title": "Search returns no results", "attrs": {"kind": "alternative", "description": "No match: the System shows 'No results found' with refinement guidance and the user (patient, clinic user or admin, any one of them) changes the term or removes filters and searches again.", "prd_ref": "Alternative Flow B1 (prd.md lines 274-293)"}}
+  - {"op": "add_node", "id": "STP-022-037", "type": "Step", "owner_fr": "FR-022", "title": "User enters a search term or applies filters", "attrs": {"prd_ref": "Alternative Flow B1 step 1"}}
+  - {"op": "add_edge", "from": "STP-022-037", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-022-037", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-022-037", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-022-037", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-022-037", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-022-037", "verb": "at", "to": "STG-admin-02-operations"}
+  - {"op": "add_edge", "from": "STP-022-037", "verb": "applies", "to": "REQ-022-060"}
+  - {"op": "add_edge", "from": "STP-022-037", "verb": "applies", "to": "REQ-022-066"}
+  - {"op": "add_edge", "from": "FLW-022-alt-b1", "verb": "starts at", "to": "STP-022-037"}
+  - {"op": "add_node", "id": "STP-022-038", "type": "Step", "owner_fr": "FR-022", "title": "System displays 'No results found' with refinement guidance", "attrs": {"prd_ref": "Alternative Flow B1 step 2"}}
+  - {"op": "add_edge", "from": "STP-022-038", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-022-038", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-022-038", "verb": "applies", "to": "REQ-022-062"}
+  - {"op": "add_edge", "from": "STP-022-037", "verb": "next", "to": "STP-022-038", "attrs": {"label": "no match found: patient"}}
+  - {"op": "add_node", "id": "STP-022-039", "type": "Step", "owner_fr": "FR-022", "title": "System displays 'No results found' with refinement guidance", "attrs": {"prd_ref": "Alternative Flow B1 step 2"}}
+  - {"op": "add_edge", "from": "STP-022-039", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-022-039", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-022-039", "verb": "applies", "to": "REQ-022-062"}
+  - {"op": "add_edge", "from": "STP-022-037", "verb": "next", "to": "STP-022-039", "attrs": {"label": "no match found: provider"}}
+  - {"op": "add_node", "id": "STP-022-040", "type": "Step", "owner_fr": "FR-022", "title": "System displays 'No results found' with refinement guidance", "attrs": {"prd_ref": "Alternative Flow B1 step 2"}}
+  - {"op": "add_edge", "from": "STP-022-040", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-022-040", "verb": "at", "to": "STG-admin-02-operations"}
+  - {"op": "add_edge", "from": "STP-022-040", "verb": "applies", "to": "REQ-022-062"}
+  - {"op": "add_edge", "from": "STP-022-037", "verb": "next", "to": "STP-022-040", "attrs": {"label": "no match found: admin"}}
+  - {"op": "add_node", "id": "STP-022-041", "type": "Step", "owner_fr": "FR-022", "title": "User updates the search term", "attrs": {"prd_ref": "Alternative Flow B1 step 3 (check spelling or try different keywords)"}}
+  - {"op": "add_edge", "from": "STP-022-041", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-022-041", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-022-041", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-022-041", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-022-041", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-022-041", "verb": "at", "to": "STG-admin-02-operations"}
+  - {"op": "add_edge", "from": "STP-022-041", "verb": "applies", "to": "REQ-022-062"}
+  - {"op": "add_node", "id": "STP-022-042", "type": "Step", "owner_fr": "FR-022", "title": "User removes one or more filters", "attrs": {"prd_ref": "Alternative Flow B1 step 3 (remove one or more filters)"}}
+  - {"op": "add_edge", "from": "STP-022-042", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-022-042", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-022-042", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-022-042", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-022-042", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-022-042", "verb": "at", "to": "STG-admin-02-operations"}
+  - {"op": "add_edge", "from": "STP-022-042", "verb": "applies", "to": "REQ-022-062"}
+  - {"op": "add_edge", "from": "STP-022-038", "verb": "next", "to": "STP-022-041", "attrs": {"label": "try different keywords: patient"}}
+  - {"op": "add_edge", "from": "STP-022-038", "verb": "next", "to": "STP-022-042", "attrs": {"label": "remove filters: patient"}}
+  - {"op": "add_edge", "from": "STP-022-039", "verb": "next", "to": "STP-022-041", "attrs": {"label": "try different keywords: provider"}}
+  - {"op": "add_edge", "from": "STP-022-039", "verb": "next", "to": "STP-022-042", "attrs": {"label": "remove filters: provider"}}
+  - {"op": "add_edge", "from": "STP-022-040", "verb": "next", "to": "STP-022-041", "attrs": {"label": "try different keywords: admin"}}
+  - {"op": "add_edge", "from": "STP-022-040", "verb": "next", "to": "STP-022-042", "attrs": {"label": "remove filters: admin"}}
+  - {"op": "add_edge", "from": "STP-022-041", "verb": "next", "to": "STP-022-037", "attrs": {"label": "search again", "back": true}}
+  - {"op": "add_edge", "from": "STP-022-042", "verb": "next", "to": "STP-022-037", "attrs": {"label": "search again", "back": true}}
+  - {"op": "add_node", "id": "FLW-022-alt-b2", "type": "Flow", "title": "Search system unavailable", "attrs": {"kind": "alternative", "description": "Database connection fails: the System shows 'Search temporarily unavailable. Please try again.', logs the error and alerts engineering; the user (patient, clinic user or admin, any one of them) retries or abandons, and a patient or clinic user can contact support.", "prd_ref": "Alternative Flow B2 (prd.md lines 295-314)"}}
+  - {"op": "add_node", "id": "STP-022-043", "type": "Step", "owner_fr": "FR-022", "title": "User enters a search term", "attrs": {"prd_ref": "Alternative Flow B2 step 1"}}
+  - {"op": "add_edge", "from": "STP-022-043", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-022-043", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-022-043", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-022-043", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-022-043", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-022-043", "verb": "at", "to": "STG-admin-02-operations"}
+  - {"op": "add_edge", "from": "STP-022-043", "verb": "applies", "to": "REQ-022-060"}
+  - {"op": "add_edge", "from": "FLW-022-alt-b2", "verb": "starts at", "to": "STP-022-043"}
+  - {"op": "add_node", "id": "STP-022-044", "type": "Step", "owner_fr": "FR-022", "title": "System displays 'Search temporarily unavailable. Please try again.'", "attrs": {"prd_ref": "Alternative Flow B2 step 2"}}
+  - {"op": "add_edge", "from": "STP-022-044", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-022-044", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-022-044", "verb": "applies", "to": "REQ-022-063"}
+  - {"op": "add_edge", "from": "STP-022-043", "verb": "next", "to": "STP-022-044", "attrs": {"label": "database unavailable: patient"}}
+  - {"op": "add_node", "id": "STP-022-045", "type": "Step", "owner_fr": "FR-022", "title": "System displays 'Search temporarily unavailable. Please try again.'", "attrs": {"prd_ref": "Alternative Flow B2 step 2"}}
+  - {"op": "add_edge", "from": "STP-022-045", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-022-045", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-022-045", "verb": "applies", "to": "REQ-022-063"}
+  - {"op": "add_edge", "from": "STP-022-043", "verb": "next", "to": "STP-022-045", "attrs": {"label": "database unavailable: provider"}}
+  - {"op": "add_node", "id": "STP-022-046", "type": "Step", "owner_fr": "FR-022", "title": "System displays 'Search temporarily unavailable. Please try again.'", "attrs": {"prd_ref": "Alternative Flow B2 step 2"}}
+  - {"op": "add_edge", "from": "STP-022-046", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-022-046", "verb": "at", "to": "STG-admin-02-operations"}
+  - {"op": "add_edge", "from": "STP-022-046", "verb": "applies", "to": "REQ-022-063"}
+  - {"op": "add_edge", "from": "STP-022-043", "verb": "next", "to": "STP-022-046", "attrs": {"label": "database unavailable: admin"}}
+  - {"op": "add_node", "id": "STP-022-047", "type": "Step", "owner_fr": "FR-022", "title": "System logs the error and alerts the engineering team", "attrs": {"prd_ref": "Alternative Flow B2 step 3"}}
+  - {"op": "add_edge", "from": "STP-022-047", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-022-047", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-022-047", "verb": "applies", "to": "REQ-022-063"}
+  - {"op": "add_edge", "from": "STP-022-044", "verb": "next", "to": "STP-022-047"}
+  - {"op": "add_node", "id": "STP-022-048", "type": "Step", "owner_fr": "FR-022", "title": "System logs the error and alerts the engineering team", "attrs": {"prd_ref": "Alternative Flow B2 step 3"}}
+  - {"op": "add_edge", "from": "STP-022-048", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-022-048", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-022-048", "verb": "applies", "to": "REQ-022-063"}
+  - {"op": "add_edge", "from": "STP-022-045", "verb": "next", "to": "STP-022-048"}
+  - {"op": "add_node", "id": "STP-022-049", "type": "Step", "owner_fr": "FR-022", "title": "System logs the error and alerts the engineering team", "attrs": {"prd_ref": "Alternative Flow B2 step 3"}}
+  - {"op": "add_edge", "from": "STP-022-049", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-022-049", "verb": "at", "to": "STG-admin-02-operations"}
+  - {"op": "add_edge", "from": "STP-022-049", "verb": "applies", "to": "REQ-022-063"}
+  - {"op": "add_edge", "from": "STP-022-046", "verb": "next", "to": "STP-022-049"}
+  - {"op": "add_node", "id": "STP-022-050", "type": "Step", "owner_fr": "FR-022", "title": "User abandons the search", "attrs": {"prd_ref": "Alternative Flow B2 step 5 (patient, clinic user or admin, any one of them)"}}
+  - {"op": "add_edge", "from": "STP-022-050", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-022-050", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-022-050", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-022-050", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-022-050", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-022-050", "verb": "at", "to": "STG-admin-02-operations"}
+  - {"op": "add_edge", "from": "STP-022-050", "verb": "applies", "to": "REQ-022-063"}
+  - {"op": "add_node", "id": "STP-022-051", "type": "Step", "owner_fr": "FR-022", "title": "User contacts support", "attrs": {"prd_ref": "Alternative Flow B2 step 5 (patient or clinic user only)"}}
+  - {"op": "add_edge", "from": "STP-022-051", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-022-051", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-022-051", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-022-051", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-022-051", "verb": "applies", "to": "REQ-022-063"}
+  - {"op": "add_edge", "from": "STP-022-047", "verb": "next", "to": "STP-022-043", "attrs": {"label": "retry: patient", "back": true}}
+  - {"op": "add_edge", "from": "STP-022-047", "verb": "next", "to": "STP-022-050", "attrs": {"label": "no retry: patient"}}
+  - {"op": "add_edge", "from": "STP-022-048", "verb": "next", "to": "STP-022-043", "attrs": {"label": "retry: provider", "back": true}}
+  - {"op": "add_edge", "from": "STP-022-048", "verb": "next", "to": "STP-022-050", "attrs": {"label": "no retry: provider"}}
+  - {"op": "add_edge", "from": "STP-022-049", "verb": "next", "to": "STP-022-043", "attrs": {"label": "retry: admin", "back": true}}
+  - {"op": "add_edge", "from": "STP-022-049", "verb": "next", "to": "STP-022-050", "attrs": {"label": "no retry: admin"}}
+  - {"op": "add_edge", "from": "STP-022-047", "verb": "next", "to": "STP-022-051", "attrs": {"label": "no retry, contact support: patient"}}
+  - {"op": "add_edge", "from": "STP-022-048", "verb": "next", "to": "STP-022-051", "attrs": {"label": "no retry, contact support: provider"}}

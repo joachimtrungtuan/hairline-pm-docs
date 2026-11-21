@@ -1,0 +1,139 @@
+reason: "FR-021 completeness re-check 2026-11-21: Alternative Flow A1 (language selection, doers any one of per ruling A2) and Alternative Flow B1 (missing translation fallback and logging) as Steps and Flows; the history panel references field shown on Screen 7; FR-021 cites the FR-029 currency display Rule"
+by: controller
+operations:
+  - {"op": "add_node", "id": "FLW-021-select-language", "type": "Flow", "title": "User selects language", "attrs": {"kind": "alternative", "description": "A1: Patient, Provider or Admin changes the interface language; the selected locale loads from the latest published bundle.", "prd_ref": "Alternative Flows, A1 (prd.md lines 170-183)"}}
+  - {"op": "add_node", "id": "STP-021-036", "type": "Step", "title": "User opens tenant-specific language selector", "owner_fr": "FR-021", "attrs": {"prd_ref": "Alternative Flow A1 step 1"}}
+  - {"op": "add_edge", "from": "STP-021-036", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-021-036", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-021-036", "verb": "on", "to": "SCR-021-01"}
+  - {"op": "add_edge", "from": "STP-021-036", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-021-036", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-021-036", "verb": "on", "to": "SCR-021-02"}
+  - {"op": "add_edge", "from": "STP-021-036", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-021-036", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-021-036", "verb": "on", "to": "SCR-021-03"}
+  - {"op": "add_edge", "from": "STP-021-036", "verb": "applies", "to": "REQ-021-002"}
+  - {"op": "add_edge", "from": "STP-021-036", "verb": "applies", "to": "REQ-021-003"}
+  - {"op": "add_edge", "from": "STP-021-036", "verb": "applies", "to": "REQ-021-004"}
+  - {"op": "add_edge", "from": "FLW-021-select-language", "verb": "starts at", "to": "STP-021-036"}
+  - {"op": "add_node", "id": "STP-021-037", "type": "Step", "title": "System displays active supported locales only", "owner_fr": "FR-021", "attrs": {"prd_ref": "Alternative Flow A1 step 2"}}
+  - {"op": "add_edge", "from": "STP-021-037", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-037", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-021-037", "verb": "on", "to": "SCR-021-01"}
+  - {"op": "add_edge", "from": "STP-021-037", "verb": "applies", "to": "REQ-021-076"}
+  - {"op": "add_edge", "from": "STP-021-036", "verb": "next", "to": "STP-021-037", "attrs": {"label": "Patient"}}
+  - {"op": "add_node", "id": "STP-021-038", "type": "Step", "title": "System displays active supported locales only", "owner_fr": "FR-021", "attrs": {"prd_ref": "Alternative Flow A1 step 2"}}
+  - {"op": "add_edge", "from": "STP-021-038", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-038", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-021-038", "verb": "on", "to": "SCR-021-02"}
+  - {"op": "add_edge", "from": "STP-021-038", "verb": "applies", "to": "REQ-021-076"}
+  - {"op": "add_edge", "from": "STP-021-036", "verb": "next", "to": "STP-021-038", "attrs": {"label": "Provider"}}
+  - {"op": "add_node", "id": "STP-021-039", "type": "Step", "title": "System displays active supported locales only", "owner_fr": "FR-021", "attrs": {"prd_ref": "Alternative Flow A1 step 2"}}
+  - {"op": "add_edge", "from": "STP-021-039", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-039", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-021-039", "verb": "on", "to": "SCR-021-03"}
+  - {"op": "add_edge", "from": "STP-021-039", "verb": "applies", "to": "REQ-021-076"}
+  - {"op": "add_edge", "from": "STP-021-036", "verb": "next", "to": "STP-021-039", "attrs": {"label": "Admin"}}
+  - {"op": "add_node", "id": "STP-021-040", "type": "Step", "title": "User selects locale", "owner_fr": "FR-021", "attrs": {"prd_ref": "Alternative Flow A1 step 3"}}
+  - {"op": "add_edge", "from": "STP-021-040", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-021-040", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-021-040", "verb": "on", "to": "SCR-021-01"}
+  - {"op": "add_edge", "from": "STP-021-037", "verb": "next", "to": "STP-021-040"}
+  - {"op": "add_edge", "from": "STP-021-040", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-021-040", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-021-040", "verb": "on", "to": "SCR-021-02"}
+  - {"op": "add_edge", "from": "STP-021-038", "verb": "next", "to": "STP-021-040"}
+  - {"op": "add_edge", "from": "STP-021-040", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-021-040", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-021-040", "verb": "on", "to": "SCR-021-03"}
+  - {"op": "add_edge", "from": "STP-021-039", "verb": "next", "to": "STP-021-040"}
+  - {"op": "add_node", "id": "STP-021-041", "type": "Step", "title": "System persists language preference", "owner_fr": "FR-021", "attrs": {"prd_ref": "Alternative Flow A1 step 4"}}
+  - {"op": "add_edge", "from": "STP-021-041", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-041", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-021-041", "verb": "on", "to": "SCR-021-01"}
+  - {"op": "add_edge", "from": "STP-021-041", "verb": "applies", "to": "REQ-021-058"}
+  - {"op": "add_edge", "from": "STP-021-040", "verb": "next", "to": "STP-021-041", "attrs": {"label": "Patient"}}
+  - {"op": "add_node", "id": "STP-021-042", "type": "Step", "title": "System persists language preference", "owner_fr": "FR-021", "attrs": {"prd_ref": "Alternative Flow A1 step 4"}}
+  - {"op": "add_edge", "from": "STP-021-042", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-042", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-021-042", "verb": "on", "to": "SCR-021-02"}
+  - {"op": "add_edge", "from": "STP-021-042", "verb": "applies", "to": "REQ-021-116"}
+  - {"op": "add_edge", "from": "STP-021-040", "verb": "next", "to": "STP-021-042", "attrs": {"label": "Provider"}}
+  - {"op": "add_node", "id": "STP-021-043", "type": "Step", "title": "System persists language preference", "owner_fr": "FR-021", "attrs": {"prd_ref": "Alternative Flow A1 step 4"}}
+  - {"op": "add_edge", "from": "STP-021-043", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-043", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-021-043", "verb": "on", "to": "SCR-021-03"}
+  - {"op": "add_edge", "from": "STP-021-043", "verb": "applies", "to": "REQ-021-117"}
+  - {"op": "add_edge", "from": "STP-021-040", "verb": "next", "to": "STP-021-043", "attrs": {"label": "Admin"}}
+  - {"op": "add_node", "id": "STP-021-044", "type": "Step", "title": "System fetches latest published bundle for selected locale and tenant/surface", "owner_fr": "FR-021", "attrs": {"prd_ref": "Alternative Flow A1 step 5"}}
+  - {"op": "add_edge", "from": "STP-021-044", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-044", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-021-044", "verb": "on", "to": "SCR-021-01"}
+  - {"op": "add_edge", "from": "STP-021-044", "verb": "applies", "to": "REQ-021-059"}
+  - {"op": "add_edge", "from": "STP-021-044", "verb": "applies", "to": "REQ-021-113"}
+  - {"op": "add_edge", "from": "STP-021-041", "verb": "next", "to": "STP-021-044"}
+  - {"op": "add_node", "id": "STP-021-045", "type": "Step", "title": "System fetches latest published bundle for selected locale and tenant/surface", "owner_fr": "FR-021", "attrs": {"prd_ref": "Alternative Flow A1 step 5"}}
+  - {"op": "add_edge", "from": "STP-021-045", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-045", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-021-045", "verb": "on", "to": "SCR-021-02"}
+  - {"op": "add_edge", "from": "STP-021-045", "verb": "applies", "to": "REQ-021-059"}
+  - {"op": "add_edge", "from": "STP-021-045", "verb": "applies", "to": "REQ-021-113"}
+  - {"op": "add_edge", "from": "STP-021-042", "verb": "next", "to": "STP-021-045"}
+  - {"op": "add_node", "id": "STP-021-046", "type": "Step", "title": "System fetches latest published bundle for selected locale and tenant/surface", "owner_fr": "FR-021", "attrs": {"prd_ref": "Alternative Flow A1 step 5"}}
+  - {"op": "add_edge", "from": "STP-021-046", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-046", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-021-046", "verb": "on", "to": "SCR-021-03"}
+  - {"op": "add_edge", "from": "STP-021-046", "verb": "applies", "to": "REQ-021-059"}
+  - {"op": "add_edge", "from": "STP-021-046", "verb": "applies", "to": "REQ-021-113"}
+  - {"op": "add_edge", "from": "STP-021-043", "verb": "next", "to": "STP-021-046"}
+  - {"op": "add_node", "id": "STP-021-047", "type": "Step", "title": "UI reloads or re-renders localized text", "owner_fr": "FR-021", "attrs": {"prd_ref": "Alternative Flow A1 step 6"}}
+  - {"op": "add_edge", "from": "STP-021-047", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-047", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-021-047", "verb": "on", "to": "SCR-021-01"}
+  - {"op": "add_edge", "from": "STP-021-044", "verb": "next", "to": "STP-021-047"}
+  - {"op": "add_node", "id": "STP-021-048", "type": "Step", "title": "UI reloads or re-renders localized text", "owner_fr": "FR-021", "attrs": {"prd_ref": "Alternative Flow A1 step 6"}}
+  - {"op": "add_edge", "from": "STP-021-048", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-048", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-021-048", "verb": "on", "to": "SCR-021-02"}
+  - {"op": "add_edge", "from": "STP-021-045", "verb": "next", "to": "STP-021-048"}
+  - {"op": "add_node", "id": "STP-021-049", "type": "Step", "title": "UI reloads or re-renders localized text", "owner_fr": "FR-021", "attrs": {"prd_ref": "Alternative Flow A1 step 6"}}
+  - {"op": "add_edge", "from": "STP-021-049", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-049", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-021-049", "verb": "on", "to": "SCR-021-03"}
+  - {"op": "add_edge", "from": "STP-021-046", "verb": "next", "to": "STP-021-049"}
+  - {"op": "add_node", "id": "FLW-021-missing-translation-fallback", "type": "Flow", "title": "Missing translation shows fallback text and is logged", "attrs": {"kind": "alternative", "description": "B1: a runtime client requests a key with no value in the selected locale; the system shows fallback text and logs the missing key.", "prd_ref": "Alternative Flows, B1 (prd.md lines 185-198)"}}
+  - {"op": "add_node", "id": "STP-021-050", "type": "Step", "title": "System displays fallback value from the configured fallback order", "owner_fr": "FR-021", "attrs": {"prd_ref": "Alternative Flow B1 steps 4-5"}}
+  - {"op": "add_node", "id": "STP-021-051", "type": "Step", "title": "System logs missing key with locale, tenant/surface, and fallback used", "owner_fr": "FR-021", "attrs": {"prd_ref": "Alternative Flow B1 step 6"}}
+  - {"op": "add_edge", "from": "STP-021-050", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-050", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-021-051", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-051", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-021-050", "verb": "applies", "to": "REQ-021-017"}
+  - {"op": "add_edge", "from": "STP-021-050", "verb": "applies", "to": "REQ-021-037"}
+  - {"op": "add_edge", "from": "STP-021-051", "verb": "applies", "to": "REQ-021-016"}
+  - {"op": "add_edge", "from": "STP-021-050", "verb": "next", "to": "STP-021-051"}
+  - {"op": "add_edge", "from": "FLW-021-missing-translation-fallback", "verb": "starts at", "to": "STP-021-050"}
+  - {"op": "add_node", "id": "STP-021-052", "type": "Step", "title": "System displays fallback value from the configured fallback order", "owner_fr": "FR-021", "attrs": {"prd_ref": "Alternative Flow B1 steps 4-5"}}
+  - {"op": "add_node", "id": "STP-021-053", "type": "Step", "title": "System logs missing key with locale, tenant/surface, and fallback used", "owner_fr": "FR-021", "attrs": {"prd_ref": "Alternative Flow B1 step 6"}}
+  - {"op": "add_edge", "from": "STP-021-052", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-052", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-021-053", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-053", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-021-052", "verb": "applies", "to": "REQ-021-017"}
+  - {"op": "add_edge", "from": "STP-021-052", "verb": "applies", "to": "REQ-021-037"}
+  - {"op": "add_edge", "from": "STP-021-053", "verb": "applies", "to": "REQ-021-016"}
+  - {"op": "add_edge", "from": "STP-021-052", "verb": "next", "to": "STP-021-053"}
+  - {"op": "add_edge", "from": "FLW-021-missing-translation-fallback", "verb": "starts at", "to": "STP-021-052"}
+  - {"op": "add_node", "id": "STP-021-054", "type": "Step", "title": "System displays fallback value from the configured fallback order", "owner_fr": "FR-021", "attrs": {"prd_ref": "Alternative Flow B1 steps 4-5"}}
+  - {"op": "add_node", "id": "STP-021-055", "type": "Step", "title": "System logs missing key with locale, tenant/surface, and fallback used", "owner_fr": "FR-021", "attrs": {"prd_ref": "Alternative Flow B1 step 6"}}
+  - {"op": "add_edge", "from": "STP-021-054", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-054", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-021-055", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-055", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-021-054", "verb": "applies", "to": "REQ-021-017"}
+  - {"op": "add_edge", "from": "STP-021-054", "verb": "applies", "to": "REQ-021-037"}
+  - {"op": "add_edge", "from": "STP-021-055", "verb": "applies", "to": "REQ-021-016"}
+  - {"op": "add_edge", "from": "STP-021-054", "verb": "next", "to": "STP-021-055"}
+  - {"op": "add_edge", "from": "FLW-021-missing-translation-fallback", "verb": "starts at", "to": "STP-021-054"}
+  - {"op": "add_edge", "from": "SCR-021-07", "verb": "shows", "to": "ENT-translation-audit-log.reference", "attrs": {"provenance": "system calculated", "label": "History panel (references)", "editable": false}}
+  - {"op": "add_edge", "from": "FR-021", "verb": "references", "to": "REQ-029-104"}

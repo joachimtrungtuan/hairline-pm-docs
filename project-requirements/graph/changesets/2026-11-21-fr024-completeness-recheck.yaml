@@ -1,0 +1,89 @@
+reason: "FR-024 completeness re-check 2026-11-21: stage reads/writes edges for the aftercare content template and treatment, Step wording aligned with the PRD, missing applies edges on four form-display Steps, Provider Name on the admin packages screen, 14 Rules for stated screen behaviours and the treatment creation rate limit, and Rule rationale text made current"
+by: controller
+operations:
+  - {"op": "add_edge", "from": "STG-admin-01-configuration", "verb": "writes", "to": "ENT-aftercare-content-template"}
+  - {"op": "add_edge", "from": "STG-main-06-treatment", "verb": "reads", "to": "ENT-aftercare-content-template"}
+  - {"op": "add_edge", "from": "STG-aftercare-01-recovery-plan", "verb": "reads", "to": "ENT-aftercare-content-template"}
+  - {"op": "add_edge", "from": "STG-admin-01-configuration", "verb": "writes", "to": "ENT-treatment"}
+  - {"op": "update_node", "id": "STP-024-008", "title": "Admin sets the treatment status Active or Inactive (default Active), or saves the treatment as a draft; the form also auto-saves a draft every 30 seconds"}
+  - {"op": "update_node", "id": "STP-024-013", "title": "System saves the treatment record with the status the admin chose"}
+  - {"op": "update_node", "id": "STP-024-014", "title": "When the treatment was saved as Active, System sends the new-treatment notification to all active providers"}
+  - {"op": "update_node", "id": "STP-024-039", "title": "Sent quotes and bookings using the treatment continue unaffected; a draft quote that uses it must pick another treatment before it can be sent"}
+  - {"op": "update_node", "id": "STP-024-080", "title": "Provider sets the package status Active or Inactive (default Active), or saves the package as a draft; the form also auto-saves a draft every 30 seconds"}
+  - {"op": "add_edge", "from": "STP-024-003", "verb": "applies", "to": "REQ-024-001"}
+  - {"op": "add_edge", "from": "STP-024-024", "verb": "applies", "to": "REQ-024-002"}
+  - {"op": "add_edge", "from": "STP-024-073", "verb": "applies", "to": "REQ-024-007"}
+  - {"op": "add_edge", "from": "STP-024-094", "verb": "applies", "to": "REQ-024-008"}
+  - {"op": "add_edge", "from": "SCR-024-07", "verb": "shows", "to": "ENT-provider.name", "attrs": {"provenance": "inherited from another FR", "label": "Provider Name", "editable": false}}
+  - {"op": "update_node", "id": "REQ-024-006", "attrs": {"statement": "System MUST allow providers to enable or disable treatment offerings without deleting pricing configuration; a treatment pricing configuration is Not Offered until the provider sets it to Offered", "rationale": "prd.md lines 486, 499 (Screen 3 Status Toggle default Not Offered; disabling keeps the pricing configuration)"}}
+  - {"op": "update_node", "id": "REQ-024-040", "attrs": {"statement": "Admin can view provider packages in read-only mode for support purposes only and cannot modify individual provider packages; provider ownership is enforced. View Details shows the full package version content (included items, travel services, plan, images, terms) read-only.", "rationale": "prd.md lines 57-58, 421, 440-442 (Module Scope, Screen 7 purpose and business rules), line 627 (Privacy Rule 2)"}}
+  - {"op": "update_node", "id": "REQ-024-058", "attrs": {"statement": "Providers can only view active treatments from the admin catalog. A treatment the provider has not configured pricing for shows a \"Not Configured\" badge, and treatments not yet configured are highlighted with a banner at the top of the screen.", "rationale": "prd.md lines 490-492, 506 (Screen 3 business rules and notes); line 174 (A3 step 2)"}}
+  - {"op": "update_node", "id": "REQ-024-077", "attrs": {"statement": "The package list offers the bulk actions \"Deactivate Selected\" and \"Export to CSV\". A quick price edit from the list (a pencil icon shows on hover) is a library edit and saves a new package version.", "rationale": "prd.md lines 545, 547 (Screen 4 notes)"}}
+  - {"op": "update_node", "id": "REQ-024-051", "attrs": {"rationale": "prd.md lines 158-163 (A2 steps 1-6); line 345 (Screen 1: Deactivate is always available and the confirmation warning shows how many providers and open quotes are affected); line 384 (Screen 2 rule)"}}
+  - {"op": "update_node", "id": "REQ-024-055", "attrs": {"rationale": "prd.md lines 335, 347, 701 (Screen 1 Number of Providers: providers whose pricing configuration status is Offered; Field Calculation Rules)"}}
+  - {"op": "update_node", "id": "REQ-024-080", "attrs": {"rationale": "prd.md lines 628, 782 (Privacy Rule 3 signed URLs; CDN failure handling: no fallback to direct S3 URLs)"}}
+  - {"op": "add_node", "id": "REQ-024-086", "type": "Rule", "owner_fr": "FR-024", "title": "Treatment card hover preview", "attrs": {"statement": "Each treatment on the admin treatment list shows its video thumbnail as a preview; hovering over the thumbnail plays a 3-second preview of the video.", "rationale": "prd.md lines 352 (Screen 1 notes: video thumbnail preview, hover plays 3 seconds)"}}
+  - {"op": "add_edge", "from": "REQ-024-086", "verb": "applies to", "to": "SCR-024-01"}
+  - {"op": "add_edge", "from": "REQ-024-086", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-024-086", "verb": "decided by", "to": "SRC-PRD-024"}
+  - {"op": "add_node", "id": "REQ-024-087", "type": "Rule", "owner_fr": "FR-024", "title": "Deactivation warning icon on treatment list", "attrs": {"statement": "The admin treatment list shows a warning icon next to a treatment that is used in active quotes when the admin attempts to deactivate it.", "rationale": "prd.md lines 353 (Screen 1 notes: warning icon next to treatments used in active quotes)"}}
+  - {"op": "add_edge", "from": "REQ-024-087", "verb": "applies to", "to": "SCR-024-01"}
+  - {"op": "add_edge", "from": "REQ-024-087", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-024-087", "verb": "decided by", "to": "SRC-PRD-024"}
+  - {"op": "add_node", "id": "REQ-024-088", "type": "Rule", "owner_fr": "FR-024", "title": "Treatment video upload progress and resume", "attrs": {"statement": "Treatment video upload shows a progress bar and supports resuming the upload after a failure.", "rationale": "prd.md lines 381 (Screen 2 business rules)"}}
+  - {"op": "add_edge", "from": "REQ-024-088", "verb": "applies to", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "REQ-024-088", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-024-088", "verb": "decided by", "to": "SRC-PRD-024"}
+  - {"op": "add_node", "id": "REQ-024-089", "type": "Rule", "owner_fr": "FR-024", "title": "Image upload by drag-and-drop or browse", "attrs": {"statement": "Image upload on the treatment form and on the package form accepts drag-and-drop or click-to-browse.", "rationale": "prd.md lines 382, 578 (Screen 2 and Screen 5 business rules)"}}
+  - {"op": "add_edge", "from": "REQ-024-089", "verb": "applies to", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "REQ-024-089", "verb": "applies to", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "REQ-024-089", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-024-089", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-024-089", "verb": "decided by", "to": "SRC-PRD-024"}
+  - {"op": "add_node", "id": "REQ-024-090", "type": "Rule", "owner_fr": "FR-024", "title": "Markdown editor with preview pane", "attrs": {"statement": "The description field on the treatment form and on the package form is a markdown editor with a preview pane; the treatment description editor is a WYSIWYG markdown editor.", "rationale": "prd.md lines 383, 390, 579 (Screen 2 and Screen 5 business rules and notes)"}}
+  - {"op": "add_edge", "from": "REQ-024-090", "verb": "applies to", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "REQ-024-090", "verb": "applies to", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "REQ-024-090", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-024-090", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-024-090", "verb": "decided by", "to": "SRC-PRD-024"}
+  - {"op": "add_node", "id": "REQ-024-091", "type": "Rule", "owner_fr": "FR-024", "title": "Inline video preview after upload", "attrs": {"statement": "After a treatment video is uploaded, the treatment form shows an inline video player preview.", "rationale": "prd.md lines 391 (Screen 2 notes)"}}
+  - {"op": "add_edge", "from": "REQ-024-091", "verb": "applies to", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "REQ-024-091", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-024-091", "verb": "decided by", "to": "SRC-PRD-024"}
+  - {"op": "add_node", "id": "REQ-024-092", "type": "Rule", "owner_fr": "FR-024", "title": "Image thumbnails with remove option", "attrs": {"statement": "After upload, treatment images and package images are shown as thumbnails with a remove option; package image thumbnails can also be reordered.", "rationale": "prd.md lines 392, 588 (Screen 2 and Screen 5 notes)"}}
+  - {"op": "add_edge", "from": "REQ-024-092", "verb": "applies to", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "REQ-024-092", "verb": "applies to", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "REQ-024-092", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-024-092", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-024-092", "verb": "decided by", "to": "SRC-PRD-024"}
+  - {"op": "add_node", "id": "REQ-024-093", "type": "Rule", "owner_fr": "FR-024", "title": "Technique specifications tooltips", "attrs": {"statement": "The treatment form shows tooltips that explain the format of the technique specifications.", "rationale": "prd.md lines 394 (Screen 2 notes)"}}
+  - {"op": "add_edge", "from": "REQ-024-093", "verb": "applies to", "to": "SCR-024-02"}
+  - {"op": "add_edge", "from": "REQ-024-093", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-024-093", "verb": "decided by", "to": "SRC-PRD-024"}
+  - {"op": "add_node", "id": "REQ-024-094", "type": "Rule", "owner_fr": "FR-024", "title": "Expandable treatment cards with inline video", "attrs": {"statement": "Treatments on the provider treatment pricing screen are shown as cards that expand and collapse to show the full description; the treatment video plays inline when a card is expanded.", "rationale": "prd.md lines 479, 503-504 (Screen 3 description field and notes)"}}
+  - {"op": "add_edge", "from": "REQ-024-094", "verb": "applies to", "to": "SCR-024-03"}
+  - {"op": "add_edge", "from": "REQ-024-094", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-024-094", "verb": "decided by", "to": "SRC-PRD-024"}
+  - {"op": "add_node", "id": "REQ-024-095", "type": "Rule", "owner_fr": "FR-024", "title": "Save becomes Update when editing pricing", "attrs": {"statement": "On the provider treatment pricing screen the Save button becomes an Update button when the provider edits an existing pricing configuration.", "rationale": "prd.md lines 507 (Screen 3 notes)"}}
+  - {"op": "add_edge", "from": "REQ-024-095", "verb": "applies to", "to": "SCR-024-03"}
+  - {"op": "add_edge", "from": "REQ-024-095", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-024-095", "verb": "decided by", "to": "SRC-PRD-024"}
+  - {"op": "add_node", "id": "REQ-024-096", "type": "Rule", "owner_fr": "FR-024", "title": "Package form starter examples", "attrs": {"statement": "The package form offers starter examples, for example \"Standard FUE with 5-night hotel and airport transfers\".", "rationale": "prd.md lines 587 (Screen 5 notes)"}}
+  - {"op": "add_edge", "from": "REQ-024-096", "verb": "applies to", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "REQ-024-096", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-024-096", "verb": "decided by", "to": "SRC-PRD-024"}
+  - {"op": "add_node", "id": "REQ-024-097", "type": "Rule", "owner_fr": "FR-024", "title": "Package description character count", "attrs": {"statement": "The package form shows a character count for the description field.", "rationale": "prd.md lines 590 (Screen 5 notes)"}}
+  - {"op": "add_edge", "from": "REQ-024-097", "verb": "applies to", "to": "SCR-024-05"}
+  - {"op": "add_edge", "from": "REQ-024-097", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-024-097", "verb": "decided by", "to": "SRC-PRD-024"}
+  - {"op": "add_node", "id": "REQ-024-098", "type": "Rule", "owner_fr": "FR-024", "title": "Treatment creation rate limit", "attrs": {"statement": "Treatment creation is limited to 10 per hour per admin by default; the limit is an admin setting and a whole number of 1 or more.", "rationale": "prd.md lines 642, 880 (Admin Editability Rules; Security Considerations threat mitigation)"}}
+  - {"op": "add_edge", "from": "REQ-024-098", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-024-098", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-024-098", "verb": "applies to", "to": "ENT-treatment"}
+  - {"op": "add_edge", "from": "REQ-024-098", "verb": "governed by", "to": "SET-treatment-creation-rate-limit"}
+  - {"op": "add_edge", "from": "REQ-024-098", "verb": "decided by", "to": "SRC-PRD-024"}
+  - {"op": "remove_edge", "from": "REQ-024-001", "verb": "governed by", "to": "SET-treatment-creation-rate-limit"}
+  - {"op": "add_node", "id": "REQ-024-099", "type": "Rule", "owner_fr": "FR-024", "title": "Placeholder image when media fails to load", "attrs": {"statement": "When a treatment video or image fails to load from the CDN, the app shows a placeholder image; there is no fallback to direct S3 URLs.", "rationale": "prd.md lines 782 (External Dependencies, CDN failure handling)"}}
+  - {"op": "add_edge", "from": "REQ-024-099", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-024-099", "verb": "applies to", "to": "ENT-treatment.image_urls"}
+  - {"op": "add_edge", "from": "REQ-024-099", "verb": "decided by", "to": "SRC-PRD-024"}
