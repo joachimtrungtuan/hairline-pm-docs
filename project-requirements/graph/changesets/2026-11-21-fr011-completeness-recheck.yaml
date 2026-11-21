@@ -1,0 +1,50 @@
+reason: "FR-011 completeness re-check 2026-11-21: calculated Adherence Period on Screen 9, medication picked only from the FR-024 list (Screens 4 and 10), the 48-hour overdue escalation Step (Workflow 3 C1), and references to the FR-025 and FR-024 Rules the PRD points to"
+by: controller
+operations:
+  # --- Screen 9: Adherence Period, calculated from the medication doses (prd.md line 725) ---
+  - op: add_field
+    id: ENT-aftercare-plan.adherence_period
+    entity_id: ENT-aftercare-plan
+    name: adherence_period
+    data_type: date range
+    title: Adherence period
+    owner_fr: FR-011
+    attrs: {description: "Start and end date of the adherence period, calculated from the medication doses; the adherence percentage shown beside it is for that period (Screen 9)."}
+  - {op: add_edge, from: SCR-011-09, verb: shows, to: ENT-aftercare-plan.adherence_period, attrs: {provenance: system calculated, label: Adherence Period}}
+
+  # --- Medication names come only from the admin-managed FR-024 list (prd.md lines 483, 785) ---
+  - op: add_node
+    id: REQ-011-089
+    type: Rule
+    owner_fr: FR-011
+    title: Medication picked only from the admin-managed medication list
+    attrs:
+      statement: "The provider MUST pick each aftercare medication only from the admin-managed medication list (the FR-024 medication templates); free-text medication names are not allowed."
+      rationale: "prd.md lines 483, 785 (Medication Name: must be a medication template owned by FR-024; no free-text medication names)."
+  - {op: add_edge, from: REQ-011-089, verb: applies to, to: ENT-aftercare-medication.name}
+  - {op: add_edge, from: REQ-011-089, verb: applies to, to: SCR-011-10}
+  - {op: add_edge, from: REQ-011-089, verb: applies to, to: SCR-011-04}
+  - {op: add_edge, from: REQ-011-089, verb: applies to, to: ACT-provider}
+  - {op: add_edge, from: REQ-011-089, verb: applies at, to: STG-aftercare-01-recovery-plan}
+  - {op: add_edge, from: REQ-011-089, verb: decided by, to: SRC-PRD-011}
+  - {op: add_edge, from: FR-011, verb: references, to: REQ-024-085}
+
+  # --- Workflow 3 C1: still overdue after 48 hours, the task escalates (prd.md line 284) ---
+  - op: add_node
+    id: STP-011-057
+    type: Step
+    owner_fr: FR-011
+    title: System escalates the task when it is still overdue after 48 hours
+    attrs: {prd_ref: "Workflow 3 Alternative Flow C1"}
+  - {op: add_edge, from: STP-011-057, verb: at, to: STG-aftercare-02-follow-up}
+  - {op: add_edge, from: STP-011-057, verb: done by, to: ACT-system}
+  - {op: add_edge, from: STP-011-057, verb: applies, to: REQ-011-025}
+  - {op: remove_edge, from: STP-011-036, verb: next, to: STP-011-037}
+  - {op: add_edge, from: STP-011-036, verb: next, to: STP-011-057}
+  - {op: add_edge, from: STP-011-057, verb: next, to: STP-011-037}
+
+  # --- Questionnaire sets are managed in FR-025 (Screens 3, 10 and 16, prd.md lines 1142-1149) ---
+  - {op: add_edge, from: FR-011, verb: references, to: REQ-025-069}
+  - {op: add_edge, from: FR-011, verb: references, to: REQ-025-070}
+  - {op: add_edge, from: FR-011, verb: references, to: REQ-025-071}
+  - {op: add_edge, from: FR-011, verb: references, to: REQ-025-019}

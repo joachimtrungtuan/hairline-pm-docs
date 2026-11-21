@@ -1,0 +1,17 @@
+reason: "FR-014 completeness re-check 2026-11-21: move the Screen 1 and Screen 4 payout shows edges off retired ENT-payout Fields (cadence, period_start, period_end, scheduled_date) onto the active Fields that carry the same information, and bring the two review sub-score Rules to the PRD citation REQ-013-023."
+by: controller
+operations:
+  - {"op": "remove_edge", "from": "SCR-014-01", "verb": "shows", "to": "ENT-payout.cadence"}
+  - {"op": "remove_edge", "from": "SCR-014-01", "verb": "shows", "to": "ENT-payout.period_end"}
+  - {"op": "remove_edge", "from": "SCR-014-01", "verb": "shows", "to": "ENT-payout.period_start"}
+  - {"op": "remove_edge", "from": "SCR-014-01", "verb": "shows", "to": "ENT-payout.scheduled_date"}
+  - {"op": "remove_edge", "from": "SCR-014-04", "verb": "shows", "to": "ENT-payout.cadence"}
+  - {"op": "remove_edge", "from": "SCR-014-04", "verb": "shows", "to": "ENT-payout.period_end"}
+  - {"op": "remove_edge", "from": "SCR-014-04", "verb": "shows", "to": "ENT-payout.period_start"}
+  - {"op": "add_edge", "from": "SCR-014-01", "verb": "shows", "to": "ENT-provider-payout.payout_period", "attrs": {"provenance": "retrieved", "label": "Period", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-014-01", "verb": "shows", "to": "ENT-provider-payout.payout_date", "attrs": {"provenance": "retrieved", "label": "Scheduled Date", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-014-01", "verb": "shows", "to": "ENT-payout.payout_method", "attrs": {"provenance": "retrieved", "label": "Cadence", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-014-04", "verb": "shows", "to": "ENT-provider-payout.payout_period", "attrs": {"provenance": "retrieved", "label": "Period", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-014-04", "verb": "shows", "to": "ENT-payout.payout_method", "attrs": {"provenance": "retrieved", "label": "Cadence", "editable": false}}
+  - {"op": "update_node", "id": "REQ-014-207", "attrs": {"statement": "Chart type: Grouped bar chart; X axis: Treatment type; Y axis: Score (1–5); Groups per bar: Overall · Results · Staff · Facility · Value; Data source: FR-013 per-treatment sub-scores endpoint (REQ-013-023), keyed by `treatment_id`, Published reviews only; not joined through quote status; Drill-down: Click bar → Reviews list filtered to that treatment"}}
+  - {"op": "update_node", "id": "REQ-014-284", "attrs": {"statement": "Chart type: Grouped bar chart; X axis: Treatment type; Y axis: Score (1–5); Groups: Overall · Results · Staff · Facility · Value; Data source: FR-013 per-treatment sub-scores endpoint (REQ-013-023), keyed by `treatment_id`, Published reviews only; Provider filter: Required. The endpoint returns one provider's sub-scores, so the widget renders only when a single provider is selected; with \"All providers\" it shows \"Select a provider to view review scores by treatment\"; Drill-down: Click bar → Reviews list filtered to that provider and treatment"}}

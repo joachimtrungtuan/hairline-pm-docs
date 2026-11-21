@@ -1,0 +1,67 @@
+reason: "FR-015 completeness re-check 2026-11-21: required flags back to optional (ruling A8), Featured Filter, reactivation reason limits, Edit Profile, Tab 1 read-only commission, phone format, reorder, document sort and filter, upload failure, unresolved support count, payout readiness display, and references to FR-009 and FR-013 Rules"
+by: controller
+operations:
+  - {"op": "update_field", "id": "ENT-provider.email", "required": false}
+  - {"op": "update_field", "id": "ENT-provider.phone", "required": false}
+  - {"op": "update_field", "id": "ENT-provider.specialty", "required": false}
+  - {"op": "update_node", "id": "REQ-015-089", "attrs": {"statement": "Dashboard displays all providers with status = \"Active\" by default on initial load Search queries match against provider name, clinic name, email, medical license number (case-insensitive) Search Bar accepts at most 200 characters; Status Filter allows multiple selections; Featured Filter, when switched on, shows only featured providers; Commission Type Filter is Percentage, Flat Rate or All; Closure Requested Filter shows providers with a pending FR-032 closure request."}}
+  - {"op": "update_node", "id": "REQ-015-080", "attrs": {"statement": "Available only when provider status = Suspended; Deactivated providers can never be reactivated (Rule 4) The reason is required, 20 to 500 characters; the admin re-authenticates with the acting admin's password (MFA once the FR-026 and FR-031 MFA stack is delivered) and must check \"I confirm this action\" to enable submit; Notify Provider is checked by default and sends the reactivation email to the provider Owner including the reason On submit, status changes to Active immediately; the status event (reason, admin, timestamp) is logged in Tab 8 On submit, any pending scheduled suspension or deactivation is cancelled automatically; the cancellation is logged in Tab 8 with the reactivation reason and admin, and the reactivation email states that the scheduled change no longer applies (if the provider had been notified of it)"}}
+  - {"op": "update_node", "id": "REQ-015-122", "title": "Header quick actions: Edit Profile opens all tabs in edit mode; the others are shown only for the matching status", "attrs": {"statement": "\"Edit Profile\" opens all tabs in edit mode. \"Reactivate\" (visible only if Suspended; opens Screen 5) \"Cancel Scheduled Change\" (visible only if a scheduled suspension/deactivation is pending; see Screen 4)"}}
+  - {"op": "update_node", "id": "REQ-015-108", "title": "Tab 7 is the single-provider commission surface; Tab 1 shows commission read-only", "attrs": {"statement": "FR-029 / A-09 owns the central commission-settings screen (global default + provider-specific commission scopes) and the booking-time snapshot policy; this tab remains the single-provider management surface for provider-specific commission configuration. Commission is edited only in Tab 7; Tab 1 shows it read-only as the Commission Summary, with a \"Manage in Commission & Financials\" link to Tab 7."}}
+  - {"op": "add_node", "id": "REQ-015-129", "type": "Rule", "owner_fr": "FR-015", "title": "Phone numbers must be valid; the public phone is a country code plus a numeric number", "attrs": {"statement": "The provider Phone Number MUST be a valid phone number with country code (Screen 2 Step 1, Tab 1). The public Contact Phone has a Country Code (dropdown from FR-026) and a Number (numeric only, length validated per country code).", "rationale": "prd.md lines 314, 337, 423, 432 (Phone Number valid format with country code; Contact Phone (Public) country code dropdown plus numeric number)."}}
+  - {"op": "add_edge", "from": "REQ-015-129", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-015-129", "verb": "applies to", "to": "SCR-015-02"}
+  - {"op": "add_edge", "from": "REQ-015-129", "verb": "applies to", "to": "SCR-015-03"}
+  - {"op": "add_edge", "from": "REQ-015-129", "verb": "applies to", "to": "ENT-provider.phone"}
+  - {"op": "add_edge", "from": "REQ-015-129", "verb": "applies to", "to": "ENT-provider-profile.public_phone"}
+  - {"op": "add_edge", "from": "REQ-015-129", "verb": "applies at", "to": "STG-provider-01-invited"}
+  - {"op": "add_edge", "from": "REQ-015-129", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-015-129", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "add_node", "id": "REQ-015-130", "type": "Rule", "owner_fr": "FR-015", "title": "Languages can be reordered by drag and drop", "attrs": {"statement": "On the Languages tab the admin can reorder the clinic's languages by drag and drop to prioritise them.", "rationale": "prd.md lines 490 (Tab 2 notes: drag-and-drop reordering supported to prioritize languages)."}}
+  - {"op": "add_edge", "from": "REQ-015-130", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-015-130", "verb": "applies to", "to": "SCR-015-03"}
+  - {"op": "add_edge", "from": "REQ-015-130", "verb": "applies to", "to": "ENT-provider-profile.supported_languages"}
+  - {"op": "add_edge", "from": "REQ-015-130", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-015-130", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "add_node", "id": "REQ-015-131", "type": "Rule", "owner_fr": "FR-015", "title": "Awards can be reordered by drag and drop and images uploaded by drag and drop", "attrs": {"statement": "On the Awards tab the admin can reorder awards by drag and drop to prioritise the most important ones, and the award image upload supports drag and drop (max 2MB, JPEG/PNG only).", "rationale": "prd.md lines 524, 525 (Tab 4 business rules: drag-and-drop reordering; award image upload supports drag-and-drop)."}}
+  - {"op": "add_edge", "from": "REQ-015-131", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-015-131", "verb": "applies to", "to": "SCR-015-03"}
+  - {"op": "add_edge", "from": "REQ-015-131", "verb": "applies to", "to": "ENT-provider.awards"}
+  - {"op": "add_edge", "from": "REQ-015-131", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-015-131", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "add_node", "id": "REQ-015-132", "type": "Rule", "owner_fr": "FR-015", "title": "Tab 6 document list sort and filter options", "attrs": {"statement": "The Tab 6 document list is sorted by Upload Date (newest first, the default), Document Type or Uploaded By, and can be filtered by Document Type and by Uploaded By (Provider or Admin).", "rationale": "prd.md lines 576, 608, 609, 610 (Tab 6 Document List sortable/filterable; Sort/Filter Options)."}}
+  - {"op": "add_edge", "from": "REQ-015-132", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-015-132", "verb": "applies to", "to": "SCR-015-03"}
+  - {"op": "add_edge", "from": "REQ-015-132", "verb": "applies to", "to": "ENT-provider-document.document_type"}
+  - {"op": "add_edge", "from": "REQ-015-132", "verb": "applies to", "to": "ENT-provider-document.uploaded_by"}
+  - {"op": "add_edge", "from": "REQ-015-132", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-015-132", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "add_node", "id": "REQ-015-133", "type": "Rule", "owner_fr": "FR-015", "title": "Document upload failure shows an error and retries automatically", "attrs": {"statement": "If a document upload fails, the admin sees the error \"Document upload failed. Please retry.\" The upload is retried automatically up to 3 times before it fails, and an interrupted upload (for example a network interruption) can be retried by the admin; the system supports resumable uploads and may resume from the last successful chunk if implemented, otherwise it restarts the upload.", "rationale": "prd.md lines 972, 1168 (External Service 3 failure handling; edge case upload fails mid-upload)."}}
+  - {"op": "add_edge", "from": "REQ-015-133", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-015-133", "verb": "applies to", "to": "SCR-015-02"}
+  - {"op": "add_edge", "from": "REQ-015-133", "verb": "applies to", "to": "SCR-015-03"}
+  - {"op": "add_edge", "from": "REQ-015-133", "verb": "applies to", "to": "ENT-provider-document.file_url"}
+  - {"op": "add_edge", "from": "REQ-015-133", "verb": "applies at", "to": "STG-provider-01-invited"}
+  - {"op": "add_edge", "from": "REQ-015-133", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-015-133", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "add_node", "id": "REQ-015-134", "type": "Rule", "owner_fr": "FR-015", "title": "Reactivation modal shows the count of unresolved support items", "attrs": {"statement": "Screen 5 shows the number of this provider's affected inquiries and cases (bookings, In Progress or Aftercare cases, standalone aftercare) still marked Admin Support Required. Each affected record counts once, matching the FR-020 `provider.status_cancellation_admin_support` unit (one per affected inquiry or case). The count links to the FR-016 list filtered to this provider and Admin Support Required. It is informational and does not block reactivation.", "rationale": "prd.md lines 757 (Screen 5 Unresolved Support Items row)."}}
+  - {"op": "add_edge", "from": "REQ-015-134", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-015-134", "verb": "applies to", "to": "SCR-015-05"}
+  - {"op": "add_edge", "from": "REQ-015-134", "verb": "applies to", "to": "ENT-inquiry.support_required"}
+  - {"op": "add_edge", "from": "REQ-015-134", "verb": "applies to", "to": "ENT-booking.support_required"}
+  - {"op": "add_edge", "from": "REQ-015-134", "verb": "applies at", "to": "STG-provider-04-suspended"}
+  - {"op": "add_edge", "from": "REQ-015-134", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "add_node", "id": "REQ-015-135", "type": "Rule", "owner_fr": "FR-015", "title": "Tab 7 shows the clinic's payout readiness read-only", "attrs": {"statement": "For a Stripe Connect clinic, Tab 7 shows Payout Readiness read-only as one of four states: Not started, In progress, Ready, Restricted. The clinic completes Stripe's own sign-up itself and sees the same status read-only in its own dashboard.", "rationale": "prd.md lines 636 (Tab 7 Payout Readiness row), 1240 (Key Entity 1 relationships: payout readiness shown to admins and the clinic read-only)."}}
+  - {"op": "add_edge", "from": "REQ-015-135", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-015-135", "verb": "applies to", "to": "SCR-015-03"}
+  - {"op": "add_edge", "from": "REQ-015-135", "verb": "applies to", "to": "ENT-provider.payout_method"}
+  - {"op": "add_edge", "from": "REQ-015-135", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-015-135", "verb": "applies at", "to": "STG-provider-04-suspended"}
+  - {"op": "add_edge", "from": "REQ-015-135", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "add_edge", "from": "FR-015", "verb": "references", "to": "REQ-009-139"}
+  - {"op": "add_edge", "from": "FR-015", "verb": "references", "to": "REQ-009-145"}
+  - {"op": "add_edge", "from": "FR-015", "verb": "references", "to": "REQ-009-024"}
+  - {"op": "add_edge", "from": "FR-015", "verb": "references", "to": "REQ-009-186"}
+  - {"op": "add_edge", "from": "FR-015", "verb": "references", "to": "REQ-013-062"}
+  - {"op": "add_edge", "from": "FR-015", "verb": "references", "to": "REQ-013-039"}
+  - {"op": "add_edge", "from": "FR-015", "verb": "references", "to": "REQ-013-038"}

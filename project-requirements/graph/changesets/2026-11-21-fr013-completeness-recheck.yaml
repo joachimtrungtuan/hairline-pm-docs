@@ -1,0 +1,6 @@
+# FR-013 completeness re-check (2026-11-21) against the PRD of 2026-11-20. Report: plans/reports/tester-261121-fr013-completeness-recheck.md
+reason: "FR-013 completeness re-check: the PRD retention lines point at the system PRD one 10-year retention period (REQ-SYS-002), so FR-013 references that Rule (PRD lines 498-499)"
+by: controller
+operations:
+  # Data & Privacy Rules: review content and audit records retained per the system PRD Platform-Wide Rules, one 10-year retention period
+  - {"op": "add_edge", "from": "FR-013", "verb": "references", "to": "REQ-SYS-002"}

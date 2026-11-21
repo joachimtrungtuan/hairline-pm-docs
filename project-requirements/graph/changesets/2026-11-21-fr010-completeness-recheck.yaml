@@ -1,0 +1,19 @@
+reason: "FR-010 completeness re-check 2026-11-21: admin listing search Rule, provider listing row opens the case, B1 and B2 Steps renamed to the Report Issue control, stale Check In rationale corrected"
+by: controller
+operations:
+  # Admin In Progress listing search (PRD Screen 7 Search Bar), parallel to the one-Rule-per-filter pattern of REQ-010-110 to 112.
+  - {"op": "add_node", "id": "REQ-010-114", "type": "Rule", "owner_fr": "FR-010", "title": "Admin In Progress listing search by patient ID, name, booking reference or provider name", "attrs": {"statement": "System MUST let admins search the admin In Progress listing by patient ID, patient name, booking reference or provider name, with the results filtering in real time (Screen 7)", "rationale": "prd.md lines 459 (Screen 7 Search Bar: patient ID, name, booking reference, or provider name; real-time filter)"}}
+  - {"op": "add_edge", "from": "REQ-010-114", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "REQ-010-114", "verb": "applies to", "to": "SCR-010-07"}
+  - {"op": "add_edge", "from": "REQ-010-114", "verb": "decided by", "to": "SRC-PRD-010"}
+  # Provider In Progress listing: a row opens Screen 4 (PRD Screen 3 Business Rules, line 336; Patient ID column, line 325).
+  - {"op": "update_node", "id": "REQ-010-102", "attrs": {"statement": "List shows only cases in \"In Progress\" status for the provider's clinic. Search and filters apply in real-time without page reload. Clicking a row (the Patient ID) opens Screen 4: In Progress Case Detail. Default sort: procedure date ascending."}}
+  # B1 step 5 and B2 steps 2-3: the provider uses Report Issue Before Check In; the booking stays Confirmed (no case closing).
+  - {"op": "update_node", "id": "STP-010-012", "title": "Provider reports the no-show with Report Issue Before Check In"}
+  - {"op": "update_node", "id": "STP-010-014", "title": "Provider reports the medical postponement with Report Issue Before Check In"}
+  - {"op": "add_edge", "from": "STP-010-012", "verb": "applies", "to": "REQ-010-107"}
+  - {"op": "add_edge", "from": "STP-010-014", "verb": "applies", "to": "REQ-010-107"}
+  - {"op": "remove_edge", "from": "STP-010-012", "verb": "applies", "to": "REQ-010-040"}
+  - {"op": "remove_edge", "from": "STP-010-014", "verb": "applies", "to": "REQ-010-040"}
+  # REQ-010-021: REQ-006-043 is retired and merged into REQ-010-106; the rationale must say so.
+  - {"op": "update_node", "id": "REQ-010-021", "attrs": {"rationale": "prd.md lines 992 (REQ-010-021). The Check In conditions themselves are held by the merged Rule REQ-010-106 (former FR-006 REQ-006-043); this Rule keeps the read of the booking payment state and the limit that FR-010 never captures payment."}}

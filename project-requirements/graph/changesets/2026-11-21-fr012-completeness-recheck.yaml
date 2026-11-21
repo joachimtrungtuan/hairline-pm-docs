@@ -1,0 +1,21 @@
+# FR-012 completeness re-check (2026-11-21) against the PRD of 2026-11-20. Report: plans/reports/tester-261121-fr012-completeness-recheck.md
+reason: "FR-012 completeness re-check: admin screens show the real patient name (PRD lines 413, 471, 613), flag category becomes an enum of the five manual flag types (PRD lines 491, 1005), MFA line cites FR-026 and FR-031 Rules (PRD line 821)"
+by: controller
+operations:
+  # Screens 5, 6A, 6B: admins see the real patient name, not the anonymized id (PRD lines 413, 471, 613; REQ-SYS-001 excludes admins)
+  - {"op": "remove_edge", "from": "SCR-012-05", "verb": "shows", "to": "ENT-patient.anonymized_id"}
+  - {"op": "add_edge", "from": "SCR-012-05", "verb": "shows", "to": "ENT-patient.name", "attrs": {"provenance": "inherited from another FR", "label": "Patient name (real name, admins see it unmasked)"}}
+  - {"op": "remove_edge", "from": "SCR-012-06", "verb": "shows", "to": "ENT-patient.anonymized_id"}
+  - {"op": "add_edge", "from": "SCR-012-06", "verb": "shows", "to": "ENT-patient.name", "attrs": {"provenance": "inherited from another FR", "label": "Patient name (real name, admins see it unmasked)"}}
+  - {"op": "remove_edge", "from": "SCR-012-07", "verb": "shows", "to": "ENT-patient.anonymized_id"}
+  - {"op": "add_edge", "from": "SCR-012-07", "verb": "shows", "to": "ENT-patient.name", "attrs": {"provenance": "inherited from another FR", "label": "Patient name (real name, same as Screen 6A header)"}}
+  # Flag category: the five manual flag types are a fixed option list (PRD lines 491, 1005, A2 step 3)
+  - {"op": "update_field", "id": "ENT-flag.category", "data_type": "enum"}
+  - {"op": "add_enum_value", "field_id": "ENT-flag.category", "value": "off_platform_risk", "label": "Off-Platform Risk", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-flag.category", "value": "potential_dispute", "label": "Potential Dispute", "sort_order": 1}
+  - {"op": "add_enum_value", "field_id": "ENT-flag.category", "value": "quality_concern", "label": "Quality Concern", "sort_order": 2}
+  - {"op": "add_enum_value", "field_id": "ENT-flag.category", "value": "follow_up_needed", "label": "Follow-Up Needed", "sort_order": 3}
+  - {"op": "add_enum_value", "field_id": "ENT-flag.category", "value": "other", "label": "Other", "sort_order": 4}
+  # MFA planned platform-wide through FR-026 and FR-031 (PRD line 821)
+  - {"op": "add_edge", "from": "FR-012", "verb": "references", "to": "REQ-026-017"}
+  - {"op": "add_edge", "from": "FR-012", "verb": "references", "to": "REQ-031-016"}

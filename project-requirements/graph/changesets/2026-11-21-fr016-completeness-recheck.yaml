@@ -1,0 +1,40 @@
+reason: "FR-016 completeness re-check 2026-11-21 against the 2026-11-20 PRD: Rules for Screen 1 date-range, location and sort controls, Screen 8 and 9 search, audit-log checksums and the Screen 3 milestone summary; four Step-to-Rule applies links; Allergies shown with Declared Medications"
+by: controller
+operations:
+  - {"op": "add_node", "id": "REQ-016-209", "type": "Rule", "owner_fr": "FR-016", "title": "Patient list date range filter needs start on or before end", "attrs": {"statement": "The patient list date range filter narrows patients by registration date or last activity; the start date must be on or before the end date", "rationale": "prd.md lines 318 (Screen 1 Date Range Filter row)"}}
+  - {"op": "add_edge", "from": "REQ-016-209", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-016-209", "verb": "applies to", "to": "SCR-016-01"}
+  - {"op": "add_edge", "from": "REQ-016-209", "verb": "decided by", "to": "SRC-PRD-016"}
+  - {"op": "add_node", "id": "REQ-016-210", "type": "Rule", "owner_fr": "FR-016", "title": "Patient list location filter uses the admin settings country list", "attrs": {"statement": "The patient list location filter narrows patients by country, and its country list comes from the admin settings", "rationale": "prd.md lines 319 (Screen 1 Location Filter row)"}}
+  - {"op": "add_edge", "from": "REQ-016-210", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-016-210", "verb": "applies to", "to": "SCR-016-01"}
+  - {"op": "add_edge", "from": "REQ-016-210", "verb": "governed by", "to": "SET-country-list"}
+  - {"op": "add_edge", "from": "REQ-016-210", "verb": "decided by", "to": "SRC-PRD-016"}
+  - {"op": "add_node", "id": "REQ-016-211", "type": "Rule", "owner_fr": "FR-016", "title": "Patient list sort options are Name, Date, Status and Last Activity", "attrs": {"statement": "The patient list can be sorted by Name, Date, Status or Last Activity", "rationale": "prd.md lines 322 (Screen 1 Sort By row)"}}
+  - {"op": "add_edge", "from": "REQ-016-211", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-016-211", "verb": "applies to", "to": "SCR-016-01"}
+  - {"op": "add_edge", "from": "REQ-016-211", "verb": "decided by", "to": "SRC-PRD-016"}
+  - {"op": "add_node", "id": "REQ-016-212", "type": "Rule", "owner_fr": "FR-016", "title": "Deletion request search is debounced and case-insensitive", "attrs": {"statement": "Deletion request search finds a request by patient name, email or HPID; the search is debounced and case-insensitive", "rationale": "prd.md lines 618 (Screen 8 Search row)"}}
+  - {"op": "add_edge", "from": "REQ-016-212", "verb": "applies at", "to": "STG-patient-05-deleted"}
+  - {"op": "add_edge", "from": "REQ-016-212", "verb": "applies to", "to": "SCR-016-08"}
+  - {"op": "add_edge", "from": "REQ-016-212", "verb": "decided by", "to": "SRC-PRD-016"}
+  - {"op": "add_node", "id": "REQ-016-213", "type": "Rule", "owner_fr": "FR-016", "title": "Booking support request search is debounced and case-insensitive", "attrs": {"statement": "Booking support request search finds a request by patient name, HPID, booking reference or support case reference; the search is debounced and case-insensitive", "rationale": "prd.md lines 659 (Screen 9 Search row)"}}
+  - {"op": "add_edge", "from": "REQ-016-213", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-016-213", "verb": "applies to", "to": "SCR-016-09"}
+  - {"op": "add_edge", "from": "REQ-016-213", "verb": "decided by", "to": "SRC-PRD-016"}
+  - {"op": "add_node", "id": "REQ-016-214", "type": "Rule", "owner_fr": "FR-016", "title": "Admin audit log carries tamper-proof checksums and is append-only", "attrs": {"statement": "The admin audit log carries tamper-proof checksums that ensure the integrity of its entries, and its entries are append-only", "rationale": "prd.md lines 603 (Screen 7 Notes: tamper-proof checksums ensure log integrity), 934 (Security Considerations: audit trail with tamper-proof checksums, immutable and append-only)"}}
+  - {"op": "add_edge", "from": "REQ-016-214", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-016-214", "verb": "applies to", "to": "SCR-016-07"}
+  - {"op": "add_edge", "from": "REQ-016-214", "verb": "applies to", "to": "ENT-admin-action-log"}
+  - {"op": "add_edge", "from": "REQ-016-214", "verb": "decided by", "to": "SRC-PRD-016"}
+  - {"op": "add_node", "id": "REQ-016-215", "type": "Rule", "owner_fr": "FR-016", "title": "Milestone card summary shows provider, location and payment amount in one or two lines", "attrs": {"statement": "Each milestone card on the Treatment Journey tab shows a summary of one to two lines with the key datapoints: provider, location and payment amount", "rationale": "prd.md lines 426 (Screen 3 Summary row)"}}
+  - {"op": "add_edge", "from": "REQ-016-215", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-016-215", "verb": "applies to", "to": "SCR-016-03"}
+  - {"op": "add_edge", "from": "REQ-016-215", "verb": "decided by", "to": "SRC-PRD-016"}
+  - {"op": "add_edge", "from": "STP-016-056", "verb": "applies", "to": "REQ-016-048"}
+  - {"op": "add_edge", "from": "STP-016-064", "verb": "applies", "to": "REQ-016-048"}
+  - {"op": "add_edge", "from": "STP-016-069", "verb": "applies", "to": "REQ-016-050"}
+  - {"op": "add_edge", "from": "STP-016-076", "verb": "applies", "to": "REQ-016-012"}
+  - {"op": "add_edge", "from": "STP-016-096", "verb": "applies", "to": "REQ-016-031"}
+  - {"op": "remove_edge", "from": "SCR-016-04", "verb": "shows", "to": "ENT-medical-questionnaire-response.details"}
+  - {"op": "add_edge", "from": "SCR-016-04", "verb": "shows", "to": "ENT-medical-questionnaire-response.details", "attrs": {"provenance": "inherited from another FR", "label": "Declared Medications and Allergies", "editable": false}}

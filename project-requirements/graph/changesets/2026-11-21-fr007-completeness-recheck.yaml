@@ -1,0 +1,55 @@
+# Draft, not applied. FR-007 completeness re-check (2026-11-21), written against the 2026-11-20 PRD (version 1.11) and the graph after the 2026-11-20 baseline.
+# Report: plans/reports/tester-261121-fr007-completeness-recheck.md
+reason: "FR-007 completeness re-check: three Rule texts brought in line with the PRD (payout at release, payout visible after the provider marks completion, refund ladder), the aftercare no-payment-effect line added to the provider-fault Rule, three admin screen button Rules, the calculated Overdue flag Field the PRD shows on Screens 3, 5 and 5B, the two held object links for the Merchant of Record Rule, the system PRD compliance reference, and Step to Rule links for receipts, confirmations and payout eligibility"
+by: controller
+operations:
+  # Rule text follows the PRD (payout only at release after treatment completion)
+  - {"op": "update_node", "id": "REQ-007-040", "title": "Provider payout only at release after treatment completion", "attrs": {"statement": "Provider payout occurs only at release after treatment completion (see Fund Release & Money Routing Rules; payout execution is managed in FR-017)", "rationale": "prd.md lines 755 (General Module Rules: provider payout occurs only at release after treatment completion; payout execution is managed in FR-017)."}}
+  # Rule text follows the PRD (payout visible once the provider has marked the procedure complete)
+  - {"op": "update_node", "id": "REQ-007-054", "title": "Payout visible only after the provider marks the procedure complete", "attrs": {"statement": "Payout visible only after the provider has marked the procedure complete; the clinic's share is then released per Fund Release & Money Routing Rules (after the patient's confirmation window with no problem raised, or after an admin resolves a problem case)", "rationale": "prd.md lines 440 (Screen 4 Business Rules: payout visible only after the provider has marked the procedure complete, then released per Fund Release & Money Routing Rules)."}}
+  - {"op": "remove_edge", "from": "REQ-007-054", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-007-054", "verb": "applies to", "to": "ACT-provider", "attrs": {}}
+  # Rule text follows the PRD (refund ladder is set in FR-029; launch default shown)
+  - {"op": "update_node", "id": "REQ-007-063", "title": "Refunds follow the cancellation policy and the refund ladder", "attrs": {"statement": "Refunds follow the FR-006 cancellation policy and the refund ladder set in FR-029 (launch default: >30 days before = 90% refund; 15-30 days before = 50% refund; <15 days before = no refund), unless an approved exception, for example a medical emergency", "rationale": "prd.md lines 790 (Payment & Billing Rules: refunds follow the FR-006 policy and the FR-029 refund ladder, launch default 90 / 50 / 0 percent, unless an approved exception)."}}
+  # Aftercare provider fault has no payment effect (PRD B4 trigger)
+  - {"op": "update_node", "id": "REQ-007-022", "attrs": {"statement": "When a provider fault after acceptance closes a booking (FR-006 Alternative Flow B5), System MUST block further payment against it. When the provider withdraws or drops out, the patient is refunded in full everything paid, with no patient fee, and the replacement booking takes a new payment. A suspension or deactivation keeps the FR-006 provider-status placeholder, which is not yet ruled. Detailed refund and fund-release mechanics are defined in FR-007B and FR-017. A provider fault during Aftercare reassigns only the aftercare provider or team (FR-011) and has no payment effect here.", "rationale": "prd.md lines 162, 165, 167 (Alternative Flow B4: provider fault after acceptance and before treatment; a provider fault during Aftercare has no payment effect; refund and fund-release mechanics are defined in FR-007B and FR-017)."}}
+  # Admin screen button availability (PRD Screen 5B Actions and Screen 6 Actions)
+  - {"op": "add_node", "id": "REQ-007-093", "type": "Rule", "owner_fr": "FR-007", "title": "Process Refund available only for a cancelled or refund-eligible booking", "attrs": {"statement": "On the admin payment detail screen, Process Refund is available only when the booking is cancelled or eligible for a refund.", "rationale": "prd.md lines 612 (Screen 5B Actions: Process Refund, condition Booking cancelled or eligible)."}}
+  - {"op": "add_edge", "from": "REQ-007-093", "verb": "applies to", "to": "SCR-007-06", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007-093", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007-093", "verb": "applies at", "to": "STG-main-05-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007-093", "verb": "decided by", "to": "SRC-PRD-007", "attrs": {}}
+  - {"op": "add_node", "id": "REQ-007-094", "type": "Rule", "owner_fr": "FR-007", "title": "Send Payment Reminder available only when a payment is due or overdue", "attrs": {"statement": "On the admin payment detail screen, Send Payment Reminder is available only when a payment is due or overdue.", "rationale": "prd.md lines 613 (Screen 5B Actions: Send Payment Reminder, condition Payment due or overdue)."}}
+  - {"op": "add_edge", "from": "REQ-007-094", "verb": "applies to", "to": "SCR-007-06", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007-094", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007-094", "verb": "applies at", "to": "STG-main-05-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007-094", "verb": "decided by", "to": "SRC-PRD-007", "attrs": {}}
+  - {"op": "add_node", "id": "REQ-007-095", "type": "Rule", "owner_fr": "FR-007", "title": "Process Refund enabled only when all required fields are complete", "attrs": {"statement": "On the refund processing screen, Process Refund is enabled only when all required fields are complete.", "rationale": "prd.md lines 702, 718 (Screen 6: Process Refund button, enabled when all required fields are complete)."}}
+  - {"op": "add_edge", "from": "REQ-007-095", "verb": "applies to", "to": "SCR-007-07", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007-095", "verb": "applies to", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007-095", "verb": "applies at", "to": "STG-main-05-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007-095", "verb": "decided by", "to": "SRC-PRD-007", "attrs": {}}
+  # Overdue flag: calculated, not stored, shown on Screens 3, 5 and 5B (PRD lines 299, 477, 567, 798)
+  - {"op": "add_field", "id": "ENT-booking.is_overdue", "entity_id": "ENT-booking", "name": "is_overdue", "data_type": "bool", "title": "Overdue flag", "owner_fr": "FR-007", "required": false, "attrs": {"description": "Calculated, not stored: true when the due date has passed and the amount is unpaid. Shown and filterable beside the payment status, which is a separate list that does not include Overdue."}}
+  - {"op": "add_edge", "from": "SCR-007-03", "verb": "shows", "to": "ENT-booking.is_overdue", "attrs": {"provenance": "system calculated", "label": "Overdue Flag"}}
+  - {"op": "add_edge", "from": "SCR-007-05", "verb": "shows", "to": "ENT-booking.is_overdue", "attrs": {"provenance": "system calculated", "label": "Overdue Flag"}}
+  - {"op": "add_edge", "from": "SCR-007-06", "verb": "shows", "to": "ENT-booking.is_overdue", "attrs": {"provenance": "system calculated", "label": "Overdue Flag"}}
+  - {"op": "add_edge", "from": "REQ-007-036", "verb": "applies to", "to": "ENT-booking.is_overdue", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007-060", "verb": "applies to", "to": "ENT-booking.is_overdue", "attrs": {}}
+  # Held ops still wanted (2026-11-10 held file): Merchant of Record Rule linked to its objects
+  - {"op": "add_edge", "from": "REQ-007-013", "verb": "applies to", "to": "ENT-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007-013", "verb": "applies to", "to": "ENT-payout", "attrs": {}}
+  # PRD lines 768 and 958 hand GDPR/HIPAA-equivalent compliance and the no-shared-database ban to the system PRD
+  - {"op": "add_edge", "from": "FR-007", "verb": "references", "to": "REQ-SYS-011", "attrs": {}}
+  # Step to Rule links where the topic clearly matches
+  - {"op": "add_edge", "from": "STP-007-005", "verb": "applies", "to": "REQ-007-004", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007-005", "verb": "applies", "to": "REQ-007-027", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007-005", "verb": "applies", "to": "REQ-007-039", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007-007", "verb": "applies", "to": "REQ-007-004", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007-007", "verb": "applies", "to": "REQ-007-027", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007-007", "verb": "applies", "to": "REQ-007-039", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007-013", "verb": "applies", "to": "REQ-007-004", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007-013", "verb": "applies", "to": "REQ-007-027", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007-013", "verb": "applies", "to": "REQ-007-039", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007-023", "verb": "applies", "to": "REQ-007-027", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007-008", "verb": "applies", "to": "REQ-007-040", "attrs": {}}

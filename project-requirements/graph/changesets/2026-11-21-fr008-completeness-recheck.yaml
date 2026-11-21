@@ -1,0 +1,157 @@
+reason: "FR-008 completeness re-check 2026-11-21: system Steps that send, store or move the record (ACT-system), six Rules the Screen Specifications state but the graph lacked, two Rule text corrections to the PRD, and Rule links to the audit entry and the quote option."
+by: controller
+operations:
+  - {"op": "add_node", "id": "REQ-008-077", "type": "Rule", "title": "Overall Status of the travel record is worked out from the submitted items", "owner_fr": "FR-008", "attrs": {"statement": "The system MUST work out the booking's Overall Status shown on the admin travel record screen as follows. Pending: nothing has been submitted. Partially submitted: some required items are in, or an item is marked Incomplete by an admin. Complete: all required items are in and none is marked Incomplete. Required items are the passport, flight and hotel for Path A, and the flight and hotel for Path B, counting only items the accepted option includes.", "rationale": "prd.md lines 669, 768 (Screen 12 Overall Status badge and its derivation)."}}
+  - {"op": "add_edge", "from": "REQ-008-077", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-008-077", "verb": "applies to", "to": "SCR-008-12"}
+  - {"op": "add_edge", "from": "REQ-008-077", "verb": "applies to", "to": "ENT-travel-context.overall_status"}
+  - {"op": "add_edge", "from": "REQ-008-077", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_field", "id": "ENT-travel-context.overall_status", "calculated_by": "REQ-008-077"}
+  - {"op": "add_node", "id": "REQ-008-078", "type": "Rule", "title": "Admin sees whether the first automatic travel request was sent and when", "owner_fr": "FR-008", "attrs": {"statement": "The admin Travel section MUST show whether the first automatic travel request has been sent (yes or no) and the time it was sent, so the admin can monitor the automated request of each booking; items still waiting for the patient show as Awaiting in the status badges.", "rationale": "prd.md lines 74, 641 (Admin scope line and Screen 11 Initial Request Sent)."}}
+  - {"op": "add_edge", "from": "REQ-008-078", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-008-078", "verb": "applies to", "to": "SCR-008-11"}
+  - {"op": "add_edge", "from": "REQ-008-078", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-008-078", "verb": "applies to", "to": "ENT-travel-context.initial_request_dispatched_at"}
+  - {"op": "add_edge", "from": "REQ-008-078", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "add_node", "id": "REQ-008-079", "type": "Rule", "title": "Admin Travel Context Status badge and the dates shown during a review", "owner_fr": "FR-008", "attrs": {"statement": "The admin Travel section MUST show a Travel Context Status badge with the values Active, Travel-date review required or Closed. While a review is required, the section MUST show the accepted appointment baseline, the current booking appointment and the flagged flight and hotel dates.", "rationale": "prd.md line 640 (Screen 11 Travel Context Status)."}}
+  - {"op": "add_edge", "from": "REQ-008-079", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-008-079", "verb": "applies to", "to": "SCR-008-11"}
+  - {"op": "add_edge", "from": "REQ-008-079", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-008-079", "verb": "applies to", "to": "ENT-travel-context.status"}
+  - {"op": "add_edge", "from": "REQ-008-079", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "add_node", "id": "REQ-008-080", "type": "Rule", "title": "Provider Path B view shows a not-yet-submitted state for each missing record", "owner_fr": "FR-008", "attrs": {"statement": "In the provider's read-only Travel Details view of a Path B booking, a flight leg or hotel record that the patient has not submitted MUST show 'Awaiting patient submission', and when no return flight record exists the view MUST show 'Return flight not yet submitted'.", "rationale": "prd.md lines 588, 613-614 (Screen 10 empty states)."}}
+  - {"op": "add_edge", "from": "REQ-008-080", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-008-080", "verb": "applies to", "to": "SCR-008-10"}
+  - {"op": "add_edge", "from": "REQ-008-080", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-008-080", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "add_node", "id": "REQ-008-081", "type": "Rule", "title": "Admin travel record screen shows an empty state and the Re-notify button for a tab with nothing submitted", "owner_fr": "FR-008", "attrs": {"statement": "On the admin travel record screen, a tab with nothing submitted MUST show 'Awaiting submission'. The Passport tab then offers the Re-notify patient button, while the Flight and Hotel tabs offer Re-notify patient only in Path B because Path A flight and hotel entry is provider-owned. When no return flight record exists the Flight tab MUST show 'Return flight not yet submitted'.", "rationale": "prd.md lines 694, 727, 731, 761 (Screen 12 empty states and Re-notify availability)."}}
+  - {"op": "add_edge", "from": "REQ-008-081", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-008-081", "verb": "applies to", "to": "SCR-008-12"}
+  - {"op": "add_edge", "from": "REQ-008-081", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-008-081", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "add_node", "id": "REQ-008-082", "type": "Rule", "title": "Patient passport screen becomes a read-only confirmation view after submission", "owner_fr": "FR-008", "attrs": {"statement": "After a successful passport submission, the passport screen MUST change to a read-only confirmation view that shows Full Name, Date of Birth, Gender, Location, Place of Birth, Date of Issue, Date of Expiry and the masked Passport Number, and MUST NOT show the passport photo.", "rationale": "prd.md line 310 (Screen 1 Notes)."}}
+  - {"op": "add_edge", "from": "REQ-008-082", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-008-082", "verb": "applies to", "to": "SCR-008-01"}
+  - {"op": "add_edge", "from": "REQ-008-082", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-008-082", "verb": "decided by", "to": "SRC-PRD-008"}
+  - {"op": "update_node", "id": "REQ-008-064", "attrs": {"statement": "The provider Travel section MUST show status badges for the passport (Path A only; Awaiting, Submitted or Incomplete), the outbound flight, the return flight and the hotel (Not included, Awaiting or Submitted), updated in real time on submission and on admin correction, and MUST show the Awaiting states immediately when the booking becomes Confirmed. In Path A, View Passport appears, and Enter Flight and Enter Hotel appear only for included services that have not yet been submitted; services not included show 'Not included' with no entry action. In Path B only View Travel Details (read-only) is shown and the provider cannot enter or modify records."}}
+  - {"op": "update_node", "id": "REQ-008-061", "attrs": {"statement": "A closed TravelContext MUST reject new passport, flight and hotel records, patient re-notification and admin corrections; its records stay read-only with their audit history, and Enter Flight, Enter Hotel, Re-notify patient, Confirm Travel Dates and Apply Correction are not available. The patient itinerary is then read-only and shows no submission links. Any external flight or hotel cancellation is coordinated outside the platform under the governing booking policy; FR-008 MUST NOT calculate refunds or cancellation fees.", "rationale": "prd.md lines 431, 464, 650, 807 (checked against the PRD text)."}}
+  - {"op": "add_edge", "from": "REQ-008-061", "verb": "applies to", "to": "SCR-008-05"}
+  - {"op": "add_edge", "from": "REQ-008-016", "verb": "applies to", "to": "ENT-travel-audit-entry"}
+  - {"op": "add_edge", "from": "REQ-008-070", "verb": "applies to", "to": "ENT-travel-audit-entry"}
+  - {"op": "add_edge", "from": "REQ-008-050", "verb": "applies to", "to": "ENT-travel-audit-entry"}
+  - {"op": "add_edge", "from": "REQ-008-018", "verb": "applies to", "to": "ENT-quote-option.included_services"}
+  - {"op": "add_node", "id": "STP-008-021", "type": "Step", "title": "System sends the passport request to the patient", "owner_fr": "FR-008", "attrs": {"prd_ref": "Main Flow 1 step A2"}}
+  - {"op": "add_edge", "from": "STP-008-021", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-008-021", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-008-021", "verb": "applies", "to": "REQ-008-005"}
+  - {"op": "add_edge", "from": "STP-008-021", "verb": "applies", "to": "REQ-008-020"}
+  - {"op": "add_edge", "from": "STP-008-021", "verb": "applies", "to": "REQ-008-027"}
+  - {"op": "add_edge", "from": "STP-008-021", "verb": "applies", "to": "REQ-008-071"}
+  - {"op": "add_node", "id": "STP-008-022", "type": "Step", "title": "System stores the passport and notifies the provider", "owner_fr": "FR-008", "attrs": {"prd_ref": "Main Flow 1 step A6; Alternative Flow A1 step A1S5"}}
+  - {"op": "add_edge", "from": "STP-008-022", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-008-022", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-008-022", "verb": "applies", "to": "REQ-008-002"}
+  - {"op": "add_edge", "from": "STP-008-022", "verb": "applies", "to": "REQ-008-004"}
+  - {"op": "add_edge", "from": "STP-008-022", "verb": "applies", "to": "REQ-008-017"}
+  - {"op": "add_edge", "from": "STP-008-022", "verb": "applies", "to": "REQ-008-042"}
+  - {"op": "add_edge", "from": "STP-008-022", "verb": "applies", "to": "REQ-008-071"}
+  - {"op": "add_node", "id": "STP-008-023", "type": "Step", "title": "System stores the travel records and refreshes the itinerary", "owner_fr": "FR-008", "attrs": {"prd_ref": "Main Flow 1 step A14"}}
+  - {"op": "add_edge", "from": "STP-008-023", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-008-023", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-008-023", "verb": "applies", "to": "REQ-008-014"}
+  - {"op": "add_edge", "from": "STP-008-023", "verb": "applies", "to": "REQ-008-016"}
+  - {"op": "add_edge", "from": "STP-008-023", "verb": "applies", "to": "REQ-008-033"}
+  - {"op": "add_node", "id": "STP-008-024", "type": "Step", "title": "System notifies the patient that travel details are confirmed", "owner_fr": "FR-008", "attrs": {"prd_ref": "Main Flow 1 step A15"}}
+  - {"op": "add_edge", "from": "STP-008-024", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-008-024", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-008-024", "verb": "applies", "to": "REQ-008-021"}
+  - {"op": "add_edge", "from": "STP-008-024", "verb": "applies", "to": "REQ-008-071"}
+  - {"op": "remove_edge", "from": "FLW-008-main-provider-included", "verb": "starts at", "to": "STP-008-001"}
+  - {"op": "add_edge", "from": "FLW-008-main-provider-included", "verb": "starts at", "to": "STP-008-021"}
+  - {"op": "add_edge", "from": "STP-008-021", "verb": "next", "to": "STP-008-001", "attrs": {"label": "Patient receives the passport request"}}
+  - {"op": "remove_edge", "from": "STP-008-001", "verb": "next", "to": "STP-008-002"}
+  - {"op": "remove_edge", "from": "STP-008-014", "verb": "next", "to": "STP-008-002"}
+  - {"op": "add_edge", "from": "STP-008-001", "verb": "next", "to": "STP-008-022", "attrs": {"label": "Passport accepted"}}
+  - {"op": "add_edge", "from": "STP-008-014", "verb": "next", "to": "STP-008-022", "attrs": {"label": "Passport accepted"}}
+  - {"op": "add_edge", "from": "STP-008-022", "verb": "next", "to": "STP-008-002", "attrs": {"label": "Provider notified: Passport Submitted", "condition": "REQ-008-004"}}
+  - {"op": "remove_edge", "from": "STP-008-003", "verb": "next", "to": "STP-008-006"}
+  - {"op": "remove_edge", "from": "STP-008-004", "verb": "next", "to": "STP-008-006"}
+  - {"op": "remove_edge", "from": "STP-008-005", "verb": "next", "to": "STP-008-006"}
+  - {"op": "add_edge", "from": "STP-008-003", "verb": "next", "to": "STP-008-023", "attrs": {"label": "Nothing further included"}}
+  - {"op": "add_edge", "from": "STP-008-004", "verb": "next", "to": "STP-008-023", "attrs": {"label": "No hotel included"}}
+  - {"op": "add_edge", "from": "STP-008-005", "verb": "next", "to": "STP-008-023", "attrs": {"label": "Itinerary complete"}}
+  - {"op": "add_edge", "from": "STP-008-023", "verb": "next", "to": "STP-008-024", "attrs": {"label": "Records stored"}}
+  - {"op": "add_edge", "from": "STP-008-024", "verb": "next", "to": "STP-008-006", "attrs": {"label": "Patient views the itinerary"}}
+  - {"op": "add_node", "id": "STP-008-025", "type": "Step", "title": "System sends the flight and hotel request to the patient", "owner_fr": "FR-008", "attrs": {"prd_ref": "Main Flow 2 step B2; Alternative Flow B1 step B1S1"}}
+  - {"op": "add_edge", "from": "STP-008-025", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-008-025", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-008-025", "verb": "applies", "to": "REQ-008-034"}
+  - {"op": "add_edge", "from": "STP-008-025", "verb": "applies", "to": "REQ-008-020"}
+  - {"op": "add_edge", "from": "STP-008-025", "verb": "applies", "to": "REQ-008-027"}
+  - {"op": "add_edge", "from": "STP-008-025", "verb": "applies", "to": "REQ-008-046"}
+  - {"op": "add_edge", "from": "STP-008-025", "verb": "applies", "to": "REQ-008-071"}
+  - {"op": "add_node", "id": "STP-008-026", "type": "Step", "title": "System stores the records and notifies the provider", "owner_fr": "FR-008", "attrs": {"prd_ref": "Main Flow 2 step B9"}}
+  - {"op": "add_edge", "from": "STP-008-026", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-008-026", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-008-026", "verb": "applies", "to": "REQ-008-016"}
+  - {"op": "add_edge", "from": "STP-008-026", "verb": "applies", "to": "REQ-008-022"}
+  - {"op": "add_edge", "from": "STP-008-026", "verb": "applies", "to": "REQ-008-071"}
+  - {"op": "add_node", "id": "STP-008-027", "type": "Step", "title": "System records that no travel is required", "owner_fr": "FR-008", "attrs": {"prd_ref": "Alternative Flow B1 steps B1S5-B1S6; Main Flow 2 step B4"}}
+  - {"op": "add_edge", "from": "STP-008-027", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-008-027", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-008-027", "verb": "applies", "to": "REQ-008-058"}
+  - {"op": "add_edge", "from": "STP-008-027", "verb": "applies", "to": "REQ-008-016"}
+  - {"op": "remove_edge", "from": "FLW-008-main-patient-self-booked", "verb": "starts at", "to": "STP-008-007"}
+  - {"op": "add_edge", "from": "FLW-008-main-patient-self-booked", "verb": "starts at", "to": "STP-008-025"}
+  - {"op": "remove_edge", "from": "FLW-008-no-travel-required", "verb": "starts at", "to": "STP-008-007"}
+  - {"op": "add_edge", "from": "FLW-008-no-travel-required", "verb": "starts at", "to": "STP-008-025"}
+  - {"op": "add_edge", "from": "STP-008-025", "verb": "next", "to": "STP-008-007", "attrs": {"label": "Patient receives the flight and hotel request"}}
+  - {"op": "remove_edge", "from": "STP-008-011", "verb": "next", "to": "STP-008-012"}
+  - {"op": "add_edge", "from": "STP-008-011", "verb": "next", "to": "STP-008-026", "attrs": {"label": "Records submitted", "condition": "REQ-008-022"}}
+  - {"op": "add_edge", "from": "STP-008-026", "verb": "next", "to": "STP-008-012", "attrs": {"label": "Provider notified", "condition": "REQ-008-022"}}
+  - {"op": "remove_edge", "from": "STP-008-008", "verb": "next", "to": "STP-008-006"}
+  - {"op": "add_edge", "from": "STP-008-008", "verb": "next", "to": "STP-008-027", "attrs": {"label": "No travel needed"}}
+  - {"op": "add_edge", "from": "STP-008-027", "verb": "next", "to": "STP-008-006", "attrs": {"label": "Itinerary shows No travel required"}}
+  - {"op": "add_node", "id": "STP-008-028", "type": "Step", "title": "System refreshes the itinerary and notifies patient and provider of the correction", "owner_fr": "FR-008", "attrs": {"prd_ref": "Alternative Flow A2 steps A2S6-A2S7"}}
+  - {"op": "add_edge", "from": "STP-008-028", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-008-028", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-008-028", "verb": "applies", "to": "REQ-008-014"}
+  - {"op": "add_edge", "from": "STP-008-028", "verb": "applies", "to": "REQ-008-021"}
+  - {"op": "add_edge", "from": "STP-008-028", "verb": "applies", "to": "REQ-008-022"}
+  - {"op": "add_edge", "from": "STP-008-028", "verb": "applies", "to": "REQ-008-071"}
+  - {"op": "add_edge", "from": "STP-008-019", "verb": "next", "to": "STP-008-028", "attrs": {"label": "Correction applied"}}
+  - {"op": "add_node", "id": "STP-008-029", "type": "Step", "title": "System closes the original TravelContext", "owner_fr": "FR-008", "attrs": {"prd_ref": "Alternative Flow B2 step B2S2"}}
+  - {"op": "add_edge", "from": "STP-008-029", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-008-029", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-008-029", "verb": "applies", "to": "REQ-008-032"}
+  - {"op": "add_edge", "from": "STP-008-029", "verb": "applies", "to": "REQ-008-061"}
+  - {"op": "add_edge", "from": "STP-008-029", "verb": "applies", "to": "REQ-008-073"}
+  - {"op": "add_node", "id": "STP-008-030", "type": "Step", "title": "System creates the replacement TravelContext from the acceptance snapshot", "owner_fr": "FR-008", "attrs": {"prd_ref": "Alternative Flow B2 step B2S3"}}
+  - {"op": "add_edge", "from": "STP-008-030", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-008-030", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-008-030", "verb": "applies", "to": "REQ-008-025"}
+  - {"op": "add_edge", "from": "STP-008-030", "verb": "applies", "to": "REQ-008-026"}
+  - {"op": "add_edge", "from": "STP-008-030", "verb": "applies", "to": "REQ-008-032"}
+  - {"op": "add_node", "id": "STP-008-031", "type": "Step", "title": "System copies the passport record to the replacement TravelContext", "owner_fr": "FR-008", "attrs": {"prd_ref": "Alternative Flow B2 step B2S4"}}
+  - {"op": "add_edge", "from": "STP-008-031", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-008-031", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-008-031", "verb": "applies", "to": "REQ-008-032"}
+  - {"op": "add_node", "id": "STP-008-032", "type": "Step", "title": "System copies the flight and hotel records to the replacement TravelContext", "owner_fr": "FR-008", "attrs": {"prd_ref": "Alternative Flow B2 step B2S5"}}
+  - {"op": "add_edge", "from": "STP-008-032", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-008-032", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-008-032", "verb": "applies", "to": "REQ-008-032"}
+  - {"op": "add_node", "id": "STP-008-033", "type": "Step", "title": "System sets the review state and notifies patient, replacement provider and admin", "owner_fr": "FR-008", "attrs": {"prd_ref": "Alternative Flow B2 step B2S6"}}
+  - {"op": "add_edge", "from": "STP-008-033", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-008-033", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-008-033", "verb": "applies", "to": "REQ-008-032"}
+  - {"op": "add_edge", "from": "STP-008-033", "verb": "applies", "to": "REQ-008-072"}
+  - {"op": "add_edge", "from": "STP-008-033", "verb": "applies", "to": "REQ-008-071"}
+  - {"op": "remove_edge", "from": "FLW-008-provider-fault-transfer", "verb": "starts at", "to": "STP-008-020"}
+  - {"op": "add_edge", "from": "FLW-008-provider-fault-transfer", "verb": "starts at", "to": "STP-008-029"}
+  - {"op": "add_edge", "from": "STP-006-608", "verb": "next", "to": "STP-008-029", "attrs": {"label": "Original TravelContext closes"}}
+  - {"op": "add_edge", "from": "STP-008-029", "verb": "next", "to": "STP-008-030", "attrs": {"label": "Replacement booking confirmed"}}
+  - {"op": "add_edge", "from": "STP-008-030", "verb": "next", "to": "STP-008-031", "attrs": {"label": "TravelContext created"}}
+  - {"op": "add_edge", "from": "STP-008-031", "verb": "next", "to": "STP-008-032", "attrs": {"label": "Passport copied"}}
+  - {"op": "add_edge", "from": "STP-008-032", "verb": "next", "to": "STP-008-033", "attrs": {"label": "Flight and hotel copied"}}
+  - {"op": "add_edge", "from": "STP-008-033", "verb": "next", "to": "STP-008-020", "attrs": {"label": "Admin reviews the copied dates"}}
