@@ -1,0 +1,6 @@
+reason: "Three support case Field descriptions still carried limits that both the FR-034 and FR-035 PRDs replaced: description is 20 to 5000 characters (FR-034 prd.md lines 431, 1225), attachments are up to 5 files per message (lines 433, 1226), and the reply stays open on Resolved cases (FR-035 prd.md lines 402, 410). The PRD wins."
+by: controller
+operations:
+  - {"op": "update_node", "id": "ENT-support-case.description", "attrs": {"description": "Support request message or feedback description: min 20 chars, max 5000 chars."}}
+  - {"op": "update_node", "id": "ENT-support-case-message.attachments", "attrs": {"description": "Attach files to reply message. Max 5 files per message, 10MB per file, formats: JPG, PNG, PDF, DOC, DOCX"}}
+  - {"op": "update_node", "id": "ENT-support-case-message.content", "attrs": {"description": "Message composer for replying to admin. Shown for Open, In Progress and Resolved cases; hidden only for Closed cases; Character counter displayed"}}

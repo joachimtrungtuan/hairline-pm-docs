@@ -1,0 +1,44 @@
+reason: "FR-037 completeness re-check 2026-11-21: required flags of always-present derived fields, four plainly stated screen behaviours the graph lacked (Previous/Next log, signed PDF download, withdrawn case leaves the queue, Assign and Share only in pending states), and a stale rationale on the PDF Rule."
+by: controller
+operations:
+  # Stale rationale: Screen 6 now states that the completion PDF includes provider advice, so the old "Screen 6 does not" remark is wrong
+  - {"op": "update_node", "id": "REQ-037-009", "attrs": {"rationale": "prd.md lines 183, 332 (the workflow and the Screen 6 business rule both state that the completion PDF includes the provider advice for advice-mode cases, and that provider advice appears in the completion PDF only), Screens 5 and 6."}}
+  # Required flags: Screen Required column is Yes and a value exists on every record of the entity (derived values, or a list that may be empty)
+  - {"op": "update_field", "id": "ENT-monitoring-case.logged_days", "required": true}
+  - {"op": "update_field", "id": "ENT-monitoring-case.severity_trend", "required": true}
+  - {"op": "update_field", "id": "ENT-monitoring-case.monitoring_period", "required": true}
+  - {"op": "update_field", "id": "ENT-monitoring-case.scan_count", "required": true}
+  - {"op": "update_field", "id": "ENT-monitoring-case.severity_summary", "required": true}
+  - {"op": "update_field", "id": "ENT-monitoring-case.latest_severity", "required": true}
+  - {"op": "update_field", "id": "ENT-monitoring-conversion.carried_over_preview", "required": true}
+  - {"op": "update_field", "id": "ENT-monitoring-conversion.items_still_needed", "required": true}
+  - {"op": "update_field", "id": "ENT-monitoring-advice.is_edited", "required": true}
+  - {"op": "update_field", "id": "ENT-monitoring-advice-window.availability", "required": true}
+  # New Rules (statement is the PRD behaviour; PRD is the Source)
+  - {"op": "add_node", "id": "REQ-037-091", "type": "Rule", "owner_fr": "FR-037", "title": "Provider can move between the patient daily logs of an assigned case", "attrs": {"statement": "On Provider Daily Log Detail, the provider can move between the patient-authored daily logs of the case, for an assigned case only.", "rationale": "prd.md lines 440 (Screen 10A, Previous / Next Log: moves between patient-authored daily logs in the case; assigned case only)"}}
+  - {"op": "add_node", "id": "REQ-037-092", "type": "Rule", "owner_fr": "FR-037", "title": "Summary PDF download only when ready, through a signed access link", "attrs": {"statement": "The patient can download the summary PDF only once it is ready, through a signed access link.", "rationale": "prd.md lines 329 (Screen 6, Download PDF: downloads the ready report; signed access link)"}}
+  - {"op": "add_node", "id": "REQ-037-093", "type": "Rule", "owner_fr": "FR-037", "title": "Withdrawn case leaves the provider queue at once", "attrs": {"statement": "A withdrawn case leaves the provider's queue immediately after the withdrawal is confirmed.", "rationale": "prd.md lines 406 (Screen 8 business rules: withdrawing removes the case from this queue immediately after confirmation)"}}
+  - {"op": "add_node", "id": "REQ-037-094", "type": "Rule", "owner_fr": "FR-037", "title": "Assign Provider and Share Case Preview only in pending states", "attrs": {"statement": "Admin can assign a provider and share a case preview with a candidate provider only while the case is in Pending Assignment or Pending Reassignment.", "rationale": "prd.md lines 503-504 (Screen 12, Assign Provider: pending states only; Share Case Preview: pending assignment or reassignment only)"}}
+  - {"op": "add_edge", "from": "REQ-037-091", "verb": "applies at", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "REQ-037-091", "verb": "applies to", "to": "SCR-037-11"}
+  - {"op": "add_edge", "from": "REQ-037-091", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-037-091", "verb": "decided by", "to": "SRC-PRD-037"}
+  - {"op": "add_edge", "from": "STP-037-010", "verb": "applies", "to": "REQ-037-091"}
+  - {"op": "add_edge", "from": "REQ-037-092", "verb": "applies at", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "REQ-037-092", "verb": "applies to", "to": "SCR-037-06"}
+  - {"op": "add_edge", "from": "REQ-037-092", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-037-092", "verb": "applies to", "to": "ENT-monitoring-export.pdf_media"}
+  - {"op": "add_edge", "from": "REQ-037-092", "verb": "decided by", "to": "SRC-PRD-037"}
+  - {"op": "add_edge", "from": "STP-037-036", "verb": "applies", "to": "REQ-037-092"}
+  - {"op": "add_edge", "from": "REQ-037-093", "verb": "applies at", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "REQ-037-093", "verb": "applies to", "to": "SCR-037-09"}
+  - {"op": "add_edge", "from": "REQ-037-093", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-037-093", "verb": "decided by", "to": "SRC-PRD-037"}
+  - {"op": "add_edge", "from": "STP-037-013", "verb": "applies", "to": "REQ-037-093"}
+  - {"op": "add_edge", "from": "REQ-037-094", "verb": "applies at", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "REQ-037-094", "verb": "applies to", "to": "SCR-037-14"}
+  - {"op": "add_edge", "from": "REQ-037-094", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-037-094", "verb": "applies to", "to": "ENT-monitoring-case.advice_state"}
+  - {"op": "add_edge", "from": "REQ-037-094", "verb": "decided by", "to": "SRC-PRD-037"}
+  - {"op": "add_edge", "from": "STP-037-015", "verb": "applies", "to": "REQ-037-094"}
+  - {"op": "add_edge", "from": "STP-037-016", "verb": "applies", "to": "REQ-037-094"}

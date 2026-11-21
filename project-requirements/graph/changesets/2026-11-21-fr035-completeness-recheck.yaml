@@ -1,0 +1,36 @@
+reason: "FR-035 completeness re-check 2026-11-21: behaviours that lived only in Rule rationale text move into the Rule statement (FAQ topic header and answer display, All default filter, thank-you confirmation, 2 to 4 related items, resource preview and download, transcript view, no-results message, resolution summary condition, title never auto-generated, retry with backoff), and four screen behaviours get their own Rule (Create New Ticket button, empty thread message, attachment thumbnail with remove, text sanitisation)"
+by: controller
+operations:
+  # Statements extended from the PRD as it reads today (rationale text is kept as is)
+  - {"op": "update_node", "id": "REQ-035-003", "attrs": {"statement": "System MUST display FAQ content in collapsible accordion sections organized by admin-defined topics (FR-033 REQ-033-006); each topic header shows the topic name and item count and expands or collapses on tap; an FAQ answer expands inline or opens an FAQ detail view, and supports formatted text and inline images"}}
+  - {"op": "update_node", "id": "REQ-035-004", "attrs": {"statement": "System MUST display article content with subtype filtering (Tutorial Guides, Troubleshooting Tips); the filter chips are All (the default), Tutorial Guides and Troubleshooting Tips"}}
+  - {"op": "update_node", "id": "REQ-035-005", "attrs": {"statement": "System MUST support in-app video playback for video tutorials with play/pause, seek, and fullscreen controls; the transcript link, when present, opens the transcript in a scrollable text view"}}
+  - {"op": "update_node", "id": "REQ-035-006", "attrs": {"statement": "System MUST support in-app file preview and download for resource documents; the preview shows at least the first page, and Download shows a progress indicator and saves the file to the device downloads folder"}}
+  - {"op": "update_node", "id": "REQ-035-007", "attrs": {"statement": "System MUST provide \"Was this helpful?\" binary feedback on all content types, with feedback aggregated anonymously at the content level (FR-033 Privacy Rule 2); tapping Yes or No shows the confirmation \"Thank you for your feedback\""}}
+  - {"op": "update_node", "id": "REQ-035-008", "attrs": {"statement": "System MUST display 2 to 4 related content suggestions (admin-configured via FR-033) that may cross content types"}}
+  - {"op": "update_node", "id": "REQ-035-009", "attrs": {"statement": "System MUST allow patients to submit support requests via Contact Support form with title (10-200 chars, entered by the patient and never auto-generated), category, description (20-5000 chars), priority, and optional file attachments (FR-034 REQ-034-020, REQ-034-030, REQ-034-031, REQ-034-035)"}}
+  - {"op": "update_node", "id": "REQ-035-021", "attrs": {"statement": "System MUST display resolution summary when the case is Resolved or Closed and admin has provided one (FR-034 REQ-034-059, REQ-034-060)"}}
+  - {"op": "update_node", "id": "REQ-035-038", "attrs": {"statement": "Patient taps No on Was this helpful? or sees no search results; System displays Still need help? Contact Support CTA, and the no-results message \"No results for '[query]'. Try different keywords or Contact Support.\"; Patient taps Contact Support; System displays Contact Support form (Screen 5)."}}
+  - {"op": "update_node", "id": "REQ-035-062", "attrs": {"statement": "A support request submitted while offline is queued locally and submitted when connectivity is restored, with clear indication to the patient; a submission to FR-034 that fails with a server error (5xx) is retried with exponential backoff."}}
+  # New Rules for screen behaviours that were not carried by any Rule
+  - {"op": "add_node", "id": "REQ-035-086", "type": "Rule", "owner_fr": "FR-035", "title": "Create New Ticket button always visible and returns to the list", "attrs": {"statement": "The Create New Ticket button on My Support Tickets is always visible and opens the Contact Support form (Screen 5); on successful submission the patient sees the confirmation and then returns to the ticket list (Screen 3).", "rationale": "prd.md lines 357 (Screen 3 Create New Ticket Button: opens Contact Support Form, confirmation then returns to the ticket list, always visible)."}}
+  - {"op": "add_edge", "from": "REQ-035-086", "verb": "applies to", "to": "SCR-035-03", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-035-086", "verb": "applies to", "to": "SCR-035-05", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-035-086", "verb": "applies at", "to": "STG-patient-03-active", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-035-086", "verb": "decided by", "to": "SRC-PRD-035", "attrs": {}}
+  - {"op": "add_node", "id": "REQ-035-087", "type": "Rule", "owner_fr": "FR-035", "title": "Empty thread message on a new case", "attrs": {"statement": "When no messages exist yet on a case (the case was just created), Ticket Detail shows \"Your case has been submitted. Our team will respond within 24 hours.\"", "rationale": "prd.md lines 406 (Screen 4 Empty Thread State)."}}
+  - {"op": "add_edge", "from": "REQ-035-087", "verb": "applies to", "to": "SCR-035-04", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-035-087", "verb": "applies at", "to": "STG-patient-03-active", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-035-087", "verb": "decided by", "to": "SRC-PRD-035", "attrs": {}}
+  - {"op": "add_node", "id": "REQ-035-088", "type": "Rule", "owner_fr": "FR-035", "title": "Attached files show a thumbnail and can be removed", "attrs": {"statement": "On the Contact Support form, each attached file shows a thumbnail preview with a remove option, so the patient can take it off before submitting.", "rationale": "prd.md lines 434 (Screen 5 Attachments: tap to add; shows thumbnail preview with remove option)."}}
+  - {"op": "add_edge", "from": "REQ-035-088", "verb": "applies to", "to": "SCR-035-05", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-035-088", "verb": "applies to", "to": "ENT-support-case.attachments", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-035-088", "verb": "applies at", "to": "STG-patient-03-active", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-035-088", "verb": "decided by", "to": "SRC-PRD-035", "attrs": {}}
+  - {"op": "add_node", "id": "REQ-035-089", "type": "Rule", "owner_fr": "FR-035", "title": "Text entered by the patient is sanitised", "attrs": {"statement": "Input sanitization applies to all text fields the patient fills in (search, support request title and description, ticket replies).", "rationale": "prd.md lines 642 (Security Considerations, Threat mitigation: input sanitization for all text fields)."}}
+  - {"op": "add_edge", "from": "REQ-035-089", "verb": "applies to", "to": "SCR-035-01", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-035-089", "verb": "applies to", "to": "SCR-035-02", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-035-089", "verb": "applies to", "to": "SCR-035-04", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-035-089", "verb": "applies to", "to": "SCR-035-05", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-035-089", "verb": "applies at", "to": "STG-patient-03-active", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-035-089", "verb": "decided by", "to": "SRC-PRD-035", "attrs": {}}

@@ -1,0 +1,26 @@
+reason: "FR-038 completeness re-check 2026-11-21: Flow A2 steps 5 to 7 (review and edit copied information, select a package and continue to checkout, system links the records and completes the case) are stated by the PRD and absent from the graph"
+by: controller
+operations:
+  - {"op": "add_node", "id": "STP-038-054", "type": "Step", "title": "Patient reviews and may edit any copied information", "owner_fr": "FR-038", "attrs": {"prd_ref": "A2 step 5"}}
+  - {"op": "add_node", "id": "STP-038-055", "type": "Step", "title": "Patient selects an available aftercare package and continues to FR-011 checkout", "owner_fr": "FR-038", "attrs": {"prd_ref": "A2 step 6"}}
+  - {"op": "add_node", "id": "STP-038-056", "type": "Step", "title": "System links the records and completes the monitoring case on successful standalone-request creation", "owner_fr": "FR-038", "attrs": {"prd_ref": "A2 step 7"}}
+  - {"op": "add_edge", "from": "STP-038-054", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-038-054", "verb": "at", "to": "STG-monitoring-03-conversion"}
+  - {"op": "add_edge", "from": "STP-038-054", "verb": "on", "to": "SCR-038-06"}
+  - {"op": "add_edge", "from": "STP-038-054", "verb": "applies", "to": "REQ-037-021"}
+  - {"op": "add_edge", "from": "STP-038-054", "verb": "applies", "to": "REQ-038-067"}
+  - {"op": "add_edge", "from": "STP-038-055", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-038-055", "verb": "at", "to": "STG-monitoring-03-conversion"}
+  - {"op": "add_edge", "from": "STP-038-055", "verb": "on", "to": "SCR-038-06"}
+  - {"op": "add_edge", "from": "STP-038-055", "verb": "applies", "to": "REQ-038-065"}
+  - {"op": "add_edge", "from": "STP-038-055", "verb": "applies", "to": "REQ-038-066"}
+  - {"op": "add_edge", "from": "STP-038-055", "verb": "applies", "to": "REQ-038-074"}
+  - {"op": "add_edge", "from": "STP-038-056", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-038-056", "verb": "at", "to": "STG-monitoring-03-conversion"}
+  - {"op": "add_edge", "from": "STP-038-056", "verb": "applies", "to": "REQ-038-015"}
+  - {"op": "add_edge", "from": "STP-038-056", "verb": "applies", "to": "REQ-038-016"}
+  - {"op": "add_edge", "from": "STP-038-056", "verb": "applies", "to": "REQ-038-044"}
+  - {"op": "add_edge", "from": "STP-038-025", "verb": "next", "to": "STP-038-054"}
+  - {"op": "add_edge", "from": "STP-038-054", "verb": "next", "to": "STP-038-055"}
+  - {"op": "add_edge", "from": "STP-038-055", "verb": "next", "to": "STP-038-056"}
+  - {"op": "add_edge", "from": "STP-038-055", "verb": "next", "to": "STP-038-051", "attrs": {"label": "Request validation or creation does not complete", "condition": "REQ-038-068"}}
