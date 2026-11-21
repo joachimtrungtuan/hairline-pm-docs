@@ -1,0 +1,22 @@
+reason: "FR-020 completeness re-check 2026-11-21: add the two owner-ruled Business Rules the PRD now states (Notification Rule Owns the Details, Event Ownership) and move the admin-dropdown Rules to the admin Stage that already holds Screen SCR-020-03."
+by: controller
+operations:
+  - {"op": "add_node", "id": "REQ-020-156", "type": "Rule", "owner_fr": "FR-020", "title": "The notification Rule is the one place for recipients, content and switch-off", "attrs": {"statement": "For each notice, the notification Rule (the one in this PRD, or the FR-030 catalogue Rule where this PRD's catalogue row is a pointer) is the one place that states recipients, content and whether the notice can be switched off. A feature FR states only what is its own (when the event happens, what the screen does, what is audited) and points to the notification Rule.", "rationale": "prd.md lines 305 (Business Rules, Notification Rule Owns the Details)"}}
+  - {"op": "add_edge", "from": "REQ-020-156", "verb": "applies at", "to": "STG-platform-01-all-stages"}
+  - {"op": "add_edge", "from": "REQ-020-156", "verb": "decided by", "to": "SRC-PRD-020"}
+  - {"op": "add_node", "id": "REQ-020-157", "type": "Rule", "owner_fr": "FR-020", "title": "An event that produces a notification belongs to the FR-030 catalogue", "attrs": {"statement": "An event that produces a notification belongs to the FR-030 catalogue, and this PRD cites it. This includes the provider.* events, `inquiry.ttfq_sla_breached` and `analytics.export_ready`. An event that produces no notification belongs to the FR that triggers it.", "rationale": "prd.md lines 307 (Business Rules, Event Ownership); also line 38"}}
+  - {"op": "add_edge", "from": "REQ-020-157", "verb": "applies at", "to": "STG-platform-01-all-stages"}
+  - {"op": "add_edge", "from": "REQ-020-157", "verb": "decided by", "to": "SRC-PRD-020"}
+  - {"op": "remove_edge", "from": "REQ-020-010", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-020-010", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-020-064", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-020-064", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-020-067", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-020-067", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "remove_edge", "from": "REQ-020-070", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-020-070", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-020-070", "verb": "applies to", "to": "SCR-020-03"}
+  - {"op": "add_edge", "from": "REQ-020-059", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-020-061", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-020-065", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-020-066", "verb": "applies at", "to": "STG-admin-01-configuration"}

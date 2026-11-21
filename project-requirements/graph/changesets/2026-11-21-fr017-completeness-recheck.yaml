@@ -1,0 +1,97 @@
+reason: "FR-017 completeness re-check 2026-11-21: payout dispute flow (Alternative Flow B1), three missing Rules, payout-Stage Event emits, payout method field, and the Step title and Rule links the PRD now states"
+by: controller
+operations:
+  - {"op": "add_node", "id": "REQ-017-182", "type": "Rule", "owner_fr": "FR-017", "title": "Outstanding invoice alert after the overdue threshold", "attrs": {"statement": "The admin gets an internal alert (email and push) for an overdue patient invoice once the invoice has been overdue for the alert threshold. The threshold is an admin setting expressed in days overdue, and no default is set yet.", "rationale": "prd.md lines 98, 1201 (Notification table and Admin Editability)."}}
+  - {"op": "add_edge", "from": "REQ-017-182", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-017-182", "verb": "applies to", "to": "EVT-billing-outstanding-invoice-alert"}
+  - {"op": "add_edge", "from": "REQ-017-182", "verb": "governed by", "to": "SET-outstanding-invoice-alert-threshold"}
+  - {"op": "add_edge", "from": "REQ-017-182", "verb": "decided by", "to": "SRC-PRD-017"}
+  - {"op": "add_node", "id": "REQ-017-183", "type": "Rule", "owner_fr": "FR-017", "title": "Daily 3 AM UTC check of upcoming installment payments", "attrs": {"statement": "Scheduled cron jobs check for upcoming installment payments once a day at 3 AM UTC.", "rationale": "prd.md line 124 (Automated Triggers)."}}
+  - {"op": "add_edge", "from": "REQ-017-183", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-017-183", "verb": "applies to", "to": "ENT-installment-payment"}
+  - {"op": "add_edge", "from": "REQ-017-183", "verb": "decided by", "to": "SRC-PRD-017"}
+  - {"op": "add_node", "id": "REQ-017-184", "type": "Rule", "owner_fr": "FR-017", "title": "Affiliate Retry Payout modal shows the failure context", "attrs": {"statement": "The Retry Payout confirmation modal on the Affiliate Billing screen shows the prior failure reason and the current payout readiness state of the affiliate payout before the admin confirms the retry.", "rationale": "prd.md lines 858-865 (Screen 6 Retry Payout Confirmation Modal, Failure context row at line 863)."}}
+  - {"op": "add_edge", "from": "REQ-017-184", "verb": "applies at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "REQ-017-184", "verb": "applies to", "to": "SCR-017-08"}
+  - {"op": "add_edge", "from": "REQ-017-184", "verb": "applies to", "to": "ENT-affiliate-commission"}
+  - {"op": "add_edge", "from": "REQ-017-184", "verb": "decided by", "to": "SRC-PRD-017"}
+  - {"op": "update_node", "id": "STP-017-037", "title": "Cron runs on the platform-wide cutoff day for manual-rail clinics"}
+  - {"op": "add_edge", "from": "STP-017-037", "verb": "applies", "to": "REQ-017-176"}
+  - {"op": "add_edge", "from": "STP-017-041", "verb": "applies", "to": "REQ-017-176"}
+  - {"op": "add_edge", "from": "STP-017-008", "verb": "applies", "to": "REQ-017-165"}
+  - {"op": "add_edge", "from": "STP-017-009", "verb": "applies", "to": "REQ-017-165"}
+  - {"op": "add_edge", "from": "STG-payout-01-statement", "verb": "emits", "to": "EVT-billing-statements-ready-for-review"}
+  - {"op": "add_edge", "from": "STG-payout-02-approval", "verb": "emits", "to": "EVT-billing-overdue-payout-alert"}
+  - {"op": "add_edge", "from": "STG-payout-03-transfer", "verb": "emits", "to": "EVT-billing-payout-failed"}
+  - {"op": "add_edge", "from": "STG-payout-03-transfer", "verb": "emits", "to": "EVT-payout-executed"}
+  - {"op": "add_edge", "from": "STG-payout-02-approval", "verb": "emits", "to": "EVT-billing-dispute-payout-added"}
+  - {"op": "add_node", "id": "STP-017-074", "type": "Step", "owner_fr": "FR-017", "title": "Provider contacts admin by support ticket to claim missing booking revenue", "attrs": {"prd_ref": "Alternative Flow B1 step 1", "handoff_to": "FR-034 (support ticket)"}}
+  - {"op": "add_edge", "from": "STP-017-074", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-017-074", "verb": "at", "to": "STG-payout-02-approval"}
+  - {"op": "add_edge", "from": "STP-017-074", "verb": "applies", "to": "REQ-017-045"}
+  - {"op": "add_node", "id": "STP-017-075", "type": "Step", "owner_fr": "FR-017", "title": "Admin searches the disputed Booking Reference in transaction history", "attrs": {"prd_ref": "Alternative Flow B1 step 2"}}
+  - {"op": "add_edge", "from": "STP-017-075", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-017-075", "verb": "at", "to": "STG-payout-02-approval"}
+  - {"op": "add_edge", "from": "STP-017-075", "verb": "on", "to": "SCR-017-09"}
+  - {"op": "add_edge", "from": "STP-017-075", "verb": "applies", "to": "REQ-017-109"}
+  - {"op": "add_edge", "from": "STP-017-075", "verb": "applies", "to": "REQ-017-045"}
+  - {"op": "add_node", "id": "STP-017-076", "type": "Step", "owner_fr": "FR-017", "title": "Booking not found: admin escalates to technical investigation and documents it in the audit trail", "attrs": {"prd_ref": "Alternative Flow B1 step 3a"}}
+  - {"op": "add_edge", "from": "STP-017-076", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-017-076", "verb": "at", "to": "STG-payout-02-approval"}
+  - {"op": "add_edge", "from": "STP-017-076", "verb": "on", "to": "SCR-017-09"}
+  - {"op": "add_edge", "from": "STP-017-076", "verb": "applies", "to": "REQ-017-045"}
+  - {"op": "add_node", "id": "STP-017-077", "type": "Step", "owner_fr": "FR-017", "title": "System displays the booking details and the expected net payout", "attrs": {"prd_ref": "Alternative Flow B1 step 4"}}
+  - {"op": "add_edge", "from": "STP-017-077", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-017-077", "verb": "at", "to": "STG-payout-02-approval"}
+  - {"op": "add_edge", "from": "STP-017-077", "verb": "on", "to": "SCR-017-09"}
+  - {"op": "add_edge", "from": "STP-017-077", "verb": "applies", "to": "REQ-017-045"}
+  - {"op": "add_node", "id": "STP-017-078", "type": "Step", "owner_fr": "FR-017", "title": "Admin checks the provider payout history for the booking completion date range", "attrs": {"prd_ref": "Alternative Flow B1 step 5"}}
+  - {"op": "add_edge", "from": "STP-017-078", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-017-078", "verb": "at", "to": "STG-payout-02-approval"}
+  - {"op": "add_edge", "from": "STP-017-078", "verb": "on", "to": "SCR-017-09"}
+  - {"op": "add_edge", "from": "STP-017-078", "verb": "applies", "to": "REQ-017-045"}
+  - {"op": "add_node", "id": "STP-017-079", "type": "Step", "owner_fr": "FR-017", "title": "Already paid: admin confirms the correct inclusion and shares the payout reference with the provider", "attrs": {"prd_ref": "Alternative Flow B1 step 7a"}}
+  - {"op": "add_edge", "from": "STP-017-079", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-017-079", "verb": "at", "to": "STG-payout-02-approval"}
+  - {"op": "add_edge", "from": "STP-017-079", "verb": "on", "to": "SCR-017-09"}
+  - {"op": "add_edge", "from": "STP-017-079", "verb": "applies", "to": "REQ-017-045"}
+  - {"op": "add_node", "id": "STP-017-080", "type": "Step", "owner_fr": "FR-017", "title": "Missing: admin confirms the booking was excluded from the payout", "attrs": {"prd_ref": "Alternative Flow B1 step 7b"}}
+  - {"op": "add_edge", "from": "STP-017-080", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-017-080", "verb": "at", "to": "STG-payout-02-approval"}
+  - {"op": "add_edge", "from": "STP-017-080", "verb": "on", "to": "SCR-017-09"}
+  - {"op": "add_edge", "from": "STP-017-080", "verb": "applies", "to": "REQ-017-045"}
+  - {"op": "add_node", "id": "STP-017-081", "type": "Step", "owner_fr": "FR-017", "title": "Admin adds the booking to the next scheduled payout with an internal note", "attrs": {"prd_ref": "Alternative Flow B1 step 8"}}
+  - {"op": "add_edge", "from": "STP-017-081", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-017-081", "verb": "at", "to": "STG-payout-02-approval"}
+  - {"op": "add_edge", "from": "STP-017-081", "verb": "on", "to": "SCR-017-09"}
+  - {"op": "add_edge", "from": "STP-017-081", "verb": "applies", "to": "REQ-017-110"}
+  - {"op": "add_node", "id": "STP-017-082", "type": "Step", "owner_fr": "FR-017", "title": "Admin notifies the provider that the booking is included in the next payout", "attrs": {"prd_ref": "Alternative Flow B1 step 9"}}
+  - {"op": "add_edge", "from": "STP-017-082", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-017-082", "verb": "at", "to": "STG-payout-02-approval"}
+  - {"op": "add_edge", "from": "STP-017-082", "verb": "on", "to": "SCR-017-09"}
+  - {"op": "add_edge", "from": "STP-017-082", "verb": "applies", "to": "REQ-017-111"}
+  - {"op": "add_node", "id": "STP-017-083", "type": "Step", "owner_fr": "FR-017", "title": "System logs the dispute resolution in the audit trail", "attrs": {"prd_ref": "Alternative Flow B1 step 10"}}
+  - {"op": "add_edge", "from": "STP-017-083", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-017-083", "verb": "at", "to": "STG-payout-02-approval"}
+  - {"op": "add_edge", "from": "STP-017-083", "verb": "applies", "to": "REQ-017-111"}
+  - {"op": "add_edge", "from": "STP-017-074", "verb": "next", "to": "STP-017-075"}
+  - {"op": "add_edge", "from": "STP-017-075", "verb": "next", "to": "STP-017-076", "attrs": {"label": "not found"}}
+  - {"op": "add_edge", "from": "STP-017-075", "verb": "next", "to": "STP-017-077", "attrs": {"label": "found"}}
+  - {"op": "add_edge", "from": "STP-017-077", "verb": "next", "to": "STP-017-078"}
+  - {"op": "add_edge", "from": "STP-017-078", "verb": "next", "to": "STP-017-079", "attrs": {"label": "already paid"}}
+  - {"op": "add_edge", "from": "STP-017-078", "verb": "next", "to": "STP-017-080", "attrs": {"label": "missing"}}
+  - {"op": "add_edge", "from": "STP-017-080", "verb": "next", "to": "STP-017-081"}
+  - {"op": "add_edge", "from": "STP-017-081", "verb": "next", "to": "STP-017-082"}
+  - {"op": "add_edge", "from": "STP-017-079", "verb": "next", "to": "STP-017-083"}
+  - {"op": "add_edge", "from": "STP-017-082", "verb": "next", "to": "STP-017-083"}
+  - {"op": "add_node", "id": "FLW-017-payout-dispute", "type": "Flow", "title": "Provider disputes a payout", "attrs": {"kind": "alternative", "description": "Provider disputes a payout; admin traces the booking and, when it was missed, adds it to the next payout.", "prd_ref": "Alternative Flow B1"}}
+  - {"op": "add_edge", "from": "FLW-017-payout-dispute", "verb": "starts at", "to": "STP-017-074"}
+  - {"op": "remove_edge", "from": "SCR-017-12", "verb": "shows", "to": "ENT-provider-payout.payout_frequency"}
+  - {"op": "retire_enum_value", "field_id": "ENT-provider-payout.payout_frequency", "value": "weekly"}
+  - {"op": "retire_enum_value", "field_id": "ENT-provider-payout.payout_frequency", "value": "twice_monthly"}
+  - {"op": "retire_enum_value", "field_id": "ENT-provider-payout.payout_frequency", "value": "monthly"}
+  - {"op": "retire_node", "id": "ENT-provider-payout.payout_frequency"}
+  - {"op": "add_field", "id": "ENT-provider-payout.payout_method", "entity_id": "ENT-provider-payout", "name": "payout_method", "data_type": "enum", "title": "Payout method", "owner_fr": "FR-017", "required": true, "attrs": {"description": "How the payout was made: Stripe Connect (one payout per released booking) or Manual bank transfer (weekly cycle). Screen 10 Payout Method; Key Entity 2."}}
+  - {"op": "add_enum_value", "field_id": "ENT-provider-payout.payout_method", "value": "stripe_connect", "label": "Stripe Connect", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-provider-payout.payout_method", "value": "manual_bank_transfer", "label": "Manual bank transfer", "sort_order": 1}
+  - {"op": "add_edge", "from": "SCR-017-12", "verb": "shows", "to": "ENT-provider-payout.payout_method", "attrs": {"provenance": "retrieved", "label": "Payout Method", "editable": false}}

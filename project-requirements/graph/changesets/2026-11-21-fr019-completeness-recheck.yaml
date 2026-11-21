@@ -1,0 +1,59 @@
+# Draft, not applied. FR-019 completeness re-check against the PRD edited 2026-11-20 (report: plans/reports/tester-261121-fr019-completeness-recheck.md).
+# Held file 2026-11-10-fr019-completeness-held.yaml: its one operation (REQ-019-014 decided by SRC-PO-001-Q6) is not taken; the owner ruling of 2026-11-10 23:05 keeps it held and Q6 concerns auto-applied promotions while REQ-019-014 covers provider-selected promotions and patient codes.
+reason: "FR-019 re-check of the open completeness rows against the 2026-11-20 PRD: five new Rules (ROI Estimate, Conversion Lift and Financial Impact Preview definitions, discount value range, soft-disable), five Rule statements aligned with their PRD lines (5-second and 1-second timings, Force-Revoke result, segment-mismatch feedback), missing applies to links, Screen 6 and 10 redemption window labels, and field descriptions that still call defined items open."
+by: controller
+operations:
+  - {"op": "add_node", "id": "REQ-019-111", "type": "Rule", "owner_fr": "FR-019", "title": "ROI Estimate is net gain over discount cost and reads Not yet calculated until the first redemption", "attrs": {"statement": "ROI Estimate (per program): net gain over discount cost, shown as a percentage: (revenue from bookings that used the program minus the discount given) divided by the discount given. Admin screens count Hairline's share of the revenue and the discount; provider screens count the provider's share. It shows `Not yet calculated` until the program has at least one redemption. The ROI Tier on Screen 1 is the admin-defined band that the ROI falls in.", "rationale": "prd.md lines 469 (Analytics Definitions: ROI Estimate), 232 (Screen 1 ROI Tier column)."}}
+  - {"op": "add_edge", "from": "REQ-019-111", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "add_edge", "from": "REQ-019-111", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-019-111", "verb": "applies to", "to": "ENT-promotion-report-snapshot.roi_estimate"}
+  - {"op": "add_edge", "from": "REQ-019-111", "verb": "applies to", "to": "ENT-promotion-program.roi_tier"}
+  - {"op": "add_edge", "from": "REQ-019-111", "verb": "applies to", "to": "SCR-019-01"}
+  - {"op": "add_edge", "from": "REQ-019-111", "verb": "applies to", "to": "SCR-019-06"}
+  - {"op": "add_edge", "from": "REQ-019-111", "verb": "applies to", "to": "SCR-019-10"}
+  - {"op": "add_edge", "from": "REQ-019-111", "verb": "decided by", "to": "SRC-PRD-019"}
+  - {"op": "add_node", "id": "REQ-019-112", "type": "Rule", "owner_fr": "FR-019", "title": "Conversion Lift compares acceptance of quotes with and without the program and is hidden below the minimum quote count", "attrs": {"statement": "Conversion Lift: the acceptance percentage of quotes carrying the program minus the acceptance percentage of quotes without any promotion, for the same provider (the whole platform on admin screens) and the same period, in percentage points. It is shown only where both sides have at least the admin-set minimum number of quotes (launch default: 20 quotes on each side); below that the lift is not shown.", "rationale": "prd.md lines 470 (Analytics Definitions: Conversion Lift), 634 (Screen 10), 755 (Admin Editability Rules)."}}
+  - {"op": "add_edge", "from": "REQ-019-112", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "add_edge", "from": "REQ-019-112", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-019-112", "verb": "applies to", "to": "ENT-promotion-report-snapshot.conversion_lift"}
+  - {"op": "add_edge", "from": "REQ-019-112", "verb": "applies to", "to": "SCR-019-06"}
+  - {"op": "add_edge", "from": "REQ-019-112", "verb": "applies to", "to": "SCR-019-10"}
+  - {"op": "add_edge", "from": "REQ-019-112", "verb": "governed by", "to": "SET-promotion-conversion-lift-min-quotes"}
+  - {"op": "add_edge", "from": "REQ-019-112", "verb": "decided by", "to": "SRC-PRD-019"}
+  - {"op": "add_node", "id": "REQ-019-113", "type": "Rule", "owner_fr": "FR-019", "title": "Financial Impact Preview is the provider's last 30 days of booking value times the discount percent times the provider's funded share", "attrs": {"statement": "Financial Impact Preview (Screen 7): the provider's booking value in the last 30 days x the discount % x the provider's funded share of the discount.", "rationale": "prd.md lines 471 (Analytics Definitions: Financial Impact Preview), 532 (Screen 7 campaign card)."}}
+  - {"op": "add_edge", "from": "REQ-019-113", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-019-113", "verb": "applies to", "to": "ENT-promotion-adoption.financial_impact_preview"}
+  - {"op": "add_edge", "from": "REQ-019-113", "verb": "applies to", "to": "SCR-019-07"}
+  - {"op": "add_edge", "from": "REQ-019-113", "verb": "decided by", "to": "SRC-PRD-019"}
+  - {"op": "add_node", "id": "REQ-019-114", "type": "Rule", "owner_fr": "FR-019", "title": "Discount Value must be within the range for its type and not above the configurable maximum", "attrs": {"statement": "The Value of a promotion program is required and must be within the range allowed for its Discount Type and not above the configurable maximum discount value; the same applies on the admin form and the provider form.", "rationale": "prd.md lines 274 (Screen 2 Value: range per type, max configurable), 593 (Screen 9 Value: per type rules), 592 (Discount Type: per policy caps). The PRD gives no range per type and no figure for the maximum."}}
+  - {"op": "add_edge", "from": "REQ-019-114", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "add_edge", "from": "REQ-019-114", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-019-114", "verb": "applies to", "to": "ENT-promotion-program.value"}
+  - {"op": "add_edge", "from": "REQ-019-114", "verb": "applies to", "to": "SCR-019-02"}
+  - {"op": "add_edge", "from": "REQ-019-114", "verb": "applies to", "to": "SCR-019-09"}
+  - {"op": "add_edge", "from": "REQ-019-114", "verb": "governed by", "to": "SET-promotion-max-discount-value"}
+  - {"op": "add_edge", "from": "REQ-019-114", "verb": "decided by", "to": "SRC-PRD-019"}
+  - {"op": "add_node", "id": "REQ-019-115", "type": "Rule", "owner_fr": "FR-019", "title": "A promotion program is disabled softly, without losing data", "attrs": {"statement": "System MUST soft-disable a promotion program without data loss: disabling a program never deletes its definition, approvals, usage records or audit trail.", "rationale": "prd.md line 825 (Implementation Notes, Technical Considerations: audit trail for all state changes; soft-disable discounts without data loss)."}}
+  - {"op": "add_edge", "from": "REQ-019-115", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "add_edge", "from": "REQ-019-115", "verb": "applies to", "to": "ENT-promotion-program"}
+  - {"op": "add_edge", "from": "REQ-019-115", "verb": "decided by", "to": "SRC-PRD-019"}
+  - {"op": "update_field", "id": "ENT-promotion-report-snapshot.roi_estimate", "calculated_by": "REQ-019-111"}
+  - {"op": "update_field", "id": "ENT-promotion-report-snapshot.conversion_lift", "calculated_by": "REQ-019-112"}
+  - {"op": "update_field", "id": "ENT-promotion-adoption.financial_impact_preview", "calculated_by": "REQ-019-113"}
+  - {"op": "update_node", "id": "ENT-promotion-program.roi_tier", "attrs": {"description": "Admin-defined ROI band that the program's ROI Estimate falls in; Not yet calculated until the program has at least one redemption. The PRD does not say where the bands are set (open item)."}}
+  - {"op": "update_node", "id": "ENT-promotion-adoption.financial_impact_preview", "attrs": {"description": "Estimated impact on provider revenue: the provider's booking value in the last 30 days x discount % x the provider's funded share of the discount."}}
+  - {"op": "update_node", "id": "ENT-promotion-program.lifecycle_state", "attrs": {"description": "Draft, Pending Approval, Active, Paused, Expired or Archived. The Screen 2 field lists Draft, Active, Paused, Expired and Archived and moves forward only, except Pause and Resume; where Pending Approval sits in that chain is an open item."}}
+  - {"op": "update_node", "id": "REQ-019-029", "attrs": {"statement": "When provider accepts, discount becomes eligible for that provider’s option/date-price rows during the active window; the campaign moves to the Active tab and becomes selectable in quote creation within 5 seconds."}}
+  - {"op": "update_node", "id": "REQ-019-059", "attrs": {"statement": "Force-Revoke immediately removes the program from the provider's quote-creation selection list; in-flight quotes with the program already applied are preserved. When an admin Force-Revokes an Accepted provider with a reason, the provider's status changes to Revoked-by-Admin and the program disappears from that provider's quote-creation list within 5 seconds."}}
+  - {"op": "update_node", "id": "REQ-019-085", "attrs": {"statement": "Where a discount applies only to a sub-component (e.g., treatment cost, not travel), the breakdown explicitly shows which line is reduced. When a valid code is applied, the price breakdown updates within 1 second and shows the discount scope label."}}
+  - {"op": "update_node", "id": "REQ-019-033", "attrs": {"statement": "Trigger: Patient/provider enters invalid/expired/reached‑limit code. Steps: System returns reason; prevents application. Outcome: No discount applied; user can retry. On the patient screen (Screen 11), the patient gets clear feedback for an invalid, expired, limit-reached or segment-mismatched code."}}
+  - {"op": "update_node", "id": "REQ-019-025", "attrs": {"rationale": "Scope Boundaries, out of scope. PRD line 69, Screen 5 business rules (line 437) and Alternative Flow C1 (line 138) repeat the boundary; Screen 5 acceptance criterion 1 (line 444) agrees: FR-018 completes generation and FR-019 registers the codes."}}
+  - {"op": "add_edge", "from": "REQ-019-106", "verb": "applies to", "to": "SCR-019-07"}
+  - {"op": "add_edge", "from": "REQ-019-106", "verb": "applies to", "to": "SCR-019-03"}
+  - {"op": "add_edge", "from": "REQ-019-049", "verb": "applies to", "to": "SCR-019-02"}
+  - {"op": "add_edge", "from": "REQ-019-049", "verb": "applies to", "to": "SCR-019-08"}
+  - {"op": "add_edge", "from": "REQ-019-049", "verb": "applies at", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "SCR-019-06", "verb": "shows", "to": "ENT-promotion-report-snapshot.total_redemptions"}
+  - {"op": "add_edge", "from": "SCR-019-06", "verb": "shows", "to": "ENT-promotion-report-snapshot.total_redemptions", "attrs": {"provenance": "system calculated", "label": "Total Redemptions (last 7 / 30 / 90 / 365 days)", "editable": false}}
+  - {"op": "remove_edge", "from": "SCR-019-10", "verb": "shows", "to": "ENT-promotion-report-snapshot.total_redemptions"}
+  - {"op": "add_edge", "from": "SCR-019-10", "verb": "shows", "to": "ENT-promotion-report-snapshot.total_redemptions", "attrs": {"provenance": "system calculated", "label": "Redemptions (last 7 / 30 / 90 / 365 days)", "editable": false}}

@@ -1,0 +1,92 @@
+reason: "FR-018 completeness re-check against the 2026-11-20 PRD: nine Rules the PRD states and the graph lacks (tenant scope, field limits, default tab, one-click copy; six of them replace twelve held Rules), two applies to links, six Field required flags, and shows edges for the list, audit, result-row and included-booking displays that carry no Field yet."
+by: controller
+operations:
+  # Rules. Each carries applies at, applies to and decided by.
+  - {"op": "add_node", "id": "REQ-018-298", "type": "Rule", "owner_fr": "FR-018", "title": "Affiliate portal is a scoped surface inside the Admin tenant", "attrs": {"statement": "The affiliate portal (Screens 9 and 10) is an external self-service surface scoped within the Admin Platform tenant boundary, not a separate tenant; it has its own authentication and authorization scope and affiliate-only data access", "rationale": "prd.md lines 30 (Module Scope, Affiliate Portal scoped surface of A-07 / Admin tenant)"}}
+  - {"op": "add_edge", "from": "REQ-018-298", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-018-298", "verb": "applies to", "to": "SCR-018-13"}
+  - {"op": "add_edge", "from": "REQ-018-298", "verb": "applies to", "to": "ACT-affiliate"}
+  - {"op": "add_edge", "from": "REQ-018-298", "verb": "decided by", "to": "SRC-PRD-018"}
+  - {"op": "add_node", "id": "REQ-018-299", "type": "Rule", "owner_fr": "FR-018", "title": "Affiliate Name limit", "attrs": {"statement": "Affiliate Name is required, at most 200 characters, and may not contain special characters", "rationale": "prd.md lines 343 and 392 (Screen 1 list column and Screen 2 Affiliate Name, Validation Rules)"}}
+  - {"op": "add_edge", "from": "REQ-018-299", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-018-299", "verb": "applies to", "to": "SCR-018-02"}
+  - {"op": "add_edge", "from": "REQ-018-299", "verb": "applies to", "to": "ENT-affiliate.name"}
+  - {"op": "add_edge", "from": "REQ-018-299", "verb": "decided by", "to": "SRC-PRD-018"}
+  - {"op": "add_node", "id": "REQ-018-300", "type": "Rule", "owner_fr": "FR-018", "title": "Affiliate Language(s) selection", "attrs": {"statement": "Language(s) is optional, but when set at least one language must be chosen, and every language comes from the supported language list", "rationale": "prd.md lines 395 and 1029 (Screen 2 and Screen 9.4 Language(s), Validation Rules)"}}
+  - {"op": "add_edge", "from": "REQ-018-300", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-018-300", "verb": "applies to", "to": "SCR-018-02"}
+  - {"op": "add_edge", "from": "REQ-018-300", "verb": "applies to", "to": "SCR-018-17"}
+  - {"op": "add_edge", "from": "REQ-018-300", "verb": "applies to", "to": "ENT-affiliate.languages"}
+  - {"op": "add_edge", "from": "REQ-018-300", "verb": "decided by", "to": "SRC-PRD-018"}
+  - {"op": "add_node", "id": "REQ-018-301", "type": "Rule", "owner_fr": "FR-018", "title": "Commission Percentage required and ranged", "attrs": {"statement": "Commission Percentage is required when the Percentage commission type is selected, and must be between 5 and 25 percent (new affiliate form and Edit Commission Structure modal)", "rationale": "prd.md lines 405 and 514 (Screen 2 and Screen 3.2 Commission Percentage, Validation Rules)"}}
+  - {"op": "add_edge", "from": "REQ-018-301", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-018-301", "verb": "applies to", "to": "SCR-018-02"}
+  - {"op": "add_edge", "from": "REQ-018-301", "verb": "applies to", "to": "SCR-018-05"}
+  - {"op": "add_edge", "from": "REQ-018-301", "verb": "applies to", "to": "ENT-affiliate.commission_percentage"}
+  - {"op": "add_edge", "from": "REQ-018-301", "verb": "decided by", "to": "SRC-PRD-018"}
+  - {"op": "add_node", "id": "REQ-018-302", "type": "Rule", "owner_fr": "FR-018", "title": "Commission Fixed Amount required and minimum", "attrs": {"statement": "Commission Fixed Amount is required when the Fixed Amount commission type is selected, and must be at least $50 (new affiliate form and Edit Commission Structure modal)", "rationale": "prd.md lines 406 and 515 (Screen 2 and Screen 3.2 Commission Fixed Amount, Validation Rules)"}}
+  - {"op": "add_edge", "from": "REQ-018-302", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-018-302", "verb": "applies to", "to": "SCR-018-02"}
+  - {"op": "add_edge", "from": "REQ-018-302", "verb": "applies to", "to": "SCR-018-05"}
+  - {"op": "add_edge", "from": "REQ-018-302", "verb": "applies to", "to": "ENT-affiliate.commission_fixed_amount"}
+  - {"op": "add_edge", "from": "REQ-018-302", "verb": "decided by", "to": "SRC-PRD-018"}
+  - {"op": "add_node", "id": "REQ-018-303", "type": "Rule", "owner_fr": "FR-018", "title": "Internal notes limit and visibility", "attrs": {"statement": "Internal notes about an affiliate are optional, at most 1000 characters, and are never visible to the affiliate", "rationale": "prd.md lines 411 and 450 (Screen 2 Notes (Internal) and Screen 3 Internal Notes, Validation Rules)"}}
+  - {"op": "add_edge", "from": "REQ-018-303", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-018-303", "verb": "applies to", "to": "SCR-018-02"}
+  - {"op": "add_edge", "from": "REQ-018-303", "verb": "applies to", "to": "SCR-018-03"}
+  - {"op": "add_edge", "from": "REQ-018-303", "verb": "applies to", "to": "ENT-affiliate.internal_notes"}
+  - {"op": "add_edge", "from": "REQ-018-303", "verb": "decided by", "to": "SRC-PRD-018"}
+  - {"op": "add_node", "id": "REQ-018-304", "type": "Rule", "owner_fr": "FR-018", "title": "Suspension and offboarding reason length", "attrs": {"statement": "The reason for a suspension and the reason for an offboarding are required, at least 20 and at most 500 characters", "rationale": "prd.md lines 487 and 542 (Screen 3.1 and Screen 3.3 Reason, Validation Rules)"}}
+  - {"op": "add_edge", "from": "REQ-018-304", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-018-304", "verb": "applies to", "to": "SCR-018-04"}
+  - {"op": "add_edge", "from": "REQ-018-304", "verb": "applies to", "to": "SCR-018-06"}
+  - {"op": "add_edge", "from": "REQ-018-304", "verb": "applies to", "to": "ENT-affiliate.status_reason"}
+  - {"op": "add_edge", "from": "REQ-018-304", "verb": "decided by", "to": "SRC-PRD-018"}
+  - {"op": "add_node", "id": "REQ-018-305", "type": "Rule", "owner_fr": "FR-018", "title": "Portal lands on the Overview tab", "attrs": {"statement": "After an affiliate logs in, the Overview tab (Screen 9.1) is the landing tab", "rationale": "prd.md lines 851 (Screen 9 Business Rules, Default Tab)"}}
+  - {"op": "add_edge", "from": "REQ-018-305", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-018-305", "verb": "applies to", "to": "SCR-018-13"}
+  - {"op": "add_edge", "from": "REQ-018-305", "verb": "applies to", "to": "SCR-018-14"}
+  - {"op": "add_edge", "from": "REQ-018-305", "verb": "decided by", "to": "SRC-PRD-018"}
+  - {"op": "add_node", "id": "REQ-018-306", "type": "Rule", "owner_fr": "FR-018", "title": "One-click copy of a discount code", "attrs": {"statement": "On the affiliate Promo Codes tab, the discount code is read-only and has a one-click copy action; copying an active code puts the code text (or the auto-apply referral link) on the clipboard", "rationale": "prd.md lines 913 and 953 (Screen 9.2 Discount Code, Validation Rules, and acceptance criterion 3)"}}
+  - {"op": "add_edge", "from": "REQ-018-306", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-018-306", "verb": "applies to", "to": "SCR-018-15"}
+  - {"op": "add_edge", "from": "REQ-018-306", "verb": "applies to", "to": "ENT-affiliate-discount-code.code_text"}
+  - {"op": "add_edge", "from": "REQ-018-306", "verb": "decided by", "to": "SRC-PRD-018"}
+  # Existing Rules that lacked a Screen link.
+  - {"op": "add_edge", "from": "REQ-018-060", "verb": "applies to", "to": "SCR-018-13"}
+  - {"op": "add_edge", "from": "REQ-018-083", "verb": "applies to", "to": "SCR-018-18"}
+  # Fields that are always filled once the record exists.
+  - {"op": "update_field", "id": "ENT-affiliate-discount-code.generation_mode", "required": true}
+  - {"op": "update_field", "id": "ENT-affiliate-discount-code.campaign_name", "required": true}
+  - {"op": "update_field", "id": "ENT-affiliate-discount-code.discount_type", "required": true}
+  - {"op": "update_field", "id": "ENT-affiliate-discount-code.discount_amount_type", "required": true}
+  - {"op": "update_field", "id": "ENT-affiliate-discount-code.application_method", "required": true}
+  - {"op": "update_field", "id": "ENT-affiliate-payout.payout_month", "required": true}
+  # Screen 3 (SCR-018-03): assigned codes list, payout history list, audit panel.
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate-discount-code.code_text", "attrs": {"provenance": "retrieved", "label": "Assigned Promo Codes List: code", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate-discount-code.campaign_name", "attrs": {"provenance": "retrieved", "label": "Assigned Promo Codes List: campaign", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate-discount-code.status", "attrs": {"provenance": "retrieved", "label": "Assigned Promo Codes List: status", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate-discount-code.applied_count", "attrs": {"provenance": "retrieved", "label": "Assigned Promo Codes List: applied", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate-discount-code.completed_count", "attrs": {"provenance": "retrieved", "label": "Assigned Promo Codes List: completed", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate-discount-code.conversion_rate", "attrs": {"provenance": "retrieved", "label": "Assigned Promo Codes List: conversion", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate-discount-code.revenue_generated", "attrs": {"provenance": "retrieved", "label": "Assigned Promo Codes List: revenue", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate-discount-code.commission_earned", "attrs": {"provenance": "retrieved", "label": "Assigned Promo Codes List: commission", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate-payout.payout_month", "attrs": {"provenance": "retrieved", "label": "Payout History List: month", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate-payout.net_amount", "attrs": {"provenance": "retrieved", "label": "Payout History List: amount", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate-payout.status", "attrs": {"provenance": "retrieved", "label": "Payout History List: status", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate-payout.stripe_transfer_id", "attrs": {"provenance": "retrieved", "label": "Payout History List: transaction ID", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate-payout.payout_date", "attrs": {"provenance": "retrieved", "label": "Payout History List: date", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate-audit-entry.action_type", "attrs": {"provenance": "retrieved", "label": "Activity / Audit Panel: event type", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-03", "verb": "shows", "to": "ENT-affiliate-audit-entry.timestamp", "attrs": {"provenance": "retrieved", "label": "Activity / Audit Panel: time", "editable": false}}
+  # Screen 4.1 (SCR-018-08): result rows name the affiliate and the generated code.
+  - {"op": "add_edge", "from": "SCR-018-08", "verb": "shows", "to": "ENT-affiliate-code-batch-result.affiliate_id", "attrs": {"provenance": "retrieved", "label": "Result Rows: affiliate", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-08", "verb": "shows", "to": "ENT-affiliate-code-batch-result.code_id", "attrs": {"provenance": "retrieved", "label": "Result Rows: generated code", "editable": false}}
+  # Screen 6 (SCR-018-10): created date in the header, audit and history list.
+  - {"op": "add_edge", "from": "SCR-018-10", "verb": "shows", "to": "ENT-affiliate-discount-code.created_at", "attrs": {"provenance": "retrieved", "label": "Code Header: created date", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-10", "verb": "shows", "to": "ENT-affiliate-audit-entry.action_type", "attrs": {"provenance": "retrieved", "label": "Audit / History: event type", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-10", "verb": "shows", "to": "ENT-affiliate-audit-entry.timestamp", "attrs": {"provenance": "retrieved", "label": "Audit / History: time", "editable": false}}
+  # Screen 8 (SCR-018-12): included bookings list.
+  - {"op": "add_edge", "from": "SCR-018-12", "verb": "shows", "to": "ENT-affiliate-attribution.booking_id", "attrs": {"provenance": "retrieved", "label": "Included Bookings: booking ID", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-12", "verb": "shows", "to": "ENT-affiliate-attribution.completion_date", "attrs": {"provenance": "retrieved", "label": "Included Bookings: date", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-12", "verb": "shows", "to": "ENT-affiliate-attribution.booking_total", "attrs": {"provenance": "retrieved", "label": "Included Bookings: booking total", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-018-12", "verb": "shows", "to": "ENT-affiliate-attribution.affiliate_commission_owed", "attrs": {"provenance": "retrieved", "label": "Included Bookings: commission", "editable": false}}
