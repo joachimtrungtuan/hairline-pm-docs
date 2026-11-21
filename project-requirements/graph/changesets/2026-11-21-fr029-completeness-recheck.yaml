@@ -1,0 +1,11 @@
+reason: "FR-029 completeness re-check 2026-11-21: three Screen 7 Settings the PRD names (deposit plan balance due days, unpaid balance cancellation point, settlement period) had no Setting node; the Event for the automatic switch of a pair to manual is retired because the PRD now blocks source deletion and switches nothing automatically."
+by: controller
+operations:
+  - {"op": "add_node", "id": "SET-deposit-plan-balance-due-days", "type": "Setting", "owner_fr": "FR-029", "title": "Deposit plan balance due days", "attrs": {"description": "How many days before the treatment date the balance of a deposit plan is due; whole number of days, admin-editable on Screen 7 (PRD Screen 7, Deposit Plan Balance Due Days). Read by FR-006.", "default": "7", "unit": "days"}}
+  - {"op": "add_node", "id": "SET-unpaid-balance-cancellation-point", "type": "Setting", "owner_fr": "FR-029", "title": "Unpaid balance cancellation point", "attrs": {"description": "The point at which a deposit plan balance that is still unpaid cancels the booking (FR-006 Boundary). A separate setting from the balance due days; it has no starting value and an admin must set it before use (PRD Screen 7, Unpaid Balance Cancellation Point)."}}
+  - {"op": "add_node", "id": "SET-settlement-period", "type": "Setting", "owner_fr": "FR-029", "title": "Settlement period", "attrs": {"description": "The one settlement period that applies to all manually paid clinics (manual bank transfer rail); there is no per-clinic value and it does not apply on the Stripe Connect rail (PRD Screen 7, Settlement Period). The cutoff day and the payout day are SET-payout-cutoff-day and SET-payout-day.", "default": "weekly"}}
+  - {"op": "add_edge", "from": "REQ-029-146", "verb": "governed by", "to": "SET-deposit-plan-balance-due-days"}
+  - {"op": "add_edge", "from": "REQ-029-147", "verb": "governed by", "to": "SET-unpaid-balance-cancellation-point"}
+  - {"op": "add_edge", "from": "REQ-029-145", "verb": "governed by", "to": "SET-settlement-period"}
+  - {"op": "remove_edge", "from": "STG-main-05-payment", "verb": "emits", "to": "EVT-pair-switched-to-manual"}
+  - {"op": "retire_node", "id": "EVT-pair-switched-to-manual"}

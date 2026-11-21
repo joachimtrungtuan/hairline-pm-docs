@@ -1,0 +1,67 @@
+reason: "FR-026 completeness re-check 2026-11-21: Rules for screen-control behaviours the PRD states (drag-and-drop reorder, autocomplete, impact previews, pending-propagation icon, success message), error text in three Rules, treatment-area image field name per Entity 9, and Stage reads and writes for the setting group, version and audit entities."
+by: controller
+operations:
+  - {"op": "add_node", "id": "REQ-026-133", "type": "Rule", "owner_fr": "FR-026", "title": "Drag-and-drop reordering sets Display Order", "attrs": {"statement": "On the list managers (Countries, Discovery Questions, Inquiry Cancellation Reasons, Account Deletion Reasons, Inquiry Treatment Areas, Provider Specialties), an admin can reorder the entries by drag and drop, and the move updates each entry's Display Order.", "rationale": "prd.md lines 491, 526, 558, 591, 612, 693 (drag-and-drop reordering updates Display Order)"}}
+  - {"op": "add_edge", "from": "REQ-026-133", "verb": "applies at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "REQ-026-133", "verb": "applies at", "to": "STG-patient-02-profile-complete"}
+  - {"op": "add_edge", "from": "REQ-026-133", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-133", "verb": "applies at", "to": "STG-provider-01-invited"}
+  - {"op": "add_edge", "from": "REQ-026-133", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-133", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-026-133", "verb": "applies to", "to": "SCR-026-04"}
+  - {"op": "add_edge", "from": "REQ-026-133", "verb": "applies to", "to": "SCR-026-05"}
+  - {"op": "add_edge", "from": "REQ-026-133", "verb": "applies to", "to": "SCR-026-06"}
+  - {"op": "add_edge", "from": "REQ-026-133", "verb": "applies to", "to": "SCR-026-07"}
+  - {"op": "add_edge", "from": "REQ-026-133", "verb": "applies to", "to": "SCR-026-08"}
+  - {"op": "add_edge", "from": "REQ-026-133", "verb": "applies to", "to": "SCR-026-11"}
+  - {"op": "add_edge", "from": "REQ-026-133", "verb": "applies to", "to": "ENT-country.display_order"}
+  - {"op": "add_edge", "from": "REQ-026-133", "verb": "applies to", "to": "ENT-discovery-question-option.display_order"}
+  - {"op": "add_edge", "from": "REQ-026-133", "verb": "applies to", "to": "ENT-inquiry-cancellation-reason.display_order"}
+  - {"op": "add_edge", "from": "REQ-026-133", "verb": "applies to", "to": "ENT-account-deletion-reason.display_order"}
+  - {"op": "add_edge", "from": "REQ-026-133", "verb": "applies to", "to": "ENT-treatment-area.display_order"}
+  - {"op": "add_edge", "from": "REQ-026-133", "verb": "applies to", "to": "ENT-provider-specialty.display_order"}
+  - {"op": "add_edge", "from": "REQ-026-133", "verb": "decided by", "to": "SRC-PRD-026"}
+  - {"op": "add_node", "id": "REQ-026-134", "type": "Rule", "owner_fr": "FR-026", "title": "Suggest common options when adding a discovery option", "attrs": {"statement": "When an admin adds a new discovery question option on Screen 5, the system suggests common options (autocomplete).", "rationale": "prd.md lines 533 (suggest common options when adding new)"}}
+  - {"op": "add_edge", "from": "REQ-026-134", "verb": "applies at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "REQ-026-134", "verb": "applies to", "to": "SCR-026-05"}
+  - {"op": "add_edge", "from": "REQ-026-134", "verb": "applies to", "to": "ENT-discovery-question-option.option_text"}
+  - {"op": "add_edge", "from": "REQ-026-134", "verb": "decided by", "to": "SRC-PRD-026"}
+  - {"op": "add_node", "id": "REQ-026-135", "type": "Rule", "owner_fr": "FR-026", "title": "Screen 2 shows the impact of the throttling values", "attrs": {"statement": "Screen 2 shows a preview of the impact of the values being set: \"Users will be locked out after X failed attempts for Y minutes\".", "rationale": "prd.md lines 390 (show preview of impact)"}}
+  - {"op": "add_edge", "from": "REQ-026-135", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-135", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-135", "verb": "applies to", "to": "SCR-026-02"}
+  - {"op": "add_edge", "from": "REQ-026-135", "verb": "decided by", "to": "SRC-PRD-026"}
+  - {"op": "add_node", "id": "REQ-026-136", "type": "Rule", "owner_fr": "FR-026", "title": "Screen 3 shows the impact of the OTP expiry", "attrs": {"statement": "Screen 3 shows an impact preview: \"Users must enter OTP within X minutes of receiving email\".", "rationale": "prd.md lines 464 (show impact preview)"}}
+  - {"op": "add_edge", "from": "REQ-026-136", "verb": "applies at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "REQ-026-136", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-136", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-136", "verb": "applies to", "to": "SCR-026-03"}
+  - {"op": "add_edge", "from": "REQ-026-136", "verb": "decided by", "to": "SRC-PRD-026"}
+  - {"op": "add_node", "id": "REQ-026-137", "type": "Rule", "owner_fr": "FR-026", "title": "Warning icon while a change is pending propagation", "attrs": {"statement": "On the Settings Management Dashboard, a setting group shows a warning icon while its latest change is pending propagation.", "rationale": "prd.md lines 342 (display warning icon if setting change pending propagation)"}}
+  - {"op": "add_edge", "from": "REQ-026-137", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-026-137", "verb": "applies to", "to": "SCR-026-01"}
+  - {"op": "add_edge", "from": "REQ-026-137", "verb": "decided by", "to": "SRC-PRD-026"}
+  - {"op": "add_node", "id": "REQ-026-138", "type": "Rule", "owner_fr": "FR-026", "title": "Success message after a throttling save", "attrs": {"statement": "After a successful save of the authentication throttling policy, the system shows a success message that names the setting group and the new version, for example \"Authentication throttling updated successfully (v1.3)\".", "rationale": "prd.md lines 148 (Main Flow step 14)"}}
+  - {"op": "add_edge", "from": "REQ-026-138", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-138", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-026-138", "verb": "applies to", "to": "SCR-026-02"}
+  - {"op": "add_edge", "from": "REQ-026-138", "verb": "decided by", "to": "SRC-PRD-026"}
+  - {"op": "add_edge", "from": "STP-026-042", "verb": "applies", "to": "REQ-026-133"}
+  - {"op": "add_edge", "from": "STP-026-051", "verb": "applies", "to": "REQ-026-133"}
+  - {"op": "add_edge", "from": "STP-026-060", "verb": "applies", "to": "REQ-026-133"}
+  - {"op": "add_edge", "from": "STP-026-041", "verb": "applies", "to": "REQ-026-134"}
+  - {"op": "add_edge", "from": "STP-026-014", "verb": "applies", "to": "REQ-026-138"}
+  - {"op": "update_node", "id": "REQ-026-081", "attrs": {"statement": "At least 2 active discovery question options must exist at all times; deactivating one of the last 2 active options is prevented with the error \"At least 2 active options required. Cannot deactivate this option.\""}}
+  - {"op": "update_node", "id": "REQ-026-085", "attrs": {"statement": "The \"Other\" cancellation reason is FIXED (cannot be deactivated or deleted) and always requires an explanation; an attempt to deactivate it is rejected with the error \"'Other' is a fixed reason and cannot be deactivated.\""}}
+  - {"op": "update_node", "id": "REQ-026-090", "attrs": {"statement": "The \"Others\" deletion reason is FIXED (cannot be deactivated or deleted) and always requires an explanation; an attempt to deactivate it is rejected with the error '\"Others\" is a fixed reason and cannot be deactivated.'"}}
+  - {"op": "update_node", "id": "REQ-026-046", "attrs": {"rationale": "Alternative Flow B2, the Settings API unreachable edge case and Integration 1: cached settings are used until the next successful poll, with a retry every 60 seconds."}}
+  - {"op": "add_field", "id": "ENT-treatment-area.image_or_icon_url", "entity_id": "ENT-treatment-area", "name": "image_or_icon_url", "data_type": "text", "title": "Treatment area image or icon URL", "owner_fr": "FR-026", "required": true, "attrs": {"description": "Image or icon returned with the option (Entity 9 and the patient configuration API); must resolve to an approved S-05-managed asset."}}
+  - {"op": "remove_edge", "from": "SCR-026-08", "verb": "shows", "to": "ENT-treatment-area.image_url"}
+  - {"op": "add_edge", "from": "SCR-026-08", "verb": "shows", "to": "ENT-treatment-area.image_or_icon_url", "attrs": {"provenance": "user input", "label": "Image or Icon", "editable": true}}
+  - {"op": "retire_node", "id": "ENT-treatment-area.image_url"}
+  - {"op": "add_edge", "from": "STG-admin-01-configuration", "verb": "writes", "to": "ENT-setting-group"}
+  - {"op": "add_edge", "from": "STG-admin-01-configuration", "verb": "reads", "to": "ENT-setting-group"}
+  - {"op": "add_edge", "from": "STG-admin-01-configuration", "verb": "writes", "to": "ENT-setting-version"}
+  - {"op": "add_edge", "from": "STG-admin-01-configuration", "verb": "reads", "to": "ENT-setting-version"}
+  - {"op": "add_edge", "from": "STG-admin-01-configuration", "verb": "writes", "to": "ENT-settings-audit-entry"}
+  - {"op": "add_edge", "from": "STG-admin-01-configuration", "verb": "reads", "to": "ENT-settings-audit-entry"}

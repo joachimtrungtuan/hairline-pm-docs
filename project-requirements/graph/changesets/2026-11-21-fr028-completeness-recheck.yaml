@@ -1,0 +1,32 @@
+reason: "FR-028 completeness re-check 2026-11-21: Screen 2 Location Default Currency field, Alternative Flow A3 step to pick the patient country, Alternative Flow A6 step for the system-wide default price, step titles and prd_refs aligned with the current PRD, and two Rule rationales no longer waiting on a question"
+by: controller
+operations:
+  - {"op": "add_field", "id": "ENT-location-starting-price.location_default_currency", "entity_id": "ENT-location-starting-price", "name": "location_default_currency", "data_type": "text", "title": "Location default currency", "owner_fr": "FR-028", "required": false, "attrs": {"description": "Default currency of the destination location, set once per destination on the pricing screen (Screen 2 Location Default Currency); used when a patient's currency has no price and a converted price is shown. Same value on every price row of the destination."}}
+  - {"op": "add_edge", "from": "SCR-028-02", "verb": "shows", "to": "ENT-location-starting-price.location_default_currency", "attrs": {"provenance": "user input", "label": "Location Default Currency", "editable": true}}
+  - {"op": "add_edge", "from": "REQ-028-089", "verb": "applies to", "to": "ENT-location-starting-price.location_default_currency"}
+  - {"op": "add_node", "id": "STP-028-426", "type": "Step", "title": "Admin selects the patient country the fallback price applies to", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow A3: Admin Sets Fallback Pricing for Region step 4"}}
+  - {"op": "add_edge", "from": "STP-028-426", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-028-426", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-028-426", "verb": "on", "to": "SCR-028-02"}
+  - {"op": "add_edge", "from": "STP-028-426", "verb": "applies", "to": "REQ-028-056"}
+  - {"op": "remove_edge", "from": "STP-028-303", "verb": "next", "to": "STP-028-304"}
+  - {"op": "add_edge", "from": "STP-028-303", "verb": "next", "to": "STP-028-426"}
+  - {"op": "add_edge", "from": "STP-028-426", "verb": "next", "to": "STP-028-304"}
+  - {"op": "update_node", "id": "STP-028-304", "attrs": {"prd_ref": "Alternative Flow A3: Admin Sets Fallback Pricing for Region step 5"}}
+  - {"op": "update_node", "id": "STP-028-305", "attrs": {"prd_ref": "Alternative Flow A3: Admin Sets Fallback Pricing for Region step 6"}}
+  - {"op": "update_node", "id": "STP-028-306", "attrs": {"prd_ref": "Alternative Flow A3: Admin Sets Fallback Pricing for Region step 7"}}
+  - {"op": "update_node", "id": "STP-028-307", "attrs": {"prd_ref": "Alternative Flow A3: Admin Sets Fallback Pricing for Region step 8"}}
+  - {"op": "update_node", "id": "STP-028-422", "title": "System checks for fallback pricing for the patient's country"}
+  - {"op": "update_node", "id": "STP-028-424", "title": "System displays the price in the location's default currency with a conversion note when there is no fallback and no system-wide default", "attrs": {"prd_ref": "Alternative Flow A6: Patient's Currency Not Configured for Selected Location step 5"}}
+  - {"op": "update_node", "id": "STP-028-425", "attrs": {"prd_ref": "Alternative Flow A6: Patient's Currency Not Configured for Selected Location step 6"}}
+  - {"op": "add_node", "id": "STP-028-427", "type": "Step", "title": "System displays the system-wide default starting price when an admin has set one", "owner_fr": "FR-028", "attrs": {"prd_ref": "Alternative Flow A6: Patient's Currency Not Configured for Selected Location step 4"}}
+  - {"op": "add_edge", "from": "STP-028-427", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-028-427", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-028-427", "verb": "on", "to": "SCR-003-02"}
+  - {"op": "add_edge", "from": "STP-028-427", "verb": "applies", "to": "REQ-028-040"}
+  - {"op": "add_edge", "from": "STP-028-427", "verb": "applies", "to": "REQ-028-088"}
+  - {"op": "remove_edge", "from": "STP-028-422", "verb": "next", "to": "STP-028-424"}
+  - {"op": "add_edge", "from": "STP-028-422", "verb": "next", "to": "STP-028-424", "attrs": {"label": "No fallback and no system-wide default"}}
+  - {"op": "add_edge", "from": "STP-028-422", "verb": "next", "to": "STP-028-427", "attrs": {"label": "No fallback, system-wide default set"}}
+  - {"op": "update_node", "id": "REQ-028-045", "attrs": {"statement": "In a future phase, admins will be able to enable or disable specific destinations for specific patient regions.", "rationale": "prd.md lines 66 (Future phase: Enable/disable specific destinations for specific patient regions). The PRD marks it a future phase and gives it no screen, field or flow."}}
+  - {"op": "update_node", "id": "REQ-028-039", "attrs": {"rationale": "prd.md lines 292-297 (Main Flow: Patient Views Personalized Location Recommendations step 7). Same fallback order as REQ-028-040 and REQ-028-041."}}

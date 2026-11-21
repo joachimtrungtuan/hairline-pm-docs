@@ -1,0 +1,48 @@
+reason: "FR-027 completeness re-check 2026-11-21: record-acceptance and resume-access Steps, B1 restoring flow reworded to the PRD, Scheduled status and audit action values, 8 screen-derived required flags back to optional (Q-90), version-published Event at the Configuration Stage"
+by: controller
+operations:
+  - {"op": "add_node", "id": "STP-027-032", "type": "Step", "owner_fr": "FR-027", "title": "System records the acceptance with user, document type, version, timestamp and locale", "attrs": {"prd_ref": "Main Flow: User Accepts New Version, step 3"}}
+  - {"op": "add_edge", "from": "STP-027-032", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-027-032", "verb": "at", "to": "STG-patient-03-active", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-027-032", "verb": "at", "to": "STG-provider-03-active", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-027-032", "verb": "applies", "to": "REQ-027-005", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-027-032", "verb": "applies", "to": "REQ-027-009", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-027-032", "verb": "applies", "to": "REQ-027-036", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-027-032", "verb": "applies", "to": "REQ-027-038", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-027-008", "verb": "next", "to": "STP-027-032", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-027-009", "verb": "next", "to": "STP-027-032", "attrs": {}}
+  - {"op": "add_node", "id": "STP-027-033", "type": "Step", "owner_fr": "FR-027", "title": "System resumes normal access without further prompts until the next required version", "attrs": {"prd_ref": "Main Flow: User Accepts New Version, step 4"}}
+  - {"op": "add_edge", "from": "STP-027-033", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-027-033", "verb": "at", "to": "STG-patient-03-active", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-027-033", "verb": "at", "to": "STG-provider-03-active", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-027-033", "verb": "applies", "to": "REQ-027-035", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-027-032", "verb": "next", "to": "STP-027-033", "attrs": {}}
+  - {"op": "update_node", "id": "FLW-027-b1-reversion", "title": "Restoring an earlier version", "attrs": {"description": "There is no revert button. Admin creates a new draft from an earlier version and publishes the restored text as a new version through the normal publishing flow; prompts update and an audit entry is recorded.", "prd_ref": "Alternative Flow B1: Restoring an Earlier Version"}}
+  - {"op": "update_node", "id": "FLW-027-admin-publish", "attrs": {"description": "Admin drafts, previews and sets publication details for a legal document version; the system then publishes it, records the audit entry and notifies the Admin, and prompts patients and providers to accept."}}
+  - {"op": "update_node", "id": "STP-027-030", "title": "Admin creates a new draft from an earlier version (there is no revert button)", "attrs": {"prd_ref": "Alternative Flow B1: Restoring an Earlier Version, step 1"}}
+  - {"op": "remove_edge", "from": "STP-027-030", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-027-030", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-027-030", "verb": "on", "to": "SCR-027-02", "attrs": {}}
+  - {"op": "remove_edge", "from": "STP-027-030", "verb": "applies", "to": "REQ-027-029"}
+  - {"op": "add_node", "id": "STP-027-034", "type": "Step", "owner_fr": "FR-027", "title": "Admin publishes the restored text as a new version through the normal publishing flow", "attrs": {"prd_ref": "Alternative Flow B1: Restoring an Earlier Version, step 2"}}
+  - {"op": "add_edge", "from": "STP-027-034", "verb": "done by", "to": "ACT-platform-admin", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-027-034", "verb": "at", "to": "STG-admin-01-configuration", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-027-034", "verb": "on", "to": "SCR-027-03", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-027-034", "verb": "applies", "to": "REQ-027-031", "attrs": {}}
+  - {"op": "remove_edge", "from": "STP-027-030", "verb": "next", "to": "STP-027-031"}
+  - {"op": "add_edge", "from": "STP-027-030", "verb": "next", "to": "STP-027-034", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-027-034", "verb": "next", "to": "STP-027-031", "attrs": {}}
+  - {"op": "update_node", "id": "STP-027-031", "title": "System updates the prompts and records an audit entry", "attrs": {"prd_ref": "Alternative Flow B1: Restoring an Earlier Version, step 3"}}
+  - {"op": "add_edge", "from": "STP-027-031", "verb": "applies", "to": "REQ-027-032", "attrs": {}}
+  - {"op": "update_node", "id": "ENT-legal-document.status", "attrs": {"description": "Draft, Scheduled, Current or Archived; only one Current per type. A published version with a future effective date is Scheduled until then."}}
+  - {"op": "update_node", "id": "ENT-legal-audit-entry.action", "attrs": {"description": "create, edit or publish."}}
+  - {"op": "update_field", "id": "ENT-legal-document.version", "required": false}
+  - {"op": "update_field", "id": "ENT-legal-document.last_updated_by", "required": false}
+  - {"op": "update_field", "id": "ENT-legal-document.last_updated_at", "required": false}
+  - {"op": "update_field", "id": "ENT-legal-document.version_diff_summary", "required": false}
+  - {"op": "update_field", "id": "ENT-legal-document.published_at", "required": false}
+  - {"op": "update_field", "id": "ENT-legal-document.acceptance_rate", "required": false}
+  - {"op": "update_field", "id": "ENT-legal-document.pending_user_count", "required": false}
+  - {"op": "update_field", "id": "ENT-legal-document.reminders_sent_count", "required": false}
+  - {"op": "add_edge", "from": "STG-admin-01-configuration", "verb": "emits", "to": "EVT-legal-version-published", "attrs": {}}
+  - {"op": "remove_edge", "from": "STG-main-01-inquiry", "verb": "emits", "to": "EVT-legal-version-published"}
