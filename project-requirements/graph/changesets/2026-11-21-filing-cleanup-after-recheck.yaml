@@ -1,0 +1,32 @@
+reason: "Filing clean-up after the 2026-11-21 completeness re-check: merge the four aftercare catalogue Rules repeated in FR-020 into their FR-030 twins (ruling Q-fr020-030-19; texts say the same thing), merge two duplicate Settings, drop one stale actor link, record the legal-coverage Event at Configuration where its Rule applies, and fix two stale texts."
+by: controller
+operations:
+  - {"op": "merge_node", "survivor": "REQ-030-072", "loser": "REQ-020-117"}
+  - {"op": "merge_node", "survivor": "REQ-030-073", "loser": "REQ-020-118"}
+  - {"op": "merge_node", "survivor": "REQ-030-074", "loser": "REQ-020-119"}
+  - {"op": "merge_node", "survivor": "REQ-030-075", "loser": "REQ-020-120"}
+  - {"op": "remove_edge", "from": "REQ-007-040", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STG-admin-01-configuration", "verb": "emits", "to": "EVT-legal-coverage-below-threshold"}
+  - {"op": "update_node", "id": "REQ-022-043", "attrs": {"statement": "System MUST allow providers to search and filter support cases by case ID, keywords, status, type, and date range (criteria owned by FR-034 and FR-032: REQ-034-114 and REQ-032-107)"}}
+  - {"op": "update_node", "id": "REQ-013-076", "attrs": {"rationale": "Paraphrase of Screen 9 Request queue Validation cell 'Filterable by status/date' (PRD line 437)."}}
+  - {"op": "remove_edge", "from": "REQ-001-058", "verb": "governed by", "to": "SET-discovery-source-options"}
+  - {"op": "add_edge", "from": "REQ-001-058", "verb": "governed by", "to": "SET-discovery-question-options"}
+  - {"op": "remove_edge", "from": "REQ-001-059", "verb": "governed by", "to": "SET-discovery-source-options"}
+  - {"op": "add_edge", "from": "REQ-001-059", "verb": "governed by", "to": "SET-discovery-question-options"}
+  - {"op": "remove_edge", "from": "REQ-006-053", "verb": "governed by", "to": "SET-cancellation-policy-schedule"}
+  - {"op": "remove_edge", "from": "REQ-006-064", "verb": "governed by", "to": "SET-cancellation-policy-schedule"}
+  - {"op": "remove_edge", "from": "REQ-007B-054", "verb": "governed by", "to": "SET-cancellation-policy-schedule"}
+  - {"op": "remove_edge", "from": "REQ-007B-056", "verb": "governed by", "to": "SET-cancellation-policy-schedule"}
+  - {"op": "remove_edge", "from": "REQ-017-133", "verb": "governed by", "to": "SET-cancellation-policy-schedule"}
+  - {"op": "remove_edge", "from": "REQ-007-063", "verb": "governed by", "to": "SET-cancellation-policy-schedule"}
+  - {"op": "add_edge", "from": "REQ-007-063", "verb": "governed by", "to": "SET-refund-ladder"}
+  - {"op": "remove_edge", "from": "REQ-007-074", "verb": "governed by", "to": "SET-cancellation-policy-schedule"}
+  - {"op": "add_edge", "from": "REQ-007-074", "verb": "governed by", "to": "SET-refund-ladder"}
+  - {"op": "remove_edge", "from": "REQ-007B-022", "verb": "governed by", "to": "SET-cancellation-policy-schedule"}
+  - {"op": "add_edge", "from": "REQ-007B-022", "verb": "governed by", "to": "SET-refund-ladder"}
+  - {"op": "remove_edge", "from": "REQ-017-094", "verb": "governed by", "to": "SET-cancellation-policy-schedule"}
+  - {"op": "add_edge", "from": "REQ-017-094", "verb": "governed by", "to": "SET-refund-ladder"}
+  - {"op": "remove_edge", "from": "REQ-017-097", "verb": "governed by", "to": "SET-cancellation-policy-schedule"}
+  - {"op": "add_edge", "from": "REQ-017-097", "verb": "governed by", "to": "SET-refund-ladder"}
+  - {"op": "retire_node", "id": "SET-discovery-source-options"}
+  - {"op": "retire_node", "id": "SET-cancellation-policy-schedule"}

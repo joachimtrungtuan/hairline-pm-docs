@@ -1,0 +1,16 @@
+reason: "Lint clean-up after the completeness re-check. Rule pairs that read alike but cover different subjects (patient data versus each audit log, provider statement versus affiliate payout, percentage versus fixed commission, patient versus provider emails) are marked as reviewed and kept apart. The inquiry cancellation Step that returns from the quote stage to the inquiry stage is marked as a deliberate return."
+by: controller
+operations:
+  - {"op": "update_node", "id": "REQ-001-012", "attrs": {"distinct_from": "REQ-010-013,REQ-023-011,REQ-029-027,REQ-007B-087,REQ-031-015"}}
+  - {"op": "update_node", "id": "REQ-007B-087", "attrs": {"distinct_from": "REQ-001-012,REQ-031-015,REQ-023-011,REQ-029-027"}}
+  - {"op": "update_node", "id": "REQ-031-015", "attrs": {"distinct_from": "REQ-001-012,REQ-023-011,REQ-029-027,REQ-007B-087"}}
+  - {"op": "update_node", "id": "REQ-023-011", "attrs": {"distinct_from": "REQ-007B-087,REQ-001-012,REQ-031-015,REQ-029-027"}}
+  - {"op": "update_node", "id": "REQ-029-027", "attrs": {"distinct_from": "REQ-007B-087,REQ-001-012,REQ-031-015,REQ-023-011"}}
+  - {"op": "update_node", "id": "REQ-017-165", "attrs": {"distinct_from": "REQ-017-184"}}
+  - {"op": "update_node", "id": "REQ-017-184", "attrs": {"distinct_from": "REQ-017-165"}}
+  - {"op": "update_node", "id": "REQ-018-301", "attrs": {"distinct_from": "REQ-018-302"}}
+  - {"op": "update_node", "id": "REQ-018-302", "attrs": {"distinct_from": "REQ-018-301"}}
+  - {"op": "update_node", "id": "REQ-034-090", "attrs": {"distinct_from": "REQ-034-091"}}
+  - {"op": "update_node", "id": "REQ-034-091", "attrs": {"distinct_from": "REQ-034-090"}}
+  - {"op": "remove_edge", "from": "STP-003-091", "verb": "next", "to": "STP-003-086"}
+  - {"op": "add_edge", "from": "STP-003-091", "verb": "next", "to": "STP-003-086", "attrs": {"back": true}}
