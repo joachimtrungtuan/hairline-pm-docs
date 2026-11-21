@@ -1,0 +1,12 @@
+reason: "FR-002 completeness re-check 2026-11-21: A2 step 3 now reads 'accepts the submission on the older version'; link the prior-versions Rule to the template version field"
+by: controller
+operations:
+  # PRD Alternative Flow A2 step 3 (prd.md lines 119, 113) now says the engine accepts the submission on the older version; the Step still carried the old resubmission wording.
+  - {op: update_node, id: STP-002-011, title: "Engine accepts the submission on the older version"}
+
+  # REQ-002-041 states which template version new and existing inquiries use; link it to the field it governs and cite today's PRD lines.
+  - op: update_node
+    id: REQ-002-041
+    attrs:
+      rationale: "prd.md lines 145, 151, 351 (Workflow 3 outcome: applies to new submissions only; Alternative Flow C1 owned by FR-025: prior versions kept for existing inquiries, new inquiries use the latest published version; Business Process assumption)."
+  - {op: add_edge, from: REQ-002-041, verb: "applies to", to: ENT-intake-processing-request.template_version}

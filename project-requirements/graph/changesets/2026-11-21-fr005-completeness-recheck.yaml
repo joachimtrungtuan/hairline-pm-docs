@@ -1,0 +1,55 @@
+reason: "FR-005 completeness re-check 2026-11-21: model Main Flow steps 6 to 11 as system Steps, link the replacement-acceptance Step to its Rules, and replace the retired credentials Field on Screen 1 with the active Fields that carry the licenses and certifications summary, and add references to the Rules the PRD cites by code"
+by: controller
+operations:
+  - {"op": "add_node", "id": "STP-005-017", "type": "Step", "owner_fr": "FR-005", "title": "System revalidates the selection and acquires the exclusive slot hold", "attrs": {"prd_ref": "Main Flow step 6"}}
+  - {"op": "add_edge", "from": "STP-005-017", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-005-017", "verb": "at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "STP-005-005", "verb": "next", "to": "STP-005-017"}
+  - {"op": "add_edge", "from": "STP-005-017", "verb": "applies", "to": "REQ-005-002"}
+  - {"op": "add_edge", "from": "STP-005-017", "verb": "applies", "to": "REQ-005-004"}
+  - {"op": "add_edge", "from": "STP-005-017", "verb": "applies", "to": "REQ-005-019"}
+  - {"op": "add_edge", "from": "STP-005-017", "verb": "applies", "to": "REQ-005-021"}
+  - {"op": "add_edge", "from": "STP-005-017", "verb": "applies", "to": "REQ-005-022"}
+  - {"op": "add_edge", "from": "STP-005-017", "verb": "applies", "to": "REQ-005-036"}
+  - {"op": "add_edge", "from": "STP-005-017", "verb": "applies", "to": "REQ-006-005"}
+  - {"op": "add_node", "id": "STP-005-018", "type": "Step", "owner_fr": "FR-005", "title": "System records the acceptance, locks the selection and writes the accepted total", "attrs": {"prd_ref": "Main Flow step 7"}}
+  - {"op": "add_edge", "from": "STP-005-018", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-005-018", "verb": "at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "STP-005-017", "verb": "next", "to": "STP-005-018"}
+  - {"op": "add_edge", "from": "STP-005-018", "verb": "applies", "to": "REQ-005-006"}
+  - {"op": "add_edge", "from": "STP-005-018", "verb": "applies", "to": "REQ-005-037"}
+  - {"op": "add_edge", "from": "STP-005-018", "verb": "applies", "to": "REQ-029-044"}
+  - {"op": "add_node", "id": "STP-005-019", "type": "Step", "owner_fr": "FR-005", "title": "System marks sibling subquotes Not Selected, cancels competing parent quotes and settles promotion uses", "attrs": {"prd_ref": "Main Flow step 8"}}
+  - {"op": "add_edge", "from": "STP-005-019", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-005-019", "verb": "at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "STP-005-018", "verb": "next", "to": "STP-005-019"}
+  - {"op": "add_edge", "from": "STP-005-019", "verb": "applies", "to": "REQ-005-003"}
+  - {"op": "add_edge", "from": "STP-005-019", "verb": "applies", "to": "REQ-005-028"}
+  - {"op": "add_node", "id": "STP-005-020", "type": "Step", "owner_fr": "FR-005", "title": "System sends the acceptance outcome notices to the patient and the providers", "attrs": {"prd_ref": "Main Flow step 9"}}
+  - {"op": "add_edge", "from": "STP-005-020", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-005-020", "verb": "at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "STP-005-019", "verb": "next", "to": "STP-005-020"}
+  - {"op": "add_edge", "from": "STP-005-020", "verb": "applies", "to": "REQ-005-029"}
+  - {"op": "add_edge", "from": "STP-005-020", "verb": "applies", "to": "REQ-005-038"}
+  - {"op": "add_edge", "from": "STP-005-020", "verb": "applies", "to": "REQ-005-039"}
+  - {"op": "add_edge", "from": "STP-005-020", "verb": "applies", "to": "REQ-020-012"}
+  - {"op": "add_edge", "from": "STP-005-020", "verb": "applies", "to": "REQ-020-019"}
+  - {"op": "add_node", "id": "STP-005-021", "type": "Step", "owner_fr": "FR-005", "title": "System sends the accepted subquote to Booking and Payment", "attrs": {"prd_ref": "Main Flow step 10"}}
+  - {"op": "add_edge", "from": "STP-005-021", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-005-021", "verb": "at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "STP-005-020", "verb": "next", "to": "STP-005-021"}
+  - {"op": "add_edge", "from": "STP-005-021", "verb": "applies", "to": "REQ-005-005"}
+  - {"op": "add_edge", "from": "STP-005-021", "verb": "applies", "to": "REQ-005-011"}
+  - {"op": "add_node", "id": "STP-005-022", "type": "Step", "owner_fr": "FR-005", "title": "System writes immutable audit entries for the selection and every resulting transition", "attrs": {"prd_ref": "Main Flow step 11"}}
+  - {"op": "add_edge", "from": "STP-005-022", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-005-022", "verb": "at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "STP-005-021", "verb": "next", "to": "STP-005-022"}
+  - {"op": "add_edge", "from": "STP-005-022", "verb": "applies", "to": "REQ-005-034"}
+  - {"op": "add_edge", "from": "STP-005-016", "verb": "applies", "to": "REQ-005-045"}
+  - {"op": "add_edge", "from": "STP-005-016", "verb": "applies", "to": "REQ-005-046"}
+  - {"op": "remove_edge", "from": "SCR-005-01", "verb": "shows", "to": "ENT-provider.credentials_summary"}
+  - {"op": "add_edge", "from": "SCR-005-01", "verb": "shows", "to": "ENT-provider.medical_license_number", "attrs": {"provenance": "inherited from another FR", "label": "Provider Credentials Summary (licenses); Comparison Differentiators", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-005-01", "verb": "shows", "to": "ENT-provider.awards", "attrs": {"provenance": "inherited from another FR", "label": "Provider Credentials Summary (certifications and awards); Comparison Differentiators", "editable": false}}
+  - {"op": "add_edge", "from": "FR-005", "verb": "references", "to": "REQ-020-012"}
+  - {"op": "add_edge", "from": "FR-005", "verb": "references", "to": "REQ-020-019"}
+  - {"op": "add_edge", "from": "FR-005", "verb": "references", "to": "REQ-012-006"}

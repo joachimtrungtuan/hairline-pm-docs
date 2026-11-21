@@ -1,0 +1,66 @@
+reason: "FR-006 completeness re-check 2026-11-21 against the PRD as edited on 2026-11-20: the one held booking.scheduled emission, six new Rules for screen and edge-case behaviours the PRD states, the blocked-state banner text, missing shows links (versions, event reference, time zone, treatment area), refund-ladder links, one Step title (plans/reports/tester-261121-fr006-completeness-recheck.md)."
+by: controller
+operations:
+  # Held operation kept from 2026-11-10-fr006-completeness-held.yaml: booking.scheduled also fires at the booking stage (admin-authored replacement acceptance, PRD lines 176 and 802).
+  - {"op": "add_edge", "from": "STG-main-04-booking", "verb": "emits", "to": "EVT-booking-scheduled"}
+  - {"op": "update_node", "id": "EVT-booking-scheduled", "attrs": {"description": "booking.scheduled (displayed as \"Booking Accepted — Slot Held (Pending Payment)\"): mandatory, patient only, sent on patient acceptance (Acceptance stage) and on an admin-authored replacement acceptance (booking stage); the provider is told by quote.accepted."}}
+  # Rule text follows the PRD: exact blocked-state banner and the Back to Dashboard button (PRD lines 87, 255, 258, 260).
+  - {"op": "update_node", "id": "REQ-006-014", "attrs": {"statement": "System MUST verify the parent inquiry is not in \"Cancelled\" status before allowing entry to the booking/payment flow. If cancelled, system MUST block entry and display a read-only blocked state (Screen 1 blocked state) instead of the payment form, with the banner \"This inquiry has been cancelled. Booking is no longer available.\" and a Back to Dashboard button that returns the patient to the Inquiry Dashboard (FR-003 Screen 8); all payment fields and actions are hidden."}}
+  # New Rules.
+  - {"op": "add_node", "id": "REQ-006-075", "type": "Rule", "owner_fr": "FR-006", "title": "Installment Plan control shows only for installments, 2 to 9", "attrs": {"statement": "On Screen 1 the Installment Plan control is shown only when the patient chooses the installment payment option, and it offers a number of installments from 2 to 9, limited to the feasible options (REQ-006-033).", "rationale": "prd.md lines 241-242 (Payment Option 'Installments (2-9)' and Installment Plan 'Only shown if installment option selected')"}}
+  - {"op": "add_node", "id": "REQ-006-076", "type": "Rule", "owner_fr": "FR-006", "title": "Provider booking row opens the booking detail view", "attrs": {"statement": "Clicking a booking row on the provider Bookings Dashboard (Screen 3) opens the booking detail view (Screen 4).", "rationale": "prd.md lines 361 (Screen 3 Business Rules, clicking on booking row)"}}
+  - {"op": "add_node", "id": "REQ-006-077", "type": "Rule", "owner_fr": "FR-006", "title": "Booking detail links open the inquiry, accepted selection and parent quote", "attrs": {"statement": "On the provider booking detail (Screen 4) and the admin booking detail (Screen 6), the links to the inquiry, the accepted selection and the source parent quote open that record, giving full context and audit trail.", "rationale": "prd.md lines 489, 690 (Screen 4 and Screen 6 Business Rules, links to the inquiry, accepted selection and source parent quote)"}}
+  - {"op": "add_node", "id": "REQ-006-078", "type": "Rule", "owner_fr": "FR-006", "title": "Admin modal Confirm checkbox must be checked before submit", "attrs": {"statement": "On the admin modals and screens for revive, appointment change, cancellation, provider-fault transfer and in-progress provider-fault resolution (Screens 7 to 11), the Confirm checkbox must be checked before the admin can submit.", "rationale": "prd.md lines 714, 739, 765, 792, 818 (Confirm row of Screens 7 to 11, 'Must be checked before submit')"}}
+  - {"op": "add_node", "id": "REQ-006-079", "type": "Rule", "owner_fr": "FR-006", "title": "Change Appointment shows a travel review notice when travel is linked", "attrs": {"statement": "On Screen 8 a read-only Travel Review Notice is shown when travel records are linked to the booking; it states that an FR-008 travel-date review will be raised.", "rationale": "prd.md lines 738 (Screen 8 Travel Review Notice, shown when travel records are linked)"}}
+  - {"op": "add_node", "id": "REQ-006-080", "type": "Rule", "owner_fr": "FR-006", "title": "Installment default before the deadline flags the booking and notifies admin and patient", "attrs": {"statement": "When an installment plan defaults before its deadline, System MUST flag the booking and notify the admin and the patient, and apply the policy set in FR-007B (REQ-007B-019 and REQ-007B-020).", "rationale": "prd.md lines 1101 (Edge Cases, installment plan default before deadline)"}}
+  - {"op": "add_edge", "from": "REQ-006-075", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-006-075", "verb": "applies to", "to": "SCR-006-01"}
+  - {"op": "add_edge", "from": "REQ-006-075", "verb": "applies to", "to": "ENT-booking.installment_count"}
+  - {"op": "add_edge", "from": "REQ-006-075", "verb": "decided by", "to": "SRC-PRD-006"}
+  - {"op": "add_edge", "from": "REQ-006-076", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-006-076", "verb": "applies to", "to": "SCR-006-03"}
+  - {"op": "add_edge", "from": "REQ-006-076", "verb": "applies to", "to": "SCR-006-04"}
+  - {"op": "add_edge", "from": "REQ-006-076", "verb": "decided by", "to": "SRC-PRD-006"}
+  - {"op": "add_edge", "from": "REQ-006-077", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-006-077", "verb": "applies to", "to": "SCR-006-04"}
+  - {"op": "add_edge", "from": "REQ-006-077", "verb": "applies to", "to": "SCR-006-06"}
+  - {"op": "add_edge", "from": "REQ-006-077", "verb": "decided by", "to": "SRC-PRD-006"}
+  - {"op": "add_edge", "from": "REQ-006-078", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-006-078", "verb": "applies to", "to": "SCR-006-07"}
+  - {"op": "add_edge", "from": "REQ-006-078", "verb": "applies to", "to": "SCR-006-08"}
+  - {"op": "add_edge", "from": "REQ-006-078", "verb": "applies to", "to": "SCR-006-09"}
+  - {"op": "add_edge", "from": "REQ-006-078", "verb": "applies to", "to": "SCR-006-10"}
+  - {"op": "add_edge", "from": "REQ-006-078", "verb": "applies to", "to": "SCR-006-11"}
+  - {"op": "add_edge", "from": "REQ-006-078", "verb": "decided by", "to": "SRC-PRD-006"}
+  - {"op": "add_edge", "from": "REQ-006-079", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-006-079", "verb": "applies to", "to": "SCR-006-08"}
+  - {"op": "add_edge", "from": "REQ-006-079", "verb": "decided by", "to": "SRC-PRD-006"}
+  - {"op": "add_edge", "from": "REQ-006-080", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "REQ-006-080", "verb": "applies to", "to": "ENT-booking"}
+  - {"op": "add_edge", "from": "REQ-006-080", "verb": "applies to", "to": "EVT-installment-plan-defaulted"}
+  - {"op": "add_edge", "from": "REQ-006-080", "verb": "decided by", "to": "SRC-PRD-006"}
+  # Topic links for existing Rules.
+  - {"op": "add_edge", "from": "REQ-006-011", "verb": "applies to", "to": "SCR-006-02"}
+  - {"op": "add_edge", "from": "REQ-006-004", "verb": "governed by", "to": "SET-refund-ladder"}
+  - {"op": "add_edge", "from": "REQ-006-053", "verb": "governed by", "to": "SET-refund-ladder"}
+  - {"op": "add_edge", "from": "REQ-006-064", "verb": "governed by", "to": "SET-refund-ladder"}
+  # Screen shows links: accepted quote versions on Screens 2 and 4 (PRD lines 293-294, 428-429).
+  - {"op": "add_edge", "from": "SCR-006-02", "verb": "shows", "to": "ENT-booking.accepted_parent_quote_version", "attrs": {"provenance": "retrieved", "label": "Parent Quote Version"}}
+  - {"op": "add_edge", "from": "SCR-006-02", "verb": "shows", "to": "ENT-booking.accepted_subquote_version", "attrs": {"provenance": "retrieved", "label": "Accepted Subquote Version"}}
+  - {"op": "add_edge", "from": "SCR-006-04", "verb": "shows", "to": "ENT-booking.accepted_parent_quote_version", "attrs": {"provenance": "retrieved", "label": "Parent Quote Version"}}
+  - {"op": "add_edge", "from": "SCR-006-04", "verb": "shows", "to": "ENT-booking.accepted_subquote_version", "attrs": {"provenance": "retrieved", "label": "Accepted Subquote Version"}}
+  # Acceptance Audit Context event reference on Screens 1, 4 and 6 (PRD lines 236, 442, 612).
+  - {"op": "add_edge", "from": "SCR-006-01", "verb": "shows", "to": "ENT-acceptance-event.id", "attrs": {"provenance": "retrieved", "label": "Acceptance Audit Context (event reference)"}}
+  - {"op": "add_edge", "from": "SCR-006-04", "verb": "shows", "to": "ENT-acceptance-event.id", "attrs": {"provenance": "retrieved", "label": "Acceptance Audit Context (event reference)"}}
+  - {"op": "add_edge", "from": "SCR-006-06", "verb": "shows", "to": "ENT-acceptance-event.id", "attrs": {"provenance": "retrieved", "label": "Acceptance Audit Context (event reference)"}}
+  # Appointment time zone on Screens 1, 7 and 8 (PRD lines 271, 710, 733).
+  - {"op": "add_edge", "from": "SCR-006-01", "verb": "shows", "to": "ENT-booking.hold_appointment_timezone", "attrs": {"provenance": "retrieved", "label": "Pre-Scheduled Appointment (time zone)"}}
+  - {"op": "add_edge", "from": "SCR-006-07", "verb": "shows", "to": "ENT-booking.hold_appointment_timezone", "attrs": {"provenance": "retrieved", "label": "Appointment (time zone)"}}
+  - {"op": "add_edge", "from": "SCR-006-08", "verb": "shows", "to": "ENT-booking.hold_appointment_timezone", "attrs": {"provenance": "retrieved", "label": "Current Appointment (time zone)"}}
+  # Treatment Area Requested replaces Treatment Type Requested on Screens 4 and 6 (PRD lines 404, 573).
+  - {"op": "remove_edge", "from": "SCR-006-04", "verb": "shows", "to": "ENT-inquiry.service_option"}
+  - {"op": "remove_edge", "from": "SCR-006-06", "verb": "shows", "to": "ENT-inquiry.service_option"}
+  - {"op": "add_edge", "from": "SCR-006-04", "verb": "shows", "to": "ENT-inquiry.treatment_area_snapshot", "attrs": {"provenance": "inherited from another FR", "label": "Treatment Area Requested"}}
+  - {"op": "add_edge", "from": "SCR-006-06", "verb": "shows", "to": "ENT-inquiry.treatment_area_snapshot", "attrs": {"provenance": "inherited from another FR", "label": "Treatment Area Requested"}}
+  # B2 step 6 now says refunds follow the FR-029 refund ladder and the refund step is FR-007's (PRD line 149).
+  - {"op": "update_node", "id": "STP-006-306", "title": "Refunds follow the refund ladder set in FR-029; the refund step, its event and the other money mechanics are owned by FR-007, FR-007B and FR-017", "attrs": {"handoff_to": "FR-007: refund step and its event for an admin cancellation (refund ladder set in FR-029)"}}

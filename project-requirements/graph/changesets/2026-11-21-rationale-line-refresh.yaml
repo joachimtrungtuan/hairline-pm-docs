@@ -1,0 +1,1078 @@
+reason: "Refresh PRD line numbers in Rule rationales that still pointed at the line the text had before the 2026-11-20 PRD edit. Line numbers only; no rule text changed."
+by: controller
+operations:
+  - {"op": "update_node", "id": "REQ-029-074", "attrs": {"rationale": "Edge case (PRD line 1174) adds that the payment attempt is logged to the admin dashboard for follow-up. B6 line 378: when the Global Fallback is used, a warning is logged to the admin."}}
+  - {"op": "update_node", "id": "REQ-029-075", "attrs": {"rationale": "PRD line 1182: payments are temporarily routed to the Global Fallback when configured."}}
+  - {"op": "update_node", "id": "REQ-029-106", "attrs": {"rationale": "PRD line 1176: the patient must select fewer installments or pay deposit plus the remaining balance immediately."}}
+  - {"op": "update_node", "id": "REQ-037-032", "attrs": {"rationale": "Business Rule 1 (prd.md line 589); Internal Dependencies FR-038 (both reuse shared monitoring entities discriminated by case type)."}}
+  - {"op": "update_node", "id": "REQ-024-001", "attrs": {"rationale": "Functional Requirements Summary (PRD line 1008)."}}
+  - {"op": "update_node", "id": "REQ-024-002", "attrs": {"rationale": "Functional Requirements Summary (PRD line 1009)."}}
+  - {"op": "update_node", "id": "REQ-024-004", "attrs": {"rationale": "Functional Requirements Summary (PRD line 1011)."}}
+  - {"op": "update_node", "id": "REQ-024-005", "attrs": {"rationale": "Functional Requirements Summary (PRD line 1012)."}}
+  - {"op": "update_node", "id": "REQ-024-006", "attrs": {"rationale": "Functional Requirements Summary (PRD line 1013)."}}
+  - {"op": "update_node", "id": "REQ-024-008", "attrs": {"rationale": "Functional Requirements Summary (PRD line 1015)."}}
+  - {"op": "update_node", "id": "REQ-024-009", "attrs": {"rationale": "Functional Requirements Summary (PRD line 1016)."}}
+  - {"op": "update_node", "id": "REQ-024-013", "attrs": {"rationale": "Functional Requirements Summary (PRD line 1028)."}}
+  - {"op": "update_node", "id": "REQ-024-014", "attrs": {"rationale": "Functional Requirements Summary (PRD line 1029)."}}
+  - {"op": "update_node", "id": "REQ-024-015", "attrs": {"rationale": "Functional Requirements Summary (PRD line 1030)."}}
+  - {"op": "update_node", "id": "REQ-024-016", "attrs": {"rationale": "Functional Requirements Summary (PRD line 1031)."}}
+  - {"op": "update_node", "id": "REQ-024-017", "attrs": {"rationale": "Functional Requirements Summary (PRD line 1032)."}}
+  - {"op": "update_node", "id": "REQ-024-018", "attrs": {"rationale": "Functional Requirements Summary (PRD line 1033)."}}
+  - {"op": "update_node", "id": "REQ-024-019", "attrs": {"rationale": "Functional Requirements Summary (PRD line 1037)."}}
+  - {"op": "update_node", "id": "REQ-024-020", "attrs": {"rationale": "Functional Requirements Summary (PRD line 1038)."}}
+  - {"op": "update_node", "id": "REQ-024-021", "attrs": {"rationale": "Functional Requirements Summary (PRD line 1039)."}}
+  - {"op": "update_node", "id": "REQ-024-022", "attrs": {"rationale": "Functional Requirements Summary (PRD line 1040)."}}
+  - {"op": "update_node", "id": "REQ-024-023", "attrs": {"rationale": "Functional Requirements Summary (PRD line 1041)."}}
+  - {"op": "update_node", "id": "REQ-024-024", "attrs": {"rationale": "Functional Requirements Summary (PRD line 1042)."}}
+  - {"op": "update_node", "id": "REQ-024-025", "attrs": {"rationale": "Functional Requirements Summary (PRD line 1046)."}}
+  - {"op": "update_node", "id": "REQ-024-026", "attrs": {"rationale": "Functional Requirements Summary (PRD line 1047)."}}
+  - {"op": "update_node", "id": "REQ-024-027", "attrs": {"rationale": "Functional Requirements Summary (PRD line 1048)."}}
+  - {"op": "update_node", "id": "REQ-024-028", "attrs": {"rationale": "Functional Requirements Summary (PRD line 1049)."}}
+  - {"op": "update_node", "id": "REQ-024-029", "attrs": {"rationale": "Functional Requirements Summary (PRD line 1050)."}}
+  - {"op": "update_node", "id": "REQ-024-033", "attrs": {"rationale": "Functional Requirements Summary (PRD line 1021)."}}
+  - {"op": "update_node", "id": "REQ-024-038", "attrs": {"rationale": "Business Rules, General Module Rule 1 (PRD line 600)."}}
+  - {"op": "update_node", "id": "REQ-024-061", "attrs": {"rationale": "Business Process Assumption 2 (PRD line 831), promoted because it states who decides prices."}}
+  - {"op": "update_node", "id": "REQ-024-062", "attrs": {"rationale": "Screen 3 notes (PRD line 505)."}}
+  - {"op": "update_node", "id": "REQ-024-064", "attrs": {"rationale": "Main Flow step 7 and step 12 (PRD lines 240, 245); Screen 5 field (line 493)."}}
+  - {"op": "update_node", "id": "REQ-024-070", "attrs": {"rationale": "Alternative Flow A4 step 10 (PRD line 270)."}}
+  - {"op": "update_node", "id": "REQ-024-071", "attrs": {"rationale": "Package Edit Paths (PRD line 622)."}}
+  - {"op": "update_node", "id": "REQ-024-079", "attrs": {"rationale": "Data & Privacy Rules, Privacy Rule 4 (PRD line 629)."}}
+  - {"op": "update_node", "id": "REQ-024-080", "attrs": {"rationale": "Data & Privacy Rules, Privacy Rule 3 (PRD line 628). External Dependencies line 704 describes a fallback to direct S3 URLs; this is an open product owner question."}}
+  - {"op": "update_node", "id": "REQ-024-083", "attrs": {"rationale": "Implementation Notes, Integration 3 error handling (PRD line 864), promoted because it is a business rule inside a technical section."}}
+  - {"op": "update_node", "id": "REQ-024-084", "attrs": {"rationale": "Implementation Notes, Security Considerations, Compliance (PRD line 881), promoted because it states an erasure and export obligation."}}
+  - {"op": "update_node", "id": "REQ-002-001", "attrs": {"rationale": "Core Requirements (prd.md line 275). Workflow 1 step 2 (flow diagram, Workflow 1 at line 80): engine validates completeness against the FR-025 template and media constraints. Shared Services (line 49): Medical Intake Engine validates questionnaire responses. Integration contract rules (line 195): enforce FR-025 required fields and media constraints."}}
+  - {"op": "update_node", "id": "REQ-002-026", "attrs": {"rationale": "General Rules 1 (prd.md line 187). Close to REQ-002-010 but adds the audit content. Assumption (line 368): access is mediated by platform RBAC and immutable audit logging."}}
+  - {"op": "update_node", "id": "REQ-012-001", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 938."}}
+  - {"op": "update_node", "id": "REQ-012-003", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 940."}}
+  - {"op": "update_node", "id": "REQ-012-005", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 942."}}
+  - {"op": "update_node", "id": "REQ-012-006", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 943."}}
+  - {"op": "update_node", "id": "REQ-012-008", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 945."}}
+  - {"op": "update_node", "id": "REQ-012-009", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 946."}}
+  - {"op": "update_node", "id": "REQ-012-011", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 948."}}
+  - {"op": "update_node", "id": "REQ-012-014", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 951."}}
+  - {"op": "update_node", "id": "REQ-012-015", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 957."}}
+  - {"op": "update_node", "id": "REQ-012-017", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 959."}}
+  - {"op": "update_node", "id": "REQ-012-018", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 963."}}
+  - {"op": "update_node", "id": "REQ-012-021", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 966."}}
+  - {"op": "update_node", "id": "REQ-012-023", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 968."}}
+  - {"op": "update_node", "id": "REQ-012-024", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 969."}}
+  - {"op": "update_node", "id": "REQ-012-025", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 973."}}
+  - {"op": "update_node", "id": "REQ-012-028", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 976."}}
+  - {"op": "update_node", "id": "REQ-012-033", "attrs": {"rationale": "prd.md lines 732. External Dependencies, Twilio failure handling (promoted because the user sees it)."}}
+  - {"op": "update_node", "id": "REQ-012-037", "attrs": {"rationale": "prd.md lines 259, 265. Screen 2 and Screen 4 Send button. Conflicts with the Message text Required flag; see the open question."}}
+  - {"op": "update_node", "id": "REQ-012-042", "attrs": {"rationale": "prd.md lines 590, 628. Screen 6B Attachment (admin). Video is not offered to admins."}}
+  - {"op": "update_node", "id": "REQ-012-059", "attrs": {"rationale": "prd.md lines 376. Screen 4 business rules."}}
+  - {"op": "update_node", "id": "REQ-012-060", "attrs": {"rationale": "prd.md lines 347. Screen 4 Message sender."}}
+  - {"op": "update_node", "id": "REQ-012-061", "attrs": {"rationale": "prd.md lines 366. Screen 4 Actions menu."}}
+  - {"op": "update_node", "id": "REQ-012-073", "attrs": {"rationale": "prd.md lines 493. Screen 6A Resolve Flag."}}
+  - {"op": "update_node", "id": "REQ-012-074", "attrs": {"rationale": "prd.md lines 494, 506. Screen 6A business rules and Enable Emergency Intervention."}}
+  - {"op": "update_node", "id": "REQ-012-075", "attrs": {"rationale": "prd.md lines 507. Screen 6A business rules. REQ-012-023 states the same for flag and intervention actions (possible duplicate)."}}
+  - {"op": "update_node", "id": "REQ-012-080", "attrs": {"rationale": "prd.md lines 566. Screen 6B business rules; Alternative Flow A3 step 2."}}
+  - {"op": "update_node", "id": "REQ-012-081", "attrs": {"rationale": "prd.md lines 540, 562, 567. Screen 6B business rules; Emergency warning banner; Warning reminder."}}
+  - {"op": "update_node", "id": "REQ-012-089", "attrs": {"rationale": "prd.md lines 595. Screen 6B notes."}}
+  - {"op": "update_node", "id": "REQ-012-091", "attrs": {"rationale": "prd.md lines 924. Edge Cases. The provider review or suspension itself belongs to FR-015."}}
+  - {"op": "update_node", "id": "REQ-012-092", "attrs": {"rationale": "prd.md lines 925. Edge Cases."}}
+  - {"op": "update_node", "id": "REQ-012-093", "attrs": {"rationale": "prd.md lines 778. Business Process Assumptions, promoted because it is the behaviour keyword flagging enforces."}}
+  - {"op": "update_node", "id": "REQ-012-096", "attrs": {"rationale": "prd.md lines 928. Edge Cases."}}
+  - {"op": "update_node", "id": "REQ-012-102", "attrs": {"rationale": "prd.md lines 824. Security Considerations, Audit trail (business rule promoted from the technical section)."}}
+  - {"op": "update_node", "id": "REQ-012-104", "attrs": {"rationale": "prd.md lines 923. Edge Cases, Simultaneous sends."}}
+  - {"op": "update_node", "id": "REQ-016-023", "attrs": {"rationale": "Stated in prd.md, Security & Privacy Requirements (line 1136). Restated: prd.md line 704: \"Patient payment card details NEVER stored or displayed in admin interface (PCI-DSS compliance)\""}}
+  - {"op": "update_node", "id": "REQ-016-029", "attrs": {"rationale": "Stated in prd.md, Admin Intervention Requirements (line 1118). Restated: prd.md line 389: \"One row per affected inquiry/case: inquiry/case reference (deep link), prior stage, cancellation cause, Admin Support Required state (Unresolved/Resolved with reason, admin, timestamp), linked FR-034 support case (if any); Read-only; shown when any FR-015 A5 impact exists\""}}
+  - {"op": "update_node", "id": "REQ-016-106", "attrs": {"rationale": "Stated in prd.md, Screen 2: Patient Detail View - Overview Tab (line 401). Restated: prd.md line 402: \"Patient-selected cancellation reason (from FR-026 Screen 5a options), or provider-caused cause `ProviderSuspended` / `ProviderDeactivated` (FR-015 A5); Read-only; only shown when Current Status = Cancelled\" prd.md line 386: \"When the inquiry was cancelled by the patient; Read-only; only shown when Current Status = Cancelled\""}}
+  - {"op": "update_node", "id": "REQ-016-160", "attrs": {"rationale": "Stated in prd.md, Screen 7: Patient Detail View - Admin Actions Tab (line 587). Restated: prd.md line 591: \"Type of intervention; Allowed values: Password Reset, Account Unlock, Profile Update, Manual Refund, Account Suspension, Medical Data Access, Data Deletion Request, Admin Note, Patient Inquiry Cancellation (system-generated audit entry when patient cancels inquiry via FR-003 Workflow 5 — logs who/when/reason), Provider-Caused Cancellation (system-generated entry per affected case/inquiry from FR-015 A5 — logs provider-status event, cause, prior stage), Provider Support Resolution (logs affected record, resolution reason, admin)\""}}
+  - {"op": "update_node", "id": "REQ-001-001", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 1272. Also stated in the PRD at line 26: \"Register and create accounts via mobile app only\"; line 82: \"Patient-Initiated: Primary flow through mobile app registration and login (patients can ONLY be registered via the mobile app)\"."}}
+  - {"op": "update_node", "id": "REQ-001-002", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 1273. Also stated in the PRD at line 415: \"Email verification required for account activation\"; line 113: \"System validates the OTP and confirms email verification (codes expire after 15 minutes; resend available with rate limiting)\"."}}
+  - {"op": "update_node", "id": "REQ-001-003", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 1274. Also stated in the PRD at line 27: \"Login and authenticate with email/password\"; line 179: \"System validates email and password combination\"."}}
+  - {"op": "update_node", "id": "REQ-001-004", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 1275. Also stated in the PRD at line 30: \"Reset password via email OTP\"; line 528: \"Reset code sent to registered email\"; line 219: \"System sends a 6-digit password reset OTP to the patient's email\"."}}
+  - {"op": "update_node", "id": "REQ-001-005", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 1276. Also stated in the PRD at line 28: \"Manage profile information (name, email, phone, date of birth, gender, country)\"; line 29: \"Update profile image and preferences\"; line 34: \"Access profile overview, settings, and account management features\"; line 278: \"System validates changes and updates profile\"; line 273: \"System displays current profile information\"."}}
+  - {"op": "update_node", "id": "REQ-001-007", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 1278. Also stated in the PRD at line 933: \"Maximum failed login attempts before account lockout (configurable in Admin Settings A-09)\"; line 963: \"Account lockout prevents brute force attacks\"; line 193: \"System tracks failed attempts (configurable max attempts before lockout, default: 5; per Admin Settings A-09 / FR-026)\"."}}
+  - {"op": "update_node", "id": "REQ-001-008", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 1279. Also stated in the PRD at line 960: \"All authentication attempts logged\"; line 936: \"Successful logins logged for security monitoring\"; line 179: \"System logs successful login for audit trail\"; line 58: \"Audit logging for all authentication and profile changes\"."}}
+  - {"op": "update_node", "id": "REQ-001-009", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 1283. Also stated in the PRD at line 927: \"Email addresses must be unique across the platform\"; line 1015: \"Unique email address enforcement\"."}}
+  - {"op": "update_node", "id": "REQ-001-010", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 1284. Also stated in the PRD at line 438: \"Gender options: Male, Female, Other, Prefer not to say\"; line 28: \"Manage profile information (name, email, phone, date of birth, gender, country)\"."}}
+  - {"op": "update_node", "id": "REQ-001-011", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 1285. Also stated in the PRD at line 57: \"Session management and authentication tokens\"; line 179: \"System creates authenticated session\"."}}
+  - {"op": "update_node", "id": "REQ-001-013", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 1290. Also stated in the PRD at line 948: \"All passwords hashed using bcrypt (cost factor 12+)\"; line 59: \"Password hashing and security utilities\"."}}
+  - {"op": "update_node", "id": "REQ-001-014", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 1291. Also stated in the PRD at line 949: \"Personal data encrypted at rest\"."}}
+  - {"op": "update_node", "id": "REQ-001-015", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 1292. Also stated in the PRD at line 956: \"Provider platform receives anonymized patient data only\"; line 41: \"Patient data remains anonymized until payment confirmation (per system PRD)\"; line 69: \"System → Provider Platform: Anonymized patient data (no direct communication)\"."}}
+  - {"op": "update_node", "id": "REQ-001-016", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 1293. Also stated in the PRD at line 962: \"Profile changes require re-authentication for sensitive fields\"."}}
+  - {"op": "update_node", "id": "REQ-001-017", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 1294. Also stated in the PRD at line 981: \"Change reason required for all modifications\"; line 918: \"Admin can edit patient information with reason logging\"; line 296: \"System logs all admin changes with reason\"."}}
+  - {"op": "update_node", "id": "REQ-001-018", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 1298. Also stated in the PRD at line 56: \"Email service for OTP delivery and notifications\"; line 67: \"System → Patient: One-time passcodes (OTP) for email confirmation and password reset, profile update notifications\"."}}
+  - {"op": "update_node", "id": "REQ-001-019", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 1299. "}}
+  - {"op": "update_node", "id": "REQ-001-021", "attrs": {"rationale": "prd.md line 37. Also stated in the PRD at line 18: \"Provider Platform: Anonymized patient data access (read-only)\"."}}
+  - {"op": "update_node", "id": "REQ-001-022", "attrs": {"rationale": "prd.md line 39. "}}
+  - {"op": "update_node", "id": "REQ-001-023", "attrs": {"rationale": "prd.md line 44. Also stated in the PRD at line 917: \"Admin can view all patient profiles\"."}}
+  - {"op": "update_node", "id": "REQ-001-025", "attrs": {"rationale": "prd.md line 1009. Also stated in the PRD at line 46: \"Edit patient profile information with audit trail\"; line 296: \"Admin can edit patient profiles through admin platform\"."}}
+  - {"op": "update_node", "id": "REQ-001-026", "attrs": {"rationale": "prd.md line 1010. Also stated in the PRD at line 49: \"Manage patient account status and verification state\"."}}
+  - {"op": "update_node", "id": "REQ-001-027", "attrs": {"rationale": "prd.md line 1011. Also stated in the PRD at line 48: \"Reset patient passwords\"."}}
+  - {"op": "update_node", "id": "REQ-001-028", "attrs": {"rationale": "prd.md line 1012. Also stated in the PRD at line 47: \"Suspend/reactivate patient accounts\"; line 919: \"Admin can suspend/reactivate accounts\"."}}
+  - {"op": "update_node", "id": "REQ-001-030", "attrs": {"rationale": "prd.md line 49. Also stated in the PRD at line 70: \"System → Admin: Authentication logs, security events, and account status updates\"."}}
+  - {"op": "update_node", "id": "REQ-001-031", "attrs": {"rationale": "prd.md line 50. Also stated in the PRD at line 33: \"Request account deletion (soft-delete handled by admin)\"."}}
+  - {"op": "update_node", "id": "REQ-001-032", "attrs": {"rationale": "prd.md line 51. Also stated in the PRD at line 76: \"Admin-initiated patient account creation (patients must register via mobile app)\"; line 75: \"Provider-initiated patient account creation\"; line 83: \"Admin-Managed: Admin can manage patient accounts (view/edit/suspend) but CANNOT create new patient accounts\"."}}
+  - {"op": "update_node", "id": "REQ-001-033", "attrs": {"rationale": "prd.md line 1021. Also stated in the PRD at line 983: \"Edit history maintained for audit trail\"; line 920: \"All admin actions logged for audit trail\"."}}
+  - {"op": "update_node", "id": "REQ-001-034", "attrs": {"rationale": "prd.md line 1023. Also stated in the PRD at line 297: \"W4D1_2 --> W4D1_3[\"Patient receives notification of changes\"]\"."}}
+  - {"op": "update_node", "id": "REQ-001-035", "attrs": {"rationale": "prd.md line 303. "}}
+  - {"op": "update_node", "id": "REQ-001-038", "attrs": {"rationale": "prd.md line 992. "}}
+  - {"op": "update_node", "id": "REQ-001-044", "attrs": {"rationale": "prd.md line 391. "}}
+  - {"op": "update_node", "id": "REQ-001-048", "attrs": {"rationale": "prd.md line 984. Also stated in the PRD at line 529: \"OTP validity window: 15 minutes (configurable via Admin Settings A-09)\"; line 416: \"6-digit OTP sent automatically to email; codes expire after 15 minutes (configurable)\"."}}
+  - {"op": "update_node", "id": "REQ-001-049", "attrs": {"rationale": "prd.md line 439. Also stated in the PRD at line 147: \"System allows \"Resend code\" option (with rate limiting)\"."}}
+  - {"op": "update_node", "id": "REQ-001-050", "attrs": {"rationale": "prd.md line 983. Also stated in the PRD at line 549: \"6-digit numeric code required\"."}}
+  - {"op": "update_node", "id": "REQ-001-051", "attrs": {"rationale": "prd.md line 144. Also stated in the PRD at line 140: \"Draft expires after 7 days of inactivity\"."}}
+  - {"op": "update_node", "id": "REQ-001-053", "attrs": {"rationale": "prd.md line 1051. Also stated in the PRD at line 440: \"Phone number with country code validation\"."}}
+  - {"op": "update_node", "id": "REQ-001-054", "attrs": {"rationale": "prd.md line 463. "}}
+  - {"op": "update_node", "id": "REQ-001-056", "attrs": {"rationale": "prd.md line 465. "}}
+  - {"op": "update_node", "id": "REQ-001-057", "attrs": {"rationale": "prd.md line 972. "}}
+  - {"op": "update_node", "id": "REQ-001-058", "attrs": {"rationale": "prd.md line 503. Also stated in the PRD at line 483: \"Continue button disabled until an option is selected\"."}}
+  - {"op": "update_node", "id": "REQ-001-060", "attrs": {"rationale": "prd.md line 504. "}}
+  - {"op": "update_node", "id": "REQ-001-061", "attrs": {"rationale": "prd.md line 1044. Also stated in the PRD at line 868: \"Returning to Settings must preserve navigation state (back stack returns to Screen 15b)\"."}}
+  - {"op": "update_node", "id": "REQ-001-063", "attrs": {"rationale": "prd.md lines 1036, 1037, 1038, 1039. "}}
+  - {"op": "update_node", "id": "REQ-001-065", "attrs": {"rationale": "prd.md line 197. Also stated in the PRD at line 192: \"Patient can retry or use \"Forgot your password?\" link\"."}}
+  - {"op": "update_node", "id": "REQ-001-066", "attrs": {"rationale": "prd.md line 205. Also stated in the PRD at line 200: \"System displays account lockout message\"; line 201: \"System logs security event\"."}}
+  - {"op": "update_node", "id": "REQ-001-067", "attrs": {"rationale": "prd.md line 977. "}}
+  - {"op": "update_node", "id": "REQ-001-069", "attrs": {"rationale": "prd.md line 1057. "}}
+  - {"op": "update_node", "id": "REQ-001-070", "attrs": {"rationale": "prd.md line 1002. Also stated in the PRD at line 509: \"Failed attempts tracked for security\"."}}
+  - {"op": "update_node", "id": "REQ-001-071", "attrs": {"rationale": "prd.md line 995. "}}
+  - {"op": "update_node", "id": "REQ-001-073", "attrs": {"rationale": "prd.md line 264. Also stated in the PRD at line 259: \"No indication given whether the email is registered\"."}}
+  - {"op": "update_node", "id": "REQ-001-074", "attrs": {"rationale": "prd.md line 1058. Also stated in the PRD at line 530: \"Rate limiting prevents abuse\"; line 260: \"System still enforces rate limiting on requests\"."}}
+  - {"op": "update_node", "id": "REQ-001-075", "attrs": {"rationale": "prd.md line 591. Also stated in the PRD at line 243: \"System displays error message\"."}}
+  - {"op": "update_node", "id": "REQ-001-076", "attrs": {"rationale": "prd.md line 613. Also stated in the PRD at line 229: \"System creates new authenticated session\"."}}
+  - {"op": "update_node", "id": "REQ-001-077", "attrs": {"rationale": "prd.md line 257. "}}
+  - {"op": "update_node", "id": "REQ-001-078", "attrs": {"rationale": "prd.md line 831. "}}
+  - {"op": "update_node", "id": "REQ-001-079", "attrs": {"rationale": "prd.md line 830. "}}
+  - {"op": "update_node", "id": "REQ-001-080", "attrs": {"rationale": "prd.md line 982. Also stated in the PRD at line 845: \"New password must meet password rules and cannot reuse last 5 passwords\"."}}
+  - {"op": "update_node", "id": "REQ-001-081", "attrs": {"rationale": "prd.md line 675. Also stated in the PRD at line 626: \"Valid format; triggers 6-digit OTP re-verification if changed\"."}}
+  - {"op": "update_node", "id": "REQ-001-083", "attrs": {"rationale": "prd.md line 991. Also stated in the PRD at line 283: \"System stores image securely\"."}}
+  - {"op": "update_node", "id": "REQ-001-084", "attrs": {"rationale": "Screen field row, prd.md line 624. "}}
+  - {"op": "update_node", "id": "REQ-001-085", "attrs": {"rationale": "prd.md line 674. "}}
+  - {"op": "update_node", "id": "REQ-001-086", "attrs": {"rationale": "Screen field row, prd.md line 629. Also stated in the PRD at line 613: \"Given patient opens Previous treatment, Then list shows only Completed items with links to details.\"."}}
+  - {"op": "update_node", "id": "REQ-001-088", "attrs": {"rationale": "Screen field row, prd.md line 632. Also stated in the PRD at line 611: \"Given patient selects Logout, When confirmed, Then session tokens are revoked and user returns to Landing screen.\"."}}
+  - {"op": "update_node", "id": "REQ-001-089", "attrs": {"rationale": "prd.md line 638. Also stated in the PRD at line 818: \"Sensitive action re-auth required when last successful auth > 5 minutes; re-auth via Screen 18 (Identity Re-verification) using password or 6-digit email OTP\"; line 892: \"Re-verification is required when last successful auth > 5 minutes (configurable threshold)\"."}}
+  - {"op": "update_node", "id": "REQ-001-090", "attrs": {"rationale": "prd.md line 637. Also stated in the PRD at line 814: \"Delete account is a request flow (DSR) queued for Admin review and fulfillment per FR-023; no immediate hard-delete occurs in-app\"."}}
+  - {"op": "update_node", "id": "REQ-001-091", "attrs": {"rationale": "prd.md line 639. Also stated in the PRD at line 815: \"If active treatment/aftercare exists, deletion request is blocked with guidance to contact support (patient safety)\"; line 609: \"Given patient has an active treatment or aftercare, When confirming Delete account, Then system blocks action and shows message “Account deletion is unavailable during active care; contact support.”\"."}}
+  - {"op": "update_node", "id": "REQ-001-092", "attrs": {"rationale": "prd.md line 640. Also stated in the PRD at line 816: \"If payment is in progress, deletion request is blocked until payment completes\"."}}
+  - {"op": "update_node", "id": "REQ-001-093", "attrs": {"rationale": "Screen field row, prd.md line 844. "}}
+  - {"op": "update_node", "id": "REQ-001-094", "attrs": {"rationale": "Screen field row, prd.md line 846. "}}
+  - {"op": "update_node", "id": "REQ-001-095", "attrs": {"rationale": "prd.md line 862. "}}
+  - {"op": "update_node", "id": "REQ-001-096", "attrs": {"rationale": "prd.md line 860. "}}
+  - {"op": "update_node", "id": "REQ-001-098", "attrs": {"rationale": "prd.md line 935. "}}
+  - {"op": "update_node", "id": "REQ-001-099", "attrs": {"rationale": "prd.md line 937. "}}
+  - {"op": "update_node", "id": "REQ-001-100", "attrs": {"rationale": "prd.md line 938. "}}
+  - {"op": "update_node", "id": "REQ-001-101", "attrs": {"rationale": "prd.md line 939. "}}
+  - {"op": "update_node", "id": "REQ-001-102", "attrs": {"rationale": "prd.md line 698. Also stated in the PRD at line 721: \"This menu contains only patient-facing items (no admin/provider configuration)\"."}}
+  - {"op": "update_node", "id": "REQ-001-103", "attrs": {"rationale": "prd.md line 697. "}}
+  - {"op": "update_node", "id": "REQ-001-104", "attrs": {"rationale": "prd.md line 729. "}}
+  - {"op": "update_node", "id": "REQ-001-105", "attrs": {"rationale": "prd.md line 730. Also stated in the PRD at line 682: \"\"Security notifications (password reset, account changes) are always sent and cannot be disabled.\"\"."}}
+  - {"op": "update_node", "id": "REQ-001-106", "attrs": {"rationale": "prd.md line 731. "}}
+  - {"op": "update_node", "id": "REQ-001-107", "attrs": {"rationale": "prd.md line 732. "}}
+  - {"op": "update_node", "id": "REQ-001-108", "attrs": {"rationale": "prd.md line 733. "}}
+  - {"op": "update_node", "id": "REQ-001-109", "attrs": {"rationale": "prd.md line 735. "}}
+  - {"op": "update_node", "id": "REQ-001-110", "attrs": {"rationale": "prd.md line 742. "}}
+  - {"op": "update_node", "id": "REQ-001-111", "attrs": {"rationale": "prd.md line 763. "}}
+  - {"op": "update_node", "id": "REQ-001-112", "attrs": {"rationale": "prd.md line 759. "}}
+  - {"op": "update_node", "id": "REQ-001-113", "attrs": {"rationale": "prd.md line 788. Also stated in the PRD at line 719: \"Privacy Policy is read-only static content sourced from the Legal Content system (FR-027)\"; line 774: \"Terms content is read-only and must match the latest published Terms & Conditions for the patient app (FR-027)\"."}}
+  - {"op": "update_node", "id": "REQ-001-114", "attrs": {"rationale": "prd.md line 761. Also stated in the PRD at line 749: \"If content fails to load, show a non-blocking error state with Retry and Back navigation\"."}}
+  - {"op": "update_node", "id": "REQ-001-117", "attrs": {"rationale": "prd.md line 886. "}}
+  - {"op": "update_node", "id": "REQ-001-118", "attrs": {"rationale": "prd.md line 889. Also stated in the PRD at line 839: \"Must not reveal whether current password is correct — use generic \"Unable to change password. Please check your entries and try again.\"\"."}}
+  - {"op": "update_node", "id": "REQ-001-119", "attrs": {"rationale": "prd.md line 890. Also stated in the PRD at line 726: \"Given user selects Change Password and submits currentPassword and a new password that meets policy, When request succeeds, Then prior refresh tokens are revoked and user remains logged in with current session.\"."}}
+  - {"op": "update_node", "id": "REQ-001-120", "attrs": {"rationale": "prd.md line 891. "}}
+  - {"op": "update_node", "id": "REQ-001-121", "attrs": {"rationale": "prd.md line 908. "}}
+  - {"op": "update_node", "id": "REQ-001-122", "attrs": {"rationale": "prd.md line 909. "}}
+  - {"op": "update_node", "id": "REQ-001-123", "attrs": {"rationale": "Screen field row, prd.md line 951. "}}
+  - {"op": "update_node", "id": "REQ-001-124", "attrs": {"rationale": "Screen field row, prd.md line 953. "}}
+  - {"op": "update_node", "id": "REQ-001-125", "attrs": {"rationale": "Screen field row, prd.md line 954. "}}
+  - {"op": "update_node", "id": "REQ-001-126", "attrs": {"rationale": "prd.md line 1320. "}}
+  - {"op": "update_node", "id": "REQ-020-001", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 489."}}
+  - {"op": "update_node", "id": "REQ-020-002", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 490."}}
+  - {"op": "update_node", "id": "REQ-020-004", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 492. Also stated at line 299 (Business Rules, Patient Preferences: global Email/Push toggles in MVP, category preferences deferred to V2) and line 124. Screen owned by FR-001."}}
+  - {"op": "update_node", "id": "REQ-020-023", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 511. Original id REQ-020-004B renumbered to REQ-020-023. Also stated at line 300 and line 125. Screen owned by FR-032."}}
+  - {"op": "update_node", "id": "REQ-020-005", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 493."}}
+  - {"op": "update_node", "id": "REQ-020-006", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 494. Alternative Flow B1 (line 164) and line 331."}}
+  - {"op": "update_node", "id": "REQ-020-007", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 495."}}
+  - {"op": "update_node", "id": "REQ-020-008", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 496. Screen: SCR-020-01."}}
+  - {"op": "update_node", "id": "REQ-020-009", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 497. Screen: SCR-020-02. Screen Business Rules lines 227 to 231 repeat the infinite scroll behaviour."}}
+  - {"op": "update_node", "id": "REQ-020-010", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 498. Screen: SCR-020-03. Screen Business Rules lines 263 to 268 repeat the infinite scroll behaviour."}}
+  - {"op": "update_node", "id": "REQ-020-011", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 499. Also stated at line 301."}}
+  - {"op": "update_node", "id": "REQ-020-012", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 500. Also stated at line 305 (privacy allowlist) and lines 308, 309."}}
+  - {"op": "update_node", "id": "REQ-020-013", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 501. Also stated at line 302 (Business Rules, Provider-Status Cancellation Notifications): patient content uses provider-caused wording and a Contact Admin/Support action, with the three pre-acceptance variants from FR-003 REQ-003-021 (CR links in the PRD line are not read)."}}
+  - {"op": "update_node", "id": "REQ-020-015", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 503. Also stated at line 304: provider.activation is mandatory because without it a new provider cannot set a password; provider.login_email_changed is a security notice to the old and the new address."}}
+  - {"op": "update_node", "id": "REQ-020-016", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 504. Also stated at line 304 (account-closure events)."}}
+  - {"op": "update_node", "id": "REQ-020-017", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 505. Locks restated at line 313."}}
+  - {"op": "update_node", "id": "REQ-020-018", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 506. Also stated at lines 310, 311, 312: pre-acceptance notices use only the From price (lowest subquote price in the parent quote) with currency, option count, treatment, expiry date, provider name and parent quote reference; a single quote total does not exist and MUST NOT be offered as a variable; booking.* appointment variables resolve from the booking's current appointment, with the accepted appointment kept as baseline; booking.rescheduled carries both the previous and the new appointment; treatment events may use the current treatment plan, clinicians and graft count and MUST NOT carry changed money values."}}
+  - {"op": "update_node", "id": "REQ-020-019", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 507. Also stated at lines 314 and 315: admins are alerted only for exceptions on the quote-to-booking path (a slot hold expiring while the first payment is unpaid, Payment Window Expired, provider fault, and a provider withdrawing a quote that was already accepted), and routine acceptances are visible on admin dashboards only; the same applies to an admin-authored replacement acceptance in the FR-006 provider-fault transfer."}}
+  - {"op": "update_node", "id": "REQ-020-022", "attrs": {"rationale": "Functional Requirements Summary, prd.md line 510. Also stated at line 303: produced only by FR-011, goes to the patient and the new aftercare provider, cannot be disabled in FR-030 rules, no admin alert because the admin performs the reassignment."}}
+  - {"op": "update_node", "id": "REQ-020-030", "attrs": {"rationale": "prd.md line 125. Also line 30. Conflicts with REQ-020-003: see the open question in the migration report."}}
+  - {"op": "update_node", "id": "REQ-020-031", "attrs": {"rationale": "prd.md line 127. Also line 132 (Out of Scope) and line 299."}}
+  - {"op": "update_node", "id": "REQ-020-032", "attrs": {"rationale": "prd.md line 136."}}
+  - {"op": "update_node", "id": "REQ-020-034", "attrs": {"rationale": "prd.md line 155. Main Flow step 1."}}
+  - {"op": "update_node", "id": "REQ-020-036", "attrs": {"rationale": "prd.md line 158. Main Flow step 4."}}
+  - {"op": "update_node", "id": "REQ-020-041", "attrs": {"rationale": "prd.md line 336."}}
+  - {"op": "update_node", "id": "REQ-020-042", "attrs": {"rationale": "prd.md line 337."}}
+  - {"op": "update_node", "id": "REQ-020-043", "attrs": {"rationale": "prd.md line 387. Implementation Notes: promoted because idempotency is a business rule."}}
+  - {"op": "update_node", "id": "REQ-020-044", "attrs": {"rationale": "prd.md line 389. Implementation Notes: promoted privacy rule."}}
+  - {"op": "update_node", "id": "REQ-020-045", "attrs": {"rationale": "prd.md line 303. Repeated at line 313: no mandatory provider event is subject to FR-032 provider notification preferences."}}
+  - {"op": "update_node", "id": "REQ-020-046", "attrs": {"rationale": "prd.md line 304."}}
+  - {"op": "update_node", "id": "REQ-020-047", "attrs": {"rationale": "prd.md line 390. Repeated at line 384 (Implementation Notes)."}}
+  - {"op": "update_node", "id": "REQ-020-048", "attrs": {"rationale": "prd.md line 340. Repeated at lines 386 and 387. The FR-026 template setting is cited, not linked, because it is created by the FR-026 change-set."}}
+  - {"op": "update_node", "id": "REQ-020-050", "attrs": {"rationale": "prd.md line 381. Assumptions section, promoted. User Story 2 scenario 2 (line 416) adds that messages beyond the cap are suppressed and recorded."}}
+  - {"op": "update_node", "id": "REQ-020-051", "attrs": {"rationale": "prd.md line 311."}}
+  - {"op": "update_node", "id": "REQ-020-052", "attrs": {"rationale": "prd.md line 313."}}
+  - {"op": "update_node", "id": "REQ-020-054", "attrs": {"rationale": "prd.md line 315."}}
+  - {"op": "update_node", "id": "REQ-020-056", "attrs": {"rationale": "prd.md line 320."}}
+  - {"op": "update_node", "id": "REQ-020-057", "attrs": {"rationale": "prd.md line 322."}}
+  - {"op": "update_node", "id": "REQ-020-060", "attrs": {"rationale": "prd.md line 202. Patient screen. Provider and admin screens show the same state as a Read/Unread dot (Read Status field, lines 222 and 257)."}}
+  - {"op": "update_node", "id": "REQ-020-061", "attrs": {"rationale": "prd.md line 203. Repeated on all three screens (lines 200, 230, 267). Patient Action Button gives a deep link to related content, context-dependent (line 194)."}}
+  - {"op": "update_node", "id": "REQ-020-063", "attrs": {"rationale": "prd.md line 235."}}
+  - {"op": "update_node", "id": "REQ-020-064", "attrs": {"rationale": "prd.md line 272."}}
+  - {"op": "update_node", "id": "REQ-020-067", "attrs": {"rationale": "prd.md line 268. Also Consolidated Screen Notes line 282."}}
+  - {"op": "update_node", "id": "REQ-020-068", "attrs": {"rationale": "prd.md line 283. Consolidated Screen Notes, Patient listing."}}
+  - {"op": "update_node", "id": "REQ-020-071", "attrs": {"rationale": "prd.md line 445. Promoted from User Story 4 acceptance scenario 1 because it states a delivery time and channel requirement. Change Log line 528 records the SLA alignment."}}
+  - {"op": "update_node", "id": "REQ-020-107", "attrs": {"rationale": "Event Catalog table, prd.md line 78. The table mirrors FR-030; FR-030 prevails on any mismatch."}}
+  - {"op": "update_node", "id": "REQ-020-141", "attrs": {"rationale": "Event Catalog table, prd.md line 114. The table mirrors FR-030; FR-030 prevails on any mismatch."}}
+  - {"op": "update_node", "id": "REQ-020-142", "attrs": {"rationale": "Event Catalog table, prd.md line 115. The table mirrors FR-030; FR-030 prevails on any mismatch."}}
+  - {"op": "update_node", "id": "REQ-020-144", "attrs": {"rationale": "Event Catalog table, prd.md line 117. The table mirrors FR-030; FR-030 prevails on any mismatch."}}
+  - {"op": "update_node", "id": "REQ-020-147", "attrs": {"rationale": "Event Catalog table, prd.md line 120. The table mirrors FR-030; FR-030 prevails on any mismatch."}}
+  - {"op": "update_node", "id": "REQ-019-006", "attrs": {"rationale": "Restated by Implementation Notes (audit trail for all state changes; soft-disable without data loss). PRD line 938."}}
+  - {"op": "update_node", "id": "REQ-019-009", "attrs": {"rationale": "Restated by Security Considerations. PRD line 944."}}
+  - {"op": "update_node", "id": "REQ-019-069", "attrs": {"rationale": "Screen 6 business rules. PRD line 498."}}
+  - {"op": "update_node", "id": "REQ-019-070", "attrs": {"rationale": "Screen 6 business rules. PRD line 499, acceptance criteria 3 and 4 (lines 501-502)."}}
+  - {"op": "update_node", "id": "REQ-019-073", "attrs": {"rationale": "Screen 7 business rules. PRD line 540."}}
+  - {"op": "update_node", "id": "REQ-019-074", "attrs": {"rationale": "Screen 7 acceptance criterion 2. PRD line 546."}}
+  - {"op": "update_node", "id": "REQ-019-075", "attrs": {"rationale": "Screen 8 business rules. PRD line 572."}}
+  - {"op": "update_node", "id": "REQ-019-076", "attrs": {"rationale": "Screen 8 business rules. PRD line 573, Screen 2 field rows (lines 276, 589). Format policy is admin configurable (PRD line 745)."}}
+  - {"op": "update_node", "id": "REQ-019-077", "attrs": {"rationale": "Screen 9 business rules. PRD line 604, scope note (line 615). A scope extension beyond the client transcription (open item)."}}
+  - {"op": "update_node", "id": "REQ-019-078", "attrs": {"rationale": "Screen 9 business rules. PRD line 605."}}
+  - {"op": "update_node", "id": "REQ-019-079", "attrs": {"rationale": "Screen 9 business rules and Screen 10 business rules. PRD lines 609, 658."}}
+  - {"op": "update_node", "id": "REQ-019-080", "attrs": {"rationale": "Screen 9 acceptance criterion 2. PRD line 614."}}
+  - {"op": "update_node", "id": "REQ-019-081", "attrs": {"rationale": "Screen 9 acceptance criterion 4. PRD line 616."}}
+  - {"op": "update_node", "id": "REQ-019-083", "attrs": {"rationale": "Screen 10 business rules. PRD line 659."}}
+  - {"op": "update_node", "id": "REQ-019-084", "attrs": {"rationale": "Screen 11 business rules. PRD line 685, edge case on a code no longer valid at confirmation."}}
+  - {"op": "update_node", "id": "REQ-019-085", "attrs": {"rationale": "Screen 11 business rules. PRD line 688, acceptance criterion 1 (line 686: breakdown updates within 1 second with the scope label)."}}
+  - {"op": "update_node", "id": "REQ-019-086", "attrs": {"rationale": "General Module Rules. PRD line 729."}}
+  - {"op": "update_node", "id": "REQ-019-087", "attrs": {"rationale": "General Module Rules. PRD line 731, Screen 9 acceptance criterion 5 (line 611), User Story 4 scenario 4."}}
+  - {"op": "update_node", "id": "REQ-019-088", "attrs": {"rationale": "General Module Rules. PRD line 734; the counting sentence is also in REQ-019-015."}}
+  - {"op": "update_node", "id": "REQ-019-089", "attrs": {"rationale": "General Module Rules, post-acceptance freeze exception. PRD line 736. FR-006 Alternative Flow B5 owns the transfer."}}
+  - {"op": "update_node", "id": "REQ-019-090", "attrs": {"rationale": "General Module Rules. PRD line 740."}}
+  - {"op": "update_node", "id": "REQ-019-091", "attrs": {"rationale": "Data and Privacy Rules. PRD line 744."}}
+  - {"op": "update_node", "id": "REQ-019-096", "attrs": {"rationale": "Implementation Notes. PRD line 824."}}
+  - {"op": "update_node", "id": "REQ-019-097", "attrs": {"rationale": "Internal Dependencies (FR-010). PRD line 788."}}
+  - {"op": "update_node", "id": "REQ-019-098", "attrs": {"rationale": "Edge cases. PRD line 909."}}
+  - {"op": "update_node", "id": "REQ-019-099", "attrs": {"rationale": "Edge cases. PRD line 911."}}
+  - {"op": "update_node", "id": "REQ-014-106", "attrs": {"rationale": "PRD line 1812 (Functional Requirements Summary, REQ-014-106)."}}
+  - {"op": "update_node", "id": "REQ-014-107", "attrs": {"rationale": "PRD line 1813 (Functional Requirements Summary, REQ-014-107)."}}
+  - {"op": "update_node", "id": "REQ-014-109", "attrs": {"rationale": "PRD line 1815 (Functional Requirements Summary, REQ-014-109)."}}
+  - {"op": "update_node", "id": "REQ-014-110", "attrs": {"rationale": "PRD line 1816 (Functional Requirements Summary, REQ-014-110). Restated by Screen 4 Business Rules (line 599) and Data Contract row (line 1600)."}}
+  - {"op": "update_node", "id": "REQ-014-111", "attrs": {"rationale": "PRD line 1817 (Functional Requirements Summary, REQ-014-111)."}}
+  - {"op": "update_node", "id": "REQ-014-112", "attrs": {"rationale": "PRD line 1818 (Functional Requirements Summary, REQ-014-112)."}}
+  - {"op": "update_node", "id": "REQ-014-113", "attrs": {"rationale": "PRD line 1819 (Functional Requirements Summary, REQ-014-113)."}}
+  - {"op": "update_node", "id": "REQ-014-115", "attrs": {"rationale": "PRD line 1826 (Functional Requirements Summary, REQ-014-115)."}}
+  - {"op": "update_node", "id": "REQ-014-116", "attrs": {"rationale": "PRD line 1820 (Functional Requirements Summary, REQ-014-116)."}}
+  - {"op": "update_node", "id": "REQ-014-117", "attrs": {"rationale": "PRD line 1821 (Functional Requirements Summary, REQ-014-117). Restated by Screen 8 Business Rules (line 936: replacement quotes appear only in the Provider-fault replacements column, attributed to the provider at fault)."}}
+  - {"op": "update_node", "id": "REQ-014-129", "attrs": {"rationale": "PRD line 1436. Analytics Counting & Time Basis preamble."}}
+  - {"op": "update_node", "id": "REQ-014-131", "attrs": {"rationale": "PRD line 1439."}}
+  - {"op": "update_node", "id": "REQ-014-132", "attrs": {"rationale": "PRD line 1440."}}
+  - {"op": "update_node", "id": "REQ-014-133", "attrs": {"rationale": "PRD line 1441."}}
+  - {"op": "update_node", "id": "REQ-014-134", "attrs": {"rationale": "PRD line 1442."}}
+  - {"op": "update_node", "id": "REQ-014-135", "attrs": {"rationale": "PRD line 1443."}}
+  - {"op": "update_node", "id": "REQ-014-136", "attrs": {"rationale": "PRD line 1444."}}
+  - {"op": "update_node", "id": "REQ-014-137", "attrs": {"rationale": "PRD line 1445."}}
+  - {"op": "update_node", "id": "REQ-014-138", "attrs": {"rationale": "PRD line 1446."}}
+  - {"op": "update_node", "id": "REQ-014-139", "attrs": {"rationale": "PRD line 1447."}}
+  - {"op": "update_node", "id": "REQ-014-140", "attrs": {"rationale": "PRD line 1448. Restated by Screen 4 Business Rules (line 599) and Screen 12 Business Rules (line 1319)."}}
+  - {"op": "update_node", "id": "REQ-014-141", "attrs": {"rationale": "PRD line 1449. Restated by Screen 4 Business Rules (line 595: Income excludes refund rows; refunds reported in Widget 5)."}}
+  - {"op": "update_node", "id": "REQ-014-142", "attrs": {"rationale": "PRD line 1450. Restated by Screen 5 Business Rules (line 666: provider identity fully anonymised in benchmark calculations)."}}
+  - {"op": "update_node", "id": "REQ-014-143", "attrs": {"rationale": "PRD line 1454. Rule 1. Restated by Screen 1 header filter default (line 138) and Screen 7 Business Rules (line 842)."}}
+  - {"op": "update_node", "id": "REQ-014-144", "attrs": {"rationale": "PRD line 1455. Rule 2."}}
+  - {"op": "update_node", "id": "REQ-014-145", "attrs": {"rationale": "PRD line 1456. Rule 3. Restated by Alternative Flow A1 (line 107)."}}
+  - {"op": "update_node", "id": "REQ-014-146", "attrs": {"rationale": "PRD line 1457. Rule 4. Restated by Screen 1 States (line 252)."}}
+  - {"op": "update_node", "id": "REQ-014-147", "attrs": {"rationale": "PRD line 1458. Rule 5."}}
+  - {"op": "update_node", "id": "REQ-014-148", "attrs": {"rationale": "PRD lines 1459, 1460, 1461, 1462. Rule 5A with its per-screen sub-bullets."}}
+  - {"op": "update_node", "id": "REQ-014-149", "attrs": {"rationale": "PRD line 1466. Rule 6. Restated by Implementation Notes (line 1626: 15-minute aggregation cycle)."}}
+  - {"op": "update_node", "id": "REQ-014-150", "attrs": {"rationale": "PRD line 1467. Rule 7. Restated by Alternative Flow B2 (line 113), Screen 1 States (line 251) and Screen 2 Business Rules (line 363)."}}
+  - {"op": "update_node", "id": "REQ-014-151", "attrs": {"rationale": "PRD line 1468. Rule 8."}}
+  - {"op": "update_node", "id": "REQ-014-152", "attrs": {"rationale": "PRD line 1469. Rule 9; overlaps REQ-014-040."}}
+  - {"op": "update_node", "id": "REQ-014-154", "attrs": {"rationale": "PRD line 1475. Rule 11. Restated by Screen 1 States (line 254: patient names masked throughout)."}}
+  - {"op": "update_node", "id": "REQ-014-155", "attrs": {"rationale": "PRD line 1476. Rule 12."}}
+  - {"op": "update_node", "id": "REQ-014-156", "attrs": {"rationale": "PRD line 1477. Rule 13."}}
+  - {"op": "update_node", "id": "REQ-014-157", "attrs": {"rationale": "PRD line 1478. Rule 14. Restated by Screen 8 Business Rules (line 932)."}}
+  - {"op": "update_node", "id": "REQ-014-158", "attrs": {"rationale": "PRD line 1479. Rule 15. Restated by Implementation Notes (line 1628: access is logged per Rule 15)."}}
+  - {"op": "update_node", "id": "REQ-014-159", "attrs": {"rationale": "PRD line 1483. Rule 15A."}}
+  - {"op": "update_node", "id": "REQ-014-160", "attrs": {"rationale": "PRD line 1484. Rule 15B."}}
+  - {"op": "update_node", "id": "REQ-014-162", "attrs": {"rationale": "PRD line 1502. Rule 15C."}}
+  - {"op": "update_node", "id": "REQ-014-163", "attrs": {"rationale": "PRD line 1503. Rule 15D."}}
+  - {"op": "update_node", "id": "REQ-014-164", "attrs": {"rationale": "PRD line 1504. Rule 15E."}}
+  - {"op": "update_node", "id": "REQ-014-166", "attrs": {"rationale": "PRD lines 1523, 1524, 1525, 1526. Admin Editability Rules, Fixed in Codebase."}}
+  - {"op": "update_node", "id": "REQ-014-167", "attrs": {"rationale": "PRD line 1527. Rule 16."}}
+  - {"op": "update_node", "id": "REQ-014-168", "attrs": {"rationale": "PRD line 1528. Rule 17."}}
+  - {"op": "update_node", "id": "REQ-014-170", "attrs": {"rationale": "PRD line 1530. Rule 19."}}
+  - {"op": "update_node", "id": "REQ-014-172", "attrs": {"rationale": "PRD line 1593. Provider Team / Auth Data dependency; restated by Screen 8 Business Rules (line 933)."}}
+  - {"op": "update_node", "id": "REQ-014-174", "attrs": {"rationale": "PRD line 1614. Analytics Data Contract closing paragraph."}}
+  - {"op": "update_node", "id": "REQ-014-175", "attrs": {"rationale": "PRD line 1621. Assumption 2 (a layout rule). Restated by Screen 7 Layout (line 748)."}}
+  - {"op": "update_node", "id": "REQ-014-176", "attrs": {"rationale": "PRD line 1622. Assumption 3 (a layout rule). Restated by Screen 1 Layout (line 130)."}}
+  - {"op": "update_node", "id": "REQ-014-177", "attrs": {"rationale": "PRD line 1624. Assumption 5 (a data-source rule). FR-015 dependency (line 1570) names provider_commissions.payment_cycle."}}
+  - {"op": "update_node", "id": "REQ-014-178", "attrs": {"rationale": "PRD line 1629. Assumption 10 (a display rule)."}}
+  - {"op": "update_node", "id": "REQ-014-179", "attrs": {"rationale": "PRD line 1639. Implementation Notes, Caching; the tenant-isolation sentence is a business rule."}}
+  - {"op": "update_node", "id": "REQ-014-180", "attrs": {"rationale": "PRD line 1640. Implementation Notes, Security and audit logging; restates Rules 15, 15A, 15B, 15F, the 48-hour secure link and the benchmark minimum."}}
+  - {"op": "update_node", "id": "REQ-014-033", "attrs": {"rationale": "PRD line 1701 (Functional Requirements Summary, REQ-014-033)."}}
+  - {"op": "update_node", "id": "REQ-014-034", "attrs": {"rationale": "PRD line 1702 (Functional Requirements Summary, REQ-014-034)."}}
+  - {"op": "update_node", "id": "REQ-014-035", "attrs": {"rationale": "PRD line 1703 (Functional Requirements Summary, REQ-014-035)."}}
+  - {"op": "update_node", "id": "REQ-014-036", "attrs": {"rationale": "PRD line 1704 (Functional Requirements Summary, REQ-014-036)."}}
+  - {"op": "update_node", "id": "REQ-014-037", "attrs": {"rationale": "PRD line 1705 (Functional Requirements Summary, REQ-014-037)."}}
+  - {"op": "update_node", "id": "REQ-014-038", "attrs": {"rationale": "PRD line 1706 (Functional Requirements Summary, REQ-014-038)."}}
+  - {"op": "update_node", "id": "REQ-014-039", "attrs": {"rationale": "PRD line 1707 (Functional Requirements Summary, REQ-014-039)."}}
+  - {"op": "update_node", "id": "REQ-014-040", "attrs": {"rationale": "PRD line 1708 (Functional Requirements Summary, REQ-014-040). Restated by Data Quality Rule 9 (line 1457) and Implementation Notes (line 1628: benchmark outputs only above the minimum peer count)."}}
+  - {"op": "update_node", "id": "REQ-014-041", "attrs": {"rationale": "PRD line 1712 (Functional Requirements Summary, REQ-014-041)."}}
+  - {"op": "update_node", "id": "REQ-014-042", "attrs": {"rationale": "PRD line 1713 (Functional Requirements Summary, REQ-014-042)."}}
+  - {"op": "update_node", "id": "REQ-014-043", "attrs": {"rationale": "PRD line 1714 (Functional Requirements Summary, REQ-014-043)."}}
+  - {"op": "update_node", "id": "REQ-014-044", "attrs": {"rationale": "PRD line 1715 (Functional Requirements Summary, REQ-014-044)."}}
+  - {"op": "update_node", "id": "REQ-014-045", "attrs": {"rationale": "PRD line 1716 (Functional Requirements Summary, REQ-014-045)."}}
+  - {"op": "update_node", "id": "REQ-014-047", "attrs": {"rationale": "PRD line 1718 (Functional Requirements Summary, REQ-014-047). Restated by Screen 3 Business Rules (line 457: no patient age distribution widget is included in this version)."}}
+  - {"op": "update_node", "id": "REQ-014-051", "attrs": {"rationale": "PRD line 1725 (Functional Requirements Summary, REQ-014-051)."}}
+  - {"op": "update_node", "id": "REQ-014-053", "attrs": {"rationale": "PRD line 1727 (Functional Requirements Summary, REQ-014-053)."}}
+  - {"op": "update_node", "id": "REQ-014-054", "attrs": {"rationale": "PRD line 1728 (Functional Requirements Summary, REQ-014-054)."}}
+  - {"op": "update_node", "id": "REQ-014-055", "attrs": {"rationale": "PRD line 1729 (Functional Requirements Summary, REQ-014-055)."}}
+  - {"op": "update_node", "id": "REQ-014-057", "attrs": {"rationale": "PRD line 1734 (Functional Requirements Summary, REQ-014-057)."}}
+  - {"op": "update_node", "id": "REQ-014-058", "attrs": {"rationale": "PRD line 1735 (Functional Requirements Summary, REQ-014-058)."}}
+  - {"op": "update_node", "id": "REQ-014-059", "attrs": {"rationale": "PRD line 1736 (Functional Requirements Summary, REQ-014-059)."}}
+  - {"op": "update_node", "id": "REQ-014-060", "attrs": {"rationale": "PRD line 1740 (Functional Requirements Summary, REQ-014-060)."}}
+  - {"op": "update_node", "id": "REQ-014-061", "attrs": {"rationale": "PRD line 1741 (Functional Requirements Summary, REQ-014-061)."}}
+  - {"op": "update_node", "id": "REQ-014-062", "attrs": {"rationale": "PRD line 1742 (Functional Requirements Summary, REQ-014-062)."}}
+  - {"op": "update_node", "id": "REQ-014-063", "attrs": {"rationale": "PRD line 1743 (Functional Requirements Summary, REQ-014-063). Restated by Screen 6 Business Rules (line 697: generated reports stored 7 days for re-download from Report History section) and S-05 dependency (line 1578)."}}
+  - {"op": "update_node", "id": "REQ-014-114", "attrs": {"rationale": "PRD line 1825 (Functional Requirements Summary, REQ-014-114)."}}
+  - {"op": "update_node", "id": "REQ-014-064", "attrs": {"rationale": "PRD line 1747 (Functional Requirements Summary, REQ-014-064)."}}
+  - {"op": "update_node", "id": "REQ-014-066", "attrs": {"rationale": "PRD line 1749 (Functional Requirements Summary, REQ-014-066)."}}
+  - {"op": "update_node", "id": "REQ-014-067", "attrs": {"rationale": "PRD line 1750 (Functional Requirements Summary, REQ-014-067)."}}
+  - {"op": "update_node", "id": "REQ-014-068", "attrs": {"rationale": "PRD line 1751 (Functional Requirements Summary, REQ-014-068)."}}
+  - {"op": "update_node", "id": "REQ-014-069", "attrs": {"rationale": "PRD line 1755 (Functional Requirements Summary, REQ-014-069)."}}
+  - {"op": "update_node", "id": "REQ-014-071", "attrs": {"rationale": "PRD line 1757 (Functional Requirements Summary, REQ-014-071)."}}
+  - {"op": "update_node", "id": "REQ-014-072", "attrs": {"rationale": "PRD line 1758 (Functional Requirements Summary, REQ-014-072)."}}
+  - {"op": "update_node", "id": "REQ-014-073", "attrs": {"rationale": "PRD line 1759 (Functional Requirements Summary, REQ-014-073). Restated by Screen 8 Business Rules (line 935: thresholds 7d / 30d configurable by admin) and Admin Editability (line 1502)."}}
+  - {"op": "update_node", "id": "REQ-014-074", "attrs": {"rationale": "PRD line 1764 (Functional Requirements Summary, REQ-014-074)."}}
+  - {"op": "update_node", "id": "REQ-014-077", "attrs": {"rationale": "PRD line 1767 (Functional Requirements Summary, REQ-014-077)."}}
+  - {"op": "update_node", "id": "REQ-014-078", "attrs": {"rationale": "PRD line 1768 (Functional Requirements Summary, REQ-014-078)."}}
+  - {"op": "update_node", "id": "REQ-014-079", "attrs": {"rationale": "PRD line 1769 (Functional Requirements Summary, REQ-014-079)."}}
+  - {"op": "update_node", "id": "REQ-014-081", "attrs": {"rationale": "PRD line 1774 (Functional Requirements Summary, REQ-014-081)."}}
+  - {"op": "update_node", "id": "REQ-014-082", "attrs": {"rationale": "PRD line 1775 (Functional Requirements Summary, REQ-014-082). Restated by Screen 10 Business Rules (line 1109: gap table only shows countries with at least 5 inquiries in the selected period to avoid statistical noise)."}}
+  - {"op": "update_node", "id": "REQ-014-083", "attrs": {"rationale": "PRD line 1776 (Functional Requirements Summary, REQ-014-083)."}}
+  - {"op": "update_node", "id": "REQ-014-084", "attrs": {"rationale": "PRD line 1777 (Functional Requirements Summary, REQ-014-084)."}}
+  - {"op": "update_node", "id": "REQ-014-085", "attrs": {"rationale": "PRD line 1781 (Functional Requirements Summary, REQ-014-085)."}}
+  - {"op": "update_node", "id": "REQ-014-086", "attrs": {"rationale": "PRD line 1782 (Functional Requirements Summary, REQ-014-086)."}}
+  - {"op": "update_node", "id": "REQ-014-087", "attrs": {"rationale": "PRD line 1783 (Functional Requirements Summary, REQ-014-087)."}}
+  - {"op": "update_node", "id": "REQ-014-088", "attrs": {"rationale": "PRD line 1784 (Functional Requirements Summary, REQ-014-088)."}}
+  - {"op": "update_node", "id": "REQ-014-089", "attrs": {"rationale": "PRD line 1785 (Functional Requirements Summary, REQ-014-089)."}}
+  - {"op": "update_node", "id": "REQ-014-090", "attrs": {"rationale": "PRD line 1787 (Functional Requirements Summary, REQ-014-090). Restated by Screen 11 Purpose (line 1116: scope is strictly operational and satisfaction-based)."}}
+  - {"op": "update_node", "id": "REQ-014-091", "attrs": {"rationale": "PRD line 1791 (Functional Requirements Summary, REQ-014-091)."}}
+  - {"op": "update_node", "id": "REQ-014-093", "attrs": {"rationale": "PRD line 1793 (Functional Requirements Summary, REQ-014-093)."}}
+  - {"op": "update_node", "id": "REQ-014-094", "attrs": {"rationale": "PRD line 1794 (Functional Requirements Summary, REQ-014-094)."}}
+  - {"op": "update_node", "id": "REQ-014-096", "attrs": {"rationale": "PRD line 1796 (Functional Requirements Summary, REQ-014-096)."}}
+  - {"op": "update_node", "id": "REQ-014-097", "attrs": {"rationale": "PRD line 1797 (Functional Requirements Summary, REQ-014-097)."}}
+  - {"op": "update_node", "id": "REQ-014-098", "attrs": {"rationale": "PRD line 1798 (Functional Requirements Summary, REQ-014-098)."}}
+  - {"op": "update_node", "id": "REQ-014-101", "attrs": {"rationale": "PRD line 1804 (Functional Requirements Summary, REQ-014-101)."}}
+  - {"op": "update_node", "id": "REQ-014-102", "attrs": {"rationale": "PRD line 1805 (Functional Requirements Summary, REQ-014-102)."}}
+  - {"op": "update_node", "id": "REQ-014-103", "attrs": {"rationale": "PRD line 1806 (Functional Requirements Summary, REQ-014-103)."}}
+  - {"op": "update_node", "id": "REQ-014-104", "attrs": {"rationale": "PRD line 1807 (Functional Requirements Summary, REQ-014-104). Restated by Screen 13 Business Rules (line 1413: outlier threshold 30% admin-configurable) and Admin Editability (line 1503)."}}
+  - {"op": "update_node", "id": "REQ-014-265", "attrs": {"rationale": "PRD line 945. Screen 8 Business Rules."}}
+  - {"op": "update_node", "id": "REQ-014-266", "attrs": {"rationale": "PRD line 946. Screen 8 Business Rules."}}
+  - {"op": "update_node", "id": "REQ-014-273", "attrs": {"rationale": "PRD line 1044. Screen 9 Business Rules."}}
+  - {"op": "update_node", "id": "REQ-014-274", "attrs": {"rationale": "PRD line 1045. Screen 9 Business Rules."}}
+  - {"op": "update_node", "id": "REQ-014-280", "attrs": {"rationale": "PRD line 1120. Screen 10 Business Rules. Restated by Assumption 6 (line 1613) and the data source lines of Screen 2 Widget 3 (line 304), Screen 3 Widget 1 (line 385) and Screen 4 Widget 3 (line 509)."}}
+  - {"op": "update_node", "id": "REQ-014-287", "attrs": {"rationale": "PRD line 1211. Screen 11 Business Rules."}}
+  - {"op": "update_node", "id": "REQ-014-288", "attrs": {"rationale": "PRD line 1212. Screen 11 Business Rules."}}
+  - {"op": "update_node", "id": "REQ-014-289", "attrs": {"rationale": "PRD line 1213. Screen 11 Business Rules; overlaps REQ-014-090."}}
+  - {"op": "update_node", "id": "REQ-014-290", "attrs": {"rationale": "PRD lines 1236-1243."}}
+  - {"op": "update_node", "id": "REQ-014-298", "attrs": {"rationale": "PRD line 1328. Screen 12 Business Rules. FR-029 dependency (line 1575)."}}
+  - {"op": "update_node", "id": "REQ-014-299", "attrs": {"rationale": "PRD line 1329. Screen 12 Business Rules."}}
+  - {"op": "update_node", "id": "REQ-014-300", "attrs": {"rationale": "PRD line 1330. Screen 12 Business Rules. FR-031 dependency (line 1576)."}}
+  - {"op": "update_node", "id": "REQ-014-301", "attrs": {"rationale": "PRD line 1331. Screen 12 Business Rules."}}
+  - {"op": "update_node", "id": "REQ-014-308", "attrs": {"rationale": "PRD line 1424. Screen 13 Business Rules."}}
+  - {"op": "update_node", "id": "REQ-014-309", "attrs": {"rationale": "PRD line 1426. Screen 13 Business Rules."}}
+  - {"op": "update_node", "id": "REQ-014-310", "attrs": {"rationale": "PRD line 1427. Screen 13 Business Rules; overlaps REQ-014-104."}}
+  - {"op": "update_node", "id": "REQ-014-311", "attrs": {"rationale": "PRD line 1428. Screen 13 Business Rules."}}
+  - {"op": "update_node", "id": "REQ-030-001", "attrs": {"rationale": "prd.md line 930 (REQ-030-001, verbatim). Restating bullets merged here: Module Scope admin bullets and S-03 consumption of rules (50, 51, 52, 53, 59)."}}
+  - {"op": "update_node", "id": "REQ-030-002", "attrs": {"rationale": "prd.md line 931 (REQ-030-002, verbatim)."}}
+  - {"op": "update_node", "id": "REQ-030-003", "attrs": {"rationale": "prd.md line 932 (REQ-030-003, verbatim)."}}
+  - {"op": "update_node", "id": "REQ-030-004", "attrs": {"rationale": "prd.md line 933 (REQ-030-004, verbatim)."}}
+  - {"op": "update_node", "id": "REQ-030-005", "attrs": {"rationale": "prd.md line 934 (REQ-030-005, verbatim)."}}
+  - {"op": "update_node", "id": "REQ-030-006", "attrs": {"rationale": "prd.md line 935 (REQ-030-006, verbatim). Restating bullets merged here: Screen 3 business rules on formatting and variable syntax (475, 476, 477, 478). Multi-language content follows the language the reader prefers (SRC-MTG-003-D06)."}}
+  - {"op": "update_node", "id": "REQ-030-007", "attrs": {"rationale": "prd.md line 936 (REQ-030-007, verbatim). Restating bullets merged here: Alternative Flow B2 and Screen 3 variable validation (340, 341, 342, 343, 479)."}}
+  - {"op": "update_node", "id": "REQ-030-009", "attrs": {"rationale": "prd.md line 938 (REQ-030-009, verbatim). Restating bullets merged here: Alternative Flow B1 step 3 logs failed deliveries with error code and timestamp (326)."}}
+  - {"op": "update_node", "id": "REQ-030-010", "attrs": {"rationale": "prd.md line 939 (REQ-030-010, verbatim). Restating bullets merged here: S-03 provides delivery logs and metrics to A-09 (64)."}}
+  - {"op": "update_node", "id": "REQ-030-011", "attrs": {"rationale": "prd.md line 943 (REQ-030-011, verbatim)."}}
+  - {"op": "update_node", "id": "REQ-030-012", "attrs": {"rationale": "prd.md line 944 (REQ-030-012, verbatim)."}}
+  - {"op": "update_node", "id": "REQ-030-013", "attrs": {"rationale": "prd.md line 945 (REQ-030-013, verbatim). Restating bullets merged here: Privacy Rule 6 (513)."}}
+  - {"op": "update_node", "id": "REQ-030-014", "attrs": {"rationale": "prd.md line 946 (REQ-030-014, verbatim)."}}
+  - {"op": "update_node", "id": "REQ-030-015", "attrs": {"rationale": "prd.md line 950 (REQ-030-015, verbatim). Restating bullets merged here: Privacy Rule 3 and the security considerations (510, 785)."}}
+  - {"op": "update_node", "id": "REQ-030-016", "attrs": {"rationale": "prd.md line 951 (REQ-030-016, verbatim). Restating bullets merged here: Privacy Rule 1 (508)."}}
+  - {"op": "update_node", "id": "REQ-030-018", "attrs": {"rationale": "prd.md line 953 (REQ-030-018, verbatim). Restating bullets merged here: Implementation Notes technology and threat mitigation (746, 789)."}}
+  - {"op": "update_node", "id": "REQ-030-019", "attrs": {"rationale": "prd.md line 954 (REQ-030-019, verbatim). Restating bullets merged here: Privacy Rule 4 (511)."}}
+  - {"op": "update_node", "id": "REQ-030-022", "attrs": {"rationale": "prd.md line 960 (REQ-030-022, verbatim)."}}
+  - {"op": "update_node", "id": "REQ-030-023", "attrs": {"rationale": "prd.md line 961 (REQ-030-023, verbatim)."}}
+  - {"op": "update_node", "id": "REQ-030-025", "attrs": {"rationale": "prd.md line 963 (REQ-030-025, verbatim)."}}
+  - {"op": "update_node", "id": "REQ-030-026", "attrs": {"rationale": "prd.md line 964 (REQ-030-026, verbatim)."}}
+  - {"op": "update_node", "id": "REQ-030-027", "attrs": {"rationale": "prd.md line 124. Category: Account/Auth. Event nodes: EVT-verification-otp-sent (existing node). Lock rule (prd.md line 541): Account/Auth notifications (OTP verification, password reset) are security-critical and MUST be non-disableable by default in the admin UI (toggle locked; no pause)."}}
+  - {"op": "update_node", "id": "REQ-030-031", "attrs": {"rationale": "prd.md line 128. Category: Inquiry. Event nodes: EVT-inquiry-cancelled (existing node)."}}
+  - {"op": "update_node", "id": "REQ-030-032", "attrs": {"rationale": "prd.md line 129. Category: Inquiry. Event nodes: EVT-inquiry-ttfq-sla-breached (created by another FR migration not yet applied; not linked from here)."}}
+  - {"op": "update_node", "id": "REQ-030-033", "attrs": {"rationale": "prd.md line 130. Category: Quote. Event nodes: EVT-quote-submitted (existing node)."}}
+  - {"op": "update_node", "id": "REQ-030-037", "attrs": {"rationale": "prd.md line 135. Category: Quote. Event nodes: EVT-quote-withdrawn (existing node). Lock rule (prd.md line 546): Quote Withdrawn (`quote.withdrawn`) is mandatory before and after acceptance: the patient MUST always learn that the provider has withdrawn the quote, and the admin MUST be alerted only when the withdrawn quote was already accepted. Toggle is locked."}}
+  - {"op": "update_node", "id": "REQ-030-038", "attrs": {"rationale": "prd.md line 136. Category: Quote. Event nodes: EVT-quote-accepted (existing node). Lock rule (prd.md line 543): Preference exemption for mandatory provider events: every event that is mandatory for providers (`quote.cancelled_inquiry`, the selected-provider and not-selected-provider outcomes of `quote.accepted`, `booking.payment_window_expired`, `booking.revived` and `booking.rescheduled`) is delivered regardless of FR-032 provider notification preferences. A provider's category toggles in FR-032 never suppress these events. Lock rule (prd.md line 547): Quote Accepted (`quote.accepted`): the selected-provider outcome and the not-selected-provider outcome are mandatory, because the selected provider must learn that its slot is held and every other provider with a sent parent quote must learn that the quote is no longer active. These outcome toggles are locked. `quote.accepted` has no patient or admin recipient."}}
+  - {"op": "update_node", "id": "REQ-030-041", "attrs": {"rationale": "prd.md line 139. Category: Booking/Schedule. Event nodes: EVT-booking-hold-expiring-soon (existing node)."}}
+  - {"op": "update_node", "id": "REQ-030-043", "attrs": {"rationale": "prd.md line 141. Category: Booking/Schedule. Event nodes: EVT-booking-revived (existing node). Lock rule (prd.md line 543): Preference exemption for mandatory provider events: every event that is mandatory for providers (`quote.cancelled_inquiry`, the selected-provider and not-selected-provider outcomes of `quote.accepted`, `booking.payment_window_expired`, `booking.revived` and `booking.rescheduled`) is delivered regardless of FR-032 provider notification preferences. A provider's category toggles in FR-032 never suppress these events. Lock rule (prd.md line 548): Payment Window Expired (`booking.payment_window_expired`) and Booking Revived (`booking.revived`) are mandatory for patient and provider: both must know whether the slot is released or held again and what the payment deadline is. Toggles are locked."}}
+  - {"op": "update_node", "id": "REQ-030-044", "attrs": {"rationale": "prd.md line 142. Category: Booking/Schedule. Event nodes: EVT-booking-provider-fault-replacement (existing node). Lock rule (prd.md line 549): Provider Unable to Proceed — Replacement Being Arranged (`booking.provider_fault_replacement`) is mandatory: the patient MUST learn that an admin will arrange a replacement provider. Toggle is locked."}}
+  - {"op": "update_node", "id": "REQ-030-050", "attrs": {"rationale": "prd.md line 148. Category: Treatment. Event nodes: EVT-treatment-plan-changed (existing node). Lock rule (prd.md line 550): Treatment Details Changed After Acceptance (`treatment.plan_changed`) is mandatory: every audited change to plan, clinicians or grafts from booking confirmation (`Confirmed`) onward MUST be notified to the patient. Toggle is locked."}}
+  - {"op": "update_node", "id": "REQ-030-052", "attrs": {"rationale": "prd.md line 150. Category: Treatment. Event nodes: EVT-treatment-completed (existing node)."}}
+  - {"op": "update_node", "id": "REQ-030-057", "attrs": {"rationale": "prd.md line 155. Category: Payment. Event nodes: EVT-payment-reminder (existing node); EVT-billing-payment-due-reminder (created by another FR migration not yet applied; not linked from here)."}}
+  - {"op": "update_node", "id": "REQ-030-058", "attrs": {"rationale": "prd.md line 156. Category: Billing/Payouts. Event nodes: EVT-payout-executed (existing node); EVT-billing-provider-payout-processed (created by another FR migration not yet applied; not linked from here)."}}
+  - {"op": "update_node", "id": "REQ-030-061", "attrs": {"rationale": "prd.md line 162. Category: Messaging/Support. Event nodes: EVT-message-sent (existing node)."}}
+  - {"op": "update_node", "id": "REQ-030-062", "attrs": {"rationale": "prd.md line 163. Category: Messaging/Support. Event nodes: EVT-support-case-created (new stub owned by FR-034)."}}
+  - {"op": "update_node", "id": "REQ-030-064", "attrs": {"rationale": "prd.md line 165. Category: Messaging/Support. Event nodes: EVT-support-case-status-changed (existing node)."}}
+  - {"op": "update_node", "id": "REQ-030-065", "attrs": {"rationale": "prd.md line 166. Category: Messaging/Support. Event nodes: EVT-support-case-admin-reply (new stub owned by FR-034)."}}
+  - {"op": "update_node", "id": "REQ-030-066", "attrs": {"rationale": "prd.md line 167. Category: Messaging/Support. Event nodes: EVT-support-case-user-reply (existing node)."}}
+  - {"op": "update_node", "id": "REQ-030-068", "attrs": {"rationale": "prd.md line 169. Category: Messaging/Support. Event nodes: EVT-support-case-reopened (existing node)."}}
+  - {"op": "update_node", "id": "REQ-030-075", "attrs": {"rationale": "prd.md line 176. Category: Aftercare. Event nodes: EVT-aftercare-escalation-triggered (new stub owned by FR-011)."}}
+  - {"op": "update_node", "id": "REQ-030-077", "attrs": {"rationale": "prd.md line 178. Category: Aftercare. Event nodes: EVT-aftercare-provider-reassigned (existing node). Lock rule (prd.md line 552): Aftercare Provider Reassigned (`aftercare.provider_reassigned`) is mandatory: when an admin reassigns an aftercare case through FR-011, the patient and the new aftercare provider MUST learn who now provides aftercare. Toggle is locked, FR-032 provider preferences cannot suppress it, and no admin alert is sent because the admin is the actor."}}
+  - {"op": "update_node", "id": "REQ-030-078", "attrs": {"rationale": "prd.md line 179. Category: Monitoring. Event nodes: EVT-monitoring-assignment-pending (existing node)."}}
+  - {"op": "update_node", "id": "REQ-030-080", "attrs": {"rationale": "prd.md line 181. Category: Monitoring. Event nodes: EVT-monitoring-provider-withdrawn (existing node)."}}
+  - {"op": "update_node", "id": "REQ-030-081", "attrs": {"rationale": "prd.md line 182. Category: Monitoring. Event nodes: EVT-monitoring-provider-reassigned (existing node)."}}
+  - {"op": "update_node", "id": "REQ-030-086", "attrs": {"rationale": "prd.md line 189. Category: Reviews. Event nodes: EVT-review-requested (existing node)."}}
+  - {"op": "update_node", "id": "REQ-030-089", "attrs": {"rationale": "prd.md line 192. Category: Reviews. Event nodes: EVT-review-removed (existing node)."}}
+  - {"op": "update_node", "id": "REQ-030-093", "attrs": {"rationale": "prd.md line 196. Category: Provider/Compliance. Event nodes: EVT-provider-document-expiration-warning (new stub owned by FR-015)."}}
+  - {"op": "update_node", "id": "REQ-030-094", "attrs": {"rationale": "prd.md line 197. Category: Provider/Compliance. Event nodes: EVT-provider-status-cancellation-patient (existing node). Lock rule (prd.md line 551): Provider-Caused Cancellation (`provider.status_cancellation_patient`) and Admin Support Required (`provider.status_cancellation_admin_support`) are mandatory notifications for each inquiry/case affected by an FR-015 provider suspension or deactivation. Affected patients and admins MUST be informed regardless of FR-015's \"Notify Provider\" checkbox; toggles are locked for both events. Failed deliveries retry per FR-020 without duplicates (de-duplicated per provider-status event + affected record + recipient) and never restore cancelled records. Before acceptance, the patient notice uses the FR-003 variants (Workflow 2 Alternative Flow B4, REQ-003-021): \"[Clinic] is no longer available. Your other offers are still open.\" when other offers remain open; \"[Clinic] is no longer available. We are finding new offers for you.\" when the inquiry is redistributed automatically, or a request to confirm redistribution first when the patient had explicitly selected the affected provider. The admin-support alert goes to admins with the FR-031 Respond to Support permission."}}
+  - {"op": "update_node", "id": "REQ-030-095", "attrs": {"rationale": "prd.md line 198. Category: Provider/Compliance. Event nodes: EVT-provider-status-cancellation-admin-support (existing node). Lock rule (prd.md line 551): Provider-Caused Cancellation (`provider.status_cancellation_patient`) and Admin Support Required (`provider.status_cancellation_admin_support`) are mandatory notifications for each inquiry/case affected by an FR-015 provider suspension or deactivation. Affected patients and admins MUST be informed regardless of FR-015's \"Notify Provider\" checkbox; toggles are locked for both events. Failed deliveries retry per FR-020 without duplicates (de-duplicated per provider-status event + affected record + recipient) and never restore cancelled records. Before acceptance, the patient notice uses the FR-003 variants (Workflow 2 Alternative Flow B4, REQ-003-021): \"[Clinic] is no longer available. Your other offers are still open.\" when other offers remain open; \"[Clinic] is no longer available. We are finding new offers for you.\" when the inquiry is redistributed automatically, or a request to confirm redistribution first when the patient had explicitly selected the affected provider. The admin-support alert goes to admins with the FR-031 Respond to Support permission."}}
+  - {"op": "update_node", "id": "REQ-030-096", "attrs": {"rationale": "prd.md line 199. Category: Provider/Compliance. Event nodes: EVT-provider-suspended (existing node); EVT-provider-deactivated (existing node)."}}
+  - {"op": "update_node", "id": "REQ-030-097", "attrs": {"rationale": "prd.md line 200. Category: Provider/Compliance. Event nodes: EVT-provider-activation (existing node). Lock rule (prd.md line 553): Provider Account Activation (`provider.activation`) is mandatory and non-disableable: without it a new provider cannot set a password and log in. Provider Reactivated (`provider.reactivated`) and Scheduled Status Change Cancelled (`provider.scheduled_change_cancelled`) follow FR-015's \"Notify Provider\" choice; when triggered they cannot be disabled here. Toggles are locked for all three events. `provider.suspended`, `provider.deactivated`, `provider.reactivated`, and `provider.scheduled_change_cancelled` go to the provider Owner only; for a scheduled suspension or deactivation with \"Notify Provider\" checked, `provider.suspended` / `provider.deactivated` is sent when the change is created and again when it takes effect, and with it unchecked no email is sent at either point. Owner Login Email Changed (`provider.login_email_changed`) is a mandatory security notice to the old and the new login address; its toggle is locked."}}
+  - {"op": "update_node", "id": "REQ-030-098", "attrs": {"rationale": "prd.md line 201. Category: Provider/Compliance. Event nodes: EVT-provider-login-email-changed (existing node)."}}
+  - {"op": "update_node", "id": "REQ-030-099", "attrs": {"rationale": "prd.md line 202. Category: Provider/Compliance. Event nodes: EVT-provider-reactivated (existing node). Lock rule (prd.md line 553): Provider Account Activation (`provider.activation`) is mandatory and non-disableable: without it a new provider cannot set a password and log in. Provider Reactivated (`provider.reactivated`) and Scheduled Status Change Cancelled (`provider.scheduled_change_cancelled`) follow FR-015's \"Notify Provider\" choice; when triggered they cannot be disabled here. Toggles are locked for all three events. `provider.suspended`, `provider.deactivated`, `provider.reactivated`, and `provider.scheduled_change_cancelled` go to the provider Owner only; for a scheduled suspension or deactivation with \"Notify Provider\" checked, `provider.suspended` / `provider.deactivated` is sent when the change is created and again when it takes effect, and with it unchecked no email is sent at either point. Owner Login Email Changed (`provider.login_email_changed`) is a mandatory security notice to the old and the new login address; its toggle is locked."}}
+  - {"op": "update_node", "id": "REQ-030-100", "attrs": {"rationale": "prd.md line 203. Category: Provider/Compliance. Event nodes: EVT-provider-scheduled-change-cancelled (existing node). Lock rule (prd.md line 553): Provider Account Activation (`provider.activation`) is mandatory and non-disableable: without it a new provider cannot set a password and log in. Provider Reactivated (`provider.reactivated`) and Scheduled Status Change Cancelled (`provider.scheduled_change_cancelled`) follow FR-015's \"Notify Provider\" choice; when triggered they cannot be disabled here. Toggles are locked for all three events. `provider.suspended`, `provider.deactivated`, `provider.reactivated`, and `provider.scheduled_change_cancelled` go to the provider Owner only; for a scheduled suspension or deactivation with \"Notify Provider\" checked, `provider.suspended` / `provider.deactivated` is sent when the change is created and again when it takes effect, and with it unchecked no email is sent at either point. Owner Login Email Changed (`provider.login_email_changed`) is a mandatory security notice to the old and the new login address; its toggle is locked."}}
+  - {"op": "update_node", "id": "REQ-030-101", "attrs": {"rationale": "prd.md line 204. Category: Provider/Compliance. Event nodes: EVT-provider-closure-requested (existing node). Lock rule (prd.md line 554): Provider Account-Closure Requested (`provider.closure_requested`) and Provider Account-Closure Request Rejected (`provider.closure_rejected`) are mandatory: admins must learn of every closure request, and a provider whose request is rejected must be told the account stays Active. Toggles are locked for both."}}
+  - {"op": "update_node", "id": "REQ-030-102", "attrs": {"rationale": "prd.md line 205. Category: Provider/Compliance. Event nodes: EVT-provider-closure-rejected (existing node). Lock rule (prd.md line 554): Provider Account-Closure Requested (`provider.closure_requested`) and Provider Account-Closure Request Rejected (`provider.closure_rejected`) are mandatory: admins must learn of every closure request, and a provider whose request is rejected must be told the account stays Active. Toggles are locked for both."}}
+  - {"op": "update_node", "id": "REQ-030-105", "attrs": {"rationale": "prd.md line 208. Category: System/Operations. Event nodes: EVT-analytics-export-ready (created by another FR migration not yet applied; not linked from here)."}}
+  - {"op": "update_node", "id": "REQ-030-112", "attrs": {"rationale": "prd.md line 51."}}
+  - {"op": "update_node", "id": "REQ-030-113", "attrs": {"rationale": "prd.md line 53. User Story 3 (prd.md line 799 onward, not migrated) adds a Failed Deliveries drill-down; no screen specifies it (open question)."}}
+  - {"op": "update_node", "id": "REQ-030-114", "attrs": {"rationale": "prd.md line 54. Main Flow step 11 gives the example (prd.md line 261): escalate to the admin billing team if payment is not received 24 hours after the reminder."}}
+  - {"op": "update_node", "id": "REQ-030-123", "attrs": {"rationale": "prd.md line 115. FR-020 must align to this table."}}
+  - {"op": "update_node", "id": "REQ-030-125", "attrs": {"rationale": "prd.md line 582. Restating: prd.md lines 563, 565 (new event types arrive through backend or product releases)."}}
+  - {"op": "update_node", "id": "REQ-030-126", "attrs": {"rationale": "prd.md line 224. The five post-MVP rows (prd.md lines 221-225) are not Event nodes; they stay as this rule."}}
+  - {"op": "update_node", "id": "REQ-030-129", "attrs": {"rationale": "prd.md line 213"}}
+  - {"op": "update_node", "id": "REQ-030-130", "attrs": {"rationale": "prd.md line 214"}}
+  - {"op": "update_node", "id": "REQ-030-131", "attrs": {"rationale": "prd.md line 215"}}
+  - {"op": "update_node", "id": "REQ-030-132", "attrs": {"rationale": "prd.md line 216"}}
+  - {"op": "update_node", "id": "REQ-030-133", "attrs": {"rationale": "prd.md line 217"}}
+  - {"op": "update_node", "id": "REQ-030-134", "attrs": {"rationale": "prd.md line 218"}}
+  - {"op": "update_node", "id": "REQ-030-135", "attrs": {"rationale": "prd.md line 219"}}
+  - {"op": "update_node", "id": "REQ-030-136", "attrs": {"rationale": "prd.md line 220. Open question: quote.withdrawn is mandatory but alerts admins only after acceptance."}}
+  - {"op": "update_node", "id": "REQ-030-137", "attrs": {"rationale": "prd.md line 559. Restating: prd.md line 241 (OTP verification and password reset show a locked toggle)."}}
+  - {"op": "update_node", "id": "REQ-030-138", "attrs": {"rationale": "prd.md line 561. The lock boundary with FR-032 (ENT-provider-notification-preferences) is a cross-FR citation."}}
+  - {"op": "update_node", "id": "REQ-030-140", "attrs": {"rationale": "prd.md line 245. Restating prd.md line 383 (rules grouped by event category)."}}
+  - {"op": "update_node", "id": "REQ-030-141", "attrs": {"rationale": "prd.md lines 248, 249."}}
+  - {"op": "update_node", "id": "REQ-030-146", "attrs": {"rationale": "prd.md lines 268, 269."}}
+  - {"op": "update_node", "id": "REQ-030-148", "attrs": {"rationale": "prd.md lines 271, 272. Restating prd.md lines 446, 439: Save Draft and Save & Activate; draft rules are not executed until Active."}}
+  - {"op": "update_node", "id": "REQ-030-149", "attrs": {"rationale": "prd.md lines 277, 278, 279, 280, 281, 282. Confirmation text: \"Notification rule activated successfully\" (line 273)."}}
+  - {"op": "update_node", "id": "REQ-030-150", "attrs": {"rationale": "prd.md lines 296, 303, 304, 305. The change is logged with timestamp and admin user ID (see the rule-modification logging REQ)."}}
+  - {"op": "update_node", "id": "REQ-030-151", "attrs": {"rationale": "prd.md lines 308, 309, 310, 311, 312, 313. Prompt: \"Paused rules will not trigger notifications. Reactivate when ready.\""}}
+  - {"op": "update_node", "id": "REQ-030-154", "attrs": {"rationale": "prd.md line 325. Fallback rules are owned by FR-021 (prd.md line 624)."}}
+  - {"op": "update_node", "id": "REQ-030-156", "attrs": {"rationale": "prd.md line 338. The flag lives on the patient account (FR-001 or FR-016 territory): open ownership question."}}
+  - {"op": "update_node", "id": "REQ-030-158", "attrs": {"rationale": "prd.md lines 351, 354, 355, 356, 357. Example variable names in the PRD are illustrative."}}
+  - {"op": "update_node", "id": "REQ-030-160", "attrs": {"rationale": "prd.md lines 399, 392."}}
+  - {"op": "update_node", "id": "REQ-030-166", "attrs": {"rationale": "prd.md line 411."}}
+  - {"op": "update_node", "id": "REQ-030-170", "attrs": {"rationale": "prd.md line 453. Related: prd.md line 569. Open question: SMS wording versus not available in MVP."}}
+  - {"op": "update_node", "id": "REQ-030-171", "attrs": {"rationale": "prd.md line 454"}}
+  - {"op": "update_node", "id": "REQ-030-173", "attrs": {"rationale": "prd.md line 456."}}
+  - {"op": "update_node", "id": "REQ-030-175", "attrs": {"rationale": "prd.md line 458."}}
+  - {"op": "update_node", "id": "REQ-030-176", "attrs": {"rationale": "prd.md line 465."}}
+  - {"op": "update_node", "id": "REQ-030-178", "attrs": {"rationale": "prd.md line 493"}}
+  - {"op": "update_node", "id": "REQ-030-179", "attrs": {"rationale": "prd.md line 494"}}
+  - {"op": "update_node", "id": "REQ-030-180", "attrs": {"rationale": "prd.md line 495"}}
+  - {"op": "update_node", "id": "REQ-030-181", "attrs": {"rationale": "prd.md line 496"}}
+  - {"op": "update_node", "id": "REQ-030-182", "attrs": {"rationale": "prd.md line 497. Recipient-specific payload schemas apply."}}
+  - {"op": "update_node", "id": "REQ-030-183", "attrs": {"rationale": "prd.md line 498. Restating prd.md lines 490, 571: revert by creating a new version copied from a selected prior version, with admin confirmation."}}
+  - {"op": "update_node", "id": "REQ-030-184", "attrs": {"rationale": "prd.md line 499"}}
+  - {"op": "update_node", "id": "REQ-030-185", "attrs": {"rationale": "prd.md line 519 (General Rule 4)."}}
+  - {"op": "update_node", "id": "REQ-030-187", "attrs": {"rationale": "prd.md line 520 (General Rule 5)."}}
+  - {"op": "update_node", "id": "REQ-030-189", "attrs": {"rationale": "prd.md line 527 (Privacy Rule 2)."}}
+  - {"op": "update_node", "id": "REQ-030-190", "attrs": {"rationale": "prd.md lines 530, 802 (Privacy Rule 5 and security considerations). Masking rules are defined in FR-003 and FR-006."}}
+  - {"op": "update_node", "id": "REQ-030-191", "attrs": {"rationale": "prd.md line 532."}}
+  - {"op": "update_node", "id": "REQ-030-195", "attrs": {"rationale": "prd.md line 588."}}
+  - {"op": "update_node", "id": "REQ-030-196", "attrs": {"rationale": "prd.md line 808 (security considerations)."}}
+  - {"op": "update_node", "id": "REQ-030-197", "attrs": {"rationale": "prd.md lines 809, 660, 661, 662. FR-031 owns the permission matrix."}}
+  - {"op": "update_node", "id": "REQ-030-198", "attrs": {"rationale": "prd.md line 820 (compliance)."}}
+  - {"op": "update_node", "id": "REQ-030-199", "attrs": {"rationale": "prd.md line 821 (post-MVP)."}}
+  - {"op": "update_node", "id": "REQ-030-200", "attrs": {"rationale": "prd.md line 759 (Business Process Assumption 1)."}}
+  - {"op": "update_node", "id": "REQ-030-201", "attrs": {"rationale": "prd.md lines 706, 711 (external dependency failure handling)."}}
+  - {"op": "update_node", "id": "REQ-034-001", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1187). Restated at prd.md lines 424, 185 (Screen 2 form fields and Main Flow step 5)."}}
+  - {"op": "update_node", "id": "REQ-034-002", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1188). Restated at prd.md lines 747, 192 (Business Rule 1)."}}
+  - {"op": "update_node", "id": "REQ-034-003", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1189). Restated at prd.md lines 81, 748, 452, 540 (Module Scope, Business Rule 2, Screen 2 and Screen 3)."}}
+  - {"op": "update_node", "id": "REQ-034-004", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1190). Restated at prd.md lines 750 (Business Rule 4)."}}
+  - {"op": "update_node", "id": "REQ-034-006", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1192). Restated at prd.md lines 752 (Business Rule 6)."}}
+  - {"op": "update_node", "id": "REQ-034-007", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1193). Restated at prd.md lines 80, 755, 454, 617 (Module Scope, Business Rule 9, Screen 2 and Screen 5)."}}
+  - {"op": "update_node", "id": "REQ-034-008", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1194). Restated at prd.md lines 757, 534 (Business Rule 11 and Screen 3)."}}
+  - {"op": "update_node", "id": "REQ-034-009", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1195). Restated at prd.md lines 86, 188 (Module Scope and Main Flow step 5)."}}
+  - {"op": "update_node", "id": "REQ-034-010", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1196)."}}
+  - {"op": "update_node", "id": "REQ-034-011", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1197)."}}
+  - {"op": "update_node", "id": "REQ-034-013", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1199). Restated at prd.md lines 200, 450 (Main Flow step 15 and Screen 2)."}}
+  - {"op": "update_node", "id": "REQ-034-014", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1200). Restated at prd.md lines 756, 535 (Business Rule 10 and Screen 3)."}}
+  - {"op": "update_node", "id": "REQ-034-017", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1203). Restated at prd.md lines 749, 327 (Business Rule 3 and alternative flow B3)."}}
+  - {"op": "update_node", "id": "REQ-034-018", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1204). Restated at prd.md lines 753 (Business Rule 7)."}}
+  - {"op": "update_node", "id": "REQ-034-020", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1206). Restated at prd.md lines 441 (Screen 2 business rules)."}}
+  - {"op": "update_node", "id": "REQ-034-022", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1208). Restated at prd.md lines 157, 232 (System-Triggered Entry and alternative flow A3)."}}
+  - {"op": "update_node", "id": "REQ-034-023", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1209). Restated at prd.md lines 158, 252 (System-Triggered Entry and alternative flow A4)."}}
+  - {"op": "update_node", "id": "REQ-034-024", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1210)."}}
+  - {"op": "update_node", "id": "REQ-034-025", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1211)."}}
+  - {"op": "update_node", "id": "REQ-034-027", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1213). Restated at prd.md lines 68, 249 (Provider Platform breakdown and alternative flows A3 and A4)."}}
+  - {"op": "update_node", "id": "REQ-034-028", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1214)."}}
+  - {"op": "update_node", "id": "REQ-034-029", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1215)."}}
+  - {"op": "update_node", "id": "REQ-034-030", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1220)."}}
+  - {"op": "update_node", "id": "REQ-034-035", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1225). Restated at prd.md lines 431 (Screen 2 validation)."}}
+  - {"op": "update_node", "id": "REQ-034-036", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1226). Restated at prd.md lines 433, 344 (Screen 2 and alternative flow B4)."}}
+  - {"op": "update_node", "id": "REQ-034-038", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1228). Restated at prd.md lines 774, 205 (Data Retention rule and Main Flow step 20)."}}
+  - {"op": "update_node", "id": "REQ-034-039", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1229). Restated at prd.md lines 568, 571 (Screen 4 fields)."}}
+  - {"op": "update_node", "id": "REQ-034-040", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1238). Restated at prd.md lines 768, 1022 (Privacy Rule 2 and Security Considerations)."}}
+  - {"op": "update_node", "id": "REQ-034-041", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1239). Restated at prd.md lines 768, 1022 (Privacy Rule 2 and Security Considerations)."}}
+  - {"op": "update_node", "id": "REQ-034-043", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1241). Restated at prd.md lines 772, 1023 (Audit Rule and Security Considerations)."}}
+  - {"op": "update_node", "id": "REQ-034-044", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1242). Restated at prd.md lines 449, 1150 (Screen 2 and Edge Cases)."}}
+  - {"op": "update_node", "id": "REQ-034-045", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1243). Restated at prd.md lines 769, 1021 (Privacy Rule 3 and Security Considerations)."}}
+  - {"op": "update_node", "id": "REQ-034-046", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1244). Restated at prd.md lines 770, 450, 538 (Privacy Rule 4, Screen 2 and Screen 3)."}}
+  - {"op": "update_node", "id": "REQ-034-047", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1248)."}}
+  - {"op": "update_node", "id": "REQ-034-048", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1249)."}}
+  - {"op": "update_node", "id": "REQ-034-049", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1250)."}}
+  - {"op": "update_node", "id": "REQ-034-050", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1251)."}}
+  - {"op": "update_node", "id": "REQ-034-051", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1252)."}}
+  - {"op": "update_node", "id": "REQ-034-052", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1253). Restated at prd.md lines 1166, 1005 (Edge Cases and Integration Points)."}}
+  - {"op": "update_node", "id": "REQ-034-053", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1254)."}}
+  - {"op": "update_node", "id": "REQ-034-054", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1261). Restated at prd.md lines 366, 412 (Screen 1 quick stats)."}}
+  - {"op": "update_node", "id": "REQ-034-055", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1262). Restated at prd.md lines 365, 403 (Screen 1 filter bar and business rules)."}}
+  - {"op": "update_node", "id": "REQ-034-056", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1263). Restated at prd.md lines 402 (Screen 1 search)."}}
+  - {"op": "update_node", "id": "REQ-034-057", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1264). Restated at prd.md lines 552, 400 (Screen 3 notes)."}}
+  - {"op": "update_node", "id": "REQ-034-058", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1265). Restated at prd.md lines 401, 553 (Screen 1 and Screen 3)."}}
+  - {"op": "update_node", "id": "REQ-034-059", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1269). Restated at prd.md lines 568, 589 (Screen 4 business rules and fields)."}}
+  - {"op": "update_node", "id": "REQ-034-060", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1270). Restated at prd.md lines 572, 580 (Screen 4)."}}
+  - {"op": "update_node", "id": "REQ-034-061", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1271). Restated at prd.md lines 573, 786 (Screen 4 Auto-Close After and Admin Editability)."}}
+  - {"op": "update_node", "id": "REQ-034-062", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1272). Restated at prd.md lines 585, 203, 975 (Screen 4, Main Flow step 18 and Assumptions)."}}
+  - {"op": "update_node", "id": "REQ-034-064", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1274). Restated at prd.md lines 652, 336 (Screen 6 business rules and alternative flow B3)."}}
+  - {"op": "update_node", "id": "REQ-034-065", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1279)."}}
+  - {"op": "update_node", "id": "REQ-034-068", "attrs": {"rationale": "Functional Requirements Summary (prd.md line 1282)."}}
+  - {"op": "update_node", "id": "REQ-034-077", "attrs": {"rationale": "General Module Rules, Rule 12 (prd.md line 764). Success Criteria SC-002 and SC-006 state a 5 business day target for non-urgent cases (prd.md lines 851, 858); see migration report."}}
+  - {"op": "update_node", "id": "REQ-034-078", "attrs": {"rationale": "General Module Rules, Rule 13 (prd.md line 765). The 14-day figure is configurable on Screen 7 (Case Inactivity Threshold, prd.md line 708)."}}
+  - {"op": "update_node", "id": "REQ-034-080", "attrs": {"rationale": "General Module Rules, Rule 17 (prd.md line 769). Notification Rule 3 names the same event as a reopening of a closed case (prd.md line 839); see migration report."}}
+  - {"op": "update_node", "id": "REQ-034-081", "attrs": {"rationale": "Data and Privacy Rules, Privacy Rule 1 (prd.md line 776)."}}
+  - {"op": "update_node", "id": "REQ-034-082", "attrs": {"rationale": "Data and Privacy Rules, Privacy Rule 3 (prd.md line 778). Also listed as fixed in the codebase under Admin Editability (audit trail structure and immutability)."}}
+  - {"op": "update_node", "id": "REQ-034-085", "attrs": {"rationale": "Data and Privacy Rules, HIPAA/GDPR (prd.md line 782)."}}
+  - {"op": "update_node", "id": "REQ-034-093", "attrs": {"rationale": "Business Rules, Notification Rule 5 (prd.md line 854). Notification Rule 4 (S-03 with retry) is restated by REQ-034-047 and REQ-034-051 (prd.md line 841)."}}
+  - {"op": "update_node", "id": "REQ-034-095", "attrs": {"rationale": "Implementation Notes, Security Considerations (prd.md line 1035). Kept as a rule because it limits what an admin may do."}}
+  - {"op": "update_node", "id": "REQ-034-110", "attrs": {"rationale": "Implementation Notes, Integration 2 (prd.md line 1011)."}}
+  - {"op": "update_node", "id": "REQ-034-137", "attrs": {"rationale": "Screen 4 business rules (prd.md lines 581, 584). REQ-034-060 states the send option."}}
+  - {"op": "update_node", "id": "REQ-034-138", "attrs": {"rationale": "Screen 4 business rules and data fields (prd.md lines 585, 575)."}}
+  - {"op": "update_node", "id": "REQ-034-140", "attrs": {"rationale": "Screen 4 data fields (prd.md line 574). REQ-034-061 and Admin Editability list only 3, 7 or 14 days; Immediately appears only here. See migration report."}}
+  - {"op": "update_node", "id": "REQ-034-146", "attrs": {"rationale": "Screen 6 business rules (prd.md line 657)."}}
+  - {"op": "update_node", "id": "REQ-034-147", "attrs": {"rationale": "Screen 6 business rules (prd.md line 658)."}}
+  - {"op": "update_node", "id": "REQ-034-150", "attrs": {"rationale": "Screen 7 business rules (prd.md line 724)."}}
+  - {"op": "update_node", "id": "REQ-034-152", "attrs": {"rationale": "Screen 7 business rules (prd.md line 729). Calculates used_count on the managed list entities."}}
+  - {"op": "update_node", "id": "REQ-034-156", "attrs": {"rationale": "Screen 7 business rules (prd.md line 733)."}}
+  - {"op": "update_node", "id": "REQ-034-158", "attrs": {"rationale": "Screen 7 notes (prd.md line 741)."}}
+  - {"op": "update_node", "id": "REQ-018-001", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1606"}}
+  - {"op": "update_node", "id": "REQ-018-002", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1607"}}
+  - {"op": "update_node", "id": "REQ-018-003", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1608"}}
+  - {"op": "update_node", "id": "REQ-018-004", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1609"}}
+  - {"op": "update_node", "id": "REQ-018-005", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1610"}}
+  - {"op": "update_node", "id": "REQ-018-006", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1611"}}
+  - {"op": "update_node", "id": "REQ-018-007", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1612"}}
+  - {"op": "update_node", "id": "REQ-018-008", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1613"}}
+  - {"op": "update_node", "id": "REQ-018-009", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1614"}}
+  - {"op": "update_node", "id": "REQ-018-010", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1615"}}
+  - {"op": "update_node", "id": "REQ-018-011", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1637"}}
+  - {"op": "update_node", "id": "REQ-018-014", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1640"}}
+  - {"op": "update_node", "id": "REQ-018-016", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1647"}}
+  - {"op": "update_node", "id": "REQ-018-018", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1649"}}
+  - {"op": "update_node", "id": "REQ-018-019", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1650"}}
+  - {"op": "update_node", "id": "REQ-018-020", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1654"}}
+  - {"op": "update_node", "id": "REQ-018-021", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1655"}}
+  - {"op": "update_node", "id": "REQ-018-022", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1656"}}
+  - {"op": "update_node", "id": "REQ-018-023", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1657"}}
+  - {"op": "update_node", "id": "REQ-018-024", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1616"}}
+  - {"op": "update_node", "id": "REQ-018-025", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1617"}}
+  - {"op": "update_node", "id": "REQ-018-026", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1618"}}
+  - {"op": "update_node", "id": "REQ-018-027", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1619"}}
+  - {"op": "update_node", "id": "REQ-018-028", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1620"}}
+  - {"op": "update_node", "id": "REQ-018-029", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1621"}}
+  - {"op": "update_node", "id": "REQ-018-030", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1622"}}
+  - {"op": "update_node", "id": "REQ-018-031", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1623"}}
+  - {"op": "update_node", "id": "REQ-018-032", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1624"}}
+  - {"op": "update_node", "id": "REQ-018-033", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1625"}}
+  - {"op": "update_node", "id": "REQ-018-034", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1626"}}
+  - {"op": "update_node", "id": "REQ-018-035", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1627"}}
+  - {"op": "update_node", "id": "REQ-018-036", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1641"}}
+  - {"op": "update_node", "id": "REQ-018-037", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1642"}}
+  - {"op": "update_node", "id": "REQ-018-038", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1628"}}
+  - {"op": "update_node", "id": "REQ-018-039", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1629"}}
+  - {"op": "update_node", "id": "REQ-018-040", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1630"}}
+  - {"op": "update_node", "id": "REQ-018-041", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1631"}}
+  - {"op": "update_node", "id": "REQ-018-042", "attrs": {"rationale": "PRD Functional Requirements Summary, prd.md line 1632"}}
+  - {"op": "update_node", "id": "REQ-018-043", "attrs": {"rationale": "PRD General Module Rules, prd.md line 1178"}}
+  - {"op": "update_node", "id": "REQ-018-044", "attrs": {"rationale": "PRD General Module Rules, prd.md line 1179"}}
+  - {"op": "update_node", "id": "REQ-018-046", "attrs": {"rationale": "PRD General Module Rules, prd.md line 1182"}}
+  - {"op": "update_node", "id": "REQ-018-047", "attrs": {"rationale": "PRD General Module Rules, prd.md line 1183"}}
+  - {"op": "update_node", "id": "REQ-018-048", "attrs": {"rationale": "PRD General Module Rules, prd.md line 1184"}}
+  - {"op": "update_node", "id": "REQ-018-049", "attrs": {"rationale": "PRD General Module Rules, prd.md line 1186"}}
+  - {"op": "update_node", "id": "REQ-018-050", "attrs": {"rationale": "PRD General Module Rules, prd.md line 1187"}}
+  - {"op": "update_node", "id": "REQ-018-051", "attrs": {"rationale": "PRD General Module Rules, prd.md line 1188"}}
+  - {"op": "update_node", "id": "REQ-018-052", "attrs": {"rationale": "PRD General Module Rules, prd.md line 1189"}}
+  - {"op": "update_node", "id": "REQ-018-053", "attrs": {"rationale": "PRD General Module Rules, prd.md line 1190"}}
+  - {"op": "update_node", "id": "REQ-018-054", "attrs": {"rationale": "PRD General Module Rules, prd.md line 1191"}}
+  - {"op": "update_node", "id": "REQ-018-055", "attrs": {"rationale": "PRD General Module Rules, prd.md line 1192"}}
+  - {"op": "update_node", "id": "REQ-018-056", "attrs": {"rationale": "PRD Affiliate Segmentation Rules, prd.md line 1197"}}
+  - {"op": "update_node", "id": "REQ-018-057", "attrs": {"rationale": "PRD Affiliate Segmentation Rules, prd.md line 1198"}}
+  - {"op": "update_node", "id": "REQ-018-058", "attrs": {"rationale": "PRD Data and Privacy Rules, prd.md line 1202"}}
+  - {"op": "update_node", "id": "REQ-018-060", "attrs": {"rationale": "PRD Data and Privacy Rules, prd.md line 1204"}}
+  - {"op": "update_node", "id": "REQ-018-061", "attrs": {"rationale": "PRD Data and Privacy Rules, prd.md line 1205"}}
+  - {"op": "update_node", "id": "REQ-018-062", "attrs": {"rationale": "PRD Data and Privacy Rules, prd.md line 1206"}}
+  - {"op": "update_node", "id": "REQ-018-066", "attrs": {"rationale": "PRD Admin Editability Rules, prd.md line 1237"}}
+  - {"op": "update_node", "id": "REQ-018-067", "attrs": {"rationale": "PRD Payment and Billing Rules, prd.md line 1242"}}
+  - {"op": "update_node", "id": "REQ-018-068", "attrs": {"rationale": "PRD Payment and Billing Rules, prd.md line 1243"}}
+  - {"op": "update_node", "id": "REQ-018-069", "attrs": {"rationale": "PRD Payment and Billing Rules, prd.md line 1244"}}
+  - {"op": "update_node", "id": "REQ-018-070", "attrs": {"rationale": "PRD Payment and Billing Rules, prd.md line 1246"}}
+  - {"op": "update_node", "id": "REQ-018-071", "attrs": {"rationale": "PRD Payment and Billing Rules, prd.md line 1247"}}
+  - {"op": "update_node", "id": "REQ-018-072", "attrs": {"rationale": "PRD Screen 1, prd.md line 359"}}
+  - {"op": "update_node", "id": "REQ-018-073", "attrs": {"rationale": "PRD Screen 1, prd.md line 360"}}
+  - {"op": "update_node", "id": "REQ-018-074", "attrs": {"rationale": "PRD Screen 1, prd.md line 361"}}
+  - {"op": "update_node", "id": "REQ-018-075", "attrs": {"rationale": "PRD Screen 1, prd.md line 362"}}
+  - {"op": "update_node", "id": "REQ-018-076", "attrs": {"rationale": "PRD Screen 1, prd.md line 364"}}
+  - {"op": "update_node", "id": "REQ-018-077", "attrs": {"rationale": "PRD Screen 1, prd.md line 371"}}
+  - {"op": "update_node", "id": "REQ-018-078", "attrs": {"rationale": "PRD Screen 2, prd.md line 415"}}
+  - {"op": "update_node", "id": "REQ-018-079", "attrs": {"rationale": "PRD Screen 2, prd.md line 416"}}
+  - {"op": "update_node", "id": "REQ-018-081", "attrs": {"rationale": "PRD Screen 2, prd.md line 419"}}
+  - {"op": "update_node", "id": "REQ-018-082", "attrs": {"rationale": "PRD Screen 2, prd.md line 420"}}
+  - {"op": "update_node", "id": "REQ-018-083", "attrs": {"rationale": "PRD Screen 2, prd.md line 422"}}
+  - {"op": "update_node", "id": "REQ-018-084", "attrs": {"rationale": "PRD Screen 2, prd.md line 427"}}
+  - {"op": "update_node", "id": "REQ-018-085", "attrs": {"rationale": "PRD Screen 2, prd.md line 428"}}
+  - {"op": "update_node", "id": "REQ-018-086", "attrs": {"rationale": "PRD Screen 3, prd.md line 455"}}
+  - {"op": "update_node", "id": "REQ-018-087", "attrs": {"rationale": "PRD Screen 3, prd.md line 457"}}
+  - {"op": "update_node", "id": "REQ-018-088", "attrs": {"rationale": "PRD Screen 3.1, prd.md line 492"}}
+  - {"op": "update_node", "id": "REQ-018-089", "attrs": {"rationale": "PRD Screen 3.1, prd.md line 493"}}
+  - {"op": "update_node", "id": "REQ-018-090", "attrs": {"rationale": "PRD Screen 3.1, prd.md line 494"}}
+  - {"op": "update_node", "id": "REQ-018-091", "attrs": {"rationale": "PRD Screen 3.1, prd.md line 495"}}
+  - {"op": "update_node", "id": "REQ-018-092", "attrs": {"rationale": "PRD Screen 3.2, prd.md line 521"}}
+  - {"op": "update_node", "id": "REQ-018-093", "attrs": {"rationale": "PRD Screen 3.2, prd.md line 522"}}
+  - {"op": "update_node", "id": "REQ-018-094", "attrs": {"rationale": "PRD Screen 3.2, prd.md line 523"}}
+  - {"op": "update_node", "id": "REQ-018-095", "attrs": {"rationale": "PRD Screen 3.2, prd.md line 524"}}
+  - {"op": "update_node", "id": "REQ-018-096", "attrs": {"rationale": "PRD Screen 3.3, prd.md line 549"}}
+  - {"op": "update_node", "id": "REQ-018-097", "attrs": {"rationale": "PRD Screen 3.3, prd.md line 550"}}
+  - {"op": "update_node", "id": "REQ-018-098", "attrs": {"rationale": "PRD Screen 3.3, prd.md line 551"}}
+  - {"op": "update_node", "id": "REQ-018-099", "attrs": {"rationale": "PRD Screen 3.3, prd.md line 552"}}
+  - {"op": "update_node", "id": "REQ-018-100", "attrs": {"rationale": "PRD Screen 3.3, prd.md line 553"}}
+  - {"op": "update_node", "id": "REQ-018-101", "attrs": {"rationale": "PRD Screen 3.3, prd.md line 555"}}
+  - {"op": "update_node", "id": "REQ-018-102", "attrs": {"rationale": "PRD Screen 3.3, prd.md line 556"}}
+  - {"op": "update_node", "id": "REQ-018-103", "attrs": {"rationale": "PRD Screen 4, prd.md line 594"}}
+  - {"op": "update_node", "id": "REQ-018-104", "attrs": {"rationale": "PRD Screen 4, prd.md line 595"}}
+  - {"op": "update_node", "id": "REQ-018-105", "attrs": {"rationale": "PRD Screen 4, prd.md line 596"}}
+  - {"op": "update_node", "id": "REQ-018-106", "attrs": {"rationale": "PRD Screen 4, prd.md line 597"}}
+  - {"op": "update_node", "id": "REQ-018-107", "attrs": {"rationale": "PRD Screen 4, prd.md line 598"}}
+  - {"op": "update_node", "id": "REQ-018-108", "attrs": {"rationale": "PRD Screen 4, prd.md line 599"}}
+  - {"op": "update_node", "id": "REQ-018-109", "attrs": {"rationale": "PRD Screen 4, prd.md line 600"}}
+  - {"op": "update_node", "id": "REQ-018-110", "attrs": {"rationale": "PRD Screen 4, prd.md line 601"}}
+  - {"op": "update_node", "id": "REQ-018-111", "attrs": {"rationale": "PRD Screen 4, prd.md line 602"}}
+  - {"op": "update_node", "id": "REQ-018-112", "attrs": {"rationale": "PRD Screen 4, prd.md line 603"}}
+  - {"op": "update_node", "id": "REQ-018-113", "attrs": {"rationale": "PRD Screen 4.1, prd.md line 640"}}
+  - {"op": "update_node", "id": "REQ-018-114", "attrs": {"rationale": "PRD Screen 4.1, prd.md line 641"}}
+  - {"op": "update_node", "id": "REQ-018-115", "attrs": {"rationale": "PRD Screen 4.1, prd.md line 642"}}
+  - {"op": "update_node", "id": "REQ-018-116", "attrs": {"rationale": "PRD Screen 4.1, prd.md line 643"}}
+  - {"op": "update_node", "id": "REQ-018-117", "attrs": {"rationale": "PRD Screen 5, prd.md line 681"}}
+  - {"op": "update_node", "id": "REQ-018-118", "attrs": {"rationale": "PRD Screen 5, prd.md line 682"}}
+  - {"op": "update_node", "id": "REQ-018-119", "attrs": {"rationale": "PRD Screen 5, prd.md line 683"}}
+  - {"op": "update_node", "id": "REQ-018-120", "attrs": {"rationale": "PRD Screen 5, prd.md line 684"}}
+  - {"op": "update_node", "id": "REQ-018-121", "attrs": {"rationale": "PRD Screen 5, prd.md line 686"}}
+  - {"op": "update_node", "id": "REQ-018-122", "attrs": {"rationale": "PRD Screen 6, prd.md line 722"}}
+  - {"op": "update_node", "id": "REQ-018-123", "attrs": {"rationale": "PRD Screen 6, prd.md line 723"}}
+  - {"op": "update_node", "id": "REQ-018-124", "attrs": {"rationale": "PRD Screen 6, prd.md line 724"}}
+  - {"op": "update_node", "id": "REQ-018-125", "attrs": {"rationale": "PRD Screen 6, prd.md line 725"}}
+  - {"op": "update_node", "id": "REQ-018-126", "attrs": {"rationale": "PRD Screen 7, prd.md line 765"}}
+  - {"op": "update_node", "id": "REQ-018-127", "attrs": {"rationale": "PRD Screen 7, prd.md line 766"}}
+  - {"op": "update_node", "id": "REQ-018-128", "attrs": {"rationale": "PRD Screen 7, prd.md line 767"}}
+  - {"op": "update_node", "id": "REQ-018-129", "attrs": {"rationale": "PRD Screen 7, prd.md line 769"}}
+  - {"op": "update_node", "id": "REQ-018-130", "attrs": {"rationale": "PRD Screen 7, prd.md line 770"}}
+  - {"op": "update_node", "id": "REQ-018-131", "attrs": {"rationale": "PRD Screen 7, prd.md line 771"}}
+  - {"op": "update_node", "id": "REQ-018-132", "attrs": {"rationale": "PRD Screen 8, prd.md line 815"}}
+  - {"op": "update_node", "id": "REQ-018-133", "attrs": {"rationale": "PRD Screen 8, prd.md line 817"}}
+  - {"op": "update_node", "id": "REQ-018-134", "attrs": {"rationale": "PRD Screen 9, prd.md line 852"}}
+  - {"op": "update_node", "id": "REQ-018-135", "attrs": {"rationale": "PRD Screen 9, prd.md line 854"}}
+  - {"op": "update_node", "id": "REQ-018-136", "attrs": {"rationale": "PRD Screen 9.1, prd.md line 887"}}
+  - {"op": "update_node", "id": "REQ-018-137", "attrs": {"rationale": "PRD Screen 9.1, prd.md line 888"}}
+  - {"op": "update_node", "id": "REQ-018-138", "attrs": {"rationale": "PRD Screen 9.1, prd.md line 889"}}
+  - {"op": "update_node", "id": "REQ-018-139", "attrs": {"rationale": "PRD Screen 9.1, prd.md line 890"}}
+  - {"op": "update_node", "id": "REQ-018-140", "attrs": {"rationale": "PRD Screen 9.2, prd.md line 942"}}
+  - {"op": "update_node", "id": "REQ-018-141", "attrs": {"rationale": "PRD Screen 9.2, prd.md line 945"}}
+  - {"op": "update_node", "id": "REQ-018-142", "attrs": {"rationale": "PRD Screen 9.2, prd.md line 946"}}
+  - {"op": "update_node", "id": "REQ-018-143", "attrs": {"rationale": "PRD Screen 9.3, prd.md line 1001"}}
+  - {"op": "update_node", "id": "REQ-018-144", "attrs": {"rationale": "PRD Screen 9.3, prd.md line 1002"}}
+  - {"op": "update_node", "id": "REQ-018-146", "attrs": {"rationale": "PRD Screen 9.3, prd.md line 1005"}}
+  - {"op": "update_node", "id": "REQ-018-147", "attrs": {"rationale": "PRD Screen 9.4, prd.md line 1055"}}
+  - {"op": "update_node", "id": "REQ-018-148", "attrs": {"rationale": "PRD Screen 9.4, prd.md line 1056"}}
+  - {"op": "update_node", "id": "REQ-018-149", "attrs": {"rationale": "PRD Screen 9.4, prd.md line 1057"}}
+  - {"op": "update_node", "id": "REQ-018-150", "attrs": {"rationale": "PRD Screen 10, prd.md line 1077"}}
+  - {"op": "update_node", "id": "REQ-018-151", "attrs": {"rationale": "PRD Screen 10.1, prd.md line 1105"}}
+  - {"op": "update_node", "id": "REQ-018-152", "attrs": {"rationale": "PRD Screen 10.1, prd.md line 1106"}}
+  - {"op": "update_node", "id": "REQ-018-153", "attrs": {"rationale": "PRD Screen 10.1, prd.md line 1107"}}
+  - {"op": "update_node", "id": "REQ-018-154", "attrs": {"rationale": "PRD Screen 10.2, prd.md line 1131"}}
+  - {"op": "update_node", "id": "REQ-018-155", "attrs": {"rationale": "PRD Screen 10.2, prd.md line 1133"}}
+  - {"op": "update_node", "id": "REQ-018-156", "attrs": {"rationale": "PRD Screen 10.2, prd.md line 1134"}}
+  - {"op": "update_node", "id": "REQ-018-157", "attrs": {"rationale": "PRD Screen 10.3, prd.md line 1162"}}
+  - {"op": "update_node", "id": "REQ-018-158", "attrs": {"rationale": "PRD Screen 10.3, prd.md line 1164"}}
+  - {"op": "update_node", "id": "REQ-018-173", "attrs": {"rationale": "PRD Edge Cases, prd.md line 1588"}}
+  - {"op": "update_node", "id": "REQ-018-174", "attrs": {"rationale": "PRD Edge Cases, prd.md line 1589"}}
+  - {"op": "update_node", "id": "REQ-018-175", "attrs": {"rationale": "PRD Edge Cases, prd.md line 1591"}}
+  - {"op": "update_node", "id": "REQ-018-176", "attrs": {"rationale": "PRD Edge Cases, prd.md line 1594"}}
+  - {"op": "update_node", "id": "REQ-018-177", "attrs": {"rationale": "PRD Edge Cases, prd.md line 1598"}}
+  - {"op": "update_node", "id": "REQ-018-201", "attrs": {"rationale": "PRD Integration Points, prd.md line 1411"}}
+  - {"op": "update_node", "id": "REQ-018-202", "attrs": {"rationale": "PRD Integration Points, prd.md line 1416"}}
+  - {"op": "update_node", "id": "REQ-018-203", "attrs": {"rationale": "PRD Integration Points, prd.md line 1421"}}
+  - {"op": "update_node", "id": "REQ-018-204", "attrs": {"rationale": "PRD Security Considerations, prd.md line 1439"}}
+  - {"op": "update_node", "id": "REQ-018-205", "attrs": {"rationale": "PRD Security Considerations, prd.md line 1441"}}
+  - {"op": "update_node", "id": "REQ-018-206", "attrs": {"rationale": "PRD Assumptions, prd.md line 1388"}}
+  - {"op": "update_node", "id": "REQ-021-001", "attrs": {"rationale": "PRD Functional Requirements Summary (prd.md line 1051). PRD id REQ-021-001.  Restated at: Exec Summary: initial languages (line 25); Business Assumption 2: Turkish first (line 845)."}}
+  - {"op": "update_node", "id": "REQ-021-002", "attrs": {"rationale": "PRD Functional Requirements Summary (prd.md line 1052). PRD id REQ-021-002.  Restated at: Module Scope P-01 (line 43)."}}
+  - {"op": "update_node", "id": "REQ-021-003", "attrs": {"rationale": "PRD Functional Requirements Summary (prd.md line 1053). PRD id REQ-021-003.  Restated at: Module Scope PR-06 (line 52); Screen 2 rule (line 275)."}}
+  - {"op": "update_node", "id": "REQ-021-004", "attrs": {"rationale": "PRD Functional Requirements Summary (prd.md line 1054). PRD id REQ-021-004. "}}
+  - {"op": "update_node", "id": "REQ-021-005", "attrs": {"rationale": "PRD Functional Requirements Summary (prd.md line 1055). PRD id REQ-021-005.  Restated at: Module Scope: in-scope localized text (line 76); Screen 1 note: coverage of selected language (line 252)."}}
+  - {"op": "update_node", "id": "REQ-021-006", "attrs": {"rationale": "PRD Functional Requirements Summary (prd.md line 1056). PRD id REQ-021-006.  Restated at: Module Scope A-09 (line 58)."}}
+  - {"op": "update_node", "id": "REQ-021-007", "attrs": {"rationale": "PRD Functional Requirements Summary (prd.md line 1057). PRD id REQ-021-007.  Restated at: Module Scope A-09 (line 59)."}}
+  - {"op": "update_node", "id": "REQ-021-008", "attrs": {"rationale": "PRD Functional Requirements Summary (prd.md line 1058). PRD id REQ-021-008.  Restated at: Screen 7 rule: saving creates draft (line 514); Screen 7 rule: bundles unchanged until publish (line 518); Screen 5 rule: drafts stay draft (line 379)."}}
+  - {"op": "update_node", "id": "REQ-021-009", "attrs": {"rationale": "PRD Functional Requirements Summary (prd.md line 1059). PRD id REQ-021-009.  Restated at: Screen 8 rule: draft is default (line 549); Screen 8 rule: publish gate (line 550)."}}
+  - {"op": "update_node", "id": "REQ-021-011", "attrs": {"rationale": "PRD Functional Requirements Summary (prd.md line 1061). PRD id REQ-021-011.  Restated at: Business Rule 7: every publish creates a version (line 652); Screen 9 rule: versions immutable (line 587)."}}
+  - {"op": "update_node", "id": "REQ-021-012", "attrs": {"rationale": "PRD Functional Requirements Summary (prd.md line 1062). PRD id REQ-021-012.  Restated at: Business Rule 8: rollback creates new version (line 653); Screen 9 rule: rollback keeps history (line 589)."}}
+  - {"op": "update_node", "id": "REQ-021-013", "attrs": {"rationale": "PRD Functional Requirements Summary (prd.md line 1063). PRD id REQ-021-013.  Restated at: Business Rule 6 (line 651); Screen 1 rule: no drafts to Patient App (line 243); Screen 2 rule: no drafts to Provider Dashboard (line 276)."}}
+  - {"op": "update_node", "id": "REQ-021-027", "attrs": {"rationale": "PRD Functional Requirements Summary (prd.md line 1064). PRD id REQ-021-013a. Renumbered from REQ-021-013a (id must be digits only). Restated at: Module Scope A-09 (line 61)."}}
+  - {"op": "update_node", "id": "REQ-021-028", "attrs": {"rationale": "PRD Functional Requirements Summary (prd.md line 1065). PRD id REQ-021-013b. Renumbered from REQ-021-013b (id must be digits only). Restated at: Screen 10 rule: prefill scope (line 626)."}}
+  - {"op": "update_node", "id": "REQ-021-029", "attrs": {"rationale": "PRD Functional Requirements Summary (prd.md line 1066). PRD id REQ-021-013c. Renumbered from REQ-021-013c (id must be digits only). Restated at: Screen 10 rule: replace scope (line 627); Configurable with restrictions: replacement confirmation (line 693)."}}
+  - {"op": "update_node", "id": "REQ-021-014", "attrs": {"rationale": "PRD Functional Requirements Summary (prd.md line 1074). PRD id REQ-021-014. "}}
+  - {"op": "update_node", "id": "REQ-021-015", "attrs": {"rationale": "PRD Functional Requirements Summary (prd.md line 1075). PRD id REQ-021-015.  Restated at: Implementation note: validation list (line 859)."}}
+  - {"op": "update_node", "id": "REQ-021-016", "attrs": {"rationale": "PRD Functional Requirements Summary (prd.md line 1076). PRD id REQ-021-016.  Restated at: Alternative flow B1: log missing key (line 195)."}}
+  - {"op": "update_node", "id": "REQ-021-018", "attrs": {"rationale": "PRD Functional Requirements Summary (prd.md line 1078). PRD id REQ-021-018. "}}
+  - {"op": "update_node", "id": "REQ-021-019", "attrs": {"rationale": "PRD Functional Requirements Summary (prd.md line 1079). PRD id REQ-021-019. "}}
+  - {"op": "update_node", "id": "REQ-021-021", "attrs": {"rationale": "PRD Functional Requirements Summary (prd.md line 1084). PRD id REQ-021-021.  Restated at: Security consideration: audit trail (line 905)."}}
+  - {"op": "update_node", "id": "REQ-021-022", "attrs": {"rationale": "PRD Functional Requirements Summary (prd.md line 1085). PRD id REQ-021-022.  Restated at: Privacy Rule 1 (line 662); Security consideration: compliance (line 907)."}}
+  - {"op": "update_node", "id": "REQ-021-031", "attrs": {"rationale": "PRD Functional Requirements Summary (prd.md line 1087). PRD id REQ-021-022b. Renumbered from REQ-021-022b (id must be digits only). Restated at: Screen 10 rule: credential handling (line 631); Security consideration: credential security (line 904)."}}
+  - {"op": "update_node", "id": "REQ-021-023", "attrs": {"rationale": "PRD Functional Requirements Summary (prd.md line 1091). PRD id REQ-021-023.  Restated at: Module Scope shared services (line 67)."}}
+  - {"op": "update_node", "id": "REQ-021-024", "attrs": {"rationale": "PRD Functional Requirements Summary (prd.md line 1092). PRD id REQ-021-024.  Restated at: Module Scope S-03 (line 68)."}}
+  - {"op": "update_node", "id": "REQ-021-025", "attrs": {"rationale": "PRD Functional Requirements Summary (prd.md line 1093). PRD id REQ-021-025.  Restated at: Module Scope PR-06 (line 53)."}}
+  - {"op": "update_node", "id": "REQ-021-026", "attrs": {"rationale": "PRD Functional Requirements Summary (prd.md line 1094). PRD id REQ-021-026. "}}
+  - {"op": "update_node", "id": "REQ-021-032", "attrs": {"rationale": "PRD Business Rules (prd.md line 650)."}}
+  - {"op": "update_node", "id": "REQ-021-033", "attrs": {"rationale": "PRD Business Rules (prd.md line 651)."}}
+  - {"op": "update_node", "id": "REQ-021-034", "attrs": {"rationale": "PRD Business Rules (prd.md line 652)."}}
+  - {"op": "update_node", "id": "REQ-021-035", "attrs": {"rationale": "PRD Business Rules (prd.md line 653)."}}
+  - {"op": "update_node", "id": "REQ-021-036", "attrs": {"rationale": "PRD Business Rules (prd.md line 654)."}}
+  - {"op": "update_node", "id": "REQ-021-037", "attrs": {"rationale": "PRD Business Rules (prd.md line 658)."}}
+  - {"op": "update_node", "id": "REQ-021-038", "attrs": {"rationale": "PRD Business Rules (prd.md line 659)."}}
+  - {"op": "update_node", "id": "REQ-021-039", "attrs": {"rationale": "PRD Business Rules (prd.md line 660)."}}
+  - {"op": "update_node", "id": "REQ-021-040", "attrs": {"rationale": "PRD Business Rules (prd.md line 661)."}}
+  - {"op": "update_node", "id": "REQ-021-041", "attrs": {"rationale": "PRD Business Rules (prd.md line 662)."}}
+  - {"op": "update_node", "id": "REQ-021-042", "attrs": {"rationale": "PRD Business Rules (prd.md line 670)."}}
+  - {"op": "update_node", "id": "REQ-021-043", "attrs": {"rationale": "PRD Business Rules (prd.md line 672)."}}
+  - {"op": "update_node", "id": "REQ-021-044", "attrs": {"rationale": "PRD Business Rules (prd.md line 673)."}}
+  - {"op": "update_node", "id": "REQ-021-045", "attrs": {"rationale": "PRD Business Rules (prd.md line 674)."}}
+  - {"op": "update_node", "id": "REQ-021-048", "attrs": {"rationale": "PRD Business Rules (prd.md line 699)."}}
+  - {"op": "update_node", "id": "REQ-021-050", "attrs": {"rationale": "PRD Business Rules (prd.md line 702)."}}
+  - {"op": "update_node", "id": "REQ-021-051", "attrs": {"rationale": "PRD Business Rules (prd.md line 704). Restated at: Dependency FR-031 (line 777); Integration note: HTTP 403 (line 879); Security: authorization (line 902)."}}
+  - {"op": "update_node", "id": "REQ-021-052", "attrs": {"rationale": "PRD Business Rules (prd.md line 708)."}}
+  - {"op": "update_node", "id": "REQ-021-053", "attrs": {"rationale": "PRD Business Rules (prd.md line 709)."}}
+  - {"op": "update_node", "id": "REQ-021-054", "attrs": {"rationale": "PRD Business Rules (prd.md line 710)."}}
+  - {"op": "update_node", "id": "REQ-021-055", "attrs": {"rationale": "PRD Implementation Notes (prd.md line 909)."}}
+  - {"op": "update_node", "id": "REQ-021-058", "attrs": {"rationale": "PRD Screen Specifications, Screen 1 (prd.md line 243)."}}
+  - {"op": "update_node", "id": "REQ-021-060", "attrs": {"rationale": "PRD Screen Specifications, Screen 1 (prd.md line 247)."}}
+  - {"op": "update_node", "id": "REQ-021-061", "attrs": {"rationale": "PRD Screen Specifications, Screen 1 (prd.md line 250)."}}
+  - {"op": "update_node", "id": "REQ-021-063", "attrs": {"rationale": "PRD Screen Specifications, Screen 1 (prd.md line 237)."}}
+  - {"op": "update_node", "id": "REQ-021-066", "attrs": {"rationale": "PRD Screen Specifications, Screen 2 (prd.md line 277)."}}
+  - {"op": "update_node", "id": "REQ-021-067", "attrs": {"rationale": "PRD Screen Specifications, Screen 2 (prd.md line 280)."}}
+  - {"op": "update_node", "id": "REQ-021-069", "attrs": {"rationale": "PRD Screen Specifications, Screen 3 (prd.md line 307)."}}
+  - {"op": "update_node", "id": "REQ-021-070", "attrs": {"rationale": "PRD Screen Specifications, Screen 3 (prd.md line 308)."}}
+  - {"op": "update_node", "id": "REQ-021-071", "attrs": {"rationale": "PRD Screen Specifications, Screen 3 (prd.md line 309)."}}
+  - {"op": "update_node", "id": "REQ-021-072", "attrs": {"rationale": "PRD Screen Specifications, Screen 4 (prd.md line 342). Restated at: Screen 4 row: remove/deactivate action (line 333)."}}
+  - {"op": "update_node", "id": "REQ-021-074", "attrs": {"rationale": "PRD Screen Specifications, Screen 4 (prd.md line 344)."}}
+  - {"op": "update_node", "id": "REQ-021-075", "attrs": {"rationale": "PRD Screen Specifications, Screen 4 (prd.md line 345)."}}
+  - {"op": "update_node", "id": "REQ-021-076", "attrs": {"rationale": "PRD Screen Specifications, Screen 4 (prd.md line 346). Restated at: Screen 1 rule (line 246); Screen 2 row: available languages (line 268); Screen 3 row: available languages (line 298); Alternative flow A1 step 2 (line 176)."}}
+  - {"op": "update_node", "id": "REQ-021-077", "attrs": {"rationale": "PRD Screen Specifications, Screen 4 (prd.md line 327)."}}
+  - {"op": "update_node", "id": "REQ-021-079", "attrs": {"rationale": "PRD Screen Specifications, Screen 5 (prd.md line 380). Restated at: Screen 5 row: machine translation route (line 371)."}}
+  - {"op": "update_node", "id": "REQ-021-080", "attrs": {"rationale": "PRD Screen Specifications, Screen 5 (prd.md line 381)."}}
+  - {"op": "update_node", "id": "REQ-021-081", "attrs": {"rationale": "PRD Screen Specifications, Screen 5 (prd.md line 372)."}}
+  - {"op": "update_node", "id": "REQ-021-082", "attrs": {"rationale": "PRD Screen Specifications, Screen 6 (prd.md line 418). Restated at: Screen 6 rule: baseline map (line 414); Screen 6 rule: when PRD updates are required (line 416)."}}
+  - {"op": "update_node", "id": "REQ-021-083", "attrs": {"rationale": "PRD Screen Specifications, Screen 6 (prd.md line 420). Restated at: Screen 6 rule: tenant-specific keys (line 418)."}}
+  - {"op": "update_node", "id": "REQ-021-084", "attrs": {"rationale": "PRD Screen Specifications, Screen 7 (prd.md line 516)."}}
+  - {"op": "update_node", "id": "REQ-021-085", "attrs": {"rationale": "PRD Screen Specifications, Screen 7 (prd.md line 519)."}}
+  - {"op": "update_node", "id": "REQ-021-088", "attrs": {"rationale": "PRD Screen Specifications, Screen 7 (prd.md line 507)."}}
+  - {"op": "update_node", "id": "REQ-021-089", "attrs": {"rationale": "PRD Main Flow (prd.md line 136)."}}
+  - {"op": "update_node", "id": "REQ-021-090", "attrs": {"rationale": "PRD Screen Specifications, Screen 8 (prd.md line 554)."}}
+  - {"op": "update_node", "id": "REQ-021-091", "attrs": {"rationale": "PRD Screen Specifications, Screen 8 (prd.md line 555). Restated at: Screen 8 row: file (line 539); Security consideration: threat mitigation (line 906)."}}
+  - {"op": "update_node", "id": "REQ-021-092", "attrs": {"rationale": "PRD Screen Specifications, Screen 8 (prd.md line 556)."}}
+  - {"op": "update_node", "id": "REQ-021-093", "attrs": {"rationale": "PRD Screen Specifications, Screen 8 (prd.md line 557)."}}
+  - {"op": "update_node", "id": "REQ-021-094", "attrs": {"rationale": "PRD Screen Specifications, Screen 8 (prd.md line 558). Restated at: Screen 8 row: group (line 538)."}}
+  - {"op": "update_node", "id": "REQ-021-096", "attrs": {"rationale": "PRD Screen Specifications, Screen 9 (prd.md line 591)."}}
+  - {"op": "update_node", "id": "REQ-021-097", "attrs": {"rationale": "PRD Screen Specifications, Screen 9 (prd.md line 593). Restated at: Main flow step 14 (line 162)."}}
+  - {"op": "update_node", "id": "REQ-021-099", "attrs": {"rationale": "PRD Screen Specifications, Screen 9 (prd.md line 595). Restated at: Screen 9 row: publish action (line 581); External dependency: translator files (line 790)."}}
+  - {"op": "update_node", "id": "REQ-021-100", "attrs": {"rationale": "PRD Main Flow (prd.md line 123). Restated at: Main flow step 4R (line 121); Screen 9 row: rollback action (line 582)."}}
+  - {"op": "update_node", "id": "REQ-021-101", "attrs": {"rationale": "PRD Screen Specifications, Screen 9 (prd.md line 586)."}}
+  - {"op": "update_node", "id": "REQ-021-102", "attrs": {"rationale": "PRD Screen Specifications, Screen 9 (prd.md line 580). Restated at: Main flow step 11 (line 157)."}}
+  - {"op": "update_node", "id": "REQ-021-104", "attrs": {"rationale": "PRD Screen Specifications, Screen 10 (prd.md line 629). Restated at: Screen 10 row: target language (line 613); Screen 10 row: generation mode (line 616)."}}
+  - {"op": "update_node", "id": "REQ-021-105", "attrs": {"rationale": "PRD Screen Specifications, Screen 10 (prd.md line 632)."}}
+  - {"op": "update_node", "id": "REQ-021-106", "attrs": {"rationale": "PRD Screen Specifications, Screen 10 (prd.md line 633). Restated at: Main flow step 8M (line 151)."}}
+  - {"op": "update_node", "id": "REQ-021-107", "attrs": {"rationale": "PRD Screen Specifications, Screen 10 (prd.md line 636)."}}
+  - {"op": "update_node", "id": "REQ-021-108", "attrs": {"rationale": "PRD Screen Specifications, Screen 10 (prd.md line 612)."}}
+  - {"op": "update_node", "id": "REQ-021-111", "attrs": {"rationale": "PRD Dependencies (prd.md line 803). Restated at: Integration note: machine translation errors (line 889)."}}
+  - {"op": "update_node", "id": "REQ-007B-001", "attrs": {"rationale": "PRD id REQ-007b-001 (prd.md line 816). Restated by General Module Rules (interest-free, 0% APR for all patients; options 2 to 9 monthly payments, enabled in FR-029), Fixed in Codebase (interest rate always 0%) and Screen 1 notes (highlight that installments are interest-free)."}}
+  - {"op": "update_node", "id": "REQ-007B-002", "attrs": {"rationale": "PRD id REQ-007b-002 (prd.md line 817). Restated by General Module Rules (only feasible counts are offered given booking date, procedure date, monthly frequency and cutoff window), Main Flow steps 2 and 3 (e.g. 2 to 5 installments for a procedure in 6 months) and Screen 1 (Maximum Installments 2 to 9, based on (days until procedure - 30) / 30)."}}
+  - {"op": "update_node", "id": "REQ-007B-003", "attrs": {"rationale": "PRD id REQ-007b-003 (prd.md line 818). Restated by General Module Rules (final payment completes by the configured cutoff days, minimum 30), the Main Flow outcome, Alternative Flow A1 (same cutoff window kept) and Screens 4 and 6 (Final Payment Deadline must meet the configured cutoff rule)."}}
+  - {"op": "update_node", "id": "REQ-007B-004", "attrs": {"rationale": "PRD id REQ-007b-004 (prd.md line 819). Restated by General Module Rules (rounded to 2 decimal places), Main Flow step 5, Alternative Flow A1 step 2 (fewer installments give a higher amount for the same total) and the Screen 4 sub-table (amounts must sum to Total Amount)."}}
+  - {"op": "update_node", "id": "REQ-007B-005", "attrs": {"rationale": "PRD id REQ-007b-005 (prd.md line 820). Restated by General Module Rules, Main Flow steps 7 and 9 (the booking is recorded as Confirmed with the plan active) and Screen 1 business rules."}}
+  - {"op": "update_node", "id": "REQ-007B-007", "attrs": {"rationale": "PRD id REQ-007b-007 (prd.md line 825). Shown on Screens 1, 2, 4 and 6; Main Flow step 5 displays the schedule with dates."}}
+  - {"op": "update_node", "id": "REQ-007B-008", "attrs": {"rationale": "PRD id REQ-007b-008 (prd.md line 826). Key Entities lists the installment payment statuses; the screens show a differently worded status list (see the report question on status values)."}}
+  - {"op": "update_node", "id": "REQ-007B-009", "attrs": {"rationale": "PRD id REQ-007b-009 (prd.md line 827). Restated by Data & Privacy Rules (stored per PCI-DSS via the processor; only tokenized references), Data Dependencies (payment method on file from enrollment at checkout) and Implementation Notes (tokenization required, no card details stored)."}}
+  - {"op": "update_node", "id": "REQ-007B-010", "attrs": {"rationale": "PRD id REQ-007b-010 (prd.md line 831). Restated by Data & Privacy Rules and Security Considerations."}}
+  - {"op": "update_node", "id": "REQ-007B-011", "attrs": {"rationale": "PRD id REQ-007b-011 (prd.md line 832). Restated by Data & Privacy Rules and Fixed in Codebase (core payment security controls and encryption standards)."}}
+  - {"op": "update_node", "id": "REQ-007B-012", "attrs": {"rationale": "PRD id REQ-007b-012 (prd.md line 833). Restated by Data & Privacy Rules (all installment lifecycle events logged for a tamper-evident audit trail), Security Considerations (full audit trail for every payment attempt: success, failure, retry, refund; admin access to installment management logged with user ID and timestamp) and Fixed in Codebase (audit logging scope for payment events)."}}
+  - {"op": "update_node", "id": "REQ-007B-013", "attrs": {"rationale": "PRD id REQ-007b-013 (prd.md line 837). Restated by the Shared Services scope (S-02 executes scheduled charges and retry logic)."}}
+  - {"op": "update_node", "id": "REQ-007B-014", "attrs": {"rationale": "PRD id REQ-007b-014 (prd.md line 838). Restated by the Patient and Shared Services scope, Communication Structure (email and push), Main Flow step 10 and Fixed in Codebase (reminder timing). User Story 2: the reminder carries the amount and date."}}
+  - {"op": "update_node", "id": "REQ-007B-015", "attrs": {"rationale": "PRD id REQ-007b-015 (prd.md line 839). Restated by Payment & Billing Rules (charges are automatic on scheduled dates; patient consent is given at checkout) and Main Flow step 11."}}
+  - {"op": "update_node", "id": "REQ-007B-016", "attrs": {"rationale": "PRD id REQ-007b-016 (prd.md line 840). Restated by Main Flow step 12, Communication Structure and the Shared Services scope (S-03)."}}
+  - {"op": "update_node", "id": "REQ-007B-017", "attrs": {"rationale": "PRD id REQ-007b-017 (prd.md line 844). Restated by Alternative Flow B1 steps 1 and 2 (failure reason logged; clear error message) and User Story 3 (clear error message and guidance)."}}
+  - {"op": "update_node", "id": "REQ-007B-018", "attrs": {"rationale": "PRD id REQ-007b-018 (prd.md line 845). Restated by Alternative Flow B1 steps 3 to 5, Payment & Billing Rules, Fixed in Codebase (3 attempts; schedule 1, 3 and 7 days) and the S-02 scope."}}
+  - {"op": "update_node", "id": "REQ-007B-019", "attrs": {"rationale": "PRD id REQ-007b-019 (prd.md line 846). Restated by Alternative Flow B1 step 6, Payment & Billing Rules, the Screen 5 flag for plans overdue after 3 failed retries and the plan status values on Screens 3, 4 and 6."}}
+  - {"op": "update_node", "id": "REQ-007B-021", "attrs": {"rationale": "PRD id REQ-007b-021 (prd.md line 851). Restated by Alternative Flow A3, Payment & Billing Rules (anytime before the next installment), Screen 2 (Update Payment Method opens P03.1 Payment Methods Management and sets the default method for the remaining installment charges) and User Story 4."}}
+  - {"op": "update_node", "id": "REQ-007B-022", "attrs": {"rationale": "PRD id REQ-007b-022 (prd.md line 852). Restated by Alternative Flow B2 step 2, the Admin scope (process refunds for canceled bookings with partial installments) and Screen 6 (Cancel Plan calculates refunds per cancellation policy)."}}
+  - {"op": "update_node", "id": "REQ-007B-023", "attrs": {"rationale": "PRD id REQ-007b-023 (prd.md line 853). Restated by Alternative Flow B2 step 5, Screen 6 (Cancel Plan stops future installments) and User Stories 5 and 6."}}
+  - {"op": "update_node", "id": "REQ-007B-025", "attrs": {"rationale": "PRD id REQ-007b-025 (prd.md line 858). Restated by General Module Rules, Main Flow upstream context and step 1, Screens 1, 2, 4 and 6 (Currency read-only, from the accepted snapshot), Data Dependencies, the FR-019 dependency (promotion already in the total), User Story 1 scenarios 4 and 5, and Edge Cases (a quote, package or promotion edited after acceptance has no effect)."}}
+  - {"op": "update_node", "id": "REQ-007B-026", "attrs": {"rationale": "PRD id REQ-007b-026 (prd.md line 859). Restated by General Module Rules (Payment Window Expired applies only to the first payment step), Screen 1 (retry or another payment method only while the hold is active per FR-007 REQ-007-017; when the hold expires installment checkout is blocked), Alternative Flow B1 boundary, Edge Cases and User Stories 1 (scenario 6) and 3 (scenario 4)."}}
+  - {"op": "update_node", "id": "REQ-007B-027", "attrs": {"rationale": "PRD id REQ-007b-027 (prd.md line 860). Restated by Alternative Flow B4 steps 1 and 2 and its outcome (the patient keeps the value already paid and continues with the replacement provider in the same inquiry), and the FR-006 dependency note."}}
+  - {"op": "update_node", "id": "REQ-007B-031", "attrs": {"rationale": "PRD prose rule, no id. prd.md line 345 (Screen 4: Provider Booking Installment Plan Detail)."}}
+  - {"op": "update_node", "id": "REQ-007B-034", "attrs": {"rationale": "PRD prose rule, no id. prd.md line 346 (Screen 4: Provider Booking Installment Plan Detail)."}}
+  - {"op": "update_node", "id": "REQ-007B-040", "attrs": {"rationale": "PRD prose rule, no id. prd.md line 447 (General Module Rules); line 229 (Screen 1: Patient Checkout - Installment Plan Selection)."}}
+  - {"op": "update_node", "id": "REQ-007B-048", "attrs": {"rationale": "PRD prose rule, no id. prd.md line 583 (Internal Dependencies (Other FRs/Modules))."}}
+  - {"op": "update_node", "id": "REQ-007B-049", "attrs": {"rationale": "PRD prose rule, no id. prd.md line 112 (Main Flow: Patient Selects Installment Plan and Completes Payments)."}}
+  - {"op": "update_node", "id": "REQ-007B-050", "attrs": {"rationale": "PRD prose rule, no id. prd.md line 157 (Alternative Flows)."}}
+  - {"op": "update_node", "id": "REQ-007B-052", "attrs": {"rationale": "PRD prose rule, no id. prd.md line 158 (Alternative Flows)."}}
+  - {"op": "update_node", "id": "REQ-007B-055", "attrs": {"rationale": "PRD prose rule, no id. prd.md line 641 (Business Process Assumptions)."}}
+  - {"op": "update_node", "id": "REQ-007B-056", "attrs": {"rationale": "PRD prose rule, no id. prd.md line 481 (Admin Editability Rules)."}}
+  - {"op": "update_node", "id": "REQ-007B-057", "attrs": {"rationale": "PRD prose rule, no id. prd.md line 169 (Alternative Flows)."}}
+  - {"op": "update_node", "id": "REQ-007B-059", "attrs": {"rationale": "PRD prose rule, no id. prd.md line 807 (Edge Cases)."}}
+  - {"op": "update_node", "id": "REQ-007B-060", "attrs": {"rationale": "PRD prose rule, no id. prd.md line 176 (Alternative Flows)."}}
+  - {"op": "update_node", "id": "REQ-007B-063", "attrs": {"rationale": "PRD prose rule, no id. prd.md line 185 (Alternative Flows)."}}
+  - {"op": "update_node", "id": "REQ-007B-064", "attrs": {"rationale": "PRD prose rule, no id. prd.md line 189 (Alternative Flows)."}}
+  - {"op": "update_node", "id": "REQ-007B-065", "attrs": {"rationale": "PRD prose rule, no id. prd.md line 806 (Edge Cases)."}}
+  - {"op": "update_node", "id": "REQ-007B-066", "attrs": {"rationale": "PRD prose rule, no id. prd.md line 805 (Edge Cases)."}}
+  - {"op": "update_node", "id": "REQ-007B-067", "attrs": {"rationale": "PRD prose rule, no id. prd.md line 808 (Edge Cases)."}}
+  - {"op": "update_node", "id": "REQ-007B-069", "attrs": {"rationale": "PRD prose rule, no id. prd.md line 687 (Security Considerations)."}}
+  - {"op": "update_node", "id": "REQ-007B-070", "attrs": {"rationale": "PRD prose rule, no id. prd.md line 494 (Payment & Billing Rules)."}}
+  - {"op": "update_node", "id": "REQ-007B-072", "attrs": {"rationale": "PRD prose rule, no id. prd.md line 454 (Data & Privacy Rules)."}}
+  - {"op": "update_node", "id": "REQ-007B-081", "attrs": {"rationale": "PRD prose rule, no id. prd.md line 505 (Screen 6: Admin Booking Installment Plan Detail)."}}
+  - {"op": "update_node", "id": "REQ-007B-085", "attrs": {"rationale": "PRD prose rule, no id. prd.md line 424 (Screen 6: Admin Booking Installment Plan Detail)."}}
+  - {"op": "update_node", "id": "REQ-007B-086", "attrs": {"rationale": "PRD prose rule, no id. prd.md line 510 (Admin Action & Audit Rules)."}}
+  - {"op": "update_node", "id": "REQ-007B-088", "attrs": {"rationale": "PRD prose rule, no id. prd.md line 512 (Admin Action & Audit Rules)."}}
+  - {"op": "update_node", "id": "REQ-007B-089", "attrs": {"rationale": "PRD prose rule, no id. prd.md line 513 (Admin Action & Audit Rules)."}}
+  - {"op": "update_node", "id": "REQ-007B-090", "attrs": {"rationale": "PRD prose rule, no id. prd.md line 518 (Admin Action & Audit Rules)."}}
+  - {"op": "update_node", "id": "REQ-007B-093", "attrs": {"rationale": "PRD prose rule, no id. prd.md line 71 (Communication Structure)."}}
+  - {"op": "update_node", "id": "REQ-007B-095", "attrs": {"rationale": "PRD prose rule, no id. prd.md line 292 (Screen 3: Provider Installment Plans Overview)."}}
+  - {"op": "update_node", "id": "REQ-007B-096", "attrs": {"rationale": "PRD prose rule, no id. prd.md line 191 (Alternative Flows)."}}
+  - {"op": "update_node", "id": "REQ-007B-097", "attrs": {"rationale": "PRD prose rule, no id. prd.md line 185 (Alternative Flows)."}}
+  - {"op": "update_node", "id": "REQ-017-001", "attrs": {"rationale": "PRD id REQ-017-001 (prd.md line 1764). Restated by Admin Platform scope Patient Billing (line 69) and Screen 4 (lines 544-612)."}}
+  - {"op": "update_node", "id": "REQ-017-002", "attrs": {"rationale": "PRD id REQ-017-002 (prd.md line 1765). Restated by Admin Platform scope Provider Billing (line 70) and Screens 2 and 3."}}
+  - {"op": "update_node", "id": "REQ-017-003", "attrs": {"rationale": "PRD id REQ-017-003 (prd.md line 1766). Restated by Admin Platform scope Discount Usage & ROI Tracking (line 72) and Screen 5."}}
+  - {"op": "update_node", "id": "REQ-017-004", "attrs": {"rationale": "PRD id REQ-017-004 (prd.md line 1767). Restated by Billing Rule 1 (line 1235: initial successful payment creates the booking's invoice; later successful payments update that same invoice and generate the payment PDF or receipt; mere subquote acceptance or unpaid options create no invoice), Screen 4 business rules (lines 588-589: invoice generated when the patient completes booking payment, deposit or full; an eligible first installment also confirms the booking and generates its invoice), Data Dependencies Entity 1 (line 1374) and Key Entity 1 relationships (one invoice per booking)."}}
+  - {"op": "update_node", "id": "REQ-017-005", "attrs": {"rationale": "PRD id REQ-017-005 (prd.md line 1768). Restated by Entry Points automated triggers (lines 124 and 127: installment cron daily at 3 AM UTC; failed payment events trigger admin alerts and retry mechanisms) and Shared Services S-02 (lines 81-83)."}}
+  - {"op": "update_node", "id": "REQ-017-006", "attrs": {"rationale": "PRD id REQ-017-006 (prd.md line 1769). Restated by Main Flow step 2 (line 147: eligible earnings are completed/aftercare treatments, commission from each booking's confirmation-time snapshot, net payout amount)."}}
+  - {"op": "update_node", "id": "REQ-017-007", "attrs": {"rationale": "PRD id REQ-017-007 (prd.md line 1770). Restated by Currency Rule 2 (line 1241: locked at subquote acceptance, recorded with the rate's timestamp, never relocked; no fluctuation risk to patient or provider), Screen 3 rule (line 492: no fluctuation risk to provider during payout), Screen 10 rule (line 1160) and the edge case on exchange-rate API downtime (lines 1716-1720: FR-017 never fetches or relocks a rate at payment, invoice or payout)."}}
+  - {"op": "update_node", "id": "REQ-017-008", "attrs": {"rationale": "PRD id REQ-017-008 (prd.md line 1771). Restated by Admin Platform scope Financial Reporting (line 73) and Screen 1."}}
+  - {"op": "update_node", "id": "REQ-017-010", "attrs": {"rationale": "PRD id REQ-017-010 (prd.md line 1773). Restated by the Communication Structure row Payment due reminder (line 94: sent 3 days before due date) and Admin Editability (line 1209: reminder timing configured in FR-030; A-05 triggers the events that S-03 dispatches)."}}
+  - {"op": "update_node", "id": "REQ-017-011", "attrs": {"rationale": "PRD id REQ-017-011 (prd.md line 1777). Restated by the Executive Summary (line 18: financial records remain booking-based)."}}
+  - {"op": "update_node", "id": "REQ-017-012", "attrs": {"rationale": "PRD id REQ-017-012 (prd.md line 1778). Restated by Privacy Rule 2 (line 1192). Near-duplicate of REQ-017-021, kept because both carry PRD ids."}}
+  - {"op": "update_node", "id": "REQ-017-014", "attrs": {"rationale": "PRD id REQ-017-014 (prd.md line 1780). Restated by Key Entity 7 lock origin (line 1829: never written independently, edited, or relocked at payment, invoice, or payout)."}}
+  - {"op": "update_node", "id": "REQ-017-015", "attrs": {"rationale": "PRD id REQ-017-015 (prd.md line 1781)."}}
+  - {"op": "update_node", "id": "REQ-017-016", "attrs": {"rationale": "PRD id REQ-017-016 (prd.md line 1785). Restated by Security Considerations Authentication (line 1474) and every confirmation modal's Re-authentication element (Screens 3, 4, 4b, 6)."}}
+  - {"op": "update_node", "id": "REQ-017-017", "attrs": {"rationale": "PRD id REQ-017-017 (prd.md line 1786). Restated by Security Considerations Authorization (lines 1475-1478: Billing Viewer cannot approve payouts or refunds; Super Admin has the same refund flow as Billing Admin)."}}
+  - {"op": "update_node", "id": "REQ-017-018", "attrs": {"rationale": "PRD id REQ-017-018 (prd.md line 1787). Restated by the Audit Rule (line 1194: all admin actions logged with admin ID, timestamp, action type and affected records), Security Considerations Audit trail (line 1480) and Main Flow step 20 (line 181: timestamp, payout amount, provider ID, statement ID)."}}
+  - {"op": "update_node", "id": "REQ-017-019", "attrs": {"rationale": "PRD id REQ-017-019 (prd.md line 1788). Restated by Security Considerations Sensitive data masking (line 1486) and the Screen 4 Payment Method field (line 563)."}}
+  - {"op": "update_node", "id": "REQ-017-020", "attrs": {"rationale": "PRD id REQ-017-020 (prd.md line 1789). Restated by Data Retention (line 1195: healthcare and tax compliance), Fixed in Codebase (line 1221: audit log retention 7 years) and Security Considerations Data retention (line 1485)."}}
+  - {"op": "update_node", "id": "REQ-017-021", "attrs": {"rationale": "PRD id REQ-017-021 (prd.md line 1790). Restated by Security Considerations Encryption (line 1479). Near-duplicate of REQ-017-012, kept because both carry PRD ids."}}
+  - {"op": "update_node", "id": "REQ-017-023", "attrs": {"rationale": "PRD id REQ-017-023 (prd.md line 1795). Integration Points (line 1437) narrow this: Stripe payment intents and patient-payment webhooks are owned by FR-007; A-05 consumes payment completion events and payout-specific webhooks only."}}
+  - {"op": "update_node", "id": "REQ-017-024", "attrs": {"rationale": "PRD id REQ-017-024 (prd.md line 1796). Restated by External Service 2 (lines 1360-1363)."}}
+  - {"op": "update_node", "id": "REQ-017-025", "attrs": {"rationale": "PRD id REQ-017-025 (prd.md line 1797). Restated by Technical Considerations Idempotency (line 1429)."}}
+  - {"op": "update_node", "id": "REQ-017-026", "attrs": {"rationale": "PRD id REQ-017-026 (prd.md line 1798). Restated by Technical Considerations Async Processing (line 1430)."}}
+  - {"op": "update_node", "id": "REQ-017-027", "attrs": {"rationale": "PRD id REQ-017-027 (prd.md line 1799). Restated by Integration 3 (lines 1449-1452: no direct database access across tenant boundaries; read-only RBAC for providers)."}}
+  - {"op": "update_node", "id": "REQ-017-028", "attrs": {"rationale": "PRD id REQ-017-028 (prd.md line 1800). Restated by Rule 14 (line 1185, adds that it does not count toward platform or affiliate commission and that no new refund percentage, fee or payout rail is introduced), Workflow B3 steps 4-9 (lines 271-288: recorded against the booking invoice, or the cancelled case or inquiry when no booking exists; the audit entry clears the flag) and the provider-suspension edge case (line 1740)."}}
+  - {"op": "update_node", "id": "REQ-017-029", "attrs": {"rationale": "PRD id REQ-017-029 (prd.md line 1801). Restated by Rule 15 (line 1186: no further automatic charges or retries run; Payment Rule 3 does not apply), Workflow B3 steps 2-3 and 7 and the provider-suspension edge case (line 1739)."}}
+  - {"op": "update_node", "id": "REQ-017-030", "attrs": {"rationale": "PRD id REQ-017-030 (prd.md line 1802). Restated by the Screen 3 rule (line 491: the result is converted to the payout currency at the rate locked at subquote acceptance, if applicable)."}}
+  - {"op": "update_node", "id": "REQ-017-041", "attrs": {"rationale": "Main Flow step 4 (prd.md line 158)."}}
+  - {"op": "update_node", "id": "REQ-017-049", "attrs": {"rationale": "Screen 1 business rules (prd.md line 333)."}}
+  - {"op": "update_node", "id": "REQ-017-050", "attrs": {"rationale": "Screen 1 business rules (prd.md line 334)."}}
+  - {"op": "update_node", "id": "REQ-017-051", "attrs": {"rationale": "Screen 1 business rules (prd.md line 335)."}}
+  - {"op": "update_node", "id": "REQ-017-052", "attrs": {"rationale": "Screen 1 business rules (prd.md line 336)."}}
+  - {"op": "update_node", "id": "REQ-017-053", "attrs": {"rationale": "Screen 1 business rules (prd.md line 337)."}}
+  - {"op": "update_node", "id": "REQ-017-054", "attrs": {"rationale": "Screen 1 business rules (prd.md line 338)."}}
+  - {"op": "update_node", "id": "REQ-017-055", "attrs": {"rationale": "Screen 1 business rules (prd.md line 339)."}}
+  - {"op": "update_node", "id": "REQ-017-056", "attrs": {"rationale": "Screen 1 business rules (prd.md line 340)."}}
+  - {"op": "update_node", "id": "REQ-017-057", "attrs": {"rationale": "Screen 1 business rules (prd.md line 341)."}}
+  - {"op": "update_node", "id": "REQ-017-058", "attrs": {"rationale": "Screen 1 business rules (prd.md line 342)."}}
+  - {"op": "update_node", "id": "REQ-017-059", "attrs": {"rationale": "Screen 1 field Conversion Rate (prd.md line 327)."}}
+  - {"op": "update_node", "id": "REQ-017-061", "attrs": {"rationale": "Screen 2 business rules (prd.md lines 390-391). Restated by the Screen 3 rule (line 485: ALL treatments with status Completed or Aftercare within the payout period)."}}
+  - {"op": "update_node", "id": "REQ-017-062", "attrs": {"rationale": "Screen 2 business rules (prd.md line 392). Restated by the provider-suspension edge case (line 1738)."}}
+  - {"op": "update_node", "id": "REQ-017-063", "attrs": {"rationale": "Screen 2 business rules (prd.md line 393). Restated by the Screen 3 rule (line 490: the model, value and Flat Rate currency are fixed at booking confirmation from the effective configuration at that moment; nothing is fixed at quote creation) and Admin Editability (line 1206)."}}
+  - {"op": "update_node", "id": "REQ-017-064", "attrs": {"rationale": "Screen 2 business rules (prd.md lines 397-398)."}}
+  - {"op": "update_node", "id": "REQ-017-066", "attrs": {"rationale": "Screen 2 business rules (prd.md line 399). Retry Payout Confirmation Modal (lines 525-534): shows prior failure reason, current payout readiness and destination last 4 digits; confirm re-initiates the transfer after successful re-authentication."}}
+  - {"op": "update_node", "id": "REQ-017-067", "attrs": {"rationale": "Screen 2 business rules (prd.md line 400)."}}
+  - {"op": "update_node", "id": "REQ-017-068", "attrs": {"rationale": "Screen 2 business rules (prd.md line 401)."}}
+  - {"op": "update_node", "id": "REQ-017-072", "attrs": {"rationale": "Screen 2 business rules (prd.md lines 407-408) and notes (line 419). Restated by Main Flow step 13b (line 163)."}}
+  - {"op": "update_node", "id": "REQ-017-074", "attrs": {"rationale": "Screen 3 business rules (prd.md lines 477-480)."}}
+  - {"op": "update_node", "id": "REQ-017-076", "attrs": {"rationale": "Screen 3 business rules (prd.md line 486). Billing Rule 5 (line 1239) initiates the transfer immediately when an Overdue statement is approved; see the product owner question on approval timing."}}
+  - {"op": "update_node", "id": "REQ-017-077", "attrs": {"rationale": "Screen 3 business rules (prd.md line 488)."}}
+  - {"op": "update_node", "id": "REQ-017-082", "attrs": {"rationale": "Screen 4 business rules (prd.md line 578)."}}
+  - {"op": "update_node", "id": "REQ-017-083", "attrs": {"rationale": "Screen 4 business rules (prd.md line 579)."}}
+  - {"op": "update_node", "id": "REQ-017-084", "attrs": {"rationale": "Screen 4 business rules (prd.md line 580). Restated by Payment Rule 3 (line 1234) and the Screen 4a At Risk banner rule (line 708)."}}
+  - {"op": "update_node", "id": "REQ-017-085", "attrs": {"rationale": "Screen 4 business rules (prd.md line 581)."}}
+  - {"op": "update_node", "id": "REQ-017-086", "attrs": {"rationale": "Screen 4 business rules (prd.md line 582)."}}
+  - {"op": "update_node", "id": "REQ-017-087", "attrs": {"rationale": "Screen 4 business rules (prd.md line 584). Fixed in Codebase (line 1220): invoice PDF template structure, branding and layout, is fixed."}}
+  - {"op": "update_node", "id": "REQ-017-093", "attrs": {"rationale": "Screen 4a business rules (prd.md line 696)."}}
+  - {"op": "update_node", "id": "REQ-017-095", "attrs": {"rationale": "Screen 4b business rules (prd.md lines 734 and 738) and field Adjustment Justification (line 733: max 500 characters)."}}
+  - {"op": "update_node", "id": "REQ-017-097", "attrs": {"rationale": "Screen 4b business rules (prd.md line 733)."}}
+  - {"op": "update_node", "id": "REQ-017-099", "attrs": {"rationale": "Screen 5 business rules (prd.md line 763) and field Hairline Cost (line 765)."}}
+  - {"op": "update_node", "id": "REQ-017-103", "attrs": {"rationale": "Screen 6 business rules (prd.md lines 812-813). Process and Retry Payout Confirmation Modals (lines 858-880)."}}
+  - {"op": "update_node", "id": "REQ-017-104", "attrs": {"rationale": "Screen 6 business rules (prd.md line 814)."}}
+  - {"op": "update_node", "id": "REQ-017-105", "attrs": {"rationale": "Screen 6 business rules (prd.md line 815). Restated by the Screen Specifications tenant scope (line 299: no affiliate-facing screens in this FR)."}}
+  - {"op": "update_node", "id": "REQ-017-107", "attrs": {"rationale": "Screen 6 notes (prd.md line 885), a client request quoted in the PRD from a transcription that is not in the source register."}}
+  - {"op": "update_node", "id": "REQ-017-110", "attrs": {"rationale": "Screen 7 Tab 1 business rules (prd.md line 957). Dispute Panel Target Payout Cycle accepts a Pending Approval or future cycle only."}}
+  - {"op": "update_node", "id": "REQ-017-111", "attrs": {"rationale": "Screen 7 Tab 1 business rules (prd.md line 958)."}}
+  - {"op": "update_node", "id": "REQ-017-113", "attrs": {"rationale": "Screen 8 business rules (prd.md line 1042)."}}
+  - {"op": "update_node", "id": "REQ-017-115", "attrs": {"rationale": "Screen 8 business rules (prd.md line 1043). Restated by Alternative Flow B2 step 7c (line 264)."}}
+  - {"op": "update_node", "id": "REQ-017-116", "attrs": {"rationale": "Screen 8 business rules (prd.md line 1044). Restated by Alternative Flow B2 step 7b (line 263)."}}
+  - {"op": "update_node", "id": "REQ-017-118", "attrs": {"rationale": "Screen 9 business rules (prd.md lines 1092-1093). The revert-to-Pending wording after a successful retry is raised as a product owner question."}}
+  - {"op": "update_node", "id": "REQ-017-119", "attrs": {"rationale": "Screen 9 business rules (prd.md line 1093)."}}
+  - {"op": "update_node", "id": "REQ-017-120", "attrs": {"rationale": "Screen 9 business rules (prd.md lines 1094-1095). Restated by the refund-after-payout edge case (line 1733)."}}
+  - {"op": "update_node", "id": "REQ-017-124", "attrs": {"rationale": "Screen 10 business rules (prd.md line 1146)."}}
+  - {"op": "update_node", "id": "REQ-017-125", "attrs": {"rationale": "Screen 10 business rules (prd.md line 1148). Restated by Main Flow step 17 (line 172), Entry Points (line 134: providers download invoice PDFs after the Stripe transfer is complete) and Billing Rule 2 second sentence (line 1236)."}}
+  - {"op": "update_node", "id": "REQ-017-126", "attrs": {"rationale": "Screen 10 business rules (prd.md line 1151)."}}
+  - {"op": "update_node", "id": "REQ-017-127", "attrs": {"rationale": "General Module Rule 1 (prd.md line 1163)."}}
+  - {"op": "update_node", "id": "REQ-017-128", "attrs": {"rationale": "General Module Rule 2 (prd.md line 1164). Restated by the Executive Summary (line 18: one patient invoice resolves through its FR-006 Booking to one accepted subquote and immutable AcceptanceEvent; parent quote alternatives are not billable cases or invoice lines) and Key Entity 1 commercial source (line 1805)."}}
+  - {"op": "update_node", "id": "REQ-017-129", "attrs": {"rationale": "General Module Rule 3 (prd.md line 1165). Restated by Security Considerations PCI-DSS (line 1484) and Data Dependencies Entity 5 (line 1390: tokens stored in Stripe, not in the Hairline database)."}}
+  - {"op": "update_node", "id": "REQ-017-130", "attrs": {"rationale": "General Module Rule 4 (prd.md line 1166). Restated by Fixed in Codebase (line 1218: exchange API source in environment variables; USD fixed base currency)."}}
+  - {"op": "update_node", "id": "REQ-017-131", "attrs": {"rationale": "General Module Rule 5 (prd.md line 1167). Restated by Data Dependencies Entity 2 (line 1377). Meeting sources ask for a patient-confirmation step before release; see the product owner question."}}
+  - {"op": "update_node", "id": "REQ-017-132", "attrs": {"rationale": "General Module Rule 6 (prd.md line 1168). Restated by Admin Editability (line 1207: FR-017 reads this value at runtime to determine installment eligibility)."}}
+  - {"op": "update_node", "id": "REQ-017-133", "attrs": {"rationale": "General Module Rule 7 (prd.md line 1169). Restated by Screen 4b field Cancellation Policy Applied (line 726) and Admin Editability (line 1213: refund initiation and approval subject to cancellation policy). Meeting sources call the ladder illustrative and configurable; see the product owner question."}}
+  - {"op": "update_node", "id": "REQ-017-134", "attrs": {"rationale": "General Module Rule 10 (prd.md line 1172)."}}
+  - {"op": "update_node", "id": "REQ-017-135", "attrs": {"rationale": "General Module Rule 11 (prd.md line 1173)."}}
+  - {"op": "update_node", "id": "REQ-017-136", "attrs": {"rationale": "General Module Rule 12 (prd.md line 1174). Restated by Screen 4a business rule (line 703: itemized invoice and PDF content from the acceptance snapshot via FR-006; the FR-019 application record is provenance only and never re-prices the invoice), Data Dependencies Entity 4 (line 1386) and the promotion usage-limit edge case (line 1714)."}}
+  - {"op": "update_node", "id": "REQ-017-137", "attrs": {"rationale": "General Module Rule 13 (prd.md line 1175). Restated by the provider-suspension edge case (lines 1736-1741: a procedure already recorded as completed under FR-010 is not erased by the cancellation)."}}
+  - {"op": "update_node", "id": "REQ-017-138", "attrs": {"rationale": "General Module Rule 16 (prd.md line 1178)."}}
+  - {"op": "update_node", "id": "REQ-017-139", "attrs": {"rationale": "Privacy Rule 1 (prd.md line 1184). Restated by the Screen 3 treatment sub-table Patient Name (shown post-payment)."}}
+  - {"op": "update_node", "id": "REQ-017-140", "attrs": {"rationale": "Privacy Rule 3 (prd.md line 1186)."}}
+  - {"op": "update_node", "id": "REQ-017-141", "attrs": {"rationale": "GDPR/Compliance (prd.md line 1189)."}}
+  - {"op": "update_node", "id": "REQ-017-142", "attrs": {"rationale": "Admin Editability, Editable by Admin (prd.md line 1203). Restated by Billing Rule 5 (line 1239) and User Behavior Assumption 1 (line 1398)."}}
+  - {"op": "update_node", "id": "REQ-017-143", "attrs": {"rationale": "Fixed in Codebase (prd.md line 1216). Payment Rule 3 (line 1234: day 1, day 3, day 7) and External Service 1 (line 1358: 1 hour, 6 hours, 24 hours) give different schedules; see the product owner question."}}
+  - {"op": "update_node", "id": "REQ-017-144", "attrs": {"rationale": "Configurable with Restrictions (prd.md line 1220)."}}
+  - {"op": "update_node", "id": "REQ-017-146", "attrs": {"rationale": "Configurable with Restrictions (prd.md line 1222). Restated by Screen 4 business rules (line 595), Screen 4b field Reason (line 732) and Business Process Assumption 4 (line 1414: refund requests reviewed manually by admin; no automated refund approvals)."}}
+  - {"op": "update_node", "id": "REQ-017-147", "attrs": {"rationale": "Payment Rule 1 (prd.md line 1226)."}}
+  - {"op": "update_node", "id": "REQ-017-148", "attrs": {"rationale": "Payment Rule 2 (prd.md line 1227). Restated by the Screen 4 Due Date field."}}
+  - {"op": "update_node", "id": "REQ-017-149", "attrs": {"rationale": "Payment Rule 3 (prd.md line 1228). External Service 1 failure handling (line 1358) gives 1 hour, 6 hours, 24 hours; see the product owner question."}}
+  - {"op": "update_node", "id": "REQ-017-150", "attrs": {"rationale": "Billing Rule 2 (prd.md line 1230). Restated by Main Flow step 3 (line 148)."}}
+  - {"op": "update_node", "id": "REQ-017-151", "attrs": {"rationale": "Billing Rule 3 (prd.md line 1231). Restated by Entry Points (line 125: monthly affiliate payout summaries generated at the start of the buffer period)."}}
+  - {"op": "update_node", "id": "REQ-017-152", "attrs": {"rationale": "Billing Rule 4 (prd.md line 1232). Restated by Admin Editability (line 1208)."}}
+  - {"op": "update_node", "id": "REQ-017-153", "attrs": {"rationale": "Billing Rule 5 (prd.md line 1233). Restated by Entry Points (line 123: payout-day cron, e.g. Friday 6 AM UTC), Main Flow steps 11-14 (lines 159-165) and the Screen 3 rule (line 497: status Processing then Paid after the Stripe confirmation webhook)."}}
+  - {"op": "update_node", "id": "REQ-017-154", "attrs": {"rationale": "Currency Rule 1 (prd.md line 1234). Restated by Business Process Assumption 5 (line 1415: no pass-through to patients or providers)."}}
+  - {"op": "update_node", "id": "REQ-017-155", "attrs": {"rationale": "Commission Rule 1 (prd.md line 1236). Restated by the Screen 3 Flat Rate rule (line 491: later changes to the commission configuration do not alter existing snapshots) and Fixed in Codebase (line 1217: formulas fixed in business logic)."}}
+  - {"op": "update_node", "id": "REQ-017-157", "attrs": {"rationale": "External Service 3 failure handling (prd.md line 1375)."}}
+  - {"op": "update_node", "id": "REQ-017-158", "attrs": {"rationale": "External Service 2 failure handling (prd.md line 1370). Restated by Integration 2 error handling (line 1447)."}}
+  - {"op": "update_node", "id": "REQ-017-159", "attrs": {"rationale": "Business Process Assumption 1 (prd.md line 1420), promoted because it states a rule. The closed-bank-account edge case (line 1707) says admin verifies the new account; see the product owner question."}}
+  - {"op": "update_node", "id": "REQ-011-081", "attrs": {"rationale": "Verbatim from the frozen PRD: Edge Cases (PRD line 1677)."}}
+  - {"op": "update_node", "id": "REQ-011-082", "attrs": {"rationale": "Verbatim from the frozen PRD: Edge Cases (PRD line 1678)."}}
+  - {"op": "update_node", "id": "REQ-011-083", "attrs": {"rationale": "Verbatim from the frozen PRD: Payment Rule 4 (PRD line 1435)."}}
+  - {"op": "update_node", "id": "REQ-011-084", "attrs": {"rationale": "Verbatim from the frozen PRD: Screen 16 Business Rules (PRD line 1140)."}}
+  - {"op": "update_node", "id": "REQ-011-085", "attrs": {"rationale": "Verbatim from the frozen PRD: Screen 16 Business Rules (PRD line 1136)."}}
+  - {"op": "update_node", "id": "REQ-011-086", "attrs": {"rationale": "Verbatim from the frozen PRD: Screen 1 Business Rules (PRD line 397)."}}
+  - {"op": "update_node", "id": "REQ-029-130", "attrs": {"rationale": "Edge Cases, accepted subquote reaches Payment Window Expired and is revived (PRD line 1160)"}}
+  - {"op": "update_node", "id": "REQ-029-132", "attrs": {"rationale": "Screen 1, Publishable Key, Validation Rules column (PRD line 385)"}}
+  - {"op": "update_node", "id": "REQ-029-133", "attrs": {"rationale": "Screen 1, Secret Key, Validation Rules column (PRD line 385)"}}
+  - {"op": "update_node", "id": "REQ-029-135", "attrs": {"rationale": "Screen 1, Default Currency, Validation Rules column (PRD line 391)"}}
+  - {"op": "update_node", "id": "REQ-029-136", "attrs": {"rationale": "Screen 2B, Manual Base Rate, Validation Rules column (PRD line 520)"}}
+  - {"op": "update_node", "id": "REQ-029-137", "attrs": {"rationale": "Screen 5, Flat Rate Currency, Validation Rules column (PRD line 653)"}}
+  - {"op": "update_node", "id": "REQ-029-138", "attrs": {"rationale": "Screen 5, Effective Date, Validation Rules column (PRD line 654)"}}
+  - {"op": "update_node", "id": "REQ-029-139", "attrs": {"rationale": "Screen 1, Global Fallback, Validation Rules column (PRD line 388)"}}
+  - {"op": "update_node", "id": "REQ-032-117", "attrs": {"rationale": "Screen 5.7, Business Rules (PRD line 1466)."}}
+  - {"op": "update_node", "id": "REQ-001-129", "attrs": {"rationale": "prd.md line 1049."}}
+  - {"op": "update_node", "id": "REQ-001-130", "attrs": {"rationale": "prd.md line 1050."}}
+  - {"op": "update_node", "id": "REQ-001-131", "attrs": {"rationale": "prd.md line 1003."}}
+  - {"op": "update_node", "id": "REQ-001-132", "attrs": {"rationale": "prd.md line 1022."}}
+  - {"op": "update_node", "id": "REQ-001-133", "attrs": {"rationale": "prd.md line 145."}}
+  - {"op": "update_node", "id": "REQ-001-134", "attrs": {"rationale": "prd.md line 327."}}
+  - {"op": "update_node", "id": "REQ-001-136", "attrs": {"rationale": "prd.md line 366."}}
+  - {"op": "update_node", "id": "REQ-001-137", "attrs": {"rationale": "prd.md line 546."}}
+  - {"op": "update_node", "id": "REQ-001-138", "attrs": {"rationale": "prd.md line 547."}}
+  - {"op": "update_node", "id": "REQ-001-141", "attrs": {"rationale": "prd.md line 910."}}
+  - {"op": "update_node", "id": "REQ-001-142", "attrs": {"rationale": "prd.md line 934."}}
+  - {"op": "update_node", "id": "REQ-001-143", "attrs": {"rationale": "prd.md line 69."}}
+  - {"op": "update_node", "id": "REQ-019-102", "attrs": {"rationale": "prd.md line 501 (Screen 6 business rules)."}}
+  - {"op": "update_node", "id": "REQ-030-212", "attrs": {"rationale": "prd.md line 589 (Configurable with Restrictions, Template versioning), copied verbatim from the clause after the last semicolon. Previously present only in the rationale of REQ-030-183."}}
+  - {"op": "update_node", "id": "REQ-021-112", "attrs": {"rationale": "PRD Integration Points, Admin Platform localization management (prd.md line 887)."}}
+  - {"op": "update_node", "id": "REQ-021-113", "attrs": {"rationale": "PRD Entry Points (prd.md line 104)."}}
+  - {"op": "update_node", "id": "REQ-021-115", "attrs": {"rationale": "PRD Integration Points, Notification Service (prd.md line 892)."}}
+  - {"op": "update_node", "id": "REQ-001-145", "attrs": {"rationale": "Proposed from prd.md line 407 (table cells, not a PRD sentence)."}}
+  - {"op": "update_node", "id": "REQ-001-157", "attrs": {"rationale": "prd.md line 582 (Screen 11 Reset Code Entry, OTP Code Input validation cell, last clause). Added beside REQ-001-147 under decision D52; no live or held Rule states this expiry."}}
+  - {"op": "update_node", "id": "REQ-001-148", "attrs": {"rationale": "prd.md line 539 (Screen 9 Login, Login Button validation cell). The other half of the proposal (line 498) is REQ-001-158 (decision D52 split)."}}
+  - {"op": "update_node", "id": "REQ-001-158", "attrs": {"rationale": "prd.md line 537 (Screen 9 Login, Password validation cell). Split from REQ-001-148 under decision D52."}}
+  - {"op": "update_node", "id": "REQ-001-149", "attrs": {"rationale": "Proposed from prd.md line 562 (table cells, not a PRD sentence)."}}
+  - {"op": "update_node", "id": "REQ-001-150", "attrs": {"rationale": "prd.md line 606 (Screen 12 Password Reset, Save and Login Button validation cell). The other half of the proposal (line 573) is REQ-001-159 (decision D52 split)."}}
+  - {"op": "update_node", "id": "REQ-001-152", "attrs": {"rationale": "prd.md line 695 (Screen 15 Settings Main, Business Rules). The other half of the proposal (line 656) is REQ-001-160 (decision D52 split)."}}
+  - {"op": "update_node", "id": "REQ-001-160", "attrs": {"rationale": "prd.md line 696 (Screen 15 Settings Main, Business Rules). Split from REQ-001-152 under decision D52."}}
+  - {"op": "update_node", "id": "REQ-001-153", "attrs": {"rationale": "prd.md line 670 (Screen 14 Edit Profile, Save and Update Button validation cell). The Change Password half of the proposal (line 838) is REQ-001-161 (decision D52 split)."}}
+  - {"op": "update_node", "id": "REQ-001-161", "attrs": {"rationale": "prd.md line 880 (Screen 17 Change Password, Save Button validation cell). Split from REQ-001-153 under decision D52."}}
+  - {"op": "update_node", "id": "REQ-001-154", "attrs": {"rationale": "Proposed from prd.md line 724 (table cells, not a PRD sentence)."}}
+  - {"op": "update_node", "id": "REQ-001-155", "attrs": {"rationale": "Proposed from prd.md line 456 (table cells, not a PRD sentence)."}}
+  - {"op": "update_node", "id": "REQ-001-156", "attrs": {"rationale": "prd.md line 848 (Screen 16 Delete Account, Request Deletion Button validation cell; line 809 states the same threshold). The modal half (line 808) is REQ-001-162 (decision D52 split)."}}
+  - {"op": "update_node", "id": "REQ-001-162", "attrs": {"rationale": "prd.md line 849 (Screen 16 Delete Account, Confirmation Modal validation cell). Split from REQ-001-156 under decision D52."}}
+  - {"op": "update_node", "id": "REQ-013-076", "attrs": {"rationale": "Paraphrase of Screen 9 Request queue Validation cell 'Filterable by status/date' (PRD line 437); wording awaits user review."}}
+  - {"op": "update_node", "id": "REQ-017-164", "attrs": {"rationale": "Screen 1, Active Currency Alerts widget (PRD line 316)."}}
+  - {"op": "update_node", "id": "REQ-017-167", "attrs": {"rationale": "Admin Editability Rules, Fixed in Codebase (PRD line 1210)."}}
+  - {"op": "update_node", "id": "REQ-017-168", "attrs": {"rationale": "Admin Editability Rules, Fixed in Codebase (PRD line 1211), first two clauses. The currency-pairs clause is REQ-017-171 (decision D52 split)."}}
+  - {"op": "update_node", "id": "REQ-017-171", "attrs": {"rationale": "Admin Editability Rules, Fixed in Codebase (PRD line 1212), last clause (FR-029 / A-09). Split from REQ-017-168 under decision D52."}}
+  - {"op": "update_node", "id": "REQ-017-169", "attrs": {"rationale": "Admin Editability Rules, Fixed in Codebase (PRD line 1213)."}}
+  - {"op": "update_node", "id": "REQ-021-116", "attrs": {"rationale": "PRD Screen 2 Save/apply action validation (prd.md line 272)."}}
+  - {"op": "update_node", "id": "REQ-030-213", "attrs": {"rationale": "prd.md line 85 (Communication Structure, Out of Scope, heading line 82). The other four bullets (lines 85 to 88) are REQ-030-214 to 217 (decision D52: one Rule per bullet)."}}
+  - {"op": "update_node", "id": "REQ-030-214", "attrs": {"rationale": "prd.md line 86 (Communication Structure, Out of Scope, heading line 82). One Rule per bullet under decision D52."}}
+  - {"op": "update_node", "id": "REQ-030-215", "attrs": {"rationale": "prd.md line 87 (Communication Structure, Out of Scope, heading line 82). One Rule per bullet under decision D52."}}
+  - {"op": "update_node", "id": "REQ-030-216", "attrs": {"rationale": "prd.md line 88 (Communication Structure, Out of Scope, heading line 82). One Rule per bullet under decision D52."}}
+  - {"op": "update_node", "id": "REQ-030-217", "attrs": {"rationale": "prd.md line 89 (Communication Structure, Out of Scope, heading line 82). One Rule per bullet under decision D52."}}
+  - {"op": "update_node", "id": "REQ-034-161", "attrs": {"rationale": "Screen 4 (PRD line 573)."}}
+  - {"op": "update_node", "id": "REQ-034-162", "attrs": {"rationale": "Screen 5 (PRD line 614)."}}
+  - {"op": "update_node", "id": "REQ-034-163", "attrs": {"rationale": "Screen 6 (PRD line 649)."}}
+  - {"op": "update_node", "id": "REQ-018-209", "attrs": {"rationale": "Screen 1, Status, Validation Rules column (PRD line 349)"}}
+  - {"op": "update_node", "id": "REQ-018-213", "attrs": {"rationale": "Screen 2, Contact Email, Validation Rules column (PRD line 393)"}}
+  - {"op": "update_node", "id": "REQ-018-214", "attrs": {"rationale": "Screen 2, Phone Number, Validation Rules column (PRD line 394, 1027)"}}
+  - {"op": "update_node", "id": "REQ-018-216", "attrs": {"rationale": "Screen 2, Tax / VAT / Business Reg ID, Validation Rules column (PRD line 398)"}}
+  - {"op": "update_node", "id": "REQ-018-217", "attrs": {"rationale": "Screen 2, Account Holder Name, Validation Rules column (PRD line 400, 401)"}}
+  - {"op": "update_node", "id": "REQ-018-218", "attrs": {"rationale": "Screen 2, Account Number, Validation Rules column (PRD line 401)"}}
+  - {"op": "update_node", "id": "REQ-018-219", "attrs": {"rationale": "Screen 2, Routing / SWIFT Code, Validation Rules column (PRD line 402)"}}
+  - {"op": "update_node", "id": "REQ-018-220", "attrs": {"rationale": "Screen 2, IBAN, Validation Rules column (PRD line 403)"}}
+  - {"op": "update_node", "id": "REQ-018-226", "attrs": {"rationale": "Screen 2, Activation Status, Validation Rules column (PRD line 409)"}}
+  - {"op": "update_node", "id": "REQ-018-227", "attrs": {"rationale": "Screen 2, Last Login, Validation Rules column (PRD line 410, 675, 806)"}}
+  - {"op": "update_node", "id": "REQ-018-229", "attrs": {"rationale": "Screen 3, Affiliate Header, Validation Rules column (PRD line 443, 752, 755, 803)"}}
+  - {"op": "update_node", "id": "REQ-018-230", "attrs": {"rationale": "Screen 3, Account Details Panel, Validation Rules column (PRD line 445)"}}
+  - {"op": "update_node", "id": "REQ-018-231", "attrs": {"rationale": "Screen 3, Assigned Promo Codes List, Validation Rules column (PRD line 447)"}}
+  - {"op": "update_node", "id": "REQ-018-232", "attrs": {"rationale": "Screen 3, Payout History List, Validation Rules column (PRD line 447)"}}
+  - {"op": "update_node", "id": "REQ-018-233", "attrs": {"rationale": "Screen 3, Activity / Audit Panel, Validation Rules column (PRD line 449, 716)"}}
+  - {"op": "update_node", "id": "REQ-018-238", "attrs": {"rationale": "Screen 5, Effective Date, Validation Rules column (PRD line 516)"}}
+  - {"op": "update_node", "id": "REQ-018-240", "attrs": {"rationale": "Screen 7, Linked Affiliate, Validation Rules column (PRD line 575)"}}
+  - {"op": "update_node", "id": "REQ-018-241", "attrs": {"rationale": "Screen 7, Affiliate Selection, Validation Rules column (PRD line 577)"}}
+  - {"op": "update_node", "id": "REQ-018-242", "attrs": {"rationale": "Screen 7, Filter Criteria, Validation Rules column (PRD line 578)"}}
+  - {"op": "update_node", "id": "REQ-018-243", "attrs": {"rationale": "Screen 7, Campaign Name, Validation Rules column (PRD line 579)"}}
+  - {"op": "update_node", "id": "REQ-018-244", "attrs": {"rationale": "Screen 7, Code Pattern, Validation Rules column (PRD line 580)"}}
+  - {"op": "update_node", "id": "REQ-018-245", "attrs": {"rationale": "Screen 7, Discount Code, Validation Rules column (PRD line 581)"}}
+  - {"op": "update_node", "id": "REQ-018-247", "attrs": {"rationale": "Screen 7, Discount Percentage, Validation Rules column (PRD line 584)"}}
+  - {"op": "update_node", "id": "REQ-018-248", "attrs": {"rationale": "Screen 7, Discount Fixed Amount, Validation Rules column (PRD line 585)"}}
+  - {"op": "update_node", "id": "REQ-018-249", "attrs": {"rationale": "Screen 7, Expiration Date, Validation Rules column (PRD line 587)"}}
+  - {"op": "update_node", "id": "REQ-018-250", "attrs": {"rationale": "Screen 7, Maximum Usage Count, Validation Rules column (PRD line 588)"}}
+  - {"op": "update_node", "id": "REQ-018-251", "attrs": {"rationale": "Screen 7, Per-Patient Usage Limit, Validation Rules column (PRD line 590)"}}
+  - {"op": "update_node", "id": "REQ-018-252", "attrs": {"rationale": "Screen 7, Status, Validation Rules column (PRD line 590)"}}
+  - {"op": "update_node", "id": "REQ-018-254", "attrs": {"rationale": "Screen 8, Result Rows, Validation Rules column (PRD line 635)"}}
+  - {"op": "update_node", "id": "REQ-018-257", "attrs": {"rationale": "Screen 10, Code Settings Panel, Validation Rules column (PRD line 712)"}}
+  - {"op": "update_node", "id": "REQ-018-258", "attrs": {"rationale": "Screen 11, Payout Month, Validation Rules column (PRD line 751)"}}
+  - {"op": "update_node", "id": "REQ-018-264", "attrs": {"rationale": "Screen 12, Failure Reason, Validation Rules column (PRD line 808)"}}
+  - {"op": "update_node", "id": "REQ-018-269", "attrs": {"rationale": "Screen 16, Minimum Threshold Note, Validation Rules column (PRD line 971)"}}
+  - {"op": "update_node", "id": "REQ-018-270", "attrs": {"rationale": "Screen 16, Payout Period, Validation Rules column (PRD line 977)"}}
+  - {"op": "update_node", "id": "REQ-018-275", "attrs": {"rationale": "Screen 19, Activation Link Status, Validation Rules column (PRD line 1095)"}}
+  - {"op": "update_node", "id": "REQ-018-277", "attrs": {"rationale": "Screen 19, Password Strength Meter, Validation Rules column (PRD line 1099)"}}
+  - {"op": "update_node", "id": "REQ-018-278", "attrs": {"rationale": "Screen 19, Set Password, Validation Rules column (PRD line 1100)"}}
+  - {"op": "update_node", "id": "REQ-018-279", "attrs": {"rationale": "Screen 20, Resend Activation, Validation Rules column (PRD line 1126)"}}
+  - {"op": "update_node", "id": "REQ-018-280", "attrs": {"rationale": "Screen 1 business rules (PRD line 379)"}}
+  - {"op": "update_node", "id": "REQ-018-285", "attrs": {"rationale": "Screen 3 business rules (PRD line 472)"}}
+  - {"op": "update_node", "id": "REQ-018-287", "attrs": {"rationale": "Screen 10 business rules (PRD line 737)"}}
+  - {"op": "update_node", "id": "REQ-018-294", "attrs": {"rationale": "Screen 21 business rules (PRD line 1163)"}}
+  - {"op": "update_node", "id": "REQ-018-295", "attrs": {"rationale": "Implementation Notes, Security Considerations (PRD line 1442)"}}
+  - {"op": "update_node", "id": "REQ-018-296", "attrs": {"rationale": "Implementation Notes, Security Considerations (PRD line 1443)"}}

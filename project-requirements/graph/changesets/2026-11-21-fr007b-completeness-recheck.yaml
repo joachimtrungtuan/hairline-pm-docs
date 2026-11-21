@@ -1,0 +1,37 @@
+reason: "FR-007B completeness re-check 2026-11-21: open rows of the 2026-11-10 report and the 2026-11-20 Not done list checked against the PRD of 2026-11-20 and today's graph. All 64 operations of the 2026-11-10 held file are already in the graph (none taken)."
+by: controller
+operations:
+  # REQ-007B-026: PRD line 223 and Edge Cases line 801 add the other-payment-method option and the checkout block after the hold expires.
+  - {"op": "update_node", "id": "REQ-007B-026", "attrs": {"statement": "System MUST allow a failed first installment to be retried, or another payment method used, only within the original FR-006 payment hold; when the hold expires the booking moves to `Payment Window Expired` and installment checkout is blocked. `Payment Window Expired` applies only to that first payment step, and missed later installments MUST NOT cause `Payment Window Expired` or inquiry cancellation"}}
+  # REQ-007B-086: PRD line 689 (Security Considerations) says admin access to installment management is logged with user ID and timestamp.
+  - {"op": "update_node", "id": "REQ-007B-086", "attrs": {"statement": "All admin actions documented in Screen 6 (Admin Booking Installment Plan Detail) are logged to the immutable audit trail system (S-06: Audit Log Service); audit logs are tamper-proof and queryable for compliance reporting. Admin access to installment management is logged with user ID and timestamp.", "rationale": "PRD prose rule, no id. prd.md lines 510, 514 (Admin Action & Audit Rules); line 689 (Security Considerations: admin access to installment management logged with user ID and timestamp)."}}
+  # REQ-007B-087: PRD line 511 now says retention follows the system PRD (one 10-year period); cite the system Rule like the other FRs do.
+  - {"op": "update_node", "id": "REQ-007B-087", "attrs": {"statement": "Audit log retention follows the system PRD, Platform-Wide Rules: one 10-year retention period.", "rationale": "PRD prose rule, no id. prd.md line 511 (Admin Action & Audit Rules)."}}
+  - {"op": "add_edge", "from": "FR-007B", "verb": "references", "to": "REQ-SYS-002", "attrs": {}}
+  # Screen 5 plan list: PRD line 370 says filter criteria are owned by FR-022; cite that Rule.
+  - {"op": "add_edge", "from": "FR-007B", "verb": "references", "to": "REQ-022-101", "attrs": {}}
+  # Overdue as a calculated flag: PRD line 867 (Key Entities, Installment Plan) states the calculation; no Rule carried it.
+  - {"op": "add_node", "id": "REQ-007B-100", "type": "Rule", "owner_fr": "FR-007B", "title": "Overdue is a calculated flag, not a stored plan status", "attrs": {"statement": "Overdue is not a plan status: it is a calculated flag that is true when an installment due date has passed and the installment is unpaid, and it is not stored.", "rationale": "prd.md line 867 (Key Entities, Entity 1 Installment Plan: Overdue is a calculated flag, not stored)."}}
+  - {"op": "add_edge", "from": "REQ-007B-100", "verb": "applies at", "to": "STG-main-05-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-100", "verb": "applies to", "to": "ENT-installment-plan.is_overdue", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-100", "verb": "applies to", "to": "ENT-installment-plan", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-007B-100", "verb": "decided by", "to": "SRC-PRD-007B", "attrs": {}}
+  - {"op": "update_field", "id": "ENT-installment-plan.is_overdue", "calculated_by": "REQ-007B-100"}
+  # Payment method: PRD lines 875-876 say token, last 4 digits and expiration date apply only to a saved card (a bank transfer has none).
+  - {"op": "update_field", "id": "ENT-payment-method.token_reference", "required": false}
+  - {"op": "update_field", "id": "ENT-payment-method.last_four_digits", "required": false}
+  - {"op": "update_field", "id": "ENT-payment-method.expiration_date", "required": false}
+  # B1 hard decline (PRD line 156): no automatic retry, the patient is notified and must retry or update the card.
+  - {"op": "add_node", "id": "STP-007B-409", "type": "Step", "owner_fr": "FR-007B", "title": "After a hard decline, the patient retries the payment or updates the card", "attrs": {"prd_ref": "Alternative Flow B1 hard decline"}}
+  - {"op": "add_edge", "from": "STP-007B-409", "verb": "done by", "to": "ACT-patient", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-409", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-409", "verb": "applies", "to": "REQ-007B-018", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-402", "verb": "next", "to": "STP-007B-409", "attrs": {"label": "hard decline: no automatic retry", "condition": "REQ-007B-018"}}
+  # B3 step 5 (PRD line 180): the system sends reminders until the remaining balance is paid.
+  - {"op": "add_node", "id": "STP-007B-606", "type": "Step", "owner_fr": "FR-007B", "title": "System sends reminders until the remaining balance is paid", "attrs": {"prd_ref": "Alternative Flow B3 step 5"}}
+  - {"op": "add_edge", "from": "STP-007B-606", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-606", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-606", "verb": "applies", "to": "REQ-007B-062", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007B-604", "verb": "next", "to": "STP-007B-606", "attrs": {"label": "patient pays the balance"}}
+  # Admin dashboard metrics (Screen 5, PRD lines 360-371): the schema has no Step to Entity verb; the Stage reads the aggregate, as STG-main-01-inquiry does for its engagement metrics.
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "reads", "to": "ENT-installment-plan-metrics", "attrs": {}}

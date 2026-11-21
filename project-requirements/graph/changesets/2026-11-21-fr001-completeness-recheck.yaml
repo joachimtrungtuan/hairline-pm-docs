@@ -1,0 +1,108 @@
+reason: "FR-001 completeness re-check 2026-11-21: Steps for the five flagged Screens, Screen links for Rules that state a Screen control, message wording from the PRD, calendar picker and re-verification Rules, system PRD pointer"
+by: controller
+operations:
+  - {"op": "add_node", "id": "REQ-001-175", "type": "Rule", "owner_fr": "FR-001", "title": "Date picker opens on the current month and year", "attrs": {"statement": "The date picker opens on the current month and year.", "rationale": "prd.md lines 475, 482 (Calendar Picker Overlay: Month/Year Navigation default, Business Rules)."}}
+  - {"op": "add_edge", "from": "REQ-001-175", "verb": "applies at", "to": "STG-patient-02-profile-complete"}
+  - {"op": "add_edge", "from": "REQ-001-175", "verb": "applies to", "to": "SCR-001-05"}
+  - {"op": "add_edge", "from": "REQ-001-175", "verb": "decided by", "to": "SRC-PRD-001"}
+  - {"op": "add_node", "id": "REQ-001-176", "type": "Rule", "owner_fr": "FR-001", "title": "Date picker Done updates the date of birth field", "attrs": {"statement": "On the date picker, Done confirms the selected date and updates the Date of Birth field on the profile creation screen.", "rationale": "prd.md lines 478, 485 (Calendar Picker Overlay: Done Button, Business Rules)."}}
+  - {"op": "add_edge", "from": "REQ-001-176", "verb": "applies at", "to": "STG-patient-02-profile-complete"}
+  - {"op": "add_edge", "from": "REQ-001-176", "verb": "applies to", "to": "SCR-001-05"}
+  - {"op": "add_edge", "from": "REQ-001-176", "verb": "applies to", "to": "SCR-001-04"}
+  - {"op": "add_edge", "from": "REQ-001-176", "verb": "applies to", "to": "ENT-patient.date_of_birth"}
+  - {"op": "add_edge", "from": "REQ-001-176", "verb": "decided by", "to": "SRC-PRD-001"}
+  - {"op": "add_node", "id": "REQ-001-177", "type": "Rule", "owner_fr": "FR-001", "title": "Re-verification offers password or email code", "attrs": {"statement": "On the Identity Re-verification screen the patient verifies with either their password or an email one-time code, and can switch between the two methods.", "rationale": "prd.md lines 924, 925, 926 (Identity Re-verification: Verification Method Selector, Password Field, Email OTP Field)."}}
+  - {"op": "add_edge", "from": "REQ-001-177", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-001-177", "verb": "applies to", "to": "SCR-001-18"}
+  - {"op": "add_edge", "from": "REQ-001-177", "verb": "decided by", "to": "SRC-PRD-001"}
+  - {"op": "add_node", "id": "REQ-001-178", "type": "Rule", "owner_fr": "FR-001", "title": "Re-verification failure message", "attrs": {"statement": "When re-verification fails, the Identity Re-verification screen shows the message “Invalid password/code. Please try again.”", "rationale": "prd.md line 928 (Identity Re-verification: Error Message row)."}}
+  - {"op": "add_edge", "from": "REQ-001-178", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-001-178", "verb": "applies to", "to": "SCR-001-18"}
+  - {"op": "add_edge", "from": "REQ-001-178", "verb": "decided by", "to": "SRC-PRD-001"}
+  - {"op": "add_node", "id": "REQ-001-179", "type": "Rule", "owner_fr": "FR-001", "title": "Password changed message holds no limits or sensitive details", "attrs": {"statement": "The confirmation message on the Password Changed screen must not include attempt limits or sensitive details.", "rationale": "prd.md line 903 (Password Changed Confirmation: Message Text row)."}}
+  - {"op": "add_edge", "from": "REQ-001-179", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-001-179", "verb": "applies to", "to": "SCR-001-26"}
+  - {"op": "add_edge", "from": "REQ-001-179", "verb": "decided by", "to": "SRC-PRD-001"}
+  - {"op": "update_node", "id": "REQ-001-091", "attrs": {"statement": "If there is an active treatment or aftercare case, delete account is blocked with guidance to contact support: the system shows the message “Account deletion is unavailable during active care; contact support.”, and the blocking message on the Delete Account screen includes a Contact support link.", "rationale": "prd.md lines 639, 648, 843 (Profile Overview business rule, acceptance scenario 3 with the message, Delete Account Blocking Message row with the Contact support link)."}}
+  - {"op": "update_node", "id": "REQ-001-092", "attrs": {"statement": "If there is an active payment in progress, delete account is blocked until the payment flow completes, and the system shows a message asking the patient to retry later.", "rationale": "prd.md lines 640, 649, 843 (Profile Overview business rule, acceptance scenario 4, Delete Account Blocking Message row)."}}
+  - {"op": "update_node", "id": "REQ-001-114", "attrs": {"statement": "If legal content cannot be loaded, the screen shows a non-blocking error “Unable to load content. Please try again.” with Retry and Back, and the patient is never blocked.", "rationale": "prd.md lines 761, 784, 790, 811, 817 (Privacy & Security menu rule, Error State rows and business rules of the Privacy Policy and Terms screens)."}}
+  - {"op": "update_node", "id": "REQ-001-118", "attrs": {"statement": "Validation errors on the Change Password screen are shown inline without revealing whether the current password is correct: the screen shows the generic message “Unable to change password. Please check your entries and try again.”", "rationale": "prd.md lines 881, 889 (Change Password: Error Message row, business rule)."}}
+  - {"op": "update_node", "id": "REQ-001-120", "attrs": {"statement": "If authentication throttling or lockout is triggered on the Change Password screen, the screen shows “Too many attempts. Please try again later.” and navigates back to the Privacy and Security menu (Screen 15b).", "rationale": "prd.md lines 882, 891 (Change Password: Throttle/Lockout Message row, business rule)."}}
+  - {"op": "add_edge", "from": "REQ-001-039", "verb": "applies to", "to": "SCR-001-20"}
+  - {"op": "add_edge", "from": "REQ-001-134", "verb": "applies to", "to": "SCR-001-20"}
+  - {"op": "add_edge", "from": "REQ-001-135", "verb": "applies to", "to": "SCR-001-20"}
+  - {"op": "add_edge", "from": "REQ-001-040", "verb": "applies to", "to": "SCR-001-22"}
+  - {"op": "add_edge", "from": "REQ-001-041", "verb": "applies to", "to": "SCR-001-22"}
+  - {"op": "remove_edge", "from": "REQ-001-136", "verb": "applies to", "to": "SCR-001-01"}
+  - {"op": "add_edge", "from": "REQ-001-136", "verb": "applies to", "to": "SCR-001-22"}
+  - {"op": "add_edge", "from": "REQ-001-102", "verb": "applies to", "to": "SCR-001-24"}
+  - {"op": "add_edge", "from": "REQ-001-102", "verb": "applies to", "to": "SCR-001-25"}
+  - {"op": "add_edge", "from": "REQ-001-103", "verb": "applies to", "to": "SCR-001-24"}
+  - {"op": "add_edge", "from": "REQ-001-152", "verb": "applies to", "to": "SCR-001-24"}
+  - {"op": "add_edge", "from": "REQ-001-160", "verb": "applies to", "to": "SCR-001-24"}
+  - {"op": "add_edge", "from": "REQ-001-111", "verb": "applies to", "to": "SCR-001-25"}
+  - {"op": "add_edge", "from": "REQ-001-112", "verb": "applies to", "to": "SCR-001-25"}
+  - {"op": "add_edge", "from": "REQ-001-114", "verb": "applies to", "to": "SCR-001-25"}
+  - {"op": "add_edge", "from": "REQ-001-121", "verb": "applies to", "to": "SCR-001-26"}
+  - {"op": "add_edge", "from": "REQ-001-141", "verb": "applies to", "to": "SCR-001-26"}
+  - {"op": "add_edge", "from": "FR-001", "verb": "references", "to": "REQ-SYS-001"}
+  - {"op": "add_node", "id": "STP-001-125", "type": "Step", "owner_fr": "FR-001", "title": "Patient sees the splash screen", "attrs": {"prd_ref": "Main Flow Workflow 1 step 1"}}
+  - {"op": "add_edge", "from": "STP-001-125", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-001-125", "verb": "at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "STP-001-125", "verb": "on", "to": "SCR-001-20"}
+  - {"op": "add_edge", "from": "STP-001-125", "verb": "applies", "to": "REQ-001-039"}
+  - {"op": "add_edge", "from": "STP-001-125", "verb": "applies", "to": "REQ-001-134"}
+  - {"op": "add_edge", "from": "STP-001-125", "verb": "applies", "to": "REQ-001-135"}
+  - {"op": "add_edge", "from": "STP-001-125", "verb": "applies", "to": "REQ-001-165"}
+  - {"op": "add_edge", "from": "STP-001-125", "verb": "applies", "to": "REQ-001-168"}
+  - {"op": "add_node", "id": "STP-001-126", "type": "Step", "owner_fr": "FR-001", "title": "Patient sees the two explanation screens", "attrs": {"prd_ref": "Main Flow Workflow 1 step 1"}}
+  - {"op": "add_edge", "from": "STP-001-126", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-001-126", "verb": "at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "STP-001-126", "verb": "on", "to": "SCR-001-21"}
+  - {"op": "add_edge", "from": "STP-001-126", "verb": "applies", "to": "REQ-001-167"}
+  - {"op": "remove_edge", "from": "FLW-001-registration", "verb": "starts at", "to": "STP-001-001"}
+  - {"op": "add_edge", "from": "FLW-001-registration", "verb": "starts at", "to": "STP-001-125"}
+  - {"op": "add_edge", "from": "STP-001-125", "verb": "next", "to": "STP-001-126"}
+  - {"op": "add_edge", "from": "STP-001-126", "verb": "next", "to": "STP-001-001"}
+  - {"op": "add_node", "id": "FLW-001-settings", "type": "Flow", "title": "Settings navigation and password change flow", "attrs": {"kind": "main", "description": "Patient moves from Settings Main to the Privacy and Security menu, changes the password and returns (prd.md Screens 15, 15b, 17, 17a).", "prd_ref": "Screens 15, 15b, 17, 17a"}}
+  - {"op": "add_node", "id": "STP-001-127", "type": "Step", "owner_fr": "FR-001", "title": "Patient picks a row on the Settings Main screen", "attrs": {"prd_ref": "Screen 15 Data Fields"}}
+  - {"op": "add_edge", "from": "STP-001-127", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-001-127", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-001-127", "verb": "on", "to": "SCR-001-24"}
+  - {"op": "add_edge", "from": "STP-001-127", "verb": "applies", "to": "REQ-001-102"}
+  - {"op": "add_edge", "from": "STP-001-127", "verb": "applies", "to": "REQ-001-103"}
+  - {"op": "add_edge", "from": "STP-001-127", "verb": "applies", "to": "REQ-001-152"}
+  - {"op": "add_edge", "from": "STP-001-127", "verb": "applies", "to": "REQ-001-160"}
+  - {"op": "add_node", "id": "STP-001-128", "type": "Step", "owner_fr": "FR-001", "title": "Patient picks Change Password or Privacy Policy on the Privacy and Security menu", "attrs": {"prd_ref": "Screen 15b Data Fields"}}
+  - {"op": "add_edge", "from": "STP-001-128", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-001-128", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-001-128", "verb": "on", "to": "SCR-001-25"}
+  - {"op": "add_edge", "from": "STP-001-128", "verb": "applies", "to": "REQ-001-102"}
+  - {"op": "add_edge", "from": "STP-001-128", "verb": "applies", "to": "REQ-001-111"}
+  - {"op": "add_edge", "from": "STP-001-128", "verb": "applies", "to": "REQ-001-112"}
+  - {"op": "add_node", "id": "STP-001-129", "type": "Step", "owner_fr": "FR-001", "title": "Patient enters the current and new password and taps Save", "attrs": {"prd_ref": "Screen 17 Data Fields"}}
+  - {"op": "add_edge", "from": "STP-001-129", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-001-129", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-001-129", "verb": "on", "to": "SCR-001-17"}
+  - {"op": "add_edge", "from": "STP-001-129", "verb": "applies", "to": "REQ-001-080"}
+  - {"op": "add_edge", "from": "STP-001-129", "verb": "applies", "to": "REQ-001-117"}
+  - {"op": "add_edge", "from": "STP-001-129", "verb": "applies", "to": "REQ-001-118"}
+  - {"op": "add_edge", "from": "STP-001-129", "verb": "applies", "to": "REQ-001-161"}
+  - {"op": "add_node", "id": "STP-001-130", "type": "Step", "owner_fr": "FR-001", "title": "System revokes prior refresh tokens and shows the password changed confirmation", "attrs": {"prd_ref": "Screen 17 Business Rules, Screen 17a"}}
+  - {"op": "add_edge", "from": "STP-001-130", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-001-130", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-001-130", "verb": "on", "to": "SCR-001-26"}
+  - {"op": "add_edge", "from": "STP-001-130", "verb": "applies", "to": "REQ-001-119"}
+  - {"op": "add_edge", "from": "STP-001-130", "verb": "applies", "to": "REQ-001-121"}
+  - {"op": "add_edge", "from": "STP-001-130", "verb": "applies", "to": "REQ-001-122"}
+  - {"op": "add_edge", "from": "STP-001-130", "verb": "applies", "to": "REQ-001-179"}
+  - {"op": "add_node", "id": "STP-001-131", "type": "Step", "owner_fr": "FR-001", "title": "Patient taps Done and returns to the Privacy and Security menu", "attrs": {"prd_ref": "Screen 17a Data Fields"}}
+  - {"op": "add_edge", "from": "STP-001-131", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-001-131", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-001-131", "verb": "on", "to": "SCR-001-26"}
+  - {"op": "add_edge", "from": "STP-001-131", "verb": "applies", "to": "REQ-001-141"}
+  - {"op": "add_edge", "from": "FLW-001-settings", "verb": "starts at", "to": "STP-001-127"}
+  - {"op": "add_edge", "from": "STP-001-127", "verb": "next", "to": "STP-001-128"}
+  - {"op": "add_edge", "from": "STP-001-128", "verb": "next", "to": "STP-001-129"}
+  - {"op": "add_edge", "from": "STP-001-129", "verb": "next", "to": "STP-001-130"}
+  - {"op": "add_edge", "from": "STP-001-130", "verb": "next", "to": "STP-001-131"}

@@ -1,0 +1,78 @@
+reason: "FR-003 completeness re-check 2026-11-21 against the PRD of 2026-11-20: Screen 7a, 9 and 11 search and filter Rules, cancel modal and success screen conditional text Rules, missing person-visible Steps and Step links in Workflows 1 A2, A3, 2 B3, 3, 5 and E3, cancel order of modal and preflight, and starting prices shown from the FR-028 Field"
+by: controller
+operations:
+  - {"op": "add_node", "id": "REQ-003-123", "type": "Rule", "owner_fr": "FR-003", "title": "Provider search on Screen 7a is debounced and case-insensitive", "attrs": {"statement": "The provider search on Screen 7a searches by provider name or keyword, is debounced, and is case-insensitive.", "rationale": "prd.md lines 697 (Screen 7a Search row: Debounced; case-insensitive)."}}
+  - {"op": "add_edge", "from": "REQ-003-123", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-003-123", "verb": "applies to", "to": "SCR-003-08"}
+  - {"op": "add_edge", "from": "REQ-003-123", "verb": "decided by", "to": "SRC-PRD-003"}
+  - {"op": "add_node", "id": "REQ-003-124", "type": "Rule", "owner_fr": "FR-003", "title": "Provider inquiry list search by patient ID and filters", "attrs": {"statement": "The provider inquiry list (Screen 9) can be searched by patient ID, the search is debounced and case-insensitive, and the list can be filtered by age range, concern, date range, medical alerts and location using valid ranges and enum values.", "rationale": "prd.md lines 836, 845-846 (Screen 9 Patient ID searchable; Search and Filters rows)."}}
+  - {"op": "add_edge", "from": "REQ-003-124", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-003-124", "verb": "applies to", "to": "SCR-003-12"}
+  - {"op": "add_edge", "from": "REQ-003-124", "verb": "decided by", "to": "SRC-PRD-003"}
+  - {"op": "add_node", "id": "REQ-003-125", "type": "Rule", "owner_fr": "FR-003", "title": "Cancel modal shows the quote impact and the provider note only when quotes exist", "attrs": {"statement": "On the cancel confirmation modal (Screen 8a) the Impact Summary reads \"X active quotes will be cancelled\" when the inquiry has quotes to cancel and \"No quotes received yet\" when it has none, derived from the associated quote count. The note \"Providers of the quotes being cancelled will be notified of this cancellation within 5 minutes\" is shown only when there are quotes to cancel. Go Back closes the modal with no change of state.", "rationale": "prd.md lines 770, 774, 785 (Screen 8a Impact Summary, Provider Notification Note, Go Back rules)."}}
+  - {"op": "add_edge", "from": "REQ-003-125", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-003-125", "verb": "applies to", "to": "SCR-003-10"}
+  - {"op": "add_edge", "from": "REQ-003-125", "verb": "applies to", "to": "ENT-inquiry.cascade_quote_count"}
+  - {"op": "add_edge", "from": "REQ-003-125", "verb": "decided by", "to": "SRC-PRD-003"}
+  - {"op": "add_node", "id": "REQ-003-126", "type": "Rule", "owner_fr": "FR-003", "title": "Cancellation success screen text follows the number of quotes cancelled", "attrs": {"statement": "On the cancellation success screen (Screen 8b) the Impact Summary reads \"Your inquiry was cancelled.\" when no quote was cancelled and \"Your inquiry and X active quote(s) were cancelled.\" otherwise. The line \"The providers of the cancelled quotes have been notified of this cancellation.\" is shown only when at least one quote was cancelled.", "rationale": "prd.md lines 807-808 (Screen 8b Impact Summary and Provider Notification Status rows)."}}
+  - {"op": "add_edge", "from": "REQ-003-126", "verb": "applies at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "REQ-003-126", "verb": "applies to", "to": "SCR-003-11"}
+  - {"op": "add_edge", "from": "REQ-003-126", "verb": "applies to", "to": "ENT-inquiry.cascade_quote_count"}
+  - {"op": "add_edge", "from": "REQ-003-126", "verb": "decided by", "to": "SRC-PRD-003"}
+  - {"op": "update_node", "id": "REQ-003-091", "attrs": {"statement": "Shows all inquiries in all lifecycle stages. Admin has full visibility of all data. Advanced filtering by patient and provider locations, stage, payment status and date ranges, using valid enum values and ranges. Bulk actions available. Real-time status updates.", "rationale": "prd.md lines 960, 964-968 (Screen 11 Advanced Filters row and business rules)."}}
+  - {"op": "add_edge", "from": "REQ-003-091", "verb": "applies to", "to": "SCR-003-14"}
+  - {"op": "add_node", "id": "STP-003-088", "type": "Step", "owner_fr": "FR-003", "title": "Provider opens the inquiry list", "attrs": {"prd_ref": "Workflow 3 (Provider Inquiry Management)"}}
+  - {"op": "add_edge", "from": "STP-003-088", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-003-088", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-003-088", "verb": "on", "to": "SCR-003-12"}
+  - {"op": "add_edge", "from": "STP-003-088", "verb": "applies", "to": "REQ-003-074"}
+  - {"op": "add_edge", "from": "STP-003-088", "verb": "next", "to": "STP-003-027"}
+  - {"op": "remove_edge", "from": "FLW-003-provider-inquiry-management", "verb": "starts at", "to": "STP-003-027"}
+  - {"op": "add_edge", "from": "FLW-003-provider-inquiry-management", "verb": "starts at", "to": "STP-003-088"}
+  - {"op": "add_node", "id": "STP-003-089", "type": "Step", "owner_fr": "FR-003", "title": "Admin reviews the critical alert and may guide providers", "attrs": {"prd_ref": "Workflow 1 Alternative Flow A3"}}
+  - {"op": "add_edge", "from": "STP-003-089", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-003-089", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-003-089", "verb": "applies", "to": "REQ-003-050"}
+  - {"op": "add_edge", "from": "STP-003-057", "verb": "next", "to": "STP-003-089"}
+  - {"op": "add_node", "id": "STP-003-090", "type": "Step", "owner_fr": "FR-003", "title": "Patient is told the inquiry cannot be modified because its stage changed", "attrs": {"prd_ref": "Workflow 1 Alternative Flow A2"}}
+  - {"op": "add_edge", "from": "STP-003-090", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-003-090", "verb": "at", "to": "STG-main-01-inquiry"}
+  - {"op": "add_edge", "from": "STP-003-090", "verb": "applies", "to": "REQ-003-057"}
+  - {"op": "add_edge", "from": "STP-003-055", "verb": "next", "to": "STP-003-090", "attrs": {"label": "stage changed"}}
+  - {"op": "add_node", "id": "STP-003-091", "type": "Step", "owner_fr": "FR-003", "title": "System cancels draft, sent and expired quotes and notifies only those providers", "attrs": {"prd_ref": "Workflow 5 Alternative Flow E3"}}
+  - {"op": "add_edge", "from": "STP-003-091", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-003-091", "verb": "at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "STP-003-091", "verb": "applies", "to": "REQ-003-103"}
+  - {"op": "add_edge", "from": "STP-003-091", "verb": "applies", "to": "REQ-003-013"}
+  - {"op": "add_edge", "from": "STP-003-091", "verb": "applies", "to": "REQ-003-100"}
+  - {"op": "remove_edge", "from": "STP-003-085", "verb": "next", "to": "STP-003-086"}
+  - {"op": "add_edge", "from": "STP-003-085", "verb": "next", "to": "STP-003-091"}
+  - {"op": "add_edge", "from": "STP-003-091", "verb": "next", "to": "STP-003-086"}
+  - {"op": "add_edge", "from": "STP-003-066", "verb": "next", "to": "STP-003-021", "attrs": {"label": "exclusive route"}}
+  - {"op": "add_edge", "from": "STP-003-019", "verb": "next", "to": "STP-003-021", "attrs": {"label": "exclusive provider assigned"}}
+  - {"op": "update_node", "id": "STP-003-058", "title": "Patient taps Cancel Inquiry on the Inquiry Dashboard"}
+  - {"op": "remove_edge", "from": "STP-003-058", "verb": "on", "to": "SCR-003-12"}
+  - {"op": "add_edge", "from": "STP-003-058", "verb": "on", "to": "SCR-003-09"}
+  - {"op": "remove_edge", "from": "STP-003-042", "verb": "next", "to": "STP-003-043"}
+  - {"op": "add_edge", "from": "STP-003-042", "verb": "next", "to": "STP-003-044"}
+  - {"op": "remove_edge", "from": "STP-003-043", "verb": "next", "to": "STP-003-044"}
+  - {"op": "add_edge", "from": "STP-003-044", "verb": "next", "to": "STP-003-043"}
+  - {"op": "remove_edge", "from": "STP-003-044", "verb": "next", "to": "STP-003-045"}
+  - {"op": "add_edge", "from": "STP-003-043", "verb": "next", "to": "STP-003-045"}
+  - {"op": "remove_edge", "from": "STP-003-059", "verb": "next", "to": "STP-003-045"}
+  - {"op": "add_edge", "from": "STP-003-059", "verb": "next", "to": "STP-003-043"}
+  - {"op": "remove_edge", "from": "STP-003-043", "verb": "on", "to": "SCR-003-09"}
+  - {"op": "add_edge", "from": "STP-003-043", "verb": "on", "to": "SCR-003-10"}
+  - {"op": "remove_edge", "from": "STP-003-051", "verb": "on", "to": "SCR-003-09"}
+  - {"op": "add_edge", "from": "STP-003-051", "verb": "on", "to": "SCR-003-10"}
+  - {"op": "add_edge", "from": "SCR-003-02", "verb": "shows", "to": "ENT-location-starting-price.starting_price_amount", "attrs": {"provenance": "inherited from another FR", "label": "Price Display", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-003-02", "verb": "shows", "to": "ENT-location-starting-price.currency_code", "attrs": {"provenance": "inherited from another FR", "label": "Price Display: currency", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-003-07", "verb": "shows", "to": "ENT-location-starting-price.starting_price_amount", "attrs": {"provenance": "inherited from another FR", "label": "Starting prices", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-003-07", "verb": "shows", "to": "ENT-location-starting-price.currency_code", "attrs": {"provenance": "inherited from another FR", "label": "Starting prices: currency", "editable": false}}
+  - {"op": "remove_edge", "from": "SCR-003-02", "verb": "shows", "to": "ENT-inquiry.destination_starting_prices"}
+  - {"op": "remove_edge", "from": "SCR-003-07", "verb": "shows", "to": "ENT-inquiry.destination_starting_prices"}
+  - {"op": "remove_edge", "from": "REQ-003-033", "verb": "applies to", "to": "ENT-inquiry.destination_starting_prices"}
+  - {"op": "add_edge", "from": "REQ-003-033", "verb": "applies to", "to": "ENT-location-starting-price.starting_price_amount"}
+  - {"op": "add_edge", "from": "REQ-003-033", "verb": "applies to", "to": "SCR-003-02"}
+  - {"op": "update_field", "id": "ENT-inquiry.destination_starting_prices", "calculated_by": null}
+  - {"op": "retire_node", "id": "ENT-inquiry.destination_starting_prices"}

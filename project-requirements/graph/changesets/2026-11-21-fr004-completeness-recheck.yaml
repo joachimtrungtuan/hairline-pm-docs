@@ -1,0 +1,16 @@
+reason: "FR-004 completeness re-check 2026-11-21 against the PRD of 2026-11-20: quote.withdrawn also emitted at the Confirmed stage (owner ruling Q-fr001-009-76, the one op still waiting in 2026-11-10-fr004-completeness-held.yaml; do not apply both), Rule for the admin Quote List inquiry grouping default and toggle (Screen 5), and links from existing Rules to the list and detail Screens whose controls they govern"
+by: controller
+operations:
+  - {"op": "add_edge", "from": "STG-main-04-booking", "verb": "emits", "to": "EVT-quote-withdrawn"}
+  - {"op": "add_node", "id": "REQ-004-108", "type": "Rule", "owner_fr": "FR-004", "title": "Admin Quote List is grouped by inquiry by default with a toggle", "attrs": {"statement": "The admin Quote List MUST group quotes by inquiry by default, and the admin MUST be able to toggle the grouping on and off.", "rationale": "prd.md lines 552 (Screen 5 Inquiry Grouping control: Default grouped by inquiry, Toggle grouping)."}}
+  - {"op": "add_edge", "from": "REQ-004-108", "verb": "applies at", "to": "STG-main-02-quote"}
+  - {"op": "add_edge", "from": "REQ-004-108", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-004-108", "verb": "applies to", "to": "SCR-004-05"}
+  - {"op": "add_edge", "from": "REQ-004-108", "verb": "decided by", "to": "SRC-PRD-004"}
+  - {"op": "add_edge", "from": "REQ-004-076", "verb": "applies to", "to": "SCR-004-02"}
+  - {"op": "add_edge", "from": "REQ-004-076", "verb": "applies to", "to": "SCR-004-03"}
+  - {"op": "add_edge", "from": "REQ-004-085", "verb": "applies to", "to": "SCR-004-02"}
+  - {"op": "add_edge", "from": "REQ-004-085", "verb": "applies to", "to": "SCR-004-03"}
+  - {"op": "add_edge", "from": "REQ-004-077", "verb": "applies to", "to": "SCR-004-05"}
+  - {"op": "add_edge", "from": "REQ-004-095", "verb": "applies to", "to": "SCR-004-04"}
+  - {"op": "add_edge", "from": "REQ-004-097", "verb": "applies to", "to": "SCR-004-04"}
