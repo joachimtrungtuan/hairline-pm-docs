@@ -75,3 +75,4 @@ The owner read and approved the FR-005 compressed PRD on 2026-11-22 and released
 - 2026-11-23, FR-001: independent review found six entity clauses missing (analytics consent read by FR-023; email delivery issue flag set by FR-030; flags and alerts owned by FR-016 and preferred region by FR-021; a patient session can be revoked independently; the OTP code is stored hashed, is one-time use and tracks attempts); restored in original wording under Business Rules, with the two entity header lines kept so the relationship lines read in context.
 - 2026-11-23, FR-019: independent review found one entity clause partly missing (promotion programs are stored in their own table and the legacy discounts table does not hold them); the baseline line was restored in original wording under Business Rules.
 - 2026-11-23, independent review of FR-009: no requirement lost or changed.
+- 2026-11-23, independent review of FR-011: no requirement lost or changed.
