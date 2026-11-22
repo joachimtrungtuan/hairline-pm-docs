@@ -497,6 +497,10 @@ flowchart TD
 - Patient-visible support categories (admin cannot add or remove categories from the fixed list but may update labels in future) (REQ-035-076)
 - Content type visibility (admin can toggle content type visibility in FR-033 but cannot add new content types for patients) (REQ-035-042)
 
+**Carried from dropped sections (original wording)**:
+
+- **Assumption 3**: Emergency contact phone and email values are configured by admin before FR-035 goes live
+
 ---
 
 ## Dependencies
@@ -662,6 +666,7 @@ A patient preparing for their upcoming procedure browses the Help Center for edu
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2026-11-22 | 1.2 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.1) is in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
+| 2026-11-23 | 1.3 | Independent compression review: 1 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
 
 ---
 
