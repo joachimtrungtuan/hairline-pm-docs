@@ -856,6 +856,11 @@ On save, Document Name, File Size, Upload Date, and Uploaded By ("Admin - [admin
 - **Payout Method Rule**: The admin chooses the clinic's payout method (Stripe Connect or Manual bank transfer) when creating the clinic (Screen 2 Step 5). The clinic sees its payout method and payout readiness read-only in its own dashboard (FR-032) and completes Stripe's own sign-up itself. After go-live only an admin changes the payout method (Tab 7); the clinic asks Hairline.
 - **Payout Readiness Rule**: Clinic activation does not wait for payout readiness. If a Stripe Connect clinic's payout setup is not Ready when a booking's share is due to move to the clinic, the share stays with Hairline, the clinic and the admin are told, and the share moves when the clinic becomes Ready. Nothing is paid out before then, even after treatment.
 
+**Carried from dropped sections (original wording)**:
+
+- **SC-003**: Patients see only active providers in search results (no suspended/deactivated providers visible), ensuring trust and booking reliability
+- **Relationships**: One provider has many status events (append-only; never updated after creation). This is the "provider status event" referenced by REQ-015-024 and by the `provider_status_event_id` / `deactivation_event_id` columns on the owning inquiry, booking, aftercare, payment, and closure-request records (`provider_status_events` in system-data-schema.md). Tab 8 displays it but the Tab 8 activity log is not the event record.
+
 ---
 
 ## Dependencies
@@ -1014,6 +1019,7 @@ Admin configures a provider account with a fixed commission fee (e.g., £200 per
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2026-11-22 | 1.26 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (versions 1.0 to 1.25) and the change requests (CR-FR015-20261013-01, CR-FR015-20261016-01, CR-FR015-20261027-01, CR-FR009-20261028-01, CR-FR032-20261015-01, CR-FR029-20261014-01, CR-FR029-20261015-01, CR-FR009-20261015-01, CR-FR017-20261015-01, CR-FR026-20261015-01, CR-FR032-20261015-02, CR-FR020-20261015-01, CR-FR030-20261015-01, CR-FR009-20261015-02, CR-FR032-20261015-03, CR-FR020-20261015-02, CR-FR030-20261015-02, CR-FR029-20261015-02, CR-FR003-20261015-01, CR-FR020-20261027-01, CR-FR006-20261027-02) are in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
+| 2026-11-23 | 1.27 | Independent compression review: 2 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
 
 ---
 

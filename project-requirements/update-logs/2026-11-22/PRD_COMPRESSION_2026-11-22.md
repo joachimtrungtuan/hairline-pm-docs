@@ -58,3 +58,5 @@ The owner read and approved the FR-005 compressed PRD on 2026-11-22 and released
 - 2026-11-23, FR-008: independent review found the passport copy clause (original submitter, copy-source reference) and the audited-action list missing; both restored in original wording under Business Rules (PRD v3.2).
 - 2026-11-23, independent review of FR-013: no requirement lost or changed.
 - 2026-11-23, FR-004: independent review found no requirement lost; 16 field tables repaired so the Graph field value sits in its own last column (PRD change-log row added).
+- 2026-11-23, FR-015: independent review found two dropped clauses missing (patients see only active providers in search; provider status events are append-only); restored in original wording under Business Rules.
+- 2026-11-23, independent review of FR-021: no requirement lost or changed.
