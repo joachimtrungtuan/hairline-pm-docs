@@ -25,34 +25,34 @@ The Affiliate Management module enables Hairline to partner with external entiti
 ### Multi-Tenant Architecture
 
 - **Patient Platform (P-03)**: Patients apply affiliate discount codes at checkout to receive promotional offers
-- **Provider Platform (PR-05)**: No direct provider interaction; providers see bookings with affiliate codes applied
+- **Provider Platform (PR-05)**: No direct provider interaction; providers see bookings with affiliate codes applied (REQ-018-178)
 - **Admin Platform (A-07)**: Full affiliate lifecycle management including onboarding, code creation, commission tracking, payout-cycle calculation, and read-only payout status/history
-- **Affiliate Portal (scoped surface of A-07 / Admin tenant)**: External affiliate-facing self-service surface (Screens 9–10: dashboard, promo codes, payouts, profile, activation). Per the platform constitution (Principle I — Multi-Tenant Architecture), this is a **scoped external surface operated within the Admin Platform tenant boundary — not a separate tenant** — with its own authentication/authorization scope and affiliate-only data access
+- **Affiliate Portal (scoped surface of A-07 / Admin tenant)**: External affiliate-facing self-service surface (Screens 9–10: dashboard, promo codes, payouts, profile, activation). Per the platform constitution (Principle I — Multi-Tenant Architecture), this is a **scoped external surface operated within the Admin Platform tenant boundary — not a separate tenant** — with its own authentication/authorization scope and affiliate-only data access (REQ-018-298)
 - **Shared Services (S-02 / S-03 / S-06)**: Payment Processing Service executes affiliate commission transfers when invoked by FR-017 / A-05; Notification Service sends payout confirmations; Audit Log Service records affiliate-related events
 
 ### Multi-Tenant Breakdown
 
 **Patient Platform (P-03)**:
 
-- Patients can enter affiliate discount codes during booking checkout
+- Patients can enter affiliate discount codes during booking checkout (REQ-018-179)
 - System validates affiliate codes and applies discounts automatically
-- Booking confirmation shows affiliate discount applied (code name displayed)
-- Patients do NOT see affiliate commission structure or payout information
+- Booking confirmation shows affiliate discount applied (code name displayed) (REQ-018-180)
+- Patients do NOT see affiliate commission structure or payout information (REQ-018-181)
 
 **Provider Platform (PR-05)**:
 
-- Providers see bookings with affiliate codes in their dashboard (read-only view)
-- Providers understand that affiliate discounts come from Hairline's commission (not their payout)
-- No provider action required for affiliate-referred bookings
+- Providers see bookings with affiliate codes in their dashboard (read-only view) (REQ-018-182)
+- Providers understand that affiliate discounts come from Hairline's commission (not their payout) (REQ-018-183)
+- No provider action required for affiliate-referred bookings (REQ-018-184)
 
 **Admin Platform (A-07)**:
 
 - **Affiliate Onboarding**: Create affiliate accounts with contact details, payment information, commission structure
 - **Discount Code Management**: Generate unique affiliate discount codes for one affiliate or bulk-generate one distinct code per affiliate for selected or filtered affiliate groups
-- **Performance Tracking**: View real-time statistics on referral counts, booking conversions, revenue generated per affiliate
+- **Performance Tracking**: View real-time statistics on referral counts, booking conversions, revenue generated per affiliate (REQ-018-185)
 - **Commission Calculation**: System automatically calculates affiliate commissions based on completed bookings
 - **Payout Data Handoff**: Monthly commission cycle calculation and read-only payout status/history; payout approval and Stripe transfer execution are owned by FR-017 / A-05
-- **Reporting**: Generate affiliate performance reports for analysis and optimization
+- **Reporting**: Generate affiliate performance reports for analysis and optimization (REQ-018-186)
 
 **Shared Services (S-02 / S-03 / S-06)**:
 
@@ -64,25 +64,25 @@ The Affiliate Management module enables Hairline to partner with external entiti
 
 **In Scope**:
 
-- Email notifications to affiliates when discount codes are created or updated
-- Email notifications to affiliates when monthly payouts are processed (sent on status Paid, from FR-017)
-- Admin-to-affiliate communication via notes in admin dashboard (internal only)
-- System-generated payout confirmations with transaction breakdown
-- Read-only access to externally hosted affiliate marketing materials (banners, templates, and campaign assets) from the affiliate portal
+- Email notifications to affiliates when discount codes are created or updated (REQ-018-187)
+- Email notifications to affiliates when monthly payouts are processed (sent on status Paid, from FR-017) (REQ-018-188)
+- Admin-to-affiliate communication via notes in admin dashboard (internal only) (REQ-018-189)
+- System-generated payout confirmations with transaction breakdown (REQ-018-190)
+- Read-only access to externally hosted affiliate marketing materials (banners, templates, and campaign assets) from the affiliate portal (REQ-018-191)
 
 **Out of Scope**:
 
-- Direct messaging between patients and affiliates (handled outside platform)
-- Marketing material creation or asset hosting (affiliates use externally hosted materials linked from the portal)
-- Affiliate training or onboarding calls (manual process outside platform)
+- Direct messaging between patients and affiliates (handled outside platform) (REQ-018-192)
+- Marketing material creation or asset hosting (affiliates use externally hosted materials linked from the portal) (REQ-018-192)
+- Affiliate training or onboarding calls (manual process outside platform) (REQ-018-192)
 
 ### Entry Points
 
-- **Admin-initiated**: Admins access Affiliate Management section in admin dashboard to onboard new affiliates
-- **Admin bulk action**: Admins select affiliates manually or through filters, then generate one unique affiliate-bound promo code per selected affiliate
-- **Affiliate-initiated**: After the admin creates their account, affiliates complete a one-time activation link to set their password, then log into the dedicated affiliate portal to view their performance dashboard
-- **Patient-triggered**: Patients enter affiliate codes during booking checkout, triggering tracking and commission calculation
-- **System-scheduled**: Automated monthly job generates payout reports on the affiliate payout day each month (platform setting, default the 7th)
+- **Admin-initiated**: Admins access Affiliate Management section in admin dashboard to onboard new affiliates (REQ-018-193)
+- **Admin bulk action**: Admins select affiliates manually or through filters, then generate one unique affiliate-bound promo code per selected affiliate (REQ-018-193)
+- **Affiliate-initiated**: After the admin creates their account, affiliates complete a one-time activation link to set their password, then log into the dedicated affiliate portal to view their performance dashboard (REQ-018-193)
+- **Patient-triggered**: Patients enter affiliate codes during booking checkout, triggering tracking and commission calculation (REQ-018-193)
+- **System-scheduled**: Automated monthly job generates payout reports on the affiliate payout day each month (platform setting, default the 7th) (REQ-018-193)
 
 ---
 
@@ -338,37 +338,37 @@ The Affiliate Management module enables Hairline to partner with external entiti
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Affiliate Name | text | Yes | Organization or individual name | Max 200 characters |
-| Contact Email | email | Yes | Primary contact email for login and notifications | Valid email format, unique |
-| Total Referrals | number | N/A | Count of all completed bookings with affiliate referral attribution (per Rule 11, attribution can be preserved separately from the final discount applied to price) | Read-only, system-calculated |
-| Total Revenue | currency | N/A | Total booking value from affiliate referrals | Read-only, system-calculated |
-| Total Commissions Paid | currency | N/A | Sum of all commissions paid to date | Read-only, system-calculated |
-| Pending Payout | currency | N/A | Commission amount awaiting next payout cycle | Read-only, system-calculated |
-| Status | status | N/A | Account status: Pending, Active, Suspended, Inactive. "Pending" is a system-set initial state shown until activation | Read-only in this list; Suspend and Reinstate are done only through the Screen 3.1 modal, and Inactive is reached only through the Screen 3.3 Deactivate / Offboard modal; Pending is system-set |
-| Country/Region | select | No | Affiliate operating country or region | Uses supported country/region list |
-| Affiliate Type | select | No | Influencer, clinic partner, organization, other | Dropdown with configured options |
-| Performance Tier | status | N/A | System-calculated tier band (e.g., by revenue) | Read-only, system-calculated |
-| Campaign Eligibility | status | N/A | Whether affiliate can receive bulk-generated codes | Read-only, system-calculated |
-| Active Codes Count | number | N/A | Count of active codes assigned to affiliate | Read-only, system-calculated |
-| Actions | buttons | N/A | View Details, Edit, Suspend, Generate Report | Context-dependent based on status |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Affiliate Name | text | Yes | Organization or individual name | Max 200 characters (REQ-018-299) | ENT-affiliate.name |
+| Contact Email | email | Yes | Primary contact email for login and notifications | Valid email format, unique | ENT-affiliate.contact_email |
+| Total Referrals | number | N/A | Count of all completed bookings with affiliate referral attribution (per Rule 11, attribution can be preserved separately from the final discount applied to price) | Read-only, system-calculated (REQ-018-208) | ENT-affiliate.total_referrals |
+| Total Revenue | currency | N/A | Total booking value from affiliate referrals | Read-only, system-calculated | ENT-affiliate.total_revenue |
+| Total Commissions Paid | currency | N/A | Sum of all commissions paid to date | Read-only, system-calculated | ENT-affiliate.total_commissions_paid |
+| Pending Payout | currency | N/A | Commission amount awaiting next payout cycle | Read-only, system-calculated | ENT-affiliate.pending_payout |
+| Status | status | N/A | Account status: Pending, Active, Suspended, Inactive. "Pending" is a system-set initial state shown until activation | Read-only in this list; Suspend and Reinstate are done only through the Screen 3.1 modal, and Inactive is reached only through the Screen 3.3 Deactivate / Offboard modal; Pending is system-set (REQ-018-209) | ENT-affiliate.status |
+| Country/Region | select | No | Affiliate operating country or region | Uses supported country/region list (REQ-018-210) | ENT-affiliate.country_region |
+| Affiliate Type | select | No | Influencer, clinic partner, organization, other | Dropdown with configured options (REQ-018-211) | ENT-affiliate.affiliate_type |
+| Performance Tier | status | N/A | System-calculated tier band (e.g., by revenue) | Read-only, system-calculated | ENT-affiliate.performance_tier |
+| Campaign Eligibility | status | N/A | Whether affiliate can receive bulk-generated codes | Read-only, system-calculated | ENT-affiliate.campaign_eligibility |
+| Active Codes Count | number | N/A | Count of active codes assigned to affiliate | Read-only, system-calculated | ENT-affiliate.active_codes_count |
+| Actions | buttons | N/A | View Details, Edit, Suspend, Generate Report | Context-dependent based on status | no graph field (control) |
 
 **Business Rules**:
 
-- **Sorting**: Default sort by "Total Revenue" descending (highest performers first)
-- **Filtering**: Admin can filter by status, country/region, affiliate type, language, performance tier, campaign eligibility, and payout setup completeness; admin can also search by affiliate name/email
-- **Pagination**: Display 25 affiliates per page with pagination controls
-- **Quick Actions**: Inline "Generate Report" button exports affiliate performance to PDF
+- **Sorting**: Default sort by "Total Revenue" descending (highest performers first) (REQ-018-072)
+- **Filtering**: Admin can filter by status, country/region, affiliate type, language, performance tier, campaign eligibility, and payout setup completeness; admin can also search by affiliate name/email (REQ-018-073)
+- **Pagination**: Display 25 affiliates per page with pagination controls (REQ-018-074)
+- **Quick Actions**: Inline "Generate Report" button exports affiliate performance to PDF (REQ-018-075)
 - **Status Indicators**: Color-coded status badges (Pending = amber, Active = green, Suspended = red, Inactive = gray)
-- **Bulk Code Action**: Admin can select one or more affiliates from the filtered list and generate one distinct affiliate-bound code per selected affiliate
+- **Bulk Code Action**: Admin can select one or more affiliates from the filtered list and generate one distinct affiliate-bound code per selected affiliate (REQ-018-076)
 
 **Acceptance Criteria**:
 
 1. Given admin opens Affiliate Management Dashboard, when the screen loads, then active, suspended, and inactive affiliates are listed with default Total Revenue descending sort and visible result count.
 2. Given admin applies status, country/region, affiliate type, language, performance tier, campaign eligibility, and payout setup filters, then the list returns only affiliates matching all active filter types while multi-select values use OR within the same filter.
 3. Given admin selects eligible affiliates from the filtered list, when admin clicks "Generate Codes", then Screen 4 (Affiliate Code Generation) opens in bulk mode with the selected affiliate count preserved.
-4. Given admin selects ineligible affiliates, when admin clicks "Generate Codes", then system blocks or excludes those rows and displays the specific eligibility reason.
+4. Given admin selects ineligible affiliates, when admin clicks "Generate Codes", then system blocks or excludes those rows and displays the specific eligibility reason. (REQ-018-077)
 5. Given admin clicks "View Details" on an affiliate row, when the action fires, then Screen 3 (Affiliate Detail) opens for that affiliate.
 
 **Notes**:
@@ -376,7 +376,7 @@ The Affiliate Management module enables Hairline to partner with external entiti
 - Use data tables with sortable columns for easy performance comparison
 - Highlight affiliates with pending payouts > $1000 with yellow background
 - Show last payout date in tooltip on hover over "Total Commissions Paid"
-- Bulk code generation should be available only after at least one eligible active affiliate is selected
+- Bulk code generation should be available only after at least one eligible active affiliate is selected (REQ-018-280)
 - "View Details" opens Screen 3 (Affiliate Detail); "Edit" opens Screen 2; "Suspend" opens Screen 3.1 (Suspend / Reinstate)
 
 ---
@@ -387,45 +387,45 @@ The Affiliate Management module enables Hairline to partner with external entiti
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Affiliate Name | text | Yes | Full name of organization or individual | Max 200 characters, no special characters |
-| Contact Email | email | Yes | Email for login and notifications | Valid email format, unique across affiliates |
-| Phone Number | tel | No | Contact phone with country code | Valid international phone format |
-| Language(s) | multi-select | No | Spoken/operating language(s) for the affiliate | At least one if set; uses supported language list |
-| Country/Region | select | No | Affiliate operating country or region | Uses supported country/region list |
-| Affiliate Type | select | No | Influencer, clinic partner, organization, other | Dropdown with configured options |
-| Tax / VAT / Business Reg ID | text | No | Tax, VAT, or business-registration identifier | Max 50 chars; format validated per country if set |
-| Account Holder Name | text | Yes | Name on the affiliate's bank account | Required, max 200 characters |
-| Bank Name | text | Yes | Name of the affiliate's bank | Required, max 200 characters |
-| Account Number | text | Yes | Affiliate bank account number | Required, format valid for selected country, masked in UI (last 4 digits), encrypted at rest |
-| Routing / SWIFT Code | text | Yes | Routing or SWIFT/BIC code | Required, SWIFT/routing format validated |
-| IBAN | text | Conditional | IBAN where applicable | Valid IBAN format if provided |
-| Commission Type | radio | Yes | Percentage of Net Booking Revenue (after discounts and refunds) OR Fixed Amount | One option must be selected |
-| Commission Percentage | number | Conditional | % of net booking revenue (after discounts and refunds) paid to affiliate | Required if "Percentage" selected, range 5-25% |
-| Commission Fixed Amount | currency | Conditional | Fixed $ amount per completed booking | Required if "Fixed Amount" selected, min $50 |
-| Payout Schedule | display | N/A | Monthly, on the affiliate payout day (platform setting, default the 7th) | Read-only here; the payout day is changed in the platform setting, not per affiliate |
-| Performance Tier | status | N/A | System-calculated tier band (read-only) | Read-only, system-calculated, not admin-entered |
-| Activation Status | status | N/A | Invited (password not set) / Active (password set) | Read-only, system-managed |
-| Last Login | datetime | N/A | Timestamp of affiliate's last portal login | Read-only, system-recorded |
-| Notes (Internal) | textarea | No | Admin notes about affiliate relationship | Max 1000 characters, not visible to affiliate |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Affiliate Name | text | Yes | Full name of organization or individual | Max 200 characters, no special characters (REQ-018-299) | ENT-affiliate.name |
+| Contact Email | email | Yes | Email for login and notifications | Valid email format, unique across affiliates (REQ-018-213) | ENT-affiliate.contact_email |
+| Phone Number | tel | No | Contact phone with country code | Valid international phone format (REQ-018-214) | ENT-affiliate.phone_number |
+| Language(s) | multi-select | No | Spoken/operating language(s) for the affiliate | At least one if set; uses supported language list (REQ-018-300) | ENT-affiliate.languages |
+| Country/Region | select | No | Affiliate operating country or region | Uses supported country/region list | ENT-affiliate.country_region |
+| Affiliate Type | select | No | Influencer, clinic partner, organization, other | Dropdown with configured options | ENT-affiliate.affiliate_type |
+| Tax / VAT / Business Reg ID | text | No | Tax, VAT, or business-registration identifier | Max 50 chars; format validated per country if set (REQ-018-216) | ENT-affiliate.tax_vat_business_reg_id |
+| Account Holder Name | text | Yes | Name on the affiliate's bank account | Required, max 200 characters (REQ-018-217) | ENT-affiliate.bank_account_holder_name |
+| Bank Name | text | Yes | Name of the affiliate's bank | Required, max 200 characters | ENT-affiliate.bank_name |
+| Account Number | text | Yes | Affiliate bank account number | Required, format valid for selected country, masked in UI (last 4 digits), encrypted at rest (REQ-018-218) | ENT-affiliate.bank_account_number |
+| Routing / SWIFT Code | text | Yes | Routing or SWIFT/BIC code | Required, SWIFT/routing format validated (REQ-018-219) | ENT-affiliate.bank_routing_swift_code |
+| IBAN | text | Conditional | IBAN where applicable | Valid IBAN format if provided (REQ-018-220) | ENT-affiliate.bank_iban |
+| Commission Type | radio | Yes | Percentage of Net Booking Revenue (after discounts and refunds) OR Fixed Amount | One option must be selected (REQ-018-221) | ENT-affiliate.commission_type |
+| Commission Percentage | number | Conditional | % of net booking revenue (after discounts and refunds) paid to affiliate | Required if "Percentage" selected, range 5-25% (REQ-018-301) | ENT-affiliate.commission_percentage |
+| Commission Fixed Amount | currency | Conditional | Fixed $ amount per completed booking | Required if "Fixed Amount" selected, min $50 (REQ-018-302) | ENT-affiliate.commission_fixed_amount |
+| Payout Schedule | display | N/A | Monthly, on the affiliate payout day (platform setting, default the 7th) | Read-only here; the payout day is changed in the platform setting, not per affiliate | ENT-affiliate.payout_schedule |
+| Performance Tier | status | N/A | System-calculated tier band (read-only) | Read-only, system-calculated, not admin-entered | ENT-affiliate.performance_tier |
+| Activation Status | status | N/A | Invited (password not set) / Active (password set) | Read-only, system-managed (REQ-018-226) | ENT-affiliate.activation_status |
+| Last Login | datetime | N/A | Timestamp of affiliate's last portal login | Read-only, system-recorded (REQ-018-227) | ENT-affiliate.last_login_at |
+| Notes (Internal) | textarea | No | Admin notes about affiliate relationship | Max 1000 characters, not visible to affiliate (REQ-018-303) | ENT-affiliate.internal_notes |
 
 **Business Rules**:
 
-- **Email Uniqueness**: System validates email is not already registered as affiliate or admin user
-- **Payment Masking**: Bank account number masked in UI after initial entry (show last 4 digits only) and encrypted at rest; S-02 validates bank-detail format on save (same handling as provider bank details in FR-032)
+- **Email Uniqueness**: System validates email is not already registered as affiliate or admin user (REQ-018-078, REQ-018-194)
+- **Payment Masking**: Bank account number masked in UI after initial entry (show last 4 digits only) and encrypted at rest; S-02 validates bank-detail format on save (same handling as provider bank details in FR-032) (REQ-018-079)
 - **Stripe Payouts**: All affiliate payouts are executed as Stripe transfers to this bank account; there is no PayPal or other payout method (consistent with the rest of the system)
-- **Commission Validation**: If percentage type, system calculates preview of commission for an example booking (e.g., "For a $1,000 booking with no discount or refund at 15% of net revenue, affiliate earns $150; if the patient received a 10% discount, net revenue is $900 and the affiliate earns $135")
-- **Default Values**: Payout schedule follows the platform payout day setting (default "Monthly on the 7th"; not set per affiliate); commission type defaults to "Percentage"
-- **Edit Restrictions**: Email cannot be changed after account creation (must create new account if email change needed)
+- **Commission Validation**: If percentage type, system calculates preview of commission for an example booking (e.g., "For a $1,000 booking with no discount or refund at 15% of net revenue, affiliate earns $150; if the patient received a 10% discount, net revenue is $900 and the affiliate earns $135") (REQ-018-080)
+- **Default Values**: Payout schedule follows the platform payout day setting (default "Monthly on the 7th"; not set per affiliate); commission type defaults to "Percentage" (REQ-018-081)
+- **Edit Restrictions**: Email cannot be changed after account creation (must create new account if email change needed) (REQ-018-082)
 - **Performance Tier**: Displayed read-only on edit; computed by the system (e.g., revenue band) and never set manually
-- **Activation State**: On create, Status is "Pending" and Activation Status is "Invited" until the affiliate completes the set-password flow; completing it flips Status to "Active" and Activation Status to "Active" together (per Rule 12). An admin "Resend Activation Email" action is available while Activation Status is "Invited"
+- **Activation State**: On create, Status is "Pending" and Activation Status is "Invited" until the affiliate completes the set-password flow; completing it flips Status to "Active" and Activation Status to "Active" together (per Rule 12). An admin "Resend Activation Email" action is available while Activation Status is "Invited" (REQ-018-083)
 
 **Notes**:
 
 - Collect the full bank-detail set (account holder name, bank name, account number, routing/SWIFT, optional IBAN), mirroring the provider billing details in FR-032; all payouts use Stripe transfers to this account (no PayPal)
-- Display warning message if commission percentage > 20%: "High commission rate - please confirm business approval"
-- Auto-save draft every 30 seconds to prevent data loss on accidental navigation away
+- Display warning message if commission percentage > 20%: "High commission rate - please confirm business approval" (REQ-018-084)
+- Auto-save draft every 30 seconds to prevent data loss on accidental navigation away (REQ-018-085)
 - Commission changes on an existing affiliate are made via Screen 3.2 (Edit Commission Structure) so an effective date is captured
 
 ---
@@ -438,23 +438,23 @@ The Affiliate Management module enables Hairline to partner with external entiti
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Affiliate Header | composite | N/A | Name, status badge, affiliate ID, type, country, activation status | Read-only, from affiliate record |
-| Summary Metrics | composite | N/A | Total referrals, total revenue, commissions paid, pending payout, next payout date | Read-only, system-calculated |
-| Account Details Panel | section | N/A | All Screen 2 fields in read view, with masked payment details | Read-only; "Edit" opens Screen 2 |
-| Assigned Promo Codes List | list | N/A | Codes linked to this affiliate (code, campaign, status, applied/completed, conversion, revenue, commission) | Read-only; each row links to Screen 6 |
-| Payout History List | list | N/A | Past payouts for this affiliate (month, amount, status, transaction ID, date) | Read-only; each row links to Screen 8 |
-| Upcoming Payout Panel | section | N/A | Next payout amount, scheduled date, included completed bookings count | Read-only, system-calculated |
-| Activity / Audit Panel | list | N/A | Chronological affiliate audit events (code created, commission calculated, payout processed, status change) | Read-only, append-only |
-| Internal Notes | textarea | No | Admin notes about the affiliate (not visible to affiliate) | Max 1000 characters |
-| Actions | buttons | N/A | Edit, Add New Discount Code, Generate Codes, Resend Activation Email, Suspend/Reinstate, Deactivate/Offboard, Generate Report | Context-dependent based on status |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Affiliate Header | composite | N/A | Name, status badge, affiliate ID, type, country, activation status | Read-only, from affiliate record (REQ-018-229, REQ-018-195) | ENT-affiliate.name, ENT-affiliate.status, ENT-affiliate.id, ENT-affiliate.affiliate_type, ENT-affiliate.country_region, ENT-affiliate.activation_status |
+| Summary Metrics | composite | N/A | Total referrals, total revenue, commissions paid, pending payout, next payout date | Read-only, system-calculated | ENT-affiliate.total_referrals, ENT-affiliate.total_revenue, ENT-affiliate.total_commissions_paid, ENT-affiliate.pending_payout, ENT-affiliate.next_payout_date |
+| Account Details Panel | section | N/A | All Screen 2 fields in read view, with masked payment details | Read-only; "Edit" opens Screen 2 (REQ-018-230) | ENT-affiliate.name, ENT-affiliate.contact_email, ENT-affiliate.phone_number, ENT-affiliate.languages, ENT-affiliate.country_region, ENT-affiliate.affiliate_type, ENT-affiliate.tax_vat_business_reg_id, ENT-affiliate.bank_account_holder_name, ENT-affiliate.bank_name, ENT-affiliate.bank_account_number, ENT-affiliate.bank_routing_swift_code, ENT-affiliate.bank_iban, ENT-affiliate.commission_type, ENT-affiliate.commission_percentage, ENT-affiliate.commission_fixed_amount, ENT-affiliate.payout_schedule, ENT-affiliate.performance_tier, ENT-affiliate.activation_status, ENT-affiliate.last_login_at |
+| Assigned Promo Codes List | list | N/A | Codes linked to this affiliate (code, campaign, status, applied/completed, conversion, revenue, commission) | Read-only; each row links to Screen 6 (REQ-018-231) | ENT-affiliate-discount-code.code_text, ENT-affiliate-discount-code.campaign_name, ENT-affiliate-discount-code.status, ENT-affiliate-discount-code.applied_count, ENT-affiliate-discount-code.completed_count, ENT-affiliate-discount-code.conversion_rate, ENT-affiliate-discount-code.revenue_generated, ENT-affiliate-discount-code.commission_earned |
+| Payout History List | list | N/A | Past payouts for this affiliate (month, amount, status, transaction ID, date) | Read-only; each row links to Screen 8 (REQ-018-232) | ENT-affiliate-payout.payout_month, ENT-affiliate-payout.net_amount, ENT-affiliate-payout.status, ENT-affiliate-payout.stripe_transfer_id, ENT-affiliate-payout.payout_date |
+| Upcoming Payout Panel | section | N/A | Next payout amount, scheduled date, included completed bookings count | Read-only, system-calculated | ENT-affiliate.next_payout_date, ENT-affiliate.pending_payout, ENT-affiliate.pending_bookings_count |
+| Activity / Audit Panel | list | N/A | Chronological affiliate audit events (code created, commission calculated, payout processed, status change) | Read-only, append-only (REQ-018-233) | ENT-affiliate-audit-entry.action_type, ENT-affiliate-audit-entry.timestamp |
+| Internal Notes | textarea | No | Admin notes about the affiliate (not visible to affiliate) | Max 1000 characters | ENT-affiliate.internal_notes |
+| Actions | buttons | N/A | Edit, Add New Discount Code, Generate Codes, Resend Activation Email, Suspend/Reinstate, Deactivate/Offboard, Generate Report | Context-dependent based on status | no graph field (control) |
 
 **Business Rules**:
 
-- **Single Source View**: All affiliate-scoped data (codes, payouts, audit) is read from the same records surfaced elsewhere; this screen aggregates, it does not duplicate
+- **Single Source View**: All affiliate-scoped data (codes, payouts, audit) is read from the same records surfaced elsewhere; this screen aggregates, it does not duplicate (REQ-018-086)
 - **Shared Detail Navigation**: Selecting a promo code row opens Screen 6 (Promo Code Detail); selecting a payout row opens Screen 8 (Payout / Transaction Detail) — the same shared screens used from the global lists
-- **Resend Activation**: "Resend Activation Email" is enabled only while Activation Status is "Invited" (password not yet set); it follows the A5 rate-limit and security rules
+- **Resend Activation**: "Resend Activation Email" is enabled only while Activation Status is "Invited" (password not yet set); it follows the A5 rate-limit and security rules (REQ-018-087, REQ-018-162)
 - **Status Actions**: "Suspend" / "Reinstate" open Screen 3.1 (temporary, reversible; suspension disables codes and holds pending payouts per B3). "Deactivate / Offboard" opens Screen 3.3 (permanent terminal Inactive state with final settlement per B5)
 - **Commission Edits**: "Edit Commission Structure" opens Screen 3.2 (effective-date captured); historical commissions are never recalculated
 - **Masking**: Payment details remain masked (last 4 digits) in the Account Details panel
@@ -469,7 +469,7 @@ The Affiliate Management module enables Hairline to partner with external entiti
 
 **Notes**:
 
-- Surface a clear "Invited — activation pending" indicator until first password set
+- Surface a clear "Invited — activation pending" indicator until first password set (REQ-018-285)
 - Order assigned codes by status then created date; allow quick filter by Active/Inactive/Expired
 - Upcoming payout panel should show a tooltip listing the completed bookings contributing to it
 
@@ -481,22 +481,22 @@ The Affiliate Management module enables Hairline to partner with external entiti
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Action | display | N/A | Suspend or Reinstate (based on current status) | Read-only |
-| Reason | textarea | Yes | Admin reason for suspension (required for suspend) | Min 20 chars, max 500 chars (suspend) |
-| Confirm Checkbox | checkbox | Yes | "I confirm this action" | Must be checked to enable Submit |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Action | display | N/A | Suspend or Reinstate (based on current status) | Read-only | ENT-affiliate.status |
+| Reason | textarea | Yes | Admin reason for suspension (required for suspend) | Min 20 chars, max 500 chars (suspend) (REQ-018-304) | ENT-affiliate.status_reason |
+| Confirm Checkbox | checkbox | Yes | "I confirm this action" | Must be checked to enable Submit | no graph field (control) |
 
 **Business Rules**:
 
-- **Suspension Effects**: On suspend, all of the affiliate's codes are disabled (invalid at checkout), pending unpaid commissions are held pending investigation, and historical data is retained
-- **Reinstatement**: On reinstate, status returns to "Active"; held payouts resume per investigation outcome
-- **Notification**: System emails the affiliate about suspension with the reason
-- **Confirmation Gate**: "Submit" is disabled until the confirmation checkbox is checked (prevents accidental suspension)
+- **Suspension Effects**: On suspend, all of the affiliate's codes are disabled (invalid at checkout), pending unpaid commissions are held pending investigation, and historical data is retained (REQ-018-088, REQ-018-170)
+- **Reinstatement**: On reinstate, status returns to "Active"; held payouts resume per investigation outcome (REQ-018-089)
+- **Notification**: System emails the affiliate about suspension with the reason (REQ-018-090)
+- **Confirmation Gate**: "Submit" is disabled until the confirmation checkbox is checked (prevents accidental suspension) (REQ-018-091)
 
 **Acceptance Criteria**:
 
-1. Given admin clicks "Suspend", when the modal opens, then a required reason field and a confirmation checkbox are shown and Submit is disabled until both are valid.
+1. Given admin clicks "Suspend", when the modal opens, then a required reason field and a confirmation checkbox are shown and Submit is disabled until both are valid. (REQ-018-169)
 2. Given admin confirms suspension, then the affiliate status becomes "Suspended", codes are disabled, pending payouts are held, and a notification is sent.
 3. Given a suspended affiliate, when admin reinstates, then status returns to "Active".
 
@@ -508,20 +508,20 @@ The Affiliate Management module enables Hairline to partner with external entiti
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Commission Type | radio | Yes | Percentage of Net Booking Revenue (after discounts and refunds) OR Fixed Amount | One option must be selected |
-| Commission Percentage | number | Conditional | New % of net booking revenue (after discounts and refunds) | Required if "Percentage", range 5-25% |
-| Commission Fixed Amount | currency | Conditional | New fixed $ amount per booking | Required if "Fixed Amount", min $50 |
-| Effective Date | date | Yes | Date the new structure applies from | Must be today or future (not in the past) |
-| Confirm | checkbox | Yes | "I confirm this commission change" | Must be checked to enable Submit |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Commission Type | radio | Yes | Percentage of Net Booking Revenue (after discounts and refunds) OR Fixed Amount | One option must be selected | ENT-affiliate.commission_type |
+| Commission Percentage | number | Conditional | New % of net booking revenue (after discounts and refunds) | Required if "Percentage", range 5-25% (REQ-018-301) | ENT-affiliate.commission_percentage |
+| Commission Fixed Amount | currency | Conditional | New fixed $ amount per booking | Required if "Fixed Amount", min $50 (REQ-018-302) | ENT-affiliate.commission_fixed_amount |
+| Effective Date | date | Yes | Date the new structure applies from | Must be today or future (not in the past) (REQ-018-238) | ENT-affiliate.commission_effective_date |
+| Confirm | checkbox | Yes | "I confirm this commission change" | Must be checked to enable Submit | no graph field (control) |
 
 **Business Rules**:
 
-- **Future-Only**: New rates apply only to bookings completed on/after the effective date; historical commissions are never recalculated
-- **Past Date Blocked**: System rejects an effective date in the past with a clear error
-- **Notification**: System emails the affiliate the old rate, new rate, and effective date
-- **Audit**: Change is logged with admin user ID, timestamp, old and new values, and effective date
+- **Future-Only**: New rates apply only to bookings completed on/after the effective date; historical commissions are never recalculated (REQ-018-092)
+- **Past Date Blocked**: System rejects an effective date in the past with a clear error (REQ-018-093)
+- **Notification**: System emails the affiliate the old rate, new rate, and effective date (REQ-018-094)
+- **Audit**: Change is logged with admin user ID, timestamp, old and new values, and effective date (REQ-018-095)
 
 **Acceptance Criteria**:
 
@@ -537,28 +537,28 @@ The Affiliate Management module enables Hairline to partner with external entiti
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Reason | textarea | Yes | Admin reason for offboarding | Min 20 chars, max 500 chars |
-| Final Balance Summary | display | N/A | Gross pending, reversals/refunds, and net final balance (USD), system-computed | Read-only |
-| Settlement Outcome | display | N/A | System-determined: Pay final balance / Forfeit (below $50) / Write off (negative) / Forfeit whole balance (ban) | Read-only, system-calculated |
-| Confirm Checkbox | checkbox | Yes | "I confirm this affiliate will be permanently deactivated" | Must be checked to enable Submit |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Reason | textarea | Yes | Admin reason for offboarding | Min 20 chars, max 500 chars (REQ-018-304) | ENT-affiliate.status_reason |
+| Final Balance Summary | display | N/A | Gross pending, reversals/refunds, and net final balance (USD), system-computed | Read-only | ENT-affiliate.final_balance_gross, ENT-affiliate.final_reversals, ENT-affiliate.final_balance_net |
+| Settlement Outcome | display | N/A | System-determined: Pay final balance / Forfeit (below $50) / Write off (negative) / Forfeit whole balance (ban) | Read-only, system-calculated | ENT-affiliate.settlement_outcome |
+| Confirm Checkbox | checkbox | Yes | "I confirm this affiliate will be permanently deactivated" | Must be checked to enable Submit | no graph field (control) |
 
 **Business Rules**:
 
-- **Terminal State**: Sets `Status: Inactive`; this is a permanent end-of-partnership state, not a temporary hold
-- **Final Settlement**: Net final balance ≥ $50 is queued for the next (or an admin-initiated final) payout; a residual below $50 is forfeited with an audit entry; a negative balance is written off with an audit entry (no future payouts exist to net against)
-- **Code Disablement**: All of the affiliate's codes are disabled (invalid at checkout)
-- **Portal Access**: Affiliate retains read-only portal access (historical views only); no new activity is possible
-- **Data Retention**: Historical referrals, commissions, payouts, and audit trail are retained for the audit-retention period
-- **Ban**: When the reason is recorded as "banned" (Rule 16), the affiliate still ends at Inactive, but the whole pending balance is forfeited with an audit entry instead of being settled as above; only admins who may offboard an affiliate may do this
-- **No Silent Reactivation**: An Inactive affiliate is not reinstated via Screen 3.1; resuming a partnership requires re-onboarding (new activation)
-- **Confirmation Gate**: "Submit" is disabled until the reason is valid and the confirmation checkbox is checked
+- **Terminal State**: Sets `Status: Inactive`; this is a permanent end-of-partnership state, not a temporary hold (REQ-018-096)
+- **Final Settlement**: Net final balance ≥ $50 is queued for the next (or an admin-initiated final) payout; a residual below $50 is forfeited with an audit entry; a negative balance is written off with an audit entry (no future payouts exist to net against) (REQ-018-097)
+- **Code Disablement**: All of the affiliate's codes are disabled (invalid at checkout) (REQ-018-098)
+- **Portal Access**: Affiliate retains read-only portal access (historical views only); no new activity is possible (REQ-018-099)
+- **Data Retention**: Historical referrals, commissions, payouts, and audit trail are retained for the audit-retention period (REQ-018-100)
+- **Ban**: When the reason is recorded as "banned" (Rule 16), the affiliate still ends at Inactive, but the whole pending balance is forfeited with an audit entry instead of being settled as above; only admins who may offboard an affiliate may do this (REQ-018-297)
+- **No Silent Reactivation**: An Inactive affiliate is not reinstated via Screen 3.1; resuming a partnership requires re-onboarding (new activation) (REQ-018-101)
+- **Confirmation Gate**: "Submit" is disabled until the reason is valid and the confirmation checkbox is checked (REQ-018-102)
 
 **Acceptance Criteria**:
 
 1. Given admin clicks "Deactivate / Offboard", when the modal opens, then the reason field, the system-computed final balance summary, and the settlement outcome are shown and Submit is disabled until the reason and checkbox are valid.
-2. Given a net final balance ≥ $50, when admin confirms, then the balance is queued for final payout, the affiliate becomes Inactive, codes are disabled, portal access becomes read-only, and an offboarding notification is sent.
+2. Given a net final balance ≥ $50, when admin confirms, then the balance is queued for final payout, the affiliate becomes Inactive, codes are disabled, portal access becomes read-only, and an offboarding notification is sent. (REQ-018-172)
 3. Given a net final balance below $50, when admin confirms, then the residual is forfeited with an audit entry and the affiliate becomes Inactive.
 4. Given a negative net balance, when admin confirms, then the negative balance is written off with an audit entry and the affiliate becomes Inactive.
 
@@ -570,37 +570,37 @@ The Affiliate Management module enables Hairline to partner with external entiti
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Linked Affiliate | select | Conditional | Affiliate account this code belongs to (Single mode) | Dropdown of active affiliates; required in Single mode |
-| Generation Mode | radio | Yes | Single Affiliate / Selected Affiliates / Filtered Segment | One option must be selected |
-| Affiliate Selection | multi-select | Conditional | Affiliates receiving generated codes | Required for Selected Affiliates mode |
-| Filter Criteria | filter set | Conditional | Saved filter used to generate codes for a segment | Required for Filtered Segment mode |
-| Campaign Name | text | Yes | Internal campaign name shared across generated codes | 3-120 characters |
-| Code Pattern | text | Conditional | Prefix/suffix pattern used for generated codes | Uppercase alphanumeric pattern, uniqueness checked |
-| Discount Code | text | Conditional | Unique code patients enter at checkout (Single mode) | Uppercase alphanumeric, 4-20 chars, unique; required in Single mode |
-| Discount Type | select | Yes | Hairline Fees Only (deducted from platform commission) | Currently only one option (future: Both Fees) |
-| Discount Amount Type | radio | Yes | Percentage OR Fixed Amount | One option must be selected |
-| Discount Percentage | number | Conditional | % discount applied to booking total | Required if "Percentage" selected, range 5-30% |
-| Discount Fixed Amount | currency | Conditional | Fixed $ discount applied to booking | Required if "Fixed Amount" selected, min $10 |
-| Application Method | radio | Yes | Auto-apply OR Code-based (manual entry) | One option must be selected |
-| Expiration Date | date | No | Date after which code is no longer valid | Must be future date if set |
-| Maximum Usage Count | number | No | Max number of **completed (paid)** redemptions per generated code (applied-but-abandoned checkouts do not count) | Min 1 if set, unlimited if blank |
-| Per-Patient Usage Limit | number | No | Max completed redemptions per patient for this code | Default 1 |
-| Status | toggle | Yes | Active (enabled) / Inactive (disabled) | Toggle switch, default Active |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Linked Affiliate | select | Conditional | Affiliate account this code belongs to (Single mode) | Dropdown of active affiliates; required in Single mode (REQ-018-240) | ENT-affiliate-discount-code.affiliate_id |
+| Generation Mode | radio | Yes | Single Affiliate / Selected Affiliates / Filtered Segment | One option must be selected | ENT-affiliate-discount-code.generation_mode |
+| Affiliate Selection | multi-select | Conditional | Affiliates receiving generated codes | Required for Selected Affiliates mode (REQ-018-241) | ENT-affiliate-code-batch.selection_snapshot |
+| Filter Criteria | filter set | Conditional | Saved filter used to generate codes for a segment | Required for Filtered Segment mode (REQ-018-242) | ENT-affiliate-code-batch.selection_snapshot |
+| Campaign Name | text | Yes | Internal campaign name shared across generated codes | 3-120 characters (REQ-018-243) | ENT-affiliate-discount-code.campaign_name |
+| Code Pattern | text | Conditional | Prefix/suffix pattern used for generated codes | Uppercase alphanumeric pattern, uniqueness checked (REQ-018-244) | ENT-affiliate-code-batch.code_pattern |
+| Discount Code | text | Conditional | Unique code patients enter at checkout (Single mode) | Uppercase alphanumeric, 4-20 chars, unique; required in Single mode (REQ-018-245) | ENT-affiliate-discount-code.code_text |
+| Discount Type | select | Yes | Hairline Fees Only (deducted from platform commission) | Currently only one option (future: Both Fees) (REQ-018-196) | ENT-affiliate-discount-code.discount_type |
+| Discount Amount Type | radio | Yes | Percentage OR Fixed Amount | One option must be selected | ENT-affiliate-discount-code.discount_amount_type |
+| Discount Percentage | number | Conditional | % discount applied to booking total | Required if "Percentage" selected, range 5-30% (REQ-018-247) | ENT-affiliate-discount-code.discount_percentage |
+| Discount Fixed Amount | currency | Conditional | Fixed $ discount applied to booking | Required if "Fixed Amount" selected, min $10 (REQ-018-248) | ENT-affiliate-discount-code.discount_fixed_amount |
+| Application Method | radio | Yes | Auto-apply OR Code-based (manual entry) | One option must be selected | ENT-affiliate-discount-code.application_method |
+| Expiration Date | date | No | Date after which code is no longer valid | Must be future date if set (REQ-018-249) | ENT-affiliate-discount-code.expiration_date |
+| Maximum Usage Count | number | No | Max number of **completed (paid)** redemptions per generated code (applied-but-abandoned checkouts do not count) | Min 1 if set, unlimited if blank (REQ-018-250) | ENT-affiliate-discount-code.max_usage_count |
+| Per-Patient Usage Limit | number | No | Max completed redemptions per patient for this code | Default 1 (REQ-018-251) | ENT-affiliate-discount-code.per_patient_usage_limit |
+| Status | toggle | Yes | Active (enabled) / Inactive (disabled) | Toggle switch, default Active (REQ-018-252) | ENT-affiliate-discount-code.status |
 
 **Business Rules**:
 
-- **Code Uniqueness**: System validates discount code is unique across all affiliates (case-insensitive check)
-- **One Affiliate Per Code**: Every affiliate-bound code belongs to exactly one affiliate; the same affiliate payout code cannot be assigned to multiple affiliates
-- **Bulk Generation**: Bulk generation creates one distinct unique code per selected affiliate using the same campaign settings
-- **Bulk Filter Snapshot**: System records the selected affiliates at generation time; later filter membership changes do not retroactively add or remove codes
-- **Code Format**: System automatically converts code to uppercase on save
-- **Expiration Logic**: If expiration date set, system automatically deactivates code at midnight (UTC) on that date
-- **Usage Limit**: The usage cap counts **"completed" (paid) redemptions only**; once completed redemptions reach the maximum, the system automatically deactivates the code. "Applied" (entered-but-not-paid) events never consume the cap; a separate soft rate limit on applied events guards against application spam (Rule 13)
-- **Generation Outcome**: On submit, Selected Affiliates and Filtered Segment modes open Screen 4.1 (Code Generation Results) showing created/skipped/failed counts; Single mode confirms inline and routes to Screen 6
-- **Margin Guard (Rule 15)**: System validates that the configured discount plus the affiliate's commission does not exceed Hairline's commission on the booking. Percentage configurations that breach the ceiling (`discount % + commission % > Hairline's commission %`) are **blocked** with the shortfall shown (override requires documented, audited business approval); fixed-amount configurations raise a **review warning** since the breach is booking-value dependent
-- **Dashboard Visibility**: Active issued codes appear in the assigned affiliate's dashboard immediately after creation; inactive, expired, or revoked codes remain visible in historical views with status labels
+- **Code Uniqueness**: System validates discount code is unique across all affiliates (case-insensitive check) (REQ-018-103)
+- **One Affiliate Per Code**: Every affiliate-bound code belongs to exactly one affiliate; the same affiliate payout code cannot be assigned to multiple affiliates (REQ-018-104)
+- **Bulk Generation**: Bulk generation creates one distinct unique code per selected affiliate using the same campaign settings (REQ-018-105, REQ-018-161)
+- **Bulk Filter Snapshot**: System records the selected affiliates at generation time; later filter membership changes do not retroactively add or remove codes (REQ-018-106)
+- **Code Format**: System automatically converts code to uppercase on save (REQ-018-107)
+- **Expiration Logic**: If expiration date set, system automatically deactivates code at midnight (UTC) on that date (REQ-018-108)
+- **Usage Limit**: The usage cap counts **"completed" (paid) redemptions only**; once completed redemptions reach the maximum, the system automatically deactivates the code. "Applied" (entered-but-not-paid) events never consume the cap; a separate soft rate limit on applied events guards against application spam (Rule 13) (REQ-018-109)
+- **Generation Outcome**: On submit, Selected Affiliates and Filtered Segment modes open Screen 4.1 (Code Generation Results) showing created/skipped/failed counts; Single mode confirms inline and routes to Screen 6 (REQ-018-110)
+- **Margin Guard (Rule 15)**: System validates that the configured discount plus the affiliate's commission does not exceed Hairline's commission on the booking. Percentage configurations that breach the ceiling (`discount % + commission % > Hairline's commission %`) are **blocked** with the shortfall shown (override requires documented, audited business approval); fixed-amount configurations raise a **review warning** since the breach is booking-value dependent (REQ-018-111)
+- **Dashboard Visibility**: Active issued codes appear in the assigned affiliate's dashboard immediately after creation; inactive, expired, or revoked codes remain visible in historical views with status labels (REQ-018-112)
 
 **Acceptance Criteria**:
 
@@ -624,27 +624,27 @@ The Affiliate Management module enables Hairline to partner with external entiti
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Batch ID | text | N/A | Unique identifier for this generation run | Read-only, system-generated |
-| Campaign Name | text | N/A | Campaign these codes belong to | Read-only |
-| Requested Count | number | N/A | Number of affiliates targeted in this run | Read-only, system-calculated |
-| Created Count | number | N/A | Codes successfully created | Read-only, system-calculated |
-| Skipped Count | number | N/A | Affiliates skipped (e.g., ineligible) | Read-only, system-calculated |
-| Failed Count | number | N/A | Affiliates whose code creation failed | Read-only, system-calculated |
-| Result Rows | list | N/A | Per-affiliate row: affiliate, generated code (if any), outcome, reason | Read-only; failed rows selectable for retry |
-| Actions | buttons | N/A | Retry Failed Only, Download Results (CSV), View Codes | Context-dependent on failed count |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Batch ID | text | N/A | Unique identifier for this generation run | Read-only, system-generated (REQ-018-253) | ENT-affiliate-code-batch.id |
+| Campaign Name | text | N/A | Campaign these codes belong to | Read-only | ENT-affiliate-code-batch.campaign_name |
+| Requested Count | number | N/A | Number of affiliates targeted in this run | Read-only, system-calculated | ENT-affiliate-code-batch.requested_count |
+| Created Count | number | N/A | Codes successfully created | Read-only, system-calculated | ENT-affiliate-code-batch.created_count |
+| Skipped Count | number | N/A | Affiliates skipped (e.g., ineligible) | Read-only, system-calculated | ENT-affiliate-code-batch.skipped_count |
+| Failed Count | number | N/A | Affiliates whose code creation failed | Read-only, system-calculated | ENT-affiliate-code-batch.failed_count |
+| Result Rows | list | N/A | Per-affiliate row: affiliate, generated code (if any), outcome, reason | Read-only; failed rows selectable for retry (REQ-018-254) | ENT-affiliate-code-batch-result.affiliate_id, ENT-affiliate-code-batch-result.code_id, ENT-affiliate-code-batch-result.outcome, ENT-affiliate-code-batch-result.reason |
+| Actions | buttons | N/A | Retry Failed Only, Download Results (CSV), View Codes | Context-dependent on failed count | no graph field (control) |
 
 **Business Rules**:
 
-- **No Duplicate Creation**: Retrying failed rows never re-creates already-successful codes
-- **Per-Row Reason**: Each skipped/failed row records a specific reason (duplicate generated code, inactive affiliate, incomplete payout setup, FR-019 registration failure, notification failure)
-- **Idempotent Retry**: "Retry Failed Only" re-runs generation for the failed subset under the same campaign settings and snapshot
-- **Export**: Results downloadable as CSV for record-keeping
+- **No Duplicate Creation**: Retrying failed rows never re-creates already-successful codes (REQ-018-113)
+- **Per-Row Reason**: Each skipped/failed row records a specific reason (duplicate generated code, inactive affiliate, incomplete payout setup, FR-019 registration failure, notification failure) (REQ-018-114)
+- **Idempotent Retry**: "Retry Failed Only" re-runs generation for the failed subset under the same campaign settings and snapshot (REQ-018-115)
+- **Export**: Results downloadable as CSV for record-keeping (REQ-018-116)
 
 **Acceptance Criteria**:
 
-1. Given a bulk generation completes, when Screen 4.1 loads, then created/skipped/failed counts and a per-affiliate result list with reasons are shown.
+1. Given a bulk generation completes, when Screen 4.1 loads, then created/skipped/failed counts and a per-affiliate result list with reasons are shown. (REQ-018-171)
 2. Given some rows failed, when admin clicks "Retry Failed Only", then only the failed affiliates are re-attempted and successful codes are not duplicated.
 3. Given admin clicks "View Codes", then Screen 5 (Promo Code Management) opens filtered to this batch's campaign.
 
@@ -661,29 +661,29 @@ The Affiliate Management module enables Hairline to partner with external entiti
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Discount Code | text | N/A | The code patients enter at checkout | Read-only |
-| Campaign Name | text | N/A | Campaign the code belongs to | Read-only |
-| Linked Affiliate | text | N/A | Affiliate the code is assigned to | Read-only; links to Screen 3 |
-| Discount | text | N/A | Discount type and value (e.g., "10%" or "$50") | Read-only |
-| Application Method | text | N/A | Auto-apply or Code-based | Read-only |
-| Applied / Completed | text | N/A | Applied count and completed count | Read-only, system-calculated |
-| Conversion Rate | percent | N/A | Completed / applied | Read-only, system-calculated |
-| Revenue | currency | N/A | Revenue attributed to the code | Read-only, system-calculated |
-| Commission | currency | N/A | Commission earned via the code | Read-only, system-calculated |
-| Status | status | N/A | Active / Inactive / Expired / Revoked | Read-only badge |
-| Created Date | date | N/A | When the code was generated | Read-only, system-recorded |
-| Actions | buttons | N/A | View Detail, Activate/Deactivate | Context-dependent based on status |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Discount Code | text | N/A | The code patients enter at checkout | Read-only | ENT-affiliate-discount-code.code_text |
+| Campaign Name | text | N/A | Campaign the code belongs to | Read-only | ENT-affiliate-discount-code.campaign_name |
+| Linked Affiliate | text | N/A | Affiliate the code is assigned to | Read-only; links to Screen 3 (REQ-018-255) | ENT-affiliate-discount-code.affiliate_id |
+| Discount | text | N/A | Discount type and value (e.g., "10%" or "$50") | Read-only | ENT-affiliate-discount-code.discount_percentage, ENT-affiliate-discount-code.discount_fixed_amount |
+| Application Method | text | N/A | Auto-apply or Code-based | Read-only | ENT-affiliate-discount-code.application_method |
+| Applied / Completed | text | N/A | Applied count and completed count | Read-only, system-calculated | ENT-affiliate-discount-code.applied_count, ENT-affiliate-discount-code.completed_count |
+| Conversion Rate | percent | N/A | Completed / applied | Read-only, system-calculated | ENT-affiliate-discount-code.conversion_rate |
+| Revenue | currency | N/A | Revenue attributed to the code | Read-only, system-calculated | ENT-affiliate-discount-code.revenue_generated |
+| Commission | currency | N/A | Commission earned via the code | Read-only, system-calculated | ENT-affiliate-discount-code.commission_earned |
+| Status | status | N/A | Active / Inactive / Expired / Revoked | Read-only badge (REQ-018-256) | ENT-affiliate-discount-code.status |
+| Created Date | date | N/A | When the code was generated | Read-only, system-recorded | ENT-affiliate-discount-code.created_at |
+| Actions | buttons | N/A | View Detail, Activate/Deactivate | Context-dependent based on status | no graph field (control) |
 
 **Business Rules**:
 
-- **System-Wide Scope**: Lists codes across all affiliates, campaigns, and generation modes (single and bulk)
-- **Filtering**: Filter by status, campaign, linked affiliate, discount type, application method, created date range; search by code text or campaign
-- **Pagination**: Display 50 codes per page with pagination controls
-- **Bulk Actions**: Admin can multi-select codes to bulk activate/deactivate (subject to status rules)
+- **System-Wide Scope**: Lists codes across all affiliates, campaigns, and generation modes (single and bulk) (REQ-018-117)
+- **Filtering**: Filter by status, campaign, linked affiliate, discount type, application method, created date range; search by code text or campaign (REQ-018-118)
+- **Pagination**: Display 50 codes per page with pagination controls (REQ-018-119)
+- **Bulk Actions**: Admin can multi-select codes to bulk activate/deactivate (subject to status rules) (REQ-018-120)
 - **Detail Navigation**: "View Detail" opens the shared Screen 6; the same screen opens from the assigned-codes list inside Screen 3
-- **Read-Through Counts**: Applied/completed and conversion stats are sourced from FR-019 redemption lifecycle
+- **Read-Through Counts**: Applied/completed and conversion stats are sourced from FR-019 redemption lifecycle (REQ-018-121)
 
 **Acceptance Criteria**:
 
@@ -705,24 +705,24 @@ The Affiliate Management module enables Hairline to partner with external entiti
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Code Header | composite | N/A | Code text, campaign, status badge, created date | Read-only |
-| Linked Affiliate | link | N/A | The single affiliate this code belongs to | Read-only; links to Screen 3 |
-| Code Settings Panel | section | N/A | Discount type/value, application method, expiration, max usage, per-patient limit | Read-only; editable subset per rules |
-| Performance Panel | composite | N/A | Applied, completed, conversion rate, revenue, commission earned | Read-only, system-calculated |
-| Usage Over Time | chart | N/A | Applications/completions trend | Read-only, system-calculated |
-| Generation Source | text | N/A | Single or batch (with Batch ID link to Screen 4.1) | Read-only |
-| Status Controls | buttons | N/A | Activate / Deactivate / Extend Expiration | Context-dependent based on status |
-| Audit / History | list | N/A | Code lifecycle events (created, edited, deactivated) | Read-only, append-only |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Code Header | composite | N/A | Code text, campaign, status badge, created date | Read-only | ENT-affiliate-discount-code.code_text, ENT-affiliate-discount-code.campaign_name, ENT-affiliate-discount-code.status, ENT-affiliate-discount-code.created_at |
+| Linked Affiliate | link | N/A | The single affiliate this code belongs to | Read-only; links to Screen 3 | ENT-affiliate-discount-code.affiliate_id |
+| Code Settings Panel | section | N/A | Discount type/value, application method, expiration, max usage, per-patient limit | Read-only; editable subset per rules (REQ-018-257) | ENT-affiliate-discount-code.discount_type, ENT-affiliate-discount-code.discount_amount_type, ENT-affiliate-discount-code.discount_percentage, ENT-affiliate-discount-code.discount_fixed_amount, ENT-affiliate-discount-code.application_method, ENT-affiliate-discount-code.expiration_date, ENT-affiliate-discount-code.max_usage_count, ENT-affiliate-discount-code.per_patient_usage_limit, ENT-affiliate-discount-code.current_usage_count |
+| Performance Panel | composite | N/A | Applied, completed, conversion rate, revenue, commission earned | Read-only, system-calculated | ENT-affiliate-discount-code.applied_count, ENT-affiliate-discount-code.completed_count, ENT-affiliate-discount-code.conversion_rate, ENT-affiliate-discount-code.revenue_generated, ENT-affiliate-discount-code.commission_earned |
+| Usage Over Time | chart | N/A | Applications/completions trend | Read-only, system-calculated | ENT-affiliate-discount-code.applied_count, ENT-affiliate-discount-code.completed_count |
+| Generation Source | text | N/A | Single or batch (with Batch ID link to Screen 4.1) | Read-only | ENT-affiliate-discount-code.batch_id |
+| Status Controls | buttons | N/A | Activate / Deactivate / Extend Expiration | Context-dependent based on status | ENT-affiliate-discount-code.status, ENT-affiliate-discount-code.expiration_date |
+| Audit / History | list | N/A | Code lifecycle events (created, edited, deactivated) | Read-only, append-only | ENT-affiliate-audit-entry.action_type, ENT-affiliate-audit-entry.timestamp |
 
 **Business Rules**:
 
 - **Single Shared Screen**: Identical layout and capabilities regardless of entry point (Screen 5 or Screen 3)
-- **One Affiliate**: The linked affiliate is always exactly one; reassignment to another affiliate is not supported (create a new code instead)
-- **Editable Subset**: Admin may edit expiration date, usage limits, and active/inactive status; discount value and linked affiliate are fixed after creation
-- **Lifecycle Source**: Applied/completed/conversion and revenue/commission figures are read from FR-019 and commission calculation; this screen does not recompute them
-- **Status Transitions**: Deactivation revokes checkout validity immediately; expired/revoked codes remain visible with status labels and cannot be copied as active codes
+- **One Affiliate**: The linked affiliate is always exactly one; reassignment to another affiliate is not supported (create a new code instead) (REQ-018-122)
+- **Editable Subset**: Admin may edit expiration date, usage limits, and active/inactive status; discount value and linked affiliate are fixed after creation (REQ-018-123)
+- **Lifecycle Source**: Applied/completed/conversion and revenue/commission figures are read from FR-019 and commission calculation; this screen does not recompute them (REQ-018-124)
+- **Status Transitions**: Deactivation revokes checkout validity immediately; expired/revoked codes remain visible with status labels and cannot be copied as active codes (REQ-018-125)
 
 **Acceptance Criteria**:
 
@@ -734,7 +734,7 @@ The Affiliate Management module enables Hairline to partner with external entiti
 **Notes**:
 
 - Show the linked-affiliate name as a clear breadcrumb/back link to Screen 3 when opened from Affiliate Detail
-- Surface the FR-019 redemption status alongside the FR-018 attribution to avoid confusion
+- Surface the FR-019 redemption status alongside the FR-018 attribution to avoid confusion (REQ-018-287)
 
 ---
 
@@ -746,29 +746,29 @@ The Affiliate Management module enables Hairline to partner with external entiti
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Payout Month | month | Yes | Month for which payouts are being processed/viewed | Format: "November 2025" |
-| Overall Totals | composite | N/A | Total owed this cycle, total paid, affiliate count, failed count | Read-only, system-calculated |
-| Affiliate Name | text | N/A | Name of affiliate receiving payout | Read-only, from affiliate record |
-| Total Completed Bookings | number | N/A | Count of completed bookings in payout period | Read-only, system-calculated |
-| Total Commissions Owed | currency | N/A | Sum of commissions for completed bookings | Read-only, system-calculated |
-| Payment Method | text | N/A | Stripe transfer to affiliate bank account, executed by FR-017 / A-05 | Read-only, from affiliate record |
-| Payment Details | text | N/A | Masked affiliate bank account (last 4 digits) | Read-only, masked |
-| Payout Status | status | N/A | Pending, Processing, Paid, Failed | Read-only, from FR-017 payout execution state |
-| Transaction ID | text | N/A | Stripe transfer reference / ID (Billing History) | Read-only, from Stripe |
-| Notes | textarea | No | Admin notes about payout | Max 500 characters |
-| Actions | buttons | N/A | View Detail, Export CSV, Download Receipt | Read-only/export actions only |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Payout Month | month | Yes | Month for which payouts are being processed/viewed | Format: "November 2025" (REQ-018-258) | ENT-affiliate-payout.payout_month |
+| Overall Totals | composite | N/A | Total owed this cycle, total paid, affiliate count, failed count | Read-only, system-calculated |  |
+| Affiliate Name | text | N/A | Name of affiliate receiving payout | Read-only, from affiliate record | ENT-affiliate.name |
+| Total Completed Bookings | number | N/A | Count of completed bookings in payout period | Read-only, system-calculated | ENT-affiliate-payout.total_bookings_count |
+| Total Commissions Owed | currency | N/A | Sum of commissions for completed bookings | Read-only, system-calculated | ENT-affiliate-payout.total_commission_amount |
+| Payment Method | text | N/A | Stripe transfer to affiliate bank account, executed by FR-017 / A-05 | Read-only, from affiliate record | ENT-affiliate-payout.payment_method |
+| Payment Details | text | N/A | Masked affiliate bank account (last 4 digits) | Read-only, masked (REQ-018-259) | ENT-affiliate.bank_account_number |
+| Payout Status | status | N/A | Pending, Processing, Paid, Failed | Read-only, from FR-017 payout execution state (REQ-018-260) | ENT-affiliate-payout.status |
+| Transaction ID | text | N/A | Stripe transfer reference / ID (Billing History) | Read-only, from Stripe (REQ-018-261) | ENT-affiliate-payout.stripe_transfer_id |
+| Notes | textarea | No | Admin notes about payout | Max 500 characters (REQ-018-262) | ENT-affiliate-payout.admin_notes |
+| Actions | buttons | N/A | View Detail, Export CSV, Download Receipt | Read-only/export actions only (REQ-018-263) | no graph field (control) |
 
 **Business Rules**:
 
-- **Automated Generation**: System automatically generates the payout list on the affiliate payout day (platform setting, default the 7th of the month) for the previous month's completed bookings and exposes the calculated amounts to FR-017 / A-05 for payout execution
-- **Overview Sub-view**: Shows overall performance for the selected month (total owed, total paid, affiliate count, failed count) at the top
-- **Current Cycle Sub-view**: Current cycle list is read-only in FR-018; payout processing actions are performed in FR-017 Screen 6 (Affiliate Billing - Commission Payouts)
+- **Automated Generation**: System automatically generates the payout list on the affiliate payout day (platform setting, default the 7th of the month) for the previous month's completed bookings and exposes the calculated amounts to FR-017 / A-05 for payout execution (REQ-018-126, REQ-018-164)
+- **Overview Sub-view**: Shows overall performance for the selected month (total owed, total paid, affiliate count, failed count) at the top (REQ-018-127)
+- **Current Cycle Sub-view**: Current cycle list is read-only in FR-018; payout processing actions are performed in FR-017 Screen 6 (Affiliate Billing - Commission Payouts) (REQ-018-128)
 - **Stripe Execution**: Payouts are executed by FR-017 / A-05 as Stripe transfers to each affiliate's stored bank account, using the Stripe accounts configured in FR-029 and the payout execution path shared with provider payouts; FR-018 displays the resulting status updates
-- **Billing History Sub-view**: Permanent audit log of all payouts (affiliate, amount, date, transaction ID, final status) with full-text search, filter by affiliate/date/status, and CSV export; retention follows the system PRD, Platform-Wide Rules: One 10-year retention period
-- **Status Workflow**: Pending → Processing (payment initiated by FR-017) → Paid (payment confirmed) OR Failed (payment error)
-- **Retry Logic**: If a payout fails, retry is handled in FR-017 Screen 6; FR-018 displays the latest failed/retried status and failure reason
+- **Billing History Sub-view**: Permanent audit log of all payouts (affiliate, amount, date, transaction ID, final status) with full-text search, filter by affiliate/date/status, and CSV export; retention follows the system PRD, Platform-Wide Rules: One 10-year retention period (REQ-018-129)
+- **Status Workflow**: Pending → Processing (payment initiated by FR-017) → Paid (payment confirmed) OR Failed (payment error) (REQ-018-130)
+- **Retry Logic**: If a payout fails, retry is handled in FR-017 Screen 6; FR-018 displays the latest failed/retried status and failure reason (REQ-018-131, REQ-018-166)
 - **Email Notifications**: System automatically sends a payout confirmation email when status changes to "Paid" based on FR-017 payout status
 - **Detail Navigation**: "View Detail" (in any sub-view) opens the shared Screen 8 (Payout / Transaction Detail)
 
@@ -794,28 +794,28 @@ The Affiliate Management module enables Hairline to partner with external entiti
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Payout Header | composite | N/A | Affiliate name, payout month, status badge, payout ID | Read-only |
-| Affiliate Link | link | N/A | The affiliate this payout belongs to | Read-only; links to Screen 3 |
-| Period | text | N/A | Payout period date range / month | Read-only |
-| Included Bookings | list | N/A | Bookings contributing to this payout (booking ID, date, booking total, commission) | Read-only, system-calculated |
-| Commission Calculation | composite | N/A | Total bookings count, gross commission, reversals/refunds, net amount | Read-only, system-calculated |
-| Payment Method | text | N/A | Stripe transfer to affiliate bank account | Read-only, from affiliate record |
-| Payment Details | text | N/A | Masked affiliate bank account (last 4 digits) | Read-only, masked |
-| Transaction ID | text | N/A | Stripe transfer reference / ID | Read-only, from Stripe |
-| Status Timeline | list | N/A | Pending → Processing → Paid/Failed with timestamps | Read-only, system-recorded |
-| Failure Reason | text | N/A | Stripe transfer error message if status is Failed | Read-only, shown only when Failed |
-| Notes | textarea | No | Admin internal notes for this payout | Max 500 characters |
-| Actions | buttons | N/A | Download Receipt | Read-only/export action only |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Payout Header | composite | N/A | Affiliate name, payout month, status badge, payout ID | Read-only | ENT-affiliate.name, ENT-affiliate-payout.payout_month, ENT-affiliate-payout.status, ENT-affiliate-payout.id |
+| Affiliate Link | link | N/A | The affiliate this payout belongs to | Read-only; links to Screen 3 | ENT-affiliate.name |
+| Period | text | N/A | Payout period date range / month | Read-only | ENT-affiliate-payout.payout_month |
+| Included Bookings | list | N/A | Bookings contributing to this payout (booking ID, date, booking total, commission) | Read-only, system-calculated | ENT-affiliate-attribution.booking_id, ENT-affiliate-attribution.completion_date, ENT-affiliate-attribution.booking_total, ENT-affiliate-attribution.affiliate_commission_owed |
+| Commission Calculation | composite | N/A | Total bookings count, gross commission, reversals/refunds, net amount | Read-only, system-calculated | ENT-affiliate-payout.total_bookings_count, ENT-affiliate-payout.total_commission_amount, ENT-affiliate-payout.reversals_refunds, ENT-affiliate-payout.net_amount |
+| Payment Method | text | N/A | Stripe transfer to affiliate bank account | Read-only, from affiliate record | ENT-affiliate-payout.payment_method |
+| Payment Details | text | N/A | Masked affiliate bank account (last 4 digits) | Read-only, masked | ENT-affiliate.bank_account_number |
+| Transaction ID | text | N/A | Stripe transfer reference / ID | Read-only, from Stripe | ENT-affiliate-payout.stripe_transfer_id |
+| Status Timeline | list | N/A | Pending → Processing → Paid/Failed with timestamps | Read-only, system-recorded | ENT-affiliate-payout.status_timeline |
+| Failure Reason | text | N/A | Stripe transfer error message if status is Failed | Read-only, shown only when Failed (REQ-018-264) | ENT-affiliate-payout.failure_reason |
+| Notes | textarea | No | Admin internal notes for this payout | Max 500 characters | ENT-affiliate-payout.admin_notes |
+| Actions | buttons | N/A | Download Receipt | Read-only/export action only | no graph field (control) |
 
 **Business Rules**:
 
 - **Single Shared Screen**: Identical layout and capabilities regardless of entry point (Screen 7 or Screen 3)
-- **Breakdown Integrity**: The included-bookings list must reconcile to the net commission amount (gross minus reversals/refunds)
+- **Breakdown Integrity**: The included-bookings list must reconcile to the net commission amount (gross minus reversals/refunds) (REQ-018-132)
 - **Refund Reversals**: Booking refunds processed after payout appear as reversals and carry forward per Payment Rule 2
-- **Receipt**: "Download Receipt" generates a PDF receipt for the payout (affiliate records)
-- **Retry Ownership**: Failed payout retry is performed in FR-017 Screen 6; this detail screen displays retry status and failure history read-only
+- **Receipt**: "Download Receipt" generates a PDF receipt for the payout (affiliate records) (REQ-018-133)
+- **Retry Ownership**: Failed payout retry is performed in FR-017 Screen 6; this detail screen displays retry status and failure history read-only (REQ-018-168)
 - **Masking**: Payment details remain masked (last 4 digits)
 
 **Acceptance Criteria**:
@@ -848,10 +848,10 @@ The Affiliate Management module enables Hairline to partner with external entiti
 **Business Rules**:
 
 - **Authentication**: Secure login (username/password, optional MFA — future / non-MVP, pending the shared MFA stack FR-026 / FR-031 per constitution Principle II); affiliates see only their own data (RBAC)
-- **Default Tab**: Overview (Screen 9.1) is the landing tab on login
-- **Real-Time Updates**: Portal data refreshes every 5 minutes (or on manual refresh)
+- **Default Tab**: Overview (Screen 9.1) is the landing tab on login (REQ-018-305)
+- **Real-Time Updates**: Portal data refreshes every 5 minutes (or on manual refresh) (REQ-018-134)
 - **Privacy**: Patient identity is never shown anywhere in the portal; only aggregated statistics are visible
-- **Referral Link**: The affiliate's unique referral link (auto-apply code URL) is available with a one-click copy action
+- **Referral Link**: The affiliate's unique referral link (auto-apply code URL) is available with a one-click copy action (REQ-018-135)
 
 **Acceptance Criteria**:
 
@@ -871,27 +871,27 @@ The Affiliate Management module enables Hairline to partner with external entiti
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Total Referrals (All-Time) | number | N/A | Count of all completed bookings with affiliate referral attribution | Read-only, system-calculated |
-| Referrals This Month | number | N/A | Count of completed bookings in current month | Read-only, system-calculated |
-| Total Revenue Generated | currency | N/A | Sum of booking values from affiliate referrals | Read-only, system-calculated |
-| Total Commissions Earned | currency | N/A | Sum of all commissions earned to date | Read-only, system-calculated |
-| Commissions Paid | currency | N/A | Sum of commissions already paid out | Read-only, system-calculated |
-| Pending Payout | currency | N/A | Commission awaiting next payout (unpaid balance) | Read-only, system-calculated |
-| Next Payout Date | date | N/A | Date of next scheduled payout | Read-only, system-set (payout day per the platform setting, default the 7th of the month) |
-| Referral Link | text | N/A | Affiliate's unique auto-apply referral URL | Read-only, one-click copy |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Total Referrals (All-Time) | number | N/A | Count of all completed bookings with affiliate referral attribution | Read-only, system-calculated | ENT-affiliate.total_referrals |
+| Referrals This Month | number | N/A | Count of completed bookings in current month | Read-only, system-calculated | ENT-affiliate.referrals_this_month |
+| Total Revenue Generated | currency | N/A | Sum of booking values from affiliate referrals | Read-only, system-calculated | ENT-affiliate.total_revenue |
+| Total Commissions Earned | currency | N/A | Sum of all commissions earned to date | Read-only, system-calculated | ENT-affiliate.total_commissions_earned |
+| Commissions Paid | currency | N/A | Sum of commissions already paid out | Read-only, system-calculated | ENT-affiliate.total_commissions_paid |
+| Pending Payout | currency | N/A | Commission awaiting next payout (unpaid balance) | Read-only, system-calculated | ENT-affiliate.pending_payout |
+| Next Payout Date | date | N/A | Date of next scheduled payout | Read-only, system-set (payout day per the platform setting, default the 7th of the month) (REQ-018-266) | ENT-affiliate.next_payout_date |
+| Referral Link | text | N/A | Affiliate's unique auto-apply referral URL | Read-only, one-click copy | ENT-affiliate.referral_link |
 
 **Business Rules**:
 
-- **Payout Calculation**: "Pending Payout" includes commissions from completed bookings in previous month (not yet paid)
-- **Conversion Funnel**: Overview shows the funnel Code Applied → Checkout Started → Payment Completed
-- **Monthly Breakdown**: Affiliate can toggle between "All-Time" and "Current Month"
-- **Export Report**: Affiliate can download a performance report as PDF
+- **Payout Calculation**: "Pending Payout" includes commissions from completed bookings in previous month (not yet paid) (REQ-018-136)
+- **Conversion Funnel**: Overview shows the funnel Code Applied → Checkout Started → Payment Completed (REQ-018-137)
+- **Monthly Breakdown**: Affiliate can toggle between "All-Time" and "Current Month" (REQ-018-138)
+- **Export Report**: Affiliate can download a performance report as PDF (REQ-018-139)
 
 **Acceptance Criteria**:
 
-1. Given an affiliate opens the Overview tab, then accurate referral count, revenue, commissions earned/paid, pending payout, and next payout date are shown.
+1. Given an affiliate opens the Overview tab, then accurate referral count, revenue, commissions earned/paid, pending payout, and next payout date are shown. (REQ-018-160)
 2. Given a pending payout exists, then the "Pending Payout" amount is shown prominently with a countdown to the next payout date.
 
 **Notes**:
@@ -908,49 +908,49 @@ The Affiliate Management module enables Hairline to partner with external entiti
 
 _List row (one per assigned code)_:
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Discount Code | text | N/A | The code patients enter at checkout | Read-only; one-click copy |
-| Campaign Name | text | N/A | Campaign the code belongs to | Read-only |
-| Status | status | N/A | Active / Inactive / Expired / Revoked | Read-only badge |
-| Expiration Date | date | N/A | Date after which the code is no longer valid (codes have an expiration date only, no start date) | Read-only |
-| Discount | text | N/A | Discount type and value (e.g., "10%" or "$50") | Read-only |
-| Application Method | text | N/A | Auto-apply or Code-based | Read-only |
-| Applied Count | number | N/A | Times the code was applied at checkout | Read-only, system-calculated |
-| Completed Count | number | N/A | Applications that became completed bookings | Read-only, system-calculated |
-| Conversion Rate | percent | N/A | Completed / applied | Read-only, system-calculated |
-| Revenue Generated | currency | N/A | Booking revenue attributed to the code | Read-only, system-calculated |
-| Commission Earned | currency | N/A | Commission earned via the code | Read-only, system-calculated |
-| Created Date | date | N/A | When the code was generated | Read-only |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Discount Code | text | N/A | The code patients enter at checkout | Read-only; one-click copy (REQ-018-306) | ENT-affiliate-discount-code.code_text |
+| Campaign Name | text | N/A | Campaign the code belongs to | Read-only | ENT-affiliate-discount-code.campaign_name |
+| Status | status | N/A | Active / Inactive / Expired / Revoked | Read-only badge | ENT-affiliate-discount-code.status |
+| Expiration Date | date | N/A | Date after which the code is no longer valid (codes have an expiration date only, no start date) | Read-only | ENT-affiliate-discount-code.expiration_date |
+| Discount | text | N/A | Discount type and value (e.g., "10%" or "$50") | Read-only | ENT-affiliate-discount-code.discount_percentage, ENT-affiliate-discount-code.discount_fixed_amount |
+| Application Method | text | N/A | Auto-apply or Code-based | Read-only | ENT-affiliate-discount-code.application_method |
+| Applied Count | number | N/A | Times the code was applied at checkout | Read-only, system-calculated | ENT-affiliate-discount-code.applied_count |
+| Completed Count | number | N/A | Applications that became completed bookings | Read-only, system-calculated | ENT-affiliate-discount-code.completed_count |
+| Conversion Rate | percent | N/A | Completed / applied | Read-only, system-calculated | ENT-affiliate-discount-code.conversion_rate |
+| Revenue Generated | currency | N/A | Booking revenue attributed to the code | Read-only, system-calculated | ENT-affiliate-discount-code.revenue_generated |
+| Commission Earned | currency | N/A | Commission earned via the code | Read-only, system-calculated | ENT-affiliate-discount-code.commission_earned |
+| Created Date | date | N/A | When the code was generated | Read-only | ENT-affiliate-discount-code.created_at |
 
 _Per-code detail (on selecting a row)_:
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Code Header | composite | N/A | Code text, campaign, status, expiration date | Read-only |
-| Discount Terms | text | N/A | Discount type/value, application method, per-patient limit, max usage | Read-only |
-| Usage Over Time | chart | N/A | Applications and completions trend | Read-only, system-calculated |
-| Applied / Completed | text | N/A | Applied count vs. completed count | Read-only, system-calculated |
-| Conversion Rate | percent | N/A | Completed / applied | Read-only, system-calculated |
-| Revenue / Commission | currency | N/A | Revenue generated and commission earned for the code | Read-only, system-calculated |
-| Last Used Date | date | N/A | Most recent application of the code | Read-only, system-calculated |
-| Copy / Share Action | button | N/A | Copy code text or the auto-apply referral link | N/A |
-| Marketing Materials | link/list | N/A | Read-only links to externally hosted banners, templates, or campaign assets assigned to the code/campaign | Links only; FR-018 does not create or host assets |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Code Header | composite | N/A | Code text, campaign, status, expiration date | Read-only | ENT-affiliate-discount-code.code_text, ENT-affiliate-discount-code.campaign_name, ENT-affiliate-discount-code.status, ENT-affiliate-discount-code.expiration_date |
+| Discount Terms | text | N/A | Discount type/value, application method, per-patient limit, max usage | Read-only | ENT-affiliate-discount-code.discount_percentage, ENT-affiliate-discount-code.discount_fixed_amount, ENT-affiliate-discount-code.application_method |
+| Usage Over Time | chart | N/A | Applications and completions trend | Read-only, system-calculated | ENT-affiliate-discount-code.applied_count, ENT-affiliate-discount-code.completed_count |
+| Applied / Completed | text | N/A | Applied count vs. completed count | Read-only, system-calculated | ENT-affiliate-discount-code.applied_count, ENT-affiliate-discount-code.completed_count |
+| Conversion Rate | percent | N/A | Completed / applied | Read-only, system-calculated | ENT-affiliate-discount-code.conversion_rate |
+| Revenue / Commission | currency | N/A | Revenue generated and commission earned for the code | Read-only, system-calculated | ENT-affiliate-discount-code.revenue_generated, ENT-affiliate-discount-code.commission_earned |
+| Last Used Date | date | N/A | Most recent application of the code | Read-only, system-calculated | ENT-affiliate-discount-code.last_used_at |
+| Copy / Share Action | button | N/A | Copy code text or the auto-apply referral link | N/A | no graph field (control) |
+| Marketing Materials | link/list | N/A | Read-only links to externally hosted banners, templates, or campaign assets assigned to the code/campaign | Links only; FR-018 does not create or host assets | ENT-affiliate-discount-code.marketing_material_links |
 
 **Business Rules**:
 
-- **Issued Code Visibility**: All active codes generated for the affiliate through single or bulk admin actions appear here with campaign name, expiration date, and status
+- **Issued Code Visibility**: All active codes generated for the affiliate through single or bulk admin actions appear here with campaign name, expiration date, and status (REQ-018-140)
 - **Historical Codes**: Expired or revoked codes remain visible with status labels but cannot be copied as active promotional codes
 - **Read-Only Stats**: Applied/completed, conversion, revenue, and commission figures are sourced from FR-019 redemption lifecycle and commission calculation; affiliates cannot edit code parameters
-- **Marketing Materials Access**: If a campaign has externally hosted marketing materials, affiliates can view/download those links from the relevant code detail. Asset creation, editing, approval, and hosting remain outside FR-018 scope.
-- **Sorting/Filtering**: Affiliate can sort by performance (revenue/commission) and filter by status (Active / Inactive / Expired / Revoked)
+- **Marketing Materials Access**: If a campaign has externally hosted marketing materials, affiliates can view/download those links from the relevant code detail. Asset creation, editing, approval, and hosting remain outside FR-018 scope. (REQ-018-141)
+- **Sorting/Filtering**: Affiliate can sort by performance (revenue/commission) and filter by status (Active / Inactive / Expired / Revoked) (REQ-018-142)
 
 **Acceptance Criteria**:
 
 1. Given admin generates a new active code for an affiliate, when the affiliate refreshes this tab, then the code appears with campaign name, status, expiration date, and zero-referral initial state.
 2. Given an affiliate has multiple active codes, when affiliate clicks one code, then per-code applied count, completed count, conversion rate, revenue, commission earned, usage-over-time, and last-used date are shown.
 3. Given an affiliate has expired or revoked codes, when affiliate opens the historical code view, then those codes remain visible with status labels but cannot be copied as active promotional codes.
-4. Given an affiliate clicks copy on an active code, then the code text (or auto-apply referral link) is copied to the clipboard.
+4. Given an affiliate clicks copy on an active code, then the code text (or auto-apply referral link) is copied to the clipboard. (REQ-018-306)
 5. Given a campaign has externally hosted marketing materials, when affiliate opens the code detail, then read-only material links are shown and can be opened/downloaded without allowing affiliate edits.
 
 ---
@@ -963,46 +963,46 @@ _Per-code detail (on selecting a row)_:
 
 _Upcoming payout panel (top of tab)_:
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Next Payout Date | date | N/A | Date of the next scheduled payout | Read-only, system-set (payout day per the platform setting, default the 7th of the month) |
-| Pending Amount | currency | N/A | Commission awaiting the next payout (unpaid balance) | Read-only, system-calculated |
-| Included Bookings Count | number | N/A | Completed bookings contributing to the pending payout | Read-only, system-calculated |
-| Minimum Threshold Note | display | N/A | Note shown when pending is below the $50 threshold (rolls over) | Read-only, shown when applicable |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Next Payout Date | date | N/A | Date of the next scheduled payout | Read-only, system-set (payout day per the platform setting, default the 7th of the month) | ENT-affiliate.next_payout_date |
+| Pending Amount | currency | N/A | Commission awaiting the next payout (unpaid balance) | Read-only, system-calculated | ENT-affiliate.pending_payout |
+| Included Bookings Count | number | N/A | Completed bookings contributing to the pending payout | Read-only, system-calculated | ENT-affiliate.pending_bookings_count |
+| Minimum Threshold Note | display | N/A | Note shown when pending is below the $50 threshold (rolls over) | Read-only, shown when applicable (REQ-018-269) |  |
 
 _Payout history list (one row per payout)_:
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Payout Period | month | N/A | Month/period the payout covers | Read-only (e.g., "November 2025") |
-| Net Amount | currency | N/A | Net commission paid in this payout | Read-only, system-calculated |
-| Status | status | N/A | Pending / Processing / Paid / Failed | Read-only badge |
-| Completed Bookings | number | N/A | Bookings included in this payout | Read-only, system-calculated |
-| Payout Date | date | N/A | Date the payout was processed | Read-only |
-| Transaction Reference | text | N/A | Stripe transfer reference / ID | Read-only, from Stripe |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Payout Period | month | N/A | Month/period the payout covers | Read-only (e.g., "November 2025") (REQ-018-270) | ENT-affiliate-payout.payout_month |
+| Net Amount | currency | N/A | Net commission paid in this payout | Read-only, system-calculated | ENT-affiliate-payout.net_amount |
+| Status | status | N/A | Pending / Processing / Paid / Failed | Read-only badge | ENT-affiliate-payout.status |
+| Completed Bookings | number | N/A | Bookings included in this payout | Read-only, system-calculated | ENT-affiliate-payout.total_bookings_count |
+| Payout Date | date | N/A | Date the payout was processed | Read-only | ENT-affiliate-payout.payout_date |
+| Transaction Reference | text | N/A | Stripe transfer reference / ID | Read-only, from Stripe | ENT-affiliate-payout.stripe_transfer_id |
 
 _Per-payout detail (on selecting a row)_:
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Payout Header | composite | N/A | Period, status, net amount, payout ID | Read-only |
-| Period | text | N/A | Payout period date range | Read-only |
-| Gross Commission | currency | N/A | Commission before reversals | Read-only, system-calculated |
-| Reversals / Refunds | currency | N/A | Deductions from refunded bookings | Read-only, system-calculated |
-| Net Amount | currency | N/A | Gross minus reversals (amount transferred) | Read-only, system-calculated |
-| Included Bookings | list | N/A | Aggregated bookings contributing (count and value; no patient identity) | Read-only, system-calculated |
-| Payment Method | text | N/A | Stripe transfer to the affiliate's bank account | Read-only |
-| Bank Account | text | N/A | Masked affiliate bank account (last 4 digits) | Read-only, masked |
-| Transaction Reference | text | N/A | Stripe transfer reference / ID | Read-only, from Stripe |
-| Download Receipt | button | N/A | Download a PDF receipt for the payout | Available for Paid payouts |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Payout Header | composite | N/A | Period, status, net amount, payout ID | Read-only | ENT-affiliate-payout.payout_month, ENT-affiliate-payout.status, ENT-affiliate-payout.net_amount |
+| Period | text | N/A | Payout period date range | Read-only | ENT-affiliate-payout.payout_month |
+| Gross Commission | currency | N/A | Commission before reversals | Read-only, system-calculated | ENT-affiliate-payout.total_commission_amount |
+| Reversals / Refunds | currency | N/A | Deductions from refunded bookings | Read-only, system-calculated | ENT-affiliate-payout.reversals_refunds |
+| Net Amount | currency | N/A | Gross minus reversals (amount transferred) | Read-only, system-calculated | ENT-affiliate-payout.net_amount |
+| Included Bookings | list | N/A | Aggregated bookings contributing (count and value; no patient identity) | Read-only, system-calculated | ENT-affiliate-payout.total_bookings_count |
+| Payment Method | text | N/A | Stripe transfer to the affiliate's bank account | Read-only | ENT-affiliate-payout.payment_method |
+| Bank Account | text | N/A | Masked affiliate bank account (last 4 digits) | Read-only, masked | ENT-affiliate.bank_account_number |
+| Transaction Reference | text | N/A | Stripe transfer reference / ID | Read-only, from Stripe | ENT-affiliate-payout.stripe_transfer_id |
+| Download Receipt | button | N/A | Download a PDF receipt for the payout | Available for Paid payouts | no graph field (control) |
 
 **Business Rules**:
 
-- **Upcoming Payout**: The next scheduled payout (amount, date, included bookings count) is shown at the top alongside the history list
-- **Minimum Threshold**: When the pending amount is below the $50 minimum, the panel notes it will roll over to the next cycle (Payment Rule 3)
-- **Read-Only**: Affiliates view payout status only; processing is admin-side (Screen 7) and execution is via Stripe transfer
+- **Upcoming Payout**: The next scheduled payout (amount, date, included bookings count) is shown at the top alongside the history list (REQ-018-143)
+- **Minimum Threshold**: When the pending amount is below the $50 minimum, the panel notes it will roll over to the next cycle (Payment Rule 3) (REQ-018-144)
+- **Read-Only**: Affiliates view payout status only; processing is admin-side (Screen 7) and execution is via Stripe transfer (REQ-018-145)
 - **Privacy**: Per-payout detail shows aggregated figures only; no individual patient identity is exposed
-- **Receipt**: A PDF receipt is downloadable for each Paid payout
+- **Receipt**: A PDF receipt is downloadable for each Paid payout (REQ-018-146)
 
 **Acceptance Criteria**:
 
@@ -1021,40 +1021,40 @@ _Per-payout detail (on selecting a row)_:
 
 _Account information_:
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Affiliate Name | text | Read-only | Legal/payout name used for attribution and Stripe transfers | Read-only to affiliate (admin-controlled) |
-| Contact Email | email | Read-only | Login username and notification address | Read-only (email change requires a new account) |
-| Phone Number | tel | Editable | Contact phone with country code | Valid international phone format |
-| Language(s) | multi-select | Editable | Spoken/operating language(s) | Uses supported language list |
-| Country/Region | select | Read-only | Operating country or region | Read-only to affiliate (admin-controlled) |
-| Affiliate Type | text | Read-only | Influencer / clinic partner / organization / other | Read-only to affiliate (admin-controlled) |
-| Tax / VAT / Business Reg ID | text | Read-only | Tax/VAT/business-registration identifier | Read-only to affiliate (admin-controlled) |
-| Member Since | date | Read-only | Account creation date | Read-only |
-| Activation Status | status | Read-only | Invited (password not set) / Active | Read-only |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Affiliate Name | text | Read-only | Legal/payout name used for attribution and Stripe transfers | Read-only to affiliate (admin-controlled) | ENT-affiliate.name |
+| Contact Email | email | Read-only | Login username and notification address | Read-only (email change requires a new account) | ENT-affiliate.contact_email |
+| Phone Number | tel | Editable | Contact phone with country code | Valid international phone format | ENT-affiliate.phone_number |
+| Language(s) | multi-select | Editable | Spoken/operating language(s) | Uses supported language list (REQ-018-300) | ENT-affiliate.languages |
+| Country/Region | select | Read-only | Operating country or region | Read-only to affiliate (admin-controlled) | ENT-affiliate.country_region |
+| Affiliate Type | text | Read-only | Influencer / clinic partner / organization / other | Read-only to affiliate (admin-controlled) | ENT-affiliate.affiliate_type |
+| Tax / VAT / Business Reg ID | text | Read-only | Tax/VAT/business-registration identifier | Read-only to affiliate (admin-controlled) | ENT-affiliate.tax_vat_business_reg_id |
+| Member Since | date | Read-only | Account creation date | Read-only | ENT-affiliate.created_at |
+| Activation Status | status | Read-only | Invited (password not set) / Active | Read-only | ENT-affiliate.activation_status |
 
 _Payout & commission (admin-controlled, read-only)_:
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Bank Account | text | Read-only | Masked affiliate bank account (last 4 digits) | Read-only to affiliate (admin-controlled) |
-| Bank Name | text | Read-only | Name of the affiliate's bank | Read-only to affiliate (admin-controlled) |
-| Commission Structure | text | Read-only | Current commission type and value | Read-only to affiliate (admin-controlled) |
-| Payout Schedule | text | Read-only | Payout frequency (e.g., Monthly on 7th) | Read-only to affiliate (admin-controlled) |
-| Account Status | status | Read-only | Pending / Active / Suspended / Inactive | Read-only to affiliate |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Bank Account | text | Read-only | Masked affiliate bank account (last 4 digits) | Read-only to affiliate (admin-controlled) | ENT-affiliate.bank_account_number |
+| Bank Name | text | Read-only | Name of the affiliate's bank | Read-only to affiliate (admin-controlled) | ENT-affiliate.bank_name |
+| Commission Structure | text | Read-only | Current commission type and value | Read-only to affiliate (admin-controlled) | ENT-affiliate.commission_type, ENT-affiliate.commission_percentage, ENT-affiliate.commission_fixed_amount |
+| Payout Schedule | text | Read-only | Payout frequency (e.g., Monthly on 7th) | Read-only to affiliate (admin-controlled) | ENT-affiliate.payout_schedule |
+| Account Status | status | Read-only | Pending / Active / Suspended / Inactive | Read-only to affiliate | ENT-affiliate.status |
 
 _Account security (affiliate-managed)_:
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Change Password | action | Editable | Update account password | Strong password (min 12 chars, upper, lower, number, special); current password required |
-| MFA (optional) | toggle | Editable | Enable/disable multi-factor authentication | Optional; future / non-MVP (pending shared MFA stack FR-026 / FR-031 per constitution Principle II); mirrors platform auth options |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Change Password | action | Editable | Update account password | Strong password (min 12 chars, upper, lower, number, special); current password required | no graph field (control) |
+| MFA (optional) | toggle | Editable | Enable/disable multi-factor authentication | Optional; future / non-MVP (pending shared MFA stack FR-026 / FR-031 per constitution Principle II); mirrors platform auth options | no graph field (control) |
 
 **Business Rules**:
 
-- **Self-Service Edit**: Affiliate may edit non-sensitive fields (phone, language) and manage their own account security (password, optional MFA — future / non-MVP, pending FR-026 / FR-031); changes sync to the admin view (Screen 2 / Screen 3)
-- **Admin-Controlled Fields**: Name (legal/payout name used for attribution and Stripe transfers), email, country/region, affiliate type, tax/VAT ID, bank details, commission structure, payout schedule, and status are read-only to the affiliate and changed only by admins
-- **Email Immutable**: Contact email (login username) cannot be changed (a new account is required), consistent with admin Screen 2 rules
+- **Self-Service Edit**: Affiliate may edit non-sensitive fields (phone, language) and manage their own account security (password, optional MFA — future / non-MVP, pending FR-026 / FR-031); changes sync to the admin view (Screen 2 / Screen 3) (REQ-018-147)
+- **Admin-Controlled Fields**: Name (legal/payout name used for attribution and Stripe transfers), email, country/region, affiliate type, tax/VAT ID, bank details, commission structure, payout schedule, and status are read-only to the affiliate and changed only by admins (REQ-018-148)
+- **Email Immutable**: Contact email (login username) cannot be changed (a new account is required), consistent with admin Screen 2 rules (REQ-018-149)
 - **Masking**: Bank account number is shown masked (last 4 digits) and is never editable by the affiliate
 - **Provider Parity**: Mirrors the provider self-service model in FR-032 with a leaner affiliate field set
 
@@ -1074,12 +1074,12 @@ _Account security (affiliate-managed)_:
 **Business Rules**:
 
 - **Sequence**: Activation email → Set Password (10.1) → first login → Welcome / Get Started (10.3); Resend Activation (10.2) is reachable from the login page when the link is missing or expired
-- **Token Handling**: One-time set-password link expires in 24 hours; generating a new link invalidates the previous one
+- **Token Handling**: One-time set-password link expires in 24 hours; generating a new link invalidates the previous one (REQ-018-150)
 - **Activation State**: Account is created with Status "Pending" and Activation Status "Invited" until the password is set; completing 10.1 flips Status to "Active" and Activation Status to "Active" (per Rule 12)
 
 **Acceptance Criteria**:
 
-1. Given an affiliate account is created, when the activation email is sent, then it contains a one-time "Set Password" link (24-hour expiry) and the affiliate's login email.
+1. Given an affiliate account is created, when the activation email is sent, then it contains a one-time "Set Password" link (24-hour expiry) and the affiliate's login email. (REQ-018-200)
 2. Given the affiliate completes activation, then they proceed through Set Password (10.1) and land on Welcome / Get Started (10.3) at first login.
 
 ---
@@ -1090,21 +1090,21 @@ _Account security (affiliate-managed)_:
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Activation Link Status | display | N/A | Whether the one-time link is valid or expired | Read-only, system-evaluated |
-| Account Email | display | N/A | The invited email (login username) | Read-only |
-| New Password | password | Yes | New account password | Min 12 chars, with uppercase, lowercase, number, special char |
-| Confirm Password | password | Yes | Re-enter new password | Must match New Password |
-| Password Strength Meter | display | N/A | Visual strength indicator | Read-only, reflects entered password |
-| Set Password | button | N/A | Submit to set password and activate | Enabled only when both fields are valid |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Activation Link Status | display | N/A | Whether the one-time link is valid or expired | Read-only, system-evaluated (REQ-018-275) | ENT-affiliate.activation_link_expires_at |
+| Account Email | display | N/A | The invited email (login username) | Read-only | ENT-affiliate.contact_email |
+| New Password | password | Yes | New account password | Min 12 chars, with uppercase, lowercase, number, special char (REQ-018-197) |  |
+| Confirm Password | password | Yes | Re-enter new password | Must match New Password (REQ-018-276) |  |
+| Password Strength Meter | display | N/A | Visual strength indicator | Read-only, reflects entered password (REQ-018-277) |  |
+| Set Password | button | N/A | Submit to set password and activate | Enabled only when both fields are valid (REQ-018-278) | no graph field (control) |
 
 **Business Rules**:
 
 - **One-Time Token**: The link is single-use and expires 24 hours after generation
-- **On Success**: System saves the encrypted password, flips Status from "Pending" to "Active" and Activation Status to "Active" (per Rule 12), and redirects to the Affiliate Portal login (Screen 9)
-- **Expired / Used Link**: System shows an explanatory message and a link to request a new one (Screen 10.2)
-- **Security**: Password strength is enforced server-side; the email field is fixed (cannot be changed here)
+- **On Success**: System saves the encrypted password, flips Status from "Pending" to "Active" and Activation Status to "Active" (per Rule 12), and redirects to the Affiliate Portal login (Screen 9) (REQ-018-151, REQ-018-198)
+- **Expired / Used Link**: System shows an explanatory message and a link to request a new one (Screen 10.2) (REQ-018-152)
+- **Security**: Password strength is enforced server-side; the email field is fixed (cannot be changed here) (REQ-018-153)
 
 **Acceptance Criteria**:
 
@@ -1120,18 +1120,18 @@ _Account security (affiliate-managed)_:
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Email | email | Yes | The email the admin used during account creation | Valid email format |
-| Resend Activation | button | N/A | Request a new one-time activation link | Subject to rate limiting |
-| Confirmation Message | display | N/A | Generic confirmation shown after submit | Read-only |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Email | email | Yes | The email the admin used during account creation | Valid email format | ENT-affiliate.contact_email |
+| Resend Activation | button | N/A | Request a new one-time activation link | Subject to rate limiting (REQ-018-279) | no graph field (control) |
+| Confirmation Message | display | N/A | Generic confirmation shown after submit | Read-only |  |
 
 **Business Rules**:
 
-- **Rate Limit**: Maximum 3 resend requests per hour per email address
+- **Rate Limit**: Maximum 3 resend requests per hour per email address (REQ-018-154)
 - **Link Invalidation**: A new link invalidates the previous one
-- **Generic Messaging**: System always shows "If an account exists with this email, an activation link will be sent." regardless of whether the email exists or is already activated (does not reveal account existence)
-- **Eligibility**: A link is only generated for accounts created but not yet activated (password not set)
+- **Generic Messaging**: System always shows "If an account exists with this email, an activation link will be sent." regardless of whether the email exists or is already activated (does not reveal account existence) (REQ-018-155)
+- **Eligibility**: A link is only generated for accounts created but not yet activated (password not set) (REQ-018-156)
 
 **Acceptance Criteria**:
 
@@ -1147,21 +1147,21 @@ _Account security (affiliate-managed)_:
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Welcome Header | display | N/A | Welcome message and platform introduction | Read-only |
-| Assigned Codes Summary | list | N/A | The affiliate's initial discount code(s) | Read-only |
-| Commission Summary | display | N/A | The affiliate's commission structure | Read-only |
-| Payout Schedule | display | N/A | Payout frequency and next payout date | Read-only |
-| Referral Link | text | N/A | The affiliate's unique auto-apply referral URL | Read-only, one-click copy |
-| Complete Profile CTA | button | N/A | Opens the Profile tab (Screen 9.4) to fill in details | N/A |
-| Get Started CTA | button | N/A | Dismisses onboarding and opens Overview (Screen 9.1) | N/A |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Welcome Header | display | N/A | Welcome message and platform introduction | Read-only |  |
+| Assigned Codes Summary | list | N/A | The affiliate's initial discount code(s) | Read-only | ENT-affiliate-discount-code.code_text |
+| Commission Summary | display | N/A | The affiliate's commission structure | Read-only | ENT-affiliate.commission_type, ENT-affiliate.commission_percentage, ENT-affiliate.commission_fixed_amount |
+| Payout Schedule | display | N/A | Payout frequency and next payout date | Read-only | ENT-affiliate.payout_schedule |
+| Referral Link | text | N/A | The affiliate's unique auto-apply referral URL | Read-only, one-click copy | ENT-affiliate.referral_link |
+| Complete Profile CTA | button | N/A | Opens the Profile tab (Screen 9.4) to fill in details | N/A | no graph field (control) |
+| Get Started CTA | button | N/A | Dismisses onboarding and opens Overview (Screen 9.1) | N/A | no graph field (control) |
 
 **Business Rules**:
 
-- **Shown Once**: Displayed only at first login; afterwards the affiliate lands directly on Overview (Screen 9.1). It is dismissible.
-- **Profile Completion**: "Complete Profile" routes to Screen 9.4, where the affiliate can fill non-sensitive fields (phone, language)
-- **Privacy**: Only the affiliate's own codes, commission, and payout schedule are shown
+- **Shown Once**: Displayed only at first login; afterwards the affiliate lands directly on Overview (Screen 9.1). It is dismissible. (REQ-018-157, REQ-018-199)
+- **Profile Completion**: "Complete Profile" routes to Screen 9.4, where the affiliate can fill non-sensitive fields (phone, language) (REQ-018-294)
+- **Privacy**: Only the affiliate's own codes, commission, and payout schedule are shown (REQ-018-158)
 
 **Acceptance Criteria**:
 
@@ -1175,272 +1175,155 @@ _Account security (affiliate-managed)_:
 
 ### General Module Rules
 
-- **Rule 1**: Affiliate commissions are ONLY calculated for completed bookings where payment is confirmed (not for quote requests or pending bookings)
-- **Rule 2**: Affiliate discount codes and affiliate commissions are both funded ONLY from Hairline's commission: the patient-facing affiliate discount applies only to Hairline's commission, and the affiliate commission is deducted from Hairline's commission. Neither reduces the provider's payout
-- **Rule 3**: Only ONE discount code can be applied per booking (priority: Patient code > Provider code > Affiliate code)
+- **Rule 1**: Affiliate commissions are ONLY calculated for completed bookings where payment is confirmed (not for quote requests or pending bookings) (REQ-018-043)
+- **Rule 2**: Affiliate discount codes and affiliate commissions are both funded ONLY from Hairline's commission: the patient-facing affiliate discount applies only to Hairline's commission, and the affiliate commission is deducted from Hairline's commission. Neither reduces the provider's payout (REQ-018-044)
+- **Rule 3**: Only ONE discount code can be applied per booking (priority: Patient code > Provider code > Affiliate code) (REQ-018-010)
 - **Rule 4**: Merged into Rule 2 (the number is kept so other Rule references stay stable)
-- **Rule 5**: Payout processing occurs monthly, on the affiliate payout day, for the previous month's completed bookings. The payout day is a platform setting that admins can change; its default is the 7th of the month. The payout stays monthly. This payout day setting is owned by FR-018
-- **Rule 6**: Affiliates can have multiple active discount codes simultaneously for different campaigns
-- **Rule 7**: FR-018 is the source of truth for affiliate-specific promo code generation and assignment; FR-019 provides the shared promotion rules, validation, redemption state lifecycle, and financial-impact logging
-- **Rule 8**: Bulk affiliate code generation MUST create one distinct code per affiliate; assigning the same affiliate payout code to multiple affiliates is not supported
-- **Rule 9**: Admins MAY create open Hairline-funded marketing codes in FR-019, but those codes do not create affiliate payout attribution unless they are generated or linked as affiliate-bound codes through FR-018
-- **Rule 10**: Affiliate onboarding uses a one-time secure activation link (set password, expires 24 hours) mirroring the provider activation flow; raw credentials are never emailed
-- **Rule 11 (Affiliate referral attribution is preserved separately from price discount priority)**: Affiliate commission and referral credit are earned when a valid affiliate-bound code or affiliate auto-apply referral link is captured for the patient's booking journey and the booking completes with payment confirmation, even if the final price discount applied at checkout is a higher-priority patient or provider promotion under Rule 3. The single-discount rule still controls the patient's price and provider/Hairline discount impact; it does **not** erase affiliate referral attribution. This protects affiliates from losing commission because a provider-side promotion is applied outside the patient's knowledge. FR-017 and FR-019 MUST consume the FR-018/FR-019 attribution result separately from the final applied discount line.
-- **Rule 12 (Affiliate lifecycle states)**: An affiliate moves through **Pending** (account created, password not yet set) → **Active** (password set, transacting) and may then be **Suspended** (temporary, reversible, codes disabled, pending commissions held pending investigation — B3) or **Inactive** (permanent terminal end-of-partnership, codes disabled, portal read-only, final balance settled/forfeited/written off — B5). Active ⇄ Suspended is reversible via Screen 3.1; Active → Inactive is terminal via Screen 3.3 and is not silently reversed (resuming requires re-onboarding).
-- **Rule 13 (Usage-limit basis)**: A code's `Maximum Usage Count` and `Per-Patient Usage Limit` are decremented on **"completed" (paid) redemptions only**, never on "applied" events — so abandoned or abusive checkouts cannot exhaust a code's cap. A separate soft anti-abuse **rate limit on "applied" events** (per patient / per IP / per time window) guards against application spam without consuming the usage cap.
-- **Rule 14 (Commission base)**: Percentage commissions are calculated as a percentage of the **completed booking's net revenue (the booking total after discounts and refunds, in USD per the Currency Rule)** — **not** as a percentage of Hairline's net commission. Fixed-amount commissions are a flat USD amount per completed booking, independent of booking value. In both cases the commission is **funded from (deducted from) Hairline's commission, never the provider's payout** (Rule 2). The patient-facing affiliate discount (also Hairline-funded, Rule 2) and the affiliate commission are separate Hairline-borne costs against the same booking.
-- **Rule 15 (Hairline-funded cost ceiling)**: On any single booking, the combined Hairline-funded cost — the patient-facing affiliate discount (Rule 2) plus the affiliate commission (Rule 14) — MUST NOT exceed Hairline's own commission earned on that booking; the affiliate program never makes a booking net-negative for Hairline. The system enforces this at affiliate code creation/generation (Screen 4): when both the discount and the commission are percentage-based, it validates that `discount % + commission % ≤ Hairline's commission % on the booking` and **blocks** the save with the shortfall shown; an admin with documented business approval may override with an audited confirmation. Fixed-amount configurations (where the ceiling depends on booking value) raise a **review warning** rather than a hard block, since the breach can only be evaluated per booking. This rule complements Assumption 4 (aggregate program cost ≤ 10% of Hairline commission revenue) by preventing per-booking negative margin.
-- **Rule 16 (Permanent ban)**: A permanent ban is the punitive way to end an affiliate partnership It is carried out through the Deactivate / Offboard action (Screen 3.3) with the reason recorded as "banned". The affiliate ends at **Inactive**; there is no separate Banned status. Unlike a normal offboarding (B5), the **whole pending balance is forfeited** whatever its size, and the forfeiture is recorded with an audit entry. Only admins who are permitted to offboard an affiliate may ban. Codes are disabled and portal access becomes read-only as for any Inactive affiliate (Rule 12).
+- **Rule 5**: Payout processing occurs monthly, on the affiliate payout day, for the previous month's completed bookings. The payout day is a platform setting that admins can change; its default is the 7th of the month. The payout stays monthly. This payout day setting is owned by FR-018 (REQ-018-046)
+- **Rule 6**: Affiliates can have multiple active discount codes simultaneously for different campaigns (REQ-018-047, REQ-018-159)
+- **Rule 7**: FR-018 is the source of truth for affiliate-specific promo code generation and assignment; FR-019 provides the shared promotion rules, validation, redemption state lifecycle, and financial-impact logging (REQ-018-048)
+- **Rule 8**: Bulk affiliate code generation MUST create one distinct code per affiliate; assigning the same affiliate payout code to multiple affiliates is not supported (REQ-018-025)
+- **Rule 9**: Admins MAY create open Hairline-funded marketing codes in FR-019, but those codes do not create affiliate payout attribution unless they are generated or linked as affiliate-bound codes through FR-018 (REQ-018-049)
+- **Rule 10**: Affiliate onboarding uses a one-time secure activation link (set password, expires 24 hours) mirroring the provider activation flow; raw credentials are never emailed (REQ-018-050)
+- **Rule 11 (Affiliate referral attribution is preserved separately from price discount priority)**: Affiliate commission and referral credit are earned when a valid affiliate-bound code or affiliate auto-apply referral link is captured for the patient's booking journey and the booking completes with payment confirmation, even if the final price discount applied at checkout is a higher-priority patient or provider promotion under Rule 3. The single-discount rule still controls the patient's price and provider/Hairline discount impact; it does **not** erase affiliate referral attribution. This protects affiliates from losing commission because a provider-side promotion is applied outside the patient's knowledge. FR-017 and FR-019 MUST consume the FR-018/FR-019 attribution result separately from the final applied discount line. (REQ-018-051)
+- **Rule 12 (Affiliate lifecycle states)**: An affiliate moves through **Pending** (account created, password not yet set) → **Active** (password set, transacting) and may then be **Suspended** (temporary, reversible, codes disabled, pending commissions held pending investigation — B3) or **Inactive** (permanent terminal end-of-partnership, codes disabled, portal read-only, final balance settled/forfeited/written off — B5). Active ⇄ Suspended is reversible via Screen 3.1; Active → Inactive is terminal via Screen 3.3 and is not silently reversed (resuming requires re-onboarding). (REQ-018-052)
+- **Rule 13 (Usage-limit basis)**: A code's `Maximum Usage Count` and `Per-Patient Usage Limit` are decremented on **"completed" (paid) redemptions only**, never on "applied" events — so abandoned or abusive checkouts cannot exhaust a code's cap. A separate soft anti-abuse **rate limit on "applied" events** (per patient / per IP / per time window) guards against application spam without consuming the usage cap. (REQ-018-053)
+- **Rule 14 (Commission base)**: Percentage commissions are calculated as a percentage of the **completed booking's net revenue (the booking total after discounts and refunds, in USD per the Currency Rule)** — **not** as a percentage of Hairline's net commission. Fixed-amount commissions are a flat USD amount per completed booking, independent of booking value. In both cases the commission is **funded from (deducted from) Hairline's commission, never the provider's payout** (Rule 2). The patient-facing affiliate discount (also Hairline-funded, Rule 2) and the affiliate commission are separate Hairline-borne costs against the same booking. (REQ-018-054)
+- **Rule 15 (Hairline-funded cost ceiling)**: On any single booking, the combined Hairline-funded cost — the patient-facing affiliate discount (Rule 2) plus the affiliate commission (Rule 14) — MUST NOT exceed Hairline's own commission earned on that booking; the affiliate program never makes a booking net-negative for Hairline. The system enforces this at affiliate code creation/generation (Screen 4): when both the discount and the commission are percentage-based, it validates that `discount % + commission % ≤ Hairline's commission % on the booking` and **blocks** the save with the shortfall shown; an admin with documented business approval may override with an audited confirmation. Fixed-amount configurations (where the ceiling depends on booking value) raise a **review warning** rather than a hard block, since the breach can only be evaluated per booking. This rule complements Assumption 4 (aggregate program cost ≤ 10% of Hairline commission revenue) by preventing per-booking negative margin. (REQ-018-055)
+- **Rule 16 (Permanent ban)**: A permanent ban is the punitive way to end an affiliate partnership It is carried out through the Deactivate / Offboard action (Screen 3.3) with the reason recorded as "banned". The affiliate ends at **Inactive**; there is no separate Banned status. Unlike a normal offboarding (B5), the **whole pending balance is forfeited** whatever its size, and the forfeiture is recorded with an audit entry. Only admins who are permitted to offboard an affiliate may ban. Codes are disabled and portal access becomes read-only as for any Inactive affiliate (Rule 12). (REQ-018-297)
 
 ### Affiliate Segmentation Rules (Performance Tier & Campaign Eligibility)
 
-- **Performance Tier** (system-calculated, read-only): a band derived from the affiliate's **trailing-12-month revenue generated** (USD) by completed referrals, recalculated monthly. Default bands (admin-editable setting): **Bronze** < $5,000 · **Silver** $5,000–$24,999 · **Gold** $25,000–$99,999 · **Platinum** ≥ $100,000. Tier is used for filtering/segmentation only and never changes commission automatically.
-- **Campaign Eligibility** (system-calculated, read-only): an affiliate is **Eligible** for bulk/campaign code generation only when **all** of the following hold — Status = Active (not Pending, Suspended, or Inactive); Activation Status = Active (password set); and complete bank/payout details on file. Otherwise the affiliate is **Ineligible** and the specific failing reason is surfaced (e.g., "Pending activation", "Incomplete payout setup", "Suspended/Inactive"). These reasons are the same ones reported per row in bulk generation (B4) and drive Screen 1's eligibility gating.
+- **Performance Tier** (system-calculated, read-only): a band derived from the affiliate's **trailing-12-month revenue generated** (USD) by completed referrals, recalculated monthly. Default bands (admin-editable setting): **Bronze** < $5,000 · **Silver** $5,000–$24,999 · **Gold** $25,000–$99,999 · **Platinum** ≥ $100,000. Tier is used for filtering/segmentation only and never changes commission automatically. (REQ-018-056)
+- **Campaign Eligibility** (system-calculated, read-only): an affiliate is **Eligible** for bulk/campaign code generation only when **all** of the following hold — Status = Active (not Pending, Suspended, or Inactive); Activation Status = Active (password set); and complete bank/payout details on file. Otherwise the affiliate is **Ineligible** and the specific failing reason is surfaced (e.g., "Pending activation", "Incomplete payout setup", "Suspended/Inactive"). These reasons are the same ones reported per row in bulk generation (B4) and drive Screen 1's eligibility gating. (REQ-018-057)
 
 ### Data & Privacy Rules
 
-- **Privacy Rule 1**: Patient identity is NEVER shared with affiliates (affiliates see only aggregated statistics, not individual patient names)
+- **Privacy Rule 1**: Patient identity is NEVER shared with affiliates (affiliates see only aggregated statistics, not individual patient names) (REQ-018-058)
 - **Privacy Rule 2**: Affiliate bank account numbers are masked in UI (show last 4 digits only)
-- **Privacy Rule 3**: Affiliate dashboard access requires secure login (username/password + optional MFA — future / non-MVP, pending the shared MFA stack FR-026 / FR-031 per constitution Principle II)
-- **Audit Rule**: All affiliate actions logged with timestamp, user ID, and action type (code usage, commission calculation, payout-cycle generation, payout status synchronization). The audit trail is immutable (append-only); retention follows the system PRD, Platform-Wide Rules: One 10-year retention period
-- **GDPR**: Affiliate personal data (contact info, payment details) can be deleted upon request (historical commission data retained for accounting)
+- **Privacy Rule 3**: Affiliate dashboard access requires secure login (username/password + optional MFA — future / non-MVP, pending the shared MFA stack FR-026 / FR-031 per constitution Principle II) (REQ-018-060)
+- **Audit Rule**: All affiliate actions logged with timestamp, user ID, and action type (code usage, commission calculation, payout-cycle generation, payout status synchronization). The audit trail is immutable (append-only); retention follows the system PRD, Platform-Wide Rules: One 10-year retention period (REQ-018-061)
+- **GDPR**: Affiliate personal data (contact info, payment details) can be deleted upon request (historical commission data retained for accounting) (REQ-018-062)
 
 ### Admin Editability Rules
 
 **Editable by Admin**:
 
-- Affiliate account details (name, email, phone, language, country, type, tax/VAT ID, bank account details, commission structure)
-- Discount code parameters (expiration date, usage limits, active/inactive status)
-- Bulk code generation criteria (selected affiliates, filtered segment, code pattern, campaign settings)
-- Commission percentage/fixed amount per affiliate (with effective date for changes, via Screen 3.2)
-- Affiliate status (Suspend and Reinstate via the Screen 3.1 modal; Inactive only via the Screen 3.3 Deactivate / Offboard modal)
-- Affiliate payout day of the month (platform setting owned by FR-018, default the 7th; the payout stays monthly)
-- Performance tier bands (platform setting; default values in Affiliate Segmentation Rules)
+- Affiliate account details (name, email, phone, language, country, type, tax/VAT ID, bank account details, commission structure) (REQ-018-063)
+- Discount code parameters (expiration date, usage limits, active/inactive status) (REQ-018-063)
+- Bulk code generation criteria (selected affiliates, filtered segment, code pattern, campaign settings) (REQ-018-063)
+- Commission percentage/fixed amount per affiliate (with effective date for changes, via Screen 3.2) (REQ-018-063)
+- Affiliate status (Suspend and Reinstate via the Screen 3.1 modal; Inactive only via the Screen 3.3 Deactivate / Offboard modal) (REQ-018-063)
+- Affiliate payout day of the month (platform setting owned by FR-018, default the 7th; the payout stays monthly) (REQ-018-063)
+- Performance tier bands (platform setting; default values in Affiliate Segmentation Rules) (REQ-018-063)
 
 **Editable by Affiliate (Self-Service)**:
 
-- Non-sensitive profile fields only: phone, language(s)
-- Affiliates CANNOT edit name (legal/payout name, admin-controlled), payment details, commission structure, status, or assigned codes (admin-controlled, read-only to affiliate)
+- Non-sensitive profile fields only: phone, language(s) (REQ-018-064)
+- Affiliates CANNOT edit name (legal/payout name, admin-controlled), payment details, commission structure, status, or assigned codes (admin-controlled, read-only to affiliate) (REQ-018-064)
 
 **Fixed in Codebase (Not Editable)**:
 
-- Affiliate commission calculation logic (percentage of net booking revenue after discounts and refunds OR fixed amount per booking)
-- One-affiliate-per-code attribution model
-- Discount code uniqueness validation rules
-- Payout workflow status transitions (Pending → Processing → Paid/Failed)
-- Retention period (one period for everything; see the system PRD, Platform-Wide Rules: One 10-year retention period)
-- Activation link expiry (24 hours) and resend rate limit (3 per hour per email)
-- Payout frequency (monthly; only the payout day is configurable, see Editable by Admin)
+- Affiliate commission calculation logic (percentage of net booking revenue after discounts and refunds OR fixed amount per booking) (REQ-018-065)
+- One-affiliate-per-code attribution model (REQ-018-065)
+- Discount code uniqueness validation rules (REQ-018-065)
+- Payout workflow status transitions (Pending → Processing → Paid/Failed) (REQ-018-065)
+- Retention period (one period for everything; see the system PRD, Platform-Wide Rules: One 10-year retention period) (REQ-018-065)
+- Activation link expiry (24 hours) and resend rate limit (3 per hour per email) (REQ-018-065)
+- Payout frequency (monthly; only the payout day is configurable, see Editable by Admin) (REQ-018-065)
 
 **Configurable with Restrictions**:
 
-- Commission structure changes apply ONLY to future bookings (historical commissions cannot be retroactively modified)
+- Commission structure changes apply ONLY to future bookings (historical commissions cannot be retroactively modified) (REQ-018-066)
 
 ### Payment & Billing Rules
 
 - **Payment Rule 1**: Affiliate commissions calculated AFTER patient completes full payment for booking
-- **Payment Rule 2**: If patient refunds booking, affiliate commission is reversed (deducted from next payout)
-- **Payment Rule 3**: Minimum payout threshold: $50 (commissions below $50 roll over to next month)
-- **Currency Rule**: All affiliate amounts (commission accrual, pending balances, thresholds, and payouts) are denominated in **USD — the platform base currency owned by FR-029 (Payment System Configuration)**. When a booking is transacted in a non-USD currency, its value is converted to USD using **FR-029's currency service, supported-currency list, and locked exchange-rate/markup logic — FR-018 never defines, caches, or overrides its own FX rate**. The conversion rate applied to a commission is the rate locked for that booking per FR-029 (no discrepancy with billing/finance figures). Affiliates are responsible for any onward conversion from USD on their side. **Note on client figures**: GBP amounts in the client transcription (e.g., "£50", "£200") are illustrative of intended incentive magnitudes; the platform base currency is USD (per FR-029), so this PRD's literal thresholds and minimums (e.g., the $50 minimum fixed commission and $50 payout threshold) are stated in USD and are not a direct GBP→USD conversion of those examples.
+- **Payment Rule 2**: If patient refunds booking, affiliate commission is reversed (deducted from next payout) (REQ-018-067)
+- **Payment Rule 3**: Minimum payout threshold: $50 (commissions below $50 roll over to next month) (REQ-018-068)
+- **Currency Rule**: All affiliate amounts (commission accrual, pending balances, thresholds, and payouts) are denominated in **USD — the platform base currency owned by FR-029 (Payment System Configuration)**. When a booking is transacted in a non-USD currency, its value is converted to USD using **FR-029's currency service, supported-currency list, and locked exchange-rate/markup logic — FR-018 never defines, caches, or overrides its own FX rate**. The conversion rate applied to a commission is the rate locked for that booking per FR-029 (no discrepancy with billing/finance figures). Affiliates are responsible for any onward conversion from USD on their side. **Note on client figures**: GBP amounts in the client transcription (e.g., "£50", "£200") are illustrative of intended incentive magnitudes; the platform base currency is USD (per FR-029), so this PRD's literal thresholds and minimums (e.g., the $50 minimum fixed commission and $50 payout threshold) are stated in USD and are not a direct GBP→USD conversion of those examples. (REQ-018-069)
 - **Billing Rule 1**: Payouts are processed as Stripe transfers to the affiliate's bank account, consistent with provider payouts (executed via FR-017 / S-02 using the Stripe accounts configured in FR-029); PayPal and other payout methods are not supported
-- **Billing Rule 2**: Hairline covers Stripe payout/transfer fees (not deducted from affiliate commission)
-- **Billing Rule 3**: Affiliates must provide complete bank details (account holder name, bank name, account number, routing/SWIFT code, optional IBAN) before a payout can be processed, mirroring provider billing setup in FR-032
+- **Billing Rule 2**: Hairline covers Stripe payout/transfer fees (not deducted from affiliate commission) (REQ-018-070)
+- **Billing Rule 3**: Affiliates must provide complete bank details (account holder name, bank name, account number, routing/SWIFT code, optional IBAN) before a payout can be processed, mirroring provider billing setup in FR-032 (REQ-018-071)
 
----
+**Internal Dependencies (Other FRs/Modules)**
 
-## Success Criteria
+- **FR-007 / Module S-02: Payment Processing Service**
+  - **Integration point**: Payout processing workflow calls Payment Service API to initiate Stripe transfers with the affiliate's stored bank account details
+- **FR-017 / Module A-05: Admin Billing & Financial Management**
+  - **Integration point**: FR-018 exposes affiliate payout-cycle totals, readiness, threshold exclusions, and reconciliation metadata; FR-017 / A-05 initiates Stripe transfers and returns payout execution status for FR-018 read-only views
+- **FR-019 / Module A-06: Discount & Promotion Management**
+  - **Integration point**: FR-018 owns affiliate-specific code generation and assignment; generated codes are registered into FR-019 promotion services for validation, expiration dates, usage limits, applied/completed redemption lifecycle, and financial-impact logging
+- **FR-006 / FR-007 / Module P-03: Booking & Scheduling and Payment Processing**
+  - **Integration point**: Patient platform sends discount code to booking service for validation and application
+- **FR-001 / Module P-01: Patient Authentication & Profile Management**
+  - **Integration point**: Booking records link patient ID to affiliate code for internal tracking (anonymized in affiliate dashboard)
 
-### Patient Experience Metrics
+**External Dependencies (APIs, Services)**
 
-- **SC-001**: Patients can successfully apply affiliate discount codes at checkout with 95%+ success rate (valid codes accepted without errors)
-- **SC-002**: Patients receive booking confirmation showing affiliate discount applied within 2 minutes of checkout completion
-- **SC-003**: Patients who use affiliate codes have 20%+ higher conversion rate (quote-to-booking) compared to non-affiliate bookings
+- **External Service 1: Stripe Payment API (via FR-017 / S-02)**
+  - **Purpose**: FR-017 processes affiliate commission payouts as Stripe transfers using affiliate bank account details and commission amounts from FR-018 (account configuration owned by FR-029)
+  - **Integration**: FR-018 exposes calculated payout data and reads back payout execution status; FR-017 / S-02 initiates Stripe transfers and consumes `transfer.created` / `transfer.paid` / `transfer.failed` webhooks
+  - **Failure handling**: If a transfer fails, FR-017 marks the payout "Failed", alerts admin for manual retry after resolving bank details, and FR-018 displays the latest status read-only (REQ-018-167)
+- **External Service 2: Email Service Provider (e.g., SendGrid)**
+  - **Failure handling**: If email fails, system logs error and admin can manually resend via dashboard
+- **External Service 3: PDF Generation Library (e.g., wkhtmltopdf, Puppeteer)**
+  - **Failure handling**: If PDF generation fails, system displays HTML version and allows manual retry
+- **External Service 4: Externally Hosted Marketing Materials**
+  - **Integration**: FR-018 stores or displays approved external URLs/asset references only; it does not create, edit, approve, or host marketing materials
+  - **Failure handling**: If a material link is unavailable, the portal shows the unavailable state and keeps code/referral workflows functional
 
-### Provider Efficiency Metrics
+**Data Dependencies**
 
-- **SC-004**: Providers can view affiliate code details for their bookings in provider dashboard without admin support
-- **SC-005**: 100% of providers understand that affiliate discounts do NOT reduce their payout (clarity in payment breakdown)
+- **Entity 1: Active Affiliate Accounts**
+  - **Why needed**: Cannot create discount codes or prepare payout cycles without onboarded affiliate accounts
 
-### Admin Management Metrics
+**Technical Considerations**
 
-- **SC-006**: Admins can onboard new affiliates (account creation + discount code) in under 5 minutes per affiliate
-- **SC-007**: Admins can bulk-generate distinct affiliate-bound codes for 100 selected affiliates in under 5 minutes
-- **SC-008**: Automated payout-cycle calculation and FR-017 / A-05 handoff reduces admin preparation time by 80% compared to manual payout workflows
-- **SC-009**: 100% of monthly payout-cycle data is generated and available to FR-017 / A-05 within 24 hours of the scheduled payout day (default the 7th of the month)
-- **SC-010**: Admin support tickets related to affiliate payouts reduced by 70% through self-service affiliate dashboard
+- **Code ownership**: Affiliate-specific code generation, assignment, and dashboard display live in FR-018; FR-019 remains the reusable promotion engine for validation and redemption state
+- **Shared screens**: Promo Code Detail (Screen 6) and Payout / Transaction Detail (Screen 8) are implemented once and reused across both entry points; route params carry the originating context for breadcrumbs only, not for behavior changes
 
-### Affiliate Experience Metrics
+**Integration Points**
 
-- **SC-011**: Affiliates can view real-time performance statistics without admin assistance (dashboard uptime 99.9%)
-- **SC-012**: Affiliates receive payout confirmations within 24 hours of payment processing
-- **SC-013**: Affiliate dashboard load time under 2 seconds for 95% of requests
-- **SC-014**: 90%+ of affiliates report satisfaction with dashboard usability and data transparency
+- **Integration 1: Patient Booking Checkout → Affiliate Code Validation**
+  - **Data format**: JSON payload with discount code, patient ID (anonymized), booking total
+  - **Error handling**: If validation service unavailable, allow checkout to proceed without discount (prevent checkout failure) (REQ-018-201)
+- **Integration 1a: FR-018 Affiliate Code Generation → FR-019 Promotion Registration**
+  - **Data format**: JSON payload with campaign name, affiliate ID, generated code text, discount type/value, expiration date, usage limits, application method, and attribution metadata
+  - **Error handling**: If FR-019 registration fails for a generated code, mark that affiliate row as failed and allow admin to retry without duplicating successful rows (REQ-018-202)
+- **Integration 2: Booking Completion Event → Commission Calculation**
+  - **Data format**: Event payload with booking ID, affiliate attribution code/link (if captured), final discount applied, final payment amount, Hairline commission amount; the event is FR-018's own booking-completed event and is produced from the booking's final payment event
+  - **Error handling**: If commission calculation fails, retry 3 times with exponential backoff; alert admin if all retries fail (REQ-018-203)
+- **Integration 3: FR-018 Payout Data → FR-017 Affiliate Billing Execution**
+  - **Data format**: JSON payload/API response with affiliate ID, payout period, completed booking count, gross commission, reversals/refunds, net amount, threshold exclusion status, payout readiness, masked destination reference, and audit metadata
+  - **Authentication**: Internal service-to-service API with A-05 admin context and immutable audit metadata; Stripe authentication is handled only by FR-017 / S-02
 
-### System Performance Metrics
+**Security Considerations**
 
-- **SC-015**: Discount code validation at checkout completes in under 500ms for 95% of requests
-- **SC-016**: Affiliate commission calculations processed within 1 hour of booking completion
-- **SC-017**: System supports 100+ active affiliates with 10,000+ code applications per month without performance degradation
-- **SC-018**: Payout batch processing completes within 30 minutes for up to 100 affiliates per month
+- **Authentication**: Affiliates access dashboard via username/password; support MFA (optional — future / non-MVP, pending the shared MFA stack FR-026 / FR-031 per constitution Principle II) for high-value affiliates
+- **Authorization**: Role-based access control (RBAC): Affiliates view only their own data; Admins view all affiliate data (REQ-018-204)
+- **Encryption**: All affiliate bank account details encrypted at rest using AES-256; TLS 1.3 for data in transit
+- **Audit trail**: Log all access to affiliate payment details with timestamp, user ID, and IP address (REQ-018-205)
+- **Threat mitigation**: Rate limiting on dashboard API (100 requests/minute/user) to prevent abuse; CAPTCHA on affiliate login after 3 failed attempts; activation link is one-time and expires in 24 hours (REQ-018-295)
+- **Compliance**: PCI-DSS compliance for handling affiliate bank account details; GDPR compliance for affiliate personal data (right to deletion) (REQ-018-296)
 
-### Business Impact Metrics
+**Technology Assumptions**
 
-- **SC-019**: Affiliate program generates 15%+ of total patient acquisition within 6 months of launch
-- **SC-020**: Average cost per acquisition via affiliates is 30%+ lower than paid advertising channels
-- **SC-021**: Affiliate-referred patients have 25%+ higher lifetime value (repeat bookings) compared to direct patients
-- **SC-022**: 80%+ of active affiliates remain in program for 12+ months (low churn rate)
-- **SC-023**: Affiliate program expands Hairline's reach to 5+ new geographic markets within 12 months
+- **Assumption 1**: Affiliates access dashboard via modern web browsers (Chrome, Safari, Firefox - last 2 versions)
+
+**Business Process Assumptions**
+
+- **Assumption 1**: Hairline will manually vet and approve affiliate partners before onboarding (no self-service affiliate signup) (REQ-018-206)
+- **Assumption 2**: Affiliate commission structure will remain stable (5-25% of net booking revenue after discounts and refunds, or a fixed amount of at least $50 per booking with no upper cap)
+- **Assumption 3**: Finance team will reconcile affiliate payouts within 48 hours of processing to detect errors
+- **Assumption 4**: Affiliate program will not exceed 10% of Hairline's total commission revenue within first 12 months (cost control)
+- **Why needed**: Affiliate amounts are denominated in USD (platform base currency) and bookings may be transacted in other currencies; FR-029 is the single owner of the supported-currency list, base currency, conversion-rate sources, markup, and locked exchange rates
 
 ---
 
 ## Dependencies
 
-### Internal Dependencies (Other FRs/Modules)
-
-- **FR-007 / Module S-02: Payment Processing Service**
-  - **Why needed**: Affiliate commission payouts require Stripe integration to process bank transfers to affiliates
-  - **Integration point**: Payout processing workflow calls Payment Service API to initiate Stripe transfers with the affiliate's stored bank account details
-
-- **FR-015 / Module A-02: Provider Management & Onboarding**
-  - **Why needed**: Affiliate account activation and profile self-service reuse the provider activation and self-service patterns for consistency across roles of the same nature
-  - **Integration point**: Activation email + one-time set-password link flow (and resend) mirrors FR-015; affiliate Profile tab mirrors the provider profile self-service model (FR-032) with a leaner field set
-
-- **FR-017 / Module A-05: Admin Billing & Financial Management**
-  - **Why needed**: Affiliate payout execution and reconciliation are owned by FR-017 / A-05 using payout-cycle data calculated by FR-018
-  - **Integration point**: FR-018 exposes affiliate payout-cycle totals, readiness, threshold exclusions, and reconciliation metadata; FR-017 / A-05 initiates Stripe transfers and returns payout execution status for FR-018 read-only views
-
-- **FR-019 / Module A-06: Discount & Promotion Management**
-  - **Why needed**: Affiliate discount codes are a subset of platform-wide discount system
-  - **Integration point**: FR-018 owns affiliate-specific code generation and assignment; generated codes are registered into FR-019 promotion services for validation, expiration dates, usage limits, applied/completed redemption lifecycle, and financial-impact logging
-
-- **FR-029 / Module S-02: Payment System Configuration (Currency & FX)**
-  - **Why needed**: Affiliate amounts are denominated in USD (platform base currency) and bookings may be transacted in other currencies; FR-029 is the single owner of the supported-currency list, base currency, conversion-rate sources, markup, and locked exchange rates
-  - **Integration point**: FR-018 reads the USD-converted value and the booking's locked exchange rate from FR-029's currency service to compute commission; FR-018 never defines or overrides its own FX rate, ensuring no discrepancy with billing/finance figures (FR-017)
-
-- **FR-006 / FR-007 / Module P-03: Booking & Scheduling and Payment Processing**
-  - **Why needed**: Affiliate code application occurs during patient booking checkout flow
-  - **Integration point**: Patient platform sends discount code to booking service for validation and application
-
-- **FR-001 / Module P-01: Patient Authentication & Profile Management**
-  - **Why needed**: Track which patients used affiliate codes (without exposing patient identity to affiliate)
-  - **Integration point**: Booking records link patient ID to affiliate code for internal tracking (anonymized in affiliate dashboard)
-
-### External Dependencies (APIs, Services)
-
-- **External Service 1: Stripe Payment API (via FR-017 / S-02)**
-  - **Purpose**: FR-017 processes affiliate commission payouts as Stripe transfers using affiliate bank account details and commission amounts from FR-018 (account configuration owned by FR-029)
-  - **Integration**: FR-018 exposes calculated payout data and reads back payout execution status; FR-017 / S-02 initiates Stripe transfers and consumes `transfer.created` / `transfer.paid` / `transfer.failed` webhooks
-  - **Failure handling**: If a transfer fails, FR-017 marks the payout "Failed", alerts admin for manual retry after resolving bank details, and FR-018 displays the latest status read-only
-
-- **External Service 2: Email Service Provider (e.g., SendGrid)**
-  - **Purpose**: Send activation, payout confirmation emails and discount code notifications to affiliates
-  - **Integration**: SMTP or API-based email sending with templated messages
-  - **Failure handling**: If email fails, system logs error and admin can manually resend via dashboard
-
-- **External Service 3: PDF Generation Library (e.g., wkhtmltopdf, Puppeteer)**
-  - **Purpose**: Generate downloadable performance reports and payout receipts for affiliates
-  - **Integration**: Server-side PDF generation from HTML templates
-  - **Failure handling**: If PDF generation fails, system displays HTML version and allows manual retry
-
-- **External Service 4: Externally Hosted Marketing Materials**
-  - **Purpose**: Provide read-only affiliate access to banners, templates, and campaign assets referenced by assigned campaigns
-  - **Integration**: FR-018 stores or displays approved external URLs/asset references only; it does not create, edit, approve, or host marketing materials
-  - **Failure handling**: If a material link is unavailable, the portal shows the unavailable state and keeps code/referral workflows functional
-
-### Data Dependencies
-
-- **Entity 1: Active Affiliate Accounts**
-  - **Why needed**: Cannot create discount codes or prepare payout cycles without onboarded affiliate accounts
-  - **Source**: Admin creates affiliate accounts via Affiliate Management module
-
-- **Entity 2: Completed Bookings with Payment Confirmation**
-  - **Why needed**: Affiliate commissions calculated only for completed bookings where patient has paid in full
-  - **Source**: Booking & Payment Processing module P-03 (FR-006 Booking & Scheduling / FR-007 Payment Processing) provides booking completion events
-
-- **Entity 3: Discount Code Catalog**
-  - **Why needed**: System must validate affiliate codes at checkout against active discount code database
-  - **Source**: Admin creates single or bulk affiliate-bound codes in FR-018; FR-019 stores and validates the shared promotion lifecycle
-
-- **Entity 4: Affiliate Segment or Filter Result**
-  - **Why needed**: Bulk generation requires a selected affiliate set or a saved filter snapshot
-  - **Source**: Affiliate Management Dashboard filters and manual selection in FR-018
-
----
-
-## Assumptions
-
-### User Behavior Assumptions
-
-- **Assumption 1**: Affiliates will check their dashboard at least once per week to monitor performance
-- **Assumption 2**: Patients will correctly enter affiliate discount codes (uppercase/lowercase variations handled by system)
-- **Assumption 3**: Affiliates prefer monthly payouts over weekly/bi-weekly schedules (fewer transactions, easier accounting)
-- **Assumption 4**: Affiliates will primarily use code-based discounts (manual entry) rather than auto-apply links
-
-### Technology Assumptions
-
-- **Assumption 1**: Affiliates access dashboard via modern web browsers (Chrome, Safari, Firefox - last 2 versions)
-- **Assumption 2**: Stripe supports batch transfer processing for multiple affiliates simultaneously
-- **Assumption 3**: Email service provider has 99.9%+ deliverability rate for transactional emails
-- **Assumption 4**: Server infrastructure can handle up to 1000 discount code validation requests per minute during peak periods
-
-### Business Process Assumptions
-
-- **Assumption 1**: Hairline will manually vet and approve affiliate partners before onboarding (no self-service affiliate signup)
-- **Assumption 2**: Affiliate commission structure will remain stable (5-25% of net booking revenue after discounts and refunds, or a fixed amount of at least $50 per booking with no upper cap)
-- **Assumption 3**: Finance team will reconcile affiliate payouts within 48 hours of processing to detect errors
-- **Assumption 4**: Affiliate program will not exceed 10% of Hairline's total commission revenue within first 12 months (cost control)
-
----
-
-## Implementation Notes
-
-### Technical Considerations
-
-- **Architecture**: Affiliate module requires event-driven architecture to trigger commission calculations when bookings complete
-- **Code ownership**: Affiliate-specific code generation, assignment, and dashboard display live in FR-018; FR-019 remains the reusable promotion engine for validation and redemption state
-- **Technology**: Discount code validation should use in-memory caching (Redis) to minimize database queries during checkout
-- **Performance**: Commission calculation jobs should run asynchronously to avoid blocking booking confirmation workflow
-- **Storage**: Audit trail requires append-only data storage for all affiliate transactions (no deletions, only inserts)
-- **Shared screens**: Promo Code Detail (Screen 6) and Payout / Transaction Detail (Screen 8) are implemented once and reused across both entry points; route params carry the originating context for breadcrumbs only, not for behavior changes
-
-### Integration Points
-
-- **Integration 1: Patient Booking Checkout → Affiliate Code Validation**
-  - **Data format**: JSON payload with discount code, patient ID (anonymized), booking total
-  - **Authentication**: Internal service-to-service API with JWT tokens
-  - **Error handling**: If validation service unavailable, allow checkout to proceed without discount (prevent checkout failure)
-
-- **Integration 1a: FR-018 Affiliate Code Generation → FR-019 Promotion Registration**
-  - **Data format**: JSON payload with campaign name, affiliate ID, generated code text, discount type/value, expiration date, usage limits, application method, and attribution metadata
-  - **Authentication**: Internal service-to-service API with admin user context for audit
-  - **Error handling**: If FR-019 registration fails for a generated code, mark that affiliate row as failed and allow admin to retry without duplicating successful rows
-
-- **Integration 2: Booking Completion Event → Commission Calculation**
-  - **Data format**: Event payload with booking ID, affiliate attribution code/link (if captured), final discount applied, final payment amount, Hairline commission amount; the event is FR-018's own booking-completed event and is produced from the booking's final payment event
-  - **Authentication**: Internal event bus with message authentication
-  - **Error handling**: If commission calculation fails, retry 3 times with exponential backoff; alert admin if all retries fail
-
-- **Integration 3: FR-018 Payout Data → FR-017 Affiliate Billing Execution**
-  - **Data format**: JSON payload/API response with affiliate ID, payout period, completed booking count, gross commission, reversals/refunds, net amount, threshold exclusion status, payout readiness, masked destination reference, and audit metadata
-  - **Authentication**: Internal service-to-service API with A-05 admin context and immutable audit metadata; Stripe authentication is handled only by FR-017 / S-02
-  - **Error handling**: If FR-017 payout execution fails, FR-017 marks the payout "Failed" and FR-018 reads back the latest status/failure reason for read-only display
-
-### Scalability Considerations
-
-- **Current scale**: Expected 20-30 active affiliates at launch, 500-1000 code applications per month
-- **Growth projection**: Plan for 100+ affiliates within 12 months, 10,000+ code applications per month
-- **Peak load**: Handle 100 simultaneous discount code validations during promotional campaigns
-- **Data volume**: Expect 50,000+ affiliate transaction records per year (code applications, commission calculations, payouts)
-- **Scaling strategy**: Horizontal scaling of API services; database partitioning by affiliate ID for transaction history
-
-### Security Considerations
-
-- **Authentication**: Affiliates access dashboard via username/password; support MFA (optional — future / non-MVP, pending the shared MFA stack FR-026 / FR-031 per constitution Principle II) for high-value affiliates
-- **Authorization**: Role-based access control (RBAC): Affiliates view only their own data; Admins view all affiliate data
-- **Encryption**: All affiliate bank account details encrypted at rest using AES-256; TLS 1.3 for data in transit
-- **Audit trail**: Log all access to affiliate payment details with timestamp, user ID, and IP address
-- **Threat mitigation**: Rate limiting on dashboard API (100 requests/minute/user) to prevent abuse; CAPTCHA on affiliate login after 3 failed attempts; activation link is one-time and expires in 24 hours
-- **Compliance**: PCI-DSS compliance for handling affiliate bank account details; GDPR compliance for affiliate personal data (right to deletion)
+Related FRs: FR-007 / S-02 (Payment Processing Service), FR-015 / A-02 (Provider Management & Onboarding), FR-017 / A-05 (Admin Billing & Financial Management), FR-019 / A-06 (Discount & Promotion Management), FR-029 / S-02 (Payment System Configuration, Currency & FX), FR-006 / FR-007 / P-03 (Booking & Scheduling and Payment Processing), FR-001 / P-01 (Patient Authentication & Profile Management).
 
 ---
 
@@ -1509,7 +1392,7 @@ Patient discovers affiliate discount code, applies it during booking checkout, a
 
 1. **Given** patient is at booking checkout with $1000 total, **When** patient enters valid affiliate code "PARTNER10" (10% discount), **Then** system validates code and applies $100 discount (total becomes $900)
 2. **Given** patient applies affiliate code, **When** patient completes payment, **Then** system records booking with affiliate code and triggers commission calculation for affiliate
-3. **Given** patient attempts to apply expired affiliate code, **When** system validates code, **Then** system displays error message "This discount code is no longer valid" and checkout proceeds without discount
+3. **Given** patient attempts to apply expired affiliate code, **When** system validates code, **Then** system displays error message "This discount code is no longer valid" and checkout proceeds without discount (REQ-018-163)
 4. **Given** patient applies affiliate code that reached usage limit, **When** system validates code, **Then** system displays error message and prevents code application
 
 ---
@@ -1585,17 +1468,17 @@ Business negotiates new commission terms with affiliate; admin updates commissio
 ### Edge Cases
 
 - What happens when **affiliate has $45 pending payout (below $50 minimum threshold)**? System does NOT process payout; commission rolls over to next month until threshold is reached.
-- How does system handle **duplicate discount codes across different affiliates**? System validates uniqueness across ALL affiliates; if code exists, displays error "Code already exists for affiliate [name]".
-- What happens if **admin tries to assign the same code to multiple affiliates**? System blocks the action and requires one unique code per affiliate, or redirects admin to create a non-attributed open marketing code in FR-019.
+- How does system handle **duplicate discount codes across different affiliates**? System validates uniqueness across ALL affiliates; if code exists, displays error "Code already exists for affiliate [name]". (REQ-018-173)
+- What happens if **admin tries to assign the same code to multiple affiliates**? System blocks the action and requires one unique code per affiliate, or redirects admin to create a non-attributed open marketing code in FR-019. (REQ-018-174)
 - What happens if **bulk generation filter results change after code generation**? Existing generated codes remain tied to the original selected affiliates; admin must run a new bulk generation action for newly eligible affiliates.
-- What occurs if **patient applies affiliate code but cancels booking before payment**? System tracks code as "applied" but NOT "completed"; no commission credited to affiliate.
+- What occurs if **patient applies affiliate code but cancels booking before payment**? System tracks code as "applied" but NOT "completed"; no commission credited to affiliate. (REQ-018-175)
 - How to manage **affiliate account suspension while pending payout exists**? Pending commission is held pending investigation; if suspension is lifted, payout processes normally; if the affiliate is permanently banned (B6, Rule 16), the affiliate ends at Inactive with reason "banned" and the whole pending balance is forfeited, with an audit entry.
-- What happens when **the Stripe transfer API is down during payout processing**? The affiliate Stripe retry is owned by FR-017 / A-05 (see B2 and the FR-017 retry rules); FR-018 shows the resulting payout status and failure reason read-only.
-- How does system handle **booking refund after affiliate payout has been processed**? System tracks negative balance for affiliate; deducts refunded commission from next payout (if next payout insufficient, carries negative balance forward). The reversal is shown on Screen 8 (Payout / Transaction Detail).
+- What happens when **the Stripe transfer API is down during payout processing**? The affiliate Stripe retry is owned by FR-017 / A-05 (see B2 and the FR-017 retry rules); FR-018 shows the resulting payout status and failure reason read-only. (REQ-018-165)
+- How does system handle **booking refund after affiliate payout has been processed**? System tracks negative balance for affiliate; deducts refunded commission from next payout (if next payout insufficient, carries negative balance forward). The reversal is shown on Screen 8 (Payout / Transaction Detail). (REQ-018-176)
 - What happens when **affiliate's activation link expires before use**? Affiliate (or admin) requests a resend; the old link is invalidated and a fresh 24-hour link is sent, rate-limited to 3 per hour per email.
 - What happens when **a partnership ends (affiliate offboarded)**? Admin deactivates via Screen 3.3 (B5): status → Inactive (terminal), codes disabled, portal read-only, historical data retained, and the net final balance is settled if ≥ $50, forfeited if below $50, or written off if negative — each audited.
 - What happens when **an affiliate is offboarded while carrying a negative balance** (reversals exceeded accrued commission)? The unrecoverable negative balance is written off on deactivation with an audit entry, since no future payouts exist to net against.
-- What happens when **a patient referred by an affiliate uses or receives a higher-priority patient/provider discount code instead**? The higher-priority discount controls the patient's final price under the one-discount rule, but the affiliate referral attribution is preserved internally if the affiliate-bound code/link was validly captured for the booking journey. When the booking completes with payment confirmation, affiliate commission and referral credit are still counted for that affiliate per Rule 11.
+- What happens when **a patient referred by an affiliate uses or receives a higher-priority patient/provider discount code instead**? The higher-priority discount controls the patient's final price under the one-discount rule, but the affiliate referral attribution is preserved internally if the affiliate-bound code/link was validly captured for the booking journey. When the booking completes with payment confirmation, affiliate commission and referral credit are still counted for that affiliate per Rule 11. (REQ-018-177)
 
 ---
 
@@ -1658,54 +1541,11 @@ Business negotiates new commission terms with affiliate; admin updates commissio
 
 ---
 
-## Key Entities
-
-- **Entity 1 - Affiliate Account**
-  - **Key attributes**: Affiliate ID (unique), Name, Contact Email (unique), Phone Number, Language(s), Country/Region, Affiliate Type, Tax/VAT/Business Reg ID, Bank Account Details (account holder name, bank name, account number [encrypted], routing/SWIFT code, IBAN optional), Commission Type (Percentage/Fixed), Commission Value, Payout Schedule, Status (Pending/Active/Suspended/Inactive), Activation Status (Invited until password set / Active), Performance Tier (system-calculated), Last Login, Created Date
-  - **Relationships**: One affiliate can have many discount codes; one affiliate can have many payouts; one affiliate can be linked to many bookings (via discount codes)
-
-- **Entity 2 - Discount Code**
-  - **Key attributes**: Code ID (unique), Code Text (unique, case-insensitive), Linked Affiliate ID (foreign key), Campaign Name, Generation Mode (Single Affiliate / Selected Affiliates / Filtered Segment), Discount Type (Hairline Fees Only), Discount Amount Type (Percentage/Fixed), Discount Value, Application Method (Auto-apply/Code-based), Expiration Date (optional), Max Usage Count (optional), Per-Patient Usage Limit, Current Usage Count, Marketing Material Links (optional external URLs), Status (Active/Inactive/Expired/Revoked), Created Date
-  - **Relationships**: One code belongs to one affiliate; one code can be applied to many bookings
-
-- **Entity 2a - Affiliate Code Generation Batch**
-  - **Key attributes**: Batch ID (unique), Campaign Name, Admin User ID, Generation Mode, Filter Snapshot or Selected Affiliate IDs, Code Pattern, Requested Count, Created Count, Skipped Count, Failed Count, Created Date, Status (Completed/Partial/Failed)
-  - **Relationships**: One batch creates many affiliate discount codes; each generated code still belongs to exactly one affiliate
-
-- **Entity 3 - Booking with Affiliate Attribution**
-  - **Key attributes**: Booking ID (unique), Patient ID (anonymized in affiliate views), Affiliate Attribution Code/Link (foreign key, if captured), Final Discount Applied (foreign key, may be patient/provider/affiliate), Booking Total, Discount Applied, Hairline Commission, Affiliate Commission Owed, Booking Status (Pending/Completed/Refunded), Completion Date
-  - **Relationships**: One booking can preserve one affiliate attribution source (if captured); one booking has one final applied discount for price calculation; one booking belongs to one patient; one booking contributes to one payout
-
-- **Entity 4 - Affiliate Payout**
-  - **Key attributes**: Payout ID (unique), Affiliate ID (foreign key), Payout Month, Total Bookings Count, Total Commission Amount, Reversals/Refunds, Net Amount, Stripe Transfer ID, Payout Date, Status (Pending/Processing/Paid/Failed), Failure Reason, Admin Notes (internal), Created Date
-  - **Relationships**: One payout belongs to one affiliate; one payout summarizes many bookings; one payout maps to one FR-017 / A-05 Stripe transfer record once execution begins
-
-- **Entity 5 - Affiliate Transaction Log (Audit Trail)**
-  - **Key attributes**: Log ID (unique), Affiliate ID (foreign key), Action Type (Code Created, Code Applied, Commission Calculated, Payout Processed, Status Changed, Activation Sent, etc.), Timestamp, User ID (admin or system), IP Address, Metadata (JSON with action details)
-  - **Relationships**: One log entry belongs to one affiliate; many log entries track lifecycle of affiliate account
-
----
-
 ## Appendix: Change Log
 
 | Date | Version | Changes | Author |
 | --- | --- | --- | --- |
-| 2025-11-12 | 1.0 | Initial PRD creation for FR-018 | Claude (AI) |
-| 2026-06-22 | 1.1 | Added FR-018 ownership for affiliate promo code generation and assignment, including filtered bulk generation with one distinct code per affiliate; clarified FR-019 integration boundary, affiliate dashboard visibility, one-affiliate-per-code attribution, success criteria, requirements, entities, and testing coverage | Codex |
-| 2026-06-22 | 1.2 | Restructured Screen Specifications by tenant/platform using verified PRD convention: Admin Platform screens and Affiliate Platform screens, with patient/provider scope clarified as out of this FR | Codex |
-| 2026-06-22 | 1.3 | Expanded screen architecture: added Affiliate Detail (Screen 3), Code Generation Results (Screen 5), system-wide Promo Code Management (Screen 6), shared Promo Code Detail (Screen 7) and shared Payout/Transaction Detail (Screen 9), consolidated Payout Management with folded Billing History (Screen 8), and Modals A-C (Suspend/Reinstate, Edit Commission, Confirm Batch Payout); reframed code generation as Screen 4; restructured the affiliate portal into Overview/Promo Codes/Payouts/Profile tabs (Screen 10) with self-service profile; added affiliate activation flow mirroring FR-015 (one-time set-password link + resend); added Add/Edit fields (phone, language, tax/VAT ID, performance tier, activation status, last login); added REQ-018-027 through REQ-018-036 and related rules, entities, and testing | Claude (AI) |
-| 2026-06-22 | 1.4 | Standardized affiliate payouts on Stripe (consistent with the rest of the system) and removed PayPal/Other payout methods; replaced the generic payment-method fields with a provider-mirrored bank-detail set (account holder name, bank name, account number, routing/SWIFT, optional IBAN) per FR-032, encrypted at rest and last-4 masked; aligned payout screens, workflows, business/billing rules, dependencies, integrations, security, entities, and testing to Stripe transfers (executed via FR-017 / S-02 using FR-029 Stripe accounts); added REQ-018-037 (bank-detail collection) | Claude (AI) |
-| 2026-06-22 | 1.6 | Expanded affiliate portal tab screens (9.2 Promo Codes, 9.3 Payouts, 9.4 Profile) with full field lists (list-row + detail fields, editable vs admin-controlled, account-security); added the missing affiliate onboarding/activation screen group — Screen 10 (Affiliate Onboarding & Activation) with 10.1 Set Password, 10.2 Resend Activation, and 10.3 Welcome / Get Started — mirroring the provider activation flow (FR-015); added REQ-018-038 and updated the tenant-scope note; corrected REQ-018-035 wording to Stripe transfers | Claude (AI) |
-| 2026-06-22 | 1.7 | Lifecycle-integrity pass from FR-018 verification: (1) added Affiliate Offboarding/Deactivation — workflow B5, Screen 3.3, Rule 12, REQ-018-039 — defining the terminal Inactive state (codes disabled, portal read-only, final balance settled/forfeited/written-off incl. negative-balance write-off); (2) standardized currency on USD with all FX/conversion sourced from FR-029 (Currency Rule rewrite, REQ-018-040, FR-029 dependency, all $→USD literals); (3) documented code-based attribution as accepted policy (Rule 11) — affiliate earns only when its code is the applied discount; corrected/superseded by v2.3, where valid captured affiliate attribution can earn commission even when a higher-priority discount controls the final price; (4) recognized the Affiliate Portal as a scoped external surface of the Admin tenant (Module Scope note + constitution Principle I amendment); (5) clarified usage caps decrement on completed redemptions only with a soft applied-event rate limit (Rule 13, REQ-018-004, code-config screen); (6) added Pending initial status; (7) made affiliate name (legal/payout name) admin-controlled, removed from affiliate self-service | Claude (Opus 4.8) |
-| 2026-06-22 | 1.5 | Adopted decimal sub-screen notation (FR-033 convention): modals renumbered to sub-screens under their parent (Screen 3.1 Suspend/Reinstate, Screen 3.2 Edit Commission, Screen 7.1 Confirm Batch Payout); Code Generation Results confirmed as a full screen and renumbered Screen 4.1; sequentially renumbered the remaining admin screens (Promo Code Management 6→5, Promo Code Detail 7→6, Payout Management 8→7, Payout/Transaction Detail 9→8); split the affiliate portal (former Screen 10) into a portal shell (Screen 9) with one screen per tab (9.1 Overview, 9.2 Promo Codes, 9.3 Payouts, 9.4 Profile); updated all cross-references, tenant-scope note, Implementation Notes, and user stories accordingly | Claude (AI) |
-| 2026-06-23 | 2.1 | Follow-up boundary cleanup from FR-018 verification Issue 1 / Option 1: replaced remaining FR-018 payout-execution wording with payout-cycle calculation, review, handoff, and read-only status/history language; removed the stale Screen 7.1 tenant-scope reference; aligned shared-service labels to S-02 / S-03 / S-06 | Codex |
-| 2026-06-23 | 2.0 | Verification-fix pass 3 (FR-018 verify-fr): applied Product Owner decisions from the v1.9 follow-up — (1) moved affiliate payout execution out of FR-018 and made Screen 7 / Screen 8 read-only payout status/history surfaces, with FR-017 / A-05 owning approval, retry, and Stripe transfer execution; updated B2, Integration 3, User Story 4, REQ-018-008, REQ-018-021, REQ-018-035, and Entity 4 accordingly; (2) corrected Screen 3 table links so promo-code rows open Screen 6 and payout rows open Screen 8; (3) added read-only affiliate access to externally hosted marketing materials on Screen 9.2 plus REQ-018-042 and the Discount Code entity attribute | Codex |
-| 2026-06-23 | 1.9 | Verification-fix pass 2 (FR-018 verify-fr): (1) reconciled the initial affiliate **Status = "Pending"** on account creation across Screen 2, Screen 10, and Screen 10.1 — previously these said "Active" on create, contradicting Main Flow, Screen 1, and Rule 12; activation now flips Status and Activation Status to "Active" together; (2) added **Rule 15 (Hairline-funded cost ceiling)**, Screen 4 Margin Guard rule + AC-6, and **REQ-018-041** — the combined patient discount + affiliate commission may not exceed Hairline's commission on a booking (percentage breaches blocked with audited override; fixed-amount raises a review warning), resolving the v1.8 Finance follow-up; (3) added a Currency Rule note clarifying that client GBP figures are illustrative and USD literals are not a direct GBP→USD conversion | Claude (Opus 4.8) |
-| 2026-06-23 | 1.8 | Verification-fix pass (FR-018 verify-fr): (1) set audit-trail retention to 10 years per constitution (financial/payout records remain 7-year minimum) — Audit Rule, REQ-018-018, Fixed-in-codebase, B3/B5 retention notes; (2) redefined the percentage commission base as **% of booking revenue** (not % of Hairline commission), added Rule 14, corrected the Screen 2 preview and the User Story 3/5 worked examples ($150, not $22.50), and aligned the system-prd FR-018 requirement line; (3) tightened commission bounds to 5-25% and fixed-amount min $50 (warning threshold 20%) to match the business assumption and client intent; (4) defined Performance Tier bands and Campaign Eligibility criteria (new Affiliate Segmentation Rules subsection); (5) standardized bank-account masking wording to "last 4 digits"; (6) made the payout schedule fixed at monthly-on-the-7th per the client transcription (removed all "configurable" date language; moved to Fixed-in-codebase) | Claude (Opus 4.8) |
-| 2026-06-23 | 2.2 | Verification-fix pass (FR-018 verify-fr): (1) marked every MFA reference as a future / non-MVP control pending the shared MFA stack (FR-026 / FR-031) per constitution Principle II — Screen 9, Screen 9.4 toggle + self-service rule, Privacy Rule 3, Security Considerations, REQ-018-019; (2) corrected the FR-015 dependency module from A-04 to A-02 (Provider Management & Onboarding); (3) repointed the mislabeled "FR-003 / Booking & Payment Processing" dependency to FR-006 (Booking & Scheduling) / FR-007 (Payment Processing) under module P-03; (4) aligned Screen 1 "Total Referrals" to completed bookings (consistent with Screen 9.1 and Rule 11); (5) resequenced REQ-018-042 to follow REQ-018-041 | Claude (Opus 4.8) |
-| 2026-06-23 | 2.3 | Product Owner decision after FR-018 verification: separated final discount priority from affiliate referral attribution. A higher-priority patient/provider discount can control the patient's price, but a valid captured affiliate-bound code/link still earns affiliate referral credit and commission after payment-confirmed booking completion. Updated Rule 11, referral-count wording, REQ-018-010, the edge case, and Booking with Affiliate Attribution entity. | Codex |
-| 2026-06-23 | 2.4 | Marked PRD status as ✅ Verified & Approved after final `verify-fr FR-018` pass; updated approvals table to template-aligned verified approval state | Codex |
-| 2026-11-20 | 2.5 | Requirements graph programme baseline: owner rulings applied. Main changes: (1) percentage commission is now calculated on net revenue after discounts and refunds (Main Flow, Screens 2 and 3.2, Rule 14, Assumption 2, worked examples); fixed-amount commission has a minimum of $50 and no upper cap; (2) the monthly payout day is an admin-editable setting with default the 7th (replaces the fixed 7th schedule in Rule 5, Screens 2/7/9.1/9.3, and REQ-018-007); (3) performance tier bands confirmed as admin-editable; (4) added permanent ban path (workflow B6, Rule 16, REQ-018-297): ends at Inactive with reason "banned", whole pending balance forfeited, only admins who may offboard an affiliate may ban; (5) affiliate status changes only through the Suspend/Reinstate modal and the offboard modal (Screen 1 Status field, Admin Editability Rules); (6) promo code status list corrected to Active, Inactive, Expired, Revoked (Screen 5 note); (7) promo codes carry an expiration date only (no start date); (8) Rules 2 and 4 merged into one Hairline-funded Rule; (9) commission event note, FR-017 ownership of the affiliate Stripe retry, payout-confirmation trigger and refund-reversal screen pointers; cross-document reconciliation (retention, affiliate payout day ownership) | Claude (AI) |
+| 2026-11-22 | 2.6 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v2.5) is in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
 
 ---
 
@@ -1722,4 +1562,4 @@ Business negotiates new commission terms with affiliate; admin updates commissio
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-017 Admin Billing & Financial Management PRD
-**Last Updated**: 2026-11-20
+**Last Updated**: 2026-11-22
