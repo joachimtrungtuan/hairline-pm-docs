@@ -7,7 +7,5 @@ operations:
   - {"op": "add_edge", "from": "FR-011", "verb": "references", "to": "REQ-004-001"}
   - {"op": "add_edge", "from": "FR-011", "verb": "references", "to": "REQ-005-006"}
   - {"op": "add_edge", "from": "STG-aftercare-01-recovery-plan", "verb": "writes", "to": "ENT-aftercare-resource"}
-  - {"op": "update_node", "id": "STP-010-026", "attrs": {"handoff_to": null}}
-  - {"op": "update_node", "id": "STP-011-001", "attrs": {"handoff_from": null}}
   - {"op": "add_edge", "from": "STP-015-152", "verb": "next", "to": "STP-011-052"}
   - {"op": "update_node", "id": "STP-011-052", "attrs": {"handoff_from": null}}

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-22T12:59:09Z",
+  "generated_at": "2026-11-22T12:59:24Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -38315,7 +38315,7 @@
       "owner_fr": null,
       "title": "Aftercare & Recovery Management",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
         "module": "fr011-aftercare-recovery-management",
         "prd_path": "project-requirements/functional-requirements/fr011-aftercare-recovery-management/prd.md",
@@ -102411,7 +102411,7 @@
       "owner_fr": null,
       "title": "Recovery plan",
       "status": "active",
-      "version": 9,
+      "version": 10,
       "attrs": {
         "timeline": "aftercare",
         "sequence": 1,
@@ -108533,10 +108533,9 @@
       "owner_fr": "FR-011",
       "title": "System records the provider-status cause and sets the supportRequired marker",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Workflow 4 Alternative Flow D4",
-        "handoff_from": "FR-015: Alternative Flow A5, provider suspension or deactivation becomes effective"
+        "prd_ref": "Workflow 4 Alternative Flow D4"
       }
     },
     {
@@ -109958,7 +109957,7 @@
       "owner_fr": "FR-015",
       "title": "Admin confirms suspension and new activity is blocked",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "A5 step 2"
       }
@@ -169943,6 +169942,12 @@
     {
       "from_id": "FR-011",
       "verb": "references",
+      "to_id": "REQ-001-015",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-011",
+      "verb": "references",
       "to_id": "REQ-002-023",
       "attrs": {}
     },
@@ -169962,6 +169967,24 @@
       "from_id": "FR-011",
       "verb": "references",
       "to_id": "REQ-002-036",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-011",
+      "verb": "references",
+      "to_id": "REQ-003-120",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-011",
+      "verb": "references",
+      "to_id": "REQ-004-001",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-011",
+      "verb": "references",
+      "to_id": "REQ-005-006",
       "attrs": {}
     },
     {
@@ -169992,6 +170015,12 @@
       "from_id": "FR-011",
       "verb": "references",
       "to_id": "REQ-010-086",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-011",
+      "verb": "references",
+      "to_id": "REQ-015-037",
       "attrs": {}
     },
     {
@@ -337148,6 +337177,12 @@
     {
       "from_id": "STG-aftercare-01-recovery-plan",
       "verb": "writes",
+      "to_id": "ENT-aftercare-resource",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-aftercare-01-recovery-plan",
+      "verb": "writes",
       "to_id": "ENT-aftercare-template",
       "attrs": {}
     },
@@ -365415,6 +365450,12 @@
       "from_id": "STP-015-152",
       "verb": "next",
       "to_id": "STP-010-035",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-015-152",
+      "verb": "next",
+      "to_id": "STP-011-052",
       "attrs": {}
     },
     {
@@ -422770,6 +422811,23 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261122-125924-6b1dce93",
+      "at": "2026-11-22T12:59:24.459266+00:00",
+      "changed_by": "controller",
+      "reason": "Consistency check FR-011: references to the owner Rules of the data its screens show read-only, the write of aftercare educational resources at the Stage of the admin template screen, and two hand-offs stitched (FR-010 completion to Workflow 1, FR-015 suspension to Alternative Flow D4).",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "FR-011",
+        "STG-aftercare-01-recovery-plan",
+        "STP-011-052",
+        "STP-015-152"
+      ],
+      "edges_added": 7,
+      "edges_removed": 0,
+      "rows": 8
+    },
     {
       "id": "cs-20261122-125852-9b5f485c",
       "at": "2026-11-22T12:58:52.725708+00:00",
