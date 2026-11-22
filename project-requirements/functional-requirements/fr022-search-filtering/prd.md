@@ -1856,6 +1856,12 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 - Admins can locate a patient record in under 10 seconds for 90% of searches
 - Patients can discover and select providers in under 2 minutes for 80% of quote requests [P2 - Post-MVP]
 
+**Carried from dropped sections (original wording)**:
+
+- **Assumption 2**: Provider data is kept up-to-date by providers and verified by admin (search reflects accurate info)
+- **Entity 2 - Search Audit Log**:
+- **Key attributes**: log_id, admin_user_id, search_type (patient/provider), search_term, filters_applied, result_count, timestamp
+
 ---
 
 ## Dependencies
@@ -2084,6 +2090,7 @@ A patient has received two parent quotes from two providers. Each parent quote o
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2026-11-22 | 2.22 | Requirements graph programme baseline: PRD compressed to the checklist structure (rules cited by REQ id, search and filter control rows tagged in the Graph field column, dropped classes removed). No rule changes. Earlier history (v1.0 to v2.21) and the change request CR-FR022-20261016-01 (change-request-2026-10-16-mtg002-quote-model-alignment.md) are in `archived/prd-baseline-2026-11-08/fr022-search-filtering/` and in git history. | AI Assistant |
+| 2026-11-23 | 2.23 | Independent compression review: 3 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | AI Assistant |
 
 ---
 
