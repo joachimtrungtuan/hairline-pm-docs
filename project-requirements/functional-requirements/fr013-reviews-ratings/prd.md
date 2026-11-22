@@ -53,10 +53,10 @@ Shared Services (S-05, S-03):
 
 ### Entry Points
 
-- Time-gated invite after confirmed procedure completion (≥ 3 months) triggers review flow.
-- Patient navigates to “Write a Review” from provider history.
-- Patient views published reviews from provider profile/offer evaluation surfaces.
-- Patient navigates to “Submitted Reviews” to view review history and request takedown from detail page.
+- Time-gated invite after confirmed procedure completion (≥ 3 months) triggers review flow. (REQ-013-024)
+- Patient navigates to “Write a Review” from provider history. (REQ-013-024)
+- Patient views published reviews from provider profile/offer evaluation surfaces. (REQ-013-024)
+- Patient navigates to “Submitted Reviews” to view review history and request takedown from detail page. (REQ-013-024)
 - Providers access “Reviews” in dashboard to list/filter/detail reviews and respond.
 - Admins access “Review Management”, “Takedown Requests”, and “Review Settings” from Admin platform navigation.
 
@@ -154,43 +154,35 @@ Purpose: Allow eligible patients to submit a structured review post-procedure.
 
 Data Fields:
 
-| Field Name         | Type        | Required | Description                                  | Validation Rules                         |
-| --- | --- | --- | --- | --- |
-| Clinic Name        | text        | Yes      | Read-only clinic/provider label at top of form | Read-only; derived from booked provider |
-| Treatment Name     | text        | Yes      | Read-only treatment label at top of form       | Read-only; derived from completed procedure |
-| Overall Rating     | 1-5 stars   | Yes      | Overall experience                              | Integer 1-5 |
-| Facility Rating    | 1-5 stars   | Yes      | Facility cleanliness                            | Integer 1-5 |
-| Staff Rating       | 1-5 stars   | Yes      | Staff professionalism                           | Integer 1-5 |
-| Results Rating     | 1-5 stars   | Yes      | Results satisfaction                            | Integer 1-5 |
-| Value Rating       | 1-5 stars   | Yes      | Value for money                                 | Integer 1-5 |
-| Feedback           | textarea    | Yes      | Narrative experience                            | 100-2000 chars; 100-char minimum ensures reviews contain enough substance to be useful to other patients |
-| Photos             | image list  | No       | Optional before/after images                    | Up to 5 files; jpg/png; max 10MB each |
+| Field Name         | Type        | Required | Description                                  | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Clinic Name        | text        | Yes      | Read-only clinic/provider label at top of form | Read-only; derived from booked provider | ENT-review.clinic_name |
+| Treatment Name     | text        | Yes      | Read-only treatment label at top of form       | Read-only; derived from completed procedure | ENT-review.treatment_name |
+| Overall Rating     | 1-5 stars   | Yes      | Overall experience                              | Integer 1-5 | ENT-review.overall_rating |
+| Facility Rating    | 1-5 stars   | Yes      | Facility cleanliness                            | Integer 1-5 | ENT-review.facility_rating |
+| Staff Rating       | 1-5 stars   | Yes      | Staff professionalism                           | Integer 1-5 | ENT-review.staff_rating |
+| Results Rating     | 1-5 stars   | Yes      | Results satisfaction                            | Integer 1-5 | ENT-review.results_rating |
+| Value Rating       | 1-5 stars   | Yes      | Value for money                                 | Integer 1-5 | ENT-review.value_rating |
+| Feedback           | textarea    | Yes      | Narrative experience                            | 100-2000 chars; 100-char minimum ensures reviews contain enough substance to be useful to other patients | ENT-review.feedback_text |
+| Photos             | image list  | No       | Optional before/after images                    | Up to 5 files; jpg/png; max 10MB each | ENT-review.photos |
 
 Business Rules:
 
-- Eligibility enforced (completed procedure and ≥ 3 months).
-- One published review per completed procedure; after an approved takedown the patient may submit one new review for the same procedure (both reviews are kept in the archive); patient can edit their published review at any time.
-- Review is published immediately upon submission — no pre-publication moderation gate.
-- Clear photo guidelines; sensitive/identifying content discouraged.
+- Eligibility: see General Module Rules (REQ-013-001) and REQ-013-002.
+- One published review per completed procedure; after an approved takedown the patient may submit one new review for the same procedure (both reviews are kept in the archive); patient can edit their published review at any time. (REQ-013-002; REQ-013-030)
+- See REQ-013-003.
+- Clear photo guidelines; sensitive/identifying content discouraged. (REQ-013-029)
 - The save action persists the current review payload and immediately publishes valid patient submissions.
 
 Data Contract (Patient Form Payload):
 
-- `clinic_name` (display only, read-only context)
-- `treatment_name` (display only, read-only context)
-- `overall_rating` (1-5)
-- `facility_rating` (1-5)
-- `staff_rating` (1-5)
-- `results_rating` (1-5)
-- `value_rating` (1-5)
-- `feedback_text`
-- `photos[]`
+See REQ-013-013 for the payload fields; `clinic_name` and `treatment_name` are display only, read-only context.
 
 Notes:
 
-- Rating rows use a row-select interaction pattern (tap row to set/update score); selected values display in `X/5 star` format.
-- Disclose display policies and admin's right to remove for violations.
-- Feedback length bounds (100–2000 chars): 100-char minimum ensures substantive content for other patients; 2000-char ceiling deters off-topic walls of text and reduces spam/abuse surface area without truncating genuine narrative experience.
+- Rating rows use a row-select interaction pattern (tap row to set/update score); selected values display in `X/5 star` format. (REQ-013-026)
+- Disclose display policies and admin's right to remove for violations. (REQ-013-029)
+- Feedback length bounds (100–2000 chars): 100-char minimum ensures substantive content for other patients; 2000-char ceiling deters off-topic walls of text and reduces spam/abuse surface area without truncating genuine narrative experience. (REQ-013-026)
 
 ---
 
@@ -200,29 +192,29 @@ Purpose: Allow patient to view all submitted reviews across treatment cases.
 
 Data Fields:
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Screen title | text | Yes | "My Reviews" | Display only |
-| Header sort icon | action icon | No | Sort/reorder action in top-right header | Opens sort options |
-| Review list | list | Yes | All patient-submitted reviews grouped by treatment case/provider | Sorted by newest first; paginated |
-| Rating + time row | group | Yes | Star rating with relative time (e.g., "5 days ago") | Read-only |
-| Status | badge | Yes | Published / Removed | Patient-facing review visibility status; color-coded |
-| Takedown request status | badge | Conditional | Pending / Approved / Rejected | Shown only when a takedown request exists; sourced from takedown request workflow, not review status |
-| Treatment line | text | Yes | "Treatment: {treatment_name}" | Read-only |
-| Review excerpt | text | Yes | Truncated narrative preview | Max 2 lines + "See more" affordance |
-| Provider row | group | Yes | Provider avatar + provider name | Read-only |
-| Sort option | select | No | Reorder list by selected criterion | Default: Most recent first |
-| Open detail | action | Yes | Opens selected review detail | Navigates to Screen 3 |
-| Empty state | text | No | "No reviews yet - complete a treatment to leave a review" | Shown when patient has no submitted reviews |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Screen title | text | Yes | "My Reviews" | Display only | no graph field (control) |
+| Header sort icon | action icon | No | Sort/reorder action in top-right header | Opens sort options | no graph field (control) |
+| Review list | list | Yes | All patient-submitted reviews grouped by treatment case/provider | Sorted by newest first; paginated | ENT-review.created_at, ENT-review.last_edited_at, ENT-review |
+| Rating + time row | group | Yes | Star rating with relative time (e.g., "5 days ago") | Read-only | ENT-review.overall_rating, ENT-review.created_at |
+| Status | badge | Yes | Published / Removed | Patient-facing review visibility status; color-coded | ENT-review.status |
+| Takedown request status | badge | Conditional | Pending / Approved / Rejected | Shown only when a takedown request exists; sourced from takedown request workflow, not review status | ENT-takedown-request.status |
+| Treatment line | text | Yes | "Treatment: {treatment_name}" | Read-only | ENT-review.treatment_name |
+| Review excerpt | text | Yes | Truncated narrative preview | Max 2 lines + "See more" affordance | ENT-review.feedback_text |
+| Provider row | group | Yes | Provider avatar + provider name | Read-only | ENT-provider.avatar, ENT-provider.name |
+| Sort option | select | No | Reorder list by selected criterion | Default: Most recent first | no graph field (control) |
+| Open detail | action | Yes | Opens selected review detail | Navigates to Screen 3 | no graph field (control) |
+| Empty state | text | No | "No reviews yet - complete a treatment to leave a review" | Shown when patient has no submitted reviews | no graph field (control) |
 
 Business Rules:
 
 - Includes all submitted reviews for the logged-in patient across all completed treatment cases.
-- Review status badge uses app-facing labels: `Published`, `Removed`. A review with status `Flagged` stays publicly visible and shows as `Published` to the patient.
+- Review status badge uses app-facing labels: `Published`, `Removed`. A review with status `Flagged` shows as `Published` to the patient: see REQ-013-079. (REQ-013-040)
 - `Submitted` is not a review status in V1; successful review submission immediately creates a `Published` review.
 - Takedown request state is displayed separately from review status when applicable (`Pending`, `Approved`, `Rejected`).
 - `Removed` means no longer publicly visible due to admin action or approved takedown.
-- Default list sort is latest submission date descending.
+- Default list sort is latest submission date descending. (REQ-013-041)
 
 ---
 
@@ -232,30 +224,30 @@ Purpose: Show full submitted review content (including provider response when av
 
 Data Fields:
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Review detail payload | card | Yes | Full ratings, feedback, photos, provider, treatment context | Read-only in detail mode |
-| Review submission date | datetime | Yes | Date/time the review was submitted | Read-only |
-| Current status | badge | Yes | Published / Removed | Read-only review visibility status |
-| Takedown request status | badge | Conditional | Pending / Approved / Rejected | Shown when the review has an associated takedown request |
-| Provider response block | card | No | Provider response content, timestamp, and role badge | Shown only when provider response exists |
-| Admin removal reason | text | No | Reason supplied by admin when review is removed | Shown only when status = Removed |
-| Takedown decision note | text | Conditional | Admin's note explaining the takedown decision | Shown only after the takedown request has been decided (Approved or Rejected) |
-| Edit review | button | Conditional | Opens pre-filled edit form | Visible only when status = Published |
-| Request takedown | button | Conditional | Opens takedown confirmation bottom sheet/modal | Visible only when status = Published |
-| Takedown reason | textarea | Yes (when requesting) | Required patient reason for admin context | 10–1000 chars |
-| Retention notice | info text | Yes (when requesting) | "Review content will be removed from public view but archived for 10 years. Audit records of this takedown are kept for the same 10 years." | Display-only policy text; reflects the one 10-year retention period (see Data & Privacy Rules) |
-| Submit takedown request | action | Yes (when requesting) | Sends request to admin queue | Confirmation required |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Review detail payload | card | Yes | Full ratings, feedback, photos, provider, treatment context | Read-only in detail mode | ENT-review.overall_rating, ENT-review.facility_rating, ENT-review.staff_rating, ENT-review.results_rating, ENT-review.value_rating, ENT-review.feedback_text, ENT-review.photos, ENT-review.treatment_name, ENT-review.last_edited_at, ENT-provider.name |
+| Review submission date | datetime | Yes | Date/time the review was submitted | Read-only | ENT-review.created_at |
+| Current status | badge | Yes | Published / Removed | Read-only review visibility status | ENT-review.status |
+| Takedown request status | badge | Conditional | Pending / Approved / Rejected | Shown when the review has an associated takedown request | ENT-takedown-request.status |
+| Provider response block | card | No | Provider response content, timestamp, and role badge | Shown only when provider response exists | ENT-provider-response.response_text, ENT-provider-response.created_at, ENT-provider-response.author_role |
+| Admin removal reason | text | No | Reason supplied by admin when review is removed | Shown only when status = Removed | ENT-review.admin_removal_reason |
+| Takedown decision note | text | Conditional | Admin's note explaining the takedown decision | Shown only after the takedown request has been decided (Approved or Rejected) | ENT-takedown-request.decision_note |
+| Edit review | button | Conditional | Opens pre-filled edit form | Visible only when status = Published | no graph field (control) |
+| Request takedown | button | Conditional | Opens takedown confirmation bottom sheet/modal | Visible only when status = Published | no graph field (control) |
+| Takedown reason | textarea | Yes (when requesting) | Required patient reason for admin context | 10–1000 chars (REQ-013-045) | ENT-takedown-request.reason |
+| Retention notice | info text | Yes (when requesting) | "Review content will be removed from public view but archived for 10 years. Audit records of this takedown are kept for the same 10 years." | Display-only policy text; reflects the one 10-year retention period (see Data & Privacy Rules) (REQ-013-075) | no graph field (control) |
+| Submit takedown request | action | Yes (when requesting) | Sends request to admin queue | Confirmation required | no graph field (control) |
 
 Business Rules:
 
-- Patient cannot directly delete a submitted review.
-- For `Published` status, both `Edit Review` and `Request Takedown` actions are available.
-- For `Removed` status, detail is read-only and shows admin removal reason; edit/takedown actions are hidden.
-- `Edit Review` opens pre-filled form fields; saved edits are published immediately (no moderation gate).
-- Takedown request is submitted from a bottom sheet/modal with required reason and mandatory retention-policy notice.
-- Takedown request creates a pending admin review record.
-- While request status is `Pending`, review remains `Published` unless manually removed by admin.
+- See REQ-013-005.
+- For `Published` status, both `Edit Review` and `Request Takedown` actions are available. (REQ-013-042)
+- For `Removed` status, detail is read-only and shows admin removal reason; edit/takedown actions are hidden. (REQ-013-042)
+- `Edit Review` opens pre-filled form fields; saved edits are published immediately (no moderation gate). (REQ-013-030; on edit see also Main Flow steps 4 and 5: REQ-013-032, REQ-013-033)
+- See REQ-013-020.
+- See REQ-013-044.
+- While request status is `Pending`, review remains `Published` unless manually removed by admin. (REQ-013-043)
 
 #### Screen 4: Patient – Provider Profile Reviews Section
 
@@ -269,32 +261,31 @@ Context Note:
 
 Data Fields:
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Host provider context | reference | Yes | Current provider/clinic profile being reviewed in the quote flow | Read-only; supplied by host provider profile screen |
-| Rating summary teaser | stats row | Yes | Average rating, star display, total review count, and `View all` entry point near provider heading | Read-only; cached summary allowed |
-| Reviews section heading | text/action row | Yes | Reviews heading with optional `View all` action | Display only; action opens full review list state |
-| Review preview list | list | Yes | Preview reviews shown within provider profile screen | Published reviews only; limited count before `View all` |
-| Full reviews list state | list/overlay/subview | Conditional | Expanded review list opened from `View all` | Paginated; newest first by default |
-| Reviewer alias | text | Yes | Public reviewer display name | Uses alias by default; no PII exposure |
-| Rating + date row | group | Yes | Overall rating and submitted date/relative time | Read-only |
-| Treatment context | text | No | Treatment/procedure context when display-safe | Read-only; no sensitive details |
-| Review excerpt/body | text | Yes | Review feedback preview or full content | Preview truncates with "See more" affordance |
-| Photos | image list | No | Public review photos/thumbnails | Display only approved/public photos |
-| Provider response block | card | No | Provider response content and timestamp | Shown only when response exists |
-| Verified off-platform badge | badge | Conditional | Provenance marker for admin-seeded authenticated reviews | Required for admin-seeded reviews |
-| Sort/filter controls | controls | No | Sort by recency/rating and filter by rating | Full reviews list state only |
-| Open review detail | action | No | Opens expanded review content | May use in-screen expansion, modal, or host-defined subview |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Host provider context | reference | Yes | Current provider/clinic profile being reviewed in the quote flow | Read-only; supplied by host provider profile screen | ENT-provider.name |
+| Rating summary teaser | stats row | Yes | Average rating, star display, total review count, and `View all` entry point near provider heading | Read-only; cached summary allowed | ENT-provider-review-summary.average_rating, ENT-provider-review-summary.review_count |
+| Reviews section heading | text/action row | Yes | Reviews heading with optional `View all` action | Display only; action opens full review list state | no graph field (control) |
+| Review preview list | list | Yes | Preview reviews shown within provider profile screen | Published reviews only; limited count before `View all` (REQ-013-062) | ENT-review, ENT-review.last_edited_at |
+| Full reviews list state | list/overlay/subview | Conditional | Expanded review list opened from `View all` | Paginated; newest first by default (REQ-013-062) | ENT-review |
+| Reviewer alias | text | Yes | Public reviewer display name | Uses alias by default; no PII exposure | ENT-review.reviewer_name |
+| Rating + date row | group | Yes | Overall rating and submitted date/relative time | Read-only | ENT-review.overall_rating, ENT-review.created_at |
+| Treatment context | text | No | Treatment/procedure context when display-safe | Read-only; no sensitive details | ENT-review.treatment_name |
+| Review excerpt/body | text | Yes | Review feedback preview or full content | Preview truncates with "See more" affordance | ENT-review.feedback_text |
+| Photos | image list | No | Public review photos/thumbnails | Display only approved/public photos | ENT-review.photos |
+| Provider response block | card | No | Provider response content and timestamp | Shown only when response exists | ENT-provider-response.response_text, ENT-provider-response.created_at |
+| Verified off-platform badge | badge | Conditional | Provenance marker for admin-seeded authenticated reviews | Required for admin-seeded reviews | ENT-review.source_type |
+| Sort/filter controls | controls | No | Sort by recency/rating and filter by rating | Full reviews list state only (REQ-013-062) | no graph field (control) |
+| Open review detail | action | No | Opens expanded review content | May use in-screen expansion, modal, or host-defined subview | no graph field (control) |
 
 Business Rules:
 
-- Only `Published` reviews are visible on patient-facing provider/clinic profile surfaces.
-- The embedded preview must not redefine or duplicate the full provider profile layout; it inherits provider identity and navigation from the host provider profile screen.
-- `View all` opens the complete review list for the same provider without changing review ownership or source rules.
-- Reviewer identity is aliased by default and must not expose patient PII.
-- Admin-seeded reviews must display the `Verified Off-platform` marker.
-- Provider response displays with the review when available.
-- Review photos shown publicly must follow the same media privacy and removal rules as submitted review photos.
+- Only `Published` reviews are visible on patient-facing provider/clinic profile surfaces. (REQ-013-059)
+- The embedded preview must not redefine or duplicate the full provider profile layout; it inherits provider identity and navigation from the host provider profile screen. (REQ-013-060)
+- `View all` opens the complete review list for the same provider without changing review ownership or source rules. (REQ-013-061)
+- See REQ-013-014.
+- See REQ-013-006 for the `Verified Off-platform` marker and the provider response display on these surfaces.
+- Review photos shown publicly must follow the same media privacy and removal rules as submitted review photos. (REQ-013-064)
 
 ---
 
@@ -312,22 +303,22 @@ Context Note:
 
 Data Fields:
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Ratings summary | stats | Yes | Average rating, count, distribution | Read-only |
-| Review list | list | Yes | All published reviews tied to provider | Paginated; newest first by default |
-| Review source type | badge | Yes | Patient-submitted / Verified Off-platform | Read-only |
-| Reviewer alias | text | Yes | Patient alias or off-platform reviewer label | Read-only; no PII exposure |
-| Case/treatment context | text | Yes | Treatment case and treatment/procedure context | Read-only |
-| Response status | badge | Yes | No response / Responded | Read-only |
-| Filters | controls | No | Filter by patient, case, rating range, date range, response status, source type | Multi-filter |
-| Sort | select | No | Sort reviews by recency or rating | Default: recency |
-| Open detail | action | Yes | Opens selected review detail | Navigates to Screen 6 |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Ratings summary | stats | Yes | Average rating, count, distribution | Read-only | ENT-provider-review-summary.average_rating, ENT-provider-review-summary.review_count, ENT-provider-review-summary.rating_distribution |
+| Review list | list | Yes | All published reviews tied to provider | Paginated; newest first by default (REQ-013-063) | ENT-review, ENT-review.created_at, ENT-review.overall_rating, ENT-review.last_edited_at |
+| Review source type | badge | Yes | Patient-submitted / Verified Off-platform | Read-only | ENT-review.source_type |
+| Reviewer alias | text | Yes | Patient alias or off-platform reviewer label | Read-only; no PII exposure | ENT-review.reviewer_name |
+| Case/treatment context | text | Yes | Treatment case and treatment/procedure context | Read-only | ENT-review.procedure_id, ENT-review.treatment_name |
+| Response status | badge | Yes | No response / Responded | Read-only | ENT-review.response_status |
+| Filters | controls | No | Filter by patient, case, rating range, date range, response status, source type | Multi-filter | no graph field (control) |
+| Sort | select | No | Sort reviews by recency or rating | Default: recency (REQ-013-063) | no graph field (control) |
+| Open detail | action | Yes | Opens selected review detail | Navigates to Screen 6 | no graph field (control) |
 
 Business Rules:
 
-- One patient may have multiple treatment cases; list must support case-specific filtering.
-- Only published reviews appear in provider list surfaces.
+- One patient may have multiple treatment cases; list must support case-specific filtering. (REQ-013-058)
+- Only published reviews appear in provider list surfaces. (REQ-013-059)
 
 ---
 
@@ -337,32 +328,32 @@ Purpose: Let provider inspect review details and post public response.
 
 Data Fields:
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Review detail payload | card | Yes | Canonical review payload (ratings, feedback, photos, treatment case context) | Read-only |
-| Review source type | badge | Yes | Patient-submitted / Verified Off-platform | Read-only |
-| Reviewer alias | text | Yes | Public reviewer label | Read-only; no PII exposure |
-| Photos | image list | No | Review photos and thumbnails | Read-only |
-| Provider response card | display block | No | Persisted provider response content, author, role, timestamp | Shown when response exists |
-| Respond as Provider | button | Conditional | Opens response composer | Visible only when review is published and no response exists |
-| Response composer | inline panel/modal | Conditional | Non-navigating response input surface within this screen | Opens from `Respond as Provider` |
-| Response text | textarea | Yes (when composing) | Provider's public response body | 50-1000 chars |
-| Character counter | indicator | Yes (when composing) | Remaining character count | Live update; blocks submit outside limits |
-| Cancel response | button | Yes (when composing) | Close composer without publishing | Confirmation prompt if unsaved content exists |
-| Submit response | action | Yes (when composing) | Publish provider response | Enabled only when validation passes |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Review detail payload | card | Yes | Canonical review payload (ratings, feedback, photos, treatment case context) | Read-only | ENT-review.overall_rating, ENT-review.facility_rating, ENT-review.staff_rating, ENT-review.results_rating, ENT-review.value_rating, ENT-review.feedback_text, ENT-review.photos, ENT-review.treatment_name, ENT-review.procedure_id, ENT-review.last_edited_at |
+| Review source type | badge | Yes | Patient-submitted / Verified Off-platform | Read-only | ENT-review.source_type |
+| Reviewer alias | text | Yes | Public reviewer label | Read-only; no PII exposure | ENT-review.reviewer_name |
+| Photos | image list | No | Review photos and thumbnails | Read-only | ENT-review.photos |
+| Provider response card | display block | No | Persisted provider response content, author, role, timestamp | Shown when response exists | ENT-provider-response.response_text, ENT-provider-response.author_id, ENT-provider-response.author_role, ENT-provider-response.created_at |
+| Respond as Provider | button | Conditional | Opens response composer | Visible only when review is published and no response exists | no graph field (control) |
+| Response composer | inline panel/modal | Conditional | Non-navigating response input surface within this screen | Opens from `Respond as Provider` | no graph field (control) |
+| Response text | textarea | Yes (when composing) | Provider's public response body | 50-1000 chars | ENT-provider-response.response_text |
+| Character counter | indicator | Yes (when composing) | Remaining character count | Live update; blocks submit outside limits | no graph field (control) |
+| Cancel response | button | Yes (when composing) | Close composer without publishing | Confirmation prompt if unsaved content exists | no graph field (control) |
+| Submit response | action | Yes (when composing) | Publish provider response | Enabled only when validation passes | no graph field (control) |
 
 Business Rules:
 
-- Provider responses are public and immutable while published; admins may remove a response for policy violation. After an admin removal, the provider may submit exactly one replacement response (see one-active-response rule below) — outside of that single replacement, posted responses cannot be edited or re-posted by the provider.
-- Detail view must preserve treatment-case context so provider can differentiate multi-case patient histories.
-- Provider may have at most one active public response per review in V1. If admin removes a prior response for policy violation, provider may submit one replacement response; both the removed and replacement responses are retained in the audit trail (`AdminAction` for the removal, `ProviderResponse` history for the lifecycle).
-- Composer is an inline state of this screen, not a separate navigation screen.
-- Submission records provider identity and timestamp and triggers patient notification.
+- Provider responses are public and immutable while published; admins may remove a response for policy violation. After an admin removal, the provider may submit exactly one replacement response (see one-active-response rule below) — outside of that single replacement, posted responses cannot be edited or re-posted by the provider. (REQ-013-055)
+- Detail view must preserve treatment-case context so provider can differentiate multi-case patient histories. (REQ-013-058)
+- Provider may have at most one active public response per review in V1. If admin removes a prior response for policy violation, provider may submit one replacement response; both the removed and replacement responses are retained in the audit trail (`AdminAction` for the removal, `ProviderResponse` history for the lifecycle). (REQ-013-056)
+- See REQ-013-021.
+- Submission records provider identity and timestamp and triggers patient notification. (REQ-013-057)
 
 Notes:
 
 - Encourage professional tone; display response timestamp and provider role.
-- Response length bounds (50–1000 chars): 50-char minimum prevents single-word or non-substantive replies that erode trust; 1000-char ceiling keeps public responses scannable on review surfaces and discourages defensive long-form rebuttals.
+- Response length bounds (50–1000 chars): 50-char minimum prevents single-word or non-substantive replies that erode trust; 1000-char ceiling keeps public responses scannable on review surfaces and discourages defensive long-form rebuttals. (REQ-013-054)
 
 ---
 
@@ -374,22 +365,22 @@ Purpose: Monitor all reviews in the system with operational filters.
 
 Data Fields:
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Reviews list | list | Yes | Global list of all reviews | Paginated; system-wide |
-| Source type | badge/filter | No | Patient-submitted / Verified Off-platform | Read-only badge; filterable |
-| Flagged status | badge/filter | No | Flagged / Not flagged | Read-only badge; filterable |
-| Response status | badge/filter | No | No response / Responded | Read-only badge; filterable |
-| Filters | controls | No | Provider, patient, treatment case, status, date, rating, source type, flagged status | Multi-filter |
-| Search | text | No | Search by patient/provider/case identifiers | Min 2 chars |
-| Open detail | action | Yes | Open selected review detail/edit view | Navigates to Screen 8 |
-| Open takedown queue | action | Yes | Navigate to takedown requests | Navigates to Screen 9 |
-| Open review settings | action | No | Navigate to review settings/export | Navigates to Screen 10 |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Reviews list | list | Yes | Global list of all reviews | Paginated; system-wide | ENT-review, ENT-review.created_at, ENT-review.overall_rating, ENT-review.status |
+| Source type | badge/filter | No | Patient-submitted / Verified Off-platform | Read-only badge; filterable | ENT-review.source_type |
+| Flagged status | badge/filter | No | Flagged / Not flagged | Read-only badge; filterable | ENT-review.status |
+| Response status | badge/filter | No | No response / Responded | Read-only badge; filterable | ENT-review.response_status |
+| Filters | controls | No | Provider, patient, treatment case, status, date, rating, source type, flagged status | Multi-filter | no graph field (control) |
+| Search | text | No | Search by patient/provider/case identifiers | Min 2 chars | no graph field (control) |
+| Open detail | action | Yes | Open selected review detail/edit view | Navigates to Screen 8 | no graph field (control) |
+| Open takedown queue | action | Yes | Navigate to takedown requests | Navigates to Screen 9 | no graph field (control) |
+| Open review settings | action | No | Navigate to review settings/export | Navigates to Screen 10 | no graph field (control) |
 
 Business Rules:
 
-- Admin list includes patient-submitted and admin-seeded reviews.
-- Review visibility/filter results must preserve complete audit traceability.
+- Admin list includes patient-submitted and admin-seeded reviews. (REQ-013-065)
+- Review visibility/filter results must preserve complete audit traceability. (REQ-013-065)
 
 ---
 
@@ -399,30 +390,30 @@ Purpose: Let admin inspect review details, edit/remove reviews, and insert new a
 
 Data Fields:
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Review detail payload | card/form | Yes | Full review content and metadata | Canonical schema |
-| Source type | badge/select | Yes | Patient-submitted / Verified Off-platform | Read-only for existing patient reviews; required for admin add |
-| Flagged status | badge | No | Auto/manual flag state and reason | Read-only unless admin resolves flag |
-| Audit trail preview | timeline | Yes | Recent admin actions and state changes | Read-only; full audit retained |
-| Edit fields | form controls | No | Redaction/correction fields for existing review | Reason required for edit |
-| Remove review | action | No | Unpublish + archive review | Removal reason min 10 chars |
-| Add review | action | No | Create new authenticated provider review | Requires provenance inputs |
-| Source verification | form group | Yes (for add) | Structured `source_metadata` payload (see below) capturing provenance and consent for seeded review | All required sub-fields must be provided for admin-seeded items; persisted to `Review.source_metadata` |
-| → Source platform | select | Yes (for add) | Origin of the off-platform review (e.g., Google, Trustpilot, Doctolify, Provider Website, Email Testimonial, Other) | Enum; "Other" requires free-text platform name |
-| → Source URL | url | Conditional (for add) | Public link to original review when available | Valid URL; required unless `source_platform = Email Testimonial` |
-| → Evidence file(s) | file upload | Yes (for add) | Screenshot/PDF/email capture of the original review | 1–5 files; jpg/png/pdf; max 10MB each; stored via S-05 |
-| → Capture date | date | Yes (for add) | Date the evidence was captured/observed | ISO date; not in future |
-| → Permission record | file or text + checkbox | Yes (for add) | Patient/reviewer consent artifact (signed permission, email screenshot, or written consent reference) + admin attestation checkbox confirming consent was obtained | Either file upload OR text reference + mandatory admin attestation |
-| → Reviewer display name | text | Yes (for add) | Admin-entered alias to show publicly (see reviewer alias rule under Data & Privacy Rules) | PII-safe; no full last name; no contact info |
-| Patient/reviewer photo | image upload | No (for add) | Optional reviewer image for authenticated seeded reviews | Must follow media policy |
-| Removal/edit reason | select + textarea | Conditional | Reason catalog plus optional details | Required for edit/remove |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Review detail payload | card/form | Yes | Full review content and metadata | Canonical schema | ENT-review.overall_rating, ENT-review.facility_rating, ENT-review.staff_rating, ENT-review.results_rating, ENT-review.value_rating, ENT-review.feedback_text, ENT-review.photos, ENT-review.created_at |
+| Source type | badge/select | Yes | Patient-submitted / Verified Off-platform | Read-only for existing patient reviews; required for admin add | ENT-review.source_type |
+| Flagged status | badge | No | Auto/manual flag state and reason | Read-only unless admin resolves flag | ENT-review.status, ENT-review.flag_reason |
+| Audit trail preview | timeline | Yes | Recent admin actions and state changes | Read-only; full audit retained | ENT-admin-action.action_type, ENT-admin-action.admin_id, ENT-admin-action.changes, ENT-admin-action.created_at, ENT-admin-action.reason |
+| Edit fields | form controls | No | Redaction/correction fields for existing review | Reason required for edit | ENT-review |
+| Remove review | action | No | Unpublish + archive review | Removal reason min 10 chars (REQ-013-039) | no graph field (control) |
+| Add review | action | No | Create new authenticated provider review | Requires provenance inputs | no graph field (control) |
+| Source verification | form group | Yes (for add) | Structured `source_metadata` payload (see below) capturing provenance and consent for seeded review | All required sub-fields must be provided for admin-seeded items; persisted to `Review.source_metadata` (REQ-013-036) | ENT-review.source_metadata |
+| → Source platform | select | Yes (for add) | Origin of the off-platform review (e.g., Google, Trustpilot, Doctolify, Provider Website, Email Testimonial, Other) | Enum; "Other" requires free-text platform name | ENT-review-source-metadata.source_platform, ENT-review-source-metadata.other_platform_name |
+| → Source URL | url | Conditional (for add) | Public link to original review when available | Valid URL; required unless `source_platform = Email Testimonial` | ENT-review-source-metadata.source_url |
+| → Evidence file(s) | file upload | Yes (for add) | Screenshot/PDF/email capture of the original review | 1–5 files; jpg/png/pdf; max 10MB each; stored via S-05 | ENT-review-source-metadata.evidence_file_ids |
+| → Capture date | date | Yes (for add) | Date the evidence was captured/observed | ISO date; not in future | ENT-review-source-metadata.capture_date |
+| → Permission record | file or text + checkbox | Yes (for add) | Patient/reviewer consent artifact (signed permission, email screenshot, or written consent reference) + admin attestation checkbox confirming consent was obtained | Either file upload OR text reference + mandatory admin attestation (REQ-013-037) | ENT-review-source-metadata.permission_record_file_id, ENT-review-source-metadata.permission_record_reference, ENT-review-source-metadata.admin_attestation_bool |
+| → Reviewer display name | text | Yes (for add) | Admin-entered alias to show publicly (see reviewer alias rule under Data & Privacy Rules) | PII-safe; no full last name; no contact info (REQ-013-037) | ENT-review-source-metadata.reviewer_display_name |
+| Patient/reviewer photo | image upload | No (for add) | Optional reviewer image for authenticated seeded reviews | Must follow media policy | ENT-review.reviewer_avatar_url |
+| Removal/edit reason | select + textarea | Conditional | Reason catalog plus optional details | Required for edit/remove | ENT-admin-action.reason, ENT-review.admin_removal_reason |
 
 Business Rules:
 
-- Every admin add/edit/remove action records admin identity, timestamp, reason, and before/after changes.
-- Admin-seeded reviews must be flagged as "Verified Off-platform" with verification provenance.
-- Removed reviews are unpublished + archived (not hard deleted).
+- Every admin add/edit/remove action records admin identity, timestamp, reason, and before/after changes. (REQ-013-038)
+- Admin-seeded reviews must be flagged as "Verified Off-platform" with verification provenance. (REQ-013-035)
+- Removed reviews are unpublished + archived (not hard deleted). (REQ-013-016)
 
 ---
 
@@ -432,26 +423,24 @@ Purpose: Review and decide patient takedown requests.
 
 Data Fields:
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Request queue | list | Yes | Pending/resolved takedown requests | Filterable by status/date |
-| Request metadata | group | Yes | Request ID, created date, requester, provider, treatment case | Read-only |
-| Linked review preview | card | Yes | Review summary linked to request | Read-only |
-| Current review status | badge | Yes | Published / Flagged / Removed | Read-only |
-| Request reason | text | Yes | Patient-submitted reason | Read-only |
-| Decision action | controls | Yes | Approve / Reject takedown | Decision note required |
-| Decision note | textarea | Yes | Admin justification for decision | 10-1000 chars |
-| Admin removal reason | textarea | Conditional | Patient-facing reason shown on Screen 3 after approved takedown/removal | Required when approving takedown; persisted to removed review record |
-| Decision history | timeline | No | Prior decisions/updates on resolved requests | Read-only |
-| Decision timestamp | datetime | Conditional | When request was resolved | Read-only after decision |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Request queue | list | Yes | Pending/resolved takedown requests | Filterable by status/date (REQ-013-076) | ENT-takedown-request.status, ENT-takedown-request.created_at |
+| Request metadata | group | Yes | Request ID, created date, requester, provider, treatment case | Read-only | ENT-takedown-request.id, ENT-takedown-request.created_at, ENT-takedown-request.requester_id, ENT-review.provider_id, ENT-review.procedure_id |
+| Linked review preview | card | Yes | Review summary linked to request | Read-only | ENT-review.feedback_text, ENT-review.overall_rating |
+| Current review status | badge | Yes | Published / Flagged / Removed | Read-only | ENT-review.status |
+| Request reason | text | Yes | Patient-submitted reason | Read-only | ENT-takedown-request.reason |
+| Decision action | controls | Yes | Approve / Reject takedown | Decision note required | no graph field (control) |
+| Decision note | textarea | Yes | Admin justification for decision | 10-1000 chars | ENT-takedown-request.decision_note |
+| Admin removal reason | textarea | Conditional | Patient-facing reason shown on Screen 3 after approved takedown/removal | Required when approving takedown; persisted to removed review record | ENT-review.admin_removal_reason |
+| Decision history | timeline | No | Prior decisions/updates on resolved requests | Read-only | ENT-admin-action.action_type |
+| Decision timestamp | datetime | Conditional | When request was resolved | Read-only after decision | ENT-takedown-request.decided_at |
 
 Notes:
 
-- Approve decision: review unpublished + archived.
-- Approved takedown must persist `Admin removal reason` on the removed review so Patient Review Detail (Screen 3) can display the same reason consistently.
-- Reject decision: review remains published.
-- Patient must be notified for both outcomes.
-- Admin tooling must read/write the same canonical review schema as patient/provider surfaces to prevent cross-tenant drift.
+- Approve and reject decisions, and notifying the patient of both outcomes: see REQ-013-046.
+- Approved takedown must persist `Admin removal reason` on the removed review so Patient Review Detail (Screen 3) can display the same reason consistently. (REQ-013-047)
+- Admin tooling must read/write the same canonical review schema as patient/provider surfaces to prevent cross-tenant drift. (REQ-013-013)
 
 ---
 
@@ -461,23 +450,23 @@ Purpose: Configure review display policy controls and operational exports, with 
 
 Data Fields:
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Review categories/labels | editable list | Yes | Category rating labels used by review forms and displays | Admin-editable labels; canonical keys remain fixed |
-| Invitation cadence link-out | navigation | Yes | Entry point to FR-030 Notification Rules & Configuration where `review.requested` event timing/cadence is owned | Read-only here; configured in FR-030 |
-| Reminder settings link-out | navigation | No | Entry point to FR-030 for reminder count/timing on review invitations | Read-only here; configured in FR-030 |
-| Photo guidelines text | rich text/textarea | Yes | Patient-facing photo upload guidance | Required; audit-logged (all edits captured via AdminAction with before/after values; no formal version model) |
-| Removal reason catalog | editable list | Yes | Standard reasons for admin removals/redactions | At least one active reason |
-| Reviewer display policy | controls | Yes | Alias/full-name policy settings | Defaults to alias; PII-safe |
-| Flagging thresholds | controls | No | Duplicate/spam/keyword flag settings | Restricted safe ranges only |
-| Takedown SLA settings | controls | No | Queue priority/SLA target and takedown decision deadline | Restricted policy range; deadline defaults to 48 hours |
-| Export reviews report | action | No | Export reviews/audit/takedown reports | RBAC-restricted; audit logged |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Review categories/labels | editable list | Yes | Category rating labels used by review forms and displays | Admin-editable labels; canonical keys remain fixed | ENT-review-settings.category_labels |
+| Invitation cadence link-out | navigation | Yes | Entry point to FR-030 Notification Rules & Configuration where `review.requested` event timing/cadence is owned | Read-only here; configured in FR-030 | no graph field (control) |
+| Reminder settings link-out | navigation | No | Entry point to FR-030 for reminder count/timing on review invitations | Read-only here; configured in FR-030 | no graph field (control) |
+| Photo guidelines text | rich text/textarea | Yes | Patient-facing photo upload guidance | Required; audit-logged (all edits captured via AdminAction with before/after values; no formal version model) (REQ-013-071) | ENT-review-settings.photo_guidelines |
+| Removal reason catalog | editable list | Yes | Standard reasons for admin removals/redactions | At least one active reason (REQ-013-072) | ENT-review-settings.removal_reasons |
+| Reviewer display policy | controls | Yes | Alias/full-name policy settings | Defaults to alias; PII-safe | ENT-review-settings.display_policy |
+| Flagging thresholds | controls | No | Duplicate/spam/keyword flag settings | Restricted safe ranges only | ENT-review-settings.flagging_thresholds |
+| Takedown SLA settings | controls | No | Queue priority/SLA target and takedown decision deadline | Restricted policy range; deadline defaults to 48 hours (REQ-013-078) | ENT-review-settings.takedown_sla |
+| Export reviews report | action | No | Export reviews/audit/takedown reports | RBAC-restricted; audit logged | no graph field (control) |
 
 Business Rules:
 
-- Settings changes are admin-only and audit logged.
-- Settings must not weaken fixed eligibility, rating scale, text length, retention, or privacy rules.
-- Export actions must preserve RBAC, PII handling, and audit traceability.
+- Settings changes are admin-only and audit logged. (REQ-013-066)
+- Settings must not weaken fixed eligibility, rating scale, text length, retention, or privacy rules. (REQ-013-067)
+- Export actions must preserve RBAC, PII handling, and audit traceability. (REQ-013-068)
 
 ---
 
@@ -485,151 +474,51 @@ Business Rules:
 
 ### General Module Rules
 
-- Eligibility check required: only patients with a completed procedure may review.
-- Time gating: review invitation and entry allowed ≥ 3 months post-procedure.
-- One published review per completed procedure; after an approved takedown the patient may submit one new review for the same procedure, and both reviews are kept in the archive.
-- Patient cannot directly delete submitted reviews; takedown requires admin decision workflow.
-- Ratings use 1–5 scale with half‑stars display allowed for averages.
+- Eligibility check required: only patients with a completed procedure may review. (REQ-013-001)
+- Time gating: review invitation and entry allowed ≥ 3 months post-procedure. (REQ-013-002)
+- See REQ-013-002.
+- See REQ-013-005.
+- Ratings use 1–5 scale with half‑stars display allowed for averages. (REQ-013-053)
+- Anti‑abuse: Duplicate detection, keyword flags, rate limits for submissions and responses.
 
 ### Data & Privacy Rules
 
-- Patient display name uses aliasing by default; see canonical reviewer alias algorithm below.
-- Photos and text must not expose sensitive personal information; admin may redact or remove post-publication.
-- Review content (review record + photos + provider responses + takedown requests) retained per the system PRD, Platform-Wide Rules: One 10-year retention period; approved takedown requests are processed by unpublish + archival with restricted access — never hard-deleted.
-- `AdminAction` and all audit-log records (patient self-edits, admin edits/removals/seeded reviews, takedown decisions, settings changes, provider responses) are immutable (Constitution §VI, Audit Trail); retention follows the system PRD, Platform-Wide Rules: One 10-year retention period.
-- All review mutations are fully auditable (who, when, what, before/after, reason where applicable), including patient self-edits to published reviews, admin actions (edits, removals, seeded reviews, takedown decisions, settings changes), and provider response creation. Audit records preserve actor type (patient / provider / admin) and prior field values to satisfy constitution Auditability requirements.
-- Reviewer alias algorithm (canonical, applied uniformly across Patient, Provider, and Admin public surfaces): `{first_name} {last_initial}.` (e.g., "Sarah M."); collisions within the same provider's review list are deduplicated with a numeric suffix (`Sarah M. 2`, `Sarah M. 3`, …). Admin views may unmask to full identity per RBAC. Admin-seeded reviews use an admin-entered `reviewer_display_name` field (free text, subject to the same PII-safety policy — no full last name, no contact info) instead of the algorithmic alias; the `Verified Off-platform` badge accompanies the display name. Patients have no opt-in to expose full name in V1; reviewer display policy toggle on Screen 10 governs only future policy expansion and MUST default to alias-only.
+- Patient display name uses aliasing by default; see canonical reviewer alias algorithm below. (REQ-013-014)
+- Photos and text must not expose sensitive personal information; admin may redact or remove post-publication. (REQ-013-051)
+- Review content (review record + photos + provider responses + takedown requests) retained per the system PRD, Platform-Wide Rules: One 10-year retention period; approved takedown requests are processed by unpublish + archival with restricted access — never hard-deleted. (REQ-013-048; REQ-SYS-002)
+- `AdminAction` and all audit-log records (patient self-edits, admin edits/removals/seeded reviews, takedown decisions, settings changes, provider responses) are immutable (Constitution §VI, Audit Trail); retention follows the system PRD, Platform-Wide Rules: One 10-year retention period. (REQ-013-049; REQ-SYS-002)
+- All review mutations are fully auditable (who, when, what, before/after, reason where applicable), including patient self-edits to published reviews, admin actions (edits, removals, seeded reviews, takedown decisions, settings changes), and provider response creation. Audit records preserve actor type (patient / provider / admin) and prior field values to satisfy constitution Auditability requirements. (REQ-013-050)
+- Reviewer alias algorithm (canonical, applied uniformly across Patient, Provider, and Admin public surfaces): `{first_name} {last_initial}.` (e.g., "Sarah M."); collisions within the same provider's review list are deduplicated with a numeric suffix (`Sarah M. 2`, `Sarah M. 3`, …). Admin views may unmask to full identity per RBAC. Admin-seeded reviews use an admin-entered `reviewer_display_name` field (free text, subject to the same PII-safety policy — no full last name, no contact info) instead of the algorithmic alias; the `Verified Off-platform` badge accompanies the display name. Patients have no opt-in to expose full name in V1; reviewer display policy toggle on Screen 10 governs only future policy expansion and MUST default to alias-only. (REQ-013-052)
+- Enforce RBAC for submit/moderate/respond actions. (REQ-013-074)
 
 ### Admin Editability Rules
 
 Editable by Admin:
 
-- Review categories/labels. (Invitation timing and reminders are configured in FR-030, not here.)
-- Photo guidelines text; removal reasons catalogue.
-- Visibility rules for display name (alias/full name toggle policy).
-- Insert authenticated reviews and edit/remove existing reviews with mandatory reasons.
+- Review categories/labels. (Invitation timing and reminders are configured in FR-030, not here.) (REQ-013-070)
+- Photo guidelines text; removal reasons catalogue. (REQ-013-070)
+- Visibility rules for display name (alias/full name toggle policy). (REQ-013-070)
+- Insert authenticated reviews and edit/remove existing reviews with mandatory reasons. (REQ-013-039)
 
 Fixed in Codebase (Not Editable):
 
-- Eligibility logic requires completed procedure and time threshold.
-- Minimum and maximum lengths for text fields and rating scale bounds.
+- Eligibility logic requires completed procedure and time threshold. (REQ-013-027)
+- Minimum and maximum lengths for text fields and rating scale bounds. (REQ-013-027)
 
 Configurable with Restrictions:
 
-- Flagging thresholds and auto-flag rules for admin review (within safe bounds approved by policy).
-- Takedown decision SLA/queue prioritization parameters (within policy bounds); the takedown decision deadline defaults to 48 hours.
+- Flagging thresholds and auto-flag rules for admin review (within safe bounds approved by policy). (REQ-013-069)
+- Takedown decision SLA/queue prioritization parameters (within policy bounds); the takedown decision deadline defaults to 48 hours. (REQ-013-069; REQ-013-078)
 
 Admin-Seeded Review Policy:
 
-- Admin-imported authenticated reviews must be flagged as "Verified Off‑platform" with verification source and date. These are published directly by admin (no patient submission flow). Each is linked to a placeholder patient and a placeholder procedure.
-
----
-
-## Success Criteria
-
-### Patient Experience Metrics
-
-- SC-001: 90% of eligible patients can complete a review in ≤ 3 minutes.
-- SC-002: ≥ 30% invite‑to‑review conversion within 14 days of invite.
-- SC-003: 95% of photo uploads validate on first attempt (guidelines clear).
-- SC-004: 95% of provider profile review sections load enough summary context for patient comparison without opening admin/provider tools.
-
-### Provider Efficiency Metrics
-
-- SC-005 *(Business KPI — tracked via FR-014 analytics, not enforced by this module)*: 80% of published reviews receive a provider response within 5 business days.
-- SC-006: Providers can locate any review and respond in ≤ 60 seconds.
-
-### Admin Management Metrics
-
-- SC-007: 95% of flagged reviews receive an admin review decision within 48 hours.
-- SC-008: 95% of takedown requests receive an admin decision within 48 hours.
-- SC-009: 100% of admin actions (insert, edit, remove, takedown decision, settings change, export) capture admin identity, timestamp, and reason/action context in audit log.
-
-### System Performance Metrics
-
-- SC-010: Ratings summary loads in ≤ 1 second for 95th percentile.
-- SC-011: Zero data loss of submitted reviews; photos stored reliably with secure access.
-- SC-012: 99.9% monthly uptime for review submission and viewing.
-
-### Business Impact Metrics
-
-- SC-013: Provider profile conversion rate improves by ≥ 10% after launch.
-- SC-014: Average content volume reaches ≥ 3 new reviews per active provider/month by month 3.
+- Admin-imported authenticated reviews must be flagged as "Verified Off‑platform" with verification source and date. These are published directly by admin (no patient submission flow). See REQ-013-077 for the placeholder patient and procedure. (REQ-013-035)
 
 ---
 
 ## Dependencies
 
-### Internal Dependencies (Other FRs/Modules)
-
-- P-01: Auth & Profile Management – identity and role context.
-- P-03: Booking & Payment – confirm procedure completion and dates for eligibility/time gating.
-- FR-010: Treatment records – review eligibility is proven by the FR-010 treatment record marked complete.
-- PR-06: Provider Profile & Settings Management – provider review display context, provider response surface, and provider review notification preference consumption.
-- FR-014: Provider Analytics & Reporting – consumes review ratings, sub-scores per treatment, and aggregate trends; FR-013 must expose published ratings, category sub-scores, and recalculated averages to FR-014's analytics pipeline.
-- FR-020: Notifications & Alerts / S-03 Notification Service – invite/reminder delivery, new published review alerts to providers, provider response alerts, admin removal notices (sent to the reviewing patient only), and takedown decision notifications.
-- FR-022: Search & Filtering – provider/admin review list filters and search fields must remain represented in the FR-022 master reference when filter criteria change.
-- FR-030: Notification Rules & Configuration – configurable review event mapping, recipient/channel rules, reminder cadence, and notification templates.
-- FR-032: Provider Dashboard Settings & Profile Management – provider organization-level review notification preference toggle and channel settings.
-- S-05: Media Storage Service – secure handling of review photos.
-- S-03: Notification Service – invitations, reminders, admin removal notifications, and provider response alerts.
-
-### External Dependencies (APIs, Services)
-
-- Email/push delivery providers for notifications (through S-03).
-
-### Data Dependencies
-
-- Completed procedure records with completion date and provider association.
-- Provider profile identifiers for correct attribution and display.
-
----
-
-## Assumptions
-
-### User Behavior Assumptions
-
-- Patients are willing to leave reviews when prompted and informed of display policies.
-- Providers will respond to reviews to improve public trust.
-
-### Technology Assumptions
-
-- Modern mobile and web clients used; stable connectivity for uploads.
-- Secure media storage available; common image formats supported.
-
-### Business Process Assumptions
-
-- Admin team monitors flagged reviews and review management dashboard during business hours.
-- Legal/compliance guidance exists for defamation and takedown handling.
-
----
-
-## Implementation Notes
-
-### Technical Considerations
-
-- Architecture: Reviews published immediately on write; admin audit logs for post-publication edits and removals.
-- Media handling: Validate size/type, generate thumbnails; protect access.
-- Anti‑abuse: Duplicate detection, keyword flags, rate limits for submissions and responses.
-- Takedown workflow: separate `takedown_requests` state machine with decision history and notification hooks.
-
-### Integration Points
-
-- Patient app → Review service: submit (published immediately), list submitted reviews, review detail, request takedown, status tracking.
-- Patient app/provider profile surfaces → Review service: published review display, ratings summary, public-safe media, provider responses, verified off-platform markers.
-- Admin dashboard → Review service: global review list/filter, review detail, add/edit/remove, takedown queue decisioning, review settings, exports, audits.
-- Provider dashboard → Review service: list/filter/detail published reviews, post responses.
-
-### Scalability Considerations
-
-- Caching of ratings summary and distribution per provider.
-- Paging and lazy load for reviews lists; background processing for photo thumbnails.
-
-### Security Considerations
-
-- Enforce RBAC for submit/moderate/respond actions.
-- Encrypt data in transit and at rest; signed URLs for media.
-- Full audit trail for all state changes; soft‑delete (unpublish) for takedowns.
+Related FRs: FR-010 (review eligibility is proven by the FR-010 treatment record marked complete), FR-014 (consumes published ratings, category sub-scores and recalculated averages; REQ-014-207, REQ-014-284), FR-020 (invite/reminder delivery, new published review alerts to providers, provider response alerts, admin removal notices sent to the reviewing patient only, and takedown decision notifications; REQ-020-131, REQ-020-132, REQ-020-133, REQ-020-134, REQ-020-135, REQ-020-152), FR-022 (provider/admin review list filters and search fields must remain represented in the FR-022 master reference when filter criteria change; REQ-022-092, REQ-022-093), FR-030 (configurable review event mapping, recipient/channel rules, reminder cadence, and notification templates; REQ-030-086, REQ-030-087, REQ-030-088, REQ-030-089, REQ-030-090), FR-032 (provider organization-level review notification preference toggle and channel settings; REQ-032-050). Related modules: P-01 (identity and role context), P-03 (confirm procedure completion and dates for eligibility/time gating), PR-06 (provider review display context, provider response surface, and provider review notification preference consumption), S-03 (invitations, reminders, admin removal notifications, and provider response alerts), S-05 (secure handling of review photos).
 
 ---
 
@@ -655,9 +544,9 @@ Independent Test: Eligible test patient submits review with photos; review is pu
 
 Acceptance Scenarios:
 
-1. Given an eligible patient, when they submit required ratings and feedback, then the review is published immediately and the patient sees confirmation.
+1. Given an eligible patient, when they submit required ratings and feedback, then the review is published immediately and the patient sees confirmation. (REQ-013-034)
 2. Given valid photos, when uploaded, then the system accepts and associates them with the review.
-3. Given a published review, when the provider profile loads, then averages and distribution reflect the new review.
+3. Given a published review, when the provider profile loads, then averages and distribution reflect the new review. (REQ-013-031)
 
 ### User Story 3 – Patient requests takedown for submitted review (P1)
 
@@ -718,12 +607,12 @@ Acceptance Scenarios:
 
 ### Edge Cases
 
-- Ineligible attempts (too early/no completed procedure) are blocked with clear messaging.
-- Photos exceed limits: user informed, upload prevented until compliant.
-- Duplicate or spam reviews: auto‑flag for admin review post-publication; the flagged review stays publicly visible (shown as Published) until an admin removes it.
-- Takedown request approved: review unpublished and archived; provider metrics recalculated.
-- Takedown request rejected: review stays published; decision reason visible to patient on Review Detail (Screen 3).
-- Takedown request approved: the patient may submit one new review for the same procedure; both reviews are kept in the archive.
+- Ineligible attempts (too early/no completed procedure) are blocked with clear messaging. (REQ-013-025)
+- Photos exceed limits: user informed, upload prevented until compliant. (REQ-013-028)
+- Duplicate or spam reviews: auto‑flag for admin review post-publication; see REQ-013-073 and REQ-013-079.
+- Takedown request approved: see REQ-013-046.
+- Takedown request rejected: see REQ-013-046.
+- Takedown request approved: see REQ-013-002.
 
 ---
 
@@ -760,28 +649,12 @@ Acceptance Scenarios:
 
 - **REQ-013-017**: The review module raises a notification on each of these events: new published review, provider reply, admin removal, takedown decision. Invitation and reminder timing is owned by FR-030. Delivery, recipients, content and opt-out follow the notification-service Rule in FR-020 and the FR-030 notification catalogue.
 - **REQ-013-018**: System MUST provide ratings summary endpoints for provider profiles with caching.
-- **REQ-013-018a**: System MUST additionally expose a per-treatment aggregated sub-scores endpoint that returns, for a given provider, `{treatment_id → {avg_overall, avg_facility, avg_staff, avg_results, avg_value, review_count, distribution}}` over Published reviews only. This endpoint is the data contract consumed by FR-014 "review sub-scores per treatment" analytics; cache invalidation MUST be triggered on every review publish, edit republish, removal, and approved takedown.
+- **REQ-013-018a**: System MUST additionally expose a per-treatment aggregated sub-scores endpoint that returns, for a given provider, `{treatment_id → {avg_overall, avg_facility, avg_staff, avg_results, avg_value, review_count, distribution}}` over Published reviews only. This endpoint is the data contract consumed by FR-014 "review sub-scores per treatment" analytics; cache invalidation MUST be triggered on every review publish, edit republish, removal, and approved takedown. (graph id REQ-013-023)
 - **REQ-013-019**: Patient Review Detail MUST display provider response (when available), admin removal reason (when removed), and support pre-filled edit flow for published reviews.
 - **REQ-013-020**: Takedown request submission MUST use a confirmation modal/bottom-sheet with required patient reason and explicit 10-year retention-policy notice before submission.
 - **REQ-013-021**: Provider Review Detail MUST include a documented inline response-composer model/state (not separate screen navigation) with validation, cancel/confirm behavior, and immutable post-publish response rendering.
 - **REQ-013-022**: Admin Review Settings MUST support review category labels, photo guidelines, removal reason catalog, reviewer display policy, restricted flagging/SLA settings, and RBAC-restricted export actions with audit logging. Review invitation and reminder cadence are owned by FR-030 (Notification Rules & Configuration); Screen 10 provides link-outs only.
 - **REQ-013-078**: Admin Review Settings MUST include a takedown decision deadline setting, within policy bounds, that defaults to 48 hours.
-
-### Marking Unclear Requirements
-
-No unresolved clarifications remain for V1 scope. Patient can view provider/clinic reviews, submit reviews, and request takedown, but cannot directly delete submitted reviews. Admin can insert/edit/remove reviews, configure review settings/export reports, and approve/reject takedown requests.
-
----
-
-## Key Entities
-
-- Review: `review_id`, `overall_rating`, `facility_rating`, `staff_rating`, `results_rating`, `value_rating`, `feedback_text`, status (Published / Flagged / Removed; a Flagged review stays publicly visible and shows as Published to patients and the public, while admins see Flagged), timestamps (`created_at`, `last_edited_at`, `edit_count`), links (patient, procedure, provider, `treatment_id`), context (`clinic_name`, `treatment_name`), source type (patient-submitted / admin-seeded "Verified Off-platform"), flag reason, `source_metadata` (for admin-seeded reviews: `source_platform` enum, `source_url`, `evidence_file_ids[]`, `capture_date`, `permission_record` {file_id or text reference, admin_attestation_bool, attested_by, attested_at}, `reviewer_display_name`).
-- ReviewPhoto: file reference (`file_ref`), thumbnails, alt text; associated review ID.
-- ProviderReviewSummary: `provider_id`, average rating, review count, rating distribution, `last_synced_at`.
-- TakedownRequest: review ID, requester (patient), reason (required), status (Pending / Approved / Rejected), decision note, decision actor (admin), created/decided timestamps.
-- AdminAction: action type (insert/edit/remove/takedown_approve/takedown_reject/settings_change/export/response_remove/flag_resolve), reason, admin identity, timestamp, changes made; associated review ID and/or takedown request ID.
-- ProviderResponse: text, author (provider), timestamp, status (active / removed), removed date (`removed_at`); associated review ID.
-- ReviewSettings: category labels, photo guidelines, removal reasons, display policy, flagging thresholds, takedown SLA settings (including the takedown decision deadline, default 48 hours), `updated_at`, `updated_by`. Review invite/reminder cadence is owned by FR-030 and linked from Screen 10.
 
 ---
 
@@ -789,23 +662,7 @@ No unresolved clarifications remain for V1 scope. Patient can view provider/clin
 
 | Date       | Version | Changes                                        | Author |
 | --- | --- | --- | --- |
-| 2025-11-11 | 1.0     | Initial PRD creation                           | AI     |
-| 2025-11-11 | 1.1     | Filled scope, workflows, rules, and criteria   | AI     |
-| 2026-03-03 | 1.2     | **Removed pre-publication moderation gate** — reviews now publish immediately upon patient submission (per client transcription: no moderation gate was requested). Admin retains post-publication edit/remove capability for policy violations. Key changes: (1) Main Flow updated — review published immediately, no "Pending Moderation" status; (2) A1/A2 workflows replaced — from approve/reject to post-publication remove/edit; (3) Screen 2 renamed from "Moderation Queue" to "Review Management"; (4) Patient can edit published review at any time; (5) Status values simplified to Published / Removed by Admin; (6) ModerationDecision entity replaced with AdminAction entity; (7) Admin-seeded reviews moved from Backlog to main admin scope per client transcription (AdminPlatform-Part1, lines 91–100); (8) All metrics, requirements, and business rules updated to reflect no-moderation model. | Product alignment (2026-03-03) |
-| 2026-05-14 | 1.3     | Aligned Screen Specifications to the current patient review form data structure: added read-only clinic/treatment context fields, canonicalized rating field names (`overall/facility/staff/results/value`), added explicit patient payload contract, and synchronized Provider/Admin screens + requirements to consume the same canonical schema across tenants. | Product alignment (2026-05-14) |
-| 2026-05-14 | 1.4     | Scope uplift per transcription and current UI flow: (1) Admin insert/edit reviews moved to in-phase scope; (2) patient direct delete removed and replaced with takedown-request workflow + admin approve/reject decisioning; (3) main flow prerequisite clarified as completed treatment case; (4) screen model expanded to 8 screens (Patient list/detail+takedown, Provider list/filter/detail, Admin list/detail+takedown queue); (5) workflows, user stories, requirements, entities, and metrics aligned to multi-case/provider-admin operations. | Product alignment (2026-05-14) |
-| 2026-05-14 | 1.5     | Takedown flow UI alignment pass using current visual flow + P05.3 design-complement references: added patient review detail provider-response section, pre-filled edit behavior, bottom-sheet takedown submission with optional message and mandatory 7-year retention notice, list sort/empty-state details, and corresponding requirement/entity refinements. | Product alignment (2026-05-14) |
-| 2026-05-14 | 1.6     | Patient "My Reviews" list visual alignment pass: updated Screen 2 to match card UI (title, header sort icon, rating+time row, treatment line, excerpt with "See more", provider avatar/name row, and status badges), then synchronized related status vocabulary in patient detail and review entity definitions. | Product alignment (2026-05-14) |
-| 2026-05-14 | 1.7     | Provider review operations refinement: added patient filter to provider review list filters and introduced detailed inline Provider Response Composer interaction model within Review Detail, including validation, cancel/submit behavior, and post-publish immutability rules. | Product alignment (2026-05-14) |
-| 2026-05-14 | 1.8     | Screen specification cleanup and coverage pass: replaced non-incremental screen labeling with strict Screen 1-10 numbering, added patient-facing Provider Profile Reviews Section as an embedded part of the provider profile/quote-review flow, merged provider response composer into Provider Review Detail, added Admin Review Settings & Export screen, expanded display/settings/export requirements, and synchronized user stories/entities/metrics. | Product alignment (2026-05-14) |
-| 2026-05-14 | 1.9     | Verification follow-up: aligned system PRD source-of-truth to immediate review publication with post-publication admin flagging/removal, and expanded FR-013 module/dependency traceability for PR-06, S-03, S-05, FR-020, FR-022, FR-030, and FR-032. | Product alignment (2026-05-14) |
-| 2026-05-14 | 1.10    | Backend-aligned review status vocabulary: removed `Submitted` as a review status, kept patient-facing review status to `Published` / `Removed`, documented `Flagged` as admin-internal, and separated takedown request states (`Pending` / `Approved` / `Rejected`) from review visibility status. | Product alignment (2026-05-14) |
-| 2026-05-14 | 1.11    | Verification fixes: (1) B2 trigger narrowed to system-automated detection only — user-initiated flagging moved to future enhancement; (2) Screen 1 feedback field validation note expanded to document 100-char minimum rationale; (3) A4 step 3 updated to include provider rating metrics recalculation on approved takedown; (4) SC-005 reclassified as a Business KPI tracked via FR-014, not a system-enforced success criterion. | Verification alignment (2026-05-14) |
-| 2026-05-14 | 1.12    | Verification fixes (round 2): (1) FR-013 ↔ FR-030 boundary — Screen 10 invitation cadence and reminder settings rewritten as read-only link-outs to FR-030, which now owns review-invite cadence/timing; REQ-013-022 updated accordingly; (2) Screen 6 — provider may submit one replacement response after admin removal (prior response retained in audit trail); (3) requirements summary — REQ-013-021 renumbered to REQ-013-009 so Core Requirements run sequentially, with subsequent IDs shifted by one; (4) Screen 10 photo guidelines validation note clarified — "versioned" replaced with "audit-logged via AdminAction" (no formal version model); (5) Screen 3 takedown message — when provided, enforced minimum length of 10 chars to prevent trivial submissions while keeping field optional. | Verification alignment (2026-05-14) |
-| 2026-05-14 | 1.13    | Verification fixes (round 3): (1) **Issue #1 — audit retention** — Data & Privacy Rules now state review-content retention is 7y while `AdminAction`/audit-log retention is 10y per Constitution §VI; Screen 3 takedown notice text updated to surface both retention windows. (2) **Issue #2 — admin-seeded provenance schema** — Screen 8 source verification replaced with structured `source_metadata` form (source_platform enum, source_url, evidence_file[], capture_date, permission_record + admin attestation, reviewer_display_name); Key Entities Review extended with `source_metadata` payload. (3) **Issue #3 — 3-month review gate** — confirmed as a product-owner additional requirement (no client-transcription evidence required); recorded here as the authoritative source. The "≥ 3 months post-procedure" eligibility threshold remains canonical and continues to live under "Fixed in Codebase". (4) **Issue #4 — per-treatment aggregation** — added **REQ-013-018a** committing to a per-treatment aggregated sub-scores endpoint (`{treatment_id → {avg_overall, avg_facility, avg_staff, avg_results, avg_value, review_count, distribution}}`) as FR-014's data contract, with cache invalidation on publish/edit/remove/takedown. (5) **Issue #5 — patient-edit safeguards** — Main Flow Step 4 now requires re-running B2 automated flagging on edit, setting `last_edited_at` / `edit_count`, notifying provider on edit, and showing an "Edited {relative_time}" marker on all public surfaces. (6) **Issue #6 — reviewer alias algorithm** — Data & Privacy Rules now define the canonical alias (`{first_name} {last_initial}.` with `Sarah M. 2/3/…` dedup), admin-seeded `reviewer_display_name` rule, and reaffirm alias-only default in V1. (7) **Issue #7 — FR-022 master reference sync** — FR-022 prd.md updated: FR-013/Screen 7 filter row refreshed to current backend-aligned status vocabulary (Published/Removed; admin-internal Flagged) plus Patient/Treatment Case/Source Type/Response Status filters and search; added FR-013/Screen 5 row for provider review list with the patient filter added in FR-013 v1.7. (8) **Issue #8 — provider response immutability wording** — Screen 6 business rule re-worded to "immutable while published; one replacement allowed only after admin removal", clarifying the previously misleading "immutable once posted" phrasing. | Verification alignment (2026-05-14) |
-| 2026-05-14 | 1.14    | Verification fixes (round 5): selected Issue #2 Option 2 — takedown requests now require a patient reason (10–1000 chars) instead of an optional message, with workflow, Screen 3, REQ-013-020, and TakedownRequest entity aligned. Cleaned remaining Screen 10 wording so review invite/reminder cadence stays owned by FR-030 link-outs, while FR-013 owns review labels/display policy/export settings. | Verification alignment (2026-05-14) |
-| 2026-05-14 | 1.15    | Status closeout: marked PRD as `✅ Verified & Approved` and updated Appendix Approvals to the PRD template format with verified approval status for Product Owner, Technical Lead, and Stakeholder rows. | Verification closeout (2026-05-14) |
-| 2026-11-20 | 1.16    | Requirements graph programme baseline: owner rulings applied. Main changes: (1) a third review status — Published, Flagged, Removed — where a Flagged review stays publicly visible until an admin removes it and shows as Published to patients and the public (REQ-013-079); (2) one published review per completed procedure, and after an approved takedown the patient may submit one new review for the same procedure, both kept in the archive (REQ-013-002); (3) Screen 3 shows the takedown decision note once a request is decided; (4) review eligibility is proven by the FR-010 treatment record marked complete; (5) takedown decision deadline setting defaults to 48 hours (REQ-013-078); (6) admin log gains settings_change, export, response_remove and flag_resolve action kinds (nine in total); (7) provider response gains a status (active / removed) and a removed date; (8) six extra fields kept and listed in Key Entities; (9) admin-seeded reviews use a placeholder patient and procedure (REQ-013-077); (10) removal notice recipient stated as the reviewing patient only; (11) REQ-013-017 shortened to the review events only, delivery owned by FR-020 and the FR-030 catalogue; (12) invitation timing and reminders removed from the admin-editable list, owned by FR-030; cross-document reconciliation (retention, system rule citations). | Product alignment (2026-11-20) |
+| 2026-11-22 | 1.17 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.16) is in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
 
 ---
 
@@ -822,4 +679,4 @@ No unresolved clarifications remain for V1 scope. Patient can view provider/clin
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-011 Aftercare & Recovery Management PRD
-**Last Updated**: 2026-11-20
+**Last Updated**: 2026-11-22
