@@ -1041,6 +1041,11 @@ The following modules consume FR-026 infrastructure. They are listed here for tr
   - Target Monthly Commission: not set (reference line hidden)
 - **Why needed**: FR-005 places the slot hold at acceptance and FR-006 manages it; both consume the slot-hold duration. FR-006 also consumes the hold-expiring-soon lead time for the patient reminder.
 
+**Carried from dropped sections (original wording)**:
+
+- **SC-015**: Security scanning shows no exposure of sensitive values in browser console or network requests
+- **None**: This module has no external dependencies (self-contained within Hairline platform)
+
 ---
 
 ## Dependencies
@@ -1330,6 +1335,7 @@ Admin needs one versioned source for the thresholds and targets used by FR-014 a
 | Date       | Version | Changes                                 | Author       |
 | ---------- | ------- | --------------------------------------- | ------------ |
 | 2026-11-22 | 1.17 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.16) and the change requests (change-request-2026-09-04-inquiry-configuration.md, change-request-2026-09-10-quote-configuration-ownership.md, CR-FR026-20261013-01 in change-request-2026-10-13-analytics-configuration.md, CR-FR026-20261015-01 in change-request-2026-10-15-provider-specialty-list.md, CR-FR026-20261016-01 in change-request-2026-10-16-mtg002-quote-model-alignment.md) are in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
+| 2026-11-23 | 1.18 | Independent compression review: 2 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
 
 ---
 
