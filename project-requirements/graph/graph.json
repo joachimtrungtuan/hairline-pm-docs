@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-22T13:24:29Z",
+  "generated_at": "2026-11-22T13:27:24Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -38627,7 +38627,7 @@
       "owner_fr": null,
       "title": "Patient Help Center & Support Submission",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "module": "fr035-patient-help-support",
         "prd_path": "project-requirements/functional-requirements/fr035-patient-help-support/prd.md",
@@ -38640,7 +38640,7 @@
       "owner_fr": null,
       "title": "Monitor Your Hair Loss",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "module": "fr037-monitor-hair-loss",
         "prd_path": "project-requirements/functional-requirements/fr037-monitor-hair-loss/prd.md",
@@ -38653,7 +38653,7 @@
       "owner_fr": null,
       "title": "Monitor Your Transplant Progress",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "module": "fr038-monitor-transplant-progress",
         "prd_path": "project-requirements/functional-requirements/fr038-monitor-transplant-progress/prd.md",
@@ -103520,7 +103520,7 @@
       "owner_fr": "FR-003",
       "title": "Patient opens inquiry creation from an entry point",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 1 (Patient Creates Inquiry)"
       }
@@ -128384,10 +128384,9 @@
       "owner_fr": "FR-035",
       "title": "System creates the support case in FR-034",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A3 step 5",
-        "handoff_to": "FR-034: Workflow A5"
+        "prd_ref": "Alternative Flow A3 step 5"
       }
     },
     {
@@ -128407,10 +128406,9 @@
       "owner_fr": "FR-035",
       "title": "System sends the confirmation email with the case reference number",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A3 step 7",
-        "handoff_to": "FR-020: confirmation email with case reference number"
+        "prd_ref": "Alternative Flow A3 step 7"
       }
     },
     {
@@ -128507,10 +128505,9 @@
       "owner_fr": "FR-035",
       "title": "System notifies the assigned admin of the reply",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A4 step 7",
-        "handoff_to": "FR-020: support.case_user_reply notification"
+        "prd_ref": "Alternative Flow A4 step 7"
       }
     },
     {
@@ -128585,10 +128582,9 @@
       "owner_fr": "FR-035",
       "title": "Admin receives the support.case_user_reply notification",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A5 step 7",
-        "handoff_to": "FR-020: support.case_user_reply notification"
+        "prd_ref": "Alternative Flow A5 step 7"
       }
     },
     {
@@ -129103,10 +129099,9 @@
       "owner_fr": "FR-037",
       "title": "Patient reviews and edits the inquiry-only fields in Step B",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Unified Flow: reviews and edits the inquiry-only fields in Step B",
-        "handoff_to": "FR-003: Workflow 1 inquiry screens (inquiry-only fields)"
+        "prd_ref": "Unified Flow: reviews and edits the inquiry-only fields in Step B"
       }
     },
     {
@@ -129159,10 +129154,9 @@
       "owner_fr": "FR-038",
       "title": "Patient selects Monitor Transplant Progress",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Main Flow step 1",
-        "handoff_from": "FR-003: Screen 1 Service Selection, patient selects Aftercare: Monitor Transplant Progress"
+        "prd_ref": "Main Flow step 1"
       }
     },
     {
@@ -129490,7 +129484,7 @@
       "owner_fr": "FR-038",
       "title": "Patient selects an available aftercare package and continues to FR-011 checkout",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A2 step 6"
       }
@@ -173421,6 +173415,12 @@
     {
       "from_id": "FR-035",
       "verb": "references",
+      "to_id": "REQ-033-008",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-035",
+      "verb": "references",
       "to_id": "REQ-034-164",
       "attrs": {}
     },
@@ -173465,6 +173465,12 @@
         "rules": 25
       },
       "derived": true
+    },
+    {
+      "from_id": "FR-037",
+      "verb": "references",
+      "to_id": "REQ-001-015",
+      "attrs": {}
     },
     {
       "from_id": "FR-037",
@@ -173642,6 +173648,12 @@
         "rules": 32
       },
       "derived": true
+    },
+    {
+      "from_id": "FR-038",
+      "verb": "references",
+      "to_id": "REQ-011-046",
+      "attrs": {}
     },
     {
       "from_id": "FR-038",
@@ -346271,6 +346283,14 @@
     },
     {
       "from_id": "STP-003-001",
+      "verb": "next",
+      "to_id": "STP-038-001",
+      "attrs": {
+        "label": "Patient selects Aftercare: Monitor Transplant Progress"
+      }
+    },
+    {
+      "from_id": "STP-003-001",
       "verb": "on",
       "to_id": "SCR-003-01",
       "attrs": {}
@@ -417842,6 +417862,12 @@
     {
       "from_id": "STP-035-035",
       "verb": "next",
+      "to_id": "STP-034-063",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-035",
+      "verb": "next",
       "to_id": "STP-035-036",
       "attrs": {}
     },
@@ -417885,6 +417911,12 @@
       "from_id": "STP-035-037",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-037",
+      "verb": "next",
+      "to_id": "STP-020-001",
       "attrs": {}
     },
     {
@@ -418194,6 +418226,12 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-035-047",
+      "verb": "next",
+      "to_id": "STP-020-001",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-035-051",
       "verb": "at",
       "to_id": "STG-patient-03-active",
@@ -418389,6 +418427,12 @@
       "from_id": "STP-035-057",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-057",
+      "verb": "next",
+      "to_id": "STP-020-001",
       "attrs": {}
     },
     {
@@ -420340,6 +420384,12 @@
     {
       "from_id": "STP-037-041",
       "verb": "next",
+      "to_id": "STP-003-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-037-041",
+      "verb": "next",
       "to_id": "STP-037-042",
       "attrs": {
         "label": "patient exits"
@@ -421424,6 +421474,14 @@
       "verb": "done by",
       "to_id": "ACT-patient",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-038-055",
+      "verb": "next",
+      "to_id": "STP-011-009",
+      "attrs": {
+        "label": "Continues to the FR-011 standalone request"
+      }
     },
     {
       "from_id": "STP-038-055",
@@ -423328,6 +423386,56 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261122-132724-b8ceae7d",
+      "at": "2026-11-22T13:27:24.226519+00:00",
+      "changed_by": "controller",
+      "reason": "FR-038 consistency review (Phase 8): references link to the FR-011 template Rule for the shown template data, the FR-003 hand-off into the transplant-progress flow, and the FR-038 to FR-011 standalone-request hand-off.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "FR-038",
+        "STP-003-001",
+        "STP-038-001",
+        "STP-038-055"
+      ],
+      "edges_added": 3,
+      "edges_removed": 0,
+      "rows": 4
+    },
+    {
+      "id": "cs-20261122-132617-7177477e",
+      "at": "2026-11-22T13:26:17.489837+00:00",
+      "changed_by": "controller",
+      "reason": "Consistency check (FR-037): FR-037 shows the anonymized patient ID owned by FR-001 and gets a references link to FR-001's anonymization Rule; the Step B hand-off into the FR-003 inquiry screens is stitched to the first inquiry-only screen (destinations).",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "FR-037",
+        "STP-037-041"
+      ],
+      "edges_added": 2,
+      "edges_removed": 0,
+      "rows": 3
+    },
+    {
+      "id": "cs-20261122-132437-7c3de604",
+      "at": "2026-11-22T13:24:37.725590+00:00",
+      "changed_by": "controller",
+      "reason": "FR-035 consistency review (Phase 8): one references link to the FR-033 patient content rule, and four open hand-offs stitched to the receiving Steps of FR-034 and FR-020.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "FR-035",
+        "STP-035-035",
+        "STP-035-037",
+        "STP-035-047",
+        "STP-035-057"
+      ],
+      "edges_added": 5,
+      "edges_removed": 0,
+      "rows": 9
+    },
     {
       "id": "cs-20261122-132429-4f0acc75",
       "at": "2026-11-22T13:24:29.279392+00:00",

@@ -1,0 +1,6 @@
+reason: "Consistency check (FR-037): FR-037 shows the anonymized patient ID owned by FR-001 and gets a references link to FR-001's anonymization Rule; the Step B hand-off into the FR-003 inquiry screens is stitched to the first inquiry-only screen (destinations)."
+by: controller
+operations:
+  - {"op": "add_edge", "from": "FR-037", "verb": "references", "to": "REQ-001-015"}
+  - {"op": "add_edge", "from": "STP-037-041", "verb": "next", "to": "STP-003-003"}
+  - {"op": "update_node", "id": "STP-037-041", "attrs": {"handoff_to": null}}

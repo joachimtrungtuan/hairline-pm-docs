@@ -1,0 +1,7 @@
+reason: "FR-038 consistency review (Phase 8): references link to the FR-011 template Rule for the shown template data, the FR-003 hand-off into the transplant-progress flow, and the FR-038 to FR-011 standalone-request hand-off."
+by: controller
+operations:
+  - {"op": "add_edge", "from": "FR-038", "verb": "references", "to": "REQ-011-046"}
+  - {"op": "add_edge", "from": "STP-003-001", "verb": "next", "to": "STP-038-001", "attrs": {"label": "Patient selects Aftercare: Monitor Transplant Progress"}}
+  - {"op": "update_node", "id": "STP-038-001", "attrs": {"handoff_from": null}}
+  - {"op": "add_edge", "from": "STP-038-055", "verb": "next", "to": "STP-011-009", "attrs": {"label": "Continues to the FR-011 standalone request"}}
