@@ -603,6 +603,12 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 - Notification testing: Admins can send test notifications to themselves or designated test accounts; cannot send to production recipients without rule activation (REQ-030-195)
 - Template versioning: Admins can create new template versions; system retains previous versions for audit; “revert” creates a **new** version copied from a selected prior version and requires admin confirmation (REQ-030-212)
 
+**Carried from dropped sections (original wording)**:
+
+- Provide breadcrumb and a "Back to list" action to return to **Screen 1: Alerts & Notifications (Rules Dashboard)** without losing the admin’s filters/search context
+- **Entity 5 - Patient Notification Preferences**: One record per patient holding the global Email and Push choices (default on for new accounts); security notifications are not affected. Owned here; the patient profile screens in FR-001 show and edit it. Messaging notification preferences are part of this configuration
+- **Entity 6 - Provider Notification Preferences**: One record per provider with on/off choices per category (quote, schedule, treatment start, aftercare, review, promotion/discount) and for email and in-app delivery. Mandatory provider events are never suppressed by it. Owned here; the provider profile and settings screens in FR-032 show and edit it
+
 ---
 
 ## Dependencies
@@ -778,6 +784,7 @@ Admin needs to monitor notification delivery performance to identify and resolve
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2026-11-22 | 1.21 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (versions 1.0 to 1.20) and the change requests (CR-FR030-20261014-01, CR-FR030-20261015-01, CR-FR030-20261015-02, CR-FR030-20261016-01, change-request-2026-08-20-fr037-monitoring-events.md, CR-FR020-20261027-01, CR-FR003-20261027-02) are in `archived/prd-baseline-2026-11-08/` and in git history. | Claude (AI Assistant) |
+| 2026-11-23 | 1.22 | Independent compression review: 3 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Claude (AI Assistant) |
 
 ---
 
