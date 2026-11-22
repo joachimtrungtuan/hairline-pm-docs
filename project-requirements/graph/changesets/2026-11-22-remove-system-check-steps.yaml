@@ -1,0 +1,365 @@
+reason: "Owner ruling: Steps that only describe a system check (validate, detect, compare) are not wanted in flows. Each listed Step is retired; the flow links pass from the Step before to the Step after, the flow start moves to the next Step, and the Rules the check applied are attached to the Step that triggers it."
+by: controller
+operations:
+  - {"op": "remove_edge", "from": "FLW-038-duplicate-case", "verb": "starts at", "to": "STP-038-041"}
+  - {"op": "add_edge", "from": "FLW-038-duplicate-case", "verb": "starts at", "to": "STP-038-042"}
+  - {"op": "remove_edge", "from": "FLW-034-attachment-failure", "verb": "starts at", "to": "STP-034-098"}
+  - {"op": "add_edge", "from": "FLW-034-attachment-failure", "verb": "starts at", "to": "STP-034-099"}
+  - {"op": "remove_edge", "from": "FLW-034-invalid-patient-identifier", "verb": "starts at", "to": "STP-034-081"}
+  - {"op": "add_edge", "from": "FLW-034-invalid-patient-identifier", "verb": "starts at", "to": "STP-034-082"}
+  - {"op": "remove_edge", "from": "FLW-032-image-upload-fails-validation", "verb": "starts at", "to": "STP-032-029"}
+  - {"op": "add_edge", "from": "FLW-032-image-upload-fails-validation", "verb": "starts at", "to": "STP-032-031"}
+  - {"op": "remove_edge", "from": "FLW-031-b3-used-link", "verb": "starts at", "to": "STP-031-901"}
+  - {"op": "add_edge", "from": "FLW-031-b3-used-link", "verb": "starts at", "to": "STP-031-902"}
+  - {"op": "remove_edge", "from": "FLW-031-b2-duplicate-email", "verb": "starts at", "to": "STP-031-801"}
+  - {"op": "add_edge", "from": "FLW-031-b2-duplicate-email", "verb": "starts at", "to": "STP-031-802"}
+  - {"op": "remove_edge", "from": "FLW-031-b6-sensitive-warning", "verb": "starts at", "to": "STP-031-751"}
+  - {"op": "add_edge", "from": "FLW-031-b6-sensitive-warning", "verb": "starts at", "to": "STP-031-752"}
+  - {"op": "remove_edge", "from": "FLW-031-b5-unauthorized-access", "verb": "starts at", "to": "STP-031-741"}
+  - {"op": "add_edge", "from": "FLW-031-b5-unauthorized-access", "verb": "starts at", "to": "STP-031-742"}
+  - {"op": "remove_edge", "from": "FLW-031-b1-invalid-email", "verb": "starts at", "to": "STP-031-701"}
+  - {"op": "add_edge", "from": "FLW-031-b1-invalid-email", "verb": "starts at", "to": "STP-031-702"}
+  - {"op": "remove_edge", "from": "FLW-012-invalid-content", "verb": "starts at", "to": "STP-012-033"}
+  - {"op": "add_edge", "from": "FLW-012-invalid-content", "verb": "starts at", "to": "STP-012-034"}
+  - {"op": "remove_edge", "from": "FLW-012-attachment", "verb": "starts at", "to": "STP-012-011"}
+  - {"op": "add_edge", "from": "FLW-012-attachment", "verb": "starts at", "to": "STP-012-012"}
+  - {"op": "remove_edge", "from": "FLW-007-invalid-handoff", "verb": "starts at", "to": "STP-007-051"}
+  - {"op": "add_edge", "from": "FLW-007-invalid-handoff", "verb": "starts at", "to": "STP-007-052"}
+  - {"op": "remove_edge", "from": "FLW-003-provider-capacity-exceeded", "verb": "starts at", "to": "STP-003-063"}
+  - {"op": "add_edge", "from": "FLW-003-provider-capacity-exceeded", "verb": "starts at", "to": "STP-003-064"}
+  - {"op": "remove_edge", "from": "FLW-003-inquiry-distribution", "verb": "starts at", "to": "STP-003-017"}
+  - {"op": "add_edge", "from": "FLW-003-inquiry-distribution", "verb": "starts at", "to": "STP-003-018"}
+  - {"op": "remove_edge", "from": "FLW-002-template-version-mismatch", "verb": "starts at", "to": "STP-002-009"}
+  - {"op": "add_edge", "from": "FLW-002-template-version-mismatch", "verb": "starts at", "to": "STP-002-010"}
+  - {"op": "remove_edge", "from": "FLW-002-media-validation-fails", "verb": "starts at", "to": "STP-002-006"}
+  - {"op": "add_edge", "from": "FLW-002-media-validation-fails", "verb": "starts at", "to": "STP-002-007"}
+  - {"op": "add_edge", "from": "STP-038-001", "verb": "next", "to": "STP-038-042", "attrs": {"label": "Active case already exists", "condition": "REQ-038-019"}}
+  - {"op": "add_edge", "from": "STP-038-032", "verb": "next", "to": "STP-038-034"}
+  - {"op": "add_edge", "from": "STP-038-001", "verb": "next", "to": "STP-038-003"}
+  - {"op": "add_edge", "from": "STP-037-008", "verb": "next", "to": "STP-037-004", "attrs": {"label": "conversion blocked, case stays active", "back": true}}
+  - {"op": "add_edge", "from": "STP-037-001", "verb": "next", "to": "STP-037-004", "attrs": {"label": "existing case opened"}}
+  - {"op": "add_edge", "from": "STP-035-033", "verb": "next", "to": "STP-035-035"}
+  - {"op": "add_edge", "from": "STP-032-179", "verb": "next", "to": "STP-032-181"}
+  - {"op": "add_edge", "from": "STP-032-167", "verb": "next", "to": "STP-032-170"}
+  - {"op": "add_edge", "from": "STP-032-162", "verb": "next", "to": "STP-032-165"}
+  - {"op": "add_edge", "from": "STP-032-146", "verb": "next", "to": "STP-032-148"}
+  - {"op": "add_edge", "from": "STP-032-143", "verb": "next", "to": "STP-032-145"}
+  - {"op": "add_edge", "from": "STP-032-138", "verb": "next", "to": "STP-032-140"}
+  - {"op": "add_edge", "from": "STP-032-132", "verb": "next", "to": "STP-032-135"}
+  - {"op": "add_edge", "from": "STP-032-124", "verb": "next", "to": "STP-032-127"}
+  - {"op": "add_edge", "from": "STP-032-115", "verb": "next", "to": "STP-032-118"}
+  - {"op": "add_edge", "from": "STP-032-107", "verb": "next", "to": "STP-032-110"}
+  - {"op": "add_edge", "from": "STP-032-090", "verb": "next", "to": "STP-032-092"}
+  - {"op": "add_edge", "from": "STP-032-080", "verb": "next", "to": "STP-032-082"}
+  - {"op": "add_edge", "from": "STP-032-055", "verb": "next", "to": "STP-032-057"}
+  - {"op": "add_edge", "from": "STP-032-044", "verb": "next", "to": "STP-032-046"}
+  - {"op": "add_edge", "from": "STP-032-034", "verb": "next", "to": "STP-032-037"}
+  - {"op": "add_edge", "from": "STP-032-009", "verb": "next", "to": "STP-032-011"}
+  - {"op": "add_edge", "from": "STP-033-067", "verb": "next", "to": "STP-033-069"}
+  - {"op": "add_edge", "from": "STP-033-060", "verb": "next", "to": "STP-033-063"}
+  - {"op": "add_edge", "from": "STP-033-041", "verb": "next", "to": "STP-033-043"}
+  - {"op": "add_edge", "from": "STP-031-742", "verb": "next", "to": "STP-031-744"}
+  - {"op": "add_edge", "from": "STP-031-410", "verb": "next", "to": "STP-031-412"}
+  - {"op": "add_edge", "from": "STP-031-308", "verb": "next", "to": "STP-031-310"}
+  - {"op": "add_edge", "from": "STP-031-208", "verb": "next", "to": "STP-031-210"}
+  - {"op": "add_edge", "from": "STP-031-018", "verb": "next", "to": "STP-031-020"}
+  - {"op": "add_edge", "from": "STP-031-014", "verb": "next", "to": "STP-031-016"}
+  - {"op": "add_edge", "from": "STP-031-007", "verb": "next", "to": "STP-031-009"}
+  - {"op": "add_edge", "from": "STP-030-059", "verb": "next", "to": "STP-030-062"}
+  - {"op": "add_edge", "from": "STP-030-046", "verb": "next", "to": "STP-030-048"}
+  - {"op": "add_edge", "from": "STP-030-014", "verb": "next", "to": "STP-030-016"}
+  - {"op": "add_edge", "from": "STP-029-128", "verb": "next", "to": "STP-029-130"}
+  - {"op": "add_edge", "from": "STP-029-110", "verb": "next", "to": "STP-029-112"}
+  - {"op": "add_edge", "from": "STP-029-064", "verb": "next", "to": "STP-029-066"}
+  - {"op": "add_edge", "from": "STP-029-049", "verb": "next", "to": "STP-029-051"}
+  - {"op": "add_edge", "from": "STP-029-044", "verb": "next", "to": "STP-029-046"}
+  - {"op": "add_edge", "from": "STP-029-034", "verb": "next", "to": "STP-029-036"}
+  - {"op": "add_edge", "from": "STP-029-004", "verb": "next", "to": "STP-029-006"}
+  - {"op": "add_edge", "from": "STP-028-208", "verb": "next", "to": "STP-028-210"}
+  - {"op": "add_edge", "from": "STP-028-007", "verb": "next", "to": "STP-028-009"}
+  - {"op": "add_edge", "from": "STP-026-096", "verb": "next", "to": "STP-026-098"}
+  - {"op": "add_edge", "from": "STP-026-093", "verb": "next", "to": "STP-026-095"}
+  - {"op": "add_edge", "from": "STP-026-088", "verb": "next", "to": "STP-026-090"}
+  - {"op": "add_edge", "from": "STP-026-080", "verb": "next", "to": "STP-026-082"}
+  - {"op": "add_edge", "from": "STP-026-075", "verb": "next", "to": "STP-026-077"}
+  - {"op": "add_edge", "from": "STP-026-068", "verb": "next", "to": "STP-026-070"}
+  - {"op": "add_edge", "from": "STP-026-022", "verb": "next", "to": "STP-026-024"}
+  - {"op": "add_edge", "from": "STP-026-007", "verb": "next", "to": "STP-026-009"}
+  - {"op": "add_edge", "from": "STP-024-122", "verb": "next", "to": "STP-024-124"}
+  - {"op": "add_edge", "from": "STP-024-081", "verb": "next", "to": "STP-024-083"}
+  - {"op": "add_edge", "from": "STP-024-052", "verb": "next", "to": "STP-024-054"}
+  - {"op": "add_edge", "from": "STP-024-046", "verb": "next", "to": "STP-024-048"}
+  - {"op": "add_edge", "from": "STP-024-032", "verb": "next", "to": "STP-024-034"}
+  - {"op": "add_edge", "from": "STP-024-009", "verb": "next", "to": "STP-024-011"}
+  - {"op": "add_edge", "from": "STP-021-008", "verb": "next", "to": "STP-021-009"}
+  - {"op": "add_edge", "from": "STP-021-022", "verb": "next", "to": "STP-021-029", "attrs": {"label": "Publish validation passed"}}
+  - {"op": "add_edge", "from": "STP-021-022", "verb": "next", "to": "STP-021-017", "attrs": {"label": "Publish validation failed"}}
+  - {"op": "add_edge", "from": "STP-021-027", "verb": "next", "to": "STP-021-029", "attrs": {"label": "Publish validation passed"}}
+  - {"op": "add_edge", "from": "STP-021-027", "verb": "next", "to": "STP-021-017", "attrs": {"label": "Publish validation failed"}}
+  - {"op": "add_edge", "from": "STP-021-024", "verb": "next", "to": "STP-021-018", "attrs": {"label": "Validation passed"}}
+  - {"op": "add_edge", "from": "STP-021-024", "verb": "next", "to": "STP-021-017", "attrs": {"label": "Validation failed"}}
+  - {"op": "add_edge", "from": "STP-021-023", "verb": "next", "to": "STP-021-018", "attrs": {"label": "Validation passed"}}
+  - {"op": "add_edge", "from": "STP-021-023", "verb": "next", "to": "STP-021-017", "attrs": {"label": "Validation failed"}}
+  - {"op": "add_edge", "from": "STP-021-004", "verb": "next", "to": "STP-021-020", "attrs": {"label": "No structural error"}}
+  - {"op": "add_edge", "from": "STP-021-004", "verb": "next", "to": "STP-021-017", "attrs": {"label": "Structural error"}}
+  - {"op": "add_edge", "from": "STP-021-015", "verb": "next", "to": "STP-021-018", "attrs": {"label": "Patch valid"}}
+  - {"op": "add_edge", "from": "STP-021-015", "verb": "next", "to": "STP-021-017", "attrs": {"label": "Patch invalid"}}
+  - {"op": "add_edge", "from": "STP-021-003", "verb": "next", "to": "STP-021-018", "attrs": {"label": "Patch valid"}}
+  - {"op": "add_edge", "from": "STP-021-003", "verb": "next", "to": "STP-021-017", "attrs": {"label": "Patch invalid"}}
+  - {"op": "add_edge", "from": "STP-021-003", "verb": "next", "to": "STP-021-015", "attrs": {"label": "English source value changed"}}
+  - {"op": "add_edge", "from": "STP-018-071", "verb": "next", "to": "STP-018-073", "attrs": {"label": "then"}}
+  - {"op": "add_edge", "from": "STP-018-065", "verb": "next", "to": "STP-018-067", "attrs": {"label": "then"}}
+  - {"op": "add_edge", "from": "STP-018-056", "verb": "next", "to": "STP-018-058", "attrs": {"label": "then"}}
+  - {"op": "add_edge", "from": "STP-018-006", "verb": "next", "to": "STP-018-008", "attrs": {"label": "then"}}
+  - {"op": "add_edge", "from": "STP-018-002", "verb": "next", "to": "STP-018-004", "attrs": {"label": "then"}}
+  - {"op": "add_edge", "from": "STP-015-131", "verb": "next", "to": "STP-015-133"}
+  - {"op": "add_edge", "from": "STP-015-105", "verb": "next", "to": "STP-015-107", "attrs": {"label": "account exists and is Active"}}
+  - {"op": "add_edge", "from": "STP-015-010", "verb": "next", "to": "STP-015-012"}
+  - {"op": "add_edge", "from": "STP-013-053", "verb": "next", "to": "STP-013-055", "attrs": {"label": "response valid"}}
+  - {"op": "add_edge", "from": "STP-013-001", "verb": "next", "to": "STP-013-003", "attrs": {"label": "inputs valid and patient eligible"}}
+  - {"op": "add_edge", "from": "STP-007B-601", "verb": "next", "to": "STP-007B-604", "attrs": {"label": "insufficient time"}}
+  - {"op": "add_edge", "from": "STP-007B-601", "verb": "next", "to": "STP-007B-603", "attrs": {"label": "sufficient time"}}
+  - {"op": "add_edge", "from": "STP-007-003", "verb": "next", "to": "STP-007-052", "attrs": {"label": "hold expired"}}
+  - {"op": "add_edge", "from": "STP-003-059", "verb": "next", "to": "STP-003-045"}
+  - {"op": "add_edge", "from": "STP-003-059", "verb": "next", "to": "STP-003-051", "attrs": {"label": "preflight fails"}}
+  - {"op": "add_edge", "from": "STP-003-044", "verb": "next", "to": "STP-003-045"}
+  - {"op": "add_edge", "from": "STP-003-044", "verb": "next", "to": "STP-003-051", "attrs": {"label": "preflight fails"}}
+  - {"op": "add_edge", "from": "STP-015-021", "verb": "next", "to": "STP-003-018"}
+  - {"op": "add_edge", "from": "STP-002-005", "verb": "next", "to": "STP-003-018"}
+  - {"op": "add_edge", "from": "STP-003-014", "verb": "next", "to": "STP-003-018"}
+  - {"op": "add_edge", "from": "STP-004-013", "verb": "next", "to": "STP-004-015"}
+  - {"op": "add_edge", "from": "STP-003-046", "verb": "next", "to": "STP-004-005"}
+  - {"op": "add_edge", "from": "STP-004-001", "verb": "next", "to": "STP-004-005"}
+  - {"op": "add_edge", "from": "STP-002-001", "verb": "next", "to": "STP-002-003"}
+  - {"op": "add_edge", "from": "STP-002-001", "verb": "applies", "to": "REQ-002-001"}
+  - {"op": "add_edge", "from": "STP-002-001", "verb": "applies", "to": "REQ-002-011"}
+  - {"op": "add_edge", "from": "STP-002-001", "verb": "applies", "to": "REQ-002-032"}
+  - {"op": "add_edge", "from": "STP-002-001", "verb": "applies", "to": "REQ-002-033"}
+  - {"op": "add_edge", "from": "STP-002-001", "verb": "applies", "to": "REQ-002-034"}
+  - {"op": "add_edge", "from": "STP-002-001", "verb": "applies", "to": "REQ-002-035"}
+  - {"op": "retire_node", "id": "STP-002-002"}
+  - {"op": "add_edge", "from": "STP-002-007", "verb": "applies", "to": "REQ-002-033"}
+  - {"op": "add_edge", "from": "STP-002-007", "verb": "applies", "to": "REQ-002-034"}
+  - {"op": "add_edge", "from": "STP-002-007", "verb": "applies", "to": "REQ-002-035"}
+  - {"op": "retire_node", "id": "STP-002-006"}
+  - {"op": "retire_node", "id": "STP-002-009"}
+  - {"op": "add_edge", "from": "STP-004-001", "verb": "applies", "to": "REQ-004-051"}
+  - {"op": "add_edge", "from": "STP-003-046", "verb": "applies", "to": "REQ-004-051"}
+  - {"op": "retire_node", "id": "STP-004-002"}
+  - {"op": "add_edge", "from": "STP-004-001", "verb": "applies", "to": "REQ-004-052"}
+  - {"op": "add_edge", "from": "STP-003-046", "verb": "applies", "to": "REQ-004-052"}
+  - {"op": "retire_node", "id": "STP-004-003"}
+  - {"op": "add_edge", "from": "STP-004-001", "verb": "applies", "to": "REQ-004-031"}
+  - {"op": "add_edge", "from": "STP-003-046", "verb": "applies", "to": "REQ-004-031"}
+  - {"op": "retire_node", "id": "STP-004-004"}
+  - {"op": "add_edge", "from": "STP-004-013", "verb": "applies", "to": "REQ-004-015"}
+  - {"op": "add_edge", "from": "STP-004-013", "verb": "applies", "to": "REQ-004-031"}
+  - {"op": "add_edge", "from": "STP-004-013", "verb": "applies", "to": "REQ-004-051"}
+  - {"op": "add_edge", "from": "STP-004-013", "verb": "applies", "to": "REQ-004-055"}
+  - {"op": "retire_node", "id": "STP-004-014"}
+  - {"op": "add_edge", "from": "STP-003-014", "verb": "applies", "to": "REQ-003-002"}
+  - {"op": "add_edge", "from": "STP-002-005", "verb": "applies", "to": "REQ-003-002"}
+  - {"op": "add_edge", "from": "STP-002-005", "verb": "applies", "to": "REQ-003-060"}
+  - {"op": "add_edge", "from": "STP-015-021", "verb": "applies", "to": "REQ-003-002"}
+  - {"op": "add_edge", "from": "STP-015-021", "verb": "applies", "to": "REQ-003-060"}
+  - {"op": "retire_node", "id": "STP-003-017"}
+  - {"op": "add_edge", "from": "STP-003-044", "verb": "applies", "to": "REQ-003-097"}
+  - {"op": "add_edge", "from": "STP-003-059", "verb": "applies", "to": "REQ-003-097"}
+  - {"op": "retire_node", "id": "STP-003-043"}
+  - {"op": "add_edge", "from": "STP-003-064", "verb": "applies", "to": "REQ-003-015"}
+  - {"op": "retire_node", "id": "STP-003-063"}
+  - {"op": "add_edge", "from": "STP-007-003", "verb": "applies", "to": "REQ-007-044"}
+  - {"op": "add_edge", "from": "STP-007-003", "verb": "applies", "to": "REQ-007-077"}
+  - {"op": "retire_node", "id": "STP-007-051"}
+  - {"op": "add_edge", "from": "STP-007B-601", "verb": "applies", "to": "REQ-007B-061"}
+  - {"op": "retire_node", "id": "STP-007B-602"}
+  - {"op": "add_edge", "from": "STP-010-008", "verb": "applies", "to": "REQ-010-043"}
+  - {"op": "add_edge", "from": "STP-010-008", "verb": "applies", "to": "REQ-010-058"}
+  - {"op": "add_edge", "from": "STP-010-009", "verb": "applies", "to": "REQ-010-043"}
+  - {"op": "add_edge", "from": "STP-010-009", "verb": "applies", "to": "REQ-010-058"}
+  - {"op": "retire_node", "id": "STP-010-028"}
+  - {"op": "retire_node", "id": "STP-012-011"}
+  - {"op": "retire_node", "id": "STP-012-033"}
+  - {"op": "add_edge", "from": "STP-013-001", "verb": "applies", "to": "REQ-013-002"}
+  - {"op": "add_edge", "from": "STP-013-001", "verb": "applies", "to": "REQ-013-025"}
+  - {"op": "retire_node", "id": "STP-013-002"}
+  - {"op": "add_edge", "from": "STP-013-053", "verb": "applies", "to": "REQ-013-055"}
+  - {"op": "retire_node", "id": "STP-013-054"}
+  - {"op": "add_edge", "from": "STP-015-010", "verb": "applies", "to": "REQ-015-030"}
+  - {"op": "add_edge", "from": "STP-015-010", "verb": "applies", "to": "REQ-015-055"}
+  - {"op": "retire_node", "id": "STP-015-011"}
+  - {"op": "add_edge", "from": "STP-015-105", "verb": "applies", "to": "REQ-015-056"}
+  - {"op": "retire_node", "id": "STP-015-106"}
+  - {"op": "add_edge", "from": "STP-015-131", "verb": "applies", "to": "REQ-015-033"}
+  - {"op": "retire_node", "id": "STP-015-132"}
+  - {"op": "add_edge", "from": "STP-018-002", "verb": "applies", "to": "REQ-018-078"}
+  - {"op": "add_edge", "from": "STP-018-002", "verb": "applies", "to": "REQ-018-079"}
+  - {"op": "add_edge", "from": "STP-018-002", "verb": "applies", "to": "REQ-018-194"}
+  - {"op": "retire_node", "id": "STP-018-003"}
+  - {"op": "add_edge", "from": "STP-018-006", "verb": "applies", "to": "REQ-018-103"}
+  - {"op": "retire_node", "id": "STP-018-007"}
+  - {"op": "add_edge", "from": "STP-018-056", "verb": "applies", "to": "REQ-018-103"}
+  - {"op": "retire_node", "id": "STP-018-057"}
+  - {"op": "add_edge", "from": "STP-018-065", "verb": "applies", "to": "REQ-018-156"}
+  - {"op": "retire_node", "id": "STP-018-066"}
+  - {"op": "add_edge", "from": "STP-018-071", "verb": "applies", "to": "REQ-018-103"}
+  - {"op": "add_edge", "from": "STP-018-071", "verb": "applies", "to": "REQ-018-108"}
+  - {"op": "add_edge", "from": "STP-018-071", "verb": "applies", "to": "REQ-018-109"}
+  - {"op": "retire_node", "id": "STP-018-072"}
+  - {"op": "add_edge", "from": "STP-021-003", "verb": "applies", "to": "REQ-021-020"}
+  - {"op": "retire_node", "id": "STP-021-014"}
+  - {"op": "add_edge", "from": "STP-021-003", "verb": "applies", "to": "REQ-021-015"}
+  - {"op": "add_edge", "from": "STP-021-003", "verb": "applies", "to": "REQ-021-085"}
+  - {"op": "add_edge", "from": "STP-021-015", "verb": "applies", "to": "REQ-021-015"}
+  - {"op": "add_edge", "from": "STP-021-015", "verb": "applies", "to": "REQ-021-085"}
+  - {"op": "retire_node", "id": "STP-021-016"}
+  - {"op": "add_edge", "from": "STP-021-004", "verb": "applies", "to": "REQ-021-091"}
+  - {"op": "retire_node", "id": "STP-021-019"}
+  - {"op": "add_edge", "from": "STP-021-023", "verb": "applies", "to": "REQ-021-106"}
+  - {"op": "add_edge", "from": "STP-021-024", "verb": "applies", "to": "REQ-021-106"}
+  - {"op": "retire_node", "id": "STP-021-025"}
+  - {"op": "add_edge", "from": "STP-021-027", "verb": "applies", "to": "REQ-021-099"}
+  - {"op": "add_edge", "from": "STP-021-022", "verb": "applies", "to": "REQ-021-099"}
+  - {"op": "retire_node", "id": "STP-021-028"}
+  - {"op": "add_edge", "from": "STP-021-008", "verb": "applies", "to": "REQ-021-109"}
+  - {"op": "retire_node", "id": "STP-021-031"}
+  - {"op": "add_edge", "from": "STP-024-009", "verb": "applies", "to": "REQ-024-023"}
+  - {"op": "add_edge", "from": "STP-024-009", "verb": "applies", "to": "REQ-024-046"}
+  - {"op": "retire_node", "id": "STP-024-010"}
+  - {"op": "retire_node", "id": "STP-024-033"}
+  - {"op": "add_edge", "from": "STP-024-046", "verb": "applies", "to": "REQ-024-060"}
+  - {"op": "retire_node", "id": "STP-024-047"}
+  - {"op": "retire_node", "id": "STP-024-053"}
+  - {"op": "add_edge", "from": "STP-024-081", "verb": "applies", "to": "REQ-024-065"}
+  - {"op": "retire_node", "id": "STP-024-082"}
+  - {"op": "retire_node", "id": "STP-024-123"}
+  - {"op": "add_edge", "from": "STP-026-007", "verb": "applies", "to": "REQ-026-045"}
+  - {"op": "retire_node", "id": "STP-026-008"}
+  - {"op": "add_edge", "from": "STP-026-022", "verb": "applies", "to": "REQ-026-076"}
+  - {"op": "retire_node", "id": "STP-026-023"}
+  - {"op": "add_edge", "from": "STP-026-068", "verb": "applies", "to": "REQ-026-096"}
+  - {"op": "retire_node", "id": "STP-026-069"}
+  - {"op": "add_edge", "from": "STP-026-075", "verb": "applies", "to": "REQ-026-037"}
+  - {"op": "retire_node", "id": "STP-026-076"}
+  - {"op": "add_edge", "from": "STP-026-080", "verb": "applies", "to": "REQ-026-100"}
+  - {"op": "retire_node", "id": "STP-026-081"}
+  - {"op": "retire_node", "id": "STP-026-089"}
+  - {"op": "add_edge", "from": "STP-026-093", "verb": "applies", "to": "REQ-026-045"}
+  - {"op": "retire_node", "id": "STP-026-094"}
+  - {"op": "retire_node", "id": "STP-026-097"}
+  - {"op": "add_edge", "from": "STP-028-007", "verb": "applies", "to": "REQ-028-022"}
+  - {"op": "add_edge", "from": "STP-028-007", "verb": "applies", "to": "REQ-028-023"}
+  - {"op": "add_edge", "from": "STP-028-007", "verb": "applies", "to": "REQ-028-024"}
+  - {"op": "retire_node", "id": "STP-028-008"}
+  - {"op": "add_edge", "from": "STP-028-208", "verb": "applies", "to": "REQ-028-015"}
+  - {"op": "add_edge", "from": "STP-028-208", "verb": "applies", "to": "REQ-028-024"}
+  - {"op": "add_edge", "from": "STP-028-208", "verb": "applies", "to": "REQ-028-053"}
+  - {"op": "add_edge", "from": "STP-028-208", "verb": "applies", "to": "REQ-028-054"}
+  - {"op": "add_edge", "from": "STP-028-208", "verb": "applies", "to": "REQ-028-055"}
+  - {"op": "retire_node", "id": "STP-028-209"}
+  - {"op": "add_edge", "from": "STP-029-004", "verb": "applies", "to": "REQ-029-003"}
+  - {"op": "retire_node", "id": "STP-029-005"}
+  - {"op": "add_edge", "from": "STP-029-034", "verb": "applies", "to": "REQ-029-037"}
+  - {"op": "retire_node", "id": "STP-029-035"}
+  - {"op": "add_edge", "from": "STP-029-044", "verb": "applies", "to": "REQ-029-047"}
+  - {"op": "retire_node", "id": "STP-029-045"}
+  - {"op": "add_edge", "from": "STP-029-049", "verb": "applies", "to": "REQ-029-117"}
+  - {"op": "retire_node", "id": "STP-029-050"}
+  - {"op": "add_edge", "from": "STP-029-064", "verb": "applies", "to": "REQ-029-039"}
+  - {"op": "add_edge", "from": "STP-029-064", "verb": "applies", "to": "REQ-029-108"}
+  - {"op": "retire_node", "id": "STP-029-065"}
+  - {"op": "retire_node", "id": "STP-029-111"}
+  - {"op": "add_edge", "from": "STP-029-116", "verb": "applies", "to": "REQ-029-003"}
+  - {"op": "retire_node", "id": "STP-029-117"}
+  - {"op": "retire_node", "id": "STP-029-129"}
+  - {"op": "retire_node", "id": "STP-030-015"}
+  - {"op": "retire_node", "id": "STP-030-047"}
+  - {"op": "add_edge", "from": "STP-030-059", "verb": "applies", "to": "REQ-030-007"}
+  - {"op": "retire_node", "id": "STP-030-060"}
+  - {"op": "retire_node", "id": "STP-030-061"}
+  - {"op": "retire_node", "id": "STP-030-064"}
+  - {"op": "add_edge", "from": "STP-031-007", "verb": "applies", "to": "REQ-031-034"}
+  - {"op": "add_edge", "from": "STP-031-007", "verb": "applies", "to": "REQ-031-035"}
+  - {"op": "retire_node", "id": "STP-031-008"}
+  - {"op": "add_edge", "from": "STP-031-014", "verb": "applies", "to": "REQ-031-041"}
+  - {"op": "retire_node", "id": "STP-031-015"}
+  - {"op": "add_edge", "from": "STP-031-018", "verb": "applies", "to": "REQ-031-045"}
+  - {"op": "add_edge", "from": "STP-031-018", "verb": "applies", "to": "REQ-SYS-007"}
+  - {"op": "retire_node", "id": "STP-031-019"}
+  - {"op": "add_edge", "from": "STP-031-208", "verb": "applies", "to": "REQ-031-011"}
+  - {"op": "retire_node", "id": "STP-031-209"}
+  - {"op": "add_edge", "from": "STP-031-308", "verb": "applies", "to": "REQ-031-057"}
+  - {"op": "add_edge", "from": "STP-031-308", "verb": "applies", "to": "REQ-031-071"}
+  - {"op": "retire_node", "id": "STP-031-309"}
+  - {"op": "add_edge", "from": "STP-031-410", "verb": "applies", "to": "REQ-031-007"}
+  - {"op": "retire_node", "id": "STP-031-411"}
+  - {"op": "retire_node", "id": "STP-031-701"}
+  - {"op": "retire_node", "id": "STP-031-704"}
+  - {"op": "retire_node", "id": "STP-031-741"}
+  - {"op": "add_edge", "from": "STP-031-742", "verb": "applies", "to": "REQ-031-003"}
+  - {"op": "retire_node", "id": "STP-031-743"}
+  - {"op": "retire_node", "id": "STP-031-751"}
+  - {"op": "retire_node", "id": "STP-031-801"}
+  - {"op": "retire_node", "id": "STP-031-901"}
+  - {"op": "add_edge", "from": "STP-033-041", "verb": "applies", "to": "REQ-033-027"}
+  - {"op": "retire_node", "id": "STP-033-042"}
+  - {"op": "retire_node", "id": "STP-033-061"}
+  - {"op": "retire_node", "id": "STP-033-062"}
+  - {"op": "retire_node", "id": "STP-033-066"}
+  - {"op": "add_edge", "from": "STP-033-067", "verb": "applies", "to": "REQ-033-057"}
+  - {"op": "retire_node", "id": "STP-033-068"}
+  - {"op": "retire_node", "id": "STP-033-073"}
+  - {"op": "add_edge", "from": "STP-032-009", "verb": "applies", "to": "REQ-032-033"}
+  - {"op": "retire_node", "id": "STP-032-010"}
+  - {"op": "retire_node", "id": "STP-032-029"}
+  - {"op": "retire_node", "id": "STP-032-030"}
+  - {"op": "retire_node", "id": "STP-032-035"}
+  - {"op": "retire_node", "id": "STP-032-036"}
+  - {"op": "retire_node", "id": "STP-032-045"}
+  - {"op": "retire_node", "id": "STP-032-056"}
+  - {"op": "retire_node", "id": "STP-032-081"}
+  - {"op": "add_edge", "from": "STP-032-090", "verb": "applies", "to": "REQ-032-065"}
+  - {"op": "retire_node", "id": "STP-032-091"}
+  - {"op": "retire_node", "id": "STP-032-108"}
+  - {"op": "retire_node", "id": "STP-032-109"}
+  - {"op": "add_edge", "from": "STP-032-115", "verb": "applies", "to": "REQ-032-065"}
+  - {"op": "retire_node", "id": "STP-032-116"}
+  - {"op": "retire_node", "id": "STP-032-117"}
+  - {"op": "add_edge", "from": "STP-032-124", "verb": "applies", "to": "REQ-SYS-007"}
+  - {"op": "retire_node", "id": "STP-032-125"}
+  - {"op": "retire_node", "id": "STP-032-126"}
+  - {"op": "add_edge", "from": "STP-032-132", "verb": "applies", "to": "REQ-032-065"}
+  - {"op": "retire_node", "id": "STP-032-133"}
+  - {"op": "retire_node", "id": "STP-032-134"}
+  - {"op": "retire_node", "id": "STP-032-139"}
+  - {"op": "add_edge", "from": "STP-032-143", "verb": "applies", "to": "REQ-032-025"}
+  - {"op": "retire_node", "id": "STP-032-144"}
+  - {"op": "add_edge", "from": "STP-032-146", "verb": "applies", "to": "REQ-032-087"}
+  - {"op": "retire_node", "id": "STP-032-147"}
+  - {"op": "retire_node", "id": "STP-032-163"}
+  - {"op": "retire_node", "id": "STP-032-164"}
+  - {"op": "add_edge", "from": "STP-032-167", "verb": "applies", "to": "REQ-032-085"}
+  - {"op": "retire_node", "id": "STP-032-168"}
+  - {"op": "retire_node", "id": "STP-032-169"}
+  - {"op": "add_edge", "from": "STP-032-179", "verb": "applies", "to": "REQ-032-025"}
+  - {"op": "retire_node", "id": "STP-032-180"}
+  - {"op": "add_edge", "from": "STP-034-082", "verb": "applies", "to": "REQ-034-009"}
+  - {"op": "retire_node", "id": "STP-034-081"}
+  - {"op": "add_edge", "from": "STP-034-099", "verb": "applies", "to": "REQ-034-036"}
+  - {"op": "add_edge", "from": "STP-034-099", "verb": "applies", "to": "REQ-034-037"}
+  - {"op": "retire_node", "id": "STP-034-098"}
+  - {"op": "add_edge", "from": "STP-035-033", "verb": "applies", "to": "REQ-035-009"}
+  - {"op": "retire_node", "id": "STP-035-034"}
+  - {"op": "retire_node", "id": "STP-037-020"}
+  - {"op": "retire_node", "id": "STP-037-022"}
+  - {"op": "add_edge", "from": "STP-037-009", "verb": "applies", "to": "REQ-037-013"}
+  - {"op": "add_edge", "from": "STP-037-009", "verb": "applies", "to": "REQ-037-081"}
+  - {"op": "retire_node", "id": "STP-037-027"}
+  - {"op": "add_edge", "from": "STP-037-008", "verb": "applies", "to": "REQ-037-030"}
+  - {"op": "retire_node", "id": "STP-037-037"}
+  - {"op": "add_edge", "from": "STP-038-001", "verb": "applies", "to": "REQ-038-001"}
+  - {"op": "add_edge", "from": "STP-038-001", "verb": "applies", "to": "REQ-038-019"}
+  - {"op": "retire_node", "id": "STP-038-002"}
+  - {"op": "add_edge", "from": "STP-038-032", "verb": "applies", "to": "REQ-038-057"}
+  - {"op": "retire_node", "id": "STP-038-033"}
+  - {"op": "retire_node", "id": "STP-038-041"}
