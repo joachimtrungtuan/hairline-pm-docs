@@ -13,6 +13,7 @@ Phase 8 checks the 38 FRs against each other. Its first step is in place: five q
 - `graph/scripts/consistency.py` (new) and `graph/scripts/query.py`: commands `boundary`, `ownership`, `flow`, `joins`, `coverage`. Tests in `graph/scripts/test_consistency.py`; the suite now has 259 tests, all passing.
 - `graph/checklists/consistency-review.md` v1.0 (new): what each finding means, the verdicts, and how a decision request is phrased. `checklists/README.md` to v1.6.
 - Graph, `changesets/2026-11-22-consistency-stage-data-links.yaml`: 266 Stage links derived from links the graph already had. A Stage reads an Entity when a Screen at that Stage shows one of its Fields (197 links), and writes it when the Field is editable there (69 links).
+- Graph, `changesets/2026-11-22-consistency-stage-data-links-steps.yaml`: 166 more Stage links (110 reads, 56 writes) derived the same way through Steps: a Step at a Stage done on a Screen that shows the Field. After it the flow check lists 45 rows.
 - Graph, `changesets/2026-11-22-consistency-rule-stages.yaml`: REQ-024-100 and REQ-026-139, added earlier the same day, now carry a Stage.
 
 ## Findings after these changes
