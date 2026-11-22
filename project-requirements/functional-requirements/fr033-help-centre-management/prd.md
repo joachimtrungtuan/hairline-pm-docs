@@ -1112,6 +1112,11 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 *Not applicable - Help Centre is a content management feature with no payment or billing components.*
 
+**Carried from dropped sections (original wording)**:
+
+- **Assumption 3**: Support team monitors feedback submissions and content gaps to prioritize new content creation for both providers and patients
+- **Content analytics (kept separately per audience)**: view counts, helpfulness counts (Yes and No, counts only, no user identity), average time spent, video watch time and completion rate, and when the item was last viewed.
+
 ---
 
 ## Dependencies
@@ -1274,6 +1279,7 @@ An admin content manager needs to reorganize existing FAQ items into logical top
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2026-11-22 | 2.3 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v2.2) is in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
+| 2026-11-23 | 2.4 | Independent compression review: 2 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
 
 ---
 
