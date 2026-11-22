@@ -3,15 +3,14 @@
 **Module**: P-05: Aftercare & Progress Monitoring | PR-04: Aftercare Participation *(elevated to P1 scope for FR-011 delivery)* | A-03: Aftercare Team Management  
 **Feature Branch**: `fr011-aftercare-recovery-management`  
 **Created**: 2025-10-23  
-**Status**: 🟡 Revised 2026-11-20 (v1.8: requirements graph programme baseline, owner rulings applied); previously revised 2026-10-28 (v1.7: aftercare entry routes and treatment-linked quote link clarified); previously revised 2026-10-26 (standalone aftercare reassignment on provider suspension/deactivation) — Pending Consolidated Verification  
+**Status**: 🟡 Revised — Pending Consolidated Verification  
 **Source**: FR-011 from system-prd.md; FR-015 v1.9 provider-status cancellation cascade  
-**Change Request**: [CR-FR011-20261026-01 — Standalone aftercare reassignment](change-request-2026-10-26-standalone-aftercare-reassignment.md) (previous: [CR-FR011-20261016-01 — MTG-002 quote model alignment](change-request-2026-10-16-mtg002-quote-model-alignment.md), [CR-FR011-20261014-01 — Provider status cancellation cascade](change-request-2026-10-14-provider-status-cancellation-cascade.md))
 
 ## Executive Summary
 
 The Aftercare & Recovery Management module provides comprehensive post-procedure support for hair transplant patients through milestone-based tracking, scan monitoring, questionnaire assessments, and multi-tenant communication. The module supports both treatment-linked aftercare (for Hairline platform patients) and standalone aftercare services (for external clinic patients).
 
-**Note on Scan Media (V1 vs V2)**: In V1, all references to "3D scans" in this FR refer to standardized head scan photo sets (multiple 2D views). True 3D scanning (ARKit/ARCore) is deferred to V2.
+**Note on Scan Media (V1 vs V2)**: In V1, all references to "3D scans" in this FR refer to standardized head scan photo sets (multiple 2D views). True 3D scanning (ARKit/ARCore) is deferred to V2. (REQ-011-079)
 
 ## Module Scope
 
@@ -41,7 +40,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - Global oversight; case reassignment; plan overrides; escalations
 - Template management (milestones, questionnaires, resources)
 - Standalone aftercare request intake and assignment
-- Aftercare specialist assignment (who delivers a case: an aftercare provider or a Hairline aftercare team member). FR-011 owns it; other modules only cite it
+- Aftercare specialist assignment (who delivers a case: an aftercare provider or a Hairline aftercare team member). FR-011 owns it; other modules only cite it (REQ-011-004)
 
 **Shared Services (S-03, S-05, S-02)**:
 
@@ -59,8 +58,8 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 
 **Out of Scope**:
 
-- Direct patient ↔ provider chat (handled by FR-012)
-- Payment flows beyond standalone activation (handled in Payment FR)
+- Direct patient ↔ provider chat (handled by FR-012) (REQ-011-080)
+- Payment flows beyond standalone activation (handled in Payment FR) (REQ-011-080)
 
 ### Entry Points
 
@@ -69,7 +68,7 @@ Aftercare has exactly two entry routes:
 1. **Treatment-Linked Aftercare**: Starts from the patient's accepted Hairline quote whose treatment was performed (the FR-006 booking reached Aftercare). It covers Workflow 1 (set up at treatment completion) and the Workflow 2b post-treatment add-on (bought later within 90 days). The aftercare record is linked to that accepted quote.
 2. **Standalone Aftercare**: Bought directly by patients treated at an outside clinic (Workflow 2). It has no inquiry or quote.
 
-Admin assignment is not a separate entry route. It is a step inside these two routes that decides who delivers the aftercare, for example the Workflow 2 provider assignment, the Workflow 1 A2 Hairline aftercare team takeover, and Workflow 4 reassignment.
+Admin assignment is not a separate entry route. It is a step inside these two routes that decides who delivers the aftercare, for example the Workflow 2 provider assignment, the Workflow 1 A2 Hairline aftercare team takeover, and Workflow 4 reassignment. (REQ-011-016)
 
 ## Business Workflows
 
@@ -77,7 +76,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 **Actors**: Provider, System, Patient, Aftercare Team
 
-**Trigger**: Provider marks treatment as completed and initiates aftercare setup
+**Trigger**: Provider marks treatment as completed and initiates aftercare setup (REQ-011-055)
 
 **Outcome**: Aftercare plan is configured, activated, and patient/aftercare team are notified
 
@@ -108,13 +107,13 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 **Alternative Flows**:
 
-- **A1**: Provider provides only paperwork/instructions
+- **A1**: Provider provides only paperwork/instructions (REQ-011-056)
   - Provider marks "Paperwork only - no aftercare service"
   - Provider uploads aftercare instructions document
   - Patient receives instructions but no active monitoring
   - Patient status moves to "Completed" after instruction delivery
 
-- **A2**: Provider requests Hairline aftercare service
+- **A2**: Provider requests Hairline aftercare service (REQ-011-057)
   - Provider marks "Assign to Hairline aftercare team"
   - Admin receives notification for aftercare assignment
   - Hairline aftercare team takes over patient monitoring
@@ -128,7 +127,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 **Outcome**: Aftercare plan is assigned, configured, paid for, and activated for the patient
 
-**Order**: Request, then admin assigns a provider, then the provider configures the plan, and payment activates the aftercare (assign first, pay last).
+**Order**: Request, then admin assigns a provider, then the provider configures the plan, and payment activates the aftercare (assign first, pay last). (REQ-011-018)
 
 **Main Flow**:
 
@@ -142,13 +141,13 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
    - Patient submits the request; no payment is taken at this point
    - Request appears as "Pending Assignment"
 
-2. **Admin Review & Assignment**
+2. **Admin Review & Assignment** (REQ-011-048)
    - Request appears in admin dashboard as "Pending Assignment" (Screen 15)
    - Admin reviews patient information and treatment details
    - Admin assigns suitable provider to oversee case
    - System notifies assigned provider
 
-3. **Provider Plan Configuration**
+3. **Provider Plan Configuration** (REQ-011-049)
    - Assigned provider reviews patient case
    - Provider selects appropriate aftercare template (same as requested template or alternative if needed)
    - Provider customizes plan based on patient's specific situation
@@ -172,17 +171,17 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 **Alternative Flows**:
 
-- **B1**: Payment fails
+- **B1**: Payment fails (REQ-011-050)
   - Patient receives payment failure notification
   - Patient can retry payment with different method
   - Request expires after 48 hours without successful payment
 
-- **B2**: Admin rejects request
+- **B2**: Admin rejects request (REQ-011-051)
   - Admin marks request as "Not suitable for aftercare"
   - Patient receives rejection notification with reason
-  - Any payment already taken is refunded in full automatically
+  - Any payment already taken is refunded in full automatically (REQ-011-037)
 
-- **B3**: No suitable provider available
+- **B3**: No suitable provider available (REQ-011-052)
   - Admin marks as "Awaiting provider availability"
   - Patient notified of delay
   - Admin manually assigns when provider becomes available
@@ -201,7 +200,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 1. **Add-On Service Request**
    - Patient navigates to "Add Aftercare Service" in patient dashboard (Screen 6)
-   - System verifies patient has completed Hairline treatment within 90 days
+   - System verifies patient has completed Hairline treatment within 90 days (REQ-011-044)
    - Patient selects service type (post-treatment add-on)
    - System auto-populates treatment information from patient's treatment history
    - Patient browses available aftercare templates (filtered by treatment type compatibility)
@@ -215,13 +214,13 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
    - On success: Payment confirmed, request moves to automatic assignment
    - On failure: Error message, retry option
 
-3. **Automatic Assignment**
+3. **Automatic Assignment** (REQ-011-054)
    - Payment confirmation triggers automatic assignment
    - System assigns to original treatment provider (if provider participates in aftercare)
    - If provider doesn't participate, system assigns to Hairline aftercare team
    - Assigned provider receives notification
 
-4. **Provider Activation**
+4. **Provider Activation** (REQ-011-049)
    - Provider reviews patient's treatment history (pre-populated from treatment records)
    - Provider selects appropriate aftercare template (same as purchased or alternative)
    - Provider customizes plan based on patient's treatment and package selection
@@ -239,7 +238,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
   - Patient notified of provider assignment
   - Aftercare team provider configures and activates plan
 
-- **B1b**: Payment fails
+- **B1b**: Payment fails (REQ-011-050)
   - Patient receives payment failure notification
   - Patient can retry payment with different method
   - Request expires after 48 hours without successful payment
@@ -254,24 +253,24 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 **Main Flow**:
 
-1. **Milestone-Based Tasks**
+1. **Milestone-Based Tasks** (REQ-011-058)
    - System sends notification for upcoming tasks (scan/photo set, questionnaire)
    - Patient completes required activities
    - System tracks completion and progress
 
-2. **Scan Upload (Head Scan Photo Set in V1)**
+2. **Scan Upload (Head Scan Photo Set in V1)** (REQ-011-059)
    - Patient receives scan reminder notification
    - Patient captures head scan photo set (V1) using mobile app
    - System validates scan quality and provides feedback
    - Scan stored and made available to aftercare team
 
-3. **Questionnaire Completion**
+3. **Questionnaire Completion** (REQ-011-060)
    - Patient receives questionnaire notification
    - Patient completes milestone-specific questionnaire
    - System processes responses and flags concerning answers
    - Aftercare team reviews responses
 
-4. **Progress Tracking**
+4. **Progress Tracking** (REQ-011-027)
    - System automatically calculates overall recovery progress percentage as completed tasks over total tasks
    - Patient views progress dashboard with real-time updates
    - System shows next upcoming tasks with countdown timers
@@ -280,12 +279,12 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 - **C1**: Patient misses scheduled task
   - System sends reminder notification
-  - After 24 hours, system sets the Overdue flag on the task (Overdue is a flag, not a status)
-  - If still overdue after 48 hours, the task escalates
+  - After 24 hours, system sets the Overdue flag on the task (Overdue is a flag, not a status) (REQ-011-026)
+  - If still overdue after 48 hours, the task escalates (REQ-011-025)
   - Aftercare team contacts patient
 
 - **C2**: Concerning symptoms reported
-  - System flags case as "Urgent"
+  - System flags case as "Urgent" (REQ-011-028)
   - Aftercare team immediately contacts patient
   - Escalation workflow triggered
 
@@ -308,7 +307,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
    - Admin can reassign cases between providers
    - Admin can modify aftercare plans for complex cases
    - Admin can escalate urgent cases to medical supervisor
-   - **Admin Editability**: Admin can edit ALL aftercare data including:
+   - **Admin Editability**: Admin can edit ALL aftercare data including: (REQ-011-034)
      - Patient aftercare plans and milestones
      - Provider assignments and customizations
      - Medication schedules and instructions
@@ -320,7 +319,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
    - Admin creates and modifies milestone templates
    - Admin configures questionnaire types and frequencies
    - Admin manages educational resources
-   - **Admin Editability**: Admin can edit all template components:
+   - **Admin Editability**: Admin can edit all template components: (REQ-011-035)
      - Milestone durations and descriptions
      - Scan schedules and frequencies
      - Questionnaire types and question content
@@ -328,7 +327,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 **Alternative Flows**:
 
-- **D1**: Provider withdraws from aftercare
+- **D1**: Provider withdraws from aftercare (REQ-011-072)
   - Provider notifies admin of inability/unwillingness to continue aftercare for a patient
   - Admin receives notification and reviews the case
   - Admin can either:
@@ -350,20 +349,20 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 - **D4**: Provider suspended or deactivated during Aftercare
   - Trigger: the assigned provider's `Suspended` or `Deactivated` status becomes effective under [FR-015 Alternative Flow A5 and Screen 4](../fr015-provider-management/prd.md#screen-4-provider-suspensiondeactivation-modal)
   - Scope covers every non-terminal Aftercare case assigned to that provider, including post-treatment (Workflow 1), add-on (Workflow 2b), and standalone aftercare for external-clinic patients (Workflow 2); standalone cases keep their intake data and payment history for admin follow-up
-  - For standalone aftercare cases (Workflow 2), the case is not cancelled: the system records the provider-status cause (`ProviderSuspended` or `ProviderDeactivated`) and sets the independent `supportRequired` marker, and an admin reassigns the aftercare provider or the Hairline aftercare team through Screen 19
-  - For treatment-linked cases (Workflow 1 and Workflow 2b), the aftercare case is not cancelled and the FR-006 booking stays `Aftercare`: the system records the provider-status cause and sets the `supportRequired` marker, and an admin reassigns the aftercare provider or team through Screen 19 (Alternative Flow D5)
-  - In both cases the provider loses aftercare actions on those cases
-  - The FR-010 completion milestone, aftercare plan, milestones, scans, questionnaire responses, medications, and communication history are retained read-only
-  - Patient/admin notifications follow FR-015 Screen 4; recovery continuity is routed to admins, who use this workflow's existing reassignment/recovery tools (reassign to another provider, assign to the Hairline aftercare team, or keep cancelled with reason) and record audited resolution of the support marker
-  - Boundary: no automatic reassignment, refund, or restoration on provider reactivation; a later deactivation does not overwrite an earlier `ProviderSuspended` cause. Distinct from D1 provider withdrawal, which remains admin-reviewed without an automatic cancellation
+  - For standalone aftercare cases (Workflow 2), the case is not cancelled: the system records the provider-status cause (`ProviderSuspended` or `ProviderDeactivated`) and sets the independent `supportRequired` marker, and an admin reassigns the aftercare provider or the Hairline aftercare team through Screen 19 (REQ-011-014)
+  - For treatment-linked cases (Workflow 1 and Workflow 2b), the aftercare case is not cancelled and the FR-006 booking stays `Aftercare`: the system records the provider-status cause and sets the `supportRequired` marker, and an admin reassigns the aftercare provider or team through Screen 19 (Alternative Flow D5) (REQ-011-073)
+  - In both cases the provider loses aftercare actions on those cases (REQ-011-074)
+  - The FR-010 completion milestone, aftercare plan, milestones, scans, questionnaire responses, medications, and communication history are retained read-only (REQ-011-074)
+  - Patient/admin notifications follow FR-015 Screen 4; recovery continuity is routed to admins, who use this workflow's existing reassignment/recovery tools (reassign to another provider, assign to the Hairline aftercare team, or keep cancelled with reason) and record audited resolution of the support marker (REQ-011-014)
+  - Boundary: no automatic reassignment, refund, or restoration on provider reactivation; a later deactivation does not overwrite an earlier `ProviderSuspended` cause. Distinct from D1 provider withdrawal, which remains admin-reviewed without an automatic cancellation (REQ-011-014, REQ-011-074)
 
-- **D5**: Provider fault during treatment-linked aftercare (aftercare reassignment)
+- **D5**: Provider fault during treatment-linked aftercare (aftercare reassignment) (REQ-011-075)
   - Trigger: the FR-006 booking is `Aftercare` and the assigned aftercare provider withdraws, drops out, is suspended or deactivated, or an admin decides the aftercare must move to another provider or to the Hairline aftercare team (FR-006 Alternative Flow B6); it also applies when an admin moves an `In Progress` booking to `Aftercare` after a provider fault (FR-006 Alternative Flow B7, FR-006 Screen 11)
   - The admin opens Screen 19 from Screen 14 or from the FR-006 admin booking detail and reassigns only the aftercare provider or team
-  - The FR-006 booking stays `Aftercare` and the FR-010 treatment record stays unchanged; there is no new quote, acceptance, or payment
-  - The aftercare plan, milestones, scans, questionnaire responses, medications, and communication history move with the case unchanged; the previous provider keeps read-only access to the history it recorded and loses all aftercare actions
-  - The reassignment needs a mandatory reason and confirmation, is recorded in the audit trail, resolves the `supportRequired` marker when one is set, and sends the `aftercare.provider_reassigned` notice (recipients, content, and the mandatory status of the notice are defined by the FR-030 notification Rule, not here)
-  - Boundary: money effects, if any, follow the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault); this flow never reassigns the treating provider of an earlier treatment stage
+  - The FR-006 booking stays `Aftercare` and the FR-010 treatment record stays unchanged; there is no new quote, acceptance, or payment (REQ-011-015, REQ-011-075)
+  - The aftercare plan, milestones, scans, questionnaire responses, medications, and communication history move with the case unchanged; the previous provider keeps read-only access to the history it recorded and loses all aftercare actions (REQ-011-075)
+  - The reassignment needs a mandatory reason and confirmation, is recorded in the audit trail, resolves the `supportRequired` marker when one is set, and sends the `aftercare.provider_reassigned` notice (recipients, content, and the mandatory status of the notice are defined by the FR-030 notification Rule, not here) (REQ-011-015, REQ-011-076)
+  - Boundary: money effects, if any, follow the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault); this flow never reassigns the treating provider of an earlier treatment stage (REQ-011-075)
 
 ## Screen Specifications
 
@@ -375,27 +374,27 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Overall Progress | derived | Yes | Percentage of completed tasks for current plan | 0–100%; auto-calculated |
-| Current Milestone | text | Yes | Name and phase of current milestone | Must exist in plan |
-| Days Remaining | number | No | Days left in current milestone | Non-negative integer |
-| Next Task | text/datetime | No | Next upcoming task with countdown | Shows due date/time |
-| Last Scan Upload | datetime/status | No | Timestamp and status of last scan upload | Valid status enum |
-| Last Questionnaire | datetime | No | Timestamp of last questionnaire completion | ISO 8601 |
-| Medication Adherence | percent | No | Adherence percentage for current period | 0–100% |
-| Upcoming Tasks | list | No | Next 7 days tasks | Items must exist in schedule |
-| Upload Scan | action | Cond. | Action to capture/upload scan/photo set | Enabled if due |
-| Complete Questionnaire | action | Cond. | Action to complete due questionnaire | Enabled if due |
-| View Instructions | action | No | Open instructions content | Always available |
-| Contact Support | action | No | Contact aftercare support | Always available |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Overall Progress | derived | Yes | Percentage of completed tasks for current plan | 0–100%; auto-calculated | ENT-aftercare-plan.overall_progress |
+| Current Milestone | text | Yes | Name and phase of current milestone | Must exist in plan | ENT-aftercare-plan.current_milestone |
+| Days Remaining | number | No | Days left in current milestone | Non-negative integer | ENT-aftercare-plan.days_remaining |
+| Next Task | text/datetime | No | Next upcoming task with countdown | Shows due date/time | ENT-aftercare-task.due_at, ENT-aftercare-task.task_type |
+| Last Scan Upload | datetime/status | No | Timestamp and status of last scan upload | Valid status enum | ENT-aftercare-scan-artifact.uploaded_at, ENT-aftercare-scan-artifact.upload_status |
+| Last Questionnaire | datetime | No | Timestamp of last questionnaire completion | ISO 8601 | ENT-aftercare-questionnaire-response.responded_at |
+| Medication Adherence | percent | No | Adherence percentage for current period | 0–100% | ENT-aftercare-plan.medication_adherence |
+| Upcoming Tasks | list | No | Next 7 days tasks | Items must exist in schedule | ENT-aftercare-task.due_at, ENT-aftercare-task.task_type |
+| Upload Scan | action | Cond. | Action to capture/upload scan/photo set | Enabled if due | no graph field (control) |
+| Complete Questionnaire | action | Cond. | Action to complete due questionnaire | Enabled if due | no graph field (control) |
+| View Instructions | action | No | Open instructions content | Always available | no graph field (control) |
+| Contact Support | action | No | Contact aftercare support | Always available | no graph field (control) |
 
 **Business Rules**:
 
-- Progress percentage = (completed tasks / total tasks) * 100
+- Progress percentage = (completed tasks / total tasks) * 100 (REQ-011-027)
 - Tasks include: scan uploads, questionnaires, medication adherence
-- Overdue tasks highlighted in red
-- Completed tasks shown in green
+- Overdue tasks highlighted in red (REQ-011-086)
+- Completed tasks shown in green (REQ-011-087)
 
 **Notes**:
 
@@ -411,26 +410,26 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Milestone Name | text | Yes | Current milestone name (read-only) | Display only |
-| Scan Due Date | datetime | Yes | Due date for this scan (read-only) | ISO 8601 format |
-| Days Overdue | number | No | Days past due date (if applicable) | Non-negative integer |
-| Scan Guidance | text | No | Instructions for proper scan capture | Display only |
-| Camera Viewfinder | component | Yes | Live camera preview for photo set capture | Standard camera capture |
-| Quality Indicator | status | Yes | Real-time scan quality feedback | Valid quality enum |
-| Capture Scan | action | Yes | Button to capture scan/photo set | Enabled when quality threshold met |
-| Retake | action | Cond. | Button to retake if quality poor | Enabled when quality below threshold |
-| Upload Progress | progress | No | Upload progress bar (0-100%) | 0-100% |
-| Upload Status | message | No | Success/error message after upload | Valid status enum |
-| View Previous Scans | link | No | Link to view historical scans | Always available |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Milestone Name | text | Yes | Current milestone name (read-only) | Display only | ENT-aftercare-milestone.name |
+| Scan Due Date | datetime | Yes | Due date for this scan (read-only) | ISO 8601 format | ENT-aftercare-task.due_at |
+| Days Overdue | number | No | Days past due date (if applicable) | Non-negative integer | ENT-aftercare-task.days_overdue |
+| Scan Guidance | text | No | Instructions for proper scan capture | Display only | ENT-aftercare-milestone.scan_guidance |
+| Camera Viewfinder | component | Yes | Live camera preview for photo set capture | Standard camera capture | no graph field (control) |
+| Quality Indicator | status | Yes | Real-time scan quality feedback | Valid quality enum | ENT-aftercare-scan-artifact.quality_score |
+| Capture Scan | action | Yes | Button to capture scan/photo set | Enabled when quality threshold met | ENT-aftercare-scan-artifact.media |
+| Retake | action | Cond. | Button to retake if quality poor | Enabled when quality below threshold | no graph field (control) |
+| Upload Progress | progress | No | Upload progress bar (0-100%) | 0-100% | no graph field (control) |
+| Upload Status | message | No | Success/error message after upload | Valid status enum | ENT-aftercare-scan-artifact.upload_status |
+| View Previous Scans | link | No | Link to view historical scans | Always available | no graph field (control) |
 
 **Business Rules**:
 
-- Scan must meet minimum quality threshold
-- Maximum file size: 50MB
-- Multiple scans within a milestone are supported per the configured scan schedule (e.g., every X days for Y repetitions); one upload is allowed per scheduled instance
-- Previous scans remain accessible for comparison
+- Scan must meet minimum quality threshold (REQ-011-059)
+- Maximum file size: 50MB (REQ-011-059)
+- Multiple scans within a milestone are supported per the configured scan schedule (e.g., every X days for Y repetitions); one upload is allowed per scheduled instance (REQ-011-059)
+- Previous scans remain accessible for comparison (REQ-011-059)
 
 **Notes**:
 
@@ -446,23 +445,23 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Milestone Name | text | Yes | Current milestone and phase | Display only |
-| Questionnaire Set | text | Yes | Questionnaire set assigned to this milestone | Must exist in FR-025 catalog |
-| Due Date | datetime | Yes | Questionnaire due date | ISO 8601 format |
-| Completion Status | status | Yes | Completed/Pending, plus an Overdue flag when past due | Valid status enum |
-| Questions | dynamic form | Yes | Full question list rendered from the assigned Questionnaire Set | Validation per question type (required fields, min/max ranges, option sets) |
-| Save Draft | action | No | Save progress without submitting | Always available |
-| Submit | action | Yes | Submit completed questionnaire | Enabled when all required fields complete |
-| Warning Message | alert | No | Warning for concerning responses | Shown when responses trigger urgent flag per milestone rules |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Milestone Name | text | Yes | Current milestone and phase | Display only | ENT-aftercare-milestone.name |
+| Questionnaire Set | text | Yes | Questionnaire set assigned to this milestone | Must exist in FR-025 catalog | ENT-aftercare-milestone.questionnaire_set_id |
+| Due Date | datetime | Yes | Questionnaire due date | ISO 8601 format | ENT-aftercare-task.due_at |
+| Completion Status | status | Yes | Completed/Pending, plus an Overdue flag when past due | Valid status enum | ENT-aftercare-task.status, ENT-aftercare-task.overdue_flag |
+| Questions | dynamic form | Yes | Full question list rendered from the assigned Questionnaire Set | Validation per question type (required fields, min/max ranges, option sets) | ENT-aftercare-questionnaire-response.answers |
+| Save Draft | action | No | Save progress without submitting | Always available | ENT-aftercare-questionnaire-response.is_draft |
+| Submit | action | Yes | Submit completed questionnaire | Enabled when all required fields complete | no graph field (control) |
+| Warning Message | alert | No | Warning for concerning responses | Shown when responses trigger urgent flag per milestone rules | ENT-aftercare-questionnaire-response.urgent_flag |
 
 **Business Rules**:
 
-- All required fields must be completed
-- Concerning responses trigger urgent flag per milestone rules
-- Drafts saved automatically every 30 seconds
-- Patient may retake and resubmit the questionnaire while its task is open; the latest answer counts and earlier answers are kept in the history
+- All required fields must be completed (REQ-011-060)
+- Concerning responses trigger urgent flag per milestone rules (REQ-011-028)
+- Drafts saved automatically every 30 seconds (REQ-011-060)
+- Patient may retake and resubmit the questionnaire while its task is open; the latest answer counts and earlier answers are kept in the history (REQ-011-060)
 
 **Notes**:
 
@@ -478,28 +477,28 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Medication Name | text | Yes | Name of medication | Must be a medication template from the admin-managed list owned by FR-024 (see FR-024) |
-| Dosage | text | Yes | Dosage amount and unit | Valid dosage format |
-| Frequency | text | Yes | Frequency (e.g., "2x daily", "Every 8 hours") | Valid frequency format |
-| Special Instructions | text | No | Additional instructions from provider | Max 500 chars |
-| Start Date | date | Yes | Medication start date | ISO 8601 format |
-| End Date | date | Yes | Medication end date | Must be after start date |
-| Today's Doses | list | Yes | Upcoming doses for today with times | Sorted by time |
-| Dose Time | time | Yes | Scheduled time for each dose | HH:MM format |
-| Mark as Taken | action | Yes | Button to mark dose as taken | Enabled when dose time reached |
-| Missed Dose Indicator | status | No | Visual indicator for missed doses | Shown if dose not taken within 2 hours |
-| Weekly Adherence | percent | Yes | Percentage of doses taken this week | 0-100%; auto-calculated |
-| Missed Doses Count | number | Yes | Total missed doses count | Non-negative integer |
-| View History | link | No | Link to view full adherence history | Always available |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Medication Name | text | Yes | Name of medication | Must be a medication template from the admin-managed list owned by FR-024 (see FR-024) (REQ-011-089) | ENT-aftercare-medication.name |
+| Dosage | text | Yes | Dosage amount and unit | Valid dosage format | ENT-aftercare-medication.dosage |
+| Frequency | text | Yes | Frequency (e.g., "2x daily", "Every 8 hours") | Valid frequency format | ENT-aftercare-medication.frequency |
+| Special Instructions | text | No | Additional instructions from provider | Max 500 chars | ENT-aftercare-medication.special_instructions |
+| Start Date | date | Yes | Medication start date | ISO 8601 format | ENT-aftercare-medication.start_date |
+| End Date | date | Yes | Medication end date | Must be after start date | ENT-aftercare-medication.end_date |
+| Today's Doses | list | Yes | Upcoming doses for today with times | Sorted by time | ENT-aftercare-dose.scheduled_time |
+| Dose Time | time | Yes | Scheduled time for each dose | HH:MM format | ENT-aftercare-dose.scheduled_time |
+| Mark as Taken | action | Yes | Button to mark dose as taken | Enabled when dose time reached | ENT-aftercare-dose.taken_at |
+| Missed Dose Indicator | status | No | Visual indicator for missed doses | Shown if dose not taken within 2 hours | ENT-aftercare-dose.missed |
+| Weekly Adherence | percent | Yes | Percentage of doses taken this week | 0-100%; auto-calculated | ENT-aftercare-plan.weekly_medication_adherence |
+| Missed Doses Count | number | Yes | Total missed doses count | Non-negative integer | ENT-aftercare-plan.missed_doses_count |
+| View History | link | No | Link to view full adherence history | Always available | no graph field (control) |
 
 **Business Rules**:
 
-- Medications prescribed by provider during aftercare setup
-- Adherence calculated as (taken doses / total doses) * 100
-- Missed doses trigger reminder notifications
-- History available for entire aftercare period
+- Medications prescribed by provider during aftercare setup (REQ-011-061)
+- Adherence calculated as (taken doses / total doses) * 100 (REQ-011-061)
+- Missed doses trigger reminder notifications (REQ-011-058)
+- History available for entire aftercare period (REQ-011-061)
 
 **Notes**:
 
@@ -515,28 +514,28 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Resource Category | text | Yes | Category (Videos, Guides, FAQs, Help) | Valid category enum |
-| Resource Title | text | Yes | Title of educational resource | Max 200 chars |
-| Resource Description | text | No | Description of resource content | Max 1000 chars |
-| Resource Type | text | Yes | Type (video, PDF, webpage, etc.) | Valid resource type enum |
-| Resource URL | url | Yes | URL or file path to resource | Valid URL or file path |
-| Duration | time | Cond. | Duration in minutes (for videos) | Valid time format |
-| File Size | size | Cond. | File size for downloadable resources | Display only |
-| Mark as Viewed | checkbox | No | Checkbox to mark resource as viewed | Boolean |
-| View/Download | action | Yes | Button to view or download resource | Always available |
-| Resources Viewed Count | number | Yes | Count of viewed resources | Non-negative integer |
-| Total Resources | number | Yes | Total resources in current milestone | Non-negative integer |
-| Completion Percentage | percent | Yes | Percentage of resources viewed | 0-100%; auto-calculated |
-| Mark All as Viewed | action | No | Button to mark all resources as viewed | Enabled when resources available |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Resource Category | text | Yes | Category (Videos, Guides, FAQs, Help) | Valid category enum | ENT-aftercare-resource.category |
+| Resource Title | text | Yes | Title of educational resource | Max 200 chars | ENT-aftercare-resource.title |
+| Resource Description | text | No | Description of resource content | Max 1000 chars | ENT-aftercare-resource.description |
+| Resource Type | text | Yes | Type (video, PDF, webpage, etc.) | Valid resource type enum | ENT-aftercare-resource.resource_type |
+| Resource URL | url | Yes | URL or file path to resource | Valid URL or file path | ENT-aftercare-resource.url |
+| Duration | time | Cond. | Duration in minutes (for videos) | Valid time format | ENT-aftercare-resource.duration_minutes |
+| File Size | size | Cond. | File size for downloadable resources | Display only | ENT-aftercare-resource.file_size_bytes |
+| Mark as Viewed | checkbox | No | Checkbox to mark resource as viewed | Boolean | ENT-aftercare-resource-view.viewed_at |
+| View/Download | action | Yes | Button to view or download resource | Always available | no graph field (control) |
+| Resources Viewed Count | number | Yes | Count of viewed resources | Non-negative integer | ENT-aftercare-milestone.resources_viewed_count |
+| Total Resources | number | Yes | Total resources in current milestone | Non-negative integer | ENT-aftercare-milestone.total_resources |
+| Completion Percentage | percent | Yes | Percentage of resources viewed | 0-100%; auto-calculated | ENT-aftercare-milestone.resource_completion_percentage |
+| Mark All as Viewed | action | No | Button to mark all resources as viewed | Enabled when resources available | no graph field (control) |
 
 **Business Rules**:
 
-- Resources specific to current milestone
-- Viewing progress tracked for compliance
-- Resources remain accessible throughout aftercare
-- New resources added by admin appear automatically
+- Resources specific to current milestone (REQ-011-062)
+- Viewing progress tracked for compliance (REQ-011-062)
+- Resources remain accessible throughout aftercare (REQ-011-062)
+- New resources added by admin appear automatically (REQ-011-062)
 
 **Notes**:
 
@@ -552,41 +551,41 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Service Type | radio | Yes | Post-Treatment Add-On or Standalone Service | Enum: "post_treatment", "standalone" |
-| Treatment Information | component | Cond. | Treatment details (if post-treatment add-on) | Auto-populated for post_treatment type |
-| External Treatment Details | form | Cond. | Treatment info form (if standalone) | Required for standalone type |
-| Treatment Date | date | Cond. | Date treatment performed | ISO 8601; required for standalone |
-| Treatment Type | select | Cond. | Type of treatment received | Value from the admin-managed treatment catalog; required for standalone |
-| Treating Clinic | text | Cond. | Name of external clinic | Max 200 chars; required for standalone |
-| Upload Treatment Documentation | file | No | Optional treatment documentation | Max 10MB; PDF/JPG/PNG |
-| Available Aftercare Services | list | Yes | List of purchasable aftercare templates | Filtered by treatment type compatibility |
-| Service Name | text | Yes | Template name (e.g., "Standard 6-Month FUE Aftercare") | Display only |
-| Service Description | text | Yes | Template description with features | Display only |
-| Duration | text | Yes | Service duration (from template) | Display only |
-| Milestones Included | list | Yes | Milestone summary | Display only |
-| Features Included | list | Yes | Features (scan uploads, questionnaires, etc.) | Display only |
-| Pricing Options | component | Yes | Available pricing for this template | Based on template configuration |
-| Pricing Option | radio | Cond. | Fixed Price or Monthly Subscription | Based on template's pricing model |
-| Price (Fixed) | currency | Cond. | One-time payment amount | Shown if Fixed or Both |
-| Price (Monthly) | currency | Cond. | Monthly subscription amount | Shown if Subscription or Both |
-| Total Amount | currency | Yes | Total amount for selected pricing option | Auto-calculated |
-| Currency | text | Yes | Patient's currency (auto-detected) | Based on location |
-| Selected Service | radio | Yes | User selection of template | Required before checkout |
-| Selected Pricing Option | radio | Cond. | If template offers both pricing models | Required if Both available |
-| Current Concerns | textarea | No | Patient's current concerns or symptoms | Max 2000 chars |
-| Upload Photos | file[] | No | Optional photos of current condition | Max 5 files; 10MB each; JPG/PNG |
-| Proceed to Payment | action | Yes | Post-treatment add-on: button to proceed to checkout. Standalone: submits the request; the patient pays later, after the admin has assigned a provider and the provider has configured the plan (Workflow 2) | Enabled when service selected |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Service Type | radio | Yes | Post-Treatment Add-On or Standalone Service | Enum: "post_treatment", "standalone" | ENT-aftercare-request.service_type |
+| Treatment Information | component | Cond. | Treatment details (if post-treatment add-on) | Auto-populated for post_treatment type | ENT-quote.treatment_id |
+| External Treatment Details | form | Cond. | Treatment info form (if standalone) | Required for standalone type | ENT-aftercare-request.treatment_date, ENT-aftercare-request.treatment_type, ENT-aftercare-request.treating_clinic, ENT-aftercare-request.documentation |
+| Treatment Date | date | Cond. | Date treatment performed | ISO 8601; required for standalone | ENT-aftercare-request.treatment_date |
+| Treatment Type | select | Cond. | Type of treatment received | Value from the admin-managed treatment catalog; required for standalone | ENT-aftercare-request.treatment_type |
+| Treating Clinic | text | Cond. | Name of external clinic | Max 200 chars; required for standalone | ENT-aftercare-request.treating_clinic |
+| Upload Treatment Documentation | file | No | Optional treatment documentation | Max 10MB; PDF/JPG/PNG | ENT-aftercare-request.documentation |
+| Available Aftercare Services | list | Yes | List of purchasable aftercare templates | Filtered by treatment type compatibility | no graph field (list of the rows below) |
+| Service Name | text | Yes | Template name (e.g., "Standard 6-Month FUE Aftercare") | Display only | ENT-aftercare-template.name |
+| Service Description | text | Yes | Template description with features | Display only | ENT-aftercare-template.service_description |
+| Duration | text | Yes | Service duration (from template) | Display only | ENT-aftercare-template.duration |
+| Milestones Included | list | Yes | Milestone summary | Display only | ENT-aftercare-milestone.name |
+| Features Included | list | Yes | Features (scan uploads, questionnaires, etc.) | Display only | ENT-aftercare-template.features_included |
+| Pricing Options | component | Yes | Available pricing for this template | Based on template configuration | ENT-aftercare-template-price.fixed_price, ENT-aftercare-template-price.monthly_price |
+| Pricing Option | radio | Cond. | Fixed Price or Monthly Subscription | Based on template's pricing model | ENT-aftercare-request.pricing_option |
+| Price (Fixed) | currency | Cond. | One-time payment amount | Shown if Fixed or Both | ENT-aftercare-template-price.fixed_price |
+| Price (Monthly) | currency | Cond. | Monthly subscription amount | Shown if Subscription or Both | ENT-aftercare-template-price.monthly_price |
+| Total Amount | currency | Yes | Total amount for selected pricing option | Auto-calculated | ENT-aftercare-request.total |
+| Currency | text | Yes | Patient's currency (auto-detected) | Based on location | ENT-aftercare-request.currency |
+| Selected Service | radio | Yes | User selection of template | Required before checkout | ENT-aftercare-request.template_id |
+| Selected Pricing Option | radio | Cond. | If template offers both pricing models | Required if Both available | ENT-aftercare-request.pricing_option |
+| Current Concerns | textarea | No | Patient's current concerns or symptoms | Max 2000 chars | ENT-aftercare-request.current_concerns |
+| Upload Photos | file[] | No | Optional photos of current condition | Max 5 files; 10MB each; JPG/PNG | ENT-aftercare-request.photos |
+| Proceed to Payment | action | Yes | Post-treatment add-on: button to proceed to checkout. Standalone: submits the request; the patient pays later, after the admin has assigned a provider and the provider has configured the plan (Workflow 2) | Enabled when service selected | no graph field (control) |
 
 **Business Rules**:
 
-- Only templates marked "Available for Purchase" are shown
-- Templates filtered by treatment type compatibility (FUE templates for FUE patients, etc.)
-- Pricing shown in patient's local currency (based on location detection)
-- If template offers both Fixed and Subscription, patient chooses preferred pricing option
-- Service name uses template name for consistency across provider and patient views
-- Post-treatment add-on only available within 90 days of Hairline treatment completion
+- Only templates marked "Available for Purchase" are shown (REQ-011-046)
+- Templates filtered by treatment type compatibility (FUE templates for FUE patients, etc.) (REQ-011-046)
+- Pricing shown in patient's local currency (based on location detection) (REQ-011-041)
+- If template offers both Fixed and Subscription, patient chooses preferred pricing option (REQ-011-042)
+- Service name uses template name for consistency across provider and patient views (REQ-011-046)
+- Post-treatment add-on only available within 90 days of Hairline treatment completion (REQ-011-044)
 - Treatment documentation optional but helps provider customize plan
 
 **Notes**:
@@ -603,46 +602,46 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Order Summary | component | Yes | Selected aftercare service details | Display only |
-| Service Name | text | Yes | Selected template name | Display only |
-| Duration | text | Yes | Service duration | Display only |
-| Pricing Option Selected | text | Yes | Fixed or Monthly Subscription | Display only |
-| Subtotal | currency | Yes | Service price (from template); the platform fee is taken out of this price and is not shown as an extra charge | Display only |
-| Tax | currency | Yes | Applicable tax | Display only; location-based |
-| Total Amount | currency | Yes | Final amount to pay | Display only |
-| Monthly Payment Details | component | Cond. | Breakdown of subscription payments | Shown if subscription selected |
-| Monthly Amount | currency | Yes | Amount charged per month | Display only |
-| Number of Months | number | Yes | Total subscription duration | Display only |
-| Total Subscription Amount | currency | Yes | Monthly amount × number of months | Display only |
-| Payment Method Selection | radio | Yes | Credit/Debit Card, PayPal, etc. | Valid payment method enum |
-| Card Number | text | Cond. | Credit/debit card number | Valid card format; required if card payment |
-| Expiry Date | text | Cond. | Card expiry date | MM/YY format; required if card payment |
-| CVV | text | Cond. | Card security code | 3-4 digits; required if card payment |
-| Cardholder Name | text | Cond. | Name on card | Max 200 chars; required if card payment |
-| Billing Address | component | Yes | Billing address details | Required for all payment methods |
-| Street Address | text | Yes | Street address | Max 500 chars |
-| City | text | Yes | City | Max 100 chars |
-| State/Province | text | Yes | State/province | Max 100 chars |
-| Postal Code | text | Yes | Postal/ZIP code | Valid postal format |
-| Country | select | Yes | Country | Valid country enum |
-| Terms & Conditions | checkbox | Yes | Agreement to terms | Boolean; must be checked |
-| Privacy Policy | checkbox | Yes | Agreement to privacy policy | Boolean; must be checked |
-| Payment Processing | status | No | Payment processing status | Display during payment |
-| Complete Payment | action | Yes | Button to submit payment | Enabled when all fields valid |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Order Summary | component | Yes | Selected aftercare service details | Display only | ENT-aftercare-template.name, ENT-aftercare-template.duration, ENT-aftercare-request.pricing_option, ENT-aftercare-request.subtotal, ENT-aftercare-request.tax, ENT-aftercare-request.total |
+| Service Name | text | Yes | Selected template name | Display only | ENT-aftercare-template.name |
+| Duration | text | Yes | Service duration | Display only | ENT-aftercare-template.duration |
+| Pricing Option Selected | text | Yes | Fixed or Monthly Subscription | Display only | ENT-aftercare-request.pricing_option |
+| Subtotal | currency | Yes | Service price (from template); the platform fee is taken out of this price and is not shown as an extra charge | Display only | ENT-aftercare-request.subtotal |
+| Tax | currency | Yes | Applicable tax | Display only; location-based | ENT-aftercare-request.tax |
+| Total Amount | currency | Yes | Final amount to pay | Display only | ENT-aftercare-request.total |
+| Monthly Payment Details | component | Cond. | Breakdown of subscription payments | Shown if subscription selected | ENT-aftercare-request.monthly_amount, ENT-aftercare-request.number_of_months, ENT-aftercare-request.total_subscription_amount |
+| Monthly Amount | currency | Yes | Amount charged per month | Display only | ENT-aftercare-request.monthly_amount |
+| Number of Months | number | Yes | Total subscription duration | Display only | ENT-aftercare-request.number_of_months |
+| Total Subscription Amount | currency | Yes | Monthly amount × number of months | Display only | ENT-aftercare-request.total_subscription_amount |
+| Payment Method Selection | radio | Yes | Credit/Debit Card, PayPal, etc. | Valid payment method enum | ENT-aftercare-request.payment_method |
+| Card Number | text | Cond. | Credit/debit card number | Valid card format; required if card payment | no graph field (card input) |
+| Expiry Date | text | Cond. | Card expiry date | MM/YY format; required if card payment | no graph field (card input) |
+| CVV | text | Cond. | Card security code | 3-4 digits; required if card payment | no graph field (card input) |
+| Cardholder Name | text | Cond. | Name on card | Max 200 chars; required if card payment | no graph field (card input) |
+| Billing Address | component | Yes | Billing address details | Required for all payment methods | ENT-aftercare-request.billing_address |
+| Street Address | text | Yes | Street address | Max 500 chars | ENT-aftercare-request.billing_address |
+| City | text | Yes | City | Max 100 chars | ENT-aftercare-request.billing_address |
+| State/Province | text | Yes | State/province | Max 100 chars | ENT-aftercare-request.billing_address |
+| Postal Code | text | Yes | Postal/ZIP code | Valid postal format | ENT-aftercare-request.billing_address |
+| Country | select | Yes | Country | Valid country enum | ENT-aftercare-request.billing_address |
+| Terms & Conditions | checkbox | Yes | Agreement to terms | Boolean; must be checked | ENT-aftercare-request.terms_accepted |
+| Privacy Policy | checkbox | Yes | Agreement to privacy policy | Boolean; must be checked | ENT-aftercare-request.privacy_accepted |
+| Payment Processing | status | No | Payment processing status | Display during payment | ENT-aftercare-request.payment_status |
+| Complete Payment | action | Yes | Button to submit payment | Enabled when all fields valid | no graph field (control) |
 
 **Business Rules**:
 
-- Payment integration with FR-007 (Payment Processing module)
-- Support for multiple payment methods (credit/debit cards, PayPal, local payment methods)
-- Secure payment processing with PCI compliance
-- Payment confirmation activates the aftercare plan for a standalone request (Workflow 2, after the provider has configured the plan) and triggers automatic assignment for a post-treatment add-on (Workflow 2b)
-- The platform fee is one amount taken from the aftercare price; it is never added on top of the patient's total
-- Failed payments allow retry with different payment method
-- Any payment already taken is refunded automatically if the request is rejected by admin
-- Subscription payments charged automatically on monthly basis
-- First subscription payment charged immediately; subsequent payments on monthly anniversary
+- Payment integration with FR-007 (Payment Processing module) (REQ-011-063)
+- Support for multiple payment methods (credit/debit cards, PayPal, local payment methods) (REQ-011-063)
+- Secure payment processing with PCI compliance (REQ-011-063)
+- Payment confirmation activates the aftercare plan for a standalone request (Workflow 2, after the provider has configured the plan) and triggers automatic assignment for a post-treatment add-on (Workflow 2b) (REQ-011-018, REQ-011-063)
+- The platform fee is one amount taken from the aftercare price; it is never added on top of the patient's total (REQ-011-040)
+- Failed payments allow retry with different payment method (REQ-011-050)
+- Any payment already taken is refunded automatically if the request is rejected by admin (REQ-011-037)
+- Subscription payments charged automatically on monthly basis (REQ-011-043)
+- First subscription payment charged immediately; subsequent payments on monthly anniversary (REQ-011-043)
 
 **Notes**:
 
@@ -663,31 +662,31 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Patient ID | column | Yes | Unique identifier (e.g., HPID2509-0001) | Searchable; sortable |
-| Patient Name | column | Yes | Avatar + full name + email | PII per role; sortable |
-| Phone Number | column | No | Contact number | E.164 format |
-| Age | column | No | Patient age | Integer 18–100 |
-| Problem | column | No | Treatment area (Hair/Both/Beard) | Value from the catalog-driven list (per FR-003) |
-| Treatment & Package | column | Yes | Treatment + package | Read-only |
-| Aftercare Start Date | column | Yes | Start date | ISO 8601; sortable |
-| Current Milestone | column | Yes | Phase name | Must exist in plan |
-| Progress | column | Yes | Visual progress (e.g., 3/5 days) | Derived; non-negative |
-| Med Alerts | column | Yes | Critical/Standard/None | Enum with color coding |
-| Last Activity | column | No | Time since last interaction | Relative format |
-| Action | column | Yes | View/Edit/Message/Escalate | RBAC enforced |
-| Search | control | No | Search aftercare cases | Debounced input |
-| Filters | control | No | Provider/Milestone/Status/Date range | Valid enums/ranges |
-| Pagination | control | No | Page controls and size | Standard UX pattern |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Patient ID | column | Yes | Unique identifier (e.g., HPID2509-0001) | Searchable; sortable | ENT-aftercare-plan.patient_id |
+| Patient Name | column | Yes | Avatar + full name + email | PII per role; sortable | ENT-patient.name, ENT-patient.email |
+| Phone Number | column | No | Contact number | E.164 format | ENT-patient.phone |
+| Age | column | No | Patient age | Integer 18–100 | ENT-patient.age |
+| Problem | column | No | Treatment area (Hair/Both/Beard) | Value from the catalog-driven list (per FR-003) | ENT-inquiry.treatment_area_id |
+| Treatment & Package | column | Yes | Treatment + package | Read-only | ENT-quote.treatment_id, ENT-subquote.package_snapshot |
+| Aftercare Start Date | column | Yes | Start date | ISO 8601; sortable | ENT-aftercare-plan.activated_at |
+| Current Milestone | column | Yes | Phase name | Must exist in plan | ENT-aftercare-plan.current_milestone |
+| Progress | column | Yes | Visual progress (e.g., 3/5 days) | Derived; non-negative | ENT-aftercare-plan.overall_progress |
+| Med Alerts | column | Yes | Critical/Standard/None | Enum with color coding | ENT-aftercare-plan.medication_alert_level |
+| Last Activity | column | No | Time since last interaction | Relative format | ENT-aftercare-plan.last_activity_at |
+| Action | column | Yes | View/Edit/Message/Escalate | RBAC enforced | no graph field (control) |
+| Search | control | No | Search aftercare cases | Debounced input | no graph field (control) |
+| Filters | control | No | Provider/Milestone/Status/Date range | Valid enums/ranges | no graph field (control) |
+| Pagination | control | No | Page controls and size | Standard UX pattern | no graph field (control) |
 
 **Business Rules**:
 
-- Only shows patients assigned to this provider
-- Overdue cases shown with amber indicators
-- Patient names are fully visible as aftercare occurs post-payment confirmation
-- Progress calculated automatically by system
-- All data editable by admin (admin override capability)
+- Only shows patients assigned to this provider (REQ-011-064)
+- Overdue cases shown with amber indicators (REQ-011-064)
+- Patient names are fully visible as aftercare occurs post-payment confirmation (REQ-011-010)
+- Progress calculated automatically by system (REQ-011-064)
+- All data editable by admin (admin override capability) (REQ-011-034)
 
 **Notes**:
 
@@ -703,45 +702,45 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Patient ID | text | Yes | Unique patient identifier | Display only |
-| Treatment Details | text | Cond. | Treatment info (if Hairline-treated patient) | Display only; N/A for standalone |
-| Aftercare Start Date | date | Yes | When aftercare began | ISO 8601 format |
-| Aftercare Duration | text | Yes | Planned duration (e.g., "12 months") | Display only |
-| Assigned Template | text | Yes | Aftercare template name | Display only |
-| Custom Instructions | text | No | Provider's patient-specific instructions | Max 2000 chars; editable |
-| Current Milestone | text | Yes | Current milestone name and phase | Must exist in plan |
-| Overall Progress | percent | Yes | Completion percentage (auto-calculated) | 0-100% |
-| Milestone Timeline | component | Yes | Visual timeline of all milestones | Display only |
-| Upcoming Tasks | list | Yes | List of next due tasks | Sorted by due date |
-| 3D Scan History | list | Yes | All uploaded scans with dates and quality | Chronological order |
-| Scan Upload Date | datetime | Yes | Date scan was uploaded | ISO 8601 format |
-| Scan Quality Score | number | Yes | Quality score (0-100) | Integer 0-100 |
-| Questionnaire Responses | list | Yes | All questionnaire completions | Chronological order |
-| Response Date | datetime | Yes | Date questionnaire was submitted | ISO 8601 format |
-| Questionnaire Set | text | Yes | Questionnaire set completed | Display only |
-| Medication Adherence History | list | Yes | Historical adherence data | Chronological order |
-| Adherence Period | date range | Yes | Start and end date of the adherence period, calculated from the medication doses | Calculated; valid date range |
-| Adherence Percentage | percent | Yes | Percentage for that period | 0-100% |
-| Communication Log | list | Yes | All communications with aftercare team | Chronological order |
-| Message Date | datetime | Yes | Date/time of message | ISO 8601 format |
-| Message Type | text | Yes | Type (message, escalation, alert) | Valid message type enum |
-| Adjust Plan | action | No | Button to modify aftercare plan | Enabled for assigned patients |
-| Request Additional Scan | action | No | Button to request extra scan | Always available |
-| Contact Aftercare Team | action | No | Button to send message | Always available |
-| Escalate Case | action | No | Button to escalate urgent case | Always available |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Patient ID | text | Yes | Unique patient identifier | Display only | ENT-aftercare-plan.patient_id |
+| Treatment Details | text | Cond. | Treatment info (if Hairline-treated patient) | Display only; N/A for standalone | ENT-quote.treatment_id |
+| Aftercare Start Date | date | Yes | When aftercare began | ISO 8601 format | ENT-aftercare-plan.activated_at |
+| Aftercare Duration | text | Yes | Planned duration (e.g., "12 months") | Display only | ENT-aftercare-plan.duration |
+| Assigned Template | text | Yes | Aftercare template name | Display only | ENT-aftercare-plan.template_id |
+| Custom Instructions | text | No | Provider's patient-specific instructions | Max 2000 chars; editable | ENT-aftercare-plan.custom_instructions |
+| Current Milestone | text | Yes | Current milestone name and phase | Must exist in plan | ENT-aftercare-plan.current_milestone |
+| Overall Progress | percent | Yes | Completion percentage (auto-calculated) | 0-100% | ENT-aftercare-plan.overall_progress |
+| Milestone Timeline | component | Yes | Visual timeline of all milestones | Display only | no graph field (display component) |
+| Upcoming Tasks | list | Yes | List of next due tasks | Sorted by due date | ENT-aftercare-task.due_at |
+| 3D Scan History | list | Yes | All uploaded scans with dates and quality | Chronological order | no graph field (list of the rows below) |
+| Scan Upload Date | datetime | Yes | Date scan was uploaded | ISO 8601 format | ENT-aftercare-scan-artifact.uploaded_at |
+| Scan Quality Score | number | Yes | Quality score (0-100) | Integer 0-100 | ENT-aftercare-scan-artifact.quality_score |
+| Questionnaire Responses | list | Yes | All questionnaire completions | Chronological order | ENT-aftercare-questionnaire-response.answers |
+| Response Date | datetime | Yes | Date questionnaire was submitted | ISO 8601 format | ENT-aftercare-questionnaire-response.responded_at |
+| Questionnaire Set | text | Yes | Questionnaire set completed | Display only | ENT-aftercare-questionnaire-response.questionnaire_set_id |
+| Medication Adherence History | list | Yes | Historical adherence data | Chronological order | ENT-aftercare-plan.medication_adherence |
+| Adherence Period | date range | Yes | Start and end date of the adherence period, calculated from the medication doses | Calculated; valid date range | ENT-aftercare-plan.adherence_period |
+| Adherence Percentage | percent | Yes | Percentage for that period | 0-100% | ENT-aftercare-plan.medication_adherence |
+| Communication Log | list | Yes | All communications with aftercare team | Chronological order | no graph field (list of the rows below) |
+| Message Date | datetime | Yes | Date/time of message | ISO 8601 format | ENT-aftercare-communication-entry.sent_at |
+| Message Type | text | Yes | Type (message, escalation, alert) | Valid message type enum | ENT-aftercare-communication-entry.entry_type |
+| Adjust Plan | action | No | Button to modify aftercare plan | Enabled for assigned patients | no graph field (control) |
+| Request Additional Scan | action | No | Button to request extra scan | Always available | no graph field (control) |
+| Contact Aftercare Team | action | No | Button to send message | Always available | no graph field (control) |
+| Escalate Case | action | No | Button to escalate urgent case | Always available | no graph field (control) |
 
 **Business Rules**:
 
-- **Data Persistence**: Screen displays all historical data from patient's entire journey (inquiry → treatment → aftercare) without removing older data, providing complete context
+- **Data Persistence**: Screen displays all historical data from patient's entire journey (inquiry → treatment → aftercare) without removing older data, providing complete context (REQ-011-065)
 - **Dual Case Handling**:
-  - **Hairline-treated patients**: Shows complete lifecycle data including pre-treatment inquiry, quote, treatment details, and aftercare
-  - **Standalone aftercare patients**: Shows only aftercare-specific data with initial intake information provided during standalone request
-- Full patient details visible as aftercare occurs post-payment confirmation
-- All activities logged with timestamps
-- Provider can modify plan only for their assigned patients
-- Escalation creates audit trail
+  - **Hairline-treated patients**: Shows complete lifecycle data including pre-treatment inquiry, quote, treatment details, and aftercare (REQ-011-065)
+  - **Standalone aftercare patients**: Shows only aftercare-specific data with initial intake information provided during standalone request (REQ-011-065)
+- Full patient details visible as aftercare occurs post-payment confirmation (REQ-011-010)
+- All activities logged with timestamps (REQ-011-065)
+- Provider can modify plan only for their assigned patients (REQ-011-065)
+- Escalation creates audit trail (REQ-011-065)
 
 **Notes**:
 
@@ -758,57 +757,57 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| **Step 1: Template Selection** | | | | |
-| Available Templates | list | Yes | List of admin-created templates | Must have at least one template |
-| Template Name | text | Yes | Selected template name | Must exist in template catalog |
-| Template Description | text | Yes | Template description | Display only |
-| Treatment Type | text | Yes | Treatment type compatibility | Valid treatment type enum |
-| Duration | text | Yes | Duration (e.g., "12 months") | Display only |
-| Milestone Count | number | Yes | Number of milestones in template | Display only |
-| Template Preview | component | No | Preview of template details | Display only |
-| Select Template | action | Yes | Button to select template | Enabled when template selected |
-| **Step 2: Milestone Customization** | | | | |
-| Milestone List | list | Yes | All milestones from selected template | Must have at least one milestone |
-| Milestone Name | text | Yes | Name of milestone | Max 200 chars |
-| Milestone Duration | number | Yes | Duration in days | Positive integer; editable |
-| 3D Scan Frequency | text | Yes | Frequency of scans (e.g., "Weekly") | Valid frequency enum; editable |
-| Questionnaire Set | select | Yes | Questionnaire set assigned to this milestone | Must exist in FR-025 catalog |
-| Questionnaire Frequency | text | Yes | Frequency of questionnaires | Valid frequency enum; editable |
-| Educational Resources | list | Yes | Resources assigned to milestone | May be empty |
-| Activity Restrictions | text | No | Restrictions for this milestone | Max 500 chars; editable |
-| Modify Duration | action | No | Button to modify milestone duration | Always available |
-| Custom Instructions | text | No | Instructions specific to this milestone | Max 1000 chars |
-| Override Restrictions | action | No | Button to override activity restrictions | Always available |
-| **Step 3: Medication Setup** | | | | |
-| Medication Name | select | Yes | Medication picked only from the admin-managed medication list (the FR-024 medication templates); no free-text medication names | Must be a medication template owned by FR-024 (see FR-024) |
-| Dosage | text | Yes | Dosage amount and unit | Valid dosage format |
-| Frequency | text | Yes | Frequency (e.g., "2x daily") | Valid frequency format |
-| Start Date | date | Yes | Medication start date | ISO 8601 format; must be today or future |
-| End Date | date | Yes | Medication end date | ISO 8601 format; must be after start date |
-| Special Instructions | text | No | Additional instructions | Max 500 chars |
-| Add Medication | action | Yes | Button to add medication to list | Enabled when all fields complete |
-| Medication List | list | Yes | List of all added medications | May be empty |
-| Medication Timeline | component | Yes | Visual timeline of all medications | Display only |
-| **Step 4: Custom Instructions** | | | | |
-| General Instructions | textarea | No | Free-text area for provider notes | Max 2000 chars |
-| Milestone Instructions | textarea[] | No | Instructions per milestone | Max 1000 chars per milestone |
-| Emergency Contact | text | No | Provider contact information | Max 200 chars |
-| Special Considerations | textarea | No | Patient-specific notes | Max 1000 chars |
-| **Step 5: Review and Confirm** | | | | |
-| Plan Summary | component | Yes | Complete aftercare plan overview | Display only |
-| Patient Information | component | Yes | Confirmation of patient details | Display only |
-| Provider Information | component | Yes | Provider contact details | Display only |
-| Activate Plan | action | Yes | Button to activate aftercare plan | Enabled when all steps complete |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| **Step 1: Template Selection** | | | | |  |
+| Available Templates | list | Yes | List of admin-created templates | Must have at least one template | no graph field (list of the rows below) |
+| Template Name | text | Yes | Selected template name | Must exist in template catalog | ENT-aftercare-template.name |
+| Template Description | text | Yes | Template description | Display only | ENT-aftercare-template.description |
+| Treatment Type | text | Yes | Treatment type compatibility | Valid treatment type enum | ENT-aftercare-template.treatment_type |
+| Duration | text | Yes | Duration (e.g., "12 months") | Display only | ENT-aftercare-template.duration |
+| Milestone Count | number | Yes | Number of milestones in template | Display only | ENT-aftercare-template.milestone_count |
+| Template Preview | component | No | Preview of template details | Display only | no graph field (display component) |
+| Select Template | action | Yes | Button to select template | Enabled when template selected | no graph field (control) |
+| **Step 2: Milestone Customization** | | | | |  |
+| Milestone List | list | Yes | All milestones from selected template | Must have at least one milestone | no graph field (list of the rows below) |
+| Milestone Name | text | Yes | Name of milestone | Max 200 chars | ENT-aftercare-milestone.name |
+| Milestone Duration | number | Yes | Duration in days | Positive integer; editable | ENT-aftercare-milestone.duration_days |
+| 3D Scan Frequency | text | Yes | Frequency of scans (e.g., "Weekly") | Valid frequency enum; editable | ENT-aftercare-milestone.scan_frequency |
+| Questionnaire Set | select | Yes | Questionnaire set assigned to this milestone | Must exist in FR-025 catalog | ENT-aftercare-milestone.questionnaire_set_id |
+| Questionnaire Frequency | text | Yes | Frequency of questionnaires | Valid frequency enum; editable | ENT-aftercare-milestone.questionnaire_frequency |
+| Educational Resources | list | Yes | Resources assigned to milestone | May be empty | ENT-aftercare-resource.title |
+| Activity Restrictions | text | No | Restrictions for this milestone | Max 500 chars; editable | ENT-aftercare-milestone.activity_restrictions |
+| Modify Duration | action | No | Button to modify milestone duration | Always available | no graph field (control) |
+| Custom Instructions | text | No | Instructions specific to this milestone | Max 1000 chars | ENT-aftercare-milestone.instructions |
+| Override Restrictions | action | No | Button to override activity restrictions | Always available | no graph field (control) |
+| **Step 3: Medication Setup** | | | | |  |
+| Medication Name | select | Yes | Medication picked only from the admin-managed medication list (the FR-024 medication templates); no free-text medication names | Must be a medication template owned by FR-024 (see FR-024) (REQ-011-089) | ENT-aftercare-medication.name |
+| Dosage | text | Yes | Dosage amount and unit | Valid dosage format | ENT-aftercare-medication.dosage |
+| Frequency | text | Yes | Frequency (e.g., "2x daily") | Valid frequency format | ENT-aftercare-medication.frequency |
+| Start Date | date | Yes | Medication start date | ISO 8601 format; must be today or future | ENT-aftercare-medication.start_date |
+| End Date | date | Yes | Medication end date | ISO 8601 format; must be after start date | ENT-aftercare-medication.end_date |
+| Special Instructions | text | No | Additional instructions | Max 500 chars | ENT-aftercare-medication.special_instructions |
+| Add Medication | action | Yes | Button to add medication to list | Enabled when all fields complete | no graph field (control) |
+| Medication List | list | Yes | List of all added medications | May be empty | no graph field (list of the rows below) |
+| Medication Timeline | component | Yes | Visual timeline of all medications | Display only | no graph field (display component) |
+| **Step 4: Custom Instructions** | | | | |  |
+| General Instructions | textarea | No | Free-text area for provider notes | Max 2000 chars | ENT-aftercare-plan.general_instructions, ENT-aftercare-plan.custom_instructions |
+| Milestone Instructions | textarea[] | No | Instructions per milestone | Max 1000 chars per milestone | ENT-aftercare-milestone.instructions |
+| Emergency Contact | text | No | Provider contact information | Max 200 chars | ENT-aftercare-plan.emergency_contact |
+| Special Considerations | textarea | No | Patient-specific notes | Max 1000 chars | ENT-aftercare-plan.special_considerations |
+| **Step 5: Review and Confirm** | | | | |  |
+| Plan Summary | component | Yes | Complete aftercare plan overview | Display only | no graph field (display component) |
+| Patient Information | component | Yes | Confirmation of patient details | Display only | ENT-aftercare-plan.patient_id |
+| Provider Information | component | Yes | Provider contact details | Display only | ENT-aftercare-plan.provider_id |
+| Activate Plan | action | Yes | Button to activate aftercare plan | Enabled when all steps complete | no graph field (control) |
 
 **Business Rules**:
 
-- All steps must be completed before activation
-- Provider can go back to previous steps
-- System validates all required fields
-- Admin can edit any step after activation
-- Patient receives notification upon activation
+- All steps must be completed before activation (REQ-011-066)
+- Provider can go back to previous steps (REQ-011-066)
+- System validates all required fields (REQ-011-066)
+- Admin can edit any step after activation (REQ-011-066)
+- Patient receives notification upon activation (REQ-011-066)
 
 **Notes**:
 
@@ -826,34 +825,34 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Selected Template | text | Yes | Current template name | Display only |
-| Milestone Structure | component | Yes | Visual structure with progress indicators | Display only |
-| Medication Schedule | component | Yes | Visual timeline of medications | Display only |
-| Custom Instructions | textarea | No | Current custom instructions | Max 2000 chars; editable |
-| Modify Medication Schedule | action | Cond. | Button to modify medications (Provider) | Enabled for providers |
-| Update Custom Instructions | action | Cond. | Button to update instructions (Provider) | Enabled for providers |
-| Add Milestone Notes | action | Cond. | Button to add milestone-specific notes (Provider) | Enabled for providers |
-| Request Duration Change | action | Cond. | Button to request milestone duration change (Provider) | Enabled for providers |
-| Change Milestone Structure | action | Cond. | Button to modify milestones (Admin only) | Enabled for admins |
-| Modify Template Assignment | action | Cond. | Button to change template (Admin only) | Enabled for admins |
-| Override Settings | action | Cond. | Button to override any settings (Admin only) | Enabled for admins |
-| Reassign Provider | action | Cond. | Button to reassign case (Admin only) | Enabled for admins |
-| Change Reason | textarea | Yes | Required reason for changes | Max 500 chars; required |
-| Change Timestamp | datetime | Yes | When change was made | Auto-generated |
-| Changed By | text | Yes | User who made the change | Auto-populated |
-| Approval Status | status | Yes | Status (Pending/Approved/Rejected) | Valid status enum |
-| Change History | list | Yes | Historical list of all changes | Chronological order |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Selected Template | text | Yes | Current template name | Display only | ENT-aftercare-plan.template_id |
+| Milestone Structure | component | Yes | Visual structure with progress indicators | Display only | ENT-aftercare-milestone.name |
+| Medication Schedule | component | Yes | Visual timeline of medications | Display only | ENT-aftercare-medication.name |
+| Custom Instructions | textarea | No | Current custom instructions | Max 2000 chars; editable | ENT-aftercare-plan.custom_instructions |
+| Modify Medication Schedule | action | Cond. | Button to modify medications (Provider) | Enabled for providers | no graph field (control) |
+| Update Custom Instructions | action | Cond. | Button to update instructions (Provider) | Enabled for providers | no graph field (control) |
+| Add Milestone Notes | action | Cond. | Button to add milestone-specific notes (Provider) | Enabled for providers | no graph field (control) |
+| Request Duration Change | action | Cond. | Button to request milestone duration change (Provider) | Enabled for providers | no graph field (control) |
+| Change Milestone Structure | action | Cond. | Button to modify milestones (Admin only) | Enabled for admins | no graph field (control) |
+| Modify Template Assignment | action | Cond. | Button to change template (Admin only) | Enabled for admins | no graph field (control) |
+| Override Settings | action | Cond. | Button to override any settings (Admin only) | Enabled for admins | no graph field (control) |
+| Reassign Provider | action | Cond. | Button to reassign case (Admin only) | Enabled for admins | no graph field (control) |
+| Change Reason | textarea | Yes | Required reason for changes | Max 500 chars; required | ENT-aftercare-audit-entry.reason |
+| Change Timestamp | datetime | Yes | When change was made | Auto-generated | ENT-aftercare-audit-entry.changed_at |
+| Changed By | text | Yes | User who made the change | Auto-populated | ENT-aftercare-audit-entry.changed_by |
+| Approval Status | status | Yes | Status (Pending/Approved/Rejected) | Valid status enum | ENT-aftercare-audit-entry.approval_status |
+| Change History | list | Yes | Historical list of all changes | Chronological order | ENT-aftercare-audit-entry.plan_id |
 
 **Business Rules**:
 
-- Provider changes logged and tracked
-- Admin changes override provider settings
-- Major changes require admin approval
-- All changes logged with reason and timestamp
-- Patient notified of approved changes
-- Change history maintained for audit trail
+- Provider changes logged and tracked (REQ-011-067)
+- Admin changes override provider settings (REQ-011-067)
+- Major changes require admin approval (REQ-011-067)
+- All changes logged with reason and timestamp (REQ-011-067)
+- Patient notified of approved changes (REQ-011-067)
+- Change history maintained for audit trail (REQ-011-067)
 
 **Notes**:
 
@@ -870,40 +869,40 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Patient Name | text | Yes | Full patient name | Display only |
-| Current Milestone | text | Yes | Current milestone name and phase | Display only |
-| Overall Progress | percent | Yes | Completion percentage (auto-calculated) | 0-100% |
-| Days Remaining | number | Yes | Days left in current milestone | Non-negative integer |
-| Next Upcoming Tasks | list | Yes | List of next due tasks | Sorted by due date |
-| Milestone Timeline | component | Yes | Visual timeline of all milestones | Display only |
-| Completed Milestones | indicator | Yes | Green indicators for completed | Display only |
-| Current Milestone Indicator | indicator | Yes | Blue indicator for current | Display only |
-| Upcoming Milestones | indicator | Yes | Gray indicators for upcoming | Display only |
-| Overdue Tasks Indicator | indicator | Yes | Red indicators for overdue | Display only |
-| 3D Scan Status | status | Yes | Completed/Pending with dates, plus an Overdue flag when past due | Valid status enum |
-| Scan Due Date | datetime | Yes | Due date for scan | ISO 8601 format |
-| Questionnaire Status | status | Yes | Completed/Pending with dates, plus an Overdue flag when past due | Valid status enum |
-| Questionnaire Due Date | datetime | Yes | Due date for questionnaire | ISO 8601 format |
-| Medication Adherence | percent | Yes | Adherence percentage | 0-100% |
-| Missed Doses | number | Yes | Count of missed doses | Non-negative integer |
-| Activity Compliance | percent | Yes | Compliance with activity restrictions | 0-100% |
-| Recent Scan Uploads | list | Yes | Recent 3D scan uploads | Chronological order |
-| Questionnaire Completions | list | Yes | Recent questionnaire submissions | Chronological order |
-| Medication Updates | list | Yes | Recent adherence updates | Chronological order |
-| Communication Interactions | list | Yes | Recent messages/interactions | Chronological order |
-| Request Additional Scan | action | No | Button to request extra scan | Always available |
-| Send Message to Patient | action | No | Button to send message | Always available |
-| Schedule Consultation | action | No | Button to schedule consultation | Always available |
-| Escalate Case | action | No | Button to escalate urgent case | Always available |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Patient Name | text | Yes | Full patient name | Display only | ENT-patient.name |
+| Current Milestone | text | Yes | Current milestone name and phase | Display only | ENT-aftercare-plan.current_milestone |
+| Overall Progress | percent | Yes | Completion percentage (auto-calculated) | 0-100% | ENT-aftercare-plan.overall_progress |
+| Days Remaining | number | Yes | Days left in current milestone | Non-negative integer | ENT-aftercare-plan.days_remaining |
+| Next Upcoming Tasks | list | Yes | List of next due tasks | Sorted by due date | ENT-aftercare-task.due_at |
+| Milestone Timeline | component | Yes | Visual timeline of all milestones | Display only | no graph field (display component) |
+| Completed Milestones | indicator | Yes | Green indicators for completed | Display only | ENT-aftercare-milestone.status |
+| Current Milestone Indicator | indicator | Yes | Blue indicator for current | Display only | ENT-aftercare-milestone.status |
+| Upcoming Milestones | indicator | Yes | Gray indicators for upcoming | Display only | ENT-aftercare-milestone.status |
+| Overdue Tasks Indicator | indicator | Yes | Red indicators for overdue | Display only | ENT-aftercare-task.overdue_flag |
+| 3D Scan Status | status | Yes | Completed/Pending with dates, plus an Overdue flag when past due | Valid status enum | ENT-aftercare-task.status, ENT-aftercare-task.overdue_flag |
+| Scan Due Date | datetime | Yes | Due date for scan | ISO 8601 format | ENT-aftercare-task.due_at |
+| Questionnaire Status | status | Yes | Completed/Pending with dates, plus an Overdue flag when past due | Valid status enum | ENT-aftercare-task.status, ENT-aftercare-task.overdue_flag |
+| Questionnaire Due Date | datetime | Yes | Due date for questionnaire | ISO 8601 format | ENT-aftercare-task.due_at |
+| Medication Adherence | percent | Yes | Adherence percentage | 0-100% | ENT-aftercare-plan.medication_adherence |
+| Missed Doses | number | Yes | Count of missed doses | Non-negative integer | ENT-aftercare-plan.missed_doses_count |
+| Activity Compliance | percent | Yes | Compliance with activity restrictions | 0-100% | ENT-aftercare-plan.activity_compliance |
+| Recent Scan Uploads | list | Yes | Recent 3D scan uploads | Chronological order | ENT-aftercare-scan-artifact.uploaded_at |
+| Questionnaire Completions | list | Yes | Recent questionnaire submissions | Chronological order | ENT-aftercare-questionnaire-response.responded_at |
+| Medication Updates | list | Yes | Recent adherence updates | Chronological order | ENT-aftercare-dose.taken_at |
+| Communication Interactions | list | Yes | Recent messages/interactions | Chronological order | ENT-aftercare-communication-entry.sent_at |
+| Request Additional Scan | action | No | Button to request extra scan | Always available | no graph field (control) |
+| Send Message to Patient | action | No | Button to send message | Always available | no graph field (control) |
+| Schedule Consultation | action | No | Button to schedule consultation | Always available | no graph field (control) |
+| Escalate Case | action | No | Button to escalate urgent case | Always available | no graph field (control) |
 
 **Business Rules**:
 
-- Progress calculated automatically by system
-- Provider can only view assigned patients
-- Real-time updates when patient completes tasks
-- Overdue tasks highlighted prominently
+- Progress calculated automatically by system (REQ-011-064)
+- Provider can only view assigned patients (REQ-011-021, REQ-011-064)
+- Real-time updates when patient completes tasks (REQ-011-027)
+- Overdue tasks highlighted prominently (REQ-011-086)
 - All actions logged for audit trail
 
 **Notes**:
@@ -923,32 +922,32 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Case ID | column | Yes | Unique identifier (e.g., AC2509-0001) | Searchable; sortable |
-| Patient Name | column | Yes | Avatar + full name + email | PII admin-only |
-| Phone Number | column | No | Contact number | E.164 format |
-| Age | column | No | Patient age | Integer 18–100 |
-| Problem | column | No | Treatment area | Value from the catalog-driven list (per FR-003) |
-| Treatment & Package | column | Yes | Treatment + package | Read-only |
-| Provider | column | Yes | Assigned provider name | Must exist |
-| Aftercare Type | column | Yes | Treatment-linked or Standalone | Enum |
-| Start Date | column | Yes | Aftercare start date | ISO 8601; sortable |
-| Current Milestone | column | Yes | Current phase | Must exist in plan |
-| Progress | column | Yes | Visual progress bar | Derived; non-negative |
-| Med Alerts | column | Yes | Critical/Standard/None | Enum with color coding |
-| Status | column | Yes | Active/Completed/Cancelled, with a separate Overdue flag shown on cases that have overdue tasks | Enum plus flag |
-| Action | column | Yes | View/Edit/Reassign/Escalate | RBAC enforced |
-| Search/Filters | control | No | Provider/Milestone/Status/Date range/Risk Level/Specialist/Completion Rate | Valid enums/ranges |
-| Pagination | control | No | Page and size controls | Standard UX pattern |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Case ID | column | Yes | Unique identifier (e.g., AC2509-0001) | Searchable; sortable | ENT-aftercare-plan.id |
+| Patient Name | column | Yes | Avatar + full name + email | PII admin-only | ENT-patient.name, ENT-patient.email |
+| Phone Number | column | No | Contact number | E.164 format | ENT-patient.phone |
+| Age | column | No | Patient age | Integer 18–100 | ENT-patient.age |
+| Problem | column | No | Treatment area | Value from the catalog-driven list (per FR-003) | ENT-inquiry.treatment_area_id |
+| Treatment & Package | column | Yes | Treatment + package | Read-only | ENT-quote.treatment_id, ENT-subquote.package_snapshot |
+| Provider | column | Yes | Assigned provider name | Must exist | ENT-provider.name |
+| Aftercare Type | column | Yes | Treatment-linked or Standalone | Enum | ENT-aftercare-plan.aftercare_type |
+| Start Date | column | Yes | Aftercare start date | ISO 8601; sortable | ENT-aftercare-plan.activated_at |
+| Current Milestone | column | Yes | Current phase | Must exist in plan | ENT-aftercare-plan.current_milestone |
+| Progress | column | Yes | Visual progress bar | Derived; non-negative | ENT-aftercare-plan.overall_progress |
+| Med Alerts | column | Yes | Critical/Standard/None | Enum with color coding | ENT-aftercare-plan.medication_alert_level |
+| Status | column | Yes | Active/Completed/Cancelled, with a separate Overdue flag shown on cases that have overdue tasks | Enum plus flag | ENT-aftercare-plan.status, ENT-aftercare-plan.overdue_flag |
+| Action | column | Yes | View/Edit/Reassign/Escalate | RBAC enforced | no graph field (control) |
+| Search/Filters | control | No | Provider/Milestone/Status/Date range/Risk Level/Specialist/Completion Rate | Valid enums/ranges | no graph field (control) |
+| Pagination | control | No | Page and size controls | Standard UX pattern | no graph field (control) |
 
 **Business Rules**:
 
-- Shows all aftercare cases across all providers
-- Admin can edit any case data (full editability)
-- Overdue cases shown with amber indicators
-- Progress calculated automatically by system
-- All actions logged for audit trail
+- Shows all aftercare cases across all providers (REQ-011-068)
+- Admin can edit any case data (full editability) (REQ-011-068)
+- Overdue cases shown with amber indicators (REQ-011-068)
+- Progress calculated automatically by system (REQ-011-068)
+- All actions logged for audit trail (REQ-011-068)
 
 **Notes**:
 
@@ -964,60 +963,60 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| **Tab 1: Case Overview** | | | | |
-| Patient Information | component | Yes | Full patient details (admin can see all) | Display only |
-| Patient ID | text | Yes | Unique patient identifier | Display only |
-| Patient Name | text | Yes | Full patient name | Display only |
-| Contact Information | text | Yes | Email, phone, address | Display only |
-| Treatment Information | component | Yes | Original treatment details | Display only |
-| Treatment Date | date | Yes | Date treatment was performed | ISO 8601 format |
-| Treatment Type | text | Yes | Type of treatment | Display only |
-| Provider Information | component | Yes | Assigned provider details | Display only |
-| Provider Name | text | Yes | Assigned provider name | Display only |
-| Provider Contact | text | Yes | Provider contact information | Display only |
-| Aftercare Plan | component | Yes | Selected template and customizations | Display only |
-| Template Name | text | Yes | Selected template name | Display only |
-| Current Status | component | Yes | Milestone progress and completion | Display only |
-| Current Milestone | text | Yes | Current milestone name | Display only |
-| Progress Percentage | percent | Yes | Overall progress | 0-100% |
-| **Tab 2: Progress Tracking** | | | | |
-| Milestone Progress | component | Yes | Visual timeline of all milestones | Display only |
-| 3D Scan History | list | Yes | All uploaded scans with dates and quality | Chronological order |
-| Scan Upload Date | datetime | Yes | Date scan was uploaded | ISO 8601 format |
-| Scan Quality Score | number | Yes | Quality score (0-100) | Integer 0-100 |
-| Questionnaire Responses | list | Yes | All responses with timestamps | Chronological order |
-| Response Date | datetime | Yes | Date questionnaire was submitted | ISO 8601 format |
-| Questionnaire Set | text | Yes | Questionnaire set | Display only |
-| Medication Adherence | component | Yes | Compliance tracking and history | Display only |
-| Adherence Percentage | percent | Yes | Overall adherence percentage | 0-100% |
-| Activity Compliance | percent | Yes | Compliance with activity restrictions | 0-100% |
-| **Tab 3: Communication Log** | | | | |
-| Patient Messages | list | Yes | All patient communications | Chronological order |
-| Provider Messages | list | Yes | Provider communications | Chronological order |
-| Aftercare Team Messages | list | Yes | Internal team communications | Chronological order |
-| Escalation History | list | Yes | All escalations and resolutions | Chronological order |
-| System Notifications | list | Yes | Automated notifications sent | Chronological order |
-| Message Date | datetime | Yes | Date/time of message | ISO 8601 format |
-| Message Type | text | Yes | Type of message | Valid message type enum |
-| **Tab 4: Admin Actions** | | | | |
-| Edit Aftercare Plan | action | No | Button to modify any aspect of plan | Always available |
-| Reassign Provider | action | No | Opens Screen 19 to reassign the aftercare provider or team | Available while the case is not completed or cancelled; standalone cases use the same screen |
-| Escalate Case | action | No | Button to escalate to supervisor | Always available |
-| Add Notes | action | No | Button to add internal admin notes | Always available |
-| Change History | list | Yes | Audit trail of all changes | Chronological order |
-| Change Date | datetime | Yes | Date of change | ISO 8601 format |
-| Changed By | text | Yes | User who made change | Display only |
-| Change Reason | text | Yes | Reason for change | Display only |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| **Tab 1: Case Overview** | | | | |  |
+| Patient Information | component | Yes | Full patient details (admin can see all) | Display only | ENT-patient.name, ENT-patient.email, ENT-patient.phone, ENT-patient.address |
+| Patient ID | text | Yes | Unique patient identifier | Display only | ENT-aftercare-plan.patient_id |
+| Patient Name | text | Yes | Full patient name | Display only | ENT-patient.name |
+| Contact Information | text | Yes | Email, phone, address | Display only | ENT-patient.email, ENT-patient.phone, ENT-patient.address |
+| Treatment Information | component | Yes | Original treatment details | Display only | ENT-aftercare-plan.treatment_date, ENT-aftercare-plan.treatment_type |
+| Treatment Date | date | Yes | Date treatment was performed | ISO 8601 format | ENT-aftercare-plan.treatment_date |
+| Treatment Type | text | Yes | Type of treatment | Display only | ENT-aftercare-plan.treatment_type |
+| Provider Information | component | Yes | Assigned provider details | Display only | ENT-provider.name, ENT-provider.phone, ENT-provider.email |
+| Provider Name | text | Yes | Assigned provider name | Display only | ENT-provider.name |
+| Provider Contact | text | Yes | Provider contact information | Display only | ENT-provider.phone, ENT-provider.email |
+| Aftercare Plan | component | Yes | Selected template and customizations | Display only | ENT-aftercare-plan.template_id |
+| Template Name | text | Yes | Selected template name | Display only | ENT-aftercare-plan.template_id |
+| Current Status | component | Yes | Milestone progress and completion | Display only | ENT-aftercare-plan.current_milestone, ENT-aftercare-plan.overall_progress |
+| Current Milestone | text | Yes | Current milestone name | Display only | ENT-aftercare-plan.current_milestone |
+| Progress Percentage | percent | Yes | Overall progress | 0-100% | ENT-aftercare-plan.overall_progress |
+| **Tab 2: Progress Tracking** | | | | |  |
+| Milestone Progress | component | Yes | Visual timeline of all milestones | Display only | ENT-aftercare-milestone.status |
+| 3D Scan History | list | Yes | All uploaded scans with dates and quality | Chronological order | no graph field (list of the rows below) |
+| Scan Upload Date | datetime | Yes | Date scan was uploaded | ISO 8601 format | ENT-aftercare-scan-artifact.uploaded_at |
+| Scan Quality Score | number | Yes | Quality score (0-100) | Integer 0-100 | ENT-aftercare-scan-artifact.quality_score |
+| Questionnaire Responses | list | Yes | All responses with timestamps | Chronological order | ENT-aftercare-questionnaire-response.answers |
+| Response Date | datetime | Yes | Date questionnaire was submitted | ISO 8601 format | ENT-aftercare-questionnaire-response.responded_at |
+| Questionnaire Set | text | Yes | Questionnaire set | Display only | ENT-aftercare-questionnaire-response.questionnaire_set_id |
+| Medication Adherence | component | Yes | Compliance tracking and history | Display only | ENT-aftercare-plan.medication_adherence |
+| Adherence Percentage | percent | Yes | Overall adherence percentage | 0-100% | ENT-aftercare-plan.medication_adherence |
+| Activity Compliance | percent | Yes | Compliance with activity restrictions | 0-100% | ENT-aftercare-plan.activity_compliance |
+| **Tab 3: Communication Log** | | | | |  |
+| Patient Messages | list | Yes | All patient communications | Chronological order | ENT-aftercare-communication-entry.sender_role |
+| Provider Messages | list | Yes | Provider communications | Chronological order | ENT-aftercare-communication-entry.sender_role |
+| Aftercare Team Messages | list | Yes | Internal team communications | Chronological order | ENT-aftercare-communication-entry.sender_role |
+| Escalation History | list | Yes | All escalations and resolutions | Chronological order | ENT-aftercare-communication-entry.entry_type |
+| System Notifications | list | Yes | Automated notifications sent | Chronological order | ENT-aftercare-communication-entry.entry_type |
+| Message Date | datetime | Yes | Date/time of message | ISO 8601 format | ENT-aftercare-communication-entry.sent_at |
+| Message Type | text | Yes | Type of message | Valid message type enum | ENT-aftercare-communication-entry.entry_type |
+| **Tab 4: Admin Actions** | | | | |  |
+| Edit Aftercare Plan | action | No | Button to modify any aspect of plan | Always available | no graph field (control) |
+| Reassign Provider | action | No | Opens Screen 19 to reassign the aftercare provider or team | Available while the case is not completed or cancelled; standalone cases use the same screen | no graph field (control) |
+| Escalate Case | action | No | Button to escalate to supervisor | Always available | no graph field (control) |
+| Add Notes | action | No | Button to add internal admin notes | Always available | ENT-aftercare-plan.admin_notes |
+| Change History | list | Yes | Audit trail of all changes | Chronological order | no graph field (list of the rows below) |
+| Change Date | datetime | Yes | Date of change | ISO 8601 format | ENT-aftercare-audit-entry.changed_at |
+| Changed By | text | Yes | User who made change | Display only | ENT-aftercare-audit-entry.changed_by |
+| Change Reason | text | Yes | Reason for change | Display only | ENT-aftercare-audit-entry.reason |
 
 **Business Rules**:
 
-- Admin has full access to all tabs and data
-- All changes logged with admin identification
-- Patient anonymization rules don't apply to admin
+- Admin has full access to all tabs and data (REQ-011-021)
+- All changes logged with admin identification (REQ-011-036)
+- Patient anonymization rules don't apply to admin (REQ-011-010)
 - All communications monitored and logged
-- Admin can override any provider settings
+- Admin can override any provider settings (REQ-011-067)
 
 **Notes**:
 
@@ -1035,39 +1034,39 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Request ID | text | Yes | Unique request identifier | Searchable; sortable |
-| Submission Date | datetime | Yes | Date request was submitted | ISO 8601 format; sortable |
-| Patient Name | text | Yes | Full patient name (admin full visibility) | Display only |
-| Patient Email | email | Yes | Patient email address | Valid email format |
-| Patient Phone | text | Yes | Patient phone number | E.164 format |
-| Treatment Date | date | Yes | Date treatment was performed | ISO 8601 format |
-| Treatment Type | text | Yes | Type of treatment | Valid treatment type enum |
-| Treatment Clinic | text | Yes | Name of clinic where treatment performed | Display only |
-| Requested Duration | text | Yes | Duration requested (e.g., "12 months") | Valid duration enum |
-| Pricing Option | text | Yes | Pricing option selected (Fixed price or Monthly subscription) | Valid pricing option enum |
-| Payment Method | text | Yes | Payment method selected (Card, PayPal, etc.) | Valid payment method enum |
-| Payment Status | status | Yes | Payment status (Paid/Pending/Failed) | Valid status enum |
-| Request Status | status | Yes | Status (Pending/Awaiting provider availability/Assigned/Active/Rejected) | Valid status enum |
-| Full Patient Information | component | Yes | Complete patient details | Display only |
-| Treatment Documentation | component | Yes | Treatment documentation files | Display/download |
-| Current Concerns | textarea | No | Patient's current concerns or issues | Max 2000 chars |
-| Uploaded Photos | list | Yes | Photos uploaded by patient | Display only |
-| Surgeon Notes | text | No | Conclusion notes read from the FR-010 Hairline treatment record; empty for standalone requests | Display only |
-| Available Providers | list | Yes | List of available providers | Display only |
-| Provider Name | text | Yes | Provider name | Display only |
-| Provider Specialization | text | Yes | Provider specialization areas | Display only |
-| Provider Availability | status | Yes | Current availability status | Valid status enum |
-| Assign Provider | action | Yes | Button to assign provider to request | Enabled when provider selected |
-| Reject Request | action | Yes | Button to reject request with reason | Always available |
-| Rejection Reason | textarea | Yes | Required reason for rejection | Max 500 chars; required when rejecting |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Request ID | text | Yes | Unique request identifier | Searchable; sortable | ENT-aftercare-request.request_id |
+| Submission Date | datetime | Yes | Date request was submitted | ISO 8601 format; sortable | ENT-aftercare-request.submitted_at |
+| Patient Name | text | Yes | Full patient name (admin full visibility) | Display only | ENT-patient.name, ENT-aftercare-request.patient_id |
+| Patient Email | email | Yes | Patient email address | Valid email format | ENT-patient.email |
+| Patient Phone | text | Yes | Patient phone number | E.164 format | ENT-patient.phone |
+| Treatment Date | date | Yes | Date treatment was performed | ISO 8601 format | ENT-aftercare-request.treatment_date |
+| Treatment Type | text | Yes | Type of treatment | Valid treatment type enum | ENT-aftercare-request.treatment_type |
+| Treatment Clinic | text | Yes | Name of clinic where treatment performed | Display only | ENT-aftercare-request.treating_clinic |
+| Requested Duration | text | Yes | Duration requested (e.g., "12 months") | Valid duration enum | ENT-aftercare-request.requested_duration |
+| Pricing Option | text | Yes | Pricing option selected (Fixed price or Monthly subscription) | Valid pricing option enum | ENT-aftercare-request.pricing_option |
+| Payment Method | text | Yes | Payment method selected (Card, PayPal, etc.) | Valid payment method enum | ENT-aftercare-request.payment_method |
+| Payment Status | status | Yes | Payment status (Paid/Pending/Failed) | Valid status enum | ENT-aftercare-request.payment_status |
+| Request Status | status | Yes | Status (Pending/Awaiting provider availability/Assigned/Active/Rejected) | Valid status enum | ENT-aftercare-request.request_status |
+| Full Patient Information | component | Yes | Complete patient details | Display only | ENT-patient.name, ENT-patient.email, ENT-patient.phone |
+| Treatment Documentation | component | Yes | Treatment documentation files | Display/download | ENT-aftercare-request.documentation |
+| Current Concerns | textarea | No | Patient's current concerns or issues | Max 2000 chars | ENT-aftercare-request.current_concerns |
+| Uploaded Photos | list | Yes | Photos uploaded by patient | Display only | ENT-aftercare-request.photos |
+| Surgeon Notes | text | No | Conclusion notes read from the FR-010 Hairline treatment record; empty for standalone requests | Display only | ENT-aftercare-request.surgeon_notes |
+| Available Providers | list | Yes | List of available providers | Display only | no graph field (list of the rows below) |
+| Provider Name | text | Yes | Provider name | Display only | ENT-provider.name |
+| Provider Specialization | text | Yes | Provider specialization areas | Display only | ENT-provider.specialty |
+| Provider Availability | status | Yes | Current availability status | Valid status enum | ENT-provider.availability_status |
+| Assign Provider | action | Yes | Button to assign provider to request | Enabled when provider selected | ENT-aftercare-request.assigned_provider_id |
+| Reject Request | action | Yes | Button to reject request with reason | Always available | no graph field (control) |
+| Rejection Reason | textarea | Yes | Required reason for rejection | Max 500 chars; required when rejecting | ENT-aftercare-request.rejection_reason |
 
 **Business Rules**:
 
-- Requests expire after 7 days if not assigned; an expired request becomes Rejected with a system reason, and the refund below applies
-- Provider assignment based on specialization and availability
-- Rejection requires reason and triggers a full refund of any payment already taken
+- Requests expire after 7 days if not assigned; an expired request becomes Rejected with a system reason, and the refund below applies (REQ-011-053)
+- Provider assignment based on specialization and availability (REQ-011-069)
+- Rejection requires reason and triggers a full refund of any payment already taken (REQ-011-037, REQ-011-051)
 - All actions logged for audit trail
 
 **Notes**:
@@ -1085,68 +1084,68 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| **Template List** | | | | |
-| Template Name | text | Yes | Name of template | Max 200 chars; unique |
-| Template Description | text | No | Description of template | Max 1000 chars |
-| Treatment Type | text | Yes | Treatment type (FUE, FUT, DHI, etc.) | Value from the admin-managed treatment catalog |
-| Duration | text | Yes | Duration (e.g., "12 months") | Valid duration enum |
-| Number of Milestones | number | Yes | Count of milestones in template | Positive integer |
-| Usage Count | number | Yes | How many patients currently using | Non-negative integer |
-| **Template Editor** | | | | |
-| Template Name (Edit) | text | Yes | Template name | Max 200 chars; unique |
-| Template Description (Edit) | textarea | No | Template description | Max 1000 chars |
-| Treatment Type Selection | select | Yes | Treatment type dropdown | Value from the admin-managed treatment catalog |
-| Milestone Name | text | Yes | Name of milestone | Max 200 chars |
-| Milestone Duration | number | Yes | Duration in days | Positive integer |
-| 3D Scan Frequency | text | Yes | Frequency of scans (e.g., "Weekly") | Valid frequency enum |
-| Questionnaire Set | select | Yes | Questionnaire Set selection for this milestone | Must exist in FR-025 catalog |
-| Questionnaire Frequency | text | Yes | Frequency of questionnaires | Valid frequency enum |
-| Educational Resources | list | Yes | Resources assigned to milestone | May be empty |
-| Resource Title | text | Yes | Resource title | Max 200 chars |
-| Resource Type | select | Yes | Type (video, PDF, webpage) | Valid resource type enum |
-| Resource URL | url | Yes | URL or file path | Valid URL or file path |
-| Activity Restrictions | textarea | No | Restrictions for milestone | Max 500 chars |
-| **Resource Management** | | | | |
-| Upload Video | action | No | Button to upload instructional videos | File size max 100MB |
-| Add Guide | action | No | Button to add best practice guides | File size max 100MB |
-| Create FAQ | action | No | Button to create FAQ documents | File size max 100MB |
-| Manage Help Guides | action | No | Button to manage help guides | File size max 100MB |
-| Resource File | file | Yes | Uploaded resource file | Max 100MB per file |
-| **Pricing Configuration** | | | | |
-| Enable for Purchase | checkbox | Yes | Make template available for standalone/add-on purchase | Boolean; default false |
-| Service Description | textarea | Cond. | Marketing description for patients | Max 500 chars; required if enabled for purchase |
-| Pricing Model | radio | Cond. | Fixed Price or Subscription or Both | Enum: "fixed", "subscription", "both"; required if enabled for purchase |
-| Multi-Currency Pricing | component | Cond. | Currency-specific pricing table | Required if enabled for purchase |
-| Currency | select | Yes | Currency (USD, GBP, EUR, etc.) | Valid currency enum |
-| Fixed Price | currency | Cond. | One-time payment amount | Required if "fixed" or "both" selected |
-| Monthly Subscription Price | currency | Cond. | Monthly payment amount | Required if "subscription" or "both" selected |
-| Add Currency | action | Yes | Button to add another currency | Always available |
-| Default Pricing Option | radio | Cond. | Default shown to patient (if Both enabled) | Enum: "fixed", "subscription"; required if "both" selected |
-| Enable Discounts | checkbox | No | Allow discount codes for this template | Boolean; default false |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| **Template List** | | | | |  |
+| Template Name | text | Yes | Name of template | Max 200 chars; unique | ENT-aftercare-template.name |
+| Template Description | text | No | Description of template | Max 1000 chars | ENT-aftercare-template.description |
+| Treatment Type | text | Yes | Treatment type (FUE, FUT, DHI, etc.) | Value from the admin-managed treatment catalog | ENT-aftercare-template.treatment_type |
+| Duration | text | Yes | Duration (e.g., "12 months") | Valid duration enum | ENT-aftercare-template.duration |
+| Number of Milestones | number | Yes | Count of milestones in template | Positive integer | ENT-aftercare-template.milestone_count |
+| Usage Count | number | Yes | How many patients currently using | Non-negative integer | ENT-aftercare-template.usage_count |
+| **Template Editor** | | | | |  |
+| Template Name (Edit) | text | Yes | Template name | Max 200 chars; unique | ENT-aftercare-template.name |
+| Template Description (Edit) | textarea | No | Template description | Max 1000 chars | ENT-aftercare-template.description |
+| Treatment Type Selection | select | Yes | Treatment type dropdown | Value from the admin-managed treatment catalog | ENT-aftercare-template.treatment_type |
+| Milestone Name | text | Yes | Name of milestone | Max 200 chars | ENT-aftercare-milestone.name |
+| Milestone Duration | number | Yes | Duration in days | Positive integer | ENT-aftercare-milestone.duration_days |
+| 3D Scan Frequency | text | Yes | Frequency of scans (e.g., "Weekly") | Valid frequency enum | ENT-aftercare-milestone.scan_frequency |
+| Questionnaire Set | select | Yes | Questionnaire Set selection for this milestone | Must exist in FR-025 catalog | ENT-aftercare-milestone.questionnaire_set_id |
+| Questionnaire Frequency | text | Yes | Frequency of questionnaires | Valid frequency enum | ENT-aftercare-milestone.questionnaire_frequency |
+| Educational Resources | list | Yes | Resources assigned to milestone | May be empty | no graph field (list of the rows below) |
+| Resource Title | text | Yes | Resource title | Max 200 chars | ENT-aftercare-resource.title |
+| Resource Type | select | Yes | Type (video, PDF, webpage) | Valid resource type enum | ENT-aftercare-resource.resource_type |
+| Resource URL | url | Yes | URL or file path | Valid URL or file path | ENT-aftercare-resource.url |
+| Activity Restrictions | textarea | No | Restrictions for milestone | Max 500 chars | ENT-aftercare-milestone.activity_restrictions |
+| **Resource Management** | | | | |  |
+| Upload Video | action | No | Button to upload instructional videos | File size max 100MB | no graph field (control) |
+| Add Guide | action | No | Button to add best practice guides | File size max 100MB | no graph field (control) |
+| Create FAQ | action | No | Button to create FAQ documents | File size max 100MB | no graph field (control) |
+| Manage Help Guides | action | No | Button to manage help guides | File size max 100MB | no graph field (control) |
+| Resource File | file | Yes | Uploaded resource file | Max 100MB per file | ENT-aftercare-resource.file |
+| **Pricing Configuration** | | | | |  |
+| Enable for Purchase | checkbox | Yes | Make template available for standalone/add-on purchase | Boolean; default false | ENT-aftercare-template.available_for_purchase |
+| Service Description | textarea | Cond. | Marketing description for patients | Max 500 chars; required if enabled for purchase | ENT-aftercare-template.service_description |
+| Pricing Model | radio | Cond. | Fixed Price or Subscription or Both | Enum: "fixed", "subscription", "both"; required if enabled for purchase | ENT-aftercare-template.pricing_model |
+| Multi-Currency Pricing | component | Cond. | Currency-specific pricing table | Required if enabled for purchase | ENT-aftercare-template-price.currency, ENT-aftercare-template-price.fixed_price, ENT-aftercare-template-price.monthly_price |
+| Currency | select | Yes | Currency (USD, GBP, EUR, etc.) | Valid currency enum | ENT-aftercare-template-price.currency |
+| Fixed Price | currency | Cond. | One-time payment amount | Required if "fixed" or "both" selected | ENT-aftercare-template-price.fixed_price |
+| Monthly Subscription Price | currency | Cond. | Monthly payment amount | Required if "subscription" or "both" selected | ENT-aftercare-template-price.monthly_price |
+| Add Currency | action | Yes | Button to add another currency | Always available | no graph field (control) |
+| Default Pricing Option | radio | Cond. | Default shown to patient (if Both enabled) | Enum: "fixed", "subscription"; required if "both" selected | ENT-aftercare-template.default_pricing_option |
+| Enable Discounts | checkbox | No | Allow discount codes for this template | Boolean; default false | ENT-aftercare-template.discounts_enabled |
 
 **Business Rules**:
 
-- Templates cannot be deleted if in use
-- Changes to active templates require approval
-- New templates must be tested before activation
-- Resource files limited to 100MB each
-- Templates can be marked as "Internal Use Only" (providers only) or "Available for Purchase" (standalone/add-on)
-- Purchasable templates require pricing configuration for all supported currencies
-- If "Both" pricing model selected, patient can choose between fixed or subscription at purchase
-- Monthly subscription price is per month; total subscription amount = monthly price × template duration in months
-- Pricing changes to active templates require admin approval and don't affect existing patients (locked at purchase time)
-- Multi-currency pricing uses real-time exchange rates as baseline but allows admin override for final pricing
-- Template Name is used as service name for patient-facing display (no separate service name needed)
-- Questionnaire sets and questions are not authored here; they are centrally managed in FR-025 (Medical Questionnaire Management). Screen 16 selects among existing Questionnaire Sets and configures schedule/frequency per milestone.
-- Screen 16 must surface only Questionnaire Sets with context type "Aftercare" from FR-025 (see FR-025), while still allowing explicit inclusion of multi-context Questionnaire Sets if flagged as compatible.
-- Each milestone independently selects a Questionnaire Set (single-select per milestone). Different milestones within the same template may reference different sets (e.g., Week 1: Pain Assessment; Week 4: Sleep Quality).
+- Templates cannot be deleted if in use (REQ-011-070)
+- Changes to active templates require approval (REQ-011-070)
+- New templates must be tested before activation (REQ-011-070)
+- Resource files limited to 100MB each (REQ-011-070)
+- Templates can be marked as "Internal Use Only" (providers only) or "Available for Purchase" (standalone/add-on) (REQ-011-046)
+- Purchasable templates require pricing configuration for all supported currencies (REQ-011-085)
+- If "Both" pricing model selected, patient can choose between fixed or subscription at purchase (REQ-011-042)
+- Monthly subscription price is per month; total subscription amount = monthly price × template duration in months (REQ-011-043)
+- Pricing changes to active templates require admin approval and don't affect existing patients (locked at purchase time) (REQ-011-047)
+- Multi-currency pricing uses real-time exchange rates as baseline but allows admin override for final pricing (REQ-011-084)
+- Template Name is used as service name for patient-facing display (no separate service name needed) (REQ-011-046)
+- Questionnaire sets and questions are not authored here; they are centrally managed in FR-025 (Medical Questionnaire Management). Screen 16 selects among existing Questionnaire Sets and configures schedule/frequency per milestone. (REQ-011-071)
+- Screen 16 must surface only Questionnaire Sets with context type "Aftercare" from FR-025 (see FR-025), while still allowing explicit inclusion of multi-context Questionnaire Sets if flagged as compatible. (REQ-011-071)
+- Each milestone independently selects a Questionnaire Set (single-select per milestone). Different milestones within the same template may reference different sets (e.g., Week 1: Pain Assessment; Week 4: Sleep Quality). (REQ-011-071)
 
 **Cross-Module Reference**:
 
-- Questionnaire content ownership and lifecycle: see FR-025: Medical Questionnaire Management
-- After selecting Questionnaire Sets here, their delivery and response handling follow the schedules defined per milestone
+- Questionnaire content ownership and lifecycle: see FR-025: Medical Questionnaire Management (REQ-011-013)
+- After selecting Questionnaire Sets here, their delivery and response handling follow the schedules defined per milestone (REQ-011-071)
 
 **Notes**:
 
@@ -1198,10 +1197,10 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 **Business Rules**:
 
-- Performance scores calculated monthly
-- Poor performance triggers review process
-- Provider suspension requires admin approval
-- Retention of performance data follows the system PRD, Platform-Wide Rules: One 10-year retention period
+- Performance scores calculated monthly (REQ-011-077)
+- Poor performance triggers review process (REQ-011-077)
+- Provider suspension requires admin approval (REQ-011-077)
+- Retention of performance data follows the system PRD, Platform-Wide Rules: One 10-year retention period (REQ-011-077)
 - This screen is deferred to a later phase as it represents system-wide analytics beyond case operations covered by Screens 11–12.
 
 **Notes**:
@@ -1255,11 +1254,11 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 **Business Rules**:
 
-- Admin can view all cases across all providers
-- Real-time updates from all aftercare activities
-- Performance metrics calculated daily
-- Alerts generated automatically for issues
-- All actions logged with admin identification
+- Admin can view all cases across all providers (REQ-011-078)
+- Real-time updates from all aftercare activities (REQ-011-078)
+- Performance metrics calculated daily (REQ-011-078)
+- Alerts generated automatically for issues (REQ-011-078)
+- All actions logged with admin identification (REQ-011-078)
 - This screen is deferred to a later phase as it represents system-wide analytics beyond case operations covered by Screens 11–12.
 
 **Notes**:
@@ -1280,325 +1279,204 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Case Reference | text | Yes (read-only) | Aftercare case identifier, patient ID, and linked booking reference for a treatment-linked case | Display only |
-| Current Aftercare Provider or Team | text | Yes (read-only) | Provider or Hairline aftercare team now assigned | Display only |
-| Provider Status and Cause | text | No (read-only) | Current provider status and any recorded cause, such as `ProviderFault`, `ProviderSuspended`, or `ProviderDeactivated`, with the `supportRequired` marker | Display only |
-| Reassignment Target Type | radio | Yes | Another provider or the Hairline aftercare team | One option must be selected |
-| New Provider | searchable select | Conditional | Replacement aftercare provider | Required when the target type is another provider; only `Active` providers; cannot be the current provider |
-| New Aftercare Team Member | select | Conditional | Hairline aftercare team member who takes the case | Required when the target type is the Hairline aftercare team |
-| Reassignment Reason | text area | Yes | Why the aftercare is reassigned | Mandatory; 10 to 1000 characters |
-| Resolve Support Marker | checkbox | Conditional | Marks the `supportRequired` marker resolved | Shown only when the marker is set; checked by default |
-| Confirmation Summary | panel | Yes (read-only) | Shows the current and new assignee, the reason, and that the booking, treatment record, plan, and payments stay unchanged | Shown on the confirmation step |
-| Confirm Reassignment | button | Yes | Saves the reassignment after the admin confirms | Enabled only when every required field is valid |
-| Cancel | button | No | Closes the screen without saving | — |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Case Reference | text | Yes (read-only) | Aftercare case identifier, patient ID, and linked booking reference for a treatment-linked case | Display only | ENT-aftercare-plan.id, ENT-aftercare-plan.booking_id |
+| Current Aftercare Provider or Team | text | Yes (read-only) | Provider or Hairline aftercare team now assigned | Display only | ENT-aftercare-plan.provider_id, ENT-aftercare-plan.assigned_team_member_id |
+| Provider Status and Cause | text | No (read-only) | Current provider status and any recorded cause, such as `ProviderFault`, `ProviderSuspended`, or `ProviderDeactivated`, with the `supportRequired` marker | Display only | ENT-provider.status, ENT-aftercare-plan.cancellation_reason, ENT-aftercare-plan.support_required |
+| Reassignment Target Type | radio | Yes | Another provider or the Hairline aftercare team | One option must be selected | no graph field (control) |
+| New Provider | searchable select | Conditional | Replacement aftercare provider | Required when the target type is another provider; only `Active` providers; cannot be the current provider | ENT-aftercare-audit-entry.new_assignee_id |
+| New Aftercare Team Member | select | Conditional | Hairline aftercare team member who takes the case | Required when the target type is the Hairline aftercare team | ENT-aftercare-audit-entry.new_assignee_id |
+| Reassignment Reason | text area | Yes | Why the aftercare is reassigned | Mandatory; 10 to 1000 characters | ENT-aftercare-audit-entry.reason |
+| Resolve Support Marker | checkbox | Conditional | Marks the `supportRequired` marker resolved | Shown only when the marker is set; checked by default | ENT-aftercare-plan.support_required_resolution |
+| Confirmation Summary | panel | Yes (read-only) | Shows the current and new assignee, the reason, and that the booking, treatment record, plan, and payments stay unchanged | Shown on the confirmation step | no graph field (display component) |
+| Confirm Reassignment | button | Yes | Saves the reassignment after the admin confirms | Enabled only when every required field is valid | no graph field (control) |
+| Cancel | button | No | Closes the screen without saving | — | no graph field (control) |
 
 **Business Rules**:
 
-- The reassignment changes only the aftercare provider or team. For a treatment-linked case, the FR-006 booking stays `Aftercare` and the FR-010 treatment record stays unchanged; no quote, acceptance, or payment is created.
-- The aftercare plan, milestones, scans, questionnaire responses, medications, and communication history stay with the case. The new assignee gets the case's aftercare actions from the moment of confirmation; the previous provider loses them.
-- The change is saved only after confirmation, is recorded in the audit trail with admin identity, timestamp, reason, previous assignee, and new assignee, and, when selected, records the audited resolution of the `supportRequired` marker.
-- On save, System sends the `aftercare.provider_reassigned` notice. FR-011 is the producer of this FR-030 event; recipients, content, and the mandatory status of the notice are defined by the FR-030 notification Rule.
-- Money effects, if any, follow the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault).
+- The reassignment changes only the aftercare provider or team. For a treatment-linked case, the FR-006 booking stays `Aftercare` and the FR-010 treatment record stays unchanged; no quote, acceptance, or payment is created. (REQ-011-015, REQ-011-075)
+- The aftercare plan, milestones, scans, questionnaire responses, medications, and communication history stay with the case. The new assignee gets the case's aftercare actions from the moment of confirmation; the previous provider loses them. (REQ-011-075)
+- The change is saved only after confirmation, is recorded in the audit trail with admin identity, timestamp, reason, previous assignee, and new assignee, and, when selected, records the audited resolution of the `supportRequired` marker. (REQ-011-076)
+- On save, System sends the `aftercare.provider_reassigned` notice. FR-011 is the producer of this FR-030 event; recipients, content, and the mandatory status of the notice are defined by the FR-030 notification Rule. (REQ-011-015)
+- Money effects, if any, follow the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault). (REQ-011-075)
 
 ## Business Rules
 
 ### General Module Rules
 
 1. **Activation Rules**
-   - Treatment-linked aftercare activates automatically upon treatment completion
-   - Standalone aftercare requires payment before activation
-   - Admin can manually activate aftercare for special cases
+   - Treatment-linked aftercare activates automatically upon treatment completion (REQ-011-017)
+   - Standalone aftercare requires payment before activation (REQ-011-018)
+   - Admin can manually activate aftercare for special cases (REQ-011-019)
 
 2. **Duration Rules**
-   - Standard aftercare duration: 6-12 months
-   - Duration determined by treatment type and complexity
-   - Extensions require provider and admin approval
+   - Standard aftercare duration: 6-12 months (REQ-011-020)
+   - Duration determined by treatment type and complexity (REQ-011-020)
+   - Extensions require provider and admin approval (REQ-011-020)
 
 3. **Access Rules**
-   - Patients can only access their own aftercare data
-   - Providers can only access assigned patients
-   - Admin has full access to all aftercare data
+   - Patients can only access their own aftercare data (REQ-011-021)
+   - Providers can only access assigned patients (REQ-011-021)
+   - Admin has full access to all aftercare data (REQ-011-021)
    - Hiding and unlocking patient identity around payment is one platform rule in the system PRD; it is not restated here
 
 4. **Provider Status Cancellation Rules**
-   - An effective provider suspension/deactivation does not cancel that provider's non-terminal standalone aftercare cases; it marks them for Screen 19 reassignment with cause `ProviderSuspended` or `ProviderDeactivated` and an independent `supportRequired` marker (Workflow 4 D4; FR-015 A5/Screen 4)
-   - For treatment-linked cases the aftercare case is not cancelled and the booking stays `Aftercare`; the cause and the `supportRequired` marker are recorded and an admin reassigns the aftercare provider or team on Screen 19 (Workflow 4 D5)
-   - The cancellation keeps the FR-010 completion milestone and all aftercare records; it is not a patient cancellation or a provider withdrawal (D1)
-   - Recovery continuity is an admin decision through the existing reassignment/recovery workflow; nothing is reassigned automatically and reactivation never restores the case
+   - An effective provider suspension/deactivation does not cancel that provider's non-terminal standalone aftercare cases; it marks them for Screen 19 reassignment with cause `ProviderSuspended` or `ProviderDeactivated` and an independent `supportRequired` marker (Workflow 4 D4; FR-015 A5/Screen 4) (REQ-011-014)
+   - For treatment-linked cases the aftercare case is not cancelled and the booking stays `Aftercare`; the cause and the `supportRequired` marker are recorded and an admin reassigns the aftercare provider or team on Screen 19 (Workflow 4 D5) (REQ-011-073)
+   - The cancellation keeps the FR-010 completion milestone and all aftercare records; it is not a patient cancellation or a provider withdrawal (D1) (REQ-011-074)
+   - Recovery continuity is an admin decision through the existing reassignment/recovery workflow; nothing is reassigned automatically and reactivation never restores the case (REQ-011-014, REQ-011-074)
 
 ### Milestone and Task Rules
 
 1. **Milestone Progression**
-   - Milestones progress automatically based on time elapsed
-   - Patients cannot skip milestones
-   - Milestone completion requires all tasks completed
+   - Milestones progress automatically based on time elapsed (REQ-011-023)
+   - Patients cannot skip milestones (REQ-011-023)
+   - Milestone completion requires all tasks completed (REQ-011-023)
 
 2. **Task Completion**
-   - Scan uploads must meet quality threshold
-   - Questionnaires must be completed in full
-   - Medication adherence tracked but not mandatory for milestone completion
-   - Overdue tasks trigger escalation after 48 hours
+   - Scan uploads must meet quality threshold (REQ-011-024)
+   - Questionnaires must be completed in full (REQ-011-024)
+   - Medication adherence tracked but not mandatory for milestone completion (REQ-011-024)
+   - Overdue tasks trigger escalation after 48 hours (REQ-011-025)
 
 3. **Progress Calculation**
-   - Progress = (completed tasks / total tasks) * 100
-   - Tasks weighted equally
-   - Progress updates in real-time
+   - Progress = (completed tasks / total tasks) * 100 (REQ-011-027)
+   - Tasks weighted equally (REQ-011-027)
+   - Progress updates in real-time (REQ-011-027)
 
 ### Communication Rules
 
 1. **Patient Communication**
-   - Patients can contact aftercare team 24/7
-   - Urgent cases receive priority response (within 2 hours)
-   - Standard cases receive response within 24 hours
+   - Patients can contact aftercare team 24/7 (REQ-011-029)
+   - Urgent cases receive priority response (within 2 hours) (REQ-011-029)
+   - Standard cases receive response within 24 hours (REQ-011-029)
 
 2. **Provider Communication**
-   - Providers can communicate with aftercare team about assigned cases
-   - Escalations require immediate response
-   - All communications logged for audit
+   - Providers can communicate with aftercare team about assigned cases (REQ-011-030)
+   - Escalations require immediate response (REQ-011-030)
+   - All communications logged for audit (REQ-011-030)
 
 3. **Admin Communication**
-   - Admin can communicate with any stakeholder
-   - System-wide announcements sent to all relevant parties
-   - Emergency communications bypass normal channels
+   - Admin can communicate with any stakeholder (REQ-011-031)
+   - System-wide announcements sent to all relevant parties (REQ-011-031)
+   - Emergency communications bypass normal channels (REQ-011-031)
 
 4. **Default Patient Progress Reminder**
-   - By default the patient receives a progress reminder once a month for 12 months after treatment
-   - The patient may change the reminder or switch it off
-   - The default is an admin-editable setting
+   - By default the patient receives a progress reminder once a month for 12 months after treatment (REQ-011-088)
+   - The patient may change the reminder or switch it off (REQ-011-088)
+   - The default is an admin-editable setting (REQ-011-088)
 
 ### Data and Privacy Rules
 
 1. **Data Retention**
-   - Retention of aftercare data, scan media and communication logs follows the system PRD, Platform-Wide Rules: One 10-year retention period
+   - Retention of aftercare data, scan media and communication logs follows the system PRD, Platform-Wide Rules: One 10-year retention period (REQ-011-032)
 
 2. **Data Access**
    - Patient identity visibility before and after payment follows the system PRD, Platform-Wide Rules: Patient identity hidden until booking confirmation (REQ-011-022 is retired in favour of it)
-   - Provider access limited to assigned patients
-   - Admin access logged for audit trail
+   - Provider access limited to assigned patients (REQ-011-021)
+   - Admin access logged for audit trail (REQ-011-033)
 
 3. **Data Security**
    - Encryption of aftercare data in transit and at rest follows the system PRD, Platform-Wide Rules: Encryption in transit and at rest
-   - Scan media stored securely with access controls
-   - Access attempts logged and monitored
+   - Scan media stored securely with access controls (REQ-011-012)
+   - Access attempts logged and monitored (REQ-011-033)
 
 ### Admin Editability Rules
 
 1. **Full Admin Override**
-   - Admin can edit ALL aftercare data in the system
-   - Admin can modify any provider's aftercare plans
-   - Admin can change patient assignments and providers
-   - Admin can override any system-calculated progress
+   - Admin can edit ALL aftercare data in the system (REQ-011-034)
+   - Admin can modify any provider's aftercare plans (REQ-011-034)
+   - Admin can change patient assignments and providers (REQ-011-034)
+   - Admin can override any system-calculated progress (REQ-011-034)
 
 2. **Edit Capabilities**
-   - **Aftercare Plans**: Modify templates, milestones, medications, instructions
-   - **Patient Data**: Edit patient information, treatment details, contact info
-   - **Provider Data**: Modify provider assignments, customizations, settings
-   - **Progress Data**: Override progress calculations, milestone completions
-   - **Communication Data**: Edit messages, escalations, notifications; the original text of an edited message is kept in the edit history
-   - **Template Data**: Modify milestone templates, questionnaires, resources
+   - **Aftercare Plans**: Modify templates, milestones, medications, instructions (REQ-011-035)
+   - **Patient Data**: Edit patient information, treatment details, contact info (REQ-011-035)
+   - **Provider Data**: Modify provider assignments, customizations, settings (REQ-011-035)
+   - **Progress Data**: Override progress calculations, milestone completions (REQ-011-035)
+   - **Communication Data**: Edit messages, escalations, notifications; the original text of an edited message is kept in the edit history (REQ-011-035)
+   - **Template Data**: Modify milestone templates, questionnaires, resources (REQ-011-035)
 
 3. **Edit Tracking**
-   - All admin edits logged with timestamp and admin identification
-   - Change reason required for all modifications
-   - Edit history maintained for audit trail
-   - Provider and patient notified of significant changes
+   - All admin edits logged with timestamp and admin identification (REQ-011-036)
+   - Change reason required for all modifications (REQ-011-036)
+   - Edit history maintained for audit trail (REQ-011-036)
+   - Provider and patient notified of significant changes (REQ-011-036)
 
 ### Payment and Billing Rules
 
 1. **Standalone Aftercare Payment**
-   - Payment activates the service: for a standalone request it is taken last, after the admin has assigned a provider and the provider has configured the plan (Workflow 2)
-   - Any payment already taken is refunded automatically for rejected requests
-   - Payment disputes handled by admin team
+   - Payment activates the service: for a standalone request it is taken last, after the admin has assigned a provider and the provider has configured the plan (Workflow 2) (REQ-011-018)
+   - Any payment already taken is refunded automatically for rejected requests (REQ-011-037)
+   - Payment disputes handled by admin team (REQ-011-038)
 
 2. **Provider Compensation**
-   - Providers compensated for aftercare participation
-   - Compensation based on case complexity and duration
-   - Payment processed monthly
+   - Providers compensated for aftercare participation (REQ-011-039)
+   - Compensation based on case complexity and duration (REQ-011-039)
+   - Payment processed monthly (REQ-011-039)
 
 3. **Platform Commission**
-   - Platform commission deducted from standalone and post-treatment add-on aftercare payments
-   - Commission rate: 15-25% (configurable); it is one amount under one setting, taken from the aftercare price and never added to the patient's total
-   - Commission calculated at time of payment
+   - Platform commission deducted from standalone and post-treatment add-on aftercare payments (REQ-011-040)
+   - Commission rate: 15-25% (configurable); it is one amount under one setting, taken from the aftercare price and never added to the patient's total (REQ-011-040)
+   - Commission calculated at time of payment (REQ-011-040)
 
 4. **Aftercare Service Payment Rules**
-   - **Template-based pricing**: Each aftercare template defines its own pricing (fixed, subscription, or both) in Screen 16
-   - **Multi-currency support**: Pricing configured per currency; patient sees price in local currency based on location
-   - **Pricing option selection**: If template offers both fixed and subscription, patient chooses the pricing option at purchase time (the pricing option is separate from the payment method, such as card or PayPal)
-   - **Subscription payments**: Monthly installments charged automatically for template duration; first payment immediate, subsequent on monthly anniversary
-   - **Post-treatment add-on availability**: Available to Hairline-treated patients within 90 days of treatment completion
-   - **Standalone service availability**: Available to all patients regardless of treatment source
-   - **Template filtering**: Only templates marked "Available for Purchase" are shown; filtered by treatment type compatibility
-   - **Pricing immutability**: Patients locked into price at time of purchase (future template price changes don't affect existing patients)
-   - **Payment timing**: Payment activates the service for both standalone and post-treatment add-on; for a standalone request payment comes last, after provider assignment and plan configuration (Workflow 2), and for a post-treatment add-on it comes before automatic assignment (Workflow 2b)
-   - **Refund policy**: Full refund of any payment already taken if request rejected by admin or expired unassigned after 7 days; prorated refund for subscription cancellations based on unused months
+   - **Template-based pricing**: Each aftercare template defines its own pricing (fixed, subscription, or both) in Screen 16 (REQ-011-041)
+   - **Multi-currency support**: Pricing configured per currency; patient sees price in local currency based on location (REQ-011-041)
+   - **Pricing option selection**: If template offers both fixed and subscription, patient chooses the pricing option at purchase time (the pricing option is separate from the payment method, such as card or PayPal) (REQ-011-042)
+   - **Subscription payments**: Monthly installments charged automatically for template duration; first payment immediate, subsequent on monthly anniversary (REQ-011-043)
+   - **Post-treatment add-on availability**: Available to Hairline-treated patients within 90 days of treatment completion (REQ-011-044)
+   - **Standalone service availability**: Available to all patients regardless of treatment source (REQ-011-045)
+   - **Template filtering**: Only templates marked "Available for Purchase" are shown; filtered by treatment type compatibility (REQ-011-046)
+   - **Pricing immutability**: Patients locked into price at time of purchase (future template price changes don't affect existing patients) (REQ-011-047)
+   - **Payment timing**: Payment activates the service for both standalone and post-treatment add-on; for a standalone request payment comes last, after provider assignment and plan configuration (Workflow 2), and for a post-treatment add-on it comes before automatic assignment (Workflow 2b) (REQ-011-018)
+   - **Refund policy**: Full refund of any payment already taken if request rejected by admin or expired unassigned after 7 days; prorated refund for subscription cancellations based on unused months (REQ-011-083, REQ-011-037)
 
-## Success Criteria
+### Integration and Security Rules
 
-### Patient Experience Metrics
-
-- **SC-001**: 90% of patients complete their first milestone within 7 days of activation
-- **SC-002**: 85% of patients maintain 80%+ task completion rate throughout aftercare
-- **SC-003**: 95% of patients can successfully upload scan photo sets (V1) on first attempt
-- **SC-004**: Patient satisfaction score of 4.5+ stars for aftercare experience
-
-### Provider Efficiency Metrics
-
-- **SC-005**: Providers can set up aftercare plan for new patient in under 10 minutes
-- **SC-006**: 90% of providers respond to aftercare escalations within 4 hours
-- **SC-007**: Provider aftercare case load of 50-100 patients without quality degradation
-
-### Admin Management Metrics
-
+- **FR-010 integration point**: Treatment completion event triggers aftercare setup workflow; uses treatment details to pre-populate aftercare plan
+- **FR-002 integration point**: Reuses scan quality validation and scan storage infrastructure
+- **FR-007 integration point**: Payment completion activates the aftercare plan for a standalone request (payment comes last, after provider assignment and plan configuration, Workflow 2) and triggers automatic assignment for a post-treatment add-on (Workflow 2b); payment status determines service activation eligibility
+- **FR-020 why needed**: Sends task reminders, progress updates, and urgent alerts to patients, providers, and aftercare team
+- **FR-020 integration point**: Aftercare events (task due, milestone completion, escalations) trigger notification delivery; notification preferences managed per user
+- **Payment Data why needed**: Payment confirmation required for standalone aftercare activation and provider access to patient information
+- **Head Scan Capture (V1) integration**: Native camera capture + guided instructions + upload (JPG/PNG)
+- **Head Scan Capture (V1) failure handling**: Retry capture; allow partial save as draft where supported; show clear remediation guidance
+- **3D Scanning SDK - ARKit/ARCore (V2) integration**: Native SDK integration in mobile apps (iOS ARKit, Android ARCore) for real-time 3D capture
+- **3D Scanning SDK - ARKit/ARCore (V2) failure handling**: Fallback to V1 photo set capture; user notification of degraded functionality
+- **Cloud Storage Service integration**: RESTful API for file upload/download with signed URLs for secure access
+- **Cloud Storage Service failure handling**: Retry with exponential backoff; queue uploads for retry if service unavailable; notify user of upload delays
+- **Payment Gateway - Stripe integration**: Stripe API integration for payment processing and refund handling
+- **Payment Gateway - Stripe failure handling**: Payment failures trigger retry queue; user notified of payment issues; automatic refund processing on rejection
+- **Notification Service purpose**: Delivers email and push notifications for reminders and alerts in MVP; SMS delivery is planned as a future enhancement once S-03 SMS support is enabled
+- **Notification Service integration**: RESTful API for notification delivery with delivery status tracking
+- **Notification Service failure handling**: Retry failed notifications; fallback to alternative channels where available (e.g., push if email fails); notification delivery failures logged for monitoring
+- **Real-time Updates**: Progress tracking and notifications require real-time data synchronization
+- **Offline Capability**: Core aftercare features should work with limited connectivity
+- **Integration 1 - Treatment Module, authentication**: OAuth 2.0 bearer tokens for service-to-service communication
+- **Integration 1 - Treatment Module, error handling**: Retry with exponential backoff on 5xx errors; queue activation requests if treatment module unavailable
+- **Integration 2 - Payment Module, authentication**: API key authentication for payment gateway integration
+- **Integration 2 - Payment Module, error handling**: Payment failures trigger user notification and retry queue; automatic refund processing on rejection
+- **Integration 3 - Notification Module, authentication**: OAuth 2.0 bearer tokens for service-to-service communication
+- **Integration 3 - Notification Module, error handling**: Retry failed notifications with exponential backoff; fallback to alternative delivery channels
+- **Integration 4 - Communication Module, authentication**: OAuth 2.0 bearer tokens with role-based access control
+- **Integration 4 - Communication Module, error handling**: Message delivery failures logged and retried; user notified of delivery status
+- **Provider Assignment**: Future phase: Automated assignment algorithms for standalone cases (manual admin assignment is the requirement)
+- **Audit Logging**: Comprehensive logging of all aftercare activities
+- **Compliance**: Healthcare data protection regulations compliance
+- **AftercareAuditEntry**: immutable audit record
 - **SC-008**: Admin can assign standalone aftercare request within 24 hours
-- **SC-009**: 95% of aftercare cases complete without admin intervention
-- **SC-010**: Admin dashboard loads with all metrics in under 3 seconds
-
-### System Performance Metrics
-
-- **SC-011**: Scan upload completes in under 60 seconds for 95% of uploads
-- **SC-012**: Questionnaire completion rate of 90% within scheduled timeframe
-- **SC-013**: System supports 1000+ concurrent aftercare patients
-- **SC-014**: 99.5% uptime for aftercare module during business hours
-
-### Business Impact Metrics
-
-- **SC-015**: 70% of patients actively engage with aftercare features (vs. passive monitoring)
-- **SC-016**: 25% reduction in post-procedure complications through early detection
-- **SC-017**: 40% increase in patient retention for future procedures
-- **SC-018**: Standalone aftercare service achieves 15% profit margin
 
 ## Dependencies
 
-### Internal Dependencies (Other FRs/Modules)
+Related FRs:
 
-- **FR-010 / Module PR-03: Treatment Execution & Documentation** (cites REQ-010-006, REQ-010-009, REQ-010-023, REQ-010-086)
-  - **Why needed**: Triggers automatic aftercare activation when treatment is marked as completed
-  - **Integration point**: Treatment completion event triggers aftercare setup workflow; uses treatment details to pre-populate aftercare plan
-
-- **FR-002 / Modules P-07: 3D Scan Capture & Viewing, S-01: 3D Scan Processing Service, S-05: Media Storage Service**: Medical History & 3D Scanning (cites REQ-002-034, REQ-002-024, REQ-002-023, REQ-002-036)
-  - **Why needed**: Provides head scan media validation/storage infrastructure for patient milestone scans (V1 photo set; V2 true 3D)
-  - **Integration point**: Reuses scan quality validation and scan storage infrastructure
-
-- **FR-007 / Modules P-03: Booking & Payment, A-01: Patient Management & Oversight, A-05: Billing & Financial Reconciliation, S-02: Payment Processing Service**: Payment Processing (cites REQ-007-088, the FR-007 Rule that processes the standalone aftercare payment)
-  - **Why needed**: Processes standalone and post-treatment add-on aftercare service payments; payment activates the service
-  - **Integration point**: Payment completion activates the aftercare plan for a standalone request (payment comes last, after provider assignment and plan configuration, Workflow 2) and triggers automatic assignment for a post-treatment add-on (Workflow 2b); payment status determines service activation eligibility
-
-- **FR-020 / Module S-03: Notification Service**: Notifications & Alerts (cites the four aftercare events REQ-020-117, REQ-020-118, REQ-020-119, REQ-020-120, each reaching its FR-030 Rule: REQ-030-072, REQ-030-073, REQ-030-074, REQ-030-075)
-  - **Why needed**: Sends task reminders, progress updates, and urgent alerts to patients, providers, and aftercare team
-  - **Integration point**: Aftercare events (task due, milestone completion, escalations) trigger notification delivery; notification preferences managed per user
-
-### External Dependencies (APIs, Services)
-
-- **Head Scan Capture (V1)**:
-  - **Purpose**: Standardized head scan photo set capture on mobile devices for patient milestone scans
-  - **Integration**: Native camera capture + guided instructions + upload (JPG/PNG)
-  - **Failure handling**: Retry capture; allow partial save as draft where supported; show clear remediation guidance
-
-- **3D Scanning SDK - ARKit/ARCore (V2)**:
-  - **Purpose**: True 3D head scanning capabilities on supported mobile devices (future enhancement)
-  - **Integration**: Native SDK integration in mobile apps (iOS ARKit, Android ARCore) for real-time 3D capture
-  - **Failure handling**: Fallback to V1 photo set capture; user notification of degraded functionality
-
-- **Cloud Storage Service**:
-  - **Purpose**: Secure storage for head scan photo sets (V1), 3D scans (V2), documents, and educational resources
-  - **Integration**: RESTful API for file upload/download with signed URLs for secure access
-  - **Failure handling**: Retry with exponential backoff; queue uploads for retry if service unavailable; notify user of upload delays
-
-- **Payment Gateway - Stripe**:
-  - **Purpose**: Processes standalone aftercare service payments
-  - **Integration**: Stripe API integration for payment processing and refund handling
-  - **Failure handling**: Payment failures trigger retry queue; user notified of payment issues; automatic refund processing on rejection
-
-- **Notification Service**:
-  - **Purpose**: Delivers email and push notifications for reminders and alerts in MVP; SMS delivery is planned as a future enhancement once S-03 SMS support is enabled
-  - **Integration**: RESTful API for notification delivery with delivery status tracking
-  - **Failure handling**: Retry failed notifications; fallback to alternative channels where available (e.g., push if email fails); notification delivery failures logged for monitoring
-
-### Data Dependencies
-
-- **Patient Data**:
-  - **Why needed**: Patient profile information required for aftercare plan creation and patient identification
-  - **Source**: Patient registration module (FR-001) and treatment records (FR-010)
-
-- **Provider Data**:
-  - **Why needed**: Provider information required for aftercare plan assignment and provider capabilities
-  - **Source**: Provider onboarding module and treatment execution records (FR-010)
-
-- **Treatment Data**:
-  - **Why needed**: Treatment completion status and details trigger aftercare activation and inform plan configuration
-  - **Source**: Treatment Execution & Documentation module (FR-010)
-
-- **Payment Data**:
-  - **Why needed**: Payment confirmation required for standalone aftercare activation and provider access to patient information
-  - **Source**: Payment Processing module (FR-007)
-
-## Assumptions
-
-### User Behavior Assumptions
-
-- Patients will actively participate in aftercare activities and complete required tasks
-- Patients will follow medication schedules and activity restrictions as prescribed
-- Providers will engage with aftercare features and respond to escalations promptly
-
-### Technology Assumptions
-
-- Patients have smartphones with camera capabilities for head scan capture (V1 photo set; V2 true 3D)
-- Patients have reliable internet access for uploading scans and completing questionnaires
-- Infrastructure can handle concurrent aftercare operations without degradation
-
-### Business Process Assumptions
-
-- Sufficient provider capacity exists to handle aftercare case load
-- Admin team can manage operations and respond to escalations
-- Scan media and questionnaire responses will be of sufficient quality for assessment
-- Standalone aftercare payments will process successfully without significant failures
-
-## Implementation Notes
-
-### Technical Considerations
-
-- **Real-time Updates**: Progress tracking and notifications require real-time data synchronization
-- **File Management**: Scan media storage and retrieval must be optimized for performance
-- **Mobile Optimization**: Patient screens must work seamlessly on mobile devices
-- **Offline Capability**: Core aftercare features should work with limited connectivity
-
-### Integration Points
-
-- **Integration 1 - Treatment Module**: Seamless transition from treatment completion to aftercare activation
-  - **Data format**: JSON payload with treatment ID, completion status, patient ID, provider ID, treatment details
-  - **Authentication**: OAuth 2.0 bearer tokens for service-to-service communication
-  - **Error handling**: Retry with exponential backoff on 5xx errors; queue activation requests if treatment module unavailable
-
-- **Integration 2 - Payment Module**: Integration for standalone aftercare service payments
-  - **Data format**: JSON payload with payment ID, amount, currency, payment method, patient ID, service type
-  - **Authentication**: API key authentication for payment gateway integration
-  - **Error handling**: Payment failures trigger user notification and retry queue; automatic refund processing on rejection
-
-- **Integration 3 - Notification Module**: Automated reminders and alerts for aftercare tasks
-  - **Data format**: JSON payload with recipient ID, notification type, message content, priority, delivery channels
-  - **Authentication**: OAuth 2.0 bearer tokens for service-to-service communication
-  - **Error handling**: Retry failed notifications with exponential backoff; fallback to alternative delivery channels
-
-- **Integration 4 - Communication Module**: Secure messaging between all stakeholders
-  - **Data format**: JSON payload with sender ID, recipient ID, message content, message type, attachments
-  - **Authentication**: OAuth 2.0 bearer tokens with role-based access control
-  - **Error handling**: Message delivery failures logged and retried; user notified of delivery status
-
-### Scalability Considerations
-
-- **Database Design**: Efficient querying for large numbers of aftercare cases
-- **File Storage**: Scalable storage solution for scan media (V1 photo sets; V2 true 3D) and documents
-- **Notification Delivery**: Reliable delivery of high-volume notifications
-- **Provider Assignment**: Future phase: Automated assignment algorithms for standalone cases (manual admin assignment is the requirement)
-
-### Security Considerations
-
-- **Data Encryption**: See the system PRD encryption record (aftercare data is encrypted in transit and at rest)
-- **Access Control**: Role-based, audited access follows the single role-based access rule in the system PRD
-- **Audit Logging**: Comprehensive logging of all aftercare activities
-- **Compliance**: Healthcare data protection regulations compliance
+- **FR-001**: Patient registration module (Patient Data)
+- **FR-010**: Treatment Execution & Documentation (cites REQ-010-006, REQ-010-009, REQ-010-023, REQ-010-086)
+- **FR-002**: Medical History & 3D Scanning (cites REQ-002-034, REQ-002-024, REQ-002-023, REQ-002-036)
+- **FR-007**: Payment Processing (cites REQ-007-088, the FR-007 Rule that processes the standalone aftercare payment)
+- **FR-020**: Notifications & Alerts (cites the four aftercare events REQ-020-117, REQ-020-118, REQ-020-119, REQ-020-120, each reaching its FR-030 Rule: REQ-030-072, REQ-030-073, REQ-030-074, REQ-030-075)
 
 ---
 
@@ -1672,36 +1550,10 @@ Acceptance Scenarios:
 
 ### Edge Cases
 
-- Provider withdrawal: admin reassigns or cancels with reason; patient notified
-- Provider suspended or deactivated mid-aftercare: a standalone case and a treatment-linked case both stay active with the cause and `supportRequired` until an admin reassigns it on Screen 19; records and completion milestone retained; admin decides reassignment or recovery support (Workflow 4 D4). Suspension followed by deactivation keeps the `ProviderSuspended` cause
-- Network loss during scan upload: resumable upload; no duplicate entries
-- Conflicting schedule changes: latest confirmed change supersedes prior; audit preserved
-
-## Key Entities
-
-- AftercarePlan: patientId, providerId, templateId, status, milestones[], medications[], customInstructions, activatedAt, cancellationReason (incl. ProviderSuspended, ProviderDeactivated), supportRequired (with audited admin resolution)
-  - Key attributes: plan status, schedule, customization
-  - Relationships: belongsTo Patient; belongsTo Provider; references Template
-
-- Milestone: planId, name, sequence (order in the plan), durationDays, scanSchedule, questionnaireSchedule, resources[]
-  - Key attributes: schedule and required tasks
-  - Relationships: belongsTo AftercarePlan
-
-- AftercareTask: planId, milestoneId, type (scan|questionnaire|medication|education), dueAt, completedAt, status
-  - Key attributes: task status and timestamps
-  - Relationships: belongsTo Milestone
-
-- ScanArtifact: planId, milestoneId, storageUrl, qualityScore, capturedAt, validated
-  - Key attributes: media reference, quality
-  - Relationships: belongsTo AftercarePlan; referenced by tasks
-
-- QuestionnaireResponse: planId, milestoneId, questionnaireId, answers, flagged, submittedAt
-  - Key attributes: responses and flags
-  - Relationships: belongsTo AftercarePlan; references FR-025 questionnaire
-
-- AftercareAuditEntry: entityType, entityId, action, actorId, reason, before, after, createdAt
-  - Key attributes: immutable audit record
-  - Relationships: belongsTo AftercarePlan (or nested entities)
+- Provider withdrawal: admin reassigns or cancels with reason; patient notified (REQ-011-072)
+- Provider suspended or deactivated mid-aftercare: a standalone case and a treatment-linked case both stay active with the cause and `supportRequired` until an admin reassigns it on Screen 19; records and completion milestone retained; admin decides reassignment or recovery support (Workflow 4 D4). Suspension followed by deactivation keeps the `ProviderSuspended` cause (REQ-011-014, REQ-011-073)
+- Network loss during scan upload: resumable upload; no duplicate entries (REQ-011-081)
+- Conflicting schedule changes: latest confirmed change supersedes prior; audit preserved (REQ-011-082)
 
 **Document Status**: ✅ Verified & Approved  
 **Next Steps**: Technical specification and implementation planning  
@@ -1715,26 +1567,14 @@ Acceptance Scenarios:
 
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
-| 2025-10-23 | 1.0 | Initial PRD creation | Product & Engineering |
-| 2025-11-04 | 1.1 | Template compliance: added Shared Services; Communication Structure (In/Out of Scope); Triggers/Outcomes for workflows; restructured Assumptions; added User Scenarios & Testing; Appendices | Product & Engineering |
-| 2026-03-03 | 1.2 | Clarified that V1 scan uploads are standardized head scan photo sets (multiple 2D views), with true 3D scanning deferred to V2. Updated module scope, dependencies, and external integrations accordingly. | AI |
-| 2026-04-12 | 1.3 | Screen 13: Expanded Search/Filters control to include Risk Level, Specialist, and Completion Rate filters, aligning with FR-022 Module Scope for A-03. | AI |
-| 2026-10-14 | 1.4 | Aligned provider suspension/deactivation cancellation cascade per CR-FR015-20261013-01 and FR-015 v1.9: added Workflow 4 D4, General Module Rule 4 (Provider Status Cancellation), REQ-011-014, mid-aftercare suspension edge case, and AftercarePlan cancellationReason/supportRequired attributes; admin reassignment/recovery workflow unchanged. See [CR-FR011-20261014-01](change-request-2026-10-14-provider-status-cancellation-cascade.md). Status reset pending consolidated verification.. Product Owner confirmed (2026-10-14) that standalone aftercare (Workflow 2) is inside the cascade scope | Vân Tay Media |
-| 2026-10-26 | 1.6 | Product Owner decision on FR-015 dev-team questions: Workflow 4 D4, General Module Rule 4, REQ-011-014, and the mid-aftercare edge case no longer cancel standalone aftercare on provider suspension/deactivation; standalone cases get the provider-status cause and `supportRequired` and move to Screen 19 reassignment, matching FR-015 v1.20/v1.21. Change Request: CR-FR011-20261026-01 | Claude (AI Assistant) |
-| 2026-10-18 | 1.5 | Final audit corrections (Q36, Q43): new Workflow 4 Alternative Flow D5 and Admin Screen 19 (Reassign Aftercare Provider) let an admin reassign only the aftercare provider or team for a provider fault during `Aftercare`, with fields, validation, mandatory reason, confirmation, audit entry and notice; the FR-006 booking stays `Aftercare` and the treatment record stays unchanged, with no new quote, acceptance or payment. D4, General Module Rule 4, the mid-aftercare suspension edge case and REQ-011-014 now cancel only standalone cases on provider suspension or deactivation; treatment-linked cases stay active for reassignment. Screen 14 Reassign Provider opens Screen 19. REQ-011-015 added. Round-two corrections (Q45, Q47): Screen 19, Alternative Flow D5 and REQ-011-015 now send the new mandatory FR-030 event `aftercare.provider_reassigned` (FR-011 producer) to the patient and the new aftercare provider, with no admin alert and no notice to the previous provider, replacing the note that the event was not registered; D5 and Screen 19 also accept a booking moved from `In Progress` to `Aftercare` by the FR-006 In-Progress provider-fault decision. See CR-FR011-20261016-01. | Product Owner / Documentation |
-| 2026-10-28 | 1.7 | Product Owner decision 2026-10-28 (FR-015 backend confirmations); clarification, no Change Request. Entry Points now list exactly two entry routes, treatment-linked (from an accepted and treated Hairline quote, including the Workflow 2b add-on) and standalone (outside-clinic patients, no inquiry or quote); admin assignment is described as a step inside those routes, not a third entry point. Workflow 2b states that the add-on creates treatment-linked aftercare linked to the accepted quote of the completed treatment. Matches system data schema v1.13.1 §13. Review follow-up (same day): header Status line updated to this revision | Claude (AI Assistant) |
-| 2026-11-20 | 1.8 | Requirements graph programme baseline: owner rulings applied. Main changes: standalone aftercare (Workflow 2) reordered to request, admin assigns provider, provider configures plan, payment activates (assign first, pay last), with refund wording limited to payments already taken and unassigned requests ending as Rejected after 7 days; one platform fee taken from the price and not added to the total, commission also applies to add-on payments; "Pricing option" (fixed price or monthly subscription) and "Payment method" (card, PayPal) separated everywhere, Screen 15 shows both; Overdue is a flag on tasks and plans, not a status, with escalation at 48 hours; progress is completed tasks over total tasks; questionnaire retake allowed while the task is open; patient chooses the service type; Adherence Period calculated from doses; milestone sequence kept; medication picked only from the admin list owned by FR-024; Surgeon Notes read from the FR-010 treatment record; default patient progress reminder added (REQ-011-088); REQ-011-009, REQ-011-011 and REQ-011-022 retired in favour of single system PRD and FR-020 rules, REQ-011-008 and REQ-011-015 now point to the owning records; aftercare specialist assignment owned by FR-011; real module codes and cited Rules filled in Dependencies; automated provider assignment marked Future phase; cross-document reconciliation (retention, system rule citations, medication list pointer to FR-024, standalone payment Rule cited as REQ-007-088) | Claude (AI Assistant) |
-| 2026-11-22 | 1.9 | Consistency review: treatment area and treatment type validation now refer to the catalog-driven lists (FR-003, FR-004) instead of a fixed Enum label. | Claude (AI Assistant) |
-| 2026-11-22 | 1.10 | Wording clean-up after the cross-FR consistency review: the stale 'payment placeholder' pointer is replaced by a pointer to the refund rules FR-006 already states (the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault). No rule changes. | Claude (AI Assistant) |
+| 2026-11-22 | 1.11 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.10) and the change requests (CR-FR011-20261014-01 in change-request-2026-10-14-provider-status-cancellation-cascade.md, CR-FR011-20261016-01 in change-request-2026-10-16-mtg002-quote-model-alignment.md, CR-FR011-20261026-01 in change-request-2026-10-26-standalone-aftercare-reassignment.md, and CR-FR015-20261013-01) are in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
 
 ## Appendix: Approvals
 
 | Role | Name | Date | Signature/Approval |
 |------|------|------|--------------------|
 | Product Owner | Product Owner | 2026-10-18 | Approved v1.5 via MTG-002 decision log (documentation only) |
-| Technical Lead | [Name] | [Date] | [Status] |
-| Stakeholder | [Name] | [Date] | [Status] |
 
 ---
 
-**Last Updated**: 2026-11-20
+**Last Updated**: 2026-11-22
