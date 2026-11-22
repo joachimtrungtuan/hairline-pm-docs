@@ -762,6 +762,10 @@ Configurable with Restrictions:
 - Maximum discount value per policy and region (the same single Setting as above). (REQ-019-094)
 - Auto‑decline window for unresponded provider approvals. (REQ-019-094)
 
+**Carried from dropped sections (original wording)**:
+
+- **PromotionProgram**: id, program_type (`ADMIN_VIA_PROVIDER` | `PROVIDER_SELF` | `HAIRLINE_FUNDED_DIRECT_ISSUED`), scope (`REUSABLE` | `AD_HOC_QUOTE_BOUND` — applies to `PROVIDER_SELF` only; other program types are always `REUSABLE`), bound_quote_id (nullable parent containment), bound_quote_option_date_price_id (nullable application target; both bindings set only for `AD_HOC_QUOTE_BOUND`), owner (admin user id or provider id), name, description, discount_type, value, applies_to (whole price / treatment / travel / other), application_mode (auto / code-only / list-selection / either), funding_model (derived), hairline_share_percent (0 to 100; Both Fees programs only), active window, total usage limit, per-user usage limit, targeting, issuance_channel (for Hairline-Funded), lifecycle_state, audit timestamps. Stored in the `promotion_programs` table; references to PromotionProgram point to that table. The legacy `discounts` table does not hold promotion programs.
+
 ---
 
 ## Dependencies
@@ -891,6 +895,7 @@ Acceptance Scenarios:
 | Date       | Version | Changes                                      | Author |
 |------------|---------|----------------------------------------------|--------|
 | 2026-11-22 | 2.8 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v2.7) and the change requests (CR-FR019-20261016-01 in `change-request-2026-10-16-mtg002-quote-model-alignment.md`, and `change-request-2026-09-10-option-date-promotion-alignment.md`) are in `archived/prd-baseline-2026-11-08/fr019-promotions-discounts/` and in git history. | Product Owner / Documentation |
+| 2026-11-23 | 2.9 | Independent compression review: 1 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
 
 ---
 
