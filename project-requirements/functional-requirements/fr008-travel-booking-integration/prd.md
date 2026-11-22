@@ -868,6 +868,11 @@ Same fields as Outbound Flight. Displayed as a separate sub-section below. If no
 - TLS 1.3 for all data in transit.
 - Travel has its own audit entity, owned by FR-008 and not shared with another feature's audit log. Entries belong to a TravelContext, are never edited or removed, and retention follows the system PRD, Platform-Wide Rules: One 10-year retention period.
 
+**Carried from dropped sections (original wording)**:
+
+**Relationships**: One current booking-linked passport record per Path A TravelContext; when the patient confirms earlier details they are saved as a new locked booking-linked record without changing the earlier source record, and a copy keeps the original submitter plus its copy-source reference. Accessible by patient, assigned provider, admin.
+**Key attributes**: `id`, `travel_context_id`, the acting user and role, the action (submission, correction, soft-delete, re-notification, travel-date review outcome, record access), the affected record and version, the reason (mandatory for corrections and soft-deletes), timestamp, and IP address.
+
 ---
 
 ## User Scenarios & Testing
@@ -970,6 +975,7 @@ Related FRs: FR-001 (patient authentication), FR-004 (quote option `included_ser
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2026-11-22 | 3.1 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v3.0) and the change requests CR-FR008-20260929-01 and CR-FR008-20261016-01 (file `change-request-2026-10-16-mtg002-quote-model-alignment.md`) are in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
+| 2026-11-23 | 3.2 | Independent compression review: 2 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
 
 ---
 

@@ -55,3 +55,5 @@ The owner read and approved the FR-005 compressed PRD on 2026-11-22 and released
 - Lint: 31 findings. Seven are new duplicate notices (L12): REQ-010-046 now uses the same pointer wording to the system PRD 10-year retention rule as six rules in other FRs. Accepted: each is a per-FR pointer to one system rule.
 - `project-automation/skills-engineering/verify-fr/SKILL.md`: step 5a added (three compression checks), owner-approved edit.
 - `local-docs/INDEX.md` section C.1: PRD scaffold updated to the compressed section list.
+- 2026-11-23, FR-008: independent review found the passport copy clause (original submitter, copy-source reference) and the audited-action list missing; both restored in original wording under Business Rules (PRD v3.2).
+- 2026-11-23, independent review of FR-013: no requirement lost or changed.
