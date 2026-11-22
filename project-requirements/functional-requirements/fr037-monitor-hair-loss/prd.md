@@ -16,7 +16,7 @@ At case creation, the patient permanently chooses either self-monitoring or limi
 
 The patient may convert an active case into a treatment inquiry under FR-003. Conversion completes the monitoring case, pre-fills all compatible inquiry information, permits the patient to review and edit every copied field, selects the latest scan by default while allowing another scan or a retake, and attaches a generated monitoring-summary PDF. The patient must not repeat information already supplied merely because they are changing services.
 
-**V1 scan terminology**: In V1, all references to a “3D head scan” mean the standardized multi-view head scan photo set defined by FR-002. True 3D capture and viewing remain V2 scope.
+**V1 scan terminology**: In V1, all references to a “3D head scan” mean the standardized multi-view head scan photo set defined by FR-002. True 3D capture and viewing remain V2 scope. (REQ-037-045)
 
 ---
 
@@ -24,7 +24,7 @@ The patient may convert an active case into a treatment inquiry under FR-003. Co
 
 ### Service Boundary: Self-Service Monitoring vs Aftercare Package (NON-NEGOTIABLE)
 
-FR-037 is a **standalone, patient-driven self-service utility**. It is not an aftercare package and must never inherit aftercare mechanics. Reviewers and implementers must apply this boundary before raising a gap against this FR: an aftercare capability absent here is correct scope, not a defect.
+FR-037 is a **standalone, patient-driven self-service utility**. It is not an aftercare package and must never inherit aftercare mechanics. Reviewers and implementers must apply this boundary before raising a gap against this FR: an aftercare capability absent here is correct scope, not a defect. (REQ-037-084)
 
 | Capability | Aftercare package (FR-011 and related) | FR-037 self-service monitoring |
 | --- | --- | --- |
@@ -35,7 +35,7 @@ FR-037 is a **standalone, patient-driven self-service utility**. It is not an af
 | Milestone-bound scan/task entities | In scope | **Out of scope** — monitoring uses its own flat entities |
 | Progress presentation | Milestone-anchored progress views | Calendar, logged-day count, and severity trend derived from patient entries |
 
-Notification scope for FR-037 is limited to the event list in Implementation Notes (assignment, advice, withdrawal, reassignment, completion, export-ready, conversion). FR-037 defines **no** patient-configurable logging or scan reminder.
+Notification scope for FR-037 is limited to the event list in Notification Events (assignment, advice, withdrawal, reassignment, completion, export-ready, conversion). FR-037 defines **no** patient-configurable logging or scan reminder. (REQ-037-079)
 
 ### Multi-Tenant Architecture
 
@@ -57,12 +57,12 @@ Notification scope for FR-037 is limited to the event list in Implementation Not
 
 **Provider Platform (PR-07)**:
 
-- Sees only advice-mode cases currently assigned to the provider.
+- Sees only advice-mode cases currently assigned to the provider. (REQ-037-038)
 - Reviews intake, required medical answers, severity trend, entries, and scans.
 - From each configured advice-window start date, may submit one concise advice paragraph. The window has no ordinary deadline and remains actionable until advice is submitted, except that an unsubmitted window expires when its next window opens.
 - Each submitted advice creates its own provider-authored entry on the case tracking calendar; it is never attached to or stored as part of a patient log entry. Submitted advice remains editable with a visible edited state and latest-edit timestamp.
 - Withdraws with a mandatory reason, after which access ends and Admin reassignment is required.
-- Does not manage self-monitoring cases.
+- Does not manage self-monitoring cases. (REQ-037-037)
 
 **Admin Platform (A-01, A-09)**:
 
@@ -71,7 +71,7 @@ Notification scope for FR-037 is limited to the event list in Implementation Not
 - Generates a scoped case-preview link before assignment so a candidate provider can decide whether to accept the case; Admin selects the link expiry at share time.
 - Distinguishes first assignment from reassignment in queues and case history.
 - Configures the advice cadence as weekly or bi-weekly.
-- Supports self-monitoring cases without adding a provider.
+- Supports self-monitoring cases without adding a provider. (REQ-037-037)
 
 **Shared Services (S-03, S-05)**:
 
@@ -86,14 +86,14 @@ Notification scope for FR-037 is limited to the event list in Implementation Not
 **In Scope**:
 
 - A short provider advice paragraph on an assigned advice-mode case.
-- Patient notification when a provider is assigned, withdraws, is replaced, or posts advice.
-- Provider and Admin notifications for assignment and reassignment actions.
+- Patient notification when a provider is assigned, withdraws, is replaced, or posts advice. (REQ-037-078)
+- Provider and Admin notifications for assignment and reassignment actions. (REQ-037-078)
 - Advice history displayed chronologically within the monitoring case.
 - An Admin-generated, read-only pre-assignment preview link shared through an existing external communication channel. Generating or viewing the preview does not assign the provider.
 
 **Out of Scope**:
 
-- An embedded or FR-037-specific chat screen, calls, diagnosis, prescriptions, or full medical consultation. Admin and a candidate provider may communicate through an existing channel before assignment, but that communication surface is not part of this FR.
+- An embedded or FR-037-specific chat screen, calls, diagnosis, prescriptions, or full medical consultation. Admin and a candidate provider may communicate through an existing channel before assignment, but that communication surface is not part of this FR. (REQ-037-019, REQ-037-075)
 - FR-012 secure messaging, which starts only after its own eligibility conditions are met.
 - Provider advice for self-monitoring cases.
 - Patient switching from self-monitoring to advice mode during an active case.
@@ -101,11 +101,11 @@ Notification scope for FR-037 is limited to the event list in Implementation Not
 
 ### Entry Points
 
-- Patient selects **Monitor Your Hair Loss** from FR-003 Screen 1: Service Selection.
-- Patient opens the active case from the patient home/dashboard monitoring card.
-- Provider opens **Hair Loss Monitoring Advice** from the provider dashboard.
-- Admin opens **Monitoring Cases** or the pending assignment/reassignment queue.
-- Patient opens conversion from the active case actions or from the completion flow.
+- Patient selects **Monitor Your Hair Loss** from FR-003 Screen 1: Service Selection. (REQ-037-034)
+- Patient opens the active case from the patient home/dashboard monitoring card. (REQ-037-034)
+- Provider opens **Hair Loss Monitoring Advice** from the provider dashboard. (REQ-037-034)
+- Admin opens **Monitoring Cases** or the pending assignment/reassignment queue. (REQ-037-034)
+- Patient opens conversion from the active case actions or from the completion flow. (REQ-037-034)
 
 ---
 
@@ -217,121 +217,121 @@ flowchart TD
 
 **Purpose**: Creates a monitoring case and captures reusable concern information.
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Monitoring Mode | radio | Yes | Self-monitoring or Provider advice | Immutable after activation |
-| Nature of Concern | textarea | Yes | Current hair-loss concern | 1 to 2000 characters |
-| Duration | select | Yes | How long the condition has been noticed | FR-003 Duration enum; identical value set so conversion copies without remapping |
-| Previous Treatments | textarea | Yes | Previous treatment or “None” | Maximum 2000 characters |
-| Current Severity | slider | Yes | Starting condition rating | Integer 1 to 10 |
-| Lifestyle Factors | textarea | No | Relevant context | Maximum 2000 characters |
-| Additional Notes | textarea | No | Other context | Maximum 2000 characters |
-| Initial Photos | file list | No | Supporting current-condition images | FR-003 image limits |
-| Initial Head Scan | capture | No | Initial V1 photo set | FR-002 quality contract |
-| Medical Questionnaire | component | Conditional | Active Inquiry-context questionnaire | Required for provider advice mode |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Monitoring Mode | radio | Yes | Self-monitoring or Provider advice | Immutable after activation | ENT-monitoring-case.mode |
+| Nature of Concern | textarea | Yes | Current hair-loss concern | 1 to 2000 characters (REQ-037-035) | ENT-monitoring-case.nature_of_concern |
+| Duration | select | Yes | How long the condition has been noticed | FR-003 Duration enum; identical value set so conversion copies without remapping (REQ-037-035) | ENT-monitoring-case.duration |
+| Previous Treatments | textarea | Yes | Previous treatment or “None” | Maximum 2000 characters (REQ-037-035) | ENT-monitoring-case.previous_treatments |
+| Current Severity | slider | Yes | Starting condition rating | Integer 1 to 10 (REQ-037-035) | ENT-monitoring-case.starting_severity |
+| Lifestyle Factors | textarea | No | Relevant context | Maximum 2000 characters (REQ-037-035) | ENT-monitoring-case.lifestyle_factors |
+| Additional Notes | textarea | No | Other context | Maximum 2000 characters (REQ-037-035) | ENT-monitoring-case.additional_notes |
+| Initial Photos | file list | No | Supporting current-condition images | FR-003 image limits (REQ-037-035) | ENT-monitoring-case.initial_photos |
+| Initial Head Scan | capture | No | Initial V1 photo set | FR-002 quality contract (REQ-037-035) | ENT-monitoring-case.initial_scan_id |
+| Medical Questionnaire | component | Conditional | Active Inquiry-context questionnaire | Required for provider advice mode | ENT-monitoring-case.medical_questionnaire_snapshot |
 
 **Business Rules**:
 
-- A patient may have only one active hair-loss monitoring case.
-- Mode cannot be changed after activation. A self-monitoring patient must complete the case before starting a new advice-mode case.
-- A new monitoring case starts with its own intake; previous monitoring-case history is not attached to it.
-- Provider-advice mode cannot be chosen while no Inquiry-context questionnaire set is active; Admin sees the same system-level warning FR-025 shows when no active Inquiry set exists, and self-monitoring remains available. Advice mode reuses the same Admin-designated active Inquiry-context set, with no separate questionnaire context type and no separate Admin toggle.
+- See REQ-037-001 and REQ-037-033.
+- Mode cannot be changed after activation. A self-monitoring patient must complete the case before starting a new advice-mode case. (REQ-037-002)
+- A new monitoring case starts with its own intake; previous monitoring-case history is not attached to it. (REQ-037-024)
+- See REQ-037-086 and REQ-037-005.
 
 #### Screen 2: Monitoring Dashboard and Calendar
 
 **Purpose**: Provides the active case timeline, progress summary, and actions.
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Case Status | badge | Yes | Active or assignment state | Derived |
-| Calendar | calendar | Yes | Dates with patient logs, scans, and separate provider-advice entries | Patient-local timezone; event author/type distinguishable |
-| Logged Days | number | Yes | Unique dates with at least one entry | Derived |
-| Severity Trend | chart | Yes | Rating over time | Derived from valid entries |
-| Provider Advice Status | component | Conditional | Pending, assigned, or pending reassignment | Advice mode only |
-| Advice Availability | status | Conditional | Future start date, available since date, submitted, or expired-unsubmitted | Advice mode and assigned only |
-| Provider Advice Detail | detail panel | Conditional | Advice text, provider, original submission time, edited cue, and latest-edit time | Read-only to patient; separate from patient log detail |
-| Add Log | action | Yes | Opens Screen 3 | Active cases only |
-| Request Treatment | action | Yes | Opens Screen 7 Step A | Active cases only |
-| End Monitoring | action | Yes | Opens Screen 5 | Active cases only |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Case Status | badge | Yes | Active or assignment state | Derived | ENT-monitoring-case.status |
+| Calendar | calendar | Yes | Dates with patient logs, scans, and separate provider-advice entries | Patient-local timezone; event author/type distinguishable (REQ-037-042) | ENT-monitoring-entry.log_date, ENT-monitoring-scan.captured_at, ENT-monitoring-advice.submitted_at |
+| Logged Days | number | Yes | Unique dates with at least one entry | Derived | ENT-monitoring-case.logged_days |
+| Severity Trend | chart | Yes | Rating over time | Derived from valid entries | ENT-monitoring-case.severity_trend |
+| Provider Advice Status | component | Conditional | Pending, assigned, or pending reassignment | Advice mode only | ENT-monitoring-case.advice_state |
+| Advice Availability | status | Conditional | Future start date, available since date, submitted, or expired-unsubmitted | Advice mode and assigned only (REQ-037-081) | ENT-monitoring-advice-window.availability |
+| Provider Advice Detail | detail panel | Conditional | Advice text, provider, original submission time, edited cue, and latest-edit time | Read-only to patient; separate from patient log detail | ENT-monitoring-advice.paragraph, ENT-monitoring-advice.author_id, ENT-monitoring-advice.submitted_at, ENT-monitoring-advice.is_edited, ENT-monitoring-advice.last_edited_at |
+| Add Log | action | Yes | Opens Screen 3 | Active cases only (REQ-037-080) | no graph field (control) |
+| Request Treatment | action | Yes | Opens Screen 7 Step A | Active cases only (REQ-037-080) | no graph field (control) |
+| End Monitoring | action | Yes | Opens Screen 5 | Active cases only (REQ-037-080) | no graph field (control) |
 
 **Business Rules**:
 
-- No daily frequency is mandatory; missing dates are neutral and never overdue.
-- Logging remains enabled during pending assignment and pending reassignment.
-- Advice is shown chronologically as its own provider-authored calendar entry, never inside a patient log, and cannot be replied to as a chat thread.
-- Edited advice shows a clear edited cue and latest-edit timestamp without exposing prior versions to the patient.
+- No daily frequency is mandatory; missing dates are neutral and never overdue. (REQ-037-012)
+- See REQ-037-004.
+- Advice is shown chronologically as its own provider-authored calendar entry, never inside a patient log, and cannot be replied to as a chat thread. (REQ-037-043)
+- Edited advice shows a clear edited cue and latest-edit timestamp without exposing prior versions to the patient. (REQ-037-043)
 
 #### Screen 3: Daily Monitoring Log
 
 **Purpose**: Records a dated observation using the same structure on every date.
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Log Date | date | Yes | Observation date | Not in future |
-| Severity | slider | Yes | Condition rating | Integer 1 to 10 |
-| Notes | textarea | No | Daily observation | Maximum 3000 characters |
-| Photos | file list | No | Supporting images | Secure image limits |
-| Head Scan | capture/select | No | V1 head scan photo set | FR-002 quality contract |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Log Date | date | Yes | Observation date | Not in future (REQ-037-039) | ENT-monitoring-entry.log_date |
+| Severity | slider | Yes | Condition rating | Integer 1 to 10 (REQ-037-039) | ENT-monitoring-entry.severity |
+| Notes | textarea | No | Daily observation | Maximum 3000 characters (REQ-037-039) | ENT-monitoring-entry.notes |
+| Photos | file list | No | Supporting images | Secure image limits (REQ-037-039) | ENT-monitoring-entry.photos |
+| Head Scan | capture/select | No | V1 head scan photo set | FR-002 quality contract (REQ-037-039) | ENT-monitoring-entry.scan_id |
 
 **Business Rules**:
 
-- The patient may create, edit, or delete their own entries while the case is active; all versions remain auditable.
-- Multiple entries on one date are allowed, but Logged Days counts the date once.
-- Every entry stores a submission timestamp. When one date holds several entries, the latest timestamp on that date supplies the date's severity for the trend, latest-severity, and summary calculations; earlier entries stay visible and auditable.
-- Scan capture opens Screen 4 and links the resulting scan to the log date.
+- The patient may create, edit, or delete their own entries while the case is active; all versions remain auditable. (REQ-037-040)
+- Multiple entries on one date are allowed, but Logged Days counts the date once. (REQ-037-041)
+- Every entry stores a submission timestamp. When one date holds several entries, the latest timestamp on that date supplies the date's severity for the trend, latest-severity, and summary calculations; earlier entries stay visible and auditable. (REQ-037-020)
+- Scan capture opens Screen 4 and links the resulting scan to the log date. (REQ-037-044)
 
 #### Screen 4: Head Scan Capture and History
 
 **Purpose**: Captures or reviews standardized scan photo sets across the case.
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Capture Guidance | component | Yes | Front, top, left, right, and back guidance | FR-002 V1 contract; five views offered, at least one view required, no single view mandatory |
-| Photo Set | capture/upload | Yes | Standardized multi-view head photos | Quality validation; at least one of the five views required |
-| Captured At | datetime | Yes | Scan timestamp | System generated |
-| Scan History | list | Yes | Previous scans and thumbnails | Current case only |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Capture Guidance | component | Yes | Front, top, left, right, and back guidance | FR-002 V1 contract; five views offered, at least one view required, no single view mandatory (REQ-037-044) | no graph field (guidance component) |
+| Photo Set | capture/upload | Yes | Standardized multi-view head photos | Quality validation; at least one of the five views required | ENT-monitoring-scan.photo_set |
+| Captured At | datetime | Yes | Scan timestamp | System generated | ENT-monitoring-scan.captured_at |
+| Scan History | list | Yes | Previous scans and thumbnails | Current case only | ENT-monitoring-scan.id |
 
 **Business Rules**:
 
-- True 3D reconstruction is not required in V1.
-- Patients can retake a failed-quality scan before saving.
-- Providers can view scans only while assigned to the advice case.
+- True 3D reconstruction is not required in V1. (REQ-037-045)
+- Patients can retake a failed-quality scan before saving. (REQ-037-044)
+- Providers can view scans only while assigned to the advice case. (REQ-037-046)
 
 #### Screen 5: Complete or Convert Monitoring Case
 
 **Purpose**: Lets the patient deliberately end the active case.
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Case Summary | component | Yes | Date range, logged days, scans, severity trend | Derived |
-| Completion Choice | radio | Yes | Complete and export, or Request Treatment | Single selection |
-| Confirmation | checkbox | Yes | Acknowledges monitoring will end | Must be selected |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Case Summary | component | Yes | Date range, logged days, scans, severity trend | Derived (REQ-037-052, REQ-037-057) | ENT-monitoring-case.monitoring_period, ENT-monitoring-case.logged_days, ENT-monitoring-case.scan_count, ENT-monitoring-case.severity_trend |
+| Completion Choice | radio | Yes | Complete and export, or Request Treatment | Single selection (REQ-037-052) | no graph field (control) |
+| Confirmation | checkbox | Yes | Acknowledges monitoring will end | Must be selected (REQ-037-052) | no graph field (control) |
 
 **Business Rules**:
 
-- Completing or successfully converting ends the active case and any advice assignment.
-- Conversion is not committed until the FR-003 inquiry is successfully submitted.
-- A completed or converted case is read-only except for Admin audited correction.
+- Completing or successfully converting ends the active case and any advice assignment. (REQ-037-053)
+- Conversion is not committed until the FR-003 inquiry is successfully submitted. (REQ-037-030, REQ-037-064)
+- A completed or converted case is read-only except for Admin audited correction. (REQ-037-054)
 
 #### Screen 6: Monitoring Summary and PDF Export
 
 **Purpose**: Displays the completed case and its downloadable report.
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Monitoring Period | date range | Yes | First through final case date | Derived |
-| Logged Days | number | Yes | Unique dates logged | Derived |
-| Severity Summary | component | Yes | First, latest, minimum, maximum, average, and trend | Derived |
-| Log Timeline | list | Yes | Date-to-date entries and notes | Chronological |
-| Head Scan Photos | gallery | Yes | Scans grouped by capture date | Authorized access only |
-| Provider Advice | list | Conditional | Advice with provider and date | Advice mode only |
-| PDF Status | status | Yes | Generating, ready, or failed | Derived |
-| Download PDF | action | Conditional | Downloads ready report | Signed access link |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Monitoring Period | date range | Yes | First through final case date | Derived | ENT-monitoring-case.monitoring_period |
+| Logged Days | number | Yes | Unique dates logged | Derived | ENT-monitoring-case.logged_days |
+| Severity Summary | component | Yes | First, latest, minimum, maximum, average, and trend | Derived (REQ-037-057) | ENT-monitoring-case.severity_summary |
+| Log Timeline | list | Yes | Date-to-date entries and notes | Chronological | ENT-monitoring-entry.log_date, ENT-monitoring-entry.notes |
+| Head Scan Photos | gallery | Yes | Scans grouped by capture date | Authorized access only | ENT-monitoring-scan.photo_set |
+| Provider Advice | list | Conditional | Advice with provider and date | Advice mode only | ENT-monitoring-advice.paragraph, ENT-monitoring-advice.author_id, ENT-monitoring-advice.submitted_at |
+| PDF Status | status | Yes | Generating, ready, or failed | Derived | ENT-monitoring-export.generation_state |
+| Download PDF | action | Conditional | Downloads ready report | Signed access link (REQ-037-092) | no graph field (control) |
 
 **Business Rules**:
 
-- The PDF contains the complete date-to-date log, scan photos, logged-day count, and severity summary, plus the provider advice for advice-mode cases. Provider advice appears in the completion PDF only.
-- Failed generation is retryable without altering the completed case.
+- The PDF contains the complete date-to-date log, scan photos, logged-day count, and severity summary, plus the provider advice for advice-mode cases. Provider advice appears in the completion PDF only. (REQ-037-009)
+- Failed generation is retryable without altering the completed case. (REQ-037-055)
 
 #### Screen 7: Convert to Treatment Inquiry
 
@@ -343,42 +343,42 @@ flowchart TD
 
 **Purpose**: Gives the patient one consolidated preview of the monitoring record and the data that will populate the inquiry, so the volume of carried-over data points is understood before any form is opened. This step is what distinguishes conversion from a plain FR-003 start — an FR-003 inquiry begun from scratch has nothing to summarize.
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Monitoring Recap | component | Yes | Date range, logged days, scan count, severity summary and trend, advice count when applicable | Derived; read-only |
-| Carried-Over Data Preview | grouped list | Yes | Every field that will pre-fill the inquiry, grouped as concern information, medical answers, selected scan, and attachments | Derived; read-only at this step |
-| Items Still Needed | list | Yes | Inquiry-only information the patient must still supply, such as destinations, dates, and terms | Derived from FR-003 required set |
-| Monitoring Summary PDF | attachment | Yes | Generated case summary that will attach to the inquiry | PDF; system generated |
-| Provider Routing Notice | component | Conditional | States that the assigned advice provider will be the only initial quote recipient | Advice mode with active assignment only |
-| Continue to Review | action | Yes | Opens Step B | Summary and PDF must be generated |
-| Back | action | Yes | Returns to the active case with no state change | Monitoring stays active |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Monitoring Recap | component | Yes | Date range, logged days, scan count, severity summary and trend, advice count when applicable | Derived; read-only (REQ-037-057) | ENT-monitoring-case.monitoring_period, ENT-monitoring-case.logged_days, ENT-monitoring-case.scan_count, ENT-monitoring-case.severity_summary, ENT-monitoring-case.advice_count |
+| Carried-Over Data Preview | grouped list | Yes | Every field that will pre-fill the inquiry, grouped as concern information, medical answers, selected scan, and attachments | Derived; read-only at this step | ENT-monitoring-conversion.carried_over_preview |
+| Items Still Needed | list | Yes | Inquiry-only information the patient must still supply, such as destinations, dates, and terms | Derived from FR-003 required set | ENT-monitoring-conversion.items_still_needed |
+| Monitoring Summary PDF | attachment | Yes | Generated case summary that will attach to the inquiry | PDF; system generated | ENT-monitoring-export.pdf_media |
+| Provider Routing Notice | component | Conditional | States that the assigned advice provider will be the only initial quote recipient | Advice mode with active assignment only (REQ-037-060) | ENT-monitoring-conversion.provider_routing |
+| Continue to Review | action | Yes | Opens Step B | Summary and PDF must be generated | no graph field (control) |
+| Back | action | Yes | Returns to the active case with no state change | Monitoring stays active | no graph field (control) |
 
 **Business Rules**:
 
-- Step A is read-only. No field is edited and no inquiry record exists yet; the monitoring case is untouched until Step B submission succeeds.
-- If PDF generation has not finished, Step A shows generation status and allows the patient to continue once it is ready or retry on failure.
-- Leaving Step A never completes, converts, or alters the monitoring case.
+- Step A is read-only. No field is edited and no inquiry record exists yet; the monitoring case is untouched until Step B submission succeeds. (REQ-037-011)
+- If PDF generation has not finished, Step A shows generation status and allows the patient to continue once it is ready or retry on failure. (REQ-037-059)
+- Leaving Step A never completes, converts, or alters the monitoring case. (REQ-037-011)
 
 ##### Screen 7 Step B: Review and Edit Carried-Over Data
 
 **Purpose**: Reviews and edits pre-filled FR-003 data before entering the remaining inquiry screens.
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Concern Information | editable component | Yes | Copied FR-003 Screen 3-compatible fields | FR-003 validation |
-| Selected Head Scan | select/capture | Yes | Latest by default, another prior scan, or retake | FR-002 quality contract |
-| Medical Answers | editable component | Yes | Previously answered items plus current active questions | Patient must review and reconfirm |
-| Monitoring Summary PDF | attachment | Yes | Generated case summary | PDF; system generated |
-| Inquiry-Only Handoff Target | reference | Yes | Names the inquiry-only information (destinations, dates, provider selection rules, terms) collected on the FR-003 screens opened after Step B | Not collected or validated on Step B; FR-003 owns the fields and their validation |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Concern Information | editable component | Yes | Copied FR-003 Screen 3-compatible fields | FR-003 validation | ENT-inquiry.problem_concern, ENT-inquiry.problem_duration, ENT-inquiry.previous_treatments, ENT-inquiry.symptom_severity, ENT-inquiry.lifestyle_factors, ENT-inquiry.additional_notes |
+| Selected Head Scan | select/capture | Yes | Latest by default, another prior scan, or retake | FR-002 quality contract | ENT-monitoring-conversion.selected_scan_id |
+| Medical Answers | editable component | Yes | Previously answered items plus current active questions | Patient must review and reconfirm | ENT-medical-questionnaire-response.answer, ENT-medical-questionnaire-response.details |
+| Monitoring Summary PDF | attachment | Yes | Generated case summary | PDF; system generated | ENT-monitoring-export.pdf_media |
+| Inquiry-Only Handoff Target | reference | Yes | Names the inquiry-only information (destinations, dates, provider selection rules, terms) collected on the FR-003 screens opened after Step B | Not collected or validated on Step B; FR-003 owns the fields and their validation | no graph field (reference to FR-003 fields) |
 
 **Business Rules**:
 
-- Every copied field remains editable by the patient before submission.
-- The patient answers only missing or newly required information and reconfirms existing medical answers.
-- The monitoring case and inquiry remain distinct records linked by immutable conversion provenance.
-- If an assigned advice provider exists at conversion, that provider is the only initial quote recipient. If none exists, or the assigned provider has withdrawn or is not eligible at conversion, conversion continues and FR-003 normal distribution applies. Exclusive routing bypasses only FR-003 country and provider-selection matching and the 10-provider cap; anonymization, notification timing, and provider dashboard behavior are unchanged.
-- Completing Step B hands the patient into the standard FR-003 inquiry screens for the inquiry-only information. FR-037 does not duplicate those screens; it supplies pre-filled values and the summary PDF to them.
-- If the exclusive provider declines after conversion and before creating a quote, FR-003 automatically removes the exclusive-provider restriction and runs its normal distribution workflow. This transition occurs on the resulting inquiry, not on Steps A or B. Expiry continues to follow FR-003/FR-004's existing configured rules.
+- Every copied field remains editable by the patient before submission. (REQ-037-021)
+- The patient answers only missing or newly required information and reconfirms existing medical answers. (REQ-037-061)
+- The monitoring case and inquiry remain distinct records linked by immutable conversion provenance. (REQ-037-062)
+- If an assigned advice provider exists at conversion, that provider is the only initial quote recipient. If none exists, or the assigned provider has withdrawn or is not eligible at conversion, conversion continues and FR-003 normal distribution applies. Exclusive routing bypasses only FR-003 country and provider-selection matching and the 10-provider cap; anonymization, notification timing, and provider dashboard behavior are unchanged. (REQ-037-029, REQ-037-069)
+- Completing Step B hands the patient into the standard FR-003 inquiry screens for the inquiry-only information. FR-037 does not duplicate those screens; it supplies pre-filled values and the summary PDF to them. (REQ-037-063)
+- If the exclusive provider declines after conversion and before creating a quote, FR-003 automatically removes the exclusive-provider restriction and runs its normal distribution workflow. This transition occurs on the resulting inquiry, not on Steps A or B. Expiry continues to follow FR-003/FR-004's existing configured rules. (REQ-037-029)
 
 ### Provider Platform Screens
 
@@ -386,99 +386,99 @@ flowchart TD
 
 **Purpose**: Shows and helps the provider find cases currently assigned to them.
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Assigned Cases | list | Yes | Active advice-mode cases | Assigned provider only |
-| Search | text input | No | Finds cases by anonymized patient ID or case ID | Debounced; scoped to assigned cases |
-| Status Filter | multi-select | No | Filters by active assignment and case status | Valid values only |
-| Advice Filter | select | No | All, advice available, awaiting future window, or submitted for current window | Derived from window state |
-| Assignment Filter | select | No | All, initial assignment, or reassignment | Valid values only |
-| Sort | select | No | Last patient log, advice availability, assignment date, or anonymized patient ID | Valid values only |
-| Last Patient Log | datetime | Yes | Most recent entry | Derived |
-| Advice Availability | status | Yes | Available now or next date | Config-derived |
-| Assignment Type | badge | Yes | Initial or reassignment | Derived |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Assigned Cases | list | Yes | Active advice-mode cases | Assigned provider only | ENT-monitoring-case.id, ENT-patient.anonymized_id |
+| Search | text input | No | Finds cases by anonymized patient ID or case ID | Debounced; scoped to assigned cases | no graph field (control) |
+| Status Filter | multi-select | No | Filters by active assignment and case status | Valid values only | no graph field (control) |
+| Advice Filter | select | No | All, advice available, awaiting future window, or submitted for current window | Derived from window state | no graph field (control) |
+| Assignment Filter | select | No | All, initial assignment, or reassignment | Valid values only | no graph field (control) |
+| Sort | select | No | Last patient log, advice availability, assignment date, or anonymized patient ID | Valid values only | no graph field (control) |
+| Last Patient Log | datetime | Yes | Most recent entry | Derived | ENT-monitoring-case.last_patient_log_at |
+| Advice Availability | status | Yes | Available now or next date | Config-derived | ENT-monitoring-advice-window.availability |
+| Assignment Type | badge | Yes | Initial or reassignment | Derived | ENT-monitoring-provider-assignment.assignment_type |
 
 **Business Rules**:
 
-- Self-monitoring and unassigned cases never appear.
-- The provider can search by anonymized patient ID or case ID; filter by status, advice availability, and assignment type; and sort by last patient log, advice availability, assignment date, or anonymized patient ID.
-- Search, filters, sorting, and pagination compose without exposing cases assigned to another provider.
-- Withdrawing removes the case from this queue immediately after confirmation.
+- Self-monitoring and unassigned cases never appear. (REQ-037-038)
+- The provider can search by anonymized patient ID or case ID; filter by status, advice availability, and assignment type; and sort by last patient log, advice availability, assignment date, or anonymized patient ID. (REQ-037-087, REQ-037-016)
+- Search, filters, sorting, and pagination compose without exposing cases assigned to another provider. (REQ-037-016)
+- Withdrawing removes the case from this queue immediately after confirmation. (REQ-037-093)
 
 #### Screen 9: Provider Monitoring Case Overview
 
 **Purpose**: Gives the assigned provider the overall view of one monitoring case and routes each calendar record into its dedicated detail screen.
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Case Header | component | Yes | Anonymized patient ID, case ID, mode, status, start date, assignment type, and assignment date | Read-only; anonymized patient identifier only for the entire case lifetime |
-| Monitoring Dashboard | component | Yes | Same summary, trend, logged-day count, scan history, and status information visible to the patient | Read-only provider parity |
-| Monitoring Calendar | calendar | Yes | Same dated calendar and event indicators visible to the patient | Read-only; patient-log events open Screen 10A and provider-advice events open Screen 10B |
-| Medical Questionnaire | component | Yes | Required advice-mode medical answers | Read-only |
-| Advice Window Summary | component | Yes | Current window plus the immediately superseded unsubmitted window when applicable, showing start date and available, submitted, or expired state | New window expires the prior unsubmitted window; current available window opens Screen 10B |
-| Advice History | list | Yes | Provider-authored advice entries with submission time, edited state, and latest-edit time | Chronological; each entry opens Screen 10B; never attached to patient logs |
-| Withdraw | action | No | Opens Screen 11 | Active assignment only |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Case Header | component | Yes | Anonymized patient ID, case ID, mode, status, start date, assignment type, and assignment date | Read-only; anonymized patient identifier only for the entire case lifetime | ENT-patient.anonymized_id, ENT-monitoring-case.id, ENT-monitoring-case.mode, ENT-monitoring-case.status, ENT-monitoring-case.started_on, ENT-monitoring-provider-assignment.assignment_type, ENT-monitoring-provider-assignment.assigned_at |
+| Monitoring Dashboard | component | Yes | Same summary, trend, logged-day count, scan history, and status information visible to the patient | Read-only provider parity | ENT-monitoring-case.severity_trend, ENT-monitoring-case.logged_days, ENT-monitoring-scan.id, ENT-monitoring-case.status |
+| Monitoring Calendar | calendar | Yes | Same dated calendar and event indicators visible to the patient | Read-only; patient-log events open Screen 10A and provider-advice events open Screen 10B | ENT-monitoring-entry.log_date, ENT-monitoring-scan.captured_at, ENT-monitoring-advice.submitted_at |
+| Medical Questionnaire | component | Yes | Required advice-mode medical answers | Read-only | ENT-monitoring-case.medical_questionnaire_snapshot |
+| Advice Window Summary | component | Yes | Current window plus the immediately superseded unsubmitted window when applicable, showing start date and available, submitted, or expired state | New window expires the prior unsubmitted window; current available window opens Screen 10B | ENT-monitoring-advice-window.start_date, ENT-monitoring-advice-window.state, ENT-monitoring-advice-window.superseded_window_id |
+| Advice History | list | Yes | Provider-authored advice entries with submission time, edited state, and latest-edit time | Chronological; each entry opens Screen 10B; never attached to patient logs | ENT-monitoring-advice.submitted_at, ENT-monitoring-advice.is_edited, ENT-monitoring-advice.last_edited_at |
+| Withdraw | action | No | Opens Screen 11 | Active assignment only | no graph field (control) |
 
 **Business Rules**:
 
-- Screen 9 is an overview only; it does not expand a complete daily log or edit advice inline.
-- FR-037 advice involves no payment, so the assigned provider sees the anonymized patient identifier for the whole case lifetime and never the patient full name or contact details. Any later de-anonymization happens only in the FR-003/FR-004 flow created by conversion, under that FR's own payment rules.
-- Patient-log and provider-advice calendar events remain visually distinct and route to Screen 10A and Screen 10B respectively.
+- Screen 9 is an overview only; it does not expand a complete daily log or edit advice inline. (REQ-037-017)
+- FR-037 advice involves no payment, so the assigned provider sees the anonymized patient identifier for the whole case lifetime and never the patient full name or contact details. Any later de-anonymization happens only in the FR-003/FR-004 flow created by conversion, under that FR's own payment rules. (REQ-037-028, REQ-037-083)
+- Patient-log and provider-advice calendar events remain visually distinct and route to Screen 10A and Screen 10B respectively. (REQ-037-017)
 
 #### Screen 10A: Provider Daily Log Detail
 
 **Purpose**: Shows the complete patient-authored record for one selected calendar day without mixing provider advice into that record.
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Case and Date Context | header | Yes | Anonymized patient ID, case ID, selected date, and navigation back to Screen 9 | Read-only |
-| Severity | value | Yes | Patient severity for the selected log | Integer 1 to 10; read-only |
-| Notes | text | No | Patient-authored observation | Read-only |
-| Photos | gallery | No | Images attached to the selected daily log | Authorized media only; read-only |
-| Head Scan | component | No | V1 head scan photo set linked to the selected log | Authorized media only; read-only |
-| Record Metadata | component | Yes | Author, created time, latest update time, and version state | Read-only |
-| Previous / Next Log | navigation | No | Moves between patient-authored daily logs in the case | Assigned case only |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Case and Date Context | header | Yes | Anonymized patient ID, case ID, selected date, and navigation back to Screen 9 | Read-only | ENT-patient.anonymized_id, ENT-monitoring-case.id, ENT-monitoring-entry.log_date |
+| Severity | value | Yes | Patient severity for the selected log | Integer 1 to 10; read-only | ENT-monitoring-entry.severity |
+| Notes | text | No | Patient-authored observation | Read-only | ENT-monitoring-entry.notes |
+| Photos | gallery | No | Images attached to the selected daily log | Authorized media only; read-only | ENT-monitoring-entry.photos |
+| Head Scan | component | No | V1 head scan photo set linked to the selected log | Authorized media only; read-only | ENT-monitoring-entry.scan_id |
+| Record Metadata | component | Yes | Author, created time, latest update time, and version state | Read-only | ENT-monitoring-entry.created_by, ENT-monitoring-entry.submitted_at, ENT-monitoring-entry.updated_at, ENT-monitoring-entry.version |
+| Previous / Next Log | navigation | No | Moves between patient-authored daily logs in the case | Assigned case only (REQ-037-091) | no graph field (control) |
 
 **Business Rules**:
 
-- Screen 10A displays one patient-authored daily log and its media; provider advice from the same date remains a separate calendar event and is never rendered as part of this record.
-- The provider cannot edit patient-authored monitoring data.
+- Screen 10A displays one patient-authored daily log and its media; provider advice from the same date remains a separate calendar event and is never rendered as part of this record. (REQ-037-014, REQ-037-017)
+- The provider cannot edit patient-authored monitoring data. (REQ-037-076)
 
 #### Screen 10B: Provider Advice Detail
 
 **Purpose**: Provides the dedicated surface for viewing, submitting, or editing one provider-advice record or the current available advice window.
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Case and Window Context | header | Yes | Anonymized patient ID, case ID, advice-window start date, state, and navigation back to Screen 9 | Assigned case only |
-| Advice Window Stack | list | Yes | Current window and immediately superseded unsubmitted window when applicable | Only current available window is actionable |
-| Advice Paragraph | textarea | Conditional | New or edited advice for the selected actionable/submitted record | Maximum 1500 characters; active assignment required for write actions |
-| Submit Advice | action | Conditional | Creates the single advice record for the current available window | Window available and no advice submitted |
-| Edit Advice | action | Conditional | Saves a new version of submitted advice | Submitted record; active assignment; audited |
-| Advice Metadata | component | Conditional | Author, original submission time, edited cue, latest-edit time, and version state | Submitted advice only |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Case and Window Context | header | Yes | Anonymized patient ID, case ID, advice-window start date, state, and navigation back to Screen 9 | Assigned case only | ENT-patient.anonymized_id, ENT-monitoring-case.id, ENT-monitoring-advice-window.start_date, ENT-monitoring-advice-window.state |
+| Advice Window Stack | list | Yes | Current window and immediately superseded unsubmitted window when applicable | Only current available window is actionable | ENT-monitoring-advice-window.id, ENT-monitoring-advice-window.state, ENT-monitoring-advice-window.superseded_window_id |
+| Advice Paragraph | textarea | Conditional | New or edited advice for the selected actionable/submitted record | Maximum 1500 characters; active assignment required for write actions (REQ-037-077) | ENT-monitoring-advice.paragraph |
+| Submit Advice | action | Conditional | Creates the single advice record for the current available window | Window available and no advice submitted | no graph field (control) |
+| Edit Advice | action | Conditional | Saves a new version of submitted advice | Submitted record; active assignment; audited (REQ-037-077) | no graph field (control) |
+| Advice Metadata | component | Conditional | Author, original submission time, edited cue, latest-edit time, and version state | Submitted advice only | ENT-monitoring-advice.author_id, ENT-monitoring-advice.submitted_at, ENT-monitoring-advice.is_edited, ENT-monitoring-advice.last_edited_at, ENT-monitoring-advice.versions |
 
 **Business Rules**:
 
-- Advice is informational and must not be represented as diagnosis or prescription.
-- Each window opens on its calculated start date and has no normal deadline. It remains available until its single advice entry is submitted. The first window opens one cadence period (7 or 14 days) after the provider is first assigned; after a reassignment the schedule carries on and the replacement provider receives the next window date.
-- If the next calculated window opens while the prior window remains unsubmitted, the prior window alone expires and the new window becomes the sole actionable window. Both remain visible with distinct states.
-- Submission creates a separate provider-authored case-calendar record and never mutates, annotates, or attaches to a patient-authored daily log.
-- Editing preserves prior versions; patient, Provider, and Admin views show an edited cue and latest-edit timestamp.
+- Advice is informational and must not be represented as diagnosis or prescription. (REQ-037-075)
+- See REQ-037-013.
+- If the next calculated window opens while the prior window remains unsubmitted, the prior window alone expires and the new window becomes the sole actionable window. Both remain visible with distinct states. (REQ-037-013)
+- See REQ-037-014.
+- See REQ-037-015.
 
 #### Screen 11: Provider Withdrawal Confirmation
 
 **Purpose**: Ends a provider assignment safely.
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Withdrawal Reason | textarea | Yes | Reason visible to Admin | 1 to 1000 characters |
-| Confirmation | checkbox | Yes | Confirms immediate loss of access | Must be selected |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Withdrawal Reason | textarea | Yes | Reason visible to Admin | 1 to 1000 characters | ENT-monitoring-provider-assignment.withdrawal_reason |
+| Confirmation | checkbox | Yes | Confirms immediate loss of access | Must be selected | no graph field (control) |
 
 **Business Rules**:
 
-- The provider must enter a withdrawal reason of 1 to 1000 characters and tick the confirmation that access ends immediately before the withdrawal is saved.
+- The provider must enter a withdrawal reason of 1 to 1000 characters and tick the confirmation that access ends immediately before the withdrawal is saved. (REQ-037-089, REQ-037-090)
 - Withdrawal does not end the patient’s monitoring case.
-- The case returns to Admin as Pending Reassignment and is clearly labeled as a reassignment.
+- The case returns to Admin as Pending Reassignment and is clearly labeled as a reassignment. (REQ-037-006, REQ-037-007)
 
 ### Admin Platform Screens
 
@@ -486,76 +486,76 @@ flowchart TD
 
 **Purpose**: Gives Admin a system-wide operational picture of monitoring cases and supports oversight, pre-assignment sharing, first assignment, and reassignment.
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Case List | table | Yes | All hair-loss monitoring cases | Paginated |
-| Mode Tabs | tabs | Yes | All Cases, Self-Monitoring, and Provider Intervention | Counts and selected tab remain synchronized with filters |
-| Search | text input | No | Finds by patient name, patient ID, case ID, assigned provider, or candidate provider | Debounced |
-| Status Filters | multi-select | No | Active, completed, converted, pending assignment, pending reassignment | Valid values |
-| Provider Filter | searchable select | No | Assigned provider, unassigned, or withdrawn-provider cases | Valid provider or derived state |
-| Advice State Filter | multi-select | No | Available, awaiting future window, submitted, or expired-unsubmitted | Advice cases only |
-| Date Filters | date range | No | Case start, last patient log, last advice, or completion date | Valid range |
-| Sort | select | No | Updated date, start date, last patient log, advice availability, patient, or provider | Valid values |
-| Case Identity | columns | Yes | Case ID, patient name and ID, mode, case status, and start date | Read-only summary |
-| Activity Summary | columns | Yes | Last patient log, logged-day count, latest severity, scan count, last advice, and next/current advice state | Derived |
-| Assignment Summary | columns | Conditional | Assigned provider, assignment state, assignment type, assignment date, and withdrawal indicator | Advice cases only |
-| Assignment Type | badge | Conditional | Initial or reassignment | Advice cases only |
-| Assign Provider | action | Conditional | Opens provider selector | Pending states only |
-| Share Case Preview | action | Conditional | Creates a read-only preview for a candidate provider before assignment | Pending assignment or reassignment only |
-| Preview Contents | review component | Conditional | Shows the exact read-only case overview and clinical summary that the candidate provider will receive | Must be reviewed before sharing; excludes patient direct-contact details and Admin-only audit/assignment data |
-| Preview Expiry | duration selector | Conditional | Admin-selected lifetime for the preview link at share time | Required before link generation; any duration up to a maximum of 14 days |
-| Preview Status | status | Conditional | Candidate provider, created by/time, expiry time, active/expired/revoked state, and last viewed time | Read-only except revoke action |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Case List | table | Yes | All hair-loss monitoring cases | Paginated | ENT-monitoring-case.id |
+| Mode Tabs | tabs | Yes | All Cases, Self-Monitoring, and Provider Intervention | Counts and selected tab remain synchronized with filters (REQ-037-070) | ENT-monitoring-case.mode |
+| Search | text input | No | Finds by patient name, patient ID, case ID, assigned provider, or candidate provider | Debounced | no graph field (control) |
+| Status Filters | multi-select | No | Active, completed, converted, pending assignment, pending reassignment | Valid values | no graph field (control) |
+| Provider Filter | searchable select | No | Assigned provider, unassigned, or withdrawn-provider cases | Valid provider or derived state | no graph field (control) |
+| Advice State Filter | multi-select | No | Available, awaiting future window, submitted, or expired-unsubmitted | Advice cases only | no graph field (control) |
+| Date Filters | date range | No | Case start, last patient log, last advice, or completion date | Valid range | no graph field (control) |
+| Sort | select | No | Updated date, start date, last patient log, advice availability, patient, or provider | Valid values | no graph field (control) |
+| Case Identity | columns | Yes | Case ID, patient name and ID, mode, case status, and start date | Read-only summary | ENT-monitoring-case.id, ENT-patient.name, ENT-patient.anonymized_id, ENT-monitoring-case.mode, ENT-monitoring-case.status, ENT-monitoring-case.started_on |
+| Activity Summary | columns | Yes | Last patient log, logged-day count, latest severity, scan count, last advice, and next/current advice state | Derived (REQ-037-082) | ENT-monitoring-case.last_patient_log_at, ENT-monitoring-case.logged_days, ENT-monitoring-case.latest_severity, ENT-monitoring-case.scan_count, ENT-monitoring-case.last_advice_at, ENT-monitoring-advice-window.availability |
+| Assignment Summary | columns | Conditional | Assigned provider, assignment state, assignment type, assignment date, and withdrawal indicator | Advice cases only | ENT-monitoring-provider-assignment.provider_id, ENT-monitoring-provider-assignment.status, ENT-monitoring-provider-assignment.assignment_type, ENT-monitoring-provider-assignment.assigned_at, ENT-monitoring-provider-assignment.withdrawal_reason |
+| Assignment Type | badge | Conditional | Initial or reassignment | Advice cases only | ENT-monitoring-provider-assignment.assignment_type |
+| Assign Provider | action | Conditional | Opens provider selector | Pending states only (REQ-037-094) | no graph field (control) |
+| Share Case Preview | action | Conditional | Creates a read-only preview for a candidate provider before assignment | Pending assignment or reassignment only (REQ-037-094) | no graph field (control) |
+| Preview Contents | review component | Conditional | Shows the exact read-only case overview and clinical summary that the candidate provider will receive | Must be reviewed before sharing; excludes patient direct-contact details and Admin-only audit/assignment data (REQ-037-071) | ENT-monitoring-case-preview.dataset_version |
+| Preview Expiry | duration selector | Conditional | Admin-selected lifetime for the preview link at share time | Required before link generation; any duration up to a maximum of 14 days | ENT-monitoring-case-preview.expires_at |
+| Preview Status | status | Conditional | Candidate provider, created by/time, expiry time, active/expired/revoked state, and last viewed time | Read-only except revoke action | ENT-monitoring-case-preview.candidate_provider_id, ENT-monitoring-case-preview.created_by, ENT-monitoring-case-preview.created_at, ENT-monitoring-case-preview.expires_at, ENT-monitoring-case-preview.state, ENT-monitoring-case-preview.last_viewed_at |
 
 **Business Rules**:
 
-- Reassignment cases display withdrawal reason and prior assignment history.
-- The mode tabs are a primary partition: provider-intervention controls and advice fields do not appear as applicable on self-monitoring rows.
-- Admin chooses the preview-link expiry each time Share is used, any time up to 14 days. The preview is read-only, scoped to the minimum case information needed for an acceptance decision, audited, revocable, and does not grant assignment access.
-- FR-037 does not embed a chat surface. Admin shares the preview link through an existing communication channel and records the eventual assignment decision in this screen.
-- Assignment eligibility and Admin permissions are validated before save. An eligible provider is one that is Active under FR-015 with setup complete; providers do not opt in separately to advice cases.
-- Admin can search by patient name, patient ID, case ID, assigned provider, or candidate provider; filter by status, provider, advice state, and date; and sort by updated date, start date, last patient log, advice availability, patient, or provider.
+- Reassignment cases display withdrawal reason and prior assignment history. (REQ-037-067)
+- The mode tabs are a primary partition: provider-intervention controls and advice fields do not appear as applicable on self-monitoring rows. (REQ-037-070)
+- Admin chooses the preview-link expiry each time Share is used, any time up to 14 days. The preview is read-only, scoped to the minimum case information needed for an acceptance decision, audited, revocable, and does not grant assignment access. (REQ-037-018, REQ-037-051)
+- FR-037 does not embed a chat surface. Admin shares the preview link through an existing communication channel and records the eventual assignment decision in this screen. (REQ-037-019)
+- Assignment eligibility and Admin permissions are validated before save. An eligible provider is one that is Active under FR-015 with setup complete; providers do not opt in separately to advice cases. (REQ-037-068)
+- Admin can search by patient name, patient ID, case ID, assigned provider, or candidate provider; filter by status, provider, advice state, and date; and sort by updated date, start date, last patient log, advice availability, patient, or provider. (REQ-037-088)
 
 #### Screen 13: Admin Monitoring Case Overview and Configuration
 
 **Purpose**: Gives Admin the overall view and operational controls for one case, routing individual patient logs and provider advice into dedicated detail screens.
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Case Header | component | Yes | Case ID, patient identity and contact summary, mode, status, dates, completion/conversion state, and linked inquiry | Permission controlled |
-| Intake and Medical Data | component | Yes | All intake answers and the advice-mode medical questionnaire visible in the patient case experience | Permission controlled; questionnaire conditional by mode |
-| Monitoring Dashboard | component | Yes | Patient-parity summary, severity trend, logged-day count, scan history, and case status | Permission controlled |
-| Monitoring Calendar | calendar | Yes | Full day-by-day patient calendar plus separate provider-advice entries | Patient logs open Screen 14A; provider advice opens Screen 14B; author type must be distinguishable |
-| Assignment History | timeline | Conditional | Provider assignment lifecycle | Immutable events |
-| Assignment Controls | component | Conditional | Candidate preview sharing, expiry/revocation, assignment, reassignment, and provider withdrawal context | Advice mode only; permission controlled |
-| Advice Window History | list | Conditional | Window start, submitted/available/expired state, linked advice record, and supersession relationship | Advice mode only; linked advice opens Screen 14B |
-| Export and Conversion | component | Yes | PDF versions, export state, conversion summary, linked FR-003 inquiry, and provenance | Permission controlled |
-| Edit Reason | textarea | Conditional | Reason for Admin mutation | Required before save |
-| Advice Cadence | select | Yes | Weekly or bi-weekly | Global active configuration; default weekly (7 days); applies to cases created after the change only |
-| Audit History | timeline | Yes | Before and after values, actor, reason, time | Read-only |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Case Header | component | Yes | Case ID, patient identity and contact summary, mode, status, dates, completion/conversion state, and linked inquiry | Permission controlled | ENT-monitoring-case.id, ENT-patient.name, ENT-patient.email, ENT-patient.phone, ENT-monitoring-case.mode, ENT-monitoring-case.status, ENT-monitoring-case.started_on, ENT-monitoring-case.completed_on, ENT-monitoring-case.converted_inquiry_id |
+| Intake and Medical Data | component | Yes | All intake answers and the advice-mode medical questionnaire visible in the patient case experience | Permission controlled; questionnaire conditional by mode | ENT-monitoring-case.nature_of_concern, ENT-monitoring-case.duration, ENT-monitoring-case.previous_treatments, ENT-monitoring-case.starting_severity, ENT-monitoring-case.lifestyle_factors, ENT-monitoring-case.additional_notes, ENT-monitoring-case.initial_photos, ENT-monitoring-case.initial_scan_id, ENT-monitoring-case.medical_questionnaire_snapshot |
+| Monitoring Dashboard | component | Yes | Patient-parity summary, severity trend, logged-day count, scan history, and case status | Permission controlled | ENT-monitoring-case.severity_trend, ENT-monitoring-case.logged_days, ENT-monitoring-case.scan_count, ENT-monitoring-scan.id, ENT-monitoring-case.status |
+| Monitoring Calendar | calendar | Yes | Full day-by-day patient calendar plus separate provider-advice entries | Patient logs open Screen 14A; provider advice opens Screen 14B; author type must be distinguishable | ENT-monitoring-entry.log_date, ENT-monitoring-scan.captured_at, ENT-monitoring-advice.submitted_at |
+| Assignment History | timeline | Conditional | Provider assignment lifecycle | Immutable events (REQ-037-085) | ENT-monitoring-provider-assignment.provider_id, ENT-monitoring-provider-assignment.assignment_type, ENT-monitoring-provider-assignment.status, ENT-monitoring-provider-assignment.assigned_at, ENT-monitoring-provider-assignment.ended_at, ENT-monitoring-provider-assignment.withdrawal_reason |
+| Assignment Controls | component | Conditional | Candidate preview sharing, expiry/revocation, assignment, reassignment, and provider withdrawal context | Advice mode only; permission controlled | ENT-monitoring-case-preview.expires_at, ENT-monitoring-case-preview.state, ENT-monitoring-provider-assignment.provider_id, ENT-monitoring-provider-assignment.withdrawal_reason |
+| Advice Window History | list | Conditional | Window start, submitted/available/expired state, linked advice record, and supersession relationship | Advice mode only; linked advice opens Screen 14B | ENT-monitoring-advice-window.start_date, ENT-monitoring-advice-window.state, ENT-monitoring-advice-window.advice_id, ENT-monitoring-advice-window.superseded_window_id |
+| Export and Conversion | component | Yes | PDF versions, export state, conversion summary, linked FR-003 inquiry, and provenance | Permission controlled | ENT-monitoring-export.report_version, ENT-monitoring-export.generation_state, ENT-monitoring-export.pdf_media, ENT-monitoring-conversion.inquiry_id, ENT-monitoring-conversion.field_mapping_version |
+| Edit Reason | textarea | Conditional | Reason for Admin mutation | Required before save | ENT-monitoring-audit-entry.reason |
+| Advice Cadence | select | Yes | Weekly or bi-weekly | Global active configuration; default weekly (7 days); applies to cases created after the change only | no graph field (setting SET-advice-cadence) |
+| Audit History | timeline | Yes | Before and after values, actor, reason, time | Read-only | ENT-monitoring-audit-entry.before_value, ENT-monitoring-audit-entry.after_value, ENT-monitoring-audit-entry.actor_id, ENT-monitoring-audit-entry.reason, ENT-monitoring-audit-entry.occurred_at |
 
 **Business Rules**:
 
-- Admin may edit any case information, but no edit may erase historical values or provenance.
+- Admin may edit any case information, but no edit may erase historical values or provenance. (REQ-037-072)
 - Admin sees every field and dated record available in the patient case view, with additional assignment, advice-window, audit, preview-sharing, export, and conversion controls according to permission.
 - Patient logs and provider advice remain separate record types and separate calendar entries even when they occur on the same date.
 - Screen 13 is the overall case screen; full daily-log and advice-record fields are presented only on Screens 14A and 14B.
-- Cadence changes apply prospectively to newly created cases only. Cases already created keep the cadence captured at their creation, so no in-flight advice window is shortened, extended, or recomputed, and no advice entry is retroactively created or removed.
-- The cadence selector is a single global setting; Admin cannot set a case-specific cadence.
+- Cadence changes apply prospectively to newly created cases only. Cases already created keep the cadence captured at their creation, so no in-flight advice window is shortened, extended, or recomputed, and no advice entry is retroactively created or removed. (REQ-037-008)
+- The cadence selector is a single global setting; Admin cannot set a case-specific cadence. (REQ-037-008)
 
 #### Screen 14A: Admin Daily Log Detail
 
 **Purpose**: Gives Admin the complete patient-authored record for one selected calendar day and the audited correction controls for that record.
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Case and Date Context | header | Yes | Patient name, case ID, selected date, and navigation back to Screen 13 | Permission controlled |
-| Severity | editable value | Yes | Patient severity for the selected log | Integer 1 to 10; edit reason required on change |
-| Notes | editable text | No | Patient-authored observation | Maximum 3000 characters; edit reason required on change |
-| Photos | editable gallery | No | Images attached to the selected daily log | Authorized media; changes audited |
-| Head Scan | editable component | No | V1 head scan photo set linked to the selected log | Authorized media; changes audited |
-| Record Metadata | component | Yes | Author, created time, latest update time, and current version | Read-only |
-| Edit Reason | textarea | Conditional | Reason for correcting the selected log | Required before any save |
-| Version History | timeline | Yes | Before/after values, Admin actor, reason, and timestamp | Read-only; immutable |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Case and Date Context | header | Yes | Patient name, case ID, selected date, and navigation back to Screen 13 | Permission controlled | ENT-patient.name, ENT-monitoring-case.id, ENT-monitoring-entry.log_date |
+| Severity | editable value | Yes | Patient severity for the selected log | Integer 1 to 10; edit reason required on change | ENT-monitoring-entry.severity |
+| Notes | editable text | No | Patient-authored observation | Maximum 3000 characters; edit reason required on change | ENT-monitoring-entry.notes |
+| Photos | editable gallery | No | Images attached to the selected daily log | Authorized media; changes audited | ENT-monitoring-entry.photos |
+| Head Scan | editable component | No | V1 head scan photo set linked to the selected log | Authorized media; changes audited | ENT-monitoring-entry.scan_id |
+| Record Metadata | component | Yes | Author, created time, latest update time, and current version | Read-only | ENT-monitoring-entry.created_by, ENT-monitoring-entry.submitted_at, ENT-monitoring-entry.updated_at, ENT-monitoring-entry.version |
+| Edit Reason | textarea | Conditional | Reason for correcting the selected log | Required before any save | ENT-monitoring-audit-entry.reason |
+| Version History | timeline | Yes | Before/after values, Admin actor, reason, and timestamp | Read-only; immutable | ENT-monitoring-audit-entry.before_value, ENT-monitoring-audit-entry.after_value, ENT-monitoring-audit-entry.actor_id, ENT-monitoring-audit-entry.reason, ENT-monitoring-audit-entry.occurred_at |
 
 **Business Rules**:
 
@@ -566,19 +566,19 @@ flowchart TD
 
 **Purpose**: Gives Admin the complete provider-advice record, its advice-window context, and audited correction history without attaching it to a patient log.
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Case and Window Context | header | Yes | Patient name, case ID, advice-window start date/state, and navigation back to Screen 13 | Permission controlled |
-| Advice Paragraph | editable text | Conditional | Submitted provider advice | Maximum 1500 characters; edit reason required on Admin change |
-| Advice Window Detail | component | Yes | Available/submitted/expired state, supersession relationship, and linked advice identity | Read-only window history |
-| Advice Metadata | component | Conditional | Provider author, original submission time, edited cue, latest-edit time, and current version | Submitted advice only |
-| Edit Reason | textarea | Conditional | Reason for correcting submitted advice | Required before any Admin save |
-| Version History | timeline | Conditional | Original and edited content, actor, reason, and timestamp | Submitted advice only; read-only; immutable |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Case and Window Context | header | Yes | Patient name, case ID, advice-window start date/state, and navigation back to Screen 13 | Permission controlled | ENT-patient.name, ENT-monitoring-case.id, ENT-monitoring-advice-window.start_date, ENT-monitoring-advice-window.state |
+| Advice Paragraph | editable text | Conditional | Submitted provider advice | Maximum 1500 characters; edit reason required on Admin change | ENT-monitoring-advice.paragraph |
+| Advice Window Detail | component | Yes | Available/submitted/expired state, supersession relationship, and linked advice identity | Read-only window history | ENT-monitoring-advice-window.state, ENT-monitoring-advice-window.superseded_window_id, ENT-monitoring-advice-window.advice_id |
+| Advice Metadata | component | Conditional | Provider author, original submission time, edited cue, latest-edit time, and current version | Submitted advice only | ENT-monitoring-advice.author_id, ENT-monitoring-advice.submitted_at, ENT-monitoring-advice.is_edited, ENT-monitoring-advice.last_edited_at, ENT-monitoring-advice.versions |
+| Edit Reason | textarea | Conditional | Reason for correcting submitted advice | Required before any Admin save | ENT-monitoring-audit-entry.reason |
+| Version History | timeline | Conditional | Original and edited content, actor, reason, and timestamp | Submitted advice only; read-only; immutable | ENT-monitoring-audit-entry.before_value, ENT-monitoring-audit-entry.after_value, ENT-monitoring-audit-entry.actor_id, ENT-monitoring-audit-entry.reason, ENT-monitoring-audit-entry.occurred_at, ENT-monitoring-advice.versions |
 
 **Business Rules**:
 
 - Screen 14B owns advice-record detail; advice never appears as a field or annotation inside Screen 14A.
-- Admin edits preserve the provider as original author, retain every prior version, and surface the edited cue and latest-edit timestamp.
+- Admin edits preserve the provider as original author, retain every prior version, and surface the edited cue and latest-edit timestamp. (REQ-037-074)
 
 ---
 
@@ -586,38 +586,43 @@ flowchart TD
 
 ### General Module Rules
 
-- **Rule 1**: A patient may have one active case per monitoring type; an active FR-037 case does not block an active FR-038 case.
-- **Rule 2**: Monitoring mode is chosen at creation and cannot change mid-case.
-- **Rule 3**: Previous monitoring-case history is not attached to a newly created monitoring case, in FR-037 or FR-038. History is linked only through conversion, and only to the destination of that case type: an FR-003 inquiry for hair-loss monitoring, an FR-011 standalone aftercare request for transplant-progress monitoring.
-- **Rule 4**: Pending provider assignment or reassignment never blocks patient logging.
-- **Rule 5**: Advice cadence is Admin-configurable as weekly or bi-weekly, implemented as minimum intervals of 7 or 14 days. The default is weekly (7 days). The setting is **global** — one value for the whole app, with no per-case, per-provider, or per-patient override.
-- **Rule 5a**: A cadence change applies **only to cases created after the change**. Each case captures the active cadence value at creation and keeps it for the entire case lifetime, including through reassignment. An existing case never switches cadence mid-flight, so a partly elapsed advice window is never recomputed. A patient who already has an active case receives the new cadence on their next case.
-- **Rule 5b**: An advice window becomes available on its calculated start date and otherwise has no deadline. The first window opens one cadence period (7 or 14 days) after the provider is first assigned. After a reassignment the replacement provider continues the existing window schedule and receives the next window date. The provider may submit its one advice entry at any later time until submission or until the next calculated window opens. If a successor opens first, only the older unsubmitted window expires; the successor becomes the sole actionable window, and both states remain visible together.
-- **Rule 5c**: Provider advice is a separate provider-authored case-calendar record, never an attachment or annotation on a patient log. Submitted advice may be edited with immutable version history; patient, provider, and Admin views must show an edited cue and latest-edit timestamp.
-- **Rule 5d**: Before assignment or reassignment, Admin may generate a read-only case-preview link for a candidate provider. Admin must select its expiry at share time, any time up to 14 days. Preview access is audited, revocable, scoped to acceptance-decision information, and grants neither assignment nor ongoing case access. No FR-037 chat screen is created for this interaction.
-- **Rule 6**: Completion and conversion are terminal case outcomes; a converted monitoring case remains distinct from the inquiry.
-- **Rule 7**: If the exclusive assigned provider explicitly declines the converted inquiry before creating a quote, FR-003 automatically removes the exclusive-provider restriction and runs normal distribution exactly once. This decline fallback requires no patient release action. Inquiry or quote expiry remains governed by FR-003/FR-004 and does not trigger this rule.
-- **Rule 8**: Monitoring has no required daily frequency and no overdue state. It also has no logging cadence, no milestones, and no patient reminders; those are aftercare-package mechanics excluded by the Service Boundary in Module Scope. The only cadence in this FR is the provider advice window in Rule 5, which limits the provider, not the patient.
-- **Rule 9**: Every monitoring entry carries a submission timestamp. Where a date holds more than one entry, the latest-timestamped entry on that date is authoritative for that date's severity in the trend, latest-severity, and PDF summary calculations. Superseded entries remain stored, visible, and auditable.
-- **Rule 10**: Provider-advice mode cannot be chosen while no Inquiry-context questionnaire set is active. Admin sees the same system-level warning FR-025 shows when no active Inquiry set exists, and self-monitoring remains available.
+- **Rule 1**: A patient may have one active case per monitoring type; an active FR-037 case does not block an active FR-038 case. (REQ-037-032)
+- **Rule 2**: Monitoring mode is chosen at creation and cannot change mid-case. (REQ-037-002)
+- **Rule 3**: See REQ-037-024.
+- **Rule 4**: See REQ-037-004.
+- **Rule 5**: Advice cadence is Admin-configurable as weekly or bi-weekly, implemented as minimum intervals of 7 or 14 days. The default is weekly (7 days). The setting is **global** — one value for the whole app, with no per-case, per-provider, or per-patient override. (REQ-037-008)
+- **Rule 5a**: A cadence change applies **only to cases created after the change**. Each case captures the active cadence value at creation and keeps it for the entire case lifetime, including through reassignment. An existing case never switches cadence mid-flight, so a partly elapsed advice window is never recomputed. A patient who already has an active case receives the new cadence on their next case. (REQ-037-008)
+- **Rule 5b**: An advice window becomes available on its calculated start date and otherwise has no deadline. The first window opens one cadence period (7 or 14 days) after the provider is first assigned. After a reassignment the replacement provider continues the existing window schedule and receives the next window date. The provider may submit its one advice entry at any later time until submission or until the next calculated window opens. If a successor opens first, only the older unsubmitted window expires; the successor becomes the sole actionable window, and both states remain visible together. (REQ-037-013)
+- **Rule 5c**: Provider advice is a separate provider-authored case-calendar record, never an attachment or annotation on a patient log. Submitted advice may be edited with immutable version history; patient, provider, and Admin views must show an edited cue and latest-edit timestamp. (REQ-037-014, REQ-037-015)
+- **Rule 5d**: Before assignment or reassignment, Admin may generate a read-only case-preview link for a candidate provider. Admin must select its expiry at share time, any time up to 14 days. Preview access is audited, revocable, scoped to acceptance-decision information, and grants neither assignment nor ongoing case access. No FR-037 chat screen is created for this interaction. (REQ-037-018, REQ-037-051, REQ-037-019)
+- **Rule 6**: Completion and conversion are terminal case outcomes; a converted monitoring case remains distinct from the inquiry. (REQ-037-053, REQ-037-062)
+- **Rule 7**: If the exclusive assigned provider explicitly declines the converted inquiry before creating a quote, FR-003 automatically removes the exclusive-provider restriction and runs normal distribution exactly once. This decline fallback requires no patient release action. Inquiry or quote expiry remains governed by FR-003/FR-004 and does not trigger this rule. (REQ-037-029)
+- **Rule 8**: Monitoring has no required daily frequency and no overdue state. It also has no logging cadence, no milestones, and no patient reminders; those are aftercare-package mechanics excluded by the Service Boundary in Module Scope. The only cadence in this FR is the provider advice window in Rule 5, which limits the provider, not the patient. (REQ-037-012, REQ-037-084)
+- **Rule 9**: Every monitoring entry carries a submission timestamp. Where a date holds more than one entry, the latest-timestamped entry on that date is authoritative for that date's severity in the trend, latest-severity, and PDF summary calculations. Superseded entries remain stored, visible, and auditable. (REQ-037-020)
+- **Rule 10**: See REQ-037-086.
+- Provider advice is a limited free service, not a full consultation. (REQ-037-083)
 
 ### Data & Privacy Rules
 
 - Monitoring entries, medical answers, scans, advice, assignments, and exports are medical data. Their encryption in transit and at rest is the single platform-wide security Rule in the system PRD; this FR keeps no separate encryption requirement.
-- Access is limited to the patient, authorized Admin users, and the currently assigned provider for advice-mode cases.
-- Providers see only an anonymized patient identifier on every FR-037 screen for the whole case lifetime. FR-037 has no payment event, so no de-anonymization trigger exists in this FR; Admin retains full identity visibility.
+- Access is limited to the patient, authorized Admin users, and the currently assigned provider for advice-mode cases. (REQ-037-025)
+- Providers see only an anonymized patient identifier on every FR-037 screen for the whole case lifetime. FR-037 has no payment event, so no de-anonymization trigger exists in this FR; Admin retains full identity visibility. (REQ-037-028, REQ-037-083)
 - Provider access ends immediately on withdrawal, reassignment away, case completion, or conversion.
 - Case records, entries, advice, assignment history, conversion provenance, and PDF exports follow the single platform-wide retention Rule in the system PRD (one 10-year period for all record types); this FR keeps no separate retention period.
 - Raw monitoring scan media is medical data and follows the same Rule. No shorter raw-media lifecycle applies.
-- Every view, export, edit, assignment, withdrawal, and conversion of medical data is audited.
+- Every view, export, edit, assignment, withdrawal, and conversion of medical data is audited. (REQ-037-026)
 - Download links for generated PDFs follow the single platform-wide download-link Rule in the system PRD (links expire and check the requester's permission); this FR keeps no separate rule for them.
-- Pre-assignment preview links must use an unguessable token, expire at the Admin-selected time, support revocation, expose only the approved preview dataset, and record creation, access, expiry, and revocation events.
+- Pre-assignment preview links must use an unguessable token, expire at the Admin-selected time, support revocation, expose only the approved preview dataset, and record creation, access, expiry, and revocation events. (REQ-037-051)
+- Retain raw scan media for the platform-wide retention period set in the system PRD; storage tiering may move it to cold storage but must not delete it earlier.
+- Never expose withdrawal reasons to another provider unless Admin includes an appropriate operational note. (REQ-037-066)
+- Recheck authorization on every signed media and PDF request.
+- Scan uploads and generated PDFs for malware before release.
 
 ### Admin Editability Rules
 
 **Editable by Admin**:
 
-- All patient-supplied monitoring information, logs, severity ratings, scan metadata, assignment state, advice records, conversion links, and status where operational correction is required.
+- All patient-supplied monitoring information, logs, severity ratings, scan metadata, assignment state, advice records, conversion links, and status where operational correction is required. (REQ-037-072)
 - Provider assignment and reassignment.
 - Advice cadence selection between weekly and bi-weekly.
 
@@ -629,122 +634,30 @@ flowchart TD
 
 **Configurable with Restrictions**:
 
-- Admin edits require permission, a reason, and version history; edits cannot delete audit evidence.
+- Admin edits require permission, a reason, and version history; edits cannot delete audit evidence. (REQ-037-027)
 - Cadence can use only the approved weekly and bi-weekly values in this release.
 
----
+### Integration Rules
 
-## Success Criteria
+- FR-003 must accept the system-generated PDF as an additional document even if its ordinary patient upload UI remains image/video-only. (REQ-037-065)
+- FR-004 restricts initial quote creation to the assigned monitoring provider when conversion carries an active assignment. (REQ-037-029)
 
-### Patient Experience Metrics
+### Notification Events
 
-- 95% of valid monitoring-case creations complete without support intervention.
-- 100% of active cases allow logging during pending assignment or reassignment.
-- 100% of successful conversions pre-fill compatible FR-003 fields and permit editing before submission.
-
-### Provider Efficiency Metrics
-
-- Assigned case history loads within 3 seconds at p95 excluding original-media download.
-- 100% of advice submissions enforce the configured cadence.
-- 100% of withdrawals remove provider access and create a reassignment queue item.
-
-### Admin Management Metrics
-
-- 100% of advice-mode cases expose clear initial-assignment or reassignment state.
-- 100% of Admin edits retain actor, reason, timestamp, before-value, and after-value.
-
-### System Performance Metrics
-
-- Daily-log saves complete within 2 seconds at p95 under normal load.
-- PDF generation completes within 60 seconds for 95% of cases and is safely retryable.
-- Duplicate conversion requests produce only one FR-003 inquiry.
-
-### Business Impact Metrics
-
-- Measure conversion from monitoring to FR-003 inquiry without counting case completion as treatment conversion.
-- Track self-mode versus advice-mode engagement and provider effort separately.
+- FR-020 event candidates: `monitoring.assignment_pending`, `monitoring.provider_assigned`, `monitoring.provider_withdrawn`, `monitoring.provider_reassigned`, `monitoring.advice_posted`, `monitoring.completed`, `monitoring.export_ready`, and `monitoring.converted_to_inquiry`. `monitoring.completed` and `monitoring.export_ready` are shared with FR-038. (REQ-037-079)
+- Implementation must validate final notification copy during technical design.
 
 ---
 
 ## Dependencies
-
-### Internal Dependencies (Other FRs/Modules)
 
 - **FR-002**: V1 head scan photo-set capture and quality validation.
 - **FR-003**: Service gateway, inquiry intake, active-inquiry rule, provider distribution, and conversion destination.
 - **FR-004**: Quote creation for the exclusive assigned provider after conversion.
 - **FR-020**: Notification event rules and delivery preferences.
 - **FR-025**: Active Inquiry-context medical questionnaire for advice mode and conversion reconfirmation.
-- **FR-038**: Sibling monitoring-type case; an active FR-038 case does not block an active FR-037 case, and both reuse shared monitoring entities discriminated by case type. FR-037 owns the shared entities; FR-038 extends them with case type `transplant_progress` and its own fields.
+- **FR-038**: Sibling monitoring-type case; an active FR-038 case does not block an active FR-037 case.
 
-### External Dependencies (APIs, Services)
-
-- Secure object storage and signed media access.
-- PDF rendering service with image embedding.
-- Push and email delivery providers through S-03.
-
-### Data Dependencies
-
-- Patient profile and consent state.
-- Monitoring case, entry, scan, assignment, advice, export, and conversion records.
-- FR-025 questionnaire version and response snapshot.
-- FR-003 inquiry schema and provider-distribution eligibility.
-
----
-
-## Assumptions
-
-### User Behavior Assumptions
-
-- Patients understand severity 1 means least severe and 10 means most severe.
-- Patients may log irregularly and are not penalized for gaps.
-- Patients review pre-filled information before converting.
-
-### Technology Assumptions
-
-- V1 uses standardized photo sets rather than true 3D models.
-- PDF generation can run asynchronously and notify the patient when ready.
-- Conversion can use an idempotency key across monitoring and inquiry services.
-
-### Business Process Assumptions
-
-- Provider advice is a limited free service, not a full consultation.
-- Admin selects providers manually for advice-mode cases.
-- The provider assigned at conversion is eligible to receive the inquiry; if that provider has withdrawn or is not eligible, conversion continues and the case follows the no-assigned-provider path.
-
----
-
-## Implementation Notes
-
-### Technical Considerations
-
-- Use separate shared monitoring entities rather than FR-011 milestone-bound scan/task tables.
-- Model case lifecycle separately from advice assignment lifecycle.
-- Suggested case statuses: `active`, `completed`, `converted_to_inquiry`.
-- Suggested advice statuses: `not_requested`, `pending_assignment`, `assigned`, `pending_reassignment`, `ended`.
-- Use append-only versions for patient and Admin edits that affect clinical context.
-- Store the advice cadence on the case at creation rather than reading the global setting at advice time, so a later Admin change cannot move an in-flight window.
-- Retain raw scan media for the platform-wide retention period set in the system PRD; storage tiering may move it to cold storage but must not delete it earlier.
-
-### Integration Points
-
-- FR-003 receives compatible concern fields, selected scan, reconfirmed medical responses, and a generated PDF attachment.
-- FR-003 must accept the system-generated PDF as an additional document even if its ordinary patient upload UI remains image/video-only.
-- FR-004 restricts initial quote creation to the assigned monitoring provider when conversion carries an active assignment.
-- FR-020 event candidates: `monitoring.assignment_pending`, `monitoring.provider_assigned`, `monitoring.provider_withdrawn`, `monitoring.provider_reassigned`, `monitoring.advice_posted`, `monitoring.completed`, `monitoring.export_ready`, and `monitoring.converted_to_inquiry`. `monitoring.completed` and `monitoring.export_ready` are shared with FR-038.
-
-### Scalability Considerations
-
-- Paginate logs, scans, advice, and Admin queues.
-- Generate PDFs and media derivatives asynchronously.
-- Cache trend summaries while preserving source-entry accuracy.
-
-### Security Considerations
-
-- Recheck authorization on every signed media and PDF request.
-- Revoke provider media access when assignment ends.
-- Scan uploads and generated PDFs for malware before release.
-- Never expose withdrawal reasons to another provider unless Admin includes an appropriate operational note.
 
 ---
 
@@ -766,7 +679,7 @@ flowchart TD
 
 **Acceptance Scenarios**:
 
-1. Given advice mode and completed medical questionnaire, when the case activates, then it is pending Admin assignment and logging is enabled.
+1. Given advice mode and completed medical questionnaire, when the case activates, then it is pending Admin assignment and logging is enabled. (REQ-037-036)
 2. Given an assigned provider and a window whose start date has arrived, when no advice has been submitted and no successor window has opened, then the advice area remains available without a deadline.
 3. Given an unsubmitted available window, when its successor window opens, then the older window expires, the successor alone is actionable, and both appear stacked with distinct states.
 4. Given submitted advice, when it is saved, then a separate provider-authored calendar entry is created and no patient log record is changed.
@@ -779,7 +692,7 @@ flowchart TD
 
 **Acceptance Scenarios**:
 
-1. Given an active monitoring case and no active inquiry, when conversion opens, then compatible data is pre-filled and every copied field is editable.
+1. Given an active monitoring case and no active inquiry, when conversion opens, then compatible data is pre-filled and every copied field is editable. (REQ-037-058)
 2. Given multiple scans, when conversion opens, then the latest is selected by default and another scan or retake is available.
 3. Given successful inquiry submission, then the monitoring case becomes converted, the inquiry remains distinct, and the PDF plus provenance link are attached.
 4. Given an assigned advice provider, then only that provider initially receives quote access; given none, normal FR-003 distribution applies.
@@ -796,10 +709,10 @@ flowchart TD
 - Provider withdraws while the patient is preparing conversion, or the assigned provider is not eligible at conversion; conversion continues and the inquiry follows normal FR-003 distribution.
 - Latest scan fails quality validation and patient selects an earlier valid scan.
 - PDF generation fails after case completion and succeeds on retry.
-- Conversion is retried after a network timeout without creating duplicate inquiries.
+- Conversion is retried after a network timeout without creating duplicate inquiries. (REQ-037-031)
 - Patient starts conversion but exits before submission; monitoring remains active.
 - Exclusive provider declines the converted inquiry before quote creation; normal FR-003 distribution runs once, while expiry without a decline remains on the existing expiry path.
-- Admin corrects a severity value after PDF generation; the PDF is versioned and regenerated.
+- Admin corrects a severity value after PDF generation; the PDF is versioned and regenerated. (REQ-037-056)
 
 ---
 
@@ -849,45 +762,13 @@ flowchart TD
 - **REQ-037-030**: Monitoring MUST remain active if FR-003 submission fails and MUST terminate only after successful conversion commit or explicit completion.
 - **REQ-037-031**: Conversion MUST be idempotent and MUST NOT create duplicate inquiries.
 
-### Marking Unclear Requirements
-
-No unresolved product requirements remain for Draft creation. An eligible advice provider is one that is Active under FR-015 with setup complete; there is no separate opt-in for advice cases. Implementation must validate final notification copy during technical design.
-
----
-
-## Key Entities
-
-FR-037 owns these monitoring entities. FR-038 shares them and extends the monitoring case with case type `transplant_progress` and its own transplant-specific fields; the destination of a conversion depends on the case type.
-
-1. **MonitoringCase**: Patient, type `hair_loss`, mode, case status, start/completion dates, intake snapshot, cadence-at-creation snapshot for advice mode, and conversion link.
-2. **MonitoringEntry**: Patient-authored case log, log date, submission timestamp, severity, notes, photos, creator, and version history. The latest timestamp on a date is authoritative for that date's derived severity.
-3. **MonitoringScan**: Case/entry link, V1 photo-set media references, quality state, and capture timestamp.
-4. **MonitoringProviderAssignment**: Case, provider, assignment type, status, dates, withdrawal reason, and Admin actor.
-5. **MonitoringAdviceWindow**: Case, cadence snapshot, calculated start date, available/submitted/expired state, superseded-window link, and linked advice record.
-6. **MonitoringAdvice**: Separate provider-authored case-calendar record with assignment, advice-window key, paragraph, author, original submission timestamp, edited state, latest-edit timestamp, and immutable versions; no patient-log foreign-key ownership.
-7. **MonitoringCasePreview**: Case, candidate provider, approved preview dataset/version, token digest, created-by/time, Admin-selected expiry, access events, revocation state, and assignment-neutral outcome.
-8. **MonitoringExport**: Case, report version, covered date range, metrics, PDF media reference, and generation state.
-9. **MonitoringConversion**: Source case, destination inquiry, selected scan, field mapping version, PDF export, provider-routing rule, and idempotency key.
-10. **MonitoringAuditEntry**: Admin correction history for a case with actor, reason, time, before-value, after-value, and the item corrected; the history names the item changed.
-
 ---
 
 ## Appendix: Change Log
 
 | Version | Date | Changes | Author |
 | --- | --- | --- | --- |
-| 2.1 | 2026-11-20 | Requirements graph programme baseline: owner rulings applied. Main changes: the first advice window opens one cadence period after the provider is first assigned and a replacement provider continues the same schedule; default advice cadence is weekly; preview-link expiry may be any time up to 14 days; provider advice is included in the completion PDF only; provider-advice mode cannot be chosen while no Inquiry questionnaire set is active; head scan guidance offers five views with at least one required; a converted case is read-only like a completed case; the exclusive-routing path bypasses FR-003 country and provider-selection matching and the 10-provider cap; a withdrawn or ineligible provider at conversion sends the inquiry to normal FR-003 distribution; eligible provider means FR-015 Active with setup complete; provider screens 10A and 10B show the anonymized patient ID and admin screens 14A and 14B show patient name and case ID; encryption, retention (one 10-year period), download-link expiry and fixed-in-code controls now follow platform-wide rules in the system PRD; previous-history rule covers FR-037 and FR-038 destinations; FR-037 owns the shared monitoring entities that FR-038 extends; event `monitoring.converted` renamed `monitoring.converted_to_inquiry`; FR-026 and FR-028 dependency lines removed; search, filter, sort, withdrawal reason and confirmation stated as Screen rules; Change Request CR-FR037-20260820-01 id added to rows 1.8 and 1.9 and those rows put in version order. | Product Team |
-| 2.0 | 2026-08-20 | Verification completed after resolving the FR-037 review findings and cross-FR integration follow-ups through v1.9; Product Owner approved the resulting requirement scope and the document moved from Draft to Verified & Approved. | Product Team |
-| 1.9 | 2026-08-20 | Clarified the monitoring-conversion fallback: an explicit exclusive-provider decline before quote creation automatically and idempotently returns the inquiry to normal FR-003 distribution; removed the patient-release requirement and kept expiry on existing FR-003/FR-004 rules. See [Change Request CR-FR037-20260820-01](./change-request-2026-08-20-cross-fr-integration.md) | Product Team |
-| 1.8 | 2026-08-20 | Cross-FR sync (verification follow-up): added FR-003 exclusive-provider distribution override and FR-004 restricted-recipient quote mode for monitoring conversions (REQ-037-029/Business Rule 7); added FR-025 System-Triggered (Monitoring Advice) entry point; added `monitoring.*` events to the FR-020/FR-030 notification catalogs; added FR-038 as a dependency for symmetry. See [Change Request CR-FR037-20260820-01](./change-request-2026-08-20-cross-fr-integration.md) | Product Team |
-| 1.7 | 2026-08-20 | Verification fixes: provider view anonymized for the entire case lifetime (no payment trigger exists in FR-037); renamed the twice-monthly cadence to bi-weekly to match the 14-day interval; relabelled Step B inquiry-only fields as a read-only FR-003 handoff target; made the latest submission timestamp authoritative when one date holds several entries; synchronized the preview-link, advice-window, anonymization, and S-03/S-05 additions into system-prd.md | Product Team |
-| 1.6 | 2026-08-20 | Enforced anonymized patient identifiers on Provider monitoring screens until payment confirmation; aligned Admin daily-note validation to the patient 3000-character contract; corrected the S-05 module name and synchronized document metadata | Product Team |
-| 1.5 | 2026-08-20 | Split Provider single-case work into Screen 9 overview, Screen 10A daily-log detail, and Screen 10B advice detail; moved Provider withdrawal to Screen 11; renumbered the Admin list and overview to Screens 12-13; added corresponding Admin Screen 14A daily-log detail and Screen 14B advice detail | Product Team |
-| 1.4 | 2026-08-20 | Separated provider advice from patient log records; defined open-until-submitted advice windows, supersession expiry, and visible advice edits; added expiring pre-assignment provider previews without embedded chat; expanded provider search/filtering and patient-parity review; expanded Admin mode tabs, list fields, and full-detail controls | Product Team |
-| 1.3 | 2026-08-17 | Added the self-service vs aftercare service boundary (no reminders, cadence, milestones, or compliance state); aligned raw scan media retention to 7 years; bound the Duration field to the FR-003 enum; split conversion into Screen 7 Step A summary and Step B review with FR-003 handoff; made advice cadence global and snapshotted at case creation | Product Team |
-| 1.2 | 2026-08-17 | Grouped Screens 1-12 under explicit Patient Platform, Provider Platform, and Admin Platform ownership sections following verified multi-tenant FR conventions | Product Team |
-| 1.1 | 2026-08-17 | Consolidated all case-creation, monitoring, advice, reassignment, completion, export, exception, and conversion routes into one conditional lifecycle flow | Product Team |
-| 1.0 | 2026-08-17 | Initial Draft: self/advice modes, provider assignment and withdrawal, longitudinal logs, PDF export, and FR-003 conversion | Product Team |
+| 2.2 | 2026-11-22 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v2.1) and the change request CR-FR037-20260820-01 (`change-request-2026-08-20-cross-fr-integration.md`) are in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
 
 ---
 
@@ -896,12 +777,10 @@ FR-037 owns these monitoring entities. FR-038 shares them and extends the monito
 | Role | Name | Date | Signature/Approval |
 | --- | --- | --- | --- |
 | Product Owner | Joachim Trung Tuan | 2026-08-20 | ✅ Approved |
-| Technical Lead | Not recorded | — | Not recorded |
-| Stakeholder | Not recorded | — | Not recorded |
 
 ---
 
-**Document Version**: 2.1
+**Document Version**: 2.2
 **Template Version**: 2.0.0
-**Last Updated**: 2026-11-20
+**Last Updated**: 2026-11-22
 **Next Review**: Upon a major requirement change
