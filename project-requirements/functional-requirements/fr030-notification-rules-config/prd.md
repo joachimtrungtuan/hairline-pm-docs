@@ -41,7 +41,7 @@ This module extends the foundational OTP template management capabilities from F
 **Provider Platform (Web)**:
 
 - Providers receive notifications for inquiries, quote responses, booking confirmations, payment receipts, patient arrivals, aftercare escalations
-- Providers can manage team notification routing (which staff members receive which notification types)
+- Provider team notifications are routed by team role only, fixed by the system; the clinic cannot choose which team member receives which notification
 - Notifications delivered via email and web push notifications
 
 **Admin Platform (A-09)**:
@@ -78,7 +78,7 @@ This module extends the foundational OTP template management capabilities from F
 - Notification testing and preview capabilities
 - Delivery status tracking and retry management
 - Notification analytics and delivery metrics
-- Notification preference records: patient preferences (including messaging notification preferences), provider preferences and provider team routing; the profile screens in FR-001 and FR-032 show and edit them
+- Notification preference records: patient preferences (including messaging notification preferences) and provider preferences, which the profile screens in FR-001 and FR-032 show and edit; the provider team routing record is also owned here but no screen edits it
 
 **Out of Scope**:
 
@@ -87,6 +87,7 @@ This module extends the foundational OTP template management capabilities from F
 - Third-party notification platform integrations beyond email, SMS, push (e.g., WhatsApp, Telegram - future enhancement)
 - User-to-user notification forwarding or sharing
 - Notification content personalization based on AI/ML (future enhancement)
+- Per-member editing of provider team notification routing (which team member receives which notification): not in launch scope; at launch routing is by team role only and fixed by the system
 
 ### Entry Points
 
@@ -604,7 +605,7 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 
 - **SC-005**: Providers receive new inquiry notifications within 5 minutes of patient submitting inquiry for 95% of inquiries
 - **SC-006**: Providers receive payment confirmation notifications within 2 minutes of successful payment for 98% of payments
-- **SC-007**: Providers can configure team notification routing to distribute notifications to appropriate staff members
+- **SC-007**: Provider team notifications reach the team members whose role the system-fixed routing assigns them
 
 ### Admin Management Metrics
 
@@ -655,8 +656,8 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
   - **Integration point**: S-03 reads the active rules and templates from FR-030 for every event; FR-020 follows the general retry rule (General Module Rule 7)
 
 - **FR-032 / Module PR-06**: Profile & Settings Management
-  - **Why needed**: Provider notification preferences and provider team routing are owned by FR-030
-  - **Integration point**: The provider profile and settings screens show and edit those records; mandatory provider events are never suppressed by them
+  - **Why needed**: Provider notification preferences are owned by FR-030
+  - **Integration point**: The provider profile and settings screens show and edit those preferences, not the team routing (fixed by role, no screen edits it); mandatory provider events are never suppressed by the preferences
 
 - **FR-031 / Module A-09**: Admin Access Control & Permissions
   - **Why needed**: Notification configuration requires granular admin permissions (some admins configure rules, others only view analytics)
@@ -744,7 +745,7 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 - **Assumption 2**: Patients check notifications within 6 hours of delivery for time-sensitive events (quotes, payments, appointments)
 - **Assumption 3**: Admins will configure notification rules during initial platform setup and make incremental changes over time rather than frequent major reconfigurations
 - **Assumption 4**: Recipients will update their contact information (email, phone) promptly if notifications fail to deliver
-- **Assumption 5**: Providers will configure team notification routing to ensure critical notifications (new inquiries, patient arrivals) reach appropriate staff members
+- **Assumption 5**: Routing by team role, fixed by the system, is enough at launch to get critical notifications (new inquiries, patient arrivals) to appropriate staff members
 
 ### Technology Assumptions
 
@@ -990,7 +991,7 @@ Admin needs to monitor notification delivery performance to identify and resolve
 - **Entity 6 - Provider Notification Preferences**: One record per provider with on/off choices per category (quote, schedule, treatment start, aftercare, review, promotion/discount) and for email and in-app delivery. Mandatory provider events are never suppressed by it. Owned here; the provider profile and settings screens in FR-032 show and edit it
   - **Key attributes**: provider_id, quote_notifications, schedule_notifications, treatment_start_notifications, aftercare_notifications, review_notifications, promotion_notifications, email_enabled, push_enabled, last_updated_at
 
-- **Entity 7 - Provider Team Notification Routing**: Which provider team members receive which notifications, based on their role (team roles come from FR-009). Owned here; provider team screens show and edit it
+- **Entity 7 - Provider Team Notification Routing**: Which provider team members receive which notifications, based on their role (team roles come from FR-009). Owned here; the system fixes it by role, read by the delivery logic; no screen edits it
 
 ---
 
@@ -1018,6 +1019,7 @@ Admin needs to monitor notification delivery performance to identify and resolve
 | 2026-10-28 | 1.17 | Product Owner decision 2026-10-28 (FR-015 backend confirmations); no Change Request. Catalog sync with FR-020 v2.13: new Provider/Compliance entry `provider.login_email_changed` (admin changes the Owner login email in FR-015; email to the old and the new address; mandatory security notice, toggle locked), added to the non-disableable provider events and the FR-015 integration point. Follow-up the same day: catalog sync with the FR-020 v2.13 follow-up, the pre-acceptance `provider.status_cancellation_patient` text names the clinic ("[Clinic] is no longer available. Your other offers are still open." or "[Clinic] is no longer available. We are finding new offers for you.") | Claude (AI Assistant) |
 | 2026-11-20 | 1.18 | Requirements graph programme baseline: owner rulings applied. Main changes: FR-030 owns all notification preference records (patient, provider, team routing, messaging) and every event that produces a notification; event keys are final; one platform-wide quiet-hours setting replaces provider business hours; rate limit is admin-editable (default 10 per hour); one general retry rule (platform default 3 retries at 1 hour, admin may override per notification) replaces the 1/3/6 hour sequence; several rules per event with Add Rule and no Delete (rules are only switched off, locked events cannot be paused); new rules start as Draft; template names unique per event, channel and language; escalation condition is free text; Screen 1 gains analytics, failed-deliveries, quiet-hours, rate-limit and transplant-reminder fields and Screen 2 gains Critical - Cannot Opt Out; two new delivery statuses; audit Rules merged into REQ-030-020; new events quote.restored, monitoring.aftercare_conversion_started, payout.paused_problem_raised, payout.funds_released, payout.cancellation_charge_deducted; inquiry.cancelled excluded for providers with a live quote; treatment.completed patient copy gains the problem deadline and support link; provider.onboarding_requested and provider.document_expiration_warning marked not triggered at launch; monitoring.converted renamed monitoring.converted_to_inquiry; SMS rules marked future phase; Entry Point 2 dropped; FR-020 and FR-032 added as dependencies; added monitoring.converted_to_aftercare to the catalogue; cross-document reconciliation (retention, system rule citations). No Change Request | Claude (AI Assistant) |
 | 2026-11-22 | 1.19 | Owner answer of 2026-11-22: the email change code is its own notification event (account.email_change_code), added to the Account/Auth catalogue. | Claude (AI Assistant) |
+| 2026-11-22 | 1.20 | Owner ruling 2026-11-22: at launch, provider team notifications are routed by team role only, fixed by the system; the clinic cannot edit which team member receives which notification and no screen edits the routing (per-member editing is not in launch scope). Reworded the provider platform summary, preference-records line, SC-007, the FR-032 integration point, Assumption 5 and Entity 7; added the Out of Scope line. | Claude (AI Assistant) |
 
 ---
 

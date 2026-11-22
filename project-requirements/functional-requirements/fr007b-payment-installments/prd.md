@@ -185,10 +185,10 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 - **Trigger**: Before treatment starts (booking `Accepted` or `Confirmed`), the provider withdraws the accepted quote, drops out, or is suspended or deactivated, and an admin transfers the patient to a replacement provider through FR-006 Alternative Flow B5 by authoring a replacement quote in the same inquiry. A provider fault during `Aftercare` reassigns only the aftercare provider (FR-011) and does not change the installment plan
 - **Steps**:
   1. System cancels the remaining scheduled installments of the original booking
-  2. When the provider withdraws or drops out, the patient is refunded in full every installment already paid and pays no cancellation fee, and the replacement booking takes a new payment. A suspension or deactivation keeps the FR-006 provider-status placeholder (FR-006 Alternative Flow B4), which is not yet ruled: paid installments move with the patient as credit toward the replacement booking and any unused part is refunded
+  2. When the provider withdraws, drops out, or is suspended or deactivated (FR-006 Alternative Flows B4 and B5), the patient is refunded in full every installment already paid and pays no cancellation fee, and the replacement booking takes a new payment
   3. Any installment plan for the replacement booking takes its total, currency and exchange rate from the replacement quote's acceptance snapshot, never from the original snapshot or a live quote
-- **Outcome**: Patient continues with the replacement provider in the same inquiry. On a provider withdrawal or drop-out every paid installment is refunded in full and the replacement booking takes a new payment; on a suspension or deactivation the paid amount follows the FR-006 provider-status placeholder (not yet ruled)
-- **Boundary**: Exact credit, refund, fund-release and payment-allocation override mechanics are defined later in FR-007, FR-007B and FR-017
+- **Outcome**: Patient continues with the replacement provider in the same inquiry. On a provider withdrawal, drop-out, suspension or deactivation every paid installment is refunded in full, no cancellation fee applies, and the replacement booking takes a new payment
+- **Boundary**: Exact refund, fund-release and payment-allocation override mechanics are defined later in FR-007, FR-007B and FR-017
 
 ---
 
@@ -857,7 +857,7 @@ Patient requests booking cancellation after paying 2 of 4 installments; admin re
 
 - **REQ-007b-025**: System MUST copy the installment plan total, currency and exchange rate read-only from the FR-005 accepted snapshot through the FR-006 booking; the total already includes the accepted promotion and any patient promotion code; it MUST NOT be recomputed and MUST be shown with its currency on all installment screens
 - **REQ-007b-026**: System MUST allow first-installment retries only within the original FR-006 payment hold; `Payment Window Expired` applies only to that first payment step, and missed later installments MUST NOT cause `Payment Window Expired` or inquiry cancellation
-- **REQ-007b-027**: When the provider fails after acceptance, System MUST cancel remaining installments with no patient cancellation fee. On a provider withdrawal or drop-out, System MUST refund in full every installment already paid, and the replacement booking takes a new payment per FR-006 Alternative Flow B5. On a suspension or deactivation, paid installments follow the FR-006 provider-status placeholder (credit toward the replacement booking, any unused part refunded), which is not yet ruled
+- **REQ-007b-027**: When the provider fails after acceptance, System MUST cancel remaining installments with no patient cancellation fee. On a provider withdrawal, drop-out, suspension or deactivation, System MUST refund in full every installment already paid, and the replacement booking takes a new payment per FR-006 Alternative Flows B4 and B5
 
 ---
 
@@ -893,6 +893,7 @@ Patient requests booking cancellation after paying 2 of 4 installments; admin re
 | 2026-11-22 | 1.7 | Owner answer of 2026-11-22 (requirements graph programme, Phase 4 re-check): a defaulted installment plan notifies the admin, the patient and the provider. Main flow B2 step 7, the retry business rule, User Story acceptance scenario and REQ-007b-020 reworded. | Product Owner / Documentation |
 | 2026-11-22 | 1.8 | Alternative Flow B4 step 2 and REQ-007b-027 aligned with FR-006 Alternative Flow B5 and FR-007: a provider withdrawal or drop-out refunds every paid installment in full and the replacement booking takes a new payment; a suspension or deactivation keeps the provider-status placeholder (credit), not yet ruled | Product Owner / Documentation |
 | 2026-11-22 | 1.9 | Alternative Flow B4 Outcome line aligned with step 2 and REQ-007b-027: full refund on a provider withdrawal or drop-out, placeholder for suspension or deactivation | Product Owner / Documentation |
+| 2026-11-22 | 1.10 | Owner ruling 2026-11-22: a provider suspension or deactivation follows the same terms as a withdrawal or drop-out in Alternative Flow B4 step 2, its Outcome line and REQ-007b-027 (every paid installment refunded in full, remaining installments cancelled with no cancellation fee, replacement booking takes a new payment); the credit-moves-with-the-patient placeholder is removed | Product Owner / Documentation |
 
 ---
 

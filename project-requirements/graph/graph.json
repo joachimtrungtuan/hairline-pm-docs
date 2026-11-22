@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-22T13:38:06Z",
+  "generated_at": "2026-11-22T14:13:59Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -22252,9 +22252,9 @@
       "owner_fr": "FR-030",
       "title": "Provider team notification routing",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Which provider team members receive which notifications, based on their role (team roles come from FR-009). Owned by FR-030; the provider team screens show and edit it (PRD Key Entities, Entity 7). The PRD names no attributes."
+        "description": "Which provider team members receive which notifications, based on their role (team roles come from FR-009). Owned by FR-030; the system fixes it by role and the delivery logic reads it; no screen edits it, and per-member editing is not in launch scope (PRD Key Entities, Entity 7). The PRD names no attributes."
       }
     },
     {
@@ -44114,10 +44114,10 @@
       "owner_fr": "FR-005",
       "title": "Only additional acceptance is the provider-fault replacement",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "System MUST allow exactly one patient acceptance per inquiry. The only additional acceptance record is the admin-authored record created by an FR-006 provider-fault transfer before treatment starts; it MUST point to an admin-authored FR-004 replacement quote, Quote Option, and option/date-price row, and the original MUST be marked superseded by one supersession record inserted at the replacement acceptance rather than by editing it.",
-        "rationale": "Restated by Business Rule 1 (applies only before treatment starts; the closure is recorded on the booking as its cause; one supersession record with cause ProviderFault, ProviderSuspended, or ProviderDeactivated links the closed acceptance to the new one; the patient keeps the same inquiry and re-enters nothing; money already paid moves with the patient as credit toward the replacement booking, any unused part refunded, with no cancellation fee, the mechanics being defined by FR-007, FR-007b, and FR-017), Alternative Flows A3, A6, and A9 (FR-006 owns the provider-fault case; the admin authors the replacement quote on FR-004 Screen 8 and records a new AcceptanceEvent with actorType = admin; the AcceptanceSupersession record is inserted once and never updated; the original AcceptanceEvent and snapshot stay unchanged as history), Admin Editability, and Key Entities (AcceptanceSupersession)."
+        "rationale": "Restated by Business Rule 1 (applies only before treatment starts; the closure is recorded on the booking as its cause; one supersession record with cause ProviderFault, ProviderSuspended, or ProviderDeactivated links the closed acceptance to the new one; the patient keeps the same inquiry and re-enters nothing; money already paid is refunded to the patient in full, with no cancellation fee, and the replacement booking takes a new payment, the mechanics being defined by FR-007, FR-007b, and FR-017), Alternative Flows A3, A6, and A9 (FR-006 owns the provider-fault case; the admin authors the replacement quote on FR-004 Screen 8 and records a new AcceptanceEvent with actorType = admin; the AcceptanceSupersession record is inserted once and never updated; the original AcceptanceEvent and snapshot stay unchanged as history), Admin Editability, and Key Entities (AcceptanceSupersession)."
       }
     },
     {
@@ -44697,9 +44697,9 @@
       "owner_fr": "FR-006",
       "title": "Provider suspension or deactivation cancels pre-treatment bookings",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "When a provider's suspension or deactivation becomes effective, System MUST cancel that provider's `Accepted` and `Confirmed` bookings with cause `ProviderSuspended` or `ProviderDeactivated` and an independent `supportRequired` marker, release holds/reservations/slots, block further payment, revalidate provider eligibility at booking-confirming payment, treat any racing capture as paid money under the B4 payment placeholder (see Provider-Status Cancellation), retain the accepted snapshot and booking/payment history, write the supersession record only at the replacement acceptance, and let an admin rehome the patient to a replacement provider in the same inquiry through Alternative Flow B5, without restoration on reactivation (Alternative Flow B4; FR-015 A5/Screen 4). `In Progress` and `Aftercare` bookings MUST keep their status and receive the cause and `supportRequired` (Alternative Flows B7 and B6).",
+        "statement": "When a provider's suspension or deactivation becomes effective, System MUST cancel that provider's `Accepted` and `Confirmed` bookings with cause `ProviderSuspended` or `ProviderDeactivated` and an independent `supportRequired` marker, release holds/reservations/slots, block further payment, revalidate provider eligibility at booking-confirming payment, treat any racing capture as paid money refunded in full under the B4 payment terms (see Provider-Status Cancellation), retain the accepted snapshot and booking/payment history, write the supersession record only at the replacement acceptance, and let an admin rehome the patient to a replacement provider in the same inquiry through Alternative Flow B5, without restoration on reactivation (Alternative Flow B4; FR-015 A5/Screen 4). `In Progress` and `Aftercare` bookings MUST keep their status and receive the cause and `supportRequired` (Alternative Flows B7 and B6).",
         "rationale": "Restated by Alternative Flows B4 to B7 and Payment & Billing Rules (Provider-Status Cancellation)."
       }
     },
@@ -44745,9 +44745,9 @@
       "owner_fr": "FR-006",
       "title": "Provider fault while In Progress keeps the booking In Progress",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "When a provider fault occurs while the booking is `In Progress`, System MUST keep the booking `In Progress`, MUST NOT cancel it automatically or create a replacement quote or acceptance, and MUST flag it `supportRequired` with the cause. Only an admin MAY resolve it on Screen 11 (Alternative Flow B7), with a mandatory reason, confirmation, and audit entry, by either moving the booking to `Aftercare` and reassigning the aftercare provider or team through FR-011 Screen 19, or cancelling the booking through Screen 9.",
+        "statement": "When a provider fault occurs while the booking is `In Progress`, System MUST keep the booking `In Progress`, MUST NOT cancel it automatically or create a replacement quote or acceptance, and MUST flag it `supportRequired` with the cause. Only an admin MAY resolve it on Screen 11 (Alternative Flow B7), with a mandatory reason, confirmation, and audit entry, by either moving the booking to `Aftercare` and reassigning the aftercare provider or team through FR-011 Screen 19, or cancelling the booking through Screen 9. The admin MUST also set the patient refund amount, from zero up to the full amount paid, under the same mandatory reason and audit entry, and System MUST hold the provider's payout for that booking until the admin decides.",
         "rationale": "Restated by Alternative Flow B7, Admin Status and Date Intervention Rules (In-Progress provider fault) and Screen 11 business rules."
       }
     },
@@ -45113,11 +45113,11 @@
       "id": "REQ-006-053",
       "type": "Rule",
       "owner_fr": "FR-006",
-      "title": "A full refund only for provider withdrawal or drop-out; other cancellations follow the FR-029 refund ladder",
+      "title": "A full refund for provider withdrawal, drop-out, suspension or deactivation before treatment starts; an in-treatment fault takes an admin-set refund; other cancellations follow the FR-029 refund ladder",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "A full refund applies only when the provider withdraws or drops out; every other cancellation follows the refund ladder set in FR-029. When the provider withdraws or drops out after acceptance and before treatment starts (Alternative Flow B5), the patient is refunded everything paid and a replacement booking takes a new payment; while `In Progress` the case follows Alternative Flow B7. The patient pays no cancellation fee in either case.",
+        "statement": "A full refund applies when the provider withdraws, drops out, or is suspended or deactivated before treatment starts; an in-treatment provider fault takes an admin-set refund; every other cancellation follows the refund ladder set in FR-029. When the provider withdraws or drops out after acceptance and before treatment starts (Alternative Flow B5), or the booking is cancelled by a provider suspension or deactivation (Alternative Flow B4), the patient is refunded everything paid, pays no cancellation fee, and a replacement booking takes a new payment. While `In Progress` the case follows Alternative Flow B7: the admin sets the patient refund amount from zero up to the full amount paid, with a mandatory reason and an audit entry, and the provider's payout for the booking is held until the admin decides.",
         "rationale": "Restated by Alternative Flow B2 step 6, Screen 9 business rules and Screen 6 business rules."
       }
     },
@@ -45125,12 +45125,12 @@
       "id": "REQ-006-054",
       "type": "Rule",
       "owner_fr": "FR-006",
-      "title": "Provider-status cancellation money follows the B4 placeholder",
+      "title": "Provider-status cancellation money follows the B5 withdrawal terms",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Bookings cancelled by an effective provider suspension/deactivation (Alternative Flow B4) are rehomed by admin to a replacement provider in the same inquiry through the Alternative Flow B5 transfer. The payment terms for this cause are not yet ruled and stay a placeholder: paid amounts move with the patient as credit toward the replacement booking, any unused part is refunded, and the patient pays no fee; exact mechanics are defined later in FR-007, FR-007B, and FR-017. Provider eligibility is revalidated at booking-confirming payment (FR-015 Rule 9). A payment captured while suspension/deactivation becomes effective is recorded and treated as paid money under this B4 payment placeholder; it never confirms or revives the booking.",
-        "rationale": "Restated by Alternative Flows B4 step 4, B5 payment placeholder and B7 payment placeholder."
+        "statement": "Bookings cancelled by an effective provider suspension/deactivation (Alternative Flow B4) are rehomed by admin to a replacement provider in the same inquiry through the Alternative Flow B5 transfer. The payment terms are the same as for a provider withdrawal or drop-out (Alternative Flow B5): the patient is refunded everything paid, pays no cancellation fee, and the replacement booking takes a new payment; exact mechanics are defined in FR-007, FR-007B, and FR-017. Provider eligibility is revalidated at booking-confirming payment (FR-015 Rule 9). A payment captured while suspension/deactivation becomes effective is recorded and treated as paid money, refunded in full under these B4 terms; it never confirms or revives the booking.",
+        "rationale": "Restated by Alternative Flows B4 step 4, B5 Payment terms and B7 Payment terms."
       }
     },
     {
@@ -45687,12 +45687,12 @@
       "id": "REQ-007-022",
       "type": "Rule",
       "owner_fr": "FR-007",
-      "title": "Provider fault after acceptance blocks payment and credits or refunds paid money",
+      "title": "Provider fault after acceptance blocks payment and refunds paid money in full; an interrupted treatment gets an admin-set refund",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "When a provider fault after acceptance closes a booking (FR-006 Alternative Flow B5), System MUST block further payment against it. When the provider withdraws or drops out, the patient is refunded in full everything paid, with no patient fee, and the replacement booking takes a new payment. A suspension or deactivation keeps the FR-006 provider-status placeholder, which is not yet ruled. Detailed refund and fund-release mechanics are defined in FR-007B and FR-017. A provider fault during Aftercare reassigns only the aftercare provider or team (FR-011) and has no payment effect here.",
-        "rationale": "prd.md lines 162, 165, 167 (Alternative Flow B4: provider fault after acceptance and before treatment; a provider fault during Aftercare has no payment effect; refund and fund-release mechanics are defined in FR-007B and FR-017)."
+        "statement": "When a provider fault after acceptance closes a booking (FR-006 Alternative Flow B5), System MUST block further payment against it. When the provider withdraws, drops out, or is suspended or deactivated (FR-006 Alternative Flow B4), the patient is refunded in full everything paid, with no patient fee, and the replacement booking takes a new payment. For a treatment already started and interrupted by the provider's fault, an admin MUST review the case and set the patient refund amount, from zero up to the full amount paid, with a mandatory reason and an audit entry, and the provider's payout for that booking MUST be held until the admin decides (see Fund Release & Money Routing Rules). Detailed refund and fund-release mechanics are defined in FR-007B and FR-017. A provider fault during Aftercare reassigns only the aftercare provider or team (FR-011) and has no payment effect here.",
+        "rationale": "prd.md lines 162, 165, 167 (Alternative Flow B4: provider fault after acceptance and before treatment; a provider fault during Aftercare has no payment effect; refund and fund-release mechanics are defined in FR-007B and FR-017) and line 813 (Fund Release & Money Routing Rules: treatment interrupted by the provider's fault). Owner ruling 2026-11-22."
       }
     },
     {
@@ -46824,12 +46824,12 @@
       "id": "REQ-007B-027",
       "type": "Rule",
       "owner_fr": "FR-007B",
-      "title": "Provider fault after acceptance cancels remaining installments and credits paid ones",
+      "title": "Provider fault after acceptance cancels remaining installments and refunds paid ones in full",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "When the provider fails after acceptance, System MUST cancel remaining installments with no patient cancellation fee. On a provider withdrawal or drop-out, System MUST refund in full every installment already paid, and the replacement booking takes a new payment per FR-006 Alternative Flow B5. On a suspension or deactivation, paid installments follow the FR-006 provider-status placeholder (credit toward the replacement booking, any unused part refunded), which is not yet ruled",
-        "rationale": "PRD id REQ-007b-027 (prd.md line 860). Restated by Alternative Flow B4 steps 1 and 2 and its outcome (the patient keeps the value already paid and continues with the replacement provider in the same inquiry), and the FR-006 dependency note."
+        "statement": "When the provider fails after acceptance, System MUST cancel remaining installments with no patient cancellation fee. On a provider withdrawal, drop-out, suspension or deactivation, System MUST refund in full every installment already paid, and the replacement booking takes a new payment per FR-006 Alternative Flows B4 and B5",
+        "rationale": "PRD id REQ-007b-027 (prd.md line 860). Restated by Alternative Flow B4 steps 1 and 2 and its outcome (the patient is refunded in full and continues with the replacement provider in the same inquiry), and the FR-006 dependency note. Owner ruling 2026-11-22: a suspension or deactivation follows the same terms as a withdrawal or drop-out."
       }
     },
     {
@@ -47641,11 +47641,11 @@
       "id": "REQ-007B-096",
       "type": "Rule",
       "owner_fr": "FR-007B",
-      "title": "Provider-fault credit and refund mechanics are defined later",
+      "title": "Provider-fault refund mechanics are defined later",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Exact credit, refund, fund-release and payment-allocation override mechanics are defined later in FR-007, FR-007B and FR-017.",
+        "statement": "Exact refund, fund-release and payment-allocation override mechanics are defined later in FR-007, FR-007B and FR-017.",
         "rationale": "PRD prose rule, no id. prd.md line 191 (Alternative Flows)."
       }
     },
@@ -51404,9 +51404,9 @@
       "owner_fr": "FR-010",
       "title": "FR-010 never reassigns the treating provider; hand-off to FR-006 flows",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "FR-010 never reassigns the treating provider. Provider withdrawal, drop-out, or replacement after acceptance and before Check In is handed to the FR-006 Alternative Flow B5 provider-fault transfer (Alternative Flow B6); after Check In it is handed to the FR-006 Alternative Flow B7 admin decision (move to Aftercare with an aftercare reassignment, or cancel), with no replacement acceptance. The B5 payment placeholder applies to the transfer: amounts already paid move with the patient as credit toward the replacement booking, any unused part is refunded, and the patient pays no cancellation fee.",
+        "statement": "FR-010 never reassigns the treating provider. Provider withdrawal, drop-out, or replacement after acceptance and before Check In is handed to the FR-006 Alternative Flow B5 provider-fault transfer (Alternative Flow B6); after Check In it is handed to the FR-006 Alternative Flow B7 admin decision (move to Aftercare with an aftercare reassignment, or cancel), with no replacement acceptance. The B5 payment terms apply to the transfer: the patient is refunded in full everything paid, pays no cancellation fee, and the replacement booking takes a new payment.",
         "rationale": "Restates REQ-010-029 and adds the payment placeholder; possible duplicate within this FR. Archived FR-010 PRD baseline, lines 567."
       }
     },
@@ -59665,11 +59665,11 @@
       "id": "REQ-015-043",
       "type": "Rule",
       "owner_fr": "FR-015",
-      "title": "Cancellation by provider status leaves payment records intact; money follows FR-006 B5",
+      "title": "Cancellation by provider status leaves payment records intact; money follows FR-006 B5 and B7 payment terms",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Suspension or deactivation closes affected bookings and blocks further patient payment to that provider, but payment/refund/commission records remain intact. For a closed accepted booking, money follows the FR-006 Alternative Flow B5 payment placeholder: paid amounts move with the patient as credit toward the replacement booking, any unused part is refunded, and the patient pays no fee. Exact refund, fund-release, and allocation mechanics belong to FR-007, FR-007B, and FR-017; no new refund percentage or fee is defined here, and the payout method and payout-readiness rules below concern only a clinic's payout setup."
+        "statement": "Suspension or deactivation closes affected bookings and blocks further patient payment to that provider, but payment/refund/commission records remain intact. For a closed accepted booking, money follows the FR-006 Alternative Flow B5 payment terms: the patient is refunded in full everything paid, pays no cancellation fee, and the replacement booking takes a new payment. For an `In Progress` booking (treatment already started), an admin reviews each case and sets the patient refund amount, from zero up to the full amount paid, with a mandatory reason and an audit entry, and the provider's payout for that booking is held until the admin decides (FR-006 Alternative Flow B7 payment terms). Exact refund, fund-release, and allocation mechanics belong to FR-007, FR-007B, and FR-017; no new refund percentage or fee is defined here, and the payout method and payout-readiness rules below concern only a clinic's payout setup."
       }
     },
     {
@@ -60169,9 +60169,9 @@
       "owner_fr": "FR-015",
       "title": "Terminal cases are not relabelled; care and money history is retained",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "`Completed`, already `Cancelled`, and `Payment Window Expired` cases are not relabelled as new suspension or deactivation cancellations. Retain clinical notes, photos, completion milestones, accepted identifiers/versions, and payment/refund history. In Progress bookings awaiting the admin decision and Aftercare reassignments caused by suspension or deactivation must reach admins for clinical continuity and recovery support; automatic lifecycle cancellation does not itself transfer care or settle money; the admin replacement-provider transfer and its payment placeholder follow FR-006 Alternative Flow B5, and the aftercare reassignment follows FR-006 Alternative Flow B6 with no new acceptance or payment.",
+        "statement": "`Completed`, already `Cancelled`, and `Payment Window Expired` cases are not relabelled as new suspension or deactivation cancellations. Retain clinical notes, photos, completion milestones, accepted identifiers/versions, and payment/refund history. In Progress bookings awaiting the admin decision and Aftercare reassignments caused by suspension or deactivation must reach admins for clinical continuity and recovery support; automatic lifecycle cancellation does not itself transfer care or settle money; the admin replacement-provider transfer and its payment terms (full refund, no cancellation fee, new payment on the replacement booking) follow FR-006 Alternative Flow B5, and the aftercare reassignment follows FR-006 Alternative Flow B6 with no new acceptance or payment.",
         "rationale": "Near-duplicate of REQ-015-021 in this FR."
       }
     },
@@ -64395,9 +64395,9 @@
       "owner_fr": "FR-017",
       "title": "Refund amount auto-calculated from the cancellation policy",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Modal auto-calculates refund amount using cancellation policy from FR-006 based on days until treatment at time admin opens the modal. Adjusted Refund Amount defaults to Calculated Refund Amount. Non-Refundable Amount: invoice amount − Final Refund Amount. Labelled \"Platform fee (non-refundable)\"",
+        "statement": "Modal auto-calculates refund amount using the refund ladder set in FR-029 / A-09 based on days until treatment at time admin opens the modal; the ladder does not apply to a provider-fault refund (Rules 13 and 19), where the amount follows that rule. Adjusted Refund Amount defaults to Calculated Refund Amount. Non-Refundable Amount: invoice amount − Final Refund Amount. Labelled \"Platform fee (non-refundable)\"",
         "rationale": "Screen 4b business rules (prd.md lines 739-740) and field Non-Refundable Amount (line 731). Field Cancellation Policy Applied (line 726) lists the tiers of Rule 7."
       }
     },
@@ -64407,9 +64407,9 @@
       "owner_fr": "FR-017",
       "title": "Adjusted refund needs a justification",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Adjusted Refund Amount can be changed ONLY for eligible partial or discretionary pre-treatment refunds; if changed, Adjustment Justification becomes mandatory. Partial refunds (e.g., cancelling add-on packages only) use the same modal; the pre-calculated amount can be manually adjusted by admin with mandatory justification in the Adjustment Justification field",
+        "statement": "Adjusted Refund Amount can be changed ONLY for eligible partial or discretionary pre-treatment refunds and for provider-fault refunds (Rule 13 full refund, Rule 19 admin-set amount from zero to the full amount paid); if changed, Adjustment Justification becomes mandatory. Partial refunds (e.g., cancelling add-on packages only) use the same modal; the pre-calculated amount can be manually adjusted by admin with mandatory justification in the Adjustment Justification field",
         "rationale": "Screen 4b business rules (prd.md lines 734 and 738) and field Adjustment Justification (line 733: max 500 characters)."
       }
     },
@@ -64431,9 +64431,9 @@
       "owner_fr": "FR-017",
       "title": "No refund through the modal once treatment has passed",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "If treatment date has already passed (treatment completed), the <15 days tier applies (0% refund) — admin sees \"0% refund — treatment has been completed\" and the Confirm button is disabled; admin must use Override Status instead if a discretionary refund is needed",
+        "statement": "If treatment date has already passed (treatment completed; a Rule 19 interrupted treatment is not covered here, the admin sets that amount), the <15 days tier applies (0% refund) — admin sees \"0% refund — treatment has been completed\" and the Confirm button is disabled; admin must use Override Status instead if a discretionary refund is needed",
         "rationale": "Screen 4b business rules (prd.md line 733)."
       }
     },
@@ -64863,9 +64863,9 @@
       "owner_fr": "FR-017",
       "title": "Refunds follow the platform-wide refund ladder",
       "status": "active",
-      "version": 7,
+      "version": 8,
       "attrs": {
-        "statement": "Refunds follow the refund ladder, a platform-wide setting owned by FR-029 / A-09: Payment System Configuration (default: >30 days = 90%, 15-30 days = 50%, <15 days = 0%). The data model allows a per-clinic ladder later. Provider-status cancellations follow Rule 13",
+        "statement": "Refunds follow the refund ladder, a platform-wide setting owned by FR-029 / A-09: Payment System Configuration (default: >30 days = 90%, 15-30 days = 50%, <15 days = 0%). The data model allows a per-clinic ladder later. Provider-status cancellations follow Rule 13, and an interrupted treatment follows Rule 19",
         "rationale": "General Module Rule 7 (prd.md line 1169). Restated by Screen 4b field Cancellation Policy Applied (line 726) and Admin Editability (line 1213: refund initiation and approval subject to cancellation policy). Meeting sources call the ladder illustrative and configurable; see the product owner question."
       }
     },
@@ -64911,10 +64911,10 @@
       "owner_fr": "FR-017",
       "title": "Provider-status cancellations: no automatic refund; admin resolution",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Bookings cancelled by an FR-015 provider suspension or deactivation (cause `ProviderSuspended` / `ProviderDeactivated`) are excluded from provider payout calculation like other cancelled bookings. No refund is issued by the system on its own and the Rule 7 refund ladder is not applied. When the clinic withdraws or drops out, the patient is always refunded in full everything paid, and pays no cancellation fee; the refund is issued through admin financial resolution (Screen 4b, mandatory reason, audit trail). A replacement booking through the FR-006 provider-fault transfer takes a new payment. The full-refund ruling covers withdrawal or drop-out only. Captured patient payments on these bookings, including payments captured while the cancellation cascade was running, remain recorded against the booking invoice and are routed to admin financial resolution through the existing refund and adjustment controls (Screen 4b, mandatory reason, audit trail). Provider reactivation does not restore cancelled bookings or their payout eligibility",
-        "rationale": "General Module Rule 13 (prd.md line 1175). Restated by the provider-suspension edge case (lines 1736-1741: a procedure already recorded as completed under FR-010 is not erased by the cancellation)."
+        "statement": "Bookings cancelled by an FR-015 provider suspension or deactivation (cause `ProviderSuspended` / `ProviderDeactivated`) are excluded from provider payout calculation like other cancelled bookings. The Rule 7 refund ladder is not applied. As when the clinic withdraws or drops out, the patient is always refunded in full everything paid and pays no cancellation fee; the system issues no refund automatically, and the admin issues the full refund through admin financial resolution (Screen 4b, mandatory reason, audit trail). A replacement booking through the FR-006 provider-fault transfer takes a new payment. The fixed clinic cancellation charge applies to a clinic withdrawal or drop-out only, not to a provider suspension or deactivation (FR-006 Alternative Flow B4). Captured patient payments on these bookings, including payments captured while the cancellation cascade was running, remain recorded against the booking invoice and are routed to admin financial resolution through the existing refund and adjustment controls (Screen 4b, mandatory reason, audit trail). Provider reactivation does not restore cancelled bookings or their payout eligibility",
+        "rationale": "General Module Rule 13 (prd.md line 1175). Restated by the provider-suspension edge case (lines 1743-1751: a procedure already recorded as completed under FR-010 is not erased by the cancellation). Owner ruling 2026-11-22: a provider-status cancellation takes the same payment terms as a provider withdrawal or drop-out (FR-006 Alternative Flow B4 and B5): full refund of everything paid, no cancellation fee, new payment on the replacement booking; the fixed clinic charge is not extended to it."
       }
     },
     {
@@ -65457,6 +65457,18 @@
         "statement": "The Retry Payout confirmation modal on the Affiliate Billing screen shows the prior failure reason and the current payout readiness state of the affiliate payout before the admin confirms the retry.",
         "rationale": "prd.md lines 858-865 (Screen 6 Retry Payout Confirmation Modal, Failure context row at line 863).",
         "distinct_from": "REQ-017-165"
+      }
+    },
+    {
+      "id": "REQ-017-185",
+      "type": "Rule",
+      "owner_fr": "FR-017",
+      "title": "Interrupted treatment: admin sets the refund, payout held until decided",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "When a treatment already started is interrupted by the provider's fault (FR-006 Alternative Flow B7, booking `In Progress`), the Rule 7 refund ladder is not applied. An admin reviews each case and sets the patient refund amount, from zero up to the full amount paid, with a mandatory reason and an audit entry, through the existing refund control (Screen 4b). The provider's payout for that booking is held until the admin decides",
+        "rationale": "General Module Rule 19 (prd.md line 1181), added by the owner ruling 2026-11-22 for FR-006 Alternative Flow B7 (provider fault while the booking is In Progress). Restated by the provider-suspension edge case (In Progress bullet) and the Screen 4b business rules on provider-fault refunds."
       }
     },
     {
@@ -83509,12 +83521,12 @@
       "id": "REQ-030-109",
       "type": "Rule",
       "owner_fr": "FR-030",
-      "title": "Providers manage team notification routing",
+      "title": "Provider team notifications are routed by team role, fixed by the system",
       "status": "active",
-      "version": 4,
+      "version": 6,
       "attrs": {
-        "statement": "Providers can manage team notification routing (which staff members receive which notification types)",
-        "rationale": "prd.md lines 44, 992 (Entity 7). Routing depends on FR-009 team data; the routing record is owned by FR-030 and the provider team screens show and edit it."
+        "statement": "Provider team notifications are routed by team role only, fixed by the system; the clinic cannot choose which team member receives which notification. Per-member editing is not in launch scope",
+        "rationale": "prd.md lines 44, 90, 994 (Entity 7). Routing depends on FR-009 team data; the routing record is owned by FR-030 and read by the delivery logic; no screen edits it. Owner ruling 2026-11-22."
       }
     },
     {
@@ -105722,9 +105734,9 @@
       "id": "STP-007-062",
       "type": "Step",
       "owner_fr": "FR-007",
-      "title": "Payment against the closed booking is blocked; on a provider withdrawal or drop-out the patient is refunded in full, while a suspension or deactivation follows the FR-006 placeholder",
+      "title": "Payment against the closed booking is blocked; on a provider withdrawal, drop-out, suspension, or deactivation the patient is refunded in full and pays no cancellation fee",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flow B4 step 2"
       }
@@ -106208,9 +106220,9 @@
       "id": "STP-007B-702",
       "type": "Step",
       "owner_fr": "FR-007B",
-      "title": "Paid installments are refunded in full on a provider withdrawal or drop-out; on a suspension or deactivation they follow the provider-status placeholder (credit)",
+      "title": "Paid installments are refunded in full on a provider withdrawal, drop-out, suspension or deactivation, with no cancellation fee",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B4 step 2"
       }
@@ -169947,7 +169959,7 @@
       "verb": "active in",
       "to_id": "STG-main-06-treatment",
       "attrs": {
-        "rules": 114
+        "rules": 115
       },
       "derived": true
     },
@@ -233093,6 +233105,30 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-017-185",
+      "verb": "applies at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-185",
+      "verb": "applies to",
+      "to_id": "ENT-provider-payout",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-185",
+      "verb": "applies to",
+      "to_id": "ENT-refund",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-185",
+      "verb": "decided by",
+      "to_id": "SRC-PO-001-Q45",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-018-001",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
@@ -271610,12 +271646,6 @@
       "from_id": "REQ-030-109",
       "verb": "applies at",
       "to_id": "STG-main-01-inquiry",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-030-109",
-      "verb": "applies to",
-      "to_id": "ACT-provider",
       "attrs": {}
     },
     {
@@ -419120,6 +419150,120 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261122-141304-40c4c18d",
+      "at": "2026-11-22T14:13:04.616078+00:00",
+      "changed_by": "controller",
+      "reason": "Owner rulings 2026-11-22: provider-fault transfer before Check In refunds in full (FR-010 wording follows FR-006); team notification routing is fixed by the system, so the routing Rule no longer applies to the provider as an acting party.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-005-024",
+        "REQ-010-044",
+        "REQ-030-109"
+      ],
+      "edges_added": 0,
+      "edges_removed": 1,
+      "rows": 3
+    },
+    {
+      "id": "cs-20261122-141304-dbb75c70",
+      "at": "2026-11-22T14:13:04.510780+00:00",
+      "changed_by": "controller",
+      "reason": "Owner ruling 2026-11-22 (R3): provider team notifications are routed by team role only, fixed by the system; no screen edits the routing; per-member editing is not in launch scope.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "ENT-provider-team-notification-routing",
+        "REQ-030-109"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 4
+    },
+    {
+      "id": "cs-20261122-141304-faec33e2",
+      "at": "2026-11-22T14:13:04.405097+00:00",
+      "changed_by": "controller",
+      "reason": "Owner ruling 2026-11-22 for FR-017: a booking cancelled by a provider suspension or deactivation gets the same payment terms as a provider withdrawal or drop-out (full refund, no cancellation fee, new payment on the replacement booking; the placeholder money principle is gone); for a treatment already started and interrupted by the provider's fault the admin sets the patient refund (zero up to the full amount paid) with mandatory reason and audit entry and the provider's payout is held until the admin decides.",
+      "source_id": null,
+      "nodes_added": [
+        "REQ-017-185"
+      ],
+      "nodes_updated": [
+        "REQ-017-094",
+        "REQ-017-095",
+        "REQ-017-097",
+        "REQ-017-133",
+        "REQ-017-137"
+      ],
+      "edges_added": 4,
+      "edges_removed": 0,
+      "rows": 16
+    },
+    {
+      "id": "cs-20261122-141304-51d67b28",
+      "at": "2026-11-22T14:13:04.300708+00:00",
+      "changed_by": "controller",
+      "reason": "Owner ruling 2026-11-22 (R1, R2) applied to FR-015: a booking cancelled by provider suspension or deactivation refunds the patient in full, no cancellation fee, new payment on the replacement booking (the credit placeholder is gone); an In Progress booking follows the admin-set refund with mandatory reason, audit entry and provider payout held until the admin decides.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-015-043",
+        "REQ-015-085"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 3
+    },
+    {
+      "id": "cs-20261122-141304-7a626daf",
+      "at": "2026-11-22T14:13:04.197358+00:00",
+      "changed_by": "controller",
+      "reason": "Owner ruling 2026-11-22 (R1): a provider suspension or deactivation follows the same payment terms as a withdrawal or drop-out: every paid installment is refunded in full, remaining installments are cancelled with no cancellation fee, and the replacement booking takes a new payment; the credit placeholder is removed.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-007B-027",
+        "REQ-007B-096",
+        "STP-007B-702"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 6
+    },
+    {
+      "id": "cs-20261122-141304-3f2cafb9",
+      "at": "2026-11-22T14:13:04.096861+00:00",
+      "changed_by": "controller",
+      "reason": "Owner rulings of 2026-11-22 applied to FR-007: a provider suspension or deactivation refunds the patient in full like a withdrawal or drop-out, replacing the provider-status placeholder; a treatment already started and interrupted by the provider's fault gets an admin-set refund (zero up to the full amount paid, mandatory reason and audit entry) with the provider payout held until the admin decides.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-007-022",
+        "STP-007-062"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 4
+    },
+    {
+      "id": "cs-20261122-141303-99499e7f",
+      "at": "2026-11-22T14:13:03.991695+00:00",
+      "changed_by": "controller",
+      "reason": "Owner ruling 2026-11-22 (FR-006): a provider-status cancellation (B4) takes the same patient payment terms as a provider withdrawal or drop-out (B5), and an in-treatment provider fault (B7) takes an admin-set patient refund with the provider payout held until the admin decides.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-006-015",
+        "REQ-006-019",
+        "REQ-006-053",
+        "REQ-006-054"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 7
+    },
     {
       "id": "cs-20261122-133806-707aa75b",
       "at": "2026-11-22T13:38:06.143345+00:00",
