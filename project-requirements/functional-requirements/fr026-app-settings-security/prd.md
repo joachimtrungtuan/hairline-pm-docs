@@ -1353,4 +1353,4 @@ Admin needs one versioned source for the thresholds and targets used by FR-014 a
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (PRD Standards & Requirements)
 **Based on**: FR-011 Aftercare & Recovery Management PRD, FR-026 from system-prd.md
-**Last Updated**: 2026-11-22
+**Last Updated**: 2026-11-23

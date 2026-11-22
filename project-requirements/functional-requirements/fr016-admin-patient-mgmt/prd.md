@@ -1019,4 +1019,4 @@ A provider is suspended or deactivated (FR-015 A5) and the patient's case is can
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0
 **Based on**: FR-011 Aftercare & Recovery Management PRD template
-**Last Updated**: 2026-11-22
+**Last Updated**: 2026-11-23

@@ -731,4 +731,4 @@ Patient requests booking cancellation after paying 2 of 4 installments; admin re
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0
 **Based on**: FR-007B from system-prd.md (Split Payment / Installment Plans)
-**Last Updated**: 2026-11-22
+**Last Updated**: 2026-11-23

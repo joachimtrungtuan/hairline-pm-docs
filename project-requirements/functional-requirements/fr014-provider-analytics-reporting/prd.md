@@ -3,7 +3,7 @@
 **Module**: PR-05: Financial Management & Reporting | A-08: Analytics & Reporting
 **Feature Branch**: `fr014-provider-analytics-reporting`
 **Created**: 2025-11-11
-**Version**: 3.20
+**Version**: 3.21
 **Status**: 🟡 Revised — Documentation Approved; Pending Consolidated Verification
 **Source**: FR-014 from system-prd.md; SRC-MTG-002 (MTG-002-D03–D06 and O01 as refined by the Product Owner); FR-004, FR-005, and FR-006 approved quote/acceptance/booking contracts; Product Owner approvals dated 2026-10-07, 2026-10-13, and 2026-10-14
 
@@ -1812,4 +1812,4 @@ These are required implementation/reconciliation cases, not a claim that the dep
 
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B
-**Last Updated**: 2026-11-22
+**Last Updated**: 2026-11-23

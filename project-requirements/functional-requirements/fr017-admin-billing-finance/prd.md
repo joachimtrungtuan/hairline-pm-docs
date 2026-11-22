@@ -1765,4 +1765,4 @@ A patient requests refund due to cancellation, admin reviews request against can
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-017 Admin Billing & Financial Management (system-prd.md), with FR-005/FR-006 accepted-subquote context
-**Last Updated**: 2026-11-22
+**Last Updated**: 2026-11-23

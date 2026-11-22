@@ -989,4 +989,4 @@ Admin processes a refund request according to cancellation policy; patient and p
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0
 **Based on**: FR-007 Payment Processing (system-prd.md)
-**Last Updated**: 2026-11-22
+**Last Updated**: 2026-11-23

@@ -787,7 +787,7 @@ flowchart TD
 
 ---
 
-**Document Version**: 2.2
+**Document Version**: 2.3
 **Template Version**: 2.0.0
-**Last Updated**: 2026-11-22
+**Last Updated**: 2026-11-23
 **Next Review**: Upon a major requirement change

@@ -3,7 +3,7 @@
 **Module**: P-04: Travel & Logistics | A-04: Travel Management | S-04: Travel API Gateway (future phase)
 **Feature Branch**: `fr008-travel-booking-integration`
 **Created**: 2025-11-10
-**Last Updated**: 2026-11-22
+**Last Updated**: 2026-11-23
 **Status**: 🟡 Revised — Pending Consolidated Verification
 **Source**: FR-008 from system-prd.md; cross-checked with transcriptions (HairlineApp-Part1/2, ProviderPlatformPart1, AdminPlatformPart1/2, HairlineOverview); SRC-MTG-002, CR-FR008-20260929-01, CR-FR008-20261016-01, and Product Owner binary-path decision of 2026-09-29
 
@@ -996,4 +996,4 @@ The 2026-02-23 verification approvals apply to the earlier baseline, not to the 
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-011 Aftercare & Recovery Management PRD
-**Last Updated**: 2026-11-22
+**Last Updated**: 2026-11-23

@@ -891,4 +891,4 @@ After a patient accepts one subquote, the case must use the accepted snapshot fo
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-010 from system-prd.md (Lines 682-705)
-**Last Updated**: 2026-11-22
+**Last Updated**: 2026-11-23

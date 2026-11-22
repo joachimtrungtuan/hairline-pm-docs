@@ -3,7 +3,7 @@
 **Module**: A-09: System Settings & Configuration
 **Feature Branch**: `fr029-payment-system-config`
 **Created**: 2025-11-13
-**Version**: 1.15
+**Version**: 1.16
 **Status**: 🟡 Revised — Pending Consolidated Verification
 **Source**: FR-029 from system-prd.md (lines 1427-1455) + Hairline-AdminPlatformPart2.txt (lines 128-230)
 **Change Request**: [CR-FR029-20261014-01 — Provider-specific Flat Rate commission alignment with FR-015](../../../../archived/prd-baseline-2026-11-08/fr029-payment-system-config/change-request-2026-10-14-provider-flat-rate-commission.md)
@@ -1114,4 +1114,4 @@ As a platform administrator managing provider commission, I need the commission 
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-029 from system-prd.md + Hairline-AdminPlatformPart2.txt transcription
-**Last Updated**: 2026-11-22
+**Last Updated**: 2026-11-23

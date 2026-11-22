@@ -3,7 +3,7 @@
 **Module**: A-02: Provider Management & Onboarding
 **Feature Branch**: `fr015-provider-management`
 **Created**: 2025-11-11
-**Version**: 1.26
+**Version**: 1.27
 **Status**: Revised 2026-11-22 (owner ruling: provider-status cancellation payment terms); previously revised 2026-11-20 (requirements graph programme baseline: owner rulings applied); previously revised 2026-10-28 (backend confirmations: seat usage member statuses, changed-fields-only saves, Owner login email change notice); previously revised 2026-10-27 (dev-team follow-up question resolution: save conflicts, data encryption, seat usage, impersonation, notification timing and recipients, cascade timing), pending consolidated verification; implementation reconciliation pending
 **Source**: FR-015 from system-prd.md (§ FR-015: Provider Management (Admin-Initiated))
 
@@ -1053,4 +1053,4 @@ Historical verification above applies to the prior baseline, not the new v1.8 ca
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B
 **Based on**: system-prd.md (§ FR-015: Provider Management (Admin-Initiated))
-**Last Updated**: 2026-11-22
+**Last Updated**: 2026-11-23
