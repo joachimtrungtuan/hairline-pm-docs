@@ -76,3 +76,4 @@ The owner read and approved the FR-005 compressed PRD on 2026-11-22 and released
 - 2026-11-23, FR-019: independent review found one entity clause partly missing (promotion programs are stored in their own table and the legacy discounts table does not hold them); the baseline line was restored in original wording under Business Rules.
 - 2026-11-23, independent review of FR-009: no requirement lost or changed.
 - 2026-11-23, independent review of FR-011: no requirement lost or changed.
+- 2026-11-23, independent review of FR-023: no requirement lost or changed.
