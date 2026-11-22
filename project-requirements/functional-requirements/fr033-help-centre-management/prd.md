@@ -17,7 +17,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 - Provide providers and patients with 24/7 access to self-service help resources
 - Reduce support ticket volume by enabling users to find answers independently
 - Enable admins to centrally manage and update help content for TWO distinct audiences: Providers and Patients
-- Maintain separate content repositories for provider-facing and patient-facing content to prevent cross-contamination
+- Maintain separate content repositories for provider-facing and patient-facing content to prevent cross-contamination (REQ-033-001)
 - Maintain a canonical Help Centre taxonomy (categories, ordering, visibility) aligned with `system-prd.md` and tenant UX (FR-032 / FR-035)
 - Support scalable content organization with multi-category structure for each audience
 - Maintain content consistency and quality through admin-controlled publishing workflow
@@ -28,8 +28,8 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 ### Multi-Tenant Architecture
 
-- **Patient Platform (P-08)**: Read-only access to Patient Help Centre content via FR-035 (Patient Help Center & Support Submission module) - patients view FAQs, guides, tutorials, and resources tailored for patient audience
-- **Provider Platform (PR-06)**: Read-only access to Provider Help Centre content via FR-032 (Provider Dashboard Settings module) - providers view FAQs, guides, tutorials, and resources tailored for provider audience
+- **Patient Platform (P-08)**: Read-only access to Patient Help Centre content via FR-035 (Patient Help Center & Support Submission module) - patients view FAQs, guides, tutorials, and resources tailored for patient audience (REQ-033-008)
+- **Provider Platform (PR-06)**: Read-only access to Provider Help Centre content via FR-032 (Provider Dashboard Settings module) - providers view FAQs, guides, tutorials, and resources tailored for provider audience (REQ-033-007)
 - **Admin Platform (A-09)**: Full Help Centre content management capabilities for BOTH provider and patient audiences including content creation, editing, categorization, versioning, and publishing with clear audience separation
 - **Shared Services (S-XX)**: No dedicated shared services required (uses standard S-05 for media storage)
 
@@ -39,43 +39,43 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 - Patients access Help Centre content via FR-035 (Patient Help Center & Support Submission module)
 - Content managed by admins in FR-033 is displayed to patients in FR-035 as read-only resources
-- Patient Help Centre includes: FAQs, Tutorial Guides, Troubleshooting Tips, Resource Library, Video Tutorials
+- Patient Help Centre includes: FAQs, Tutorial Guides, Troubleshooting Tips, Resource Library, Video Tutorials (REQ-033-003)
 - No Service Status page for patients (provider-only feature)
-- Content updates from FR-033 propagate to FR-035 patient views within 1 minute
+- Content updates from FR-033 propagate to FR-035 patient views within 1 minute (REQ-035-028)
 
 **Provider Platform (PR-06)**:
 
 - Providers access Help Centre content via FR-032 (Provider Dashboard Settings module)
 - Content managed by admins in FR-033 is displayed to providers in FR-032 as read-only resources
-- Provider Help Centre includes 10 categories aligned with `system-prd.md`/FR-032: FAQ's, Tutorial Guides, Contact Support, Troubleshooting Tips, Resource Library, Community Forum, Feedback & Suggestions, Service Status, Policy Information, Video Tutorials
-- Content updates from FR-033 propagate to FR-032 provider views within 1 minute
-- Search functionality across all provider Help Centre content
+- Provider Help Centre includes 10 categories aligned with `system-prd.md`/FR-032: FAQ's, Tutorial Guides, Contact Support, Troubleshooting Tips, Resource Library, Community Forum, Feedback & Suggestions, Service Status, Policy Information, Video Tutorials (REQ-033-002)
+- Content updates from FR-033 propagate to FR-032 provider views within 1 minute (REQ-033-034, REQ-032-092)
+- Search functionality across all provider Help Centre content (REQ-033-035)
 
 **Admin Platform (A-09)**:
 
 - Admins manage Help Centre content for TWO distinct audiences: Providers and Patients
-- Content repositories completely separated by audience type to prevent cross-contamination
+- Content repositories completely separated by audience type to prevent cross-contamination (REQ-033-001)
 - Admin selects "Provider" or "Patient" audience when creating/editing content
 - **Provider Content Management**:
   - Manage FAQ content (for FR-032 Screen 5.1)
   - Manage article content: Tutorial Guides, Troubleshooting Tips, Policies (for FR-032 Screen 5.2)
   - Upload and manage Resource Library files (for FR-032 Screen 5.3)
   - Upload and manage Video Tutorials (for FR-032 Screen 5.4)
-  - Manage Service Status components, incidents, and maintenance windows (for FR-032 Screen 5.7)
+  - Manage Service Status components, incidents, and maintenance windows (for FR-032 Screen 5.7) (REQ-033-030)
   - Configure category metadata for all 10 provider categories (visibility, ordering, labels, descriptions, routing)
 - **Patient Content Management**:
   - Manage FAQ content (for FR-035 patient FAQs)
   - Manage article content: Tutorial Guides, Troubleshooting Tips (for FR-035 patient articles)
   - Upload and manage Resource Library files (for FR-035 patient resources)
   - Upload and manage Video Tutorials (for FR-035 patient videos)
-  - No Service Status management for patients (provider-only feature)
+  - No Service Status management for patients (provider-only feature) (REQ-033-030)
 - **Shared Admin Capabilities** (applies to both provider and patient content):
-  - Publish/unpublish content to control visibility
-  - Version control for content updates with change tracking
-  - Preview content in audience-facing layout before publishing
-  - Audit trail for all content changes (who, when, what changed)
-  - Bulk operations for content management
-  - Content analytics (view counts, search queries, popular topics by audience)
+  - Publish/unpublish content to control visibility (REQ-033-037)
+  - Version control for content updates with change tracking (REQ-033-012)
+  - Preview content in audience-facing layout before publishing (REQ-033-011)
+  - Audit trail for all content changes (who, when, what changed) (REQ-033-015)
+  - Bulk operations for content management (REQ-033-062)
+  - Content analytics (view counts, search queries, popular topics by audience) (REQ-033-018)
   - Multi-language content management (future enhancement)
 
 **Shared Services (S-XX)**:
@@ -92,25 +92,25 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 **Out of Scope**:
 
-- Provider Contact Support form submissions (handled by FR-034: Support Center & Ticketing; forms in provider UX create support cases in FR-034)
-- Provider Feedback & Suggestions form submissions (handled by FR-034: Support Center & Ticketing; forms in provider UX create support cases in FR-034)
-- Real-time chat between providers and admin (handled by separate communication module A-10)
-- Provider-to-provider communication in community forum (future enhancement; FR-033 can only configure category presentation/routing)
-- Automated chatbot responses (future V2 enhancement)
-- Email digest subscriptions for content updates (future enhancement)
+- Provider Contact Support form submissions (handled by FR-034: Support Center & Ticketing; forms in provider UX create support cases in FR-034) (REQ-033-032)
+- Provider Feedback & Suggestions form submissions (handled by FR-034: Support Center & Ticketing; forms in provider UX create support cases in FR-034) (REQ-033-032)
+- Real-time chat between providers and admin (handled by separate communication module A-10) (REQ-033-032)
+- Provider-to-provider communication in community forum (future enhancement; FR-033 can only configure category presentation/routing) (REQ-033-032)
+- Automated chatbot responses (future V2 enhancement) (REQ-033-032)
+- Email digest subscriptions for content updates (future enhancement) (REQ-033-032)
 
 ### Entry Points
 
 **Provider Entry**:
 
-- Providers access Help Centre via "Help Centre" menu item in provider platform navigation
-- Direct link from provider dashboard settings page (FR-032 integration point)
+- Providers access Help Centre via "Help Centre" menu item in provider platform navigation (REQ-033-031)
+- Direct link from provider dashboard settings page (FR-032 integration point) (REQ-033-031)
 - Context-sensitive help links from various provider platform screens (future enhancement)
 
 **Admin Entry**:
 
-- Admins access Help Centre management via Settings > Help Centre Management
-- Quick access from admin dashboard for content updates
+- Admins access Help Centre management via Settings > Help Centre Management (REQ-033-031)
+- Quick access from admin dashboard for content updates (REQ-033-031)
 
 ---
 
@@ -127,7 +127,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 1. Provider navigates to "Help Centre" from provider platform navigation (per FR-032).
 2. FR-032 calls FR-033 provider Help Centre APIs to load the provider category registry (10 categories) and published provider-audience content (FAQs, Articles, Resources, Videos, Service Status).
 3. System displays category navigation and content in provider-facing layouts defined in FR-032 (Screens 5.x), routing Contact Support/Feedback categories to their form flows (FR-034 integration).
-4. Providers interact with content in read-only mode; any feedback or support submissions are handled by FR-032 + FR-034.
+4. Providers interact with content in read-only mode; any feedback or support submissions are handled by FR-032 + FR-034. (REQ-033-007)
 
 ---
 
@@ -153,13 +153,13 @@ The Help Centre Content Management module provides a centralized knowledge base 
 6. Admin enters details using the category-specific editor
 7. Admin uploads attachments if needed (images, PDFs, videos) - optimized for the content type
 8. Admin assigns tags for content organization and searchability
-9. Admin clicks "Preview" to see how content will appear to providers in the specific subscreen layout
-10. System renders preview matching provider-facing layout (accordion for FAQs, article layout for guides, file viewer for resources, video player for videos, status page for service status)
+9. Admin clicks "Preview" to see how content will appear to providers in the specific subscreen layout (REQ-033-011)
+10. System renders preview matching provider-facing layout (accordion for FAQs, article layout for guides, file viewer for resources, video player for videos, status page for service status) (REQ-033-011)
 11. Admin reviews preview and clicks "Save as Draft" or "Publish"
-12. System saves content with status (Draft/Published) and timestamps
-13. System logs content creation in audit trail (admin name, timestamp, action)
-14. If published, system makes content available in the provider Help Centre category within 1 minute
-15. System displays success confirmation with link to view published content
+12. System saves content with status (Draft/Published) and timestamps (REQ-033-053)
+13. System logs content creation in audit trail (admin name, timestamp, action) (REQ-033-015)
+14. If published, system makes content available in the provider Help Centre category within 1 minute (REQ-033-034)
+15. System displays success confirmation with link to view published content (REQ-033-053)
 
 ### Alternative Flows
 
@@ -170,13 +170,13 @@ The Help Centre Content Management module provides a centralized knowledge base 
   1. Admin navigates to Settings > Help Centre Management
   2. Admin searches/filters content by category, title, or tags
   3. Admin clicks "Edit" on target content item
-  4. System loads content editor pre-filled with existing content
-  5. System creates new version of content in version control
-  6. Admin makes changes to title, body, attachments, or content kind (a change of kind also moves the content to the matching section)
+  4. System loads content editor pre-filled with existing content (REQ-033-054)
+  5. System creates new version of content in version control (REQ-033-054)
+  6. Admin makes changes to title, body, attachments, or content kind (a change of kind also moves the content to the matching section) (REQ-033-036)
   7. Admin previews changes to verify formatting and accuracy
-  8. Admin saves changes with optional "Version note" describing what changed
-  9. System updates content version and logs change in audit trail
-  10. If content is published, system updates provider-facing content within 1 minute
+  8. Admin saves changes with optional "Version note" describing what changed (REQ-033-054)
+  9. System updates content version and logs change in audit trail (REQ-033-054)
+  10. If content is published, system updates provider-facing content within 1 minute (REQ-033-034)
   11. System sends notification to admins who subscribed to content change alerts (future enhancement)
 - **Outcome**: Content updated with new version and change tracked in audit trail
 
@@ -194,7 +194,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
   8. Admin previews FAQ accordion layout to verify organization
   9. Admin saves organization structure
   10. System updates FAQ navigation structure for provider Help Centre (FR-032 Screen 5.1)
-  11. Provider Help Centre reflects new organization in accordion layout within 1 minute
+  11. Provider Help Centre reflects new organization in accordion layout within 1 minute (REQ-033-034)
 - **Outcome**: FAQ content organized into logical topic sections displayed in accordion layout for easier provider navigation
 
 **A4: Admin Uploads Video Tutorial**:
@@ -205,15 +205,15 @@ The Help Centre Content Management module provides a centralized knowledge base 
   2. Admin clicks "Create New Video Tutorial"
   3. System displays video upload form with fields: title, description, video file upload, thumbnail image, transcript (optional), tags
   4. Admin enters title and description for video tutorial
-  5. Admin uploads video file (supports MP4, MOV formats, max 500MB)
+  5. Admin uploads video file (supports MP4, MOV formats, max 500MB) (REQ-033-077)
   6. System validates file size, format, and begins upload to media storage (S-05)
-  7. System displays upload progress bar
-  8. System auto-extracts video duration and generates thumbnail from video frame (10% mark)
+  7. System displays upload progress bar (REQ-033-077)
+  8. System auto-extracts video duration and generates thumbnail from video frame (10% mark) (REQ-033-077)
   9. Admin uploads custom thumbnail image or uses auto-generated thumbnail
   10. Admin optionally enters video transcript for accessibility
   11. Admin previews video in video player interface (matches FR-032 Screen 5.4)
   12. Admin publishes video tutorial
-  13. System processes video for streaming optimization (if applicable)
+  13. System processes video for streaming optimization (if applicable) (REQ-033-077)
   14. System makes video available in provider Help Centre Video Tutorials subscreen (FR-032 Screen 5.4)
 - **Outcome**: Video tutorial uploaded, processed, and published to Help Centre with video player interface
 
@@ -223,13 +223,13 @@ The Help Centre Content Management module provides a centralized knowledge base 
 - **Steps**:
   1. Admin identifies outdated content item in content list
   2. Admin clicks "Unpublish" action on content item
-  3. System prompts admin to confirm unpublish action with reason
+  3. System prompts admin to confirm unpublish action with reason (REQ-033-055)
   4. Admin enters reason (e.g., "Content outdated, new version coming soon")
   5. Admin confirms unpublish
-  6. System changes content status from "Published" to "Unpublished"
-  7. System removes content from provider Help Centre view within 1 minute
-  8. System logs unpublish action in audit trail with reason
-  9. Content remains in admin view as "Unpublished" for future editing or re-publishing
+  6. System changes content status from "Published" to "Unpublished" (REQ-033-055)
+  7. System removes content from provider Help Centre view within 1 minute (REQ-033-034)
+  8. System logs unpublish action in audit trail with reason (REQ-033-055)
+  9. Content remains in admin view as "Unpublished" for future editing or re-publishing (REQ-033-055)
 - **Outcome**: Content removed from provider view but preserved in admin system for future use
 
 **B1: Content Validation Fails**:
@@ -237,9 +237,9 @@ The Help Centre Content Management module provides a centralized knowledge base 
 - **Trigger**: Admin attempts to publish content with missing required fields or invalid format
 - **Steps**:
   1. Admin completes content creation form and clicks "Publish"
-  2. System validates required fields (category, title, content body)
+  2. System validates required fields (category, title, content body) (REQ-033-056)
   3. System detects validation error (e.g., missing title, empty content body, unsupported file format)
-  4. System displays error message highlighting missing/invalid fields
+  4. System displays error message highlighting missing/invalid fields (REQ-033-056)
   5. Admin corrects validation errors
   6. Admin re-submits content for publishing
   7. System re-validates and proceeds with publish if all validations pass
@@ -250,10 +250,10 @@ The Help Centre Content Management module provides a centralized knowledge base 
 - **Trigger**: Admin attempts to upload file larger than maximum allowed size
 - **Steps**:
   1. Admin selects file for upload (video, PDF, image) in appropriate management screen
-  2. System checks file size against limits (videos: 500MB, PDFs: 50MB, images: 10MB)
+  2. System checks file size against limits (videos: 500MB, PDFs: 50MB, images: 10MB) (REQ-033-057, REQ-033-010)
   3. File exceeds size limit
-  4. System displays error message with file size limit and suggested alternatives (compress file, use external video hosting)
-  5. Admin reduces file size or uses alternative hosting (YouTube/Vimeo embed link)
+  4. System displays error message with file size limit and suggested alternatives (compress file, use external video hosting) (REQ-033-057)
+  5. Admin reduces file size or uses alternative hosting (YouTube/Vimeo embed link) (REQ-033-057)
   6. Admin re-uploads compressed file or adds external video embed link
   7. System validates new file/link and proceeds with upload
 - **Outcome**: File size issue resolved and content uploaded successfully
@@ -264,14 +264,14 @@ The Help Centre Content Management module provides a centralized knowledge base 
 - **Steps**:
   1. Admin navigates to Settings > Help Centre Management > Service Status Management (Screen 6)
   2. System displays current overall status, service components list, incident history, maintenance schedule
-  3. Admin updates service component status (e.g., "API Service" → Degraded)
-  4. System automatically recalculates overall status based on component statuses (unless an admin has set the overall status by hand)
-  5. Admin creates new incident: enters title, description, selects affected services, sets status (Investigating)
-  6. System creates incident record and adds to incident history timeline
-  7. Admin updates incident status as investigation progresses (Investigating → Identified → Monitoring → Resolved)
-  8. System updates incident timeline with each status change
-  9. Status updates propagate to provider Service Status subscreen (FR-032 Screen 5.7) within 1 minute
-  10. Providers see the updated status in the status page interface within 1 minute
+  3. Admin updates service component status (e.g., "API Service" → Degraded) (REQ-033-081)
+  4. System automatically recalculates overall status based on component statuses (unless an admin has set the overall status by hand) (REQ-033-080)
+  5. Admin creates new incident: enters title, description, selects affected services, sets status (Investigating) (REQ-033-082)
+  6. System creates incident record and adds to incident history timeline (REQ-033-083)
+  7. Admin updates incident status as investigation progresses (Investigating → Identified → Monitoring → Resolved) (REQ-033-082)
+  8. System updates incident timeline with each status change (REQ-033-083)
+  9. Status updates propagate to provider Service Status subscreen (FR-032 Screen 5.7) within 1 minute (REQ-033-033)
+  10. Providers see the updated status in the status page interface within 1 minute (REQ-033-033)
 - **Outcome**: Service status updated and displayed to providers in status page interface
 
 ---
@@ -288,25 +288,25 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Category Navigation | navigation menu | Yes | Links to category management for the 10 provider Help Centre categories: FAQ's (Screen 2), Tutorial Guides (Screen 3, filtered), Contact Support (Screen 1.1), Troubleshooting Tips (Screen 3, filtered), Resource Library (Screen 4), Community Forum (Screen 1.1), Feedback & Suggestions (Screen 1.1), Service Status (Screen 6), Policy Information (Screen 3, filtered), Video Tutorials (Screen 5) | N/A |
-| Quick Stats | display cards | No | Summary statistics: total content, published content, draft content, total views | Read-only, calculated |
-| Recent Activity | timeline | No | Recent content changes and updates | Read-only, sorted by date |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Category Navigation | navigation menu | Yes | Links to category management for the 10 provider Help Centre categories: FAQ's (Screen 2), Tutorial Guides (Screen 3, filtered), Contact Support (Screen 1.1), Troubleshooting Tips (Screen 3, filtered), Resource Library (Screen 4), Community Forum (Screen 1.1), Feedback & Suggestions (Screen 1.1), Service Status (Screen 6), Policy Information (Screen 3, filtered), Video Tutorials (Screen 5) | N/A | ENT-help-centre-category.label |
+| Quick Stats | display cards | No | Summary statistics: total content, published content, draft content, total views | Read-only, calculated | ENT-help-centre-stats.total_content_count, ENT-help-centre-stats.published_content_count, ENT-help-centre-stats.draft_content_count, ENT-help-centre-stats.total_views |
+| Recent Activity | timeline | No | Recent content changes and updates | Read-only, sorted by date | ENT-help-centre-audit-entry.action_type, ENT-help-centre-audit-entry.occurred_at, ENT-help-centre-audit-entry.target_id |
 
 **Business Rules**:
 
-- Dashboard provides category navigation matching the provider Help Centre taxonomy in `system-prd.md`/FR-032 (10 categories)
-- Clicking "FAQs" category navigates to Screen 2 (FAQ Management) where FAQ list is displayed
-- Clicking "Tutorial Guides" navigates to Screen 3 (Article Management) filtered to Article Type = Tutorial Guide
-- Clicking "Troubleshooting Tips" navigates to Screen 3 (Article Management) filtered to Article Type = Troubleshooting Tip
-- Clicking "Policy Information" navigates to Screen 3 (Article Management) filtered to Article Type = Policy Information
-- Clicking "Resources" category navigates to Screen 4 (Resource Management) where resource list is displayed
-- Clicking "Videos" category navigates to Screen 5 (Video Management) where video list is displayed
-- Clicking "Service Status" category navigates to Screen 6 (Service Status Management) where service status overview is displayed
-- Clicking "Contact Support", "Feedback & Suggestions", or "Community Forum" navigates to Screen 1.1 (Category Configuration) for those categories
-- Quick stats update in real-time showing aggregate metrics across all content types
-- Recent activity shows: content created/edited/published, category configuration changes, service status updates
+- Dashboard provides category navigation matching the provider Help Centre taxonomy in `system-prd.md`/FR-032 (10 categories) (REQ-033-049)
+- Clicking "FAQs" category navigates to Screen 2 (FAQ Management) where FAQ list is displayed (REQ-033-049)
+- Clicking "Tutorial Guides" navigates to Screen 3 (Article Management) filtered to Article Type = Tutorial Guide (REQ-033-049)
+- Clicking "Troubleshooting Tips" navigates to Screen 3 (Article Management) filtered to Article Type = Troubleshooting Tip (REQ-033-049)
+- Clicking "Policy Information" navigates to Screen 3 (Article Management) filtered to Article Type = Policy Information (REQ-033-049)
+- Clicking "Resources" category navigates to Screen 4 (Resource Management) where resource list is displayed (REQ-033-049)
+- Clicking "Videos" category navigates to Screen 5 (Video Management) where video list is displayed (REQ-033-049)
+- Clicking "Service Status" category navigates to Screen 6 (Service Status Management) where service status overview is displayed (REQ-033-049)
+- Clicking "Contact Support", "Feedback & Suggestions", or "Community Forum" navigates to Screen 1.1 (Category Configuration) for those categories (REQ-033-049)
+- Quick stats update in real-time showing aggregate metrics across all content types (REQ-033-050)
+- Recent activity shows: content created/edited/published, category configuration changes, service status updates (REQ-033-050)
 
 **Notes**:
 
@@ -324,25 +324,25 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Category List | table/list | Yes | Provider categories with ordering and visibility controls | Categories are predefined; cannot be deleted |
-| Display Order | number / drag-drop | Yes | Order categories appear in provider Help Centre navigation | Integer; drag-and-drop supported |
-| Visibility Toggle | toggle | Yes | Show/Hide category in provider Help Centre navigation | Every hide (any of the 10 categories) asks the admin for confirmation |
-| Category Label | text | Yes | Display label per category | Max 50 chars |
-| Category Description | textarea | No | Short description shown on category tile/landing | Max 200 chars |
-| Routing Type | dropdown | Yes | How the category behaves in provider UX | Content List, Ticket Form, External Link, Coming Soon |
-| External URL | url | No | Used when Routing Type = External Link (e.g., Community Forum link-out) | Must be valid HTTPS URL |
-| Contact Support Intro Copy | rich text | No | Admin-managed copy shown above the Contact Support submission CTA/form | Sanitized HTML |
-| Feedback & Suggestions Intro Copy | rich text | No | Admin-managed copy shown above the Feedback submission CTA/form | Sanitized HTML |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Category List | table/list | Yes | Provider categories with ordering and visibility controls | Categories are predefined; cannot be deleted (REQ-033-043) | ENT-help-centre-category.category_key |
+| Display Order | number / drag-drop | Yes | Order categories appear in provider Help Centre navigation | Integer; drag-and-drop supported | ENT-help-centre-category.display_order |
+| Visibility Toggle | toggle | Yes | Show/Hide category in provider Help Centre navigation | Every hide (any of the 10 categories) asks the admin for confirmation (REQ-033-044) | ENT-help-centre-category.visible |
+| Category Label | text | Yes | Display label per category | Max 50 chars (REQ-033-048) | ENT-help-centre-category.label |
+| Category Description | textarea | No | Short description shown on category tile/landing | Max 200 chars (REQ-033-048) | ENT-help-centre-category.description |
+| Routing Type | dropdown | Yes | How the category behaves in provider UX | Content List, Ticket Form, External Link, Coming Soon (REQ-033-045) | ENT-help-centre-category.routing_type |
+| External URL | url | No | Used when Routing Type = External Link (e.g., Community Forum link-out) | Must be valid HTTPS URL (REQ-033-046) | ENT-help-centre-category.external_url |
+| Contact Support Intro Copy | rich text | No | Admin-managed copy shown above the Contact Support submission CTA/form | Sanitized HTML (REQ-033-048) | ENT-help-centre-category.intro_copy |
+| Feedback & Suggestions Intro Copy | rich text | No | Admin-managed copy shown above the Feedback submission CTA/form | Sanitized HTML (REQ-033-048) | ENT-help-centre-category.intro_copy |
 
 **Business Rules**:
 
-- Provider Help Centre categories are fixed to the 10-category taxonomy in `system-prd.md`; admins can reorder and toggle visibility but cannot add/remove categories.
-- For Contact Support and Feedback & Suggestions, Routing Type MUST be Ticket Form and MUST route to the FR-034-backed submission flows exposed in provider UX (FR-032 integration).
-- For Community Forum, Routing Type defaults to Coming Soon in MVP; if set to External Link, the External URL is required.
-- Changes to category registry propagate to provider Help Centre navigation within 1 minute.
-- All category configuration changes are versioned and recorded in audit trail (who/when/old value/new value).
+- Provider Help Centre categories are fixed to the 10-category taxonomy in `system-prd.md`; admins can reorder and toggle visibility but cannot add/remove categories. (REQ-033-043)
+- For Contact Support and Feedback & Suggestions, Routing Type MUST be Ticket Form and MUST route to the FR-034-backed submission flows exposed in provider UX (FR-032 integration). (REQ-033-045)
+- For Community Forum, Routing Type defaults to Coming Soon in MVP; if set to External Link, the External URL is required. (REQ-033-046)
+- Changes to category registry propagate to provider Help Centre navigation within 1 minute. (REQ-033-033)
+- All category configuration changes are versioned and recorded in audit trail (who/when/old value/new value). (REQ-033-047)
 
 ---
 
@@ -352,30 +352,30 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| FAQ List | table/list | Yes | List of all FAQ items organized by topics | Each row: question, topic, display order, status, helpfulness rating, actions (Edit, Delete, Preview) |
-| FAQ Question | text | Yes | FAQ question text | Max 200 chars |
-| FAQ Answer | rich text | Yes | FAQ answer content | Max 5000 chars, supports HTML formatting |
-| FAQ Topic | dropdown | Yes | Topic category for organization | Pre-defined topics or create new |
-| Display Order | number | No | Order within topic | Integer, auto-incremented |
-| Publish Status | dropdown | Yes | Draft, Published, Unpublished | Pre-defined statuses |
-| Helpfulness Rating | display | No | Aggregated feedback (Yes/No counts) | Read-only, calculated from provider feedback |
-| Action Buttons | buttons | Yes | Add New FAQ, Edit, Delete, Preview, Manage Topics | N/A |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| FAQ List | table/list | Yes | List of all FAQ items organized by topics | Each row: question, topic, display order, status, helpfulness rating, actions (Edit, Delete, Preview) | ENT-help-centre-content.title, ENT-help-centre-content.topic, ENT-help-centre-content.display_order, ENT-help-centre-content.publish_status, ENT-help-centre-content.helpfulness_rating |
+| FAQ Question | text | Yes | FAQ question text | Max 200 chars (REQ-033-065) | ENT-help-centre-content.title |
+| FAQ Answer | rich text | Yes | FAQ answer content | Max 5000 chars, supports HTML formatting (REQ-033-065) | ENT-help-centre-content.body |
+| FAQ Topic | dropdown | Yes | Topic category for organization | Pre-defined topics or create new (REQ-033-065) | ENT-help-centre-content.topic |
+| Display Order | number | No | Order within topic | Integer, auto-incremented (REQ-033-065) | ENT-help-centre-content.display_order |
+| Publish Status | dropdown | Yes | Draft, Published, Unpublished | Pre-defined statuses (REQ-033-065) | ENT-help-centre-content.publish_status |
+| Helpfulness Rating | display | No | Aggregated feedback (Yes/No counts) | Read-only, calculated from provider feedback (REQ-033-087) | ENT-help-centre-content.helpfulness_rating |
+| Action Buttons | buttons | Yes | Add New FAQ, Edit, Delete, Preview, Manage Topics | N/A | no graph field (control) |
 
 **Business Rules**:
 
-- FAQ list displays all FAQs organized by topics with expandable topic sections
-- FAQ list filterable by topic, status, and searchable by question text
+- FAQ list displays all FAQs organized by topics with expandable topic sections (REQ-033-064)
+- FAQ list filterable by topic, status, and searchable by question text (REQ-022-118)
 - "Add New FAQ" button opens FAQ creation form (inline or modal)
-- "Edit" button on each FAQ opens FAQ editor pre-filled with existing content
-- "Delete" button on each FAQ prompts confirmation before deletion (soft-delete)
-- "Preview" button shows exact accordion layout as providers will see (FR-032 Screen 5.1)
+- "Edit" button on each FAQ opens FAQ editor pre-filled with existing content (REQ-033-060)
+- "Delete" button on each FAQ prompts confirmation before deletion (soft-delete) (REQ-033-059)
+- "Preview" button shows exact accordion layout as providers will see (FR-032 Screen 5.1) (REQ-033-064)
 - "Manage Topics" button opens topic management interface (create, edit, delete, reorder topics)
-- FAQs organized by topics with drag-and-drop reordering within topics
-- Multiple FAQs can be edited in batch
-- Helpfulness feedback tracked per FAQ for analytics
-- FAQ editor optimized for accordion display format (question as header, answer as expandable content)
+- FAQs organized by topics with drag-and-drop reordering within topics (REQ-033-064)
+- Multiple FAQs can be edited in batch (REQ-033-062)
+- Helpfulness feedback tracked per FAQ for analytics (REQ-033-087)
+- FAQ editor optimized for accordion display format (question as header, answer as expandable content) (REQ-033-064)
 
 **Notes**:
 
@@ -384,7 +384,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 - Topic selector with "Create New Topic" option
 - Drag-and-drop interface for reordering FAQs within topics
 - Preview shows accordion layout with expand/collapse functionality matching FR-032 Screen 5.1
-- Bulk operations: assign multiple FAQs to topic, change status for multiple FAQs, delete multiple FAQs
+- Bulk operations: assign multiple FAQs to topic, change status for multiple FAQs, delete multiple FAQs (REQ-033-062)
 - Breadcrumb navigation: Settings > Help Centre Management > FAQs
 
 ---
@@ -395,36 +395,36 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| FAQ Question | text | Yes | FAQ question text | Max 200 chars, required |
-| FAQ Answer | rich text | Yes | FAQ answer content | Max 5000 chars, supports HTML formatting, required |
-| FAQ Topic | dropdown | Yes | Topic category for organization | Pre-defined topics or create new, required |
-| Display Order | number | No | Order within topic | Integer, auto-incremented if not specified |
-| Publish Status | dropdown | Yes | Draft, Published, Unpublished | Pre-defined statuses, defaults to Draft |
-| Preview Button | button | No | Preview FAQ in accordion layout | N/A |
-| Save Button | button | Yes | Save FAQ (as Draft or Publish) | N/A |
-| Cancel Button | button | No | Cancel and return to FAQ list | N/A |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| FAQ Question | text | Yes | FAQ question text | Max 200 chars, required | ENT-help-centre-content.title |
+| FAQ Answer | rich text | Yes | FAQ answer content | Max 5000 chars, supports HTML formatting, required | ENT-help-centre-content.body |
+| FAQ Topic | dropdown | Yes | Topic category for organization | Pre-defined topics or create new, required | ENT-help-centre-content.topic |
+| Display Order | number | No | Order within topic | Integer, auto-incremented if not specified | ENT-help-centre-content.display_order |
+| Publish Status | dropdown | Yes | Draft, Published, Unpublished | Pre-defined statuses, defaults to Draft | ENT-help-centre-content.publish_status |
+| Preview Button | button | No | Preview FAQ in accordion layout | N/A | no graph field (control) |
+| Save Button | button | Yes | Save FAQ (as Draft or Publish) | N/A | no graph field (control) |
+| Cancel Button | button | No | Cancel and return to FAQ list | N/A | no graph field (control) |
 
 **Business Rules**:
 
 - Form opens in modal or separate screen when "Add New FAQ" or "Edit" is clicked from Screen 2
-- If editing existing FAQ, form is pre-filled with current FAQ data
-- If creating new FAQ, form starts empty with default values (Draft status, auto-incremented display order)
+- If editing existing FAQ, form is pre-filled with current FAQ data (REQ-033-060)
+- If creating new FAQ, form starts empty with default values (Draft status, auto-incremented display order) (REQ-033-060)
 - Topic dropdown includes "Create New Topic" option which opens topic creation dialog
-- Rich text editor for FAQ Answer supports: bold, italic, lists, links, images
-- "Preview" button shows FAQ in accordion layout exactly as providers will see (FR-032 Screen 5.1)
-- Form validation: question and answer are required before saving
-- On save, FAQ is created/updated and admin returns to Screen 2 (FAQ Management) with updated list
-- On cancel, changes are discarded and admin returns to Screen 2
+- Rich text editor for FAQ Answer supports: bold, italic, lists, links, images (REQ-033-061)
+- "Preview" button shows FAQ in accordion layout exactly as providers will see (FR-032 Screen 5.1) (REQ-033-064)
+- Form validation: question and answer are required before saving (REQ-033-065)
+- On save, FAQ is created/updated and admin returns to Screen 2 (FAQ Management) with updated list (REQ-033-060)
+- On cancel, changes are discarded and admin returns to Screen 2 (REQ-033-060)
 
 **Notes**:
 
 - Form layout: question field at top, answer field below with rich text editor
 - Character counters for question (200 max) and answer (5000 max)
 - Topic selector with search/autocomplete for existing topics
-- Save options: "Save as Draft" or "Publish" buttons
-- Success message displayed after save: "FAQ saved successfully" or "FAQ published successfully"
+- Save options: "Save as Draft" or "Publish" buttons (REQ-033-053)
+- Success message displayed after save: "FAQ saved successfully" or "FAQ published successfully" (REQ-033-053)
 - Breadcrumb navigation: Settings > Help Centre Management > FAQs > [Add New FAQ / Edit FAQ]
 
 ---
@@ -435,15 +435,15 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Audience Switch | toggle | Yes | Selects whether Provider or Patient topics are shown and edited | Provider or Patient; starts on the audience of the FAQ screen it was opened from |
-| Topic List | table/list | Yes | List of all FAQ topics of the selected audience | Each row: topic name, description (optional), number of FAQs, display order, actions (Edit, Delete) |
-| Topic Name | text | Yes | Name of topic section (e.g., "Quote Submission", "Payment Processing") | Max 100 chars, unique per audience (Provider/Patient) |
-| Topic Description | textarea | No | Optional description for internal/admin context | Max 250 chars |
-| Display Order | number | Yes | Order in which topic appears in FAQ accordion | Integer, required; supports drag-and-drop reordering |
-| Number of FAQs | display | No | Count of FAQs currently assigned to topic | Read-only, calculated |
-| Action Buttons | buttons | Yes | Add New Topic, Edit, Delete, Save Order, Cancel | N/A |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Audience Switch | toggle | Yes | Selects whether Provider or Patient topics are shown and edited | Provider or Patient; starts on the audience of the FAQ screen it was opened from | ENT-faq-topic.audience |
+| Topic List | table/list | Yes | List of all FAQ topics of the selected audience | Each row: topic name, description (optional), number of FAQs, display order, actions (Edit, Delete) | ENT-faq-topic.name, ENT-faq-topic.description, ENT-faq-topic.faq_count, ENT-faq-topic.display_order |
+| Topic Name | text | Yes | Name of topic section (e.g., "Quote Submission", "Payment Processing") | Max 100 chars, unique per audience (Provider/Patient) (REQ-033-066) | ENT-faq-topic.name |
+| Topic Description | textarea | No | Optional description for internal/admin context | Max 250 chars (REQ-033-066) | ENT-faq-topic.description |
+| Display Order | number | Yes | Order in which topic appears in FAQ accordion | Integer, required; supports drag-and-drop reordering (REQ-033-066) | ENT-faq-topic.display_order |
+| Number of FAQs | display | No | Count of FAQs currently assigned to topic | Read-only, calculated (REQ-033-068) | ENT-faq-topic.faq_count |
+| Action Buttons | buttons | Yes | Add New Topic, Edit, Delete, Save Order, Cancel | N/A | no graph field (control) |
 
 **Business Rules**:
 
@@ -451,13 +451,13 @@ The Help Centre Content Management module provides a centralized knowledge base 
 - Topic list shows all topics for the selected audience (Provider or Patient, chosen with the audience switch) with current display order.
 - "Add New Topic" opens inline row or modal with fields: Topic Name, Topic Description, Display Order (auto-suggested as last).
 - "Edit" opens topic edit form (inline or modal) allowing admin to change name, description, and display order.
-- "Delete" prompts confirmation; topics with assigned FAQs cannot be hard-deleted:
-  - If topic has FAQs, system blocks deletion and prompts admin to reassign or remove FAQs first.
-  - Implementation may soft-delete topic only when no FAQs are assigned.
-- Topics support drag-and-drop reordering; moving rows updates Display Order values.
-- "Save Order" persists new topic ordering; the FAQ accordion of the selected audience (FR-032 Screen 5.1 for providers, FR-035 for patients) reflects updated topic order.
-- "Cancel" discards unsaved changes to ordering or edits and returns admin to the FAQ management screen it was opened from.
-- Validation ensures Topic Name is required and unique within the audience; Display Order must be a positive integer.
+- "Delete" prompts confirmation; topics with assigned FAQs cannot be hard-deleted (REQ-033-067):
+  - If topic has FAQs, system blocks deletion and prompts admin to reassign or remove FAQs first. (REQ-033-067)
+  - Implementation may soft-delete topic only when no FAQs are assigned. (REQ-033-067)
+- Topics support drag-and-drop reordering; moving rows updates Display Order values. (REQ-033-066)
+- "Save Order" persists new topic ordering; the FAQ accordion of the selected audience (FR-032 Screen 5.1 for providers, FR-035 for patients) reflects updated topic order. (REQ-033-066)
+- "Cancel" discards unsaved changes to ordering or edits and returns admin to the FAQ management screen it was opened from. (REQ-033-066)
+- Validation ensures Topic Name is required and unique within the audience; Display Order must be a positive integer. (REQ-033-066)
 
 **Notes**:
 
@@ -474,32 +474,32 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Article List | table/list | Yes | List of all articles organized by type | Each row: title, article type, category/tags, status, last updated, view count, actions (Edit, Delete, Preview) |
-| Article Title | text | Yes | Article title | Max 200 chars |
-| Article Content | rich text | Yes | Full article content with formatting | Max 10,000 chars, supports HTML, headings, lists, images, tables |
-| Article Type | dropdown | Yes | Tutorial Guide, Troubleshooting Tip, Policy Information | Pre-defined types |
-| Category/Tags | multi-select | No | Content tags for organization | Pre-defined tags or create new |
-| Table of Contents | auto-generated | No | Auto-generated from headings (for articles >1000 words) | Read-only, generated on save |
-| Related Articles | multi-select | No | Links to related articles | References to other articles |
-| Publish Status | dropdown | Yes | Draft, Published, Unpublished | Pre-defined statuses |
-| Helpfulness Rating | display | No | Aggregated feedback (Yes/No counts) | Read-only, calculated from provider feedback |
-| Action Buttons | buttons | Yes | Add New Article, Edit, Delete, Preview | N/A |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Article List | table/list | Yes | List of all articles organized by type | Each row: title, article type, category/tags, status, last updated, view count, actions (Edit, Delete, Preview) | ENT-help-centre-content.title, ENT-help-centre-content.content_type, ENT-help-centre-content.tags, ENT-help-centre-content.publish_status, ENT-help-centre-content.updated_at, ENT-help-centre-content.view_count |
+| Article Title | text | Yes | Article title | Max 200 chars (REQ-033-070) | ENT-help-centre-content.title |
+| Article Content | rich text | Yes | Full article content with formatting | Max 10,000 chars, supports HTML, headings, lists, images, tables (REQ-033-070) | ENT-help-centre-content.body |
+| Article Type | dropdown | Yes | Tutorial Guide, Troubleshooting Tip, Policy Information | Pre-defined types (REQ-033-070) | ENT-help-centre-content.content_type |
+| Category/Tags | multi-select | No | Content tags for organization | Pre-defined tags or create new (REQ-033-070) | ENT-help-centre-content.tags |
+| Table of Contents | auto-generated | No | Auto-generated from headings (for articles >1000 words) | Read-only, generated on save (REQ-033-071) | ENT-help-centre-content.table_of_contents |
+| Related Articles | multi-select | No | Links to related articles | References to other articles (REQ-033-063) | ENT-help-centre-content.related_content_ids |
+| Publish Status | dropdown | Yes | Draft, Published, Unpublished | Pre-defined statuses | ENT-help-centre-content.publish_status |
+| Helpfulness Rating | display | No | Aggregated feedback (Yes/No counts) | Read-only, calculated from provider feedback (REQ-033-087) | ENT-help-centre-content.helpfulness_rating |
+| Action Buttons | buttons | Yes | Add New Article, Edit, Delete, Preview | N/A | no graph field (control) |
 
 **Business Rules**:
 
-- Article list displays all articles organized by type (Tutorial Guide, Troubleshooting Tip, Policy Information)
-- Article list filterable by type, category/tags, status, and searchable by title
+- Article list displays all articles organized by type (Tutorial Guide, Troubleshooting Tip, Policy Information) (REQ-033-069)
+- Article list filterable by type, category/tags, status, and searchable by title (REQ-022-119)
 - "Add New Article" button opens article creation form (inline or modal)
 - "Edit" button on each article opens article editor pre-filled with existing content
-- "Delete" button on each article prompts confirmation before deletion (soft-delete)
-- "Preview" button shows exact article layout as providers will see (FR-032 Screen 5.2)
-- Article editor optimized for article layout format (full-width content with formatted text, images, code blocks)
-- Rich text editor supports: headings (H1-H6), bold, italic, lists, links, images, tables, code blocks
-- Table of contents auto-generated for articles with multiple headings (articles >1000 words)
-- Related articles can be manually assigned or auto-suggested based on tags/category
-- Print-friendly view available in preview
+- "Delete" button on each article prompts confirmation before deletion (soft-delete) (REQ-033-059)
+- "Preview" button shows exact article layout as providers will see (FR-032 Screen 5.2) (REQ-033-069)
+- Article editor optimized for article layout format (full-width content with formatted text, images, code blocks) (REQ-033-069)
+- Rich text editor supports: headings (H1-H6), bold, italic, lists, links, images, tables, code blocks (REQ-033-061)
+- Table of contents auto-generated for articles with multiple headings (articles >1000 words) (REQ-033-071)
+- Related articles can be manually assigned or auto-suggested based on tags/category (REQ-033-063)
+- Print-friendly view available in preview (REQ-033-069)
 
 **Notes**:
 
@@ -510,7 +510,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 - Step-by-step tutorial format: numbered lists with visual separators
 - Preview shows: formatted article with table of contents (if applicable), related articles section matching FR-032 Screen 5.2
 - Character counter for content body
-- Bulk operations: change status for multiple articles, delete multiple articles
+- Bulk operations: change status for multiple articles, delete multiple articles (REQ-033-062)
 - Breadcrumb navigation: Settings > Help Centre Management > Articles
 
 ---
@@ -521,32 +521,32 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Article Title | text | Yes | Article title | Max 200 chars, required |
-| Article Content | rich text | Yes | Full article content with formatting | Max 10,000 chars, supports HTML, headings, lists, images, tables, required |
-| Article Type | dropdown | Yes | Tutorial Guide, Troubleshooting Tip, Policy Information | Pre-defined types, required |
-| Category/Tags | multi-select | No | Content tags for organization | Pre-defined tags or create new |
-| Related Articles | multi-select | No | Links to related articles | References to other articles |
-| Publish Status | dropdown | Yes | Draft, Published, Unpublished | Pre-defined statuses, defaults to Draft |
-| Table of Contents | auto-generated | No | Auto-generated from headings (for articles >1000 words) | Read-only, generated on save |
-| Preview Button | button | No | Preview article in article layout | N/A |
-| Save Button | button | Yes | Save article (as Draft or Publish) | N/A |
-| Cancel Button | button | No | Cancel and return to article list | N/A |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Article Title | text | Yes | Article title | Max 200 chars, required (REQ-033-070) | ENT-help-centre-content.title |
+| Article Content | rich text | Yes | Full article content with formatting | Max 10,000 chars, supports HTML, headings, lists, images, tables, required (REQ-033-070) | ENT-help-centre-content.body |
+| Article Type | dropdown | Yes | Tutorial Guide, Troubleshooting Tip, Policy Information | Pre-defined types, required (REQ-033-070) | ENT-help-centre-content.content_type |
+| Category/Tags | multi-select | No | Content tags for organization | Pre-defined tags or create new | ENT-help-centre-content.tags |
+| Related Articles | multi-select | No | Links to related articles | References to other articles (REQ-033-063) | ENT-help-centre-content.related_content_ids |
+| Publish Status | dropdown | Yes | Draft, Published, Unpublished | Pre-defined statuses, defaults to Draft | ENT-help-centre-content.publish_status |
+| Table of Contents | auto-generated | No | Auto-generated from headings (for articles >1000 words) | Read-only, generated on save (REQ-033-071) | ENT-help-centre-content.table_of_contents |
+| Preview Button | button | No | Preview article in article layout | N/A | no graph field (control) |
+| Save Button | button | Yes | Save article (as Draft or Publish) | N/A | no graph field (control) |
+| Cancel Button | button | No | Cancel and return to article list | N/A | no graph field (control) |
 
 **Business Rules**:
 
 - Form opens in modal or separate screen when "Add New Article" or "Edit" is clicked from Screen 3
-- If editing existing article, form is pre-filled with current article data
-- If creating new article, form starts empty with default values (Draft status)
-- Rich text editor supports: headings (H1-H6), bold, italic, lists, links, images, tables, code blocks
-- Table of contents auto-generated for articles with multiple headings (articles >1000 words) on save
-- "Preview" button shows article in article layout exactly as providers will see (FR-032 Screen 5.2)
-- Form validation: title and content are required before saving
-- Image upload available inline within editor
-- Related articles can be manually selected or auto-suggested based on tags/category
-- On save, article is created/updated and admin returns to Screen 3 (Article Management) with updated list
-- On cancel, changes are discarded and admin returns to Screen 3
+- If editing existing article, form is pre-filled with current article data (REQ-033-060)
+- If creating new article, form starts empty with default values (Draft status) (REQ-033-060)
+- See REQ-033-061.
+- Table of contents auto-generated for articles with multiple headings (articles >1000 words) on save (REQ-033-071)
+- "Preview" button shows article in article layout exactly as providers will see (FR-032 Screen 5.2) (REQ-033-069)
+- Form validation: title and content are required before saving (REQ-033-070)
+- Image upload available inline within editor (REQ-033-061)
+- Related articles can be manually selected or auto-suggested based on tags/category (REQ-033-063)
+- On save, article is created/updated and admin returns to Screen 3 (Article Management) with updated list (REQ-033-060)
+- On cancel, changes are discarded and admin returns to Screen 3 (REQ-033-060)
 
 **Notes**:
 
@@ -554,9 +554,9 @@ The Help Centre Content Management module provides a centralized knowledge base 
 - Character counter for content body (10,000 max)
 - Image upload inline within editor with caption support
 - Step-by-step tutorial format support: numbered lists with visual separators
-- Print-friendly view available in preview
-- Save options: "Save as Draft" or "Publish" buttons
-- Success message displayed after save
+- See REQ-033-069.
+- See REQ-033-053.
+- Success message displayed after save (REQ-033-053)
 - Breadcrumb navigation: Settings > Help Centre Management > Articles > [Add New Article / Edit Article]
 
 ---
@@ -567,19 +567,19 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Resource List | table/list | Yes | List of all resources organized by category | Each row: name, category, file type, file size, download count, status, last updated, actions (Edit, Delete, Preview, Download) |
-| Resource Name | text | Yes | Display name for resource | Max 200 chars |
-| Resource Description | textarea | No | Brief description of resource | Max 500 chars |
-| Resource File | file upload | Yes | File to upload (PDF, DOCX, XLSX, etc.) | Max 50MB, whitelist: PDF, DOCX, XLSX, PNG, JPG |
-| Resource Category | dropdown | No | Category (Templates, Documents, Forms, etc.) | Pre-defined categories |
-| File Type | auto-detected | No | File format detected from upload | Read-only, auto-detected |
-| File Size | auto-calculated | No | File size in MB | Read-only, auto-calculated |
-| Thumbnail/Icon | image upload | No | Custom thumbnail or file type icon | Max 1MB, PNG/JPG, 128x128px recommended |
-| Download Count | display | No | Number of times resource downloaded | Read-only, incremented on download |
-| Publish Status | dropdown | Yes | Draft, Published, Unpublished | Pre-defined statuses |
-| Action Buttons | buttons | Yes | Add New Resource, Edit, Delete, Preview, Download | N/A |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Resource List | table/list | Yes | List of all resources organized by category | Each row: name, category, file type, file size, download count, status, last updated, actions (Edit, Delete, Preview, Download) | ENT-help-centre-content.title, ENT-help-centre-content.topic, ENT-help-centre-content.file_type, ENT-help-centre-content.file_size, ENT-help-centre-content.download_count, ENT-help-centre-content.publish_status, ENT-help-centre-content.updated_at |
+| Resource Name | text | Yes | Display name for resource | Max 200 chars (REQ-033-072) | ENT-help-centre-content.title |
+| Resource Description | textarea | No | Brief description of resource | Max 500 chars (REQ-033-072) | ENT-help-centre-content.summary |
+| Resource File | file upload | Yes | File to upload (PDF, DOCX, XLSX, etc.) | Max 50MB, whitelist: PDF, DOCX, XLSX, PNG, JPG (REQ-033-072, REQ-033-024) | ENT-help-centre-content.attachments |
+| Resource Category | dropdown | No | Category (Templates, Documents, Forms, etc.) | Pre-defined categories (REQ-033-072) | ENT-help-centre-content.topic |
+| File Type | auto-detected | No | File format detected from upload | Read-only, auto-detected (REQ-033-073) | ENT-help-centre-content.file_type |
+| File Size | auto-calculated | No | File size in MB | Read-only, auto-calculated (REQ-033-073) | ENT-help-centre-content.file_size |
+| Thumbnail/Icon | image upload | No | Custom thumbnail or file type icon | Max 1MB, PNG/JPG, 128x128px recommended (REQ-033-072) | ENT-help-centre-content.thumbnail_url |
+| Download Count | display | No | Number of times resource downloaded | Read-only, incremented on download | ENT-help-centre-content.download_count |
+| Publish Status | dropdown | Yes | Draft, Published, Unpublished | Pre-defined statuses | ENT-help-centre-content.publish_status |
+| Action Buttons | buttons | Yes | Add New Resource, Edit, Delete, Preview, Download | N/A | no graph field (control) |
 
 **Business Rules**:
 
@@ -587,24 +587,24 @@ The Help Centre Content Management module provides a centralized knowledge base 
 - Resource list filterable by category, file type, status, and searchable by name
 - "Add New Resource" button opens resource upload form (inline or modal)
 - "Edit" button on each resource opens resource editor pre-filled with existing metadata
-- "Delete" button on each resource prompts confirmation before deletion (soft-delete)
+- "Delete" button on each resource prompts confirmation before deletion (soft-delete) (REQ-033-059)
 - "Preview" button shows exact file viewer interface as providers will see (FR-032 Screen 5.3)
-- "Download" button allows admin to download resource file
+- "Download" button allows admin to download resource file (REQ-033-075)
 - File upload interface optimized for resource management (drag-and-drop or file picker with progress indicator)
-- File type icons auto-assigned if no custom thumbnail uploaded
+- File type icons auto-assigned if no custom thumbnail uploaded (REQ-033-073)
 - Download count tracked per resource
-- Preview available for PDF and image files (opens in modal)
+- Preview available for PDF and image files (opens in modal) (REQ-033-075)
 
 **Notes**:
 
 - Resource management interface: list view with action buttons for each resource item
 - Resource creation/editing: form with file upload, metadata fields, thumbnail upload
-- File validation: size check, format check, virus scan
-- Thumbnail generation: auto-generate from PDF first page or use custom upload
-- Preview modal: shows resource card with thumbnail, name, description, file type badge, download button matching FR-032 Screen 5.3
-- Bulk upload: upload multiple files at once
-- File replacement: replace existing file while keeping same resource record
-- Bulk operations: change status for multiple resources, delete multiple resources
+- File validation: size check, format check, virus scan (REQ-033-073)
+- See REQ-033-073.
+- Preview modal: shows resource card with thumbnail, name, description, file type badge, download button matching FR-032 Screen 5.3 (REQ-033-086)
+- Bulk upload: upload multiple files at once (REQ-033-062)
+- File replacement: replace existing file while keeping same resource record (REQ-033-074)
+- Bulk operations: change status for multiple resources, delete multiple resources (REQ-033-062)
 - Breadcrumb navigation: Settings > Help Centre Management > Resources
 
 ---
@@ -615,34 +615,34 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Resource Name | text | Yes | Display name for resource | Max 200 chars, required |
-| Resource Description | textarea | No | Brief description of resource | Max 500 chars |
-| Resource File | file upload | Yes (for new) | File to upload (PDF, DOCX, XLSX, etc.) | Max 50MB, whitelist: PDF, DOCX, XLSX, PNG, JPG, required for new resources |
-| Resource Category | dropdown | No | Category (Templates, Documents, Forms, etc.) | Pre-defined categories |
-| Thumbnail/Icon | image upload | No | Custom thumbnail or file type icon | Max 1MB, PNG/JPG, 128x128px recommended |
-| Publish Status | dropdown | Yes | Draft, Published, Unpublished | Pre-defined statuses, defaults to Draft |
-| File Type | auto-detected | No | File format detected from upload | Read-only, auto-detected |
-| File Size | auto-calculated | No | File size in MB | Read-only, auto-calculated |
-| Preview Button | button | No | Preview resource in file viewer interface | N/A |
-| Save Button | button | Yes | Save resource (as Draft or Publish) | N/A |
-| Cancel Button | button | No | Cancel and return to resource list | N/A |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Resource Name | text | Yes | Display name for resource | Max 200 chars, required (REQ-033-072) | ENT-help-centre-content.title |
+| Resource Description | textarea | No | Brief description of resource | Max 500 chars (REQ-033-072) | ENT-help-centre-content.summary |
+| Resource File | file upload | Yes (for new) | File to upload (PDF, DOCX, XLSX, etc.) | Max 50MB, whitelist: PDF, DOCX, XLSX, PNG, JPG, required for new resources (REQ-033-072, REQ-033-024) | ENT-help-centre-content.attachments |
+| Resource Category | dropdown | No | Category (Templates, Documents, Forms, etc.) | Pre-defined categories (REQ-033-072) | ENT-help-centre-content.topic |
+| Thumbnail/Icon | image upload | No | Custom thumbnail or file type icon | Max 1MB, PNG/JPG, 128x128px recommended (REQ-033-072) | ENT-help-centre-content.thumbnail_url |
+| Publish Status | dropdown | Yes | Draft, Published, Unpublished | Pre-defined statuses, defaults to Draft | ENT-help-centre-content.publish_status |
+| File Type | auto-detected | No | File format detected from upload | Read-only, auto-detected (REQ-033-073) | ENT-help-centre-content.file_type |
+| File Size | auto-calculated | No | File size in MB | Read-only, auto-calculated (REQ-033-073) | ENT-help-centre-content.file_size |
+| Preview Button | button | No | Preview resource in file viewer interface | N/A | no graph field (control) |
+| Save Button | button | Yes | Save resource (as Draft or Publish) | N/A | no graph field (control) |
+| Cancel Button | button | No | Cancel and return to resource list | N/A | no graph field (control) |
 
 **Business Rules**:
 
 - Form opens in modal or separate screen when "Add New Resource" or "Edit" is clicked from Screen 4
-- If editing existing resource, form is pre-filled with current resource metadata (file cannot be changed, only replaced)
-- If creating new resource, form starts empty with file upload required
+- If editing existing resource, form is pre-filled with current resource metadata (file cannot be changed, only replaced) (REQ-033-074)
+- If creating new resource, form starts empty with file upload required (REQ-033-060)
 - File upload: drag-and-drop or file picker with progress indicator
-- File validation: size check (max 50MB), format check (whitelist), virus scan
-- Thumbnail generation: auto-generate from PDF first page or use custom upload
-- File type icons auto-assigned if no custom thumbnail uploaded
-- "Replace File" option available when editing (replaces file while keeping same resource record)
+- File validation: size check (max 50MB), format check (whitelist), virus scan (REQ-033-073)
+- Thumbnail generation: auto-generate from PDF first page or use custom upload (REQ-033-073)
+- See REQ-033-073.
+- "Replace File" option available when editing (replaces file while keeping same resource record) (REQ-033-074)
 - "Preview" button shows resource in file viewer interface exactly as providers will see (FR-032 Screen 5.3)
-- Form validation: name and file are required before saving
-- On save, resource is created/updated and admin returns to Screen 4 (Resource Management) with updated list
-- On cancel, changes are discarded and admin returns to Screen 4
+- Form validation: name and file are required before saving (REQ-033-072)
+- On save, resource is created/updated and admin returns to Screen 4 (Resource Management) with updated list (REQ-033-060)
+- On cancel, changes are discarded and admin returns to Screen 4 (REQ-033-060)
 
 **Notes**:
 
@@ -650,9 +650,9 @@ The Help Centre Content Management module provides a centralized knowledge base 
 - Upload progress bar showing percentage and estimated time
 - File validation feedback (size, format, virus scan status)
 - Thumbnail preview/editor
-- Preview modal: shows resource card with thumbnail, name, description, file type badge, download button matching FR-032 Screen 5.3
-- Save options: "Save as Draft" or "Publish" buttons
-- Success message displayed after save
+- See REQ-033-086.
+- See REQ-033-053.
+- See REQ-033-053.
 - Breadcrumb navigation: Settings > Help Centre Management > Resources > [Add New Resource / Edit Resource]
 
 ---
@@ -663,23 +663,23 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Video List | table/list | Yes | List of all videos organized by category | Each row: title, source type (File/Embed), category/tags, duration, view count, status, last updated, actions (Edit, Delete, Preview) |
-| Video Title | text | Yes | Video tutorial title | Max 200 chars |
-| Video Description | textarea | No | Brief description of video content | Max 500 chars |
-| Video Source Type | dropdown | Yes | How video is provided | Options: Upload File, Embed from Third-Party |
-| Video File | file upload | Conditional | Video file to upload when using "Upload File" source type | Max 500MB, formats: MP4, MOV; required when Video Source Type = Upload File |
-| Video Embed URL | text | Conditional | URL to embedded video when using "Embed from Third-Party" source type | Required when Video Source Type = Embed from Third-Party; must be valid YouTube/Vimeo (or approved provider) URL |
-| Video Thumbnail | image upload | No | Custom thumbnail image | Max 2MB, PNG/JPG, 16:9 aspect ratio recommended |
-| Video Duration | auto-calculated | No | Video length in minutes:seconds | Read-only, extracted from video file |
-| Video Transcript | textarea | No | Text transcript of video (optional) | Max 10,000 chars |
-| Category/Tags | multi-select | No | Content tags for organization | Pre-defined tags or create new |
-| Related Videos | multi-select | No | Links to related video tutorials | References to other videos |
-| View Count | display | No | Number of times video viewed (>30 seconds) | Read-only, incremented on view |
-| Publish Status | dropdown | Yes | Draft, Published, Unpublished | Pre-defined statuses |
-| Helpfulness Rating | display | No | Aggregated feedback (Yes/No counts) | Read-only, calculated from provider feedback |
-| Action Buttons | buttons | Yes | Add New Video, Edit, Delete, Preview | N/A |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Video List | table/list | Yes | List of all videos organized by category | Each row: title, source type (File/Embed), category/tags, duration, view count, status, last updated, actions (Edit, Delete, Preview) | ENT-help-centre-content.title, ENT-help-centre-content.video_source_type, ENT-help-centre-content.tags, ENT-help-centre-content.duration, ENT-help-centre-content.view_count, ENT-help-centre-content.publish_status, ENT-help-centre-content.updated_at |
+| Video Title | text | Yes | Video tutorial title | Max 200 chars (REQ-033-076) | ENT-help-centre-content.title |
+| Video Description | textarea | No | Brief description of video content | Max 500 chars (REQ-033-076) | ENT-help-centre-content.summary |
+| Video Source Type | dropdown | Yes | How video is provided | Options: Upload File, Embed from Third-Party (REQ-033-076) | ENT-help-centre-content.video_source_type |
+| Video File | file upload | Conditional | Video file to upload when using "Upload File" source type | Max 500MB, formats: MP4, MOV; required when Video Source Type = Upload File (REQ-033-077) | ENT-help-centre-content.attachments |
+| Video Embed URL | text | Conditional | URL to embedded video when using "Embed from Third-Party" source type | Required when Video Source Type = Embed from Third-Party; must be valid YouTube/Vimeo (or approved provider) URL (REQ-033-078) | ENT-help-centre-content.video_embed_url |
+| Video Thumbnail | image upload | No | Custom thumbnail image | Max 2MB, PNG/JPG, 16:9 aspect ratio recommended (REQ-033-076) | ENT-help-centre-content.thumbnail_url |
+| Video Duration | auto-calculated | No | Video length in minutes:seconds | Read-only, extracted from video file (REQ-033-077) | ENT-help-centre-content.duration |
+| Video Transcript | textarea | No | Text transcript of video (optional) | Max 10,000 chars (REQ-033-076) | ENT-help-centre-content.transcript |
+| Category/Tags | multi-select | No | Content tags for organization | Pre-defined tags or create new | ENT-help-centre-content.tags |
+| Related Videos | multi-select | No | Links to related video tutorials | References to other videos (REQ-033-063) | ENT-help-centre-content.related_content_ids |
+| View Count | display | No | Number of times video viewed (>30 seconds) | Read-only, incremented on view (REQ-033-079) | ENT-help-centre-content.view_count |
+| Publish Status | dropdown | Yes | Draft, Published, Unpublished | Pre-defined statuses | ENT-help-centre-content.publish_status |
+| Helpfulness Rating | display | No | Aggregated feedback (Yes/No counts) | Read-only, calculated from provider feedback (REQ-033-087) | ENT-help-centre-content.helpfulness_rating |
+| Action Buttons | buttons | Yes | Add New Video, Edit, Delete, Preview | N/A | no graph field (control) |
 
 **Business Rules**:
 
@@ -687,27 +687,27 @@ The Help Centre Content Management module provides a centralized knowledge base 
 - Video list filterable by category/tags, status, source type, and searchable by title
 - "Add New Video" button opens video creation form (inline or modal)
 - "Edit" button on each video opens video editor pre-filled with existing metadata and source configuration
-- "Delete" button on each video prompts confirmation before deletion (soft-delete)
+- "Delete" button on each video prompts confirmation before deletion (soft-delete) (REQ-033-059)
 - "Preview" button shows exact video player interface as providers will see (FR-032 Screen 5.4), using either uploaded file or embedded player depending on source type
-- For "Upload File" videos, video upload interface is optimized for video management (file picker with progress indicator, supports large files 500MB max)
-- For "Upload File" videos, system processes uploaded video for streaming optimization (if applicable)
-- For "Embed from Third-Party" videos, system validates embed URL against allowed providers (e.g., YouTube, Vimeo) and stores only the URL/ID, not the video file
-- Thumbnail generation: for uploaded videos, auto-generate from video frame at 10% mark or use custom upload; for embedded videos, allow either custom thumbnail upload or retrieval of provider thumbnail (if supported)
-- Video transcript optional but recommended for accessibility
-- View count incremented when video plays for >30 seconds, regardless of source type
-- Related videos can be manually assigned or auto-suggested based on tags/category
+- For "Upload File" videos, video upload interface is optimized for video management (file picker with progress indicator, supports large files 500MB max) (REQ-033-077)
+- For "Upload File" videos, system processes uploaded video for streaming optimization (if applicable) (REQ-033-077)
+- For "Embed from Third-Party" videos, system validates embed URL against allowed providers (e.g., YouTube, Vimeo) and stores only the URL/ID, not the video file (REQ-033-078)
+- Thumbnail generation: for uploaded videos, auto-generate from video frame at 10% mark or use custom upload; for embedded videos, allow either custom thumbnail upload or retrieval of provider thumbnail (if supported) (REQ-033-077, REQ-033-078)
+- Video transcript optional but recommended for accessibility (REQ-033-076)
+- View count incremented when video plays for >30 seconds, regardless of source type (REQ-033-079)
+- Related videos can be manually assigned or auto-suggested based on tags/category (REQ-033-063)
 
 **Notes**:
 
 - Video management interface: list view with action buttons for each video item and a visible badge/chip for source type (File / Embed)
 - Video creation/editing: form starts with source type selector; when "Upload File" is selected, show file upload controls; when "Embed from Third-Party" is selected, show embed URL input and provider hints/examples
-- Upload progress and processing indicators only appear when source type is "Upload File"
-- Video processing: background job processes uploaded videos after file upload (transcoding, thumbnail generation)
+- Upload progress and processing indicators only appear when source type is "Upload File" (REQ-033-077)
+- Video processing: background job processes uploaded videos after file upload (transcoding, thumbnail generation) (REQ-033-077)
 - Thumbnail editor: crop/select frame from uploaded video for thumbnail; embedded videos can optionally use provider thumbnail or custom upload
 - Preview: embedded video player with play controls (play, pause, volume, fullscreen, playback speed) matching FR-032 Screen 5.4, supporting both uploaded and embedded videos
 - Transcript editor: textarea with character counter, searchable text
-- Video analytics: view count, average watch time, completion rate
-- Bulk operations: change status for multiple videos, delete multiple videos
+- Video analytics: view count, average watch time, completion rate (REQ-033-079)
+- Bulk operations: change status for multiple videos, delete multiple videos (REQ-033-062)
 - Breadcrumb navigation: Settings > Help Centre Management > Videos
 
 ---
@@ -718,61 +718,61 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Video Title | text | Yes | Video tutorial title | Max 200 chars, required |
-| Video Description | textarea | No | Brief description of video content | Max 500 chars |
-| Video Source Type | dropdown | Yes | How video is provided | Options: Upload File, Embed from Third-Party; required |
-| Video File | file upload | Conditional | Video file to upload when using "Upload File" source type | Max 500MB, formats: MP4, MOV; required for new videos when Video Source Type = Upload File |
-| Video Embed URL | text | Conditional | URL to embedded video when using "Embed from Third-Party" source type | Required when Video Source Type = Embed from Third-Party; must be valid URL for supported providers (e.g., YouTube, Vimeo) |
-| Video Thumbnail | image upload | No | Custom thumbnail image | Max 2MB, PNG/JPG, 16:9 aspect ratio recommended |
-| Video Duration | auto-calculated | No | Video length in minutes:seconds | Read-only, extracted from video file |
-| Video Transcript | textarea | No | Text transcript of video (optional) | Max 10,000 chars |
-| Category/Tags | multi-select | No | Content tags for organization | Pre-defined tags or create new |
-| Related Videos | multi-select | No | Links to related video tutorials | References to other videos |
-| Publish Status | dropdown | Yes | Draft, Published, Unpublished | Pre-defined statuses, defaults to Draft |
-| Preview Button | button | No | Preview video in video player interface | N/A |
-| Save Button | button | Yes | Save video (as Draft or Publish) | N/A |
-| Cancel Button | button | No | Cancel and return to video list | N/A |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Video Title | text | Yes | Video tutorial title | Max 200 chars, required (REQ-033-076) | ENT-help-centre-content.title |
+| Video Description | textarea | No | Brief description of video content | Max 500 chars (REQ-033-076) | ENT-help-centre-content.summary |
+| Video Source Type | dropdown | Yes | How video is provided | Options: Upload File, Embed from Third-Party; required (REQ-033-076) | ENT-help-centre-content.video_source_type |
+| Video File | file upload | Conditional | Video file to upload when using "Upload File" source type | Max 500MB, formats: MP4, MOV; required for new videos when Video Source Type = Upload File (REQ-033-077) | ENT-help-centre-content.attachments |
+| Video Embed URL | text | Conditional | URL to embedded video when using "Embed from Third-Party" source type | Required when Video Source Type = Embed from Third-Party; must be valid URL for supported providers (e.g., YouTube, Vimeo) (REQ-033-078) | ENT-help-centre-content.video_embed_url |
+| Video Thumbnail | image upload | No | Custom thumbnail image | Max 2MB, PNG/JPG, 16:9 aspect ratio recommended (REQ-033-076) | ENT-help-centre-content.thumbnail_url |
+| Video Duration | auto-calculated | No | Video length in minutes:seconds | Read-only, extracted from video file (REQ-033-077) | ENT-help-centre-content.duration |
+| Video Transcript | textarea | No | Text transcript of video (optional) | Max 10,000 chars (REQ-033-076) | ENT-help-centre-content.transcript |
+| Category/Tags | multi-select | No | Content tags for organization | Pre-defined tags or create new | ENT-help-centre-content.tags |
+| Related Videos | multi-select | No | Links to related video tutorials | References to other videos (REQ-033-063) | ENT-help-centre-content.related_content_ids |
+| Publish Status | dropdown | Yes | Draft, Published, Unpublished | Pre-defined statuses, defaults to Draft | ENT-help-centre-content.publish_status |
+| Preview Button | button | No | Preview video in video player interface | N/A | no graph field (control) |
+| Save Button | button | Yes | Save video (as Draft or Publish) | N/A | no graph field (control) |
+| Cancel Button | button | No | Cancel and return to video list | N/A | no graph field (control) |
 
 **Business Rules**:
 
 - Form opens in modal or separate screen when "Add New Video" or "Edit" is clicked from Screen 5
-- If editing existing video, form is pre-filled with current video metadata including current source type and either file reference or embed URL
+- If editing existing video, form is pre-filled with current video metadata including current source type and either file reference or embed URL (REQ-033-060)
 - Admin must choose a Video Source Type:
   - When "Upload File" is selected:
-    - Video File becomes required for new videos.
-    - File upload uses file picker with progress indicator (500MB max, MP4/MOV).
-    - Video processing background job is triggered after successful upload (transcoding, thumbnail generation).
-    - Video Duration is auto-extracted from uploaded file.
+    - Video File becomes required for new videos. (REQ-033-077)
+    - File upload uses file picker with progress indicator (500MB max, MP4/MOV). (REQ-033-077)
+    - Video processing background job is triggered after successful upload (transcoding, thumbnail generation). (REQ-033-077)
+    - Video Duration is auto-extracted from uploaded file. (REQ-033-077)
   - When "Embed from Third-Party" is selected:
-    - Video Embed URL becomes required.
-    - System validates URL format and that domain is in the allowed provider list (e.g., YouTube, Vimeo).
-    - No video file is uploaded; Video Duration may be fetched from provider API or left manual/optional (implementation detail).
-- For existing videos, admin can change the source type (Upload File or Embed from Third-Party) by providing the new file or URL and confirming that the old file or URL is replaced; the video keeps its view counts.
+    - Video Embed URL becomes required. (REQ-033-078)
+    - System validates URL format and that domain is in the allowed provider list (e.g., YouTube, Vimeo). (REQ-033-078)
+    - No video file is uploaded; Video Duration may be fetched from provider API or left manual/optional (implementation detail). (REQ-033-078)
+- For existing videos, admin can change the source type (Upload File or Embed from Third-Party) by providing the new file or URL and confirming that the old file or URL is replaced; the video keeps its view counts. (REQ-033-094)
 - Thumbnail generation:
-  - For uploaded videos, system auto-generates from frame at 10% mark, with option to override via custom thumbnail upload.
-  - For embedded videos, system may pull provider thumbnail (if supported) or allow only custom thumbnail upload.
-- Video transcript optional but recommended for accessibility, regardless of source type.
-- "Replace Video" option is available when editing "Upload File" videos (replaces file while keeping same video record).
+  - For uploaded videos, system auto-generates from frame at 10% mark, with option to override via custom thumbnail upload. (REQ-033-077)
+  - For embedded videos, system may pull provider thumbnail (if supported) or allow only custom thumbnail upload. (REQ-033-078)
+- Video transcript optional but recommended for accessibility, regardless of source type. (REQ-033-076)
+- "Replace Video" option is available when editing "Upload File" videos (replaces file while keeping same video record). (REQ-033-074)
 - "Preview" button shows video in video player interface exactly as providers will see (FR-032 Screen 5.4), using either uploaded file or embedded player.
 - Form validation:
-  - Title and Video Source Type always required.
-  - When source type is "Upload File": Video File required for new records.
-  - When source type is "Embed from Third-Party": Video Embed URL required and must pass validation.
-- On save, video is created/updated and admin returns to Screen 5 (Video Management) with updated list.
-- On cancel, changes are discarded and admin returns to Screen 5.
+  - Title and Video Source Type always required. (REQ-033-076)
+  - When source type is "Upload File": Video File required for new records. (REQ-033-077)
+  - When source type is "Embed from Third-Party": Video Embed URL required and must pass validation. (REQ-033-078)
+- On save, video is created/updated and admin returns to Screen 5 (Video Management) with updated list. (REQ-033-060)
+- On cancel, changes are discarded and admin returns to Screen 5. (REQ-033-060)
 
 **Notes**:
 
 - Video upload interface with progress tracking
-- Video processing status indicator (uploading, processing, ready)
+- Video processing status indicator (uploading, processing, ready) (REQ-033-077)
 - Thumbnail editor with frame selection from video
 - Transcript editor: textarea with character counter (10,000 max), searchable text
 - Preview: embedded video player with play controls (play, pause, volume, fullscreen, playback speed) matching FR-032 Screen 5.4
-- Related videos can be manually selected or auto-suggested based on tags/category
-- Save options: "Save as Draft" or "Publish" buttons
-- Success message displayed after save
+- Related videos can be manually selected or auto-suggested based on tags/category (REQ-033-063)
+- See REQ-033-053.
+- See REQ-033-053.
 - Breadcrumb navigation: Settings > Help Centre Management > Videos > [Add New Video / Edit Video]
 
 ---
@@ -783,45 +783,45 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Overall Status | dropdown | Yes | All Systems Operational, Partial Outage, Major Outage. Calculated by the system from component statuses; admin may pick another value | Pre-defined statuses; a value set by hand stays until an admin switches back to automatic |
-| Return to Automatic | button | No | Switches the overall status back to the calculated value; shown only while the overall status was set by hand | N/A |
-| Service Components List | table | No | List of service components | Each row: component name, status (Operational/Degraded/Down), last updated |
-| Component Name | text | Yes | Service component name | Max 100 chars |
-| Component Status | dropdown | Yes | Operational, Degraded, Down | Pre-defined statuses |
-| Incident History | timeline | No | List of recent incidents | Each incident: title, description, status, start time, end time, affected services |
-| Incident Title | text | Yes | Brief incident title | Max 200 chars |
-| Incident Description | textarea | Yes | Detailed incident description | Max 2000 chars |
-| Incident Status | dropdown | Yes | Investigating, Identified, Monitoring, Resolved | Pre-defined statuses |
-| Affected Services | multi-select | Yes | Service components affected by incident | References to service components |
-| Maintenance Schedule | table | No | List of scheduled maintenance windows | Each maintenance: title, description, scheduled start/end time, affected services |
-| Maintenance Title | text | Yes | Brief maintenance title | Max 200 chars |
-| Maintenance Description | textarea | Yes | Detailed maintenance description | Max 2000 chars |
-| Scheduled Start Time | datetime | Yes | Planned maintenance start time | Valid datetime; future date for new windows |
-| Scheduled End Time | datetime | Yes | Planned maintenance end time | Valid datetime, after start time |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Overall Status | dropdown | Yes | All Systems Operational, Partial Outage, Major Outage. Calculated by the system from component statuses; admin may pick another value | Pre-defined statuses; a value set by hand stays until an admin switches back to automatic (REQ-033-080, REQ-033-093) | ENT-service-status.overall_status |
+| Return to Automatic | button | No | Switches the overall status back to the calculated value; shown only while the overall status was set by hand | N/A (REQ-033-093) | no graph field (control) |
+| Service Components List | table | No | List of service components | Each row: component name, status (Operational/Degraded/Down), last updated | ENT-service-status.components |
+| Component Name | text | Yes | Service component name | Max 100 chars (REQ-033-081) | ENT-service-component.name |
+| Component Status | dropdown | Yes | Operational, Degraded, Down | Pre-defined statuses (REQ-033-081) | ENT-service-component.status |
+| Incident History | timeline | No | List of recent incidents | Each incident: title, description, status, start time, end time, affected services | ENT-service-status.incidents |
+| Incident Title | text | Yes | Brief incident title | Max 200 chars (REQ-033-082) | ENT-incident-record.title |
+| Incident Description | textarea | Yes | Detailed incident description | Max 2000 chars (REQ-033-082) | ENT-incident-record.description |
+| Incident Status | dropdown | Yes | Investigating, Identified, Monitoring, Resolved | Pre-defined statuses (REQ-033-082) | ENT-incident-record.status |
+| Affected Services | multi-select | Yes | Service components affected by incident | References to service components (REQ-033-082) | ENT-incident-record.affected_services |
+| Maintenance Schedule | table | No | List of scheduled maintenance windows | Each maintenance: title, description, scheduled start/end time, affected services | ENT-service-status.maintenance |
+| Maintenance Title | text | Yes | Brief maintenance title | Max 200 chars (REQ-033-084) | ENT-maintenance-window.title |
+| Maintenance Description | textarea | Yes | Detailed maintenance description | Max 2000 chars (REQ-033-084) | ENT-maintenance-window.description |
+| Scheduled Start Time | datetime | Yes | Planned maintenance start time | Valid datetime; future date for new windows (REQ-033-084) | ENT-maintenance-window.scheduled_start |
+| Scheduled End Time | datetime | Yes | Planned maintenance end time | Valid datetime, after start time (REQ-033-084) | ENT-maintenance-window.scheduled_end |
 
 **Business Rules**:
 
 - Service Status overview displays: overall status, service components list, incident history, maintenance schedule
-- "Add Component" button allows admin to create new service components
-- "Edit" button on each component allows admin to edit component name and status
-- "Delete" button on each component prompts confirmation before deletion (soft delete: the component is archived, not permanently erased)
-- "Create Incident" button opens incident creation form
-- "Edit" button on each incident allows admin to update incident details and status
-- "Delete" button on each incident prompts confirmation before deletion (soft delete: the incident is archived, not permanently erased)
-- "Schedule Maintenance" button opens maintenance scheduling form
-- "Edit" button on each maintenance allows admin to update maintenance details
-- "Cancel" button on each maintenance allows admin to cancel scheduled maintenance
-- Overall status is calculated automatically from service component statuses. Degraded components do not count: if no component is Down, overall status is All Systems Operational; if some components are Down, Partial Outage; if all components are Down, Major Outage
-- Admin may override the calculated overall status by picking another value in the Overall Status dropdown
-- A hand-set overall status stays until an admin switches it back to automatic with the "Return to Automatic" control; it is not reset when component statuses change
-- Service components: create, edit, delete components; update status in real-time
-- Incident management: create new incidents, update status, add timeline updates, mark as resolved
-- Maintenance schedule: create scheduled maintenance, edit, cancel, mark as completed
-- Status updates propagate to provider platform within 1 minute
-- Incident timeline: system auto-logs status changes with timestamps
-- Preview shows exact status page interface as providers will see (FR-032 Screen 5.7)
+- "Add Component" button allows admin to create new service components (REQ-033-081)
+- "Edit" button on each component allows admin to edit component name and status (REQ-033-081)
+- "Delete" button on each component prompts confirmation before deletion (soft delete: the component is archived, not permanently erased) (REQ-033-081)
+- "Create Incident" button opens incident creation form (REQ-033-082)
+- "Edit" button on each incident allows admin to update incident details and status (REQ-033-082)
+- "Delete" button on each incident prompts confirmation before deletion (soft delete: the incident is archived, not permanently erased) (REQ-033-082)
+- "Schedule Maintenance" button opens maintenance scheduling form (REQ-033-084)
+- "Edit" button on each maintenance allows admin to update maintenance details (REQ-033-084)
+- "Cancel" button on each maintenance allows admin to cancel scheduled maintenance (REQ-033-084)
+- Overall status is calculated automatically from service component statuses. Degraded components do not count: if no component is Down, overall status is All Systems Operational; if some components are Down, Partial Outage; if all components are Down, Major Outage (REQ-033-080)
+- Admin may override the calculated overall status by picking another value in the Overall Status dropdown (REQ-033-080)
+- A hand-set overall status stays until an admin switches it back to automatic with the "Return to Automatic" control; it is not reset when component statuses change (REQ-033-093)
+- Service components: create, edit, delete components; update status in real-time (REQ-033-081)
+- Incident management: create new incidents, update status, add timeline updates, mark as resolved (REQ-033-082)
+- Maintenance schedule: create scheduled maintenance, edit, cancel, mark as completed (REQ-033-084)
+- Status updates propagate to provider platform within 1 minute (REQ-033-033)
+- Incident timeline: system auto-logs status changes with timestamps (REQ-033-083)
+- Preview shows exact status page interface as providers will see (FR-032 Screen 5.7) (REQ-033-086)
 
 **Notes**:
 
@@ -830,8 +830,8 @@ The Help Centre Content Management module provides a centralized knowledge base 
 - Status badges: color-coded (Operational: green, Degraded: yellow, Down: red)
 - Incident editor: form with timeline view showing status progression, action buttons (Edit, Delete, Resolve)
 - Maintenance scheduler: calendar interface for scheduling maintenance windows, action buttons (Edit, Cancel, Complete)
-- Status changes reflect in provider view within 1 minute
-- Historical data: past incidents and completed maintenance retained for historical reference
+- Status changes reflect in provider view within 1 minute (REQ-033-033)
+- Historical data: past incidents and completed maintenance retained for historical reference (REQ-033-085)
 - Breadcrumb navigation: Settings > Help Centre Management > Service Status
 
 ---
@@ -842,21 +842,21 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Component Name | text | Yes | Service component name | Max 100 chars, required |
-| Component Status | dropdown | Yes | Operational, Degraded, Down | Pre-defined statuses, defaults to Operational |
-| Save Button | button | Yes | Save component | N/A |
-| Cancel Button | button | No | Cancel and return to service status overview | N/A |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Component Name | text | Yes | Service component name | Max 100 chars, required (REQ-033-081) | ENT-service-component.name |
+| Component Status | dropdown | Yes | Operational, Degraded, Down | Pre-defined statuses, defaults to Operational (REQ-033-081) | ENT-service-component.status |
+| Save Button | button | Yes | Save component | N/A | no graph field (control) |
+| Cancel Button | button | No | Cancel and return to service status overview | N/A | no graph field (control) |
 
 **Business Rules**:
 
 - Form opens in modal or separate screen when "Add Component" or "Edit" is clicked from Screen 6
 - If editing existing component, form is pre-filled with current component data
-- If creating new component, form starts empty with default status "Operational"
-- Component status affects overall platform status calculation (a Down component counts; a Degraded component does not)
-- On save, component is created/updated and admin returns to Screen 6 with updated component list
-- On cancel, changes are discarded and admin returns to Screen 6
+- If creating new component, form starts empty with default status "Operational" (REQ-033-081)
+- Component status affects overall platform status calculation (a Down component counts; a Degraded component does not) (REQ-033-080)
+- On save, component is created/updated and admin returns to Screen 6 with updated component list (REQ-033-060)
+- On cancel, changes are discarded and admin returns to Screen 6 (REQ-033-060)
 
 **Notes**:
 
@@ -873,27 +873,27 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Incident Title | text | Yes | Brief incident title | Max 200 chars, required |
-| Incident Description | textarea | Yes | Detailed incident description | Max 2000 chars, required |
-| Incident Status | dropdown | Yes | Investigating, Identified, Monitoring, Resolved | Pre-defined statuses, defaults to Investigating |
-| Affected Services | multi-select | Yes | Service components affected by incident | References to service components, at least one required |
-| Start Time | datetime | Yes | Incident start time | Valid datetime, defaults to current time |
-| End Time | datetime | No | Incident end time (when resolved) | Valid datetime, after start time |
-| Save Button | button | Yes | Save incident | N/A |
-| Cancel Button | button | No | Cancel and return to service status overview | N/A |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Incident Title | text | Yes | Brief incident title | Max 200 chars, required (REQ-033-082) | ENT-incident-record.title |
+| Incident Description | textarea | Yes | Detailed incident description | Max 2000 chars, required (REQ-033-082) | ENT-incident-record.description |
+| Incident Status | dropdown | Yes | Investigating, Identified, Monitoring, Resolved | Pre-defined statuses, defaults to Investigating (REQ-033-082) | ENT-incident-record.status |
+| Affected Services | multi-select | Yes | Service components affected by incident | References to service components, at least one required (REQ-033-082) | ENT-incident-record.affected_services |
+| Start Time | datetime | Yes | Incident start time | Valid datetime, defaults to current time (REQ-033-082) | ENT-incident-record.start_time |
+| End Time | datetime | No | Incident end time (when resolved) | Valid datetime, after start time (REQ-033-082) | ENT-incident-record.end_time |
+| Save Button | button | Yes | Save incident | N/A | no graph field (control) |
+| Cancel Button | button | No | Cancel and return to service status overview | N/A | no graph field (control) |
 
 **Business Rules**:
 
 - Form opens in modal or separate screen when "Create Incident" or "Edit" is clicked from Screen 6
 - If editing existing incident, form is pre-filled with current incident data
-- If creating new incident, form starts empty with default status "Investigating" and current time as start time
+- If creating new incident, form starts empty with default status "Investigating" and current time as start time (REQ-033-082)
 - Affected services multi-select shows all available service components
-- Incident status changes are logged in incident timeline automatically
-- Overall status is recalculated from the component statuses (unless set by hand)
-- On save, incident is created/updated and admin returns to Screen 6 with updated incident history
-- On cancel, changes are discarded and admin returns to Screen 6
+- Incident status changes are logged in incident timeline automatically (REQ-033-083)
+- Overall status is recalculated from the component statuses (unless set by hand) (REQ-033-080)
+- On save, incident is created/updated and admin returns to Screen 6 with updated incident history (REQ-033-060)
+- See REQ-033-060.
 
 **Notes**:
 
@@ -911,27 +911,27 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Maintenance Title | text | Yes | Brief maintenance title | Max 200 chars, required |
-| Maintenance Description | textarea | Yes | Detailed maintenance description | Max 2000 chars, required |
-| Scheduled Start Time | datetime | Yes | Planned maintenance start time | Valid datetime; future date for new windows; required |
-| Scheduled End Time | datetime | Yes | Planned maintenance end time | Valid datetime, after start time, required |
-| Affected Services | multi-select | Yes | Service components affected by maintenance | References to service components, at least one required |
-| Status | dropdown | Yes | Scheduled, In Progress, Completed, Cancelled | Pre-defined statuses, defaults to Scheduled |
-| Save Button | button | Yes | Save maintenance | N/A |
-| Cancel Button | button | No | Cancel and return to service status overview | N/A |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Maintenance Title | text | Yes | Brief maintenance title | Max 200 chars, required (REQ-033-084) | ENT-maintenance-window.title |
+| Maintenance Description | textarea | Yes | Detailed maintenance description | Max 2000 chars, required (REQ-033-084) | ENT-maintenance-window.description |
+| Scheduled Start Time | datetime | Yes | Planned maintenance start time | Valid datetime; future date for new windows; required (REQ-033-084) | ENT-maintenance-window.scheduled_start |
+| Scheduled End Time | datetime | Yes | Planned maintenance end time | Valid datetime, after start time, required (REQ-033-084) | ENT-maintenance-window.scheduled_end |
+| Affected Services | multi-select | Yes | Service components affected by maintenance | References to service components, at least one required (REQ-033-084) | ENT-maintenance-window.affected_services |
+| Status | dropdown | Yes | Scheduled, In Progress, Completed, Cancelled | Pre-defined statuses, defaults to Scheduled (REQ-033-084) | ENT-maintenance-window.status |
+| Save Button | button | Yes | Save maintenance | N/A | no graph field (control) |
+| Cancel Button | button | No | Cancel and return to service status overview | N/A | no graph field (control) |
 
 **Business Rules**:
 
 - Form opens in modal or separate screen when "Schedule Maintenance" or "Edit" is clicked from Screen 6
 - If editing existing maintenance, form is pre-filled with current maintenance data
-- If creating new maintenance, form starts empty with default status "Scheduled"
-- Scheduled times must be in the future for new maintenance windows
+- If creating new maintenance, form starts empty with default status "Scheduled" (REQ-033-084)
+- Scheduled times must be in the future for new maintenance windows (REQ-033-084)
 - Affected services multi-select shows all available service components
 - Calendar interface available for selecting scheduled times
-- On save, maintenance is created/updated and admin returns to Screen 6 with updated maintenance schedule
-- On cancel, changes are discarded and admin returns to Screen 6
+- On save, maintenance is created/updated and admin returns to Screen 6 with updated maintenance schedule (REQ-033-060)
+- See REQ-033-060.
 
 **Notes**:
 
@@ -950,21 +950,21 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Preview Mode | dropdown | Yes | Select subscreen layout to preview (FAQs, Articles, Resources, Videos, Service Status) | Pre-defined layouts matching FR-032 |
-| Content Preview | rendered view | No | Rendered content in provider-facing layout | Read-only, matches FR-032 subscreen layouts |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Preview Mode | dropdown | Yes | Select subscreen layout to preview (FAQs, Articles, Resources, Videos, Service Status) | Pre-defined layouts matching FR-032 | no graph field (control) |
+| Content Preview | rendered view | No | Rendered content in provider-facing layout | Read-only, matches FR-032 subscreen layouts | ENT-help-centre-content.title, ENT-help-centre-content.body, ENT-help-centre-content.attachments, ENT-help-centre-content.thumbnail_url, ENT-service-status.overall_status |
 
 **Business Rules**:
 
-- Preview renders content in exact provider-facing layout for selected subscreen type
-- FAQ preview shows accordion layout with expand/collapse (matches FR-032 Screen 5.1)
-- Article preview shows article layout with table of contents (matches FR-032 Screen 5.2)
-- Resource preview shows file viewer interface (matches FR-032 Screen 5.3)
-- Video preview shows video player interface (matches FR-032 Screen 5.4)
-- Service Status preview shows status page interface (matches FR-032 Screen 5.7)
-- Preview updates in real-time as admin edits content
-- Preview includes all formatting, images, and interactive elements
+- Preview renders content in exact provider-facing layout for selected subscreen type (REQ-033-086)
+- FAQ preview shows accordion layout with expand/collapse (matches FR-032 Screen 5.1) (REQ-033-086)
+- Article preview shows article layout with table of contents (matches FR-032 Screen 5.2) (REQ-033-086)
+- Resource preview shows file viewer interface (matches FR-032 Screen 5.3) (REQ-033-086)
+- Video preview shows video player interface (matches FR-032 Screen 5.4) (REQ-033-086)
+- Service Status preview shows status page interface (matches FR-032 Screen 5.7) (REQ-033-086)
+- Preview updates in real-time as admin edits content (REQ-033-086)
+- Preview includes all formatting, images, and interactive elements (REQ-033-086)
 
 **Notes**:
 
@@ -977,7 +977,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 #### Patient Help Centre Content Management (Admin Platform)
 
-**Note**: The following Patient Help Centre content management screens (Screen 8 through Screen 13) are **admin-only screens on the Admin Platform**. They mirror the provider content management screens (Screen 1 through Screen 7) in structure and functionality, with the following key differences:
+**Note**: The following Patient Help Centre content management screens (Screen 8 through Screen 13) are **admin-only screens on the Admin Platform**. They mirror the provider content management screens (Screen 1 through Screen 7) in structure and functionality, with the following key differences (REQ-033-051):
 
 - **Audience**: Content managed here is displayed to patients via FR-035 (Patient Help Center & Support Submission module) instead of providers
 - **Screen 8**: Patient Help Centre Management Dashboard (mirrors Screen 1; there is no patient version of Screen 1.1 because the four patient sections are fixed)
@@ -994,15 +994,15 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 **Excluded for Patients**:
 
-- **No Service Status Management** (Screen 6, Screen 6.1, Screen 6.2, Screen 6.3): Service Status is provider-only feature not applicable to patient Help Centre
+- **No Service Status Management** (Screen 6, Screen 6.1, Screen 6.2, Screen 6.3): Service Status is provider-only feature not applicable to patient Help Centre (REQ-033-030)
 
 **Content Separation**:
 
-- Patient content and provider content are stored in completely separate database tables/repositories
-- Admin UI clearly labels content as "Patient Content" or "Provider Content" throughout the interface
-- Content cannot be copied or shared between provider and patient repositories (manual re-creation required)
-- Search and filtering functions are scoped to selected audience (provider or patient)
-- Analytics and view counts tracked separately per audience
+- Patient content and provider content are stored in completely separate database tables/repositories (REQ-033-001)
+- Admin UI clearly labels content as "Patient Content" or "Provider Content" throughout the interface (REQ-033-052)
+- Content cannot be copied or shared between provider and patient repositories (manual re-creation required) (REQ-033-052)
+- Search and filtering functions are scoped to selected audience (provider or patient) (REQ-033-052, REQ-033-035)
+- Analytics and view counts tracked separately per audience (REQ-033-018)
 
 ---
 
@@ -1010,28 +1010,29 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 ### General Module Rules
 
-- **Rule 1**: Help Centre content managed for TWO distinct audiences: Providers and Patients; content repositories completely separated by audience type
-- **Rule 2**: Only admins can create, edit, or delete Help Centre content; providers and patients have read-only access to their respective content
-- **Rule 3**: Content must be tagged with audience type (Provider or Patient) and with its kind (FAQ, Tutorial Guide, Troubleshooting Tip, Video Tutorial, Resource Document, Policy Document); the kind decides the Help Centre section the content appears in, and admins do not pick a section separately
-- **Rule 4**: Content can exist in four states: Draft (admin-only), Published (audience-visible), Unpublished (admin-only, previously published), Archived (admin-only, set when content is deleted)
-- **Rule 5**: All content changes logged in audit trail with admin identity, timestamp, audience type, and action type
-- **Rule 6**: Content deletion is soft-delete (archived) not permanent deletion to support recovery and audit compliance
-- **Rule 7**: Admin must explicitly select audience (Provider or Patient) when creating content; content cannot be shared across audiences without manual re-creation
-- **Rule 8**: When content is deleted (archived), Related Content links that point to it are removed from other items
+- **Rule 1**: Help Centre content managed for TWO distinct audiences: Providers and Patients; content repositories completely separated by audience type (REQ-033-001)
+- **Rule 2**: Only admins can create, edit, or delete Help Centre content; providers and patients have read-only access to their respective content (REQ-033-020, REQ-033-007, REQ-033-008)
+- **Rule 3**: Content must be tagged with audience type (Provider or Patient) and with its kind (FAQ, Tutorial Guide, Troubleshooting Tip, Video Tutorial, Resource Document, Policy Document); the kind decides the Help Centre section the content appears in, and admins do not pick a section separately (REQ-033-036)
+- **Rule 4**: Content can exist in four states: Draft (admin-only), Published (audience-visible), Unpublished (admin-only, previously published), Archived (admin-only, set when content is deleted) (REQ-033-037)
+- **Rule 5**: All content changes logged in audit trail with admin identity, timestamp, audience type, and action type (REQ-033-015)
+- **Rule 6**: Content deletion is soft-delete (archived) not permanent deletion to support recovery and audit compliance (REQ-033-016)
+- **Rule 7**: Admin must explicitly select audience (Provider or Patient) when creating content; content cannot be shared across audiences without manual re-creation (REQ-033-004, REQ-033-052)
+- **Rule 8**: When content is deleted (archived), Related Content links that point to it are removed from other items (REQ-033-092)
 
 ### Data & Privacy Rules
 
-- **Privacy Rule 1**: Help Centre content is non-sensitive and accessible to all users within their respective audience (all provider staff see provider content; all patients see patient content; no role-based content restrictions)
-- **Privacy Rule 2**: Content view analytics tracked at organization level for providers (clinic), and aggregated for patients (not individual user level)
-- **Privacy Rule 3**: Provider-specific content and patient-specific content stored in separate databases/repositories to prevent cross-audience data exposure
-- **Audit Rule**: All content creation, editing, publishing, unpublishing, and deletion actions logged with admin identity and timestamp for compliance audit trail
-- **Data Retention**: Archived content retained indefinitely for historical reference and audit compliance
+- **Privacy Rule 1**: Help Centre content is non-sensitive and accessible to all users within their respective audience (all provider staff see provider content; all patients see patient content; no role-based content restrictions) (REQ-033-038)
+- **Privacy Rule 2**: Content view analytics tracked at organization level for providers (clinic), and aggregated for patients (not individual user level) (REQ-033-039)
+- **Privacy Rule 3**: Provider-specific content and patient-specific content stored in separate databases/repositories to prevent cross-audience data exposure (REQ-033-001, REQ-033-021)
+- **Audit Rule**: All content creation, editing, publishing, unpublishing, and deletion actions logged with admin identity and timestamp for compliance audit trail (REQ-033-015)
+- **Data Retention**: Archived content retained indefinitely for historical reference and audit compliance (REQ-033-040)
+- **Data Privacy**: User feedback on content (helpfulness ratings) is kept as Yes/No counts only and no user identity is stored (patients are anonymous; providers are counted at clinic level at most); ratings are not publicly displayed; support requests encrypted in transit (HTTPS) (REQ-033-095)
 
 ### Admin Editability Rules
 
 **Editable by Admin**:
 
-- All Help Centre content for both Provider and Patient audiences (title, body, attachments, content kind which decides its section, publish status, audience type)
+- All Help Centre content for both Provider and Patient audiences (title, body, attachments, content kind which decides its section, publish status, audience type) (REQ-033-004)
 - **Provider Content**:
   - FAQ content with accordion/topic organization (for FR-032 Screen 5.1)
   - Article content (Tutorial Guides, Troubleshooting Tips, Policies) with article layout formatting (for FR-032 Screen 5.2)
@@ -1043,7 +1044,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
   - Article content (Tutorial Guides, Troubleshooting Tips) with article layout formatting (for FR-035 patient articles)
   - Resource Library files with file metadata (for FR-035 patient resources)
   - Video Tutorials with video metadata and transcripts (for FR-035 patient videos)
-  - No Service Status management for patients (provider-only feature)
+  - See REQ-033-030.
 - **Shared Admin Capabilities**:
   - Category organization and ordering
   - FAQ topic organization and FAQ item assignment to topics
@@ -1051,19 +1052,61 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 **Fixed in Codebase (Not Editable)**:
 
-- Provider Help Centre categories: 10 categories (FAQ's, Tutorial Guides, Contact Support, Troubleshooting Tips, Resource Library, Community Forum, Feedback & Suggestions, Service Status, Policy Information, Video Tutorials)
-- Number of Help Centre content types: 5 types for providers (FAQs, Articles, Resources, Videos, Service Status); 4 types for patients (FAQs, Articles, Resources, Videos - no Service Status)
-- Audience types: Provider and Patient (fixed; cannot add new audience types)
-- Content type options (FAQ, Tutorial Guide, Troubleshooting Tip, Video Tutorial, Resource Document, Policy Document)
-- File upload size limits (PDF: 50MB, Video: 500MB, Image: 10MB)
-- Content body character limits (max 5000 characters for FAQ answers, max 10,000 characters for tutorial guides)
-- Audit log retention period (indefinite retention for compliance)
+- Provider Help Centre categories: 10 categories (FAQ's, Tutorial Guides, Contact Support, Troubleshooting Tips, Resource Library, Community Forum, Feedback & Suggestions, Service Status, Policy Information, Video Tutorials) (REQ-033-041, REQ-033-002)
+- Number of Help Centre content types: 5 types for providers (FAQs, Articles, Resources, Videos, Service Status); 4 types for patients (FAQs, Articles, Resources, Videos - no Service Status) (REQ-033-041, REQ-033-003)
+- Audience types: Provider and Patient (fixed; cannot add new audience types) (REQ-033-041, REQ-033-001)
+- Content type options (FAQ, Tutorial Guide, Troubleshooting Tip, Video Tutorial, Resource Document, Policy Document) (REQ-033-041, REQ-033-005)
+- File upload size limits (PDF: 50MB, Video: 500MB, Image: 10MB) (REQ-033-041, REQ-033-010)
+- Content body character limits (max 5000 characters for FAQ answers, max 10,000 characters for tutorial guides) (REQ-033-041)
+- Audit log retention period (indefinite retention for compliance) (REQ-033-041, REQ-033-040)
 
 **Configurable with Restrictions**:
 
-- Category visibility (admin can show/hide provider categories but cannot delete predefined categories; every hide asks for confirmation; applies to provider content only, because the four patient sections are fixed and have no category configuration screen)
-- Content versioning (enabled by default, admin cannot disable version control; applies to both provider and patient content)
-- Audience targeting (admin must select Provider or Patient when creating content; content cannot be shared across audiences without manual re-creation)
+- Category visibility (admin can show/hide provider categories but cannot delete predefined categories; every hide asks for confirmation; applies to provider content only, because the four patient sections are fixed and have no category configuration screen) (REQ-033-043, REQ-033-044)
+- Content versioning (enabled by default, admin cannot disable version control; applies to both provider and patient content) (REQ-033-042)
+- Audience targeting (admin must select Provider or Patient when creating content; content cannot be shared across audiences without manual re-creation) (REQ-033-052)
+
+### Integration Boundaries
+
+- **FR-032 / Module PR-06**: Help Centre navigation menu item added to provider platform sidebar, accessible from settings page; displays provider-specific Help Centre content (REQ-033-031)
+- **FR-035 / Module P-08**: Patient app fetches patient-specific Help Centre content via REST API; displays patient-facing FAQs, articles, resources, and videos (no Service Status) (REQ-033-026)
+- **FR-031 / Module A-09**: Admin platform role-based permissions control access to Help Centre management features across both content repositories (REQ-033-020)
+- **FR-009 / Module PR-01**: Help Centre accessible to all provider roles defined in FR-009 (Owner, Manager, Clinical Staff, Billing Staff) (REQ-033-038)
+- **FR-034 / Module A-10**: Provider submissions via Help Centre Contact Support form (FR-032 Screen 5.5) and Feedback & Suggestions form (FR-032 Screen 5.6), and patient submissions via FR-035, are managed through FR-034 Support Center & Ticketing system, not within FR-033 (REQ-033-032)
+- **FR-034 / Module A-10**: All submissions from Help Centre forms automatically create support cases in FR-034; FR-033 provides read-only Help Centre content only, while FR-034 handles all support ticket and feedback case management for both providers and patients (REQ-033-032)
+- Cannot display Help Centre content to providers without active provider accounts
+
+### Integration Failure Handling
+
+- **Integration 1**: Provider platform fetches provider-specific Help Centre content via REST API (REQ-033-025)
+  - **Error handling**: If API unavailable, display cached content or "Help Centre temporarily unavailable" message; retry API call on next page load
+- **Integration 2**: Patient app fetches patient-specific Help Centre content via REST API (REQ-033-026)
+  - **Error handling**: If API unavailable, display cached content or "Help Centre temporarily unavailable" message; retry API call on next page load
+- **Integration 3**: Admin platform manages Help Centre content for both audiences via REST API with rich text editor
+  - **Error handling**: If API unavailable, queue content changes locally and sync when API available; notify admin of sync failures
+- **Integration 4**: Media storage service (S-05) stores uploaded files for both audiences (REQ-033-027)
+  - **Error handling**: If upload fails, retry with exponential backoff (3 attempts); if all retries fail, notify admin and save content as draft (REQ-033-058)
+
+### Security and Upload Controls
+
+- Scan uploaded files for viruses and malware before storage (REQ-033-029, REQ-033-022)
+- **Authentication**: Help Centre content accessible only to authenticated users (providers and patients access their respective content); admin content management accessible only to authenticated admin users with Help Centre management permissions (REQ-033-019)
+- **Authorization**: Role-based access control enforced at API level (providers: read-only provider content, patients: read-only patient content, admins: read-write both content repositories based on permissions) (REQ-033-020)
+- **Audience Separation**: Providers cannot access patient content; patients cannot access provider content; API endpoints enforce audience-based access control to prevent cross-audience data exposure (REQ-033-021)
+- **File Upload Security**: All uploaded files scanned for viruses before storage; file type validation (one allowed-file list per upload kind: resources PDF, DOCX, XLSX, PNG, JPG; videos MP4, MOV; images such as thumbnails PNG, JPG); file size limits enforced; uploaded files stored outside web root with access-controlled URLs; files tagged with audience type for access control (REQ-033-022, REQ-033-024)
+- **Content Injection**: Rich text editor sanitizes HTML input to prevent XSS attacks; strip dangerous tags (script, iframe) before saving; use Content Security Policy (CSP) headers (REQ-033-023)
+- **Audit trail**: All content changes logged with admin identity, timestamp, IP address, audience type, and action for security audit compliance (REQ-033-015)
+
+### Content and Operating Constraints
+
+- **Search**: Full-text search across all content (title, body, tags) is required for P1 and scoped to the selected audience (provider or patient). Database full-text indexing is the minimum implementation baseline; a dedicated search engine remains an optional later enhancement. (REQ-033-035)
+- Patient content will be curated to avoid medical advice and focus on platform usage, appointment management, and general information (REQ-033-088)
+- Service status updates managed by Hairline technical operations team with real-time incident updates during outages (provider-only feature) (REQ-033-030)
+- Admins will maintain Help Centre content currency by reviewing and updating content quarterly or as platform features change for both provider and patient content
+- Providers access Help Centre via modern web browsers (Chrome, Firefox, Safari, Edge - latest 2 versions) on desktop or tablet devices
+- Patients access Help Centre via mobile app (iOS/Android) with occasional web browser access
+- Providers and patients have stable internet connection to download tutorial videos and PDF guides (minimum 5 Mbps recommended)
+- Admins use desktop/laptop computers for Help Centre content management (not optimized for mobile editing)
 
 ### Payment & Billing Rules
 
@@ -1071,181 +1114,9 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 ---
 
-## Success Criteria
-
-### Provider Experience Metrics
-
-- **SC-001**: Providers can access Help Centre and find relevant content within 2 clicks from any provider platform screen
-- **SC-002**: 70% of provider support questions can be answered via Help Centre self-service content
-- **SC-003**: Providers can navigate Help Centre and find answers to common questions in under 3 minutes
-- **SC-004**: 80% of providers rate Help Centre content as "Helpful" or "Very Helpful" via feedback buttons
-
-### Patient Experience Metrics
-
-- **SC-013**: Patients can access Help Centre and find relevant content within 2 clicks from any patient app screen
-- **SC-014**: 60% of patient support questions can be answered via Help Centre self-service content
-- **SC-015**: Patients can navigate Help Centre and find answers to common questions in under 3 minutes
-- **SC-016**: 75% of patients rate Help Centre content as "Helpful" or "Very Helpful" via feedback buttons
-
-### Admin Management Metrics
-
-- **SC-005**: Admins can create and publish new Help Centre content (provider or patient) in under 10 minutes per content item
-- **SC-006**: Admins can update existing content and publish changes in under 5 minutes
-- **SC-007**: Admins can organize FAQ topics and reorder content in under 5 minutes using drag-and-drop interface
-- **SC-008**: 100% of Help Centre content changes tracked in audit trail for compliance verification (both provider and patient content)
-
-### System Performance Metrics
-
-- **SC-009**: Help Centre landing page loads in under 2 seconds for 95% of requests (both provider and patient platforms)
-- **SC-010**: Content search returns results in under 1 second for 90% of queries (P1 requirement for both audiences)
-- **SC-011**: File downloads (PDFs, videos) begin within 3 seconds of user click (both provider and patient)
-- **SC-012**: System capacity: supports up to 1000 concurrent provider accesses and 5000 concurrent patient accesses to Help Centre without performance degradation (the expected peak for providers is 500, see Scalability Considerations)
-
-### Business Impact Metrics
-
-- **SC-017**: Average time to resolve provider support issues decreases by 25% due to self-service content availability
-- **SC-018**: Average time to resolve patient support issues decreases by 20% due to self-service content availability
-- **SC-019**: 60% of providers access Help Centre at least once per month for self-service support
-- **SC-020**: 40% of patients access Help Centre at least once per month for self-service support
-- **SC-021**: Help Centre content view count increases by 20% month-over-month indicating growing adoption across both audiences
-
----
-
 ## Dependencies
 
-### Internal Dependencies (Other FRs/Modules)
-
-- **FR-032 / Module PR-06**: Provider Help Centre accessed from provider settings page
-  - **Why needed**: Help Centre menu item appears in provider platform navigation, linked from FR-032 profile & settings module
-  - **Integration point**: Help Centre navigation menu item added to provider platform sidebar, accessible from settings page; displays provider-specific Help Centre content
-
-- **FR-035 / Module P-08**: Patient Help Centre accessed from patient app
-  - **Why needed**: Patient Help Centre provides read-only access to patient-specific Help Centre content managed in FR-033
-  - **Integration point**: Patient app fetches patient-specific Help Centre content via REST API; displays patient-facing FAQs, articles, resources, and videos (no Service Status)
-
-- **FR-031 / Module A-09**: Admin access control for Help Centre management
-  - **Why needed**: Help Centre management requires admin role permissions to create, edit, publish content for both provider and patient audiences
-  - **Integration point**: Admin platform role-based permissions control access to Help Centre management features across both content repositories
-
-- **FR-009 / Module PR-01**: Provider team member access to Help Centre
-  - **Why needed**: All provider staff (regardless of role) should be able to access provider Help Centre for support
-  - **Integration point**: Help Centre accessible to all provider roles defined in FR-009 (Owner, Manager, Clinical Staff, Billing Staff)
-
-- **FR-034 / Module A-10**: Support Center & Ticketing for all submissions
-  - **Why needed**: Provider submissions via Help Centre Contact Support form (FR-032 Screen 5.5) and Feedback & Suggestions form (FR-032 Screen 5.6), and patient submissions via FR-035, are managed through FR-034 Support Center & Ticketing system, not within FR-033
-  - **Integration point**: All submissions from Help Centre forms automatically create support cases in FR-034; FR-033 provides read-only Help Centre content only, while FR-034 handles all support ticket and feedback case management for both providers and patients
-
-### External Dependencies (APIs, Services)
-
-- **External Service 1**: Media Storage Service (S-05)
-  - **Purpose**: Store uploaded tutorial guides, videos, images, PDF documents
-  - **Integration**: RESTful API calls for file upload, retrieval, deletion
-
-- **External Service 2**: Rich Text Editor Library (e.g., Quill, TinyMCE, CKEditor)
-  - **Purpose**: Provide WYSIWYG editing for Help Centre content creation
-  - **Integration**: JavaScript library integrated into admin content creation form
-
-- **External Service 3**: Virus Scanning Service (e.g., ClamAV, cloud-based scanner)
-  - **Purpose**: Scan uploaded files for viruses and malware before storage
-  - **Integration**: API call during file upload process
-
-### Data Dependencies
-
-- **Entity 1**: Admin user accounts with Help Centre management permissions
-  - **Why needed**: Cannot create or manage Help Centre content without authenticated admin user with appropriate permissions
-  - **Source**: Admin platform authentication module (A-09 / FR-031)
-
-- **Entity 2**: Provider clinic accounts
-  - **Why needed**: Cannot display Help Centre content to providers without active provider accounts
-  - **Source**: Provider authentication and account management module (PR-01 / FR-009)
-
-- **Entity 3**: Media storage infrastructure
-  - **Why needed**: Cannot store or serve uploaded files (videos, PDFs, images) without media storage service
-  - **Source**: Shared media storage service (S-05)
-
----
-
-## Assumptions
-
-### User Behavior Assumptions
-
-- **Assumption 1**: Providers and patients will proactively check Help Centre for answers before contacting support (requires cultural shift toward self-service)
-- **Assumption 2**: Admins will maintain Help Centre content currency by reviewing and updating content quarterly or as platform features change for both provider and patient content
-- **Assumption 3**: Providers and patients have basic computer literacy to navigate Help Centre categories, expand/collapse sections, and download files
-- **Assumption 4**: Providers and patients prefer self-service content (FAQ, tutorials) over contacting support for common questions
-- **Assumption 5**: Patient content will have higher view volume than provider content due to larger patient user base
-
-### Technology Assumptions
-
-- **Assumption 1**: Providers access Help Centre via modern web browsers (Chrome, Firefox, Safari, Edge - latest 2 versions) on desktop or tablet devices
-- **Assumption 2**: Patients access Help Centre via mobile app (iOS/Android) with occasional web browser access
-- **Assumption 3**: Providers and patients have stable internet connection to download tutorial videos and PDF guides (minimum 5 Mbps recommended)
-- **Assumption 4**: Admins use desktop/laptop computers for Help Centre content management (not optimized for mobile editing)
-- **Assumption 5**: Media storage service (S-05) has sufficient capacity to store tutorial videos for both audiences (assume average 50MB per video, 200 videos total = 10GB storage)
-
-### Business Process Assumptions
-
-- **Assumption 1**: Hairline admin team has dedicated content manager(s) responsible for creating and maintaining Help Centre content for both provider and patient audiences
-- **Assumption 2**: Help Centre content reviewed and updated quarterly to ensure accuracy and relevance across both audiences
-- **Assumption 3**: Support team monitors feedback submissions and content gaps to prioritize new content creation for both providers and patients
-- **Assumption 4**: Service status updates managed by Hairline technical operations team with real-time incident updates during outages (provider-only feature)
-- **Assumption 5**: Patient content will be curated to avoid medical advice and focus on platform usage, appointment management, and general information
-
----
-
-## Implementation Notes
-
-### Technical Considerations
-
-- **Architecture**: Help Centre content stored in relational database with separate tables/repositories for provider and patient content; shared media storage for files; content served via web API with caching layer for frequently accessed content
-- **Content Management**: Use headless CMS architecture to separate content management (admin) from content presentation (provider platform and patient app); admin UI clearly distinguishes between provider and patient content repositories
-- **Multi-Tenant Separation**: Provider content and patient content completely separated at database level to prevent cross-audience data exposure; separate API endpoints for provider content (/api/provider/help-centre) and patient content (/api/patient/help-centre)
-- **File Storage**: Large files (videos, PDFs) stored in cloud object storage (S3, Azure Blob) with CDN for fast global delivery; files tagged with audience type (provider/patient) for access control
-- **Performance**: Implement aggressive caching for published Help Centre content (cache invalidation on content updates); pre-generate content indexes for fast category/tag filtering per audience; patient content cached more aggressively due to higher expected traffic
-- **Search**: Full-text search across all content (title, body, tags) is required for P1 and scoped to the selected audience (provider or patient). Database full-text indexing is the minimum implementation baseline; a dedicated search engine remains an optional later enhancement.
-
-### Integration Points
-
-- **Integration 1**: Provider platform fetches provider-specific Help Centre content via REST API
-  - **Data format**: JSON payload with content metadata (title, category, type, publish date, audience: "provider") and content body (HTML)
-  - **Authentication**: Provider platform uses authenticated API calls with provider session token
-  - **Error handling**: If API unavailable, display cached content or "Help Centre temporarily unavailable" message; retry API call on next page load
-  - **Endpoint**: GET /api/provider/help-centre (returns provider content only)
-
-- **Integration 2**: Patient app fetches patient-specific Help Centre content via REST API
-  - **Data format**: JSON payload with content metadata (title, category, type, publish date, audience: "patient") and content body (HTML)
-  - **Authentication**: Patient app uses authenticated API calls with patient session token
-  - **Error handling**: If API unavailable, display cached content or "Help Centre temporarily unavailable" message; retry API call on next page load
-  - **Endpoint**: GET /api/patient/help-centre (returns patient content only, excludes Service Status)
-
-- **Integration 3**: Admin platform manages Help Centre content for both audiences via REST API with rich text editor
-  - **Data format**: JSON payload with content metadata (including audience: "provider" or "patient") and HTML content body; file uploads via multipart form data
-  - **Authentication**: Admin platform uses authenticated API calls with admin session token and permission verification
-  - **Error handling**: If API unavailable, queue content changes locally and sync when API available; notify admin of sync failures
-  - **Endpoints**: POST /api/admin/help-centre (create content), PUT /api/admin/help-centre/:id (update), DELETE /api/admin/help-centre/:id (archive)
-
-- **Integration 4**: Media storage service (S-05) stores uploaded files for both audiences
-  - **Data format**: Binary file upload with metadata (file name, size, content type, associated content ID, audience type)
-  - **Authentication**: Signed upload URLs or API key authentication
-  - **Error handling**: If upload fails, retry with exponential backoff (3 attempts); if all retries fail, notify admin and save content as draft
-
-### Scalability Considerations
-
-- **Current scale**: Expect 200 Help Centre content items at launch (100 provider content items + 100 patient content items; 50 FAQs + 30 guides + 20 videos per audience)
-- **Growth projection**: Plan for 1000+ content items within 12 months as platform features expand and user base grows (500 provider + 500 patient)
-- **Expected peak load**: 500 concurrent provider accesses and 5000 concurrent patient accesses to Help Centre during major feature launches or platform incidents
-- **Data volume**: Expect 20GB media storage for videos and PDFs within first year (200 videos @ 50MB average, 400 PDFs @ 5MB average across both audiences)
-- **Scaling strategy**: Horizontal scaling of web servers serving Help Centre API; CDN for media file delivery; database read replicas for content queries; cache layer (Redis/Memcached) for frequently accessed content with separate cache namespaces for provider and patient content
-
-### Security Considerations
-
-- **Authentication**: Help Centre content accessible only to authenticated users (providers and patients access their respective content); admin content management accessible only to authenticated admin users with Help Centre management permissions
-- **Authorization**: Role-based access control enforced at API level (providers: read-only provider content, patients: read-only patient content, admins: read-write both content repositories based on permissions)
-- **Audience Separation**: Providers cannot access patient content; patients cannot access provider content; API endpoints enforce audience-based access control to prevent cross-audience data exposure
-- **File Upload Security**: All uploaded files scanned for viruses before storage; file type validation (one allowed-file list per upload kind: resources PDF, DOCX, XLSX, PNG, JPG; videos MP4, MOV; images such as thumbnails PNG, JPG); file size limits enforced; uploaded files stored outside web root with access-controlled URLs; files tagged with audience type for access control
-- **Content Injection**: Rich text editor sanitizes HTML input to prevent XSS attacks; strip dangerous tags (script, iframe) before saving; use Content Security Policy (CSP) headers
-- **Audit trail**: All content changes logged with admin identity, timestamp, IP address, audience type, and action for security audit compliance
-- **Data Privacy**: User feedback on content (helpfulness ratings) is kept as Yes/No counts only and no user identity is stored (patients are anonymous; providers are counted at clinic level at most); ratings are not publicly displayed; support requests encrypted in transit (HTTPS)
+Related FRs: FR-032 (Provider Help Centre accessed from provider settings page), FR-035 (Patient Help Centre accessed from patient app), FR-031 (Admin access control for Help Centre management), FR-009 (Provider team member access to Help Centre), FR-034 (Support Center & Ticketing for all submissions).
 
 ---
 
@@ -1343,8 +1214,8 @@ An admin content manager needs to reorganize existing FAQ items into logical top
 
 - What happens when admin attempts to publish content with missing required fields?
 - How does system handle concurrent edits by multiple admins to the same Help Centre content? Platform-wide rule: the second admin is warned that the item changed since they opened it; if they continue, the last save wins.
-- How to manage Help Centre content when admin deletes content that is linked as "Related Content" from other items? The links to the deleted (archived) item are removed from the other items.
-- What happens when file upload exceeds maximum size limit (video > 500MB, PDF > 50MB)?
+- How to manage Help Centre content when admin deletes content that is linked as "Related Content" from other items? The links to the deleted (archived) item are removed from the other items. (REQ-033-092)
+- What happens when file upload exceeds maximum size limit (video > 500MB, PDF > 50MB)? (REQ-033-057, REQ-033-010)
 - How does system handle Help Centre content search when search query returns zero results?
 
 ---
@@ -1398,35 +1269,11 @@ An admin content manager needs to reorganize existing FAQ items into logical top
 
 ---
 
-## Key Entities
-
-What the module must keep, in business terms (no storage design):
-
-- **Help Centre content item**: the audience (Provider or Patient); its kind (FAQ, Tutorial Guide, Troubleshooting Tip, Video Tutorial, Resource Document, Policy Document), which decides the section it appears in; title; short description; body text; attachments; tags; the topic (FAQs) or resource grouping (resources); related content links; display order; publish status (Draft, Published, Unpublished, Archived); when it was created, last updated and published, and which admin created and last updated it. By kind: articles keep a table of contents; resources keep file type, file size and download count; videos keep source (uploaded file or third-party link), the link, thumbnail, duration, transcript and processing progress. View count and helpfulness counts are shown with the item.
-- **Help Centre category (provider)**: label, description, display order, shown or hidden, routing type, external link, and the intro copy shown above Contact Support and Feedback & Suggestions.
-- **FAQ topic**: audience, name, description, display order, and the number of FAQs in it.
-- **Content file attachment**: the file, its name, the audience it belongs to, and its virus-scan result.
-- **Content version history**: for every saved version, the version number, the optional version note, which admin saved it, when, and the audience.
-- **Platform service status (provider only)**: the overall status, whether it is calculated automatically or was set by hand, the service components, the incident history, and the maintenance schedule.
-- **Service component**: name, status (Operational, Degraded, Down), when it was last updated and by which admin.
-- **Incident**: title, description, status (Investigating, Identified, Monitoring, Resolved), start and end time, the service components affected, the timeline of status changes, and which admin created it.
-- **Maintenance window**: title, description, scheduled start and end time, the service components affected, status (Scheduled, In Progress, Completed, Cancelled), and which admin created it.
-- **Content analytics (kept separately per audience)**: view counts, helpfulness counts (Yes and No, counts only, no user identity), average time spent, video watch time and completion rate, and when the item was last viewed.
-- **Help Centre audit entry**: which admin, when, what action, the audience, the item affected, the old and new value for configuration changes, the reason where one is required (for example unpublish), and the IP address.
-- **Dashboard statistics**: total, published and draft content and total views, calculated from the items above rather than kept separately.
-
----
-
 ## Appendix: Change Log
 
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
-| 2025-11-17 | 1.0 | Initial PRD creation for FR-033 Help Centre Content Management | Claude AI Assistant |
-| 2025-12-03 | 1.1 | Major updates to align with FR-032 changes: Reorganized screen specifications to match FR-032's 7 subscreen structure (FAQs, Articles, Resources, Videos, Contact Support, Feedback, Service Status); Added submission tracking management screens for Contact Support and Feedback with status workflows; Added Service Status management interface for components, incidents, and maintenance windows; Updated content creation/editing forms to match provider-facing layouts (accordion for FAQs, article layout for guides, file viewer for resources, video player for videos, status page for service status); Updated preview functionality to match each subscreen layout; Updated workflows to reflect new subscreen structure; Added functional requirements for submission tracking and service status management | AI/Claude |
-| 2026-01-11 | 1.2 | Moved provider Contact Support and Feedback management to FR-034: Removed Contact Support and Feedback submission management from FR-033 (moved to FR-034 Support Center & Ticketing); Updated to 5 subscreen types (removed Contact Support and Feedback, kept FAQs, Articles, Resources, Videos, Service Status); Removed Screen 6 (Contact Support Management) and Screen 7 (Feedback Management); Removed workflows A1 and A2 for provider submissions; Removed related functional requirements and entities; Provider submissions now managed through FR-034 unified ticketing system | AI Assistant |
-| 2026-01-16 | 2.0 | Major scope extension to support both Provider and Patient audiences: Extended module to manage Help Centre content for TWO distinct audiences (Providers and Patients) with completely separated content repositories; Added Patient Help Centre Content Management section (Screens A-8 through A-13 mirroring provider screens A-1 through A-7, excluding Service Status); Updated Executive Summary, Multi-Tenant Architecture, and Module Scope to reflect dual-audience support; Reorganized Screen Specifications with tenant headers and proper screen numbering (A-1 through A-13); Updated Business Rules for multi-tenant support (General Module Rules, Data & Privacy Rules, Admin Editability Rules, Configurable with Restrictions); Added Patient Experience Metrics to Success Criteria; Updated Dependencies to include FR-035 (Patient Help Center & Support Submission); Updated Assumptions for both provider and patient users; Enhanced Implementation Notes with multi-tenant architecture details (separate API endpoints, database separation, audience-based caching); Updated Integration Points to specify provider and patient API endpoints; Updated Scalability, Security Considerations for both audiences; Completely revised Functional Requirements Summary to specify provider AND patient content requirements with audience separation and access control | AI Assistant |
-| 2026-01-19 | 2.1 | Verification and finalization: Moved provider-facing Help Centre access flows from FR-033 to FR-032 (provider UX flows belong in FR-032, not content management PRD); Added Screen 2.2 for FAQ Topic Management (create/edit topics, drag-and-drop reordering); Enhanced video management to support both file uploads and third-party embeds (YouTube, Vimeo) with conditional validation; Clarified that Patient Help Centre content management screens are admin-only (not patient app screens); Updated module references to include P-08 (Patient Help Center & Support Access); Updated status to Verified & Approved | AI Assistant |
-| 2026-11-20 | 2.2 | Requirements graph programme baseline: owner rulings applied. Main changes: overall service status mapping (Degraded does not count; some Down is Partial Outage; all Down is Major Outage), admin override that stays until switched back to automatic; Screen 2.2 renamed FAQ Topic Management and serves both audiences through an audience switch; no patient category configuration (four fixed patient sections); every category hide asks for confirmation; content kind decides section (category and content type merged); video source type can be changed with a replace confirmation; Related Content links removed when content is deleted; Archived added as a fourth content state; one allowed-file list per upload kind; publish and update effects stated as within 1 minute; future start time applies to new maintenance windows only; service components and incidents are soft-deleted; helpfulness ratings are counts only with no identity stored; expected peak load (500 providers) and capacity (1000 providers) labelled; three failure-handling requirements retired; Key Entities rewritten as a plain-word list; three open edge-case questions settled or removed | AI Assistant |
+| 2026-11-22 | 2.3 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v2.2) is in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
 
 ---
 
@@ -1443,4 +1290,4 @@ What the module must keep, in business terms (no storage design):
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-011 Aftercare & Recovery Management PRD Template
-**Last Updated**: 2026-11-20
+**Last Updated**: 2026-11-22
