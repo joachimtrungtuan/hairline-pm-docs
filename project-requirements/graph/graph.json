@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-22T12:35:06Z",
+  "generated_at": "2026-11-22T12:40:09Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -102333,7 +102333,7 @@
       "owner_fr": null,
       "title": "Configuration",
       "status": "active",
-      "version": 9,
+      "version": 10,
       "attrs": {
         "timeline": "platform-admin",
         "sequence": 1,
@@ -102359,7 +102359,7 @@
       "owner_fr": null,
       "title": "Pending",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "timeline": "affiliate-account",
         "sequence": 1,
@@ -102372,7 +102372,7 @@
       "owner_fr": null,
       "title": "Active",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "timeline": "affiliate-account",
         "sequence": 2,
@@ -102385,7 +102385,7 @@
       "owner_fr": null,
       "title": "Suspended",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "timeline": "affiliate-account",
         "sequence": 3,
@@ -102398,7 +102398,7 @@
       "owner_fr": null,
       "title": "Inactive",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "timeline": "affiliate-account",
         "sequence": 4,
@@ -102464,7 +102464,7 @@
       "owner_fr": null,
       "title": "Quote",
       "status": "active",
-      "version": 15,
+      "version": 16,
       "attrs": {
         "timeline": "main",
         "sequence": 2,
@@ -102477,7 +102477,7 @@
       "owner_fr": null,
       "title": "Acceptance",
       "status": "active",
-      "version": 10,
+      "version": 11,
       "attrs": {
         "timeline": "main",
         "sequence": 3,
@@ -102490,7 +102490,7 @@
       "owner_fr": null,
       "title": "Confirmed",
       "status": "active",
-      "version": 17,
+      "version": 18,
       "attrs": {
         "timeline": "main",
         "sequence": 4,
@@ -102503,7 +102503,7 @@
       "owner_fr": null,
       "title": "Payment",
       "status": "active",
-      "version": 15,
+      "version": 16,
       "attrs": {
         "timeline": "main",
         "sequence": 5,
@@ -102516,7 +102516,7 @@
       "owner_fr": null,
       "title": "In progress",
       "status": "active",
-      "version": 12,
+      "version": 13,
       "attrs": {
         "timeline": "main",
         "sequence": 6,
@@ -102529,7 +102529,7 @@
       "owner_fr": null,
       "title": "Aftercare",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "timeline": "main",
         "sequence": 7,
@@ -102568,7 +102568,7 @@
       "owner_fr": null,
       "title": "Baseline",
       "status": "active",
-      "version": 8,
+      "version": 9,
       "attrs": {
         "timeline": "monitoring",
         "sequence": 1,
@@ -102595,7 +102595,7 @@
       "owner_fr": null,
       "title": "Conversion",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
         "timeline": "monitoring",
         "sequence": 3,
@@ -102634,7 +102634,7 @@
       "owner_fr": null,
       "title": "Active",
       "status": "active",
-      "version": 23,
+      "version": 24,
       "attrs": {
         "timeline": "patient-account",
         "sequence": 3,
@@ -102699,7 +102699,7 @@
       "owner_fr": null,
       "title": "Approval",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "timeline": "provider-payout",
         "sequence": 2,
@@ -102712,7 +102712,7 @@
       "owner_fr": null,
       "title": "Transfer",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "timeline": "provider-payout",
         "sequence": 3,
@@ -102764,7 +102764,7 @@
       "owner_fr": null,
       "title": "Active",
       "status": "active",
-      "version": 24,
+      "version": 25,
       "attrs": {
         "timeline": "provider-account",
         "sequence": 3,
@@ -102803,7 +102803,7 @@
       "owner_fr": null,
       "title": "Configuration",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "timeline": "provider-configuration",
         "sequence": 1,
@@ -335781,6 +335781,12 @@
     {
       "from_id": "STG-admin-01-configuration",
       "verb": "reads",
+      "to_id": "ENT-account-deletion-reason",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "reads",
       "to_id": "ENT-admin-audit-trail-entry",
       "attrs": {}
     },
@@ -335799,7 +335805,31 @@
     {
       "from_id": "STG-admin-01-configuration",
       "verb": "reads",
+      "to_id": "ENT-analytics-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "reads",
+      "to_id": "ENT-auth-throttling-policy",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "reads",
       "to_id": "ENT-commission-rate-config",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "reads",
+      "to_id": "ENT-configuration-change-audit-log",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "reads",
+      "to_id": "ENT-country",
       "attrs": {}
     },
     {
@@ -335824,6 +335854,18 @@
       "from_id": "STG-admin-01-configuration",
       "verb": "reads",
       "to_id": "ENT-deposit-rate-config",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "reads",
+      "to_id": "ENT-discovery-question-option",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "reads",
+      "to_id": "ENT-email-template",
       "attrs": {}
     },
     {
@@ -335865,6 +335907,18 @@
     {
       "from_id": "STG-admin-01-configuration",
       "verb": "reads",
+      "to_id": "ENT-inquiry-cancellation-reason",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "reads",
+      "to_id": "ENT-inquiry-scheduling-policy",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "reads",
       "to_id": "ENT-legal-acceptance",
       "attrs": {}
     },
@@ -335884,6 +335938,12 @@
       "from_id": "STG-admin-01-configuration",
       "verb": "reads",
       "to_id": "ENT-locale",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "reads",
+      "to_id": "ENT-location-starting-price",
       "attrs": {}
     },
     {
@@ -335913,7 +335973,25 @@
     {
       "from_id": "STG-admin-01-configuration",
       "verb": "reads",
+      "to_id": "ENT-notification-rule",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "reads",
+      "to_id": "ENT-notification-template",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "reads",
       "to_id": "ENT-package",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "reads",
+      "to_id": "ENT-patient",
       "attrs": {}
     },
     {
@@ -335931,6 +336009,30 @@
     {
       "from_id": "STG-admin-01-configuration",
       "verb": "reads",
+      "to_id": "ENT-provider-specialty",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "reads",
+      "to_id": "ENT-questionnaire-question",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "reads",
+      "to_id": "ENT-questionnaire-set",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "reads",
+      "to_id": "ENT-quote-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "reads",
       "to_id": "ENT-rate-source",
       "attrs": {}
     },
@@ -335938,6 +336040,12 @@
       "from_id": "STG-admin-01-configuration",
       "verb": "reads",
       "to_id": "ENT-refund-fee-settings",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "reads",
+      "to_id": "ENT-regional-grouping",
       "attrs": {}
     },
     {
@@ -335991,6 +336099,12 @@
     {
       "from_id": "STG-admin-01-configuration",
       "verb": "reads",
+      "to_id": "ENT-team-member",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "reads",
       "to_id": "ENT-translation-audit-log",
       "attrs": {}
     },
@@ -336026,6 +336140,18 @@
     },
     {
       "from_id": "STG-admin-01-configuration",
+      "verb": "reads",
+      "to_id": "ENT-treatment-area",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "writes",
+      "to_id": "ENT-account-deletion-reason",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
       "verb": "writes",
       "to_id": "ENT-admin-audit-trail-entry",
       "attrs": {}
@@ -336045,7 +336171,31 @@
     {
       "from_id": "STG-admin-01-configuration",
       "verb": "writes",
+      "to_id": "ENT-analytics-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "writes",
+      "to_id": "ENT-auth-throttling-policy",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "writes",
       "to_id": "ENT-commission-rate-config",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "writes",
+      "to_id": "ENT-configuration-change-audit-log",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "writes",
+      "to_id": "ENT-country",
       "attrs": {}
     },
     {
@@ -336075,6 +336225,18 @@
     {
       "from_id": "STG-admin-01-configuration",
       "verb": "writes",
+      "to_id": "ENT-discovery-question-option",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "writes",
+      "to_id": "ENT-email-template",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "writes",
       "to_id": "ENT-faq-topic",
       "attrs": {}
     },
@@ -336099,6 +336261,18 @@
     {
       "from_id": "STG-admin-01-configuration",
       "verb": "writes",
+      "to_id": "ENT-inquiry-cancellation-reason",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "writes",
+      "to_id": "ENT-inquiry-scheduling-policy",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "writes",
       "to_id": "ENT-legal-document",
       "attrs": {}
     },
@@ -336106,6 +336280,12 @@
       "from_id": "STG-admin-01-configuration",
       "verb": "writes",
       "to_id": "ENT-locale",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "writes",
+      "to_id": "ENT-location-starting-price",
       "attrs": {}
     },
     {
@@ -336129,6 +336309,48 @@
     {
       "from_id": "STG-admin-01-configuration",
       "verb": "writes",
+      "to_id": "ENT-notification-rule",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "writes",
+      "to_id": "ENT-notification-template",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "writes",
+      "to_id": "ENT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "writes",
+      "to_id": "ENT-provider-specialty",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "writes",
+      "to_id": "ENT-questionnaire-question",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "writes",
+      "to_id": "ENT-questionnaire-set",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "writes",
+      "to_id": "ENT-quote-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "writes",
       "to_id": "ENT-rate-source",
       "attrs": {}
     },
@@ -336136,6 +336358,12 @@
       "from_id": "STG-admin-01-configuration",
       "verb": "writes",
       "to_id": "ENT-refund-fee-settings",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "writes",
+      "to_id": "ENT-regional-grouping",
       "attrs": {}
     },
     {
@@ -336189,6 +336417,12 @@
     {
       "from_id": "STG-admin-01-configuration",
       "verb": "writes",
+      "to_id": "ENT-team-member",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "writes",
       "to_id": "ENT-translation-audit-log",
       "attrs": {}
     },
@@ -336220,6 +336454,12 @@
       "from_id": "STG-admin-01-configuration",
       "verb": "writes",
       "to_id": "ENT-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "writes",
+      "to_id": "ENT-treatment-area",
       "attrs": {}
     },
     {
@@ -336301,9 +336541,105 @@
       "attrs": {}
     },
     {
+      "from_id": "STG-affiliate-01-pending",
+      "verb": "reads",
+      "to_id": "ENT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-affiliate-01-pending",
+      "verb": "reads",
+      "to_id": "ENT-affiliate-code-batch",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-affiliate-01-pending",
+      "verb": "reads",
+      "to_id": "ENT-affiliate-discount-code",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-affiliate-01-pending",
+      "verb": "writes",
+      "to_id": "ENT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-affiliate-01-pending",
+      "verb": "writes",
+      "to_id": "ENT-affiliate-code-batch",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-affiliate-01-pending",
+      "verb": "writes",
+      "to_id": "ENT-affiliate-discount-code",
+      "attrs": {}
+    },
+    {
       "from_id": "STG-affiliate-02-active",
       "verb": "follows",
       "to_id": "STG-affiliate-01-pending",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-affiliate-02-active",
+      "verb": "reads",
+      "to_id": "ENT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-affiliate-02-active",
+      "verb": "reads",
+      "to_id": "ENT-affiliate-audit-entry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-affiliate-02-active",
+      "verb": "reads",
+      "to_id": "ENT-affiliate-code-batch",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-affiliate-02-active",
+      "verb": "reads",
+      "to_id": "ENT-affiliate-code-batch-result",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-affiliate-02-active",
+      "verb": "reads",
+      "to_id": "ENT-affiliate-discount-code",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-affiliate-02-active",
+      "verb": "reads",
+      "to_id": "ENT-affiliate-payout",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-affiliate-02-active",
+      "verb": "writes",
+      "to_id": "ENT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-affiliate-02-active",
+      "verb": "writes",
+      "to_id": "ENT-affiliate-code-batch",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-affiliate-02-active",
+      "verb": "writes",
+      "to_id": "ENT-affiliate-discount-code",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-affiliate-02-active",
+      "verb": "writes",
+      "to_id": "ENT-affiliate-payout",
       "attrs": {}
     },
     {
@@ -336313,9 +336649,69 @@
       "attrs": {}
     },
     {
+      "from_id": "STG-affiliate-03-suspended",
+      "verb": "reads",
+      "to_id": "ENT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-affiliate-03-suspended",
+      "verb": "reads",
+      "to_id": "ENT-affiliate-audit-entry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-affiliate-03-suspended",
+      "verb": "reads",
+      "to_id": "ENT-affiliate-discount-code",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-affiliate-03-suspended",
+      "verb": "reads",
+      "to_id": "ENT-affiliate-payout",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-affiliate-03-suspended",
+      "verb": "writes",
+      "to_id": "ENT-affiliate",
+      "attrs": {}
+    },
+    {
       "from_id": "STG-affiliate-04-inactive",
       "verb": "follows",
       "to_id": "STG-affiliate-03-suspended",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-affiliate-04-inactive",
+      "verb": "reads",
+      "to_id": "ENT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-affiliate-04-inactive",
+      "verb": "reads",
+      "to_id": "ENT-affiliate-audit-entry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-affiliate-04-inactive",
+      "verb": "reads",
+      "to_id": "ENT-affiliate-discount-code",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-affiliate-04-inactive",
+      "verb": "reads",
+      "to_id": "ENT-affiliate-payout",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-affiliate-04-inactive",
+      "verb": "writes",
+      "to_id": "ENT-affiliate",
       "attrs": {}
     },
     {
@@ -337329,6 +337725,12 @@
     {
       "from_id": "STG-main-02-quote",
       "verb": "reads",
+      "to_id": "ENT-audit-entry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-02-quote",
+      "verb": "reads",
       "to_id": "ENT-conversation",
       "attrs": {}
     },
@@ -337360,6 +337762,12 @@
       "from_id": "STG-main-02-quote",
       "verb": "reads",
       "to_id": "ENT-inquiry-date-range",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-02-quote",
+      "verb": "reads",
+      "to_id": "ENT-medical-questionnaire-response",
       "attrs": {}
     },
     {
@@ -337504,6 +337912,12 @@
       "from_id": "STG-main-02-quote",
       "verb": "reads",
       "to_id": "ENT-risk-tag",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-02-quote",
+      "verb": "reads",
+      "to_id": "ENT-scan",
       "attrs": {}
     },
     {
@@ -337713,6 +338127,12 @@
     {
       "from_id": "STG-main-03-acceptance",
       "verb": "reads",
+      "to_id": "ENT-affiliate-attribution",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-03-acceptance",
+      "verb": "reads",
       "to_id": "ENT-booking",
       "attrs": {}
     },
@@ -337731,7 +338151,31 @@
     {
       "from_id": "STG-main-03-acceptance",
       "verb": "reads",
+      "to_id": "ENT-inquiry-audit-entry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-03-acceptance",
+      "verb": "reads",
       "to_id": "ENT-inquiry-date-range",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-03-acceptance",
+      "verb": "reads",
+      "to_id": "ENT-medical-questionnaire-response",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-03-acceptance",
+      "verb": "reads",
+      "to_id": "ENT-package",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-03-acceptance",
+      "verb": "reads",
+      "to_id": "ENT-patient",
       "attrs": {}
     },
     {
@@ -337756,6 +338200,12 @@
       "from_id": "STG-main-03-acceptance",
       "verb": "reads",
       "to_id": "ENT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-03-acceptance",
+      "verb": "reads",
+      "to_id": "ENT-provider-inquiry",
       "attrs": {}
     },
     {
@@ -337838,6 +338288,18 @@
     },
     {
       "from_id": "STG-main-03-acceptance",
+      "verb": "reads",
+      "to_id": "ENT-travel-context",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-03-acceptance",
+      "verb": "reads",
+      "to_id": "ENT-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-03-acceptance",
       "verb": "writes",
       "to_id": "ENT-acceptance-annotation",
       "attrs": {}
@@ -337894,6 +338356,30 @@
       "from_id": "STG-main-03-acceptance",
       "verb": "writes",
       "to_id": "ENT-quote-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-03-acceptance",
+      "verb": "writes",
+      "to_id": "ENT-quote-option",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-03-acceptance",
+      "verb": "writes",
+      "to_id": "ENT-quote-option-date-price",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-03-acceptance",
+      "verb": "writes",
+      "to_id": "ENT-quote-option-item",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-03-acceptance",
+      "verb": "writes",
+      "to_id": "ENT-quote-option-plan-day",
       "attrs": {}
     },
     {
@@ -338115,6 +338601,12 @@
     {
       "from_id": "STG-main-04-booking",
       "verb": "reads",
+      "to_id": "ENT-provider-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-04-booking",
+      "verb": "reads",
       "to_id": "ENT-quote",
       "attrs": {}
     },
@@ -338224,6 +338716,12 @@
       "from_id": "STG-main-04-booking",
       "verb": "writes",
       "to_id": "ENT-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-04-booking",
+      "verb": "writes",
+      "to_id": "ENT-deposit-rate-config",
       "attrs": {}
     },
     {
@@ -338769,6 +339267,12 @@
     {
       "from_id": "STG-main-05-payment",
       "verb": "reads",
+      "to_id": "ENT-rate-source",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-05-payment",
+      "verb": "reads",
       "to_id": "ENT-refund",
       "attrs": {}
     },
@@ -339147,6 +339651,12 @@
     {
       "from_id": "STG-main-06-treatment",
       "verb": "reads",
+      "to_id": "ENT-audit-entry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-06-treatment",
+      "verb": "reads",
       "to_id": "ENT-booking",
       "attrs": {}
     },
@@ -339297,6 +339807,18 @@
     {
       "from_id": "STG-main-06-treatment",
       "verb": "writes",
+      "to_id": "ENT-audit-entry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-06-treatment",
+      "verb": "writes",
+      "to_id": "ENT-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-06-treatment",
+      "verb": "writes",
       "to_id": "ENT-currency-alert-decision",
       "attrs": {}
     },
@@ -339400,6 +339922,84 @@
       "from_id": "STG-main-07-aftercare",
       "verb": "follows",
       "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-07-aftercare",
+      "verb": "reads",
+      "to_id": "ENT-acceptance-event",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-07-aftercare",
+      "verb": "reads",
+      "to_id": "ENT-audit-entry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-07-aftercare",
+      "verb": "reads",
+      "to_id": "ENT-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-07-aftercare",
+      "verb": "reads",
+      "to_id": "ENT-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-07-aftercare",
+      "verb": "reads",
+      "to_id": "ENT-inquiry-date-range",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-07-aftercare",
+      "verb": "reads",
+      "to_id": "ENT-medical-questionnaire-response",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-07-aftercare",
+      "verb": "reads",
+      "to_id": "ENT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-07-aftercare",
+      "verb": "reads",
+      "to_id": "ENT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-07-aftercare",
+      "verb": "reads",
+      "to_id": "ENT-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-07-aftercare",
+      "verb": "reads",
+      "to_id": "ENT-risk-tag",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-07-aftercare",
+      "verb": "reads",
+      "to_id": "ENT-subquote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-07-aftercare",
+      "verb": "reads",
+      "to_id": "ENT-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-07-aftercare",
+      "verb": "writes",
+      "to_id": "ENT-booking",
       "attrs": {}
     },
     {
@@ -339585,6 +340185,12 @@
     {
       "from_id": "STG-monitoring-01-baseline",
       "verb": "reads",
+      "to_id": "ENT-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-monitoring-01-baseline",
+      "verb": "reads",
       "to_id": "ENT-monitoring-case",
       "attrs": {}
     },
@@ -339610,6 +340216,12 @@
       "from_id": "STG-monitoring-01-baseline",
       "verb": "reads",
       "to_id": "ENT-questionnaire-set",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-monitoring-01-baseline",
+      "verb": "reads",
+      "to_id": "ENT-treatment-area",
       "attrs": {}
     },
     {
@@ -339862,6 +340474,18 @@
       "from_id": "STG-monitoring-03-conversion",
       "verb": "reads",
       "to_id": "ENT-medical-questionnaire-response",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-monitoring-03-conversion",
+      "verb": "reads",
+      "to_id": "ENT-monitoring-advice",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-monitoring-03-conversion",
+      "verb": "reads",
+      "to_id": "ENT-monitoring-advice-window",
       "attrs": {}
     },
     {
@@ -340197,6 +340821,12 @@
     {
       "from_id": "STG-patient-03-active",
       "verb": "reads",
+      "to_id": "ENT-admin-user-account",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-patient-03-active",
+      "verb": "reads",
       "to_id": "ENT-auth-throttling-policy",
       "attrs": {}
     },
@@ -340497,6 +341127,12 @@
     {
       "from_id": "STG-patient-03-active",
       "verb": "reads",
+      "to_id": "ENT-team-member",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-patient-03-active",
+      "verb": "reads",
       "to_id": "ENT-translation-bundle",
       "attrs": {}
     },
@@ -340510,6 +341146,12 @@
       "from_id": "STG-patient-03-active",
       "verb": "writes",
       "to_id": "ENT-admin-action-log",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-patient-03-active",
+      "verb": "writes",
+      "to_id": "ENT-admin-user-account",
       "attrs": {}
     },
     {
@@ -340725,6 +341367,12 @@
     {
       "from_id": "STG-patient-03-active",
       "verb": "writes",
+      "to_id": "ENT-team-member",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-patient-03-active",
+      "verb": "writes",
       "to_id": "ENT-translation-audit-log",
       "attrs": {}
     },
@@ -340843,6 +341491,126 @@
       "attrs": {}
     },
     {
+      "from_id": "STG-payout-02-approval",
+      "verb": "reads",
+      "to_id": "ENT-affiliate",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-payout-02-approval",
+      "verb": "reads",
+      "to_id": "ENT-affiliate-commission",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-payout-02-approval",
+      "verb": "reads",
+      "to_id": "ENT-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-payout-02-approval",
+      "verb": "reads",
+      "to_id": "ENT-currency-alert",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-payout-02-approval",
+      "verb": "reads",
+      "to_id": "ENT-currency-alert-decision",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-payout-02-approval",
+      "verb": "reads",
+      "to_id": "ENT-currency-rate-lock",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-payout-02-approval",
+      "verb": "reads",
+      "to_id": "ENT-installment-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-payout-02-approval",
+      "verb": "reads",
+      "to_id": "ENT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-payout-02-approval",
+      "verb": "reads",
+      "to_id": "ENT-patient-invoice",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-payout-02-approval",
+      "verb": "reads",
+      "to_id": "ENT-payout-adjustment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-payout-02-approval",
+      "verb": "reads",
+      "to_id": "ENT-payout-dispute-resolution",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-payout-02-approval",
+      "verb": "reads",
+      "to_id": "ENT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-payout-02-approval",
+      "verb": "reads",
+      "to_id": "ENT-provider-earning",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-payout-02-approval",
+      "verb": "reads",
+      "to_id": "ENT-provider-payout",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-payout-02-approval",
+      "verb": "reads",
+      "to_id": "ENT-refund",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-payout-02-approval",
+      "verb": "reads",
+      "to_id": "ENT-transaction-audit-log",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-payout-02-approval",
+      "verb": "reads",
+      "to_id": "ENT-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-payout-02-approval",
+      "verb": "writes",
+      "to_id": "ENT-currency-alert-decision",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-payout-02-approval",
+      "verb": "writes",
+      "to_id": "ENT-payout-dispute-resolution",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-payout-02-approval",
+      "verb": "writes",
+      "to_id": "ENT-provider-payout",
+      "attrs": {}
+    },
+    {
       "from_id": "STG-payout-03-transfer",
       "verb": "emits",
       "to_id": "EVT-billing-payout-failed",
@@ -340858,6 +341626,36 @@
       "from_id": "STG-payout-03-transfer",
       "verb": "follows",
       "to_id": "STG-payout-02-approval",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-payout-03-transfer",
+      "verb": "reads",
+      "to_id": "ENT-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-payout-03-transfer",
+      "verb": "reads",
+      "to_id": "ENT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-payout-03-transfer",
+      "verb": "reads",
+      "to_id": "ENT-provider-earning",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-payout-03-transfer",
+      "verb": "reads",
+      "to_id": "ENT-provider-payout",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-payout-03-transfer",
+      "verb": "reads",
+      "to_id": "ENT-treatment",
       "attrs": {}
     },
     {
@@ -341170,6 +341968,12 @@
       "from_id": "STG-provider-03-active",
       "verb": "reads",
       "to_id": "ENT-acceptance-supersession",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-03-active",
+      "verb": "reads",
+      "to_id": "ENT-admin-user-account",
       "attrs": {}
     },
     {
@@ -341685,6 +342489,12 @@
     {
       "from_id": "STG-provider-03-active",
       "verb": "writes",
+      "to_id": "ENT-admin-user-account",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-03-active",
+      "verb": "writes",
       "to_id": "ENT-analytics-configuration",
       "attrs": {}
     },
@@ -341848,6 +342658,12 @@
       "from_id": "STG-provider-03-active",
       "verb": "writes",
       "to_id": "ENT-package-plan-day",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-03-active",
+      "verb": "writes",
+      "to_id": "ENT-patient",
       "attrs": {}
     },
     {
@@ -342364,6 +343180,186 @@
       "from_id": "STG-provider-config-01-configuration",
       "verb": "emits",
       "to_id": "EVT-team-invitation-sent",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-config-01-configuration",
+      "verb": "reads",
+      "to_id": "ENT-commission-rate-config",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-config-01-configuration",
+      "verb": "reads",
+      "to_id": "ENT-invitation",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-config-01-configuration",
+      "verb": "reads",
+      "to_id": "ENT-package",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-config-01-configuration",
+      "verb": "reads",
+      "to_id": "ENT-package-item",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-config-01-configuration",
+      "verb": "reads",
+      "to_id": "ENT-package-plan-day",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-config-01-configuration",
+      "verb": "reads",
+      "to_id": "ENT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-config-01-configuration",
+      "verb": "reads",
+      "to_id": "ENT-provider-account-settings",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-config-01-configuration",
+      "verb": "reads",
+      "to_id": "ENT-provider-award",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-config-01-configuration",
+      "verb": "reads",
+      "to_id": "ENT-provider-billing-settings",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-config-01-configuration",
+      "verb": "reads",
+      "to_id": "ENT-provider-closure-request",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-config-01-configuration",
+      "verb": "reads",
+      "to_id": "ENT-provider-notification-preferences",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-config-01-configuration",
+      "verb": "reads",
+      "to_id": "ENT-provider-profile",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-config-01-configuration",
+      "verb": "reads",
+      "to_id": "ENT-provider-review-summary",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-config-01-configuration",
+      "verb": "reads",
+      "to_id": "ENT-provider-team-summary",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-config-01-configuration",
+      "verb": "reads",
+      "to_id": "ENT-team-member",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-config-01-configuration",
+      "verb": "reads",
+      "to_id": "ENT-team-member-org-role",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-config-01-configuration",
+      "verb": "reads",
+      "to_id": "ENT-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-config-01-configuration",
+      "verb": "reads",
+      "to_id": "ENT-treatment-pricing-config",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-config-01-configuration",
+      "verb": "writes",
+      "to_id": "ENT-invitation",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-config-01-configuration",
+      "verb": "writes",
+      "to_id": "ENT-package",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-config-01-configuration",
+      "verb": "writes",
+      "to_id": "ENT-package-item",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-config-01-configuration",
+      "verb": "writes",
+      "to_id": "ENT-package-plan-day",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-config-01-configuration",
+      "verb": "writes",
+      "to_id": "ENT-provider-account-settings",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-config-01-configuration",
+      "verb": "writes",
+      "to_id": "ENT-provider-award",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-config-01-configuration",
+      "verb": "writes",
+      "to_id": "ENT-provider-billing-settings",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-config-01-configuration",
+      "verb": "writes",
+      "to_id": "ENT-provider-closure-request",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-config-01-configuration",
+      "verb": "writes",
+      "to_id": "ENT-provider-notification-preferences",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-config-01-configuration",
+      "verb": "writes",
+      "to_id": "ENT-provider-profile",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-config-01-configuration",
+      "verb": "writes",
+      "to_id": "ENT-team-member",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-config-01-configuration",
+      "verb": "writes",
+      "to_id": "ENT-treatment-pricing-config",
       "attrs": {}
     },
     {
@@ -421213,6 +422209,37 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261122-124001-4011ce5b",
+      "at": "2026-11-22T12:40:01.926906+00:00",
+      "changed_by": "controller",
+      "reason": "Consistency check (flow): a Stage reads an Entity when a Step at that Stage is done on a Screen that shows one of its Fields, and writes it when the Field is editable there. Derived from the existing at, on and shows links.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "STG-admin-01-configuration",
+        "STG-affiliate-01-pending",
+        "STG-affiliate-02-active",
+        "STG-affiliate-03-suspended",
+        "STG-affiliate-04-inactive",
+        "STG-main-02-quote",
+        "STG-main-03-acceptance",
+        "STG-main-04-booking",
+        "STG-main-05-payment",
+        "STG-main-06-treatment",
+        "STG-main-07-aftercare",
+        "STG-monitoring-01-baseline",
+        "STG-monitoring-03-conversion",
+        "STG-patient-03-active",
+        "STG-payout-02-approval",
+        "STG-payout-03-transfer",
+        "STG-provider-03-active",
+        "STG-provider-config-01-configuration"
+      ],
+      "edges_added": 166,
+      "edges_removed": 0,
+      "rows": 166
+    },
     {
       "id": "cs-20261122-123359-2cbd59b9",
       "at": "2026-11-22T12:33:59.868503+00:00",
