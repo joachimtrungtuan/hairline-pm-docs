@@ -1399,6 +1399,17 @@ These rules record the product owner's decisions on how a clinic's money is rele
   - **Relationships**: One alert concerns one currency pair and many bookings; one decision per alert is logged in Transaction Audit Log (Entity 5). The currency alert record moved to FR-017 from FR-029; FR-029 keeps the rate-protection alert event
 - **Source**: [FR-006 Booking](../fr006-booking-scheduling/prd.md#key-entities) carries the accepted FR-005 snapshot/provenance. Initial successful payment confirms the pending booking and creates its invoice; financial aggregation uses existing eligible booking/transaction records, not sibling subquotes.
 
+**Carried from dropped sections (original wording)**:
+
+- **Entity 4 - Discount Code**: Merged into the Promotion Program owned by FR-019. FR-017 reads the program through the FR-006 acceptance snapshot and keeps no discount entity of its own; one accepted subquote, and therefore one booking, has at most one promotion, frozen at acceptance
+- **Entity 5 - Transaction Audit Log**
+- **Relationships**: One admin action generates one log entry; one entity (invoice/payout) can have many log entries over time
+- **Entity 6 - Affiliate Commission**
+- **Relationships**: One booking generates one affiliate commission (if booked via affiliate code); one affiliate has many commissions over time
+- **Entity 7 - Currency Exchange Rate Lock**
+- **Relationships**: One booking has one currency rate lock (if multi-currency); rate used for all calculations related to that booking
+- **Lock origin**: Read-only projection of the FR-005 acceptance snapshot, retained by FR-006; never written independently, edited, or relocked at payment, invoice, or payout.
+
 ---
 
 ## Dependencies
@@ -1735,6 +1746,7 @@ A patient requests refund due to cancellation, admin reviews request against can
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2026-11-22 | 2.17 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v2.16) and the change requests (CR-FR017-20261015-01, file change-request-2026-10-15-post-suspension-payment-reconciliation.md; CR-FR017-20261016-01, file change-request-2026-10-16-mtg002-quote-model-alignment.md) are in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
+| 2026-11-23 | 2.18 | Independent compression review: 8 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
 
 ---
 
