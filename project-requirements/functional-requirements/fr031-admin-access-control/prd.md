@@ -10,10 +10,10 @@
 
 ## Executive Summary
 
-The Admin Access Control & Permissions module is a **Super Admin-only configuration tool** that serves as the **single source of truth** for all role definitions and permission matrices across the entire Hairline platform. This module enables Super Admins to:
+The Admin Access Control & Permissions module is a **Super Admin-only configuration tool** that serves as the **single source of truth** for all role definitions and permission matrices across the entire Hairline platform. This module enables Super Admins to: (REQ-031-028)
 
-1. **Define Admin Platform Role Permissions**: Configure what permissions each admin role has (Super Admin, Aftercare Specialist, Billing Admin, Support Staff)
-2. **Define Provider Platform Roles and Permissions**: Configure the permissions of the four provider roles (Owner, Manager, Clinical Staff, Billing Staff)
+1. **Define Admin Platform Role Permissions**: Configure what permissions each admin role has (Super Admin, Aftercare Specialist, Billing Admin, Support Staff) (REQ-031-004)
+2. **Define Provider Platform Roles and Permissions**: Configure the permissions of the four provider roles (Owner, Manager, Clinical Staff, Billing Staff) (REQ-031-005)
 3. **Manage Admin Team Members**: Invite admin users and assign them roles (team member invitation/management for providers is handled separately in FR-009)
 
 **Key Distinction**: This module is exclusively for **Super Admins to configure RBAC rules**. Regular admin users and providers do not have access to this module. Provider owners can assign roles to their team members (FR-009), but only Super Admins can define what permissions those roles have.
@@ -41,7 +41,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 
 **Provider Platform (PR-01)**:
 
-- **Permission enforcement only**: Provider Platform consumes and enforces RBAC rules defined in Admin Platform (FR-031)
+- **Permission enforcement only**: Provider Platform consumes and enforces RBAC rules defined in Admin Platform (FR-031) (REQ-031-029)
 - **No configuration UI**: Provider users do not see or access role permission configuration; they only experience the enforced permissions
 - **Read-only consumption**: Provider Platform reads permission matrices from FR-031 and applies them when provider team members access features
 - **Note**: Provider team member invitation and role assignment is handled in PR-01/FR-009, but the permission definitions for those roles come from FR-031
@@ -55,39 +55,39 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 - Permission matrix definition and editing for both admin and provider roles
 - Centralized RBAC configuration interface accessible only to Super Admins
 - Audit trail of all permission changes and role assignments
-- Access control: Only Super Admins can access this module; regular admin users and providers cannot view or modify role permissions
+- Access control: Only Super Admins can access this module; regular admin users and providers cannot view or modify role permissions (REQ-031-028)
 
 **Shared Services (S-03)**:
 
-- Invitation and role/permission change notifications delivered via S-03
+- Invitation and role/permission change notifications delivered via S-03 (REQ-020-152)
 - Permission checks executed within admin platform backend
 
 ### Communication Structure
 
 **In Scope**:
 
-- Email notifications for admin team member invitations
-- Email notifications for role assignment changes
-- Email notifications for permission changes (to affected admin users)
+- Email notifications for admin team member invitations (REQ-031-010)
+- Email notifications for role assignment changes (REQ-031-010)
+- Email notifications for permission changes (to affected admin users) (REQ-031-032)
 - System notifications for access denial attempts
 
 **Out of Scope**:
 
-- SMS notifications (handled by S-03: Notification Service if needed; **no SMS admin notifications are available in MVP and SMS will only be enabled if/when S-03 adds SMS delivery in a later phase**)
-- Real-time permission updates via WebSocket (V2 enhancement)
-- External identity provider integration (OAuth, SAML - V2 enhancement)
+- SMS notifications (handled by S-03: Notification Service if needed; **no SMS admin notifications are available in MVP and SMS will only be enabled if/when S-03 adds SMS delivery in a later phase**) (REQ-031-031)
+- Real-time permission updates via WebSocket (V2 enhancement) (REQ-031-031)
+- External identity provider integration (OAuth, SAML - V2 enhancement) (REQ-031-031)
 
 ### Entry Points
 
-- **Super Admin Access Only**: Super Admins access this module via "Settings > User Roles & Permissions" in the Admin Platform
-- **Access Restriction**: This module is hidden from non-Super Admin users; only Super Admins can view and access it
-- **Initial Setup**: First Super Admin account created during platform deployment/installation
+- **Super Admin Access Only**: Super Admins access this module via "Settings > User Roles & Permissions" in the Admin Platform (REQ-031-027)
+- **Access Restriction**: This module is hidden from non-Super Admin users; only Super Admins can view and access it (REQ-031-027)
+- **Initial Setup**: First Super Admin account created during platform deployment/installation (REQ-031-027)
 - **Configuration Workflow**:
   - Super Admins configure role permissions for admin and provider roles
   - Super Admins invite admin team members and assign them roles
-  - Provider owners invite their team members (FR-009) but cannot configure role permissions
-- **Permission Enforcement**: Configured permissions enforced across all platforms on every API request
-- **Audit Trail Access**: All Super Admin actions logged automatically and viewable in audit trail interface
+  - Provider owners invite their team members (FR-009) but cannot configure role permissions (REQ-031-027)
+- **Permission Enforcement**: Configured permissions enforced across all platforms on every API request (REQ-031-020)
+- **Audit Trail Access**: All Super Admin actions logged automatically and viewable in audit trail interface (REQ-031-008)
 
 ---
 
@@ -150,7 +150,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
   4. System displays role change dialog with current role highlighted
   5. Super Admin selects new role from dropdown
   6. Super Admin sets **Effective From** date/time (default: now)
-  7. System displays permission comparison (current vs new role permissions) and effective date/time
+  7. System displays permission comparison (current vs new role permissions) and effective date/time (REQ-031-075)
   8. Super Admin confirms role change
   9. System validates Effective From is not in the past
   10. System updates user's role assignment with Effective From timestamp
@@ -188,7 +188,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
   4. System opens Permission Matrix Modal (Screen 4) with provider permissions
   5. System displays current permissions checked and shows user count: "Currently assigned to [X] users across [Y] providers"
   6. Super Admin modifies permissions (e.g., grants "View Financial Reports" to Clinical Staff)
-  7. System displays permission comparison showing additions/removals
+  7. System displays permission comparison showing additions/removals (REQ-031-075)
   8. System shows warning if removing critical permissions (e.g., "This will remove access to [feature] for all Clinical Staff members")
   9. System displays count of affected provider team members across all providers
   10. Super Admin reviews changes and clicks "Save Changes"
@@ -196,7 +196,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
   12. System saves updated permission matrix
   13. System logs permission change in audit trail with before/after comparison
   14. System syncs permission changes to Provider Platform (FR-009) within 5 seconds
-  15. System displays confirmation: "Provider role permissions updated. Changes reach all [Role] members within 5 seconds and apply on their next request."
+  15. System displays confirmation: "Provider role permissions updated. Changes reach all [Role] members within 5 seconds and apply on their next request." (REQ-031-075)
   16. All provider team members with this role receive updated permissions on their next API call
 - **Outcome**: Provider role permissions updated and automatically propagated to all provider organizations; changes enforced immediately
 
@@ -225,7 +225,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 - **Trigger**: Admin user clicks invitation link that was already accepted
 - **Steps**:
   1. System detects invitation status is "Accepted"
-  2. System displays message: "This invitation has already been used. Please log in with your existing credentials."
+  2. System displays message: "This invitation has already been used. Please log in with your existing credentials." (REQ-031-041)
   3. System provides login link
 - **Outcome**: Prevents duplicate account creation
 
@@ -295,25 +295,25 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Role List | table | N/A | List of all admin roles | Display: Role Name, Description, # Users, Actions |
-| Role Name | text | N/A | Name of role | Read-only for system roles |
-| Users Count | number | N/A | Number of admin users with this role | Display only, clickable to filter Tab 2 |
-| Actions | button group | N/A | Edit Permissions, View Users, Clone Role | Edit Permissions and Clone Role are disabled for the Super Admin role; View Users stays available |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|---------------|
+| Role List | table | N/A | List of all admin roles | Display: Role Name, Description, # Users, Actions | ENT-role-permission-definition.role_name, ENT-role-permission-definition.description, ENT-role-permission-definition.user_count |
+| Role Name | text | N/A | Name of role | Read-only for system roles | ENT-role-permission-definition.role_name |
+| Users Count | number | N/A | Number of admin users with this role | Display only, clickable to filter Tab 2 | ENT-role-permission-definition.user_count |
+| Actions | button group | N/A | Edit Permissions, View Users, Clone Role | Edit Permissions and Clone Role are disabled for the Super Admin role; View Users stays available (REQ-031-052) | no graph field (control) |
 
 **Actions**:
 
 - **Edit Permissions**: Opens permission matrix modal/panel for selected role
-- **View Users**: Switches to Tab 2 filtered by this role
-- **Clone Role**: Creates new custom role based on existing role
-- **Create New Role**: Creates custom admin role with specific permissions
+- **View Users**: Switches to Tab 2 filtered by this role (REQ-031-080)
+- **Clone Role**: Creates new custom role based on existing role (REQ-031-057)
+- **Create New Role**: Creates custom admin role with specific permissions (REQ-031-058)
 
 **Business Rules**:
 
-- Super Admin role permissions cannot be edited (locked, full access)
-- System roles (Super Admin, Aftercare Specialist, Billing Admin, Support Staff) cannot be deleted; all of them except Super Admin can be edited
-- Custom roles can be created, edited, and deleted (if no users assigned)
+- Super Admin role permissions cannot be edited (locked, full access) (REQ-031-051)
+- System roles (Super Admin, Aftercare Specialist, Billing Admin, Support Staff) cannot be deleted; all of them except Super Admin can be edited (REQ-031-056)
+- Custom roles can be created, edited, and deleted (if no users assigned) (REQ-031-057)
 - Permission changes take effect on the next API call after propagation (≤ 5 seconds) for all users with that role
 
 ---
@@ -324,41 +324,41 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Search Bar | text input | No | Search users by name or email | Real-time filtering |
-| Filter: Role | dropdown | No | Filter users by assigned role | All Roles, then every active admin role including custom roles (predefined: Super Admin, Aftercare Specialist, Billing Admin, Support Staff) |
-| Filter: Status | dropdown | No | Filter by user status | All, Active, Suspended, Pending Invitation |
-| User Name | Display (text) | N/A | Full name of admin user | Display only |
-| Email | Display (email) | N/A | Admin user's email address | Display only |
-| Role | Display (badge) | N/A | Assigned role | Color-coded by role |
-| Role Effective From | Display (datetime) | N/A | When the assigned role becomes active | Display only |
-| Last Login | datetime | N/A | Timestamp of most recent login | Relative format (e.g., "2 hours ago") |
-| Status | badge | N/A | Active/Suspended/Pending | Color-coded |
-| Actions | button group | N/A | Change Role, Suspend, View Audit | Dropdown menu |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|---------------|
+| Search Bar | text input | No | Search users by name or email | Real-time filtering | no graph field (control) |
+| Filter: Role | dropdown | No | Filter users by assigned role | All Roles, then every active admin role including custom roles (predefined: Super Admin, Aftercare Specialist, Billing Admin, Support Staff) | ENT-admin-user-account.assigned_role_id |
+| Filter: Status | dropdown | No | Filter by user status | All, Active, Suspended, Pending Invitation | ENT-admin-user-account.status, ENT-admin-user-account.invitation_status |
+| User Name | Display (text) | N/A | Full name of admin user | Display only | ENT-admin-user-account.name |
+| Email | Display (email) | N/A | Admin user's email address | Display only | ENT-admin-user-account.email |
+| Role | Display (badge) | N/A | Assigned role | Color-coded by role | ENT-admin-user-account.assigned_role_id |
+| Role Effective From | Display (datetime) | N/A | When the assigned role becomes active | Display only | ENT-admin-user-account.role_effective_from |
+| Last Login | datetime | N/A | Timestamp of most recent login | Relative format (e.g., "2 hours ago") | ENT-admin-user-account.last_login_at |
+| Status | badge | N/A | Active/Suspended/Pending | Color-coded | ENT-admin-user-account.status |
+| Actions | button group | N/A | Change Role, Suspend, View Audit | Dropdown menu | no graph field (control) |
 
 **Actions**:
 
 - **Invite Team Member**: Opens invitation form (Screen 2)
-- **Change Role**: Opens role assignment modal
-- **Suspend/Activate**: Suspend or reactivate admin user (not available for Super Admin accounts)
+- **Change Role**: Opens role assignment modal (REQ-031-082)
+- **Suspend/Activate**: Suspend or reactivate admin user (not available for Super Admin accounts) (REQ-031-053)
 - **View Audit**: Opens user detail page with audit trail (Screen 5)
 
 **Business Rules**:
 
 - A Super Admin account cannot be suspended by any other user, and cannot be removed, demoted or deactivated by anyone inside the product, including its holder; if ever needed, this is done outside the product (system protection)
-- At least one active Super Admin must exist at all times (prevent lockout)
-- Suspended users cannot log in but accounts remain in system (soft suspension)
-- Search filters users in real-time without page reload
-- Pagination: Display 25 users per page with "Load More" option
-- Sort columns: Name (A-Z), Last Login (most recent first), Role (alphabetical)
+- At least one active Super Admin must exist at all times (prevent lockout) (REQ-031-085)
+- Suspended users cannot log in but accounts remain in system (soft suspension) (REQ-031-053)
+- Search filters users in real-time without page reload (REQ-022-115)
+- Pagination: Display 25 users per page with "Load More" option (REQ-031-098)
+- Sort columns: Name (A-Z), Last Login (most recent first), Role (alphabetical) (REQ-031-098)
 
 **Notes**:
 
-- Display warning banner if only one Super Admin exists: "Warning: Only one Super Admin account. Consider adding backup admin."
-- Show notification dot on Pending Invitations sub-tab if invitations are about to expire (< 24 hours)
-- Export user list to CSV with all columns and applied filters
-- Each user row shows whether the user has acknowledged the latest role change (Acknowledged or Awaiting acknowledgement)
+- Display warning banner if only one Super Admin exists: "Warning: Only one Super Admin account. Consider adding backup admin." (REQ-031-085)
+- Show notification dot on Pending Invitations sub-tab if invitations are about to expire (< 24 hours) (REQ-031-042)
+- Export user list to CSV with all columns and applied filters (REQ-031-098)
+- Each user row shows whether the user has acknowledged the latest role change (Acknowledged or Awaiting acknowledgement) (REQ-031-124; ENT-admin-user-account.role_change_acknowledged_at)
 
 ---
 
@@ -368,31 +368,31 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Role List | table | N/A | List of provider roles | Display: Role Name, Description, Total Users Across All Providers, Actions |
-| Role Name | text | N/A | Name of provider role | Read-only; the four provider role names are fixed |
-| Total Users | number | N/A | Count of provider team members with this role across all providers | Display only, informational |
-| Last Modified | datetime | N/A | When permissions were last updated | Display only |
-| Actions | button group | N/A | Edit Permissions, View Users | Owner role has a lock icon |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|---------------|
+| Role List | table | N/A | List of provider roles | Display: Role Name, Description, Total Users Across All Providers, Actions | ENT-role-permission-definition.role_name, ENT-role-permission-definition.description, ENT-role-permission-definition.user_count |
+| Role Name | text | N/A | Name of provider role | Read-only; the four provider role names are fixed | ENT-role-permission-definition.role_name |
+| Total Users | number | N/A | Count of provider team members with this role across all providers | Display only, informational | ENT-role-permission-definition.user_count |
+| Last Modified | datetime | N/A | When permissions were last updated | Display only | ENT-role-permission-definition.updated_at |
+| Actions | button group | N/A | Edit Permissions, View Users | Owner role has a lock icon | no graph field (control) |
 
 **Actions**:
 
 - **Edit Permissions**: Opens permission matrix modal/panel for selected role (Provider Platform permissions)
-- **View Users**: Links to FR-015 (Provider Management) to view providers and their team members with this role
+- **View Users**: Links to FR-015 (Provider Management) to view providers and their team members with this role (REQ-031-080)
 
 **Business Rules**:
 
 - Owner role must always have full access to all provider features (cannot be restricted)
-- The four provider roles (Owner, Manager, Clinical Staff, Billing Staff) cannot be renamed or removed, and no other provider roles can be created or cloned; Super Admins configure only their permissions
-- Actions limited to named roles (for example Owner only) stay limited to those roles even if the permission is granted to another role
+- The four provider roles (Owner, Manager, Clinical Staff, Billing Staff) cannot be renamed or removed, and no other provider roles can be created or cloned; Super Admins configure only their permissions (REQ-031-056; REQ-031-055)
+- Actions limited to named roles (for example Owner only) stay limited to those roles even if the permission is granted to another role (REQ-031-068)
 - Permission changes sync to Provider Platform (FR-009) within 5 seconds
-- Permission changes affect all provider team members with that role across all providers
-- System shows warning when editing: "This will affect [count] provider team members across all provider organizations"
+- Permission changes affect all provider team members with that role across all providers (REQ-031-066)
+- System shows warning when editing: "This will affect [count] provider team members across all provider organizations" (REQ-031-074)
 
 **Notes**:
 
-- Display sync status indicator: "Last synced to Provider Platform: [timestamp]"
+- Display sync status indicator: "Last synced to Provider Platform: [timestamp]" (REQ-031-079; ENT-role-permission-definition.last_synced_at)
 - Show impact summary before saving: "This change will affect [X] providers and [Y] team members"
 
 ---
@@ -403,14 +403,14 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| First Name | text | Yes | Admin user's first name | Max 50 characters; letters, spaces, hyphens only |
-| Last Name | text | Yes | Admin user's last name | Max 50 characters; letters, spaces, hyphens only |
-| Email Address | email input | Yes | New admin user's email | Valid email format; unique (not already in use); lowercase conversion |
-| Phone Number | tel input | No | Admin user's phone number | E.164 format validation; optional for now (MFA implementation planned for future) |
-| Assigned Role | select (dropdown) | Yes | Role to assign to new user | Must select from the active admin roles, including custom roles (predefined: Super Admin, Aftercare Specialist, Billing Admin, Support Staff) |
-| Personal Message | textarea | No | Optional welcome message from Super Admin | Max 500 characters; included in invitation email |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|---------------|
+| First Name | text | Yes | Admin user's first name | Max 50 characters; letters, spaces, hyphens only | ENT-admin-user-account.first_name |
+| Last Name | text | Yes | Admin user's last name | Max 50 characters; letters, spaces, hyphens only | ENT-admin-user-account.last_name |
+| Email Address | email input | Yes | New admin user's email | Valid email format; unique (not already in use); lowercase conversion | ENT-admin-user-account.email |
+| Phone Number | tel input | No | Admin user's phone number | E.164 format validation; optional for now (MFA implementation planned for future) | ENT-admin-user-account.phone_number |
+| Assigned Role | select (dropdown) | Yes | Role to assign to new user | Must select from the active admin roles, including custom roles (predefined: Super Admin, Aftercare Specialist, Billing Admin, Support Staff) | ENT-admin-user-account.assigned_role_id |
+| Personal Message | textarea | No | Optional welcome message from Super Admin | Max 500 characters; included in invitation email | ENT-admin-user-account.personal_message |
 
 **Actions**:
 
@@ -420,28 +420,28 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 
 **Business Rules**:
 
-- Email validation occurs on blur (field loses focus) for immediate feedback
-- System checks for duplicate email across all admin users (active, suspended, pending)
-- Role dropdown populated from active admin roles, including custom admin roles
-- Role dropdown displays: role name + brief description on hover
-- Form cannot be submitted until all required fields pass validation
-- Invitation token expires after 7 days (168 hours)
+- Email validation occurs on blur (field loses focus) for immediate feedback (REQ-031-034)
+- System checks for duplicate email across all admin users (active, suspended, pending) (REQ-031-035)
+- Role dropdown populated from active admin roles, including custom admin roles (REQ-031-036)
+- Role dropdown displays: role name + brief description on hover (REQ-031-036)
+- Form cannot be submitted until all required fields pass validation (REQ-031-033)
+- Invitation token expires after 7 days (168 hours) (REQ-031-037)
 - Personal message is optional but recommended for first-time team setup
-- Phone number field is optional (MFA will be implemented in future enhancement)
+- Phone number field is optional (MFA will be implemented in future enhancement) (REQ-031-048)
 
 **Validation Messages**:
 
 - Email already in use: "This email is already associated with an admin account. Please use a different email or check existing team members."
 - Invalid email format: "Please enter a valid email address."
-- Invalid phone format: "Please enter a valid phone number (e.g., +1234567890)."
+- Invalid phone format: "Please enter a valid phone number (e.g., +1234567890)." (REQ-031-121)
 - Role not selected: "Please select a role for this team member."
 
 **Notes**:
 
-- Display role permission summary below role dropdown (expandable section showing what this role can access)
-- Show estimated invitation expiry time: "Invitation will expire in 7 days on [date] at [time]"
-- System auto-generates preview showing: invitee name, role, personal message (if provided), invitation link placeholder
-- After successful send, show confirmation: "Invitation sent to [email]. They have 7 days to accept."
+- Display role permission summary below role dropdown (expandable section showing what this role can access) (REQ-031-036)
+- Show estimated invitation expiry time: "Invitation will expire in 7 days on [date] at [time]" (REQ-031-038)
+- System auto-generates preview showing: invitee name, role, personal message (if provided), invitation link placeholder (REQ-031-038)
+- After successful send, show confirmation: "Invitation sent to [email]. They have 7 days to accept." (REQ-031-038)
 
 ---
 
@@ -453,37 +453,37 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Email | display (read-only) | N/A | Pre-filled from invitation, locked | Read-only; must match invitation token |
-| First Name | text | Yes | Editable first name (pre-filled from invitation) | 2-50 characters; letters, spaces, hyphens only |
-| Last Name | text | Yes | Editable last name (pre-filled from invitation) | 2-50 characters; letters, spaces, hyphens only |
-| Phone Number | tel input | No | Primary contact phone for admin user | E.164 format (e.g., +1234567890); optional for now (MFA planned for future) |
-| Password | password | Yes | Account password | Must satisfy the password policy (see system PRD, Platform-Wide Rules: Password and one-time-code policy) |
-| Confirm Password | password | Yes | Re-enter password | Must match Password field exactly |
-| Accept Terms | checkbox | Yes | Confirm platform terms & privacy policy | Must be checked before submission |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|---------------|
+| Email | display (read-only) | N/A | Pre-filled from invitation, locked | Read-only; must match invitation token | ENT-admin-user-account.email |
+| First Name | text | Yes | Editable first name (pre-filled from invitation) | 2-50 characters; letters, spaces, hyphens only | ENT-admin-user-account.first_name |
+| Last Name | text | Yes | Editable last name (pre-filled from invitation) | 2-50 characters; letters, spaces, hyphens only | ENT-admin-user-account.last_name |
+| Phone Number | tel input | No | Primary contact phone for admin user | E.164 format (e.g., +1234567890); optional for now (MFA planned for future) | ENT-admin-user-account.phone_number |
+| Password | password | Yes | Account password | Must satisfy the password policy (see system PRD, Platform-Wide Rules: Password and one-time-code policy) | ENT-admin-user-account.password_hash |
+| Confirm Password | password | Yes | Re-enter password | Must match Password field exactly | no graph field (control) |
+| Accept Terms | checkbox | Yes | Confirm platform terms & privacy policy | Must be checked before submission | ENT-admin-user-account.terms_accepted_at |
 
 **Actions**:
 
 - **Create Account**: Submits form and creates admin account
-- **Cancel**: Returns to login page (invalidates the invitation token if clicked; the invitation then shows as "Expired")
+- **Cancel**: Returns to login page (invalidates the invitation token if clicked; the invitation then shows as "Expired") (REQ-031-047; REQ-031-039)
 
 **Business Rules**:
 
-- Email field is pre-filled from invitation token and cannot be edited
-- First Name and Last Name are pre-filled from invitation but can be edited
-- Password must meet the password policy: see system PRD, Platform-Wide Rules: Password and one-time-code policy
-- "Create Account" button disabled until all required fields are valid and terms are accepted
-- Phone number is optional for now (MFA enrollment will be added in future enhancement)
-- Invitation token validated before displaying form
-- Expired or invalid tokens redirect to error page with "Request New Invitation" option
+- Email field is pre-filled from invitation token and cannot be edited (REQ-031-044)
+- First Name and Last Name are pre-filled from invitation but can be edited (REQ-031-044)
+- Password must meet the password policy: see system PRD, Platform-Wide Rules: Password and one-time-code policy (REQ-031-045; REQ-SYS-007)
+- "Create Account" button disabled until all required fields are valid and terms are accepted (REQ-031-046)
+- Phone number is optional for now (MFA enrollment will be added in future enhancement) (REQ-031-048)
+- Invitation token validated before displaying form (REQ-031-040)
+- Expired or invalid tokens redirect to error page with "Request New Invitation" option (REQ-031-040)
 
 **Validation Messages**:
 
-- Password too weak: "Password must be at least 12 characters with uppercase, lowercase, number, and special character from !@#$%^&(),.?\":{}|<>."
-- Password mismatch: "Passwords do not match."
-- Terms not accepted: "You must accept the Terms of Service to continue."
-- Invalid phone format: "Please enter a valid phone number (e.g., +1234567890)."
+- Password too weak: "Password must be at least 12 characters with uppercase, lowercase, number, and special character from !@#$%^&(),.?\":{}|<>." (REQ-031-045)
+- Password mismatch: "Passwords do not match." (REQ-031-045)
+- Terms not accepted: "You must accept the Terms of Service to continue." (REQ-031-046)
+- Invalid phone format: "Please enter a valid phone number (e.g., +1234567890)." (REQ-031-121)
 
 **Success Flow**:
 
@@ -496,16 +496,16 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 7. System sends confirmation email to both new admin user and Super Admin who sent invitation
 8. System displays success message: "Account created successfully! Redirecting to login..."
 9. System redirects to admin login page after 3 seconds
-10. New admin user can immediately log in with new credentials
+10. New admin user can immediately log in with new credentials (REQ-031-049)
 
 **Notes**:
 
-- Display provider branding (Hairline Admin Platform logo and name)
-- Show invitation expiry countdown if less than 24 hours remaining: "Your invitation expires in [X] hours"
-- Show assigned role in header: "You've been invited as [Role Name]"
-- Include personal message from Super Admin if provided (display below header)
-- Security notice: "Strong password required. All admin actions are logged for security."
-- MFA enrollment section marked as "Coming Soon" with note: "Multi-factor authentication will be required in future updates"
+- Display provider branding (Hairline Admin Platform logo and name) (REQ-031-122)
+- Show invitation expiry countdown if less than 24 hours remaining: "Your invitation expires in [X] hours" (REQ-031-044)
+- Show assigned role in header: "You've been invited as [Role Name]" (REQ-031-044)
+- Include personal message from Super Admin if provided (display below header) (REQ-031-044)
+- Security notice: "Strong password required. All admin actions are logged for security." (REQ-031-123)
+- MFA enrollment section marked as "Coming Soon" with note: "Multi-factor authentication will be required in future updates" (REQ-031-048)
 
 ---
 
@@ -526,7 +526,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 - Role Type Badge: "Admin Role" or "Provider Role"
 - View Toggle: Switch between "Single Role" and "Matrix View"
 - User Count: "Currently assigned to [X] users" (Single Role Mode only)
-- Warning (if Provider Role): "Changes will affect all provider organizations"
+- Warning (if Provider Role): "Changes will affect all provider organizations" (REQ-031-074)
 
 ---
 
@@ -536,224 +536,224 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Role Name | text | Yes | Name of role (e.g., "Aftercare Specialist") | **Locked for system-defined roles**. Editable for custom admin roles only. When editable: max 50 chars; unique within the role's guard. |
-| Role Description | textarea | Yes | Purpose and responsibilities of role | Max 500 chars |
-| Permission Categories | accordion | Yes | Grouped permissions by feature area | At least one permission required |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|---------------|
+| Role Name | text | Yes | Name of role (e.g., "Aftercare Specialist") | **Locked for system-defined roles**. Editable for custom admin roles only. When editable: max 50 chars; unique within the role's guard. | ENT-role-permission-definition.role_name |
+| Role Description | textarea | Yes | Purpose and responsibilities of role | Max 500 chars | ENT-role-permission-definition.description |
+| Permission Categories | accordion | Yes | Grouped permissions by feature area | At least one permission required | ENT-role-permission-definition.permissions, ENT-permission.feature_area, ENT-permission.permission_name, ENT-permission.description, ENT-permission.permission_category |
 
 **Permission Matrix Structure** (Expandable Categories):
 
-**Category: Dashboard & Overview (A-01)**:
+**Category: Dashboard & Overview (A-01)**: (REQ-031-101)
 
-| Permission | Description | Access Level |
-|------------|-------------|--------------|
-| View Dashboard | Access main admin dashboard | ☐ Read |
-| View Patient Overview | View patients across all lifecycle stages | ☐ Read |
+| Permission | Description | Access Level | Graph field |
+|------------|-------------|--------------|---------------|
+| View Dashboard | Access main admin dashboard | ☐ Read | ENT-permission |
+| View Patient Overview | View patients across all lifecycle stages | ☐ Read | ENT-permission |
 
-**Category: Patient Management (A-01)**:
+**Category: Patient Management (A-01)**: (REQ-031-102)
 
-| Permission | Description | Access Level |
-|------------|-------------|--------------|
-| View Patients | View patient list and profiles | ☐ Read |
-| Edit Patients | Modify patient information | ☐ Write |
-| Delete Patients | Archive patient accounts | ☐ Delete |
+| Permission | Description | Access Level | Graph field |
+|------------|-------------|--------------|---------------|
+| View Patients | View patient list and profiles | ☐ Read | ENT-permission |
+| Edit Patients | Modify patient information | ☐ Write | ENT-permission |
+| Delete Patients | Archive patient accounts | ☐ Delete | ENT-permission |
 
-**Category: Provider Management (A-02)**:
+**Category: Provider Management (A-02)**: (REQ-031-103)
 
-| Permission | Description | Access Level |
-|------------|-------------|--------------|
-| View Providers | View provider list and profiles | ☐ Read |
-| Edit Providers | Modify provider information | ☐ Write |
-| Onboard Providers | Create new provider accounts | ☐ Write |
-| Suspend Providers | Suspend/activate provider accounts | ☐ Delete |
+| Permission | Description | Access Level | Graph field |
+|------------|-------------|--------------|---------------|
+| View Providers | View provider list and profiles | ☐ Read | ENT-permission |
+| Edit Providers | Modify provider information | ☐ Write | ENT-permission |
+| Onboard Providers | Create new provider accounts | ☐ Write | ENT-permission |
+| Suspend Providers | Suspend/activate provider accounts | ☐ Delete | ENT-permission |
 
-**Category: Aftercare Management (A-03)**:
+**Category: Aftercare Management (A-03)**: (REQ-031-104)
 
-| Permission | Description | Access Level |
-|------------|-------------|--------------|
-| View Aftercare Cases | View aftercare patient list | ☐ Read |
-| Manage Aftercare | Assign specialists, edit plans | ☐ Write |
-| Chat with Patients | Access aftercare chat | ☐ Write |
-| Schedule Consultations | Book video consultations | ☐ Write |
+| Permission | Description | Access Level | Graph field |
+|------------|-------------|--------------|---------------|
+| View Aftercare Cases | View aftercare patient list | ☐ Read | ENT-permission |
+| Manage Aftercare | Assign specialists, edit plans | ☐ Write | ENT-permission |
+| Chat with Patients | Access aftercare chat | ☐ Write | ENT-permission |
+| Schedule Consultations | Book video consultations | ☐ Write | ENT-permission |
 
-**Category: Quotes & Inquiries Oversight (A-01)**:
+**Category: Quotes & Inquiries Oversight (A-01)**: (REQ-031-105)
 
-| Permission | Description | Access Level |
-|------------|-------------|--------------|
-| View Inquiries Overview | View all inquiries across lifecycle stages | ☐ Read |
-| View Quote Details | View all quotes per inquiry | ☐ Read |
-| Edit Quotes | Modify quotes (provider cancellations, rescheduling) | ☐ Write |
-| Reassign Providers | Manually assign/reassign providers to inquiries | ☐ Write |
+| Permission | Description | Access Level | Graph field |
+|------------|-------------|--------------|---------------|
+| View Inquiries Overview | View all inquiries across lifecycle stages | ☐ Read | ENT-permission |
+| View Quote Details | View all quotes per inquiry | ☐ Read | ENT-permission |
+| Edit Quotes | Modify quotes (provider cancellations, rescheduling) | ☐ Write | ENT-permission |
+| Reassign Providers | Manually assign/reassign providers to inquiries | ☐ Write | ENT-permission |
 
-**Category: Reviews & Ratings Management (A-01)**:
+**Category: Reviews & Ratings Management (A-01)**: (REQ-031-106)
 
-| Permission | Description | Access Level |
-|------------|-------------|--------------|
-| View Reviews | View all patient reviews | ☐ Read |
-| Moderate Reviews | Approve/reject/edit reviews | ☐ Write |
-| Add Reviews | Import authenticated reviews for providers | ☐ Write |
-| Manage Review Categories | Configure review categories and labels | ☐ Write |
+| Permission | Description | Access Level | Graph field |
+|------------|-------------|--------------|---------------|
+| View Reviews | View all patient reviews | ☐ Read | ENT-permission |
+| Moderate Reviews | Approve/reject/edit reviews | ☐ Write | ENT-permission |
+| Add Reviews | Import authenticated reviews for providers | ☐ Write | ENT-permission |
+| Manage Review Categories | Configure review categories and labels | ☐ Write | ENT-permission |
 
-**Category: Billing & Financial (A-05)**:
+**Category: Billing & Financial (A-05)**: (REQ-031-107)
 
-| Permission | Description | Access Level |
-|------------|-------------|--------------|
-| View Transactions | View patient and provider transactions | ☐ Read |
-| Process Payouts | Initiate provider payouts | ☐ Write |
-| Issue Refunds | Process patient refunds | ☐ Write (requires approval; any admin holding this permission may approve, no second person is required; approval step defined in FR-007) |
-| View Financial Reports | Access revenue analytics | ☐ Read |
-| View Patient Billing | View patient invoices and payment status | ☐ Read |
-| Send Payment Reminders | Send payment reminders to patients | ☐ Write |
-| Download Invoices | Download patient/provider invoices | ☐ Read |
+| Permission | Description | Access Level | Graph field |
+|------------|-------------|--------------|---------------|
+| View Transactions | View patient and provider transactions | ☐ Read | ENT-permission |
+| Process Payouts | Initiate provider payouts | ☐ Write | ENT-permission |
+| Issue Refunds | Process patient refunds | ☐ Write (requires approval; any admin holding this permission may approve, no second person is required; approval step defined in FR-007) (REQ-031-069; REQ-007-015) | ENT-permission |
+| View Financial Reports | Access revenue analytics | ☐ Read | ENT-permission |
+| View Patient Billing | View patient invoices and payment status | ☐ Read | ENT-permission |
+| Send Payment Reminders | Send payment reminders to patients | ☐ Write | ENT-permission |
+| Download Invoices | Download patient/provider invoices | ☐ Read | ENT-permission |
 
-**Category: Promotions & Discounts (A-06)**:
+**Category: Promotions & Discounts (A-06)**: (REQ-031-108)
 
-| Permission | Description | Access Level |
-|------------|-------------|--------------|
-| View Discounts | View all discount codes (Hairline and provider) | ☐ Read |
-| Create Discounts | Create platform-wide discount codes | ☐ Write |
-| Edit Discounts | Modify discount parameters | ☐ Write |
-| Track Discount Usage | View discount statistics and ROI | ☐ Read |
-| Manage Admin Campaign Adoptions | Manage provider accept/decline participation and admin override actions for admin-created both-fees campaigns | ☐ Write |
+| Permission | Description | Access Level | Graph field |
+|------------|-------------|--------------|---------------|
+| View Discounts | View all discount codes (Hairline and provider) | ☐ Read | ENT-permission |
+| Create Discounts | Create platform-wide discount codes | ☐ Write | ENT-permission |
+| Edit Discounts | Modify discount parameters | ☐ Write | ENT-permission |
+| Track Discount Usage | View discount statistics and ROI | ☐ Read | ENT-permission |
+| Manage Admin Campaign Adoptions | Manage provider accept/decline participation and admin override actions for admin-created both-fees campaigns | ☐ Write | ENT-permission |
 
-**Category: Affiliate Management (A-07)**:
+**Category: Affiliate Management (A-07)**: (REQ-031-109)
 
-| Permission | Description | Access Level |
-|------------|-------------|--------------|
-| View Affiliates | View affiliate list and details | ☐ Read |
-| Create Affiliates | Add new affiliate accounts | ☐ Write |
-| Edit Affiliates | Modify affiliate profiles and commission rules | ☐ Write |
-| Process Affiliate Payouts | Process affiliate commission payments | ☐ Write |
-| View Affiliate Performance | View referral counts and conversions | ☐ Read |
+| Permission | Description | Access Level | Graph field |
+|------------|-------------|--------------|---------------|
+| View Affiliates | View affiliate list and details | ☐ Read | ENT-permission |
+| Create Affiliates | Add new affiliate accounts | ☐ Write | ENT-permission |
+| Edit Affiliates | Modify affiliate profiles and commission rules | ☐ Write | ENT-permission |
+| Process Affiliate Payouts | Process affiliate commission payments | ☐ Write | ENT-permission |
+| View Affiliate Performance | View referral counts and conversions | ☐ Read | ENT-permission |
 
-**Category: Analytics & Reporting (A-08)**:
+**Category: Analytics & Reporting (A-08)**: (REQ-031-110)
 
-| Permission | Description | Access Level |
-|------------|-------------|--------------|
-| View Analytics Dashboard | Access platform-wide analytics overview | ☐ Read |
-| View Provider Analytics | View provider performance metrics | ☐ Read |
-| View Financial Analytics | View revenue and conversion analytics | ☐ Read |
-| Export Reports | Export analytics reports (PDF/CSV) | ☐ Read |
-| View Treatment Outcomes | Access treatment outcomes analytics | ☐ Read |
+| Permission | Description | Access Level | Graph field |
+|------------|-------------|--------------|---------------|
+| View Analytics Dashboard | Access platform-wide analytics overview | ☐ Read | ENT-permission |
+| View Provider Analytics | View provider performance metrics | ☐ Read | ENT-permission |
+| View Financial Analytics | View revenue and conversion analytics | ☐ Read | ENT-permission |
+| Export Reports | Export analytics reports (PDF/CSV) | ☐ Read | ENT-permission |
+| View Treatment Outcomes | Access treatment outcomes analytics | ☐ Read | ENT-permission |
 
-**Category: Communication & Support (A-10)**:
+**Category: Communication & Support (A-10)**: (REQ-031-111)
 
-| Permission | Description | Access Level |
-|------------|-------------|--------------|
-| View Support Center | Access patient support cases | ☐ Read |
-| Respond to Support | Send messages to patients/providers | ☐ Write |
-| View Provider-Patient Messages | Monitor provider-to-patient communications | ☐ Read |
-| Flag Communications | Flag suspicious or policy-violating messages | ☐ Write |
-| Export Conversation Transcripts | Export chat transcripts for compliance | ☐ Read |
+| Permission | Description | Access Level | Graph field |
+|------------|-------------|--------------|---------------|
+| View Support Center | Access patient support cases | ☐ Read | ENT-permission |
+| Respond to Support | Send messages to patients/providers | ☐ Write | ENT-permission |
+| View Provider-Patient Messages | Monitor provider-to-patient communications | ☐ Read | ENT-permission |
+| Flag Communications | Flag suspicious or policy-violating messages | ☐ Write | ENT-permission |
+| Export Conversation Transcripts | Export chat transcripts for compliance | ☐ Read | ENT-permission |
 
-**Category: Travel Management (A-04)**:
+**Category: Travel Management (A-04)**: (REQ-031-112)
 
-| Permission | Description | Access Level |
-|------------|-------------|--------------|
-| View Travel Bookings | View flight and hotel bookings | ☐ Read |
-| Manage Travel Settings | Configure travel API settings and commissions | ☐ Write |
-| View Travel Reports | View travel booking analytics | ☐ Read |
+| Permission | Description | Access Level | Graph field |
+|------------|-------------|--------------|---------------|
+| View Travel Bookings | View flight and hotel bookings | ☐ Read | ENT-permission |
+| Manage Travel Settings | Configure travel API settings and commissions | ☐ Write | ENT-permission |
+| View Travel Reports | View travel booking analytics | ☐ Read | ENT-permission |
 
-**Category: System Settings (A-09)**:
+**Category: System Settings (A-09)**: (REQ-031-113)
 
-| Permission | Description | Access Level |
-|------------|-------------|--------------|
-| View Settings | View system configuration | ☐ Read |
-| Edit Settings | Modify system settings | ☐ Write (Super Admin only) |
-| Manage Users | Create/edit admin accounts | ☐ Write (Super Admin only) |
-| Manage Roles | Create/edit roles and permissions | ☐ Write (Super Admin only) |
-| Manage Terms & Conditions | Edit patient/provider terms and consent | ☐ Write |
-| Manage App Data | Edit countries, discovery questions, location presentation | ☐ Write |
-| Manage Treatment Catalog | Create/edit treatments and packages | ☐ Write |
-| Manage Aftercare Templates | Create/edit aftercare milestone templates | ☐ Write |
-| Manage Notification Templates | Edit email templates (OTP, confirmations) | ☐ Write |
-| Configure Payment Settings | Manage Stripe accounts, commission rates, split pay | ☐ Write |
-| Manage Help Centre | Create/edit Help Centre content for providers | ☐ Write |
-| View Sensitive Settings | View the full value of sensitive settings (for example API keys) | ☐ Read |
-| Manage Authentication Policies | Edit authentication policy settings (for example lockout and session timeout) | ☐ Write |
+| Permission | Description | Access Level | Graph field |
+|------------|-------------|--------------|---------------|
+| View Settings | View system configuration | ☐ Read | ENT-permission |
+| Edit Settings | Modify system settings | ☐ Write (Super Admin only) (REQ-031-067) | ENT-permission |
+| Manage Users | Create/edit admin accounts | ☐ Write (Super Admin only) (REQ-031-067) | ENT-permission |
+| Manage Roles | Create/edit roles and permissions | ☐ Write (Super Admin only) (REQ-031-067) | ENT-permission |
+| Manage Terms & Conditions | Edit patient/provider terms and consent | ☐ Write | ENT-permission |
+| Manage App Data | Edit countries, discovery questions, location presentation | ☐ Write | ENT-permission |
+| Manage Treatment Catalog | Create/edit treatments and packages | ☐ Write | ENT-permission |
+| Manage Aftercare Templates | Create/edit aftercare milestone templates | ☐ Write | ENT-permission |
+| Manage Notification Templates | Edit email templates (OTP, confirmations) | ☐ Write | ENT-permission |
+| Configure Payment Settings | Manage Stripe accounts, commission rates, split pay | ☐ Write | ENT-permission |
+| Manage Help Centre | Create/edit Help Centre content for providers | ☐ Write | ENT-permission |
+| View Sensitive Settings | View the full value of sensitive settings (for example API keys) | ☐ Read | ENT-permission |
+| Manage Authentication Policies | Edit authentication policy settings (for example lockout and session timeout) | ☐ Write | ENT-permission |
 
 FR-026 refers to these permission names for its screens: View Settings, Edit Settings, View Sensitive Settings, Manage Authentication Policies, Manage App Data and Manage Notification Templates.
 
 **Provider Platform Permission Categories** (for configuring the four provider roles):
 
-**Category: Patient Inquiries & Quotes (PR-02)**:
+**Category: Patient Inquiries & Quotes (PR-02)**: (REQ-031-114)
 
-| Permission | Description | Access Level |
-|------------|-------------|--------------|
-| View Inquiries | View patient inquiry list and details | ☐ Read |
-| Respond to Inquiries | Submit quotes and respond to inquiries | ☐ Write |
-| Edit Quotes | Modify submitted quotes | ☐ Write |
-| Accept/Decline Quotes | Accept or decline patient quote acceptances | ☐ Write |
-| View Quote History | View all quotes for inquiries | ☐ Read |
+| Permission | Description | Access Level | Graph field |
+|------------|-------------|--------------|---------------|
+| View Inquiries | View patient inquiry list and details | ☐ Read | ENT-permission |
+| Respond to Inquiries | Submit quotes and respond to inquiries | ☐ Write | ENT-permission |
+| Edit Quotes | Modify submitted quotes | ☐ Write | ENT-permission |
+| Accept/Decline Quotes | Accept or decline patient quote acceptances | ☐ Write | ENT-permission |
+| View Quote History | View all quotes for inquiries | ☐ Read | ENT-permission |
 
-**Category: Appointments & Scheduling (PR-02)**:
+**Category: Appointments & Scheduling (PR-02)**: (REQ-031-115)
 
 > Note: In the System PRD, appointment slot pre-scheduling is part of the inquiry/quote flow; this category is tracked under PR-02 for module-code consistency.
 
-| Permission | Description | Access Level |
-|------------|-------------|--------------|
-| View Appointments | View scheduled appointments | ☐ Read |
-| Schedule Appointments | Create and schedule appointments | ☐ Write |
-| Edit Appointments | Modify appointment details | ☐ Write |
-| Cancel Appointments | Cancel scheduled appointments | ☐ Write |
-| View Calendar | Access provider calendar view | ☐ Read |
+| Permission | Description | Access Level | Graph field |
+|------------|-------------|--------------|---------------|
+| View Appointments | View scheduled appointments | ☐ Read | ENT-permission |
+| Schedule Appointments | Create and schedule appointments | ☐ Write | ENT-permission |
+| Edit Appointments | Modify appointment details | ☐ Write | ENT-permission |
+| Cancel Appointments | Cancel scheduled appointments | ☐ Write | ENT-permission |
+| View Calendar | Access provider calendar view | ☐ Read | ENT-permission |
 
-**Category: Treatment & Procedures (PR-03)**:
+**Category: Treatment & Procedures (PR-03)**: (REQ-031-116)
 
-| Permission | Description | Access Level |
-|------------|-------------|--------------|
-| View In-Progress Cases | View patients currently in treatment | ☐ Read |
-| Document Treatment | Add treatment notes, scans, photos | ☐ Write (Owner or Clinical Staff only) |
-| Update Treatment Status | Change patient treatment stage | ☐ Write |
-| View Treatment History | Access historical treatment records | ☐ Read |
+| Permission | Description | Access Level | Graph field |
+|------------|-------------|--------------|---------------|
+| View In-Progress Cases | View patients currently in treatment | ☐ Read | ENT-permission |
+| Document Treatment | Add treatment notes, scans, photos | ☐ Write (Owner or Clinical Staff only) | ENT-permission |
+| Update Treatment Status | Change patient treatment stage | ☐ Write | ENT-permission |
+| View Treatment History | Access historical treatment records | ☐ Read | ENT-permission |
 
-**Category: Aftercare Management (PR-04)**:
+**Category: Aftercare Management (PR-04)**: (REQ-031-117)
 
-| Permission | Description | Access Level |
-|------------|-------------|--------------|
-| View Aftercare Cases | View aftercare patient list | ☐ Read |
-| Manage Aftercare Plans | Create and edit aftercare plans | ☐ Write |
-| Chat with Patients | Access aftercare messaging | ☐ Write |
-| Schedule Consultations | Book video consultations | ☐ Write |
-| View Progress Reports | Access patient progress data | ☐ Read |
+| Permission | Description | Access Level | Graph field |
+|------------|-------------|--------------|---------------|
+| View Aftercare Cases | View aftercare patient list | ☐ Read | ENT-permission |
+| Manage Aftercare Plans | Create and edit aftercare plans | ☐ Write | ENT-permission |
+| Chat with Patients | Access aftercare messaging | ☐ Write | ENT-permission |
+| Schedule Consultations | Book video consultations | ☐ Write | ENT-permission |
+| View Progress Reports | Access patient progress data | ☐ Read | ENT-permission |
 
-**Category: Financial & Billing (PR-05)**:
+**Category: Financial & Billing (PR-05)**: (REQ-031-118)
 
-| Permission | Description | Access Level |
-|------------|-------------|--------------|
-| View Financial Dashboard | View revenue and earnings | ☐ Read |
-| View Payouts | View payment history and upcoming payouts | ☐ Read |
-| Manage Bank Details | Update payment account information | ☐ Write (Owner only) |
-| View Financial Reports | Access financial analytics | ☐ Read |
+| Permission | Description | Access Level | Graph field |
+|------------|-------------|--------------|---------------|
+| View Financial Dashboard | View revenue and earnings | ☐ Read | ENT-permission |
+| View Payouts | View payment history and upcoming payouts | ☐ Read | ENT-permission |
+| Manage Bank Details | Update payment account information | ☐ Write (Owner only) | ENT-permission |
+| View Financial Reports | Access financial analytics | ☐ Read | ENT-permission |
 
-**Category: Team Management (PR-01)**:
+**Category: Team Management (PR-01)**: (REQ-031-119)
 
-| Permission | Description | Access Level |
-|------------|-------------|--------------|
-| View Team Members | View team member list | ☐ Read |
-| Invite Team Members | Send team member invitations | ☐ Write |
-| Edit Team Member Roles | Change team member roles (non-Owner) | ☐ Write (Owner or Manager only) |
-| Remove Team Members | Remove or suspend team members | ☐ Write (Owner only) |
-| View Team Activity | Access team activity logs | ☐ Read |
+| Permission | Description | Access Level | Graph field |
+|------------|-------------|--------------|---------------|
+| View Team Members | View team member list | ☐ Read | ENT-permission |
+| Invite Team Members | Send team member invitations | ☐ Write | ENT-permission |
+| Edit Team Member Roles | Change team member roles (non-Owner) | ☐ Write (Owner or Manager only) | ENT-permission |
+| Remove Team Members | Remove or suspend team members | ☐ Write (Owner only) | ENT-permission |
+| View Team Activity | Access team activity logs | ☐ Read | ENT-permission |
 
-**Category: Provider Settings (PR-06)**:
+**Category: Provider Settings (PR-06)**: (REQ-031-120)
 
-| Permission | Description | Access Level |
-|------------|-------------|--------------|
-| View Profile | View provider profile information | ☐ Read |
-| Edit Profile | Update provider profile details | ☐ Write |
-| Manage Treatments | Add/edit treatment offerings | ☐ Write |
-| Manage Promotions | Create and edit discount codes | ☐ Write |
-| View Settings | View provider settings | ☐ Read |
-| Edit Settings | Modify provider settings | ☐ Write (Owner only) |
+| Permission | Description | Access Level | Graph field |
+|------------|-------------|--------------|---------------|
+| View Profile | View provider profile information | ☐ Read | ENT-permission |
+| Edit Profile | Update provider profile details | ☐ Write | ENT-permission |
+| Manage Treatments | Add/edit treatment offerings | ☐ Write | ENT-permission |
+| Manage Promotions | Create and edit discount codes | ☐ Write | ENT-permission |
+| View Settings | View provider settings | ☐ Read | ENT-permission |
+| Edit Settings | Modify provider settings | ☐ Write (Owner only) | ENT-permission |
 
 **Modal Actions** (Single Role Mode):
 
 - **Save Changes**: Saves permission changes and closes modal
 - **Cancel**: Closes modal (shows confirmation dialog if unsaved changes exist)
-- **Reset to Default**: Resets to system-recommended permissions for this role (if available)
-- **Preview Impact**: Shows which users and providers will be affected by changes
+- **Reset to Default**: Resets to system-recommended permissions for this role (if available) (REQ-031-076)
+- **Preview Impact**: Shows which users and providers will be affected by changes (REQ-031-076)
 - **Switch to Matrix View**: Switches to 2-axis matrix comparison view (shows confirmation dialog if unsaved changes exist)
 - **Close (X button)**: Closes modal (shows confirmation dialog if unsaved changes exist)
 
@@ -761,7 +761,7 @@ FR-026 refers to these permission names for its screens: View Settings, Edit Set
 
 #### View Mode 2: Matrix Comparison View
 
-**Purpose**: View and edit permissions across multiple roles simultaneously in a 2-axis table format for easy comparison and bulk editing.
+**Purpose**: View and edit permissions across multiple roles simultaneously in a 2-axis table format for easy comparison and bulk editing. (REQ-031-077)
 
 **Layout**: 2-axis table where:
 
@@ -771,65 +771,65 @@ FR-026 refers to these permission names for its screens: View Settings, Edit Set
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Role Type Filter | toggle | Yes | Filter to Admin Roles or Provider Roles | Single selection |
-| Permission Categories | expandable sections | Yes | Group permissions by module/feature area | Expand/collapse per category |
-| Matrix Table | table | Yes | 2-axis table with permissions as rows, roles as columns | Scrollable horizontally and vertically |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|---------------|
+| Role Type Filter | toggle | Yes | Filter to Admin Roles or Provider Roles | Single selection | no graph field (control) |
+| Permission Categories | expandable sections | Yes | Group permissions by module/feature area | Expand/collapse per category | ENT-permission.feature_area |
+| Matrix Table | table | Yes | 2-axis table with permissions as rows, roles as columns | Scrollable horizontally and vertically | ENT-permission.permission_name, ENT-permission.module_code, ENT-role-permission-definition.role_name, ENT-role-permission-definition.permissions, ENT-role-permission-definition.user_count |
 
 **Matrix Table Structure**:
 
 **Example for Admin Roles** (default permissions of the predefined roles):
 
-| Permission | Category | Super Admin | Aftercare Specialist | Billing Admin | Support Staff |
-|------------|----------|-------------|---------------------|---------------|---------------|
-| View Dashboard | A-01 | ☑ | ☑ | ☑ | ☑ |
-| View Patient Overview | A-01 | ☑ | ☑ | ☑ | ☑ |
-| View Patients | A-01 | ☑ | ☑ | ☑ | ☑ |
-| Edit Patients | A-01 | ☑ | ☐ | ☐ | ☐ |
-| Delete Patients | A-01 | ☑ | ☐ | ☐ | ☐ |
-| View Quotes & Inquiries | A-01 | ☑ | ☐ | ☐ | ☐ |
-| Edit Quotes | A-01 | ☑ | ☐ | ☐ | ☐ |
-| View Reviews | A-01 | ☑ | ☑ | ☐ | ☐ |
-| Moderate Reviews | A-01 | ☑ | ☐ | ☐ | ☐ |
-| View Providers | A-02 | ☑ | ☑ | ☑ | ☑ |
-| Edit Providers | A-02 | ☑ | ☐ | ☐ | ☐ |
-| Onboard Providers | A-02 | ☑ | ☐ | ☐ | ☐ |
-| Suspend Providers | A-02 | ☑ | ☐ | ☐ | ☐ |
-| View Aftercare Cases | A-03 | ☑ | ☑ | ☐ | ☐ |
-| Manage Aftercare | A-03 | ☑ | ☑ | ☐ | ☐ |
-| Chat with Patients (Aftercare) | A-03 | ☑ | ☑ | ☐ | ☐ |
-| Schedule Consultations | A-03 | ☑ | ☑ | ☐ | ☐ |
-| View Transactions | A-05 | ☑ | ☐ | ☑ | ☐ |
-| Process Payouts | A-05 | ☑ | ☐ | ☑ | ☐ |
-| Issue Refunds | A-05 | ☑ | ☐ | ☐ | ☐ |
-| View Patient Billing | A-05 | ☑ | ☐ | ☑ | ☐ |
-| View Discounts | A-06 | ☑ | ☐ | ☑ | ☐ |
-| Create Discounts | A-06 | ☑ | ☐ | ☐ | ☐ |
-| View Affiliates | A-07 | ☑ | ☐ | ☐ | ☐ |
-| View Analytics | A-08 | ☑ | ☑ | ☑ | ☐ |
-| View Support Center | A-10 | ☑ | ☑ | ☐ | ☑ |
-| Respond to Support | A-10 | ☑ | ☑ | ☐ | ☑ |
-| View Settings | A-09 | ☑ | ☑ | ☑ | ☑ |
-| Edit Settings | A-09 | ☑ | ☐ | ☐ | ☐ |
-| Manage Users | A-09 | ☑ | ☐ | ☐ | ☐ |
-| Manage Roles | A-09 | ☑ | ☐ | ☐ | ☐ |
+| Permission | Category | Super Admin | Aftercare Specialist | Billing Admin | Support Staff | Graph field |
+|------------|----------|-------------|---------------------|---------------|---------------|---------------|
+| View Dashboard | A-01 | ☑ | ☑ | ☑ | ☑ | ENT-permission, ENT-role-permission-definition |
+| View Patient Overview | A-01 | ☑ | ☑ | ☑ | ☑ | ENT-permission, ENT-role-permission-definition |
+| View Patients | A-01 | ☑ | ☑ | ☑ | ☑ | ENT-permission, ENT-role-permission-definition |
+| Edit Patients | A-01 | ☑ | ☐ | ☐ | ☐ | ENT-permission, ENT-role-permission-definition |
+| Delete Patients | A-01 | ☑ | ☐ | ☐ | ☐ | ENT-permission, ENT-role-permission-definition |
+| View Quotes & Inquiries | A-01 | ☑ | ☐ | ☐ | ☐ | ENT-permission, ENT-role-permission-definition |
+| Edit Quotes | A-01 | ☑ | ☐ | ☐ | ☐ | ENT-permission, ENT-role-permission-definition |
+| View Reviews | A-01 | ☑ | ☑ | ☐ | ☐ | ENT-permission, ENT-role-permission-definition |
+| Moderate Reviews | A-01 | ☑ | ☐ | ☐ | ☐ | ENT-permission, ENT-role-permission-definition |
+| View Providers | A-02 | ☑ | ☑ | ☑ | ☑ | ENT-permission, ENT-role-permission-definition |
+| Edit Providers | A-02 | ☑ | ☐ | ☐ | ☐ | ENT-permission, ENT-role-permission-definition |
+| Onboard Providers | A-02 | ☑ | ☐ | ☐ | ☐ | ENT-permission, ENT-role-permission-definition |
+| Suspend Providers | A-02 | ☑ | ☐ | ☐ | ☐ | ENT-permission, ENT-role-permission-definition |
+| View Aftercare Cases | A-03 | ☑ | ☑ | ☐ | ☐ | ENT-permission, ENT-role-permission-definition |
+| Manage Aftercare | A-03 | ☑ | ☑ | ☐ | ☐ | ENT-permission, ENT-role-permission-definition |
+| Chat with Patients (Aftercare) | A-03 | ☑ | ☑ | ☐ | ☐ | ENT-permission, ENT-role-permission-definition |
+| Schedule Consultations | A-03 | ☑ | ☑ | ☐ | ☐ | ENT-permission, ENT-role-permission-definition |
+| View Transactions | A-05 | ☑ | ☐ | ☑ | ☐ | ENT-permission, ENT-role-permission-definition |
+| Process Payouts | A-05 | ☑ | ☐ | ☑ | ☐ | ENT-permission, ENT-role-permission-definition |
+| Issue Refunds | A-05 | ☑ | ☐ | ☐ | ☐ | ENT-permission, ENT-role-permission-definition |
+| View Patient Billing | A-05 | ☑ | ☐ | ☑ | ☐ | ENT-permission, ENT-role-permission-definition |
+| View Discounts | A-06 | ☑ | ☐ | ☑ | ☐ | ENT-permission, ENT-role-permission-definition |
+| Create Discounts | A-06 | ☑ | ☐ | ☐ | ☐ | ENT-permission, ENT-role-permission-definition |
+| View Affiliates | A-07 | ☑ | ☐ | ☐ | ☐ | ENT-permission, ENT-role-permission-definition |
+| View Analytics | A-08 | ☑ | ☑ | ☑ | ☐ | ENT-permission, ENT-role-permission-definition |
+| View Support Center | A-10 | ☑ | ☑ | ☐ | ☑ | ENT-permission, ENT-role-permission-definition |
+| Respond to Support | A-10 | ☑ | ☑ | ☐ | ☑ | ENT-permission, ENT-role-permission-definition |
+| View Settings | A-09 | ☑ | ☑ | ☑ | ☑ | ENT-permission, ENT-role-permission-definition |
+| Edit Settings | A-09 | ☑ | ☐ | ☐ | ☐ | ENT-permission, ENT-role-permission-definition |
+| Manage Users | A-09 | ☑ | ☐ | ☐ | ☐ | ENT-permission, ENT-role-permission-definition |
+| Manage Roles | A-09 | ☑ | ☐ | ☐ | ☐ | ENT-permission, ENT-role-permission-definition |
 
 **Example for Provider Roles** (default permissions of the four provider roles):
 
-| Permission | Category | Owner | Manager | Clinical Staff | Billing Staff |
-|------------|----------|-------|---------|----------------|---------------|
-| View Inquiries | PR-02 | ☑ | ☑ | ☐ | ☐ |
-| Respond to Inquiries | PR-02 | ☑ | ☑ | ☐ | ☐ |
-| View Appointments | PR-02 | ☑ | ☑ | ☑ | ☐ |
-| Schedule Appointments | PR-02 | ☑ | ☑ | ☑ | ☐ |
-| View In-Progress Cases | PR-03 | ☑ | ☑ | ☑ | ☐ |
-| Document Treatment | PR-03 | ☑ | ☑ | ☑ | ☐ |
-| View Financial Dashboard | PR-05 | ☑ | ☑ | ☐ | ☑ |
-| View Payouts | PR-05 | ☑ | ☑ | ☐ | ☑ |
-| Manage Bank Details | PR-05 | ☑ | ☐ | ☐ | ☐ |
-| View Team Members | PR-01 | ☑ | ☑ | ☐ | ☐ |
-| Invite Team Members | PR-01 | ☑ | ☑ | ☐ | ☐ |
+| Permission | Category | Owner | Manager | Clinical Staff | Billing Staff | Graph field |
+|------------|----------|-------|---------|----------------|---------------|---------------|
+| View Inquiries | PR-02 | ☑ | ☑ | ☐ | ☐ | ENT-permission, ENT-role-permission-definition |
+| Respond to Inquiries | PR-02 | ☑ | ☑ | ☐ | ☐ | ENT-permission, ENT-role-permission-definition |
+| View Appointments | PR-02 | ☑ | ☑ | ☑ | ☐ | ENT-permission, ENT-role-permission-definition |
+| Schedule Appointments | PR-02 | ☑ | ☑ | ☑ | ☐ | ENT-permission, ENT-role-permission-definition |
+| View In-Progress Cases | PR-03 | ☑ | ☑ | ☑ | ☐ | ENT-permission, ENT-role-permission-definition |
+| Document Treatment | PR-03 | ☑ | ☑ | ☑ | ☐ | ENT-permission, ENT-role-permission-definition |
+| View Financial Dashboard | PR-05 | ☑ | ☑ | ☐ | ☑ | ENT-permission, ENT-role-permission-definition |
+| View Payouts | PR-05 | ☑ | ☑ | ☐ | ☑ | ENT-permission, ENT-role-permission-definition |
+| Manage Bank Details | PR-05 | ☑ | ☐ | ☐ | ☐ | ENT-permission, ENT-role-permission-definition |
+| View Team Members | PR-01 | ☑ | ☑ | ☐ | ☐ | ENT-permission, ENT-role-permission-definition |
+| Invite Team Members | PR-01 | ☑ | ☑ | ☐ | ☐ | ENT-permission, ENT-role-permission-definition |
 
 **Matrix View Features**:
 
@@ -841,14 +841,14 @@ FR-026 refers to these permission names for its screens: View Settings, Edit Set
   - "Select All" checkbox in row header to grant permission to all roles
   - "Select Category" to grant all permissions in a category to selected roles
 - **Visual Indicators**:
-  - Locked cells (Super Admin, Owner) shown with lock icon and disabled checkbox
+  - Locked cells (Super Admin, Owner) shown with lock icon and disabled checkbox (REQ-031-077)
   - Permission dependencies highlighted (e.g., "Edit" row highlighted when "View" is checked)
   - Color coding: Green = granted, Gray = not granted, Red = locked/protected
-- **Filtering**:
+- **Filtering**: (REQ-031-077)
   - Filter permissions by category/module
   - Search permissions by name
   - Show only differences between roles
-- **Sorting**:
+- **Sorting**: (REQ-031-077)
   - Sort columns (roles) alphabetically or by user count
   - Sort rows (permissions) by category or alphabetically
 
@@ -856,38 +856,38 @@ FR-026 refers to these permission names for its screens: View Settings, Edit Set
 
 - **Save All Changes**: Saves all permission changes across all roles and closes modal
 - **Cancel**: Closes modal (shows confirmation dialog if unsaved changes exist)
-- **Reset Role to Default**: Resets selected role(s) to system-recommended permissions (shows confirmation dialog if unsaved changes exist)
-- **Export Matrix**: Export matrix to CSV/Excel for documentation
+- **Reset Role to Default**: Resets selected role(s) to system-recommended permissions (shows confirmation dialog if unsaved changes exist) (REQ-031-076)
+- **Export Matrix**: Export matrix to CSV/Excel for documentation (REQ-031-077)
 - **Switch to Single Role View**: Switches to single role edit mode for focused editing (shows confirmation dialog if unsaved changes exist)
 - **Close (X button)**: Closes modal (shows confirmation dialog if unsaved changes exist)
 
 **Business Rules** (Matrix Mode):
 
 - All business rules from Single Role Mode apply
-- Changes can be made to multiple roles simultaneously
-- System shows confirmation dialog listing all affected roles and user counts before saving
+- Changes can be made to multiple roles simultaneously (REQ-031-077)
+- System shows confirmation dialog listing all affected roles and user counts before saving (REQ-031-074)
 - Locked roles (Super Admin, Owner) remain locked in matrix view
-- Permission dependencies apply across all roles (e.g., checking "Edit" for any role auto-checks "View" for that role)
+- Permission dependencies apply across all roles (e.g., checking "Edit" for any role auto-checks "View" for that role) (REQ-031-070)
 
 **Business Rules** (Both Modes):
 
-- Permissions organized by module code (A-01, A-02 for admin; PR-01, PR-02, etc. for provider) for traceability
-- "Select All" checkbox available for each category
+- Permissions organized by module code (A-01, A-02 for admin; PR-01, PR-02, etc. for provider) for traceability (REQ-031-072)
+- "Select All" checkbox available for each category (REQ-031-072)
 - Permission dependencies highlighted (e.g., "Edit Patients" requires "View Patients")
-- System prevents saving role with zero permissions
+- System prevents saving role with zero permissions (REQ-031-071)
 - **Admin Role Protection**: Super Admin permissions cannot be removed from Super Admin role (system protection, checkboxes disabled)
 - **Provider Role Protection**: Owner role must always have full access to all provider features (cannot be restricted, checkboxes disabled for critical permissions)
 - Permission changes take effect for all users with that role on the next API call after propagation (≤ 5 seconds)
 - **Provider Permission Propagation**: Changes to provider role permissions automatically sync to Provider Platform (FR-009) within 5 seconds
-- Role edits logged in audit trail with before/after permission comparison
-- **UI Enforcement**: Admin and Provider platforms hide UI elements (menu items, buttons, tabs, sections) for features users cannot access based on their role permissions
+- Role edits logged in audit trail with before/after permission comparison (REQ-031-081)
+- **UI Enforcement**: Admin and Provider platforms hide UI elements (menu items, buttons, tabs, sections) for features users cannot access based on their role permissions (REQ-031-088)
 
 **Validation**:
 
-- Display warning when granting sensitive permissions (billing, user management, provider suspension)
-- Show confirmation dialog before saving: "This will affect [X] users. Continue?"
-- For provider roles: "This will affect [Y] team members across [Z] provider organizations. Continue?"
-- Highlight permission dependencies (selecting "Edit X" automatically selects "View X")
+- Display warning when granting sensitive permissions (billing, user management, provider suspension) (REQ-031-073)
+- Show confirmation dialog before saving: "This will affect [X] users. Continue?" (REQ-031-074)
+- For provider roles: "This will affect [Y] team members across [Z] provider organizations. Continue?" (REQ-031-074)
+- Highlight permission dependencies (selecting "Edit X" automatically selects "View X") (REQ-031-070)
 
 **Notes**:
 
@@ -896,7 +896,7 @@ FR-026 refers to these permission names for its screens: View Settings, Edit Set
 - Search/filter box to quickly find specific permissions
 **Unsaved Changes Protection**:
 
-- **Detection**: System tracks all permission changes (checkbox toggles, bulk selections) and compares against saved state
+- **Detection**: System tracks all permission changes (checkbox toggles, bulk selections) and compares against saved state (REQ-031-078)
 - **Warning Triggers**: Confirmation dialog appears when user attempts to:
   - Click "Cancel" button
   - Click "X" (close) button
@@ -921,42 +921,42 @@ FR-026 refers to these permission names for its screens: View Settings, Edit Set
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| User Profile | section (read-only) | N/A | Name, email, role, status, created date | - |
-| Current Role | badge | N/A | Currently assigned role with color coding | - |
-| Role Effective From | datetime | N/A | When the current role became (or will become) active | - |
-| Role Change Acknowledged | datetime / badge | N/A | When the user acknowledged the latest role change, or Awaiting acknowledgement | Display only |
-| Last Login | datetime | N/A | Most recent successful login | - |
-| Login Count | number | N/A | Total number of logins since account creation | - |
-| Account Status | badge | N/A | Active/Suspended/Pending | - |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|---------------|
+| User Profile | section (read-only) | N/A | Name, email, role, status, created date | - | ENT-admin-user-account.name, ENT-admin-user-account.email, ENT-admin-user-account.assigned_role_id, ENT-admin-user-account.status, ENT-admin-user-account.created_at |
+| Current Role | badge | N/A | Currently assigned role with color coding | - | ENT-admin-user-account.assigned_role_id |
+| Role Effective From | datetime | N/A | When the current role became (or will become) active | - | ENT-admin-user-account.role_effective_from |
+| Role Change Acknowledged | datetime / badge | N/A | When the user acknowledged the latest role change, or Awaiting acknowledgement | Display only | ENT-admin-user-account.role_change_acknowledged_at |
+| Last Login | datetime | N/A | Most recent successful login | - | ENT-admin-user-account.last_login_at |
+| Login Count | number | N/A | Total number of logins since account creation | - | ENT-admin-user-account.login_count |
+| Account Status | badge | N/A | Active/Suspended/Pending | - | ENT-admin-user-account.status |
 
 **Audit Trail Table**:
 
-| Column | Type | Description | Format |
-|--------|------|-------------|--------|
-| Timestamp | datetime | When action occurred | "2025-11-14 14:32:15 UTC" |
-| Action Type | text | Type of action (Login, Role Change, Permission Grant, Access Denied) | Badge with color |
-| Details | text | Description of action | "Role changed from 'Support Staff' to 'Aftercare Specialist' by <admin@hairline.com>" |
-| IP Address | text | IP address of action (security audit) | "192.168.1.1" |
-| Outcome | badge | Success/Failed/Denied | Color-coded |
+| Column | Type | Description | Format | Graph field |
+|--------|------|-------------|--------|---------------|
+| Timestamp | datetime | When action occurred | "2025-11-14 14:32:15 UTC" | ENT-admin-audit-trail-entry.timestamp |
+| Action Type | text | Type of action (Login, Role Change, Permission Grant, Access Denied) | Badge with color | ENT-admin-audit-trail-entry.action_type |
+| Details | text | Description of action | "Role changed from 'Support Staff' to 'Aftercare Specialist' by <admin@hairline.com>" | ENT-admin-audit-trail-entry.action_details |
+| IP Address | text | IP address of action (security audit) | "192.168.1.1" | ENT-admin-audit-trail-entry.ip_address |
+| Outcome | badge | Success/Failed/Denied | Color-coded | ENT-admin-audit-trail-entry.outcome |
 
 **Business Rules**:
 
-- Audit trail shows last 100 actions by default with "Load More" option
-- Audit trail searchable by action type, date range, outcome
+- Audit trail shows last 100 actions by default with "Load More" option (REQ-031-094)
+- Audit trail searchable by action type, date range, outcome (REQ-031-094; REQ-022-117)
 - Audit entries immutable (cannot be edited or deleted)
-- Login failures logged with reason (invalid password, account suspended, etc.)
-- Access denial attempts logged with requested feature/endpoint
-- Audit trail exportable to CSV for compliance reporting
-- Sensitive actions (role changes, permission grants) highlighted in audit trail
+- Login failures logged with reason (invalid password, account suspended, etc.) (REQ-031-094)
+- Access denial attempts logged with requested feature/endpoint (REQ-031-089)
+- Audit trail exportable to CSV for compliance reporting (REQ-031-095)
+- Sensitive actions (role changes, permission grants) highlighted in audit trail (REQ-031-094)
 - Admin actions on a patient account (managed in FR-016) appear in the acting admin's audit trail on this screen; patient accounts and admin accounts remain separate records
 
 **Notes**:
 
-- Display security alerts if suspicious activity detected (multiple failed logins, unusual access patterns)
-- Provide "Send Password Reset" button for Super Admins (forces password reset on next login)
-- Show comparison view when viewing role change events (old role permissions vs new role permissions)
+- Display security alerts if suspicious activity detected (multiple failed logins, unusual access patterns) (REQ-031-096)
+- Provide "Send Password Reset" button for Super Admins (forces password reset on next login) (REQ-031-093)
+- Show comparison view when viewing role change events (old role permissions vs new role permissions) (REQ-031-094)
 
 ---
 
@@ -964,236 +964,97 @@ FR-026 refers to these permission names for its screens: View Settings, Edit Set
 
 ### General Module Rules
 
-- **Rule 1**: Every admin user MUST have exactly one role assigned (no "roleless" accounts)
-- **Rule 2**: Super Admin role MUST always have full system access (cannot be restricted)
-- **Rule 3**: Authorization MUST be evaluated server-side on every API call using the latest role assignment and permission matrix. Server-side caching is allowed only if invalidated/updated within 5 seconds of a role/permission change; enforcement MUST reflect changes on the next API call after cache invalidation.
-- **Rule 4**: At least one active Super Admin account MUST exist at all times (system protection against lockout)
-- **Rule 5**: All administrative actions (role changes, permission grants, user suspensions) MUST be logged in audit trail
-- **Rule 6**: Invitation tokens expire after 7 days (configurable via A-09 settings; range 1-30 days)
-- **Rule 7**: Suspended admin users cannot log in but accounts remain in system (soft suspension, not deletion); Super Admin accounts are never suspended inside the product
-- **Rule 8**: Role assignments MUST be stored with an **Effective From** timestamp; enforcement MUST respect that effective date/time on authorization checks
-- **Rule 9**: Role names for system-defined roles (admin + provider) MUST be immutable (not editable/renamable); only custom admin roles can be renamed.
+- **Rule 1**: Every admin user MUST have exactly one role assigned (no "roleless" accounts) (REQ-031-050)
+- **Rule 2**: Super Admin role MUST always have full system access (cannot be restricted) (REQ-031-051)
+- **Rule 3**: Authorization MUST be evaluated server-side on every API call using the latest role assignment and permission matrix. Server-side caching is allowed only if invalidated/updated within 5 seconds of a role/permission change; enforcement MUST reflect changes on the next API call after cache invalidation. (REQ-031-020; REQ-031-026)
+- **Rule 4**: At least one active Super Admin account MUST exist at all times (system protection against lockout) (REQ-031-085)
+- **Rule 5**: All administrative actions (role changes, permission grants, user suspensions) MUST be logged in audit trail (REQ-031-008; REQ-031-083)
+- **Rule 6**: Invitation tokens expire after 7 days (configurable via A-09 settings; range 1-30 days) (REQ-031-037)
+- **Rule 7**: Suspended admin users cannot log in but accounts remain in system (soft suspension, not deletion); Super Admin accounts are never suspended inside the product (REQ-031-053; REQ-031-009)
+- **Rule 8**: Role assignments MUST be stored with an **Effective From** timestamp; enforcement MUST respect that effective date/time on authorization checks (REQ-031-011; REQ-031-082)
+- **Rule 9**: Role names for system-defined roles (admin + provider) MUST be immutable (not editable/renamable); only custom admin roles can be renamed. (REQ-031-055)
 - **Rule 10**: After an admin user's role changes, the user MUST acknowledge the change within 24 hours; the acknowledgement time is stored on the account and shown to Super Admins (REQ-031-124)
+- Only active roles can be assigned to new or existing users (REQ-031-036)
+- **Role Definition**: An admin role may be assigned to admin users; a provider role may be assigned across provider organizations. Each role has permission grants; cloned admin roles retain an independent permission snapshot. (REQ-031-057)
+- **Admin User Account**: One admin user has one assigned role; one role can be assigned to many admin users (REQ-031-050)
+- Admin platform accessed via modern web browsers (Chrome, Firefox, Safari, Edge - latest 2 versions)
+- Admin users will primarily access platform from trusted devices/networks (office, VPN)
+- Super Admins will review and update team member roles periodically (quarterly or when responsibilities change)
+- Email delivery service (SendGrid/SES) has 99%+ uptime for invitation emails
+- Super Admin role assigned to senior operations staff (CEO, CTO, Operations Manager)
+- Aftercare specialists check aftercare cases at least twice daily during business hours
+- Billing Admins process payouts on scheduled basis (weekly, bi-weekly, or monthly)
+- Support staff respond to patient and provider inquiries within 24 hours
 
 ### Data & Privacy Rules
 
-- **Privacy Rule 1**: Audit trail entries are immutable; retention follows the system PRD, Platform-Wide Rules: One 10-year retention period
-- **Privacy Rule 2**: IP addresses logged for security audit purposes (GDPR-compliant logging)
-- **Privacy Rule 3**: Password reset requests logged in audit trail with requester identity
-- **Audit Rule**: All access to sensitive features (billing, patient medical data, provider financial data) MUST be logged with: timestamp, user ID, action, IP address, outcome
-- **GDPR Compliance**: Admin user data (email, name) can be anonymized on account deletion request, but audit trail preserved with anonymized identifiers
+- **Privacy Rule 1**: Audit trail entries are immutable; retention follows the system PRD, Platform-Wide Rules: One 10-year retention period (REQ-031-015; REQ-SYS-002)
+- **Privacy Rule 2**: IP addresses logged for security audit purposes (GDPR-compliant logging) (REQ-031-014)
+- **Privacy Rule 3**: Password reset requests logged in audit trail with requester identity (REQ-031-092)
+- **Audit Rule**: All access to sensitive features (billing, patient medical data, provider financial data) MUST be logged with: timestamp, user ID, action, IP address, outcome (REQ-031-091)
+- **GDPR Compliance**: Admin user data (email, name) can be anonymized on account deletion request, but audit trail preserved with anonymized identifiers (REQ-031-022)
+- **System Clock / Time Service**: Accurate timestamps for audit trail entries and token expiration; System time (NTP synchronized); Use server time as fallback; alert if time drift detected
+- **Architecture**: Role-based access control (RBAC) implemented via middleware on all admin API endpoints
+- **Technology**: Permission checks execute before business logic (fail-fast approach)
+- **Integration 1**: Admin API endpoints check permissions via middleware
+  - **Data format**: JWT token containing authenticated user/session identifiers (not authoritative role/permission claims)
+  - **Authentication**: Bearer token authentication
+  - **Error handling**: Return 403 Forbidden with clear error message if permission denied
+- **Integration 2**: Notification Service for invitation and role change emails
+  - **Data format**: JSON payload with email template ID, recipient email, template variables
+  - **Authentication**: Internal service-to-service authentication (API key)
+- **Integration 3**: Audit trail writes for all admin actions
+  - **Authentication**: Internal service (no external auth)
+  - **Error handling**: Buffer audit entries and batch-write to database; alert if audit writes fail (critical security issue)
+- **Authentication**: MFA support planned (MFA will be a mandatory control for all admin platform users Post-MVP, once the shared stack is available per Constitution Principle II) (REQ-031-016)
+- **Authorization**: Role-based access control with granular permissions per feature/module
+- **Threat mitigation**: Rate limiting on admin login endpoint to prevent brute-force attacks (max 5 attempts per 15 minutes) (REQ-031-100)
+- Both modules share the underlying authorization infrastructure while keeping **admin roles** (Super Admin, Aftercare Specialist, Billing Admin, Support Staff) separate from **provider roles** in terms of management, but unified in terms of permission configuration
+- **Data format**: Structured log entries (timestamp, user_id, action_type, details, IP address, outcome)
 
 ### Provider Role Permission Rules
 
-- **Provider Rule 1**: Provider role descriptions in FR-009 are recommended defaults; the configured permission matrix in FR-031 is authoritative and may grant additional access (e.g., Clinical Staff granted read-only financial reporting)
+- **Provider Rule 1**: Provider role descriptions in FR-009 are recommended defaults; the configured permission matrix in FR-031 is authoritative and may grant additional access (e.g., Clinical Staff granted read-only financial reporting) (REQ-031-064)
 
 ### Admin Editability Rules
 
 **Editable by Super Admin**:
 
-- Create, edit, delete custom admin roles
-- Assign/change roles for any admin user
+- Create, edit, delete custom admin roles (REQ-031-057)
+- Assign/change roles for any admin user (REQ-031-054)
 - Suspend/activate admin accounts
-- Configure invitation token expiry time (default 7 days, range 1-30 days)
+- Configure invitation token expiry time (default 7 days, range 1-30 days) (REQ-031-037)
 - Create permission matrix for custom admin roles
-- Re-send invitation emails for pending accounts
+- Re-send invitation emails for pending accounts (REQ-031-042)
 
 **Fixed in Codebase (Not Editable)**:
 
-- Super Admin role permissions (always full access)
-- System role names (Super Admin, Aftercare Specialist, Billing Admin, Support Staff) and the four protected provider role names (Owner, Manager, Clinical Staff, Billing Staff)
-- Owner-only provider capabilities
-- Core permission categories (cannot rename or remove: Patient Management, Provider Management, Billing, etc.)
-- Audit trail retention period (retention follows the system PRD, Platform-Wide Rules: One 10-year retention period)
-- Password hashing algorithm (bcrypt, cost factor 12)
-- Password requirements (see system PRD, Platform-Wide Rules: Password and one-time-code policy)
+- Super Admin role permissions (always full access) (REQ-031-051)
+- System role names (Super Admin, Aftercare Specialist, Billing Admin, Support Staff) and the four protected provider role names (Owner, Manager, Clinical Staff, Billing Staff) (REQ-031-055)
+- Owner-only provider capabilities (REQ-031-068)
+- Core permission categories (cannot rename or remove: Patient Management, Provider Management, Billing, etc.) (REQ-031-065)
+- Audit trail retention period (retention follows the system PRD, Platform-Wide Rules: One 10-year retention period) (REQ-031-015; REQ-SYS-002)
+- Password hashing algorithm (bcrypt, cost factor 12) (REQ-031-017)
+- Password requirements (see system PRD, Platform-Wide Rules: Password and one-time-code policy) (REQ-SYS-007)
 
 **Configurable with Restrictions**:
 
-- Invitation token expiry (configurable within 1-30 day range)
-- Maximum failed login attempts before lockout (configurable in A-09: Authentication Settings; default 5 failed attempts with a 15-minute lockout, the same setting as FR-001; the admin login rate limit in Security Considerations is a separate control and stays)
-- Session timeout duration: the admin inactivity timeout set in A-09 (FR-026; default 30 minutes)
-- Number of concurrent sessions per admin user (default: 3, range: 1-5)
-- Repeated access denial alert threshold (default 5 refusals for one admin within 10 minutes; configurable in A-09)
-
----
-
-## Success Criteria
-
-### Admin Management Efficiency Metrics
-
-- **SC-001**: Super Admins can invite and activate new admin team members in under 2 minutes (from invitation to account activation)
-- **SC-002**: Role assignment changes take effect on the next user action/API call within 5 seconds
-- **SC-003**: 90% of admin team member invitations are activated within 24 hours of sending
-- **SC-004**: Super Admins can create custom roles with granular permissions in under 5 minutes
-
-### Security & Compliance Metrics
-
-- **SC-005**: 100% of administrative actions (role changes, permission grants, suspensions) are logged in audit trail
-- **SC-006**: Zero unauthorized access to restricted admin features (all access attempts properly validated)
-- **SC-007**: Audit trail entries are immutable; retention follows the system PRD, Platform-Wide Rules: One 10-year retention period
-- **SC-008**: System architecture supports MFA integration (MFA is a planned Post-MVP requirement and will be enforced platform-wide once the shared MFA stack is delivered per Constitution Principle II)
-- **SC-009**: Password reset requests are processed and logged within 2 minutes
-
-### User Experience Metrics
-
-- **SC-010**: Admin users can identify their role and permissions within 3 clicks from dashboard
-- **SC-011**: Permission matrix clearly displays all granted and denied permissions for any role
-- **SC-012**: New admin team members receive clear invitation emails with activation instructions
-- **SC-013**: 95% of admin users successfully activate accounts on first attempt without support
-
-### System Performance Metrics
-
-- **SC-014**: Permission checks execute in under 50ms for API endpoint authorization
-- **SC-015**: Audit trail queries return results within 1 second for last 100 entries
-- **SC-016**: Role permission updates propagate to all user sessions within 5 seconds
-- **SC-017**: System supports 100+ concurrent admin users with different roles without performance degradation
-
-### Operational Impact Metrics
-
-- **SC-018**: Reduction in unauthorized access attempts by 80% through clear permission enforcement
-- **SC-019**: Support tickets related to admin access issues reduced by 60% through self-service permission visibility
-- **SC-020**: Time to onboard new admin team members reduced by 70% through streamlined invitation workflow
+- Invitation token expiry (configurable within 1-30 day range) (REQ-031-037)
+- Maximum failed login attempts before lockout (configurable in A-09: Authentication Settings; default 5 failed attempts with a 15-minute lockout, the same setting as FR-001; the admin login rate limit (REQ-031-100) is a separate control and stays) (REQ-031-099)
+- Session timeout duration: the admin inactivity timeout set in A-09 (FR-026; default 30 minutes) (REQ-031-099)
+- Number of concurrent sessions per admin user (default: 3, range: 1-5) (REQ-031-099)
+- Repeated access denial alert threshold (default 5 refusals for one admin within 10 minutes; configurable in A-09) (REQ-031-090)
 
 ---
 
 ## Dependencies
 
-### Internal Dependencies (Other FRs/Modules)
-
-- **FR-009 / Module PR-01**: Provider Team & Role Management
-  - **Why needed**: FR-009 handles provider team member invitation, assignment, and management. FR-031 provides the **centralized permission configuration** for provider roles that FR-009 consumes and enforces.
-  - **Integration point**:
-    - **FR-031 defines and configures** provider role permission matrices
-    - **FR-009 consumes** these permission definitions from FR-031 and enforces them when provider team members access features
-    - Permission changes made in FR-031 automatically propagate to FR-009 enforcement
-    - Both modules share the underlying authorization infrastructure while keeping **admin roles** (Super Admin, Aftercare Specialist, Billing Admin, Support Staff) separate from **provider roles** in terms of management, but unified in terms of permission configuration
-
-- **FR-015**: Provider Management
-  - **Why needed**: FR-015 handles provider organization management and provides oversight of provider team members
-  - **Integration point**:
-    - **FR-031**: Configures what provider roles can do (RBAC configuration)
-    - **FR-015**: Views provider organizations and their team members (oversight and management)
-    - "View Users" action in FR-031 Provider Roles tab links to FR-015
-    - This separation avoids duplication: FR-031 = RBAC configuration, FR-015 = provider oversight
-
-- **FR-020 / Module S-03**: Notifications & Alerts
-  - **Why needed**: Delivers transactional email/in-app alerts for admin invitations, role changes, suspensions, and audit events
-  - **Integration point**: Admin platform emits notification events that FR-020 templates render; ensures consistent messaging across tenants
-
-- **FR-026 / Module A-09**: App Settings & Security Policies
-  - **Why needed**: Provides authentication throttling, OTP configuration, password policy enforcement
-  - **Integration point**: Admin user login and password reset flows use authentication settings from FR-026
-
-- **FR-001 / Module P-01**: Patient Auth & Profile Management
-  - **Why needed**: Shares authentication infrastructure and security patterns
-  - **Integration point**: Similar session management, password hashing, MFA enforcement patterns
-
-- **Module S-03**: Notification Service
-  - **Why needed**: Sends invitation emails, role change notifications, password reset emails
-  - **Integration point**: Triggers email notifications for admin user lifecycle events
-
-- **Module A-01 through A-10**: All Admin Platform Modules
-  - **Why needed**: Permission checks enforced across all admin features
-  - **Integration point**: Every admin API endpoint checks user permissions before granting access
-
-### External Dependencies (APIs, Services)
-
-- **External Service: Email Delivery Service** (Twilio SendGrid / AWS SES)
-  - **Purpose**: Delivers invitation emails, role change notifications, password reset emails
-  - **Integration**: RESTful API calls for email sending
-  - **Failure handling**: Retries follow the notification retry rule owned by FR-030; log failures in audit trail; admin notification if emails fail for 24+ hours
-
-- **External Service: System Clock / Time Service**
-  - **Purpose**: Accurate timestamps for audit trail entries and token expiration
-  - **Integration**: System time (NTP synchronized)
-  - **Failure handling**: Use server time as fallback; alert if time drift detected
-
-### Data Dependencies
-
-- **Entity: Admin User Accounts**
-  - **Why needed**: Cannot assign roles or permissions without existing admin accounts
-  - **Source**: Initial super admin created during platform deployment; subsequent accounts created via invitation flow
-
-- **Entity: Role Definitions**
-  - **Why needed**: Cannot assign roles to users without predefined or custom roles
-  - **Source**: System ships with default roles (Super Admin, Aftercare Specialist, Billing Admin, Support Staff); custom roles created via this module
-
-- **State: Active Roles**
-  - **Why needed**: Only active roles can be assigned to new or existing users
-  - **Source**: Role management within this module (FR-031)
-
----
-
-## Assumptions
-
-### User Behavior Assumptions
-
-- **Assumption 1**: Super Admins will create roles before inviting team members (logical workflow)
-- **Assumption 2**: New admin team members will activate accounts within 7 days of invitation
-- **Assumption 3**: Admin users will primarily access platform from trusted devices/networks (office, VPN)
-- **Assumption 4**: Super Admins will review and update team member roles periodically (quarterly or when responsibilities change)
-
-### Technology Assumptions
-
-- **Assumption 1**: Admin platform accessed via modern web browsers (Chrome, Firefox, Safari, Edge - latest 2 versions)
-- **Assumption 2**: Admin users have stable internet connectivity (office network or reliable home internet)
-- **Assumption 3**: Email delivery service (SendGrid/SES) has 99%+ uptime for invitation emails
-- **Assumption 4**: System clock synchronized via NTP for accurate audit trail timestamps
-
-### Business Process Assumptions
-
-- **Assumption 1**: Super Admin role assigned to senior operations staff (CEO, CTO, Operations Manager)
-- **Assumption 2**: Aftercare specialists check aftercare cases at least twice daily during business hours
-- **Assumption 3**: Billing Admins process payouts on scheduled basis (weekly, bi-weekly, or monthly)
-- **Assumption 4**: Support staff respond to patient and provider inquiries within 24 hours
-- **Assumption 5**: Admin team members are notified of role changes via email and acknowledge the change within 24 hours (REQ-031-124)
-
----
-
-## Implementation Notes
-
-### Technical Considerations
-
-- **Architecture**: Role-based access control (RBAC) implemented via middleware on all admin API endpoints
-- **Technology**: Permission checks execute before business logic (fail-fast approach)
-- **Performance**: Permission matrix cached in memory for fast lookups (invalidate cache on role/permission changes)
-- **Storage**: Audit trail stored in separate database table with indexes on user_id, timestamp, action_type for fast queries
-- **Security**: Authorization is evaluated server-side per request using the current role assignment and permission matrix. JWT tokens are used for authentication (user/session identity) and are signed with RS256.
-
-### Integration Points
-
-- **Integration 1**: Admin API endpoints check permissions via middleware
-  - **Data format**: JWT token containing authenticated user/session identifiers (not authoritative role/permission claims)
-  - **Authentication**: Bearer token authentication
-  - **Error handling**: Return 403 Forbidden with clear error message if permission denied
-
-- **Integration 2**: Notification Service for invitation and role change emails
-  - **Data format**: JSON payload with email template ID, recipient email, template variables
-  - **Authentication**: Internal service-to-service authentication (API key)
-  - **Error handling**: Retry follows the notification retry rule owned by FR-030; log failures in audit trail
-
-- **Integration 3**: Audit trail writes for all admin actions
-  - **Data format**: Structured log entries (timestamp, user_id, action_type, details, IP address, outcome)
-  - **Authentication**: Internal service (no external auth)
-  - **Error handling**: Buffer audit entries and batch-write to database; alert if audit writes fail (critical security issue)
-
-### Scalability Considerations
-
-- **Current scale**: Expected 10-20 admin users at launch
-- **Growth projection**: Plan for 50-100 admin users within 12 months (as platform scales to multiple countries)
-- **Peak load**: Permission checks on every admin API call (100-500 requests/minute estimated)
-- **Data volume**: Audit trail grows by ~1,000 entries per day (admin actions logged)
-- **Scaling strategy**: Cache permission matrix in Redis for fast lookups; partition audit trail by date for query performance; horizontal scaling of admin API servers
-
-### Security Considerations
-
-- **Authentication**: MFA support planned (MFA will be a mandatory control for all admin platform users Post-MVP, once the shared stack is available per Constitution Principle II)
-- **Authorization**: Role-based access control with granular permissions per feature/module
-- **Encryption**: JWT tokens signed with RS256 (asymmetric encryption) to prevent token tampering
-- **Audit trail**: All permission changes, role assignments, and admin actions logged with timestamp, user, IP address
-- **Threat mitigation**: Rate limiting on admin login endpoint to prevent brute-force attacks (max 5 attempts per 15 minutes)
-- **Compliance**: GDPR-compliant audit logging; PII anonymization on account deletion request; audit trail immutable; retention follows the system PRD, Platform-Wide Rules: One 10-year retention period
+- **FR-009**: Provider Team & Role Management (consumes and enforces the provider role permission matrices configured in FR-031)
+- **FR-015**: Provider Management (provider organizations and oversight of provider team members)
+- **FR-020**: Notifications & Alerts (transactional email/in-app alerts for admin invitations, role changes, suspensions, and audit events; module S-03 Notification Service)
+- **FR-026**: App Settings & Security Policies (authentication settings used by admin login and password reset flows)
+- **FR-001**: Patient Auth & Profile Management (shared authentication infrastructure and security patterns)
+- **Modules A-01 through A-10**: all Admin Platform modules (permission checks enforced across all admin features)
 
 ---
 
@@ -1267,7 +1128,7 @@ As a Super Admin, I need to review audit trail of all administrative actions to 
 
 1. **Given** Super Admin navigates to User Audit Trail, **When** Super Admin selects user "<support@hairline.com>", **Then** audit trail displays all actions by that user with timestamps, action types, and outcomes
 
-2. **Given** admin user with "Support Staff" role attempts to access Provider Billing section, **When** access denied due to insufficient permissions, **Then** access denial logged in audit trail with: timestamp, user ID, requested feature, IP address, outcome "Denied"
+2. **Given** admin user with "Support Staff" role attempts to access Provider Billing section, **When** access denied due to insufficient permissions, **Then** access denial logged in audit trail with: timestamp, user ID, requested feature, IP address, outcome "Denied" (REQ-031-089)
 
 3. **Given** Super Admin reviews audit trail for last 30 days, **When** Super Admin exports audit log to CSV, **Then** CSV file contains all audit entries with columns: timestamp, user, action, details, IP address, outcome
 
@@ -1283,11 +1144,11 @@ As an admin user, I need to be notified immediately when my role or permissions 
 
 **Acceptance Scenarios**:
 
-1. **Given** admin user "<support@hairline.com>" has role "Support Staff", **When** Super Admin changes role to "Aftercare Specialist", **Then** user receives email notification within 5 minutes with: old role, new role, permission changes summary
+1. **Given** admin user "<support@hairline.com>" has role "Support Staff", **When** Super Admin changes role to "Aftercare Specialist", **Then** user receives email notification within 5 minutes with: old role, new role, permission changes summary (REQ-031-084)
 
 2. **Given** role change notification received, **When** user logs in after role change, **Then** dashboard reflects new role permissions (aftercare features visible, support features hidden)
 
-3. **Given** user's role changed from "Billing Admin" to "Support Staff", **When** user attempts to access previously permitted billing feature, **Then** access denied and user informed: "Your permissions have changed. You no longer have access to this feature."
+3. **Given** user's role changed from "Billing Admin" to "Support Staff", **When** user attempts to access previously permitted billing feature, **Then** access denied and user informed: "Your permissions have changed. You no longer have access to this feature." (REQ-031-084)
 
 ---
 
@@ -1312,19 +1173,19 @@ As a platform administrator, I need the system to prevent any Super Admin accoun
 ### Edge Cases
 
 - **Edge Case 1**: What happens when admin user's session is active and their role is changed by another Super Admin?
-  - **Handling**: Current session remains valid until next API call; next API call checks updated permissions and enforces new role; user may see "Permission denied" on action if new role lacks permission; session not forcibly terminated (graceful permission enforcement)
+  - **Handling**: Current session remains valid until next API call; next API call checks updated permissions and enforces new role; user may see "Permission denied" on action if new role lacks permission; session not forcibly terminated (graceful permission enforcement) (REQ-031-087)
 
 - **Edge Case 2**: How does system handle simultaneous role changes by two Super Admins on the same user?
-  - **Handling**: Database-level locking prevents concurrent updates; second Super Admin receives error: "Role change failed - this user's role was just updated by another admin. Refresh and try again." Audit trail logs both attempts with outcomes (success, conflict)
+  - **Handling**: Database-level locking prevents concurrent updates; second Super Admin receives error: "Role change failed - this user's role was just updated by another admin. Refresh and try again." Audit trail logs both attempts with outcomes (success, conflict) (REQ-031-086)
 
 - **Edge Case 3**: What occurs if invitation email delivery fails (email service down)?
-  - **Handling**: System retries the invitation email according to the FR-030 notification retry rule; while sending keeps failing the invitation shows "Pending Send" and the Super Admin is notified; if the email still cannot be sent 24 hours after the invitation was created, the invitation becomes "Expired"; Super Admin can re-send the invitation once the email service is restored
+  - **Handling**: System retries the invitation email according to the FR-030 notification retry rule; while sending keeps failing the invitation shows "Pending Send" and the Super Admin is notified; if the email still cannot be sent 24 hours after the invitation was created, the invitation becomes "Expired"; Super Admin can re-send the invitation once the email service is restored (REQ-031-043; REQ-030-008)
 
 - **Edge Case 4**: How to manage admin user who forgets password before activating account?
-  - **Handling**: Pending activation accounts do not support password reset (no password set yet); user must request new invitation from Super Admin; original invitation token invalidated to prevent duplicate accounts
+  - **Handling**: Pending activation accounts do not support password reset (no password set yet); user must request new invitation from Super Admin; original invitation token invalidated to prevent duplicate accounts (REQ-031-093)
 
 - **Edge Case 5**: What happens if audit trail write fails (database connection lost)?
-  - **Handling**: Critical actions (role changes, suspensions) buffered in memory and retried on database reconnection; if buffer full or database unavailable for extended period, admin actions temporarily blocked with message: "System maintenance in progress. Please try again shortly." Alert sent to infrastructure team immediately (audit trail failure is critical security issue)
+  - **Handling**: Critical actions (role changes, suspensions) buffered in memory and retried on database reconnection; if buffer full or database unavailable for extended period, admin actions temporarily blocked with message: "System maintenance in progress. Please try again shortly." Alert sent to infrastructure team immediately (audit trail failure is critical security issue) (REQ-031-097)
 
 ---
 
@@ -1371,35 +1232,11 @@ As a platform administrator, I need the system to prevent any Super Admin accoun
 
 ---
 
-## Key Entities
-
-- **Entity 1 - Admin User Account**
-  - **Key attributes**: user_id (UUID), email (unique), name, password_hash, assigned_role_id (foreign key), role_effective_from (timestamp), role_change_acknowledged_at (timestamp, nullable), status (active/pending/suspended), created_at (timestamp), last_login_at (timestamp), MFA_enabled (boolean), invitation_token (nullable, expires after 7 days)
-  - **Relationships**: One admin user has one assigned role; one role can be assigned to many admin users; one admin user has many audit trail entries
-
-- **Entity 2 - Role Definition**
-  - **Key attributes**: role_id (UUID), role_name (unique within guard), guard, description, is_system_role (boolean - true for protected roles), permissions (permission matrix), created_at (timestamp), updated_at (timestamp), created_by (admin user ID)
-  - **Relationships**: An admin role may be assigned to admin users; a provider role may be assigned across provider organizations. Each role has permission grants; cloned admin roles retain an independent permission snapshot.
-
-- **Entity 3 - Audit Trail Entry**
-  - **Key attributes**: audit_id (UUID), timestamp (indexed), user_id (foreign key), action_type (enum: login, role_change, permission_grant, access_denied, user_suspended, password_reset), action_details (JSON object with context), ip_address, outcome (enum: success, failed, denied), session_id (for tracking related actions)
-  - **Relationships**: One admin user has many audit trail entries; audit entries are immutable (no updates or deletes)
-
-- **Entity 4 - Permission**
-  - **Key attributes**: permission_id (UUID), permission_name (unique), module_code (e.g., A-01, A-02), feature_area (the category heading the permission is listed under, e.g., Patient Management), access_level (read/write/delete), description, is_super_admin_only (boolean)
-  - **Relationships**: Permissions are assigned to roles via permission matrix (many-to-many through role permissions JSON)
-
----
-
 ## Appendix: Change Log
 
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
-| 2025-11-14 | 1.0 | Initial PRD creation for FR-031: Admin Access Control & Permissions | Claude AI / Speckit |
-| 2026-01-04 | 1.0.1 | Lock system/provider role names (Issue #3 option 1); mark status + approvals as ✅ Verified & Approved | GPT-5.2 (AI) |
-| 2026-05-14 | 1.0.2 | Renamed A-06 permission `Approve Provider Discounts` to `Manage Admin Campaign Adoptions` to align with FR-019: provider self-created discounts do not require admin approval; admins manage adoption/override for admin-created both-fees campaigns. | Codex |
-| 2026-09-29 | 1.1 (proposed) | Added global custom provider role creation and cloning with non-Owner base types; aligned FR-009 assignment contract. See [CR-FR031-20260929-01](change-request-2026-09-29-global-custom-provider-roles.md). | Codex |
-| 2026-11-20 | 1.2 | Requirements graph programme baseline: owner rulings applied. Main changes: global custom provider roles rejected and removed (custom roles remain for admin roles only; the four provider roles are fixed); admin finance role named Billing Admin (Billing Staff now names only the clinic role) and Finance admin actor added; one role per admin user; Super Admin accounts never suspended by another user and never removed, demoted or self-deactivated inside the product; role filter and invite dropdown list all active admin roles; Super Admin row has Edit Permissions and Clone Role off; invitation retry refers to the FR-030 retry rule, 24 hours of failed sending or Cancel on setup makes the invitation Expired, status label Pending; duplicate-email message unified; invitation email within 1 minute; repeated-denial alert default 5 refusals in 10 minutes as an admin setting; 24-hour role-change acknowledgement Rule added (REQ-031-124); lockout default 5 attempts and 15 minutes; refund approval by any permitted admin; admin actions on patient accounts shown in the audit trail; FR-026 permission names added; default permission grids confirmed; Key Entity 4 fields corrected; cross-document reconciliation (retention and password policy pointers to the system PRD). | Claude AI |
+| 2026-11-22 | 1.3 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.2) and the change request CR-FR031-20260929-01 (file change-request-2026-09-29-global-custom-provider-roles.md) are in `archived/prd-baseline-2026-11-08/fr031-admin-access-control/` and in git history. | Documentation |
 
 ---
 
