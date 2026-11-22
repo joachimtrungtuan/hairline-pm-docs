@@ -564,7 +564,7 @@ Per Hairline Platform Constitution (Principle VI: Data Integrity & Audit Trail),
 
 - **FR-006: Booking & Scheduling**
   - **Why needed**: Installment plan tied to booking confirmation and procedure date
-  - **Integration point**: Installment plan is set up at checkout for an `Accepted` booking, and first installment success confirms that booking; procedure date determines maximum installments; plan total, currency and exchange rate come from the booking's accepted snapshot; provider fault after acceptance follows Alternative Flow B5
+  - **Integration point**: Installment plan is set up at checkout for an `Accepted` booking, and first installment success confirms that booking; procedure date determines maximum installments; plan total, currency and exchange rate come from the booking's accepted snapshot; provider fault after acceptance follows this PRD's Alternative Flow B4 together with FR-006 Alternative Flows B4 and B5
 
 - **FR-007: Payment Processing**
   - **Why needed**: Core payment infrastructure for processing installment charges
@@ -894,6 +894,7 @@ Patient requests booking cancellation after paying 2 of 4 installments; admin re
 | 2026-11-22 | 1.8 | Alternative Flow B4 step 2 and REQ-007b-027 aligned with FR-006 Alternative Flow B5 and FR-007: a provider withdrawal or drop-out refunds every paid installment in full and the replacement booking takes a new payment; a suspension or deactivation keeps the provider-status placeholder (credit), not yet ruled | Product Owner / Documentation |
 | 2026-11-22 | 1.9 | Alternative Flow B4 Outcome line aligned with step 2 and REQ-007b-027: full refund on a provider withdrawal or drop-out, placeholder for suspension or deactivation | Product Owner / Documentation |
 | 2026-11-22 | 1.10 | Owner ruling 2026-11-22: a provider suspension or deactivation follows the same terms as a withdrawal or drop-out in Alternative Flow B4 step 2, its Outcome line and REQ-007b-027 (every paid installment refunded in full, remaining installments cancelled with no cancellation fee, replacement booking takes a new payment); the credit-moves-with-the-patient placeholder is removed | Product Owner / Documentation |
+| 2026-11-22 | 1.11 | Wording clarification: the FR-006 dependency line now names this PRD's Alternative Flow B4 and FR-006 Alternative Flows B4 and B5 for a provider fault after acceptance (it said only Alternative Flow B5, which this PRD does not have). | Product Owner / Documentation |
 
 ---
 

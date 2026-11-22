@@ -48,3 +48,4 @@ Three rulings by the owner; no Change Request files (new baseline). Each PRD has
 - **Team notification routing (FR-030 v1.20):** at launch provider team notifications are routed by team role, fixed by the system; no screen edits the routing; per-member editing is out of launch scope.
 - Graph: `changesets/2026-11-22-owner-ruling-fr006.yaml`, `-fr007`, `-fr007b`, `-fr015`, `-fr017` (new Rule REQ-017-185), `-fr030`, `-followups`.
 - Not changed: "payment placeholder" lines about a cancellation made at the patient's request or after a patient suspension (FR-003, FR-005, FR-006 scenario 1, FR-007B B2, FR-010, FR-011, FR-016); that refund is a separate topic the owner has not ruled.
+- FR-007B v1.11 (minor): the FR-006 dependency line names this PRD's Alternative Flow B4 and FR-006 Alternative Flows B4 and B5 (it pointed to a flow B5 that FR-007B does not have).
