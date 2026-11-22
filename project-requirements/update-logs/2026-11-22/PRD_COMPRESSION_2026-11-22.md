@@ -78,3 +78,4 @@ The owner read and approved the FR-005 compressed PRD on 2026-11-22 and released
 - 2026-11-23, independent review of FR-011: no requirement lost or changed.
 - 2026-11-23, independent review of FR-023: no requirement lost or changed.
 - 2026-11-23, FR-014: independent review found no requirement lost; one dropped assumption (provider analytics widgets are PRD-derived and later verification passes must not flag them against the client transcripts) was restored in original wording under Business Rules by controller judgement.
+- 2026-11-23, FR-028: independent review found six clauses from the dropped Dependencies and Implementation Notes sections missing (no external services, provider location list maintained by PR-01, internal service authentication on two integrations, retry with backoff on server errors, cache keys carrying a version hash); the baseline lines were restored in original wording under Business Rules, with their integration headings.

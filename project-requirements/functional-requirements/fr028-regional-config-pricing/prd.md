@@ -506,6 +506,19 @@ This module provides the administrative infrastructure to:
 
 - Not applicable to this module - FR-028 configures pricing display only, not actual payment processing (REQ-028-048)
 
+**Carried from dropped sections (original wording)**:
+
+- **None**: This module does not integrate with external services. Currency conversion rates are provided internally by FR-029.
+- **Entity 1: Provider Locations**: Active provider locations with service coverage
+- **Source**: Provider onboarding module (PR-01) maintains list of provider locations
+- **Integration 1: Patient API to Regional Configuration Service**
+- **Authentication**: Internal service-to-service authentication (OAuth2 client credentials)
+- **Integration 2: Admin UI to Regional Configuration API**
+- **Error handling**: Validation errors returned with specific field-level error messages; retry with exponential backoff on server errors
+- **Integration 3: Regional Configuration Service to FR-026 Country List**
+- **Authentication**: Internal service-to-service authentication
+- **Cache Poisoning Protection**: Cache keys include version hash to prevent stale data serving after configuration changes
+
 ---
 
 ## Dependencies
@@ -667,6 +680,7 @@ This module provides the administrative infrastructure to:
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2026-11-22 | 1.5 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.4) and the change requests (the PRD names none) are in `archived/prd-baseline-2026-11-08/` and in git history. | Product Team |
+| 2026-11-23 | 1.6 | Independent compression review: 10 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Team |
 
 ---
 
