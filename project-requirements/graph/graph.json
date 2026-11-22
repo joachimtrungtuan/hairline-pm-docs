@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-22T14:24:46Z",
+  "generated_at": "2026-11-22T18:13:12Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -51416,9 +51416,9 @@
       "owner_fr": "FR-010",
       "title": "Treatment documentation retained at least 7 years",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Treatment documentation MUST be retained for minimum 7 years per healthcare compliance regulations",
+        "statement": "Treatment documentation retention follows the system PRD, Platform-Wide Rules: One 10-year retention period",
         "rationale": "Overlaps the 7+ year retention for photos in REQ-010-013; possible duplicate within this FR. Archived FR-010 PRD baseline, lines 573."
       }
     },
@@ -79907,9 +79907,9 @@
       "owner_fr": "FR-028",
       "title": "Missing price in the patient's currency: fallback for the patient's country, else system-wide default, else converted location default price",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "When the patient's currency has no pricing for the location, System checks for fallback pricing for the patient's country; if none, it displays the system-wide default starting price when an admin has set one; if there is no system-wide default, it displays the price in the location's default currency with a conversion note (\"Starting from €2,200 (approx. £2,500)\") using the real-time exchange rate from the FR-029 currency service.",
+        "statement": "When the patient's currency has no pricing for the location, System checks for fallback pricing for the patient's country; if none, it displays the system-wide default starting price when an admin has set one; if there is no system-wide default, it displays the price in the location's default currency with a conversion note (\"Starting from €2,200 (approx. £2,500)\") using the admin-configured conversion rate with markup from FR-029.",
         "rationale": "A6 (316-325) and the second edge case (748)."
       }
     },
@@ -100245,7 +100245,7 @@
       "owner_fr": null,
       "title": "FR-003 change request: pre-acceptance redistribution",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "summary": "FR-003 change request recording automatic redistribution before acceptance, its patient confirmation step and the redistribution state fields. Linked to REQ-003-021 as a documented exception to the rule that decided-by Sources are meeting and decision items."
       }
@@ -417303,7 +417303,7 @@
     {
       "id": "SRC-CR-003-20261027",
       "kind": "document",
-      "ref": "project-requirements/functional-requirements/fr003-inquiry-submission/change-request-2026-10-27-pre-acceptance-redistribution.md",
+      "ref": "archived/prd-baseline-2026-11-08/fr003-inquiry-submission/change-request-2026-10-27-pre-acceptance-redistribution.md",
       "section": null,
       "date": "2026-10-27",
       "lifecycle": "incorporated"
@@ -419150,6 +419150,48 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261122-181305-e59fc112",
+      "at": "2026-11-22T18:13:05.798221+00:00",
+      "changed_by": "controller",
+      "reason": "The change-request files were removed from the live FR folders; the one change request held as a Source now points at its archived copy.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "SRC-CR-003-20261027"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 1
+    },
+    {
+      "id": "cs-20261122-161416-6ab2ddb0",
+      "at": "2026-11-22T16:14:16.672978+00:00",
+      "changed_by": "controller",
+      "reason": "REQ-010-046 said a 7-year minimum retention; the FR-010 PRD Privacy Rule 3 and the system PRD Platform-Wide Rules state one 10-year retention period. Wording aligned to the PRD.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-010-046"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 1
+    },
+    {
+      "id": "cs-20261122-150342-f56fa06b",
+      "at": "2026-11-22T15:03:42.392412+00:00",
+      "changed_by": "controller",
+      "reason": "REQ-028-040 said the real-time exchange rate; the FR-028 PRD states the admin-configured conversion rate with markup from FR-029. Wording aligned to the PRD.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-028-040"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 1
+    },
     {
       "id": "cs-20261122-142417-d1cc5b2c",
       "at": "2026-11-22T14:24:17.688831+00:00",
