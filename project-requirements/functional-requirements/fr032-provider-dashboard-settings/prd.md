@@ -5,11 +5,6 @@
 **Created**: 2025-11-17
 **Status**: 🟡 Revised — Pending Consolidated Verification
 **Source**: FR-032 from system-prd.md
-**Change Request**: [CR-FR032-20261015-01](change-request-2026-10-15-provider-commission-panel-suspension-banner.md) — Commission & Payout panel and provider account-status banner
-**Change Request**: [CR-FR032-20261015-02](change-request-2026-10-15-account-closure-deactivation-request.md) — Account closure as an admin-processed deactivation request
-**Change Request**: [CR-FR032-20261015-03](change-request-2026-10-15-closure-request-notifications.md) — Closure request notifications and admin marker
-**Change Request**: [CR-FR032-20261016-01](change-request-2026-10-16-mtg002-quote-model-alignment.md) — Inquiry-cancelled quote notice made mandatory (no provider toggle)
-**Related Change Request**: [CR-FR015-20261027-01](../fr015-provider-management/change-request-2026-10-27-save-conflict-encryption-seat-usage.md) — Last-save-wins provider profile saves (no conflict check)
 
 ---
 
@@ -86,15 +81,15 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 
 **Provider-Initiated**:
 
-- Provider navigates to "Settings & Support > Settings" from main dashboard navigation
-- Provider clicks on notification icon to configure preferences
-- Provider accesses Help Centre from footer or help icon
-- Provider Owner role accesses billing settings from financial dashboard
+- Provider navigates to "Settings & Support > Settings" from main dashboard navigation (REQ-032-032)
+- Provider clicks on notification icon to configure preferences (REQ-032-032)
+- Provider accesses Help Centre from footer or help icon (REQ-032-032)
+- Provider Owner role accesses billing settings from financial dashboard (REQ-032-032)
 
 **System-Initiated**:
 
-- System prompts provider to complete profile setup during onboarding
-- System sends notification approval requests when admin creates platform-wide discount
+- System prompts provider to complete profile setup during onboarding (REQ-032-032)
+- System sends notification approval requests when admin creates platform-wide discount (REQ-032-032)
 
 ---
 
@@ -148,7 +143,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 - **Steps**:
   1. System displays confirmation dialog "Are you sure you want to delete this award?"
   2. Provider confirms deletion
-  3. System removes award from profile (soft-delete, retained in archive)
+  3. System removes award from profile (soft-delete, retained in archive) (REQ-032-046)
   4. System displays success message "Award deleted"
 - **Outcome**: Award removed from public provider profile
 
@@ -618,8 +613,8 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
   2. Provider clicks "Was this helpful? No" or similar feedback control on an article/FAQ
   3. System prompts provider to briefly describe what they were looking for
   4. Provider submits content-gap feedback form
-  5. System records feedback with reference to the viewed content item and provider account
-  6. System forwards feedback to admin/content team via FR-034 (e.g., as a low-priority ticket or feedback case)
+  5. System records feedback with reference to the viewed content item and provider account (REQ-032-095)
+  6. System forwards feedback to admin/content team via FR-034 (e.g., as a low-priority ticket or feedback case) (REQ-032-095)
 - **Outcome**: Content gap is captured for admins to review and action in FR-033 content management / FR-034 ticketing
 
 **B14: Uploaded File or Video Fails to Load**:
@@ -632,7 +627,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
   4. System displays a clear error message with retry option
   5. System offers a "Report issue" or similar action
   6. Provider clicks "Report issue"
-  7. System creates an issue/support case in FR-034 including file identifier, provider, and error details
+  7. System creates an issue/support case in FR-034 including file identifier, provider, and error details (REQ-032-096)
   8. System confirms to provider that the issue has been reported
 - **Outcome**: File loading problem is surfaced to admins/ops via FR-034 while provider receives clear feedback
 
@@ -731,7 +726,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
   4. Email includes link to case: "View case in My Support Cases"
   5. Provider clicks link in email
   6. System opens provider platform and navigates to My Support Cases Screen 5.7
-  7. System highlights and auto-expands the case with new reply
+  7. System highlights and auto-expands the case with new reply (REQ-032-112)
   8. Provider reads admin's response in Communication Thread
   9. Provider replies if needed or marks issue as resolved
 - **Outcome**: Provider notified of admin reply and can continue conversation seamlessly
@@ -754,16 +749,16 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
    - "Deactivation cannot be reversed. To rejoin Hairline, our team must create a new account for you."
    - "When our team deactivates your account, all open inquiries, quotes, and active bookings are cancelled and the affected patients are notified. Payments already captured are reconciled by our finance team."
    - "Your quotes, bookings, and financial data will be archived per our data retention policy."
-   - [Checkbox] "I understand that closing my account is permanent and my account data will be archived."
-   - Reason for closure: [textarea] (optional)
+   - [Checkbox] "I understand that closing my account is permanent and my account data will be archived." (REQ-032-070)
+   - Reason for closure: [textarea] (optional) (REQ-032-070)
 5. Provider checks "I understand" checkbox
 6. Provider enters reason for closure (optional): "Closing clinic permanently"
 7. Provider clicks "Submit Closure Request"
-8. System creates account closure request record with status "Pending Admin Review" (only one pending request per provider; no booking or payout check blocks submission)
+8. System creates account closure request record with status "Pending Admin Review" (only one pending request per provider; no booking or payout check blocks submission) (REQ-032-071)
 9. System logs closure request in audit trail (user, timestamp, reason)
-10. System notifies admins of the request (FR-020 `provider.closure_requested`, a mandatory notice; recipients and content are defined by the notification Rules REQ-020-016 and REQ-030-101), and FR-015 Screen 1 shows the provider with the Closure Requested marker and filter
-11. System displays confirmation to provider "Account closure request submitted. Our team will review and process your request within 5 business days. You will receive an email once your account is deactivated."
-12. Provider account remains Active until admin processes the request. If the admin schedules the deactivation for a future date, the request stays "Pending Admin Review" until the deactivation takes effect; if the scheduled deactivation is cancelled, the request stays "Pending Admin Review" and no rejection email is sent
+10. System notifies admins of the request (FR-020 `provider.closure_requested`, a mandatory notice; recipients and content are defined by the notification Rules REQ-020-016 and REQ-030-101), and FR-015 Screen 1 shows the provider with the Closure Requested marker and filter (REQ-032-072)
+11. System displays confirmation to provider "Account closure request submitted. Our team will review and process your request within 5 business days. You will receive an email once your account is deactivated." (REQ-032-073)
+12. Provider account remains Active until admin processes the request. If the admin schedules the deactivation for a future date, the request stays "Pending Admin Review" until the deactivation takes effect; if the scheduled deactivation is cancelled, the request stays "Pending Admin Review" and no rejection email is sent (REQ-032-074)
 13. Admin reviews the closure request in FR-015 (A-02: Provider Management) and processes it per FR-015 Alternative Flow A7: deactivates the provider via FR-015 Screen 4 (immediate or scheduled), with a reason that references the request
 14. System applies the FR-015 deactivation:
     - Provider account status changed to "Deactivated"
@@ -772,8 +767,8 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
     - All non-terminal inquiries, quotes, and bookings cancelled under the FR-015 Screen 4 cascade, with patient and admin-support notifications (FR-020); captured payments reconciled by FR-017
     - All provider data retained in archive (retention follows the system PRD, Platform-Wide Rules: One 10-year retention period)
     - Bank account details encrypted and archived
-15. When the deactivation takes effect, the system sets the closure request status to "Approved", links it to the FR-015 deactivation status event, and sends the FR-015 deactivation email (`provider.deactivated`, FR-020). FR-015 locks "Notify Provider" on for closure deactivations, so this email is always sent, as step 11 promises
-16. If the admin rejects the request instead (e.g., the provider asks to withdraw it), the system sets the request status to "Rejected" with review notes, the provider account remains Active, and the provider receives the FR-020 `provider.closure_rejected` email with the review notes (mandatory). The provider may submit a new request later
+15. When the deactivation takes effect, the system sets the closure request status to "Approved", links it to the FR-015 deactivation status event, and sends the FR-015 deactivation email (`provider.deactivated`, FR-020). FR-015 locks "Notify Provider" on for closure deactivations, so this email is always sent, as step 11 promises (REQ-032-075)
+16. If the admin rejects the request instead (e.g., the provider asks to withdraw it), the system sets the request status to "Rejected" with review notes, the provider account remains Active, and the provider receives the FR-020 `provider.closure_rejected` email with the review notes (mandatory). The provider may submit a new request later (REQ-032-076)
 
 ### Alternative Flows
 
@@ -785,7 +780,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
   2. System displays warning dialog
   3. Provider reads warning
   4. Provider clicks "Cancel" button
-  5. System closes dialog without creating closure request
+  5. System closes dialog without creating closure request (REQ-032-070)
 - **Outcome**: No closure request created; provider account remains active
 
 ---
@@ -804,31 +799,31 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules | Inline Editing |
-|------------|------|----------|-------------|------------------|----------------|
-| Profile Picture | image upload | No | Clinic branding image displayed in patient app | Max 5MB, JPEG/PNG only, min 200x200px, recommended 500x500px | **Inline Edit**: Click image area to open upload dialog with file picker; shows preview before save; crop/resize tool available; save/cancel buttons appear during edit |
-| Cover Image | image upload | No | Large banner image for clinic profile | Max 10MB, JPEG/PNG only, recommended 1920x300px | **Inline Edit**: Click image area to open upload dialog with file picker; shows preview before save; crop/resize tool available; save/cancel buttons appear during edit |
-| Clinic Name | text | Yes | Official clinic name | Max 200 chars, min 3 chars | **Inline Edit**: Click text to activate edit mode; field becomes editable input; save (✓) and cancel (✗) buttons appear; validation on blur; saves immediately on save button click |
-| Review Rating | display | No | Average rating from patient reviews (read-only) | Display format: X.X/5.0 stars with total review count (e.g., "4.8/5.0 - Based on 127 reviews") | **Read-only**: Displays current average rating; clicking rating or "View all reviews" text navigates to Reviews tab (Tab 5) |
-| Edit Profile Button | button | N/A | Quick access to edit mode for all fields in tab | N/A | **Toggle Action**: Clicking button toggles all editable fields in tab into edit mode simultaneously; button text changes to "Cancel Edit" when active; allows bulk editing of multiple fields |
-| About/Description | textarea | Yes | Brief clinic description for patients | Max 500 chars, min 50 chars | **Inline Edit**: Click textarea to activate edit mode; expands to show full textarea with character counter (e.g., "245/500 characters"); save/cancel buttons appear; real-time validation; saves on save button click |
-| Contact Phone (Public) | object | No | Public-facing clinic phone number shown in profile "About" section | Contains `Country Code` (dropdown, FR-026) and `Number` (text, numeric only, length validated per country code) | **Inline Edit**: Click to activate edit mode; field becomes object with dropdown for country code and input for number; auto-formats on blur (e.g., "+90 555 123 4567"); save/cancel buttons appear; saves on save button click |
-| Contact Email | email | Yes | Clinic contact email shown on provider public profile and used for communications | Valid email format; must be unique among Active and Suspended providers if changed (Deactivated records ignored, per FR-015 Rule 4) | **Inline Edit**: Click email to activate edit mode; field becomes editable input with email validation; shows validation error if invalid format; save/cancel buttons appear; saves on save button click |
-| Location - City | text | No | City where clinic is located | Max 100 chars | **Inline Edit**: Click city name to activate edit mode; field becomes editable input; save/cancel buttons appear; saves on save button click |
-| Location - Country | dropdown | No | Country where clinic is located | Values from centrally managed country list (FR-026); optional but recommended | **Inline Edit**: Click country name to activate edit mode; field becomes dropdown selector with search; shows country list from FR-026; save/cancel buttons appear; saves on save button click |
-| Website URL | url | No | Public-facing clinic website shown in profile "About" section | Valid URL format (http/https); auto-prepends https:// if protocol missing | **Inline Edit**: Click URL to activate edit mode; field becomes editable input with URL validation; auto-formats on blur (adds https:// if missing); shows validation error if invalid; save/cancel buttons appear; saves on save button click |
+| Field Name | Type | Required | Description | Validation Rules | Inline Editing | Graph field |
+|------------|------|----------|-------------|------------------|----------------|---|
+| Profile Picture | image upload | No | Clinic branding image displayed in patient app | Max 5MB, JPEG/PNG only, min 200x200px, recommended 500x500px | **Inline Edit**: Click image area to open upload dialog with file picker; shows preview before save; crop/resize tool available; save/cancel buttons appear during edit | ENT-provider-profile.logo_url |
+| Cover Image | image upload | No | Large banner image for clinic profile | Max 10MB, JPEG/PNG only, recommended 1920x300px (REQ-032-034) | **Inline Edit**: Click image area to open upload dialog with file picker; shows preview before save; crop/resize tool available; save/cancel buttons appear during edit | ENT-provider-profile.cover_image_url |
+| Clinic Name | text | Yes | Official clinic name | Max 200 chars, min 3 chars (REQ-032-033) | **Inline Edit**: Click text to activate edit mode; field becomes editable input; save (✓) and cancel (✗) buttons appear; validation on blur; saves immediately on save button click | ENT-provider-profile.clinic_name |
+| Review Rating | display | No | Average rating from patient reviews (read-only) | Display format: X.X/5.0 stars with total review count (e.g., "4.8/5.0 - Based on 127 reviews") | **Read-only**: Displays current average rating; clicking rating or "View all reviews" text navigates to Reviews tab (Tab 5) | ENT-provider-review-summary.average_rating, ENT-provider-review-summary.review_count |
+| Edit Profile Button | button | N/A | Quick access to edit mode for all fields in tab | N/A | **Toggle Action**: Clicking button toggles all editable fields in tab into edit mode simultaneously; button text changes to "Cancel Edit" when active; allows bulk editing of multiple fields (REQ-032-119) | no graph field (control) |
+| About/Description | textarea | Yes | Brief clinic description for patients | Max 500 chars, min 50 chars (REQ-032-033) | **Inline Edit**: Click textarea to activate edit mode; expands to show full textarea with character counter (e.g., "245/500 characters"); save/cancel buttons appear; real-time validation; saves on save button click | ENT-provider-profile.clinic_description |
+| Contact Phone (Public) | object | No | Public-facing clinic phone number shown in profile "About" section | Contains `Country Code` (dropdown, FR-026) and `Number` (text, numeric only, length validated per country code) (REQ-032-037) | **Inline Edit**: Click to activate edit mode; field becomes object with dropdown for country code and input for number; auto-formats on blur (e.g., "+90 555 123 4567"); save/cancel buttons appear; saves on save button click | ENT-provider-profile.public_phone |
+| Contact Email | email | Yes | Clinic contact email shown on provider public profile and used for communications | Valid email format; must be unique among Active and Suspended providers if changed (Deactivated records ignored, per FR-015 Rule 4) (REQ-032-036) | **Inline Edit**: Click email to activate edit mode; field becomes editable input with email validation; shows validation error if invalid format; save/cancel buttons appear; saves on save button click | ENT-provider-profile.contact_email |
+| Location - City | text | No | City where clinic is located | Max 100 chars (REQ-032-033) | **Inline Edit**: Click city name to activate edit mode; field becomes editable input; save/cancel buttons appear; saves on save button click | ENT-provider-profile.city |
+| Location - Country | dropdown | No | Country where clinic is located | Values from centrally managed country list (FR-026); optional but recommended (REQ-032-038) | **Inline Edit**: Click country name to activate edit mode; field becomes dropdown selector with search; shows country list from FR-026; save/cancel buttons appear; saves on save button click | ENT-provider-profile.country |
+| Website URL | url | No | Public-facing clinic website shown in profile "About" section | Valid URL format (http/https); auto-prepends https:// if protocol missing (REQ-032-039) | **Inline Edit**: Click URL to activate edit mode; field becomes editable input with URL validation; auto-formats on blur (adds https:// if missing); shows validation error if invalid; save/cancel buttons appear; saves on save button click | ENT-provider-profile.website_url |
 
 **Business Rules**:
 
 - Profile picture displayed in profile section; clicking opens upload dialog
-- Cover image displayed as a banner on the top of the provider profile in patient app;
-- If no logo uploaded, system displays clinic name initials as fallback
-- Review rating displays average rating (e.g., "4.8/5.0") with total review count (e.g., "Based on 127 reviews"); clicking navigates to Reviews tab
+- Cover image displayed as a banner on the top of the provider profile in patient app; (REQ-032-034)
+- If no logo uploaded, system displays clinic name initials as fallback (REQ-032-035)
+- Review rating displays average rating (e.g., "4.8/5.0") with total review count (e.g., "Based on 127 reviews"); clicking navigates to Reviews tab (REQ-032-116)
 - All fields support inline editing: clicking a field activates edit mode with save/cancel buttons
-- Unsaved changes indicator (dot/asterisk) appears on tab label when edits are made
+- Unsaved changes indicator (dot/asterisk) appears on tab label when edits are made (REQ-032-040)
 - Each field can be edited independently; changes saved per field or via "Save All" button
-- Profile changes logged in audit trail with timestamp and user
-- Profile updates propagate to patient app within 1 minute
+- Profile changes logged in audit trail with timestamp and user (REQ-032-020)
+- Profile updates propagate to patient app within 1 minute (REQ-032-014)
 
 **Notes**:
 
@@ -836,7 +831,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 - **Cover Image**: Image upload via file picker; shows preview after upload before saving; crop/resize functionality available to ensure proper aspect ratio;
 - **Inline Editing Behavior**: Clicking any editable field highlights it with border/background change and shows save (✓) and cancel (✗) buttons; field becomes editable input/textarea/dropdown; validation occurs on blur or save; changes persist immediately on save button click; cancel button discards changes and reverts to original value
 - **Character Counter**: About/Description field shows real-time character counter (e.g., "245/500 characters") with color change when approaching limit (yellow at 80%, red at 95%)
-- **Bulk Edit Mode**: "Edit Profile" button toggles all editable fields in tab into edit mode simultaneously; button text changes to "Cancel Edit" when active; allows editing multiple fields before saving all at once via "Save All" button
+- **Bulk Edit Mode**: "Edit Profile" button toggles all editable fields in tab into edit mode simultaneously; button text changes to "Cancel Edit" when active; allows editing multiple fields before saving all at once via "Save All" button (REQ-032-119)
 - **Unsaved Changes**: Unsaved changes indicator (dot or asterisk) appears on tab label when any field has unsaved edits; indicator disappears when all changes saved
 - **Field Validation**: Real-time validation feedback shown inline (e.g., red border for invalid email, green checkmark for valid); error messages appear below field when invalid
 
@@ -848,24 +843,24 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules | Inline Editing |
-|------------|------|----------|-------------|------------------|----------------|
-| Supported Languages | chip/pill list | Yes | Languages spoken at clinic | At least 1 language required; consumes the FR-021 language/locale catalog surfaced through settings | **Inline Edit**: Add language: click "+ Add Language" button to open dropdown with all available languages from FR-021; select language to add chip immediately; Remove language: click X icon on chip to remove (confirmation required if last language); Reorder: drag-and-drop chips to prioritize; changes save automatically or via "Save" button; unsaved changes indicator appears on tab label |
+| Field Name | Type | Required | Description | Validation Rules | Inline Editing | Graph field |
+|------------|------|----------|-------------|------------------|----------------|---|
+| Supported Languages | chip/pill list | Yes | Languages spoken at clinic | At least 1 language required; consumes the FR-021 language/locale catalog surfaced through settings | **Inline Edit**: Add language: click "+ Add Language" button to open dropdown with all available languages from FR-021; select language to add chip immediately; Remove language: click X icon on chip to remove (confirmation required if last language); Reorder: drag-and-drop chips to prioritize; changes save automatically or via "Save" button; unsaved changes indicator appears on tab label | ENT-provider-profile.supported_languages |
 
 **Business Rules**:
 
 - Languages displayed as removable chips/pills with X button on each chip
 - Clicking "+ Add Language" opens dropdown with all available languages from FR-021
 - Selected languages immediately appear as chips; removing a chip removes it from selection
-- At least 1 language must be selected (validation prevents removing last language)
+- At least 1 language must be selected (validation prevents removing last language) (REQ-032-043)
 - Changes saved automatically when language added/removed, or via "Save" button
-- Unsaved changes indicator appears on tab label when edits are made
-- Language changes logged in audit trail
+- Unsaved changes indicator appears on tab label when edits are made (REQ-032-040)
+- Language changes logged in audit trail (REQ-032-020)
 
 **Notes**:
 
 - Each language chip displays language name (e.g., "English", "Turkish", "Spanish")
-- Chips support drag-and-drop reordering to prioritize languages (most important first)
+- Chips support drag-and-drop reordering to prioritize languages (most important first) (REQ-032-044)
 - Visual feedback: chip highlights on hover; removal requires confirmation if it's the last language
 - Language list consumed from FR-021; FR-026 may surface the list through the broader settings shell but does not own provider language-capacity semantics.
 
@@ -887,20 +882,20 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules | Inline Editing |
-|------------|------|----------|-------------|------------------|----------------|
-| Awards List | card/list | No | Clinic awards, certifications, recognitions | Each award: name (max 100 chars), issuer/organization (max 150 chars, optional), description (max 300 chars), year (1900-current year), award image (max 2MB, JPEG/PNG) | **Inline Edit**: Add award: click "+ Add Award" button to open award form (modal or inline expansion) with fields: name (text), issuer/organization (text, optional), description (textarea, max 300 chars), year (number dropdown 1900-current), image upload (drag-and-drop or file picker, max 2MB); Edit award: click "Edit" icon/button on award card to expand inline editor with all fields editable; Delete award: click "Delete" icon/button on award card, confirmation dialog appears; Reorder: drag-and-drop award cards to prioritize; each award saves independently or via "Save All" button; unsaved changes indicator appears on tab label |
+| Field Name | Type | Required | Description | Validation Rules | Inline Editing | Graph field |
+|------------|------|----------|-------------|------------------|----------------|---|
+| Awards List | card/list | No | Clinic awards, certifications, recognitions | Each award: name (max 100 chars), issuer/organization (max 150 chars, optional), description (max 300 chars), year (1900-current year), award image (max 2MB, JPEG/PNG) (REQ-032-045) | **Inline Edit**: Add award: click "+ Add Award" button to open award form (modal or inline expansion) with fields: name (text), issuer/organization (text, optional), description (textarea, max 300 chars), year (number dropdown 1900-current), image upload (drag-and-drop or file picker, max 2MB); Edit award: click "Edit" icon/button on award card to expand inline editor with all fields editable; Delete award: click "Delete" icon/button on award card, confirmation dialog appears; Reorder: drag-and-drop award cards to prioritize; each award saves independently or via "Save All" button; unsaved changes indicator appears on tab label | ENT-provider-award.name, ENT-provider-award.issuer, ENT-provider-award.description, ENT-provider-award.year, ENT-provider-award.image_url |
 
 **Business Rules**:
 
 - Awards displayed as cards/rows with: award image thumbnail, name, issuer/organization, year, description snippet
 - Clicking "Edit" on an award card opens inline editor (or modal) with all award fields editable
 - Clicking "+ Add Award" opens award form (name, issuer/organization, description, year, image upload)
-- Awards support drag-and-drop reordering to prioritize most important awards
+- Awards support drag-and-drop reordering to prioritize most important awards (REQ-032-047)
 - Award image upload supports drag-and-drop; max 2MB, JPEG/PNG only
 - Changes saved per award (inline save) or via "Save All" button
-- Unsaved changes indicator appears on tab label when edits are made
-- Award changes logged in audit trail
+- Unsaved changes indicator appears on tab label when edits are made (REQ-032-040)
+- Award changes logged in audit trail (REQ-032-020)
 
 **Notes**:
 
@@ -908,7 +903,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 - Inline editing: clicking "Edit" expands award card to show editable fields with save/cancel buttons
 - Award image upload: click image area to upload/replace; supports drag-and-drop
 - Awards list supports reordering via drag-and-drop handles
-- Empty state: "No awards added yet. Click '+ Add Award' to showcase your achievements."
+- Empty state: "No awards added yet. Click '+ Add Award' to showcase your achievements." (REQ-032-120)
 
 ---
 
@@ -918,23 +913,23 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules | Inline Editing |
-|------------|------|----------|-------------|------------------|----------------|
-| Overall Rating Summary | display | No | Average rating and total review count (e.g., "4.8/5.0 - Based on 127 reviews") | Read-only; calculated from Reviews service | **Read-only**: Displays current average rating with star display and total review count; updates automatically when new reviews added |
-| Rating Distribution | bar chart | No | Percentage/count visualization for 5★ through 1★ reviews | Read-only; calculated from Reviews service | **Read-only**: Bar chart showing distribution of ratings (e.g., 60% 5-star, 25% 4-star, etc.) with counts; updates automatically |
-| Rating Filters | checkbox/pill group | No | Filter reviews by rating (5★, 4★, 3★, 2★, 1★); multiple selections allowed | Client-side filtering; selections persist per session | **Interactive**: Click rating pill/checkbox to toggle filter; multiple ratings can be selected; filtered results update immediately; filter state persists during session |
-| Sort Dropdown | dropdown | No | Sort order options: "Most recent" (default), "Highest rated", "Lowest rated", "Oldest first" | Client-side sorting; selection persists per session | **Interactive**: Select from dropdown to change sort order; results update immediately; sort preference persists during session |
-| Review Cards | list | No | List of review cards displaying: reviewer avatar/name, treatment type, rating stars, review date, review text (truncated), optional "Read more" link | Read-only content from Reviews service; pagination supported | **Read-only**: Review cards display review information; click "Read more" to expand full review text; click reviewer name/avatar (if implemented) may show reviewer profile; cards update automatically when new reviews added |
-| Pagination Controls | control group | No | Page navigation: page numbers, next/previous buttons, page-size selector (10/20/50 per page) | Client-side pagination | **Interactive**: Click page numbers or next/previous to navigate; select page size from dropdown; pagination state persists during session |
+| Field Name | Type | Required | Description | Validation Rules | Inline Editing | Graph field |
+|------------|------|----------|-------------|------------------|----------------|---|
+| Overall Rating Summary | display | No | Average rating and total review count (e.g., "4.8/5.0 - Based on 127 reviews") | Read-only; calculated from Reviews service | **Read-only**: Displays current average rating with star display and total review count; updates automatically when new reviews added | ENT-provider-review-summary.average_rating, ENT-provider-review-summary.review_count |
+| Rating Distribution | bar chart | No | Percentage/count visualization for 5★ through 1★ reviews | Read-only; calculated from Reviews service | **Read-only**: Bar chart showing distribution of ratings (e.g., 60% 5-star, 25% 4-star, etc.) with counts; updates automatically | ENT-provider-review-summary.rating_distribution |
+| Rating Filters | checkbox/pill group | No | Filter reviews by rating (5★, 4★, 3★, 2★, 1★); multiple selections allowed | Client-side filtering; selections persist per session | **Interactive**: Click rating pill/checkbox to toggle filter; multiple ratings can be selected; filtered results update immediately; filter state persists during session | no graph field (control) |
+| Sort Dropdown | dropdown | No | Sort order options: "Most recent" (default), "Highest rated", "Lowest rated", "Oldest first" | Client-side sorting; selection persists per session | **Interactive**: Select from dropdown to change sort order; results update immediately; sort preference persists during session | no graph field (control) |
+| Review Cards | list | No | List of review cards displaying: reviewer avatar/name, treatment type, rating stars, review date, review text (truncated), optional "Read more" link | Read-only content from Reviews service; pagination supported | **Read-only**: Review cards display review information; click "Read more" to expand full review text; click reviewer name/avatar (if implemented) may show reviewer profile; cards update automatically when new reviews added | ENT-review.reviewer_avatar_url, ENT-review.reviewer_name, ENT-review.treatment_name, ENT-review.overall_rating, ENT-review.created_at, ENT-review.feedback_text |
+| Pagination Controls | control group | No | Page navigation: page numbers, next/previous buttons, page-size selector (10/20/50 per page) | Client-side pagination | **Interactive**: Click page numbers or next/previous to navigate; select page size from dropdown; pagination state persists during session (REQ-032-122) | no graph field (control) |
 
 **Business Rules**:
 
-- Review content (ratings, feedback, photos) is read-only — providers cannot edit or delete patient-submitted reviews
-- Providers may post a public response to any published review via the inline response composer defined in FR-013 Screen 6; see FR-013 for response rules and immutability
-- Overall rating displays average (e.g., "4.8/5.0") with total count (e.g., "Based on 127 reviews")
+- Review content (ratings, feedback, photos) is read-only — providers cannot edit or delete patient-submitted reviews (REQ-032-050)
+- Providers may post a public response to any published review via the inline response composer defined in FR-013 Screen 6; see FR-013 for response rules and immutability (REQ-032-050)
+- Overall rating displays average (e.g., "4.8/5.0") with total count (e.g., "Based on 127 reviews") (REQ-032-116)
 - Rating distribution shows bar chart with counts/percentages for each star rating
 - Rating filter and sort options, defaults and per-session persistence are defined by FR-022 (REQ-022-084)
-- Clicking a review notification (from notifications) opens this tab with relevant review auto-highlighted
+- Clicking a review notification (from notifications) opens this tab with relevant review auto-highlighted (REQ-032-052)
 - Data sourced from Reviews service; loading/empty/error states handled
 - Reviews update automatically when new reviews are posted
 
@@ -942,8 +937,8 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 
 - Review cards display: reviewer avatar/name, treatment type, rating stars, review date, review text (truncated with "Read more")
 - Filters and sort controls at top of reviews list
-- Pagination controls: page numbers, next/previous, page-size selector (10/20/50 per page)
-- Empty state: "No reviews yet. Reviews will appear here once patients leave feedback."
+- Pagination controls: page numbers, next/previous, page-size selector (10/20/50 per page) (REQ-032-122)
+- Empty state: "No reviews yet. Reviews will appear here once patients leave feedback." (REQ-032-121)
 - Timestamp of last sync with Reviews service displayed at bottom
 
 ---
@@ -954,38 +949,38 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules | Inline Editing |
-|------------|------|----------|-------------|------------------|----------------|
-| Upload Document Button | button | No | Primary action to upload new document | Opens upload modal | **Interactive**: Click to open "Upload Document" modal with fields: Document Type (dropdown), Document File (file picker), optional notes |
-| Document List | list/cards | No | List of uploaded documents with metadata | Displays all provider and admin-uploaded documents | **Interactive**: Document cards in list/grid format; each card shows document name, type badge, upload date, file size, uploaded by (Provider/Admin), and action buttons (View, Replace, Delete) |
-| Document Name | text (display/edit) | Yes | Filename of document | Auto-generated from uploaded file; max 200 chars; editable via "Rename" action | **Editable**: Click "Rename" icon/button on document card to edit filename; save on blur or Enter key |
-| Document Type | dropdown | Yes | Document type selection | Options: "Medical License", "Board Certification", "Insurance", "Malpractice Insurance", "Business License", "Other" | **Editable**: Select from dropdown when uploading; can be changed via "Edit" action on document card |
-| Document File | file upload | Yes | Upload document file | Accepted formats: PDF, JPG, PNG, DOCX, XLSX; Max 10MB per file | **Interactive**: Drag-and-drop or click to browse; file picker validates format/size before upload |
-| Upload Date | date (display) | N/A | Date when document was uploaded | Timestamp format: "MMM DD, YYYY" (e.g., "Jan 15, 2025"); auto-generated | **Read-only**: Displays upload date with relative time on hover (e.g., "Uploaded 3 months ago") |
-| Uploaded By | badge (display) | N/A | Who uploaded the document: "Provider" or "Admin" | Badge displays "You" for provider uploads, "Admin" for admin uploads | **Read-only**: Badge color: green for "You", blue for "Admin" |
-| File Size | text (display) | N/A | Document file size | Format: "X.X MB" or "X KB"; auto-calculated | **Read-only**: Displays file size |
-| Notes | text (optional) | No | Optional notes about document | Max 500 chars; editable | **Editable**: Click "Edit Notes" on document card to add/edit notes; save on blur or via Save button |
-| View/Download Button | button | No | Action button to view or download document | Opens document in new browser tab or downloads file depending on file type | **Interactive**: Click to view PDF in browser or download file; button label: "View" for PDFs, "Download" for other file types |
-| Replace Button | button | No | Action button to replace existing document with new version | Opens file picker to upload replacement | **Interactive**: Click "Replace" button on document card; file picker opens; validates format/size; on upload, old version archived (soft delete) and new version becomes active; confirmation toast: "Document replaced successfully" |
-| Delete Button | button | No | Action button to delete document | Opens confirmation dialog; performs soft delete | **Interactive**: Click "Delete" button on document card; confirmation dialog: "Are you sure you want to delete [document name]? This action cannot be undone." On confirm, document soft-deleted; confirmation toast: "Document deleted successfully" |
+| Field Name | Type | Required | Description | Validation Rules | Inline Editing | Graph field |
+|------------|------|----------|-------------|------------------|----------------|---|
+| Upload Document Button | button | No | Primary action to upload new document | Opens upload modal | **Interactive**: Click to open "Upload Document" modal with fields: Document Type (dropdown), Document File (file picker), optional notes | no graph field (control) |
+| Document List | list/cards | No | List of uploaded documents with metadata | Displays all provider and admin-uploaded documents | **Interactive**: Document cards in list/grid format; each card shows document name, type badge, upload date, file size, uploaded by (Provider/Admin), and action buttons (View, Replace, Delete) | ENT-provider-document.document_name, ENT-provider-document.document_type, ENT-provider-document.uploaded_at, ENT-provider-document.file_size, ENT-provider-document.uploaded_by |
+| Document Name | text (display/edit) | Yes | Filename of document | Auto-generated from uploaded file; max 200 chars; editable via "Rename" action | **Editable**: Click "Rename" icon/button on document card to edit filename; save on blur or Enter key | ENT-provider-document.document_name |
+| Document Type | dropdown | Yes | Document type selection | Options: "Medical License", "Board Certification", "Insurance", "Malpractice Insurance", "Business License", "Other" | **Editable**: Select from dropdown when uploading; can be changed via "Edit" action on document card | ENT-provider-document.document_type |
+| Document File | file upload | Yes | Upload document file | Accepted formats: PDF, JPG, PNG, DOCX, XLSX; Max 10MB per file (REQ-032-060) | **Interactive**: Drag-and-drop or click to browse; file picker validates format/size before upload | ENT-provider-document.file_url |
+| Upload Date | date (display) | N/A | Date when document was uploaded | Timestamp format: "MMM DD, YYYY" (e.g., "Jan 15, 2025"); auto-generated | **Read-only**: Displays upload date with relative time on hover (e.g., "Uploaded 3 months ago") | ENT-provider-document.uploaded_at |
+| Uploaded By | badge (display) | N/A | Who uploaded the document: "Provider" or "Admin" | Badge displays "You" for provider uploads, "Admin" for admin uploads | **Read-only**: Badge color: green for "You", blue for "Admin" | ENT-provider-document.uploaded_by |
+| File Size | text (display) | N/A | Document file size | Format: "X.X MB" or "X KB"; auto-calculated | **Read-only**: Displays file size | ENT-provider-document.file_size |
+| Notes | text (optional) | No | Optional notes about document | Max 500 chars; editable | **Editable**: Click "Edit Notes" on document card to add/edit notes; save on blur or via Save button | ENT-provider-document.notes |
+| View/Download Button | button | No | Action button to view or download document | Opens document in new browser tab or downloads file depending on file type | **Interactive**: Click to view PDF in browser or download file; button label: "View" for PDFs, "Download" for other file types | no graph field (control) |
+| Replace Button | button | No | Action button to replace existing document with new version | Opens file picker to upload replacement | **Interactive**: Click "Replace" button on document card; file picker opens; validates format/size; on upload, old version archived (soft delete) and new version becomes active; confirmation toast: "Document replaced successfully" | no graph field (control) |
+| Delete Button | button | No | Action button to delete document | Opens confirmation dialog; performs soft delete | **Interactive**: Click "Delete" button on document card; confirmation dialog: "Are you sure you want to delete [document name]? This action cannot be undone." On confirm, document soft-deleted; confirmation toast: "Document deleted successfully" | no graph field (control) |
 
 **Business Rules**:
 
-- **Provider Document Management**: Providers can upload, replace, delete, and view their own documents
-- **Admin Oversight**: Admins can upload additional documents via FR-015 Tab 6 (e.g., documents received via email, external verifications). Admin-uploaded documents display "Admin" badge
-- **Document Sync**: Documents uploaded by provider in FR-032 sync to FR-015 within 1 minute for admin visibility
-- **Empty State**: If no documents uploaded yet, display message: "No documents on file. Upload your clinic documents (medical license, certifications, insurance) to get started." with prominent "Upload Document" button
+- **Provider Document Management**: Providers can upload, replace, delete, and view their own documents (REQ-032-053)
+- **Admin Oversight**: Admins can upload additional documents via FR-015 Tab 6 (e.g., documents received via email, external verifications). Admin-uploaded documents display "Admin" badge (REQ-032-054)
+- **Document Sync**: Documents uploaded by provider in FR-032 sync to FR-015 within 1 minute for admin visibility (REQ-032-055)
+- **Empty State**: If no documents uploaded yet, display message: "No documents on file. Upload your clinic documents (medical license, certifications, insurance) to get started." with prominent "Upload Document" button (REQ-032-135)
 - **Upload Modal Fields**:
   - Document Type: Dropdown (required) - "Medical License", "Board Certification", "Insurance", "Malpractice Insurance", "Business License", "Other"
   - Document File: File picker (required) - Accepted formats: PDF, JPG, PNG, DOCX, XLSX; Max 10MB
   - Notes: Text area (optional) - Max 500 chars; helpful for adding context (e.g., "License expires Dec 2026")
   - On submit: Document uploaded, confirmation toast: "Document uploaded successfully"
-- **Replace Document**: Clicking "Replace" on a document card opens file picker; uploading new file replaces current version; old version archived (soft delete) with timestamp
-- **Delete Document**: Clicking "Delete" opens confirmation dialog; on confirm, document soft-deleted (not permanently removed); admin can view deleted documents in FR-015 for audit purposes
-- **Document Permissions**: Providers can only delete/replace documents they uploaded; Admin-uploaded documents display "View Only" (providers cannot delete/replace, but can download)
-- **Audit Logging**: All document actions (upload/replace/delete/view/download) logged with timestamp, user, action type, and IP address (visible in FR-015 Tab 8: Activity Log)
-- **Security**: Document URLs are secure, time-limited signed URLs; direct file access not allowed
-- **File Validation**:
+- **Replace Document**: Clicking "Replace" on a document card opens file picker; uploading new file replaces current version; old version archived (soft delete) with timestamp (REQ-032-056)
+- **Delete Document**: Clicking "Delete" opens confirmation dialog; on confirm, document soft-deleted (not permanently removed); admin can view deleted documents in FR-015 for audit purposes (REQ-032-057)
+- **Document Permissions**: Providers can only delete/replace documents they uploaded; Admin-uploaded documents display "View Only" (providers cannot delete/replace, but can download) (REQ-032-053)
+- **Audit Logging**: All document actions (upload/replace/delete/view/download) logged with timestamp, user, action type, and IP address (visible in FR-015 Tab 8: Activity Log) (REQ-032-058)
+- **Security**: Document URLs are secure, time-limited signed URLs; direct file access not allowed (REQ-032-059)
+- **File Validation**: (REQ-032-060)
   - Accepted formats: PDF, JPG, PNG, DOCX, XLSX
   - Max file size: 10MB per document
   - File name sanitization: Remove special characters, limit to 200 chars
@@ -1001,19 +996,19 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 - Document versioning: When replaced, old versions archived with timestamp (not shown to provider, but admin can view in FR-015)
 - Document list sorted by upload date (most recent first) by default
 - Loading state: Display skeleton loaders while fetching documents
-- Error state: If document fetch fails, display "Unable to load documents. Please refresh or contact support."
+- Error state: If document fetch fails, display "Unable to load documents. Please refresh or contact support." (REQ-032-123)
 - Document cards display icon based on file type (PDF icon for PDFs, image icon for JPG/PNG, generic doc icon for DOCX/XLSX)
-- Drag-and-drop upload: Providers can drag files directly onto the Documents tab to upload (opens upload modal with file pre-selected)
+- Drag-and-drop upload: Providers can drag files directly onto the Documents tab to upload (opens upload modal with file pre-selected) (REQ-032-124)
 
 ---
 
 **General Business Rules (All Tabs)**:
 
-- Each tab can be saved independently; system displays unsaved changes indicator (dot/asterisk) on tab label when edits are made
-- When provider attempts to navigate away or quit, system displays reminder dialog "You have unsaved changes. Are you sure you want to leave?" with options to save, discard, or cancel
-- All profile changes logged in audit trail with timestamp and user
-- Profile updates propagate to patient app within 1 minute
-- All profile fields are provider-editable from the provider dashboard (subject to role/permissions defined in FR-009 where applicable)
+- Each tab can be saved independently; system displays unsaved changes indicator (dot/asterisk) on tab label when edits are made (REQ-032-040)
+- See REQ-032-040.
+- All profile changes logged in audit trail with timestamp and user (REQ-032-020)
+- Profile updates propagate to patient app within 1 minute (REQ-032-014)
+- All profile fields are provider-editable from the provider dashboard (subject to role/permissions defined in FR-009 where applicable) (REQ-032-041)
 - Inline editing: clicking editable fields activates edit mode with save/cancel buttons; changes persist immediately on save
 - **Tab Editability**:
   - **Fully Editable**: Tab 1 (Basic Information), Tab 2 (Languages), Tab 4 (Awards), Tab 6 (Documents) - providers can add, edit, delete content inline
@@ -1028,44 +1023,44 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules | Role-Based Behavior |
-|------------|------|----------|-------------|------------------|-------------------|
-| Account Name | text/display | Yes | Display name for the account | Max 200 chars | **Owner**: Unified with clinic name (read-only, synced from Tab 1: Basic Information); **Staff**: Editable display name (defaults to First Name + Last Name, can be customized) |
-| First Name | text | Yes | User's first name | 2-50 characters, letters, spaces, hyphens (same as FR-009) | Editable by all roles (Owner and Staff) |
-| Last Name | text | Yes | User's last name | 2-50 characters, letters, spaces, hyphens (same as FR-009) | Editable by all roles (Owner and Staff) |
-| Account Email | email | Yes | Email address for login and communications | Valid email format, unique per FR-009 Rule 3 (an email belongs to at most one provider organization at a time) | Editable by all roles (Owner and Staff) |
-| Phone Number - Country Code | dropdown | Yes (if phone provided) | Worldwide country calling code | Consumes FR-026 country calling codes list (e.g., +1, +44, +90, +234) | Editable by all roles |
-| Phone Number - Number | text | No | Provider phone number | Numeric only, length validated per country code format | Editable by all roles |
-| Timezone | dropdown | Yes | Provider's local timezone for date/time display | Multiple timezone options (GMT-12 to GMT+14) | Editable by all roles |
-| Current Password | password | Yes (for password change) | Current password for verification | Must match existing password hash | Editable by all roles |
-| New Password | password | Yes (for password change) | New password | See system PRD, Platform-Wide Rules: Password and one-time-code policy | Editable by all roles |
-| Confirm New Password | password | Yes (for password change) | Confirm new password | Must match New Password field | Editable by all roles |
+| Field Name | Type | Required | Description | Validation Rules | Role-Based Behavior | Graph field |
+|------------|------|----------|-------------|------------------|-------------------|---|
+| Account Name | text/display | Yes | Display name for the account | Max 200 chars (REQ-032-063) | **Owner**: Unified with clinic name (read-only, synced from Tab 1: Basic Information); **Staff**: Editable display name (defaults to First Name + Last Name, can be customized) | ENT-provider-account-settings.account_name |
+| First Name | text | Yes | User's first name | 2-50 characters, letters, spaces, hyphens (same as FR-009) (REQ-032-063) | Editable by all roles (Owner and Staff) | ENT-team-member.first_name |
+| Last Name | text | Yes | User's last name | 2-50 characters, letters, spaces, hyphens (same as FR-009) (REQ-032-063) | Editable by all roles (Owner and Staff) | ENT-team-member.last_name |
+| Account Email | email | Yes | Email address for login and communications | Valid email format, unique per FR-009 Rule 3 (an email belongs to at most one provider organization at a time) (REQ-032-063) | Editable by all roles (Owner and Staff) | ENT-team-member.email |
+| Phone Number - Country Code | dropdown | Yes (if phone provided) (REQ-032-125) | Worldwide country calling code | Consumes FR-026 country calling codes list (e.g., +1, +44, +90, +234) | Editable by all roles | ENT-provider-account-settings.country_code |
+| Phone Number - Number | text | No | Provider phone number | Numeric only, length validated per country code format | Editable by all roles | ENT-provider-account-settings.phone_number |
+| Timezone | dropdown | Yes | Provider's local timezone for date/time display | Multiple timezone options (GMT-12 to GMT+14) | Editable by all roles | ENT-provider-account-settings.timezone |
+| Current Password | password | Yes (for password change) | Current password for verification | Must match existing password hash | Editable by all roles | no graph field (input checked against the stored hash) |
+| New Password | password | Yes (for password change) | New password | See system PRD, Platform-Wide Rules: Password and one-time-code policy | Editable by all roles | ENT-provider-account-settings.password_hash |
+| Confirm New Password | password | Yes (for password change) | Confirm new password | Must match New Password field (REQ-032-065) | Editable by all roles | no graph field (input that must match New Password) |
 
 **Business Rules**:
 
 - **Account Name Unification (Owner Role)**:
   - For Owner accounts (main account holder/provider admin): Account Name is unified with the clinic name from Tab 1: Basic Information (clinic name field)
-  - Account Name field is read-only for Owner role; it automatically syncs when clinic name is updated in Tab 1
-  - If Owner updates clinic name in Tab 1, Account Name in Tab 2 updates automatically (within 1 minute)
+  - Account Name field is read-only for Owner role; it automatically syncs when clinic name is updated in Tab 1 (REQ-032-061)
+  - If Owner updates clinic name in Tab 1, Account Name in Tab 2 updates automatically (within 1 minute) (REQ-032-061)
   - Account Name displays clinic name with read-only indicator (e.g., "Istanbul Hair Clinic" with lock icon or "Synced with clinic name" helper text)
   - Rationale: Owner account represents the clinic organization, so account name should match clinic name for consistency across the platform
   
 - **Account Name (Staff Roles)**:
-  - For Staff roles (Manager, Clinical Staff, Billing Staff): Account Name is editable and independent from clinic name
-  - Default Account Name for staff is "First Name + Last Name" (e.g., "John Smith")
+  - For Staff roles (Manager, Clinical Staff, Billing Staff): Account Name is editable and independent from clinic name (REQ-032-062)
+  - Default Account Name for staff is "First Name + Last Name" (e.g., "John Smith") (REQ-032-062)
   - Staff can customize Account Name to any display name (e.g., "Dr. John Smith", "John S.", "J. Smith")
   - Account Name for staff is used for display purposes in dashboard, notifications, activity logs, and team member listings
-  - Staff Account Name changes do not affect clinic name or other staff members' account names
+  - Staff Account Name changes do not affect clinic name or other staff members' account names (REQ-032-062)
   - Rationale: Staff are individual team members, not the clinic itself, so they should have personalized display names
   
-- Phone number country code and number stored together in international format (e.g., +44 7700 900123)
-- Timezone preference applies to all date/time displays in provider dashboard
-- Existing timestamps in database remain in UTC, converted to provider's timezone for display
-- Password change requires correct current password (security measure)
+- Phone number country code and number stored together in international format (e.g., +44 7700 900123) (REQ-032-015)
+- Timezone preference applies to all date/time displays in provider dashboard (REQ-032-064)
+- Existing timestamps in database remain in UTC, converted to provider's timezone for display (REQ-032-064)
+- Password change requires correct current password (security measure) (REQ-032-007)
 - New password must meet the password policy. See system PRD, Platform-Wide Rules: Password and one-time-code policy
-- Password change event logged in audit trail (timestamp, user ID, IP address)
-- Email notification sent to provider email address after successful password change (security alert)
-- All account-level fields (account name, first name, last name, account email, phone number, timezone, password) are provider-editable by the logged-in user, subject to role-based restrictions (Account Name read-only for Owner) and FR-026 security rules and FR-009 role permissions
+- Password change event logged in audit trail (timestamp, user ID, IP address) (REQ-032-020)
+- Email notification sent to provider email address after successful password change (security alert) (REQ-032-021)
+- All account-level fields (account name, first name, last name, account email, phone number, timezone, password) are provider-editable by the logged-in user, subject to role-based restrictions (Account Name read-only for Owner) and FR-026 security rules and FR-009 role permissions (REQ-032-041)
 
 **Notes**:
 
@@ -1082,8 +1077,8 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 - Display last password change date below password section
 - Include a dedicated **Account Closure** warning card at the bottom of the Account Information tab with explanatory copy and a red `Request account closure` button; clicking the button opens the Account Closure dialog described in the "Request Account Closure" flow, where the reason textarea remains provider-editable while approval status stays admin-controlled
 - Account Settings shares the Settings page with Notification Preferences as a two-tab interface; the `Account Information` tab (this screen) is the default tab when landing on Settings
-- Each tab can be saved independently; system displays unsaved changes indicator on tabs with edits
-- When provider attempts to navigate away or quit, system displays reminder dialog for unsaved changes
+- Each tab can be saved independently; system displays unsaved changes indicator on tabs with edits (REQ-032-040)
+- When provider attempts to navigate away or quit, system displays reminder dialog for unsaved changes (REQ-032-040)
 
 ---
 
@@ -1093,38 +1088,38 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Quote Notifications | toggle/checkbox | No (default enabled) | New inquiry received, quote expiring soon. Does not cover mandatory quote notices (the inquiry-cancelled quote notice and the quote-accepted outcomes), which are always sent | Toggle on/off |
-| Schedule Notifications | toggle/checkbox | No (default enabled) | Appointment confirmed, appointment reminder. Does not cover mandatory booking notices (payment window expired, booking revived, booking rescheduled), which are always sent | Toggle on/off |
-| Treatment Start Notifications | toggle/checkbox | No (default enabled) | Patient checked in, procedure started | Toggle on/off |
-| Aftercare Notifications | toggle/checkbox | No (default enabled) | Patient milestone completed, urgent aftercare alert | Toggle on/off |
-| Review Notifications | toggle/checkbox | No (default enabled) | New review posted, review requires response | Toggle on/off |
-| Promotion/Discount Notifications | toggle/checkbox | No (default enabled) | New platform discounts created by admin that require provider acceptance/opt-in | Toggle on/off |
-| Email Notifications | toggle/checkbox | No (default enabled) | Send notifications via email | Toggle on/off, email address from profile |
-| Push/In-App Notifications | toggle/checkbox | No (default enabled) | Show notifications in web portal | Toggle on/off |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|---|
+| Quote Notifications | toggle/checkbox | No (default enabled) | New inquiry received, quote expiring soon. Does not cover mandatory quote notices (the inquiry-cancelled quote notice and the quote-accepted outcomes), which are always sent | Toggle on/off | ENT-provider-notification-preferences.quote_notifications |
+| Schedule Notifications | toggle/checkbox | No (default enabled) | Appointment confirmed, appointment reminder. Does not cover mandatory booking notices (payment window expired, booking revived, booking rescheduled), which are always sent | Toggle on/off | ENT-provider-notification-preferences.schedule_notifications |
+| Treatment Start Notifications | toggle/checkbox | No (default enabled) | Patient checked in, procedure started | Toggle on/off | ENT-provider-notification-preferences.treatment_start_notifications |
+| Aftercare Notifications | toggle/checkbox | No (default enabled) | Patient milestone completed, urgent aftercare alert | Toggle on/off | ENT-provider-notification-preferences.aftercare_notifications |
+| Review Notifications | toggle/checkbox | No (default enabled) | New review posted, review requires response | Toggle on/off | ENT-provider-notification-preferences.review_notifications |
+| Promotion/Discount Notifications | toggle/checkbox | No (default enabled) | New platform discounts created by admin that require provider acceptance/opt-in | Toggle on/off | ENT-provider-notification-preferences.promotion_notifications |
+| Email Notifications | toggle/checkbox | No (default enabled) | Send notifications via email | Toggle on/off, email address from profile | ENT-provider-notification-preferences.email_enabled |
+| Push/In-App Notifications | toggle/checkbox | No (default enabled) | Show notifications in web portal | Toggle on/off | ENT-provider-notification-preferences.push_enabled |
 
 **Business Rules**:
 
-- Notification preferences are profile-specific (apply to entire provider organization, not individual team members)
-- If all notification types disabled, show confirmation dialog warning provider may miss important updates
-- Notification preferences saved and enforced by S-03 Notification Service (FR-020)
-- Global channel preferences override individual notification types (e.g., if Email disabled, no notifications sent via email regardless of individual toggles)
-- Each tab (Profile, Account Information, Notification Preferences, Billing) can be saved independently; system displays unsaved changes indicator (e.g., dot or asterisk) on tabs with unsaved edits
-- When provider attempts to navigate away or quit, system displays reminder dialog "You have unsaved changes. Are you sure you want to leave?" with options to save, discard, or cancel
-- Critical system alerts (e.g., payment failure, security breach) bypass preferences and always sent via all available channels
-- Mandatory provider notices (defined in FR-030 Non-Disableable by Default; for the inquiry-cancelled quote notice, FR-020 REQ-020-020) are exempt from these preferences. This screen offers no toggle for them, and neither the Quote or Schedule Notifications toggles, "Disable All" nor the channel preferences can suppress them
-- Preference changes logged in audit trail
-- Preference updates propagate to S-03 within 1 minute
-- All notification type and channel toggles are provider-editable from the `Settings → Notification Preferences` tab in the provider dashboard
+- Notification preferences are profile-specific (apply to entire provider organization, not individual team members) (REQ-032-078)
+- If all notification types disabled, show confirmation dialog warning provider may miss important updates (REQ-032-079)
+- Notification preferences saved and enforced by S-03 Notification Service (FR-020) (REQ-032-009)
+- Global channel preferences override individual notification types (e.g., if Email disabled, no notifications sent via email regardless of individual toggles) (REQ-032-080)
+- Each tab (Profile, Account Information, Notification Preferences, Billing) can be saved independently; system displays unsaved changes indicator (e.g., dot or asterisk) on tabs with unsaved edits (REQ-032-040)
+- See REQ-032-040.
+- Critical system alerts (e.g., payment failure, security breach) bypass preferences and always sent via all available channels (REQ-032-081)
+- Mandatory provider notices (defined in FR-030 Non-Disableable by Default; for the inquiry-cancelled quote notice, FR-020 REQ-020-020) are exempt from these preferences. This screen offers no toggle for them, and neither the Quote or Schedule Notifications toggles, "Disable All" nor the channel preferences can suppress them (REQ-032-031)
+- Preference changes logged in audit trail (REQ-032-082)
+- Preference updates propagate to S-03 within 1 minute (REQ-032-016)
+- All notification type and channel toggles are provider-editable from the `Settings → Notification Preferences` tab in the provider dashboard (REQ-032-041)
 
 **Notes**:
 
 - Display notification types in collapsible sections with examples (expand to show what notifications are included)
-- Provide "Enable All" / "Disable All" quick action buttons
+- Provide "Enable All" / "Disable All" quick action buttons (REQ-032-126)
 - Show real-time preview of notification channels (e.g., "You will receive Quote Notifications via Email and Push")
 - Display last preference update timestamp
-- Provide "Test Notification" button to send sample notification and verify settings work
+- Provide "Test Notification" button to send sample notification and verify settings work (REQ-032-127)
 - Notification Preferences appears as the second tab on the Settings page beside Account Information; toggling between tabs should maintain unsaved changes warning if applicable
 - Each tab has its own "Save" button; unsaved changes indicator appears on tab label when edits are made
 
@@ -1136,45 +1131,45 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Account Holder Name | text | Yes | Full name or business name on bank account | Max 200 chars, alphabetic and spaces only |
-| Bank Name | text | Yes | Official name of bank | Max 200 chars |
-| Account Number | text | Yes | Bank account number | Format varies by country, validated by S-02 Payment Service |
-| Routing/SWIFT Code | text | Yes | Bank routing code (USA) or SWIFT code (international) | 8-11 chars for SWIFT, 9 digits for USA routing |
-| IBAN | text | Conditional (if applicable) | International Bank Account Number | Format validated per country (e.g., Turkey = 26 chars) |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|---|
+| Account Holder Name | text | Yes | Full name or business name on bank account | Max 200 chars, alphabetic and spaces only (REQ-032-085) | ENT-provider-billing-settings.account_holder_name |
+| Bank Name | text | Yes | Official name of bank | Max 200 chars | ENT-provider-billing-settings.bank_name |
+| Account Number | text | Yes | Bank account number | Format varies by country, validated by S-02 Payment Service | ENT-provider-billing-settings.account_number |
+| Routing/SWIFT Code | text | Yes | Bank routing code (USA) or SWIFT code (international) | 8-11 chars for SWIFT, 9 digits for USA routing (REQ-032-085) | ENT-provider-billing-settings.routing_swift_code |
+| IBAN | text | Conditional (if applicable) | International Bank Account Number | Format validated per country (e.g., Turkey = 26 chars) (REQ-032-085) | ENT-provider-billing-settings.iban |
 
 **Commission & Payout (Read-Only Panel)**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Commission Model | display | N/A | "Percentage" or "Flat Rate" | Retrieved from FR-015 Tab 7 (FR-029 provider-specific commission configuration); read-only |
-| Commission Value | display | N/A | e.g., "15%" or "£200 per completed procedure" | Retrieved from FR-015 Tab 7; Flat Rate shown with its Flat Rate Currency; read-only |
-| Effective Date | display | N/A | Date from which the current configuration applies to newly confirmed bookings | Retrieved from FR-015 Tab 7 (FR-029 `effective_date`); format DD-MM-YYYY; read-only |
-| Scheduled Configuration | display | N/A | Next configuration and its Effective Date, if an admin has set a future-dated change. At most one pending configuration exists per provider; a newer future-dated edit by an admin replaces it (FR-015 Tab 7, FR-029) | Retrieved from FR-015 Tab 7; hidden when none is pending; read-only |
-| Payout Method | display | N/A | "Stripe Connect" or "Manual bank transfer"; chosen by the admin when the clinic is created in FR-015 | Read-only; the provider cannot change it |
-| Payout Readiness | display | N/A | Whether the clinic's payout set-up is ready; for Stripe Connect the clinic completes Stripe's own sign-up itself | Read-only |
-| Payout Timing | display | N/A | Stripe Connect: "Released automatically after completion" (FR-017). Manual bank transfer: follows the one platform-wide settlement period set in FR-029 (default weekly, Sunday cutoff, Wednesday payout). There is no per-clinic payout frequency | Read-only; shown according to the clinic's payout method |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|---|
+| Commission Model | display | N/A | "Percentage" or "Flat Rate" | Retrieved from FR-015 Tab 7 (FR-029 provider-specific commission configuration); read-only | ENT-commission-rate-config.commission_model |
+| Commission Value | display | N/A | e.g., "15%" or "£200 per completed procedure" | Retrieved from FR-015 Tab 7; Flat Rate shown with its Flat Rate Currency; read-only | ENT-commission-rate-config.commission_percentage, ENT-commission-rate-config.flat_rate_amount, ENT-commission-rate-config.flat_rate_currency |
+| Effective Date | display | N/A | Date from which the current configuration applies to newly confirmed bookings | Retrieved from FR-015 Tab 7 (FR-029 `effective_date`); format DD-MM-YYYY; read-only | ENT-commission-rate-config.effective_date |
+| Scheduled Configuration | display | N/A | Next configuration and its Effective Date, if an admin has set a future-dated change. At most one pending configuration exists per provider; a newer future-dated edit by an admin replaces it (FR-015 Tab 7, FR-029) | Retrieved from FR-015 Tab 7; hidden when none is pending; read-only | ENT-commission-rate-config.status, ENT-commission-rate-config.effective_date |
+| Payout Method | display | N/A | "Stripe Connect" or "Manual bank transfer"; chosen by the admin when the clinic is created in FR-015 | Read-only; the provider cannot change it | ENT-provider.payout_method |
+| Payout Readiness | display | N/A | Whether the clinic's payout set-up is ready; for Stripe Connect the clinic completes Stripe's own sign-up itself | Read-only | no graph field (display) |
+| Payout Timing | display | N/A | Stripe Connect: "Released automatically after completion" (FR-017). Manual bank transfer: follows the one platform-wide settlement period set in FR-029 (default weekly, Sunday cutoff, Wednesday payout). There is no per-clinic payout frequency | Read-only; shown according to the clinic's payout method | no graph field (display) |
 
 **Business Rules**:
 
-- Billing settings accessible ONLY to Owner role (per FR-009 role permissions)
-- Non-owner roles cannot see or access billing settings (tab hidden from navigation)
-- Account number masked in read-only view (e.g., ●●●●●●1234), unmasked in edit mode
-- Bank account details encrypted at rest using AES-256
-- Bank account information validated by S-02 Payment Service before saving
-- Bank account changes logged in audit trail (Owner user, timestamp, action)
-- Email confirmation sent to Owner after bank account details updated
+- Billing settings accessible ONLY to Owner role (per FR-009 role permissions) (REQ-032-011)
+- See REQ-032-022.
+- Account number masked in read-only view (e.g., ●●●●●●1234), unmasked in edit mode (REQ-032-086)
+- See REQ-032-017.
+- Bank account information validated by S-02 Payment Service before saving (REQ-032-025)
+- Bank account changes logged in audit trail (Owner user, timestamp, action) (REQ-032-020)
+- Email confirmation sent to Owner after bank account details updated (REQ-032-088)
 - Bank account details used by FR-017 billing workflow for provider payouts
-- **Commission & Payout panel**: Read-only; values are set by admins in FR-015 Tab 7 and synchronized with FR-029. Providers cannot edit them and must contact support to discuss changes. The panel notes that existing confirmed bookings keep the commission snapshot taken at their confirmation (FR-029)
+- **Commission & Payout panel**: Read-only; values are set by admins in FR-015 Tab 7 and synchronized with FR-029. Providers cannot edit them and must contact support to discuss changes. The panel notes that existing confirmed bookings keep the commission snapshot taken at their confirmation (FR-029) (REQ-032-090)
 - **Payout method and readiness**: The admin chooses the payout method (Stripe Connect or manual bank transfer) when creating the clinic in FR-015. The Owner sees the method and the readiness read-only and cannot change the method
-- If bank account validation fails, display error message from S-02 and prevent saving
+- If bank account validation fails, display error message from S-02 and prevent saving (REQ-032-087)
 
 **Notes**:
 
-- Provide country selector to determine required fields (e.g., IBAN required for EU, routing number required for USA)
+- Provide country selector to determine required fields (e.g., IBAN required for EU, routing number required for USA) (REQ-032-128)
 - Show bank account format examples based on selected country
-- Provide "Verify Bank Account" button to test bank account details with S-02 before saving
+- Provide "Verify Bank Account" button to test bank account details with S-02 before saving (REQ-032-129)
 - Display last bank account update timestamp
 - Show next scheduled payout date and amount (if available)
 - Provide link to payout history (handled by PR-05: Financial Management & Reporting)
@@ -1191,19 +1186,19 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Search Bar | text | No | Global search across all Help Centre content | Max 200 chars, autocomplete suggestions |
-| Category Navigation | navigation menu | No | Links to subscreens: FAQs, Tutorial Guides, Troubleshooting Tips, Policy Information, Resource Library, Video Tutorials, Contact Support, Feedback & Suggestions, My Support Cases, Service Status | N/A |
-| Most Popular Articles | card list | No | Top 5 most viewed/helpful articles across all categories | Read-only, sorted by view count/helpfulness |
-| Recently Updated | card list | No | Latest 5 updated articles across all categories | Read-only, sorted by update date |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|---|
+| Search Bar | text | No | Global search across all Help Centre content | Max 200 chars, autocomplete suggestions | no graph field (control) |
+| Category Navigation | navigation menu | No | Links to subscreens: FAQs, Tutorial Guides, Troubleshooting Tips, Policy Information, Resource Library, Video Tutorials, Contact Support, Feedback & Suggestions, My Support Cases, Service Status | N/A | ENT-help-centre-content.content_type |
+| Most Popular Articles | card list | No | Top 5 most viewed/helpful articles across all categories (REQ-032-093) | Read-only, sorted by view count/helpfulness | ENT-help-centre-content.title, ENT-help-centre-content.view_count, ENT-help-centre-content.helpfulness_rating |
+| Recently Updated | card list | No | Latest 5 updated articles across all categories (REQ-032-093) | Read-only, sorted by update date | ENT-help-centre-content.title, ENT-help-centre-content.updated_at |
 
 **Business Rules**:
 
-- All Help Centre content is read-only for providers (content managed exclusively by admins via FR-033)
+- All Help Centre content is read-only for providers (content managed exclusively by admins via FR-033) (REQ-032-012)
 - Help Centre search behaviour (content types searched, 200-character limit, autocomplete) is defined by FR-022 (REQ-022-081)
-- When a Help Centre search returns no results, the system shows "No results for '[query]'. Try different keywords or Contact Support." (same message as the patient Help Centre, FR-035)
-- Help Centre content updates (from admin) propagate to providers within 1 minute
+- When a Help Centre search returns no results, the system shows "No results for '[query]'. Try different keywords or Contact Support." (same message as the patient Help Centre, FR-035) (REQ-032-130)
+- Help Centre content updates (from admin) propagate to providers within 1 minute (REQ-032-092)
 - Breadcrumb navigation available on all subscreens for easy return to home
 
 ---
@@ -1216,11 +1211,11 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| FAQ Topic Filter | category filter | No | Filter FAQs by topic (e.g., "Quote Management", "Payment Settings", "Aftercare") | Pre-defined topics from admin |
-| FAQ Questions | accordion list | No | List of FAQ items with question and expandable answer | Each FAQ: question (text), answer (rich text/HTML), topic category, helpfulness rating |
-| "Was this helpful?" Feedback | button group | No | Yes/No buttons for each FAQ | Records feedback for admin analytics |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|---|
+| FAQ Topic Filter | category filter | No | Filter FAQs by topic (e.g., "Quote Management", "Payment Settings", "Aftercare") | Pre-defined topics from admin | ENT-help-centre-content.topic |
+| FAQ Questions | accordion list | No | List of FAQ items with question and expandable answer | Each FAQ: question (text), answer (rich text/HTML), topic category, helpfulness rating | ENT-help-centre-content.title, ENT-help-centre-content.body, ENT-help-centre-content.topic, ENT-help-centre-content.helpfulness_rating |
+| "Was this helpful?" Feedback | button group | No | Yes/No buttons for each FAQ | Records feedback for admin analytics | no graph field (control) |
 
 **Business Rules**:
 
@@ -1228,7 +1223,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 - Clicking question expands to show answer; clicking again collapses
 - Multiple FAQs can be expanded simultaneously
 - Topic filter updates list instantly (client-side filtering)
-- Feedback (Yes/No) recorded per FAQ for admin analytics
+- Feedback (Yes/No) recorded per FAQ for admin analytics (REQ-032-094)
 - Search results highlight matching keywords in questions and answers
 
 **Notes**:
@@ -1248,14 +1243,14 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Article Title | display | No | Title of tutorial guide/tip/policy | Read-only |
-| Article Content | rich text/HTML | No | Formatted article content with headings, lists, images, screenshots | Read-only, supports HTML formatting |
-| Article Metadata | display | No | Publication date, last updated date, author (admin), category | Read-only |
-| Table of Contents | navigation | No | Auto-generated from article headings (for long articles) | Read-only, clickable anchor links |
-| Related Articles | card list | No | Related articles from same or other categories | Read-only, links to other articles |
-| "Was this helpful?" Feedback | button group | No | Yes/No buttons | Records feedback for admin analytics |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|---|
+| Article Title | display | No | Title of tutorial guide/tip/policy | Read-only | ENT-help-centre-content.title |
+| Article Content | rich text/HTML | No | Formatted article content with headings, lists, images, screenshots | Read-only, supports HTML formatting | ENT-help-centre-content.body |
+| Article Metadata | display | No | Publication date, last updated date, author (admin), category | Read-only | ENT-help-centre-content.published_at, ENT-help-centre-content.updated_at, ENT-help-centre-content.created_by_admin_id, ENT-help-centre-content.content_type |
+| Table of Contents | navigation | No | Auto-generated from article headings (for long articles) | Read-only, clickable anchor links | no graph field (display) |
+| Related Articles | card list | No | Related articles from same or other categories | Read-only, links to other articles | ENT-help-centre-content.related_content_ids |
+| "Was this helpful?" Feedback | button group | No | Yes/No buttons | Records feedback for admin analytics | no graph field (control) |
 
 **Business Rules**:
 
@@ -1273,7 +1268,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 - Screenshots/images displayed inline with captions
 - Step-by-step tutorials use numbered lists with visual separators
 - Breadcrumb navigation: Help Centre > [Category] > [Article Title]
-- Share article functionality (copy link, email link)
+- Share article functionality (copy link, email link) (REQ-032-140)
 
 ---
 
@@ -1285,20 +1280,20 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Resource List | card/grid | No | List of downloadable resources with thumbnails/icons | Each resource: name, description, file type, file size, download count, last updated |
-| Resource Category Filter | filter | No | Filter by resource type (Templates, Documents, Forms, etc.) | Pre-defined categories from admin |
-| File Type Filter | filter | No | Filter by file format (PDF, DOCX, XLSX, etc.) | Pre-defined file types |
-| Preview Button | button | No | Preview resource before download (if supported format) | Opens preview modal or new tab |
-| Download Button | button | No | Download resource file | Initiates file download |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|---|
+| Resource List | card/grid | No | List of downloadable resources with thumbnails/icons | Each resource: name, description, file type, file size, download count, last updated | ENT-help-centre-content.title, ENT-help-centre-content.summary, ENT-help-centre-content.file_type, ENT-help-centre-content.file_size, ENT-help-centre-content.download_count, ENT-help-centre-content.updated_at, ENT-help-centre-content.thumbnail_url |
+| Resource Category Filter | filter | No | Filter by resource type (Templates, Documents, Forms, etc.) | Pre-defined categories from admin | ENT-help-centre-content.topic |
+| File Type Filter | filter | No | Filter by file format (PDF, DOCX, XLSX, etc.) | Pre-defined file types | ENT-help-centre-content.file_type |
+| Preview Button | button | No | Preview resource before download (if supported format) | Opens preview modal or new tab | no graph field (control) |
+| Download Button | button | No | Download resource file | Initiates file download | ENT-help-centre-content.attachments |
 
 **Business Rules**:
 
 - Resources displayed as cards/grid with file type icons and metadata
 - Clicking resource card shows details: description, file size, download count, last updated date
-- Preview available for PDF and image files (opens in modal or new tab)
-- Download initiates file download; download count incremented
+- Preview available for PDF and image files (opens in modal or new tab) (REQ-032-131)
+- Download initiates file download; download count incremented (REQ-032-098)
 - Resources can be filtered by category and file type
 - Search functionality searches resource names and descriptions
 
@@ -1320,13 +1315,13 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Video List | card/grid | No | List of video tutorials with thumbnails | Each video: title, description, duration, thumbnail, view count, publish date |
-| Video Player | embedded player | No | Video player with play controls | Supports play, pause, volume, fullscreen, playback speed |
-| Video Transcript | expandable section | No | Text transcript of video (if available) | Read-only, expandable/collapsible |
-| Related Videos | card list | No | Related video tutorials | Read-only, links to other videos |
-| "Was this helpful?" Feedback | button group | No | Yes/No buttons | Records feedback for admin analytics |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|---|
+| Video List | card/grid | No | List of video tutorials with thumbnails | Each video: title, description, duration, thumbnail, view count, publish date | ENT-help-centre-content.title, ENT-help-centre-content.summary, ENT-help-centre-content.duration, ENT-help-centre-content.thumbnail_url, ENT-help-centre-content.view_count, ENT-help-centre-content.published_at |
+| Video Player | embedded player | No | Video player with play controls | Supports play, pause, volume, fullscreen, playback speed | ENT-help-centre-content.attachments |
+| Video Transcript | expandable section | No | Text transcript of video (if available) | Read-only, expandable/collapsible | ENT-help-centre-content.transcript |
+| Related Videos | card list | No | Related video tutorials | Read-only, links to other videos | ENT-help-centre-content.related_content_ids |
+| "Was this helpful?" Feedback | button group | No | Yes/No buttons | Records feedback for admin analytics | no graph field (control) |
 
 **Business Rules**:
 
@@ -1334,7 +1329,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 - Video thumbnails displayed in grid/list view
 - Clicking video card opens video player (inline or modal)
 - Video transcripts available (if provided by admin) in expandable section below player
-- View count incremented when video plays for >30 seconds
+- View count incremented when video plays for >30 seconds (REQ-032-099)
 - Related videos displayed based on category and tags
 - Feedback recorded for admin analytics
 
@@ -1356,25 +1351,25 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Support Request Form - Subject | text | Yes | Support request subject line | Max 200 chars |
-| Support Request Form - Category | dropdown | No | Request category (Technical Issue, Payment Question, Feature Request, etc.) | Pre-defined categories |
-| Support Request Form - Message | textarea | Yes | Detailed support request message | Max 5000 chars, min 20 chars |
-| Support Request Form - Priority | dropdown | No | Request priority (Low, Medium, High, Urgent) | Default: Medium |
-| Support Request Form - Attachment | file upload | No | Optional screenshot or document | Max 10MB, common file types (PDF, PNG, JPG, DOCX) |
-| Submission Tracking | list | No | List of submitted support requests with status | Each request: subject, category, status (Open, In Progress, Resolved, Closed), submitted date, last updated, case number |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|---|
+| Support Request Form - Subject | text | Yes | Support request subject line | Max 200 chars (REQ-032-102) | ENT-support-case.title |
+| Support Request Form - Category | dropdown | No | Request category (Technical Issue, Payment Question, Feature Request, etc.) | Pre-defined categories | ENT-support-case.category |
+| Support Request Form - Message | textarea | Yes | Detailed support request message | Max 5000 chars, min 20 chars (REQ-032-102) | ENT-support-case.description |
+| Support Request Form - Priority | dropdown | No | Request priority (Low, Medium, High, Urgent) | Default: Medium (REQ-032-102) | ENT-support-case.priority |
+| Support Request Form - Attachment | file upload | No | Optional screenshot or document | Max 10MB, common file types (PDF, PNG, JPG, DOCX) (REQ-032-102) | ENT-support-case.attachments |
+| Submission Tracking | list | No | List of submitted support requests with status | Each request: subject, category, status (Open, In Progress, Resolved, Closed), submitted date, last updated, case number | ENT-support-case.case_id, ENT-support-case.title, ENT-support-case.category, ENT-support-case.status, ENT-support-case.submitted_at, ENT-support-case.last_updated_at |
 
 **Business Rules**:
 
-- Support contact form auto-populates provider contact information (name, email, clinic name)
+- Support contact form auto-populates provider contact information (name, email, clinic name) (REQ-032-101)
 - Form submission creates a support case with a unique case number
-- Support request confirmation displayed: "Support request submitted. Case #[number]. Our team will respond within 24 hours."
-- Form submissions automatically create support cases in FR-034 Support Center & Ticketing System with status 'Open'; case management, admin responses, and status updates are handled in FR-034
+- Support request confirmation displayed: "Support request submitted. Case #[number]. Our team will respond within 24 hours." (REQ-032-103)
+- Form submissions automatically create support cases in FR-034 Support Center & Ticketing System with status 'Open'; case management, admin responses, and status updates are handled in FR-034 (REQ-032-100)
 - Submission tracking shows all user's support requests with status updates
-- Status updates: Open → In Progress → Resolved → Closed
+- Status updates: Open → In Progress → Resolved → Closed (REQ-032-105)
 - Provider can view request details and add follow-up messages (if implemented)
-- Email notification sent to provider when admin responds or updates status
+- Email notification sent to provider when admin responds or updates status (REQ-032-111)
 
 **Notes**:
 
@@ -1394,22 +1389,22 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Feedback Form - Type | dropdown | Yes | Feedback type (Feature Request, Bug Report, Suggestion, Other) | Pre-defined types |
-| Feedback Form - Title | text | Yes | Brief title for feedback | Max 100 chars |
-| Feedback Form - Description | textarea | Yes | Detailed feedback description | Max 5000 chars, min 20 chars |
-| Feedback Form - Priority | dropdown | No | Suggested priority (Low, Medium, High) | Default: Low |
-| Submission Tracking | list | No | List of submitted feedback with status | Each submission: title, type, status (Open, In Progress, Resolved, Closed), feedback resolution (if applicable: Implemented, Planned, Declined), submitted date, admin response |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|---|
+| Feedback Form - Type | dropdown | Yes | Feedback type (Feature Request, Bug Report, Suggestion, Other) | Pre-defined types | ENT-support-case.feedback_type |
+| Feedback Form - Title | text | Yes | Brief title for feedback | Max 100 chars (REQ-032-104) | ENT-support-case.title |
+| Feedback Form - Description | textarea | Yes | Detailed feedback description | Max 5000 chars, min 20 chars (REQ-032-104) | ENT-support-case.description |
+| Feedback Form - Priority | dropdown | No | Suggested priority (Low, Medium, High) | Default: Low (REQ-032-104) | ENT-support-case.priority |
+| Submission Tracking | list | No | List of submitted feedback with status | Each submission: title, type, status (Open, In Progress, Resolved, Closed), feedback resolution (if applicable: Implemented, Planned, Declined), submitted date, admin response | ENT-support-case.title, ENT-support-case.feedback_type, ENT-support-case.status, ENT-support-case.feedback_resolution, ENT-support-case.submitted_at, ENT-support-case-message.content |
 
 **Business Rules**:
 
 - Feedback form allows providers to submit feature requests, bug reports, and suggestions
 - Form submission creates feedback record with unique ID
 - Confirmation displayed: "Thank you for your feedback! We'll review your submission."
-- Form submissions automatically create feedback cases in FR-034 Support Center & Ticketing System with status 'Open'; case tracking, admin responses, and resolution status are handled in FR-034
+- Form submissions automatically create feedback cases in FR-034 Support Center & Ticketing System with status 'Open'; case tracking, admin responses, and resolution status are handled in FR-034 (REQ-032-100)
 - Submission tracking shows all user's feedback submissions with status
-- Status updates follow unified workflow: Open → In Progress → Resolved → Closed (feedback resolution outcome—Implemented, Planned, Declined—tracked separately in FR-034)
+- Status updates follow unified workflow: Open → In Progress → Resolved → Closed (feedback resolution outcome—Implemented, Planned, Declined—tracked separately in FR-034) (REQ-032-105)
 - Admin can respond to feedback (if implemented); response visible in tracking list
 - Feedback helps prioritize platform improvements
 
@@ -1432,46 +1427,46 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Filter Bar | filter group | No | Filter controls including: **Status Filter** (multi-select dropdown: Open, In Progress, Resolved, Closed; Default: Open + In Progress), **Type Filter** (multi-select dropdown: Support Request, Feedback; Default: All types), **Date Range Filter** (date picker; Default: Last 90 days) | Filters are cumulative (AND logic) |
-| Search Bar | text input | No | Search cases by case ID, title, keywords | Min 3 chars to trigger search, real-time search; searches across Case ID, Title, Description, Message content |
-| Quick Stats Bar | stats component | N/A | Displays summary metrics: Open (X), In Progress (X), Resolved (X), Unread Messages (X) | Display only, updates based on current filters |
-| Case List Table | data table | N/A | Displays cases matching filters with 8 columns (see below); 20 cases per page default | Sortable columns, paginated; default sort by Last Updated descending |
-| **Table Column 1**: Case ID | link | N/A | Unique case identifier (format: CASE-YYYY-#####); Width: 140px | Clickable link to case detail view (Screen 5.8); Sortable |
-| **Table Column 2**: Title | text | N/A | Case title; Width: 250px | Truncated with ellipsis if >40 chars; full title shown on hover; Sortable |
-| **Table Column 3**: Type | badge | N/A | Case type; Width: 120px | Support Request / Feedback; Color-coded badge; Sortable |
-| **Table Column 4**: Status | badge | N/A | Current status with color coding; Width: 100px | Open (blue), In Progress (yellow), Resolved (green), Closed (gray); Sortable |
-| **Table Column 5**: Feedback Resolution | badge | No | Resolution outcome for feedback cases; Width: 120px | Implemented (green) / Planned (yellow) / Declined (red) / Under Review (blue); Empty if not feedback or not set; Not sortable |
-| **Table Column 6**: Submitted Date | datetime | N/A | Case creation timestamp (format: YYYY-MM-DD HH:mm); Width: 130px | Local timezone; Sortable |
-| **Table Column 7**: Last Updated | datetime | N/A | Most recent modification timestamp (format: YYYY-MM-DD HH:mm); Width: 130px | Local timezone; Default sort column (descending); Sortable |
-| **Table Column 8**: Unread | badge/icon | No | Unread message indicator; Width: 60px | Shows unread message count if admin replied (e.g., "2 new"); Empty if no unread; Not sortable |
-| Pagination Controls | component | N/A | Navigate through case list pages | 20 cases per page default; Shows: Previous, 1, 2, 3, ..., Next |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|---|
+| Filter Bar | filter group | No | Filter controls including: **Status Filter** (multi-select dropdown: Open, In Progress, Resolved, Closed; Default: Open + In Progress), **Type Filter** (multi-select dropdown: Support Request, Feedback; Default: All types), **Date Range Filter** (date picker; Default: Last 90 days) | Filters are cumulative (AND logic) | ENT-support-case.status, ENT-support-case.submitted_at |
+| Search Bar | text input | No | Search cases by case ID, title, keywords | Min 3 chars to trigger search, real-time search; searches across Case ID, Title, Description, Message content (REQ-032-107) | no graph field (control) |
+| Quick Stats Bar | stats component | N/A | Displays summary metrics: Open (X), In Progress (X), Resolved (X), Unread Messages (X) | Display only, updates based on current filters | no graph field (display component) |
+| Case List Table | data table | N/A | Displays cases matching filters with 8 columns (see below); 20 cases per page default | Sortable columns, paginated; default sort by Last Updated descending | no graph field (list of the column rows below) |
+| **Table Column 1**: Case ID | link | N/A | Unique case identifier (format: CASE-YYYY-#####); Width: 140px | Clickable link to case detail view (Screen 5.8); Sortable | ENT-support-case.case_id |
+| **Table Column 2**: Title | text | N/A | Case title; Width: 250px | Truncated with ellipsis if >40 chars; full title shown on hover; Sortable | ENT-support-case.title |
+| **Table Column 3**: Type | badge | N/A | Case type; Width: 120px | Support Request / Feedback; Color-coded badge; Sortable | ENT-support-case.case_type |
+| **Table Column 4**: Status | badge | N/A | Current status with color coding; Width: 100px | Open (blue), In Progress (yellow), Resolved (green), Closed (gray); Sortable | ENT-support-case.status |
+| **Table Column 5**: Feedback Resolution | badge | No | Resolution outcome for feedback cases; Width: 120px | Implemented (green) / Planned (yellow) / Declined (red) / Under Review (blue); Empty if not feedback or not set; Not sortable | ENT-support-case.feedback_resolution |
+| **Table Column 6**: Submitted Date | datetime | N/A | Case creation timestamp (format: YYYY-MM-DD HH:mm); Width: 130px | Local timezone; Sortable | ENT-support-case.submitted_at |
+| **Table Column 7**: Last Updated | datetime | N/A | Most recent modification timestamp (format: YYYY-MM-DD HH:mm); Width: 130px | Local timezone; Default sort column (descending); Sortable | ENT-support-case.last_updated_at |
+| **Table Column 8**: Unread | badge/icon | No | Unread message indicator; Width: 60px | Shows unread message count if admin replied (e.g., "2 new"); Empty if no unread; Not sortable | ENT-support-case-message.is_read |
+| Pagination Controls | component | N/A | Navigate through case list pages | 20 cases per page default; Shows: Previous, 1, 2, 3, ..., Next | no graph field (control) |
 
 **Business Rules**:
 
 - Default view shows Open and In Progress cases from last 90 days, sorted by Last Updated descending (one shared Rule with the admin case list: FR-034 REQ-034-114)
-- The case list shows 20 cases per page by default
+- The case list shows 20 cases per page by default (REQ-032-118)
 - Providers can view all their submitted cases (both support requests from Screen 5.5 and feedback from Screen 5.6)
 - Clicking case row or Case ID opens Screen 5.8 (Support Case Detail View)
 - Status badges color-coded (Open=blue, In Progress=yellow, Resolved=green, Closed=gray)
 - Type badges color-coded (Support Request=orange, Feedback=purple)
 - Feedback Resolution badges color-coded (Implemented=green, Planned=yellow, Declined=red, Under Review=blue)
-- Unread Messages indicator shows count of admin messages provider hasn't viewed yet (e.g., "2 new")
+- Unread Messages indicator shows count of admin messages provider hasn't viewed yet (e.g., "2 new") (REQ-032-108)
 - Cases with unread messages highlighted with subtle background color or bold text
-- Search is real-time and searches across: Case ID, Case Title, Original Description, Message content
-- Filters are cumulative (AND logic between different filter types)
-- Filter options: Status (Open, In Progress, Resolved, Closed; default Open and In Progress), Type (Support Request, Feedback; default all types), Date Range (custom range on the case creation date; default last 90 days); several selections within one filter combine as OR
-- Filter selections persist during session
-- Quick Stats bar shows counts based on current filters
+- Search is real-time and searches across: Case ID, Case Title, Original Description, Message content (REQ-032-107)
+- Filters are cumulative (AND logic between different filter types) (REQ-032-107)
+- Filter options: Status (Open, In Progress, Resolved, Closed; default Open and In Progress), Type (Support Request, Feedback; default all types), Date Range (custom range on the case creation date; default last 90 days); several selections within one filter combine as OR (REQ-032-107)
+- Filter selections persist during session (REQ-032-107)
+- Quick Stats bar shows counts based on current filters (REQ-032-117)
 - If case has new admin messages since last view, "New Reply" badge shown prominently
 
 **Notes**:
 
 - Use sticky table header for scrolling through long case lists
-- Display empty state message if no cases match filters: "No cases found. Try adjusting your filters or submit a new request via Contact Support."
-- Display empty state if no cases exist: "You haven't submitted any support cases yet. Visit Contact Support or Feedback & Suggestions to get help."
-- Show total case count matching current filters at top of table: "Showing X cases"
+- Display empty state message if no cases match filters: "No cases found. Try adjusting your filters or submit a new request via Contact Support." (REQ-032-133)
+- Display empty state if no cases exist: "You haven't submitted any support cases yet. Visit Contact Support or Feedback & Suggestions to get help." (REQ-032-133)
+- Show total case count matching current filters at top of table: "Showing X cases" (REQ-032-134)
 - Consider implementing saved filter presets as future enhancement (e.g., "Open Issues", "All Feedback")
 - Highlight urgent cases (High/Urgent priority) with warning icon in list
 
@@ -1485,24 +1480,24 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Case ID | text (readonly) | N/A | Unique case identifier (e.g., CASE-2025-12345) | Display only |
-| Case Title | text (readonly) | N/A | Case title | Display only |
-| Status Badge | badge | N/A | Current case status with color coding | Open (blue), In Progress (yellow), Resolved (green), Closed (gray) |
-| Feedback Resolution Badge | badge | No | Resolution outcome for feedback cases | Implemented (green), Planned (yellow), Declined (red), Under Review (blue); Only shown for feedback cases when resolution is set |
-| Case Type | text (readonly) | N/A | Support Request or Feedback | Display only |
-| Priority | text (readonly) | N/A | Case priority level (Low, Medium, High, Urgent) | Display only |
-| Submitted Date | datetime (readonly) | N/A | When case was created | Display only |
-| Last Updated | datetime (readonly) | N/A | Most recent modification | Display only |
-| Original Description | text block | N/A | Initial submission description | Display only, expandable if long |
-| Communication Thread | threaded conversation | N/A | Two-way conversation showing all messages from admin and provider with full context | Scrollable, chronological (oldest first), shows sender name, sender type badge, timestamp, message content, attachments |
-| Reply Message Box | textarea | No | Message composer for replying to admin | Max 5000 chars; only enabled for Open and In Progress cases; Character counter displayed |
-| Attach Files Button | file upload | No | Attach files to reply message | Max 5 files, 10MB per file, formats: JPG, PNG, PDF, DOC, DOCX |
-| Send Reply Button | button | N/A | Sends reply message to admin | Enabled only if message box has content; disabled for Resolved/Closed cases |
-| Request Reopen Button | button | N/A | Request to reopen closed case | Only visible for Closed cases; opens reopen request modal (Screen 5.9) |
-| Case Timeline | vertical timeline | N/A | Shows all case events with full context | Displays: case created, status changes, feedback resolution updates, messages sent/received, case resolved, case closed; Readonly, scrollable, reverse chronological (newest first) |
-| Back to List Button | button | N/A | Returns to My Support Cases list (Screen 5.7) | Click action, preserves filter state |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|---|
+| Case ID | text (readonly) | N/A | Unique case identifier (e.g., CASE-2025-12345) | Display only | ENT-support-case.case_id |
+| Case Title | text (readonly) | N/A | Case title | Display only | ENT-support-case.title |
+| Status Badge | badge | N/A | Current case status with color coding | Open (blue), In Progress (yellow), Resolved (green), Closed (gray) | ENT-support-case.status |
+| Feedback Resolution Badge | badge | No | Resolution outcome for feedback cases | Implemented (green), Planned (yellow), Declined (red), Under Review (blue); Only shown for feedback cases when resolution is set | ENT-support-case.feedback_resolution |
+| Case Type | text (readonly) | N/A | Support Request or Feedback | Display only | ENT-support-case.case_type |
+| Priority | text (readonly) | N/A | Case priority level (Low, Medium, High, Urgent) | Display only | ENT-support-case.priority |
+| Submitted Date | datetime (readonly) | N/A | When case was created | Display only | ENT-support-case.submitted_at |
+| Last Updated | datetime (readonly) | N/A | Most recent modification | Display only | ENT-support-case.last_updated_at |
+| Original Description | text block | N/A | Initial submission description | Display only, expandable if long | ENT-support-case.description |
+| Communication Thread | threaded conversation | N/A | Two-way conversation showing all messages from admin and provider with full context | Scrollable, chronological (oldest first), shows sender name, sender type badge, timestamp, message content, attachments | ENT-support-case-message.sender_name, ENT-support-case-message.sender_type, ENT-support-case-message.sent_at, ENT-support-case-message.content, ENT-support-case-message.attachments |
+| Reply Message Box | textarea | No | Message composer for replying to admin | Max 5000 chars; only enabled for Open and In Progress cases; Character counter displayed (REQ-032-110) | ENT-support-case-message.content |
+| Attach Files Button | file upload | No | Attach files to reply message | Max 5 files, 10MB per file, formats: JPG, PNG, PDF, DOC, DOCX (REQ-032-110) | ENT-support-case-message.attachments |
+| Send Reply Button | button | N/A | Sends reply message to admin | Enabled only if message box has content; disabled for Resolved/Closed cases | no graph field (control) |
+| Request Reopen Button | button | N/A | Request to reopen closed case | Only visible for Closed cases; opens reopen request modal (Screen 5.9) | no graph field (control) |
+| Case Timeline | vertical timeline | N/A | Shows all case events with full context | Displays: case created, status changes, feedback resolution updates, messages sent/received, case resolved, case closed; Readonly, scrollable, reverse chronological (newest first) | ENT-support-case-timeline-event.event_type, ENT-support-case-timeline-event.event_timestamp, ENT-support-case-timeline-event.description |
+| Back to List Button | button | N/A | Returns to My Support Cases list (Screen 5.7) | Click action, preserves filter state (REQ-032-132) | no graph field (control) |
 
 **Communication Thread Structure**:
 
@@ -1518,18 +1513,18 @@ Each message in the thread displays:
 **Business Rules**:
 
 - Case detail view shows complete communication thread with all messages from admin and provider
-- Providers can reply to admin messages for Open and In Progress cases via Reply Message Box
+- Providers can reply to admin messages for Open and In Progress cases via Reply Message Box (REQ-032-109)
 - When provider replies, message is sent to FR-034 system and appears in admin's case view (FR-034 Screen 3)
-- An admin reply notifies the provider (support.case_admin_reply) and a provider reply notifies the assigned admin, or all support staff if unassigned (support.case_user_reply); recipients, content and channels are defined by the notification catalogue (FR-030 REQ-030-065 and REQ-030-066)
-- System marks messages as read when provider opens case detail view
+- An admin reply notifies the provider (support.case_admin_reply) and a provider reply notifies the assigned admin, or all support staff if unassigned (support.case_user_reply); recipients, content and channels are defined by the notification catalogue (FR-030 REQ-030-065 and REQ-030-066) (REQ-032-111)
+- System marks messages as read when provider opens case detail view (REQ-032-108)
 - Unread admin messages marked with "New" badge until provider views case
-- For Resolved cases, Reply Message Box is read-only with message: "This case has been marked as resolved. If the issue persists, click 'Request Reopen'."
-- For Closed cases, Reply Message Box is disabled; provider can only click "Request Reopen" button
+- For Resolved cases, Reply Message Box is read-only with message: "This case has been marked as resolved. If the issue persists, click 'Request Reopen'." (REQ-032-109)
+- For Closed cases, Reply Message Box is disabled; provider can only click "Request Reopen" button (REQ-032-109)
 - Communication Thread displays messages in chronological order (oldest first) to show conversation flow
 - Case Timeline displays events in reverse chronological order (newest first) to show latest updates
-- Attachment files validated before upload (file type, size, virus scan)
-- System displays confirmation after successful reply: "Reply sent. The support team will respond soon."
-- If provider navigates away with unsaved message content, system prompts: "You have unsaved changes. Discard?"
+- Attachment files validated before upload (file type, size, virus scan) (REQ-032-110)
+- System displays confirmation after successful reply: "Reply sent. The support team will respond soon." (REQ-032-136)
+- If provider navigates away with unsaved message content, system prompts: "You have unsaved changes. Discard?" (REQ-032-040)
 
 **Notes**:
 
@@ -1552,35 +1547,35 @@ Each message in the thread displays:
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Previous Resolution Summary | text (readonly) | N/A | Resolution summary from when case was previously resolved | Display only, helps provider provide context |
-| Previous Closure Date | datetime (readonly) | N/A | Date when case was closed | Display only |
-| Reopening Reason | textarea | Yes | Reason for reopening case | Min 20 chars, max 500 chars; Example: "The issue is still occurring after following all troubleshooting steps" |
-| Priority Update | dropdown select | No | Adjust priority for reopened case | Options: Keep Current, Low, Medium, High, Urgent; Default: Keep Current |
-| Submit Reopen Request Button | button | Yes | Submits reopen request to admin | Validates reason length; Sends notification to admin via S-03 |
-| Cancel Button | button | Yes | Closes modal without reopening case | No changes made |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|---|
+| Previous Resolution Summary | text (readonly) | N/A | Resolution summary from when case was previously resolved | Display only, helps provider provide context | ENT-support-case-resolution.resolution_summary |
+| Previous Closure Date | datetime (readonly) | N/A | Date when case was closed | Display only | ENT-support-case.closed_at |
+| Reopening Reason | textarea | Yes | Reason for reopening case | Min 20 chars, max 500 chars; Example: "The issue is still occurring after following all troubleshooting steps" (REQ-032-113) | ENT-support-case-reopening.reopening_reason |
+| Priority Update | dropdown select | No | Adjust priority for reopened case | Options: Keep Current, Low, Medium, High, Urgent; Default: Keep Current | ENT-support-case.priority |
+| Submit Reopen Request Button | button | Yes | Submits reopen request to admin | Validates reason length; Sends notification to admin via S-03 | no graph field (control) |
+| Cancel Button | button | Yes | Closes modal without reopening case | No changes made | no graph field (control) |
 
 **Business Rules**:
 
-- Modal only accessible from Screen 5.8 when viewing Closed cases
+- Modal only accessible from Screen 5.8 when viewing Closed cases (REQ-032-113)
 - System displays previous resolution summary and closure date for context
-- Reopening reason required (min 20 chars) to prevent accidental/spam reopening
-- Provider can optionally adjust priority when reopening (e.g., escalate if issue was marked resolved incorrectly)
-- When submitted:
+- Reopening reason required (min 20 chars) to prevent accidental/spam reopening (REQ-032-113)
+- Provider can optionally adjust priority when reopening (e.g., escalate if issue was marked resolved incorrectly) (REQ-032-113)
+- When submitted: (REQ-032-114)
   - Case status changes from "Closed" to "Open"
   - System logs reopening in case timeline with timestamp, reopening reason, and provider who requested
   - FR-034 triggers support.case_reopened notification event to S-03
   - S-03 sends email notification to assigned admin (or all support staff if unassigned)
   - Admin receives notification with reopening reason and previous resolution for context
-- System displays confirmation: "Reopen request submitted. We'll review your case shortly."
+- System displays confirmation: "Reopen request submitted. We'll review your case shortly." (REQ-032-137)
 - After submission, modal closes and provider returns to Screen 5.8 with updated case status "Open"
 - Reply Message Box becomes enabled again for reopened cases
 
 **Notes**:
 
-- Display warning if case was recently closed (e.g., within 24 hours): "This case was recently closed. Are you sure the issue persists?"
-- Show estimated response time: "Our team typically responds to reopen requests within 4 hours."
+- Display warning if case was recently closed (e.g., within 24 hours): "This case was recently closed. Are you sure the issue persists?" (REQ-032-138)
+- Show estimated response time: "Our team typically responds to reopen requests within 4 hours." (REQ-032-139)
 - Consider adding "Reopen Reason Templates" dropdown for quick selection (e.g., "Issue persists", "New information available") (future enhancement)
 
 ---
@@ -1593,12 +1588,12 @@ Each message in the thread displays:
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Overall Status Indicator | badge | No | Current platform status (All Systems Operational, Partial Outage, Major Outage) | Color-coded: green/yellow/red |
-| Service Components Status | list | No | Status of individual services/components | Each component: name, status (Operational, Degraded, Down), last updated |
-| Incident History | timeline | No | Recent incidents and maintenance windows | Each incident: title, description, status (Investigating, Identified, Monitoring, Resolved), start time, end time, affected services |
-| Maintenance Schedule | list | No | Upcoming scheduled maintenance | Each maintenance: title, description, scheduled start/end time, affected services |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|---|
+| Overall Status Indicator | badge | No | Current platform status (All Systems Operational, Partial Outage, Major Outage) | Color-coded: green/yellow/red | ENT-service-status.overall_status |
+| Service Components Status | list | No | Status of individual services/components | Each component: name, status (Operational, Degraded, Down), last updated | ENT-service-status.components |
+| Incident History | timeline | No | Recent incidents and maintenance windows | Each incident: title, description, status (Investigating, Identified, Monitoring, Resolved), start time, end time, affected services | ENT-service-status.incidents |
+| Maintenance Schedule | list | No | Upcoming scheduled maintenance | Each maintenance: title, description, scheduled start/end time, affected services | ENT-service-status.maintenance |
 
 **Business Rules**:
 
@@ -1607,8 +1602,8 @@ Each message in the thread displays:
 - Individual service components show status: Operational (green), Degraded (yellow), Down (red)
 - Incident history shows recent incidents with timeline and resolution details
 - Maintenance schedule shows upcoming planned maintenance windows
-- Status updates automatically when admin updates status via admin platform
-- Providers can subscribe to status updates (email notifications for incidents)
+- Status updates automatically when admin updates status via admin platform (REQ-032-115)
+- Providers can subscribe to status updates (email notifications for incidents) (REQ-032-115)
 
 **Notes**:
 
@@ -1625,25 +1620,25 @@ Each message in the thread displays:
 
 ### General Module Rules
 
-- **Rule 1**: All provider profile changes (logo, name, description, languages, awards) propagate to patient-facing quote comparison view within 1 minute
-- **Rule 2**: Provider notification preferences enforced by S-03 Notification Service for all platform notifications, except critical system alerts and mandatory provider notices, which bypass preferences. Which notices are mandatory, their recipients and their content are defined by the notification Rules (FR-020 REQ-020-020 and FR-030 Non-Disableable by Default)
-- **Rule 3**: All account settings changes (phone, timezone, password) logged in audit trail with timestamp, user ID, and IP address
-- **Rule 4**: Billing settings accessible ONLY to Owner role; non-owner roles cannot see or access billing settings (tab hidden from navigation)
-- **Rule 5**: All profile, language, awards, account, and notification fields documented in this FR are provider-editable within the Provider Dashboard (subject to role restrictions noted); reviews content and Help Centre articles are read-only views fed by their respective modules (staff roster managed by FR-009); providers may post responses to reviews via FR-013 Screen 6 response composer but cannot edit or delete review records
-- **Rule 6 — Provider account-status banner**: Provider account status is owned by FR-015.
-  - **Suspended**: The Owner and every FR-009 team member can still log in and see a persistent, non-dismissible banner on every Provider Platform page: "Your account is temporarily suspended. Reason: [admin-provided reason]. Contact support@hairlineapp.com for assistance." The reason is the Screen 4 reason recorded in FR-015. While suspended, the provider cannot receive new inquiries, submit quotes, or accept new work (FR-015 Rule 9); profile, documents, reviews, billing, and team management (FR-009 Rule 10) are view-only. Account security (password change), notification preferences, Help Centre, and support cases (Screens 5.5–5.9) remain available so the provider can contact admins. Chat with patients on the provider's open `In Progress` and `Aftercare` cases also stays available. Clinical notes, photos, and aftercare answers and actions are blocked until the admin reassigns or decides the case (FR-015 Screen 4).
-  - **Deactivated**: Login is disabled for the Owner and all team members. A login attempt shows "This account has been deactivated. Contact support@hairlineapp.com for assistance." and no session is created.
-  - **Reactivated**: The banner is removed on the next page load and normal editing returns; nothing cancelled by the suspension is restored (FR-015 Screen 5).
+- **Rule 1**: All provider profile changes (logo, name, description, languages, awards) propagate to patient-facing quote comparison view within 1 minute (REQ-032-014)
+- **Rule 2**: Provider notification preferences enforced by S-03 Notification Service for all platform notifications, except critical system alerts and mandatory provider notices, which bypass preferences. Which notices are mandatory, their recipients and their content are defined by the notification Rules (FR-020 REQ-020-020 and FR-030 Non-Disableable by Default) (REQ-032-009; REQ-032-031)
+- **Rule 3**: All account settings changes (phone, timezone, password) logged in audit trail with timestamp, user ID, and IP address (REQ-032-020)
+- **Rule 4**: Billing settings accessible ONLY to Owner role; non-owner roles cannot see or access billing settings (tab hidden from navigation) (REQ-032-022)
+- **Rule 5**: All profile, language, awards, account, and notification fields documented in this FR are provider-editable within the Provider Dashboard (subject to role restrictions noted); reviews content and Help Centre articles are read-only views fed by their respective modules (staff roster managed by FR-009); providers may post responses to reviews via FR-013 Screen 6 response composer but cannot edit or delete review records (REQ-032-041)
+- **Rule 6 — Provider account-status banner**: Provider account status is owned by FR-015. (REQ-032-030)
+  - **Suspended**: The Owner and every FR-009 team member can still log in and see a persistent, non-dismissible banner on every Provider Platform page: "Your account is temporarily suspended. Reason: [admin-provided reason]. Contact support@hairlineapp.com for assistance." The reason is the Screen 4 reason recorded in FR-015. While suspended, the provider cannot receive new inquiries, submit quotes, or accept new work (FR-015 Rule 9); profile, documents, reviews, billing, and team management (FR-009 Rule 10) are view-only. Account security (password change), notification preferences, Help Centre, and support cases (Screens 5.5–5.9) remain available so the provider can contact admins. Chat with patients on the provider's open `In Progress` and `Aftercare` cases also stays available. Clinical notes, photos, and aftercare answers and actions are blocked until the admin reassigns or decides the case (FR-015 Screen 4). (REQ-032-067)
+  - **Deactivated**: Login is disabled for the Owner and all team members. A login attempt shows "This account has been deactivated. Contact support@hairlineapp.com for assistance." and no session is created. (REQ-032-068)
+  - **Reactivated**: The banner is removed on the next page load and normal editing returns; nothing cancelled by the suspension is restored (FR-015 Screen 5). (REQ-032-069)
 
 ### Data & Privacy Rules
 
-- **Privacy Rule 1**: Bank account details encrypted at rest using AES-256 and masked in UI (e.g., ●●●●●●1234)
-- **Privacy Rule 2**: Password stored as bcrypt hash (cost factor 12+), never stored in plain text
-- **Privacy Rule 3**: Approved account-closure requests result in FR-015 deactivation (account status = "Deactivated"; there is no separate "Deleted" status), with data archived (retention follows the system PRD, Platform-Wide Rules: One 10-year retention period)
-- **Audit Rule**: All profile changes, account settings changes, billing settings changes, and account closure requests logged in audit trail with: timestamp, user ID, IP address, action, old value, new value (bank details, password, phone and email values are masked)
-- **GDPR Compliance**: Provider account closure request gives the provider a path to request erasure (FR-015 deactivation with data archival per FR-023, not permanent deletion)
-- **Unsaved Changes Rule**: System displays unsaved changes indicator (e.g., dot or asterisk) on tabs with unsaved edits; when provider attempts to navigate away or quit, system displays reminder dialog "You have unsaved changes. Are you sure you want to leave?" with options to save, discard, or cancel
-- **Concurrent Edits Rule**: Provider profile saves are last-save-wins. If a provider user and an admin (FR-015), or two provider users, edit the same fields at the same time, the later save overwrites the earlier one; there is no conflict check and no conflict message. A save applies only the fields the user changed; untouched fields are not rewritten, so last save wins only when two people change the same field. Every save is logged in the audit trail with old and new values
+- **Privacy Rule 1**: Bank account details encrypted at rest using AES-256 and masked in UI (e.g., ●●●●●●1234) (REQ-032-017)
+- **Privacy Rule 2**: Password stored as bcrypt hash (cost factor 12+), never stored in plain text (REQ-032-019)
+- **Privacy Rule 3**: Approved account-closure requests result in FR-015 deactivation (account status = "Deactivated"; there is no separate "Deleted" status), with data archived (retention follows the system PRD, Platform-Wide Rules: One 10-year retention period) (REQ-032-023)
+- **Audit Rule**: All profile changes, account settings changes, billing settings changes, and account closure requests logged in audit trail with: timestamp, user ID, IP address, action, old value, new value (bank details, password, phone and email values are masked) (REQ-032-020)
+- **GDPR Compliance**: Provider account closure request gives the provider a path to request erasure (FR-015 deactivation with data archival per FR-023, not permanent deletion) (REQ-032-077)
+- **Unsaved Changes Rule**: System displays unsaved changes indicator (e.g., dot or asterisk) on tabs with unsaved edits; when provider attempts to navigate away or quit, system displays reminder dialog "You have unsaved changes. Are you sure you want to leave?" with options to save, discard, or cancel (REQ-032-040)
+- **Concurrent Edits Rule**: Provider profile saves are last-save-wins. If a provider user and an admin (FR-015), or two provider users, edit the same fields at the same time, the later save overwrites the earlier one; there is no conflict check and no conflict message. A save applies only the fields the user changed; untouched fields are not rewritten, so last save wins only when two people change the same field. Every save is logged in the audit trail with old and new values (REQ-032-042)
 
 ### Admin Editability Rules
 
@@ -1665,184 +1660,65 @@ Each message in the thread displays:
 
 **Configurable with Restrictions**:
 
-- Notification preference options: admins can add/remove notification types via system configuration, but core notification types (quote, schedule, treatment, aftercare, review) are required
+- Notification preference options: admins can add/remove notification types via system configuration, but core notification types (quote, schedule, treatment, aftercare, review) are required (REQ-032-084)
 - Bank account validation rules: S-02 Payment Service validates bank account format per country, admin cannot modify validation logic
 
 ### Payment & Billing Rules
 
-- **Billing Rule 1**: Bank account details validated by S-02 Payment Service before saving (format validation only, no funds verification)
+- **Billing Rule 1**: Bank account details validated by S-02 Payment Service before saving (format validation only, no funds verification) (REQ-032-025)
 - **Billing Rule 2**: Bank account details used by FR-017 billing workflow for provider payouts (admin-triggered after treatment completion)
-- **Billing Rule 3**: Bank account changes require Owner role; non-owner roles cannot see or access billing settings (tab hidden from navigation)
-- **Billing Rule 4**: Bank account details encrypted at rest and masked in UI (only last 4 digits visible in read-only view)
+- **Billing Rule 3**: Bank account changes require Owner role; non-owner roles cannot see or access billing settings (tab hidden from navigation) (REQ-032-022)
+- **Billing Rule 4**: Bank account details encrypted at rest and masked in UI (only last 4 digits visible in read-only view) (REQ-032-017)
 
----
+### Integration, Security and Operating Rules
 
-## Success Criteria
-
-### Provider Experience Metrics
-
-- **SC-001**: Providers can complete profile setup (logo, description, languages, awards) in under 5 minutes
-- **SC-002**: 90% of providers successfully update profile information on first attempt without errors
-- **SC-003**: Providers can configure notification preferences in under 2 minutes
-
-### Provider Efficiency Metrics
-
-- **SC-004**: Providers can change account settings (phone, timezone, password) in under 3 minutes
-- **SC-005**: Provider support requests submitted via Help Centre receive first response within 24 hours for 95% of requests
-- **SC-006**: 70% of provider questions resolved via Help Centre self-service (without contacting support)
-
-### Admin Management Metrics
-
-- **SC-007**: Admins can manage Help Centre content for all categories (FAQs, guides, videos, resources)
-- **SC-008**: Help Centre content updates propagate to provider platform within 1 minute
-- **SC-009**: 100% of provider profile changes, account settings changes, and billing settings changes logged in audit trail
-
-### System Performance Metrics
-
-- **SC-010**: Profile updates (logo, description, awards) save and display within 2 seconds for 95% of requests
-- **SC-011**: Notification preference changes propagate to S-03 Notification Service within 1 minute
-- **SC-012**: System supports 1000 concurrent provider settings updates without degradation
-- **SC-013**: Bank account validation via S-02 Payment Service completes within 3 seconds for 95% of requests
-
-### Business Impact Metrics
-
-- **SC-014**: Provider profile completion rate increases to 85% (all sections completed: logo, description, languages, awards, phone, billing)
-- **SC-015**: Support ticket volume related to settings/profile issues reduced by 40% (due to Help Centre self-service)
-- **SC-016**: Provider satisfaction score for settings management improves to 4.5+ out of 5
+- **FR-015: Provider Management (Admin-Initiated) / Module A-02**: Commission display and account status
+  - **Why needed**: Admins set commission, payout method, and provider status in FR-015
+  - **Integration point**: Screen 4 Commission & Payout panel reads FR-015 Tab 7 values (FR-029 configuration); Rule 6 reads provider status and the latest suspension reason from FR-015 Screens 4-5
+- **FR-021 / A-09: Multi-Language & Localization**: Language options for provider profile capacity
+  - **Why needed**: Profile language selection must display centrally managed languages without conflating spoken-language capacity with Provider Dashboard UI language preference
+- **FR-034 / A-10: Support Center & Ticketing**: Provider support request and feedback submission management with two-way communication
+  - **Integration point**: Form submissions create support cases with provider ID linked and Ticket Source = "Provider Portal", Submitter Type = "Provider"; providers view and interact with their cases through Screen 5.7 (My Support Cases) which queries FR-034 case data including full communication thread; provider replies sent to FR-034 Communication Thread appear in admin's case detail view (FR-034 Screen 3); notification events (support.case_admin_reply, support.case_user_reply) trigger via S-03 (REQ-032-100)
+- **Entity 1: Provider Profile Data (from PR-01: Auth & Team Management)**: Provider account information
+  - **Why needed**: Settings module requires existing provider account with clinic name, email, and role information
+  - **Source**: Provider onboarding module (A-02: Provider Management & Onboarding creates provider account; PR-01 manages team members)
+- Provider support requests submitted via Help Centre receive first response within 24 hours for 95% of requests
+- Providers access web platform via modern browsers (Chrome, Safari, Firefox, Edge - last 2 versions) per NFR-006
+- Admins update Help Centre content at least monthly to keep resources current and relevant
+- Admins review and process provider account closure requests within 5 business days
+- Provider profile updates (logo, awards) reviewed by admin for quality assurance (future enhancement, not MVP)
+- Bank account details remain valid for at least 12 months; providers responsible for updating if bank account changes
+- **Technology**: Image uploads (logo, awards) should use resumable upload protocol to handle network interruptions during large file uploads
+- **Performance**: Profile updates should use optimistic UI updates (display success immediately, synchronize with backend asynchronously) to improve perceived performance
+- **Storage**: Bank account details encrypted at rest using AES-256; encryption keys managed via secure key management service (e.g., AWS KMS, Google Cloud KMS)
+- **Integration 1**: Provider Settings → S-03 Notification Service (notification preference enforcement)
+  - **Authentication**: OAuth 2.0 bearer token (service-to-service)
+  - **Error handling**: Retry with exponential backoff on 5xx errors; if S-03 unavailable for >5 minutes, log error and notify admin
+- **Integration 2**: Billing Settings → S-02 Payment Service (bank account validation)
+  - **Authentication**: OAuth 2.0 bearer token (service-to-service)
+- **Integration 3**: Help Centre → Admin Content Database (read-only content display)
+  - **Authentication**: Internal API (user authentication required, RBAC enforced per FR-009 as this is an authenticated provider area)
+  - **Error handling**: If content unavailable, display cached version with "Content may be outdated" warning; retry after 1 minute
+- **Authentication**: Multi-factor authentication (MFA) required for Owner role when accessing billing settings (future enhancement)
+- **Authorization**: Role-based access control (RBAC) enforced for billing settings (Owner role only); API endpoints validate user role before allowing access
+- **Encryption**: All provider data encrypted in transit (TLS 1.3) and at rest (AES-256); bank account details use field-level encryption with separate encryption keys
+- **Audit trail**: Log all settings changes (profile, account, notifications, billing) with timestamp, user ID, IP address, action, old value, new value (REQ-032-020)
+- **Threat mitigation**: Rate limiting on password change endpoint (max 5 attempts/hour/user) to prevent brute force attacks; rate limiting on image upload endpoint (max 10 uploads/hour/user) to prevent abuse (REQ-032-049)
+- **Compliance**: GDPR-compliant account closure (FR-015 deactivation with data archival); PCI-DSS compliance for bank account data handling (no card data stored, only bank account details for payouts)
+- **Provider Notification Preferences**: Owned by FR-030 (Notification Rules & Configuration). Screen 3 shows and edits it: six notification type toggles (quote, schedule, treatment start, aftercare, review, promotion/discount) and the email and push channels, one record per provider organization.
 
 ---
 
 ## Dependencies
 
-### Internal Dependencies (Other FRs/Modules)
-
-- **FR-015: Provider Management (Admin-Initiated) / Module A-02**: Commission display and account status
-  - **Why needed**: Admins set commission, payout method, and provider status in FR-015
-  - **Integration point**: Screen 4 Commission & Payout panel reads FR-015 Tab 7 values (FR-029 configuration); Rule 6 reads provider status and the latest suspension reason from FR-015 Screens 4-5
-
-- **FR-020 / S-03: Notification Service**: Notification preferences integration
-  - **Why needed**: Provider notification preferences must be enforced when S-03 sends notifications (quote alerts, schedule reminders, review notifications)
-  - **Integration point**: When provider saves notification preferences, system updates S-03 preference rules; S-03 checks preferences before sending each notification
-
-- **FR-021 / A-09: Multi-Language & Localization**: Language options for provider profile capacity
-  - **Why needed**: Profile language selection must display centrally managed languages without conflating spoken-language capacity with Provider Dashboard UI language preference
-  - **Integration point**: Profile language dropdown consumes the FR-021 language/locale catalog. FR-026 may surface the selector through the broader App Settings shell, but FR-021 remains the canonical owner of language semantics.
-
-- **FR-026 / A-09: App Settings & Security Policies**: Country codes, timezone options, password policy
-  - **Why needed**: Account settings require worldwide country calling codes, timezone list, and password validation rules
-  - **Integration point**: Phone number country code dropdown consumes FR-026 country list; timezone dropdown consumes FR-026 timezone list; password change validates against FR-026 password policy
-
-- **FR-009 / PR-01: Provider Team & Role Management**: Role-based access control for billing settings
-  - **Why needed**: Billing settings must be accessible ONLY to Owner role per FR-009 role permissions
-  - **Integration point**: System validates user role before allowing access to billing settings; non-owner roles denied access
-
-- **FR-017 / A-05: Admin Billing & Financial Management**: Bank account details for payouts
-  - **Why needed**: Bank account details saved in billing settings used by FR-017 for provider payouts
-  - **Integration point**: When admin triggers provider payout (FR-017), system retrieves bank account details from billing settings
-
-- **FR-033 / A-09: Help Centre Content Management**: Help Centre content
-  - **Why needed**: Help Centre displays admin-managed content (FAQs, guides, videos, resources)
-  - **Integration point**: Help Centre reads content from admin-managed content database; content updates from admin propagate to provider Help Centre view
-
-- **FR-034 / A-10: Support Center & Ticketing**: Provider support request and feedback submission management with two-way communication
-  - **Why needed**: Provider submissions via Screen 5.5 (Contact Support) and Screen 5.6 (Feedback & Suggestions) automatically create support cases in FR-034 ticketing system; providers need to view case status, read admin responses, and reply within communication thread
-  - **Integration point**: Form submissions create support cases with provider ID linked and Ticket Source = "Provider Portal", Submitter Type = "Provider"; providers view and interact with their cases through Screen 5.7 (My Support Cases) which queries FR-034 case data including full communication thread; provider replies sent to FR-034 Communication Thread appear in admin's case detail view (FR-034 Screen 3); notification events (support.case_admin_reply, support.case_user_reply) trigger via S-03
-
-### External Dependencies (APIs, Services)
-
-- **S-02 Payment Processing Service**: Bank account validation
-  - **Purpose**: Validates bank account details format before saving in billing settings
-  - **Integration**: RESTful API call to S-02 with bank account details (account number, SWIFT/routing code, IBAN)
-  - **Failure handling**: If S-02 validation fails, display error message to provider and prevent saving; provider must correct bank details and retry
-
-- **S-03 Notification Service**: Notification preference enforcement
-  - **Purpose**: Enforces provider notification preferences when sending notifications
-  - **Integration**: System updates S-03 preference database when provider saves notification preferences; S-03 queries preferences before sending each notification
-  - **Failure handling**: If S-03 unavailable during preference save, queue preference update for retry; provider sees success message but preferences may take up to 5 minutes to propagate
-
-### Data Dependencies
-
-- **Entity 1: Provider Profile Data (from PR-01: Auth & Team Management)**: Provider account information
-  - **Why needed**: Settings module requires existing provider account with clinic name, email, and role information
-  - **Source**: Provider onboarding module (A-02: Provider Management & Onboarding creates provider account; PR-01 manages team members)
-
-- **Entity 2: System Configuration Data (from A-09: System Settings & Configuration / FR-026 and FR-021)**: FR-021 language/locale catalog for provider spoken-language capacity, plus FR-026 country codes, timezone list, and password policy
-  - **Why needed**: Account settings and profile require system-wide configuration data
-  - **Source**: FR-021 provides canonical language/locale options for provider spoken-language chips; FR-026 provides country codes, timezone options, and security policy data consumed by settings module
-
-- **Entity 3: Help Centre Content (from FR-033: Help Centre Content Management)**: FAQs, guides, videos, resources
-  - **Why needed**: Help Centre displays admin-managed content
-  - **Source**: A-09 (admins create and manage Help Centre content via FR-033)
-
----
-
-## Assumptions
-
-### User Behavior Assumptions
-
-- **Assumption 1**: Providers will complete profile setup (logo, description, awards) within first 7 days of account activation to maximize patient quote requests
-- **Assumption 2**: Providers will enable at least email notifications (most providers prefer email over push)
-- **Assumption 3**: Provider Owners will add bank account details before completing first treatment (required for receiving payouts)
-- **Assumption 4**: Providers will use Help Centre for common questions before contacting support (self-service first)
-
-### Technology Assumptions
-
-- **Assumption 1**: Providers access web platform via modern browsers (Chrome, Safari, Firefox, Edge - last 2 versions) per NFR-006
-- **Assumption 2**: Providers have stable internet connection for image uploads (logo, awards)
-- **Assumption 3**: Providers have access to bank account information (account number, SWIFT/routing code) when setting up billing
-- **Assumption 4**: Help Centre content (videos, documents) delivered via CDN for fast loading
-
-### Business Process Assumptions
-
-- **Assumption 1**: Admins update Help Centre content at least monthly to keep resources current and relevant
-- **Assumption 2**: Admins review and process provider account closure requests within 5 business days
-- **Assumption 3**: Provider profile updates (logo, awards) reviewed by admin for quality assurance (future enhancement, not MVP)
-- **Assumption 4**: Bank account details remain valid for at least 12 months; providers responsible for updating if bank account changes
-
----
-
-## Implementation Notes
-
-### Technical Considerations
-
-- **Architecture**: Settings module requires real-time synchronization with S-03 Notification Service for preference enforcement; use message queue for asynchronous preference updates to prevent blocking
-- **Technology**: Image uploads (logo, awards) should use resumable upload protocol to handle network interruptions during large file uploads
-- **Performance**: Profile updates should use optimistic UI updates (display success immediately, synchronize with backend asynchronously) to improve perceived performance
-- **Storage**: Bank account details encrypted at rest using AES-256; encryption keys managed via secure key management service (e.g., AWS KMS, Google Cloud KMS)
-
-### Integration Points
-
-- **Integration 1**: Provider Settings → S-03 Notification Service (notification preference enforcement)
-  - **Data format**: JSON payload with provider ID, notification type toggles (quote, schedule, treatment, aftercare, review), channel preferences (email, push)
-  - **Authentication**: OAuth 2.0 bearer token (service-to-service)
-  - **Error handling**: Retry with exponential backoff on 5xx errors; if S-03 unavailable for >5 minutes, log error and notify admin
-
-- **Integration 2**: Billing Settings → S-02 Payment Service (bank account validation)
-  - **Data format**: JSON payload with account holder name, bank name, account number, SWIFT/routing code, IBAN, country code
-  - **Authentication**: OAuth 2.0 bearer token (service-to-service)
-  - **Error handling**: Display S-02 validation error message to provider; prevent saving until validation succeeds
-
-- **Integration 3**: Help Centre → Admin Content Database (read-only content display)
-  - **Data format**: JSON API response with Help Centre content (categories, articles, FAQs, videos, resources)
-  - **Authentication**: Internal API (user authentication required, RBAC enforced per FR-009 as this is an authenticated provider area)
-  - **Error handling**: If content unavailable, display cached version with "Content may be outdated" warning; retry after 1 minute
-
-### Scalability Considerations
-
-- **Current scale**: Expected 100-200 providers updating settings daily at launch
-- **Growth projection**: Plan for 1,000 providers updating settings daily within 12 months
-- **Peak load**: Handle 10x normal load during onboarding campaigns (1,000 concurrent profile updates)
-- **Data volume**: Expect 500KB average per provider profile (logo, awards, settings); total ~50MB for 100 providers, ~500MB for 1,000 providers
-- **Scaling strategy**: Horizontal scaling of API servers; CDN for image delivery (logos, awards); database read replicas for Help Centre content
-
-### Security Considerations
-
-- **Authentication**: Multi-factor authentication (MFA) required for Owner role when accessing billing settings (future enhancement)
-- **Authorization**: Role-based access control (RBAC) enforced for billing settings (Owner role only); API endpoints validate user role before allowing access
-- **Encryption**: All provider data encrypted in transit (TLS 1.3) and at rest (AES-256); bank account details use field-level encryption with separate encryption keys
-- **Audit trail**: Log all settings changes (profile, account, notifications, billing) with timestamp, user ID, IP address, action, old value, new value
-- **Threat mitigation**: Rate limiting on password change endpoint (max 5 attempts/hour/user) to prevent brute force attacks; rate limiting on image upload endpoint (max 10 uploads/hour/user) to prevent abuse
-- **Compliance**: GDPR-compliant account closure (FR-015 deactivation with data archival); PCI-DSS compliance for bank account data handling (no card data stored, only bank account details for payouts)
+- FR-015: Commission display and account status
+- FR-020 / S-03: Notification preferences integration
+- FR-021: Language options for provider profile capacity
+- FR-026: Country codes, timezone options, password policy
+- FR-009: Role-based access control for billing settings
+- FR-017: Bank account details for payouts
+- FR-033: Help Centre content
+- FR-034: Provider support request and feedback submission management with two-way communication
 
 ---
 
@@ -1963,25 +1839,25 @@ A provider closing their clinic permanently requests account closure, and an adm
 ### Edge Cases
 
 - What happens when **provider uploads 10MB logo image exceeding 5MB limit**?
-  - System validates image size during upload, detects size exceeds limit, displays error "Image too large. Maximum size is 5MB. Please compress or choose a smaller image.", and prevents upload until valid image selected
+  - System validates image size during upload, detects size exceeds limit, displays error "Image too large. Maximum size is 5MB. Please compress or choose a smaller image.", and prevents upload until valid image selected (REQ-032-001)
 
 - How does system handle **provider changes password to same as current password**?
-  - System validates new password ≠ current password, detects match, displays error "New password must be different from current password", and prevents password change until different password entered
+  - System validates new password ≠ current password, detects match, displays error "New password must be different from current password", and prevents password change until different password entered (REQ-032-065)
 
 - What occurs if **S-03 Notification Service unavailable when provider saves notification preferences**?
-  - System attempts to update S-03 with new preferences, detects S-03 unavailable (timeout or 5xx error), queues preference update for retry (exponential backoff), displays success message to provider "Notification preferences updated" (optimistic UI), logs error for admin monitoring, and retries preference update every 1 minute for up to 5 minutes; if S-03 still unavailable after 5 minutes, admin receives alert
+  - System attempts to update S-03 with new preferences, detects S-03 unavailable (timeout or 5xx error), queues preference update for retry (exponential backoff), displays success message to provider "Notification preferences updated" (optimistic UI), logs error for admin monitoring, and retries preference update every 1 minute for up to 5 minutes; if S-03 still unavailable after 5 minutes, admin receives alert (REQ-032-083)
 
 - What happens when **S-02 Payment Service returns validation error for bank account details**?
-  - System receives validation error from S-02 (e.g., "Bank not found" or "SWIFT code mismatch"), displays error message to provider "Bank account validation failed: [error detail from S-02]. Please verify your bank details and try again.", prevents saving bank account details, and provider must correct details and retry
+  - System receives validation error from S-02 (e.g., "Bank not found" or "SWIFT code mismatch"), displays error message to provider "Bank account validation failed: [error detail from S-02]. Please verify your bank details and try again.", prevents saving bank account details, and provider must correct details and retry (REQ-032-087)
 
 - How does system handle **provider Owner changes role to Admin (no longer Owner)**?
-  - When admin changes provider's role from Owner to Admin (via FR-009), system detects role change, and next time user navigates to Settings & Support > Settings, the Billing tab is hidden from navigation (non-owner cannot see or access billing settings); existing bank account details remain saved and accessible to new Owner role user
+  - When admin changes provider's role from Owner to Admin (via FR-009), system detects role change, and next time user navigates to Settings & Support > Settings, the Billing tab is hidden from navigation (non-owner cannot see or access billing settings); existing bank account details remain saved and accessible to new Owner role user (REQ-032-089)
 
 - What occurs if **Help Centre content fails to load due to network issue**?
-  - System attempts to fetch Help Centre content from admin content database, detects network timeout or error, displays cached version of Help Centre content (if available) with warning banner "Content may be outdated. Please refresh to load latest updates.", and provides "Retry" button for manual refresh
+  - System attempts to fetch Help Centre content from admin content database, detects network timeout or error, displays cached version of Help Centre content (if available) with warning banner "Content may be outdated. Please refresh to load latest updates.", and provides "Retry" button for manual refresh (REQ-032-097)
 
 - How to manage **provider uploads award image with virus or malicious content**?
-  - System scans uploaded image using anti-virus/malware scanning service (e.g., ClamAV), detects malicious content, deletes uploaded file, displays error "Image upload blocked due to security concerns. Please try a different image or contact support if this was a mistake.", logs security event for admin review, and prevents award image from being saved
+  - System scans uploaded image using anti-virus/malware scanning service (e.g., ClamAV), detects malicious content, deletes uploaded file, displays error "Image upload blocked due to security concerns. Please try a different image or contact support if this was a mistake.", logs security event for admin review, and prevents award image from being saved (REQ-032-048)
 
 ---
 
@@ -2032,57 +1908,11 @@ A provider closing their clinic permanently requests account closure, and an adm
 
 ---
 
-## Key Entities
-
-- **Entity 1 - Provider Profile**: Represents clinic public-facing profile information
-  - **Key attributes**: provider ID, clinic logo URL, optional cover image URL (static asset reference), clinic name, clinic description, contact email, public clinic phone, clinic website URL, clinic country, clinic city, supported languages (array), awards (array of award objects: name, issuer/organization, description, year, image URL), last updated timestamp, updated by user ID
-  - **Relationships**: One provider has one profile; one profile has many awards; profile displayed to many patients during quote comparison
-
-- **Entity 2 - Provider Account Settings**: Represents provider account configuration
-  - **Key attributes**: provider ID, phone number (international format), country code, timezone, password hash, last password change date, password change history (timestamps), last updated timestamp
-  - **Relationships**: One provider has one account settings record; account settings linked to provider profile
-
-- **Entity 3 - Provider Notification Preferences**: Owned by FR-030 (Notification Rules & Configuration). Screen 3 shows and edits it: six notification type toggles (quote, schedule, treatment start, aftercare, review, promotion/discount) and the email and push channels, one record per provider organization.
-
-- **Entity 4 - Provider Billing Settings**: Represents provider bank account details for payouts
-  - **Key attributes**: provider ID, account holder name, bank name, account number (encrypted), routing/SWIFT code, IBAN (if applicable), last updated timestamp, updated by user ID (Owner role), S-02 validation status
-  - **Relationships**: One provider has one billing settings record (accessible only to Owner role); billing settings used by FR-017 for provider payouts
-
-- **Entity 5 - Provider Account Closure Request**: Represents provider account closure request workflow
-  - **Key attributes**: request ID, provider ID, reason for closure, request date, requested by user ID, status (Pending Admin Review / Approved / Rejected), reviewed by admin ID, review date, review notes, FR-015 deactivation status event ID (set when Approved)
-  - **Relationships**: One provider can have multiple closure requests (but only one "Pending" at a time); closure request reviewed by one admin; an approved request links to one FR-015 deactivation status event
-
-- **Entity 6 - Help Centre Content (Admin-Managed)**: Represents help resources displayed to providers
-  - **Key attributes**: content ID, category (FAQ / Tutorial Guide / Troubleshooting / Policy Information / Resource Library / Video Tutorial), title, body (HTML/Markdown), attachments (file URLs), created date, created by admin ID, last updated date, updated by admin ID
-  - **Relationships**: Help Centre content created and managed by admins (FR-033); one provider can view many help centre content items (read-only)
-
-- **Entity 7 - Provider Reviews View**: Represents aggregated reviews and list data shown in Tab 5 (Reviews tab) within Screen 1 (Provider Profile)
-  - **Key attributes**: provider ID, average rating, total reviews count, rating distribution (counts per star), reviews array (review ID, reviewer name, avatar URL, rating, review text, treatment type, review date, response status), last sync timestamp
-  - **Relationships**: Data sourced from Reviews module/service; provider can filter/sort and post responses via FR-013 Screen 6 response composer, but cannot edit or delete review records within FR-032
-
----
-
 ## Appendix: Change Log
 
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
-| 2025-11-17 | 1.0 | Initial PRD creation for FR-032: Provider Dashboard Settings & Profile Management | AI/Claude |
-| 2025-12-03 | 1.1 | Major updates: Removed SMS functionality throughout; Reorganized Screen 1 (Profile Management) into 5 tabs (Basic Information, Languages, Staff List, Awards, Reviews) with detailed inline editing specifications; Added account name unification rules (Owner accounts unified with clinic name, Staff accounts editable); Removed Screen 6 (Reviews now Tab 5 in Screen 1); Reorganized Screen 5 (Help Centre) into 7 subscreens with distinct layouts (FAQs, Articles, Resource Library, Video Tutorials, Contact Support, Feedback, Service Status); Updated navigation paths to "Settings & Support > Settings" and "Settings & Support > Provider profile"; Removed password change after 90 days requirement; Added per-tab save functionality with unsaved changes indicators; Updated language list references to FR-026 (centrally managed with country list); Removed admin metrics (profile completion, notification trends); Updated non-owner access restrictions (hidden tabs instead of error messages); Removed preview public profile functionality; Removed profile picture circle shape requirement and drag-and-drop; Updated all field specifications with inline editing details | AI/Claude |
-| 2025-12-07 | 1.2 | **Major update - Full document management capabilities:** Added Tab 6: Documents to Screen 1 (Profile Management) with full provider document management (upload, replace, delete, view); Providers can now manage their own compliance documents (medical licenses, certifications, insurance) with drag-and-drop upload, file validation (PDF/JPG/PNG/DOCX/XLSX, max 10MB), document versioning (old versions archived on replace), soft delete, and optional notes; Admin-uploaded documents display "Admin" badge and are view-only for providers; Added document sync with FR-015 (bidirectional, within 1 minute); Updated Tab 3: Staff List to clarify display-only nature with "Manage Team" button linking to FR-009 for full staff management; Added Seat Usage Summary to Tab 3 showing current usage vs. seat limit; Updated Screen 1 tab count from 5 to 6 tabs; Updated General Business Rules to accurately reflect tab editability (Fully Editable: Tabs 1,2,4,6; Display-Only with External Management: Tab 3 via FR-009; Read-Only: Tab 5 Reviews); Added security rules (time-limited signed URLs), audit logging, sort/filter options, and comprehensive empty/error/loading state handling | AI/Claude |
-| 2026-01-26 | 1.3 | **Added two-way communication for support cases with screen structure improvements:** Split support case functionality into 3 dedicated screens for clarity: **Screen 5.7 (My Support Cases List)** with filters, search, quick stats, and merged table column specifications into Data Fields (consistent with other PRDs); **Screen 5.8 (Support Case Detail View)** with complete case information, communication thread, reply interface, timeline, and export capability; **Screen 5.9 (Reopen Case Request Modal)** for reopening closed cases with reason tracking; Renumbered Screen 5.8 (Service Status) to Screen 5.10; Providers can now view all submitted cases (support requests + feedback) in unified list, view case details with full communication thread, reply to admin messages with attachments, track status and feedback resolution, request case reopening, and export cases as PDF/CSV; Added Quick Stats Bar showing Open, In Progress, Resolved, and Unread Messages counts; Added comprehensive filtering (status, type, date range), real-time search, and unread message indicators; Added new business workflow "View and Reply to Support Cases" with 3 alternative flows (reopen closed case, filter/search cases, receive admin reply notification); Added User Story 6 (View and Reply to Support Cases) with 4 comprehensive acceptance scenarios; Renumbered User Story 6 (Request Account Deletion) to User Story 7; Updated Multi-Tenant Breakdown to document two-way communication capability; Updated FR-034 integration point to clarify communication architecture and notification events (support.case_admin_reply, support.case_user_reply); Updated Help Centre category navigation to include "My Support Cases" link; All changes ensure providers have same two-way communication experience as patients (FR-035) for support cases managed in FR-034 unified ticketing system | AI/Claude |
-| 2026-01-26 | 1.4 | **Removed Case export functionality:** Removed Export Case Button from Screen 5.8 (Support Case Detail View); Removed Export Filtered Cases Button from Screen 5.7 (My Support Cases List); Removed all export-related business rules and constraints; Removed export steps from Business Workflow A2 and User Story 6 acceptance scenario 4; Case export feature was accidentally included and is now removed from both provider-facing (FR-032) and admin-facing (FR-034) specifications | AI/Claude |
-| 2026-05-14 | 1.5 | **Aligned Reviews tab scope with FR-013:** Removed read-only / future-enhancement designation for provider responses. Tab 5 (Reviews) is now "Read/Respond" — review content remains read-only but providers can post public responses via the FR-013 Screen 6 inline response composer. Updated: module scope bullet (line ~54), Tab 5 Purpose, Tab 5 Business Rules, General Business Rule 5, Entity 7 name and description. Resolves scope conflict identified in FR-013 verification. | Verification alignment (2026-05-14) |
-| 2026-10-15 | 1.6 | FR-015 v1.11 alignment via [CR-FR032-20261015-01](change-request-2026-10-15-provider-commission-panel-suspension-banner.md): added read-only Commission & Payout panel to Screen 4 (Owner only); added Rule 6 provider account-status banner (Suspended banner with admin reason and view-only restrictions, Deactivated login block, Reactivated removal); added REQ-032-029 and REQ-032-030 and an FR-015 internal dependency | Claude |
-| 2026-10-15 | 1.7 | Clarification from FR-015 v1.12 fourth verification: Screen 4 Scheduled Configuration shows at most one pending configuration per provider, and a newer future-dated admin edit replaces it, per FR-015 Tab 7 and [CR-FR029-20261015-01](../fr029-payment-system-config/change-request-2026-10-15-single-provider-scope-scheduled-commission.md). No change to provider permissions or screen layout | Claude |
-| 2026-10-15 | 1.8 | FR-015 v1.14 alignment via [CR-FR032-20261015-02](change-request-2026-10-15-account-closure-deactivation-request.md): Delete Account became Request account closure; an admin processes it by deactivating the provider in FR-015 (Alternative Flow A7, Screen 4 cascade). Removed the "Deleted" status and the active-booking and pending-payout blocks (former B13 and B14 of the closure flow). Updated Screen 2 card, Privacy Rule 3, Audit and GDPR rules, Assumption 2, User Story 7, REQ-032-013, REQ-032-020, REQ-032-023, and Entity 5. Minor: Contact Email uniqueness counts Active and Suspended providers only (FR-015 Rule 4) | Claude |
-| 2026-10-15 | 1.9 | FR-015 v1.16 alignment via [CR-FR032-20261015-03](change-request-2026-10-15-closure-request-notifications.md): Request Account Closure step 10 sends FR-020 `provider.closure_requested` to admins and flags the provider in FR-015 Screen 1; step 15 deactivation email is always sent (Notify Provider locked on in FR-015 A7); step 16 rejection sends `provider.closure_rejected` with review notes | Claude |
-| 2026-10-16 | 1.10 | MTG-002 notification alignment via [CR-FR032-20261016-01](change-request-2026-10-16-mtg002-quote-model-alignment.md): removed provider control over the inquiry-cancelled quote notice (`quote.cancelled_inquiry`); the Quote Notifications toggle, Disable All and channel preferences no longer suppress it; updated Main Flow step 4, Alternative Flow A5, Screen 3 and Rule 2, and added REQ-032-031. Aligns with FR-020 v2.8 and FR-030 v1.13. Decision Q12. Status reset to pending consolidated verification. | Claude |
-| 2026-10-18 | 1.11 | Consolidated verification corrections via [CR-FR032-20261016-01](change-request-2026-10-16-mtg002-quote-model-alignment.md): User Story 2 scenario 2 now states that "all disabled" still lets critical system alerts and mandatory notices such as `quote.cancelled_inquiry` through (Q12). | Product Owner / Documentation |
-| 2026-10-18 | 1.12 | Final audit corrections via [CR-FR032-20261016-01](change-request-2026-10-16-mtg002-quote-model-alignment.md): the preference exemption now covers every mandatory provider notice (`quote.cancelled_inquiry`, the `quote.accepted` outcomes, `booking.payment_window_expired`, `booking.revived` and the new mandatory `booking.rescheduled`, Q42), not only the inquiry-cancelled notice, in Main Flow step 4, Screen 3 fields and rules, Rule 2 and REQ-032-031. Later the same day (decision Q47): the mandatory FR-011 aftercare reassignment notice `aftercare.provider_reassigned` is added to the mandatory provider notices that preferences cannot suppress (Screen 3 rules, Rule 2, REQ-032-031). | Product Owner / Documentation |
-| 2026-10-27 | 1.13 | FR-015 v1.22 alignment (Product Owner decisions, 2026-10-27): added the Concurrent Edits Rule (provider profile saves are last-save-wins, no conflict check), mentioned in [CR-FR015-20261027-01](../fr015-provider-management/change-request-2026-10-27-save-conflict-encryption-seat-usage.md); Rule 6 Suspended now keeps chat with patients on open In Progress and Aftercare cases while clinical notes, photos, and aftercare actions stay blocked until the admin decides; Request Account Closure steps 12 and 15: a request with a scheduled deactivation stays Pending Admin Review until the deactivation takes effect, and stays pending if the scheduled change is cancelled. Open bookings and pending payouts already never block a closure request (step 8, User Story 7 scenario 3); no change | Product Owner / Documentation |
-| 2026-10-28 | 1.14 | Product Owner decision 2026-10-28 (FR-015 backend confirmations); clarification, no new Change Request. Concurrent Edits Rule: a save applies only the fields the user changed and does not rewrite untouched fields, so last save wins only when two people change the same field; no conflict check or message (unchanged). Matches FR-015 v1.23 and the 2026-10-28 note in CR-FR015-20261027-01 | Product Owner / Documentation |
-| 2026-11-20 | 1.15 | Requirements graph programme baseline: owner rulings applied. Main changes: Provider Notification Preferences record is now owned by FR-030 (Entity 3 is a pointer; Screen 3 still shows and edits it); Screen 4 Commission & Payout panel also shows the payout method (set by the admin when the clinic is created in FR-015) and payout readiness, read-only; audit rule names the masked values (bank details, password, phone, email); mandatory-notice, closure-notice and support-reply Rules shortened to point to the notification Rules (FR-020, FR-030); Help Centre search and Reviews filter/sort rules moved to FR-022 (REQ-022-081, REQ-022-084); default My Support Cases view now shares one Rule with FR-034 (REQ-034-114) and the case list filter options are stated here (REQ-022-086 retired); empty Help Centre search message added; confirmation message uses Case #; promotion toggle added to the six-toggle list and all toggles default on; reopen priority options and Contact Support fields corrected; staff first and last name rules follow FR-009; support reply and feedback limits follow FR-034 (5000 characters, 5 attachments); Policy Information added to Help Centre content categories; cross-document reconciliation (retention, system rule citations, payout wording) | Product Owner / Documentation |
-| 2026-11-22 | 1.16 | Consistency review: Account Email uniqueness wording aligned to FR-009 Rule 3 (the owner of the provider email identity rule). | Product Owner / Documentation |
+| 2026-11-22 | 1.17 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.16) and the change requests CR-FR032-20261015-01, CR-FR032-20261015-02, CR-FR032-20261015-03, CR-FR032-20261016-01, CR-FR015-20261027-01 and CR-FR029-20261015-01 are in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
 
 ---
 
@@ -2090,9 +1920,6 @@ A provider closing their clinic permanently requests account closure, and an adm
 
 | Role | Name | Date | Signature/Approval |
 |------|------|------|--------------------|
-| Product Owner | [Name] | 2025-12-03 | ✅ Approved |
-| Technical Lead | [Name] | 2025-12-03 | ✅ Approved |
-| Stakeholder | [Name] | 2025-12-03 | ✅ Approved |
 | Product Owner | Joachim Trung Tuan | 2026-10-18 | Approved FR-032 v1.10 to v1.12 via MTG-002 decision log (documentation only), including CR-FR032-20261016-01 |
 | Product Owner | Joachim Trung Tuan | 2026-10-27 | Approved FR-032 v1.13 (documentation only) |
 
