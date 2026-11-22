@@ -5,7 +5,6 @@
 **Created**: 2025-11-12
 **Status**: 🟡 Revised — Pending Consolidated Verification
 **Source**: FR-022 from system-prd.md
-**Change Request**: [CR-FR022-20261016-01 — MTG-002 quote model alignment](change-request-2026-10-16-mtg002-quote-model-alignment.md)
 
 ---
 
@@ -41,24 +40,24 @@ The feature spans all three tenants:
 
 **Patient Platform** [Mixed Priority]:
 
-- **P2 — Post-MVP**: Search providers by name and specialty; filter by country and rating (P-02 quote request flow, per FR-003 Screen 7a)
-- **P1 — MVP**: Search and filter messages inbox by provider/content and read status (P-06, per FR-012)
-- **P1 — MVP**: Search help center content; filter support tickets by status (P-08)
+- **P2 — Post-MVP**: Search providers by name and specialty; filter by country and rating (P-02 quote request flow, per FR-003 Screen 7a) (REQ-022-013, REQ-022-014)
+- **P1 — MVP**: Search and filter messages inbox by provider/content and read status (P-06, per FR-012) (REQ-022-070)
+- **P1 — MVP**: Search help center content; filter support tickets by status (P-08) (REQ-022-051, REQ-022-052)
 
 **Provider Platform** [Mixed Priority]:
 
-- **P1 — MVP / Team Management (PR-01)**: Search and filter team directory by name, role, status. _(Activity log and work queue filter specs are defined in FR-009 Screen 6; see FR-009 as source of truth for those.)_
-- **P1 — MVP / Inquiry & Quote Management (PR-02)**: Search and filter inquiries by patient ID, concern, date, alerts, location (patient name excluded from search pre-payment confirmation); search and filter quotes by status, concern, location, alerts
-- **P1 — MVP / Treatment Execution (PR-03)**: Search and filter treatment cases by patient ID, name, booking reference; filter by date and clinician
-- **P1 — MVP / Aftercare Participation (PR-04)**: Search and filter aftercare cases by patient; filter by milestone, status, and date
-- **P1 — MVP / Financial Management (PR-05)**: Filter analytics dashboard by date range and treatment type
-- **P1 — MVP / Profile & Settings (PR-06)**: Search Help Centre content globally; filter provider FAQs by topic; filter Resource Library content by category and file type; filter reviews by rating; search and filter support cases by case ID, keywords, status, type, and date range
+- **P1 — MVP / Team Management (PR-01)**: Search and filter team directory by name, role, status. _(Activity log and work queue filter specs are defined in FR-009 Screen 6; see FR-009 as source of truth for those.)_ (REQ-022-044)
+- **P1 — MVP / Inquiry & Quote Management (PR-02)**: Search and filter inquiries by patient ID, concern, date, alerts, location (patient name excluded from search pre-payment confirmation); search and filter quotes by status, concern, location, alerts (REQ-022-033, REQ-022-034, REQ-022-035, REQ-022-036)
+- **P1 — MVP / Treatment Execution (PR-03)**: Search and filter treatment cases by patient ID, name, booking reference; filter by date and clinician (REQ-022-037, REQ-022-038)
+- **P1 — MVP / Aftercare Participation (PR-04)**: Search and filter aftercare cases by patient; filter by milestone, status, and date (REQ-022-039)
+- **P1 — MVP / Financial Management (PR-05)**: Filter analytics dashboard by date range and treatment type (REQ-022-040)
+- **P1 — MVP / Profile & Settings (PR-06)**: Search Help Centre content globally; filter provider FAQs by topic; filter Resource Library content by category and file type; filter reviews by rating; search and filter support cases by case ID, keywords, status, type, and date range (REQ-022-042, REQ-022-043)
 - **P1 — MVP / Communication & Messaging (PR-07)**: Search and filter provider message threads via FR-012 secure messaging
 
 **Admin Platform (A-01, A-02, A-03, A-05, A-06, A-07, A-09, A-10)** [P1 - MVP]:
 
-- **Patient Search & Filtering (A-01)**: Search patients by name, email, phone, patient ID (HPID format); filter by status, location, registration date
-- **Provider Search & Filtering (A-02)**: Search providers by provider name, clinic name, email, and license number; filter by status, featured designation, commission type, and creation/last activity date
+- **Patient Search & Filtering (A-01)**: Search patients by name, email, phone, patient ID (HPID format); filter by status, location, registration date (REQ-022-001, REQ-022-002)
+- **Provider Search & Filtering (A-02)**: Search providers by provider name, clinic name, email, and license number; filter by status, featured designation, commission type, and creation/last activity date (REQ-022-003, REQ-022-004)
 - **Aftercare Team Management (A-03)**: Search aftercare cases by case ID; filter by provider, milestone, case status, date range, risk level, specialist assignment, completion rate (FR-011 / Screen 13)
 - **Billing & Financial Reconciliation (A-05)**: Search and filter invoices, transactions, the billing audit log, installment plans and affiliate payouts as set out on their owning screens (FR-017 / Screens 4 and 7, FR-007b / Screen 5, FR-018 / Screen 7)
 - **Discount & Promotion Management (A-06)**: Search and filter discount codes by code, provider participation, status, usage, date range, ROI
@@ -84,7 +83,7 @@ The feature spans all three tenants:
 
 ### Entry Points
 
-**Patient Platform** [Mixed Priority]:
+**Patient Platform** [Mixed Priority]: (REQ-022-059)
 
 - **P2 / Provider Search**: Accessed when patient begins quote request flow and needs to select destination/providers
 - **P2 / Provider Search**: Triggered from "Choose Destination" or "Select Providers" screens
@@ -92,7 +91,7 @@ The feature spans all three tenants:
 - **P1 / Messaging**: Accessed from the patient communications inbox
 - **P1 / Help & Support**: Accessed from the Help & Support hub, Help Center, and My Support Tickets screens
 
-**Provider Platform** [Mixed Priority]:
+**Provider Platform** [Mixed Priority]: (REQ-022-059)
 
 - **PR-01 (Team)**: Accessed from Provider Dashboard → Team tab → Team Directory (FR-009/Screen 10)
 - **PR-02 (Inquiries/Quotes)**: Accessed from Provider Dashboard → Inquiries tab → Inquiry List (FR-003/Screen 9) and Quotes List (FR-004/Screen 2)
@@ -102,7 +101,7 @@ The feature spans all three tenants:
 - **PR-06 (Profile/Settings)**: Accessed from Provider Dashboard → Profile/Settings section — Packages (FR-024/Screen 4), Help Centre (FR-032/Screen 5), Reviews (FR-032/Screen 1 Tab 5), Support Cases (FR-032/Screen 5.7)
 - **PR-07 (Messaging) [P1 - MVP]**: Accessed from the provider secure messaging inbox
 
-**Admin Platform** [P1 - MVP]:
+**Admin Platform** [P1 - MVP]: (REQ-022-059)
 
 - **Module-Specific Search**: Each admin module (A-01 through A-10) provides context-specific search and filtering within its own interface
 
@@ -114,7 +113,7 @@ The feature spans all three tenants:
 
 **Actors**: Admin, System
 **Trigger**: Admin needs to find patient record(s) for support, inquiry status check, or booking modification — using keyword search, filters, or both
-**Outcome**: Admin finds relevant patient(s) and views details
+**Outcome**: Admin finds relevant patient(s) and views details (REQ-022-060, REQ-022-061)
 
 **Flow Diagram**:
 
@@ -144,7 +143,7 @@ flowchart TD
 
 **Actors**: Admin, System
 **Trigger**: Admin needs to find provider(s) for onboarding verification, performance review, or billing — using keyword search, filters, or both
-**Outcome**: Admin finds relevant provider(s) and views details
+**Outcome**: Admin finds relevant provider(s) and views details (REQ-022-060, REQ-022-061)
 
 **Flow Diagram**:
 
@@ -174,7 +173,7 @@ flowchart TD
 
 **Actors**: Patient, System
 **Trigger**: Patient begins quote request and needs to discover and select providers — using destination selection, keyword search, filters, or any combination
-**Outcome**: Patient discovers and selects up to 5 providers for a quote request
+**Outcome**: Patient discovers and selects up to 5 providers for a quote request (REQ-022-060, REQ-022-061)
 
 **Flow Diagram**:
 
@@ -275,7 +274,7 @@ flowchart TD
 
 - **Actors**: Patient, clinic user, or admin (any one of them; each searches on their own and none depends on another), System
 - **Trigger**: Search term or filter combination matches no records
-- **Outcome**: Clear feedback guides user to refine or reset criteria
+- **Outcome**: Clear feedback guides user to refine or reset criteria (REQ-022-062)
 - **Flow Diagram**:
 
 ```mermaid
@@ -296,7 +295,7 @@ flowchart TD
 
 - **Actors**: Patient, clinic user, or admin (any one of them; each searches on their own and none depends on another), System
 - **Trigger**: Backend database connection fails during a search query
-- **Outcome**: Graceful error handling with retry capability and engineering alert
+- **Outcome**: Graceful error handling with retry capability and engineering alert (REQ-022-063)
 - **Flow Diagram**:
 
 ```mermaid
@@ -392,13 +391,13 @@ The states below apply uniformly to every screen in this document. Individual sc
 
 | State | View | Trigger | UI Behavior | System Behavior | Visual Indicator |
 |-------|------|---------|-------------|-----------------|------------------|
-| Search Inactive | Search | Default; no input in search field | Placeholder text shown; full default list visible | No query fired; list displays default results | Dimmed placeholder text; neutral input border |
-| Search Active | Search | User types in search field | Typed text visible; clear (×) button appears | Debounced query fires (300–500ms per screen spec); list filters to matching results | Active input border; clear (×) button visible |
-| Filter Inactive | Filter | Default; no filters applied | Filter button in neutral state; no filter chips visible | Default query runs; full result set shown | Neutral filter icon; no chips |
-| Filter Active | Filter | One or more filter controls changed from default | Active filter chips shown below filter bar; filter button highlighted | AND-logic applied across all active filters; list narrows; result count updates | Highlighted filter icon; active chips visible |
-| Reset Filter | Filter | User taps "Clear Filters" / "Reset" / selects default option | All filter controls return to their default values; chips cleared | All filter parameters cleared; default result set restored | Chips removed; filter icon returns to neutral |
+| Search Inactive | Search | Default; no input in search field | Placeholder text shown; full default list visible | No query fired; list displays default results | Dimmed placeholder text; neutral input border [REQ-022-064] |
+| Search Active | Search | User types in search field | Typed text visible; clear (×) button appears | Debounced query fires (300–500ms per screen spec); list filters to matching results | Active input border; clear (×) button visible [REQ-022-064] |
+| Filter Inactive | Filter | Default; no filters applied | Filter button in neutral state; no filter chips visible | Default query runs; full result set shown | Neutral filter icon; no chips [REQ-022-065] |
+| Filter Active | Filter | One or more filter controls changed from default | Active filter chips shown below filter bar; filter button highlighted | AND-logic applied across all active filters; list narrows; result count updates | Highlighted filter icon; active chips visible [REQ-022-065] |
+| Reset Filter | Filter | User taps "Clear Filters" / "Reset" / selects default option | All filter controls return to their default values; chips cleared | All filter parameters cleared; default result set restored | Chips removed; filter icon returns to neutral [REQ-022-065] |
 
-**Filter Logic Note**: AND logic applies _across_ different active filter types simultaneously — a result must satisfy all active filter conditions at once. Within a single multi-select filter field, selected values are combined with OR logic — a result matches if it satisfies _any_ of the selected values for that field. The "OR (within field)" label in the Logic column of multi-select filter tables reflects this within-field OR behavior.
+**Filter Logic Note**: AND logic applies _across_ different active filter types simultaneously — a result must satisfy all active filter conditions at once. Within a single multi-select filter field, selected values are combined with OR logic — a result matches if it satisfies _any_ of the selected values for that field. The "OR (within field)" label in the Logic column of multi-select filter tables reflects this within-field OR behavior. (REQ-022-066)
 
 ---
 
@@ -414,25 +413,25 @@ The states below apply uniformly to every screen in this document. Individual sc
 
 ###### FR-003 / Screen 7a: Provider Selection [P2 — Post-MVP]
 
-**Purpose**: Patient searches for and selects providers during the quote request flow.
+**Purpose**: Patient searches for and selects providers during the quote request flow. (REQ-022-067)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Max Length | Notes |
-|-------|------|-------------|----------|------------|-------|
-| Provider name / keyword | text | "Search providers…" | 500ms | 50 chars | Case-insensitive; matches provider name and specialty tags |
+| Field | Type | Placeholder | Debounce | Max Length | Notes | Graph field |
+|-------|------|-------------|----------|------------|-------|---------------|
+| Provider name / keyword | text | "Search providers…" | 500ms | 50 chars | Case-insensitive; matches provider name and specialty tags | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Country / Destination | Multi-select chips | Patient's previously selected destination countries | All selected countries | AND within selection |
-| Rating | Star selector | All, 4+ stars, 4.5+ stars | All | Min threshold |
-| Specialty | Dropdown | Hair Transplant, Beard Transplant, Both | All | Exact match |
-| Active Status | Segmented | All, Active Only | Active Only | Single selection |
-| Available Capacity | Toggle | Show providers with open appointment slots only | Off | Single flag |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Country / Destination | Multi-select chips | Patient's previously selected destination countries | All selected countries | AND within selection | no graph field (control) |
+| Rating | Star selector | All, 4+ stars, 4.5+ stars | All | Min threshold | no graph field (control) |
+| Specialty | Dropdown | Hair Transplant, Beard Transplant, Both | All | Exact match | no graph field (control) |
+| Active Status | Segmented | All, Active Only | Active Only | Single selection | no graph field (control) |
+| Available Capacity | Toggle | Show providers with open appointment slots only | Off | Single flag | no graph field (control) |
 
 ---
 
@@ -450,12 +449,12 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Sort By | Dropdown | Price (Low–High), Price (High–Low), Graft Count, Rating, Appointment Date, Quote Date | Quote Date (most recent) | Single selection; evaluates subquote-owned values and inherited parent/provider values |
-| Date Range | Filter chips | Patient's submitted date ranges | All | Narrows to subquotes whose selected Option/Date-Price Record uses that range |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Sort By | Dropdown | Price (Low–High), Price (High–Low), Graft Count, Rating, Appointment Date, Quote Date | Quote Date (most recent) | Single selection; evaluates subquote-owned values and inherited parent/provider values | no graph field (control) |
+| Date Range | Filter chips | Patient's submitted date ranges | All | Narrows to subquotes whose selected Option/Date-Price Record uses that range | no graph field (control) |
 
-**Sort basis**: Price sorts use each subquote's complete offered price as shown on FR-005 / Screen 1, with any promotion already included; the standard price before promotion and the price per graft are not used for price sorting. For ordering only, each price is converted to the patient's display currency at the current rate; each card still shows its own quote currency, and when the listed subquotes use more than one currency the price order is labelled approximate. Subquotes with the same sort value are ordered by parent quote send date (most recent first), then by option order within the parent quote, then by date range start. Subquotes that cannot currently be accepted (Not Selected, Expired, Withdrawn or Cancelled) stay in the list, shown disabled as in FR-005, and sort after all eligible subquotes. Each list row and each counted result is one subquote.
+**Sort basis**: Price sorts use each subquote's complete offered price as shown on FR-005 / Screen 1, with any promotion already included; the standard price before promotion and the price per graft are not used for price sorting. For ordering only, each price is converted to the patient's display currency at the current rate; each card still shows its own quote currency, and when the listed subquotes use more than one currency the price order is labelled approximate. Subquotes with the same sort value are ordered by parent quote send date (most recent first), then by option order within the parent quote, then by date range start. Subquotes that cannot currently be accepted (Not Selected, Expired, Withdrawn or Cancelled) stay in the list, shown disabled as in FR-005, and sort after all eligible subquotes. Each list row and each counted result is one subquote. (REQ-022-069)
 
 ---
 
@@ -467,21 +466,21 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-012 / Screen 1: Patient Messages Inbox [P1 — MVP]
 
-**Purpose**: Patient searches and filters their conversation inbox to find specific messages or providers.
+**Purpose**: Patient searches and filters their conversation inbox to find specific messages or providers. (REQ-022-070)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Min Length | Notes |
-|-------|------|-------------|----------|------------|-------|
-| Provider name / message content | text | "Search messages…" | 300ms | 2 chars | Searches across provider name and message body |
+| Field | Type | Placeholder | Debounce | Min Length | Notes | Graph field |
+|-------|------|-------------|----------|------------|-------|---------------|
+| Provider name / message content | text | "Search messages…" | 300ms | 2 chars | Searches across provider name and message body | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Read Status | Segmented control / tabs | All, Unread, Read | All | Single selection |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Read Status | Segmented control / tabs | All, Unread, Read | All | Single selection | no graph field (control) |
 
 ---
 
@@ -493,15 +492,15 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-035 / Screen 1: Help & Support Hub [P1 — MVP]
 
-**Purpose**: Patient searches help content from the support entry hub before deciding whether to browse content or open a support request.
+**Purpose**: Patient searches help content from the support entry hub before deciding whether to browse content or open a support request. (REQ-022-071)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Notes |
-|-------|------|-------------|----------|-------|
-| Search Bar | text | "Search help articles..." | 300ms | Full-text search across published patient-audience FAQ and article content; results are relevance-ranked and must surface a Contact Support path when no match is found |
+| Field | Type | Placeholder | Debounce | Notes | Graph field |
+|-------|------|-------------|----------|-------|---------------|
+| Search Bar | text | "Search help articles..." | 300ms | Full-text search across published patient-audience FAQ and article content; results are relevance-ranked and must surface a Contact Support path when no match is found | no graph field (control) |
 
 > No filter controls on this screen — search-only entry point into the patient help system.
 
@@ -509,28 +508,28 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-035 / Screen 2: Help Center [P1 — MVP]
 
-**Purpose**: Patient searches for help articles and browses content by type.
+**Purpose**: Patient searches for help articles and browses content by type. (REQ-022-072)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Notes |
-|-------|------|-------------|----------|-------|
-| Help content search | text | "Search help articles…" | 300ms | Full-text search across all patient-audience FAQs, articles, resources, and videos; auto-suggests results while typing |
+| Field | Type | Placeholder | Debounce | Notes | Graph field |
+|-------|------|-------------|----------|-------|---------------|
+| Help content search | text | "Search help articles…" | 300ms | Full-text search across all patient-audience FAQs, articles, resources, and videos; auto-suggests results while typing | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Content Type | Segmented chips / cards | All, FAQs, Articles, Resources, Videos | All | Single selection |
-| Article Subtype | Filter chips (conditional) | All, Tutorial Guides, Troubleshooting Tips | All | Shown only when "Articles" type is selected |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Content Type | Segmented chips / cards | All, FAQs, Articles, Resources, Videos | All | Single selection | no graph field (control) |
+| Article Subtype | Filter chips (conditional) | All, Tutorial Guides, Troubleshooting Tips | All | Shown only when "Articles" type is selected | no graph field (control) |
 
 ---
 
 ###### FR-035 / Screen 3: My Support Tickets [P1 — MVP]
 
-**Purpose**: Patient filters their support ticket list by status.
+**Purpose**: Patient filters their support ticket list by status. (REQ-022-073)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
@@ -538,9 +537,9 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Status | Segmented chips | All, Open, In Progress, Resolved, Closed | All | Single selection |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Status | Segmented chips | All, Open, In Progress, Resolved, Closed | All | Single selection | no graph field (control) |
 
 ---
 
@@ -556,24 +555,24 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-009 / Screen 10: Team Directory [P1 — MVP]
 
-**Purpose**: Provider searches for and filters team members within the clinic.
+**Purpose**: Provider searches for and filters team members within the clinic. (REQ-022-074)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Notes |
-|-------|------|-------------|----------|-------|
-| Name / email / status | text | "Search team members…" | 500ms | Supports wildcard; case-insensitive |
+| Field | Type | Placeholder | Debounce | Notes | Graph field |
+|-------|------|-------------|----------|-------|---------------|
+| Name / email / status | text | "Search team members…" | 500ms | Supports wildcard; case-insensitive | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Role | Multi-select | All roles defined in clinic (e.g., Surgeon, Coordinator, Aftercare Specialist) | All | OR (within field) |
-| Status | Multi-select | Active, Inactive, Pending Invitation | All | OR (within field) |
-| Region | Dropdown | All; admin-defined region list | All | Exact match |
-| Role Compatibility | Context filter (conditional) | Shown during reassignment workflows only | — | Filters members eligible for role reassignment |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Role | Multi-select | All roles defined in clinic (e.g., Surgeon, Coordinator, Aftercare Specialist) | All | OR (within field) | no graph field (control) |
+| Status | Multi-select | Active, Inactive, Pending Invitation | All | OR (within field) | no graph field (control) |
+| Region | Dropdown | All; admin-defined region list | All | Exact match | no graph field (control) |
+| Role Compatibility | Context filter (conditional) | Shown during reassignment workflows only | — | Filters members eligible for role reassignment | no graph field (control) |
 
 ---
 
@@ -585,25 +584,25 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-003 / Screen 9: Provider Inquiry List [P1 — MVP]
 
-**Purpose**: Provider searches for and filters incoming patient inquiries.
+**Purpose**: Provider searches for and filters incoming patient inquiries. (REQ-022-075)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Notes |
-|-------|------|-------------|----------|-------|
-| Patient ID | text | "Search by patient ID…" | 500ms | Case-insensitive; fuzzy match; patient name excluded from search field until booking payment confirmed |
+| Field | Type | Placeholder | Debounce | Notes | Graph field |
+|-------|------|-------------|----------|-------|---------------|
+| Patient ID | text | "Search by patient ID…" | 500ms | Case-insensitive; fuzzy match; patient name excluded from search field until booking payment confirmed | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Patient Age Range | Range slider | 18–100 | All ages | Min–Max range |
-| Concern | Multi-select | Hair Transplant, Beard Transplant, Both | All | OR (within field) |
-| Requested Date Range | Date range picker | Custom | All dates | Overlaps with inquiry dates |
-| Medical Alerts | Multi-select chips | None, Standard, Critical | All | OR (within field) |
-| Patient Location | Dropdown | All; country list from DB | All | Exact match |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Patient Age Range | Range slider | 18–100 | All ages | Min–Max range | no graph field (control) |
+| Concern | Multi-select | Hair Transplant, Beard Transplant, Both | All | OR (within field) | no graph field (control) |
+| Requested Date Range | Date range picker | Custom | All dates | Overlaps with inquiry dates | no graph field (control) |
+| Medical Alerts | Multi-select chips | None, Standard, Critical | All | OR (within field) | no graph field (control) |
+| Patient Location | Dropdown | All; country list from DB | All | Exact match | no graph field (control) |
 
 ---
 
@@ -613,25 +612,25 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-004 / Screen 2: Provider Quote List [P1 — MVP]
 
-**Purpose**: Provider searches for and filters their submitted quotes across all patient inquiries. Each list row and each counted result is one parent quote; its options and date ranges are shown as row attributes and are not counted as separate results.
+**Purpose**: Provider searches for and filters their submitted quotes across all patient inquiries. Each list row and each counted result is one parent quote; its options and date ranges are shown as row attributes and are not counted as separate results. (REQ-022-076)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Notes |
-|-------|------|-------------|----------|-------|
-| Patient ID / inquiry / treatment / date / status / location | text | "Search quotes…" | 500ms | Case-insensitive; fuzzy match across all indexed fields; patient name field excluded until booking payment confirmed |
+| Field | Type | Placeholder | Debounce | Notes | Graph field |
+|-------|------|-------------|----------|-------|---------------|
+| Patient ID / inquiry / treatment / date / status / location | text | "Search quotes…" | 500ms | Case-insensitive; fuzzy match across all indexed fields; patient name field excluded until booking payment confirmed | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Quote Status | Multi-select | Draft, Sent, Expired, Withdrawn, Archived, Accepted, Cancelled (Other Accepted), Cancelled (Inquiry Cancelled), Cancelled (Provider Status) | All | OR (within field) |
-| Date Range | Date range picker | Custom | All dates | Filters by quote creation date |
-| Concern | Multi-select | Hair Transplant, Beard Transplant, Both | All | OR (within field) |
-| Patient Location | Dropdown | All; country list from DB | All | Exact match |
-| Medical Alerts | Multi-select chips | None, Standard, Critical | All | OR (within field) |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Quote Status | Multi-select | Draft, Sent, Expired, Withdrawn, Archived, Accepted, Cancelled (Other Accepted), Cancelled (Inquiry Cancelled), Cancelled (Provider Status) | All | OR (within field) | no graph field (control) |
+| Date Range | Date range picker | Custom | All dates | Filters by quote creation date | no graph field (control) |
+| Concern | Multi-select | Hair Transplant, Beard Transplant, Both | All | OR (within field) | no graph field (control) |
+| Patient Location | Dropdown | All; country list from DB | All | Exact match | no graph field (control) |
+| Medical Alerts | Multi-select chips | None, Standard, Critical | All | OR (within field) | no graph field (control) |
 
 ---
 
@@ -643,22 +642,22 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-010 / Screen 3: In Progress Cases [P1 — MVP]
 
-**Purpose**: Provider searches for and filters active treatment cases by patient or clinician.
+**Purpose**: Provider searches for and filters active treatment cases by patient or clinician. (REQ-022-077)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Notes |
-|-------|------|-------------|----------|-------|
-| Patient ID / name / booking reference | text | "Search cases…" | 500ms | Real-time filter; case-insensitive |
+| Field | Type | Placeholder | Debounce | Notes | Graph field |
+|-------|------|-------------|----------|-------|---------------|
+| Patient ID / name / booking reference | text | "Search cases…" | 500ms | Real-time filter; case-insensitive | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Procedure Date Range | Date range picker | Custom | Current month | Filters by treatment procedure date |
-| Clinician | Dropdown | All; clinic's active clinicians | All | Exact match |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Procedure Date Range | Date range picker | Custom | Current month | Filters by treatment procedure date | no graph field (control) |
+| Clinician | Dropdown | All; clinic's active clinicians | All | Exact match | no graph field (control) |
 
 ---
 
@@ -670,23 +669,23 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-011 / Screen 8: Aftercare Cases List [P1 — MVP]
 
-**Purpose**: Provider searches for and filters patient aftercare cases managed by their clinic.
+**Purpose**: Provider searches for and filters patient aftercare cases managed by their clinic. (REQ-022-078)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Notes |
-|-------|------|-------------|----------|-------|
-| Patient name / ID | text | "Search aftercare cases…" | 500ms | Debounced; case-insensitive |
+| Field | Type | Placeholder | Debounce | Notes | Graph field |
+|-------|------|-------------|----------|-------|---------------|
+| Patient name / ID | text | "Search aftercare cases…" | 500ms | Debounced; case-insensitive | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Milestone | Dropdown | All; aftercare plan milestone names | All | Exact match |
-| Case Status | Multi-select | Active, Overdue, Completed | All | OR (within field) |
-| Date Range | Date range picker | Custom | All dates | Filters by aftercare start date |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Milestone | Dropdown | All; aftercare plan milestone names | All | Exact match | no graph field (control) |
+| Case Status | Multi-select | Active, Overdue, Completed | All | OR (within field) | no graph field (control) |
+| Date Range | Date range picker | Custom | All dates | Filters by aftercare start date | no graph field (control) |
 
 ---
 
@@ -698,7 +697,7 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-014 / Screen 1: Provider Analytics Dashboard [P1 — MVP]
 
-**Purpose**: Provider filters analytics reports by date range and treatment type.
+**Purpose**: Provider filters analytics reports by date range and treatment type. (REQ-022-079)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
@@ -706,11 +705,11 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Date Range | Segmented + custom picker | Today, This week, Last 4 weeks, Last 12 weeks, Custom | Last 4 weeks | Single selection |
-| Treatment Type | Multi-select | All, FUE, FUT, DHI, Sapphire FUE, and other admin-defined types | All | OR (within field) |
-| Benchmarks Toggle | Toggle | Show industry benchmarks overlay | Off | Single flag |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Date Range | Segmented + custom picker | Today, This week, Last 4 weeks, Last 12 weeks, Custom | Last 4 weeks | Single selection | no graph field (control) |
+| Treatment Type | Multi-select | All, FUE, FUT, DHI, Sapphire FUE, and other admin-defined types | All | OR (within field) | no graph field (control) |
+| Benchmarks Toggle | Toggle | Show industry benchmarks overlay | Off | Single flag | no graph field (control) |
 
 ---
 
@@ -722,21 +721,21 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-024 / Screen 4: Provider Package List [P1 — MVP]
 
-**Purpose**: Provider searches for and filters their published treatment packages.
+**Purpose**: Provider searches for and filters their published treatment packages. (REQ-022-080)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Notes |
-|-------|------|-------------|----------|-------|
-| Package name | text | "Search packages…" | 300ms | Real-time filter; case-insensitive |
+| Field | Type | Placeholder | Debounce | Notes | Graph field |
+|-------|------|-------------|----------|-------|---------------|
+| Package name | text | "Search packages…" | 300ms | Real-time filter; case-insensitive | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Status | Dropdown | All, Active, Inactive | All | Exact match |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Status | Dropdown | All, Active, Inactive | All | Exact match | no graph field (control) |
 
 ---
 
@@ -746,15 +745,15 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-032 / Screen 5: Help Centre [P1 — MVP]
 
-**Purpose**: Provider searches across Help Centre content from the main support landing page.
+**Purpose**: Provider searches across Help Centre content from the main support landing page. (REQ-022-081)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Max Length | Notes |
-|-------|------|-------------|------------|-------|
-| Search Bar | text | Global Help Centre search | 200 chars | Global search across all provider Help Centre content types (FAQs, articles, resources, and videos) with autocomplete suggestions |
+| Field | Type | Placeholder | Max Length | Notes | Graph field |
+|-------|------|-------------|------------|-------|---------------|
+| Search Bar | text | Global Help Centre search | 200 chars | Global search across all provider Help Centre content types (FAQs, articles, resources, and videos) with autocomplete suggestions | no graph field (control) |
 
 > No additional filter controls on this landing screen — topic and content-specific filtering occurs in the relevant Help Centre sub-screens.
 
@@ -762,7 +761,7 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-032 / Screen 5.1: FAQs [P1 — MVP]
 
-**Purpose**: Provider filters FAQ content by topic within the Help Centre.
+**Purpose**: Provider filters FAQ content by topic within the Help Centre. (REQ-022-082)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
@@ -770,15 +769,15 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| FAQ Topic | Category filter | Admin-defined FAQ topics (for example Quote Management, Payment Settings, Aftercare) | All topics | Exact topic filter; updates list instantly |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| FAQ Topic | Category filter | Admin-defined FAQ topics (for example Quote Management, Payment Settings, Aftercare) | All topics | Exact topic filter; updates list instantly | no graph field (control) |
 
 ---
 
 ###### FR-032 / Screen 5.3: Resource Library [P1 — MVP]
 
-**Purpose**: Provider narrows downloadable Help Centre resources by category and file type.
+**Purpose**: Provider narrows downloadable Help Centre resources by category and file type. (REQ-022-083)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
@@ -786,16 +785,16 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Resource Category | Filter | Admin-defined resource categories (for example Templates, Documents, Forms) | All | Exact category filter |
-| File Type | Filter | Admin-defined file types (for example PDF, DOCX, XLSX) | All | Exact file-type filter |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Resource Category | Filter | Admin-defined resource categories (for example Templates, Documents, Forms) | All | Exact category filter | no graph field (control) |
+| File Type | Filter | Admin-defined file types (for example PDF, DOCX, XLSX) | All | Exact file-type filter | no graph field (control) |
 
 ---
 
 ###### FR-032 / Screen 1 / Tab 5: Reviews Tab [P1 — MVP]
 
-**Purpose**: Provider filters their patient reviews by star rating.
+**Purpose**: Provider filters their patient reviews by star rating. (REQ-022-084)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
@@ -803,10 +802,10 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Rating | Multi-select star chips | 5★, 4★, 3★, 2★, 1★ | All ratings | OR (within field) |
-| Sort | Dropdown | Most recent, Highest rated, Lowest rated, Oldest first | Most recent | Single selection |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Rating | Multi-select star chips | 5★, 4★, 3★, 2★, 1★ | All ratings | OR (within field) | no graph field (control) |
+| Sort | Dropdown | Most recent, Highest rated, Lowest rated, Oldest first | Most recent | Single selection | no graph field (control) |
 
 Filter and sort selections on this screen persist for the session.
 
@@ -820,23 +819,23 @@ Filter and sort selections on this screen persist for the session.
 
 ###### FR-012 / Screen 3: Provider Messages List [P1 — MVP]
 
-**Purpose**: Provider searches for and filters their patient conversations from the header messages list.
+**Purpose**: Provider searches for and filters their patient conversations from the header messages list. (REQ-022-085)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Min Length | Debounce | Notes |
-|-------|------|-------------|-----------|----------|-------|
-| Patient name / inquiry or quote ID / message content | text | "Search messages…" | 2 chars | 300ms | Filters the conversation list in real time; case-insensitive fuzzy match across patient name, inquiry/quote ID, and message content |
+| Field | Type | Placeholder | Min Length | Debounce | Notes | Graph field |
+|-------|------|-------------|-----------|----------|-------|---------------|
+| Patient name / inquiry or quote ID / message content | text | "Search messages…" | 2 chars | 300ms | Filters the conversation list in real time; case-insensitive fuzzy match across patient name, inquiry/quote ID, and message content | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Read Status | Toggle | All, Unread Only | All | Exact match |
-| Date Range | Dropdown | Today, Last 7 days, Last 30 days, All | All | Filters by activity date |
-| Service Type | Dropdown | All; options from service catalog | All | Exact match |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Read Status | Toggle | All, Unread Only | All | Exact match | no graph field (control) |
+| Date Range | Dropdown | Today, Last 7 days, Last 30 days, All | All | Filters by activity date | no graph field (control) |
+| Service Type | Dropdown | All; options from service catalog | All | Exact match | no graph field (control) |
 
 ---
 
@@ -860,25 +859,25 @@ The search and filter criteria for this screen are owned by FR-032 (REQ-032-106 
 
 ###### FR-003 / Screen 11: Hairline Overview Dashboard [P1 — MVP]
 
-**Purpose**: Admin searches for and filters all patient inquiries across all providers.
+**Purpose**: Admin searches for and filters all patient inquiries across all providers. (REQ-022-087)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Notes |
-|-------|------|-------------|----------|-------|
-| Patient ID / name | text | "Search by patient ID or name…" | 500ms | Case-insensitive; fuzzy match |
+| Field | Type | Placeholder | Debounce | Notes | Graph field |
+|-------|------|-------------|----------|-------|---------------|
+| Patient ID / name | text | "Search by patient ID or name…" | 500ms | Case-insensitive; fuzzy match | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Patient Location | Dropdown | All; country list from DB | All | Exact match |
-| Provider Location | Dropdown | All; country list from DB | All | Exact match |
-| Inquiry Stage | Multi-select | Inquiry, Quoted, Accepted, Scheduled, Cancelled | All | OR (within field) |
-| Payment Status | Dropdown | All, Paid, Unpaid, Partial | All | Exact match |
-| Date Range | Date range picker | Custom | All dates | Filters by inquiry submission date |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Patient Location | Dropdown | All; country list from DB | All | Exact match | no graph field (control) |
+| Provider Location | Dropdown | All; country list from DB | All | Exact match | no graph field (control) |
+| Inquiry Stage | Multi-select | Inquiry, Quoted, Accepted, Scheduled, Cancelled | All | OR (within field) | no graph field (control) |
+| Payment Status | Dropdown | All, Paid, Unpaid, Partial | All | Exact match | no graph field (control) |
+| Date Range | Date range picker | Custom | All dates | Filters by inquiry submission date | no graph field (control) |
 
 ---
 
@@ -888,26 +887,26 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-004 / Screen 5: Global Quote Table [P1 — MVP]
 
-**Purpose**: Admin searches for and filters all quotes across all providers and patients. Each list row and each counted result is one parent quote; its options and date ranges are shown as row attributes and are not counted as separate results.
+**Purpose**: Admin searches for and filters all quotes across all providers and patients. Each list row and each counted result is one parent quote; its options and date ranges are shown as row attributes and are not counted as separate results. (REQ-022-088)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Notes |
-|-------|------|-------------|----------|-------|
-| Patient ID / name / provider / inquiry | text | "Search quotes…" | 500ms | Case-insensitive; fuzzy match across all indexed fields |
+| Field | Type | Placeholder | Debounce | Notes | Graph field |
+|-------|------|-------------|----------|-------|---------------|
+| Patient ID / name / provider / inquiry | text | "Search quotes…" | 500ms | Case-insensitive; fuzzy match across all indexed fields | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Quote Status | Multi-select | Draft, Sent, Expired, Withdrawn, Archived, Accepted, Cancelled (Other Accepted), Cancelled (Inquiry Cancelled), Cancelled (Provider Status) | All | OR (within field) |
-| Date Range | Date range picker | Custom | All dates | Filters by quote creation date |
-| Concern | Multi-select | Hair Transplant, Beard Transplant, Both | All | OR (within field) |
-| Patient Location | Dropdown | All; country list from DB | All | Exact match |
-| Provider | Dropdown | All; provider list from DB | All | Exact match |
-| Medical Alerts | Multi-select chips | None, Standard, Critical | All | OR (within field) |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Quote Status | Multi-select | Draft, Sent, Expired, Withdrawn, Archived, Accepted, Cancelled (Other Accepted), Cancelled (Inquiry Cancelled), Cancelled (Provider Status) | All | OR (within field) | no graph field (control) |
+| Date Range | Date range picker | Custom | All dates | Filters by quote creation date | no graph field (control) |
+| Concern | Multi-select | Hair Transplant, Beard Transplant, Both | All | OR (within field) | no graph field (control) |
+| Patient Location | Dropdown | All; country list from DB | All | Exact match | no graph field (control) |
+| Provider | Dropdown | All; provider list from DB | All | Exact match | no graph field (control) |
+| Medical Alerts | Multi-select chips | None, Standard, Critical | All | OR (within field) | no graph field (control) |
 
 ---
 
@@ -917,7 +916,7 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-005 / Screen 5: Quote Acceptance Table [P1 — MVP]
 
-**Purpose**: Admin filters the quote acceptance overview by acceptance status.
+**Purpose**: Admin filters the quote acceptance overview by acceptance status. (REQ-022-089)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
@@ -925,9 +924,9 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Acceptance Status | Multi-select | Active, Booking Cancelled, Superseded — Provider Fault | Active | OR (within field) |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Acceptance Status | Multi-select | Active, Booking Cancelled, Superseded — Provider Fault | Active | OR (within field) | no graph field (control) |
 
 ---
 
@@ -937,26 +936,26 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-006 / Screen 5: Admin Bookings Table [P1 — MVP]
 
-**Purpose**: Admin searches for and filters all bookings across the platform.
+**Purpose**: Admin searches for and filters all bookings across the platform. (REQ-022-090)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Notes |
-|-------|------|-------------|----------|-------|
-| Booking reference / patient name / patient email / provider name | text | "Search bookings…" | 500ms | Case-insensitive; fuzzy match |
+| Field | Type | Placeholder | Debounce | Notes | Graph field |
+|-------|------|-------------|----------|-------|---------------|
+| Booking reference / patient name / patient email / provider name | text | "Search bookings…" | 500ms | Case-insensitive; fuzzy match | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Booking Status | Multi-select | Accepted, Payment Window Expired, Confirmed, In Progress, Aftercare, Completed, Cancelled | All | OR (within field) |
-| Provider | Dropdown | All; provider list from DB | All | Exact match |
-| Date Range | Date range picker | Custom | All dates | Filters by booking date |
-| Treatment Type | Dropdown | All, Hair Transplant, Beard Transplant, Both | All | Exact match |
-| Payment Status | Multi-select | All, Unpaid, Deposit Paid, Fully Paid, Overdue | All | OR (within field) |
-| Deposit Status | Multi-select | Pending, Paid, Partial | All | OR (within field) |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Booking Status | Multi-select | Accepted, Payment Window Expired, Confirmed, In Progress, Aftercare, Completed, Cancelled | All | OR (within field) | no graph field (control) |
+| Provider | Dropdown | All; provider list from DB | All | Exact match | no graph field (control) |
+| Date Range | Date range picker | Custom | All dates | Filters by booking date | no graph field (control) |
+| Treatment Type | Dropdown | All, Hair Transplant, Beard Transplant, Both | All | Exact match | no graph field (control) |
+| Payment Status | Multi-select | All, Unpaid, Deposit Paid, Fully Paid, Overdue | All | OR (within field) | no graph field (control) |
+| Deposit Status | Multi-select | Pending, Paid, Partial | All | OR (within field) | no graph field (control) |
 
 ---
 
@@ -966,26 +965,26 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-007 / Screen 5: Patient Payment Progress Dashboard [P1 — MVP]
 
-**Purpose**: Admin searches for and filters payment records by booking, patient, and payment status.
+**Purpose**: Admin searches for and filters payment records by booking, patient, and payment status. (REQ-022-091)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Notes |
-|-------|------|-------------|----------|-------|
-| Booking ID / patient name | text | "Search by booking ID or patient name…" | 500ms | Case-insensitive; fuzzy match |
+| Field | Type | Placeholder | Debounce | Notes | Graph field |
+|-------|------|-------------|----------|-------|---------------|
+| Booking ID / patient name | text | "Search by booking ID or patient name…" | 500ms | Case-insensitive; fuzzy match | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Provider | Dropdown | All; provider list from DB | All | Exact match |
-| Deposit Status | Multi-select | Pending, Paid, Partial | All | OR (within field) |
-| Payment Status | Multi-select | Unpaid, Deposit Only, Installments Active, Full Paid, Overdue | All | OR (within field) |
-| Final Payment Status | Multi-select | Not Due, Due, Paid, Overdue | All | OR (within field) |
-| Overdue Flag | Toggle | Show overdue only | Off | Single flag |
-| Date Range | Date range picker | Custom | All dates | Filters by booking date |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Provider | Dropdown | All; provider list from DB | All | Exact match | no graph field (control) |
+| Deposit Status | Multi-select | Pending, Paid, Partial | All | OR (within field) | no graph field (control) |
+| Payment Status | Multi-select | Unpaid, Deposit Only, Installments Active, Full Paid, Overdue | All | OR (within field) | no graph field (control) |
+| Final Payment Status | Multi-select | Not Due, Due, Paid, Overdue | All | OR (within field) | no graph field (control) |
+| Overdue Flag | Toggle | Show overdue only | Off | Single flag | no graph field (control) |
+| Date Range | Date range picker | Custom | All dates | Filters by booking date | no graph field (control) |
 
 ---
 
@@ -995,7 +994,7 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-013 / Screen 5: Provider Reviews List & Filters [P1 — MVP]
 
-**Purpose**: Provider filters their reviews across treatment cases by patient, case, rating, date, response status, and source type.
+**Purpose**: Provider filters their reviews across treatment cases by patient, case, rating, date, response status, and source type. (REQ-022-092)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
@@ -1003,42 +1002,42 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Patient | Dropdown | All; patients linked to this provider's completed cases | All | Exact match (supports multi-case patient histories — added in FR-013 v1.7) |
-| Treatment Case | Dropdown | All; cases for the selected patient (or all cases when patient = All) | All | Exact match |
-| Rating | Multi-select star chips | 5★, 4★, 3★, 2★, 1★ | All | OR (within field) |
-| Date Range | Date range picker | Custom | All dates | Filters by review submission date |
-| Response Status | Multi-select | No response, Responded | All | OR (within field) |
-| Source Type | Multi-select | Patient-submitted, Verified Off-platform | All | OR (within field) |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Patient | Dropdown | All; patients linked to this provider's completed cases | All | Exact match (supports multi-case patient histories — added in FR-013 v1.7) | no graph field (control) |
+| Treatment Case | Dropdown | All; cases for the selected patient (or all cases when patient = All) | All | Exact match | no graph field (control) |
+| Rating | Multi-select star chips | 5★, 4★, 3★, 2★, 1★ | All | OR (within field) | no graph field (control) |
+| Date Range | Date range picker | Custom | All dates | Filters by review submission date | no graph field (control) |
+| Response Status | Multi-select | No response, Responded | All | OR (within field) | no graph field (control) |
+| Source Type | Multi-select | Patient-submitted, Verified Off-platform | All | OR (within field) | no graph field (control) |
 
 ---
 
 ###### FR-013 / Screen 7: Review Management Dashboard [P1 — MVP]
 
-**Purpose**: Admin filters all platform reviews by date, provider, patient, treatment case, rating, status, source type, flagged status, and response status.
+**Purpose**: Admin filters all platform reviews by date, provider, patient, treatment case, rating, status, source type, flagged status, and response status. (REQ-022-093)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Min Length | Notes |
-|-------|------|-------------|----------|------------|-------|
-| Patient / provider / case identifier | text | "Search reviews…" | 500ms | 2 chars | Case-insensitive |
+| Field | Type | Placeholder | Debounce | Min Length | Notes | Graph field |
+|-------|------|-------------|----------|------------|-------|---------------|
+| Patient / provider / case identifier | text | "Search reviews…" | 500ms | 2 chars | Case-insensitive | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Date Range | Date range picker | Custom | All dates | Filters by review submission date |
-| Provider | Dropdown | All; provider list from DB | All | Exact match |
-| Patient | Dropdown | All; patient list from DB | All | Exact match |
-| Treatment Case | Dropdown | All; cases scoped by selected patient/provider | All | Exact match |
-| Rating | Multi-select star chips | 5★, 4★, 3★, 2★, 1★ | All | OR (within field) |
-| Review Status | Multi-select | Published, Removed | All | OR (within field) — updated per FR-013 v1.10 backend-aligned status vocabulary; `Pending Moderation` / `Rejected` removed |
-| Source Type | Multi-select | Patient-submitted, Verified Off-platform | All | OR (within field) |
-| Response Status | Multi-select | No response, Responded | All | OR (within field) |
-| Flagged | Toggle | Show flagged only (admin-internal `Flagged` state) | Off | Single flag |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Date Range | Date range picker | Custom | All dates | Filters by review submission date | no graph field (control) |
+| Provider | Dropdown | All; provider list from DB | All | Exact match | no graph field (control) |
+| Patient | Dropdown | All; patient list from DB | All | Exact match | no graph field (control) |
+| Treatment Case | Dropdown | All; cases scoped by selected patient/provider | All | Exact match | no graph field (control) |
+| Rating | Multi-select star chips | 5★, 4★, 3★, 2★, 1★ | All | OR (within field) | no graph field (control) |
+| Review Status | Multi-select | Published, Removed | All | OR (within field) — updated per FR-013 v1.10 backend-aligned status vocabulary; `Pending Moderation` / `Rejected` removed | no graph field (control) |
+| Source Type | Multi-select | Patient-submitted, Verified Off-platform | All | OR (within field) | no graph field (control) |
+| Response Status | Multi-select | No response, Responded | All | OR (within field) | no graph field (control) |
+| Flagged | Toggle | Show flagged only (admin-internal `Flagged` state) | Off | Single flag | no graph field (control) |
 
 ---
 
@@ -1048,31 +1047,31 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-016 / Screen 1: Patient Management List [P1 — MVP]
 
-**Purpose**: Admin searches for and filters all registered patients across the platform.
+**Purpose**: Admin searches for and filters all registered patients across the platform. (REQ-022-094)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Min Length | Notes |
-|-------|------|-------------|----------|------------|-------|
-| Name / email / patient code (HPID) / phone | text | "Search patients…" | 500ms | 2 chars | Case-insensitive; fuzzy match |
+| Field | Type | Placeholder | Debounce | Min Length | Notes | Graph field |
+|-------|------|-------------|----------|------------|-------|---------------|
+| Name / email / patient code (HPID) / phone | text | "Search patients…" | 500ms | 2 chars | Case-insensitive; fuzzy match | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Status | Multi-select | Inquiry, Quoted, Accepted, Confirmed, In Progress, Aftercare, Completed, Cancelled (the FR-003 stage list, per FR-016 Screen 1) | All | OR (within field) |
-| Account Status | Multi-select | Active, Suspended, Deactivated, Locked (per FR-016 Screen 1) | All | OR (within field) |
-| Date Range | Date range picker + type toggle | Custom; toggle: Registration Date / Last Activity | All dates — Registration Date | Filters by selected date type |
-| Location | Dropdown | All; country list from DB | All | Exact match |
-| Provider | Dropdown | All; provider list from DB | All | Exact match |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Status | Multi-select | Inquiry, Quoted, Accepted, Confirmed, In Progress, Aftercare, Completed, Cancelled (the FR-003 stage list, per FR-016 Screen 1) | All | OR (within field) | no graph field (control) |
+| Account Status | Multi-select | Active, Suspended, Deactivated, Locked (per FR-016 Screen 1) | All | OR (within field) | no graph field (control) |
+| Date Range | Date range picker + type toggle | Custom; toggle: Registration Date / Last Activity | All dates — Registration Date | Filters by selected date type | no graph field (control) |
+| Location | Dropdown | All; country list from DB | All | Exact match | no graph field (control) |
+| Provider | Dropdown | All; provider list from DB | All | Exact match | no graph field (control) |
 
 ---
 
 ###### FR-016 / Screen 7: Admin Actions Audit Log [P1 — MVP]
 
-**Purpose**: Admin searches for and filters the patient data access and modification audit log.
+**Purpose**: Admin searches for and filters the patient data access and modification audit log. (REQ-022-095)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
@@ -1080,26 +1079,26 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Action Type | Multi-select | View, Edit, Export, Access Request, Deletion Request, Override, and others per FR-016 | All | OR (within field) |
-| Date Range | Date range picker | Custom | All dates | Filters by action timestamp |
-| Admin User | Dropdown | All; admin user list | All | Exact match |
-| Show Only My Actions | Toggle | On / Off | Off | Filters to current admin's actions only |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Action Type | Multi-select | View, Edit, Export, Access Request, Deletion Request, Override, and others per FR-016 | All | OR (within field) | no graph field (control) |
+| Date Range | Date range picker | Custom | All dates | Filters by action timestamp | no graph field (control) |
+| Admin User | Dropdown | All; admin user list | All | Exact match | no graph field (control) |
+| Show Only My Actions | Toggle | On / Off | Off | Filters to current admin's actions only | no graph field (control) |
 
 ---
 
 ###### FR-016 / Screen 8: Pending Data Requests [P1 — MVP]
 
-**Purpose**: Admin searches the pending patient data access and deletion request queue.
+**Purpose**: Admin searches the pending patient data access and deletion request queue. (REQ-022-096)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Notes |
-|-------|------|-------------|----------|-------|
-| Patient name / email / HPID | text | "Search requests…" | 500ms | Debounced; case-insensitive; searches within Pending Admin Review queue |
+| Field | Type | Placeholder | Debounce | Notes | Graph field |
+|-------|------|-------------|----------|-------|---------------|
+| Patient name / email / HPID | text | "Search requests…" | 500ms | Debounced; case-insensitive; searches within Pending Admin Review queue | no graph field (control) |
 
 > No additional filter controls — this screen is pre-filtered to Status = Pending Admin Review by default.
 
@@ -1113,51 +1112,51 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-015 / Screen 1: Provider Management List [P1 — MVP]
 
-**Purpose**: Admin searches for and filters all provider accounts.
+**Purpose**: Admin searches for and filters all provider accounts. (REQ-022-097)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Max Length | Notes |
-|-------|------|-------------|----------|------------|-------|
-| Provider name / clinic name / email / license number | text | "Search providers…" | 500ms | 200 chars | Case-insensitive; fuzzy match |
+| Field | Type | Placeholder | Debounce | Max Length | Notes | Graph field |
+|-------|------|-------------|----------|------------|-------|---------------|
+| Provider name / clinic name / email / license number | text | "Search providers…" | 500ms | 200 chars | Case-insensitive; fuzzy match | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Status | Multi-select | Active, Suspended, Deactivated | Active | OR (within field); matches FR-015 Screen 1 Default View. Clearing the Status filter shows all statuses |
-| Featured | Checkbox | Featured only | Off | Single flag |
-| Commission Type | Dropdown | All, Percentage, Flat Rate | All | Exact match |
-| Closure Requested | Checkbox | Only providers with a pending FR-032 account-closure request (per FR-015 Screen 1) | Off | Single flag |
-| Date Range | Date range picker + type toggle | Custom; toggle: Creation Date / Last Activity | All dates — Creation Date | Filters by selected date type |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Status | Multi-select | Active, Suspended, Deactivated | Active | OR (within field); matches FR-015 Screen 1 Default View. Clearing the Status filter shows all statuses | no graph field (control) |
+| Featured | Checkbox | Featured only | Off | Single flag | no graph field (control) |
+| Commission Type | Dropdown | All, Percentage, Flat Rate | All | Exact match | no graph field (control) |
+| Closure Requested | Checkbox | Only providers with a pending FR-032 account-closure request (per FR-015 Screen 1) | Off | Single flag | no graph field (control) |
+| Date Range | Date range picker + type toggle | Custom; toggle: Creation Date / Last Activity | All dates — Creation Date | Filters by selected date type | no graph field (control) |
 
 ---
 
 ###### FR-015 / Screen 3 / Tab 5: Provider Reviews Tab [P1 — MVP]
 
-**Purpose**: Admin searches for and filters reviews within a provider's profile.
+**Purpose**: Admin searches for and filters reviews within a provider's profile. (REQ-022-098)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Notes |
-|-------|------|-------------|----------|-------|
-| Review keyword | text | "Search reviews…" | 500ms | Fuzzy match on review content |
+| Field | Type | Placeholder | Debounce | Notes | Graph field |
+|-------|------|-------------|----------|-------|---------------|
+| Review keyword | text | "Search reviews…" | 500ms | Fuzzy match on review content | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Rating | Multi-select star chips | 5★, 4★, 3★, 2★, 1★ | All ratings | OR (within field) |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Rating | Multi-select star chips | 5★, 4★, 3★, 2★, 1★ | All ratings | OR (within field) | no graph field (control) |
 
 ---
 
 ###### FR-015 / Screen 3 / Tab 6: Provider Documents List [P1 — MVP]
 
-**Purpose**: Admin filters provider-submitted documents by type and uploader.
+**Purpose**: Admin filters provider-submitted documents by type and uploader. (REQ-022-099)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
@@ -1165,10 +1164,10 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Document Type | Dropdown | All; admin-defined document types (e.g., Medical License, Insurance, Certification) | All | Exact match |
-| Uploaded By | Dropdown | All, Provider, Admin | All | Exact match |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Document Type | Dropdown | All; admin-defined document types (e.g., Medical License, Insurance, Certification) | All | Exact match | no graph field (control) |
+| Uploaded By | Dropdown | All, Provider, Admin | All | Exact match | no graph field (control) |
 
 ---
 
@@ -1180,27 +1179,27 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-011 / Screen 13: Admin Aftercare Cases List [P1 — MVP]
 
-**Purpose**: Admin searches for and filters all aftercare cases across all providers.
+**Purpose**: Admin searches for and filters all aftercare cases across all providers. (REQ-022-100)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Notes |
-|-------|------|-------------|----------|-------|
-| Case ID | text | "Search by case ID…" | 500ms | Searchable; sortable |
+| Field | Type | Placeholder | Debounce | Notes | Graph field |
+|-------|------|-------------|----------|-------|---------------|
+| Case ID | text | "Search by case ID…" | 500ms | Searchable; sortable | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Provider | Dropdown | All; provider list from DB | All | Exact match |
-| Milestone | Dropdown | All; milestone names from aftercare plan templates | All | Exact match |
-| Case Status | Multi-select | Active, Overdue, Completed | All | OR (within field) |
-| Date Range | Date range picker | Custom | All dates | Filters by aftercare start date |
-| Risk Level | Multi-select | High, Medium, Low | All | OR (within field) |
-| Specialist Assignment | Dropdown | All; aftercare specialists from DB | All | Exact match |
-| Completion Rate | Range slider | 0–100% | All | Min threshold |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Provider | Dropdown | All; provider list from DB | All | Exact match | no graph field (control) |
+| Milestone | Dropdown | All; milestone names from aftercare plan templates | All | Exact match | no graph field (control) |
+| Case Status | Multi-select | Active, Overdue, Completed | All | OR (within field) | no graph field (control) |
+| Date Range | Date range picker | Custom | All dates | Filters by aftercare start date | no graph field (control) |
+| Risk Level | Multi-select | High, Medium, Low | All | OR (within field) | no graph field (control) |
+| Specialist Assignment | Dropdown | All; aftercare specialists from DB | All | Exact match | no graph field (control) |
+| Completion Rate | Range slider | 0–100% | All | Min threshold | no graph field (control) |
 
 ---
 
@@ -1212,7 +1211,7 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-007b / Screen 5: Installment Plans List [P1 — MVP]
 
-**Purpose**: Admin filters installment plans by plan status and procedure date range.
+**Purpose**: Admin filters installment plans by plan status and procedure date range. (REQ-022-101)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
@@ -1220,11 +1219,11 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Plan Status | Multi-select | Active, Completed, Canceled, Defaulted | All | OR (within field) |
-| Overdue | Toggle (yes/no) | Yes, No | Off (all plans) | AND with other filters; Overdue is a calculated flag (a due date has passed and the installment is unpaid), not a plan status |
-| Procedure Date Range | Date range picker | Custom | All dates | Filters by procedure date; default sort is nearest upcoming first, overdue/defaulted at top |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Plan Status | Multi-select | Active, Completed, Canceled, Defaulted | All | OR (within field) | no graph field (control) |
+| Overdue | Toggle (yes/no) | Yes, No | Off (all plans) | AND with other filters; Overdue is a calculated flag (a due date has passed and the installment is unpaid), not a plan status | no graph field (control) |
+| Procedure Date Range | Date range picker | Custom | All dates | Filters by procedure date; default sort is nearest upcoming first, overdue/defaulted at top | no graph field (control) |
 
 ---
 
@@ -1234,47 +1233,47 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-017 / Screen 4: Patient Billing Invoices [P1 — MVP]
 
-**Purpose**: Admin searches for and filters patient invoices by status and date.
+**Purpose**: Admin searches for and filters patient invoices by status and date. (REQ-022-102)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Notes |
-|-------|------|-------------|----------|-------|
-| Patient name | text | "Search by patient name…" | 500ms | Case-insensitive; fuzzy match |
+| Field | Type | Placeholder | Debounce | Notes | Graph field |
+|-------|------|-------------|----------|-------|---------------|
+| Patient name | text | "Search by patient name…" | 500ms | Case-insensitive; fuzzy match | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Payment Status | Multi-select | Pending, Partial, Paid, Overdue, Refunded, At Risk | All | OR (within field) |
-| Date Range | Date range picker | Custom | Last 30 days | Filters by invoice date |
-| Currency | Dropdown | All; configured currency list | All | Exact match |
-| Payment Method | Dropdown | All, Full Payment, Installment | All | Exact match |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Payment Status | Multi-select | Pending, Partial, Paid, Overdue, Refunded, At Risk | All | OR (within field) | no graph field (control) |
+| Date Range | Date range picker | Custom | Last 30 days | Filters by invoice date | no graph field (control) |
+| Currency | Dropdown | All; configured currency list | All | Exact match | no graph field (control) |
+| Payment Method | Dropdown | All, Full Payment, Installment | All | Exact match | no graph field (control) |
 
 ---
 
 ###### FR-017 / Screen 7 / Tab 1: Transaction Search [P1 — MVP]
 
-**Purpose**: Admin searches for any financial transaction using multiple lookup fields and narrows results by type, date, and status.
+**Purpose**: Admin searches for any financial transaction using multiple lookup fields and narrows results by type, date, and status. (REQ-022-103)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Notes |
-|-------|------|-------------|----------|-------|
-| Search By (type selector) | Dropdown | Booking Reference, Invoice Number, Patient Name/ID, Provider Name/ID, Affiliate Name/ID | Booking Reference | Determines search context |
-| Search Input | text | Auto-updates per "Search By" selection | 500ms | Free-text; case-insensitive; scoped to selected type |
+| Field | Type | Placeholder | Debounce | Notes | Graph field |
+|-------|------|-------------|----------|-------|---------------|
+| Search By (type selector) | Dropdown | Booking Reference, Invoice Number, Patient Name/ID, Provider Name/ID, Affiliate Name/ID | Booking Reference | Determines search context | no graph field (control) |
+| Search Input | text | Auto-updates per "Search By" selection | 500ms | Free-text; case-insensitive; scoped to selected type | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Record Type | Multi-select | Invoice, Provider Payout, Installment, Refund, Affiliate Commission | All | OR (within field) |
-| Date Range | Date range picker | Custom | All dates | Filters by transaction date |
-| Status | Multi-select | Dynamically scoped to selected Record Type(s) — see enumeration below | All | OR (within field) |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Record Type | Multi-select | Invoice, Provider Payout, Installment, Refund, Affiliate Commission | All | OR (within field) | no graph field (control) |
+| Date Range | Date range picker | Custom | All dates | Filters by transaction date | no graph field (control) |
+| Status | Multi-select | Dynamically scoped to selected Record Type(s) — see enumeration below | All | OR (within field) | no graph field (control) |
 
 > **Status options by Record Type** (when multiple Record Types are selected, the union of all applicable statuses is shown):
 >
@@ -1290,7 +1289,7 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-017 / Screen 7 / Tab 2: Billing Audit Log [P1 — MVP]
 
-**Purpose**: Admin filters the billing action audit log by date, admin user, action type, and entity.
+**Purpose**: Admin filters the billing action audit log by date, admin user, action type, and entity. (REQ-022-104)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
@@ -1298,13 +1297,13 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Date Range | Date range picker | Custom | Last 30 days | Filters by action timestamp |
-| Admin User | Dropdown | All; admin user list | All | Exact match |
-| Action Type | Multi-select | Payout Approved, Payout Unapproved, Payout Voided, Payout Retried, Bulk Approval, Refund Processed, Invoice Generated, Status Overridden, Note Added, Installment Retry, Affiliate Payout Processed, Affiliate Payout Retried, Payout Added to Next Cycle, Reminder Sent, Currency Alert Decision, Re-authentication Verified | All | OR (within field) |
-| Affected Entity | Multi-select | Invoice, Provider Payout, Installment, Affiliate Commission, Booking, Currency Alert | All | OR (within field) |
-| Entity ID | text (optional) | "Filter by entity ID…" | 500ms | Optional free-text lookup |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Date Range | Date range picker | Custom | Last 30 days | Filters by action timestamp | no graph field (control) |
+| Admin User | Dropdown | All; admin user list | All | Exact match | no graph field (control) |
+| Action Type | Multi-select | Payout Approved, Payout Unapproved, Payout Voided, Payout Retried, Bulk Approval, Refund Processed, Invoice Generated, Status Overridden, Note Added, Installment Retry, Affiliate Payout Processed, Affiliate Payout Retried, Payout Added to Next Cycle, Reminder Sent, Currency Alert Decision, Re-authentication Verified | All | OR (within field) | no graph field (control) |
+| Affected Entity | Multi-select | Invoice, Provider Payout, Installment, Affiliate Commission, Booking, Currency Alert | All | OR (within field) | no graph field (control) |
+| Entity ID | text (optional) | "Filter by entity ID…" | 500ms | Optional free-text lookup | no graph field (control) |
 
 ---
 
@@ -1314,23 +1313,23 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-018 / Screen 7: Affiliate Payout Status & History [P1 — MVP]
 
-**Purpose**: Admin searches for and filters affiliate payout records.
+**Purpose**: Admin searches for and filters affiliate payout records. (REQ-022-105)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Notes |
-|-------|------|-------------|----------|-------|
-| Affiliate name / transaction ID / payout month | text | "Search payout history…" | 500ms | Full-text search; case-insensitive |
+| Field | Type | Placeholder | Debounce | Notes | Graph field |
+|-------|------|-------------|----------|-------|---------------|
+| Affiliate name / transaction ID / payout month | text | "Search payout history…" | 500ms | Full-text search; case-insensitive | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Affiliate | Dropdown / autocomplete | All; affiliate list | All | Exact selection |
-| Date Range | Date range picker | Custom | All dates | Filters by payout date |
-| Payment Status | Multi-select | Pending, Paid, Failed, Cancelled | All | OR (within field) |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Affiliate | Dropdown / autocomplete | All; affiliate list | All | Exact selection | no graph field (control) |
+| Date Range | Date range picker | Custom | All dates | Filters by payout date | no graph field (control) |
+| Payment Status | Multi-select | Pending, Paid, Failed, Cancelled | All | OR (within field) | no graph field (control) |
 
 ---
 
@@ -1342,7 +1341,7 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-019 / Screen 1: Promotion Program Hub [P1 — MVP]
 
-**Purpose**: Admin searches for and filters all promotion programs across the platform, including Admin-via-Provider, Provider Self-Created, and Hairline-Funded & Direct-Issued programs.
+**Purpose**: Admin searches for and filters all promotion programs across the platform, including Admin-via-Provider, Provider Self-Created, and Hairline-Funded & Direct-Issued programs. (REQ-022-106)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
@@ -1350,22 +1349,22 @@ See `fr019-promotions-discounts/prd.md → Screen 1` for the finalized result-ta
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Notes |
-|-------|------|-------------|----------|-------|
-| Code / keyword | text | "Search promotion programs…" | 500ms | Case-insensitive; fuzzy match on code text, program name, and keyword |
+| Field | Type | Placeholder | Debounce | Notes | Graph field |
+|-------|------|-------------|----------|-------|---------------|
+| Code / keyword | text | "Search promotion programs…" | 500ms | Case-insensitive; fuzzy match on code text, program name, and keyword | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Program Type | Multi-select | Admin-via-Provider, Provider Self-Created, Hairline-Funded & Direct-Issued | All | OR (within field) |
-| Scope | Multi-select | Reusable, Ad-Hoc Quote-Bound | All | OR (within field) |
-| Status | Multi-select | Draft, Pending Approval, Active, Paused, Expired, Archived | All | OR (within field) |
-| Funding Model | Multi-select | Both Fees, Hairline Only, Provider Only | All | OR (within field) |
-| Provider Participation | Dropdown | All; provider list from DB | All | Exact match |
-| Date Range | Date range picker | Custom | All dates | Filters by active window overlap |
-| Usage | Range | 0–Max | All | Min–Max usage count |
-| ROI | Dropdown | All; admin-defined ROI tiers | All | Exact match |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Program Type | Multi-select | Admin-via-Provider, Provider Self-Created, Hairline-Funded & Direct-Issued | All | OR (within field) | no graph field (control) |
+| Scope | Multi-select | Reusable, Ad-Hoc Quote-Bound | All | OR (within field) | no graph field (control) |
+| Status | Multi-select | Draft, Pending Approval, Active, Paused, Expired, Archived | All | OR (within field) | no graph field (control) |
+| Funding Model | Multi-select | Both Fees, Hairline Only, Provider Only | All | OR (within field) | no graph field (control) |
+| Provider Participation | Dropdown | All; provider list from DB | All | Exact match | no graph field (control) |
+| Date Range | Date range picker | Custom | All dates | Filters by active window overlap | no graph field (control) |
+| Usage | Range | 0–Max | All | Min–Max usage count | no graph field (control) |
+| ROI | Dropdown | All; admin-defined ROI tiers | All | Exact match | no graph field (control) |
 
 ---
 
@@ -1377,27 +1376,27 @@ See `fr019-promotions-discounts/prd.md → Screen 1` for the finalized result-ta
 
 ###### FR-018 / Screen 1: Affiliate Management List [P1 — MVP]
 
-**Purpose**: Admin searches for and filters affiliate accounts.
+**Purpose**: Admin searches for and filters affiliate accounts. (REQ-022-107)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Notes |
-|-------|------|-------------|----------|-------|
-| Affiliate name / email | text | "Search affiliates…" | 500ms | Case-insensitive; fuzzy match |
+| Field | Type | Placeholder | Debounce | Notes | Graph field |
+|-------|------|-------------|----------|-------|---------------|
+| Affiliate name / email | text | "Search affiliates…" | 500ms | Case-insensitive; fuzzy match | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Status | Multi-select | Active, Suspended, Inactive | All | OR (within field) |
-| Country / Region | Multi-select | Supported affiliate countries/regions | All | OR (within field) |
-| Affiliate Type | Multi-select | Influencer, Clinic Partner, Organization, Other | All | OR (within field) |
-| Language | Multi-select | Supported affiliate communication languages | All | OR (within field) |
-| Performance Tier | Multi-select | Admin-defined performance tiers | All | OR (within field) |
-| Campaign Eligibility | Multi-select | Eligible, Ineligible | All | OR (within field) |
-| Payout Setup | Multi-select | Complete, Incomplete | All | OR (within field) |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Status | Multi-select | Active, Suspended, Inactive | All | OR (within field) | no graph field (control) |
+| Country / Region | Multi-select | Supported affiliate countries/regions | All | OR (within field) | no graph field (control) |
+| Affiliate Type | Multi-select | Influencer, Clinic Partner, Organization, Other | All | OR (within field) | no graph field (control) |
+| Language | Multi-select | Supported affiliate communication languages | All | OR (within field) | no graph field (control) |
+| Performance Tier | Multi-select | Admin-defined performance tiers | All | OR (within field) | no graph field (control) |
+| Campaign Eligibility | Multi-select | Eligible, Ineligible | All | OR (within field) | no graph field (control) |
+| Payout Setup | Multi-select | Complete, Incomplete | All | OR (within field) | no graph field (control) |
 
 ---
 
@@ -1409,21 +1408,21 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-024 / Screen 1: Admin Treatment Catalog [P1 — MVP]
 
-**Purpose**: Admin searches for and filters the global treatment catalog.
+**Purpose**: Admin searches for and filters the global treatment catalog. (REQ-022-108)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Notes |
-|-------|------|-------------|----------|-------|
-| Treatment name | text | "Search treatments…" | 300ms | Real-time filter; case-insensitive |
+| Field | Type | Placeholder | Debounce | Notes | Graph field |
+|-------|------|-------------|----------|-------|---------------|
+| Treatment name | text | "Search treatments…" | 300ms | Real-time filter; case-insensitive | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Treatment Type | Dropdown | All; admin-defined treatment types | All | Exact match |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Treatment Type | Dropdown | All; admin-defined treatment types | All | Exact match | no graph field (control) |
 
 ---
 
@@ -1433,23 +1432,23 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-025 / Screen 1: Questionnaire Catalog [P1 — MVP]
 
-**Purpose**: Admin searches for and filters the questionnaire set catalog.
+**Purpose**: Admin searches for and filters the questionnaire set catalog. (REQ-022-109)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Notes |
-|-------|------|-------------|----------|-------|
-| Set name keyword | text | "Search questionnaire sets…" | 500ms | Fuzzy match on set name; case-insensitive |
+| Field | Type | Placeholder | Debounce | Notes | Graph field |
+|-------|------|-------------|----------|-------|---------------|
+| Set name keyword | text | "Search questionnaire sets…" | 500ms | Fuzzy match on set name; case-insensitive | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Context Type | Dropdown | All, Inquiry, Aftercare, Multi-Context | All | Exact match |
-| Status | Multi-select | Draft, Active, Archived | All | OR (within field) |
-| Category | Dropdown | All; admin-defined categories (e.g., Allergies, Cardiovascular) | All | Exact match |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Context Type | Dropdown | All, Inquiry, Aftercare, Multi-Context | All | Exact match | no graph field (control) |
+| Status | Multi-select | Draft, Active, Archived | All | OR (within field) | no graph field (control) |
+| Category | Dropdown | All; admin-defined categories (e.g., Allergies, Cardiovascular) | All | Exact match | no graph field (control) |
 
 ---
 
@@ -1459,7 +1458,7 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-027 / Screen 1: Legal Documents List [P1 — MVP]
 
-**Purpose**: Admin filters the legal document catalog by type, status, and locale.
+**Purpose**: Admin filters the legal document catalog by type, status, and locale. (REQ-022-110)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
@@ -1467,34 +1466,34 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Document Type | Dropdown | All; admin-defined legal document types (e.g., Terms of Service, Privacy Policy, Consent Form) | All | Exact match |
-| Status | Multi-select | Draft, Published, Archived | All | OR (within field) |
-| Locale | Dropdown | All; configured locale list | All | Exact match |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Document Type | Dropdown | All; admin-defined legal document types (e.g., Terms of Service, Privacy Policy, Consent Form) | All | Exact match | no graph field (control) |
+| Status | Multi-select | Draft, Published, Archived | All | OR (within field) | no graph field (control) |
+| Locale | Dropdown | All; configured locale list | All | Exact match | no graph field (control) |
 
 ---
 
 ###### FR-027 / Screen 4A: User Acceptance List [P1 — MVP]
 
-**Purpose**: Admin searches for and filters user acceptance records for legal documents.
+**Purpose**: Admin searches for and filters user acceptance records for legal documents. (REQ-022-111)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Notes |
-|-------|------|-------------|----------|-------|
-| User name / email / user ID | text | "Search users…" | 500ms | Case-insensitive; fuzzy match |
+| Field | Type | Placeholder | Debounce | Notes | Graph field |
+|-------|------|-------------|----------|-------|---------------|
+| User name / email / user ID | text | "Search users…" | 500ms | Case-insensitive; fuzzy match | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Acceptance Status | Multi-select | Accepted, Pending | All | OR (within field) |
-| Locale | Dropdown | All; configured locale list | All | Exact match |
-| Acceptance Timestamp | Date range picker | Custom | All dates | Filters by date of acceptance |
-| Reminder Status | Multi-select | Not Sent, Sent, Acknowledged | All | OR (within field) |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Acceptance Status | Multi-select | Accepted, Pending | All | OR (within field) | no graph field (control) |
+| Locale | Dropdown | All; configured locale list | All | Exact match | no graph field (control) |
+| Acceptance Timestamp | Date range picker | Custom | All dates | Filters by date of acceptance | no graph field (control) |
+| Reminder Status | Multi-select | Not Sent, Sent, Acknowledged | All | OR (within field) | no graph field (control) |
 
 ---
 
@@ -1504,15 +1503,15 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-029 / Screen 5: Provider Commission Search [P1 — MVP]
 
-**Purpose**: Admin searches for a specific provider when configuring provider-specific commission rates.
+**Purpose**: Admin searches for a specific provider when configuring provider-specific commission rates. (REQ-022-112)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Notes |
-|-------|------|-------------|----------|-------|
-| Provider name / ID | text | "Search provider by name or ID…" | 500ms | Returns provider record for commission configuration |
+| Field | Type | Placeholder | Debounce | Notes | Graph field |
+|-------|------|-------------|----------|-------|---------------|
+| Provider name / ID | text | "Search provider by name or ID…" | 500ms | Returns provider record for commission configuration | no graph field (control) |
 
 > No filter controls — search-only functionality for provider selection.
 
@@ -1520,15 +1519,15 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-029 / Screen 6: Currency Configuration [P1 — MVP]
 
-**Purpose**: Admin searches for a currency by code or name when configuring platform currencies.
+**Purpose**: Admin searches for a currency by code or name when configuring platform currencies. (REQ-022-113)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Max Length | Notes |
-|-------|------|-------------|----------|------------|-------|
-| Currency code / name | text | "Filter currencies by code or name…" | 300ms | 100 chars | Real-time filter of currency list |
+| Field | Type | Placeholder | Debounce | Max Length | Notes | Graph field |
+|-------|------|-------------|----------|------------|-------|---------------|
+| Currency code / name | text | "Filter currencies by code or name…" | 300ms | 100 chars | Real-time filter of currency list | no graph field (control) |
 
 > No filter controls — search/filter input only for narrowing the currency list.
 
@@ -1540,22 +1539,22 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-030 / Screen 1: Notification Rules Dashboard [P1 — MVP]
 
-**Purpose**: Admin searches for and filters notification rules by event category and rule status.
+**Purpose**: Admin searches for and filters notification rules by event category and rule status. (REQ-022-114)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Max Length | Notes |
-|-------|------|-------------|----------|------------|-------|
-| Event name / template name / recipient type | text | "Search rules…" | 500ms | 100 chars | Case-insensitive; fuzzy match |
+| Field | Type | Placeholder | Debounce | Max Length | Notes | Graph field |
+|-------|------|-------------|----------|------------|-------|---------------|
+| Event name / template name / recipient type | text | "Search rules…" | 500ms | 100 chars | Case-insensitive; fuzzy match | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Event Category | Dropdown | All, Account/Auth, Inquiry, Quote, Booking/Schedule, Treatment, Payment, Billing/Payouts, Messaging/Support, Aftercare, Reviews, Promotions/Discounts, Provider/Compliance, System/Operations | All | Exact match |
-| Rule Status | Multi-select | Active, Paused, Draft | All | OR (within field) |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Event Category | Dropdown | All, Account/Auth, Inquiry, Quote, Booking/Schedule, Treatment, Payment, Billing/Payouts, Messaging/Support, Aftercare, Reviews, Promotions/Discounts, Provider/Compliance, System/Operations | All | Exact match | no graph field (control) |
+| Rule Status | Multi-select | Active, Paused, Draft | All | OR (within field) | no graph field (control) |
 
 ---
 
@@ -1565,49 +1564,49 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-031 / Screen 1 / Tab 2: Admin Users List [P1 — MVP]
 
-**Purpose**: Admin searches for and filters admin user accounts.
+**Purpose**: Admin searches for and filters admin user accounts. (REQ-022-115)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Notes |
-|-------|------|-------------|----------|-------|
-| Name / email | text | "Search admin users…" | 300ms | Real-time filter; case-insensitive |
+| Field | Type | Placeholder | Debounce | Notes | Graph field |
+|-------|------|-------------|----------|-------|---------------|
+| Name / email | text | "Search admin users…" | 300ms | Real-time filter; case-insensitive | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Role | Dropdown | All Roles, Super Admin, Aftercare Specialist, Billing Staff, Support Staff | All Roles | Exact match |
-| Status | Multi-select | All, Active, Suspended, Pending Invitation | All | OR (within field) |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Role | Dropdown | All Roles, Super Admin, Aftercare Specialist, Billing Staff, Support Staff | All Roles | Exact match | no graph field (control) |
+| Status | Multi-select | All, Active, Suspended, Pending Invitation | All | OR (within field) | no graph field (control) |
 
 ---
 
 ###### FR-031 / Screen 1 / Tab 1: Roles & Permissions [P1 — MVP]
 
-**Purpose**: Admin searches for permissions and filters by category or module.
+**Purpose**: Admin searches for permissions and filters by category or module. (REQ-022-116)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Notes |
-|-------|------|-------------|----------|-------|
-| Permission name | text | "Search permissions…" | 300ms | Real-time filter on permission name |
+| Field | Type | Placeholder | Debounce | Notes | Graph field |
+|-------|------|-------------|----------|-------|---------------|
+| Permission name | text | "Search permissions…" | 300ms | Real-time filter on permission name | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Category | Dropdown | All; admin-defined permission categories | All | Exact match |
-| Module | Dropdown | All; platform modules (Patient, Provider, Admin, System) | All | Exact match |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Category | Dropdown | All; admin-defined permission categories | All | Exact match | no graph field (control) |
+| Module | Dropdown | All; platform modules (Patient, Provider, Admin, System) | All | Exact match | no graph field (control) |
 
 ---
 
 ###### FR-031 / Screen 5: Admin Activity Audit Trail [P1 — MVP]
 
-**Purpose**: Admin filters the admin user activity log by action type, date, and outcome.
+**Purpose**: Admin filters the admin user activity log by action type, date, and outcome. (REQ-022-117)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
@@ -1615,11 +1614,11 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Action Type | Multi-select | Platform-defined admin action types (per FR-031) | All | OR (within field) |
-| Date Range | Date range picker | Custom | Last 30 days | Filters by action timestamp |
-| Outcome | Multi-select | Success, Failed, Denied | All | OR (within field) |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Action Type | Multi-select | Platform-defined admin action types (per FR-031) | All | OR (within field) | no graph field (control) |
+| Date Range | Date range picker | Custom | Last 30 days | Filters by action timestamp | no graph field (control) |
+| Outcome | Multi-select | Success, Failed, Denied | All | OR (within field) | no graph field (control) |
 
 ---
 
@@ -1629,92 +1628,92 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-033 / Screen 2: FAQ Management [P1 — MVP]
 
-**Purpose**: Admin searches for and filters FAQ entries in the Help Centre.
+**Purpose**: Admin searches for and filters FAQ entries in the Help Centre. (REQ-022-118)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Notes |
-|-------|------|-------------|----------|-------|
-| Question text | text | "Search FAQ questions…" | 500ms | Fuzzy match on question content |
+| Field | Type | Placeholder | Debounce | Notes | Graph field |
+|-------|------|-------------|----------|-------|---------------|
+| Question text | text | "Search FAQ questions…" | 500ms | Fuzzy match on question content | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Topic | Dropdown | All; admin-defined FAQ topics | All | Exact match |
-| Status | Multi-select | Draft, Published, Archived | All | OR (within field) |
-| Audience | Dropdown | All, Patient, Provider | All | Exact match |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Topic | Dropdown | All; admin-defined FAQ topics | All | Exact match | no graph field (control) |
+| Status | Multi-select | Draft, Published, Archived | All | OR (within field) | no graph field (control) |
+| Audience | Dropdown | All, Patient, Provider | All | Exact match | no graph field (control) |
 
 ---
 
 ###### FR-033 / Screen 3: Article Management [P1 — MVP]
 
-**Purpose**: Admin searches for and filters help articles.
+**Purpose**: Admin searches for and filters help articles. (REQ-022-119)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Notes |
-|-------|------|-------------|----------|-------|
-| Article title | text | "Search articles…" | 500ms | Fuzzy match on title |
+| Field | Type | Placeholder | Debounce | Notes | Graph field |
+|-------|------|-------------|----------|-------|---------------|
+| Article title | text | "Search articles…" | 500ms | Fuzzy match on title | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Article Type | Dropdown | All, Tutorial Guide, Troubleshooting Tip | All | Exact match |
-| Category / Tags | Multi-select | Admin-defined article categories | All | OR (within field) |
-| Status | Multi-select | Draft, Published, Archived | All | OR (within field) |
-| Audience | Dropdown | All, Patient, Provider | All | Exact match |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Article Type | Dropdown | All, Tutorial Guide, Troubleshooting Tip | All | Exact match | no graph field (control) |
+| Category / Tags | Multi-select | Admin-defined article categories | All | OR (within field) | no graph field (control) |
+| Status | Multi-select | Draft, Published, Archived | All | OR (within field) | no graph field (control) |
+| Audience | Dropdown | All, Patient, Provider | All | Exact match | no graph field (control) |
 
 ---
 
 ###### FR-033 / Screen 4: Resource Management [P1 — MVP]
 
-**Purpose**: Admin searches for and filters downloadable help resources.
+**Purpose**: Admin searches for and filters downloadable help resources. (REQ-022-120)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Notes |
-|-------|------|-------------|----------|-------|
-| Resource name | text | "Search resources…" | 500ms | Fuzzy match on name |
+| Field | Type | Placeholder | Debounce | Notes | Graph field |
+|-------|------|-------------|----------|-------|---------------|
+| Resource name | text | "Search resources…" | 500ms | Fuzzy match on name | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Category | Dropdown | All; admin-defined resource categories | All | Exact match |
-| File Type | Multi-select | PDF, Video, Image, Link, and others as configured | All | OR (within field) |
-| Status | Multi-select | Draft, Published, Archived | All | OR (within field) |
-| Audience | Dropdown | All, Patient, Provider | All | Exact match |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Category | Dropdown | All; admin-defined resource categories | All | Exact match | no graph field (control) |
+| File Type | Multi-select | PDF, Video, Image, Link, and others as configured | All | OR (within field) | no graph field (control) |
+| Status | Multi-select | Draft, Published, Archived | All | OR (within field) | no graph field (control) |
+| Audience | Dropdown | All, Patient, Provider | All | Exact match | no graph field (control) |
 
 ---
 
 ###### FR-033 / Screen 5: Video Management [P1 — MVP]
 
-**Purpose**: Admin searches for and filters help videos.
+**Purpose**: Admin searches for and filters help videos. (REQ-022-121)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Debounce | Notes |
-|-------|------|-------------|----------|-------|
-| Video title | text | "Search videos…" | 500ms | Fuzzy match on title |
+| Field | Type | Placeholder | Debounce | Notes | Graph field |
+|-------|------|-------------|----------|-------|---------------|
+| Video title | text | "Search videos…" | 500ms | Fuzzy match on title | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Category / Tags | Multi-select | Admin-defined video categories | All | OR (within field) |
-| Status | Multi-select | Draft, Published, Archived | All | OR (within field) |
-| Source Type | Dropdown | All, Uploaded, YouTube, Vimeo, and other configured sources | All | Exact match |
-| Audience | Dropdown | All, Patient, Provider | All | Exact match |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Category / Tags | Multi-select | Admin-defined video categories | All | OR (within field) | no graph field (control) |
+| Status | Multi-select | Draft, Published, Archived | All | OR (within field) | no graph field (control) |
+| Source Type | Dropdown | All, Uploaded, YouTube, Vimeo, and other configured sources | All | Exact match | no graph field (control) |
+| Audience | Dropdown | All, Patient, Provider | All | Exact match | no graph field (control) |
 
 ---
 
@@ -1726,28 +1725,28 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-012 / Screen 5: Communication Monitoring Center [P1 — MVP]
 
-**Purpose**: Admin searches for and filters all platform conversations for oversight and support.
+**Purpose**: Admin searches for and filters all platform conversations for oversight and support. (REQ-022-122)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Min Length | Debounce | Notes |
-|-------|------|-------------|-----------|----------|-------|
-| Patient / provider / keyword / inquiry ID | text | "Search conversations…" | 2 chars | 300ms | Searches across all four fields simultaneously |
+| Field | Type | Placeholder | Min Length | Debounce | Notes | Graph field |
+|-------|------|-------------|-----------|----------|-------|---------------|
+| Patient / provider / keyword / inquiry ID | text | "Search conversations…" | 2 chars | 300ms | Searches across all four fields simultaneously | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Patient | Autocomplete | Matching patient names | None | Exact selection |
-| Provider | Autocomplete | Matching provider names | None | Exact selection |
-| Service Type | Multi-select | All; platform-defined service types | All | OR (within field) |
-| Quote ID | text (optional) | "Filter by quote ID…" | — | Optional exact match |
-| Inquiry ID | text (optional) | "Filter by inquiry ID…" | — | Optional exact match |
-| Date Range | Date range picker + presets | Custom; Today, Last 7 days, Last 30 days, All | All | Filters by message date |
-| Flag Type | Multi-select | Keyword Flagged, Manually Flagged, Intervened, No Flags | All | OR (within field) |
-| Conversation Status | Multi-select | Active, Resolved, Escalated | All | OR (within field) |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Patient | Autocomplete | Matching patient names | None | Exact selection | no graph field (control) |
+| Provider | Autocomplete | Matching provider names | None | Exact selection | no graph field (control) |
+| Service Type | Multi-select | All; platform-defined service types | All | OR (within field) | no graph field (control) |
+| Quote ID | text (optional) | "Filter by quote ID…" | — | Optional exact match | no graph field (control) |
+| Inquiry ID | text (optional) | "Filter by inquiry ID…" | — | Optional exact match | no graph field (control) |
+| Date Range | Date range picker + presets | Custom; Today, Last 7 days, Last 30 days, All | All | Filters by message date | no graph field (control) |
+| Flag Type | Multi-select | Keyword Flagged, Manually Flagged, Intervened, No Flags | All | OR (within field) | no graph field (control) |
+| Conversation Status | Multi-select | Active, Resolved, Escalated | All | OR (within field) | no graph field (control) |
 
 Active filters combine, and the filters are remembered.
 
@@ -1759,27 +1758,27 @@ Active filters combine, and the filters are remembered.
 
 ###### FR-034 / Screen 1: Support Center Dashboard [P1 — MVP]
 
-**Purpose**: Admin searches for and filters all support tickets from patients and providers.
+**Purpose**: Admin searches for and filters all support tickets from patients and providers. (REQ-022-123)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
 **Search View**
 
-| Field | Type | Placeholder | Min Length | Debounce | Notes |
-|-------|------|-------------|-----------|----------|-------|
-| Case ID / patient name / provider name / email / title keywords | text | "Search support cases…" | 3 chars | 300ms | Real-time search across all listed fields |
+| Field | Type | Placeholder | Min Length | Debounce | Notes | Graph field |
+|-------|------|-------------|-----------|----------|-------|---------------|
+| Case ID / patient name / provider name / email / title keywords | text | "Search support cases…" | 3 chars | 300ms | Real-time search across all listed fields | no graph field (control) |
 
 **Filter View**
 
-| Filter | Type | Options | Default | Logic |
-|--------|------|---------|---------|-------|
-| Status | Multi-select | Open, In Progress, Resolved, Closed | Open + In Progress | OR (within field) |
-| Priority | Multi-select | High, Medium, Low | All | OR (within field) |
-| Category | Dropdown | All; admin-defined ticket categories | All | Exact match |
-| Ticket Source | Dropdown | All, Patient App, Provider App, Admin Portal | All | Exact match |
-| Submitter Type | Dropdown | All, Patient, Provider | All | Exact match |
-| Date Range | Date range picker | Custom | Last 30 days | Filters by ticket creation date |
-| Assigned Admin | Dropdown | All; admin user list | All | Exact match |
+| Filter | Type | Options | Default | Logic | Graph field |
+|--------|------|---------|---------|-------|---------------|
+| Status | Multi-select | Open, In Progress, Resolved, Closed | Open + In Progress | OR (within field) | no graph field (control) |
+| Priority | Multi-select | High, Medium, Low | All | OR (within field) | no graph field (control) |
+| Category | Dropdown | All; admin-defined ticket categories | All | Exact match | no graph field (control) |
+| Ticket Source | Dropdown | All, Patient App, Provider App, Admin Portal | All | Exact match | no graph field (control) |
+| Submitter Type | Dropdown | All, Patient, Provider | All | Exact match | no graph field (control) |
+| Date Range | Date range picker | Custom | Last 30 days | Filters by ticket creation date | no graph field (control) |
+| Assigned Admin | Dropdown | All; admin user list | All | Exact match | no graph field (control) |
 
 ---
 
@@ -1787,24 +1786,24 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ### General Module Rules
 
-- **Rule 1**: All search queries MUST be case-insensitive to improve match rate
-- **Rule 2**: Search functionality MUST support fuzzy matching (e.g., "Mark P" matches "Mark Patterson"; "Mehmet" matches "Mehmet Yilmaz"; accent-insensitive matching, e.g., "Jose" matches "José")
-- **Rule 3**: Search results MUST be paginated to prevent performance degradation with large datasets
-- **Rule 4**: Filter selections MUST persist during user session (cleared on logout)
+- **Rule 1**: All search queries MUST be case-insensitive to improve match rate (REQ-022-007)
+- **Rule 2**: Search functionality MUST support fuzzy matching (e.g., "Mark P" matches "Mark Patterson"; "Mehmet" matches "Mehmet Yilmaz"; accent-insensitive matching, e.g., "Jose" matches "José") (REQ-022-124)
+- **Rule 3**: Search results MUST be paginated to prevent performance degradation with large datasets (REQ-022-006)
+- **Rule 4**: Filter selections MUST persist during user session (cleared on logout) (REQ-022-125)
 - **Rule 5**: Admin search results SHOULD display patient/provider status for quick context (a design hint only; REQ-022-010 and REQ-022-011 carry the requirement)
 - **Rule 6**: Search input fields MUST have debounce (300–500ms depending on screen type — see REQ-022-012) to reduce server load from rapid typing
-- **Rule 7**: Autocomplete suggestions MUST be limited to 10 results to avoid overwhelming user
-- **Rule 8**: No user-facing search history is offered (no recent-searches list or saved searches); the admin audit log of admin searches stays (see Audit Rule)
-- **Rule 9**: Any patient-facing price sort or price filter across items priced in different currencies MUST convert each price to the patient's display currency at the current rate for ordering and filtering only; each card carrying a quote MUST still show its own quote currency, and when the listed items use more than one currency the price order MUST be labelled approximate
-- **Rule 10**: A provider card that carries no quote MUST show its starting price converted to the patient's currency [P2 - Post-MVP]
+- **Rule 7**: Autocomplete suggestions MUST be limited to 10 results to avoid overwhelming user (REQ-022-126)
+- **Rule 8**: No user-facing search history is offered (no recent-searches list or saved searches); the admin audit log of admin searches stays (see Audit Rule) (REQ-022-127)
+- **Rule 9**: Any patient-facing price sort or price filter across items priced in different currencies MUST convert each price to the patient's display currency at the current rate for ordering and filtering only; each card carrying a quote MUST still show its own quote currency, and when the listed items use more than one currency the price order MUST be labelled approximate (REQ-022-058)
+- **Rule 10**: A provider card that carries no quote MUST show its starting price converted to the patient's currency [P2 - Post-MVP] (REQ-022-143)
 
 ### Data & Privacy Rules
 
-- **Privacy Rule 1**: Until the booking is confirmed and paid, provider-facing results show the Patient ID plus a masked patient name, never the full name, and patient names MUST be excluded from provider-facing search fields. Provider search for inquiries and quotes is restricted to Patient ID as the only patient identifier prior to payment confirmation (see FR-003/Screen 9 and FR-004/Screen 2)
-- **Privacy Rule 2**: Admin search logs MUST be retained for audit purposes (who searched for whom, when)
-- **Privacy Rule 3**: Patient contact information MUST NOT be indexed for public search (admin only)
-- **Privacy Rule 4**: Provider financial data MUST NOT be searchable by other providers (admin only)
-- **Audit Rule**: All admin searches for patient/provider records MUST be logged with admin user ID, timestamp, and search terms
+- **Privacy Rule 1**: Until the booking is confirmed and paid, provider-facing results show the Patient ID plus a masked patient name, never the full name, and patient names MUST be excluded from provider-facing search fields. Provider search for inquiries and quotes is restricted to Patient ID as the only patient identifier prior to payment confirmation (see FR-003/Screen 9 and FR-004/Screen 2) (REQ-022-026)
+- **Privacy Rule 2**: Admin search logs MUST be retained for audit purposes (who searched for whom, when) (REQ-022-140)
+- **Privacy Rule 3**: Patient contact information MUST NOT be indexed for public search (admin only) (REQ-022-128)
+- **Privacy Rule 4**: Provider financial data MUST NOT be searchable by other providers (admin only) (REQ-022-129)
+- **Audit Rule**: All admin searches for patient/provider records MUST be logged with admin user ID, timestamp, and search terms (REQ-022-023)
 
 ### Admin Editability Rules
 
@@ -1812,167 +1811,82 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 - Maximum search results per page for admin and provider lists (default: 25, range: 10-100)
 - Default sort order for provider search (Recommended, Rating, Price, Experience)
-- Featured provider designation (manually curated list)
-- Provider visibility status (active providers appear in patient provider search, suspended do not)
+- Featured provider designation (manually curated list) (REQ-022-130)
+- Provider visibility status (active providers appear in patient provider search, suspended do not) (REQ-022-131)
 
 **Fixed in Codebase (Not Editable)**:
 
-- Search debounce timing (per REQ-022-012: 300ms for local filters, 500ms for server-query searches)
-- Autocomplete result limit (10 suggestions)
-- Maximum providers selectable per quote request (5 providers)
-- Search results per page in the patient app (10)
-- Search query max length (200 chars for admin, 200 chars for provider, 50 chars for patient, unless the screen states less)
+- Search debounce timing (per REQ-022-012: 300ms for local filters, 500ms for server-query searches) (REQ-022-132)
+- Autocomplete result limit (10 suggestions) (REQ-022-126)
+- Maximum providers selectable per quote request (5 providers) (REQ-022-017)
+- Search results per page in the patient app (10) (REQ-022-006)
+- Search query max length (200 chars for admin, 200 chars for provider, 50 chars for patient, unless the screen states less) (REQ-022-133)
 
 **Configurable with Restrictions**:
 
-- Admin can temporarily disable provider from patient provider search results (suspension) but cannot delete provider record
-- Admin can feature/unfeature providers in patient search, affecting "Recommended" sort order
+- Admin can temporarily disable provider from patient provider search results (suspension) but cannot delete provider record (REQ-022-131)
+- Admin can feature/unfeature providers in patient search, affecting "Recommended" sort order (REQ-022-130)
 
 ### Search Performance Rules
 
-- **Performance Rule 1**: Search queries MUST complete within 300ms for p95 of requests
-- **Performance Rule 2**: Database indexes MUST exist on all searchable fields (name, email, phone, location, status)
-- **Performance Rule 3**: Search results MUST use pagination to prevent loading excessive data to client
-- **Performance Rule 4**: Autocomplete queries MUST be cached for 5 minutes to reduce database load
+- **Performance Rule 1**: Search queries MUST complete within 300ms for p95 of requests (REQ-022-005)
+- **Performance Rule 2**: Database indexes MUST exist on all searchable fields (name, email, phone, location, status) (REQ-022-028)
+- **Performance Rule 3**: Search results MUST use pagination to prevent loading excessive data to client (REQ-022-006)
+- **Performance Rule 4**: Autocomplete queries MUST be cached for 5 minutes to reduce database load (REQ-022-029)
 
----
+### Rules Carried From Dropped Sections
 
-## Success Criteria
-
-### Admin Experience Metrics
-
-- **SC-001**: Admins can locate a patient record in under 10 seconds for 90% of searches
-- **SC-002**: Admin search returns relevant results in first 25 results for 85% of queries
-- **SC-003**: Admins successfully use filters to narrow results in under 3 clicks for 80% of complex searches
-- **SC-004**: Admin search interface receives 4.5+ satisfaction rating in internal feedback surveys
-
-### Patient Experience Metrics [P2 - Post-MVP]
-
-- **SC-005**: Patients can discover and select providers in under 2 minutes for 80% of quote requests
-- **SC-006**: Patient provider search returns satisfactory options within first 10 results for 75% of searches
-- **SC-007**: Patients successfully apply filters to refine provider choices for 60% of searches
-- **SC-008**: Patient provider selection process receives 4+ satisfaction rating in post-booking surveys
-
-### System Performance Metrics
-
-- **SC-009**: Search queries complete in under 300ms for 95% of requests (p95 latency)
-- **SC-010**: Search system handles 100 concurrent admin searches without degradation
-- **SC-011**: Search system handles 500 concurrent patient searches without degradation [P2 - Post-MVP]
-- **SC-012**: Autocomplete suggestions return in under 200ms for 95% of requests
-- **SC-013**: Database query performance remains under 100ms for indexed searches
-- **SC-014**: Zero full table scans on large tables (patients, providers) during search operations
-
-### Operational Efficiency Metrics
-
-- **SC-015**: Admin support response time improves by 40% due to faster patient lookup
-- **SC-016**: Admin overhead for patient/provider management reduced by 30% through efficient search
-- **SC-017**: Admin search usage grows to 200+ searches per day within first month
-
-### Business Impact Metrics [P2 - Post-MVP]
-
-- **SC-019**: Patient quote request completion rate increases by 20% with improved provider discovery
-- **SC-020**: Average providers selected per quote request increases from 2 to 3.5 (improved comparison)
-- **SC-021**: Patient-selected providers convert at 25% higher rate than auto-assigned providers
-- **SC-022**: Provider search engagement (filters used, profiles viewed) correlates with 15% higher booking rate
+- All search endpoints require a signed-in admin session before displaying patient or provider PII (REQ-022-021, REQ-022-138)
+- Role-based access control enforced per FR-031 (REQ-022-022)
+- Provider search queries provider profiles, credentials, and status
+- Patient search queries patient profiles, medical history, and booking status
+- Selected providers from search are added to quote request recipients
+- FR-022 is the single source of truth for search/filter specifications across all source FRs listed below. Any screen-level change to a search field or filter criterion in a source FR **must** trigger an update to the FR-022 Master Reference Table and the corresponding screen spec entry here.
+- Active patient records with complete profiles
+  - **Why needed**: Cannot search patients if no patient data exists
+  - **Source**: Patient registration module (P-01)
+- Active provider records with complete profiles, credentials, and performance data
+  - **Why needed**: Cannot search providers if no provider data exists
+  - **Source**: Provider onboarding module (A-02)
+- Patient and Provider Records (owned by FR-001 and FR-015; no separate search records)
+- Admin search reads the Patient record (FR-001) and the Provider record (FR-015) directly
+- Admin platform accessed via modern browsers (Chrome, Firefox, Safari - last 2 versions)
+- Provider "Featured" status manually curated by admin based on performance, quality, and partnerships (REQ-022-130)
+- Patient searches for providers occur during quote request flow, not as standalone exploration [P2] (REQ-022-013)
+- Admins can locate a patient record in under 10 seconds for 90% of searches
+- Patients can discover and select providers in under 2 minutes for 80% of quote requests [P2 - Post-MVP]
 
 ---
 
 ## Dependencies
 
-### Internal Dependencies (Other FRs/Modules)
-
-- **FR-031 / Module A-09**: Requires admin authentication from A-09: Admin Access Control
-  - **Why needed**: All search endpoints require a signed-in admin session before displaying patient or provider PII
-  - **Integration point**: Role-based access control enforced per FR-031
-
-- **FR-015 / Module A-02**: Depends on A-02: Provider Management & Onboarding for provider data
-  - **Why needed**: Provider search queries provider profiles, credentials, and status
-
-- **FR-016 / Module A-01**: Depends on A-01: Patient Management & Oversight for patient data
-  - **Why needed**: Patient search queries patient profiles, medical history, and booking status
-
-- **FR-003 / Module P-02**: Integrates with P-02: Quote Request & Management for provider selection [P2]
-  - **Why needed**: Selected providers from search are added to quote request recipients
-
-- **Source FR Maintenance Dependencies**: FR-022 is the single source of truth for search/filter specifications across all source FRs listed below. Any screen-level change to a search field or filter criterion in a source FR **must** trigger an update to the FR-022 Master Reference Table and the corresponding screen spec entry here.
-
-  | Tenant | Source FR(s) | Screens Owned by FR-022 |
-  |--------|-------------|-------------------------|
-  | Patient | FR-003 | Screen 7a (Provider Selection) |
-  | Patient | FR-005 | Screen 1 (Quote Comparison List) |
-  | Patient | FR-012 | Screen 1 (Patient Messages Inbox) |
-  | Patient | FR-035 | Screens 1–3 (Help & Support Hub, Help Center, My Support Tickets) |
-  | Provider | FR-003 | Screen 9 (Provider Inquiry List) |
-  | Provider | FR-004 | Screen 2 (Provider Quote List) |
-  | Provider | FR-009 | Screen 10 (Team Directory) |
-  | Provider | FR-010 | Screen 3 (In Progress Cases) |
-  | Provider | FR-011 | Screen 8 (Aftercare Cases List) |
-  | Provider | FR-012 | Screen 3 (Provider Messages List) |
-  | Provider | FR-014 | Screen 1 (Provider Analytics Dashboard) |
-  | Provider | FR-024 | Screen 4 (Provider Package List) |
-  | Provider | FR-032 | Screens 5, 5.1, 5.3, 1/Tab 5 (Help Centre, FAQs, Resource Library, Reviews Tab) |
-  | Admin (A-01) | FR-003 | Screen 11 (Hairline Overview Dashboard) |
-  | Admin (A-01) | FR-004 | Screen 5 (Global Quote Table) |
-  | Admin (A-01) | FR-005 | Screen 5 (Quote Acceptance Table) |
-  | Admin (A-01) | FR-006 | Screen 5 (Admin Bookings Table) |
-  | Admin (A-01) | FR-007 | Screen 5 (Patient Payment Progress Dashboard) |
-  | Admin (A-01) | FR-013 | Screen 7 (Review Management Dashboard) |
-  | Admin (A-01) | FR-016 | Screens 1, 7, 8 (Patient Management List, Audit Log, Pending Data Requests) |
-  | Admin (A-02) | FR-015 | Screens 1, 3/Tab 5, 3/Tab 6 (Provider Management List, Reviews Tab, Documents List) |
-  | Admin (A-03) | FR-011 | Screen 13 (Admin Aftercare Cases List) |
-  | Admin (A-05) | FR-007b | Screen 5 (Installment Plans List) |
-  | Admin (A-05) | FR-017 | Screens 4, 7/Tab 1, 7/Tab 2 (Patient Billing Invoices, Transaction Search, Billing Audit Log) |
-  | Admin (A-05/A-07) | FR-018 | Screens 1, 7 (Affiliate Management List, Affiliate Payout Status & History) |
-  | Admin (A-06) | FR-019 | Screen 1 (Promotion Program Hub) |
-  | Admin (A-09) | FR-024 | Screen 1 (Admin Treatment Catalog) |
-  | Admin (A-09) | FR-025 | Screen 1 (Questionnaire Catalog) |
-  | Admin (A-09) | FR-027 | Screens 1, 4A (Legal Documents List, User Acceptance List) |
-  | Admin (A-09) | FR-029 | Screens 5, 6 (Provider Commission Search, Currency Configuration) |
-  | Admin (A-09) | FR-030 | Screen 1 (Notification Rules Dashboard) |
-  | Admin (A-09) | FR-031 | Screens 1/Tab 1, 1/Tab 2, 5 (Roles & Permissions, Admin Users List, Admin Activity Audit Trail) |
-  | Admin (A-09) | FR-033 | Screens 2, 3, 4, 5 (FAQ, Article, Resource, Video Management) |
-  | Admin (A-10) | FR-012 | Screen 5 (Communication Monitoring Center) |
-  | Admin (A-10) | FR-034 | Screen 1 (Support Center Dashboard) |
-
-### External Dependencies (APIs, Services)
-
-- **External Service 1**: None required for MVP
-
-### Data Dependencies
-
-- **Entity 1**: Active patient records with complete profiles
-  - **Why needed**: Cannot search patients if no patient data exists
-  - **Source**: Patient registration module (P-01)
-
-- **Entity 2**: Active provider records with complete profiles, credentials, and performance data
-  - **Why needed**: Cannot search providers if no provider data exists
-  - **Source**: Provider onboarding module (A-02)
-
----
-
-## Assumptions
-
-### User Behavior Assumptions
-
-- **Assumption 1**: Admins will use search functionality 10-20 times per day for support, oversight, and operations
-- **Assumption 2**: Admins will primarily search by patient name or ID, less frequently by email or phone
-- **Assumption 3**: Patients will browse 3-5 provider profiles before selecting providers for quote request [P2 - Post-MVP]
-- **Assumption 4**: Patients will primarily sort by "Recommended" and filter by rating, less frequently by price [P2 - Post-MVP]
-- **Assumption 5**: Admins will use filters for complex queries (e.g., "all aftercare patients in Turkey") 30% of the time
-
-### Technology Assumptions
-
-- **Assumption 1**: Admin platform accessed via modern browsers (Chrome, Firefox, Safari - last 2 versions)
-- **Assumption 2**: Patient mobile app has stable internet connection for search queries [P2 - Post-MVP]
-- **Assumption 3**: Backend API can handle 100 concurrent search queries without performance degradation
-- **Assumption 4**: Client-side pagination and infinite scroll supported by mobile app framework [P2 - Post-MVP]
-
-### Business Process Assumptions
-
-- **Assumption 1**: Admin searches are for legitimate support/oversight purposes (audit logs deter abuse)
-- **Assumption 2**: Provider data is kept up-to-date by providers and verified by admin (search reflects accurate info)
-- **Assumption 3**: Patient searches for providers occur during quote request flow, not as standalone exploration [P2]
-- **Assumption 4**: Provider "Featured" status manually curated by admin based on performance, quality, and partnerships
+- **FR-003**: Integrates with P-02: Quote Request & Management for provider selection [P2]; Source FR, Screens 7a, 9, 11
+- **FR-004**: Source FR, Screens 2, 5
+- **FR-005**: Source FR, Screens 1, 5
+- **FR-006**: Source FR, Screen 5
+- **FR-007**: Source FR, Screen 5
+- **FR-007b**: Source FR, Screen 5
+- **FR-009**: Source FR, Screen 10
+- **FR-010**: Source FR, Screen 3
+- **FR-011**: Source FR, Screens 8, 13
+- **FR-012**: Source FR, Screens 1, 3, 5
+- **FR-013**: Source FR, Screen 7
+- **FR-014**: Source FR, Screen 1
+- **FR-015**: Depends on A-02: Provider Management & Onboarding for provider data; Source FR, Screens 1, 3/Tab 5, 3/Tab 6
+- **FR-016**: Depends on A-01: Patient Management & Oversight for patient data; Source FR, Screens 1, 7, 8
+- **FR-017**: Source FR, Screens 4, 7/Tab 1, 7/Tab 2
+- **FR-018**: Source FR, Screens 1, 7
+- **FR-019**: Source FR, Screen 1
+- **FR-024**: Source FR, Screens 1, 4
+- **FR-025**: Source FR, Screen 1
+- **FR-027**: Source FR, Screens 1, 4A
+- **FR-029**: Source FR, Screens 5, 6
+- **FR-030**: Source FR, Screen 1
+- **FR-031**: Requires admin authentication from A-09: Admin Access Control; Source FR, Screens 1/Tab 1, 1/Tab 2, 5
+- **FR-032**: Source FR, Screens 5, 5.1, 5.3, 1/Tab 5
+- **FR-033**: Source FR, Screens 2, 3, 4, 5
+- **FR-034**: Source FR, Screen 1
+- **FR-035**: Source FR, Screens 1-3
 
 ---
 
@@ -2069,22 +1983,22 @@ A patient has received two parent quotes from two providers. Each parent quote o
 ### Edge Cases
 
 - **Edge Case 1**: What happens when a patient searches for providers in a country with no active providers?
-  - **Handling**: Display "No providers available in [country]. Please try another location or contact support." with link to support chat.
+  - **Handling**: Display "No providers available in [country]. Please try another location or contact support." with link to support chat. (REQ-022-134)
 
 - **Edge Case 2**: How does the system handle an admin searching for a patient with a very common name (e.g., "John Smith")?
-  - **Handling**: Display the first page of results (25 per page, per REQ-022-006) with total result count shown (e.g., "500+ results found"). System shows an informational banner: "Many results found. Use filters to narrow down by location, status, or patient ID."
+  - **Handling**: Display the first page of results (25 per page, per REQ-022-006) with total result count shown (e.g., "500+ results found"). System shows an informational banner: "Many results found. Use filters to narrow down by location, status, or patient ID." (REQ-022-135)
 
 - **Edge Case 3**: What occurs if a patient's search query contains special characters or SQL syntax?
-  - **Handling**: Input sanitization removes/escapes special characters; query runs safely without SQL injection risk; user sees results or "No results found."
+  - **Handling**: Input sanitization removes/escapes special characters; query runs safely without SQL injection risk; user sees results or "No results found." (REQ-022-024)
 
 - **Edge Case 4**: How does search handle diacritics or accented characters (e.g., "José" vs "Jose")?
-  - **Handling**: Search performs accent-insensitive matching (José matches Jose).
+  - **Handling**: Search performs accent-insensitive matching (José matches Jose). (REQ-022-141)
 
 - **Edge Case 5**: What happens if database index is missing on a searchable field, causing slow queries?
-  - **Handling**: Search times out after 10 seconds; error message displayed: "Search taking too long. Please try again or contact support."; error logged for engineering team to investigate.
+  - **Handling**: Search times out after 10 seconds; error message displayed: "Search taking too long. Please try again or contact support."; error logged for engineering team to investigate. (REQ-022-136)
 
 - **Edge Case 6**: What happens if a patient has multiple accounts with same name/email?
-  - **Handling**: Search returns all matching accounts; admin reviews each record to identify correct patient using patient ID, location, or registration date; duplicate account detection flagged in results.
+  - **Handling**: Search returns all matching accounts; admin reviews each record to identify correct patient using patient ID, location, or registration date; duplicate account detection flagged in results. (REQ-022-137)
 
 ---
 
@@ -2165,47 +2079,11 @@ A patient has received two parent quotes from two providers. Each parent quote o
 
 ---
 
-## Key Entities
-
-- **Entity 1 - Patient and Provider Records** (owned by FR-001 and FR-015; no separate search records):
-  - Admin search reads the Patient record (FR-001) and the Provider record (FR-015) directly
-  - **Patient fields the search uses beyond what the Patient record lists**: patient ID (HPID), name, phone, status, location, registration date, last activity date
-  - **Provider fields the search uses beyond what the Provider record lists**: clinic name, location (city, country), specialties, rating, review count, years of experience, active patients, total procedures
-  - **Relationships**: Patient record links to inquiries, quotes, bookings, payments; Provider record links to staff, certifications, reviews, treatments, bookings
-
-- **Entity 2 - Search Audit Log**:
-  - **Key attributes**: log_id, admin_user_id, search_type (patient/provider), search_term, filters_applied, result_count, timestamp
-  - **Relationships**: Audit log links to admin user who performed search
-
----
-
 ## Appendix: Change Log
 
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
-| 2025-11-12 | 1.0 | Initial PRD creation for FR-022 | Claude AI |
-| 2026-04-03 | 2.0 | Major overhaul: Screen Specifications fully rewritten with three-tenant structure (Patient/Provider/Admin); master reference table added (Module → FR → Screen); Provider Platform screens added (PR-01 through PR-06) to match P1-MVP scope; control behaviors mini-tables added to all screen specs (search inactive/active, filter inactive/active, reset filter); maintenance convention note added; Executive Summary and Module Scope updated; Functional Requirements Summary expanded with Provider and Patient P1 REQs | Claude AI |
-| 2026-04-12 | 2.1 | Post-verification source-of-truth alignment: added missing patient/provider Help & Support search/filter screens from FR-035 and FR-032 to the Master Reference Table and screen specs; corrected Provider Messages mapping from FR-012 Screen 2 to Screen 3 and aligned its exact filter controls to the source FR; aligned A-02 provider-management search/filter wording and provider search requirement to the FR-015 admin dashboard model | Codex |
-| 2026-04-12 | 2.2 | Verification round 2 fixes: removed unimplemented "treatment type" filter from REQ-022-002, Module Scope, and Main Flow 1; corrected Main Flow 2 diagram nodes to match FR-015/Screen 1 (search: provider name/clinic name/email/license number; filters: status/featured/commission type/date range); rewrote User Story 2 Scenario 2 to test Location filter instead of search field; enumerated Transaction Search status options per record type (FR-017/Screen 7/Tab 1); updated footer date and approvals table | Claude AI |
-| 2026-04-12 | 2.3 | Verification round 3 fixes: (1) Standardized all search matching to fuzzy matching (database full-text indexes — MySQL FULLTEXT / PostgreSQL TSVECTOR) across all screen specs, Business Rules, REQ-022-007, and Implementation Notes; P3 external dependency updated to reflect advanced fuzzy (synonym expansion, edit-distance) as the P3 enhancement scope. (2) Resolved patient name PHI masking gap: removed patient name from provider-facing search fields in FR-003/Screen 9 and FR-004/Screen 2 (now Patient ID only pre-payment); updated Privacy Rule 1, REQ-022-033, REQ-022-035, and Module Scope PR-02 description. (3) Fixed admin search query max length from 100 to 200 chars to match FR-015/Screen 1 and FR-032/Screen 5 specs. (4) Corrected multi-select filter Logic column from "AND" to "OR (within field)" across all screen specs; added Filter Logic Note to Control Behavior Standards clarifying cross-filter AND vs. within-field OR semantics. (5) Expanded Internal Dependencies with full source FR maintenance table covering all 30+ FRs in the Master Reference Table. (6) Added Provider Platform entry points (PR-01 through PR-06). (7) Added 300ms debounce to FR-035/Screen 1 (was missing). (8) Marked REQ-022-009 export functionality as P2 spec gap with TODO. | Claude AI |
-| 2026-04-13 | 2.4 | Verification round 4 fixes: (1) Removed "specialist" from Module Scope PR-04 and REQ-022-039 — specialist filter is admin-only (A-03); provider screen spec (FR-011/Screen 8) does not include it and the client transcriptions contain no provider-facing specialist filter requirement. (2) Removed B2 "Search returns too many results" workflow — truncation model (first 100 results) contradicted pagination rules (REQ-022-006: 25 results/page); pagination is now the single authoritative model; B3 renumbered to B2; Edge Case 2 updated to reflect paginated first-page display with filter guidance banner. (3) Moved REQ-022-009 (export) from Core Requirements (P1) to Enhanced Requirements (P2) — spec is incomplete; placement under P1 heading while noting P2 in an inline TODO was ambiguous. (4) Added "Active Status" and "Available Capacity" filters to FR-003/Screen 7a (Patient Provider Selection, P2) — required by system PRD (L441) but missing from screen spec. (5) Corrected Implementation Notes debounce from blanket "500ms" to "300–500ms per screen type, per REQ-022-012". Minor: overflow-vs-page-size interaction resolved as side-effect of B2 removal. | Claude AI |
-| 2026-04-13 | 2.5 | Post-verification fixes: (1) Corrected FR-015/Screen 1 commission type filter from stale "Tier-based" to "Flat Rate" — aligns with FR-015 v1.6 update (maintenance convention gap). (2) Fixed User Story 2 Scenario 3: replaced non-existent "Pending Onboarding" status with "Draft" to match FR-015 provider status values. (3) Replaced FR-001 internal dependency with FR-031 — admin search authentication is governed by Admin Access Control (FR-031), not patient auth (FR-001). (4) Removed PostgreSQL references from Assumptions, Edge Case 4, and Implementation Notes — system uses MySQL 8.0+ exclusively per system-technical-spec.md. (5) Added provider platform max search query length (200 chars) to Business Rules — was undefined, leaving an implementation gap. | Claude AI |
-| 2026-04-13 | 2.6 | Applied selected follow-up resolutions: (1) realigned FR-012 search/filter surfaces to source scope by moving patient/provider messaging screens to P2 and assigning provider messaging to PR-07, (2) removed non-authoritative search-result export behavior from FR-022 outside deferred REQ-022-009, and (3) replaced the FR-019/Screen 4 placeholder dependency note with a finalized screen reference. | Codex |
-| 2026-04-13 | 2.7 | Removed unsupported admin global-search/cross-module-search entry-point claims. Per user direction, provider-selection contract changes for Screen 7a were limited to `system-prd.md`; FR-022 content was otherwise left unchanged for that topic. | Codex |
-| 2026-04-13 | 2.8 | Status finalized: set PRD status to **✅ Verified & Approved**, updated approvals to **✅ Approved**, and refreshed footer metadata to match `prd-template.md`. | Documentation governance (2026-04-13) |
-| 2026-05-14 | 2.9 | FR-019 follow-up alignment: updated A-06 search/filter mapping from stale `FR-019 / Screen 4: Discount Code Catalog` to current `FR-019 / Screen 1: Promotion Program Hub`; added Program Type, Scope, and Funding Model filters to match FR-019 v1.7. | Codex |
-| 2026-05-14 | 2.10 | Corrected stale FR-013 screen reference: updated all three occurrences of `FR-013 / Screen 2 (Review Management Dashboard)` to `FR-013 / Screen 7` following FR-013 v1.8 screen renumbering. | Verification alignment (2026-05-14) |
-| 2026-06-22 | 2.11 | Synced A-07 Affiliate Management filters with FR-018 v1.1 bulk affiliate code generation: added country/region, affiliate type, language, performance tier, campaign eligibility, and payout setup filters so admins can select affiliate cohorts before generating one unique code per affiliate. | Codex |
-| 2026-06-23 | 2.12 | FR-018 screen-reference cleanup: updated affiliate payout search/filter mappings from the stale FR-018 Screen 5 reference to current FR-018 Screen 7 Affiliate Payout Status & History. | Codex |
-| 2026-09-16 | 2.13 | Reconciled FR-005 Screen 1 with the accepted subquote model: changed the filter target from flat quotes to complete subquotes, added Appointment Date sorting, documented inherited sort values, and bound Date Range filtering to the subquote's selected Option/Date-Price Record. | Product Owner / Verification alignment |
-| 2026-10-16 | 2.14 | MTG-002 quote-model alignment: Quote Status filters on FR-004 / Screen 2 and Screen 5 now use the exact FR-004 quote statuses, adding Cancelled (Provider Status), with no `confirmed` quote status; the FR-006 / Screen 5 Booking Status filter now uses the exact FR-006 booking states (Accepted, Payment Window Expired, Confirmed, In Progress, Aftercare, Completed, Cancelled) and drops "Pending Payment"; FR-024 / Screen 4 package filter changed from Package Type to package status (Active, Inactive) with REQ-022-041 updated, following FR-024 v1.3; FR-005 / Screen 1 sort basis, tie-break order, ineligible-subquote placement and result unit defined; parent-quote row and count unit stated for FR-004 / Screen 2 and Screen 5; User Story 5 added for REQ-022-057; footer date refreshed. Findings FR-022-1, FR-022-2, FR-022-3, FR-022-4, FR-022-5, FR-022-6, FR-022-7, FR-022-9; decisions M6, D23, D17, R7-3. Status reset pending consolidated verification. See [Change Request](./change-request-2026-10-16-mtg002-quote-model-alignment.md) (CR-FR022-20261016-01). | Product Owner / Documentation |
-| 2026-10-16 | 2.15 | Product Owner Q-series alignment (CR-FR022-20261016-01): patient-facing price sorts and price filters convert each price to the display currency at the current rate for ordering only, cards keep their own quote currency, and mixed-currency order is labelled approximate (FR-005 / Screen 1 sort basis, General Module Rule 9, User Story 5 scenario 5, REQ-022-058; Q8). Consolidated verification remains pending. | Product Owner / Documentation |
-| 2026-10-18 | 2.16 | Consolidated verification corrections (CR-FR022-20261016-01): Approvals row refreshed to record Product Owner documentation approval through v2.15 via the MTG-002 decision log. No requirement change. | AI |
-| 2026-10-18 | 2.17 | Final audit corrections (CR-FR022-20261016-01): the 2026-04-13 change log rows for versions 2.4 and 2.5 are now listed in version order. No requirement change; the provider and admin Quote Status filters keep the FR-004 status label Cancelled (Provider Status), while FR-004 owns the patient-facing label Offer Unavailable. | Product Owner |
-| 2026-10-22 | 2.18 | FR-015 alignment for A-02 provider search (B01 manual test findings): FR-015 / Screen 1 Status filter drops the non-existent Draft status and defaults to Active, matching FR-015 Screen 1 Default View; Main Flow 2 and User Story 2 scenarios 3 and 5 no longer reference Draft providers or an Approve action, since FR-015 creates providers Active. Product decision 2026-10-22. | AI |
-| 2026-11-20 | 2.19 | Requirements graph programme baseline: owner rulings applied. Main changes: (1) messaging inbox and provider messages search and filters move from P2 to P1, with REQ-022-070 as the one statement for the patient inbox (REQ-022-049, REQ-022-050 retired); (2) provider-facing results show Patient ID plus a masked name before payment (Privacy Rule 1, REQ-022-026); (3) new REQ-022-143 and Rule 10 for provider card starting price converted to the patient's currency, with REQ-022-058 and Rule 9 limited to cards carrying a quote; (4) REQ-022-009 (export), REQ-022-053 and REQ-022-086 (My Support Cases criteria, now owned by FR-032) retired; REQ-022-139 and REQ-022-142 retired and technical notes dropped (database joins, search engine notes, MySQL FULLTEXT, scaling strategy, collation clause); (5) admin settings search points to FR-031 Screen 5 for change history, Admin Analytics deferral line removed, A-03/A-05/A-07/A-10 lines trimmed to the owning screens; (6) option lists corrected to the owning FRs (FR-014 time range, FR-005 acceptance status, FR-031 admin status, FR-034 ticket status), page size setting covers admin and provider only, Help Centre search lists its content types, reviews and monitoring filters remembered; (7) B1 and B2 name patient, clinic user and admin as any-one-of doers, B1 drops the contact-support suggestion, B2 separates abandoning (all three) from contacting support (patient and clinic user); (8) Key Entities fold the search records into the Patient and Provider records; cross-document reconciliation (leftover technical notes removed: search engine and database dependency notes, Implementation Notes section, Database Index entity, database wording in Rule 2). | Product Owner / Documentation |
-| 2026-11-22 | 2.20 | Owner answer of 2026-11-22 (requirements graph programme, Phase 4 re-check): installment plan statuses are Active, Completed, Canceled, Defaulted; Overdue is a calculated flag with its own yes/no filter. FR-007b / Screen 5 filter table and the status reference table aligned with FR-007B. | Product Owner / Documentation |
-| 2026-11-22 | 2.21 | Consistency review: admin patient Status filter and new Account Status filter aligned to FR-016 Screen 1; Closure Requested filter added to the provider filters and REQ-022-004 per FR-015 Screen 1; REQ-022-006 notes the FR-015 provider list page size (50); stale treatment type removed from Key Entities. | Product Owner / Documentation |
+| 2026-11-22 | 2.22 | Requirements graph programme baseline: PRD compressed to the checklist structure (rules cited by REQ id, search and filter control rows tagged in the Graph field column, dropped classes removed). No rule changes. Earlier history (v1.0 to v2.21) and the change request CR-FR022-20261016-01 (change-request-2026-10-16-mtg002-quote-model-alignment.md) are in `archived/prd-baseline-2026-11-08/fr022-search-filtering/` and in git history. | AI Assistant |
 
 ---
 
