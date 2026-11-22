@@ -77,3 +77,4 @@ The owner read and approved the FR-005 compressed PRD on 2026-11-22 and released
 - 2026-11-23, independent review of FR-009: no requirement lost or changed.
 - 2026-11-23, independent review of FR-011: no requirement lost or changed.
 - 2026-11-23, independent review of FR-023: no requirement lost or changed.
+- 2026-11-23, FR-014: independent review found no requirement lost; one dropped assumption (provider analytics widgets are PRD-derived and later verification passes must not flag them against the client transcripts) was restored in original wording under Business Rules by controller judgement.

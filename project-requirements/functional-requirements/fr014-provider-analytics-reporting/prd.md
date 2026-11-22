@@ -1586,6 +1586,10 @@ Do not backfill an accepted amount by choosing a current alternative or consulti
 - **Assumption 6**: Patient-country analytics resolve from `patients.location_id` referencing `countries.id`; during transition, legacy rows may still fall back to `patients.location` for display/grouping compatibility until data cleanup is complete
 - **Pipeline and pre-aggregation**: Metrics are computed by a scheduled aggregation job on a 15-minute cycle (SC-010) into the provider-level and platform-level aggregates (Key Entities 1 and 4), each stamped with its reporting cutoff and FR-026 configuration version. Screens read aggregates, not live transactional tables, so the 3-second load target (Rule 16) does not depend on raw query volume. Late-arriving source events (refunds, closures, re-generated payout statements) are picked up on the next cycle and recalculate the affected periods.
 
+**Carried from dropped sections (original wording)**:
+
+- **Assumption 8**: Provider-side analytics widgets (TTFQ benchmarks, pricing scatter, patient journey, conversion breakdowns, etc.) are **PRD-derived, not transcription-derived**. Client transcriptions focus primarily on admin-side reporting; the provider analytics UX was product-designed to complement the admin view. This is an accepted design decision — future verification passes MUST NOT flag these widgets as discrepancies from client transcriptions.
+
 ---
 
 ## Dependencies
@@ -1784,6 +1788,7 @@ These are required implementation/reconciliation cases, not a claim that the dep
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2026-11-22 | 3.20 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v3.19) and the change requests (CR-FR014-20261007-01, file change-request-2026-10-07-parent-quote-subquote-analytics.md; CR-FR014-20261013-02, file change-request-2026-10-13-export-history-accessibility.md; CR-FR014-20261016-01, file change-request-2026-10-16-mtg002-quote-model-alignment.md) are in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
+| 2026-11-23 | 3.21 | Independent compression review: 1 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
 
 ---
 
