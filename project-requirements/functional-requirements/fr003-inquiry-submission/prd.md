@@ -1195,6 +1195,10 @@ flowchart TD
   - Distribution metadata via related ProviderInquiry records
 - These fields MUST be fully populated before an inquiry is eligible for distribution to providers. (REQ-003-060)
 
+**Carried from dropped sections (original wording)**:
+
+- **Location Data**: From admin-configured country/location lists
+
 ## Functional Requirements Summary
 
 ### Core Requirements
@@ -1330,6 +1334,7 @@ Acceptance Scenarios:
 | Date | Version | Changes | Author |
 | --- | --- | --- | --- |
 | 2026-11-22 | 2.16 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v2.15) and the change requests (CR-FR003-20261014-01, CR-FR003-20261015-01, CR-FR003-20261016-01, CR-FR003-20261027-01, CR-FR003-20261027-02, CR-FR015-20261013-01 named in v2.7, and the change request files change-request-2026-08-20-fr037-monitoring-conversion-alignment.md and change-request-2026-09-04-inquiry-configuration.md named in v2.0 to v2.3) are in `archived/prd-baseline-2026-11-08/` and in git history. | Claude (AI Assistant) |
+| 2026-11-23 | 2.17 | Independent compression review: 1 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Claude (AI Assistant) |
 
 ## Appendix: Approvals
 

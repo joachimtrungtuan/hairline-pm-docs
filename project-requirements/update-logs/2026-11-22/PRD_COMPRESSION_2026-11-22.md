@@ -71,3 +71,4 @@ The owner read and approved the FR-005 compressed PRD on 2026-11-22 and released
 - 2026-11-23, independent review of FR-032: no requirement lost or changed.
 - 2026-11-23, FR-024: independent review found one clause missing (the removed QuotePackage record: FR-004 Quote Options hold package provenance and legacy rows are handled by the FR-004 migration); restored in original wording under Business Rules.
 - 2026-11-23, FR-016: independent review found nothing lost in kept sections; two borderline clauses from dropped sections were restored by the controller in original wording under Business Rules (admin-flagged communications resolved within 48 hours; audit log storage is append-only with no updates or deletes).
+- 2026-11-23, FR-003: independent review found one clause missing (location data comes from admin-configured country and location lists); restored in original wording under Business Rules.
