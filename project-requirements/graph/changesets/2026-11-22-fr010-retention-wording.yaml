@@ -1,0 +1,4 @@
+reason: "REQ-010-046 said a 7-year minimum retention; the FR-010 PRD Privacy Rule 3 and the system PRD Platform-Wide Rules state one 10-year retention period. Wording aligned to the PRD."
+by: controller
+operations:
+  - {"op": "update_node", "id": "REQ-010-046", "attrs": {"statement": "Treatment documentation retention follows the system PRD, Platform-Wide Rules: One 10-year retention period"}}
