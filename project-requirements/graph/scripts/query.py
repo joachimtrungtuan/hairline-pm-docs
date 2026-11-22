@@ -14,6 +14,16 @@ Usage: query.py <command> [args] [--db DB_PATH] [--json]
                                  without it, every pair of active Rules that duplicate each other.
                                  Matching is lint.py's L12: normalised text, difflib ratio >= 0.8
 
+Cross-FR consistency checks (see consistency.py; every row is a finding for a person to decide):
+
+  boundary                       FR pairs where one FR's Screens show, or Rules apply to, data another FR owns,
+                                 with no references edge between the two FRs
+  ownership                      Entities, Settings or Events two FRs appear to own; Fields owned apart from their Entity
+  flow                           Events no Rule consumes, Entities written but never read (or the reverse),
+                                 Stages that read no data
+  joins                          whether Stages linked across timelines (enters from, joins) carry the data they need
+  coverage                       Screens no Actor uses, Stages no Actor acts in, Rules tied to no Stage
+
 Output is a plain table, or JSON with --json. Exit codes: 0 ok, 1 not found or bad argument, 2 database error.
 """
 
@@ -27,6 +37,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any
 
+import consistency
 from common import DEFAULT_DB_PATH, Schema, SchemaError, load_graph, load_schema, open_db
 from lint import duplicate_pairs, match_statement, rule_statements
 
@@ -268,6 +279,8 @@ def run(conn: sqlite3.Connection, schema: Schema, args: argparse.Namespace) -> R
         return at(conn, args.node_id, args.timestamp)
     if args.command == "duplicates":
         return duplicates(conn, args.text)
+    if args.command in consistency.CHECKS:
+        return Result(*consistency.CHECKS[args.command](conn))
     return changeset(conn, args.changeset_id)
 
 
@@ -290,6 +303,8 @@ def build_parser() -> argparse.ArgumentParser:
     sub.add_parser("changeset", parents=[shared], help="rows of one change-set").add_argument("changeset_id")
     sub.add_parser("duplicates", parents=[shared], help="duplicate or near-duplicate Rule statements").add_argument(
         "--text", help="candidate statement to check before adding a Rule")
+    for name, check in consistency.CHECKS.items():
+        sub.add_parser(name, parents=[shared], help=(check.__doc__ or "").strip().splitlines()[0])
     return parser
 
 
