@@ -733,6 +733,10 @@ Before production release, implementation must ensure all treatment- and package
 - **Usage Count** (Screen 4): `COUNT(quote options WHERE source_package_id = X AND parent quote status IN ('draft', 'sent'))`. It counts the FR-004 quote options copied from any version of this package whose parent quote is still open. The deactivation warning "used in N open quotes" shows the number of distinct open parent quotes among them. Status values follow FR-004 (REQ-024-074)
 - **Last Updated** (all screens): Database `updated_at` timestamp, displayed in user's local timezone (REQ-024-056)
 
+**Carried from dropped sections (original wording)**:
+
+- **Entity 5 - QuotePackage** (removed): No longer a record of this module. FR-004 Quote Options hold package provenance (`sourcePackageId`, `sourcePackageVersion`) and the quote-local copy. Legacy rows are handled by the FR-004 migration.
+
 ---
 
 ## Dependencies
@@ -920,6 +924,7 @@ Provider needs to temporarily stop offering a package (seasonal hotel unavailabi
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2026-11-22 | 1.8 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.7) and the change requests CR-FR024-20261016-01 (change-request-2026-10-16-mtg002-quote-model-alignment.md) and change-request-2026-09-10-quote-option-provenance-alignment.md are in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
+| 2026-11-23 | 1.9 | Independent compression review: 1 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
 
 ---
 
