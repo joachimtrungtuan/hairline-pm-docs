@@ -1287,12 +1287,15 @@ _Account security (affiliate-managed)_:
 
 - **Integration 1: Patient Booking Checkout → Affiliate Code Validation**
   - **Data format**: JSON payload with discount code, patient ID (anonymized), booking total
+  - **Authentication**: Internal service-to-service API with JWT tokens
   - **Error handling**: If validation service unavailable, allow checkout to proceed without discount (prevent checkout failure) (REQ-018-201)
 - **Integration 1a: FR-018 Affiliate Code Generation → FR-019 Promotion Registration**
   - **Data format**: JSON payload with campaign name, affiliate ID, generated code text, discount type/value, expiration date, usage limits, application method, and attribution metadata
+  - **Authentication**: Internal service-to-service API with admin user context for audit
   - **Error handling**: If FR-019 registration fails for a generated code, mark that affiliate row as failed and allow admin to retry without duplicating successful rows (REQ-018-202)
 - **Integration 2: Booking Completion Event → Commission Calculation**
   - **Data format**: Event payload with booking ID, affiliate attribution code/link (if captured), final discount applied, final payment amount, Hairline commission amount; the event is FR-018's own booking-completed event and is produced from the booking's final payment event
+  - **Authentication**: Internal event bus with message authentication
   - **Error handling**: If commission calculation fails, retry 3 times with exponential backoff; alert admin if all retries fail (REQ-018-203)
 - **Integration 3: FR-018 Payout Data → FR-017 Affiliate Billing Execution**
   - **Data format**: JSON payload/API response with affiliate ID, payout period, completed booking count, gross commission, reversals/refunds, net amount, threshold exclusion status, payout readiness, masked destination reference, and audit metadata
@@ -1318,6 +1321,10 @@ _Account security (affiliate-managed)_:
 - **Assumption 3**: Finance team will reconcile affiliate payouts within 48 hours of processing to detect errors
 - **Assumption 4**: Affiliate program will not exceed 10% of Hairline's total commission revenue within first 12 months (cost control)
 - **Why needed**: Affiliate amounts are denominated in USD (platform base currency) and bookings may be transacted in other currencies; FR-029 is the single owner of the supported-currency list, base currency, conversion-rate sources, markup, and locked exchange rates
+
+**Carried from dropped sections (original wording)**:
+
+- **Relationships**: One booking can preserve one affiliate attribution source (if captured); one booking has one final applied discount for price calculation; one booking belongs to one patient; one booking contributes to one payout
 
 ---
 
@@ -1546,6 +1553,7 @@ Business negotiates new commission terms with affiliate; admin updates commissio
 | Date | Version | Changes | Author |
 | --- | --- | --- | --- |
 | 2026-11-22 | 2.6 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v2.5) is in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
+| 2026-11-23 | 2.7 | Independent compression review: 4 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
 
 ---
 
