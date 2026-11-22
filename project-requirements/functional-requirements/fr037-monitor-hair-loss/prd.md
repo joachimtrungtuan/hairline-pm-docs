@@ -647,6 +647,12 @@ flowchart TD
 - FR-020 event candidates: `monitoring.assignment_pending`, `monitoring.provider_assigned`, `monitoring.provider_withdrawn`, `monitoring.provider_reassigned`, `monitoring.advice_posted`, `monitoring.completed`, `monitoring.export_ready`, and `monitoring.converted_to_inquiry`. `monitoring.completed` and `monitoring.export_ready` are shared with FR-038. (REQ-037-079)
 - Implementation must validate final notification copy during technical design.
 
+**Carried from dropped sections (original wording)**:
+
+- **FR-038**: Sibling monitoring-type case; an active FR-038 case does not block an active FR-037 case, and both reuse shared monitoring entities discriminated by case type. FR-037 owns the shared entities; FR-038 extends them with case type `transplant_progress` and its own fields.
+- Patients understand severity 1 means least severe and 10 means most severe.
+10. **MonitoringAuditEntry**: Admin correction history for a case with actor, reason, time, before-value, after-value, and the item corrected; the history names the item changed.
+
 ---
 
 ## Dependencies
@@ -769,6 +775,7 @@ flowchart TD
 | Version | Date | Changes | Author |
 | --- | --- | --- | --- |
 | 2.2 | 2026-11-22 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v2.1) and the change request CR-FR037-20260820-01 (`change-request-2026-08-20-cross-fr-integration.md`) are in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
+| 2.3 | 2026-11-23 | Independent compression review: 3 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
 
 ---
 
