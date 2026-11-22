@@ -1,0 +1,6 @@
+reason: "Consistency review of FR-009: it reads provider role permissions (FR-031) and provider seat limit, name and id (FR-015) as the owners' read-only data, so it cites one Rule of each owner; the patient-handler-changed Event is reacted to by the FR-009 rerouting Rule."
+by: controller
+operations:
+  - {"op": "add_edge", "from": "FR-009", "verb": "references", "to": "REQ-031-005"}
+  - {"op": "add_edge", "from": "FR-009", "verb": "references", "to": "REQ-015-010"}
+  - {"op": "add_edge", "from": "REQ-009-077", "verb": "applies to", "to": "EVT-team-patient-handler-changed"}
