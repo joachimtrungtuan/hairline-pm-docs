@@ -55,7 +55,7 @@ The patient may convert the active monitoring case into FR-011 standalone afterc
 - Stores monitoring media and logs securely.
 - Generates date-to-date PDF summaries asynchronously.
 - Transfers compatible fields, a selected scan, and PDF into an FR-011 standalone-aftercare request idempotently.
-- Sends export-ready, completion, and conversion notifications to the patient.
+- Sends export-ready, completion, and conversion notifications to the patient. (REQ-038-042)
 
 ### Communication Structure
 
@@ -67,16 +67,16 @@ The patient may convert the active monitoring case into FR-011 standalone afterc
 **Out of Scope**:
 
 - Provider advice, provider assignment, provider chat, clinic review, diagnosis, and prescriptions.
-- FR-012 secure messaging.
-- FR-011 milestone/task communications before standalone aftercare is purchased, assigned, and activated.
+- FR-012 secure messaging. (REQ-038-063)
+- FR-011 milestone/task communications before standalone aftercare is purchased, assigned, and activated. (REQ-038-063)
 - Automated clinical interpretation of severity or scan changes.
 
 ### Entry Points
 
-- Patient selects **Aftercare: Monitor Transplant Progress** from FR-003 Screen 1: Service Selection.
-- Patient opens the active case from the patient home/dashboard monitoring card.
-- Admin opens **Monitoring Cases** and filters Type = Transplant Progress.
-- Patient selects **Switch to Aftercare Package** from active-case actions or the completion screen.
+- Patient selects **Aftercare: Monitor Transplant Progress** from FR-003 Screen 1: Service Selection. (REQ-038-062)
+- Patient opens the active case from the patient home/dashboard monitoring card. (REQ-038-062)
+- Admin opens **Monitoring Cases** and filters Type = Transplant Progress. (REQ-038-062)
+- Patient selects **Switch to Aftercare Package** from active-case actions or the completion screen. (REQ-038-062)
 
 ---
 
@@ -179,140 +179,143 @@ flowchart TD
 
 #### Screen 1: Transplant-Progress Monitoring Intake
 
-**Purpose**: Creates a self-service case using information compatible with FR-011 standalone aftercare.
+**Purpose**: Creates a self-service case using information compatible with FR-011 standalone aftercare. (REQ-038-024, REQ-038-020)
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Treatment Date | date | Yes | Date transplant was performed | Not in future |
-| Treatment Type | select | Yes | Transplant/procedure type | Active treatment-type value |
-| Treating Clinic | text | Yes | External clinic name | 1 to 200 characters |
-| Treating Country | select | No | Country of treatment | Active FR-028 country |
-| Treatment Documentation | file list | No | Existing treatment records | PDF/JPG/PNG; maximum 10MB each |
-| Current Concerns | textarea | No | Current recovery concern or symptom | Maximum 2000 characters |
-| Initial Severity | slider | Yes | Starting condition/recovery rating | Integer 1 to 10 |
-| Initial Photos | file list | No | Current-condition photos | Maximum 5; secure image limits |
-| Initial Head Scan | capture | No | V1 multi-view photo set | FR-002 quality contract |
-| Self-Service Acknowledgment | checkbox | Yes | Confirms no provider monitoring or required cadence | Must be selected |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Treatment Date | date | Yes | Date transplant was performed | Not in future | ENT-monitoring-case.treatment_date |
+| Treatment Type | select | Yes | Transplant/procedure type | Active treatment-type value | ENT-monitoring-case.treatment_type |
+| Treating Clinic | text | Yes | External clinic name | 1 to 200 characters | ENT-monitoring-case.treating_clinic |
+| Treating Country | select | No | Country of treatment | Active FR-028 country | ENT-monitoring-case.treating_country |
+| Treatment Documentation | file list | No | Existing treatment records | PDF/JPG/PNG; maximum 10MB each | ENT-monitoring-case.treatment_documentation |
+| Current Concerns | textarea | No | Current recovery concern or symptom | Maximum 2000 characters | ENT-monitoring-case.current_concerns |
+| Initial Severity | slider | Yes | Starting condition/recovery rating | Integer 1 to 10 | ENT-monitoring-case.starting_severity |
+| Initial Photos | file list | No | Current-condition photos | Maximum 5; secure image limits | ENT-monitoring-case.initial_photos |
+| Initial Head Scan | capture | No | V1 multi-view photo set | FR-002 quality contract | ENT-monitoring-scan.photo_set |
+| Self-Service Acknowledgment | checkbox | Yes | Confirms no provider monitoring or required cadence | Must be selected (REQ-038-021) | ENT-monitoring-case.self_service_acknowledged |
 
 **Business Rules**:
 
-- A patient may have only one active transplant-progress case.
-- This intake does not purchase aftercare and does not create an FR-011 request.
-- Prior monitoring-case history is not attached when starting a new monitoring case.
+- See REQ-038-001 and REQ-038-019.
+- This intake does not purchase aftercare and does not create an FR-011 request. (REQ-038-023)
+- See Business Rule 4 (FR-037 REQ-037-024).
 
 #### Screen 2: Transplant-Progress Dashboard and Calendar
 
 **Purpose**: Shows the self-paced longitudinal record and case actions.
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Case Status | badge | Yes | Active | Derived |
-| Treatment Summary | component | Yes | Date, type, and clinic | Current case data |
-| Calendar | calendar | Yes | Dates with logs/scans | Patient-local timezone |
-| Logged Days | number | Yes | Unique dates with entries | Derived |
-| Severity Trend | chart | Yes | Rating over time | Derived |
-| Add Log | action | Yes | Opens Screen 3 | Active case only |
-| Switch to Aftercare Package | action | Yes | Opens Screen 6 | Active case only |
-| End Monitoring | action | Yes | Opens Screen 5 | Active case only |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Case Status | badge | Yes | Active | Derived | ENT-monitoring-case.status |
+| Treatment Summary | component | Yes | Date, type, and clinic | Current case data | ENT-monitoring-case.treatment_date, ENT-monitoring-case.treatment_type, ENT-monitoring-case.treating_clinic |
+| Calendar | calendar | Yes | Dates with logs/scans | Patient-local timezone (REQ-038-032) | ENT-monitoring-entry.log_date |
+| Logged Days | number | Yes | Unique dates with entries | Derived | ENT-monitoring-case.logged_days |
+| Severity Trend | chart | Yes | Rating over time | Derived | ENT-monitoring-case.severity_trend |
+| Add Log | action | Yes | Opens Screen 3 | Active case only (REQ-038-033) | no graph field (control) |
+| Switch to Aftercare Package | action | Yes | Opens Screen 6 | Active case only (REQ-038-033) | no graph field (control) |
+| End Monitoring | action | Yes | Opens Screen 5 | Active case only (REQ-038-033) | no graph field (control) |
 
 **Business Rules**:
 
 - The system must not display overdue, missed milestone, compliance, or required-frequency states.
-- Optional personal reminders may be disabled without affecting case status.
+- Optional personal reminders may be disabled without affecting case status. (REQ-038-031)
 - No provider identity or advice controls appear.
 
 #### Screen 3: Daily Transplant-Progress Log
 
-**Purpose**: Records a dated recovery observation with a consistent structure.
+**Purpose**: Records a dated recovery observation with a consistent structure. (REQ-038-026)
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Log Date | date | Yes | Observation date | Not in future and not before treatment date |
-| Severity | slider | Yes | Patient-rated condition | Integer 1 to 10 |
-| Notes | textarea | No | Recovery observation | Maximum 3000 characters |
-| Photos | file list | No | Supporting photos | Secure image limits |
-| Head Scan | capture/select | No | V1 photo set | FR-002 quality contract |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Log Date | date | Yes | Observation date | Not in future and not before treatment date | ENT-monitoring-entry.log_date |
+| Severity | slider | Yes | Patient-rated condition | Integer 1 to 10 | ENT-monitoring-entry.severity |
+| Notes | textarea | No | Recovery observation | Maximum 3000 characters | ENT-monitoring-entry.notes |
+| Photos | file list | No | Supporting photos | Secure image limits | ENT-monitoring-entry.photos |
+| Head Scan | capture/select | No | V1 photo set | FR-002 quality contract | ENT-monitoring-scan.photo_set |
 
 **Business Rules**:
 
 - Patient edits and deletes of their own entries while the case is active, with every version auditable, follow FR-037 REQ-037-040.
 - Multiple entries on one date are allowed and Logged Days counts that date once, as set in FR-037 REQ-037-041.
-- No automated clinical advice is generated from a score or image.
+- No automated clinical advice is generated from a score or image. (REQ-038-029)
 
 #### Screen 4: Head Scan Capture and History
 
 **Purpose**: Captures and compares standardized scan photo sets within the self-service case.
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Capture Guidance | component | Yes | Front, top, left, and right guidance | FR-002 V1 contract |
-| Photo Set | capture/upload | Yes | Standardized multi-view photos | Quality and completeness checks |
-| Captured At | datetime | Yes | Scan timestamp | System generated |
-| Scan History | list | Yes | Prior scans grouped by date | Current case only |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Capture Guidance | component | Yes | Front, top, left, and right guidance | FR-002 V1 contract | no graph field (guidance display) |
+| Photo Set | capture/upload | Yes | Standardized multi-view photos | Quality and completeness checks (REQ-038-047) | ENT-monitoring-scan.photo_set |
+| Captured At | datetime | Yes | Scan timestamp | System generated | ENT-monitoring-scan.captured_at |
+| Scan History | list | Yes | Prior scans grouped by date | Current case only (REQ-038-049) | ENT-monitoring-scan.case_id, ENT-monitoring-scan.captured_at |
 
 **Business Rules**:
 
-- V1 does not require true 3D reconstruction.
-- A failed-quality scan may be retaken before save.
+- See the V1 scan terminology in the Executive Summary (FR-037 REQ-037-045).
+- A failed-quality scan may be retaken before save. (REQ-038-048)
 - Scans remain inaccessible to providers unless later transferred into an activated FR-011 case under FR-011 rules.
 
 #### Screen 5: Complete or Convert Monitoring Case
 
 **Purpose**: Lets the patient end self-tracking or begin standalone-aftercare conversion.
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Case Summary | component | Yes | Date range, logged days, scans, and severity trend | Derived |
-| Completion Choice | radio | Yes | Complete and export, or Switch to Aftercare Package | Single selection |
-| Confirmation | checkbox | Yes | Acknowledges current monitoring case will end | Must be selected |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Case Summary | component | Yes | Date range, logged days, scans, and severity trend | Derived (REQ-038-038) | ENT-monitoring-case.monitoring_period, ENT-monitoring-case.logged_days, ENT-monitoring-case.scan_count, ENT-monitoring-case.severity_trend |
+| Completion Choice | radio | Yes | Complete and export, or Switch to Aftercare Package | Single selection (REQ-038-080) | no graph field (control) |
+| Confirmation | checkbox | Yes | Acknowledges current monitoring case will end | Must be selected (REQ-038-081) | no graph field (control) |
 
 **Business Rules**:
 
-- Explicit completion ends the case immediately after confirmation.
-- Conversion ends the case only when the FR-011 standalone request is successfully created.
+- Explicit completion ends the case immediately after confirmation. (REQ-038-039)
+- See REQ-038-015 and REQ-038-068 (flow B2).
 - A completed or converted case is read-only except for Admin audited correction (one rule, owned by FR-037 REQ-037-054).
 
 #### Screen 6: Convert to Standalone Aftercare
 
 **Purpose**: Reviews pre-filled information before continuing into FR-011 Screen 7.
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| External Treatment Details | editable component | Yes | Treatment date, type, clinic, country, concerns, documentation | FR-011 standalone validation |
-| Selected Head Scan | select/capture | No | Latest valid scan by default, another scan, or retake | FR-002 quality contract |
-| Monitoring Summary PDF | attachment | Yes | Current date-to-date report | System-generated PDF |
-| Available Aftercare Services | list | Yes | Purchasable FR-011 templates | FR-011 compatibility and availability |
-| Continue to Aftercare Request | action | Yes | Continues to FR-011 Screen 7, where the patient submits the standalone request and pays later per FR-011 Workflow 2 | Package selected and fields valid |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| External Treatment Details | editable component | Yes | Treatment date, type, clinic, country, concerns, documentation | FR-011 standalone validation | ENT-monitoring-conversion.treatment_details_draft |
+| Selected Head Scan | select/capture | No | Latest valid scan by default, another scan, or retake | FR-002 quality contract | ENT-monitoring-conversion.selected_scan_id |
+| Monitoring Summary PDF | attachment | Yes | Current date-to-date report | System-generated PDF (REQ-038-064) | ENT-monitoring-conversion.export_id |
+| Available Aftercare Services | list | Yes | Purchasable FR-011 templates | FR-011 compatibility and availability | ENT-aftercare-template.name, ENT-aftercare-template.description |
+| Continue to Aftercare Request | action | Yes | Continues to FR-011 Screen 7, where the patient submits the standalone request and pays later per FR-011 Workflow 2 | Package selected and fields valid (REQ-038-066) | no graph field (control) |
 
 **Business Rules**:
 
 - Every copied field is editable before standalone request creation.
 - The patient may replace copied documentation and may select another scan or retake.
-- FR-038 does not calculate price, take payment, assign a provider, or activate aftercare.
-- The monitoring record and FR-011 request remain distinct records linked by conversion provenance.
-- If the selected package becomes unavailable while the conversion draft is open, sending is stopped with a message, the rest of the draft is kept, and the patient must pick another package.
+- FR-038 does not calculate price, take payment, assign a provider, or activate aftercare. (REQ-038-072)
+- See Business Rules 4 and 5 (REQ-038-044).
+- See REQ-038-074.
+- Package availability and treatment compatibility are governed by FR-011 templates. (REQ-038-065)
+- Transfer only data explicitly reviewed in the conversion draft. (REQ-038-067)
+- FR-011 must accept the generated monitoring PDF as treatment documentation/additional case context. (REQ-038-010)
 
 #### Screen 7: Monitoring Summary and PDF Export
 
 **Purpose**: Displays the completed case and downloadable report.
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Monitoring Period | date range | Yes | First through final case date | Derived |
-| Treatment Summary | component | Yes | Treatment date, type, clinic | Case snapshot |
-| Logged Days | number | Yes | Unique dates logged | Derived |
-| Severity Summary | component | Yes | First, latest, minimum, maximum, average, and trend | Derived |
-| Log Timeline | list | Yes | Date-to-date entries and notes | Chronological |
-| Head Scan Photos | gallery | Yes | Scans grouped by date | Authorized access only |
-| PDF Status | status | Yes | Generating, ready, or failed | Derived |
-| Download PDF | action | Conditional | Downloads ready report | Signed access link |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Monitoring Period | date range | Yes | First through final case date | Derived (REQ-038-035) | ENT-monitoring-case.monitoring_period |
+| Treatment Summary | component | Yes | Treatment date, type, clinic | Case snapshot | ENT-monitoring-case.treatment_date, ENT-monitoring-case.treatment_type, ENT-monitoring-case.treating_clinic |
+| Logged Days | number | Yes | Unique dates logged | Derived | ENT-monitoring-case.logged_days |
+| Severity Summary | component | Yes | First, latest, minimum, maximum, average, and trend | Derived (REQ-038-034) | ENT-monitoring-case.severity_summary, ENT-monitoring-case.latest_severity, ENT-monitoring-case.severity_trend |
+| Log Timeline | list | Yes | Date-to-date entries and notes | Chronological | ENT-monitoring-entry.log_date, ENT-monitoring-entry.notes |
+| Head Scan Photos | gallery | Yes | Scans grouped by date | Authorized access only | ENT-monitoring-scan.photo_set |
+| PDF Status | status | Yes | Generating, ready, or failed | Derived | ENT-monitoring-export.generation_state |
+| Download PDF | action | Conditional | Downloads ready report | Signed access link | no graph field (control) |
 
 **Business Rules**:
 
-- PDF includes treatment summary, complete date-to-date log, scan photos, logged-day count, and severity summary.
-- Failed generation can be retried without reopening the case.
-- The Log Timeline lists entries in chronological order.
-- Download PDF is available only when the report is ready, through a signed access link.
+- PDF includes treatment summary, complete date-to-date log, scan photos, logged-day count, and severity summary. (REQ-038-040)
+- Failed generation can be retried without reopening the case. (REQ-038-041)
+- See REQ-038-075.
+- See REQ-038-076.
 
 ### Provider Platform Screens
 
@@ -324,35 +327,35 @@ No Provider Dashboard screens are defined in FR-038. This monitoring case is sel
 
 **Purpose**: Gives Admin support and oversight visibility.
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Case List | table | Yes | All transplant-progress monitoring cases | Paginated |
-| Status Filter | multi-select | No | Active, completed, converted | Valid values |
-| Search | text | No | Patient or case identifier | Permission-scoped |
-| Last Log Date | datetime | Yes | Most recent patient entry | Derived |
-| Conversion State | badge | No | None, draft, or converted to FR-011 | Derived |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Case List | table | Yes | All transplant-progress monitoring cases | Paginated (REQ-038-061) | ENT-monitoring-case (entity; list of cases) |
+| Status Filter | multi-select | No | Active, completed, converted | Valid values (REQ-038-061) | ENT-monitoring-case.status |
+| Search | text | No | Patient or case identifier | Permission-scoped (REQ-038-061) | ENT-monitoring-case.patient_id |
+| Last Log Date | datetime | Yes | Most recent patient entry | Derived (REQ-038-036) | ENT-monitoring-case.last_patient_log_at |
+| Conversion State | badge | No | None, draft, or converted to FR-011 | Derived (REQ-038-037) | ENT-monitoring-case.conversion_state |
 
 **Business Rules**:
 
 - There is no assignment queue or provider field.
-- Admin visibility does not imply clinical monitoring or advice responsibility.
+- Admin visibility does not imply clinical monitoring or advice responsibility. (REQ-038-060)
 
 #### Screen 9: Admin Monitoring Case Detail and Audit
 
 **Purpose**: Supports audited correction and conversion support.
 
-| Field Name | Type | Required | Description | Validation Rules |
-| --- | --- | --- | --- | --- |
-| Case Data | editable component | Yes | Intake, logs, scans, status, and conversion link | Permission controlled |
-| Edit Reason | textarea | Conditional | Reason for any mutation | Required before save |
-| Export History | list | Yes | PDF versions and generation state | Read-only metadata |
-| Conversion Link | link | Conditional | Destination FR-011 request | Authorized access only |
-| Audit History | timeline | Yes | Actor, reason, time, before and after values | Immutable |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- |
+| Case Data | editable component | Yes | Intake, logs, scans, status, and conversion link | Permission controlled | ENT-monitoring-case.treatment_date, ENT-monitoring-case.treatment_type, ENT-monitoring-case.treating_clinic, ENT-monitoring-case.treating_country, ENT-monitoring-case.treatment_documentation, ENT-monitoring-case.current_concerns, ENT-monitoring-case.starting_severity, ENT-monitoring-case.initial_photos, ENT-monitoring-case.status, ENT-monitoring-case.conversion_id, ENT-monitoring-entry.log_date, ENT-monitoring-entry.severity, ENT-monitoring-entry.notes, ENT-monitoring-entry.photos, ENT-monitoring-scan.photo_set |
+| Edit Reason | textarea | Conditional | Reason for any mutation | Required before save | ENT-transplant-progress-audit-entry.reason |
+| Export History | list | Yes | PDF versions and generation state | Read-only metadata | ENT-monitoring-export.report_version, ENT-monitoring-export.generation_state |
+| Conversion Link | link | Conditional | Destination FR-011 request | Authorized access only | ENT-monitoring-conversion.destination_request_id |
+| Audit History | timeline | Yes | Actor, reason, time, before and after values | Immutable (REQ-038-058) | ENT-transplant-progress-audit-entry.actor_id, ENT-transplant-progress-audit-entry.reason, ENT-transplant-progress-audit-entry.occurred_at, ENT-transplant-progress-audit-entry.before_value, ENT-transplant-progress-audit-entry.after_value |
 
 **Business Rules**:
 
-- Admin may edit any information for operational correction, but no edit may erase historical values or provenance: version history, exports, and conversion provenance remain.
-- Admin cannot assign a provider to FR-038; the patient must convert to FR-011 for managed aftercare.
+- Admin may edit any information for operational correction, but no edit may erase historical values or provenance: version history, exports, and conversion provenance remain. (REQ-038-056)
+- Admin cannot assign a provider to FR-038; the patient must convert to FR-011 for managed aftercare. (REQ-038-059)
 
 ---
 
@@ -360,28 +363,29 @@ No Provider Dashboard screens are defined in FR-038. This monitoring case is sel
 
 ### General Module Rules
 
-- **Rule 1**: A patient may have one active case per monitoring type; an active FR-038 case does not block an active FR-037 case.
-- **Rule 2**: FR-038 is self-service only and never includes provider advice or assignment.
-- **Rule 3**: Logging frequency is entirely optional; the system has no overdue, missed-task, compliance, or milestone state.
+- **Rule 1**: A patient may have one active case per monitoring type; an active FR-038 case does not block an active FR-037 case. (REQ-038-001, REQ-038-018)
+- **Rule 2**: See REQ-038-002.
+- **Rule 3**: Logging frequency is entirely optional; the system has no overdue, missed-task, compliance, or milestone state. (REQ-038-004)
 - **Rule 4**: Previous monitoring history is not linked to a new monitoring case. Conversion links only the source FR-038 case to its destination FR-011 standalone request. This is the same rule as FR-037 REQ-037-024, which covers both features.
-- **Rule 5**: Completion and successful conversion are terminal outcomes, and source/destination cases remain distinct.
-- **Rule 6**: FR-011 becomes the sole workflow owner after handoff, including package selection, payment, assignment, activation, and ongoing managed aftercare.
-- **Rule 7**: The system must clearly state that self-tracking is not medical advice or provider-monitored aftercare.
+- **Rule 5**: Completion and successful conversion are terminal outcomes, and source/destination cases remain distinct. (REQ-038-044)
+- **Rule 6**: See REQ-038-017.
+- **Rule 7**: The system must clearly state that self-tracking is not medical advice or provider-monitored aftercare. (REQ-038-022)
+- Patients understand severity 1 means least severe and 10 means most severe. (REQ-038-025)
 
 ### Data & Privacy Rules
 
 - Intake, logs, severity ratings, scans, documentation, exports, and conversion links are medical data. See system PRD, Platform-Wide Rules: Encryption in transit and at rest.
-- Access is restricted to the patient and authorized Admin users while data belongs to FR-038.
-- Providers have no FR-038 access. Provider access to copied information begins only under FR-011 authorization after assignment/activation.
+- Access is restricted to the patient and authorized Admin users while data belongs to FR-038. (REQ-038-012)
+- Providers have no FR-038 access. Provider access to copied information begins only under FR-011 authorization after assignment/activation. (REQ-038-050)
 - Case records, entries, conversion provenance, PDF exports, and raw monitoring scan media are retained as set by the system PRD, Platform-Wide Rules: One 10-year retention period. FR-038 sets no separate period.
-- Every view, edit, export, and conversion is audited.
+- See REQ-038-013.
 - PDF and media download links expire and check the requester's permission each time they are used. See system PRD, Platform-Wide Rules: Download links expire and check permission.
 
 ### Admin Editability Rules
 
 **Editable by Admin**:
 
-- All monitoring intake information, entries, severity ratings, scan metadata, status, exports, and conversion metadata when operational correction is required. No edit may erase historical values or provenance.
+- All monitoring intake information, entries, severity ratings, scan metadata, status, exports, and conversion metadata when operational correction is required. No edit may erase historical values or provenance. (REQ-038-055)
 
 **Fixed in Codebase (Not Editable)**:
 
@@ -390,130 +394,35 @@ No Provider Dashboard screens are defined in FR-038. This monitoring case is sel
 
 **Configurable with Restrictions**:
 
-- Admin edits require permission, a reason, and version history.
+- Admin edits require permission, a reason, and version history. (REQ-038-057)
 - Optional patient reminder defaults: Admin sets the ready-made reminder schedule offered to patients tracking transplant progress in the FR-030 notification settings; FR-038 only refers to that schedule. The patient can change the schedule or switch it off, and reminders cannot become mandatory milestones or compliance checks.
 
 ### Payment & Billing Rules
 
-- FR-038 is free and creates no invoice, charge, subscription, or refund.
-- If the patient converts, FR-011 and FR-007 exclusively own package pricing, checkout, payment status, invoice, subscription, and refund behavior.
-- An incomplete or failed checkout must not create an FR-038 payment record.
+- FR-038 is free and creates no invoice, charge, subscription, or refund. (REQ-038-071)
+- If the patient converts, FR-011 and FR-007 exclusively own package pricing, checkout, payment status, invoice, subscription, and refund behavior. (REQ-038-070)
+- FR-007 is invoked only after FR-011 package selection and checkout. (REQ-038-070)
+- An incomplete or failed checkout must not create an FR-038 payment record. (REQ-038-073)
 
----
+### Notification Events
 
-## Success Criteria
-
-### Patient Experience Metrics
-
-- 95% of valid case creations complete without support intervention.
-- 100% of active cases support irregular logging without overdue or compliance warnings.
-- 100% of conversion screens permit editing of every copied field and scan reselection/retake.
-
-### Provider Efficiency Metrics
-
-- 100% of FR-038 cases remain absent from provider queues and provider APIs.
-- Provider access begins only under an eligible FR-011 assignment after conversion.
-
-### Admin Management Metrics
-
-- 100% of Admin edits retain actor, reason, timestamp, before-value, and after-value.
-- Admin can locate active, completed, and converted cases without implying provider assignment.
-
-### System Performance Metrics
-
-- Daily-log saves complete within 2 seconds at p95 under normal load.
-- PDF generation completes within 60 seconds for 95% of cases and is retryable.
-- Duplicate conversion submissions create at most one FR-011 standalone request.
-
-### Business Impact Metrics
-
-- Track conversion from self-monitoring to paid standalone aftercare separately from ordinary FR-011 acquisition.
-- Measure monitoring engagement without treating missed days as failure.
+- Notification events come from the FR-030 notification catalogue, which FR-020 mirrors. FR-038 uses the shared `monitoring.completed` and `monitoring.export_ready` events (also used by FR-037) and keeps no copies of them. `monitoring.export_ready` also fires when the conversion PDF is ready, not only the completion PDF.
+- FR-038 adds two events, both notifying the patient only: `monitoring.aftercare_conversion_started`, which fires when the patient selects Switch to Aftercare Package (flow A2 step 1), and `monitoring.converted_to_aftercare`, which fires when the standalone-aftercare request is successfully created (flow A2 step 7).
+- The conversion-started notice goes out immediately after the patient selects Switch to Aftercare Package. Proposed wording, to be confirmed in notification copy review: "You have started switching to an Aftercare Package. Your monitoring case stays active until your aftercare request is created."
 
 ---
 
 ## Dependencies
 
-### Internal Dependencies (Other FRs/Modules)
-
 - **FR-002**: V1 head scan photo-set capture and quality validation.
 - **FR-003**: Service Selection gateway entry point.
 - **FR-007**: Payment only after handoff into FR-011 checkout.
-- **FR-011**: Standalone external-treatment intake, package selection, payment handoff, Admin assignment, provider activation, and managed aftercare.
+- **FR-011**: Standalone external-treatment intake, package selection, and managed aftercare.
 - **FR-020**: Patient notification events and delivery preferences.
-- **System PRD, Platform-Wide Rules**: One 10-year retention period governs retention of FR-038 records and media.
 - **FR-026**: Privacy, security, consent, timezone, and file configuration.
 - **FR-028**: Country configuration for external treatment information.
-- **FR-030**: Notification catalogue entries for the monitoring events, and the notification settings where Admin sets the transplant-progress reminder schedule.
+- **FR-030**: Notification catalogue entries and the notification settings (reminder schedule).
 - **FR-037**: Shared monitoring entities and the single Rules that FR-038 refers to instead of restating.
-
-### External Dependencies (APIs, Services)
-
-- Secure object storage and signed media access.
-- PDF rendering service with embedded scan images.
-- Push and email delivery providers through S-03.
-
-### Data Dependencies
-
-- Patient profile and consent state.
-- Monitoring case, entry, scan, export, and conversion records.
-- FR-011 aftercare template catalog and standalone-request schema.
-- FR-002 scan-quality metadata.
-
----
-
-## Assumptions
-
-### User Behavior Assumptions
-
-- Patients understand severity 1 means least severe and 10 means most severe.
-- Patients may log at any frequency and understand this is not managed aftercare.
-- Patients review copied external-treatment information before conversion.
-
-### Technology Assumptions
-
-- V1 uses standardized photo sets rather than true 3D models.
-- PDF generation, for both the completion PDF and the conversion PDF, runs asynchronously and can notify the patient when ready.
-- FR-011 exposes an idempotent standalone-request creation interface.
-
-### Business Process Assumptions
-
-- Clinic conflict-of-interest concerns require FR-038 to remain provider-free.
-- FR-011 standalone aftercare remains the only route from self-tracking to provider-managed aftercare.
-- Package availability and treatment compatibility are governed by FR-011 templates.
-
----
-
-## Implementation Notes
-
-### Technical Considerations
-
-- Reuse shared monitoring entities with FR-037, discriminated by case type, rather than FR-011 milestone-bound task/scan tables.
-- Suggested case statuses: `active`, `completed`, `converted_to_aftercare`.
-- Do not create provider-assignment or advice records for FR-038.
-- Use append-only versions for patient and Admin edits that affect medical context.
-
-### Integration Points
-
-- FR-011 receives external treatment fields, selected scan, treatment documentation, current concerns, and generated PDF.
-- FR-011 must accept the generated monitoring PDF as treatment documentation/additional case context.
-- Notification events come from the FR-030 notification catalogue, which FR-020 mirrors. FR-038 uses the shared `monitoring.completed` and `monitoring.export_ready` events (also used by FR-037) and keeps no copies of them. `monitoring.export_ready` also fires when the conversion PDF is ready, not only the completion PDF.
-- FR-038 adds two events, both notifying the patient only: `monitoring.aftercare_conversion_started`, which fires when the patient selects Switch to Aftercare Package (flow A2 step 1), and `monitoring.converted_to_aftercare`, which fires when the standalone-aftercare request is successfully created (flow A2 step 7).
-- The conversion-started notice goes out immediately after the patient selects Switch to Aftercare Package. Proposed wording, to be confirmed in notification copy review: "You have started switching to an Aftercare Package. Your monitoring case stays active until your aftercare request is created."
-- FR-007 is invoked only after FR-011 package selection and checkout.
-
-### Scalability Considerations
-
-- Paginate logs, scans, exports, and Admin lists.
-- Generate PDF and media derivatives asynchronously.
-- Cache trend summaries while retaining source-entry authority.
-
-### Security Considerations
-
-- Exclude FR-038 routes and media from provider authorization scopes.
-- Signed media and PDF links: see system PRD, Platform-Wide Rules: Download links expire and check permission.
-- Scan uploaded documentation and generated PDFs for malware.
-- Transfer only data explicitly reviewed in the conversion draft.
 
 ---
 
@@ -552,13 +461,13 @@ No Provider Dashboard screens are defined in FR-038. This monitoring case is sel
 
 ### Edge Cases
 
-- Treatment date is corrected after several logs; invalid pre-treatment log dates are flagged for review rather than silently deleted.
+- Treatment date is corrected after several logs; invalid pre-treatment log dates are flagged for review rather than silently deleted. (REQ-038-030)
 - Patient logs multiple entries and scans on the same date.
 - Latest scan fails quality and an earlier valid scan is selected during conversion.
-- A package becomes unavailable while the conversion draft is open; sending is stopped with a message, the rest of the draft is kept, and the patient picks another package.
-- FR-011 payment fails after a standalone request is created; FR-011 owns the pending/failed payment state while the FR-038 conversion link remains intact.
+- A package becomes unavailable while the conversion draft is open (REQ-038-074).
+- FR-011 payment fails after a standalone request is created; FR-011 owns the pending/failed payment state while the FR-038 conversion link remains intact. (REQ-038-069)
 - Conversion is retried after network timeout without duplicate standalone requests.
-- Admin corrects data after PDF generation; a new report version is generated.
+- Admin corrects data after PDF generation; a new report version is generated. (REQ-038-045)
 
 ---
 
@@ -602,33 +511,13 @@ No Provider Dashboard screens are defined in FR-038. This monitoring case is sel
 - **REQ-038-078**: System MUST NOT provide provider advice, provider assignment, provider chat, clinic review, diagnosis, prescriptions, FR-012 secure messaging, FR-011 milestone communications before standalone aftercare is purchased, assigned, and activated, or automated clinical interpretation of severity or scan changes.
 - **REQ-038-079**: System MUST generate PDF summaries asynchronously and notify the patient when the PDF is ready.
 
-### Marking Unclear Requirements
-
-No unresolved product requirements remain for Draft creation. Technical design must validate final FR-011 request-creation boundary and notification copy.
-
----
-
-## Key Entities
-
-FR-038 reuses the shared monitoring entities owned by FR-037, told apart by case type `transplant_progress`. It does not keep its own copies, except for its audit entry.
-
-1. **MonitoringCase** (shared, owned by FR-037): Patient, type `transplant_progress`, status, start/completion dates. FR-038 adds its own intake fields (treatment date, type, treating clinic, country, documentation, current concerns), the self-service acknowledgment, and the conversion link to an FR-011 standalone-aftercare request.
-2. **MonitoringEntry** (shared, owned by FR-037): Case, log date, severity, notes, photos, creator, and version history.
-3. **MonitoringScan** (shared, owned by FR-037): Case/entry link, V1 photo-set media references, quality state, and capture timestamp.
-4. **MonitoringExport** (shared, owned by FR-037): Case, report version, covered date range, metrics, PDF media reference, and generation state.
-5. **MonitoringConversion** (shared, owned by FR-037): Source case, destination, selected scan, field mapping version, PDF export, and idempotency key. For FR-038 the destination is an FR-011 standalone-aftercare request.
-6. **Transplant-progress audit entry** (kept by FR-038): Case, actor, action, reason, time, before-value, and after-value.
-
 ---
 
 ## Appendix: Change Log
 
 | Version | Date | Changes | Author |
 | --- | --- | --- | --- |
-| 1.3 | 2026-11-22 | Consistency review: conversion hand-off wording aligned to FR-011 (the owner): the patient submits a standalone aftercare request and pays later, not an immediate checkout. | Product Team |
-| 1.2 | 2026-11-20 | Requirements graph programme baseline: owner rulings applied. Main changes: monitoring entities now shared with FR-037 (case type transplant_progress; own audit entry kept); rules identical to FR-037 now refer to FR-037 instead of restating (optional logs, complete and export, conversion pre-fill, scan default, Admin version history, entries per date, own-entry edits, V1 scan meaning, read-only after completion, no history on a new case); one 10-year retention rule from FR-023 replaces the 7-year and 2-year lines; encryption and download-link expiry refer to the system-level rules; Admin correction may never erase historical values or provenance; events cited from the FR-030 catalogue (completed and export-ready shared with FR-037, two conversion events kept, aftercare-conversion-started notifies the patient only, export-ready also fires for the conversion PDF); reminder schedule is set by Admin in FR-030 notification settings, patient may change or switch it off; added rules for unavailable package during conversion, chronological Log Timeline, Download PDF only when ready, malware scan, out-of-scope statements, and asynchronous PDF generation; conversion continues into FR-011 Screen 7; cross-document reconciliation (retention and system rule citations) | AI Assistant |
-| 1.1 | 2026-08-17 | Grouped Screens 1-9 under explicit Patient Platform, Provider Platform, and Admin Platform ownership sections; documented that FR-038 has no Provider Dashboard screens | Product Team |
-| 1.0 | 2026-08-17 | Initial Draft: self-service transplant tracking, PDF export, and conversion to FR-011 standalone aftercare | Product Team |
+| 1.4 | 2026-11-22 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.3) is in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
 
 ---
 
@@ -636,14 +525,10 @@ FR-038 reuses the shared monitoring entities owned by FR-037, told apart by case
 
 | Role | Name | Status | Date |
 | --- | --- | --- | --- |
-| Product Owner | Pending | Pending Review | — |
-| Technical Lead | Pending | Pending Review | — |
-| Design Lead | Pending | Pending Review | — |
-| Compliance Officer | Pending | Pending Review | — |
 
 ---
 
-**Document Version**: 1.3
+**Document Version**: 1.4
 **Template Version**: 2.0.0
-**Last Updated**: 2026-11-20
+**Last Updated**: 2026-11-22
 **Next Review**: Before implementation planning
