@@ -5,7 +5,6 @@
 **Created**: 2025-11-10
 **Status**: 🟡 Revised — Pending Consolidated Verification
 **Source**: FR-007B from local-docs/project-requirements/system-prd.md (Split Payment / Installment Plans) + Constitution (.specify/memory/constitution.md)
-**Change Request**: [CR-FR007B-20261016-01 — MTG-002 quote model alignment](change-request-2026-10-16-mtg002-quote-model-alignment.md)
 
 ---
 
@@ -40,17 +39,17 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 
 - View booking payment status: installment plan active, number of installments, completion percentage
 - See payment progress: which installments have been paid, which are upcoming
-- Receive alerts for overdue installments that may affect booking
+- Receive alerts for overdue installments that may affect booking (REQ-007B-032)
 - Access payment history for installment-based bookings
 
 **Admin Platform (A-05)**:
 
-- View installment plan configuration (managed in FR-029) and link to configuration screen for authorized users
+- View installment plan configuration (managed in FR-029) and link to configuration screen for authorized users (REQ-007B-079)
 - Monitor all active installment plans across the platform
 - View installment payment success/failure rates
 - Handle defaulted installment plans (failed payments after retries)
 - Process refunds for canceled bookings with partial installment payments
-- Generate reports on installment plan usage and performance
+- Generate reports on installment plan usage and performance (REQ-007B-075)
 - View aging reports for overdue installments
 
 **Shared Services (S-02, S-03)**:
@@ -62,26 +61,26 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 
 **In Scope**:
 
-- Email/push notifications for installment payment reminders (3 days before due date)
+- Email/push notifications for installment payment reminders (3 days before due date) (REQ-007B-092)
 - Payment confirmation notifications for successful installment charges
 - Payment failure notifications for declined/failed installments
 - Admin alerts for defaulted installment plans
 - Provider alert when an installment becomes overdue
 - Patient insufficient-time notice when a procedure date change leaves too little time for the remaining installments
-- Booking status change notifications when final installment completes
+- Booking status change notifications when final installment completes (REQ-007B-093)
 
 **Out of Scope**:
 
-- SMS notifications (handled by S-03 channel configuration; **no SMS installment notifications are available in MVP and this channel is a future enhancement**)
-- Chat/messaging between patient and provider about payment terms
-- Marketing content about installment plans
+- SMS notifications (handled by S-03 channel configuration; **no SMS installment notifications are available in MVP and this channel is a future enhancement**) (REQ-007B-092)
+- Chat/messaging between patient and provider about payment terms (REQ-007B-092)
+- Marketing content about installment plans (REQ-007B-092)
 
 ### Entry Points
 
-- Patient has accepted a quote (FR-005) and reaches the **Payment Options** step in the booking & payment flow (FR-006/FR-007), then selects **"Pay in Installments"**, which hands off to FR-007B Screen 1
-- Patient views installment schedule from booking details screen
-- Admin accesses installment management from billing/financial management module
-- Provider views installment status from booking overview screen
+- Patient has accepted a quote (FR-005) and reaches the **Payment Options** step in the booking & payment flow (FR-006/FR-007), then selects **"Pay in Installments"**, which hands off to FR-007B Screen 1 (REQ-007B-028)
+- Patient views installment schedule from booking details screen (REQ-007B-028)
+- Admin accesses installment management from billing/financial management module (REQ-007B-028)
+- Provider views installment status from booking overview screen (REQ-007B-028)
 
 ---
 
@@ -202,35 +201,35 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 
 **Data Fields**:
 
-| Field Name           | Type   | Required | Description                        | Validation Rules                                      |
-|---------------------|--------|----------|------------------------------------|-------------------------------------------------------|
-| Total Amount         | number | Yes      | Booking total (accepted price after promotion) | Read-only; copied from the accepted snapshot through the FR-006 booking; already includes the accepted promotion and any patient promotion code; never recomputed |
-| Currency             | text   | Yes      | Accepted patient currency          | Read-only; copied with the exchange rate from the accepted snapshot; used for every installment |
-| Time Until Procedure | date   | Yes      | Days remaining until procedure     | At least 60 days (for minimum 2 installments + buffer)|
-| Maximum Installments | number | Yes      | Calculated max installments available | 2-9; (days until procedure - 30) ÷ 30 + 1, rounded down (60 days gives 2) |
-| Selected Installments| select | Yes      | Patient's chosen number of installments | Must be ≤ maximum available                      |
-| Installment Amount   | number | Yes      | Amount per installment             | Total ÷ selected installments                         |
-| Payment Schedule     | table  | Yes      | Dates and amounts for each installment | First installment is today; subsequent monthly     |
-| Payment Method       | form   | Yes      | Card details for recurring charges | Valid payment method required                         |
+| Field Name           | Type   | Required | Description                        | Validation Rules                                      | Graph field |
+|---------------------|--------|----------|------------------------------------|-------------------------------------------------------|---|
+| Total Amount         | number | Yes      | Booking total (accepted price after promotion) | Read-only; copied from the accepted snapshot through the FR-006 booking; already includes the accepted promotion and any patient promotion code; never recomputed | ENT-installment-plan.total_amount |
+| Currency             | text   | Yes      | Accepted patient currency          | Read-only; copied with the exchange rate from the accepted snapshot; used for every installment | ENT-installment-plan.currency |
+| Time Until Procedure | date   | Yes      | Days remaining until procedure     | At least 60 days (for minimum 2 installments + buffer) | ENT-installment-plan.days_until_procedure |
+| Maximum Installments | number | Yes      | Calculated max installments available | 2-9; (days until procedure - 30) ÷ 30 + 1, rounded down (60 days gives 2) | ENT-installment-plan.max_installments |
+| Selected Installments| select | Yes      | Patient's chosen number of installments | Must be ≤ maximum available | ENT-installment-plan.installment_count |
+| Installment Amount   | number | Yes      | Amount per installment             | Total ÷ selected installments | ENT-installment-plan.installment_amount |
+| Payment Schedule     | table  | Yes      | Dates and amounts for each installment | First installment is today; subsequent monthly | ENT-installment-payment.due_date, ENT-installment-payment.amount |
+| Payment Method       | form   | Yes      | Card details for recurring charges | Valid payment method required | ENT-payment-method.token_reference |
 
 **Business Rules**:
 
-- Display clear explanation: "Final payment must complete 30 days before your procedure"
-- Show maximum installments prominently with calculation explanation
-- Allow patient to select any number from 2 to maximum available
-- First installment charged at checkout when the patient confirms the plan; its success confirms the existing `Accepted` booking (FR-006)
-- Show the total and every installment amount in the accepted currency
-- A failed first installment can be retried, or another payment method used, only while the original FR-006 payment hold is active (FR-007 REQ-007-017); when the hold expires the booking moves to `Payment Window Expired` and installment checkout is blocked
-- Display full payment schedule with dates before patient confirms
-- Show comparison: installment plan vs. full payment
-- Disable installment option if procedure is less than 60 days away
+- Display clear explanation: "Final payment must complete 30 days before your procedure" (REQ-007B-035)
+- Show maximum installments prominently with calculation explanation (REQ-007B-035)
+- Allow patient to select any number from 2 to maximum available (REQ-007B-036)
+- First installment charged at checkout when the patient confirms the plan; its success confirms the existing `Accepted` booking (FR-006) (REQ-007B-005)
+- Show the total and every installment amount in the accepted currency (REQ-007B-025)
+- A failed first installment can be retried, or another payment method used, only while the original FR-006 payment hold is active (FR-007 REQ-007-017); when the hold expires the booking moves to `Payment Window Expired` and installment checkout is blocked (REQ-007B-026, REQ-007B-052)
+- Display full payment schedule with dates before patient confirms (REQ-007B-037)
+- Show comparison: installment plan vs. full payment (REQ-007B-038)
+- Disable installment option if procedure is less than 60 days away (REQ-007B-039)
 
 **Notes**:
 
-- Use visual payment timeline showing each installment date
-- Highlight that installments are interest-free
-- Show clear "Pay in Full" alternative option
-- Provide calculator tool to experiment with different installment counts
+- Use visual payment timeline showing each installment date (REQ-007B-042)
+- Highlight that installments are interest-free (REQ-007B-042)
+- Show clear "Pay in Full" alternative option (REQ-007B-040)
+- Provide calculator tool to experiment with different installment counts (REQ-007B-042)
 
 ---
 
@@ -240,32 +239,32 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 
 **Data Fields**:
 
-| Field Name            | Type   | Required | Description                           | Validation Rules                            |
-|----------------------|--------|----------|---------------------------------------|---------------------------------------------|
-| Total Amount          | number | Yes      | Booking total (accepted price after promotion) | Matches booking total                       |
-| Currency              | text   | Yes      | Accepted patient currency             | Read-only; from the accepted snapshot; same for all installments |
-| Installments Paid     | number | Yes      | Count of completed installments       | 0 to total installments                     |
-| Installments Remaining| number | Yes      | Count of upcoming installments        | Total minus paid                            |
-| Next Payment Date     | date   | Conditional | Date of next scheduled installment | Only if installments remaining > 0          |
-| Next Payment Amount   | number | Conditional | Amount of next installment         | Only if installments remaining > 0          |
-| Payment History       | list   | Yes      | Past installment payments with dates and statuses | Read-only history                 |
-| Payment Method        | text   | Yes      | Last 4 digits of card on file         | Masked for security                         |
-| Update Payment Method Button | button | Yes | "Update Payment Method" action button | Navigates to P03.1 Payment Methods Management screen; allows patient to update the default payment method used for remaining installment charges |
+| Field Name            | Type   | Required | Description                           | Validation Rules                            | Graph field |
+|----------------------|--------|----------|---------------------------------------|---------------------------------------------|---|
+| Total Amount          | number | Yes      | Booking total (accepted price after promotion) | Matches booking total | ENT-installment-plan.total_amount |
+| Currency              | text   | Yes      | Accepted patient currency             | Read-only; from the accepted snapshot; same for all installments | ENT-installment-plan.currency |
+| Installments Paid     | number | Yes      | Count of completed installments       | 0 to total installments (REQ-007B-094) | ENT-installment-plan.installments_paid |
+| Installments Remaining| number | Yes      | Count of upcoming installments        | Total minus paid (REQ-007B-094) | ENT-installment-plan.installments_remaining |
+| Next Payment Date     | date   | Conditional | Date of next scheduled installment | Only if installments remaining > 0 (REQ-007B-094) | ENT-installment-plan.next_payment_date |
+| Next Payment Amount   | number | Conditional | Amount of next installment         | Only if installments remaining > 0 (REQ-007B-094) | ENT-installment-plan.next_payment_amount |
+| Payment History       | list   | Yes      | Past installment payments with dates and statuses | Read-only history | ENT-installment-payment.payment_date, ENT-installment-payment.status |
+| Payment Method        | text   | Yes      | Last 4 digits of card on file         | Masked for security | ENT-payment-method.last_four_digits |
+| Update Payment Method Button | button | Yes | "Update Payment Method" action button | Navigates to P03.1 Payment Methods Management screen; allows patient to update the default payment method used for remaining installment charges | no graph field (control) |
 
 **Business Rules**:
 
-- Show progress bar: installments completed / total installments
-- Display countdown: "X days until next payment"
-- Show reminder status: "Reminder sent" or "Reminder pending"
-- Highlight overdue installments in red with "Payment Failed - Retry in Progress"
-- Allow update of payment method with "Update Card" button
-- Show final payment deadline: "All payments complete by [date]"
+- Show progress bar: installments completed / total installments (REQ-007B-044)
+- Display countdown: "X days until next payment" (REQ-007B-044)
+- Show reminder status: "Reminder sent" or "Reminder pending" (REQ-007B-044)
+- Highlight overdue installments in red with "Payment Failed - Retry in Progress" (REQ-007B-045)
+- Allow update of payment method with "Update Card" button (REQ-007B-021, REQ-007B-047)
+- Show final payment deadline: "All payments complete by [date]" (REQ-007B-044)
 
 **Notes**:
 
-- Use visual timeline with checkmarks for completed installments
-- Show clear status for each installment: Scheduled, Retrying, Paid, Failed, Overdue, Cancelled
-- Provide download option for payment receipts
+- Use visual timeline with checkmarks for completed installments (REQ-007B-044)
+- Show clear status for each installment: Scheduled, Retrying, Paid, Failed, Overdue, Cancelled (REQ-007B-008, REQ-007B-044)
+- Provide download option for payment receipts (REQ-007B-046)
 
 ---
 
@@ -277,31 +276,31 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 
 **Data Fields**:
 
-| Field Name               | Type   | Required | Description                                           | Validation Rules                          |
-|--------------------------|--------|----------|-------------------------------------------------------|-------------------------------------------|
-| Booking ID               | text   | Yes      | Unique booking identifier                             | Clickable link to booking detail          |
-| Patient Name             | text   | Yes      | Patient full name (revealed post-payment)            | Display only                              |
-| Procedure Date           | date   | Yes      | Scheduled procedure date                              | Format: DD-MM-YYYY                        |
-| Total Amount             | number | Yes      | Booking total (accepted price after promotion) | Matches booking total                     |
-| Installments Paid        | number | Yes      | Number of completed installments                      | 0 to total installments                   |
-| Total Installments       | number | Yes      | Total installments in plan                            | 2–9                                       |
-| Completion Percentage    | number | Yes      | Percentage of total amount collected                  | 0–100% (auto-calculated)                  |
-| Next Payment Date        | date   | No       | Date of next scheduled installment (if any)           | Only if installments remaining > 0        |
-| Next Payment Amount      | number | No       | Amount of next installment (if any)                   | Only if installments remaining > 0        |
-| Plan Status              | badge  | Yes      | "Active", "Canceled", "Completed", "Defaulted"; an Overdue flag is shown beside it when a due date has passed and the installment is unpaid (calculated, not stored) | Color-coded                               |
-| Overdue Days             | number | No       | Days since first missed/failed installment            | Only for plans flagged Overdue or "Defaulted" |
+| Field Name               | Type   | Required | Description                                           | Validation Rules                          | Graph field |
+|--------------------------|--------|----------|-------------------------------------------------------|-------------------------------------------|---|
+| Booking ID               | text   | Yes      | Unique booking identifier                             | Clickable link to booking detail | ENT-booking.id |
+| Patient Name             | text   | Yes      | Patient full name (revealed post-payment)            | Display only | ENT-patient.name |
+| Procedure Date           | date   | Yes      | Scheduled procedure date                              | Format: DD-MM-YYYY | ENT-booking.appointment_at |
+| Total Amount             | number | Yes      | Booking total (accepted price after promotion) | Matches booking total | ENT-installment-plan.total_amount |
+| Installments Paid        | number | Yes      | Number of completed installments                      | 0 to total installments | ENT-installment-plan.installments_paid |
+| Total Installments       | number | Yes      | Total installments in plan                            | 2–9 | ENT-installment-plan.installment_count |
+| Completion Percentage    | number | Yes      | Percentage of total amount collected                  | 0–100% (auto-calculated) (REQ-007B-094) | ENT-installment-plan.completion_percentage |
+| Next Payment Date        | date   | No       | Date of next scheduled installment (if any)           | Only if installments remaining > 0 | ENT-installment-plan.next_payment_date |
+| Next Payment Amount      | number | No       | Amount of next installment (if any)                   | Only if installments remaining > 0 | ENT-installment-plan.next_payment_amount |
+| Plan Status              | badge  | Yes      | "Active", "Canceled", "Completed", "Defaulted"; an Overdue flag is shown beside it when a due date has passed and the installment is unpaid (calculated, not stored) (REQ-007B-100) | Color-coded | ENT-installment-plan.status, ENT-installment-plan.is_overdue |
+| Overdue Days             | number | No       | Days since first missed/failed installment            | Only for plans flagged Overdue or "Defaulted" (REQ-007B-095) | ENT-installment-plan.overdue_days |
 
 **Business Rules**:
 
-- List includes only bookings for the **current provider** that have an active or completed installment plan (no one-time payments).
-- Providers see **status and progress only**; they cannot change payment schedules or retry charges (admin-only actions).
-- Overdue and defaulted plans are visually emphasized (e.g., warning badges, sort to top).
-- Clicking a row opens the shared **Booking Installment Plan Detail** screen for that booking.
+- List includes only bookings for the **current provider** that have an active or completed installment plan (no one-time payments). (REQ-007B-030)
+- Providers see **status and progress only**; they cannot change payment schedules or retry charges (admin-only actions). (REQ-007B-029)
+- Overdue and defaulted plans are visually emphasized (e.g., warning badges, sort to top). (REQ-007B-033)
+- Clicking a row opens the shared **Booking Installment Plan Detail** screen for that booking. (REQ-007B-030)
 
 **Notes**:
 
-- Table should support filtering by plan status (Active, Canceled, Completed, Defaulted), the Overdue flag and procedure date range.
-- Default sort: nearest upcoming procedure date, then highest risk (Overdue/Defaulted) at top.
+- Table should support filtering by plan status (Active, Canceled, Completed, Defaulted), the Overdue flag and procedure date range. (REQ-007B-033)
+- Default sort: nearest upcoming procedure date, then highest risk (Overdue/Defaulted) at top. (REQ-007B-033)
 
 ---
 
@@ -311,39 +310,39 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 
 **Data Fields**:
 
-| Field Name                | Type   | Required | Description                                          | Validation Rules                          |
-|---------------------------|--------|----------|------------------------------------------------------|-------------------------------------------|
-| Booking ID                | text   | Yes      | Unique booking identifier                            | Display only                              |
-| Patient Name              | text   | Yes      | Patient full name (revealed post-payment)           | Display only                              |
-| Provider Name             | text   | Yes      | Clinic/provider name                                 | Display only                              |
-| Procedure Date            | date   | Yes      | Scheduled procedure date                             | Format: DD-MM-YYYY                        |
-| Total Amount              | number | Yes      | Booking total (accepted price after promotion) | Matches booking total                     |
-| Currency                  | text   | Yes      | Accepted patient currency                            | Read-only; from the accepted snapshot     |
-| Total Installments        | number | Yes      | Total installments in plan                           | 2–9                                       |
-| Installments Paid         | number | Yes      | Number of completed installments                     | 0 to total installments                   |
-| Installments Remaining    | number | Yes      | Number of upcoming installments                      | Total minus paid                          |
-| Completion Percentage     | number | Yes      | Percentage of total amount collected                 | 0–100% (auto-calculated)                  |
-| Final Payment Deadline    | date   | Yes      | Date by which all installments must be completed     | Must meet configured cutoff rule          |
-| Plan Status               | badge  | Yes      | "Active", "Canceled", "Completed", "Defaulted"; an Overdue flag is shown beside it when a due date has passed and the installment is unpaid (calculated, not stored) | Color-coded                               |
-| Payment Method Summary    | text   | Yes      | Masked card details or payment method descriptor     | Display only                              |
-| Installment Schedule      | table  | Yes      | Row per installment with date, amount, and status    | See sub-table below                       |
+| Field Name                | Type   | Required | Description                                          | Validation Rules                          | Graph field |
+|---------------------------|--------|----------|------------------------------------------------------|-------------------------------------------|---|
+| Booking ID                | text   | Yes      | Unique booking identifier                            | Display only | ENT-booking.id |
+| Patient Name              | text   | Yes      | Patient full name (revealed post-payment)           | Display only | ENT-patient.name |
+| Provider Name             | text   | Yes      | Clinic/provider name                                 | Display only | ENT-provider.name |
+| Procedure Date            | date   | Yes      | Scheduled procedure date                             | Format: DD-MM-YYYY | ENT-booking.appointment_at |
+| Total Amount              | number | Yes      | Booking total (accepted price after promotion) | Matches booking total | ENT-installment-plan.total_amount |
+| Currency                  | text   | Yes      | Accepted patient currency                            | Read-only; from the accepted snapshot | ENT-installment-plan.currency |
+| Total Installments        | number | Yes      | Total installments in plan                           | 2–9 | ENT-installment-plan.installment_count |
+| Installments Paid         | number | Yes      | Number of completed installments                     | 0 to total installments | ENT-installment-plan.installments_paid |
+| Installments Remaining    | number | Yes      | Number of upcoming installments                      | Total minus paid | ENT-installment-plan.installments_remaining |
+| Completion Percentage     | number | Yes      | Percentage of total amount collected                 | 0–100% (auto-calculated) | ENT-installment-plan.completion_percentage |
+| Final Payment Deadline    | date   | Yes      | Date by which all installments must be completed     | Must meet configured cutoff rule | ENT-installment-plan.final_payment_deadline |
+| Plan Status               | badge  | Yes      | "Active", "Canceled", "Completed", "Defaulted"; an Overdue flag is shown beside it when a due date has passed and the installment is unpaid (calculated, not stored) | Color-coded | ENT-installment-plan.status, ENT-installment-plan.is_overdue |
+| Payment Method Summary    | text   | Yes      | Masked card details or payment method descriptor     | Display only | ENT-payment-method.last_four_digits |
+| Installment Schedule      | table  | Yes      | Row per installment with date, amount, and status    | See sub-table below | ENT-installment-payment |
 
 **Installment Schedule Sub-Table**:
 
-| Field Name        | Type   | Required | Description                               | Validation Rules                |
-|-------------------|--------|----------|-------------------------------------------|---------------------------------|
-| Installment #     | number | Yes      | Sequence number (1..N)                    | 1–9                             |
-| Due Date          | date   | Yes      | Scheduled charge date                     | Format: DD-MM-YYYY              |
-| Amount            | number | Yes      | Installment amount                        | Must sum to Total Amount        |
-| Status            | badge  | Yes      | "Scheduled", "Retrying", "Paid", "Failed", "Overdue", "Cancelled" | Color-coded                     |
-| Paid Date         | date   | No       | Actual payment date (if paid)             | Present only for Paid           |
-| Failure Reason    | text   | No       | Processor error message (if failed)       | Read-only                       |
+| Field Name        | Type   | Required | Description                               | Validation Rules                | Graph field |
+|-------------------|--------|----------|-------------------------------------------|---------------------------------|---|
+| Installment #     | number | Yes      | Sequence number (1..N)                    | 1–9 | ENT-installment-payment.installment_number |
+| Due Date          | date   | Yes      | Scheduled charge date                     | Format: DD-MM-YYYY | ENT-installment-payment.due_date |
+| Amount            | number | Yes      | Installment amount                        | Must sum to Total Amount | ENT-installment-payment.amount |
+| Status            | badge  | Yes      | "Scheduled", "Retrying", "Paid", "Failed", "Overdue", "Cancelled" | Color-coded | ENT-installment-payment.status |
+| Paid Date         | date   | No       | Actual payment date (if paid)             | Present only for Paid | ENT-installment-payment.payment_date |
+| Failure Reason    | text   | No       | Processor error message (if failed)       | Read-only | ENT-installment-payment.failure_reason |
 
 **Business Rules**:
 
-- View is **read-only**; providers can see schedule and history but **cannot** modify plan or trigger payments.
-- If plan is flagged Overdue or is "Defaulted", show instruction banner: "Please contact Hairline support; payment follow-up is handled by admin team."
-- All dates and amounts are consistent with underlying payment records; discrepancies must be treated as data errors and surfaced via internal alerts (out of scope for UI behavior here).
+- View is **read-only**; providers can see schedule and history but **cannot** modify plan or trigger payments. (REQ-007B-029)
+- If plan is flagged Overdue or is "Defaulted", show instruction banner: "Please contact Hairline support; payment follow-up is handled by admin team." (REQ-007B-031)
+- All dates and amounts are consistent with underlying payment records; discrepancies must be treated as data errors and surfaced via internal alerts (out of scope for UI behavior here). (REQ-007B-034)
 
 **Notes**:
 
@@ -360,29 +359,29 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 
 **Data Fields**:
 
-| Field Name                | Type       | Required | Description                                     | Validation Rules          |
-|--------------------------|------------|----------|-------------------------------------------------|---------------------------|
-| Active Plans Count        | number     | Yes      | Total installment plans currently active        | Non-negative integer      |
-| Overdue Installments      | number     | Yes      | Count of failed installments after retries      | Flagged for admin action  |
-| Total Installment Revenue | number     | Yes      | Sum of all installment payments collected       | Aggregate across all bookings |
-| Average Installments      | number     | Yes      | Average number of installments selected         | Analytics metric          |
-| Success Rate              | percentage | Yes      | Successful installment charges / total attempts | Performance indicator     |
-| Plan List                 | table      | Yes      | All installment plans with patient, provider, status, progress | Filter criteria are owned by FR-022 (Search and Filter) |
+| Field Name                | Type       | Required | Description                                     | Validation Rules          | Graph field |
+|--------------------------|------------|----------|-------------------------------------------------|---------------------------|---|
+| Active Plans Count        | number     | Yes      | Total installment plans currently active        | Non-negative integer | ENT-installment-plan-metrics.active_plans_count |
+| Overdue Installments      | number     | Yes      | Count of failed installments after retries      | Flagged for admin action | ENT-installment-plan-metrics.overdue_installments_count |
+| Total Installment Revenue | number     | Yes      | Sum of all installment payments collected       | Aggregate across all bookings | ENT-installment-plan-metrics.total_installment_revenue |
+| Average Installments      | number     | Yes      | Average number of installments selected         | Analytics metric | ENT-installment-plan-metrics.average_installments |
+| Success Rate              | percentage | Yes      | Successful installment charges / total attempts | Performance indicator | ENT-installment-plan-metrics.success_rate |
+| Plan List                 | table      | Yes      | All installment plans with patient, provider, status, progress | Filter criteria are owned by FR-022 (Search and Filter) | ENT-patient.name, ENT-provider.name, ENT-installment-plan.status, ENT-installment-plan.completion_percentage |
 
 **Business Rules**:
 
-- Flag installment plans with overdue payments (after 3 failed retries)
-- Show aging report: days overdue for failed installments
-- Allow admin to manually retry failed installment
-- Allow admin to contact patient for payment resolution
-- Allow admin to cancel booking for chronically defaulted plans through the FR-006 Cancel Booking action
-- Show revenue forecast based on scheduled installments
+- Flag installment plans with overdue payments (after 3 failed retries) (REQ-007B-075)
+- Show aging report: days overdue for failed installments (REQ-007B-076)
+- Allow admin to manually retry failed installment (REQ-007B-080)
+- Allow admin to contact patient for payment resolution (REQ-007B-051)
+- Allow admin to cancel booking for chronically defaulted plans through the FR-006 Cancel Booking action (REQ-007B-051)
+- Show revenue forecast based on scheduled installments (REQ-007B-077)
 
 **Notes**:
 
-- Use dashboard widgets for key metrics
-- Provide drill-down into individual installment plan details
-- Export capabilities for financial reporting and reconciliation
+- Use dashboard widgets for key metrics (REQ-007B-075)
+- Provide drill-down into individual installment plan details (REQ-007B-075)
+- Export capabilities for financial reporting and reconciliation (REQ-007B-078)
 
 ---
 
@@ -392,36 +391,36 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 
 **Data Fields**:
 
-| Field Name                | Type   | Required | Description                                          | Validation Rules                          |
-|---------------------------|--------|----------|------------------------------------------------------|-------------------------------------------|
-| Booking ID                | text   | Yes      | Unique booking identifier                            | Display only                              |
-| Patient Name              | text   | Yes      | Patient full name                                    | Display only                              |
-| Provider Name             | text   | Yes      | Clinic/provider name                                 | Display only                              |
-| Procedure Date            | date   | Yes      | Scheduled procedure date                             | Format: DD-MM-YYYY                        |
-| Total Amount              | number | Yes      | Booking total (accepted price after promotion) | Matches booking total                     |
-| Currency                  | text   | Yes      | Accepted patient currency                            | Read-only; from the accepted snapshot     |
-| Total Installments        | number | Yes      | Total installments in plan                           | 2–9                                       |
-| Installments Paid         | number | Yes      | Number of completed installments                     | 0 to total installments                   |
-| Installments Remaining    | number | Yes      | Number of upcoming installments                      | Total minus paid                          |
-| Completion Percentage     | number | Yes      | Percentage of total amount collected                 | 0–100% (auto-calculated)                  |
-| Final Payment Deadline    | date   | Yes      | Date by which all installments must be completed     | Must meet configured cutoff rule          |
-| Plan Status               | badge  | Yes      | "Active", "Canceled", "Completed", "Defaulted"; an Overdue flag is shown beside it when a due date has passed and the installment is unpaid (calculated, not stored) | Color-coded                               |
-| Payment Method Summary    | text   | Yes      | Masked card details or payment method descriptor     | Display only                              |
-| Installment Schedule      | table  | Yes      | Row per installment with date, amount, and status    | Same structure as provider detail screen  |
-| Admin Action Panel        | group  | Yes      | Section with admin-only controls and justification   | See Business Rules                        |
+| Field Name                | Type   | Required | Description                                          | Validation Rules                          | Graph field |
+|---------------------------|--------|----------|------------------------------------------------------|-------------------------------------------|---|
+| Booking ID                | text   | Yes      | Unique booking identifier                            | Display only | ENT-booking.id |
+| Patient Name              | text   | Yes      | Patient full name                                    | Display only | ENT-patient.name |
+| Provider Name             | text   | Yes      | Clinic/provider name                                 | Display only | ENT-provider.name |
+| Procedure Date            | date   | Yes      | Scheduled procedure date                             | Format: DD-MM-YYYY | ENT-booking.appointment_at |
+| Total Amount              | number | Yes      | Booking total (accepted price after promotion) | Matches booking total | ENT-installment-plan.total_amount |
+| Currency                  | text   | Yes      | Accepted patient currency                            | Read-only; from the accepted snapshot | ENT-installment-plan.currency |
+| Total Installments        | number | Yes      | Total installments in plan                           | 2–9 | ENT-installment-plan.installment_count |
+| Installments Paid         | number | Yes      | Number of completed installments                     | 0 to total installments | ENT-installment-plan.installments_paid |
+| Installments Remaining    | number | Yes      | Number of upcoming installments                      | Total minus paid | ENT-installment-plan.installments_remaining |
+| Completion Percentage     | number | Yes      | Percentage of total amount collected                 | 0–100% (auto-calculated) | ENT-installment-plan.completion_percentage |
+| Final Payment Deadline    | date   | Yes      | Date by which all installments must be completed     | Must meet configured cutoff rule | ENT-installment-plan.final_payment_deadline |
+| Plan Status               | badge  | Yes      | "Active", "Canceled", "Completed", "Defaulted"; an Overdue flag is shown beside it when a due date has passed and the installment is unpaid (calculated, not stored) | Color-coded | ENT-installment-plan.status, ENT-installment-plan.is_overdue |
+| Payment Method Summary    | text   | Yes      | Masked card details or payment method descriptor     | Display only | ENT-payment-method.last_four_digits |
+| Installment Schedule      | table  | Yes      | Row per installment with date, amount, and status    | Same structure as provider detail screen | ENT-installment-payment.installment_number, ENT-installment-payment.due_date, ENT-installment-payment.amount, ENT-installment-payment.status, ENT-installment-payment.payment_date, ENT-installment-payment.failure_reason |
+| Admin Action Panel        | group  | Yes      | Section with admin-only controls and justification   | See Business Rules | no graph field (control) |
 
 **Business Rules**:
 
 - Admin can perform the following actions (subject to internal policy and audit logging):
-  - **Retry Charge** on a failed installment (invokes payment processor via S-02).
-  - **Mark as Resolved** when an external/manual payment issue has been handled.
-  - There is no separate plan cancel action: to cancel the booking the admin uses the FR-006 Cancel Booking action, which stops future installments and applies the refund inside it.
+  - **Retry Charge** on a failed installment (invokes payment processor via S-02). (REQ-007B-080)
+  - **Mark as Resolved** when an external/manual payment issue has been handled. (REQ-007B-081)
+  - See REQ-007B-023.
 - All admin actions MUST:
-  - Require a justification text input (minimum 20 characters).
-  - Be logged with timestamp, admin ID, action type, and justification.
+  - Require a justification text input (minimum 20 characters). (REQ-007B-083)
+  - Be logged with timestamp, admin ID, action type, and justification. (REQ-007B-083)
 - Certain actions are only available based on plan status:
-  - "Retry Charge" available only for "Failed" or "Overdue" installments.
-- Admin cannot directly edit financial amounts; changes must be made via refunds/adjustments defined in payment rules.
+  - "Retry Charge" available only for "Failed" or "Overdue" installments. (REQ-007B-080)
+- Admin cannot directly edit financial amounts; changes must be made via refunds/adjustments defined in payment rules. (REQ-007B-085)
 
 **Notes**:
 
@@ -434,39 +433,39 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 
 ### General Module Rules
 
-- Installment plans are interest-free (0% APR) for all patients
-- Available installment options: 2, 3, 4, 5, 6, 7, 8, or 9 monthly payments (enabled in FR-029)
-- Final payment MUST complete by the configured cutoff days before scheduled procedure date (minimum 30 days; configured in FR-029)
-- System offers only installment counts that are feasible given booking date, procedure date, monthly frequency, and the cutoff window
-- First installment charged at checkout; its success confirms the existing `Accepted` booking (FR-006)
-- Installment plan total, currency and exchange rate are copied read-only from the FR-005 accepted snapshot through the FR-006 booking. The total already includes the accepted promotion and any patient promotion code (FR-019). It is never recomputed from a live quote, sibling option, package library price or current exchange rate
-- `Payment Window Expired` applies only to the first payment step (acceptance to first installment). Missed later installments never cause `Payment Window Expired` or inquiry cancellation (FR-006)
-- Subsequent installments charged monthly (30-day intervals)
-- Installment amount calculated as: booking total (accepted price after promotion) ÷ number of installments (rounded to 2 decimal places)
-- Patient can choose fewer installments than maximum available (pay faster)
-- Single full payment option always available as alternative to installments
+- Installment plans are interest-free (0% APR) for all patients (REQ-007B-001)
+- See REQ-007B-001, REQ-007B-002.
+- See REQ-007B-003.
+- System offers only installment counts that are feasible given booking date, procedure date, monthly frequency, and the cutoff window (REQ-007B-002)
+- See REQ-007B-005.
+- Installment plan total, currency and exchange rate are copied read-only from the FR-005 accepted snapshot through the FR-006 booking. The total already includes the accepted promotion and any patient promotion code (FR-019). It is never recomputed from a live quote, sibling option, package library price or current exchange rate (REQ-007B-025)
+- `Payment Window Expired` applies only to the first payment step (acceptance to first installment). Missed later installments never cause `Payment Window Expired` or inquiry cancellation (FR-006) (REQ-007B-026, REQ-007B-052)
+- See REQ-007B-006.
+- See REQ-007B-004.
+- See REQ-007B-036.
+- Single full payment option always available as alternative to installments (REQ-007B-040, REQ-007B-041)
 
 ### Data & Privacy Rules
 
-- Payment method details stored securely per PCI-DSS standards (via payment processor)
-- Platform does not store full credit card numbers (only tokenized references)
-- All installment payment records encrypted at rest and in transit
-- Access to installment payment data follows RBAC: patients see their own installments; providers see booking payment status; admins see all plans
-- All installment lifecycle events logged for tamper-evident audit trail
-- Compliance: PCI-DSS (via processor), GDPR/HIPAA-aligned handling of payment data
+- Payment method details stored securely per PCI-DSS standards (via payment processor) (REQ-007B-073)
+- See REQ-007B-010.
+- See REQ-007B-011.
+- Access to installment payment data follows RBAC: patients see their own installments; providers see booking payment status; admins see all plans (REQ-007B-072)
+- See REQ-007B-012.
+- Compliance: PCI-DSS (via processor), GDPR/HIPAA-aligned handling of payment data (REQ-007B-073)
 
 ### Admin Editability Rules
 
 **Editable by Admin**:
 
-- Customer-facing installment plan settings are configured via **FR-029 (A-09)**:
+- Customer-facing installment plan settings are configured via **FR-029 (A-09)** (REQ-007B-079):
   - Enabled installment counts (2-9)
   - Cutoff days (30-90) requiring full payment completion before procedure date
   - Minimum booking amount eligibility threshold
-  - Late payment grace period before booking cancellation; it also sets when a late fee is charged for an unpaid installment
+  - Late payment grace period before booking cancellation; it also sets when a late fee is charged for an unpaid installment (REQ-007B-099)
   - Late fee and rescheduling fee amounts
 
-**Fixed in Codebase (Not Editable)**:
+**Fixed in Codebase (Not Editable)** (REQ-007B-074):
 
 - Interest rate (always 0% - interest-free policy)
 - Installment frequency (monthly; 30-day intervals)
@@ -478,216 +477,60 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 
 **Configurable with Restrictions**:
 
-- Cancellation refund ladder for installment plans (owned by FR-029, Payment settings)
-- Payment processor integration settings (requires technical deployment, not runtime editable)
+- Cancellation refund ladder for installment plans (owned by FR-029, Payment settings) (REQ-007B-056)
+- Payment processor integration settings (requires technical deployment, not runtime editable) (REQ-007B-074)
 
 ### Payment & Billing Rules
 
-- Installment charges are automatic on scheduled dates (patient consent given at checkout)
-- A failed installment charge triggers 3 automatic retry attempts only when the failure was technical, with waits of 1 day, 3 days and 7 days (retries fall on day 1, day 4 and day 11 after the failure)
-- After a hard decline there is no automatic retry: the patient is notified and must retry or update the card
-- After 3 failed retries, installment plan marked as "Defaulted" and the admin, the patient and the provider are notified
-- Patient can update payment method anytime before next installment
-- Cancellation refunds are a percentage of the amount paid so far, set by the refund ladder in FR-029 (Payment settings)
-- A late fee is charged when the late payment grace period (FR-029) has passed without payment; the amounts of the late fee and the rescheduling fee are set by the admin in FR-029
-- Money movement follows the owner decisions that replace the missing Payment Routing Spec: Hairline is the seller on the card payment, and Hairline's balance pays refunds, chargebacks and Stripe fees first and recovers the clinic's part afterwards. Hairline holds the payment; the clinic's share moves to the clinic's locked Stripe balance 60 days before treatment (30 days for an installment plan once it is fully paid) and is paid out at release. If the booking is cancelled after the share has moved, Hairline refunds the patient per the refund ladder, pulls the share back from the clinic's locked balance and deducts any shortfall from the clinic's next payout. If the booking is rescheduled after the share has moved, Hairline always pulls it back and moves it again 60 or 30 days before the new date
-- Platform commission calculated on the booking total (accepted price after promotion), using the commission type (Percentage or Flat Rate) and value from the snapshot taken at booking confirmation (FR-029), deducted from provider payout after final installment completes
-- Provider payout delayed until all installments completed and the instalment plan is fully paid
-- Rescheduling procedure date may require installment plan adjustment or immediate payment of remaining balance
+- Installment charges are automatic on scheduled dates (patient consent given at checkout) (REQ-007B-015, REQ-007B-043)
+- See REQ-007B-018.
+- See REQ-007B-019, REQ-007B-020.
+- See REQ-007B-021, REQ-007B-047.
+- See REQ-007B-022, REQ-007B-054.
+- A late fee is charged when the late payment grace period (FR-029) has passed without payment; the amounts of the late fee and the rescheduling fee are set by the admin in FR-029 (REQ-007B-099, REQ-007B-050)
+- Money movement follows the owner decisions that replace the missing Payment Routing Spec: Hairline is the seller on the card payment, and Hairline's balance pays refunds, chargebacks and Stripe fees first and recovers the clinic's part afterwards. Hairline holds the payment; the clinic's share moves to the clinic's locked Stripe balance 60 days before treatment (30 days for an installment plan once it is fully paid) and is paid out at release. If the booking is cancelled after the share has moved, Hairline refunds the patient per the refund ladder, pulls the share back from the clinic's locked balance and deducts any shortfall from the clinic's next payout. If the booking is rescheduled after the share has moved, Hairline always pulls it back and moves it again 60 or 30 days before the new date (REQ-007B-098)
+- Platform commission calculated on the booking total (accepted price after promotion), using the commission type (Percentage or Flat Rate) and value from the snapshot taken at booking confirmation (FR-029), deducted from provider payout after final installment completes (REQ-007B-070)
+- Provider payout delayed until all installments completed and the instalment plan is fully paid (REQ-007B-071, REQ-007B-049)
+- See REQ-007B-024, REQ-007B-060, REQ-007B-061, REQ-007B-062.
+- Installment charges must be idempotent (prevent duplicate charges on retry) (REQ-007B-068)
+- Installment schedule and amounts are immutable once confirmed (prevent tampering) (REQ-007B-069)
+- Cancellation refund policy applies same percentages to installment plans as to single payments (REQ-007B-055)
+- For a provider-selected promotion or patient-entered code, the first successful installment consumes the promotion use reserved at acceptance (an automatic promotion's use is consumed at acceptance per FR-019); installments never apply or remove a promotion (REQ-007B-048)
+- Installment revenue tracked separately from one-time payments
+- Providers receive payout within 2 business days after final installment completes and procedure finishes
+- Timezone handling critical for installment due dates (use UTC internally, display in patient timezone)
+- Admins can identify and resolve defaulted installment plans within 24 hours of flag
 
 ### Admin Action & Audit Rules
 
-Per Hairline Platform Constitution (Principle VI: Data Integrity & Audit Trail), all admin actions that modify installment plan state MUST be audited:
+Per Hairline Platform Constitution (Principle VI: Data Integrity & Audit Trail), all admin actions that modify installment plan state MUST be audited (REQ-007B-083):
 
 **Admin Actions Requiring Justification & Audit Logging**:
 
-- **Retry Charge**: Manually triggering a payment retry on a failed installment (requires justification minimum 20 characters; logged with timestamp, admin ID, action type, installment ID, retry attempt number)
-- **Mark as Resolved**: Marking a failed installment as resolved when external/manual payment has been handled (requires justification minimum 20 characters; logged with timestamp, admin ID, action type, installment ID, resolution method)
-- **Cancelling a booking with an installment plan** is not a plan action: the admin uses the FR-006 Cancel Booking action, which stops the remaining installments and applies the refund
+- **Retry Charge**: Manually triggering a payment retry on a failed installment (requires justification minimum 20 characters; logged with timestamp, admin ID, action type, installment ID, retry attempt number) (REQ-007B-080, REQ-007B-084)
+- **Mark as Resolved**: Marking a failed installment as resolved when external/manual payment has been handled (requires justification minimum 20 characters; logged with timestamp, admin ID, action type, installment ID, resolution method) (REQ-007B-081, REQ-007B-084)
+- **Cancelling a booking with an installment plan** is not a plan action: the admin uses the FR-006 Cancel Booking action, which stops the remaining installments and applies the refund (REQ-007B-023, REQ-007B-053, REQ-007B-057, REQ-007B-058)
 
 **Audit Trail Requirements**:
 
-- All admin actions documented in Screen 6 (Admin Booking Installment Plan Detail) MUST be logged to the immutable audit trail system (S-06: Audit Log Service)
-- Audit log retention follows the system PRD, Platform-Wide Rules: One 10-year retention period
-- Audit logs MUST include: timestamp (UTC), admin user ID, admin name, action type, affected entity IDs (installment plan ID, booking ID, patient ID), justification text, before/after state (if applicable), IP address
-- Failed admin action attempts (e.g., insufficient permissions, validation errors) MUST also be logged
-- Audit logs MUST be tamper-proof and queryable for compliance reporting
+- All admin actions documented in Screen 6 (Admin Booking Installment Plan Detail) MUST be logged to the immutable audit trail system (S-06: Audit Log Service) (REQ-007B-086)
+- Audit log retention follows the system PRD, Platform-Wide Rules: One 10-year retention period (REQ-007B-087)
+- Audit logs MUST include: timestamp (UTC), admin user ID, admin name, action type, affected entity IDs (installment plan ID, booking ID, patient ID), justification text, before/after state (if applicable), IP address (REQ-007B-088)
+- Failed admin action attempts (e.g., insufficient permissions, validation errors) MUST also be logged (REQ-007B-089)
+- Audit logs MUST be tamper-proof and queryable for compliance reporting (REQ-007B-086)
+- Admin access to installment management logged with user ID and timestamp (REQ-007B-086)
 
 **Access Control**:
 
-- Only authorized admin roles (Billing Admin, Financial Manager, Super Admin) can execute installment management actions
-- Role-based access control (RBAC) enforced per FR-031 (Admin Access Control & Permissions)
-- All installment data access (read and write) is subject to RBAC validation
-
----
-
-## Success Criteria
-
-### Patient Experience Metrics
-
-- **SC-001**: Patients can select and confirm installment plan within 2 minutes of reaching checkout
-- **SC-002**: 90% of patients successfully complete installment plan enrollment on first attempt without errors
-- **SC-003**: 80% of patients find installment plan options clear and understandable (survey-based)
-
-### Provider Efficiency Metrics
-
-- **SC-004**: Providers can view installment payment status for any booking in under 30 seconds
-- **SC-005**: Providers receive payout within 2 business days after final installment completes and procedure finishes
-- **SC-006**: 95% of bookings with installment plans result in full payment completion
-
-### Admin Management Metrics
-
-- **SC-007**: Admins can identify and resolve defaulted installment plans within 24 hours of flag
-- **SC-008**: Admin-configured installment parameters (buffer, max installments) apply to new bookings within 1 minute
-- **SC-009**: 100% of installment payment lifecycle events (scheduled, charged, failed, retried) are auditable
-
-### System Performance Metrics
-
-- **SC-010**: 95% of scheduled installment charges execute within 5 minutes of due time
-- **SC-011**: Payment reminders sent within 1 hour of scheduled time (3 days before due)
-- **SC-012**: Failed payment retry logic executes automatically without manual intervention
-- **SC-013**: Zero duplicate charges on idempotent retries in all tested scenarios
-
-### Business Impact Metrics
-
-- **SC-014**: Booking conversion rate increases by 20% due to installment plan availability
-- **SC-015**: Installment plan adoption reaches 40% of all bookings within first 3 months
-- **SC-016**: Average transaction value increases by 15% (patients book higher-cost procedures with installments)
-- **SC-017**: Installment payment success rate ≥ 92% (successful charges / total attempted charges)
-- **SC-018**: Defaulted installment plans < 5% of all active plans
+- Only authorized admin roles (Billing Admin, Financial Manager, Super Admin) can execute installment management actions (REQ-007B-090)
+- Role-based access control (RBAC) enforced per FR-031 (Admin Access Control & Permissions) (REQ-007B-091)
+- All installment data access (read and write) is subject to RBAC validation (REQ-007B-091)
 
 ---
 
 ## Dependencies
 
-### Internal Dependencies (Other FRs/Modules)
-
-- **FR-006: Booking & Scheduling**
-  - **Why needed**: Installment plan tied to booking confirmation and procedure date
-  - **Integration point**: Installment plan is set up at checkout for an `Accepted` booking, and first installment success confirms that booking; procedure date determines maximum installments; plan total, currency and exchange rate come from the booking's accepted snapshot; provider fault after acceptance follows this PRD's Alternative Flow B4 together with FR-006 Alternative Flows B4 and B5
-
-- **FR-007: Payment Processing**
-  - **Why needed**: Core payment infrastructure for processing installment charges
-  - **Integration point**: Uses same payment gateway, security controls, receipt generation; installments extend deposit/final payment logic
-
-- **P-01: Auth & Profile Management**
-  - **Why needed**: Only authenticated patients can enroll in installment plans
-  - **Integration point**: Patient profile linked to installment payment schedule and history
-
-- **A-05: Billing & Financial Reconciliation**
-  - **Why needed**: Admin oversight of installment plans and revenue reconciliation
-  - **Integration point**: Installment revenue tracked separately from one-time payments; affects provider payout timing
-
-- **FR-019: Promotions & Discount Management**
-  - **Why needed**: The accepted promotion and any patient promotion code are already in the plan total
-  - **Integration point**: For a provider-selected promotion or patient-entered code, the first successful installment consumes the promotion use reserved at acceptance (an automatic promotion's use is consumed at acceptance per FR-019); installments never apply or remove a promotion
-
-- **S-03: Notification Service**
-  - **Why needed**: Send installment reminders, confirmations, and failure notifications
-  - **Integration point**: Triggers on installment lifecycle events (scheduled, charged, failed, completed)
-
-### External Dependencies (APIs, Services)
-
-- **PCI-compliant Payment Processor (Stripe)**
-  - **Purpose**: Processes recurring installment charges; stores tokenized payment methods; handles automatic retries
-  - **Integration**: Scheduled charge API, payment method tokenization, webhook notifications for charge status
-  - **Failure handling**: Retry logic with exponential backoff; notify patient and admin of persistent failures; support manual payment submission
-
-- **Scheduled Job Processor**
-  - **Purpose**: Executes time-based installment charges and reminders
-  - **Integration**: Cron-based or queue-based job scheduling for installment due dates
-  - **Failure handling**: Queue failed jobs for retry; alert admin if scheduling system unavailable
-
-### Data Dependencies
-
-- **Active booking with procedure date**
-  - **Why needed**: Calculate available installments and payment schedule
-  - **Source**: Booking & Scheduling module (FR-006)
-
-- **Accepted snapshot: plan total, currency and exchange rate**
-  - **Why needed**: Calculate installment amounts and charge every installment in the accepted currency
-  - **Source**: FR-006 Booking, read-only from the FR-005 AcceptanceEvent snapshot of the one accepted subquote; the total already includes the accepted promotion and any patient promotion code (FR-019)
-
-- **Patient payment method on file**
-  - **Why needed**: Process recurring installment charges
-  - **Source**: Patient payment method enrollment during checkout
-
----
-
-## Assumptions
-
-### User Behavior Assumptions
-
-- Patients prefer smaller monthly payments over single large payment
-- Patients will keep payment method valid for duration of installment plan
-- Patients check email/app for installment reminders before due date
-- Patients understand "interest-free" means no additional charges beyond procedure cost
-- Most patients will complete installment plans without defaulting
-
-### Technology Assumptions
-
-- Payment processor supports scheduled/recurring charges
-- Payment processor provides webhook notifications for charge success/failure
-- Mobile app has reliable push notification delivery for reminders
-- Patients have access to email and mobile app for payment notifications
-- System has scheduled job processor for timely installment execution
-
-### Business Process Assumptions
-
-- 30-day buffer before procedure is sufficient for final payment confirmation
-- 3 retry attempts with increasing delays adequate to resolve temporary payment issues
-- Admin intervention required only for persistent payment failures after retries
-- Provider payouts can be delayed until installment plan completes (acceptable business terms)
-- Cancellation refund policy applies same percentages to installment plans as single payments
-- Rescheduling procedure date is infrequent enough that manual installment adjustment is acceptable
-
----
-
-## Implementation Notes
-
-### Technical Considerations
-
-- Scheduled jobs must execute reliably on exact dates (use robust job queue with monitoring)
-- Installment charges must be idempotent (prevent duplicate charges on retry)
-- Payment method tokenization required for recurring charges (do not store card details)
-- Timezone handling critical for installment due dates (use UTC internally, display in patient timezone)
-- Financial calculations must round correctly (avoid floating point errors)
-
-### Performance Targets
-
-Per Hairline Platform Constitution (Principle VIII: Performance & Scalability):
-
-- **API response times**: p95 < 500ms, p99 < 1000ms (excluding external payment processor calls)
-- **Installment calculation**: < 200ms for determining available options and calculating schedule
-- **Schedule retrieval**: < 300ms for loading patient installment history and upcoming payments
-- **Admin dashboard queries**: < 500ms for installment plan list and filtering operations
-- **Payment processing**: Acknowledge charge initiation within 100ms; actual charge completion time depends on payment processor (typically 2-5 seconds)
-- **Reminder job execution**: 95% of reminders sent within 1 hour of scheduled time (3 days before due date)
-- **Retry job scheduling**: Failed payment retries scheduled within 5 minutes of failure detection
-
-### Integration Points
-
-- Payment processor webhook integration for charge status updates (success, failure, requires action)
-- Notification service triggers on installment lifecycle events
-- Booking status updates when installment milestones reached (first charge, final charge, default)
-- Admin dashboard polling for real-time installment plan monitoring
-
-### Scalability Considerations
-
-- Expected 200-500 bookings/month at launch; 40% may use installments = 80-200 active installment plans
-- Plan for 10x growth within 12 months: 2,000 active installment plans
-- Each plan has 2-9 scheduled charges = 4,000-18,000 scheduled jobs over plan lifetimes
-- Peak load on monthly payment dates (concentrated around 1st of month if patients book similarly)
-- Ensure job queue can handle 500+ simultaneous installment charges on peak days
-
-### Security Considerations
-
-- RBAC enforced across tenants; patients see only their own installment data
-- All payment method details tokenized (never store card numbers)
-- Installment schedule and amounts are immutable once confirmed (prevent tampering)
-- Full audit trail for all installment payment attempts (success, failure, retry, refund)
-- Admin access to installment management logged with user ID and timestamp
-- Compliance alignment with PCI-DSS for recurring charges
+Related FRs: FR-006 (installment plan tied to booking confirmation and procedure date), FR-007 (core payment infrastructure for processing installment charges; uses same payment gateway, security controls, receipt generation; installments extend deposit/final payment logic), FR-019 (the accepted promotion and any patient promotion code are already in the plan total). Related modules: P-01 (only authenticated patients can enroll in installment plans), A-05 (admin oversight of installment plans and revenue reconciliation), S-03 (send installment reminders, confirmations, and failure notifications).
 
 ---
 
@@ -796,16 +639,16 @@ Patient requests booking cancellation after paying 2 of 4 installments; admin re
 
 ### Edge Cases
 
-- What happens when patient's payment method expires mid-plan? (Charge is declined; no automatic retry; patient is notified and must retry or update the card)
-- How does system handle procedure date rescheduled after installment plan established? (Recalculate installment schedule if sufficient time; otherwise require immediate payment of remaining balance)
-- What occurs if first installment fails at checkout? (Booking stays `Accepted` and not confirmed; patient may retry or use a different payment method only while the original FR-006 payment hold is active, per FR-007 REQ-007-017; when the hold expires the booking moves to `Payment Window Expired`, installment checkout is blocked, and recovery follows FR-006)
-- What if a later installment is missed? (B1 retry and default handling applies, with automatic retries only after a technical failure; it never causes `Payment Window Expired` or inquiry cancellation)
-- What if the provider fails after acceptance? (Alternative Flow B4 and FR-006 Alternative Flow B5 apply)
+- What happens when patient's payment method expires mid-plan? (Charge is declined; no automatic retry; patient is notified and must retry or update the card) (REQ-007B-018)
+- How does system handle procedure date rescheduled after installment plan established? (Recalculate installment schedule if sufficient time; otherwise require immediate payment of remaining balance) (REQ-007B-024, REQ-007B-061, REQ-007B-062)
+- What occurs if first installment fails at checkout? (Booking stays `Accepted` and not confirmed; patient may retry or use a different payment method only while the original FR-006 payment hold is active, per FR-007 REQ-007-017; when the hold expires the booking moves to `Payment Window Expired`, installment checkout is blocked, and recovery follows FR-006) (REQ-007B-026, REQ-007B-052)
+- What if a later installment is missed? (B1 retry and default handling applies, with automatic retries only after a technical failure; it never causes `Payment Window Expired` or inquiry cancellation) (REQ-007B-052, REQ-007B-018)
+- What if the provider fails after acceptance? (Alternative Flow B4 and FR-006 Alternative Flow B5 apply) (REQ-007B-027, REQ-007B-063, REQ-007B-064, REQ-007B-096, REQ-007B-097)
 - What if the quote, package or promotion is edited after acceptance? (No effect; the plan reads only the accepted snapshot)
-- How to manage patient requesting fewer installments mid-plan? (Not supported; patient can pay remaining balance early to complete plan)
-- What if admin increases the cutoff window from 30 to 45 days via FR-029? (Applies only to new bookings; existing installment plans unchanged)
-- How does system handle refund for partial installments if patient disputes charge? (Admin reviews dispute; processes refund per resolution; may cancel booking or allow continuation)
-- What if payment processor webhook fails to deliver charge status? (System polls payment status as fallback; ensures no missed confirmations or retries)
+- How to manage patient requesting fewer installments mid-plan? (Not supported; patient can pay remaining balance early to complete plan) (REQ-007B-066)
+- What if admin increases the cutoff window from 30 to 45 days via FR-029? (Applies only to new bookings; existing installment plans unchanged) (REQ-007B-065)
+- How does system handle refund for partial installments if patient disputes charge? (Admin reviews dispute; processes refund per resolution; may cancel booking or allow continuation) (REQ-007B-059)
+- What if payment processor webhook fails to deliver charge status? (System polls payment status as fallback; ensures no missed confirmations or retries) (REQ-007B-067)
 
 ---
 
@@ -813,69 +656,51 @@ Patient requests booking cancellation after paying 2 of 4 installments; admin re
 
 ### Core Requirements
 
-- **REQ-007b-001**: System MUST offer interest-free installment payment plans with 2-9 monthly payments
-- **REQ-007b-002**: System MUST determine feasible installment options based on time until procedure, monthly frequency, and cutoff days configured in FR-029 (minimum 30 days); the maximum number of installments is (days until procedure - 30) ÷ 30 + 1, rounded down, so 60 days allows 2 installments; offered options are limited to enabled installment counts configured in FR-029 (2-9)
-- **REQ-007b-003**: System MUST enforce the cutoff window: final installment must complete by the configured cutoff days before procedure date (minimum 30 days; configured in FR-029)
-- **REQ-007b-004**: System MUST calculate installment amounts as equal shares: booking total (accepted price after promotion) ÷ number of installments, rounded to 2 decimal places
-- **REQ-007b-005**: System MUST charge the first installment at checkout; its success confirms the existing `Accepted` booking (FR-006)
-- **REQ-007b-006**: System MUST schedule remaining installments at 30-day intervals
+- **REQ-007B-001**: System MUST offer interest-free installment payment plans with 2-9 monthly payments
+- **REQ-007B-002**: System MUST determine feasible installment options based on time until procedure, monthly frequency, and cutoff days configured in FR-029 (minimum 30 days); the maximum number of installments is (days until procedure - 30) ÷ 30 + 1, rounded down, so 60 days allows 2 installments; offered options are limited to enabled installment counts configured in FR-029 (2-9)
+- **REQ-007B-003**: System MUST enforce the cutoff window: final installment must complete by the configured cutoff days before procedure date (minimum 30 days; configured in FR-029)
+- **REQ-007B-004**: System MUST calculate installment amounts as equal shares: booking total (accepted price after promotion) ÷ number of installments, rounded to 2 decimal places
+- **REQ-007B-005**: System MUST charge the first installment at checkout; its success confirms the existing `Accepted` booking (FR-006)
+- **REQ-007B-006**: System MUST schedule remaining installments at 30-day intervals
 
 ### Data Requirements
 
-- **REQ-007b-007**: System MUST maintain installment schedule with amounts and due dates per booking
-- **REQ-007b-008**: System MUST track installment payment status as one list: scheduled, retrying, paid, failed, overdue, cancelled
-- **REQ-007b-009**: System MUST persist patient payment method securely for recurring charges (tokenized)
+- **REQ-007B-007**: System MUST maintain installment schedule with amounts and due dates per booking
+- **REQ-007B-008**: System MUST track installment payment status as one list: scheduled, retrying, paid, failed, overdue, cancelled
+- **REQ-007B-009**: System MUST persist patient payment method securely for recurring charges (tokenized)
 
 ### Security & Privacy Requirements
 
-- **REQ-007b-010**: System MUST tokenize payment methods (never store full card numbers)
-- **REQ-007b-011**: System MUST encrypt all installment payment records at rest and in transit
-- **REQ-007b-012**: System MUST log every installment payment attempt and lifecycle event (scheduled, charged, failed, retried, refunded) with timestamp, amount, status, and user, in a tamper-evident audit trail
+- **REQ-007B-010**: System MUST tokenize payment methods (never store full card numbers)
+- **REQ-007B-011**: System MUST encrypt all installment payment records at rest and in transit
+- **REQ-007B-012**: System MUST log every installment payment attempt and lifecycle event (scheduled, charged, failed, retried, refunded) with timestamp, amount, status, and user, in a tamper-evident audit trail
 
 ### Integration Requirements
 
-- **REQ-007b-013**: System MUST integrate with payment processor for scheduled/recurring charges
-- **REQ-007b-014**: System MUST send payment reminders 3 days before each installment due date
-- **REQ-007b-015**: System MUST automatically charge payment method on installment due date
-- **REQ-007b-016**: System MUST send confirmation notification after successful installment charge
+- **REQ-007B-013**: System MUST integrate with payment processor for scheduled/recurring charges
+- **REQ-007B-014**: System MUST send payment reminders 3 days before each installment due date
+- **REQ-007B-015**: System MUST automatically charge payment method on installment due date
+- **REQ-007B-016**: System MUST send confirmation notification after successful installment charge
 
 ### Error Handling Requirements
 
-- **REQ-007b-017**: System MUST detect failed installment charges and notify patient immediately
-- **REQ-007b-018**: System MUST execute 3 automatic retry attempts for an installment whose charge failed for a technical reason, with waits of 1 day, 3 days and 7 days (retries fall on day 1, day 4 and day 11 after the failure). After a hard decline System MUST NOT retry automatically; it MUST notify the patient, who must retry or update the card
-- **REQ-007b-019**: System MUST flag installment plan as "Defaulted" after 3 failed retry attempts
-- **REQ-007b-020**: System MUST notify the admin (for intervention), the patient and the provider of a defaulted installment plan
+- **REQ-007B-017**: System MUST detect failed installment charges and notify patient immediately
+- **REQ-007B-018**: System MUST execute 3 automatic retry attempts for an installment whose charge failed for a technical reason, with waits of 1 day, 3 days and 7 days (retries fall on day 1, day 4 and day 11 after the failure). After a hard decline System MUST NOT retry automatically; it MUST notify the patient, who must retry or update the card
+- **REQ-007B-019**: System MUST flag installment plan as "Defaulted" after 3 failed retry attempts
+- **REQ-007B-020**: System MUST notify the admin (for intervention), the patient and the provider of a defaulted installment plan
 
 ### Cancellation & Refund Requirements
 
-- **REQ-007b-021**: System MUST allow the patient to update the payment method of an active installment plan at any time before the next installment is charged; the new method applies to the remaining installments only
-- **REQ-007b-022**: System MUST calculate refunds for canceled bookings with partial installments paid as a percentage of the amount paid so far, per the cancellation refund ladder owned by FR-029
-- **REQ-007b-023**: System MUST cancel remaining installments when booking is canceled; stopping the installments and the refund happen inside the FR-006 Cancel Booking action, and installment plans have no separate cancel action
-- **REQ-007b-024**: System MUST handle procedure date rescheduling by recalculating installment schedule or requiring immediate payment; when the new date leaves too little time for the remaining installments, System MUST notify the patient (insufficient-time notice)
+- **REQ-007B-021**: System MUST allow the patient to update the payment method of an active installment plan at any time before the next installment is charged; the new method applies to the remaining installments only
+- **REQ-007B-022**: System MUST calculate refunds for canceled bookings with partial installments paid as a percentage of the amount paid so far, per the cancellation refund ladder owned by FR-029
+- **REQ-007B-023**: System MUST cancel remaining installments when booking is canceled; stopping the installments and the refund happen inside the FR-006 Cancel Booking action, and installment plans have no separate cancel action
+- **REQ-007B-024**: System MUST handle procedure date rescheduling by recalculating installment schedule or requiring immediate payment; when the new date leaves too little time for the remaining installments, System MUST notify the patient (insufficient-time notice)
 
 ### Accepted Snapshot & Payment Window Requirements
 
-- **REQ-007b-025**: System MUST copy the installment plan total, currency and exchange rate read-only from the FR-005 accepted snapshot through the FR-006 booking; the total already includes the accepted promotion and any patient promotion code; it MUST NOT be recomputed and MUST be shown with its currency on all installment screens
-- **REQ-007b-026**: System MUST allow first-installment retries only within the original FR-006 payment hold; `Payment Window Expired` applies only to that first payment step, and missed later installments MUST NOT cause `Payment Window Expired` or inquiry cancellation
-- **REQ-007b-027**: When the provider fails after acceptance, System MUST cancel remaining installments with no patient cancellation fee. On a provider withdrawal, drop-out, suspension or deactivation, System MUST refund in full every installment already paid, and the replacement booking takes a new payment per FR-006 Alternative Flows B4 and B5
-
----
-
-## Key Entities
-
-- **Entity 1 - Installment Plan**: Represents the payment schedule for a booking
-  - **Key attributes**: booking ID, total amount, currency, exchange rate, number of installments, installment amount, cutoff_days, creation date, status (active, completed, defaulted, canceled); total amount, currency and exchange rate are read-only copies of the accepted snapshot. Overdue is not a status: it is a calculated flag (an installment due date has passed and the installment is unpaid), not stored
-  - **Provenance**: resolves the AcceptanceEvent, accepted parent quote and subquote IDs and versions through its booking (FR-007 REQ-007-019)
-  - **Relationships**: belongs to one booking; has many installment payments; linked to one patient payment method
-
-- **Entity 2 - Installment Payment**: Represents a single scheduled/completed installment charge
-  - **Key attributes**: installment plan ID, due date, amount, status (scheduled, retrying, paid, failed, overdue, cancelled), payment date, retry count, failure reason
-  - **Relationships**: belongs to one installment plan; linked to payment transaction record
-
-- **Entity 3 - Payment Method**: The single record of a patient's saved payment method, used by installment plans here and read by the FR-007 payment screens and the FR-016 patient payments view. The payment methods it records are card and bank transfer. For a card it is a tokenized recurring payment method; for a bank transfer, which has no saved card, there is no card token, last 4 digits or expiration date to show
-  - **Key attributes**: token/reference ID, last 4 digits, expiration date, patient ID, active status (token, last 4 digits and expiration date apply only to a saved card)
-  - **Relationships**: belongs to one patient; used by one or more installment plans
-  - **Ownership**: FR-007B owns installment plans and payment methods; the Stripe account and the split-payment setting belong to FR-029
+- **REQ-007B-025**: System MUST copy the installment plan total, currency and exchange rate read-only from the FR-005 accepted snapshot through the FR-006 booking; the total already includes the accepted promotion and any patient promotion code; it MUST NOT be recomputed and MUST be shown with its currency on all installment screens
+- **REQ-007B-026**: System MUST allow first-installment retries only within the original FR-006 payment hold; `Payment Window Expired` applies only to that first payment step, and missed later installments MUST NOT cause `Payment Window Expired` or inquiry cancellation
+- **REQ-007B-027**: When the provider fails after acceptance, System MUST cancel remaining installments with no patient cancellation fee. On a provider withdrawal, drop-out, suspension or deactivation, System MUST refund in full every installment already paid, and the replacement booking takes a new payment per FR-006 Alternative Flows B4 and B5
 
 ---
 
@@ -883,19 +708,7 @@ Patient requests booking cancellation after paying 2 of 4 installments; admin re
 
 | Date       | Version | Changes                 | Author |
 |------------|---------|-------------------------|--------|
-| 2025-11-10 | 1.0     | Initial PRD creation    | AI     |
-| 2025-12-16 | 1.1     | Documentation alignment: Moved customer-facing installment configuration ownership to FR-029 (cutoff days, enabled installment counts, eligibility thresholds) and removed conflicting admin-configurable ranges/formulas; retained monthly schedule execution and retry/reminder behavior here. | AI |
-| 2026-02-12 | 1.2     | Constitution alignment enhancements: Added explicit performance targets (p95 < 500ms API response times, job execution timing) to Implementation Notes; added Admin Action & Audit Rules subsection documenting audit logging requirements for admin actions (retry charge, mark as resolved, cancel plan) per Constitution Principle VI. | AI |
-| 2026-10-16 | 1.3     | MTG-002 quote model alignment: plan total, currency and exchange rate copied read-only from the accepted snapshot through the booking, including accepted promotion and any patient code, never recomputed, currency on installment screens (FR-007b-2 merged FR-007b-4, S1-7; M15, D8); first-payment-only Payment Window Expired boundary with first-installment retry bound to the FR-006 hold (D1; FR-007b-3); Alternative Flow B4 provider fault with payment placeholder (D6, D6-M, M18); REQ-007b-025 to REQ-007b-027 added. Minors: FR-007b-1, FR-007b-5, FR-007b-6, FR-007b-7 (O). See CR-FR007B-20261016-01. Consolidated verification pending. | Product Owner / Documentation |
-| 2026-10-18 | 1.4     | Consolidated verification corrections ([CR-FR007B-20261016-01](./change-request-2026-10-16-mtg002-quote-model-alignment.md)): instalment base and Total Amount fields use the booking total (accepted price after promotion) instead of "total procedure cost" (Main Flow step 1, Screens, General Module Rules, REQ-007b-004; Q25); platform commission is calculated on the booking total and locked at booking confirmation, matching FR-007 REQ-007-014 (D12, Q5, Q25, Q28); promotion-use consumption scoped by source (Q30). | Product Owner / Documentation |
-| 2026-10-18 | 1.5     | Final audit corrections (Q35, Q36, Q37, Q42): Alternative Flow B2 routes the patient's cancellation request through Contact Support and the admin cancels through the FR-006 Cancel Booking action, with refund amounts left to the payment placeholder; B1 and B3 cancellations and the B3 date change use the FR-006 actions, with `booking.rescheduled` on a date change; B4 applies only before treatment starts and takes the replacement plan from the replacement quote's acceptance snapshot; the payout rule reads commission (Percentage or Flat Rate) from the booking-confirmation snapshot. Approvals row recorded. See [CR-FR007B-20261016-01](./change-request-2026-10-16-mtg002-quote-model-alignment.md). | Product Owner / Documentation |
-| 2026-11-20 | 1.6     | Requirements graph programme baseline: owner rulings applied. Main changes: plan status list is Active, Canceled, Completed, Defaulted, with Overdue as a calculated flag (due date passed and unpaid, not stored); one installment status list (Scheduled, Retrying, Paid, Failed, Overdue, Cancelled); maximum installments formula corrected so 60 days gives 2 installments; retries (waits of 1, 3 and 7 days) run only after a technical failure, and after a hard decline the patient is notified and must retry or update the card; first-installment type setting removed (equal split only); admin Cancel Plan action removed, cancelling goes through the FR-006 Cancel Booking action; refund ladder owned by FR-029; late and rescheduling fee amounts set in FR-029, late fee charged when the grace period ends without payment; two new notices (provider overdue alert, patient insufficient-time notice); Payment Method entity widened to the single saved record; Stripe Connect money-movement decisions noted as replacing the missing Payment Routing Spec; Requirements REQ-007b-004, REQ-007b-012, REQ-007b-021 reworded; cross-document reconciliation (retention pointer, payment method entity includes bank transfer, balance payment with reminders). | Product Owner / Documentation |
-| 2026-11-22 | 1.7 | Owner answer of 2026-11-22 (requirements graph programme, Phase 4 re-check): a defaulted installment plan notifies the admin, the patient and the provider. Main flow B2 step 7, the retry business rule, User Story acceptance scenario and REQ-007b-020 reworded. | Product Owner / Documentation |
-| 2026-11-22 | 1.8 | Alternative Flow B4 step 2 and REQ-007b-027 aligned with FR-006 Alternative Flow B5 and FR-007: a provider withdrawal or drop-out refunds every paid installment in full and the replacement booking takes a new payment; a suspension or deactivation keeps the provider-status placeholder (credit), not yet ruled | Product Owner / Documentation |
-| 2026-11-22 | 1.9 | Alternative Flow B4 Outcome line aligned with step 2 and REQ-007b-027: full refund on a provider withdrawal or drop-out, placeholder for suspension or deactivation | Product Owner / Documentation |
-| 2026-11-22 | 1.10 | Owner ruling 2026-11-22: a provider suspension or deactivation follows the same terms as a withdrawal or drop-out in Alternative Flow B4 step 2, its Outcome line and REQ-007b-027 (every paid installment refunded in full, remaining installments cancelled with no cancellation fee, replacement booking takes a new payment); the credit-moves-with-the-patient placeholder is removed | Product Owner / Documentation |
-| 2026-11-22 | 1.11 | Wording clarification: the FR-006 dependency line now names this PRD's Alternative Flow B4 and FR-006 Alternative Flows B4 and B5 for a provider fault after acceptance (it said only Alternative Flow B5, which this PRD does not have). | Product Owner / Documentation |
-| 2026-11-22 | 1.12 | Wording clean-up after the cross-FR consistency review: the stale 'payment placeholder' pointer is replaced by a pointer to the refund rules FR-006 already states (the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault). No rule changes. | Product Owner / Documentation |
+| 2026-11-22 | 1.13 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.12) and the change request CR-FR007B-20261016-01 (change-request-2026-10-16-mtg002-quote-model-alignment.md) are in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
 
 ---
 
@@ -904,8 +717,6 @@ Patient requests booking cancellation after paying 2 of 4 installments; admin re
 | Role            | Name   | Date   | Signature/Approval |
 |-----------------|--------|--------|--------------------|
 | Product Owner   | Product Owner | 2026-10-18 | Approved v1.5 via MTG-002 decision log (documentation only) |
-| Technical Lead  | [Name] | [Date] | [Status]           |
-| Stakeholder     | [Name] | [Date] | [Status]           |
 
 ---
 
