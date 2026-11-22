@@ -10,7 +10,7 @@
 
 FR-002 defines shared backend engines for processing medical intake data and head media, consumed by FR-003 (Inquiry) and others. It excludes patient-facing UI. The engine ingests medical questionnaire responses (defined/versioned via FR-025), generates severity alerts, validates and processes head media, applies anonymization, and persists artifacts for provider review. For V1, the patient app supplies a standardized head scan photo set (multiple 2D views; not a true 3D model); the engine validates and stores this media.
 This FR covers backend engines only; patient capture UX is handled by FR-003 and consumed by `P-07` for V1.
-For V1, "3D scan" capture is implemented as a standardized head scan photo set (multiple 2D views). True 3D capture is deferred to V2.
+For V1, "3D scan" capture is implemented as a standardized head scan photo set (multiple 2D views). True 3D capture is deferred to V2. (REQ-002-031)
 
 ## Module Scope
 
@@ -25,30 +25,29 @@ For V1, "3D scan" capture is implemented as a standardized head scan photo set (
 
 **Patient Platform (P-07)**:
 
-- Patient-facing capture UI is handled by FR-003 (Inquiry Submission module)
+- Patient-facing capture UI: see REQ-002-025.
 - Patient app submits questionnaire responses and head scan photo set (V1) to engine via FR-003
-- Patients do not directly interact with FR-002 engine; all interaction through FR-003
+- Patients do not directly interact with FR-002 engine; all interaction through FR-003 (REQ-002-015)
 
 **Provider Platform (PR-02)**:
 
-- Providers consume read-only processed artifacts (normalized questionnaire, alerts, processed media)
-- Provider review UI is handled by FR-003/PR-02; engine remains passive after initial processing
-- See system PRD, Platform-Wide Rules: Patient identity hidden until booking confirmation
+- Providers consume read-only processed artifacts (normalized questionnaire, alerts, processed media) (REQ-002-016)
+- Provider review UI is handled by FR-003/PR-02; engine remains passive after initial processing (REQ-002-017)
 
 **Admin Platform (A-09)**:
 
-- Admin manages questionnaire templates, sections, fields, and risk-tag rules via FR-025
-- Admin configures validation rules and media constraints (head scan photo limits are fixed; see Media Rules). Alert severity is driven by the severity flags admins set on questionnaire answers in FR-025; there is no separate alert threshold setting
-- Admin cannot modify fixed security constraints (encryption, retention policies)
-- Template versioning and publishing managed through FR-025; engine consumes published versions
+- Admin manages questionnaire templates, sections, fields, and risk-tag rules via FR-025 (REQ-002-019)
+- Admin configures validation rules and media constraints (head scan photo limits are fixed; see Media Rules). Alert severity is driven by the severity flags admins set on questionnaire answers in FR-025; there is no separate alert threshold setting (REQ-002-020)
+- Admin cannot modify fixed security constraints (encryption, retention policies) (REQ-002-021)
+- Template versioning and publishing managed through FR-025; engine consumes published versions (REQ-002-022)
 
 **Shared Services (S-01, S-05)**:
 
-- **S-01: 3D Media Processing Service**: Validates head scan media (V1 photo set) and handles media transformations (the original file stays unmodified; see Media Rules)
-- **S-05: Media Storage Service**: Stores processed media artifacts with secure access controls
+- **S-01: 3D Media Processing Service**: Validates head scan media (V1 photo set) and handles media transformations (the original file stays unmodified; see Media Rules) (REQ-002-023)
+- **S-05: Media Storage Service**: Stores processed media artifacts with secure access controls (REQ-002-024)
 - **Medical Intake Engine**: Validates questionnaire responses, computes severity alerts, normalizes data, manages versioning
-- Engine operations are stateless between calls except for persisted artifacts
-- All processing includes configuration version stamping (templateVersion, rulesetVersion)
+- See REQ-002-027.
+- See REQ-002-005.
 
 ### Communication Structure
 
@@ -56,11 +55,11 @@ For V1, "3D scan" capture is implemented as a standardized head scan photo set (
 
 - FR-003 → Engine: Submission of questionnaire responses and head scan media for processing
 - Engine → FR-003: Return of normalized payload, alert tags, and media URIs
-- Engine → Providers (via FR-003/PR-02): Read-only access to processed artifacts
+- Engine → Providers (via FR-003/PR-02): Read-only access to processed artifacts (REQ-002-016, REQ-002-039)
 - Admin → Engine (via FR-025): Template and rule configuration updates
 - Engine → System: Automatic consumption of published template versions
 
-**Out of Scope**:
+**Out of Scope** (REQ-002-025):
 
 - Patient-facing capture UI (handled by FR-003)
 - Provider review UI (handled by FR-003/PR-02)
@@ -71,9 +70,9 @@ For V1, "3D scan" capture is implemented as a standardized head scan photo set (
 
 ### Entry Points
 
-1. **FR-003 Submission**: FR-003 (Inquiry Submission) calls engine API with questionnaire responses and head scan media
-2. **Template Updates**: Engine automatically consumes updated templates/rules when FR-025 publishes new versions
-3. **Admin Configuration**: Admin publishes template versions via FR-025 (A-09 settings); engine applies to new inquiries
+1. **FR-003 Submission**: FR-003 (Inquiry Submission) calls engine API with questionnaire responses and head scan media (REQ-002-014)
+2. **Template Updates**: Engine automatically consumes updated templates/rules when FR-025 publishes new versions (REQ-002-014)
+3. **Admin Configuration**: Admin publishes template versions via FR-025 (A-09 settings); engine applies to new inquiries (REQ-002-014, REQ-002-041)
 
 ## Business Workflows
 
@@ -160,7 +159,7 @@ Backend-only: This FR provides integration contracts used by FR-003 (patient cap
 
 - templateVersion (string)
 - responses (object keyed by questionId per FR-025)
-- media: one of
+- media: one of (REQ-002-038)
   - headScanPhotoSet { uris[], sizeBytesTotal?, viewHints? }  // V1: standardized photo set capture
   - headVideo { uri, durationSeconds, sizeBytes, frameHints? } // optional fallback / future
   - altPhotos { uris[] } | altClips { uris[] }  // aligns with system PRD supplemental media support
@@ -175,41 +174,41 @@ Backend-only: This FR provides integration contracts used by FR-003 (patient cap
 
 **Rules**:
 
-- Enforce FR-025 required fields and media constraints; stamp templateVersionUsed/rulesetVersion.
-- Store media under anonymizedPatientId; no PII in payloads.
-- See system PRD, Platform-Wide Rules: Patient identity hidden until booking confirmation.
-- On validation failure, return structured error codes and remediation guidance; do not persist artifacts.
+- Enforce FR-025 required fields and media constraints (REQ-002-001, REQ-002-003); stamping: see REQ-002-005.
+- Store media under anonymizedPatientId; no PII in payloads. (REQ-002-009, REQ-002-008)
+- See REQ-002-036.
 
 ## Business Rules
 
 ### General Rules
 
-1. Engine operations are fully auditable (timestamps, actor/service, reasons on overrides).
-2. Draft/submit/edit UX is defined in FR-003; engine is stateless between calls except persisted artifacts.
-3. All processing includes configuration version stamping (templateVersion, rulesetVersion). rulesetVersion is the FR-025 questionnaire set version.
+1. Engine operations are fully auditable (timestamps, actor/service, reasons on overrides). (REQ-002-026)
+2. Draft/submit/edit UX is defined in FR-003; engine is stateless between calls except persisted artifacts. (REQ-002-027)
+3. All processing includes configuration version stamping (templateVersion, rulesetVersion). rulesetVersion is the FR-025 questionnaire set version. (REQ-002-005)
+4. All access is mediated by platform RBAC and immutable audit logging (REQ-002-026, REQ-002-029).
 
 ### Data & Privacy Rules
 
-1. See system PRD, Platform-Wide Rules: Patient identity hidden until booking confirmation (this FR does not restate it).
-2. Retention follows the system PRD, Platform-Wide Rules: One 10-year retention period; deletion requests result in archival/anonymization (no hard deletes).
-3. All access is role-based; admin access is logged with justification for sensitive views.
-4. Intake payloads and media artifacts processed under this FR are encrypted in transit (TLS 1.3) and at rest (AES-256), in alignment with the Constitution and FR-026.
+1. See system PRD, Platform-Wide Rules: Patient identity hidden until booking confirmation (this FR does not restate it). (REQ-SYS-001)
+2. Retention follows the system PRD, Platform-Wide Rules: One 10-year retention period; deletion requests result in archival/anonymization (no hard deletes). (REQ-SYS-002; REQ-002-028)
+3. All access is role-based; admin access is logged with justification for sensitive views. (REQ-002-029)
+4. Intake payloads and media artifacts processed under this FR are encrypted in transit (TLS 1.3) and at rest (AES-256), in alignment with the Constitution and FR-026. (REQ-002-030)
 
 ### Media Rules (Head Scan Media Intake)
 
-1. For V1, head media is a standardized **photo set** captured in the patient app and uploaded to the system (not a true 3D model).
-2. The head scan offers five views (front, top, left, right, back). At least one photo is required; no single view is compulsory.
-3. Allowed formats: JPG/PNG. A head scan holds up to 5 photos of at most 2 MB each, counted on its own (separate from the FR-003 visual evidence limit, which has its own count).
-4. Basic quality checks (e.g., brightness/blur) MUST be enforced and actionable guidance returned on failure.
-5. If `headVideo` is accepted (optional fallback/future), duration constraints (min/max) apply via policy (A-09).
-6. On validation failure, engine returns structured error codes and guidance to the caller (FR-003); no artifacts persisted.
-7. The original media file is kept unmodified; any transformation creates a separate copy.
+1. For V1, head media is a standardized **photo set** captured in the patient app and uploaded to the system (not a true 3D model). (REQ-002-031)
+2. The head scan offers five views (front, top, left, right, back). At least one photo is required; no single view is compulsory. (REQ-002-032)
+3. Allowed formats: JPG/PNG. A head scan holds up to 5 photos of at most 2 MB each, counted on its own (separate from the FR-003 visual evidence limit, which has its own count). (REQ-002-033)
+4. Basic quality checks (e.g., brightness/blur) MUST be enforced and actionable guidance returned on failure. (REQ-002-034)
+5. If `headVideo` is accepted (optional fallback/future), duration constraints (min/max) apply via policy (A-09). (REQ-002-035)
+6. On validation failure, engine returns structured error codes and guidance to the caller (FR-003); no artifacts persisted. (REQ-002-036)
+7. The original media file is kept unmodified; any transformation creates a separate copy. (REQ-002-042)
 
 ### Admin Editability
 
-1. Admin can manage templates, guidance copy, and risk-tag rules.
-2. Admin cannot alter fixed security constraints (e.g., password policy, OTP length).
-3. Admin edits are versioned; prior versions remain accessible for existing inquiries.
+1. Admin can manage templates, guidance copy, and risk-tag rules. (REQ-002-019)
+2. Admin cannot alter fixed security constraints (e.g., password policy, OTP length). (REQ-002-021)
+3. Admin edits are versioned; prior versions remain accessible for existing inquiries. (REQ-002-040)
 
 ## User Scenarios & Testing
 
@@ -239,34 +238,9 @@ Acceptance Scenarios:
 
 ### Edge Cases
 
-- Media too short or poor lighting: engine rejects with specific error codes and guidance.
-- Template version mismatch: engine accepts the submission on the older version and records the version used.
-- Oversize file: engine rejects with size error and suggested compression guidance.
-
-## Success Criteria
-
-### Provider Efficiency Metrics
-
-- SC-002-P1: Providers can triage inquiry medical risk in under 2 minutes using engine-generated alerts (median).
-- SC-002-P2: 95% of provider reviews do not require manual admin correction of alerts.
-
-### Admin Management Metrics
-
-- SC-002-A1: 100% of engine responses stamped with templateVersion and rulesetVersion used.
-- SC-002-A2: Audit trail completeness is 100% for all engine operations (who/when/what-before/after).
-
-### System Performance Metrics
-
-- SC-002-S1: 99% of valid submissions produce normalized payload + media URIs in < 3 seconds (p95).
-- SC-002-S2: 95% of compliant head scan photo sets pass validation on first attempt.
-- SC-002-S3: 0% PII detected in engine responses during automated checks.
-
-### Business Impact Metrics
-
-- SC-002-B1: < 5% of engine rejections attributed to ambiguous error guidance (tracked via support tags).
-- SC-002-B2: 80%+ of inquiries proceed to distribution without engine-related blockers.
-
----
+- Media too short or poor lighting: engine rejects with specific error codes and guidance. (REQ-002-034, REQ-002-036)
+- Template version mismatch: see REQ-002-037 (Alternative Flow A2).
+- Oversize file: engine rejects with size error and suggested compression guidance. (REQ-002-033, REQ-002-036)
 
 ## Functional Requirements Summary
 
@@ -297,86 +271,9 @@ Acceptance Scenarios:
 
 ## Dependencies
 
-### Internal Dependencies
-
 - FR-003: Inquiry Submission & Distribution (caller for capture and distribution)
 - FR-025: Medical Questionnaire Management (templates and rules)
 - FR-020: Notifications & Alerts (used by consumer modules for user messaging)
-
-### External Dependencies
-
-- Cloud Storage Service: secure object storage for media artifacts (URIs consumed by FR-003/PR-02)
-- Email/Notification Service (indirect via consumer modules): surface validation failures to patients/providers
-
-### Data Dependencies
-
-- Questionnaire templates, categories, and severity rules from Admin Settings (FR-025)
-
----
-
-## Key Entities
-
-- IntakeProcessingRequest: templateVersion, responses, media(headScanPhotoSet|headVideo|altPhotos|altClips), patientContext(anonymizedPatientId)
-  - Note: V1 expects `media` as `headScanPhotoSet` (photo set). `headVideo` is optional fallback/future.
-  - Key attributes: required fields completeness, media metadata
-  - Relationships: references published questionnaire template (FR-025)
-
-- IntakeProcessingResult: normalizedPayload, alerts[], mediaRef, audit
-  - Key attributes: templateVersionUsed, rulesetVersion (the FR-025 questionnaire set version), processingId, processedAt
-  - Relationships: links to stored media artifact and audit log
-
-- RiskTag: code, label, severity(critical|standard|none), rationale, derivedFrom
-  - Relationships: belongs to IntakeProcessingResult
-
-- MediaArtifact: storedUri, validationStatus, metadata
-  - Relationships: referenced by IntakeProcessingResult
-
-## Assumptions
-
-### User Behavior Assumptions
-
-- Patients capture and upload standardized head scan photo sets following instructions in FR-003
-- Providers review anonymized artifacts and alerts without requiring PII pre-payment
-- Admins proactively maintain questionnaire templates and risk rules (FR-025)
-
-### Technology Assumptions
-
-- Patient devices can capture compliant head scan photo sets (file formats, size, quality) per policy
-- Stable connectivity allows upload of head scan media within size constraints
-- Cloud storage is available for persisted media artifacts with secure access
-
-### Business Process Assumptions
-
-- FR-003 manages drafts/resubmissions and user communications
-- New submissions use the latest published questionnaire/rules; existing retain prior versions
-- All access is mediated by platform RBAC and immutable audit logging
-
-## Implementation Notes
-
-### Technical Considerations
-
-- Stateless processing per request; artifacts persisted in storage with references returned
-- Deterministic normalization and alert derivation based on versioned rules
-- Media validation includes duration, size, brightness/blur heuristics
-  - V1: validate that at least one head scan photo is present + file constraints; duration applies only if video is accepted
-
-### Integration Points
-
-- FR-003 → Engine: POST intake processing request (responses, templateVersion, media metadata)
-- Engine → FR-003: normalized payload, alerts, media URIs, audit identifiers
-- Engine ← FR-025: consumes published templates/rules (read-only)
-
-### Scalability Considerations
-
-- Asynchronous media processing where needed to meet p95 < 3s response target
-- Storage lifecycle policies for long-term retention and quick retrieval
-- Horizontal scaling of processing workers; rate limiting to protect services
-
-### Security Considerations
-
-- No PII in engine responses; anonymized identifiers only
-- Media stored under anonymizedPatientId; artifacts access-controlled
-- Full audit trail for processing operations and configuration versions
 
 ---
 
@@ -384,18 +281,12 @@ Acceptance Scenarios:
 
 | Date | Version | Changes | Author |
 | --- | --- | --- | --- |
-| 2025-10-30 | 1.0 | Initial PRD creation | Product & Engineering |
-| 2025-11-04 | 1.1 | Template alignment: workflows metadata, assumptions, implementation notes, user scenarios, FR summary, key entities, external deps, status blocks | Product & Engineering |
-| 2026-03-03 | 1.2 | Clarified that V1 head scan capture is a standardized photo set (multiple 2D views), with true 3D capture deferred to V2. Updated integration contract and media validation rules accordingly. | AI |
-| 2026-11-20 | 1.3 | Requirements graph programme baseline: owner rulings applied. Main changes: alert severity driven by FR-025 severity flags (no alert threshold setting); head scan photo limits fixed (up to 5 photos, JPG or PNG, 2 MB each, counted on its own); head scan offers five views with at least one photo required and no single view compulsory; original media file kept unmodified, transformations create a separate copy; engine accepts a submission on an older template version and records the version used; rulesetVersion is the FR-025 questionnaire set version; admin template Steps removed from Workflow 3 and C1 (owned by FR-025); identity-until-payment rule now cites the system PRD; medical record retention follows the single 10-year system retention Rule (no hard deletes unchanged); cross-document reconciliation (system rule citations, retention pointer). | AI |
+| 2026-11-22 | 1.4 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.3) and the change requests (the PRD names none) are in `archived/prd-baseline-2026-11-08/` and in git history. | AI |
 
 ## Appendix: Approvals
 
 | Role | Name | Date | Signature/Approval |
 | --- | --- | --- | --- |
-| Product Owner | [Name] | [Date] | [Status] |
-| Technical Lead | [Name] | [Date] | [Status] |
-| Stakeholder | [Name] | [Date] | [Status] |
 
 ---
 

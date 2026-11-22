@@ -9,3 +9,4 @@ The owner read and approved the FR-005 compressed PRD on 2026-11-22 and released
 
 - FR-005: compressed PRD applied (691 lines to 529). Report: `plans/reports/docs-manager-261120-fr005-compression.md`.
 - FR-023: compressed PRD applied (     226 lines to      191); each rule stated once, field rows tagged with graph field ids where the PRD has screens, dropped classes removed. No rule changes. Report: `plans/reports/docs-manager-261122-fr023-compression.md`.
+- FR-002: compressed PRD applied (     404 lines to      295); each rule stated once, field rows tagged with graph field ids where the PRD has screens, dropped classes removed. No rule changes. Report: `plans/reports/docs-manager-261122-fr002-compression.md`.
