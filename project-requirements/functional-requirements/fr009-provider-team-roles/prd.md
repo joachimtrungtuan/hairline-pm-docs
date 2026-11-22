@@ -5,7 +5,6 @@
 **Created**: 2025-11-11
 **Status**: Proposed revision (v1.8); prior v1.2 document marked Verified & Approved
 **Source**: FR-009 from system-prd.md
-**Related Change Request**: [CR-FR009-20261028-01 — Invitation and team member model, seat usage](change-request-2026-10-28-invitation-member-model.md) — an invited person exists only as an invitation until acceptance; seat usage counts Active and Suspended non-Owner members plus valid pending invitations (previous: [CR-FR015-20261027-01 — Last-save-wins edits, at-rest encryption of provider contact data, and seat usage](../fr015-provider-management/change-request-2026-10-27-save-conflict-encryption-seat-usage.md) — seat usage excludes the Owner and expired invitations)
 
 ---
 
@@ -22,72 +21,72 @@ The Provider Team & Role Management feature enables multi-user collaboration wit
 ### Multi-Tenant Architecture
 
 - **Patient Platform (P-XX)**: No direct patient-facing functionality
-- **Provider Platform (PR-01)**: Complete team management interface, role assignment, permission controls, team member invitations, activity audit logs
-- **Admin Platform (A-01)**: Oversight of all provider teams, ability to view team structures, audit team member activities across providers, manage suspended accounts
-- **Shared Services (S-03, S-06)**: S-03 Notification Service for team member invitations and management emails; S-06 Audit Log Service for immutable recording of team management actions
+- **Provider Platform (PR-01)**: Complete team management interface, role assignment, permission controls, team member invitations, activity audit logs (REQ-009-029)
+- **Admin Platform (A-01)**: Oversight of all provider teams, ability to view team structures, audit team member activities across providers, manage suspended accounts (REQ-009-027)
+- **Shared Services (S-03, S-06)**: S-03 Notification Service for team member invitations and management emails; S-06 Audit Log Service for immutable recording of team management actions (REQ-009-030)
 
 ### Multi-Tenant Breakdown
 
 **Patient Platform (P-XX)**:
 
 - No functionality in patient app
-- Patients may see team member names/roles in communications (e.g., "Dr. Sarah responded to your inquiry")
+- Patients may see team member names/roles in communications (e.g., "Dr. Sarah responded to your inquiry") (REQ-009-026)
 
 **Provider Platform (PR-01)**:
 
-- Team dashboard showing all active team members with roles
-- Invite team member flow with email invitation
-- Role assignment and modification interface
-- Permission management screen
-- Team member removal/suspension capability
-- Activity log viewer showing team member actions
-- Profile management for each team member
+- Team dashboard showing all active team members with roles (REQ-009-029)
+- Invite team member flow with email invitation (REQ-009-029)
+- Role assignment and modification interface (REQ-009-029)
+- Permission management screen (REQ-009-029)
+- Team member removal/suspension capability (REQ-009-029)
+- Activity log viewer showing team member actions (REQ-009-029)
+- Profile management for each team member (REQ-009-029)
 
 **Admin Platform (A-01)**:
 
-- System-wide view of all provider teams
-- Ability to view team composition for any provider
-- Audit log access for compliance investigations
-- Capability to suspend individual team members or entire teams
-- Analytics on team sizes, role distribution across platform
-- Override capability for emergency access removal
+- System-wide view of all provider teams (REQ-009-027)
+- Ability to view team composition for any provider (REQ-009-027)
+- Audit log access for compliance investigations (REQ-009-027)
+- Capability to suspend individual team members or entire teams (REQ-009-027)
+- Analytics on team sizes, role distribution across platform (REQ-009-028)
+- Override capability for emergency access removal (REQ-009-027)
 
 **Shared Services (S-03, S-06)**:
 
-- S-03: Notification Service sends invitation and team-management emails with secure signup links
-- Provider Auth Service (PR-01) handles team member account creation, login, password reset, and session management while enforcing PR-01/FR-031 permission checks
-- S-06: Audit Log Service records all team management actions for compliance
+- S-03: Notification Service sends invitation and team-management emails with secure signup links (REQ-009-030)
+- Provider Auth Service (PR-01) handles team member account creation, login, password reset, and session management while enforcing PR-01/FR-031 permission checks (REQ-009-030)
+- S-06: Audit Log Service records all team management actions for compliance (REQ-009-030)
 
 ### Provider Role Model
 
-The provider platform starts with four protected clinic-side roles that directly reflect how real clinics operate, while keeping clear separation from Hairline's own Admin Platform roles. There are no custom provider roles.
+The provider platform starts with four protected clinic-side roles that directly reflect how real clinics operate, while keeping clear separation from Hairline's own Admin Platform roles. There are no custom provider roles. (REQ-009-002)
 
-- **Owner (Main Account Holder)**: Single primary account per provider organization. Responsible for bank details and payouts, contract acceptance, and high-risk configuration. Mapped to the "provider admin / main account holder" described in the client transcription.
-- **Manager (Clinic Manager / Operations)**: Operational lead and front-of-staff representative. Can see and manage the full patient journey in the provider portal (inquiries, quotes, schedules, day-to-day operations), coordinate staff work, and manage most team settings, but cannot change bank details or assign/change the Owner role.
-- **Clinical Staff**: Medical staff who perform procedures and aftercare (surgeons, clinicians, nurses). Focused on in-progress and aftercare sections, treatment documentation, scans, and medical notes. **Default**: limited or no access to billing or sensitive configuration (final per-feature permissions are configured centrally in FR-031 and may deviate from this default).
-- **Billing Staff**: Finance-oriented staff who work with quotes and payouts ("how much they're making"). Can view and reconcile financial information but cannot alter clinical records or manage team structure or assign/change the Owner role.
+- **Owner (Main Account Holder)**: Single primary account per provider organization. Responsible for bank details and payouts, contract acceptance, and high-risk configuration. Mapped to the "provider admin / main account holder" described in the client transcription. (REQ-009-031)
+- **Manager (Clinic Manager / Operations)**: Operational lead and front-of-staff representative. Can see and manage the full patient journey in the provider portal (inquiries, quotes, schedules, day-to-day operations), coordinate staff work, and manage most team settings, but cannot change bank details or assign/change the Owner role. (REQ-009-032)
+- **Clinical Staff**: Medical staff who perform procedures and aftercare (surgeons, clinicians, nurses). Focused on in-progress and aftercare sections, treatment documentation, scans, and medical notes. **Default**: limited or no access to billing or sensitive configuration (final per-feature permissions are configured centrally in FR-031 and may deviate from this default). (REQ-009-033)
+- **Billing Staff**: Finance-oriented staff who work with quotes and payouts ("how much they're making"). Can view and reconcile financial information but cannot alter clinical records or manage team structure or assign/change the Owner role. (REQ-009-034)
 
 ### Communication Structure
 
 **In Scope**:
 
-- Email invitations to new team members with secure signup link
-- Email notifications when team member role changes
-- Email notifications when team member is removed or suspended
-- In-platform notifications for team management events
+- Email invitations to new team members with secure signup link (REQ-009-035)
+- Email notifications when team member role changes (REQ-009-035)
+- Email notifications when team member is removed or suspended (REQ-009-035)
+- In-platform notifications for team management events (REQ-009-035)
 
 **Out of Scope**:
 
-- SMS notifications for team management (handled by S-03: Notification Service if needed; **no SMS is sent in MVP and this channel is reserved for future phases**)
-- Video tutorials for team onboarding (handled by separate content module)
-- Chat/messaging between team members (separate collaboration feature)
+- SMS notifications for team management (handled by S-03: Notification Service if needed; **no SMS is sent in MVP and this channel is reserved for future phases**) (REQ-009-036)
+- Video tutorials for team onboarding (handled by separate content module) (REQ-009-036)
+- Chat/messaging between team members (separate collaboration feature) (REQ-009-036)
 
 ### Entry Points
 
-- **Provider Owner**: Accesses team management from provider dashboard main navigation ("Team" tab)
-- **Provider Manager**: Accesses operational team management features from settings menu (within Owner-defined limits)
-- **New Team Member**: Receives email invitation with signup link, creates account, automatically assigned to provider organization with specified role
-- **Admin Platform**: System administrators access team management oversight from admin dashboard provider detail view
+- **Provider Owner**: Accesses team management from provider dashboard main navigation ("Team" tab) (REQ-009-037)
+- **Provider Manager**: Accesses operational team management features from settings menu (within Owner-defined limits) (REQ-009-037)
+- **New Team Member**: Receives email invitation with signup link, creates account, automatically assigned to provider organization with specified role (REQ-009-037)
+- **Admin Platform**: System administrators access team management oversight from admin dashboard provider detail view (REQ-009-037)
 
 ---
 
@@ -105,22 +104,22 @@ The provider platform starts with four protected clinic-side roles that directly
 2. System displays current team members with their roles and status
 3. Provider Owner or Manager clicks "Invite Team Member" button
 4. System presents invitation form with fields: email address, first name, last name, role selection
-5. Provider Owner or Manager enters team member details and selects a non-Owner role. The Owner can choose Manager, Clinical Staff, or Billing Staff; for a Manager the form lists only Clinical Staff and Billing Staff. Owner is not assignable from this flow and is reserved for the single primary account holder.
-6. System validates email format and checks for duplicate email within organization. The invitation is blocked while the provider organization is Suspended, because the Team page is view-only for a Suspended provider (Rule 10)
+5. Provider Owner or Manager enters team member details and selects a non-Owner role. The Owner can choose Manager, Clinical Staff, or Billing Staff; for a Manager the form lists only Clinical Staff and Billing Staff. Owner is not assignable from this flow and is reserved for the single primary account holder. (REQ-009-038)
+6. System validates email format and checks for duplicate email within organization. The invitation is blocked while the provider organization is Suspended, because the Team page is view-only for a Suspended provider (Rule 10) (REQ-009-039)
 7. Provider Owner or Manager reviews invitation details and clicks "Send Invitation"
-8. System generates secure invitation token (expires in 7 days)
-9. System sends email to invitee with invitation link, provider organization name, and role being offered
-10. System creates an invitation record with status "Pending". No team member record exists yet; the team list shows the pending invitation with the "Invited" badge
-11. System displays confirmation message to the Provider Owner or Manager who sent the invitation
+8. System generates secure invitation token (expires in 7 days) (REQ-009-016)
+9. System sends email to invitee with invitation link, provider organization name, and role being offered (REQ-009-040)
+10. System creates an invitation record with status "Pending". No team member record exists yet; the team list shows the pending invitation with the "Invited" badge (REQ-009-041)
+11. System displays confirmation message to the Provider Owner or Manager who sent the invitation (REQ-009-042)
 12. New Team Member receives email and clicks invitation link
-13. System validates invitation token (not expired, not already used)
-14. System presents account creation form pre-filled with email, first name, last name
-15. New Team Member sets password and accepts terms of service
-16. System creates the team member record (status Active) and links it to the provider organization with the assigned role. This is the first point at which the invitee becomes a team member
-17. System marks invitation as "Accepted"
-18. System sends confirmation email to both Provider Owner and new team member
-19. System logs all actions in audit trail
-20. New Team Member can immediately log in with new credentials
+13. System validates invitation token (not expired, not already used) (REQ-009-043)
+14. System presents account creation form pre-filled with email, first name, last name (REQ-009-044)
+15. New Team Member sets password and accepts terms of service (REQ-009-045)
+16. System creates the team member record (status Active) and links it to the provider organization with the assigned role. This is the first point at which the invitee becomes a team member (REQ-009-045)
+17. System marks invitation as "Accepted" (REQ-009-045)
+18. System sends confirmation email to both Provider Owner and new team member (REQ-009-046)
+19. System logs all actions in audit trail (REQ-009-013)
+20. New Team Member can immediately log in with new credentials (REQ-009-047)
 
 ### Alternative Flows
 
@@ -131,45 +130,45 @@ The provider platform starts with four protected clinic-side roles that directly
   1. Provider Owner views pending invitations list
   2. System shows invitation status as "Expired"
   3. Provider Owner clicks "Resend Invitation" button
-  4. System generates new invitation token and sends new email
-  5. Old invitation token invalidated
-- **Outcome**: Team member receives fresh invitation with new 7-day expiry
+  4. System generates new invitation token and sends new email (REQ-009-048)
+  5. Old invitation token invalidated (REQ-009-048)
+- **Outcome**: Team member receives fresh invitation with new 7-day expiry (REQ-009-048)
 
 **A3: Team member already has account (different provider)**:
 
-- **Trigger**: Invitee email address already belongs to another provider organization as Owner, team member, or pending invitation (global provider email identity rule, REQ-009-008). Memberships and pending invitations of a Deactivated provider (FR-015) do not count
+- **Trigger**: Invitee email address already belongs to another provider organization as Owner, team member, or pending invitation (global provider email identity rule, REQ-009-008). Memberships and pending invitations of a Deactivated provider (FR-015) do not count (REQ-009-049)
 - **Steps**:
-  1. System detects existing membership during invitation validation
-  2. System displays blocking error: "This email already belongs to another provider team. Remove the member from their current provider team before inviting them here."
-- **Outcome**: Cross-provider duplication prevented; invitee must first be removed from their current provider team before they can be invited here
+  1. System detects existing membership during invitation validation (REQ-009-049)
+  2. System displays blocking error: "This email already belongs to another provider team. Remove the member from their current provider team before inviting them here." (REQ-009-049)
+- **Outcome**: Cross-provider duplication prevented; invitee must first be removed from their current provider team before they can be invited here (REQ-009-049)
 
 **B1: Invalid email address**:
 
 - **Trigger**: Provider Owner enters malformed email address
 - **Steps**:
-  1. System validates email format on blur or submit
-  2. System displays inline error message: "Please enter a valid email address"
-  3. Provider Owner corrects email
-  4. System re-validates and allows submission
-- **Outcome**: Only valid email addresses accepted
+  1. System validates email format on blur or submit (REQ-009-050)
+  2. System displays inline error message: "Please enter a valid email address" (REQ-009-050)
+  3. Provider Owner corrects email (REQ-009-050)
+  4. System re-validates and allows submission (REQ-009-050)
+- **Outcome**: Only valid email addresses accepted (REQ-009-050)
 
 **B2: Duplicate email within same organization**:
 
 - **Trigger**: Provider Owner invites email that already exists as team member or pending invitation
 - **Steps**:
-  1. System checks email against existing team members and pending invitations
-  2. System displays error: "This email is already part of your team"
-  3. System suggests: "View team member" or "Resend invitation" if pending
-  4. Provider Owner either cancels or takes suggested action
-- **Outcome**: Duplicate prevented, existing record maintained
+  1. System checks email against existing team members and pending invitations (REQ-009-051)
+  2. System displays error: "This email is already part of your team" (REQ-009-051)
+  3. System suggests: "View team member" or "Resend invitation" if pending (REQ-009-051)
+  4. Provider Owner either cancels or takes suggested action (REQ-009-051)
+- **Outcome**: Duplicate prevented, existing record maintained (REQ-009-051)
 
 **B3: Invitation link already used**:
 
 - **Trigger**: Team member clicks invitation link that was already accepted
 - **Steps**:
   1. System detects invitation status is "Accepted"
-  2. System displays message: "This invitation has already been used. Please log in with your existing credentials."
-  3. System provides login link
+  2. System displays message: "This invitation has already been used. Please log in with your existing credentials." (REQ-009-053)
+  3. System provides login link (REQ-009-053)
 - **Outcome**: Prevents duplicate account creation
 
 **B4: Network error during invitation send**:
@@ -178,11 +177,11 @@ The provider platform starts with four protected clinic-side roles that directly
 - **Steps**:
   1. System attempts to send invitation email
   2. Email service returns error
-  3. System logs the error and retries sending under the FR-030 notification retry rule
-  4. If all retries fail, the invitation stays Pending and the system sets its delivery state to "Pending Send". "Pending Send" is a delivery state, not an invitation status, and the invitation takes a seat while it is Pending (Rule 6)
-  5. System displays warning to Provider Owner: "Invitation created but email failed. We'll retry automatically."
-  6. If sending still fails when the FR-030 retry rule is exhausted, system alerts admin team
-- **Outcome**: Invitation record created, email eventually delivered or admin intervenes
+  3. System logs the error and retries sending under the FR-030 notification retry rule (REQ-009-054)
+  4. If all retries fail, the invitation stays Pending and the system sets its delivery state to "Pending Send". "Pending Send" is a delivery state, not an invitation status, and the invitation takes a seat while it is Pending (Rule 6) (REQ-009-054)
+  5. System displays warning to Provider Owner: "Invitation created but email failed. We'll retry automatically." (REQ-009-054)
+  6. If sending still fails when the FR-030 retry rule is exhausted, system alerts admin team (REQ-009-055)
+- **Outcome**: Invitation record created, email eventually delivered or admin intervenes (REQ-009-054)
 
 ---
 
@@ -199,15 +198,15 @@ The provider platform starts with four protected clinic-side roles that directly
 3. Authorized actor clicks "Edit" button next to team member name (Owner rows show locked badge and no edit action)
 4. System presents role selection dropdown with current role pre-selected
 5. Authorized actor selects a non-Owner role from the dropdown (Owner role is read-only and cannot be reassigned in this module)
-6. System displays permission comparison: "Current permissions" vs "New permissions"
+6. System displays permission comparison: "Current permissions" vs "New permissions" (REQ-009-056)
 7. Authorized actor reviews changes and clicks "Update Role"
-8. System validates actor has permission to assign selected role
-9. System updates team member's role in database
-10. System immediately applies new permissions to any active sessions
-11. System sends email to affected team member: "Your role has been changed to [Role]"
-12. System logs role change in audit trail with timestamp, actor, old role, new role
+8. System validates actor has permission to assign selected role (REQ-009-015)
+9. System updates team member's role in database (REQ-009-057)
+10. System immediately applies new permissions to any active sessions (REQ-009-057)
+11. System sends email to affected team member: "Your role has been changed to [Role]" (REQ-009-058)
+12. System logs role change in audit trail with timestamp, actor, old role, new role (REQ-009-013)
 13. System displays success confirmation
-14. Affected team member's next page load reflects new permissions
+14. Affected team member's next page load reflects new permissions (REQ-009-057)
 
 ### Alternative Flows
 
@@ -216,18 +215,18 @@ The provider platform starts with four protected clinic-side roles that directly
 - **Trigger**: Any provider user (Owner or Manager) attempts to modify the Owner's role from the provider platform
 - **Steps**:
   1. System detects target role is Owner (single primary account holder)
-  2. System displays error: "The primary Owner role is fixed and cannot be changed."
+  2. System displays error: "The primary Owner role is fixed and cannot be changed." (REQ-009-065)
   3. Edit dialog closes without making changes
-- **Outcome**: Owner role remains unchanged; no provider-facing workflow can reassign the primary Owner role
+- **Outcome**: Owner role remains unchanged; no provider-facing workflow can reassign the primary Owner role (REQ-009-065)
 
 **B5: Team member currently performing critical action**:
 
 - **Trigger**: Role change attempted while team member is mid-transaction (e.g., submitting quote)
 - **Steps**:
-  1. System updates role in database
-  2. System allows in-progress action to complete with old permissions
-  3. Next action uses new permissions
-  4. System logs that in-flight action completed with previous permission set
+  1. System updates role in database (REQ-009-066)
+  2. System allows in-progress action to complete with old permissions (REQ-009-066)
+  3. Next action uses new permissions (REQ-009-066)
+  4. System logs that in-flight action completed with previous permission set (REQ-009-066)
 - **Outcome**: No transaction interruption, clean permission transition
 
 ---
@@ -241,22 +240,22 @@ The provider platform starts with four protected clinic-side roles that directly
 **Steps**:
 
 1. Provider Owner or Manager clicks "Remove" button next to team member name
-2. System presents confirmation dialog with warning about data reassignment
-3. System displays list of team member's current responsibilities:
-   - Active inquiries assigned to them
-   - Draft quotes in progress
-   - Upcoming scheduled appointments
-4. System prompts: "Reassign to:" with dropdown of remaining team members
-5. Provider Owner or Manager selects the reassignment target. "Archive unassigned" is offered only when the team member has nothing outstanding; otherwise the work must be reassigned
+2. System presents confirmation dialog with warning about data reassignment (REQ-009-067)
+3. System displays list of team member's current responsibilities: (REQ-009-067)
+   - Active inquiries assigned to them (REQ-009-067)
+   - Draft quotes in progress (REQ-009-067)
+   - Upcoming scheduled appointments (REQ-009-067)
+4. System prompts: "Reassign to:" with dropdown of remaining team members (REQ-009-067)
+5. Provider Owner or Manager selects the reassignment target. "Archive unassigned" is offered only when the team member has nothing outstanding; otherwise the work must be reassigned (REQ-009-068)
 6. Provider Owner or Manager confirms removal
-7. System validates actor has permission to remove target team member
-8. System immediately revokes all active sessions for removed team member
-9. System reassigns all active work items to selected team member
-10. System archives team member's historical records (maintains for audit)
-11. System sends email to removed team member: "Your access to [Provider Name] has been removed"
-12. System logs removal in audit trail with the removal reason (required)
+7. System validates actor has permission to remove target team member (REQ-009-015)
+8. System immediately revokes all active sessions for removed team member (REQ-009-069)
+9. System reassigns all active work items to selected team member (REQ-009-070)
+10. System archives team member's historical records (maintains for audit) (REQ-009-071)
+11. System sends email to removed team member: "Your access to [Provider Name] has been removed" (REQ-009-072)
+12. System logs removal in audit trail with the removal reason (required) (REQ-009-073)
 13. System displays success confirmation
-14. Removed team member's next login attempt shows: "You no longer have access to this organization. Contact your clinic owner if you believe this is an error."
+14. Removed team member's next login attempt shows: "You no longer have access to this organization. Contact your clinic owner if you believe this is an error." (REQ-009-074)
 
 ### Alternative Flows
 
@@ -264,31 +263,31 @@ The provider platform starts with four protected clinic-side roles that directly
 
 - **Trigger**: Provider Owner attempts to remove themselves
 - **Steps**:
-  1. System detects actor is removing themselves
-  2. System immediately blocks request with error: "Owners cannot remove their own accounts."
-  3. Error is logged in audit trail for compliance
-- **Outcome**: Self-removal is blocked
+  1. System detects actor is removing themselves (REQ-009-075)
+  2. System immediately blocks request with error: "Owners cannot remove their own accounts." (REQ-009-075)
+  3. Error is logged in audit trail for compliance (REQ-009-075)
+- **Outcome**: Self-removal is blocked (REQ-009-075)
 
 **A7: Remove team member with no active work**:
 
 - **Trigger**: Team member being removed has no assigned inquiries, quotes, or appointments
 - **Steps**:
-  1. System detects no active work items
-  2. System skips reassignment step
-  3. Removal proceeds immediately after confirmation
-- **Outcome**: Simplified flow for inactive team members
+  1. System detects no active work items (REQ-009-076)
+  2. System skips reassignment step (REQ-009-076)
+  3. Removal proceeds immediately after confirmation (REQ-009-076)
+- **Outcome**: Simplified flow for inactive team members (REQ-009-076)
 
 **B6: Team member removed has active patient communication**:
 
 - **Trigger**: Removed team member has ongoing message threads with patients
 - **Steps**:
-  1. System detects active message threads
-  2. System displays warning: "This member has active patient conversations"
-  3. System prompts: "New messages from patients will be routed to [reassigned team member]"
-  4. Provider Owner confirms understanding
-  5. System updates message routing
-  6. System sends automated message to patients: "Your inquiry is now being handled by [new team member]"
-- **Outcome**: Seamless patient communication continuity
+  1. System detects active message threads (REQ-009-077)
+  2. System displays warning: "This member has active patient conversations" (REQ-009-077)
+  3. System prompts: "New messages from patients will be routed to [reassigned team member]" (REQ-009-077)
+  4. Provider Owner confirms understanding (REQ-009-077)
+  5. System updates message routing (REQ-009-077)
+  6. System sends automated message to patients: "Your inquiry is now being handled by [new team member]" (REQ-009-077)
+- **Outcome**: Seamless patient communication continuity (REQ-009-077)
 
 ---
 
@@ -302,35 +301,35 @@ The provider platform starts with four protected clinic-side roles that directly
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Team Member Name | Display (text) | N/A | Full name of team member | Display only |
-| Email | Display (email) | N/A | Team member's email address | Display only |
-| Role | Display (badge/tag) | N/A | Current provider role | Display only |
-| Role Lock Indicator | Icon | N/A | Shows lock icon for Owner rows (non-editable) | Display only |
-| Status | Display (badge) | N/A | Team member status Active or Suspended; a pending invitation row shows the "Invited" badge (an invitation, not a member status) | Display only |
-| Last Active | Display (timestamp) | N/A | Last login or activity timestamp | Display as relative time |
-| Workload Summary | Display (chip) | N/A | Counts of inquiries/quotes assigned | Display only |
-| Actions | Button group | N/A | Edit, Remove, View Activity | Hidden for Owner rows |
-| Team Size Meter | Progress bar | N/A | Seat usage (non-Owner team members with status Active or Suspended plus pending invitations not past expiry; see Rule 6) vs centrally approved limit | Turns amber at 90%, red at 100% |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Team Member Name | Display (text) | N/A | Full name of team member | Display only | ENT-team-member.first_name, ENT-team-member.last_name |
+| Email | Display (email) | N/A | Team member's email address | Display only | ENT-team-member.email |
+| Role | Display (badge/tag) | N/A | Current provider role | Display only | ENT-team-member-org-role.role_id |
+| Role Lock Indicator | Icon | N/A | Shows lock icon for Owner rows (non-editable) | Display only | no graph field (control) |
+| Status | Display (badge) | N/A | Team member status Active or Suspended; a pending invitation row shows the "Invited" badge (an invitation, not a member status) | Display only | ENT-team-member.status, ENT-invitation.status |
+| Last Active | Display (timestamp) | N/A | Last login or activity timestamp | Display as relative time | ENT-team-member.last_active_at |
+| Workload Summary | Display (chip) | N/A | Counts of inquiries/quotes assigned | Display only (REQ-009-099) | ENT-team-member.active_inquiries_count, ENT-team-member.draft_quotes_count |
+| Actions | Button group | N/A | Edit, Remove, View Activity | Hidden for Owner rows | no graph field (control) |
+| Team Size Meter | Progress bar | N/A | Seat usage (non-Owner team members with status Active or Suspended plus pending invitations not past expiry; see Rule 6) vs centrally approved limit | Turns amber at 90%, red at 100% (REQ-009-095) | ENT-provider-team-summary.seat_usage, ENT-provider.seat_limit |
 
 **Business Rules**:
 
-- Only Owners and authorized Managers can access the dashboard; non-Owner users have read-only visibility into Owner rows.
-- Owner rows display lock badge with tooltip: "Primary Owner role cannot be changed."
-- Pending invitation rows (badge "Invited") show "Resend Invitation" and "Cancel Invitation."
-- "Suspended" rows show "Reactivate."
-- While the provider organization is Suspended, the dashboard is view-only (Rule 10): invite, resend, cancel invitation, role change, suspend, reactivate, and remove actions are unavailable, and the page shows "Your account is suspended. Team changes are unavailable. Please contact support."
-- Current logged-in user's row highlighted with "(You)."
-- Sorting: Owners (locked) first, then other roles alphabetically.
-- Search/filter by name, email, role, status.
-- Banner surfaces central team-size policy and provides link to "Request More Seats", which opens an FR-034 support case pre-filled as a seat-increase request; the admin applies an approved increase by editing Seat Limit in FR-015 Screen 3 Tab 1.
+- Only Owners and authorized Managers can access the dashboard; non-Owner users have read-only visibility into Owner rows. (REQ-009-087)
+- Owner rows display lock badge with tooltip: "Primary Owner role cannot be changed." (REQ-009-088)
+- Pending invitation rows (badge "Invited") show "Resend Invitation" and "Cancel Invitation." (REQ-009-089)
+- "Suspended" rows show "Reactivate." (REQ-009-090)
+- While the provider organization is Suspended, the dashboard is view-only (Rule 10): invite, resend, cancel invitation, role change, suspend, reactivate, and remove actions are unavailable, and the page shows "Your account is suspended. Team changes are unavailable. Please contact support." (REQ-009-153)
+- Current logged-in user's row highlighted with "(You)." (REQ-009-091)
+- Sorting: Owners (locked) first, then other roles alphabetically. (REQ-009-092)
+- Search/filter by name, email, role, status. (REQ-009-093)
+- Banner surfaces central team-size policy and provides link to "Request More Seats", which opens an FR-034 support case pre-filled as a seat-increase request; the admin applies an approved increase by editing Seat Limit in FR-015 Screen 3 Tab 1. (REQ-009-094)
 
 **Notes**:
 
-- Pagination/infinite scroll for >50 members.
-- Quick stats: Total, Active, Pending Invitations (count of invitations with status Pending that are not past expires_at), Suspended, Seats Remaining.
-- CSV export for audit.
+- Pagination/infinite scroll for >50 members. (REQ-009-096)
+- Quick stats: Total, Active, Pending Invitations (count of invitations with status Pending that are not past expires_at), Suspended, Seats Remaining. (REQ-009-097; ENT-provider-team-summary.total_members, ENT-provider-team-summary.active_members, ENT-provider-team-summary.pending_invitations, ENT-provider-team-summary.suspended_members, ENT-provider-team-summary.seats_remaining)
+- CSV export for audit. (REQ-009-098)
 
 ---
 
@@ -340,28 +339,28 @@ The provider platform starts with four protected clinic-side roles that directly
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| First Name | text | Yes | Team member's first name | 2-50 characters, letters, spaces, hyphens |
-| Last Name | text | Yes | Team member's last name | 2-50 characters |
-| Email | email | Yes | Work email | Valid email; globally unique across provider organizations (Owners, team members, pending invitations; REQ-009-008); not exceeding seat limit |
-| Role | select/dropdown | Yes | Manager, Clinical Staff, and Billing Staff (FR-031). When a Manager is inviting, the list shows only Clinical Staff and Billing Staff | Owner option shows warning + lock icon and is disabled |
-| Personal Message | textarea | No | Optional note for invitation email | Max 500 chars |
-| Seat Limit Banner | Display | N/A | Shows remaining seats & link to request more if depleted | Display-only |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| First Name | text | Yes | Team member's first name | 2-50 characters, letters, spaces, hyphens (REQ-009-175) | ENT-invitation.first_name |
+| Last Name | text | Yes | Team member's last name | 2-50 characters (REQ-009-175) | ENT-invitation.last_name |
+| Email | email | Yes | Work email | Valid email; globally unique across provider organizations (Owners, team members, pending invitations; REQ-009-008); not exceeding seat limit | ENT-invitation.email |
+| Role | select/dropdown | Yes | Manager, Clinical Staff, and Billing Staff (FR-031). When a Manager is inviting, the list shows only Clinical Staff and Billing Staff | Owner option shows warning + lock icon and is disabled | ENT-invitation.role |
+| Personal Message | textarea | No | Optional note for invitation email | Max 500 chars (REQ-009-176) | ENT-invitation.personal_message |
+| Seat Limit Banner | Display | N/A | Shows remaining seats & link to request more if depleted | Display-only | ENT-provider-team-summary.seats_remaining |
 
 **Business Rules**:
 
-- Email uniqueness is global (global provider email identity rule, REQ-009-008). An email already on this team or pending here prompts the "View member / Resend invitation" CTA (B2). An email used by another provider organization (Owner, member, or pending invitation) shows the A3 blocking error; emails freed by a Deactivated provider can be invited.
-- Role dropdown includes inline permission summary from FR-031's current matrix; Owner option is always disabled in this screen and annotated: "Primary Owner cannot be set or changed from this screen."
-- Form unavailable while the provider organization is Suspended (Team page view-only, Rule 10); admin invitations are blocked separately (Screen 12, REQ-009-024).
-- Form blocked when seat limit reached; CTA changes to "Request more seats", which opens an FR-034 support case pre-filled as a seat-increase request (FR-015 Rule 7); the admin edits Seat Limit in FR-015 Screen 3 Tab 1.
-- SSE updates show send status; success toast: "Invitation sent to [email] (expires in 7 days)."
+- Email uniqueness is global (global provider email identity rule, REQ-009-008). An email already on this team or pending here prompts the "View member / Resend invitation" CTA (B2). An email used by another provider organization (Owner, member, or pending invitation) shows the A3 blocking error; emails freed by a Deactivated provider can be invited. (REQ-009-052)
+- Role dropdown includes inline permission summary from FR-031's current matrix; Owner option is always disabled in this screen and annotated: "Primary Owner cannot be set or changed from this screen." (REQ-009-100)
+- Form unavailable while the provider organization is Suspended (Team page view-only, Rule 10); admin invitations are blocked separately (Screen 12, REQ-009-024). (REQ-009-153)
+- Form blocked when seat limit reached; CTA changes to "Request more seats", which opens an FR-034 support case pre-filled as a seat-increase request (FR-015 Rule 7); the admin edits Seat Limit in FR-015 Screen 3 Tab 1. (REQ-009-101)
+- SSE updates show send status; success toast: "Invitation sent to [email] (expires in 7 days)." (REQ-009-042)
 
 **Notes**:
 
-- Optional profile photo upload (future).
-- CSV bulk invite (future).
-- Draft invitations backlog (future).
+- Optional profile photo upload (future). (REQ-009-102)
+- CSV bulk invite (future). (REQ-009-102)
+- Draft invitations backlog (future). (REQ-009-102)
 
 ---
 
@@ -371,27 +370,27 @@ The provider platform starts with four protected clinic-side roles that directly
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Team Member Name | Display | N/A | Full name | Read-only |
-| Current Role | Display (badge) | N/A | Existing role | Read-only |
-| New Role | select/dropdown | Yes | Target role | Must differ from current; Owner option disabled |
-| Permission Comparison | Display (table) | N/A | Side-by-side diff | Read-only |
-| Reason for Change | textarea | No | Optional audit note | Max 250 chars |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Team Member Name | Display | N/A | Full name | Read-only | ENT-team-member.first_name, ENT-team-member.last_name |
+| Current Role | Display (badge) | N/A | Existing role | Read-only | ENT-team-member-org-role.role_id |
+| New Role | select/dropdown | Yes | Target role | Must differ from current; Owner option disabled (REQ-009-063) | ENT-team-member-org-role.role_id |
+| Permission Comparison | Display (table) | N/A | Side-by-side diff | Read-only | ENT-role-permission-definition.permissions |
+| Reason for Change | textarea | No | Optional audit note | Max 250 chars (REQ-009-063) | ENT-team-activity-audit-log.description |
 
 **Business Rules**:
 
-- Owner records show disabled form with callout: "Primary Owner role cannot be changed."
-- The affected team member is always notified by email of a role change; there is no option to suppress the notification.
-- Cannot change own role.
-- A Manager can change the role of Clinical Staff and Billing Staff only; a Manager cannot change the role of the Owner or of another Manager.
-- Permissions diff highlights removals (red) and additions (green).
-- Confirmation modal summarises risk (e.g., losing billing access).
+- Owner records show disabled form with callout: "Primary Owner role cannot be changed." (REQ-009-059)
+- The affected team member is always notified by email of a role change; there is no option to suppress the notification. (REQ-009-058)
+- Cannot change own role. (REQ-009-061)
+- A Manager can change the role of Clinical Staff and Billing Staff only; a Manager cannot change the role of the Owner or of another Manager. (REQ-009-004)
+- Permissions diff highlights removals (red) and additions (green). (REQ-009-056)
+- Confirmation modal summarises risk (e.g., losing billing access). (REQ-009-062)
 
 **Notes**:
 
-- Provide impact summary (# of inquiries/quotes affected).
-- Display last role change timestamp + actor.
+- Provide impact summary (# of inquiries/quotes affected). (REQ-009-062)
+- Display last role change timestamp + actor. (REQ-009-062)
 
 ---
 
@@ -401,25 +400,25 @@ The provider platform starts with four protected clinic-side roles that directly
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Responsibilities List | table | N/A | Active inquiries, quotes, appointments | Auto-generated |
-| Reassignment Dropdown | select | Yes (if outstanding work) | Target team member | Filters by role compatibility |
-| Removal Reason | select + textarea | Yes | Categorized reason + optional notes | Predefined reasons |
-| Session Revocation Toggle | checkbox | Yes | Force logout all sessions | Locked to true |
-| Notification Preview | display | N/A | Email template summary | Pulls from FR-020 notification templates |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Responsibilities List | table | N/A | Active inquiries, quotes, appointments | Auto-generated | ENT-team-member.active_inquiries_count, ENT-team-member.draft_quotes_count, ENT-team-member.upcoming_appointments_count |
+| Reassignment Dropdown | select | Yes (if outstanding work) | Target team member | Filters by role compatibility | no graph field (control) |
+| Removal Reason | select + textarea | Yes | Categorized reason + optional notes | Predefined reasons (REQ-009-083) | ENT-team-member.removal_reason_category, ENT-team-member.removal_reason_note |
+| Session Revocation Toggle | checkbox | Yes | Force logout all sessions | Locked to true (REQ-009-083) | no graph field (control) |
+| Notification Preview | display | N/A | Email template summary | Pulls from FR-020 notification templates | no graph field (control) |
 
 **Business Rules**:
 
-- Modal unavailable for Owners; no provider-facing workflow can remove or suspend the primary Owner.
-- Reassignment required when outstanding work exists; otherwise option to archive.
-- Removal triggers notifications to removed member and provider owner, plus audit event.
-- Suspensions use same modal with different final state.
+- Modal unavailable for Owners; no provider-facing workflow can remove or suspend the primary Owner. (REQ-009-079)
+- Reassignment required when outstanding work exists; otherwise option to archive. (REQ-009-080)
+- Removal triggers notifications to removed member and provider owner, plus audit event. (REQ-009-081)
+- Suspensions use same modal with different final state. (REQ-009-082)
 
 **Notes**:
 
-- Provide bulk reassignment for >10 inquiries (wizard launches Screen 5).
-- Show SLA: "Transfers must complete before confirming removal."
+- Provide bulk reassignment for >10 inquiries (wizard launches Screen 5). (REQ-009-084)
+- Show SLA: "Transfers must complete before confirming removal." (REQ-009-084)
 
 ---
 
@@ -429,15 +428,15 @@ The provider platform starts with four protected clinic-side roles that directly
 
 **Steps**:
 
-1. **Select Workloads**: Breakdown by entity type with counts (inquiries, quotes, appointments, messages).
-2. **Assign Targets**: Map each workload type to a target member (supports split assignments).
-3. **Review & Confirm**: Summary of transfers, notifications to recipients, and audit preview.
+1. **Select Workloads**: Breakdown by entity type with counts (inquiries, quotes, appointments, messages). (REQ-009-085; ENT-team-member.active_inquiries_count, ENT-team-member.draft_quotes_count, ENT-team-member.upcoming_appointments_count, ENT-team-member.unread_messages_count)
+2. **Assign Targets**: Map each workload type to a target member (supports split assignments). (REQ-009-085)
+3. **Review & Confirm**: Summary of transfers, notifications to recipients, and audit preview. (REQ-009-085)
 
 **Business Rules**:
 
-- Wizard auto-suggests targets based on role + current workload.
-- Transfers blocked if target lacks required permissions; prompts to update role first.
-- Completion required before removal modal allows final confirmation.
+- Wizard auto-suggests targets based on role + current workload. (REQ-009-086)
+- Transfers blocked if target lacks required permissions; prompts to update role first. (REQ-009-086)
+- Completion required before removal modal allows final confirmation. (REQ-009-086)
 
 ---
 
@@ -445,7 +444,7 @@ The provider platform starts with four protected clinic-side roles that directly
 
 **Purpose**: Provide comprehensive view of individual team member's profile, workload, permissions, and activity for provider owners/admins to manage and monitor.
 
-**Access Control**: Accessible by Owners and Managers only. Team members cannot view other members' detail pages (except their own profile in account settings).
+**Access Control**: Accessible by Owners and Managers only. Team members cannot view other members' detail pages (except their own profile in account settings). (REQ-009-103)
 
 **Entry Points**:
 
@@ -457,52 +456,52 @@ The provider platform starts with four protected clinic-side roles that directly
 
 **Header Section**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Profile Photo | image | No | Team member avatar (default to initials) | JPG/PNG, max 2MB, square aspect |
-| Full Name | display (text) | N/A | First name + Last name | Read-only for others |
-| Email | display (email) | N/A | Primary email address | Read-only |
-| Role Badge | badge | N/A | Current role with lock icon if Owner | Color-coded by role |
-| Status Indicator | badge | N/A | Active / Suspended for team members; "Invited" for a pending invitation | Real-time status |
-| Last Active | display (timestamp) | N/A | Last login or action timestamp | Relative time with tooltip |
-| Quick Actions | button group | N/A | Edit Role, Remove Member, View Activity Log | Context-aware based on actor permissions |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Profile Photo | image | No | Team member avatar (default to initials) | JPG/PNG, max 2MB, square aspect | ENT-team-member.profile_photo |
+| Full Name | display (text) | N/A | First name + Last name | Read-only for others | ENT-team-member.first_name, ENT-team-member.last_name |
+| Email | display (email) | N/A | Primary email address | Read-only | ENT-team-member.email |
+| Role Badge | badge | N/A | Current role with lock icon if Owner | Color-coded by role | ENT-team-member-org-role.role_id |
+| Status Indicator | badge | N/A | Active / Suspended for team members; "Invited" for a pending invitation | Real-time status | ENT-team-member.status, ENT-invitation.status |
+| Last Active | display (timestamp) | N/A | Last login or action timestamp | Relative time with tooltip | ENT-team-member.last_active_at |
+| Quick Actions | button group | N/A | Edit Role, Remove Member, View Activity Log | Context-aware based on actor permissions | no graph field (control) |
 
 **Tab 1: Overview**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Member Since | display (date) | N/A | Account creation / invitation acceptance date | Read-only |
-| Phone Number | display (tel) | Yes | Contact phone (required at account setup, Screen 8) | Masked for privacy |
-| Department/Specialty | text | No | Optional organizational label (e.g., "Surgeon", "Reception") | Max 50 chars; editable by Owner/Manager |
-| Current Workload Summary | card/widget | N/A | Active inquiries (count), Draft quotes (count), Upcoming appointments (count), Unread messages (count) | Click counts to filter relevant lists |
-| Permissions Matrix | table | N/A | Read-only table showing what this role can/cannot do | Grouped by feature area; links to Screen 3 for role changes |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Member Since | display (date) | N/A | Account creation / invitation acceptance date | Read-only | ENT-team-member.created_at |
+| Phone Number | display (tel) | Yes | Contact phone (required at account setup, Screen 8) | Masked for privacy (REQ-009-109) | ENT-team-member.phone_number |
+| Department/Specialty | text | No | Optional organizational label (e.g., "Surgeon", "Reception") | Max 50 chars; editable by Owner/Manager (REQ-009-109) | ENT-team-member.department_specialty |
+| Current Workload Summary | card/widget | N/A | Active inquiries (count), Draft quotes (count), Upcoming appointments (count), Unread messages (count) | Click counts to filter relevant lists (REQ-009-099) | ENT-team-member.active_inquiries_count, ENT-team-member.draft_quotes_count, ENT-team-member.upcoming_appointments_count, ENT-team-member.unread_messages_count |
+| Permissions Matrix | table | N/A | Read-only table showing what this role can/cannot do | Grouped by feature area; links to Screen 3 for role changes | ENT-role-permission-definition.permissions |
 
 **Tab 2: Activity Log**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Date Range Filter | date picker | No | Filter by start/end date | Defaults to last 30 days |
-| Action Type Filter | multi-select dropdown | No | Filter by action categories (Login, Inquiry, Quote, Treatment, Patient Communication, Settings) | Multi-select |
-| Activity Timeline | list/table | N/A | Chronological list of actions | Columns: Timestamp, Action Type, Description, Related Entity (link), IP Address (if enabled) |
-| Export CSV | button | N/A | Download filtered activity log | Includes all columns plus metadata |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Date Range Filter | date picker | No | Filter by start/end date | Defaults to last 30 days (REQ-009-110) | ENT-team-activity-audit-log.timestamp |
+| Action Type Filter | multi-select dropdown | No | Filter by action categories (Login, Inquiry, Quote, Treatment, Patient Communication, Settings) | Multi-select (REQ-009-110) | ENT-team-activity-audit-log.action_type |
+| Activity Timeline | list/table | N/A | Chronological list of actions | Columns: Timestamp, Action Type, Description, Related Entity (link), IP Address (if enabled) | ENT-team-activity-audit-log.timestamp, ENT-team-activity-audit-log.action_type, ENT-team-activity-audit-log.description, ENT-team-activity-audit-log.related_entity_type, ENT-team-activity-audit-log.ip_address |
+| Export CSV | button | N/A | Download filtered activity log | Includes all columns plus metadata (REQ-009-177) | no graph field (control) |
 
 **Tab 3: Assigned Work**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Work Category Tabs | sub-tabs | N/A | Inquiries, Quotes, Appointments, Messages | Badge shows count per category |
-| Work Item List | table | N/A | Context-specific columns per category | Sortable by date, status, priority |
-| Bulk Reassign | button | N/A | Select multiple items and reassign to another member | Opens Screen 5 (Task Transfer Wizard) |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Work Category Tabs | sub-tabs | N/A | Inquiries, Quotes, Appointments, Messages | Badge shows count per category (REQ-009-111) | no graph field (control) |
+| Work Item List | table | N/A | Context-specific columns per category | Sortable by date, status, priority (REQ-009-178) | no graph field (list of work items) |
+| Bulk Reassign | button | N/A | Select multiple items and reassign to another member | Opens Screen 5 (Task Transfer Wizard) (REQ-009-111) | no graph field (control) |
 
 **Business Rules**:
 
-- Owner rows show lock badge on role field with tooltip: "Primary Owner role cannot be changed."
-- "Edit Role" action only available if actor has permission (Owners can edit all non-Owners; Managers can edit only Clinical Staff and Billing Staff, never the Owner or another Manager).
-- "Remove Member" action shows confirmation with impact summary (pulls data from Screen 4).
-- Activity log respects privacy rules and the global audit retention policy; IP addresses remain visible in full to authorized admins for the duration of the retention period.
-- If viewing own detail page, "Remove Member" and "Edit Role" actions are hidden (cannot self-modify).
-- Suspended members show banner: "This member is suspended. Reactivate to restore access."
-- A pending invitation (badge "Invited") is not yet a team member and shows limited data: only the Overview tab with invitation status and "Resend Invitation" / "Cancel Invitation" actions.
+- Owner rows show lock badge on role field with tooltip: "Primary Owner role cannot be changed." (REQ-009-088)
+- "Edit Role" action only available if actor has permission (Owners can edit all non-Owners; Managers can edit only Clinical Staff and Billing Staff, never the Owner or another Manager). (REQ-009-104)
+- "Remove Member" action shows confirmation with impact summary (pulls data from Screen 4). (REQ-009-105)
+- Activity log respects privacy rules and the global audit retention policy; IP addresses remain visible in full to authorized admins for the duration of the retention period. (REQ-009-156)
+- If viewing own detail page, "Remove Member" and "Edit Role" actions are hidden (cannot self-modify). (REQ-009-106)
+- Suspended members show banner: "This member is suspended. Reactivate to restore access." (REQ-009-107)
+- A pending invitation (badge "Invited") is not yet a team member and shows limited data: only the Overview tab with invitation status and "Resend Invitation" / "Cancel Invitation" actions. (REQ-009-108)
 
 ---
 
@@ -514,13 +513,13 @@ The provider platform starts with four protected clinic-side roles that directly
 
 **Key Elements**:
 
-- Provider branding (name, logo), role summary, invitation expiry countdown.
-- CTA: "Accept & Create Account" (new user) with secondary link "Already have an account with this provider? Log in to continue."
-- Security notice referencing central policies (strong password requirements, audit logging; MFA to be introduced in a future release—see **Future Improvements: MFA/2FA**).
+- Provider branding (name, logo), role summary, invitation expiry countdown. (REQ-009-112; ENT-provider.name, ENT-invitation.role, ENT-invitation.expires_at)
+- CTA: "Accept & Create Account" (new user) with secondary link "Already have an account with this provider? Log in to continue." (REQ-009-112)
+- Security notice referencing central policies (strong password requirements, audit logging; MFA to be introduced in a future release—see **Future Improvements: MFA/2FA**). (REQ-009-112)
 
 **Validation**:
 
-- Token validity, seat availability (double-check), invitation status (Pending and not past expires_at only).
+- Token validity, seat availability (double-check), invitation status (Pending and not past expires_at only). (REQ-009-043)
 
 ---
 
@@ -530,27 +529,27 @@ The provider platform starts with four protected clinic-side roles that directly
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Email | display | N/A | Pre-filled from invitation, locked | Read-only; must match invitation token |
-| First Name | text | Yes | Editable first name | 2-50 characters; letters/spaces/hyphen |
-| Last Name | text | Yes | Editable last name | 2-50 characters; letters/spaces/hyphen |
-| Phone Number | tel | Yes | Primary contact phone for this team member (also used later for MFA where applicable) | E.164 format; uniqueness per user within provider; must be verified via one-time code where possible |
-| Password | password | Yes | Account password | Must satisfy FR-026 policy (length + complexity) |
-| Confirm Password | password | Yes | Re-enter password | Must match Password |
-| Accept Terms | checkbox | Yes | Confirm platform terms & privacy | Must be checked before submission |
-| Create Account CTA | button | N/A | Submit enrollment | Disabled until required fields valid |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Email | display | N/A | Pre-filled from invitation, locked | Read-only; must match invitation token (REQ-009-113) | ENT-invitation.email |
+| First Name | text | Yes | Editable first name | 2-50 characters; letters/spaces/hyphen (REQ-009-113) | ENT-team-member.first_name |
+| Last Name | text | Yes | Editable last name | 2-50 characters; letters/spaces/hyphen (REQ-009-113) | ENT-team-member.last_name |
+| Phone Number | tel | Yes | Primary contact phone for this team member (also used later for MFA where applicable) | E.164 format; uniqueness per user within provider; must be verified via one-time code where possible (REQ-009-113) | ENT-team-member.phone_number |
+| Password | password | Yes | Account password | Must satisfy FR-026 policy (length + complexity) (REQ-009-113) | ENT-team-member.password |
+| Confirm Password | password | Yes | Re-enter password | Must match Password (REQ-009-113) | ENT-team-member.password |
+| Accept Terms | checkbox | Yes | Confirm platform terms & privacy | Must be checked before submission (REQ-009-113) | ENT-team-member.terms_accepted_at |
+| Create Account CTA | button | N/A | Submit enrollment | Disabled until required fields valid (REQ-009-190) | no graph field (control) |
 
 > **Deferred Fields (Future Improvement – MFA/2FA)**  
 > The following field is **explicitly out of scope for the initial implementation of FR-009** and will be implemented later once platform-wide MFA is delivered (see Constitution + FR-031 / FR-026):  
 >
-> - MFA Setup Method – selection of MFA factor (SMS, Authenticator App, Security Key)
+> - MFA Setup Method – selection of MFA factor (SMS, Authenticator App, Security Key) (REQ-009-167; ENT-team-member.mfa_setup_method)
 
 **Business Rules**:
 
-- Password setup must succeed before account is activated.
-- MFA enrollment for provider team members will be added in a future release and is **not** enforced in the initial FR-009 scope.
-- If invitee already has global Hairline account, screen switches to login-only acceptance flow, unless the email belongs to another provider (A3).
+- Password setup must succeed before account is activated. (REQ-009-114)
+- MFA enrollment for provider team members will be added in a future release and is **not** enforced in the initial FR-009 scope. (REQ-009-167)
+- If invitee already has global Hairline account, screen switches to login-only acceptance flow, unless the email belongs to another provider (A3). (REQ-009-115)
 
 ---
 
@@ -560,14 +559,14 @@ The provider platform starts with four protected clinic-side roles that directly
 
 **Components**:
 
-- Role overview card (permissions summary).
+- Role overview card (permissions summary). (ENT-role-permission-definition.permissions)
 - Required next steps (e.g., complete profile, review assigned inquiries handed over via Screen 5).
-- Notification opt-in management referencing FR-020 templates.
+- Notification opt-in management referencing FR-020 templates. (REQ-009-187)
 
 **Business Rules**:
 
-- Tour must be acknowledged before hitting dashboard.
-- Logs acceptance in audit trail.
+- Tour must be acknowledged before hitting dashboard. (REQ-009-116)
+- Logs acceptance in audit trail. (REQ-009-116)
 
 ---
 
@@ -579,20 +578,20 @@ The provider platform starts with four protected clinic-side roles that directly
 
 **Data Fields / UI Elements**:
 
-| Field Name | Type | Required | Description | Validation / Notes |
-|------------|------|----------|-------------|--------------------|
-| Global Search | input | No | Search by provider name, member email, or status | Debounced; supports wildcard |
-| Provider Name | display (link) | N/A | Provider organization name | Click opens provider profile in admin console |
-| Provider ID | display | N/A | Internal provider identifier | Read-only |
-| Team Member Name | display | N/A | Full name of team member | Read-only |
-| Email | display | N/A | Team member email | Read-only |
-| Role | badge | N/A | Provider role | Owner rows show lock icon |
-| Ownership Flag | icon | N/A | Indicates primary owner | Tooltip: "Primary Owner" |
-| Status | badge | N/A | Team member status Active or Suspended; a pending invitation row shows the "Invited" badge | Color-coded |
-| Last Login | display (timestamp) | N/A | Most recent login timestamp | Relative time with tooltip for exact timestamp |
-| Actions | button group | N/A | Force suspend, reset invitation, view audit log, impersonate | Buttons enabled based on admin permissions; Impersonate is Super Admin only and follows the FR-015 "Login as Provider" rules (see Screen 11 Business Rules) |
-| Filters Panel | chips/checkboxes | No | Filter by status, role, region | Multi-select |
-| Pagination Controls | pagination | N/A | Navigate through result pages | Server-driven |
+| Field Name | Type | Required | Description | Validation / Notes | Graph field |
+|------------|------|----------|-------------|--------------------|-------------|
+| Global Search | input | No | Search by provider name, member email, or status | Debounced; supports wildcard (REQ-009-184) | no graph field (control) |
+| Provider Name | display (link) | N/A | Provider organization name | Click opens provider profile in admin console | ENT-provider.name |
+| Provider ID | display | N/A | Internal provider identifier | Read-only | ENT-provider.id |
+| Team Member Name | display | N/A | Full name of team member | Read-only | ENT-team-member.first_name, ENT-team-member.last_name |
+| Email | display | N/A | Team member email | Read-only | ENT-team-member.email |
+| Role | badge | N/A | Provider role | Owner rows show lock icon | ENT-team-member-org-role.role_id |
+| Ownership Flag | icon | N/A | Indicates primary owner | Tooltip: "Primary Owner" (REQ-009-186) | no graph field (control) |
+| Status | badge | N/A | Team member status Active or Suspended; a pending invitation row shows the "Invited" badge | Color-coded | ENT-team-member.status, ENT-invitation.status |
+| Last Login | display (timestamp) | N/A | Most recent login timestamp | Relative time with tooltip for exact timestamp | ENT-team-member.last_login_at |
+| Actions | button group | N/A | Force suspend, reset invitation, view audit log, impersonate | Buttons enabled based on admin permissions; Impersonate is Super Admin only and follows the FR-015 "Login as Provider" rules (see Screen 11 Business Rules) (REQ-009-117) | no graph field (control) |
+| Filters Panel | chips/checkboxes | No | Filter by status, role, region | Multi-select (REQ-009-185) | no graph field (control) |
+| Pagination Controls | pagination | N/A | Navigate through result pages | Server-driven | no graph field (control) |
 
 **Notes**:
 
@@ -604,7 +603,7 @@ The provider platform starts with four protected clinic-side roles that directly
 
 **Purpose**: Provide platform admins with comprehensive oversight of individual team members across all providers, including audit logs, compliance monitoring, and emergency intervention capabilities.
 
-**Access Control**: Accessible by platform administrators only. Supports a Super Admin-only impersonation session for support and troubleshooting, governed by the FR-015 "Login as Provider" rules (limited write; see Business Rules below).
+**Access Control**: Accessible by platform administrators only. Supports a Super Admin-only impersonation session for support and troubleshooting, governed by the FR-015 "Login as Provider" rules (limited write; see Business Rules below). (REQ-009-118)
 
 **Entry Points**:
 
@@ -617,118 +616,118 @@ The provider platform starts with four protected clinic-side roles that directly
 
 **Header Section**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Profile Photo | image | No | Team member avatar | Read-only; same as provider view |
-| Full Name | display (text) | N/A | First name + Last name | Read-only |
-| Email | display (email) | N/A | Primary email address | Read-only; clickable to send admin email |
-| Provider Organization | display (link) | N/A | Provider name this member belongs to | Click to view provider detail in admin console |
-| Role Badge | badge | N/A | Current role with ownership indicator | Color-coded by role |
-| Status Indicator | badge | N/A | Active / Suspended / Flagged for team members; "Invited" for a pending invitation | Real-time status; "Flagged" shown if compliance alert exists |
-| Account Created | display (timestamp) | N/A | Original account creation date | Relative time with tooltip |
-| Last Active | display (timestamp) | N/A | Most recent login or action timestamp | Relative time with tooltip; highlight if >30 days inactive |
-| Admin Actions | button group | N/A | Force Suspend, Reset Password, View Sessions, Impersonate | High-privilege actions require re-authentication; MFA-based re-auth is a future enhancement tied to platform-wide MFA rollout |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Profile Photo | image | No | Team member avatar | Read-only; same as provider view | ENT-team-member.profile_photo |
+| Full Name | display (text) | N/A | First name + Last name | Read-only | ENT-team-member.first_name, ENT-team-member.last_name |
+| Email | display (email) | N/A | Primary email address | Read-only; clickable to send admin email (REQ-009-188) | ENT-team-member.email |
+| Provider Organization | display (link) | N/A | Provider name this member belongs to | Click to view provider detail in admin console | ENT-provider.name |
+| Role Badge | badge | N/A | Current role with ownership indicator | Color-coded by role | ENT-team-member-org-role.role_id |
+| Status Indicator | badge | N/A | Active / Suspended / Flagged for team members; "Invited" for a pending invitation | Real-time status; "Flagged" shown if compliance alert exists (REQ-009-119) | ENT-team-member.status, ENT-invitation.status |
+| Account Created | display (timestamp) | N/A | Original account creation date | Relative time with tooltip | ENT-team-member.created_at |
+| Last Active | display (timestamp) | N/A | Most recent login or action timestamp | Relative time with tooltip; highlight if >30 days inactive (REQ-009-119) | ENT-team-member.last_active_at |
+| Admin Actions | button group | N/A | Force Suspend, Reset Password, View Sessions, Impersonate | High-privilege actions require re-authentication; MFA-based re-auth is a future enhancement tied to platform-wide MFA rollout | no graph field (control) |
 
 **Tab 1: Profile & Overview**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Account ID | display (text) | N/A | System-generated unique identifier | Read-only; copyable |
-| Member Since | display (date) | N/A | Invitation acceptance date | Read-only |
-| Phone Number | display (tel) | No | Contact phone | Masked; admin can reveal with MFA (future enhancement; initially standard re-auth only) |
-| Department/Specialty | display (text) | No | Provider-defined label | Read-only; editable by provider only |
-| Permission Summary | table | N/A | Current role permissions | Read-only; shows effective permissions |
-| Linked Devices | list | N/A | Registered devices for MFA | **Future improvement** – placeholder for when MFA is implemented; includes device type, last used, location |
-| Compliance Flags | alert list | N/A | Active compliance issues or investigations | Links to investigation records |
-| Account Notes (Admin-Only) | textarea | No | Internal admin notes not visible to provider or member | Max 2000 chars; audit-logged on every edit |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Account ID | display (text) | N/A | System-generated unique identifier | Read-only; copyable | ENT-team-member.user_id |
+| Member Since | display (date) | N/A | Invitation acceptance date | Read-only | ENT-team-member.created_at |
+| Phone Number | display (tel) | No | Contact phone | Masked; admin can reveal with MFA (future enhancement; initially standard re-auth only) (REQ-009-121) | ENT-team-member.phone_number |
+| Department/Specialty | display (text) | No | Provider-defined label | Read-only; editable by provider only | ENT-team-member.department_specialty |
+| Permission Summary | table | N/A | Current role permissions | Read-only; shows effective permissions | ENT-role-permission-definition.permissions |
+| Linked Devices | list | N/A | Registered devices for MFA | **Future improvement** – placeholder for when MFA is implemented; includes device type, last used, location | ENT-team-member.linked_devices |
+| Compliance Flags | alert list | N/A | Active compliance issues or investigations | Links to investigation records | ENT-team-member.compliance_flags |
+| Account Notes (Admin-Only) | textarea | No | Internal admin notes not visible to provider or member | Max 2000 chars; audit-logged on every edit (REQ-009-120) | ENT-team-member.account_notes |
 
 **Tab 2: Complete Activity Audit Log**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Date Range Filter | date picker | No | Filter by start/end date | Defaults to last 90 days; can query up to 10 years (global audit-log retention) |
-| Action Type Filter | multi-select dropdown | No | Filter by action categories (Login, Patient Access, Data Export, Settings Change, Communication, Treatment) | Multi-select; includes admin-specific categories |
-| Risk Level Filter | dropdown | No | Filter by risk classification (High, Medium, Low) | Auto-classified by system |
-| Activity Timeline | list/table | N/A | Chronological list of all actions | Columns: Timestamp, Action Type, Description, Related Entity (link), IP Address, Location, Device, Risk Level |
-| IP Address Tracking | display | N/A | Full IP history with geolocation | Shows all IPs used; flags VPN/proxy usage |
-| Export Full Audit | button | N/A | Download complete audit trail | CSV/JSON format; includes all fields; requires strong re-authentication (MFA in future release) |
-| Flag for Investigation | button | N/A | Mark activity for compliance review | Creates investigation case in FR-031 |
-| Pagination Controls | pagination | N/A | Navigate through activity pages | Server-side pagination, 100 events per page |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Date Range Filter | date picker | No | Filter by start/end date | Defaults to last 90 days; can query up to 10 years (global audit-log retention) (REQ-009-122) | ENT-team-activity-audit-log.timestamp |
+| Action Type Filter | multi-select dropdown | No | Filter by action categories (Login, Patient Access, Data Export, Settings Change, Communication, Treatment) | Multi-select; includes admin-specific categories (REQ-009-122) | ENT-team-activity-audit-log.action_type |
+| Risk Level Filter | dropdown | No | Filter by risk classification (High, Medium, Low) | Auto-classified by system (REQ-009-123) | ENT-team-activity-audit-log.risk_level |
+| Activity Timeline | list/table | N/A | Chronological list of all actions | Columns: Timestamp, Action Type, Description, Related Entity (link), IP Address, Location, Device, Risk Level | ENT-team-activity-audit-log.timestamp, ENT-team-activity-audit-log.action_type, ENT-team-activity-audit-log.description, ENT-team-activity-audit-log.related_entity_type, ENT-team-activity-audit-log.ip_address, ENT-team-activity-audit-log.location, ENT-team-activity-audit-log.device, ENT-team-activity-audit-log.risk_level |
+| IP Address Tracking | display | N/A | Full IP history with geolocation | Shows all IPs used; flags VPN/proxy usage (REQ-009-124) | ENT-team-activity-audit-log.ip_address, ENT-team-activity-audit-log.location, ENT-team-activity-audit-log.vpn_proxy_flag |
+| Export Full Audit | button | N/A | Download complete audit trail | CSV/JSON format; includes all fields; requires strong re-authentication (MFA in future release) (REQ-009-125) | no graph field (control) |
+| Flag for Investigation | button | N/A | Mark activity for compliance review | Creates investigation case in FR-031 (REQ-009-126) | no graph field (control) |
+| Pagination Controls | pagination | N/A | Navigate through activity pages | Server-side pagination, 100 events per page (REQ-009-122) | no graph field (control) |
 
 **Tab 3: Assigned Work**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Work Category Tabs | sub-tabs | N/A | Inquiries, Quotes, Appointments, Messages | Badge shows count per category |
-| Work Item List | table | N/A | Context-specific columns per category | Sortable by date, status, priority; includes patient ID, status, assigned date, last activity |
-| Patient Link | link | N/A | Links to patient detail page in admin console | Opens patient record in FR-016 (Admin Patient Management) |
-| Provider Context | display (badge) | N/A | Shows which provider organization this work belongs to | Always displays since this is admin view |
-| Bulk Reassign | button | N/A | Select multiple items and reassign to another member | Opens reassignment workflow; admin can override provider-level restrictions |
-| Filter by Status | dropdown | No | Filter work items by status (Draft, Active, Completed, Overdue) | Applies to current category tab |
-| Filter by Priority | dropdown | No | Filter by urgency (High, Medium, Low) | Auto-calculated based on SLA deadlines |
-| Workload Metrics | display (widget) | N/A | Summary stats: Total items, Overdue count, Avg response time | Provides context for investigations |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Work Category Tabs | sub-tabs | N/A | Inquiries, Quotes, Appointments, Messages | Badge shows count per category (REQ-009-179) | no graph field (control) |
+| Work Item List | table | N/A | Context-specific columns per category | Sortable by date, status, priority; includes patient ID, status, assigned date, last activity (REQ-009-180) | no graph field (list of work items) |
+| Patient Link | link | N/A | Links to patient detail page in admin console | Opens patient record in FR-016 (Admin Patient Management) (REQ-009-182) | no graph field (control) |
+| Provider Context | display (badge) | N/A | Shows which provider organization this work belongs to | Always displays since this is admin view | ENT-provider.name |
+| Bulk Reassign | button | N/A | Select multiple items and reassign to another member | Opens reassignment workflow; admin can override provider-level restrictions | no graph field (control) |
+| Filter by Status | dropdown | No | Filter work items by status (Draft, Active, Completed, Overdue) | Applies to current category tab (REQ-009-181) | no graph field (control) |
+| Filter by Priority | dropdown | No | Filter by urgency (High, Medium, Low) | Auto-calculated based on SLA deadlines (REQ-009-130) | no graph field (control) |
+| Workload Metrics | display (widget) | N/A | Summary stats: Total items, Overdue count, Avg response time | Provides context for investigations (REQ-009-130) | ENT-team-member.total_work_items, ENT-team-member.overdue_work_items, ENT-team-member.avg_response_time |
 
 **Business Rules**:
 
-- Admins can view assigned work to understand team member's current responsibilities during investigations
-- All work items link to relevant patient/inquiry/quote records with proper permissions
-- "Overdue" status highlights items past SLA deadlines, supporting compliance reviews
-- Bulk reassign available for emergency situations (e.g., team member suspended, provider transition)
-- Work item access respects admin permissions defined in FR-031 (Admin Access Control)
-- Provides context for questions like: "Why did this member access Patient X's data?" → Check if Patient X is in their assigned work
+- Admins can view assigned work to understand team member's current responsibilities during investigations (REQ-009-127)
+- All work items link to relevant patient/inquiry/quote records with proper permissions (REQ-009-127)
+- "Overdue" status highlights items past SLA deadlines, supporting compliance reviews (REQ-009-128)
+- Bulk reassign available for emergency situations (e.g., team member suspended, provider transition) (REQ-009-129)
+- Work item access respects admin permissions defined in FR-031 (Admin Access Control) (REQ-009-127)
+- Provides context for questions like: "Why did this member access Patient X's data?" → Check if Patient X is in their assigned work (REQ-009-127)
 
 **Tab 4: Security & Sessions**:
 
-**(Initial FR-009 scope note: Implementation of this tab is deferred for a later improvement phase and is not required for the current build.)*
+**(Initial FR-009 scope note: Implementation of this tab is deferred for a later improvement phase and is not required for the current build.)* (REQ-009-131)
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Active Sessions | list | N/A | Current logged-in sessions | Shows device, browser, IP, location, started timestamp |
-| Session Actions | button group | N/A | Force Logout (single session), Force Logout All | Requires re-authentication; MFA re-auth will be introduced in a future release |
-| Login History | table | N/A | Last 100 login attempts | Columns: Timestamp, IP, Location, Device, Success/Failure, Failure Reason |
-| Failed Login Count | display (number) | N/A | Failed attempts in last 24 hours | Highlights if >5 attempts |
-| MFA Status | badge | N/A | Enabled / Disabled / Enforced | **Future improvement** – will show MFA method (SMS, App, Key) once MFA exists |
-| MFA Reset | button | N/A | Force MFA re-enrollment | **Future improvement** – requires MFA re-auth + justification once MFA exists |
-| Password Last Changed | display (timestamp) | N/A | Last password change date | Flags if >90 days old |
-| Force Password Reset | button | N/A | Invalidate password and require reset | Requires re-authentication + justification (MFA re-auth in future release) |
-| Anomaly Alerts | list | N/A | Suspicious login patterns detected by system | E.g., "Login from new country", "Unusual access time" |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Active Sessions | list | N/A | Current logged-in sessions | Shows device, browser, IP, location, started timestamp | ENT-team-member.active_sessions |
+| Session Actions | button group | N/A | Force Logout (single session), Force Logout All | Requires re-authentication; MFA re-auth will be introduced in a future release | no graph field (control) |
+| Login History | table | N/A | Last 100 login attempts | Columns: Timestamp, IP, Location, Device, Success/Failure, Failure Reason | ENT-team-member.login_history |
+| Failed Login Count | display (number) | N/A | Failed attempts in last 24 hours | Highlights if >5 attempts | ENT-team-member.failed_login_count_24h |
+| MFA Status | badge | N/A | Enabled / Disabled / Enforced | **Future improvement** – will show MFA method (SMS, App, Key) once MFA exists | ENT-team-member.mfa_status |
+| MFA Reset | button | N/A | Force MFA re-enrollment | **Future improvement** – requires MFA re-auth + justification once MFA exists | no graph field (control) |
+| Password Last Changed | display (timestamp) | N/A | Last password change date | Flags if >90 days old | ENT-team-member.password_changed_at |
+| Force Password Reset | button | N/A | Invalidate password and require reset | Requires re-authentication + justification (MFA re-auth in future release) | no graph field (control) |
+| Anomaly Alerts | list | N/A | Suspicious login patterns detected by system | E.g., "Login from new country", "Unusual access time" | ENT-team-member.anomaly_alerts |
 
 **Tab 5: Provider Relationship**:
 
-**(Initial FR-009 scope note: Implementation of this tab is deferred for a later improvement phase and is not required for the current build.)*
+**(Initial FR-009 scope note: Implementation of this tab is deferred for a later improvement phase and is not required for the current build.)* (REQ-009-131)
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Current Provider | display (link) | N/A | Provider organization name | Click to view provider profile |
-| Membership Status | badge | N/A | Active / Suspended / Removed | Current team member status; a pending invitation is not a membership and appears only in Invitation History |
-| Invitation History | table | N/A | All invitations sent to this email | Columns: Date, Inviting Provider, Role Offered, Status |
-| Role Change History | table | N/A | All role modifications | Columns: Date, Old Role, New Role, Changed By, Reason |
-| Remove from Provider | button | N/A | Admin-forced removal | Requires re-authentication + justification (MFA requirement deferred to future release); logs high-priority audit event |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Current Provider | display (link) | N/A | Provider organization name | Click to view provider profile | ENT-provider.name |
+| Membership Status | badge | N/A | Active / Suspended / Removed | Current team member status; a pending invitation is not a membership and appears only in Invitation History | ENT-team-member.status |
+| Invitation History | table | N/A | All invitations sent to this email | Columns: Date, Inviting Provider, Role Offered, Status | ENT-invitation.created_at, ENT-provider.name, ENT-invitation.role, ENT-invitation.status |
+| Role Change History | table | N/A | All role modifications | Columns: Date, Old Role, New Role, Changed By, Reason | ENT-team-member-org-role.role_id |
+| Remove from Provider | button | N/A | Admin-forced removal | Requires re-authentication + justification (MFA requirement deferred to future release); logs high-priority audit event | no graph field (control) |
 
 **Business Rules**:
 
-- All admin actions (suspend, password reset, session logout, etc.) require strong re-authentication before execution; MFA-based re-authentication is **planned as a future improvement** and is not part of the initial FR-009 scope.
-- Every admin action generates high-priority audit log entry with justification field (required).
-- **Impersonate** follows the FR-015 "Login as Provider" rules, which own this behavior (FR-015 Screen 3); FR-009 applies them to impersonating an individual team member:
+- All admin actions (suspend, password reset, session logout, etc.) require strong re-authentication before execution; MFA-based re-authentication is **planned as a future improvement** and is not part of the initial FR-009 scope. (REQ-009-132)
+- Every admin action generates high-priority audit log entry with justification field (required). (REQ-009-133)
+- **Impersonate** follows the FR-015 "Login as Provider" rules, which own this behavior (FR-015 Screen 3); FR-009 applies them to impersonating an individual team member: (REQ-009-023)
   - Impersonation is blocked when the provider is Deactivated ("Login as Provider is not available for a deactivated provider."). When the provider is Suspended, the session is read-only under FR-032 Rule 6, the same as for the user.
   - Super Admin only. Before starting, the admin enters a reason (min 20 chars) and re-authenticates with password (MFA re-authentication is a future enhancement tied to the platform-wide MFA rollout).
   - The impersonated session shows a persistent banner: "You are viewing as [Name] — admin session by [Admin Name]" with an "End Session" action.
   - The admin may act on the impersonated user's behalf, except changing that user's password or login email, or changing payout/bank or financial settings; those actions are blocked during the session.
   - Session start (with reason), session end, and every write action performed during the session are logged in the FR-009 audit trail and FR-015 Tab 8: Activity Log, attributed to the admin acting as the user.
   - The session ends automatically after the standard 30-minute admin inactivity timeout.
-- Patient data access log is kept for 10 years, like all audit logs (global audit-log rule); it is not anonymized after 1 year or deleted after 2 years.
-- Compliance flags automatically trigger notification to admin compliance team via FR-020.
-- IP addresses shown in full for admins (not anonymized) to support security investigations.
-- Activity log export includes admin metadata (who exported, when, for what case) for chain of custody.
+- Patient data access log is kept for 10 years, like all audit logs (global audit-log rule); it is not anonymized after 1 year or deleted after 2 years. (REQ-009-134)
+- Compliance flags automatically trigger notification to admin compliance team via FR-020. (REQ-009-135)
+- IP addresses shown in full for admins (not anonymized) to support security investigations. (REQ-009-136)
+- Activity log export includes admin metadata (who exported, when, for what case) for chain of custody. (REQ-009-137)
 
 **Notes**:
 
-- Real-time updates via SSE: session changes, login attempts, and activity updates reflected immediately.
+- Real-time updates via SSE: session changes, login attempts, and activity updates reflected immediately. (REQ-009-183)
 - Breadcrumb navigation: Admin Dashboard > Provider Team Directory > [Member Name]
 - Mobile responsive with collapsible tabs.
-- Supports "Compare Members" feature: select multiple members and compare activity patterns side-by-side (future enhancement).
+- Supports "Compare Members" feature: select multiple members and compare activity patterns side-by-side (future enhancement). (REQ-009-138)
 - Integration with FR-031 (Admin Access Control) for permission checks on sensitive actions.
-- Links to patient records respect admin permissions defined in FR-016 (Admin Patient Management).
+- Links to patient records respect admin permissions defined in FR-016 (Admin Patient Management). (REQ-009-182)
 
 ---
 
@@ -736,38 +735,38 @@ The provider platform starts with four protected clinic-side roles that directly
 
 **Purpose**: Let Hairline admins view one provider's team and invite staff on that provider's behalf. This view is embedded in FR-015 Screen 3 (Provider Profile Details), Tab 3: Staff List.
 
-**Access Control**: Platform administrators. Viewing follows admin access to the provider profile; the Invite Staff Member action requires the FR-031 "Edit Providers" permission. Impersonate remains Super Admin only.
+**Access Control**: Platform administrators. Viewing follows admin access to the provider profile; the Invite Staff Member action requires the FR-031 "Edit Providers" permission. Impersonate remains Super Admin only. (REQ-009-139)
 
 **Data Fields / UI Elements**:
 
-| Field Name | Type | Required | Description | Validation / Notes |
-|------------|------|----------|-------------|--------------------|
-| Team Member Name | display (link) | N/A | Full name of team member | Click opens Screen 11 |
-| Email | display | N/A | Team member email | Read-only |
-| Role | badge | N/A | Provider role | Owner row shows lock icon |
-| Ownership Flag | icon | N/A | Indicates primary owner | Tooltip: "Primary Owner" |
-| Status | badge | N/A | Team member status Active or Suspended; a pending invitation row shows the "Invited" badge | Color-coded |
-| Last Login | display (timestamp) | N/A | Most recent login timestamp | Relative time with tooltip for exact timestamp |
-| Seat Usage | display | N/A | Non-Owner team members with status Active or Suspended plus invitations with status Pending that are not past expires_at, against the provider's Seat Limit (FR-015); the Owner, Removed members, and Expired, Cancelled, or Accepted invitations do not count (Rule 6) | Example: "12 / 100 seats used" |
-| Row Actions | button group | N/A | Force suspend, reset invitation, view audit log, impersonate | Same behavior and permissions as Screen 10 and Screen 11 |
-| Invite Staff Member | button | N/A | Opens the admin invite form for this provider | Hidden or disabled without FR-031 "Edit Providers"; disabled with reason when blocked (see Business Rules) |
+| Field Name | Type | Required | Description | Validation / Notes | Graph field |
+|------------|------|----------|-------------|--------------------|-------------|
+| Team Member Name | display (link) | N/A | Full name of team member | Click opens Screen 11 | ENT-team-member.first_name, ENT-team-member.last_name |
+| Email | display | N/A | Team member email | Read-only | ENT-team-member.email |
+| Role | badge | N/A | Provider role | Owner row shows lock icon | ENT-team-member-org-role.role_id |
+| Ownership Flag | icon | N/A | Indicates primary owner | Tooltip: "Primary Owner" (REQ-009-186) | no graph field (control) |
+| Status | badge | N/A | Team member status Active or Suspended; a pending invitation row shows the "Invited" badge | Color-coded | ENT-team-member.status, ENT-invitation.status |
+| Last Login | display (timestamp) | N/A | Most recent login timestamp | Relative time with tooltip for exact timestamp | ENT-team-member.last_login_at |
+| Seat Usage | display | N/A | Non-Owner team members with status Active or Suspended plus invitations with status Pending that are not past expires_at, against the provider's Seat Limit (FR-015); the Owner, Removed members, and Expired, Cancelled, or Accepted invitations do not count (Rule 6) | Example: "12 / 100 seats used" (REQ-009-148) | ENT-provider-team-summary.seat_usage, ENT-provider.seat_limit |
+| Row Actions | button group | N/A | Force suspend, reset invitation, view audit log, impersonate | Same behavior and permissions as Screen 10 and Screen 11 | no graph field (control) |
+| Invite Staff Member | button | N/A | Opens the admin invite form for this provider | Hidden or disabled without FR-031 "Edit Providers"; disabled with reason when blocked (see Business Rules) | no graph field (control) |
 
 **Invite Staff Member Form (admin)**:
 
-| Field Name | Type | Required | Description | Validation / Notes |
-|------------|------|----------|-------------|--------------------|
-| Email Address | email | Yes | Invitee email | Same validation as Screen 2, including the global provider email identity rule (REQ-009-008) and duplicate pending invitation checks |
-| Role | dropdown | Yes | One of the provider's assignable roles | Manager, Clinical Staff, and Billing Staff only (FR-031); Owner is not offered |
+| Field Name | Type | Required | Description | Validation / Notes | Graph field |
+|------------|------|----------|-------------|--------------------|-------------|
+| Email Address | email | Yes | Invitee email | Same validation as Screen 2, including the global provider email identity rule (REQ-009-008) and duplicate pending invitation checks | ENT-invitation.email |
+| Role | dropdown | Yes | One of the provider's assignable roles | Manager, Clinical Staff, and Billing Staff only (FR-031); Owner is not offered | ENT-invitation.role |
 
 **Business Rules**:
 
-- The list shows only the selected provider's members and pending invitations; no cross-provider data appears in this view.
-- Admin invitations use the normal FR-009 invitation flow: same invitation email, acceptance flow (Screens 7-9), token rules, and expiry (REQ-009-016), and the same per-provider invitation rate limit (REQ-009-018).
-- Admins cannot assign the Owner role in the invite form. The Owner role changes hands only through the Hairline admin Owner handover (Rule 11, REQ-009-174), which is a separate admin action and not part of invitations.
-- Invite is blocked when the provider's Seat Limit (FR-015) is reached, with message: "This provider has reached its seat limit. Increase the Seat Limit in Tab 1 before inviting."
-- Invite is blocked when the provider status is Suspended or Deactivated, with message: "Invitations are unavailable while this provider is [Status]."
-- Each admin invitation is logged in the FR-009 audit trail and in FR-015 Tab 8: Activity Log, recording the inviting admin as the actor.
-- Existing admin actions (force suspend, reset invitation, view audit log, impersonate) remain available from each row.
+- The list shows only the selected provider's members and pending invitations; no cross-provider data appears in this view. (REQ-009-140)
+- Admin invitations use the normal FR-009 invitation flow: same invitation email, acceptance flow (Screens 7-9), token rules, and expiry (REQ-009-016), and the same per-provider invitation rate limit (REQ-009-018). (REQ-009-141)
+- Admins cannot assign the Owner role in the invite form. The Owner role changes hands only through the Hairline admin Owner handover (Rule 11, REQ-009-174), which is a separate admin action and not part of invitations. (REQ-009-142)
+- Invite is blocked when the provider's Seat Limit (FR-015) is reached, with message: "This provider has reached its seat limit. Increase the Seat Limit in Tab 1 before inviting." (REQ-009-143)
+- Invite is blocked when the provider status is Suspended or Deactivated, with message: "Invitations are unavailable while this provider is [Status]." (REQ-009-144)
+- Each admin invitation is logged in the FR-009 audit trail and in FR-015 Tab 8: Activity Log, recording the inviting admin as the actor. (REQ-009-025)
+- Existing admin actions (force suspend, reset invitation, view audit log, impersonate) remain available from each row. (REQ-009-145)
 
 ---
 
@@ -775,224 +774,78 @@ The provider platform starts with four protected clinic-side roles that directly
 
 ### General Module Rules
 
-- **Rule 1**: Every provider organization must have exactly one Owner at all times (single primary account holder).
-- **Rule 2**: Owner role assignments cannot be created, changed, or demoted through the provider platform UI. The Owner changes only through the Hairline admin handover (Rule 11).
-- **Rule 3 (Global Provider Email Identity)**: An email belongs to at most one provider organization at a time, across all forms of membership: Owner (created via FR-015), team member, or pending invitation. When a provider is Deactivated (FR-015), its Owner, team member, and pending-invitation emails are freed for reuse; the old records stay archived and are not reactivated by reuse. FR-015 provider creation and owner login-email edits apply this same rule.
-- **Rule 4**: All team management actions (invite, role change, removal) are logged in audit trail with timestamp, actor, and action details.
-- **Rule 5**: Invitation links expire after 7 days—expired invitations can be resent with new expiry.
-- **Rule 6**: Maximum team size per provider organization defaults to 100 members and is configured by admins per FR-015. Seat usage counts non-Owner team members with status Active or Suspended plus invitations with status Pending that are not past expires_at, and each person is counted once. The Owner, Removed members, and Expired, Cancelled, or Accepted invitations do not count. A Suspended member keeps the seat; only removal frees it. Providers can request limit increases through support per FR-015; invitations must be blocked when seat usage reaches the limit.
-- **Rule 7**: FR-031 defines provider roles and their permission matrices centrally; FR-009 handles team assignment and consumes those definitions without allowing clinics to edit them.
-- **Rule 8**: Provider roles are limited to the four clinic roles: Owner, Manager, Clinical Staff, and Billing Staff. Custom provider roles do not exist.
-- **Rule 9 (Invitation and Team Member Model)**: An invited person exists only as an invitation (Pending, Accepted, Expired, Cancelled) until they accept. A team member record is created only when the invitation is accepted. Team member statuses are Active, Suspended, and Removed, stored as `active`, `suspended`, and `inactive` (`inactive` means Removed and is kept for compatibility). A Removed member never takes a seat. "Invited" is only the badge that team lists show for a Pending invitation row; it is not a team member status. Legacy invitees that the old invite flow stored as team member rows (status `inactive` or `pending`, never accepted and no password set) are migrated into invitations: Pending if their invite or activation link has not expired, otherwise Expired. The placeholder member row is then deleted, so after migration `inactive` means Removed only (CR-FR009-20261028-01).
-- **Rule 10 (Suspended Provider Team Management)**: While the provider organization is Suspended (FR-015; banner per FR-032 Rule 6), the provider Team page and team member detail pages are view-only. Provider users cannot invite, resend or cancel an invitation, change a role, suspend, reactivate, or remove a member. The Team page shows "Your account is suspended. Team changes are unavailable. Please contact support." Admin invitations to a Suspended or Deactivated provider are blocked by REQ-009-024.
+- **Rule 1**: Every provider organization must have exactly one Owner at all times (single primary account holder). (REQ-009-146)
+- **Rule 2**: Owner role assignments cannot be created, changed, or demoted through the provider platform UI. The Owner changes only through the Hairline admin handover (Rule 11). (REQ-009-147)
+- **Rule 3 (Global Provider Email Identity)**: An email belongs to at most one provider organization at a time, across all forms of membership: Owner (created via FR-015), team member, or pending invitation. When a provider is Deactivated (FR-015), its Owner, team member, and pending-invitation emails are freed for reuse; the old records stay archived and are not reactivated by reuse. FR-015 provider creation and owner login-email edits apply this same rule. (REQ-009-008)
+- **Rule 4**: All team management actions (invite, role change, removal) are logged in audit trail with timestamp, actor, and action details. (REQ-009-013)
+- **Rule 5**: Invitation links expire after 7 days—expired invitations can be resent with new expiry. (REQ-009-016)
+- **Rule 6**: Maximum team size per provider organization defaults to 100 members and is configured by admins per FR-015. Seat usage counts non-Owner team members with status Active or Suspended plus invitations with status Pending that are not past expires_at, and each person is counted once. The Owner, Removed members, and Expired, Cancelled, or Accepted invitations do not count. A Suspended member keeps the seat; only removal frees it. Providers can request limit increases through support per FR-015; invitations must be blocked when seat usage reaches the limit. (REQ-009-148; REQ-015-010)
+- **Rule 7**: FR-031 defines provider roles and their permission matrices centrally; FR-009 handles team assignment and consumes those definitions without allowing clinics to edit them. (REQ-009-011; REQ-031-005)
+- **Rule 8**: Provider roles are limited to the four clinic roles: Owner, Manager, Clinical Staff, and Billing Staff. Custom provider roles do not exist. (REQ-009-002)
+- **Rule 9 (Invitation and Team Member Model)**: An invited person exists only as an invitation (Pending, Accepted, Expired, Cancelled) until they accept. A team member record is created only when the invitation is accepted. Team member statuses are Active, Suspended, and Removed, stored as `active`, `suspended`, and `inactive` (`inactive` means Removed and is kept for compatibility). A Removed member never takes a seat. "Invited" is only the badge that team lists show for a Pending invitation row; it is not a team member status. Legacy invitees that the old invite flow stored as team member rows (status `inactive` or `pending`, never accepted and no password set) are migrated into invitations: Pending if their invite or activation link has not expired, otherwise Expired. The placeholder member row is then deleted, so after migration `inactive` means Removed only (CR-FR009-20261028-01). (REQ-009-150; REQ-009-151; REQ-009-152)
+- **Rule 10 (Suspended Provider Team Management)**: While the provider organization is Suspended (FR-015; banner per FR-032 Rule 6), the provider Team page and team member detail pages are view-only. Provider users cannot invite, resend or cancel an invitation, change a role, suspend, reactivate, or remove a member. The Team page shows "Your account is suspended. Team changes are unavailable. Please contact support." Admin invitations to a Suspended or Deactivated provider are blocked by REQ-009-024. (REQ-009-153)
 - **Rule 11 (Owner Handover)**: Only a Hairline admin can hand the Owner role of a provider organization to another person; no provider-side user can do it (Rule 2). The handover is one admin action, so the provider organization has exactly one Owner before and after it (Rule 1). The new Owner must already be an active team member of that provider organization, and the previous Owner becomes a Manager. The action requires a reason, is recorded in the FR-009 audit trail (Rule 4) and FR-015 Tab 8: Activity Log with the admin as actor, and the new and the previous Owner are notified by email. REQ-009-174.
+- One team member belongs to exactly one provider organization at any given time. Transfers require admin-assisted reassignment that archives the old membership before creating a new one. (REQ-009-189)
+- Team Member Organization Role: One-to-one mapping per team member ensuring unique provider linkage; record persists for audit/history when transfers occur.
+- Team Member: Name, email, phone number, and password belong to the individual team member; clinic-level settings stay with the provider organization
 
 ### Data & Privacy Rules
 
-- **Privacy Rule 1**: Team member email addresses are visible only within their own provider organization
-- **Privacy Rule 2**: Team member activity logs are accessible only to Owners and Managers within same organization
-- **Privacy Rule 3**: IP addresses in team member activity logs are retained in full for security and compliance investigations, subject to the global audit log retention and access rules defined in the Constitution
-- **Privacy Rule 4**: Removed team members' historical records are archived (not deleted) for compliance—visible only to Owners and platform admins
-- **Audit Rule**: All access to team member data must be logged with timestamp, accessing user, and action performed
-- **GDPR Compliance**: Team members can request data export (personal data only) and account deletion (marks as deleted, archives for compliance period)
+- **Privacy Rule 1**: Team member email addresses are visible only within their own provider organization (REQ-009-154)
+- **Privacy Rule 2**: Team member activity logs are accessible only to Owners and Managers within same organization (REQ-009-155)
+- **Privacy Rule 3**: IP addresses in team member activity logs are retained in full for security and compliance investigations, subject to the global audit log retention and access rules defined in the Constitution (REQ-009-156)
+- **Privacy Rule 4**: Removed team members' historical records are archived (not deleted) for compliance—visible only to Owners and platform admins (REQ-009-157)
+- **Audit Rule**: All access to team member data must be logged with timestamp, accessing user, and action performed (REQ-009-158)
+- **GDPR Compliance**: Team members can request data export (personal data only) and account deletion (marks as deleted, archives for compliance period) (REQ-009-159)
+- **Authentication**: Team member accounts use same strong authentication as provider owners (password only in initial FR-009 scope; MFA is planned as a future enhancement per Constitution / FR-031 and will be applied platform-wide, including provider admins and staff, in a later release)
+- **Authorization**: Every API request validates role permissions before execution—fail closed on permission check errors
+- **Storage**: Audit logs stored in append-only ledger for immutability and compliance
+- **Provider web app calls Team Management API for all CRUD operations**: Authentication: OAuth 2.0 bearer tokens with role claims. Error handling: Return 403 Forbidden for permission violations, 409 Conflict for business rule violations
+- **Audit logging service receives events from all team management actions**: Authentication: Internal service-to-service auth. Error handling: Async event publishing with retry queue
+- **MaxMind GeoIP (Optional)**: Failure handling: Graceful degradation—if service unavailable, show IP address without location (REQ-009-173)
+- Provider staff use modern web browsers (Chrome, Safari, Firefox, Edge - last 2 versions) for accessing provider web app
 
 ### Admin Editability Rules
 
 **Editable by Admin (Hairline platform admins)**:
 
-- Maximum team size limit per provider (default 100, adjustable 1-500)
-- Invitation expiry period (default 7 days, range 1-30 days)
-- Force-suspend individual team member accounts for terms violations
-- Force-remove team member in emergency situations (bypasses Owner-only rule)
-- Invite staff to a single provider with a non-Owner role (Screen 12; requires FR-031 "Edit Providers")
+- Maximum team size limit per provider (default 100, adjustable 1-500) (REQ-009-160)
+- Invitation expiry period (default 7 days, range 1-30 days) (REQ-009-160)
+- Force-suspend individual team member accounts for terms violations (REQ-009-161)
+- Force-remove team member in emergency situations (bypasses Owner-only rule) (REQ-009-162)
+- Invite staff to a single provider with a non-Owner role (Screen 12; requires FR-031 "Edit Providers") (REQ-009-024)
 
 **Fixed in Codebase (Not Editable)**:
 
-- Protected role identities and primary Owner rule. Role permissions are configured centrally in FR-031, not by provider organizations.
-- Number of Owners (always exactly 1)
-- Team activity log retention: the global audit-log rule applies (10 years); there is no FR-009 retention setting
-- Audit log structure and required fields
-- Email invitation template structure (content editable, structure fixed)
-- Session management security parameters
+- Protected role identities and primary Owner rule. Role permissions are configured centrally in FR-031, not by provider organizations. (REQ-009-163)
+- Number of Owners (always exactly 1) (REQ-009-163)
+- Team activity log retention: the global audit-log rule applies (10 years); there is no FR-009 retention setting (REQ-009-163)
+- Audit log structure and required fields (REQ-009-163)
+- Email invitation template structure (content editable, structure fixed) (REQ-009-163)
+- Session management security parameters (REQ-009-163)
 
 **Configurable with Restrictions**:
 
-- Admin can view any provider's team structure but cannot modify it without provider consent (audit trail logged), except the admin actions defined in Screens 10-12 (including inviting staff via Screen 12 and actions taken during a Super Admin impersonation session)
-- Admin can suspend team members but cannot delete accounts (compliance requirement)
+- Admin can view any provider's team structure but cannot modify it without provider consent (audit trail logged), except the admin actions defined in Screens 10-12 (including inviting staff via Screen 12 and actions taken during a Super Admin impersonation session) (REQ-009-164)
+- Admin can suspend team members but cannot delete accounts (compliance requirement) (REQ-009-165)
 
 ### Payment & Billing Rules
 
-*Not applicable to this module—team management itself has no direct payment flows. Provider subscription billing (future) may factor in team size.*
-
----
-
-## Success Criteria
-
-### Provider Efficiency Metrics
-
-- **SC-001**: Provider Owners and Managers can invite a new team member in under 2 minutes from dashboard to invitation sent
-- **SC-002**: 90% of team member invitations accepted within 48 hours of email receipt
-- **SC-003**: Team member role changes apply immediately (within 5 seconds) to active sessions
-- **SC-004**: Providers with multi-user teams respond to inquiries 40% faster than single-user providers
-
-### User Experience Metrics
-
-- **SC-005**: 95% of new team members successfully create accounts on first invitation attempt without support assistance
-- **SC-006**: Team management dashboard loads in under 2 seconds for provider organizations with up to 100 team members
-- **SC-007**: Zero unauthorized access incidents due to improper permission enforcement
-- **SC-008**: 100% of role changes reflected correctly in permission checks within 5 seconds
-
-### Admin Management Metrics
-
-- **SC-009**: Platform admins can view team composition for any provider in under 10 seconds
-- **SC-010**: 100% of team management actions logged in audit trail with no data loss
-- **SC-011**: Emergency team member suspension completes within 30 seconds of admin action
-
-### System Performance Metrics
-
-- **SC-012**: Team management API endpoints respond within 500ms for 95% of requests
-- **SC-013**: System supports 500 concurrent team member invitations without degradation
-- **SC-014**: Session permission updates propagate to all active sessions within 5 seconds
-- **SC-015**: 99.9% uptime for team authentication and authorization services
-
-### Business Impact Metrics
-
-- **SC-016**: 70% of provider organizations with 3+ team members achieve higher patient satisfaction scores than single-user providers
-- **SC-017**: Multi-user provider organizations process 50% more inquiries per month than single-user providers
-- **SC-018**: Provider churn rate reduced by 25% for organizations using team features (team collaboration increases stickiness)
+*Not applicable to this module—team management itself has no direct payment flows. Provider subscription billing (future) may factor in team size.* (REQ-009-166)
 
 ---
 
 ## Dependencies
 
-### Internal Dependencies (Other FRs/Modules)
+- **FR-031**: Admin Access Control & Permissions (provider roles and permission matrices)
+- **FR-020**: Notifications & Alerts (invitation, role change, removal, and reassignment templates)
+- **FR-015**: Provider Management (provider organizations and owner accounts, Seat Limit, "Login as Provider"; Staff List embeds Screen 12)
+- **FR-032**: Provider Dashboard Settings & Profile Management (Owner-level settings gated by FR-009 roles)
+- **FR-003 and FR-004**: Inquiry Submission & Distribution; Quote Submission & Management (role-based access to inquiries and quotes)
+- **FR-010**: Treatment Execution & Documentation (which roles may document treatment is defined only in FR-010 Rule 4, REQ-010-002)
+- Shared services: S-03 Notification Service, S-06 Audit Log Service
 
-- **FR-031 / Module A-09**: Admin Access Control & Permissions
-  - **Why needed**: Provides the master RBAC framework, default role definitions, and permission matrices that provider teams inherit
-  - **Integration point**: Provider team roles are synced with admin-defined permissions; updates from FR-031 propagate to provider invitation, role assignment, and enforcement flows
 
-- **FR-020 / Module S-03**: Notifications & Alerts
-  - **Why needed**: Centralizes transactional templates (email + in-app) for invitations, role changes, removals, and reassignment alerts
-  - **Integration point**: Team management flows publish notification events consumed by FR-020 channels; template changes propagate without code updates
-
-- **FR-015 / Module A-02**: Provider Management (Admin-Initiated)
-  - **Why needed**: Provider organizations and initial owner accounts are created and managed by admins; team members attach to these provider entities
-  - **Integration point**: Team member records reference provider organizations and owners created via FR-015 flows. FR-015 Screen 3 Tab 3: Staff List embeds FR-009 Screen 12 (admin single-provider team view and Invite Staff Member), enforcing the FR-015 Seat Limit and provider status. FR-009 admin impersonation follows the FR-015 "Login as Provider" rules; FR-015 Tab 8 records admin invitations and impersonation activity. FR-015 provider creation (Screen 2) and owner login-email edits (Tab 1) apply the FR-009 global provider email identity rule (Rule 3, REQ-009-008); deactivation in FR-015 frees the provider's emails.
-
-- **FR-032 / Module PR-06**: Provider Dashboard Settings & Profile Management
-  - **Why needed**: Owner-level settings (including billing, notification preferences, and profile details) rely on FR-009 roles (especially Owner) for access control
-  - **Integration point**: FR-032 screens use FR-009 role permissions (via PR-01/FR-031) to gate access to sensitive settings like billing
-
-- **FR-003 & FR-004 / Module PR-02**: Inquiry Submission & Distribution; Quote Submission & Management
-  - **Why needed**: Team members need role-based access to inquiries
-  - **Integration point**: Inquiry and quote views apply FR-009 role permissions (via PR-02) when filtering and enforcing what each team member can see and edit
-
-- **FR-010 / Module PR-03**: Treatment Execution & Documentation
-  - **Why needed**: Clinical Staff need access to record treatment details
-  - **Integration point**: Treatment workflow checks team member role before allowing procedure documentation; which roles may document treatment is defined only in FR-010 Rule 4
-
-- **Module S-03**: Notification Service
-  - **Why needed**: Email invitations, role change notifications, removal notifications
-  - **Integration point**: Team management triggers send email events to notification service
-
-- **Module S-06**: Audit Log Service
-  - **Why needed**: Record all team management actions for compliance
-  - **Integration point**: All team management operations write to centralized audit log
-
-### External Dependencies (APIs, Services)
-
-- **External Service 1**: SendGrid/AWS SES (Email Service)
-  - **Purpose**: Deliver invitation emails, role change notifications, removal notifications
-  - **Integration**: RESTful API calls to send transactional emails with secure token links
-  - **Failure handling**: Failed emails are retried under the FR-030 notification retry rule; the Pending invitation's delivery state is set to "Pending Send" (not an invitation status; the invitation still takes a seat)
-
-- **External Service 2**: MaxMind GeoIP (Optional)
-  - **Purpose**: Geolocation of IP addresses for security monitoring in activity logs
-  - **Integration**: API lookup of IP address to city/country
-  - **Failure handling**: Graceful degradation—if service unavailable, show IP address without location
-
-### Data Dependencies
-
-- **Entity 1**: Provider Organization Profile
-  - **Why needed**: Team members must be associated with a valid provider organization
-  - **Source**: Provider Management (FR-015)
-
-- **Entity 2**: Provider Subscription/Billing Status
-  - **Why needed**: Future consideration—team member limits may be tied to subscription tier
-  - **Source**: Billing module (future)
-
----
-
-## Assumptions
-
-### User Behavior Assumptions
-
-- **Assumption 1**: Provider Owners understand the security implications of assigning Owner role to other team members
-- **Assumption 2**: Team members invited will have access to their email to receive invitation links within 7 days
-- **Assumption 3**: Clinics will clearly define internal role responsibilities before inviting team members to platform
-- **Assumption 4**: Team members removed from platform will not require ongoing access to historical data (archival sufficient)
-
-### Technology Assumptions
-
-- **Assumption 1**: Provider staff use modern web browsers (Chrome, Safari, Firefox, Edge - last 2 versions) for accessing provider web app
-- **Assumption 2**: Providers have stable internet connectivity for managing team members
-- **Assumption 3**: Email delivery is reliable (99%+ delivery rate for transactional emails)
-- **Assumption 4**: Session management infrastructure can propagate permission changes within 5 seconds
-
-### Business Process Assumptions
-
-- **Assumption 1**: Provider organizations have 1-20 team members on average (design for up to 100)
-- **Assumption 2**: Team composition changes infrequently (1-2 changes per month per provider)
-- **Assumption 3**: Providers follow principle of least privilege when assigning roles
-- **Assumption 4**: Admins will not need to frequently intervene in provider team management (self-service model)
-
----
-
-## Implementation Notes
-
-### Technical Considerations
-
-- **Architecture**: Role-based access control (RBAC) model with permissions cached in user session tokens to avoid database lookups on every request
-- **Performance**: Team member permissions denormalized into session JWT claims for fast permission checks without database roundtrips
-- **Caching**: Team member role changes must invalidate the cached permissions for all of that user's active sessions within 5 seconds (pub/sub pattern), so the next request uses the new role without forcing logout
-- **Storage**: Audit logs stored in append-only ledger for immutability and compliance
-
-### Integration Points
-
-- **Integration 1**: Provider web app calls Team Management API for all CRUD operations
-  - **Data format**: JSON payloads with team member details, role enums, timestamps
-  - **Authentication**: OAuth 2.0 bearer tokens with role claims
-  - **Error handling**: Return 403 Forbidden for permission violations, 409 Conflict for business rule violations
-
-- **Integration 2**: Authentication service validates team member credentials and builds session with role context
-  - **Data format**: JWT tokens with claims: user_id, provider_org_id, role, permissions[]
-  - **Authentication**: Session token refresh on role change events
-  - **Error handling**: If a role change is detected, refresh the session's role and permission claims on the next request instead of forcing re-authentication
-
-- **Integration 3**: Audit logging service receives events from all team management actions
-  - **Data format**: Structured log events with timestamp, actor, action type, target, changes
-  - **Authentication**: Internal service-to-service auth
-  - **Error handling**: Async event publishing with retry queue
-
-### Scalability Considerations
-
-- **Current scale**: 100-200 provider organizations at launch, average 3-5 team members each = 300-1000 total users
-- **Growth projection**: 1000 provider organizations within 12 months, 3000-5000 total users
-- **Peak load**: Minimal—team management is infrequent operation (not real-time transactional)
-- **Data volume**: Audit logs will grow—expect 10-50 events per provider per month = 500K-1M audit events per year
-- **Scaling strategy**: Database read replicas for audit log queries, archive old audit logs to cold storage after 1 year (retain for compliance)
-
-### Security Considerations
-
-- **Authentication**: Team member accounts use same strong authentication as provider owners (password only in initial FR-009 scope; MFA is planned as a future enhancement per Constitution / FR-031 and will be applied platform-wide, including provider admins and staff, in a later release)
-- **Authorization**: Every API request validates role permissions before execution—fail closed on permission check errors
-- **Encryption**: All team member data encrypted at rest (AES-256), in transit (TLS 1.3)
-- **Audit trail**: All team management actions logged with actor, timestamp, IP address, action details
-- **Threat mitigation**:
-  - Rate limiting on invitation sends (max 10 invitations per hour per provider to prevent abuse)
-  - Invitation tokens single-use and time-limited (7 days) to prevent replay attacks
-  - Permission refresh on role change (previous permissions stop applying; the session stays active) to prevent privilege escalation
-- **Compliance**: GDPR right-to-access and right-to-deletion supported for team members
 
 ---
 
@@ -1106,19 +959,19 @@ Each clinic has exactly one primary Owner account. All other elevated users are 
 ### Edge Cases
 
 - **What happens when invitation email bounces (invalid email address)?**
-  System logs the bounce event, keeps the invitation status Pending with delivery state "Pending Send" (there is no Bounced status), and notifies provider owner via in-app notification: "Invitation to [email] failed—email address may be invalid. Please verify and resend."
+  System logs the bounce event, keeps the invitation status Pending with delivery state "Pending Send" (there is no Bounced status), and notifies provider owner via in-app notification: "Invitation to [email] failed—email address may be invalid. Please verify and resend." (REQ-009-168)
 
 - **How does system handle provider owner inviting 100+ team members at once?**
-  System enforces rate limit: maximum 10 invitations per hour per provider organization. If limit exceeded, display error: "You've reached the invitation limit (10 per hour). Please try again later." This prevents abuse and email service quota exhaustion.
+  System enforces rate limit: maximum 10 invitations per hour per provider organization. If limit exceeded, display error: "You've reached the invitation limit (10 per hour). Please try again later." This prevents abuse and email service quota exhaustion. (REQ-009-169)
 
 - **What occurs if team member clicks invitation link on mobile device vs desktop?**
-  Invitation link and account creation flow are fully responsive—works on any device. After account creation, mobile user is prompted to "Download Mobile App" (if patient platform) or "Bookmark this page" (if provider web app).
+  Invitation link and account creation flow are fully responsive—works on any device. After account creation, mobile user is prompted to "Download Mobile App" (if patient platform) or "Bookmark this page" (if provider web app). (REQ-009-170)
 
 - **What happens if owner removes team member while they're actively submitting a quote?**
-  System allows in-progress transaction to complete (quote submission succeeds). However, after submission completes, session is invalidated on next request. Team member sees: "Your access has been removed. Please contact clinic owner."
+  System allows in-progress transaction to complete (quote submission succeeds). However, after submission completes, session is invalidated on next request. Team member sees: "Your access has been removed. Please contact clinic owner." (REQ-009-078)
 
 - **How does system handle two admins simultaneously trying to change same team member's role?**
-  The last change wins. The later change overwrites the earlier one and no error is shown to either person. The activity log records both changes with who made each.
+  The last change wins. The later change overwrites the earlier one and no error is shown to either person. The activity log records both changes with who made each. (REQ-009-171)
 
 ---
 
@@ -1129,12 +982,12 @@ The system-wide Constitution and `system-prd.md` require Multi-Factor Authentica
 **Deferred items for future implementation (out of scope for current FR-009 build):**
 
 - **Team Member Onboarding (Provider Side)**:
-  - MFA enrollment during team member account setup (Screen 8): phone number capture for MFA, MFA factor selection, and enforcement that "password + MFA" must succeed before activation.
+  - MFA enrollment during team member account setup (Screen 8): phone number capture for MFA, MFA factor selection, and enforcement that "password + MFA" must succeed before activation. (REQ-009-167)
 - **Admin Console Security Controls**:
-  - MFA-gated actions in Screen 11 (Admin Team Member Detail): export full audit requiring MFA, session actions requiring MFA re-auth, MFA Status and MFA Reset controls, and admin-force removal/reset flows that currently mention MFA.
-  - Device-level MFA concepts such as "Linked Devices" are documented as placeholders only.
+  - MFA-gated actions in Screen 11 (Admin Team Member Detail): export full audit requiring MFA, session actions requiring MFA re-auth, MFA Status and MFA Reset controls, and admin-force removal/reset flows that currently mention MFA. (REQ-009-167)
+  - Device-level MFA concepts such as "Linked Devices" are documented as placeholders only. (REQ-009-167)
 - **Strong Re-Auth vs MFA**:
-  - Where this PRD currently mentions "re-authentication" for high-privilege actions, the **initial implementation** will rely on password-based re-auth only. Upgrading these flows to **MFA-backed re-auth** is a **future enhancement** aligned with the platform-wide MFA rollout.
+  - Where this PRD currently mentions "re-authentication" for high-privilege actions, the **initial implementation** will rely on password-based re-auth only. Upgrading these flows to **MFA-backed re-auth** is a **future enhancement** aligned with the platform-wide MFA rollout. (REQ-009-167)
 
 Implementation teams MUST treat the above as **non-blocking, non-MVP requirements** for FR-009 and track them against the corresponding security/MFA epics instead of this feature’s delivery scope.
 
@@ -1158,7 +1011,7 @@ Implementation teams MUST treat the above as **non-blocking, non-MVP requirement
 
 ### Data Requirements
 
-> Note: Data requirements are summarized here for traceability; field-level definitions and provenance are specified in Screen Specifications and Key Entities.
+> Note: Data requirements are summarized here for traceability; field-level definitions and provenance are specified in Screen Specifications.
 
 - **REQ-009-009**: System MUST maintain team member records with: name, email, role, status (Active/Suspended/Removed), invitation date, acceptance date, last activity timestamp. A team member record is created only when an invitation is accepted
 - **REQ-009-010**: System MUST persist invitation records with: token, expiry date, status (Pending/Accepted/Expired/Cancelled), email delivery state (a failed send is "Pending Send" on a Pending invitation, not a status), sender, recipient email, role offered. Until acceptance an invited person exists only as an invitation; "Invited" is the display badge for a Pending invitation, not a team member status
@@ -1178,7 +1031,7 @@ Implementation teams MUST treat the above as **non-blocking, non-MVP requirement
 
 ### Integration Requirements
 
-> Note: Integration requirements summarize how FR-009 interacts with shared services and other FRs; detailed interaction patterns are documented in Dependencies and Implementation Notes.
+> Note: Integration requirements summarize how FR-009 interacts with shared services and other FRs; detailed interaction patterns are documented in Dependencies.
 
 - **REQ-009-019**: System MUST integrate with email service to send invitation and notification emails with 99%+ delivery rate
 - **REQ-009-020**: System MUST integrate with authentication service to create team member accounts and manage sessions
@@ -1190,49 +1043,11 @@ Implementation teams MUST treat the above as **non-blocking, non-MVP requirement
 
 ---
 
-## Key Entities
-
-- **Entity 1 - Team Member**:
-  - **Key attributes**: user_id, email, first_name, last_name, phone_number (required), password (set by the member at account creation), status (Active/Suspended/Removed), created_at, last_active_at. Name, email, phone number, and password belong to the individual team member; clinic-level settings stay with the provider organization
-  - **Lifecycle**: Created only when an invitation is accepted. An invited person who has not accepted has no team member record.
-  - **Relationships**: One team member belongs to exactly one provider organization at any given time. Transfers require admin-assisted reassignment that archives the old membership before creating a new one. One team member has many audit log entries.
-
-- **Entity 2 - Team Member Organization Role**:
-  - **Key attributes**: team_member_id, provider_org_id (unique), role_id (one of the four clinic roles), assigned_at, assigned_by
-  - **Relationships**: One-to-one mapping per team member ensuring unique provider linkage; record persists for audit/history when transfers occur.
-
-- **Entity 3 - Invitation**:
-  - **Key attributes**: invitation_id, token (secure random), email, first_name, last_name, role, provider_org_id, invited_by, status (Pending/Accepted/Expired/Cancelled), delivery state ("Pending Send" when the email failed), expires_at, accepted_at
-  - **Relationships**: One invitation belongs to one provider organization. One invitation invited by one existing team member (owner/admin). One invitation may result in one team member account, created when the invitation becomes Accepted. A Pending invitation is shown in team lists with the "Invited" badge and counts toward seat usage until it expires, is cancelled, or is accepted (Rule 6).
-
-- **Entity 4 - Role Permission Definition**:
-  - **Key attributes**: role_id, role_name, is_system_role, permissions[] (array of permission strings like "inquiries.view", "quotes.create", "team.manage")
-  - **Relationships**: Centrally managed FR-031 definition for the four clinic roles (Owner, Manager, Clinical Staff, Billing Staff). Each team member organization role references one definition.
-
-- **Entity 5 - Team Activity Audit Log**:
-  - **Key attributes**: event_id, team_member_id, provider_org_id, timestamp, action_type (Login, Inquiry, Quote, Treatment, Patient Communication, Settings, Patient Access, Data Export, plus the team management actions InviteSent, RoleChanged, MemberRemoved; the list matches the Action Type filters in Screens 6 and 11), description, ip_address, related_entity_type, related_entity_id
-  - **Relationships**: Many audit log entries belong to one team member. Many audit log entries belong to one provider organization.
-
----
-
 ## Appendix: Change Log
 
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
-| 2025-11-11 | 1.0 | Initial PRD creation for FR-009: Provider Team & Role Management | Claude (AI) |
-| 2025-11-21 | 1.1 | **Screen 11 Enhancement**: Added Tab 3 "Assigned Work" to Admin Console Team Member Detail Page (Screen 11) to provide admins with context on current workload during investigations. Renumbered subsequent tabs (Patient Data Access Log → Tab 4, Security & Sessions → Tab 5, Provider Relationship → Tab 6, Compliance & Investigations → Tab 7). Verified necessity of all admin oversight tabs against original transcription requirements. | Claude (AI) |
-| 2025-12-03 | 1.2 | **MFA/2FA Scope Clarification for FR-009**: Marked all MFA-related behaviors in team member signup and admin console as future improvements (not in initial implementation scope), while keeping phone number as a required field on Screen 8 for contact and future MFA use. Added explicit **Future Improvements: MFA/2FA** section summarizing deferred items and aligned wording with Constitution / FR-026 / FR-031. | GPT-5.1 (AI) |
-| 2026-09-29 | 1.3 (proposed) | Aligned provider team invitation, role change, and Owner safeguards with proposed global custom roles in FR-031. See [CR-FR009-20260929-01](change-request-2026-09-29-custom-provider-role-assignment.md). | Codex |
-| 2026-10-15 | 1.4 (proposed) | Replaced the former view-only admin impersonation with the FR-015 "Login as Provider" limited-write rules (Screens 10 and 11). Added Screen 12: Provider Team (Admin, Single Provider), embedded in FR-015 Screen 3 Tab 3, with admin Invite Staff Member (non-Owner roles only, Seat Limit and provider status checks, FR-031 "Edit Providers" permission, audit in FR-009 and FR-015 Tab 8). Added REQ-009-023 to REQ-009-025 and an FR-015 dependency note. See [CR-FR009-20261015-01](change-request-2026-10-15-admin-staff-invite-impersonation.md). | Claude (AI) |
-| 2026-10-15 | 1.4 (proposed) | Minor alignment with FR-015 v1.14 Rule 7: "Request more seats" (Screen 2 banner and invite form) opens an FR-034 support case pre-filled as a seat-increase request; the admin edits Seat Limit in FR-015 Screen 3 Tab 1. Clarified the Screen 2 invite-form email rule: uniqueness is global per REQ-009-008 and A3 (matches `provider_users.email` UNIQUE), not per org; same-team duplicates get the View/Resend CTA | Claude |
-| 2026-10-15 | 1.5 (proposed) | **Global provider email identity rule**: Rule 3 and REQ-009-008 now cover Owners, team members, and pending invitations across all provider organizations, and FR-015 provider creation and owner login-email edits apply the same rule. Emails of a Deactivated provider (FR-015) are freed for reuse; old records stay archived. Updated A3 trigger, Screen 2 and Screen 12 email validation, and the FR-015 dependency note. See [CR-FR009-20261015-02](change-request-2026-10-15-global-provider-email-identity.md). | Claude |
-| 2026-10-27 | 1.6 (proposed) | FR-015 v1.22 alignment (Product Owner decisions, 2026-10-27). Seat usage counts accepted non-Owner team members plus pending invitations; the Owner and expired invitations do not count (Rule 6, Screen 2 Team Size Meter, Screen 12 Seat Usage), per [CR-FR015-20261027-01](../fr015-provider-management/change-request-2026-10-27-save-conflict-encryption-seat-usage.md). Impersonation (Screen 11 rules, REQ-009-023) is blocked for a Deactivated provider and read-only under FR-032 Rule 6 for a Suspended provider. | Product Owner / Documentation |
-| 2026-10-28 | 1.7 (proposed) | Product Owner decision 2026-10-28 (FR-015 backend confirmations). Invitation and team member model: an invited person exists only as an invitation (Pending, Accepted, Expired, Cancelled) until acceptance; a team member record is created only on acceptance; team member statuses are Active, Suspended, Removed; "Invited" is only the display badge for a Pending invitation (Main Flow steps 10 and 16, Screens 1, 6, 10, 11 and 12 status fields, Screen 6 and Screen 7 notes, Screen 11 Tab 5 Membership Status, new Rule 9, REQ-009-009, REQ-009-010, Key Entities 1 and 3). Seat usage counts non-Owner members with status Active or Suspended plus Pending invitations not past expires_at, each person once; a Suspended member keeps the seat (Rule 6, Screen 1 Team Size Meter, Screen 12 Seat Usage). Screen 1 quick stats label Pending Invitations. A Suspended provider organization cannot send staff invitations (Main Flow step 6, Screen 2, new Rule 10, REQ-009-001). See [CR-FR009-20261028-01](change-request-2026-10-28-invitation-member-model.md). | Product Owner / Documentation |
-| 2026-10-28 | 1.7 (proposed) | Product Owner decisions 2026-10-28 (follow-up) and review fixes. Stored team member statuses are `active`, `suspended`, and `inactive` (= Removed, kept for compatibility); a Removed member never takes a seat; legacy invitee member rows (`inactive` or `pending`, never accepted) are migrated into Pending or Expired invitations and the placeholder row is deleted (Rule 9). "Pending Send" is a delivery state of a Pending invitation that takes a seat, not an invitation status (Alternative Flow B4, External Dependencies, REQ-009-010, Key Entity 3). A Suspended provider's Team page is view-only with no invite, resend, role change, suspend, or remove, and shows the suspended message (Main Flow step 6, Screens 1 and 2, Rule 10 renamed Suspended Provider Team Management, REQ-009-001); the rule is stated in FR-009 because FR-032 Rule 6 does not list team management. See [CR-FR009-20261028-01](change-request-2026-10-28-invitation-member-model.md). | Product Owner / Documentation |
-| 2026-11-04 | 1.7 (proposed) | Minor correction (Product Owner decision, manual test PR01-FR009-12): a role change refreshes the member's permissions in place on their next request without forcing logout; the previous permissions stop applying within 5 seconds. Removal still invalidates all active sessions. Aligned REQ-009-014, Implementation Notes (Caching, Integration 2 error handling, Security threat mitigation) with User Story 2 scenario 4. | Documentation |
-| 2026-11-20 | 1.8 (proposed) | Requirements graph programme baseline: owner rulings applied. Main changes: (1) Custom provider roles removed; the clinic roles are Owner, Manager, Clinical Staff, and Billing Staff only (Provider Role Model, flows, Screens 1-3, 11, 12, Rule 8, Key Entity 4, REQ-009-002, REQ-009-011); the 2026-09-29 custom-role change request is rejected. (2) Invitations and removals are done by the Provider Owner or Manager; a Manager can invite only Clinical Staff and Billing Staff. (3) Exactly one Owner at all times (REQ-009-006); new Owner handover performed by a Hairline admin (new Rule 11, new REQ-009-174, Screen 12). (4) Team activity log retention setting removed: audit logs are kept 10 years under the global audit-log rule, including the patient-data access log; Screen 11 date filter reaches 10 years. (5) A bounced invitation keeps status Pending with delivery state "Pending Send"; no Bounced status. (6) Concurrent role changes: the later change overwrites, no error. (7) Role-change notification toggle removed: the member is always notified. (8) Phone number is required; removal reason is required; Archive is offered only when nothing is outstanding; name is read-only on the member detail page. (9) Treatment documentation rights now point to FR-010 Rule 4 (REQ-009-172 retired). (10) Invitation email retry numbers replaced by the FR-030 retry rule (REQ-009-054). (11) Team member entity holds name, email, phone number, and password; audit action types extended to match the filters. | Documentation |
-| 2026-11-22 | 1.9 (proposed) | Owner answers of 2026-11-22 (requirements graph programme, Phase 4 re-check): (1) a Manager may change the role only of members below Manager (Clinical Staff, Billing Staff), never the Owner or another Manager (REQ-009-004, Screen 6 business rule; stale 'Admin' wording for the provider Manager role corrected in the Owner-modification alternative flow and Screen 6 access control). (2) Owner handover stays in FR-009: the new Owner must be an active team member, the previous Owner becomes a Manager, a reason is required and both are emailed (Rule 11, REQ-009-174). | Documentation |
-| 2026-11-22 | 1.10 (proposed) | Audit follow-up to the owner answers of 2026-11-22: remaining Admin wording for the provider role replaced with Manager (department field, Privacy Rule 2, role-change scenarios) and the Manager limit on role changes added to Screen 3. | Documentation |
+| 2026-11-22 | 1.11 (proposed) | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.10) and the change requests CR-FR009-20260929-01, CR-FR009-20261015-01, CR-FR009-20261015-02, CR-FR015-20261027-01 and CR-FR009-20261028-01 are in `archived/prd-baseline-2026-11-08/fr009-provider-team-roles/` and in git history. | Documentation |
 
 ---
 
@@ -1240,11 +1055,8 @@ Implementation teams MUST treat the above as **non-blocking, non-MVP requirement
 
 | Role | Name | Date | Signature/Approval |
 |------|------|------|--------------------|
-| Product Owner | [Name] | [Date] | [Status] |
 | Product Owner | Joachim Trung Tuan | 2026-10-27 | Approved v1.6 seat usage and impersonation alignment (documentation only), with CR-FR015-20261027-01 |
 | Product Owner | Joachim Trung Tuan | 2026-10-28 | Approved v1.7 invitation and team member model and seat usage (documentation only), with CR-FR009-20261028-01 |
-| Technical Lead | [Name] | [Date] | [Status] |
-| Stakeholder | [Name] | [Date] | [Status] |
 
 ---
 
