@@ -1220,7 +1220,8 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 | Filter | Type | Options | Default | Logic |
 |--------|------|---------|---------|-------|
-| Plan Status | Multi-select | Active, Completed, Overdue, Defaulted | All | OR (within field) |
+| Plan Status | Multi-select | Active, Completed, Canceled, Defaulted | All | OR (within field) |
+| Overdue | Toggle (yes/no) | Yes, No | Off (all plans) | AND with other filters; Overdue is a calculated flag (a due date has passed and the installment is unpaid), not a plan status |
 | Procedure Date Range | Date range picker | Custom | All dates | Filters by procedure date; default sort is nearest upcoming first, overdue/defaulted at top |
 
 ---
@@ -1279,7 +1280,7 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 > |---|---|
 > | Invoice | Pending, Partial, Paid, Overdue, Refunded, At Risk |
 > | Provider Payout | Pending, Approved, Paid, Voided, Failed |
-> | Installment | Active, Completed, Overdue, Defaulted |
+> | Installment | Active, Completed, Canceled, Defaulted (Overdue is a calculated flag with its own yes/no filter, not a status) |
 > | Refund | Processing, Completed, Failed |
 > | Affiliate Commission | Pending, Paid, Failed, Cancelled |
 
@@ -2201,6 +2202,7 @@ A patient has received two parent quotes from two providers. Each parent quote o
 | 2026-10-18 | 2.17 | Final audit corrections (CR-FR022-20261016-01): the 2026-04-13 change log rows for versions 2.4 and 2.5 are now listed in version order. No requirement change; the provider and admin Quote Status filters keep the FR-004 status label Cancelled (Provider Status), while FR-004 owns the patient-facing label Offer Unavailable. | Product Owner |
 | 2026-10-22 | 2.18 | FR-015 alignment for A-02 provider search (B01 manual test findings): FR-015 / Screen 1 Status filter drops the non-existent Draft status and defaults to Active, matching FR-015 Screen 1 Default View; Main Flow 2 and User Story 2 scenarios 3 and 5 no longer reference Draft providers or an Approve action, since FR-015 creates providers Active. Product decision 2026-10-22. | AI |
 | 2026-11-20 | 2.19 | Requirements graph programme baseline: owner rulings applied. Main changes: (1) messaging inbox and provider messages search and filters move from P2 to P1, with REQ-022-070 as the one statement for the patient inbox (REQ-022-049, REQ-022-050 retired); (2) provider-facing results show Patient ID plus a masked name before payment (Privacy Rule 1, REQ-022-026); (3) new REQ-022-143 and Rule 10 for provider card starting price converted to the patient's currency, with REQ-022-058 and Rule 9 limited to cards carrying a quote; (4) REQ-022-009 (export), REQ-022-053 and REQ-022-086 (My Support Cases criteria, now owned by FR-032) retired; REQ-022-139 and REQ-022-142 retired and technical notes dropped (database joins, search engine notes, MySQL FULLTEXT, scaling strategy, collation clause); (5) admin settings search points to FR-031 Screen 5 for change history, Admin Analytics deferral line removed, A-03/A-05/A-07/A-10 lines trimmed to the owning screens; (6) option lists corrected to the owning FRs (FR-014 time range, FR-005 acceptance status, FR-031 admin status, FR-034 ticket status), page size setting covers admin and provider only, Help Centre search lists its content types, reviews and monitoring filters remembered; (7) B1 and B2 name patient, clinic user and admin as any-one-of doers, B1 drops the contact-support suggestion, B2 separates abandoning (all three) from contacting support (patient and clinic user); (8) Key Entities fold the search records into the Patient and Provider records; cross-document reconciliation (leftover technical notes removed: search engine and database dependency notes, Implementation Notes section, Database Index entity, database wording in Rule 2). | Product Owner / Documentation |
+| 2026-11-22 | 2.20 | Owner answer of 2026-11-22 (requirements graph programme, Phase 4 re-check): installment plan statuses are Active, Completed, Canceled, Defaulted; Overdue is a calculated flag with its own yes/no filter. FR-007b / Screen 5 filter table and the status reference table aligned with FR-007B. | Product Owner / Documentation |
 
 ---
 

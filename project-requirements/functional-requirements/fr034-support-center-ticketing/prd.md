@@ -796,8 +796,8 @@ Each message in the thread displays:
 
 **Configurable by Super Admin (via Settings > Support Center - Screen 7)**:
 
-- Case categories list (add, edit, deactivate, reorder)
-- Case priorities list (add, edit, deactivate, reorder, color coding)
+- Case categories list (built-in list: edit label and reorder only; categories cannot be added, deactivated or deleted, as Screen 7 states)
+- Case priorities list (the four built-in priorities Low, Medium, High, Urgent cannot be renamed, deactivated or deleted; other priorities can be added, edited, deactivated and reordered; color coding)
 - Resolution categories list (add, edit, deactivate, reorder)
 - Root cause options list (add, edit, deactivate, reorder)
 - Case tags master list (add, edit, delete, color coding)
@@ -1280,7 +1280,7 @@ Support staff member encounters complex technical issue requiring more senior at
 - **REQ-034-066**: System MUST load case detail view (including timeline) within 2 seconds
 - **REQ-034-067**: System MUST return case search results within 1 second for keyword searches
 - **REQ-034-068**: System MUST support 50 concurrent admin users managing cases without performance degradation
-- **REQ-034-069**: System MUST handle up to 500 case creations per day at launch, scalable to 1000+ cases per day
+- **REQ-034-069**: System MUST handle the expected 100 to 200 case creations per day at launch, absorb peaks of up to 500 per day, and scale to 1000 cases per day within 12 months
 
 ---
 
@@ -1328,6 +1328,7 @@ Support staff member encounters complex technical issue requiring more senior at
 | 2026-01-26 | 2.3 | Constitution alignment updates: Set support case retention to **10 years** (aligns with audit-trail retention; exceeds 7-year minimum); clarified Support Center access semantics (visibility is not restricted by assignment); aligned Provider module naming to **PR-06** (per FR-032); clarified MFA language as dependent on shared MFA stack delivery (FR-026 / FR-031). | AI Assistant |
 | 2026-01-26 | 2.4 | Naming alignment: Updated patient Help/Support module references from **P-XX** to **P-08** to match Constitution module breakdown (Help Center & Support Access). | AI Assistant |
 | 2026-11-20 | 2.5 | Requirements graph programme baseline: owner rulings applied. Main changes: (1) No Support Manager role and no "Manage Support Configuration" permission: the Support Center settings screen is Super Admin only, escalations go to Super Admin, all other support work is Support Staff; (2) Escalate is a tick inside the Reassign Case modal (reason required, priority raised to High or Urgent, escalation notice sent), with no separate escalation form; (3) automatic reopen when a patient or provider replies to a Resolved case is recorded as a Reopening by System with reason "User replied"; replies to Closed cases go to an admin; (4) urgent unassigned cases get a fixed 1-hour alert email to admins, then escalate to Super Admin at the configured threshold; (5) auto-close options are Immediately, 3, 7 or 14 days; (6) Low, Medium, High and Urgent are locked, resolution categories, root causes and reopen reason templates cannot be deleted while in use, and built-in case categories are fixed; (7) default case list view is the last 90 days and is shared with the provider My Support Cases list (FR-032); (8) one inactivity clock: the Case Inactivity Threshold replaces the fixed 7-day warning; (9) up to 5 files per message; plain-text description; search covers email and phone but not internal notes; (10) internal notes visible to every admin with "View Support Center"; (11) retired: Save as Draft, case analytics reporting view, notification preferences per category, case-data export, repeated resolution details on the case; (12) added: Report a problem rule (FR-034 owns it), booking request type, request status, decline reason and outcome (moved in from FR-016), link from a case to a provider-caused cancellation, 17 timeline event types, "support case created" and provider status-change and closure emails; (13) notification retry numbers now come only from the FR-030 retry rule; (14) the ten category names are the master list, with per-form subsets; Suggestion and Other are filed under Feedback; cross-document reconciliation (retention, case analytics mentions removed) | AI Assistant |
+| 2026-11-22 | 2.6 | Owner answers of 2026-11-22 (requirements graph programme, Phase 4 re-check): (1) built-in case categories and priorities are locked as Screen 7 states; the Admin Editability list reworded to match. (2) Volumes: 100 to 200 cases a day at launch, 500 at peak, 1000 within 12 months (REQ-034-069 aligned with the assumptions). | AI Assistant |
 
 ---
 

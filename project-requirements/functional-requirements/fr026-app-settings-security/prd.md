@@ -347,7 +347,7 @@ The App Settings & Security Policies module provides a centralized, audited, and
   - Authentication Throttling (max attempts, lockout duration)
   - OTP Configuration (expiry time, resend limits; code length is fixed, view-only)
   - Password Policy (fixed in codebase, view-only)
-  - Re-Verification Threshold and Admin Session Policy (concurrent sessions, inactivity timeout, admin maximum failed logins), edited on Screen 8
+  - Re-Verification Threshold and Admin Session Policy (concurrent sessions, inactivity timeout), edited on Screen 8
 - App Data
   - Countries & Calling Codes (name, ISO code, calling code, flag, order, active)
   - Discovery Questions (answer options, order, active)
@@ -375,7 +375,7 @@ The App Settings & Security Policies module provides a centralized, audited, and
 
 | Field Name          | Type     | Required | Description                                         | Validation Rules                   |
 | ------------------- | -------- | -------- | --------------------------------------------------- | ---------------------------------- |
-| Max Login Attempts  | number   | Yes      | Maximum failed login attempts before lockout        | Range: 1-10, integer only          |
+| Max Login Attempts  | number   | Yes      | Maximum failed login attempts before lockout; one shared setting for patients, providers and admins | Range: 1-10, integer only          |
 | Lockout Duration    | number   | Yes      | Lockout duration in minutes                         | Range: 5-60, integer only          |
 
 **Business Rules**:
@@ -603,7 +603,7 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 
 ### Screen 5c: Inquiry Configuration Manager
 
-**Purpose**: Allow Admin to manage treatment-area options displayed at inquiry creation and the blocked window before a patient may select a preferred treatment date.
+**Purpose**: Allow Admin to manage treatment-area options displayed at inquiry creation, the problem-duration list offered in the inquiry's detailed information step, and the blocked window before a patient may select a preferred treatment date.
 
 | Field Name | Type | Required | Description | Validation Rules |
 | --- | --- | --- | --- | --- |
@@ -612,10 +612,14 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 | Display Order | number | Yes | Display sequence in the inquiry form | Unique integer order; drag-and-drop supported |
 | Active | checkbox | Yes | Whether the option is selectable for new inquiries | Default true; cannot deactivate the final active option; deactivation preserves historical records |
 | Minimum Inquiry Lead Time | number | Yes | Whole days blocked before a patient may select a preferred range | Integer 0-730; default 3 |
+| Problem Duration Label | text | Yes | Patient-facing option of the problem-duration list (FR-003 Screen 3, Duration) | Unique among active options; max 100 chars |
+| Problem Duration Display Order | number | Yes | Display sequence of the problem-duration options | Unique integer order |
+| Problem Duration Active | checkbox | Yes | Whether the option is selectable for new inquiries | Default true; cannot deactivate the final active option; deactivation preserves historical records |
 
 **Business Rules**:
 
 - The treatment-area list has no seed values. It starts empty and the admin fills it first.
+- The problem-duration list starts with five values, editable by Admin: Less than 6 months; 6 to 12 months; 1 to 2 years; 2 to 5 years; More than 5 years. Admin may create, edit, reorder, activate, or deactivate options; at least one stays active. Consumer: FR-003 Screen 3.
 - Admin may create, edit, reorder, activate, or deactivate treatment-area options. Options referenced by an inquiry cannot be deleted.
 - System MUST retain at least one active treatment-area option. A deactivation that would leave no active option is rejected.
 - The patient configuration API returns active options in display order with `id`, `label`, and `image_or_icon_url`, plus `minimum_inquiry_lead_days`.
@@ -780,7 +784,6 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 | Re-Verification Threshold | number (minutes) | Yes | How long after a patient's last successful sign-in the patient must confirm identity again before a sensitive action (FR-001 Screens 16 and 18) | Whole minutes; default 5 |
 | Admin Concurrent Sessions | number | Yes | Number of concurrent sessions allowed for one admin user (consumer: FR-031) | Whole number from 1 to 5; default 3 |
 | Admin Inactivity Timeout | number (minutes) | Yes | Standard admin inactivity timeout; it also ends a Login as Provider session (consumers: FR-031, FR-015) | Whole minutes; default 30 |
-| Admin Maximum Failed Logins | number | No | Failed admin sign-in attempts allowed before the admin account is locked. Separate from Max Login Attempts on Screen 2, which governs patients and providers (consumer: FR-031) | Whole number; no default or range is fixed in this document |
 | Landing Background Images | image set | No | Background images that rotate behind the patient landing screen (FR-001) | Image assets only; rotation follows the admin configuration |
 | Profile Photo Accepted Formats | multi-select | Yes | File formats a patient may upload as a profile photo (read by FR-001 REQ-001-082) | Default JPG and PNG |
 | Profile Photo Maximum Size | number (MB) | Yes | Largest profile photo a patient may upload (read by FR-001 REQ-001-082) | Default 5 MB |
@@ -798,7 +801,7 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 **Business Rules**:
 
 - Saving requires a change reason, version increment, immutable audit entry, and immediate cache invalidation, as on every other Settings screen.
-- Admin Maximum Failed Logins is its own Setting. It is not merged with Max Login Attempts on Screen 2.
+- Failed admin sign-ins use the shared Max Login Attempts setting on Screen 2 (default 5, with the shared lockout duration); there is no separate admin setting (FR-031).
 - The discovery source options of the registration question are the Discovery Questions answer options managed on Screen 5; Screen 8 holds no second list.
 - Where the table says no value is fixed, an admin sets the value here and can change it without a code release.
 - Which roles and permissions may edit these Settings is decided in FR-031.
@@ -840,7 +843,7 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 - Quote configuration: set the quote expiry window and the quote-expiring-soon lead time (FR-004 consumer), and the slot-hold duration and the hold-expiring-soon lead time (FR-005 and FR-006 consumers); the quote currency is shown read-only because it is the FR-029 Default Currency
 - Analytics configuration: TTFQ SLA target, At Risk and Dormant thresholds, price outlier threshold, benchmark refresh frequency, and optional target monthly commission (FR-014 consumer)
 - OTP email templates: subject line, HTML body, plain text body
-- Platform Settings (Screen 8): re-verification threshold; admin concurrent sessions, inactivity timeout and maximum failed logins; landing background images; profile photo formats and maximum size; head scan intake limits; acceptance terms text; timezone options; provider notification types; support emergency contact phone and email
+- Platform Settings (Screen 8): re-verification threshold; admin concurrent sessions and inactivity timeout; landing background images; profile photo formats and maximum size; head scan intake limits; acceptance terms text; timezone options; provider notification types; support emergency contact phone and email
 
 **Fixed in Codebase (Not Editable)**:
 
@@ -1335,13 +1338,14 @@ Admin needs one versioned source for the thresholds and targets used by FR-014 a
 
 - **REQ-026-009**: System MUST store authentication throttling settings: max login attempts (1-10), lockout duration (5-60 minutes)
 - **REQ-026-010**: System MUST store OTP configuration: expiry time (5-30 minutes), resend cooldown (30-300 seconds), max resend attempts (3-10)
-- **REQ-026-011**: System MUST store centrally managed country list: country name, ISO code, calling code, country flag asset URL (stored via S-05 Media Storage, nullable), display order, active status
+- **REQ-026-011**: System MUST store centrally managed country list: country name, ISO code, calling code, country flag asset URL (stored via S-05 Media Storage; required, the admin uploads the flag on Screen 4), display order, active status
 - **REQ-026-012**: System MUST store centrally managed discovery question options: answer option, display order, active status
 - **REQ-026-012a**: System MUST store centrally managed inquiry cancellation reason options: reason label, requires_explanation flag, display order, active status. Consumer: FR-003 Screen 8a.
 - **REQ-026-012b**: System MUST store centrally managed account deletion reason options: reason label, requires_explanation flag, display order, active status. Consumer: FR-001 Screen 16.
 - **REQ-026-012c**: System MUST store centrally managed inquiry treatment-area options: stable option ID, label, image/icon asset URL, display order, and active status. Consumer: FR-003 Screen 1.
 - **REQ-026-012d**: System MUST store a versioned minimum inquiry lead time as a whole number of days from 0 through 730. Default: 3 days. Consumer: FR-003 Screen 5 and submission validation.
 - **REQ-026-012e**: System MUST prevent deactivation of the final active inquiry treatment-area option.
+- **REQ-026-139**: System MUST store the centrally managed problem-duration list: option label, display order, active status. Starting values, editable by Admin: Less than 6 months; 6 to 12 months; 1 to 2 years; 2 to 5 years; More than 5 years. At least one option stays active. Consumer: FR-003 Screen 3 (Duration).
 - **REQ-026-012f**: System MUST store one versioned Quote Configuration containing the quote expiry window (whole hours from 24 to 336, default 48), the quote-expiring-soon lead time (whole hours from 1 up to half of the expiry window, default 12), the slot-hold duration (whole hours from 24 to 168, default 48), and the hold-expiring-soon lead time (whole hours from 1 up to half of the slot-hold duration, default 12). The quote currency MUST be the FR-029 Default Currency, not a separate setting, and each change to the FR-029 Default Currency MUST create a new Quote Configuration version so the version recorded on a quote identifies both the hours and the currency used. Consumers: FR-004 (currency, expiry window, quote-expiring-soon lead time), FR-005 and FR-006 (slot-hold duration), and FR-006 (hold-expiring-soon lead time).
 - **REQ-026-012g**: System MUST store one versioned Analytics Configuration containing TTFQ SLA target (positive whole minutes, default 120), At Risk threshold (whole days, default 7), Dormant threshold (whole days, greater than At Risk, default 30), price outlier threshold (whole percent 1-100, default 30), benchmark refresh frequency (Daily, Weekly, or Monthly; default Weekly), and optional target monthly commission (blank by default). Consumer: FR-014.
 - **REQ-026-012h**: System MUST store a centrally managed Provider Specialties list: stable specialty ID, specialty name (max 100 chars, unique case-insensitive), display order, active status; seeded with Hair Transplant Surgeon, Dermatologist, Trichologist, Plastic Surgeon, Other. Admins can add, rename, reorder, and deactivate values (no hard delete); at least one value MUST remain active; changes MUST be versioned and audit-logged. Deactivated values MUST be hidden from new selection while providers that hold them keep and still display them; renames MUST apply to display everywhere. Consumer: FR-015 Screen 2 Step 2 and Screen 3 Tab 1.
@@ -1377,7 +1381,7 @@ Admin needs one versioned source for the thresholds and targets used by FR-014 a
 - **REQ-026-113**: System MUST let an admin manage the Landing Background Images Setting, the set of background images that rotate behind the patient landing screen. Consumer: FR-001.
 - **REQ-026-114**: System MUST store Profile Photo Accepted Formats (default JPG and PNG) and Profile Photo Maximum Size (default 5 MB) as admin-changeable Settings. Consumer: FR-001 REQ-001-082.
 - **REQ-026-115**: System MUST store the Support Emergency Contact Phone and Support Emergency Contact Email Settings, with no default, for display read-only on the patient Help & Support Hub. Consumer: FR-035 Screen 1.
-- **REQ-026-116**: System MUST store the admin session Settings: concurrent sessions per admin user (1 to 5, default 3), the admin inactivity timeout (default 30 minutes, which also ends a Login as Provider session), and Admin Maximum Failed Logins as its own Setting, separate from Max Login Attempts. Consumers: FR-031, FR-015.
+- **REQ-026-116**: System MUST store the admin session Settings: concurrent sessions per admin user (1 to 5, default 3), the admin inactivity timeout (default 30 minutes, which also ends a Login as Provider session), and no separate admin failed-login Setting: failed admin sign-ins use the shared Max Login Attempts Setting of Screen 2. Consumers: FR-031, FR-015.
 - **REQ-026-117**: System MUST store the head scan intake Settings: maximum file size, maximum total size, quality thresholds, required views, and head video duration limits. This document fixes no values for them. Consumer: FR-002 REQ-002-032 to REQ-002-035.
 - **REQ-026-118**: System MUST store the acceptance legal copy and terms acknowledgment text shown at quote acceptance as a versioned Setting. Consumer: FR-005.
 - **REQ-026-119**: System MUST offer the registration question "How did you find out about us?" from the Discovery Questions options managed on Screen 5. Consumer: FR-001.
@@ -1475,6 +1479,7 @@ Admin needs one versioned source for the thresholds and targets used by FR-014 a
 | 2026-10-16 | 1.12 | MTG-002 quote-model alignment: Quote Configuration now owns the versioned, audited slot-hold duration (default 48 hours, one fixed hold from acceptance, never extended by payment failure; consumers FR-005 and FR-006), the hold-expiring-soon reminder lead time (default 12 hours; FR-006), and the quote-expiring-soon lead time (default 12 hours; FR-004 emits `quote.expiring_soon`). Quote currency and expiry window are copied read-only at first send with the configuration version recorded; drafts carry neither; no per-quote extension; "Default Quote Expiry" renamed "Quote Expiry Window". The quote currency is the FR-029 Default Currency, not a second setting, and is seeded from it. Updated A7, Screen 1, Screen 5d, editability rules, dependencies (FR-005, FR-006, FR-029, FR-020), seeding, User Story 8, edge cases (Settings API outage at first send, duration change during active holds), REQ-026-012f, 026, 027, new REQ-026-030 and 031, Entity 11, and the Executive Summary setting groups. Findings S2-5 (absorbs FR-026-1), FR-026-2, FR-026-3, FR-026-4, FR-026-5, FR-026-6 (part), FR-026-7 (part), FR-026-8, FR-026-9, S2-6; decisions D14, D15, D16, M3, M11, M13, R7-3. See [Change Request](./change-request-2026-10-16-mtg002-quote-model-alignment.md) (CR-FR026-20261016-01). | Product Owner / Documentation |
 | 2026-10-16 | 1.13 | Product Owner follow-up decisions: reminder defaults kept at 12 hours with validation bounds (quote expiry window 24 to 336 hours; slot-hold duration 24 to 168 hours; each lead time at least 1 hour and at most half of its window), and an FR-029 Default Currency change explicitly creates a new Quote Configuration version. Updated A7, Screen 5d, REQ-026-012f, and User Story 8. Decisions Q13, Q14. See [Change Request](./change-request-2026-10-16-mtg002-quote-model-alignment.md) (CR-FR026-20261016-01). | Product Owner / Documentation |
 | 2026-11-20 | 1.14 | Requirements graph programme baseline: owner rulings applied. Main changes: new Screen 8 (Platform Settings Editor) describing the 12 platform Settings FR-026 keeps for other FRs plus the re-verification threshold, landing background, profile photo limits, and the two support emergency contact Settings (REQ-026-112 to REQ-026-121); field limits and screen behaviours recorded as Rules (REQ-026-122 to REQ-026-132); Settings API rate limit (REQ-026-018) moved to the system PRD; roles and permission names deferred to FR-031; treatment-area list starts empty; OTP resend counter is a rolling window, up to 10 requests per hour; deletion-reason explanation is optional; cached settings are kept until the next successful poll; {app_name} added to template variables; analytics added to setting group categories; cross-document reconciliation (retention, system rule citations). | Product Owner / Documentation |
+| 2026-11-22 | 1.15 | Owner answers of 2026-11-22 (requirements graph programme, Phase 4 re-check): (1) the country flag is required and uploaded by the admin on Screen 4 (REQ-026-011 no longer nullable). (2) FR-026 owns the problem-duration list: added to Screen 5c with five starting values (new REQ-026-139; consumer FR-003). (3) One shared failed-login setting: the separate Admin Maximum Failed Logins setting is removed from Screen 8, Rule text, the setting-group list and REQ-026-116; admins use Max Login Attempts on Screen 2. | Product Owner / Documentation |
 
 ---
 

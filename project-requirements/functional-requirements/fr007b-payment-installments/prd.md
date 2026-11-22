@@ -151,7 +151,7 @@ Enable patients to pay for hair transplant procedures through interest-free inst
   4. If retry fails, System waits 3 days and attempts second retry
   5. If second retry fails, System waits 7 days and attempts third retry
   6. If all 3 retries fail, System flags installment plan as "Defaulted"
-  7. System notifies admin of defaulted plan and overdue booking, and alerts the provider that an installment is overdue
+  7. System notifies the admin, the patient and the provider of the defaulted plan and overdue booking
   8. Admin reviews and contacts patient to resolve payment issue
 - **Hard decline**: If the charge was hard declined (the issuer refuses the payment), System does not retry automatically; the patient is notified and must retry or update the card
 - **Outcome**: Payment resolved manually, or the admin cancels the booking through the FR-006 Cancel Booking action with a mandatory reason; patient may be charged late fees or rescheduling fees, with amounts set in the FR-029 late-fee and rescheduling-fee settings; the late fee is charged when the late payment grace period (FR-029) has passed without payment
@@ -486,7 +486,7 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 - Installment charges are automatic on scheduled dates (patient consent given at checkout)
 - A failed installment charge triggers 3 automatic retry attempts only when the failure was technical, with waits of 1 day, 3 days and 7 days (retries fall on day 1, day 4 and day 11 after the failure)
 - After a hard decline there is no automatic retry: the patient is notified and must retry or update the card
-- After 3 failed retries, installment plan marked as "Defaulted" and admin notified
+- After 3 failed retries, installment plan marked as "Defaulted" and the admin, the patient and the provider are notified
 - Patient can update payment method anytime before next installment
 - Cancellation refunds are a percentage of the amount paid so far, set by the refund ladder in FR-029 (Payment settings)
 - A late fee is charged when the late payment grace period (FR-029) has passed without payment; the amounts of the late fee and the rescheduling fee are set by the admin in FR-029
@@ -740,7 +740,7 @@ System detects failed installment charge, notifies patient immediately, executes
 
 1. **Given** scheduled installment charge fails, **When** failure detected, **Then** patient is notified immediately with clear error message and guidance
 2. **Given** a technical failure and the first retry attempt is due (1 day later), **When** retry executes and fails, **Then** system schedules second retry after a wait of 3 days
-3. **Given** all 3 retry attempts fail, **When** retries exhausted, **Then** system flags installment plan as "Defaulted" and notifies admin for intervention
+3. **Given** all 3 retry attempts fail, **When** retries exhausted, **Then** system flags installment plan as "Defaulted" and notifies the admin (for intervention), the patient and the provider
 4. **Given** a later installment is defaulted, **When** admin reviews it, **Then** the booking is not moved to `Payment Window Expired` and the inquiry is not cancelled
 5. **Given** the charge was hard declined, **When** failure detected, **Then** the patient is notified and must retry or update the card, and no automatic retry is scheduled
 
@@ -844,7 +844,7 @@ Patient requests booking cancellation after paying 2 of 4 installments; admin re
 - **REQ-007b-017**: System MUST detect failed installment charges and notify patient immediately
 - **REQ-007b-018**: System MUST execute 3 automatic retry attempts for an installment whose charge failed for a technical reason, with waits of 1 day, 3 days and 7 days (retries fall on day 1, day 4 and day 11 after the failure). After a hard decline System MUST NOT retry automatically; it MUST notify the patient, who must retry or update the card
 - **REQ-007b-019**: System MUST flag installment plan as "Defaulted" after 3 failed retry attempts
-- **REQ-007b-020**: System MUST notify admin of defaulted installment plans for intervention
+- **REQ-007b-020**: System MUST notify the admin (for intervention), the patient and the provider of a defaulted installment plan
 
 ### Cancellation & Refund Requirements
 
@@ -890,6 +890,7 @@ Patient requests booking cancellation after paying 2 of 4 installments; admin re
 | 2026-10-18 | 1.4     | Consolidated verification corrections ([CR-FR007B-20261016-01](./change-request-2026-10-16-mtg002-quote-model-alignment.md)): instalment base and Total Amount fields use the booking total (accepted price after promotion) instead of "total procedure cost" (Main Flow step 1, Screens, General Module Rules, REQ-007b-004; Q25); platform commission is calculated on the booking total and locked at booking confirmation, matching FR-007 REQ-007-014 (D12, Q5, Q25, Q28); promotion-use consumption scoped by source (Q30). | Product Owner / Documentation |
 | 2026-10-18 | 1.5     | Final audit corrections (Q35, Q36, Q37, Q42): Alternative Flow B2 routes the patient's cancellation request through Contact Support and the admin cancels through the FR-006 Cancel Booking action, with refund amounts left to the payment placeholder; B1 and B3 cancellations and the B3 date change use the FR-006 actions, with `booking.rescheduled` on a date change; B4 applies only before treatment starts and takes the replacement plan from the replacement quote's acceptance snapshot; the payout rule reads commission (Percentage or Flat Rate) from the booking-confirmation snapshot. Approvals row recorded. See [CR-FR007B-20261016-01](./change-request-2026-10-16-mtg002-quote-model-alignment.md). | Product Owner / Documentation |
 | 2026-11-20 | 1.6     | Requirements graph programme baseline: owner rulings applied. Main changes: plan status list is Active, Canceled, Completed, Defaulted, with Overdue as a calculated flag (due date passed and unpaid, not stored); one installment status list (Scheduled, Retrying, Paid, Failed, Overdue, Cancelled); maximum installments formula corrected so 60 days gives 2 installments; retries (waits of 1, 3 and 7 days) run only after a technical failure, and after a hard decline the patient is notified and must retry or update the card; first-installment type setting removed (equal split only); admin Cancel Plan action removed, cancelling goes through the FR-006 Cancel Booking action; refund ladder owned by FR-029; late and rescheduling fee amounts set in FR-029, late fee charged when the grace period ends without payment; two new notices (provider overdue alert, patient insufficient-time notice); Payment Method entity widened to the single saved record; Stripe Connect money-movement decisions noted as replacing the missing Payment Routing Spec; Requirements REQ-007b-004, REQ-007b-012, REQ-007b-021 reworded; cross-document reconciliation (retention pointer, payment method entity includes bank transfer, balance payment with reminders). | Product Owner / Documentation |
+| 2026-11-22 | 1.7 | Owner answer of 2026-11-22 (requirements graph programme, Phase 4 re-check): a defaulted installment plan notifies the admin, the patient and the provider. Main flow B2 step 7, the retry business rule, User Story acceptance scenario and REQ-007b-020 reworded. | Product Owner / Documentation |
 
 ---
 

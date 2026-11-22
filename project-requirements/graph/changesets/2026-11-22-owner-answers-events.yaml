@@ -1,0 +1,62 @@
+reason: "Owner answers 2026-11-22: move the 55 notification-producing Events to FR-030 (ruling A16, move list confirmed) and add the patient email-change code Event as its own node."
+by: controller
+operations:
+  - {"op": "update_node", "id": "EVT-aftercare-activated", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-aftercare-escalation-triggered", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-aftercare-provider-reassigned", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-aftercare-questionnaire-due", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-aftercare-scan-due", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-aftercare-standalone-payment-confirmed", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-billing-affiliate-payout-processed", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-billing-payment-due-reminder", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-billing-payment-failed", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-billing-payment-received", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-billing-payout-failed", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-booking-appointment-reminder", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-booking-cancelled", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-booking-confirmed", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-booking-hold-expiring-soon", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-booking-payment-window-expired", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-booking-provider-fault-replacement", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-booking-rescheduled", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-booking-revived", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-booking-scheduled", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-final-payment-confirmed", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-initial-payment-confirmed", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-inquiry-cancelled", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-inquiry-submitted", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-message-sent", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-monitoring-advice-posted", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-monitoring-assignment-pending", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-monitoring-converted", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-monitoring-provider-assigned", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-monitoring-provider-reassigned", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-monitoring-provider-withdrawn", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-password-reset-otp-sent", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-payment-reminder", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-payout-executed", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-quote-accepted", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-quote-cancelled-inquiry", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-quote-expired", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-quote-expiring-soon", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-quote-submitted", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-quote-updated", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-quote-withdrawn", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-support-case-admin-reply", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-support-case-assigned", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-support-case-closed", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-support-case-created", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-support-case-escalated", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-support-case-reopened", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-support-case-resolved", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-support-case-status-changed", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-support-case-user-reply", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-treatment-cancelled", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-treatment-completed", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-treatment-plan-changed", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-treatment-started", "owner_fr": "FR-030"}
+  - {"op": "update_node", "id": "EVT-verification-otp-sent", "owner_fr": "FR-030"}
+  - {"op": "add_node", "id": "EVT-email-change-otp-sent", "type": "Event", "title": "Email change code sent", "owner_fr": "FR-030", "attrs": {"description": "email change code: when a patient changes the email address on the profile, a 6-digit code is sent to the new address to confirm it (FR-001 prd.md line 675). Owner answer 2026-11-22: its own Event, owned by FR-030."}}
+  - {"op": "add_edge", "from": "STG-patient-03-active", "verb": "emits", "to": "EVT-email-change-otp-sent"}
+  - {"op": "add_edge", "from": "REQ-001-081", "verb": "applies to", "to": "EVT-email-change-otp-sent"}
+  - {"op": "update_node", "id": "EVT-verification-otp-sent", "attrs": {"description": "verification code: system sends a 6-digit OTP to the patient's email to confirm the address at registration (prd.md Workflow 1, Screen 5). The email-change code is its own Event, EVT-email-change-otp-sent."}}

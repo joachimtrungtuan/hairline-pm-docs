@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-21T04:12:43Z",
+  "generated_at": "2026-11-22T11:35:33Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -7389,7 +7389,7 @@
       "owner_fr": "FR-026",
       "title": "Country flag URL",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {}
     },
     {
@@ -31477,10 +31477,10 @@
     {
       "id": "EVT-aftercare-activated",
       "type": "Event",
-      "owner_fr": "FR-011",
+      "owner_fr": "FR-030",
       "title": "Aftercare activated",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "aftercare.activated: notification catalog event (FR-030 catalog, PRD line 167). Stub created during FR-030 migration; the producer FR supplies the detail."
       }
@@ -31488,10 +31488,10 @@
     {
       "id": "EVT-aftercare-escalation-triggered",
       "type": "Event",
-      "owner_fr": "FR-011",
+      "owner_fr": "FR-030",
       "title": "Aftercare escalation or red flag triggered",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "aftercare.escalation_triggered: notification catalog event (FR-030 catalog, PRD line 171). Stub created during FR-030 migration; the producer FR supplies the detail."
       }
@@ -31510,10 +31510,10 @@
     {
       "id": "EVT-aftercare-provider-reassigned",
       "type": "Event",
-      "owner_fr": "FR-011",
+      "owner_fr": "FR-030",
       "title": "Aftercare provider reassigned",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "aftercare.provider_reassigned: mandatory notice to the patient and the new aftercare provider (or assigned Hairline aftercare team member) when an admin saves a reassignment on Screen 19; no admin alert and the previous provider is not a recipient. FR-011 is the producer; FR-030 owns notification delivery."
       }
@@ -31521,10 +31521,10 @@
     {
       "id": "EVT-aftercare-questionnaire-due",
       "type": "Event",
-      "owner_fr": "FR-011",
+      "owner_fr": "FR-030",
       "title": "Aftercare questionnaire due",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "aftercare.questionnaire_due: notification catalog event (FR-030 catalog, PRD line 170). Stub created during FR-030 migration; the producer FR supplies the detail."
       }
@@ -31543,10 +31543,10 @@
     {
       "id": "EVT-aftercare-scan-due",
       "type": "Event",
-      "owner_fr": "FR-011",
+      "owner_fr": "FR-030",
       "title": "Aftercare scan due",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "aftercare.scan_due: notification catalog event (FR-030 catalog, PRD line 169). Stub created during FR-030 migration; the producer FR supplies the detail."
       }
@@ -31565,10 +31565,10 @@
     {
       "id": "EVT-aftercare-standalone-payment-confirmed",
       "type": "Event",
-      "owner_fr": "FR-011",
+      "owner_fr": "FR-030",
       "title": "Standalone aftercare payment confirmed",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "aftercare.standalone_payment_confirmed: notification catalog event (FR-030 catalog, PRD line 172). Stub created during FR-030 migration; the producer FR supplies the detail."
       }
@@ -31587,10 +31587,10 @@
     {
       "id": "EVT-billing-affiliate-payout-processed",
       "type": "Event",
-      "owner_fr": "FR-017",
+      "owner_fr": "FR-030",
       "title": "Affiliate payout processed",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "To the affiliate (admin optional) after the monthly affiliate payout, by email and push (prd.md line 96)."
       }
@@ -31642,10 +31642,10 @@
     {
       "id": "EVT-billing-payment-due-reminder",
       "type": "Event",
-      "owner_fr": "FR-017",
+      "owner_fr": "FR-030",
       "title": "Payment due reminder",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Installment or balance reminder to the patient 3 days before the due date, by email and push (prd.md line 94)."
       }
@@ -31653,10 +31653,10 @@
     {
       "id": "EVT-billing-payment-failed",
       "type": "Event",
-      "owner_fr": "FR-017",
+      "owner_fr": "FR-030",
       "title": "Payment failed",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "To the patient (admin optional) on a failed charge or webhook, by email and push (prd.md line 93)."
       }
@@ -31664,10 +31664,10 @@
     {
       "id": "EVT-billing-payment-received",
       "type": "Event",
-      "owner_fr": "FR-017",
+      "owner_fr": "FR-030",
       "title": "Payment received",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Receipt to the patient (provider and admin optional) on a successful Stripe payment, by email and push (prd.md line 92)."
       }
@@ -31675,10 +31675,10 @@
     {
       "id": "EVT-billing-payout-failed",
       "type": "Event",
-      "owner_fr": "FR-017",
+      "owner_fr": "FR-030",
       "title": "Payout failed",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "To admin (provider and affiliate optional) on a failed Stripe transfer, by email and push (prd.md lines 97, 167)."
       }
@@ -31697,10 +31697,10 @@
     {
       "id": "EVT-booking-appointment-reminder",
       "type": "Event",
-      "owner_fr": "FR-006",
+      "owner_fr": "FR-030",
       "title": "Appointment reminder due",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "booking.appointment_reminder: notification catalog event (FR-030 catalog, PRD line 144). Stub created during FR-030 migration; the producer FR supplies the detail."
       }
@@ -31708,10 +31708,10 @@
     {
       "id": "EVT-booking-cancelled",
       "type": "Event",
-      "owner_fr": "FR-006",
+      "owner_fr": "FR-030",
       "title": "Booking cancelled",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "booking.cancelled: patient and provider, sent on admin cancellation with the reason."
       }
@@ -31719,10 +31719,10 @@
     {
       "id": "EVT-booking-confirmed",
       "type": "Event",
-      "owner_fr": "FR-006",
+      "owner_fr": "FR-030",
       "title": "Booking confirmed",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "booking.confirmed: notification catalog event (FR-030 catalog, PRD line 141). Stub created during FR-030 migration; the producer FR supplies the detail."
       }
@@ -31742,10 +31742,10 @@
     {
       "id": "EVT-booking-hold-expiring-soon",
       "type": "Event",
-      "owner_fr": "FR-006",
+      "owner_fr": "FR-030",
       "title": "Booking hold expiring soon",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "booking.hold_expiring_soon: patient reminder, and admin exception alert."
       }
@@ -31753,10 +31753,10 @@
     {
       "id": "EVT-booking-payment-window-expired",
       "type": "Event",
-      "owner_fr": "FR-006",
+      "owner_fr": "FR-030",
       "title": "Booking payment window expired",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "booking.payment_window_expired: mandatory, patient and provider, and admin exception alert."
       }
@@ -31764,10 +31764,10 @@
     {
       "id": "EVT-booking-provider-fault-replacement",
       "type": "Event",
-      "owner_fr": "FR-006",
+      "owner_fr": "FR-030",
       "title": "Booking provider-fault replacement",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "booking.provider_fault_replacement: mandatory, patient and admin exception alert."
       }
@@ -31775,10 +31775,10 @@
     {
       "id": "EVT-booking-rescheduled",
       "type": "Event",
-      "owner_fr": "FR-006",
+      "owner_fr": "FR-030",
       "title": "Booking rescheduled",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "booking.rescheduled: mandatory, patient and provider, sent on an admin appointment change with the old and new appointment."
       }
@@ -31786,10 +31786,10 @@
     {
       "id": "EVT-booking-revived",
       "type": "Event",
-      "owner_fr": "FR-006",
+      "owner_fr": "FR-030",
       "title": "Booking revived",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "booking.revived: mandatory, patient and provider."
       }
@@ -31797,10 +31797,10 @@
     {
       "id": "EVT-booking-scheduled",
       "type": "Event",
-      "owner_fr": "FR-006",
+      "owner_fr": "FR-030",
       "title": "Booking scheduled",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "description": "booking.scheduled (displayed as \"Booking Accepted — Slot Held (Pending Payment)\"): mandatory, patient only, sent on patient acceptance (Acceptance stage) and on an admin-authored replacement acceptance (booking stage); the provider is told by quote.accepted."
       }
@@ -31861,12 +31861,23 @@
       }
     },
     {
-      "id": "EVT-final-payment-confirmed",
+      "id": "EVT-email-change-otp-sent",
       "type": "Event",
-      "owner_fr": "FR-007",
-      "title": "Final payment confirmed",
+      "owner_fr": "FR-030",
+      "title": "Email change code sent",
       "status": "active",
       "version": 1,
+      "attrs": {
+        "description": "email change code: when a patient changes the email address on the profile, a 6-digit code is sent to the new address to confirm it (FR-001 prd.md line 675). Owner answer 2026-11-22: its own Event, owned by FR-030."
+      }
+    },
+    {
+      "id": "EVT-final-payment-confirmed",
+      "type": "Event",
+      "owner_fr": "FR-030",
+      "title": "Final payment confirmed",
+      "status": "active",
+      "version": 2,
       "attrs": {
         "description": "Payment confirmation (final) to the patient."
       }
@@ -31874,10 +31885,10 @@
     {
       "id": "EVT-initial-payment-confirmed",
       "type": "Event",
-      "owner_fr": "FR-007",
+      "owner_fr": "FR-030",
       "title": "Initial payment confirmed",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Payment confirmation (deposit) to the patient, and confirmation to the provider, on the first successful initial charge."
       }
@@ -31885,10 +31896,10 @@
     {
       "id": "EVT-inquiry-cancelled",
       "type": "Event",
-      "owner_fr": "FR-003",
+      "owner_fr": "FR-030",
       "title": "Inquiry cancelled",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "inquiry.cancelled: sent to distributed providers when an inquiry is cancelled (patient cancellation, account deletion, or admin booking cancellation). The cancellation reason is never included."
       }
@@ -31907,10 +31918,10 @@
     {
       "id": "EVT-inquiry-submitted",
       "type": "Event",
-      "owner_fr": "FR-003",
+      "owner_fr": "FR-030",
       "title": "Inquiry submitted",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "inquiry.submitted: notification catalog event (FR-030 catalog, PRD line 126). Stub created during FR-030 migration; the producer FR supplies the detail."
       }
@@ -32065,10 +32076,10 @@
     {
       "id": "EVT-message-sent",
       "type": "Event",
-      "owner_fr": "FR-012",
+      "owner_fr": "FR-030",
       "title": "Message sent",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "A patient, provider or admin message is sent in a conversation; recipients get a real-time alert and unread badges update (REQ-012-007, REQ-012-026)."
       }
@@ -32087,10 +32098,10 @@
     {
       "id": "EVT-monitoring-advice-posted",
       "type": "Event",
-      "owner_fr": "FR-037",
+      "owner_fr": "FR-030",
       "title": "monitoring.advice_posted",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "monitoring.advice_posted: The provider submits advice; the patient is notified (REQ-037-078)."
       }
@@ -32098,10 +32109,10 @@
     {
       "id": "EVT-monitoring-assignment-pending",
       "type": "Event",
-      "owner_fr": "FR-037",
+      "owner_fr": "FR-030",
       "title": "monitoring.assignment_pending",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "monitoring.assignment_pending: An advice-mode case becomes Pending Assignment; Admin is notified (Business Workflows ActivateAdvice step; REQ-037-036)."
       }
@@ -32120,10 +32131,10 @@
     {
       "id": "EVT-monitoring-converted",
       "type": "Event",
-      "owner_fr": "FR-037",
+      "owner_fr": "FR-030",
       "title": "monitoring.converted_to_inquiry",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "description": "monitoring.converted_to_inquiry: The FR-003 inquiry is submitted and the case converts (REQ-037-030, REQ-037-079)."
       }
@@ -32142,10 +32153,10 @@
     {
       "id": "EVT-monitoring-provider-assigned",
       "type": "Event",
-      "owner_fr": "FR-037",
+      "owner_fr": "FR-030",
       "title": "monitoring.provider_assigned",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "monitoring.provider_assigned: Admin saves an assignment; the patient is notified and the provider is notified of the assignment (REQ-037-078)."
       }
@@ -32153,10 +32164,10 @@
     {
       "id": "EVT-monitoring-provider-reassigned",
       "type": "Event",
-      "owner_fr": "FR-037",
+      "owner_fr": "FR-030",
       "title": "monitoring.provider_reassigned",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "monitoring.provider_reassigned: Admin saves a reassignment; the patient and the replacement provider are notified (REQ-037-078)."
       }
@@ -32164,10 +32175,10 @@
     {
       "id": "EVT-monitoring-provider-withdrawn",
       "type": "Event",
-      "owner_fr": "FR-037",
+      "owner_fr": "FR-030",
       "title": "monitoring.provider_withdrawn",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "monitoring.provider_withdrawn: The assigned provider withdraws; the patient and Admin are notified and the case returns to Admin as Pending Reassignment (Screen 11)."
       }
@@ -32175,10 +32186,10 @@
     {
       "id": "EVT-password-reset-otp-sent",
       "type": "Event",
-      "owner_fr": "FR-001",
+      "owner_fr": "FR-030",
       "title": "Password reset OTP sent",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "reset code: system sends a 6-digit password reset OTP to the registered email (prd.md Workflow 3, Screens 10 and 11). Same message for unregistered emails is privacy-preserving and sends nothing."
       }
@@ -32252,10 +32263,10 @@
     {
       "id": "EVT-payment-reminder",
       "type": "Event",
-      "owner_fr": "FR-007",
+      "owner_fr": "FR-030",
       "title": "Payment reminder",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Payment reminder for the upcoming final payment, sent by the system or by an admin on request."
       }
@@ -32274,10 +32285,10 @@
     {
       "id": "EVT-payout-executed",
       "type": "Event",
-      "owner_fr": "FR-017",
+      "owner_fr": "FR-030",
       "title": "Payout executed",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "description": "Payout notification to the provider after execution. Payout execution is described in FR-017; the producer stage is recorded as the treatment stage and raised as an ownership question."
       }
@@ -32506,10 +32517,10 @@
     {
       "id": "EVT-quote-accepted",
       "type": "Event",
-      "owner_fr": "FR-005",
+      "owner_fr": "FR-030",
       "title": "Quote accepted",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "quote.accepted: emitted at acceptance. Outcome notices go to providers only, never to the patient: one notice per sent parent quote (selected or not selected); an unsent draft cancelled because another quote was accepted produces no notice; non-selected notices never reveal the selected provider or accepted price. Also sent to the replacement provider at an admin-authored replacement acceptance. Delivered through FR-020."
       }
@@ -32517,10 +32528,10 @@
     {
       "id": "EVT-quote-cancelled-inquiry",
       "type": "Event",
-      "owner_fr": "FR-004",
+      "owner_fr": "FR-030",
       "title": "Quote cancelled (inquiry cancelled)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Sent through FR-020 only to providers whose quotes the patient inquiry-cancellation cascade cancelled. The PRD does not name FR-004 as its producer explicitly."
       }
@@ -32528,10 +32539,10 @@
     {
       "id": "EVT-quote-expired",
       "type": "Event",
-      "owner_fr": "FR-004",
+      "owner_fr": "FR-030",
       "title": "Quote expired",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Emitted once per parent quote when expiry processing moves a sent quote to expired (FR-030)."
       }
@@ -32539,10 +32550,10 @@
     {
       "id": "EVT-quote-expiring-soon",
       "type": "Event",
-      "owner_fr": "FR-004",
+      "owner_fr": "FR-030",
       "title": "Quote expiring soon",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Emitted once per sent parent quote when it reaches the FR-026 quote-expiring-soon lead time (FR-030); never for drafts, accepted or terminal quotes."
       }
@@ -32561,10 +32572,10 @@
     {
       "id": "EVT-quote-submitted",
       "type": "Event",
-      "owner_fr": "FR-004",
+      "owner_fr": "FR-030",
       "title": "Quote submitted",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Emitted on the first send of a parent quote, for FR-020 notification. Not emitted for an admin-authored replacement quote."
       }
@@ -32572,10 +32583,10 @@
     {
       "id": "EVT-quote-updated",
       "type": "Event",
-      "owner_fr": "FR-004",
+      "owner_fr": "FR-030",
       "title": "Quote updated",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "\"Quote revised (new version)\": emitted when a new version of an already-sent quote is re-sent, including after an admin edit. FR-004 is the only producer. Saving a draft emits nothing."
       }
@@ -32583,10 +32594,10 @@
     {
       "id": "EVT-quote-withdrawn",
       "type": "Event",
-      "owner_fr": "FR-004",
+      "owner_fr": "FR-030",
       "title": "Quote withdrawn",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Mandatory notice; FR-004 is the only producer. Goes to the patient for every withdrawal and to the admin only when the withdrawn quote was already accepted; FR-006 then starts the provider-fault transfer without re-emitting it."
       }
@@ -32709,10 +32720,10 @@
     {
       "id": "EVT-support-case-admin-reply",
       "type": "Event",
-      "owner_fr": "FR-034",
+      "owner_fr": "FR-030",
       "title": "Support case admin reply",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "description": "support.case_admin_reply: emitted when an admin sends a message in the case thread. Notifies the patient or provider."
       }
@@ -32720,10 +32731,10 @@
     {
       "id": "EVT-support-case-assigned",
       "type": "Event",
-      "owner_fr": "FR-034",
+      "owner_fr": "FR-030",
       "title": "Support case assigned",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "description": "support.case_assigned: emitted when a case is assigned or reassigned. Notifies the new assignee."
       }
@@ -32731,10 +32742,10 @@
     {
       "id": "EVT-support-case-closed",
       "type": "Event",
-      "owner_fr": "FR-034",
+      "owner_fr": "FR-030",
       "title": "Support case closed",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "`support.case_closed`: FR-034 triggers it and FR-020/S-03 notifies the patient by push and email (Resolved to Closed, including closure when the auto-closure period expires (FR-035 lines 70, 412)). Stub created during FR-035 migration."
       }
@@ -32742,10 +32753,10 @@
     {
       "id": "EVT-support-case-created",
       "type": "Event",
-      "owner_fr": "FR-034",
+      "owner_fr": "FR-030",
       "title": "Support case created",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "description": "support.case_created: emitted when a case is created, whether submitted from the patient app, the provider Help Centre or entered by an admin. Triggers the optional confirmation to the submitter and the notice to the assigned admin."
       }
@@ -32753,10 +32764,10 @@
     {
       "id": "EVT-support-case-escalated",
       "type": "Event",
-      "owner_fr": "FR-034",
+      "owner_fr": "FR-030",
       "title": "Support case escalated",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "description": "support.case_escalated: emitted when a case is escalated to senior staff or the technical team. Notifies the recipient."
       }
@@ -32764,10 +32775,10 @@
     {
       "id": "EVT-support-case-reopened",
       "type": "Event",
-      "owner_fr": "FR-034",
+      "owner_fr": "FR-030",
       "title": "Support case reopened",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "`support.case_reopened`: FR-034 notifies the assigned admin (or all support staff if unassigned) when a provider reopens a Closed case (FR-032 Screen 5.9). Stub created during FR-032 migration."
       }
@@ -32775,10 +32786,10 @@
     {
       "id": "EVT-support-case-resolved",
       "type": "Event",
-      "owner_fr": "FR-034",
+      "owner_fr": "FR-030",
       "title": "Support case resolved",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "`support.case_resolved`: FR-034 triggers it and FR-020/S-03 notifies the patient by push and email (In Progress to Resolved; the email carries the resolution summary (FR-035 line 395)). Stub created during FR-035 migration."
       }
@@ -32786,10 +32797,10 @@
     {
       "id": "EVT-support-case-status-changed",
       "type": "Event",
-      "owner_fr": "FR-034",
+      "owner_fr": "FR-030",
       "title": "Support case status changed",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "`support.case_status_changed`: FR-034 triggers it and FR-020/S-03 notifies the patient by push and email (Open to In Progress status change). Stub created during FR-035 migration."
       }
@@ -32797,10 +32808,10 @@
     {
       "id": "EVT-support-case-user-reply",
       "type": "Event",
-      "owner_fr": "FR-034",
+      "owner_fr": "FR-030",
       "title": "Support case user reply",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "`support.case_user_reply`: email to the assigned admin (or all support staff if unassigned) when the provider replies (FR-032 Screen 5.8). Stub created during FR-032 migration."
       }
@@ -33030,10 +33041,10 @@
     {
       "id": "EVT-treatment-cancelled",
       "type": "Event",
-      "owner_fr": "FR-010",
+      "owner_fr": "FR-030",
       "title": "Treatment cancelled",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "treatment.cancelled: notification catalog event (FR-030 catalog, PRD line 147). Stub created during FR-030 migration; the producer FR supplies the detail."
       }
@@ -33041,10 +33052,10 @@
     {
       "id": "EVT-treatment-completed",
       "type": "Event",
-      "owner_fr": "FR-010",
+      "owner_fr": "FR-030",
       "title": "Treatment completed",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "treatment_completed: sent to the patient when treatment completes, with post-op and medication instructions; the admin is also notified of completion for billing (Integration 3, REQ-010-007, REQ-010-008)."
       }
@@ -33096,10 +33107,10 @@
     {
       "id": "EVT-treatment-plan-changed",
       "type": "Event",
-      "owner_fr": "FR-010",
+      "owner_fr": "FR-030",
       "title": "Treatment plan changed",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "treatment.plan_changed: emitted for every treatment-detail change (plan days, clinicians or graft estimate); carries what changed and the new values, never money fields; registered in the FR-030 catalogue. Also fires from Confirmed, before the treatment stage; one producer stage recorded."
       }
@@ -33107,10 +33118,10 @@
     {
       "id": "EVT-treatment-started",
       "type": "Event",
-      "owner_fr": "FR-010",
+      "owner_fr": "FR-030",
       "title": "Treatment started",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "treatment_started: sent to the patient when Check In moves the booking to In Progress (Integration 3, REQ-010-007)."
       }
@@ -33140,12 +33151,12 @@
     {
       "id": "EVT-verification-otp-sent",
       "type": "Event",
-      "owner_fr": "FR-001",
+      "owner_fr": "FR-030",
       "title": "Verification OTP sent",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "verification code: system sends a 6-digit OTP to the patient's email to confirm the address at registration (prd.md Workflow 1, Screen 5). The PRD also fires it on email change at the Active stage; see report question."
+        "description": "verification code: system sends a 6-digit OTP to the patient's email to confirm the address at registration (prd.md Workflow 1, Screen 5). The email-change code is its own Event, EVT-email-change-otp-sent."
       }
     },
     {
@@ -39606,7 +39617,7 @@
       "owner_fr": "FR-001",
       "title": "Email change requires OTP re-verification",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "Email change triggers re-verification via 6-digit OTP",
         "rationale": "prd.md line 675. Also stated in the PRD at line 626: \"Valid format; triggers 6-digit OTP re-verification if changed\"."
@@ -42619,7 +42630,7 @@
       "owner_fr": "FR-003",
       "title": "Problem-duration choices come from an Admin-managed list owned by FR-026",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "Problem-duration choices come from an Admin-managed problem-duration list retrieved from the backend, not a fixed client-side enum; the list is managed with the other inquiry configuration owned by FR-026. Starting values, editable by Admin: Less than 6 months; 6 to 12 months; 1 to 2 years; 2 to 5 years; More than 5 years. The patient must select one active option.",
         "rationale": "PRD Screen 3 Duration row and Duration Options notes."
@@ -44004,9 +44015,9 @@
       "owner_fr": "FR-005",
       "title": "Subquote comparison differentiators",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System MUST display these subquote comparison differentiators: package, included/custom services, date range, appointment details, total price, currency, promotion, price per graft, treatment plan, inherited graft count, provider review rating/count, and provider credentials summary. Estimated travel costs remain deferred pending an approved FR-008 source.",
+        "statement": "System MUST display these subquote comparison differentiators: package, included/custom services, date range, appointment details, total price, currency, promotion, price per graft, treatment plan, inherited graft count, provider review rating/count, and provider credentials summary (certifications and awards only; never the medical license number). Estimated travel costs remain deferred pending an approved FR-008 source.",
         "rationale": "Restated by the Screen 1 Comparison Differentiators field, which lists the same rows."
       }
     },
@@ -45436,9 +45447,9 @@
       "owner_fr": "FR-006",
       "title": "Installment default before the deadline flags the booking and notifies admin and patient",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "When an installment plan defaults before its deadline, System MUST flag the booking and notify the admin and the patient, and apply the policy set in FR-007B (REQ-007B-019 and REQ-007B-020).",
+        "statement": "When an installment plan defaults before its deadline, System MUST flag the booking and notify the admin, the patient and the provider, and apply the policy set in FR-007B (REQ-007B-019 and REQ-007B-020).",
         "rationale": "prd.md lines 1101 (Edge Cases, installment plan default before deadline)"
       }
     },
@@ -46740,9 +46751,9 @@
       "owner_fr": "FR-007B",
       "title": "Admin notified of a defaulted plan",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST notify admin of defaulted installment plans for intervention",
+        "statement": "System MUST notify the admin (for intervention), the patient and the provider of a defaulted installment plan",
         "rationale": "PRD id REQ-007b-020 (prd.md line 844). Restated by Alternative Flow B1 step 7 (defaulted plan and overdue booking), Communication Structure (admin alerts) and the S-03 scope."
       }
     },
@@ -48713,9 +48724,9 @@
       "owner_fr": "FR-009",
       "title": "System MUST allow Owners and Managers with the required permission to modify non-Owner team...",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System MUST allow Owners and Managers with the required permission to modify non-Owner team member roles with immediate permission updates",
+        "statement": "System MUST allow the Owner to modify the role of any non-Owner team member, and a Manager to modify the role only of members below Manager (Clinical Staff and Billing Staff), never the Owner or another Manager, with immediate permission updates",
         "rationale": "prd.md line 1151 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -49889,9 +49900,9 @@
       "owner_fr": "FR-009",
       "title": "Edit Role action only for permitted actors",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "\"Edit Role\" action only available if actor has permission (Owners can edit all non-Owners; Admins cannot edit Owners).",
+        "statement": "\"Edit Role\" action only available if actor has permission (Owners can edit all non-Owners; Managers can edit only Clinical Staff and Billing Staff, never the Owner or another Manager).",
         "rationale": "prd.md line 499 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -50705,9 +50716,9 @@
       "owner_fr": "FR-009",
       "title": "Only a Hairline admin can hand the Owner role to another person",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System MUST let only a Hairline admin hand the Owner role of a provider organization to another person (Rule 11). The provider organization keeps exactly one Owner before, during, and after the handover, and no provider-side user can start a handover",
+        "statement": "System MUST let only a Hairline admin hand the Owner role of a provider organization to another person (Rule 11). The provider organization keeps exactly one Owner before, during, and after the handover, and no provider-side user can start a handover. The new Owner MUST already be an active team member of that organization; the previous Owner becomes a Manager; the action requires a reason; and the new and the previous Owner are both notified by email",
         "rationale": "Rule 11 (Owner Handover): Only a Hairline admin can hand the Owner role of a provider organization to another person; no provider-side user can do it (Rule 2). The handover is one admin action, so the provider organization has exactly one Owner before and after it (Rule 1). The action requires a reason, is recorded in the FR-009 audit trail (Rule 4) and FR-015 Tab 8: Activity Log with the admin as actor, and the new and the previous Owner are notified by email."
       }
     },
@@ -63097,9 +63108,9 @@
       "owner_fr": "FR-016",
       "title": "Uploaded documents on the Medical Data tab share its access controls",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Documents the patient uploaded other than photos are listed on the Medical Data tab and are covered by the same justification prompt, permission, and access logging as the rest of the medical data",
+        "statement": "Additional documents the patient uploaded besides head photos and scans are listed on the Medical Data tab and are covered by the same justification prompt, permission, and access logging as the rest of the medical data.",
         "rationale": "Stated in prd.md, Screen 4: Patient Detail View - Medical Data Tab (Uploaded Documents row and Business Rules)."
       }
     },
@@ -63281,6 +63292,18 @@
       "attrs": {
         "statement": "Each milestone card on the Treatment Journey tab shows a summary of one to two lines with the key datapoints: provider, location and payment amount",
         "rationale": "prd.md lines 426 (Screen 3 Summary row)"
+      }
+    },
+    {
+      "id": "REQ-016-216",
+      "type": "Rule",
+      "owner_fr": "FR-016",
+      "title": "Additional patient documents: PDF and image files only, at most 5",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "A patient may upload additional documents besides head photos and scans as PDF or image files only, at most 5 files per patient; each file follows the existing patient upload size limits.",
+        "rationale": "prd.md Screen 4 Medical Data tab, Uploaded Documents field and business rules; owner answer 2026-11-22"
       }
     },
     {
@@ -70060,12 +70083,12 @@
       "id": "REQ-019-114",
       "type": "Rule",
       "owner_fr": "FR-019",
-      "title": "Discount Value must be within the range for its type and not above the configurable maximum",
+      "title": "Discount Value: percentage 1 to 100 under the configurable cap; fixed amount above 0",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "The Value of a promotion program is required and must be within the range allowed for its Discount Type and not above the configurable maximum discount value; the same applies on the admin form and the provider form.",
-        "rationale": "prd.md lines 274 (Screen 2 Value: range per type, max configurable), 593 (Screen 9 Value: per type rules), 592 (Discount Type: per policy caps). The PRD gives no range per type and no figure for the maximum."
+        "statement": "The Value of a promotion program is required. A percentage discount must be from 1 to 100 and not above the configurable maximum discount value, which starts at 50 percent; a fixed-amount discount must be above 0 and has no cap. The same applies on the admin form and the provider form.",
+        "rationale": "prd.md lines 274 (Screen 2 Value), 593 (Screen 9 Value); owner answer 2026-11-22 set the ranges and the starting cap."
       }
     },
     {
@@ -74138,9 +74161,9 @@
       "owner_fr": "FR-022",
       "title": "Search and filter criteria: Installment Plans List (FR-007b / Screen 5)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "FR-007b / Screen 5: Installment Plans List [P1 — MVP]. Admin filters installment plans by plan status and procedure date range. Filters: Plan Status (Type: Multi-select; Options: Active, Completed, Overdue, Defaulted; Default: All; Logic: OR (within field)) / Procedure Date Range (Type: Date range picker; Options: Custom; Default: All dates; Logic: Filters by procedure date; default sort is nearest upcoming first, overdue/defaulted at top). Notes: No search input on this screen — filtering only.",
+        "statement": "FR-007b / Screen 5: Installment Plans List [P1 — MVP]. Admin filters installment plans by plan status, the Overdue flag and procedure date range. Filters: Plan Status (Type: Multi-select; Options: Active, Completed, Canceled, Defaulted; Default: All; Logic: OR (within field)) / Overdue (Type: Toggle (yes/no); Options: Yes, No; Default: Off (all plans); Logic: AND with other filters; Overdue is a calculated flag, not a plan status) / Procedure Date Range (Type: Date range picker; Options: Custom; Default: All dates; Logic: Filters by procedure date; default sort is nearest upcoming first, overdue/defaulted at top). Notes: No search input on this screen — filtering only.",
         "rationale": "Screen Specifications (prd.md lines 1222-1238). Screen owned by FR-007B (Admin tenant, Master Reference Table). Search inputs and filter controls are UI controls, not Fields; FR-022 owns the criteria (Maintenance Convention, line 319)."
       }
     },
@@ -76169,6 +76192,18 @@
       }
     },
     {
+      "id": "REQ-024-100",
+      "type": "Rule",
+      "owner_fr": "FR-024",
+      "title": "Status after a successful media upload retry",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "After a successful media upload retry, a treatment in Pending Media Upload takes the status the admin picks on that save (Active or Inactive).",
+        "rationale": "prd.md line 998 (edge case: media upload fails during treatment creation); owner answer 2026-11-22"
+      }
+    },
+    {
       "id": "REQ-025-001",
       "type": "Rule",
       "owner_fr": "FR-025",
@@ -77268,9 +77303,9 @@
       "owner_fr": "FR-026",
       "title": "Centrally managed country list",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST store centrally managed country list: country name, ISO code, calling code, country flag asset URL (stored via S-05 Media Storage, nullable), display order, active status",
+        "statement": "System MUST store centrally managed country list: country name, ISO code, calling code, country flag asset URL (stored via S-05 Media Storage; required, the admin uploads the flag on Screen 4), display order, active status",
         "rationale": "Flag assets are stored in centralized media storage/CDN (S-05) and referenced by URL. Screen 4 marks the Country Flag field Required = Yes while this rule and Entity 4 say nullable; see the open question on country flag."
       }
     },
@@ -78497,9 +78532,9 @@
       "owner_fr": "FR-026",
       "title": "Admin session Settings",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System MUST store the admin session Settings: concurrent sessions per admin user (1 to 5, default 3), the admin inactivity timeout (default 30 minutes, which also ends a Login as Provider session), and Admin Maximum Failed Logins as its own Setting, separate from Max Login Attempts. Consumers: FR-031, FR-015.",
+        "statement": "System MUST store the admin session Settings: concurrent sessions per admin user (1 to 5, default 3) and the admin inactivity timeout (default 30 minutes, which also ends a Login as Provider session). Failed admin sign-ins use the shared Max Login Attempts Setting of Screen 2; there is no separate admin Setting. Consumers: FR-031, FR-015.",
         "rationale": "FR-026 PRD, section Platform Settings Requirements."
       }
     },
@@ -78766,6 +78801,18 @@
       "attrs": {
         "statement": "After a successful save of the authentication throttling policy, the system shows a success message that names the setting group and the new version, for example \"Authentication throttling updated successfully (v1.3)\".",
         "rationale": "prd.md lines 148 (Main Flow step 14)"
+      }
+    },
+    {
+      "id": "REQ-026-139",
+      "type": "Rule",
+      "owner_fr": "FR-026",
+      "title": "Store the centrally managed problem-duration list",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "System MUST store the centrally managed problem-duration list: option label, display order, active status. Starting values, editable by Admin: Less than 6 months; 6 to 12 months; 1 to 2 years; 2 to 5 years; More than 5 years. At least one option stays active. Consumer: FR-003 Screen 3 (Duration).",
+        "rationale": "prd.md Screen 5c (Problem Duration fields and business rules) and REQ-026-139; owner answer 2026-11-22"
       }
     },
     {
@@ -85982,7 +86029,7 @@
       "owner_fr": "FR-031",
       "title": "Authentication limits configurable in A-09",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "The maximum failed login attempts before lockout (default 5 failed attempts with a 15-minute lockout, the same setting as FR-001), the session timeout duration (the admin inactivity timeout of A-09, default 30 minutes) and the number of concurrent sessions per admin user (default 3, range 1-5) are configurable in A-09 Authentication Settings.",
         "rationale": "Admin Editability (Configurable with Restrictions). The session timeout is the admin inactivity timeout SET-admin-inactivity-timeout (FR-026); the lockout default is the FR-001 / FR-026 lockout setting. The admin login rate limit (REQ-031-100) is a separate control."
@@ -89846,9 +89893,9 @@
       "owner_fr": "FR-034",
       "title": "Handle up to 500 case creations per day at launch, scalable to 1000+ cases",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System MUST handle up to 500 case creations per day at launch, scalable to 1000+ cases per day",
+        "statement": "System MUST handle the expected 100 to 200 case creations per day at launch, absorb peaks of up to 500 per day, and scale to 1000 cases per day within 12 months",
         "rationale": "Functional Requirements Summary (prd.md line 1264)."
       }
     },
@@ -90026,9 +90073,9 @@
       "owner_fr": "FR-034",
       "title": "Lists Super Admin can configure",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Configurable by Super Admin (via Settings > Support Center - Screen 7): Case categories list (add, edit, deactivate, reorder); Case priorities list (add, edit, deactivate, reorder, color coding); Resolution categories list (add, edit, deactivate, reorder); Root cause options list (add, edit, deactivate, reorder); Case tags master list (add, edit, delete, color coding); Auto-escalation thresholds (configurable within defined ranges: 1-48 hours for urgent cases, 12-72 hours for high priority, 7-90 days for inactivity); Reopen reason templates (add, edit, delete)",
+        "statement": "Configurable by Super Admin (via Settings > Support Center - Screen 7): Case categories list (built-in list: edit label and reorder only; categories cannot be added, deactivated or deleted); Case priorities list (the four built-in priorities Low, Medium, High, Urgent cannot be renamed, deactivated or deleted; other priorities can be added, edited, deactivated and reordered; color coding); Resolution categories list (add, edit, deactivate, reorder); Root cause options list (add, edit, deactivate, reorder); Case tags master list (add, edit, delete, color coding); Auto-escalation thresholds (configurable within defined ranges: 1-48 hours for urgent cases, 12-72 hours for high priority, 7-90 days for inactivity); Reopen reason templates (add, edit, delete)",
         "rationale": "Business Rules, Admin Editability (prd.md lines 790 to 796). Screen 7 business rules restate the access, immediate effect and deletion limits (prd.md lines 718 to 728)."
       }
     },
@@ -94752,7 +94799,7 @@
       "owner_fr": "FR-005",
       "title": "Inquiry Dashboard with Quote Comparison",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "platform": "patient",
         "description": "Extends FR-003 Screen 8. Patient views submitted inquiry status (stage, timeline, summary, medical alerts, deadlines, next actions), browses parent quotes grouped under providers, compares complete subquotes side by side, and accepts one subquote. Parent quote groups show provider, reference, shared clinical information, reviews, credentials, the expiry timer and a Message Provider button that opens the FR-012 conversation. Each subquote card offers View Details and Accept. Sort and filter controls and Compare checkboxes (at most three) sit above the list; the comparison panel renders only when at least two subquotes are selected."
@@ -98677,17 +98724,6 @@
       }
     },
     {
-      "id": "SET-admin-max-failed-logins",
-      "type": "Setting",
-      "owner_fr": "FR-026",
-      "title": "Admin maximum failed login attempts",
-      "status": "active",
-      "version": 2,
-      "attrs": {
-        "description": "Failed admin sign-in attempts allowed before the admin account is locked; a separate Setting from the patient and provider Max Login Attempts (consumer: FR-031). Edited on FR-026 Screen 8; the PRD fixes no default or range."
-      }
-    },
-    {
       "id": "SET-admin-repeated-denial-threshold",
       "type": "Setting",
       "owner_fr": "FR-031",
@@ -99298,9 +99334,9 @@
       "owner_fr": "FR-026",
       "title": "Max login attempts before lockout",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Failed login attempts allowed before the account is locked. Permitted 1 through 10.",
+        "description": "Failed login attempts allowed before the account is locked. Permitted 1 through 10. One shared Setting for patients, providers and admins.",
         "default": "5",
         "unit": "attempts"
       }
@@ -99572,6 +99608,17 @@
       }
     },
     {
+      "id": "SET-problem-duration-options",
+      "type": "Setting",
+      "owner_fr": "FR-026",
+      "title": "Inquiry problem-duration options",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Ordered list of problem-duration options (label, display order, active flag) offered in the inquiry's detailed information step. Starting values, editable by Admin: Less than 6 months; 6 to 12 months; 1 to 2 years; 2 to 5 years; More than 5 years. Edited on FR-026 Screen 5c; consumer FR-003 Screen 3."
+      }
+    },
+    {
       "id": "SET-profile-photo-formats",
       "type": "Setting",
       "owner_fr": "FR-026",
@@ -99648,9 +99695,11 @@
       "owner_fr": "FR-019",
       "title": "Promotion maximum discount value",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "One maximum-discount-value Setting; it also carries the per policy and region limit. Admin Editability Rules. The PRD fixes no figure and the Setting has no default."
+        "description": "One maximum-discount-value Setting; it also carries the per policy and region limit. Applies to percentage discounts only; fixed-amount discounts have no cap. Admin Editability Rules.",
+        "default": "50",
+        "unit": "percent"
       }
     },
     {
@@ -102585,7 +102634,7 @@
       "owner_fr": null,
       "title": "Active",
       "status": "active",
-      "version": 21,
+      "version": 22,
       "attrs": {
         "timeline": "patient-account",
         "sequence": 3,
@@ -135149,7 +135198,7 @@
       "entity_id": "ENT-country",
       "name": "flag_url",
       "data_type": "text",
-      "required": false,
+      "required": true,
       "calculated_by": null
     },
     {
@@ -170644,7 +170693,7 @@
       "verb": "active in",
       "to_id": "STG-patient-03-active",
       "attrs": {
-        "rules": 166
+        "rules": 167
       },
       "derived": true
     },
@@ -175272,6 +175321,12 @@
       "from_id": "REQ-001-081",
       "verb": "applies to",
       "to_id": "ENT-patient.email",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-081",
+      "verb": "applies to",
+      "to_id": "EVT-email-change-otp-sent",
       "attrs": {}
     },
     {
@@ -181050,6 +181105,12 @@
       "from_id": "REQ-003-122",
       "verb": "decided by",
       "to_id": "SRC-PRD-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-003-122",
+      "verb": "governed by",
+      "to_id": "SET-problem-duration-options",
       "attrs": {}
     },
     {
@@ -229215,6 +229276,24 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-016-216",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-216",
+      "verb": "applies to",
+      "to_id": "SCR-016-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-216",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-016",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-017-001",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
@@ -256275,6 +256354,18 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-024-100",
+      "verb": "applies to",
+      "to_id": "SCR-024-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-024-100",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-024",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-025-001",
       "verb": "applies at",
       "to_id": "STG-aftercare-01-recovery-plan",
@@ -261761,7 +261852,7 @@
     {
       "from_id": "REQ-026-116",
       "verb": "governed by",
-      "to_id": "SET-admin-max-failed-logins",
+      "to_id": "SET-max-login-attempts",
       "attrs": {}
     },
     {
@@ -262620,6 +262711,24 @@
       "from_id": "REQ-026-138",
       "verb": "decided by",
       "to_id": "SRC-PRD-026",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-139",
+      "verb": "applies to",
+      "to_id": "SCR-026-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-139",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-026",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-139",
+      "verb": "governed by",
+      "to_id": "SET-problem-duration-options",
       "attrs": {}
     },
     {
@@ -276666,12 +276775,6 @@
       "from_id": "REQ-031-099",
       "verb": "governed by",
       "to_id": "SET-admin-inactivity-timeout",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-031-099",
-      "verb": "governed by",
-      "to_id": "SET-admin-max-failed-logins",
       "attrs": {}
     },
     {
@@ -297118,16 +297221,6 @@
       "attrs": {
         "provenance": "inherited from another FR",
         "label": "Provider Credentials Summary (certifications and awards); Comparison Differentiators",
-        "editable": false
-      }
-    },
-    {
-      "from_id": "SCR-005-01",
-      "verb": "shows",
-      "to_id": "ENT-provider.medical_license_number",
-      "attrs": {
-        "provenance": "inherited from another FR",
-        "label": "Provider Credentials Summary (licenses); Comparison Differentiators",
         "editable": false
       }
     },
@@ -338809,6 +338902,12 @@
       "from_id": "STG-patient-03-active",
       "verb": "emits",
       "to_id": "EVT-dsr-verification-required",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-patient-03-active",
+      "verb": "emits",
+      "to_id": "EVT-email-change-otp-sent",
       "attrs": {}
     },
     {
@@ -419506,6 +419605,144 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261122-113431-69bfe063",
+      "at": "2026-11-22T11:34:31.494024+00:00",
+      "changed_by": "controller",
+      "reason": "Owner answers of 2026-11-22, third batch: country flag required, problem-duration list owned by FR-026, one shared failed-login Setting (FR-026, FR-031, FR-003); locked built-in categories and priorities, and case volumes (FR-034).",
+      "source_id": null,
+      "nodes_added": [
+        "REQ-026-139",
+        "SET-problem-duration-options"
+      ],
+      "nodes_updated": [
+        "ENT-country.flag_url",
+        "REQ-003-122",
+        "REQ-026-011",
+        "REQ-026-116",
+        "REQ-031-099",
+        "REQ-034-069",
+        "REQ-034-087",
+        "SET-admin-max-failed-logins",
+        "SET-max-login-attempts"
+      ],
+      "edges_added": 5,
+      "edges_removed": 2,
+      "rows": 25
+    },
+    {
+      "id": "cs-20261122-113258-0fe3ecac",
+      "at": "2026-11-22T11:32:58.251104+00:00",
+      "changed_by": "controller",
+      "reason": "Owner answers of 2026-11-22, second batch: Manager role-change limit and Owner handover conditions (FR-009); additional patient documents (FR-016); discount value limits and starting cap (FR-019).",
+      "source_id": null,
+      "nodes_added": [
+        "REQ-016-216"
+      ],
+      "nodes_updated": [
+        "REQ-009-004",
+        "REQ-009-104",
+        "REQ-009-174",
+        "REQ-016-200",
+        "REQ-019-114",
+        "SET-promotion-max-discount-value"
+      ],
+      "edges_added": 3,
+      "edges_removed": 0,
+      "rows": 19
+    },
+    {
+      "id": "cs-20261122-113146-37c4e552",
+      "at": "2026-11-22T11:31:46.809226+00:00",
+      "changed_by": "controller",
+      "reason": "Owner answers of 2026-11-22, first batch: patient never sees the provider license number (FR-005); installment default notifies admin, patient and provider (FR-006, FR-007B); Overdue is a calculated flag, not a plan status (FR-022); status after a media upload retry (FR-024).",
+      "source_id": null,
+      "nodes_added": [
+        "REQ-024-100"
+      ],
+      "nodes_updated": [
+        "REQ-005-014",
+        "REQ-006-080",
+        "REQ-007B-020",
+        "REQ-022-101",
+        "SCR-005-01"
+      ],
+      "edges_added": 2,
+      "edges_removed": 1,
+      "rows": 13
+    },
+    {
+      "id": "cs-20261122-112908-9a765b87",
+      "at": "2026-11-22T11:29:08.495746+00:00",
+      "changed_by": "controller",
+      "reason": "Owner answers 2026-11-22: move the 55 notification-producing Events to FR-030 (ruling A16, move list confirmed) and add the patient email-change code Event as its own node.",
+      "source_id": null,
+      "nodes_added": [
+        "EVT-email-change-otp-sent"
+      ],
+      "nodes_updated": [
+        "EVT-aftercare-activated",
+        "EVT-aftercare-escalation-triggered",
+        "EVT-aftercare-provider-reassigned",
+        "EVT-aftercare-questionnaire-due",
+        "EVT-aftercare-scan-due",
+        "EVT-aftercare-standalone-payment-confirmed",
+        "EVT-billing-affiliate-payout-processed",
+        "EVT-billing-payment-due-reminder",
+        "EVT-billing-payment-failed",
+        "EVT-billing-payment-received",
+        "EVT-billing-payout-failed",
+        "EVT-booking-appointment-reminder",
+        "EVT-booking-cancelled",
+        "EVT-booking-confirmed",
+        "EVT-booking-hold-expiring-soon",
+        "EVT-booking-payment-window-expired",
+        "EVT-booking-provider-fault-replacement",
+        "EVT-booking-rescheduled",
+        "EVT-booking-revived",
+        "EVT-booking-scheduled",
+        "EVT-final-payment-confirmed",
+        "EVT-initial-payment-confirmed",
+        "EVT-inquiry-cancelled",
+        "EVT-inquiry-submitted",
+        "EVT-message-sent",
+        "EVT-monitoring-advice-posted",
+        "EVT-monitoring-assignment-pending",
+        "EVT-monitoring-converted",
+        "EVT-monitoring-provider-assigned",
+        "EVT-monitoring-provider-reassigned",
+        "EVT-monitoring-provider-withdrawn",
+        "EVT-password-reset-otp-sent",
+        "EVT-payment-reminder",
+        "EVT-payout-executed",
+        "EVT-quote-accepted",
+        "EVT-quote-cancelled-inquiry",
+        "EVT-quote-expired",
+        "EVT-quote-expiring-soon",
+        "EVT-quote-submitted",
+        "EVT-quote-updated",
+        "EVT-quote-withdrawn",
+        "EVT-support-case-admin-reply",
+        "EVT-support-case-assigned",
+        "EVT-support-case-closed",
+        "EVT-support-case-created",
+        "EVT-support-case-escalated",
+        "EVT-support-case-reopened",
+        "EVT-support-case-resolved",
+        "EVT-support-case-status-changed",
+        "EVT-support-case-user-reply",
+        "EVT-treatment-cancelled",
+        "EVT-treatment-completed",
+        "EVT-treatment-plan-changed",
+        "EVT-treatment-started",
+        "EVT-verification-otp-sent",
+        "REQ-001-081",
+        "STG-patient-03-active"
+      ],
+      "edges_added": 2,
+      "edges_removed": 0,
+      "rows": 63
+    },
     {
       "id": "cs-20261121-041146-e7e302a2",
       "at": "2026-11-21T04:11:46.926421+00:00",
