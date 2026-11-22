@@ -1,0 +1,10 @@
+reason: "FR-023 consistency review: references to the owner-FR Rules for the inquiry, quote, acceptance, booking and analytics data FR-023 retention and deletion Rules apply to; a writer for the Retention Policy (admin Retention Settings) and a reader for the Audit Log Entry (admin audit trail review)."
+by: controller
+operations:
+  - {"op": "add_edge", "from": "FR-023", "verb": "references", "to": "REQ-003-095", "attrs": {}}
+  - {"op": "add_edge", "from": "FR-023", "verb": "references", "to": "REQ-004-092", "attrs": {}}
+  - {"op": "add_edge", "from": "FR-023", "verb": "references", "to": "REQ-005-023", "attrs": {}}
+  - {"op": "add_edge", "from": "FR-023", "verb": "references", "to": "REQ-006-052", "attrs": {}}
+  - {"op": "add_edge", "from": "FR-023", "verb": "references", "to": "REQ-014-210", "attrs": {}}
+  - {"op": "add_edge", "from": "STG-admin-01-configuration", "verb": "writes", "to": "ENT-retention-policy", "attrs": {}}
+  - {"op": "add_edge", "from": "STG-admin-02-operations", "verb": "reads", "to": "ENT-audit-log-entry", "attrs": {}}

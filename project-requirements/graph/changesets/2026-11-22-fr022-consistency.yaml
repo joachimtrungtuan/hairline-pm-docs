@@ -1,0 +1,20 @@
+reason: "FR-022 consistency review: references to the Patient (FR-001) and Provider (FR-015) data owners, four hand-offs stitched, and seven Fields moved to the FR whose PRD states their meaning."
+by: controller
+operations:
+  - {"op": "add_edge", "from": "FR-022", "verb": "references", "to": "REQ-001-010"}
+  - {"op": "add_edge", "from": "FR-022", "verb": "references", "to": "REQ-015-089"}
+  - {"op": "add_edge", "from": "STP-022-007", "verb": "next", "to": "STP-016-007"}
+  - {"op": "update_node", "id": "STP-022-007", "attrs": {"handoff_to": null}}
+  - {"op": "add_edge", "from": "STP-022-028", "verb": "next", "to": "STP-016-007"}
+  - {"op": "update_node", "id": "STP-022-028", "attrs": {"handoff_to": null}}
+  - {"op": "add_edge", "from": "STP-022-033", "verb": "next", "to": "STP-016-007"}
+  - {"op": "update_node", "id": "STP-022-033", "attrs": {"handoff_to": null}}
+  - {"op": "add_edge", "from": "STP-022-023", "verb": "next", "to": "STP-003-013", "attrs": {"label": "five providers selected, recipients finalized"}}
+  - {"op": "update_node", "id": "STP-022-023", "attrs": {"handoff_to": null}}
+  - {"op": "update_node", "id": "ENT-patient.location", "owner_fr": "FR-001"}
+  - {"op": "update_node", "id": "ENT-provider.clinic_name", "owner_fr": "FR-015"}
+  - {"op": "update_node", "id": "ENT-provider.location", "owner_fr": "FR-015"}
+  - {"op": "update_node", "id": "ENT-provider.rating", "owner_fr": "FR-015"}
+  - {"op": "update_node", "id": "ENT-provider.review_count", "owner_fr": "FR-015"}
+  - {"op": "update_node", "id": "ENT-provider.specialties", "owner_fr": "FR-015"}
+  - {"op": "update_node", "id": "ENT-provider.total_procedures", "owner_fr": "FR-015"}

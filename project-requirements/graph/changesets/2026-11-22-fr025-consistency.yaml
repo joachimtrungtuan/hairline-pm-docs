@@ -1,0 +1,13 @@
+reason: "Consistency review FR-025: the version-published Event gets the Rules that react to it (REQ-025-056 propagation, REQ-025-057 push of the current Active version); four open hand-offs are stitched to the FR-003 and FR-011 Steps that receive them."
+by: controller
+operations:
+  - {"op": "add_edge", "from": "REQ-025-056", "verb": "applies to", "to": "EVT-questionnaire-version-published"}
+  - {"op": "add_edge", "from": "REQ-025-057", "verb": "applies to", "to": "EVT-questionnaire-version-published"}
+  - {"op": "add_edge", "from": "STP-003-008", "verb": "next", "to": "STP-025-030"}
+  - {"op": "update_node", "id": "STP-025-030", "attrs": {"handoff_from": null}}
+  - {"op": "add_edge", "from": "STP-025-032", "verb": "next", "to": "STP-003-028"}
+  - {"op": "update_node", "id": "STP-025-032", "attrs": {"handoff_to": null}}
+  - {"op": "add_edge", "from": "STP-011-043", "verb": "next", "to": "STP-025-046"}
+  - {"op": "update_node", "id": "STP-025-046", "attrs": {"handoff_from": null}}
+  - {"op": "add_edge", "from": "STP-025-048", "verb": "next", "to": "STP-011-043"}
+  - {"op": "update_node", "id": "STP-025-048", "attrs": {"handoff_to": null}}

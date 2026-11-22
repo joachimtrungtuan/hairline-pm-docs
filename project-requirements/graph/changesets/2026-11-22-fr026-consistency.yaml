@@ -1,0 +1,7 @@
+reason: "Consistency check (flow alignment, FR-026): the PRD flows A4, A7 and A9 name the receiving FR flow or screen, and no cross-FR next link carried the hand-off; each link goes to the one matching Step."
+by: controller
+operations:
+  - {"op": "add_edge", "from": "STP-026-055", "verb": "next", "to": "STP-003-044"}
+  - {"op": "add_edge", "from": "STP-026-077", "verb": "next", "to": "STP-004-015"}
+  - {"op": "add_edge", "from": "STP-026-078", "verb": "next", "to": "STP-005-017"}
+  - {"op": "add_edge", "from": "STP-026-092", "verb": "next", "to": "STP-015-005"}

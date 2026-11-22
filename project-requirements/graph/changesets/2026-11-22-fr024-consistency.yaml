@@ -1,0 +1,6 @@
+reason: "Consistency review of FR-024: Screen 7 shows the provider name read-only (owner FR-015), the package hand-off to quote creation is stitched to FR-004, and A3 ends by making the treatment selectable in quote creation."
+by: controller
+operations:
+  - {"op": "add_edge", "from": "FR-024", "verb": "references", "to": "REQ-015-039"}
+  - {"op": "add_edge", "from": "STP-024-086", "verb": "next", "to": "STP-004-006"}
+  - {"op": "update_node", "id": "STP-024-086", "attrs": {"handoff_to": null}}

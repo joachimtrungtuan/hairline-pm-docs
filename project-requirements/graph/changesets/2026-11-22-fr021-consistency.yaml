@@ -1,0 +1,5 @@
+reason: "Consistency review of FR-021 (boundary): FR-021 shows and stores language preferences on accounts owned by FR-001 and FR-009; one references link to each owner FR settles the pairs."
+by: controller
+operations:
+  - {"op": "add_edge", "from": "FR-021", "verb": "references", "to": "REQ-001-165"}
+  - {"op": "add_edge", "from": "FR-021", "verb": "references", "to": "REQ-009-009"}

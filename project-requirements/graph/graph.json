@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-22T13:08:22Z",
+  "generated_at": "2026-11-22T13:16:24Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -17353,10 +17353,10 @@
     {
       "id": "ENT-patient.location",
       "type": "Field",
-      "owner_fr": "FR-022",
+      "owner_fr": "FR-001",
       "title": "Location",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {}
     },
     {
@@ -22535,10 +22535,10 @@
     {
       "id": "ENT-provider.clinic_name",
       "type": "Field",
-      "owner_fr": "FR-022",
+      "owner_fr": "FR-015",
       "title": "Clinic name",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {}
     },
     {
@@ -22640,10 +22640,10 @@
     {
       "id": "ENT-provider.location",
       "type": "Field",
-      "owner_fr": "FR-022",
+      "owner_fr": "FR-015",
       "title": "Location",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "City and country."
       }
@@ -22711,19 +22711,19 @@
     {
       "id": "ENT-provider.rating",
       "type": "Field",
-      "owner_fr": "FR-022",
+      "owner_fr": "FR-015",
       "title": "Rating",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {}
     },
     {
       "id": "ENT-provider.review_count",
       "type": "Field",
-      "owner_fr": "FR-022",
+      "owner_fr": "FR-015",
       "title": "Review count",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {}
     },
     {
@@ -22740,10 +22740,10 @@
     {
       "id": "ENT-provider.specialties",
       "type": "Field",
-      "owner_fr": "FR-022",
+      "owner_fr": "FR-015",
       "title": "Specialties",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {}
     },
     {
@@ -22793,10 +22793,10 @@
     {
       "id": "ENT-provider.total_procedures",
       "type": "Field",
-      "owner_fr": "FR-022",
+      "owner_fr": "FR-015",
       "title": "Total procedures",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {}
     },
     {
@@ -38445,7 +38445,7 @@
       "owner_fr": null,
       "title": "Multi-Language & Localization",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "module": "fr021-i18n-localization",
         "prd_path": "project-requirements/functional-requirements/fr021-i18n-localization/prd.md",
@@ -38458,7 +38458,7 @@
       "owner_fr": null,
       "title": "Search & Filtering",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "module": "fr022-search-filtering",
         "prd_path": "project-requirements/functional-requirements/fr022-search-filtering/prd.md",
@@ -38471,7 +38471,7 @@
       "owner_fr": null,
       "title": "Data Retention & Compliance",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "module": "fr023-data-retention-compliance",
         "prd_path": "project-requirements/functional-requirements/fr023-data-retention-compliance/prd.md",
@@ -38484,7 +38484,7 @@
       "owner_fr": null,
       "title": "Treatment & Package Management",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "module": "fr024-treatment-package-management",
         "prd_path": "project-requirements/functional-requirements/fr024-treatment-package-management/prd.md",
@@ -76845,7 +76845,7 @@
       "owner_fr": "FR-025",
       "title": "Version consistency across platforms",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "Version consistency must be maintained across all platforms; questionnaire changes must propagate immediately to the patient platform",
         "rationale": "prd.md lines 557, 591, 667 (version consistency across platforms; changes propagate immediately to the patient platform)."
@@ -76857,7 +76857,7 @@
       "owner_fr": "FR-025",
       "title": "Version mismatch pushes the current Active version; older version accepted and recorded",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "When the patient platform holds an older questionnaire version than the current Active version, the system pushes the current Active version; a patient already in progress is not made to start over, the submission is accepted on the older version, and the version used is recorded against the inquiry",
         "rationale": "prd.md line 558 (found by matching the rule statement to the PRD text)."
@@ -102333,7 +102333,7 @@
       "owner_fr": null,
       "title": "Configuration",
       "status": "active",
-      "version": 10,
+      "version": 11,
       "attrs": {
         "timeline": "platform-admin",
         "sequence": 1,
@@ -102346,7 +102346,7 @@
       "owner_fr": null,
       "title": "Operations",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "timeline": "platform-admin",
         "sequence": 2,
@@ -103597,7 +103597,7 @@
       "owner_fr": "FR-003",
       "title": "Patient picks treatment date ranges",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 1 (Patient Creates Inquiry)"
       }
@@ -108434,7 +108434,7 @@
       "owner_fr": "FR-011",
       "title": "Admin manages milestone templates, questionnaire schedules and resources",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 4 Main Flow step 3"
       }
@@ -113664,10 +113664,9 @@
       "owner_fr": "FR-022",
       "title": "Admin selects a patient record",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Main Flow 1 step 7",
-        "handoff_to": "FR-016: patient profile view (Main Flow 1 step: system loads full patient profile)"
+        "prd_ref": "Main Flow 1 step 7"
       }
     },
     {
@@ -113842,10 +113841,9 @@
       "owner_fr": "FR-022",
       "title": "Patient adds the provider to the quote recipients (maximum five)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Main Flow 3 step 9",
-        "handoff_to": "FR-003: quote request recipients finalized when five providers are selected (Main Flow 3, Proceed)"
+        "prd_ref": "Main Flow 3 step 9"
       }
     },
     {
@@ -113898,10 +113896,9 @@
       "owner_fr": "FR-022",
       "title": "Admin selects the target record",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "A1 step 5",
-        "handoff_to": "FR-016: patient profile view (Alternative Flow A1, select target record)"
+        "prd_ref": "A1 step 5"
       }
     },
     {
@@ -113954,10 +113951,9 @@
       "owner_fr": "FR-022",
       "title": "Admin selects the correct patient record",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "A2 step 5",
-        "handoff_to": "FR-016: patient profile view (Alternative Flow A2, system loads full patient profile)"
+        "prd_ref": "A2 step 5"
       }
     },
     {
@@ -115077,10 +115073,9 @@
       "owner_fr": "FR-024",
       "title": "Package appears in the provider list and, when Active, is selectable during quote creation",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Main Flow: Provider Creates Package step 16",
-        "handoff_to": "FR-004: Main Flow, provider selects a treatment and one to five packages"
+        "prd_ref": "Main Flow: Provider Creates Package step 16"
       }
     },
     {
@@ -115617,10 +115612,9 @@
       "owner_fr": "FR-025",
       "title": "Patient starts the inquiry submission and the active Inquiry questionnaire is delivered",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Workflow 3 flow diagram: trigger",
-        "handoff_from": "FR-003: Main Flow, patient starts the inquiry submission"
+        "prd_ref": "Workflow 3 flow diagram: trigger"
       }
     },
     {
@@ -115640,10 +115634,9 @@
       "owner_fr": "FR-025",
       "title": "Provider sees the alert level on the inquiry record",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Workflow 3 flow diagram: alert displayed on inquiry record for provider review",
-        "handoff_to": "FR-003: provider reviews the inquiry with its medical alert"
+        "prd_ref": "Workflow 3 flow diagram: alert displayed on inquiry record for provider review"
       }
     },
     {
@@ -115729,10 +115722,9 @@
       "owner_fr": "FR-025",
       "title": "Admin selects a questionnaire set for an aftercare milestone",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "prd_ref": "Workflow 4 flow diagram: Assigning a set to an Aftercare milestone",
-        "handoff_from": "FR-011: Aftercare template milestone, questionnaire set selection"
+        "prd_ref": "Workflow 4 flow diagram: Assigning a set to an Aftercare milestone"
       }
     },
     {
@@ -115752,10 +115744,9 @@
       "owner_fr": "FR-025",
       "title": "Admin sees the milestone assigned the questionnaire set",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Workflow 4 flow diagram: Milestone assigned this questionnaire set",
-        "handoff_to": "FR-011: Aftercare milestone questionnaire delivery schedule and frequency"
+        "prd_ref": "Workflow 4 flow diagram: Milestone assigned this questionnaire set"
       }
     },
     {
@@ -116424,7 +116415,7 @@
       "owner_fr": "FR-026",
       "title": "FR-003 cancellation modal shows the reasons within one minute",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A4 step 9"
       }
@@ -116666,7 +116657,7 @@
       "owner_fr": "FR-026",
       "title": "FR-004 copies currency and expiry onto a sent quote",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A7 step 6"
       }
@@ -116677,7 +116668,7 @@
       "owner_fr": "FR-026",
       "title": "FR-005 and FR-006 place the hold for the current duration",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A7 step 7"
       }
@@ -116831,7 +116822,7 @@
       "owner_fr": "FR-026",
       "title": "FR-015 shows active values in order within one minute",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A9 step 8"
       }
@@ -171835,6 +171826,18 @@
     {
       "from_id": "FR-021",
       "verb": "references",
+      "to_id": "REQ-001-165",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-021",
+      "verb": "references",
+      "to_id": "REQ-009-009",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-021",
+      "verb": "references",
       "to_id": "REQ-024-081",
       "attrs": {}
     },
@@ -171994,6 +171997,18 @@
     {
       "from_id": "FR-022",
       "verb": "references",
+      "to_id": "REQ-001-010",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-022",
+      "verb": "references",
+      "to_id": "REQ-015-089",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-022",
+      "verb": "references",
       "to_id": "REQ-032-107",
       "attrs": {}
     },
@@ -172061,6 +172076,36 @@
       "from_id": "FR-023",
       "verb": "references",
       "to_id": "REQ-001-094",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-023",
+      "verb": "references",
+      "to_id": "REQ-003-095",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-023",
+      "verb": "references",
+      "to_id": "REQ-004-092",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-023",
+      "verb": "references",
+      "to_id": "REQ-005-023",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-023",
+      "verb": "references",
+      "to_id": "REQ-006-052",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-023",
+      "verb": "references",
+      "to_id": "REQ-014-210",
       "attrs": {}
     },
     {
@@ -172178,6 +172223,12 @@
       "from_id": "FR-024",
       "verb": "references",
       "to_id": "REQ-009-011",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-024",
+      "verb": "references",
+      "to_id": "REQ-015-039",
       "attrs": {}
     },
     {
@@ -258207,6 +258258,12 @@
     },
     {
       "from_id": "REQ-025-056",
+      "verb": "applies to",
+      "to_id": "EVT-questionnaire-version-published",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-025-056",
       "verb": "decided by",
       "to_id": "SRC-PRD-025",
       "attrs": {}
@@ -258221,6 +258278,12 @@
       "from_id": "REQ-025-057",
       "verb": "applies to",
       "to_id": "ENT-questionnaire-set.version",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-025-057",
+      "verb": "applies to",
+      "to_id": "EVT-questionnaire-version-published",
       "attrs": {}
     },
     {
@@ -336757,6 +336820,12 @@
     {
       "from_id": "STG-admin-01-configuration",
       "verb": "writes",
+      "to_id": "ENT-retention-policy",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "writes",
       "to_id": "ENT-role-permission-definition",
       "attrs": {}
     },
@@ -336872,6 +336941,12 @@
       "from_id": "STG-admin-02-operations",
       "verb": "reads",
       "to_id": "ENT-audit-entry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-02-operations",
+      "verb": "reads",
+      "to_id": "ENT-audit-log-entry",
       "attrs": {}
     },
     {
@@ -346432,6 +346507,12 @@
       "from_id": "STP-003-008",
       "verb": "next",
       "to_id": "STP-003-009",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-003-008",
+      "verb": "next",
+      "to_id": "STP-025-030",
       "attrs": {}
     },
     {
@@ -361440,6 +361521,12 @@
     },
     {
       "from_id": "STP-011-043",
+      "verb": "next",
+      "to_id": "STP-025-046",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-043",
       "verb": "on",
       "to_id": "SCR-011-16",
       "attrs": {}
@@ -376380,6 +376467,12 @@
     },
     {
       "from_id": "STP-022-007",
+      "verb": "next",
+      "to_id": "STP-016-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-022-007",
       "verb": "on",
       "to_id": "SCR-016-01",
       "attrs": {}
@@ -377119,6 +377212,14 @@
     {
       "from_id": "STP-022-023",
       "verb": "next",
+      "to_id": "STP-003-013",
+      "attrs": {
+        "label": "five providers selected, recipients finalized"
+      }
+    },
+    {
+      "from_id": "STP-022-023",
+      "verb": "next",
       "to_id": "STP-022-019",
       "attrs": {
         "label": "fewer than five selected, add more",
@@ -377311,6 +377412,12 @@
       "from_id": "STP-022-028",
       "verb": "done by",
       "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-022-028",
+      "verb": "next",
+      "to_id": "STP-016-007",
       "attrs": {}
     },
     {
@@ -377511,6 +377618,12 @@
       "from_id": "STP-022-033",
       "verb": "done by",
       "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-022-033",
+      "verb": "next",
+      "to_id": "STP-016-007",
       "attrs": {}
     },
     {
@@ -380817,6 +380930,12 @@
     },
     {
       "from_id": "STP-024-086",
+      "verb": "next",
+      "to_id": "STP-004-006",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-086",
       "verb": "on",
       "to_id": "SCR-024-04",
       "attrs": {}
@@ -382624,6 +382743,12 @@
     {
       "from_id": "STP-025-032",
       "verb": "next",
+      "to_id": "STP-003-028",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-032",
+      "verb": "next",
       "to_id": "STP-025-055",
       "attrs": {}
     },
@@ -383018,6 +383143,12 @@
       "from_id": "STP-025-048",
       "verb": "done by",
       "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-048",
+      "verb": "next",
+      "to_id": "STP-011-043",
       "attrs": {}
     },
     {
@@ -384662,6 +384793,12 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-026-055",
+      "verb": "next",
+      "to_id": "STP-003-044",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-026-056",
       "verb": "at",
       "to_id": "STG-admin-01-configuration",
@@ -385252,6 +385389,12 @@
     {
       "from_id": "STP-026-077",
       "verb": "next",
+      "to_id": "STP-004-015",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-077",
+      "verb": "next",
       "to_id": "STP-026-078",
       "attrs": {}
     },
@@ -385277,6 +385420,12 @@
       "from_id": "STP-026-078",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-078",
+      "verb": "next",
+      "to_id": "STP-005-017",
       "attrs": {}
     },
     {
@@ -385643,6 +385792,12 @@
       "from_id": "STP-026-092",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-092",
+      "verb": "next",
+      "to_id": "STP-015-005",
       "attrs": {}
     },
     {
@@ -423075,6 +423230,114 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261122-131624-3ed787e5",
+      "at": "2026-11-22T13:16:24.221595+00:00",
+      "changed_by": "controller",
+      "reason": "Consistency check (flow alignment, FR-026): the PRD flows A4, A7 and A9 name the receiving FR flow or screen, and no cross-FR next link carried the hand-off; each link goes to the one matching Step.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "STP-026-055",
+        "STP-026-077",
+        "STP-026-078",
+        "STP-026-092"
+      ],
+      "edges_added": 4,
+      "edges_removed": 0,
+      "rows": 4
+    },
+    {
+      "id": "cs-20261122-131614-aa2c5660",
+      "at": "2026-11-22T13:16:14.652579+00:00",
+      "changed_by": "controller",
+      "reason": "Consistency review FR-025: the version-published Event gets the Rules that react to it (REQ-025-056 propagation, REQ-025-057 push of the current Active version); four open hand-offs are stitched to the FR-003 and FR-011 Steps that receive them.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-025-056",
+        "REQ-025-057",
+        "STP-003-008",
+        "STP-011-043",
+        "STP-025-030",
+        "STP-025-032",
+        "STP-025-046",
+        "STP-025-048"
+      ],
+      "edges_added": 6,
+      "edges_removed": 0,
+      "rows": 10
+    },
+    {
+      "id": "cs-20261122-131401-2b716ebf",
+      "at": "2026-11-22T13:14:01.497479+00:00",
+      "changed_by": "controller",
+      "reason": "FR-022 consistency review: references to the Patient (FR-001) and Provider (FR-015) data owners, four hand-offs stitched, and seven Fields moved to the FR whose PRD states their meaning.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "ENT-patient.location",
+        "ENT-provider.clinic_name",
+        "ENT-provider.location",
+        "ENT-provider.rating",
+        "ENT-provider.review_count",
+        "ENT-provider.specialties",
+        "ENT-provider.total_procedures",
+        "FR-022",
+        "STP-022-007",
+        "STP-022-023",
+        "STP-022-028",
+        "STP-022-033"
+      ],
+      "edges_added": 6,
+      "edges_removed": 0,
+      "rows": 17
+    },
+    {
+      "id": "cs-20261122-131256-de4d1f9a",
+      "at": "2026-11-22T13:12:56.682722+00:00",
+      "changed_by": "controller",
+      "reason": "Consistency review of FR-024: Screen 7 shows the provider name read-only (owner FR-015), the package hand-off to quote creation is stitched to FR-004, and A3 ends by making the treatment selectable in quote creation.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "FR-024",
+        "STP-024-086"
+      ],
+      "edges_added": 2,
+      "edges_removed": 0,
+      "rows": 3
+    },
+    {
+      "id": "cs-20261122-131150-0aa5ff70",
+      "at": "2026-11-22T13:11:50.273969+00:00",
+      "changed_by": "controller",
+      "reason": "FR-023 consistency review: references to the owner-FR Rules for the inquiry, quote, acceptance, booking and analytics data FR-023 retention and deletion Rules apply to; a writer for the Retention Policy (admin Retention Settings) and a reader for the Audit Log Entry (admin audit trail review).",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "FR-023",
+        "STG-admin-01-configuration",
+        "STG-admin-02-operations"
+      ],
+      "edges_added": 7,
+      "edges_removed": 0,
+      "rows": 7
+    },
+    {
+      "id": "cs-20261122-131044-5277e11f",
+      "at": "2026-11-22T13:10:44.961237+00:00",
+      "changed_by": "controller",
+      "reason": "Consistency review of FR-021 (boundary): FR-021 shows and stores language preferences on accounts owned by FR-001 and FR-009; one references link to each owner FR settles the pairs.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "FR-021"
+      ],
+      "edges_added": 2,
+      "edges_removed": 0,
+      "rows": 2
+    },
     {
       "id": "cs-20261122-130822-fe019caa",
       "at": "2026-11-22T13:08:22.363861+00:00",
