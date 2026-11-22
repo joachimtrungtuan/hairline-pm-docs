@@ -1,0 +1,5 @@
+reason: "FR-029 consistency review (flow): two entities FR-029 owns were stored with no reading Stage; each gets the Stage where the PRD reads it (FR-014 reads the daily rates; Screen 3 shows the deposit-rate change history)."
+by: controller
+operations:
+  - {"op": "add_edge", "from": "STG-provider-03-active", "verb": "reads", "to": "ENT-currency-exchange-rate"}
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "reads", "to": "ENT-payment-config-audit-log"}

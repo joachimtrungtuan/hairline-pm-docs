@@ -1,0 +1,9 @@
+reason: "Consistency check (FR-032): five read-only displays of data owned by other FRs get one references link each; the closure request flow is handed to FR-015 Alternative Flow A7."
+by: controller
+operations:
+  - {"op": "add_edge", "from": "FR-032", "verb": "references", "to": "REQ-009-009"}
+  - {"op": "add_edge", "from": "FR-032", "verb": "references", "to": "REQ-013-008"}
+  - {"op": "add_edge", "from": "FR-032", "verb": "references", "to": "REQ-015-124"}
+  - {"op": "add_edge", "from": "FR-032", "verb": "references", "to": "REQ-029-043"}
+  - {"op": "add_edge", "from": "FR-032", "verb": "references", "to": "REQ-033-013"}
+  - {"op": "add_edge", "from": "STP-032-317", "verb": "next", "to": "STP-015-171"}

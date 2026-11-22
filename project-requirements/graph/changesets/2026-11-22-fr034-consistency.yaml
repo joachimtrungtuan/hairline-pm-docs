@@ -1,0 +1,11 @@
+reason: "Consistency check FR-034: link FR-034 to the patient and provider data it displays read-only (one Rule of each owner FR), and stitch the three Help Centre hand-offs into the support-case flows."
+by: controller
+operations:
+  - {"op": "add_edge", "from": "FR-034", "verb": "references", "to": "REQ-001-010"}
+  - {"op": "add_edge", "from": "FR-034", "verb": "references", "to": "REQ-015-007"}
+  - {"op": "add_edge", "from": "STP-032-200", "verb": "next", "to": "STP-034-032"}
+  - {"op": "update_node", "id": "STP-034-032", "attrs": {"handoff_from": null}}
+  - {"op": "add_edge", "from": "STP-032-216", "verb": "next", "to": "STP-034-046"}
+  - {"op": "update_node", "id": "STP-034-046", "attrs": {"handoff_from": null}}
+  - {"op": "add_edge", "from": "STP-035-031", "verb": "next", "to": "STP-034-060"}
+  - {"op": "update_node", "id": "STP-034-060", "attrs": {"handoff_from": null}}

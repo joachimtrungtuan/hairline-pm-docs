@@ -1,0 +1,7 @@
+reason: "FR-028 consistency review: references to the owner Rules of FR-001 (patient profile) and FR-029 (supported currencies), and the patient destination list hands over to FR-003's destination step."
+by: controller
+operations:
+  - {"op": "add_edge", "from": "FR-028", "verb": "references", "to": "REQ-001-010"}
+  - {"op": "add_edge", "from": "FR-028", "verb": "references", "to": "REQ-029-005"}
+  - {"op": "add_edge", "from": "STP-028-409", "verb": "next", "to": "STP-003-004"}
+  - {"op": "update_node", "id": "STP-028-409", "attrs": {"handoff_to": null}}

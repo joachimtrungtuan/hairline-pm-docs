@@ -1,0 +1,12 @@
+reason: "FR-035 consistency review (Phase 8): one references link to the FR-033 patient content rule, and four open hand-offs stitched to the receiving Steps of FR-034 and FR-020."
+by: controller
+operations:
+  - {"op": "add_edge", "from": "FR-035", "verb": "references", "to": "REQ-033-008", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-035-035", "verb": "next", "to": "STP-034-063", "attrs": {}}
+  - {"op": "update_node", "id": "STP-035-035", "attrs": {"handoff_to": null}}
+  - {"op": "add_edge", "from": "STP-035-037", "verb": "next", "to": "STP-020-001", "attrs": {}}
+  - {"op": "update_node", "id": "STP-035-037", "attrs": {"handoff_to": null}}
+  - {"op": "add_edge", "from": "STP-035-047", "verb": "next", "to": "STP-020-001", "attrs": {}}
+  - {"op": "update_node", "id": "STP-035-047", "attrs": {"handoff_to": null}}
+  - {"op": "add_edge", "from": "STP-035-057", "verb": "next", "to": "STP-020-001", "attrs": {}}
+  - {"op": "update_node", "id": "STP-035-057", "attrs": {"handoff_to": null}}

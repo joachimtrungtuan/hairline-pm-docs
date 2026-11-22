@@ -1,0 +1,4 @@
+reason: "Consistency check (flow, FR-030): the notification service reads the provider team notification routing record when it picks recipients (FR-030 PRD lines 651 and 993); the read sits at the Stage where it already reads the other notification preference records."
+by: controller
+operations:
+  - {"op": "add_edge", "from": "STG-main-01-inquiry", "verb": "reads", "to": "ENT-provider-team-notification-routing"}
