@@ -234,56 +234,56 @@ The Parent Quote is versioned as one aggregate. Every derived subquote uses that
 
 This matrix is the canonical completeness check for Screen 1. Tabs organize editing, but they do not change entity ownership. Fields marked system-owned or derived are never provider inputs.
 
-| Entity / Field | Ownership | Provider Surface | Contract Graph field |
-| --- | --- | --- | --- --- |
-| Quote ID | System-owned | Persistent context and Tab 7 | Stable generated identifier; read-only ENT-quote.id |
-| Inquiry ID and inquiry context | System-owned from FR-003 | Persistent context and Tab 7 | Read-only; quote appends to the inquiry and never overwrites it ENT-quote.inquiry_id |
-| Provider ID | System-owned from authenticated tenant | Tab 7 | Read-only; never selected in the quote ENT-quote.provider_id |
-| Treatment ID and version | Provider-selected relationship | Tab 1 | References the exact immutable FR-024 Treatment version shared by every option; the quote does not copy treatment-owned data ENT-quote.treatment_id, ENT-quote.treatment_version |
-| Technique details | Database/API retrieved from Treatment | Tabs 1 and 7 | Loaded read-only through the exact Treatment-version relationship; never separate provider input or duplicated quote data ENT-treatment.technique_details |
-| Estimated grafts | Provider-edited parent field | Tab 3 | Positive integer shared by every option ENT-quote.estimated_grafts |
-| Graft description | System-derived parent field | Tab 3 | Generated from the fixed template (Business Rules, Graft Description template) and estimated grafts; read-only ENT-quote.graft_description |
-| Visual treatment plan / graft markup | Provider-edited parent field | Tab 3 | Optional shared drawing/media snapshot ENT-quote.graft_visual_plan |
-| Clinician IDs | Provider-edited parent field | Tab 6 | One or more eligible clinicians shared by every option ENT-quote.clinician_ids |
-| Common notes | Provider-edited parent field | Tab 6 | Optional text applying to every option ENT-quote.common_notes |
-| Common requirements | Provider-edited parent field | Tab 6 | Optional structured/text requirements applying to every option ENT-quote.common_requirements |
-| Attachments | Provider-edited parent field | Tab 6 | Optional quote-level files applying to every option ENT-quote.attachment_ids |
-| Currency snapshot | System-configured parent field | Read-only in Tabs 4 and 7 | Captured read-only at first send from the active FR-026 quote configuration, whose currency is the FR-029 Default Currency; drafts carry none; never provider input ENT-quote.currency_snapshot |
-| Status | System-owned lifecycle field | Persistent context and Tab 7 | Read-only; changed only by governed workflow actions ENT-quote.status |
-| Expiry | System-derived parent field | Tab 7 | Captured read-only at first send from the FR-026 quote expiry setting; drafts carry none; no per-quote extension ENT-quote.expires_at |
-| Calculated price range / accepted total | System-derived parent summary | Tabs 4 and 7 | Price range is derived from all option/date prices; accepted total is written only at FR-005 acceptance from the acceptance snapshot (price after promotion) and is a read-only copy; neither is entered separately (REQ-004-086, REQ-004-093) ENT-quote.calculated_price_range, ENT-quote.accepted_total |
-| Commission | System-derived financial field | Tab 7 subject to permissions | Shows the commission model and value (percentage or flat rate) from the active FR-029 configuration, labelled "indicative, final at booking confirmation"; the binding commission is fixed at booking confirmation on the accepted price after promotion (FR-029); never provider input ENT-quote.commission |
-| Affiliate attribution reference | System-captured financial provenance | Tab 7 subject to permissions | Inherited from validated referral context; never provider input; display-only here, data owned by FR-018 ENT-affiliate-attribution.reference |
-| Terms acknowledged timestamp | System-owned FR-005 acceptance field | Tab 7 after acceptance | Null during quote creation; read-only copy of the FR-005 acceptance snapshot value (REQ-004-086) ENT-quote.terms_acknowledged_at |
-| Locked exchange-rate value and pair | System-owned FR-005/FR-029 acceptance snapshot | Tab 7 subject to permissions | Null before acceptance; read-only copy of the FR-005 acceptance snapshot value when conversion is required (REQ-004-086) ENT-quote.locked_exchange_rate_snapshot |
-| Cancellation and supersession provenance | System-owned lifecycle fields | Tab 7 / Audit | Records inquiry cancellation, another accepted quote, or provider suspension/deactivation of an unaccepted quote; never provider input ENT-quote.cancellation_provenance |
-| Travel path | System-owned FR-008 downstream field | Tab 7 after applicable workflow action | Derived from the accepted option (FR-008); display-only; not edited during quote creation ENT-travel-context.travel_path |
-| Created and updated timestamps | System-owned audit metadata | Tab 7 / Audit | System-generated; read-only ENT-quote.created_at, ENT-quote.updated_at |
-| Quote Option ID and parent Quote ID | System-owned | Tabs 2, 4, 5, and 7 | Stable identifiers; read-only ENT-quote-option.id, ENT-quote-option.quote_id |
-| Source Package ID and version | System-captured option provenance | Tab 2 and Sub-screen 2A | Captured when selected (the exact FR-024 package version); read-only after snapshot creation ENT-quote-option.source_package_id, ENT-quote-option.source_package_version |
-| Option display order | Provider-edited option field | Tab 2 | Unique consecutive patient-facing order ENT-quote-option.display_order |
-| Package name, description, and standard price snapshots | System-copied option fields | Tab 2 and Sub-screen 2A | Copied from the selected library version; retained for history ENT-quote-option.package_name_snapshot, ENT-quote-option.package_description_snapshot, ENT-quote-option.standard_price_snapshot |
-| Option customization state (inline-customised flag) | System-derived option field | Tab 2 and Tab 7 | Indicates whether the quote-local copy has been edited inline and differs from its source package version ENT-quote-option.is_customized |
-| Included travel services (`included_services`) | Provider-edited option field | Sub-screen 2A | Flight, hotel, transport, and other travel services included in this option; stored only in the option snapshot ENT-quote-option.included_services |
-| Option item ID and parent Option ID | System-owned | Sub-screen 2A and Audit | Stable identifiers; read-only ENT-quote-option-item.id, ENT-quote-option-item.quote_option_id |
-| Option item source ID | System-captured item provenance | Sub-screen 2A | Read-only; null for an item created inside the quote ENT-quote-option-item.source_package_item_id |
-| Option item type | Provider-edited item field | Sub-screen 2A | Controlled service type ENT-quote-option-item.item_type |
-| Option item name and description | Provider-edited item fields | Sub-screen 2A | Required name; optional description ENT-quote-option-item.name, ENT-quote-option-item.description |
-| Option item price | Provider-edited item field | Sub-screen 2A | Optional component price; does not replace the final Tab 4 offered price ENT-quote-option-item.price |
-| Option item inclusion state | Provider-edited item field | Sub-screen 2A | Explicit included or excluded state ENT-quote-option-item.is_included |
-| Option item display order | Provider-edited item field | Sub-screen 2A | Unique consecutive order within the option ENT-quote-option-item.display_order |
-| Option item metadata | System-retained item field | Sub-screen 2A / Audit | Read-only extension/source metadata; never free-form provider input ENT-quote-option-item.metadata |
-| Option/date-price ID | System-owned | Tab 4 and Tab 7 | Stable identifier for FR-005 acceptance ENT-quote-option-date-price.id |
-| Source inquiry date-range ID | Provider-selected reference | Tab 4 | Must reference a patient-requested FR-003 range ENT-quote-option-date-price.source_inquiry_date_range_id |
-| Start and end dates | System-copied date fields | Tab 4 | Read-only values from the selected inquiry range ENT-quote-option-date-price.start_date, ENT-quote-option-date-price.end_date |
-| Appointment date/time and timezone | Provider-edited option/date fields | Tab 4 | Appointment must fall within the selected range and be in the future when sent; timezone required. Together with the provider, these fields are the key of the FR-006 slot hold placed at acceptance; no appointment record is created at quote time (REQ-004-062) ENT-quote-option-date-price.appointment_at, ENT-quote-option-date-price.appointment_time_zone |
-| Offered price | Provider-edited option/date field | Tab 4 | Price greater than 0 in the quote currency, stored as entered before any promotion; prefilled from the package standard price, or from the FR-024 treatment Base Price only where no other standard value exists ENT-quote-option-date-price.price |
-| Promotion and promotion terms | Provider-selected option/date reference; system-copied terms | Tab 4 | Optional structured FR-019 promotion. At send, its terms and discount are copied into the sent quote version and shown separately from the offered price; eligible automatic promotions are attached by the system at send ENT-quote-option-date-price.promotion_id, ENT-quote-option-date-price.promotion_terms_snapshot, ENT-quote-option-date-price.discount_amount |
-| Acceptance state | Derived from FR-005 | Tab 7 after FR-005 action | Read-only; derived from the FR-005 subquote state and never stored on the option/date-price record ENT-subquote.acceptance_state |
-| Option plan-day ID and parent Option ID | System-owned | Tab 5 | Stable identifiers; read-only ENT-quote-option-plan-day.id, ENT-quote-option-plan-day.quote_option_id |
-| Plan day number and description | Provider-edited option fields | Tab 5 | Consecutive relative day number and required description ENT-quote-option-plan-day.day_number, ENT-quote-option-plan-day.description |
-| Child-record created and updated metadata | System-owned audit metadata | Tab 7 / Audit | Applies to options, items, date-price rows, and plan days; read-only ENT-quote-option.created_at, ENT-quote-option.updated_at, ENT-quote-option-item.created_at, ENT-quote-option-item.updated_at, ENT-quote-option-date-price.created_at, ENT-quote-option-date-price.updated_at, ENT-quote-option-plan-day.created_at, ENT-quote-option-plan-day.updated_at |
-| Quote version and audit records | System-owned compliance records | Tab 7 / Audit | Complete immutable history of parent and option changes ENT-quote.version, ENT-quote-audit.action, ENT-quote-audit.actor_id, ENT-quote-audit.created_at |
+| Entity / Field | Ownership | Provider Surface | Contract | Graph field |
+| --- | --- | --- | --- | --- |
+| Quote ID | System-owned | Persistent context and Tab 7 | Stable generated identifier; read-only | ENT-quote.id |
+| Inquiry ID and inquiry context | System-owned from FR-003 | Persistent context and Tab 7 | Read-only; quote appends to the inquiry and never overwrites it | ENT-quote.inquiry_id |
+| Provider ID | System-owned from authenticated tenant | Tab 7 | Read-only; never selected in the quote | ENT-quote.provider_id |
+| Treatment ID and version | Provider-selected relationship | Tab 1 | References the exact immutable FR-024 Treatment version shared by every option; the quote does not copy treatment-owned data | ENT-quote.treatment_id, ENT-quote.treatment_version |
+| Technique details | Database/API retrieved from Treatment | Tabs 1 and 7 | Loaded read-only through the exact Treatment-version relationship; never separate provider input or duplicated quote data | ENT-treatment.technique_details |
+| Estimated grafts | Provider-edited parent field | Tab 3 | Positive integer shared by every option | ENT-quote.estimated_grafts |
+| Graft description | System-derived parent field | Tab 3 | Generated from the fixed template (Business Rules, Graft Description template) and estimated grafts; read-only | ENT-quote.graft_description |
+| Visual treatment plan / graft markup | Provider-edited parent field | Tab 3 | Optional shared drawing/media snapshot | ENT-quote.graft_visual_plan |
+| Clinician IDs | Provider-edited parent field | Tab 6 | One or more eligible clinicians shared by every option | ENT-quote.clinician_ids |
+| Common notes | Provider-edited parent field | Tab 6 | Optional text applying to every option | ENT-quote.common_notes |
+| Common requirements | Provider-edited parent field | Tab 6 | Optional structured/text requirements applying to every option | ENT-quote.common_requirements |
+| Attachments | Provider-edited parent field | Tab 6 | Optional quote-level files applying to every option | ENT-quote.attachment_ids |
+| Currency snapshot | System-configured parent field | Read-only in Tabs 4 and 7 | Captured read-only at first send from the active FR-026 quote configuration, whose currency is the FR-029 Default Currency; drafts carry none; never provider input | ENT-quote.currency_snapshot |
+| Status | System-owned lifecycle field | Persistent context and Tab 7 | Read-only; changed only by governed workflow actions | ENT-quote.status |
+| Expiry | System-derived parent field | Tab 7 | Captured read-only at first send from the FR-026 quote expiry setting; drafts carry none; no per-quote extension | ENT-quote.expires_at |
+| Calculated price range / accepted total | System-derived parent summary | Tabs 4 and 7 | Price range is derived from all option/date prices; accepted total is written only at FR-005 acceptance from the acceptance snapshot (price after promotion) and is a read-only copy; neither is entered separately (REQ-004-086, REQ-004-093) | ENT-quote.calculated_price_range, ENT-quote.accepted_total |
+| Commission | System-derived financial field | Tab 7 subject to permissions | Shows the commission model and value (percentage or flat rate) from the active FR-029 configuration, labelled "indicative, final at booking confirmation"; the binding commission is fixed at booking confirmation on the accepted price after promotion (FR-029); never provider input | ENT-quote.commission |
+| Affiliate attribution reference | System-captured financial provenance | Tab 7 subject to permissions | Inherited from validated referral context; never provider input; display-only here, data owned by FR-018 | ENT-affiliate-attribution.reference |
+| Terms acknowledged timestamp | System-owned FR-005 acceptance field | Tab 7 after acceptance | Null during quote creation; read-only copy of the FR-005 acceptance snapshot value (REQ-004-086) | ENT-quote.terms_acknowledged_at |
+| Locked exchange-rate value and pair | System-owned FR-005/FR-029 acceptance snapshot | Tab 7 subject to permissions | Null before acceptance; read-only copy of the FR-005 acceptance snapshot value when conversion is required (REQ-004-086) | ENT-quote.locked_exchange_rate_snapshot |
+| Cancellation and supersession provenance | System-owned lifecycle fields | Tab 7 / Audit | Records inquiry cancellation, another accepted quote, or provider suspension/deactivation of an unaccepted quote; never provider input | ENT-quote.cancellation_provenance |
+| Travel path | System-owned FR-008 downstream field | Tab 7 after applicable workflow action | Derived from the accepted option (FR-008); display-only; not edited during quote creation | ENT-travel-context.travel_path |
+| Created and updated timestamps | System-owned audit metadata | Tab 7 / Audit | System-generated; read-only | ENT-quote.created_at, ENT-quote.updated_at |
+| Quote Option ID and parent Quote ID | System-owned | Tabs 2, 4, 5, and 7 | Stable identifiers; read-only | ENT-quote-option.id, ENT-quote-option.quote_id |
+| Source Package ID and version | System-captured option provenance | Tab 2 and Sub-screen 2A | Captured when selected (the exact FR-024 package version); read-only after snapshot creation | ENT-quote-option.source_package_id, ENT-quote-option.source_package_version |
+| Option display order | Provider-edited option field | Tab 2 | Unique consecutive patient-facing order | ENT-quote-option.display_order |
+| Package name, description, and standard price snapshots | System-copied option fields | Tab 2 and Sub-screen 2A | Copied from the selected library version; retained for history | ENT-quote-option.package_name_snapshot, ENT-quote-option.package_description_snapshot, ENT-quote-option.standard_price_snapshot |
+| Option customization state (inline-customised flag) | System-derived option field | Tab 2 and Tab 7 | Indicates whether the quote-local copy has been edited inline and differs from its source package version | ENT-quote-option.is_customized |
+| Included travel services (`included_services`) | Provider-edited option field | Sub-screen 2A | Flight, hotel, transport, and other travel services included in this option; stored only in the option snapshot | ENT-quote-option.included_services |
+| Option item ID and parent Option ID | System-owned | Sub-screen 2A and Audit | Stable identifiers; read-only | ENT-quote-option-item.id, ENT-quote-option-item.quote_option_id |
+| Option item source ID | System-captured item provenance | Sub-screen 2A | Read-only; null for an item created inside the quote | ENT-quote-option-item.source_package_item_id |
+| Option item type | Provider-edited item field | Sub-screen 2A | Controlled service type | ENT-quote-option-item.item_type |
+| Option item name and description | Provider-edited item fields | Sub-screen 2A | Required name; optional description | ENT-quote-option-item.name, ENT-quote-option-item.description |
+| Option item price | Provider-edited item field | Sub-screen 2A | Optional component price; does not replace the final Tab 4 offered price | ENT-quote-option-item.price |
+| Option item inclusion state | Provider-edited item field | Sub-screen 2A | Explicit included or excluded state | ENT-quote-option-item.is_included |
+| Option item display order | Provider-edited item field | Sub-screen 2A | Unique consecutive order within the option | ENT-quote-option-item.display_order |
+| Option item metadata | System-retained item field | Sub-screen 2A / Audit | Read-only extension/source metadata; never free-form provider input | ENT-quote-option-item.metadata |
+| Option/date-price ID | System-owned | Tab 4 and Tab 7 | Stable identifier for FR-005 acceptance | ENT-quote-option-date-price.id |
+| Source inquiry date-range ID | Provider-selected reference | Tab 4 | Must reference a patient-requested FR-003 range | ENT-quote-option-date-price.source_inquiry_date_range_id |
+| Start and end dates | System-copied date fields | Tab 4 | Read-only values from the selected inquiry range | ENT-quote-option-date-price.start_date, ENT-quote-option-date-price.end_date |
+| Appointment date/time and timezone | Provider-edited option/date fields | Tab 4 | Appointment must fall within the selected range and be in the future when sent; timezone required. Together with the provider, these fields are the key of the FR-006 slot hold placed at acceptance; no appointment record is created at quote time (REQ-004-062) | ENT-quote-option-date-price.appointment_at, ENT-quote-option-date-price.appointment_time_zone |
+| Offered price | Provider-edited option/date field | Tab 4 | Price greater than 0 in the quote currency, stored as entered before any promotion; prefilled from the package standard price, or from the FR-024 treatment Base Price only where no other standard value exists | ENT-quote-option-date-price.price |
+| Promotion and promotion terms | Provider-selected option/date reference; system-copied terms | Tab 4 | Optional structured FR-019 promotion. At send, its terms and discount are copied into the sent quote version and shown separately from the offered price; eligible automatic promotions are attached by the system at send | ENT-quote-option-date-price.promotion_id, ENT-quote-option-date-price.promotion_terms_snapshot, ENT-quote-option-date-price.discount_amount |
+| Acceptance state | Derived from FR-005 | Tab 7 after FR-005 action | Read-only; derived from the FR-005 subquote state and never stored on the option/date-price record | ENT-subquote.acceptance_state |
+| Option plan-day ID and parent Option ID | System-owned | Tab 5 | Stable identifiers; read-only | ENT-quote-option-plan-day.id, ENT-quote-option-plan-day.quote_option_id |
+| Plan day number and description | Provider-edited option fields | Tab 5 | Consecutive relative day number and required description | ENT-quote-option-plan-day.day_number, ENT-quote-option-plan-day.description |
+| Child-record created and updated metadata | System-owned audit metadata | Tab 7 / Audit | Applies to options, items, date-price rows, and plan days; read-only | ENT-quote-option.created_at, ENT-quote-option.updated_at, ENT-quote-option-item.created_at, ENT-quote-option-item.updated_at, ENT-quote-option-date-price.created_at, ENT-quote-option-date-price.updated_at, ENT-quote-option-plan-day.created_at, ENT-quote-option-plan-day.updated_at |
+| Quote version and audit records | System-owned compliance records | Tab 7 / Audit | Complete immutable history of parent and option changes | ENT-quote.version, ENT-quote-audit.action, ENT-quote-audit.actor_id, ENT-quote-audit.created_at |
 
 **Tab Structure**:
 
@@ -301,10 +301,10 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 
 **Purpose**: Select the treatment before package options are introduced.
 
-| Field Name | Scope | Type | Required | Description | Validation Rules Graph field |
-| --- | --- | --- | --- | --- | --- --- |
-| Treatment Service | Quote | select | Yes | One admin-curated treatment shared by every option | Must be active; package choices in Tab 2 must belong to this treatment ENT-quote.treatment_id, ENT-quote.treatment_version |
-| Technique Details | Treatment relationship | read-only text | N/A | Technique information loaded from the selected immutable Treatment version when documented in FR-024 | Never provider-editable or copied into a separate Quote field; show "Not specified" when the Treatment has no technique specifications ENT-treatment.technique_details |
+| Field Name | Scope | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- | --- |
+| Treatment Service | Quote | select | Yes | One admin-curated treatment shared by every option | Must be active; package choices in Tab 2 must belong to this treatment | ENT-quote.treatment_id, ENT-quote.treatment_version |
+| Technique Details | Treatment relationship | read-only text | N/A | Technique information loaded from the selected immutable Treatment version when documented in FR-024 | Never provider-editable or copied into a separate Quote field; show "Not specified" when the Treatment has no technique specifications | ENT-treatment.technique_details |
 
 **Behavior**:
 
@@ -317,33 +317,33 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 
 **Purpose**: Choose the package alternatives and manage their quote-local content.
 
-| Field Name | Scope | Type | Required | Description | Validation Rules Graph field |
-| --- | --- | --- | --- | --- | --- --- |
-| Package Options | Quote | ordered multiselect | Yes | Packages selected from the authenticated provider's active library; each selected package seeds one Quote Option | Minimum 1; maximum 5; must match Tab 1 treatment; package must be active when selected; packages are never summed into one option ENT-quote-option.source_package_id, ENT-quote-option.source_package_version, ENT-package.status |
-| Option Order | Option | reorder control | Yes | Patient-facing comparison order | Unique consecutive order within the quote ENT-quote-option.display_order |
-| Package Snapshot | Option | read-only summary | Yes | Source package identity/version, standard price, services, included travel services, and relative day plan copied into the quote | Later library edits must not alter the snapshot ENT-quote-option.source_package_id, ENT-quote-option.source_package_version, ENT-quote-option.standard_price_snapshot, ENT-quote-option.package_name_snapshot, ENT-quote-option.package_description_snapshot, ENT-quote-option.included_services, ENT-quote-option-item.name, ENT-quote-option-plan-day.day_number, ENT-quote-option-plan-day.description |
-| Edit Package Inline | Option | action | No | Opens Sub-screen 2A for the selected option | Available independently for every option no graph field (control) |
+| Field Name | Scope | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- | --- |
+| Package Options | Quote | ordered multiselect | Yes | Packages selected from the authenticated provider's active library; each selected package seeds one Quote Option | Minimum 1; maximum 5; must match Tab 1 treatment; package must be active when selected; packages are never summed into one option | ENT-quote-option.source_package_id, ENT-quote-option.source_package_version, ENT-package.status |
+| Option Order | Option | reorder control | Yes | Patient-facing comparison order | Unique consecutive order within the quote | ENT-quote-option.display_order |
+| Package Snapshot | Option | read-only summary | Yes | Source package identity/version, standard price, services, included travel services, and relative day plan copied into the quote | Later library edits must not alter the snapshot | ENT-quote-option.source_package_id, ENT-quote-option.source_package_version, ENT-quote-option.standard_price_snapshot, ENT-quote-option.package_name_snapshot, ENT-quote-option.package_description_snapshot, ENT-quote-option.included_services, ENT-quote-option-item.name, ENT-quote-option-plan-day.day_number, ENT-quote-option-plan-day.description |
+| Edit Package Inline | Option | action | No | Opens Sub-screen 2A for the selected option | Available independently for every option | no graph field (control) |
 
 ###### Sub-screen 2A: Inline Package Editor
 
 **Purpose**: Customize one package option for this quote without modifying the provider's reusable package library.
 
-| Field Name | Scope | Type | Required | Description | Validation Rules Graph field |
-| --- | --- | --- | --- | --- | --- --- |
-| Option Name and Source | Option | read-only header | Yes | Identifies the option and its source package/version | Must remain traceable to the selected source package ENT-quote-option.package_name_snapshot, ENT-quote-option.source_package_id, ENT-quote-option.source_package_version |
-| Source Item | Option item | read-only reference | No | Identifies the package-library item from which this row was copied | Null only for a service created inside the quote ENT-quote-option-item.source_package_item_id |
-| Item Type | Option item | select | Yes | Controlled medical, travel, accommodation, transport, flight, or other service category | Must use an allowed service type ENT-quote-option-item.item_type |
-| Item Name | Option item | text | Yes | Patient-facing service name | Required; maximum 255 characters ENT-quote-option-item.name |
-| Item Description | Option item | textarea | No | Patient-facing service details | Maximum 1,000 characters ENT-quote-option-item.description |
-| Item Price | Option item | amount | No | Optional component price for transparency | Non-negative; displayed in configured currency; final offered price remains in Tab 4 ENT-quote-option-item.price |
-| Included | Option item | toggle | Yes | Whether the service is included in this package option | Explicit true or false ENT-quote-option-item.is_included |
-| Item Order | Option item | reorder control | Yes | Patient-facing order inside the option | Unique consecutive order ENT-quote-option-item.display_order |
-| Item Metadata | Option item | read-only metadata | No | Source or extension data retained by the system | Never free-form provider input ENT-quote-option-item.metadata |
-| Included Travel Services (`included_services`) | Option | checklist | No | Flight, hotel, transport, and other travel services included in this option | Stored only in the option snapshot; no cross-field dependency ENT-quote-option.included_services |
-| Add Custom Service | Option | action | No | Adds a patient-specific item with the same type, name, description, price, inclusion, and ordering fields | New item has no source package-item ID no graph field (control) |
-| Remove Service | Option item | action | No | Removes an item from this option snapshot | Confirmation required; source package remains unchanged no graph field (control) |
-| Standard Package Price | Option | read-only amount | Yes | Library price used to prefill Tab 4 | Final offered prices are edited only in Tab 4 ENT-quote-option.standard_price_snapshot |
-| Save Option Changes | Option | action | Yes | Returns the customized snapshot to Tab 2 | Must update only this Quote Option and its aggregate audit/version state no graph field (control) |
+| Field Name | Scope | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- | --- |
+| Option Name and Source | Option | read-only header | Yes | Identifies the option and its source package/version | Must remain traceable to the selected source package | ENT-quote-option.package_name_snapshot, ENT-quote-option.source_package_id, ENT-quote-option.source_package_version |
+| Source Item | Option item | read-only reference | No | Identifies the package-library item from which this row was copied | Null only for a service created inside the quote | ENT-quote-option-item.source_package_item_id |
+| Item Type | Option item | select | Yes | Controlled medical, travel, accommodation, transport, flight, or other service category | Must use an allowed service type | ENT-quote-option-item.item_type |
+| Item Name | Option item | text | Yes | Patient-facing service name | Required; maximum 255 characters | ENT-quote-option-item.name |
+| Item Description | Option item | textarea | No | Patient-facing service details | Maximum 1,000 characters | ENT-quote-option-item.description |
+| Item Price | Option item | amount | No | Optional component price for transparency | Non-negative; displayed in configured currency; final offered price remains in Tab 4 | ENT-quote-option-item.price |
+| Included | Option item | toggle | Yes | Whether the service is included in this package option | Explicit true or false | ENT-quote-option-item.is_included |
+| Item Order | Option item | reorder control | Yes | Patient-facing order inside the option | Unique consecutive order | ENT-quote-option-item.display_order |
+| Item Metadata | Option item | read-only metadata | No | Source or extension data retained by the system | Never free-form provider input | ENT-quote-option-item.metadata |
+| Included Travel Services (`included_services`) | Option | checklist | No | Flight, hotel, transport, and other travel services included in this option | Stored only in the option snapshot; no cross-field dependency | ENT-quote-option.included_services |
+| Add Custom Service | Option | action | No | Adds a patient-specific item with the same type, name, description, price, inclusion, and ordering fields | New item has no source package-item ID | no graph field (control) |
+| Remove Service | Option item | action | No | Removes an item from this option snapshot | Confirmation required; source package remains unchanged | no graph field (control) |
+| Standard Package Price | Option | read-only amount | Yes | Library price used to prefill Tab 4 | Final offered prices are edited only in Tab 4 | ENT-quote-option.standard_price_snapshot |
+| Save Option Changes | Option | action | Yes | Returns the customized snapshot to Tab 2 | Must update only this Quote Option and its aggregate audit/version state | no graph field (control) |
 
 **Behavior**:
 
@@ -357,24 +357,24 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 
 **Purpose**: Record treatment facts that apply equally to every package option.
 
-| Field Name | Scope | Type | Required | Description | Validation Rules Graph field |
-| --- | --- | --- | --- | --- | --- --- |
-| Estimated Grafts | Quote | number | Yes | Provider-entered estimate shared by every option | Provider may enter and revise a positive integer ENT-quote.estimated_grafts |
-| Graft Description | Quote | read-only text | Yes | System-generated explanation based on the fixed template (see Business Rules) and the current Estimated Grafts value | Regenerated whenever Estimated Grafts changes; providers cannot edit it directly; retained in aggregate versions ENT-quote.graft_description |
-| Visual Treatment Plan / 3D Markup | Quote | drawing/upload | No | Shared visual plan or markup | Supported file/media rules; stored in the aggregate version ENT-quote.graft_visual_plan |
+| Field Name | Scope | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- | --- |
+| Estimated Grafts | Quote | number | Yes | Provider-entered estimate shared by every option | Provider may enter and revise a positive integer | ENT-quote.estimated_grafts |
+| Graft Description | Quote | read-only text | Yes | System-generated explanation based on the fixed template (see Business Rules) and the current Estimated Grafts value | Regenerated whenever Estimated Grafts changes; providers cannot edit it directly; retained in aggregate versions | ENT-quote.graft_description |
+| Visual Treatment Plan / 3D Markup | Quote | drawing/upload | No | Shared visual plan or markup | Supported file/media rules; stored in the aggregate version | ENT-quote.graft_visual_plan |
 
 ##### Tab 4: Dates & Pricing
 
 **Purpose**: Combine treatment-date selection and pricing in one package-first configuration surface.
 
-| Field Name | Scope | Type | Required | Description | Validation Rules Graph field |
-| --- | --- | --- | --- | --- | --- --- |
-| Package Option | Option | repeated section | Yes | One section per option selected in Tab 2 | All options shown in Tab 2 order ENT-quote-option.id, ENT-quote-option.display_order |
-| Applicable Treatment Dates | Option | multiselect | Yes | Patient-requested ranges for which this option is offered | At least one per option; subset of FR-003 ranges ENT-quote-option-date-price.source_inquiry_date_range_id |
-| Appointment Slot | Option/date | datetime | Yes | Appointment start for this option/date combination | Must fall within its selected range; timezone required ENT-quote-option-date-price.appointment_at, ENT-quote-option-date-price.appointment_time_zone |
-| Offered Price | Option/date | amount | Yes | Price for this package option on this date range, as entered by the provider before any promotion | Must be greater than 0; a zero or negative price blocks send; quote currency; prefilled from the package standard price, or from the FR-024 treatment Base Price only where no other standard value exists, and editable ENT-quote-option-date-price.price |
-| Promotion | Option/date | select-or-create | No | Structured promotion applied to this option/date price; the discount is shown separately from the offered price | Must resolve to a valid `PromotionProgram`; no free-text promotion; terms are copied into the quote version at send (REQ-004-100) ENT-quote-option-date-price.promotion_id, ENT-quote-option-date-price.promotion_terms_snapshot, ENT-quote-option-date-price.discount_amount |
-| Configured Currency | Quote | read-only label | Yes | Quote currency from the active FR-026 quote configuration (the FR-029 Default Currency), used across every option/date price | Never provider-editable; captured onto the quote at first send; packages carry no currency of their own; if the Default Currency changes while the draft holds prices, the draft switches to the new currency with typed numbers kept and shows a "currency changed, check your prices" banner ENT-quote.currency_snapshot |
+| Field Name | Scope | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- | --- |
+| Package Option | Option | repeated section | Yes | One section per option selected in Tab 2 | All options shown in Tab 2 order | ENT-quote-option.id, ENT-quote-option.display_order |
+| Applicable Treatment Dates | Option | multiselect | Yes | Patient-requested ranges for which this option is offered | At least one per option; subset of FR-003 ranges | ENT-quote-option-date-price.source_inquiry_date_range_id |
+| Appointment Slot | Option/date | datetime | Yes | Appointment start for this option/date combination | Must fall within its selected range; timezone required | ENT-quote-option-date-price.appointment_at, ENT-quote-option-date-price.appointment_time_zone |
+| Offered Price | Option/date | amount | Yes | Price for this package option on this date range, as entered by the provider before any promotion | Must be greater than 0; a zero or negative price blocks send; quote currency; prefilled from the package standard price, or from the FR-024 treatment Base Price only where no other standard value exists, and editable | ENT-quote-option-date-price.price |
+| Promotion | Option/date | select-or-create | No | Structured promotion applied to this option/date price; the discount is shown separately from the offered price | Must resolve to a valid `PromotionProgram`; no free-text promotion; terms are copied into the quote version at send (REQ-004-100) | ENT-quote-option-date-price.promotion_id, ENT-quote-option-date-price.promotion_terms_snapshot, ENT-quote-option-date-price.discount_amount |
+| Configured Currency | Quote | read-only label | Yes | Quote currency from the active FR-026 quote configuration (the FR-029 Default Currency), used across every option/date price | Never provider-editable; captured onto the quote at first send; packages carry no currency of their own; if the Default Currency changes while the draft holds prices, the draft switches to the new currency with typed numbers kept and shows a "currency changed, check your prices" banner | ENT-quote.currency_snapshot |
 
 **Behavior**:
 
@@ -391,11 +391,11 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 
 **Purpose**: Define a different day-to-day treatment plan for each package option.
 
-| Field Name | Scope | Type | Required | Description | Validation Rules Graph field |
-| --- | --- | --- | --- | --- | --- --- |
-| Package Option | Option | selector/section | Yes | Chooses the option whose plan is being edited | Every option requires a plan ENT-quote-option.id |
-| Day Number | Option | number | Yes | Relative sequential day index | Starts at 1; consecutive with no gaps ENT-quote-option-plan-day.day_number |
-| Day Description | Option | text | Yes | What happens on that relative treatment day | Required; maximum 1,000 characters ENT-quote-option-plan-day.description |
+| Field Name | Scope | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- | --- |
+| Package Option | Option | selector/section | Yes | Chooses the option whose plan is being edited | Every option requires a plan | ENT-quote-option.id |
+| Day Number | Option | number | Yes | Relative sequential day index | Starts at 1; consecutive with no gaps | ENT-quote-option-plan-day.day_number |
+| Day Description | Option | text | Yes | What happens on that relative treatment day | Required; maximum 1,000 characters | ENT-quote-option-plan-day.description |
 
 **Behavior**:
 
@@ -407,33 +407,33 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 
 **Purpose**: Record remaining information that applies to all options in the parent quote.
 
-| Field Name | Scope | Type | Required | Description | Validation Rules Graph field |
-| --- | --- | --- | --- | --- | --- --- |
-| Clinicians | Quote | multiselect | Yes | One or more responsible clinicians shared by every option | At least one; every clinician must be active, eligible, and belong to the provider ENT-quote.clinician_ids |
-| Common Notes | Quote | textarea | No | Additional provider information applying to every option | Maximum 5,000 characters ENT-quote.common_notes |
-| Common Requirements | Quote | textarea/repeater | No | Patient or treatment requirements shared by every option | Maximum 5,000 characters per entry; empty entries rejected ENT-quote.common_requirements |
-| Attachments | Quote | multi-file upload | No | Quote-level images, videos, or documents applying to every option | Maximum 5 files; JPG/PNG up to 5 MB each; MP4/PDF up to 10 MB each; virus scan, retention, and access rules enforced ENT-quote.attachment_ids |
+| Field Name | Scope | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- | --- |
+| Clinicians | Quote | multiselect | Yes | One or more responsible clinicians shared by every option | At least one; every clinician must be active, eligible, and belong to the provider | ENT-quote.clinician_ids |
+| Common Notes | Quote | textarea | No | Additional provider information applying to every option | Maximum 5,000 characters | ENT-quote.common_notes |
+| Common Requirements | Quote | textarea/repeater | No | Patient or treatment requirements shared by every option | Maximum 5,000 characters per entry; empty entries rejected | ENT-quote.common_requirements |
+| Attachments | Quote | multi-file upload | No | Quote-level images, videos, or documents applying to every option | Maximum 5 files; JPG/PNG up to 5 MB each; MP4/PDF up to 10 MB each; virus scan, retention, and access rules enforced | ENT-quote.attachment_ids |
 
 ##### Tab 7: Review & Submit
 
 **Purpose**: Review the complete quote aggregate and resolve missing information before submission.
 
-| Field Name | Scope | Type | Required | Description | Validation Rules Graph field |
-| --- | --- | --- | --- | --- | --- --- |
-| Quote, Inquiry, and Provider References | Quote | read-only context | Yes | Stable quote ID plus source inquiry and authenticated provider | System-owned; must match the active quote context ENT-quote.id, ENT-quote.inquiry_id, ENT-quote.provider_id |
-| Shared Quote Summary | Quote | read-only group | Yes | Treatment, graft facts, visual plan, clinicians, notes, requirements, and attachments | Must reflect the latest saved values from Tabs 1, 3, and 6 ENT-quote.treatment_id, ENT-quote.estimated_grafts, ENT-quote.graft_visual_plan, ENT-quote.clinician_ids, ENT-quote.common_notes, ENT-quote.common_requirements, ENT-quote.attachment_ids |
-| Package Comparison | Quote aggregate | read-only cards/table | Yes | Ordered options with inclusions, date prices, and plans | Must reflect Tabs 2, 4, and 5 ENT-quote-option.id, ENT-quote-option.display_order, ENT-quote-option.package_name_snapshot, ENT-quote-option.included_services, ENT-quote-option-date-price.price, ENT-quote-option-plan-day.day_number |
-| Configured Currency | Quote | read-only label | Yes | Currency applied to all displayed prices | From the active FR-026 quote configuration; captured at first send; never provider-editable ENT-quote.currency_snapshot |
-| Calculated Price Range / Accepted Total | Quote | read-only amount | Yes | Price range before acceptance and accepted total after FR-005 acceptance | Price range derived from the complete Tab 4 matrix; accepted total written from the FR-005 acceptance snapshot ENT-quote.calculated_price_range, ENT-quote.accepted_total |
-| Commission | Quote | read-only model and value (percentage or flat rate) | Conditional | Commission model and value shown only to authorized roles, labelled "indicative, final at booking confirmation" | From the active FR-029 configuration; never provider input; the binding commission is fixed at booking confirmation ENT-quote.commission |
-| Quote Status | Quote | read-only badge | Yes | Current governed lifecycle state | System-owned enum ENT-quote.status |
-| Expiry | Quote | read-only datetime | Yes | Deadline for the complete quote; shown as "set on first send" while drafting | Captured at first send from the FR-026 quote expiry setting ENT-quote.expires_at |
-| Created and Updated | Quote | read-only metadata | Yes | System timestamps for creation and last update | System-generated ENT-quote.created_at, ENT-quote.updated_at |
-| Option Customization State | Option | read-only badge | Yes | Shows the source package and version and whether each option has been customised inline; warns when the source package has since been edited or deactivated | System-derived from option-item changes and the FR-024 package state ENT-quote-option.is_customized, ENT-quote-option.source_package_id, ENT-quote-option.source_package_version, ENT-package.status |
-| Downstream Acceptance and Lifecycle Metadata | Quote | read-only group | Conditional | Terms acknowledgment, exchange-rate lock, cancellation/supersession provenance, affiliate attribution (data owned by FR-018), and the travel path derived from the accepted option (FR-008) | Display-only; visible only when populated and authorized; never edited in Screen 1 ENT-quote.terms_acknowledged_at, ENT-quote.locked_exchange_rate_snapshot, ENT-quote.cancellation_provenance, ENT-affiliate-attribution.reference, ENT-travel-context.travel_path |
-| Version and Audit Summary | Quote aggregate | read-only links | Yes | Current version and immutable change history | Must cover parent and all option-owned records ENT-quote.version, ENT-quote-audit.action, ENT-quote-audit.actor_id, ENT-quote-audit.created_at |
-| Validation Summary | Quote aggregate | read-only checklist | Yes | Shows complete tabs and links each issue to its owning tab | No unresolved blocking issue no graph field (read-only checklist) |
-| Submit Quote | Quote aggregate | action | Yes | Submits parent and options as one transaction | Revalidate inquiry, authorization, option count, and every tab gate; blocked while any option/date price is not greater than 0 or an unacknowledged "currency changed, check your prices" banner is shown no graph field (control) |
+| Field Name | Scope | Type | Required | Description | Validation Rules | Graph field |
+| --- | --- | --- | --- | --- | --- | --- |
+| Quote, Inquiry, and Provider References | Quote | read-only context | Yes | Stable quote ID plus source inquiry and authenticated provider | System-owned; must match the active quote context | ENT-quote.id, ENT-quote.inquiry_id, ENT-quote.provider_id |
+| Shared Quote Summary | Quote | read-only group | Yes | Treatment, graft facts, visual plan, clinicians, notes, requirements, and attachments | Must reflect the latest saved values from Tabs 1, 3, and 6 | ENT-quote.treatment_id, ENT-quote.estimated_grafts, ENT-quote.graft_visual_plan, ENT-quote.clinician_ids, ENT-quote.common_notes, ENT-quote.common_requirements, ENT-quote.attachment_ids |
+| Package Comparison | Quote aggregate | read-only cards/table | Yes | Ordered options with inclusions, date prices, and plans | Must reflect Tabs 2, 4, and 5 | ENT-quote-option.id, ENT-quote-option.display_order, ENT-quote-option.package_name_snapshot, ENT-quote-option.included_services, ENT-quote-option-date-price.price, ENT-quote-option-plan-day.day_number |
+| Configured Currency | Quote | read-only label | Yes | Currency applied to all displayed prices | From the active FR-026 quote configuration; captured at first send; never provider-editable | ENT-quote.currency_snapshot |
+| Calculated Price Range / Accepted Total | Quote | read-only amount | Yes | Price range before acceptance and accepted total after FR-005 acceptance | Price range derived from the complete Tab 4 matrix; accepted total written from the FR-005 acceptance snapshot | ENT-quote.calculated_price_range, ENT-quote.accepted_total |
+| Commission | Quote | read-only model and value (percentage or flat rate) | Conditional | Commission model and value shown only to authorized roles, labelled "indicative, final at booking confirmation" | From the active FR-029 configuration; never provider input; the binding commission is fixed at booking confirmation | ENT-quote.commission |
+| Quote Status | Quote | read-only badge | Yes | Current governed lifecycle state | System-owned enum | ENT-quote.status |
+| Expiry | Quote | read-only datetime | Yes | Deadline for the complete quote; shown as "set on first send" while drafting | Captured at first send from the FR-026 quote expiry setting | ENT-quote.expires_at |
+| Created and Updated | Quote | read-only metadata | Yes | System timestamps for creation and last update | System-generated | ENT-quote.created_at, ENT-quote.updated_at |
+| Option Customization State | Option | read-only badge | Yes | Shows the source package and version and whether each option has been customised inline; warns when the source package has since been edited or deactivated | System-derived from option-item changes and the FR-024 package state | ENT-quote-option.is_customized, ENT-quote-option.source_package_id, ENT-quote-option.source_package_version, ENT-package.status |
+| Downstream Acceptance and Lifecycle Metadata | Quote | read-only group | Conditional | Terms acknowledgment, exchange-rate lock, cancellation/supersession provenance, affiliate attribution (data owned by FR-018), and the travel path derived from the accepted option (FR-008) | Display-only; visible only when populated and authorized; never edited in Screen 1 | ENT-quote.terms_acknowledged_at, ENT-quote.locked_exchange_rate_snapshot, ENT-quote.cancellation_provenance, ENT-affiliate-attribution.reference, ENT-travel-context.travel_path |
+| Version and Audit Summary | Quote aggregate | read-only links | Yes | Current version and immutable change history | Must cover parent and all option-owned records | ENT-quote.version, ENT-quote-audit.action, ENT-quote-audit.actor_id, ENT-quote-audit.created_at |
+| Validation Summary | Quote aggregate | read-only checklist | Yes | Shows complete tabs and links each issue to its owning tab | No unresolved blocking issue | no graph field (read-only checklist) |
+| Submit Quote | Quote aggregate | action | Yes | Submits parent and options as one transaction | Revalidate inquiry, authorization, option count, and every tab gate; blocked while any option/date price is not greater than 0 or an unacknowledged "currency changed, check your prices" banner is shown | no graph field (control) |
 
 #### Screen 2: Quote List (Unified; no tabs)
 
@@ -441,20 +441,20 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules Graph field |
-|------------|------|----------|-------------|------------------ --- |
-| Patient ID | column | Yes | Anonymized ID | Searchable ENT-patient.anonymized_id |
-| Name | column | Yes | Partly censored name | Masking applies ENT-patient.name |
-| Age | column | No | Patient age | Number; sortable ENT-patient.age |
-| Problem/Concern | column | No | Primary concern | Filterable ENT-inquiry.problem_concern |
-| Treatment & Options | column | Yes | Shared treatment and option count | Read-only; show 1–5 options ENT-quote.treatment_id, ENT-quote-option.id |
-| Date Ranges Quoted | column | Yes | Distinct ranges offered across options | Tooltip groups ranges by option ENT-quote-option-date-price.start_date, ENT-quote-option-date-price.end_date |
-| Price Range | column | Yes | Lowest to highest option/date price | Currency formatting; derived from matrix (REQ-004-093) ENT-quote.calculated_price_range |
-| Location | column | No | Patient country | Filterable ENT-patient.country |
-| Medical Alerts | column | Yes | Alert chips | Severity colors ENT-risk-tag.severity |
-| Quoted Date | column | Yes | Quote created date | Relative formatting rules ENT-quote.created_at |
-| Action | column | Yes | Edit, Soft Delete, View Details | State-aware no graph field (control) |
-| Search/Filters | control | No | Patient/Inquiry/Treatment/Date/Status/Location/Alerts | Valid enums/ranges no graph field (control) |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------ | --- |
+| Patient ID | column | Yes | Anonymized ID | Searchable | ENT-patient.anonymized_id |
+| Name | column | Yes | Partly censored name | Masking applies | ENT-patient.name |
+| Age | column | No | Patient age | Number; sortable | ENT-patient.age |
+| Problem/Concern | column | No | Primary concern | Filterable | ENT-inquiry.problem_concern |
+| Treatment & Options | column | Yes | Shared treatment and option count | Read-only; show 1–5 options | ENT-quote.treatment_id, ENT-quote-option.id |
+| Date Ranges Quoted | column | Yes | Distinct ranges offered across options | Tooltip groups ranges by option | ENT-quote-option-date-price.start_date, ENT-quote-option-date-price.end_date |
+| Price Range | column | Yes | Lowest to highest option/date price | Currency formatting; derived from matrix (REQ-004-093) | ENT-quote.calculated_price_range |
+| Location | column | No | Patient country | Filterable | ENT-patient.country |
+| Medical Alerts | column | Yes | Alert chips | Severity colors | ENT-risk-tag.severity |
+| Quoted Date | column | Yes | Quote created date | Relative formatting rules | ENT-quote.created_at |
+| Action | column | Yes | Edit, Soft Delete, View Details | State-aware | no graph field (control) |
+| Search/Filters | control | No | Patient/Inquiry/Treatment/Date/Status/Location/Alerts | Valid enums/ranges | no graph field (control) |
 
 **Notes**:
 
@@ -468,29 +468,29 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules Graph field |
-|------------|------|----------|-------------|------------------ --- |
-| Patient (Anonymized) | group | Yes | Anonymized ID, masked name, age, location | Contact hidden until payment ENT-patient.anonymized_id, ENT-patient.name, ENT-patient.age, ENT-patient.country |
-| Inquiry Context | group | Yes | Continuation data from FR-003 | Read-only no graph field (group of the rows below) |
-|  • Countries | list | Yes | Selected treatment countries | From inquiry ENT-inquiry.treatment_countries |
-|  • Problem Details | group | Yes | Concern, duration, previous treatments | From inquiry ENT-inquiry.problem_concern, ENT-inquiry.problem_duration, ENT-inquiry.previous_treatments |
-|  • Medical Alerts | chips | Yes | Critical/Standard/None | Derived from questionnaire ENT-risk-tag.severity |
-|  • Requested Date Ranges | list | Yes | All patient-requested ranges | Read-only ENT-inquiry-date-range.start_date, ENT-inquiry-date-range.end_date |
-|  • Media/Scan | links/viewer | No | Photos/videos/3D scan viewer | Read-only ENT-inquiry.media |
-| Quote Summary | group | Yes | Shared treatment facts, common notes, expiry, and option count | Read-only ENT-quote.treatment_id, ENT-quote.common_notes, ENT-quote.expires_at, ENT-quote-option.id |
-| Quote Options | comparison cards/table | Yes | Ordered package snapshots with option-local inclusions and services | One to five options ENT-quote-option.display_order, ENT-quote-option.package_name_snapshot, ENT-quote-option.included_services, ENT-quote-option-item.name, ENT-quote-option-item.is_included |
-| Option Date Prices | matrix | Yes | Applicable date ranges, appointment slots, and prices for each option | Every applicable combination shown; currency rules ENT-quote-option-date-price.start_date, ENT-quote-option-date-price.end_date, ENT-quote-option-date-price.appointment_at, ENT-quote-option-date-price.appointment_time_zone, ENT-quote-option-date-price.price, ENT-quote.currency_snapshot |
-| Option Treatment Plan | table | Yes | Package-specific relative day plan | Grouped by option; consecutive day numbers ENT-quote-option-plan-day.day_number, ENT-quote-option-plan-day.description |
-| Estimated Grafts | number | Yes | Estimated graft count | Positive integer ENT-quote.estimated_grafts |
-| Promotion | reference | No | Structured promotion applied to an option/date price, with its discount shown separately from the offered price | Read-only; shows the promotion terms copied into the sent quote version, never the live FR-019 terms ENT-quote-option-date-price.promotion_id, ENT-quote-option-date-price.promotion_terms_snapshot, ENT-quote-option-date-price.discount_amount |
-| Clinicians | list | Yes | Responsible clinicians shared by every option | At least one; each must be eligible ENT-quote.clinician_ids |
-| 3D Markup | viewer | No | Drawings over 3D image | Read-only snapshot ENT-quote.graft_visual_plan |
-| Common Notes and Requirements | text | No | Provider information applying to every option | Read-only ENT-quote.common_notes, ENT-quote.common_requirements |
-| Attachments | file list/viewer | No | Quote-level files applying to every option | Read-only; access and retention rules enforced ENT-quote.attachment_ids |
-| Expiry | datetime | Yes | Computed deadline | From admin window ENT-quote.expires_at |
-| Provider Info | group | Yes | Provider/practice info | Read-only per policy ENT-provider.name |
-| Actions | actions | Yes | Edit / Soft Delete (if eligible) | State policy enforced no graph field (control) |
-| Audit/Version | modal | Yes | Version history and audit log | Immutable audit ENT-quote-version.version, ENT-quote-audit.action |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------ | --- |
+| Patient (Anonymized) | group | Yes | Anonymized ID, masked name, age, location | Contact hidden until payment | ENT-patient.anonymized_id, ENT-patient.name, ENT-patient.age, ENT-patient.country |
+| Inquiry Context | group | Yes | Continuation data from FR-003 | Read-only | no graph field (group of the rows below) |
+|  • Countries | list | Yes | Selected treatment countries | From inquiry | ENT-inquiry.treatment_countries |
+|  • Problem Details | group | Yes | Concern, duration, previous treatments | From inquiry | ENT-inquiry.problem_concern, ENT-inquiry.problem_duration, ENT-inquiry.previous_treatments |
+|  • Medical Alerts | chips | Yes | Critical/Standard/None | Derived from questionnaire | ENT-risk-tag.severity |
+|  • Requested Date Ranges | list | Yes | All patient-requested ranges | Read-only | ENT-inquiry-date-range.start_date, ENT-inquiry-date-range.end_date |
+|  • Media/Scan | links/viewer | No | Photos/videos/3D scan viewer | Read-only | ENT-inquiry.media |
+| Quote Summary | group | Yes | Shared treatment facts, common notes, expiry, and option count | Read-only | ENT-quote.treatment_id, ENT-quote.common_notes, ENT-quote.expires_at, ENT-quote-option.id |
+| Quote Options | comparison cards/table | Yes | Ordered package snapshots with option-local inclusions and services | One to five options | ENT-quote-option.display_order, ENT-quote-option.package_name_snapshot, ENT-quote-option.included_services, ENT-quote-option-item.name, ENT-quote-option-item.is_included |
+| Option Date Prices | matrix | Yes | Applicable date ranges, appointment slots, and prices for each option | Every applicable combination shown; currency rules | ENT-quote-option-date-price.start_date, ENT-quote-option-date-price.end_date, ENT-quote-option-date-price.appointment_at, ENT-quote-option-date-price.appointment_time_zone, ENT-quote-option-date-price.price, ENT-quote.currency_snapshot |
+| Option Treatment Plan | table | Yes | Package-specific relative day plan | Grouped by option; consecutive day numbers | ENT-quote-option-plan-day.day_number, ENT-quote-option-plan-day.description |
+| Estimated Grafts | number | Yes | Estimated graft count | Positive integer | ENT-quote.estimated_grafts |
+| Promotion | reference | No | Structured promotion applied to an option/date price, with its discount shown separately from the offered price | Read-only; shows the promotion terms copied into the sent quote version, never the live FR-019 terms | ENT-quote-option-date-price.promotion_id, ENT-quote-option-date-price.promotion_terms_snapshot, ENT-quote-option-date-price.discount_amount |
+| Clinicians | list | Yes | Responsible clinicians shared by every option | At least one; each must be eligible | ENT-quote.clinician_ids |
+| 3D Markup | viewer | No | Drawings over 3D image | Read-only snapshot | ENT-quote.graft_visual_plan |
+| Common Notes and Requirements | text | No | Provider information applying to every option | Read-only | ENT-quote.common_notes, ENT-quote.common_requirements |
+| Attachments | file list/viewer | No | Quote-level files applying to every option | Read-only; access and retention rules enforced | ENT-quote.attachment_ids |
+| Expiry | datetime | Yes | Computed deadline | From admin window | ENT-quote.expires_at |
+| Provider Info | group | Yes | Provider/practice info | Read-only per policy | ENT-provider.name |
+| Actions | actions | Yes | Edit / Soft Delete (if eligible) | State policy enforced | no graph field (control) |
+| Audit/Version | modal | Yes | Version history and audit log | Immutable audit | ENT-quote-version.version, ENT-quote-audit.action |
 
 **Notes**:
 
@@ -507,20 +507,20 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules Graph field |
-|------------|------|----------|-------------|------------------ --- |
-| Quote List | list | Yes | Parent quotes grouped by inquiry and provider | Read-only; separate quote and option counts ENT-quote.id, ENT-quote.inquiry_id, ENT-quote.provider_id |
-| Treatment | text | Yes | Selected treatment | Read-only ENT-quote.treatment_id |
-| Quote Options | comparison cards/table | Yes | One to five package options within the selected quote | Read-only in FR-004; selection governed by FR-005 ENT-quote-option.display_order, ENT-quote-option.package_name_snapshot |
-| Price Breakdown | matrix | Yes | Price for every applicable option/date combination, with any promotion discount shown separately | Currency rules ENT-quote-option-date-price.start_date, ENT-quote-option-date-price.end_date, ENT-quote-option-date-price.price, ENT-quote-option-date-price.discount_amount, ENT-quote.currency_snapshot |
-| Inclusions and Services | list | Yes | Snapshot of inclusions and quote-local customizations | Grouped by option; read-only ENT-quote-option.included_services, ENT-quote-option-item.name, ENT-quote-option-item.is_included |
-| Treatment Plan | table | Yes | Different day-to-day plan for each option | Grouped by option; read-only ENT-quote-option-plan-day.day_number, ENT-quote-option-plan-day.description |
-| Attachments | file list/viewer | No | Quote-level supporting files | Read-only; patient access rules enforced ENT-quote.attachment_ids |
-| Status | badge | Yes | Parent quote status mapped from the Key Entities enum: Sent (shown as Awaiting Decision), Accepted, Expired, Withdrawn, Cancelled (Inquiry Cancelled), Cancelled (Other Accepted), and Cancelled (Provider Status) shown as Offer Unavailable; each subquote also shows its FR-005 state, including Not Selected | Enum validation; drafts and archived quotes are never shown to patients; visual treatment per state (e.g., greyed-out for cancelled/expired) (REQ-004-075, REQ-004-097) ENT-quote.status, ENT-subquote.acceptance_state |
-| Expiration Timer | timer | Yes | Countdown to expiry | From admin window ENT-quote.expires_at |
-| Provider Info | group | Yes | Allowed provider details | Privacy rules ENT-provider.name |
-| Actions | actions | Yes | Accept one subquote (FR-005); there is no parent-level Accept or Decline action | State & confirmation rules owned by FR-005 (REQ-004-095) no graph field (control) |
-| Notifications | note | No | New/updated/expired indicators | Read-only no graph field (read-only indicator) |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------ | --- |
+| Quote List | list | Yes | Parent quotes grouped by inquiry and provider | Read-only; separate quote and option counts | ENT-quote.id, ENT-quote.inquiry_id, ENT-quote.provider_id |
+| Treatment | text | Yes | Selected treatment | Read-only | ENT-quote.treatment_id |
+| Quote Options | comparison cards/table | Yes | One to five package options within the selected quote | Read-only in FR-004; selection governed by FR-005 | ENT-quote-option.display_order, ENT-quote-option.package_name_snapshot |
+| Price Breakdown | matrix | Yes | Price for every applicable option/date combination, with any promotion discount shown separately | Currency rules | ENT-quote-option-date-price.start_date, ENT-quote-option-date-price.end_date, ENT-quote-option-date-price.price, ENT-quote-option-date-price.discount_amount, ENT-quote.currency_snapshot |
+| Inclusions and Services | list | Yes | Snapshot of inclusions and quote-local customizations | Grouped by option; read-only | ENT-quote-option.included_services, ENT-quote-option-item.name, ENT-quote-option-item.is_included |
+| Treatment Plan | table | Yes | Different day-to-day plan for each option | Grouped by option; read-only | ENT-quote-option-plan-day.day_number, ENT-quote-option-plan-day.description |
+| Attachments | file list/viewer | No | Quote-level supporting files | Read-only; patient access rules enforced | ENT-quote.attachment_ids |
+| Status | badge | Yes | Parent quote status mapped from the Key Entities enum: Sent (shown as Awaiting Decision), Accepted, Expired, Withdrawn, Cancelled (Inquiry Cancelled), Cancelled (Other Accepted), and Cancelled (Provider Status) shown as Offer Unavailable; each subquote also shows its FR-005 state, including Not Selected | Enum validation; drafts and archived quotes are never shown to patients; visual treatment per state (e.g., greyed-out for cancelled/expired) (REQ-004-075, REQ-004-097) | ENT-quote.status, ENT-subquote.acceptance_state |
+| Expiration Timer | timer | Yes | Countdown to expiry | From admin window | ENT-quote.expires_at |
+| Provider Info | group | Yes | Allowed provider details | Privacy rules | ENT-provider.name |
+| Actions | actions | Yes | Accept one subquote (FR-005); there is no parent-level Accept or Decline action | State & confirmation rules owned by FR-005 (REQ-004-095) | no graph field (control) |
+| Notifications | note | No | New/updated/expired indicators | Read-only | no graph field (read-only indicator) |
 
 **Governance Note**: This screen’s field/visual specification is defined here in FR-004, but the end-to-end patient quote comparison and acceptance flows (including edge cases, blocking rules, and booking handoff) are governed primarily by **FR-005: Quote Comparison & Acceptance (P-02)**. FR-005 may extend or refine the actions on this screen while preserving the privacy constraints and data structure specified in FR-004.
 
@@ -532,26 +532,26 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules Graph field |
-|------------|------|----------|-------------|------------------ --- |
-| Global Quote Table | table | Yes | All quotes with columns & filters | Admin-only no graph field (table of the columns below) |
-| Patient ID | column | Yes | Anonymized ID | Searchable ENT-patient.anonymized_id |
-| Name | column | Yes | Partly censored name | Masking applies ENT-patient.name |
-| Age | column | No | Patient age | Number; sortable ENT-patient.age |
-| Problem/Concern | column | No | Primary concern | Filterable ENT-inquiry.problem_concern |
-| Treatment & Options | column | Yes | Shared treatment and option count | Read-only; show 1–5 options ENT-quote.treatment_id, ENT-quote-option.id |
-| Date Ranges Quoted | column | Yes | Distinct ranges offered across options | Tooltip groups ranges by option ENT-quote-option-date-price.start_date, ENT-quote-option-date-price.end_date |
-| Price Range | column | Yes | Lowest to highest option/date price | Currency formatting; derived from matrix ENT-quote.calculated_price_range |
-| Location | column | No | Patient country | Filterable ENT-patient.country |
-| Medical Alerts | column | Yes | Alert chips | Severity colors ENT-risk-tag.severity |
-| Quoted Date | column | Yes | Quote created date | Relative formatting rules ENT-quote.created_at |
-| Provider | column | Yes | Provider/clinic | Filterable ENT-provider.name |
-| Actions | column | Yes | Restore/Archive/View Detail | State-aware; Restore and Archive are hidden for `accepted` quotes no graph field (control) |
-| Search/Filters | control | No | Patient/Inquiry/Treatment/Date/Status/Location/Alerts/Provider. Status filter includes: draft, sent, expired, withdrawn, archived, accepted, cancelled_other_accepted, cancelled_inquiry_cancelled, cancelled_provider_status | Valid enums/ranges no graph field (control) |
-| Inquiry Grouping | control | Yes | Default: grouped by inquiry | Toggle grouping (REQ-004-108) no graph field (control) |
-| Multi-Quote Cue | badge/icon | No | Visual cue for multiple quotes in inquiry | Shows count or indicator no graph field (read-only indicator) |
-| Audit Trail | modal | Yes | Per-quote audit (who/what/when/prev value) | Immutable ENT-quote-audit.action, ENT-quote-audit.actor_id, ENT-quote-audit.before, ENT-quote-audit.created_at |
-| Version History | modal | Yes | Full version history | Immutable ENT-quote-version.version, ENT-quote-version.created_at |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------ | --- |
+| Global Quote Table | table | Yes | All quotes with columns & filters | Admin-only | no graph field (table of the columns below) |
+| Patient ID | column | Yes | Anonymized ID | Searchable | ENT-patient.anonymized_id |
+| Name | column | Yes | Partly censored name | Masking applies | ENT-patient.name |
+| Age | column | No | Patient age | Number; sortable | ENT-patient.age |
+| Problem/Concern | column | No | Primary concern | Filterable | ENT-inquiry.problem_concern |
+| Treatment & Options | column | Yes | Shared treatment and option count | Read-only; show 1–5 options | ENT-quote.treatment_id, ENT-quote-option.id |
+| Date Ranges Quoted | column | Yes | Distinct ranges offered across options | Tooltip groups ranges by option | ENT-quote-option-date-price.start_date, ENT-quote-option-date-price.end_date |
+| Price Range | column | Yes | Lowest to highest option/date price | Currency formatting; derived from matrix | ENT-quote.calculated_price_range |
+| Location | column | No | Patient country | Filterable | ENT-patient.country |
+| Medical Alerts | column | Yes | Alert chips | Severity colors | ENT-risk-tag.severity |
+| Quoted Date | column | Yes | Quote created date | Relative formatting rules | ENT-quote.created_at |
+| Provider | column | Yes | Provider/clinic | Filterable | ENT-provider.name |
+| Actions | column | Yes | Restore/Archive/View Detail | State-aware; Restore and Archive are hidden for `accepted` quotes | no graph field (control) |
+| Search/Filters | control | No | Patient/Inquiry/Treatment/Date/Status/Location/Alerts/Provider. Status filter includes: draft, sent, expired, withdrawn, archived, accepted, cancelled_other_accepted, cancelled_inquiry_cancelled, cancelled_provider_status | Valid enums/ranges | no graph field (control) |
+| Inquiry Grouping | control | Yes | Default: grouped by inquiry | Toggle grouping (REQ-004-108) | no graph field (control) |
+| Multi-Quote Cue | badge/icon | No | Visual cue for multiple quotes in inquiry | Shows count or indicator | no graph field (read-only indicator) |
+| Audit Trail | modal | Yes | Per-quote audit (who/what/when/prev value) | Immutable | ENT-quote-audit.action, ENT-quote-audit.actor_id, ENT-quote-audit.before, ENT-quote-audit.created_at |
+| Version History | modal | Yes | Full version history | Immutable | ENT-quote-version.version, ENT-quote-version.created_at |
 
 #### Screen 6: Quote Detail (Admin)
 
@@ -559,24 +559,24 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules Graph field |
-|------------|------|----------|-------------|------------------ --- |
-| Quote Selector | dropdown/list | Yes | Switch between quotes for this inquiry | Must belong to same inquiry ENT-quote.id |
-| Quote Summary | group | Yes | Shared treatment facts, common notes, expiry, and option count | Read-only ENT-quote.treatment_id, ENT-quote.common_notes, ENT-quote.expires_at, ENT-quote-option.id |
-| Quote Options | comparison cards/table | Yes | Package snapshots, option-local inclusions, and source-package provenance | One to five options ENT-quote-option.display_order, ENT-quote-option.package_name_snapshot, ENT-quote-option.included_services, ENT-quote-option-item.name, ENT-quote-option-item.is_included, ENT-quote-option.source_package_id, ENT-quote-option.source_package_version |
-| Option Date Prices | matrix | Yes | Applicable date ranges, appointment slots, and prices by option | Complete for every applicable combination ENT-quote-option-date-price.start_date, ENT-quote-option-date-price.end_date, ENT-quote-option-date-price.appointment_at, ENT-quote-option-date-price.appointment_time_zone, ENT-quote-option-date-price.price, ENT-quote.currency_snapshot |
-| Option Treatment Plans | table | Yes | Relative day plan grouped by package option | Consecutive day numbers per option ENT-quote-option-plan-day.day_number, ENT-quote-option-plan-day.description |
-| Estimated Grafts | number | Yes | Estimated graft count | Positive integer ENT-quote.estimated_grafts |
-| Promotion | reference | No | Structured promotion applied to an option/date price, with its discount shown separately from the offered price | Read-only; shows the promotion terms copied into the sent quote version, never the live FR-019 terms ENT-quote-option-date-price.promotion_id, ENT-quote-option-date-price.promotion_terms_snapshot, ENT-quote-option-date-price.discount_amount |
-| Clinicians | list | Yes | Responsible clinicians shared by every option | At least one; each must be eligible ENT-quote.clinician_ids |
-| 3D Markup | viewer | No | Drawings over 3D image | Read-only snapshot ENT-quote.graft_visual_plan |
-| Common Notes and Requirements | text/list | No | Provider information applying to every option | Read-only ENT-quote.common_notes, ENT-quote.common_requirements |
-| Attachments | file list/viewer | No | Quote-level supporting files | Read-only; access and retention rules enforced ENT-quote.attachment_ids |
-| Expiry | datetime | Yes | Computed deadline | From admin window ENT-quote.expires_at |
-| Provider Info | group | Yes | Provider/practice info | Read-only ENT-provider.name |
-| Inquiry Context | group | Yes | Countries, problem, alerts, ranges, media/scan | From FR-003 ENT-inquiry.treatment_countries, ENT-inquiry.problem_concern, ENT-risk-tag.severity, ENT-inquiry-date-range.start_date, ENT-inquiry-date-range.end_date, ENT-inquiry.media |
-| Audit Trail | log | Yes | Full change history | Immutable ENT-quote-audit.action |
-| Version History | list | Yes | Quote versions | Immutable ENT-quote-version.version |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------ | --- |
+| Quote Selector | dropdown/list | Yes | Switch between quotes for this inquiry | Must belong to same inquiry | ENT-quote.id |
+| Quote Summary | group | Yes | Shared treatment facts, common notes, expiry, and option count | Read-only | ENT-quote.treatment_id, ENT-quote.common_notes, ENT-quote.expires_at, ENT-quote-option.id |
+| Quote Options | comparison cards/table | Yes | Package snapshots, option-local inclusions, and source-package provenance | One to five options | ENT-quote-option.display_order, ENT-quote-option.package_name_snapshot, ENT-quote-option.included_services, ENT-quote-option-item.name, ENT-quote-option-item.is_included, ENT-quote-option.source_package_id, ENT-quote-option.source_package_version |
+| Option Date Prices | matrix | Yes | Applicable date ranges, appointment slots, and prices by option | Complete for every applicable combination | ENT-quote-option-date-price.start_date, ENT-quote-option-date-price.end_date, ENT-quote-option-date-price.appointment_at, ENT-quote-option-date-price.appointment_time_zone, ENT-quote-option-date-price.price, ENT-quote.currency_snapshot |
+| Option Treatment Plans | table | Yes | Relative day plan grouped by package option | Consecutive day numbers per option | ENT-quote-option-plan-day.day_number, ENT-quote-option-plan-day.description |
+| Estimated Grafts | number | Yes | Estimated graft count | Positive integer | ENT-quote.estimated_grafts |
+| Promotion | reference | No | Structured promotion applied to an option/date price, with its discount shown separately from the offered price | Read-only; shows the promotion terms copied into the sent quote version, never the live FR-019 terms | ENT-quote-option-date-price.promotion_id, ENT-quote-option-date-price.promotion_terms_snapshot, ENT-quote-option-date-price.discount_amount |
+| Clinicians | list | Yes | Responsible clinicians shared by every option | At least one; each must be eligible | ENT-quote.clinician_ids |
+| 3D Markup | viewer | No | Drawings over 3D image | Read-only snapshot | ENT-quote.graft_visual_plan |
+| Common Notes and Requirements | text/list | No | Provider information applying to every option | Read-only | ENT-quote.common_notes, ENT-quote.common_requirements |
+| Attachments | file list/viewer | No | Quote-level supporting files | Read-only; access and retention rules enforced | ENT-quote.attachment_ids |
+| Expiry | datetime | Yes | Computed deadline | From admin window | ENT-quote.expires_at |
+| Provider Info | group | Yes | Provider/practice info | Read-only | ENT-provider.name |
+| Inquiry Context | group | Yes | Countries, problem, alerts, ranges, media/scan | From FR-003 | ENT-inquiry.treatment_countries, ENT-inquiry.problem_concern, ENT-risk-tag.severity, ENT-inquiry-date-range.start_date, ENT-inquiry-date-range.end_date, ENT-inquiry.media |
+| Audit Trail | log | Yes | Full change history | Immutable | ENT-quote-audit.action |
+| Version History | list | Yes | Quote versions | Immutable | ENT-quote-version.version |
 
 #### Screen 7: Admin Inline Quote Edit
 
@@ -584,20 +584,20 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules Graph field |
-|------------|------|----------|-------------|------------------ --- |
-| Quote Selector | dropdown/list | Yes | Select target quote under inquiry | Must belong to same inquiry ENT-quote.id |
-| Quote Option | selector | Yes | Select the package option being edited | Must belong to the selected quote ENT-quote-option.id |
-| Option/Date Price | matrix | Cond. | Edit applicability, appointment slot, or price for an option/date combination | Reason required; matrix must remain complete ENT-quote-option-date-price.source_inquiry_date_range_id, ENT-quote-option-date-price.appointment_at, ENT-quote-option-date-price.appointment_time_zone, ENT-quote-option-date-price.price |
-| Package Inclusions | inline option editor | Cond. | Edit the option snapshot without changing the package library | Reason required ENT-quote-option.included_services, ENT-quote-option-item.name, ENT-quote-option-item.is_included |
-| Estimated Grafts | number | Cond. | Adjust graft count. Saving a new value regenerates Graft Description from the fixed template (see Business Rules); the prior text stays in quote history | Positive integer; reason required (REQ-004-101) ENT-quote.estimated_grafts, ENT-quote.graft_description |
-| Option Items | repeater | Cond. | Add/edit/remove items within the selected option snapshot | Same fields as Sub-screen 2A — Item Name, Item Type, Included flag, Item Order, and Item Price (optional); item order consecutive with no gaps; reason required ENT-quote-option-item.name, ENT-quote-option-item.item_type, ENT-quote-option-item.is_included, ENT-quote-option-item.display_order, ENT-quote-option-item.price |
-| Treatment Plan (per-day) | repeater | Cond. | Edit the selected option's relative day plan | Consecutive day numbers; reason required ENT-quote-option-plan-day.day_number, ENT-quote-option-plan-day.description |
-| Promotion | select-or-create | Cond. | Add, replace, or remove the structured promotion on an option/date price of a draft or sent quote. Inline create permitted with `scope = AD_HOC_QUOTE_BOUND` per FR-019 Screen 9 Mode 2 | Must resolve to a valid PromotionProgram id or null; reason required; the change creates a new quote version into which the current promotion terms are copied (REQ-004-099, REQ-004-100) ENT-quote-option-date-price.promotion_id, ENT-promotion-program.scope |
-| Notes | textarea | No | Admin note | Stored with audit ENT-quote-audit.note |
-| Clinicians | multiselect | Cond. | Change the shared clinician assignments | At least one; each must be active, eligible, and belong to the provider; reason required ENT-quote.clinician_ids |
-| Attachments | multi-file upload | Cond. | Add or remove quote-level supporting files | File/access rules and reason required ENT-quote.attachment_ids |
-| Audit Reason | textarea | Yes | Reason for change | Required for any edit ENT-quote-audit.reason |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------ | --- |
+| Quote Selector | dropdown/list | Yes | Select target quote under inquiry | Must belong to same inquiry | ENT-quote.id |
+| Quote Option | selector | Yes | Select the package option being edited | Must belong to the selected quote | ENT-quote-option.id |
+| Option/Date Price | matrix | Cond. | Edit applicability, appointment slot, or price for an option/date combination | Reason required; matrix must remain complete | ENT-quote-option-date-price.source_inquiry_date_range_id, ENT-quote-option-date-price.appointment_at, ENT-quote-option-date-price.appointment_time_zone, ENT-quote-option-date-price.price |
+| Package Inclusions | inline option editor | Cond. | Edit the option snapshot without changing the package library | Reason required | ENT-quote-option.included_services, ENT-quote-option-item.name, ENT-quote-option-item.is_included |
+| Estimated Grafts | number | Cond. | Adjust graft count. Saving a new value regenerates Graft Description from the fixed template (see Business Rules); the prior text stays in quote history | Positive integer; reason required (REQ-004-101) | ENT-quote.estimated_grafts, ENT-quote.graft_description |
+| Option Items | repeater | Cond. | Add/edit/remove items within the selected option snapshot | Same fields as Sub-screen 2A — Item Name, Item Type, Included flag, Item Order, and Item Price (optional); item order consecutive with no gaps; reason required | ENT-quote-option-item.name, ENT-quote-option-item.item_type, ENT-quote-option-item.is_included, ENT-quote-option-item.display_order, ENT-quote-option-item.price |
+| Treatment Plan (per-day) | repeater | Cond. | Edit the selected option's relative day plan | Consecutive day numbers; reason required | ENT-quote-option-plan-day.day_number, ENT-quote-option-plan-day.description |
+| Promotion | select-or-create | Cond. | Add, replace, or remove the structured promotion on an option/date price of a draft or sent quote. Inline create permitted with `scope = AD_HOC_QUOTE_BOUND` per FR-019 Screen 9 Mode 2 | Must resolve to a valid PromotionProgram id or null; reason required; the change creates a new quote version into which the current promotion terms are copied (REQ-004-099, REQ-004-100) | ENT-quote-option-date-price.promotion_id, ENT-promotion-program.scope |
+| Notes | textarea | No | Admin note | Stored with audit | ENT-quote-audit.note |
+| Clinicians | multiselect | Cond. | Change the shared clinician assignments | At least one; each must be active, eligible, and belong to the provider; reason required | ENT-quote.clinician_ids |
+| Attachments | multi-file upload | Cond. | Add or remove quote-level supporting files | File/access rules and reason required | ENT-quote.attachment_ids |
+| Audit Reason | textarea | Yes | Reason for change | Required for any edit | ENT-quote-audit.reason |
 
 **Notes**:
 
@@ -610,19 +610,19 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules Graph field |
-|------------|------|----------|-------------|------------------ --- |
-| Transfer Context | group | Yes | Inquiry, closed booking, provider-fault cause, and the closed AcceptanceEvent with its snapshot | Read-only; opened only from the FR-006 transfer; booking must be closed with `ProviderFault`, `ProviderSuspended`, or `ProviderDeactivated` before treatment started (REQ-004-081) ENT-booking.status, ENT-booking.closure_cause, ENT-quote.inquiry_id, ENT-quote.replacement_for_acceptance_event_id, ENT-acceptance-event.snapshot |
-| Replacement Provider | reference | Yes | Provider chosen in the FR-006 transfer | Read-only here; must be `Active` and must not be the provider at fault ENT-quote.provider_id |
-| Treatment | select | Yes | Shared treatment for the replacement quote | From the admin-curated catalog; prefilled from the closed acceptance ENT-quote.treatment_id |
-| Quote Options | inline option editor | Yes | One to five options seeded from the replacement provider's active packages | Same option rules as Screen 1; quote-local copies only ENT-quote-option.package_name_snapshot, ENT-quote-option.source_package_id, ENT-quote-option.included_services, ENT-quote-option-item.name, ENT-quote-option-item.is_included |
-| Option/Date Price | matrix | Yes | Date range, appointment date/time, time zone, and price for each applicable option/date pairing | Price greater than 0; date range from the inquiry; appointment within the range ENT-quote-option-date-price.source_inquiry_date_range_id, ENT-quote-option-date-price.appointment_at, ENT-quote-option-date-price.appointment_time_zone, ENT-quote-option-date-price.price |
-| Estimated Grafts | number | Yes | Shared graft estimate | Positive integer; Graft Description regenerated from the template ENT-quote.estimated_grafts, ENT-quote.graft_description |
-| Treatment Plan (per-day) | repeater | Yes | Relative day plan per option | Consecutive day numbers ENT-quote-option-plan-day.day_number, ENT-quote-option-plan-day.description |
-| Clinicians | multiselect | Yes | Shared clinicians of the replacement provider | At least one; each active, eligible, and belonging to that provider ENT-quote.clinician_ids |
-| Notes and Attachments | text/files | No | Common notes, requirements, and supporting files | Same limits as Screen 1 ENT-quote.common_notes, ENT-quote.common_requirements, ENT-quote.attachment_ids |
-| Adjustment Reason | textarea | Yes | Why the package or price differs from the closed acceptance, or why it is unchanged | Required; stored in the quote audit ENT-quote-audit.reason |
-| Actions | buttons | Yes | Save Draft, Save and Continue to Acceptance, Cancel | Save and Continue validates every field and returns to the FR-006 transfer to record the acceptance no graph field (control) |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------ | --- |
+| Transfer Context | group | Yes | Inquiry, closed booking, provider-fault cause, and the closed AcceptanceEvent with its snapshot | Read-only; opened only from the FR-006 transfer; booking must be closed with `ProviderFault`, `ProviderSuspended`, or `ProviderDeactivated` before treatment started (REQ-004-081) | ENT-booking.status, ENT-booking.closure_cause, ENT-quote.inquiry_id, ENT-quote.replacement_for_acceptance_event_id, ENT-acceptance-event.snapshot |
+| Replacement Provider | reference | Yes | Provider chosen in the FR-006 transfer | Read-only here; must be `Active` and must not be the provider at fault | ENT-quote.provider_id |
+| Treatment | select | Yes | Shared treatment for the replacement quote | From the admin-curated catalog; prefilled from the closed acceptance | ENT-quote.treatment_id |
+| Quote Options | inline option editor | Yes | One to five options seeded from the replacement provider's active packages | Same option rules as Screen 1; quote-local copies only | ENT-quote-option.package_name_snapshot, ENT-quote-option.source_package_id, ENT-quote-option.included_services, ENT-quote-option-item.name, ENT-quote-option-item.is_included |
+| Option/Date Price | matrix | Yes | Date range, appointment date/time, time zone, and price for each applicable option/date pairing | Price greater than 0; date range from the inquiry; appointment within the range | ENT-quote-option-date-price.source_inquiry_date_range_id, ENT-quote-option-date-price.appointment_at, ENT-quote-option-date-price.appointment_time_zone, ENT-quote-option-date-price.price |
+| Estimated Grafts | number | Yes | Shared graft estimate | Positive integer; Graft Description regenerated from the template | ENT-quote.estimated_grafts, ENT-quote.graft_description |
+| Treatment Plan (per-day) | repeater | Yes | Relative day plan per option | Consecutive day numbers | ENT-quote-option-plan-day.day_number, ENT-quote-option-plan-day.description |
+| Clinicians | multiselect | Yes | Shared clinicians of the replacement provider | At least one; each active, eligible, and belonging to that provider | ENT-quote.clinician_ids |
+| Notes and Attachments | text/files | No | Common notes, requirements, and supporting files | Same limits as Screen 1 | ENT-quote.common_notes, ENT-quote.common_requirements, ENT-quote.attachment_ids |
+| Adjustment Reason | textarea | Yes | Why the package or price differs from the closed acceptance, or why it is unchanged | Required; stored in the quote audit | ENT-quote-audit.reason |
+| Actions | buttons | Yes | Save Draft, Save and Continue to Acceptance, Cancel | Save and Continue validates every field and returns to the FR-006 transfer to record the acceptance | no graph field (control) |
 
 **Notes**:
 
@@ -956,6 +956,7 @@ Acceptance Scenarios:
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2026-11-22 | 4.0 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v3.9) and the change requests (CR-FR004-20260820-01, CR-FR004-20260909-01, CR-FR004-20261014-01, CR-FR004-20261016-01, CR-FR004-20261027-01, and CR-FR015-20261013-01 named in v3.0) are in `archived/prd-baseline-2026-11-08/` and in git history. | Claude (AI Assistant) |
+| 2026-11-23 | 4.1 | Table format repair: the Graph field values of 16 field tables moved into their own last column (they sat inside the previous cell). Cell text unchanged. No rule changes. | Claude (AI Assistant) |
 
 ## Appendix: Approvals
 
