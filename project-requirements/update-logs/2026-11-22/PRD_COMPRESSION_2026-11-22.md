@@ -60,3 +60,5 @@ The owner read and approved the FR-005 compressed PRD on 2026-11-22 and released
 - 2026-11-23, FR-004: independent review found no requirement lost; 16 field tables repaired so the Graph field value sits in its own last column (PRD change-log row added).
 - 2026-11-23, FR-015: independent review found two dropped clauses missing (patients see only active providers in search; provider status events are append-only); restored in original wording under Business Rules.
 - 2026-11-23, independent review of FR-021: no requirement lost or changed.
+- 2026-11-23, FR-007: independent review found one dropped clause missing (the payment method is the saved record owned by FR-007B, covering bank transfer and card); restored in original wording under Business Rules.
+- 2026-11-23, independent reviews of FR-025 and FR-038: no requirement lost or changed.

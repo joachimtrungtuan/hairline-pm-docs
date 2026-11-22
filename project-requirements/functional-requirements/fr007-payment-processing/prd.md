@@ -827,6 +827,10 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 - The provider cannot self-execute payouts (payout execution in FR-017)
 - Payout execution (FR-017) updates Provider views and generates statements
 
+**Carried from dropped sections (original wording)**:
+
+- **Key attributes**: booking reference, amount, currency, payment method (the saved payment method record owned by FR-007B, which covers bank transfer as well as card), processor fee, status, timestamps, receipt/invoice refs
+
 ---
 
 ## Dependencies
@@ -967,6 +971,7 @@ Admin processes a refund request according to cancellation policy; patient and p
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2026-11-22 | 1.13 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.12) and the change requests CR-FR007-20261013-01 and CR-FR007-20261016-01 are in `archived/prd-baseline-2026-11-08/fr007-payment-processing/` and in git history. | Product Owner / Documentation |
+| 2026-11-23 | 1.14 | Independent compression review: 1 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
 
 ---
 
