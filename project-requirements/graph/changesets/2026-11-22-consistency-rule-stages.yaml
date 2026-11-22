@@ -1,0 +1,5 @@
+reason: "Consistency check (coverage): two Rules added on 2026-11-22 had no Stage; each takes the Stage of the Screen it applies to."
+by: controller
+operations:
+  - {"op": "add_edge", "from": "REQ-024-100", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-026-139", "verb": "applies at", "to": "STG-main-01-inquiry"}
