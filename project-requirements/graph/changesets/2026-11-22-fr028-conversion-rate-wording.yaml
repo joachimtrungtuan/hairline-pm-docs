@@ -1,0 +1,4 @@
+reason: "REQ-028-040 said the real-time exchange rate; the FR-028 PRD states the admin-configured conversion rate with markup from FR-029. Wording aligned to the PRD."
+by: controller
+operations:
+  - {"op": "update_node", "id": "REQ-028-040", "attrs": {"statement": "When the patient's currency has no pricing for the location, System checks for fallback pricing for the patient's country; if none, it displays the system-wide default starting price when an admin has set one; if there is no system-wide default, it displays the price in the location's default currency with a conversion note (\"Starting from €2,200 (approx. £2,500)\") using the admin-configured conversion rate with markup from FR-029."}}
