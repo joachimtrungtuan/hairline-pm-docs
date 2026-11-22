@@ -1,0 +1,5 @@
+reason: "Consistency review FR-020 (flow): the Notification Service reads the emitted event (Main Flow step 2) and the recorded attempt status (retry with backoff, status exposed per attempt, REQ-020-007); both Entities were only written."
+by: controller
+operations:
+  - {"op": "add_edge", "from": "STG-main-01-inquiry", "verb": "reads", "to": "ENT-notification-event"}
+  - {"op": "add_edge", "from": "STG-main-01-inquiry", "verb": "reads", "to": "ENT-notification-attempt"}

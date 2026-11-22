@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-22T13:05:13Z",
+  "generated_at": "2026-11-22T13:08:22Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -38393,7 +38393,7 @@
       "owner_fr": null,
       "title": "Admin Billing & Financial Management",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "module": "fr017-admin-billing-finance",
         "prd_path": "project-requirements/functional-requirements/fr017-admin-billing-finance/prd.md",
@@ -38419,7 +38419,7 @@
       "owner_fr": null,
       "title": "Promotions & Discount Management",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "module": "fr019-promotions-discounts",
         "prd_path": "project-requirements/functional-requirements/fr019-promotions-discounts/prd.md",
@@ -64248,7 +64248,7 @@
       "owner_fr": "FR-017",
       "title": "Manual reminder content from FR-020; history updated; automated schedule untouched",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Reminder content and template are determined by FR-020 / S-03 based on the reminder type; admin cannot customize the message text. On confirm: FR-020 notification event is triggered; Reminder History table on Screen 4a is updated with: type, channel, sent timestamp, delivery status. Admin sees a success toast: \"Reminder sent to [Patient Name]\" (or an error toast if FR-020 returns a failure). Sending a manual reminder does NOT reset or interfere with any automated reminder schedule",
         "rationale": "Send Reminder business rules (prd.md lines 581-584)."
@@ -64608,7 +64608,7 @@
       "owner_fr": "FR-017",
       "title": "Saving a dispute resolution audits it and notifies the provider",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "Saving a dispute resolution writes an audit log entry; when Resolution Action = \"Add to Next Payout\", provider notification is mandatory and sent automatically. For other resolution actions, notification is sent only when selected",
         "rationale": "Screen 7 Tab 1 business rules (prd.md line 958)."
@@ -65100,7 +65100,7 @@
       "owner_fr": "FR-017",
       "title": "Approve between cutoff and payout day; payout day processes only Approved",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "statement": "Admin must approve payout statements during the review time between the cutoff day and the payout day. On payout day, the system auto-processes only \"Approved\" statements. Any statement still in \"Pending Approval\" at that point moves to \"Overdue\" and is NOT auto-processed. Overdue statements can be approved and processed at any time outside the normal cycle; the Stripe transfer is initiated immediately on approval. For a manual-rail clinic the admin records the payment by marking the statement as paid. Delay is recorded in the audit trail.",
         "rationale": "Billing Rule 5 (prd.md line 1233). Restated by Entry Points (line 123: payout-day cron, e.g. Friday 6 AM UTC), Main Flow steps 11-14 (lines 159-165) and the Screen 3 rule (line 497: status Processing then Paid after the Stripe confirmation webhook)."
@@ -69591,7 +69591,7 @@
       "owner_fr": "FR-019",
       "title": "Refund is logged with a reason, integrates with FR-017 and never changes the accepted price",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "Refund actions are logged with mandatory reason and integrate with FR-017 (Billing & Finance) for monetary reconciliation. They never change the accepted price or the AcceptanceEvent snapshot.",
         "rationale": "Screen 6 business rules and acceptance criterion 2 (status Refunded, FR-017 receives a reconciliation event)."
@@ -102346,7 +102346,7 @@
       "owner_fr": null,
       "title": "Operations",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "timeline": "platform-admin",
         "sequence": 2,
@@ -102451,7 +102451,7 @@
       "owner_fr": null,
       "title": "Inquiry",
       "status": "active",
-      "version": 20,
+      "version": 21,
       "attrs": {
         "timeline": "main",
         "sequence": 1,
@@ -102477,7 +102477,7 @@
       "owner_fr": null,
       "title": "Acceptance",
       "status": "active",
-      "version": 11,
+      "version": 12,
       "attrs": {
         "timeline": "main",
         "sequence": 3,
@@ -102516,7 +102516,7 @@
       "owner_fr": null,
       "title": "In progress",
       "status": "active",
-      "version": 14,
+      "version": 15,
       "attrs": {
         "timeline": "main",
         "sequence": 6,
@@ -102699,7 +102699,7 @@
       "owner_fr": null,
       "title": "Approval",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "timeline": "provider-payout",
         "sequence": 2,
@@ -104621,7 +104621,7 @@
       "owner_fr": "FR-004",
       "title": "Provider sets dates and prices (Tab 4)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 10"
       }
@@ -104995,7 +104995,7 @@
       "owner_fr": "FR-005",
       "title": "Patient enters a promotion code on the named subquote before acceptance",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A8"
       }
@@ -111055,10 +111055,10 @@
       "owner_fr": "FR-017",
       "title": "Invalid bank account: admin contacts the provider, who updates bank details in Billing Settings; admin retries the payout",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Main Flow step 16c",
-        "handoff_to": "FR-032 (provider updates bank details in Billing Settings); FR-034 (support contact)"
+        "handoff_to": "FR-034 (support contact)"
       }
     },
     {
@@ -111188,10 +111188,10 @@
       "owner_fr": "FR-017",
       "title": "Admin routes a commission change to the FR-015 or FR-029 surface",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B2 step 7c",
-        "handoff_to": "FR-015 (single-provider commission edit); FR-029 (global or bulk commission change)"
+        "handoff_to": "FR-015 (single-provider commission edit)"
       }
     },
     {
@@ -111530,10 +111530,9 @@
       "owner_fr": "FR-017",
       "title": "Provider contacts admin by support ticket to claim missing booking revenue",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow B1 step 1",
-        "handoff_to": "FR-034 (support ticket)"
+        "prd_ref": "Alternative Flow B1 step 1"
       }
     },
     {
@@ -112708,10 +112707,9 @@
       "owner_fr": "FR-019",
       "title": "Provider enters name, type, value, applies-to and optional code in the inline mini-form for one option/date-price row",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Alternative Flow A1b",
-        "handoff_from": "FR-004: Screen 1 inline promotion creator"
+        "prd_ref": "Alternative Flow A1b"
       }
     },
     {
@@ -112863,10 +112861,9 @@
       "owner_fr": "FR-019",
       "title": "System validates the code for the named subquote only and shows the discounted price or the reason",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A4",
-        "handoff_from": "STP-005-015"
+        "prd_ref": "Alternative Flow A4"
       }
     },
     {
@@ -171295,7 +171292,25 @@
     {
       "from_id": "FR-017",
       "verb": "references",
+      "to_id": "REQ-001-010",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-017",
+      "verb": "references",
+      "to_id": "REQ-006-028",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-017",
+      "verb": "references",
       "to_id": "REQ-007-041",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-017",
+      "verb": "references",
+      "to_id": "REQ-007B-007",
       "attrs": {}
     },
     {
@@ -171368,6 +171383,12 @@
       "from_id": "FR-017",
       "verb": "references",
       "to_id": "REQ-020-102",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-017",
+      "verb": "references",
+      "to_id": "REQ-024-001",
       "attrs": {}
     },
     {
@@ -171519,6 +171540,12 @@
         "rules": 17
       },
       "derived": true
+    },
+    {
+      "from_id": "FR-019",
+      "verb": "references",
+      "to_id": "REQ-001-015",
+      "attrs": {}
     },
     {
       "from_id": "FR-019",
@@ -231690,6 +231717,12 @@
     },
     {
       "from_id": "REQ-017-081",
+      "verb": "applies to",
+      "to_id": "EVT-billing-manual-payment-reminder",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-081",
       "verb": "decided by",
       "to_id": "SRC-PRD-017",
       "attrs": {}
@@ -232406,6 +232439,12 @@
       "from_id": "REQ-017-111",
       "verb": "applies to",
       "to_id": "ENT-transaction-audit-log",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-111",
+      "verb": "applies to",
+      "to_id": "EVT-billing-dispute-payout-added",
       "attrs": {}
     },
     {
@@ -233486,6 +233525,12 @@
       "from_id": "REQ-017-153",
       "verb": "applies to",
       "to_id": "ENT-provider-payout",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-153",
+      "verb": "applies to",
+      "to_id": "EVT-billing-overdue-payout-alert",
       "attrs": {}
     },
     {
@@ -242606,6 +242651,12 @@
       "from_id": "REQ-019-071",
       "verb": "applies to",
       "to_id": "ENT-promotion-application",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-071",
+      "verb": "applies to",
+      "to_id": "EVT-promotion-reconciliation-requested",
       "attrs": {}
     },
     {
@@ -336886,6 +336937,12 @@
     {
       "from_id": "STG-admin-02-operations",
       "verb": "writes",
+      "to_id": "ENT-discount-code",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-02-operations",
+      "verb": "writes",
       "to_id": "ENT-promotion-code",
       "attrs": {}
     },
@@ -337630,6 +337687,12 @@
     {
       "from_id": "STG-main-01-inquiry",
       "verb": "reads",
+      "to_id": "ENT-notification-attempt",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-01-inquiry",
+      "verb": "reads",
       "to_id": "ENT-notification-delivery-log",
       "attrs": {}
     },
@@ -337637,6 +337700,12 @@
       "from_id": "STG-main-01-inquiry",
       "verb": "reads",
       "to_id": "ENT-notification-engagement-metrics",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-01-inquiry",
+      "verb": "reads",
+      "to_id": "ENT-notification-event",
       "attrs": {}
     },
     {
@@ -338711,6 +338780,12 @@
       "from_id": "STG-main-03-acceptance",
       "verb": "writes",
       "to_id": "ENT-audit-entry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-03-acceptance",
+      "verb": "writes",
+      "to_id": "ENT-currency-rate-lock",
       "attrs": {}
     },
     {
@@ -340217,6 +340292,12 @@
       "from_id": "STG-main-06-treatment",
       "verb": "writes",
       "to_id": "ENT-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-06-treatment",
+      "verb": "writes",
+      "to_id": "ENT-currency-alert",
       "attrs": {}
     },
     {
@@ -341999,6 +342080,12 @@
       "from_id": "STG-payout-02-approval",
       "verb": "reads",
       "to_id": "ENT-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-payout-02-approval",
+      "verb": "writes",
+      "to_id": "ENT-currency-alert",
       "attrs": {}
     },
     {
@@ -349429,6 +349516,12 @@
     },
     {
       "from_id": "STP-004-010",
+      "verb": "next",
+      "to_id": "STP-019-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-010",
       "verb": "on",
       "to_id": "SCR-004-01",
       "attrs": {}
@@ -350522,6 +350615,12 @@
       "attrs": {
         "label": "code valid, discounted price carried into the confirmation summary"
       }
+    },
+    {
+      "from_id": "STP-005-015",
+      "verb": "next",
+      "to_id": "STP-019-016",
+      "attrs": {}
     },
     {
       "from_id": "STP-005-015",
@@ -368559,6 +368658,12 @@
     },
     {
       "from_id": "STP-017-008",
+      "verb": "next",
+      "to_id": "STP-032-138",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-008",
       "verb": "on",
       "to_id": "SCR-017-03",
       "attrs": {}
@@ -368963,6 +369068,12 @@
       "from_id": "STP-017-033",
       "verb": "next",
       "to_id": "STP-017-066",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-033",
+      "verb": "next",
+      "to_id": "STP-029-041",
       "attrs": {}
     },
     {
@@ -369843,6 +369954,12 @@
       "from_id": "STP-017-074",
       "verb": "next",
       "to_id": "STP-017-075",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-074",
+      "verb": "next",
+      "to_id": "STP-034-032",
       "attrs": {}
     },
     {
@@ -422958,6 +423075,63 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261122-130822-fe019caa",
+      "at": "2026-11-22T13:08:22.363861+00:00",
+      "changed_by": "controller",
+      "reason": "FR-019 consistency review: references link to FR-001 anonymization rule, reconciliation event rule, discount-code write at the admin stage, and the two inbound hand-offs from FR-004 and FR-005.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "FR-019",
+        "REQ-019-071",
+        "STG-admin-02-operations",
+        "STP-004-010",
+        "STP-005-015",
+        "STP-019-002",
+        "STP-019-016"
+      ],
+      "edges_added": 5,
+      "edges_removed": 0,
+      "rows": 7
+    },
+    {
+      "id": "cs-20261122-130804-c33e2794",
+      "at": "2026-11-22T13:08:04.902518+00:00",
+      "changed_by": "controller",
+      "reason": "Consistency review FR-020 (flow): the Notification Service reads the emitted event (Main Flow step 2) and the recorded attempt status (retry with backoff, status exposed per attempt, REQ-020-007); both Entities were only written.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "STG-main-01-inquiry"
+      ],
+      "edges_added": 2,
+      "edges_removed": 0,
+      "rows": 2
+    },
+    {
+      "id": "cs-20261122-130617-9a3e20dd",
+      "at": "2026-11-22T13:06:17.475190+00:00",
+      "changed_by": "controller",
+      "reason": "FR-017 consistency review: references to owner-FR Rules for data FR-017 shows read-only, Rules linked to the notification Events they trigger, writers for two entities FR-017 reads, and the open hand-offs stitched to the receiving Steps.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "FR-017",
+        "REQ-017-081",
+        "REQ-017-111",
+        "REQ-017-153",
+        "STG-main-03-acceptance",
+        "STG-main-06-treatment",
+        "STG-payout-02-approval",
+        "STP-017-008",
+        "STP-017-033",
+        "STP-017-074"
+      ],
+      "edges_added": 13,
+      "edges_removed": 0,
+      "rows": 16
+    },
     {
       "id": "cs-20261122-130513-c73d15ef",
       "at": "2026-11-22T13:05:13.042038+00:00",

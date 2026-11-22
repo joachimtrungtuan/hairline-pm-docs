@@ -15,8 +15,5 @@ operations:
   - {"op": "update_node", "id": "STP-017-008", "attrs": {"handoff_to": "FR-034 (support contact)"}}
   - {"op": "add_edge", "from": "STP-017-033", "verb": "next", "to": "STP-029-041", "attrs": {}}
   - {"op": "update_node", "id": "STP-017-033", "attrs": {"handoff_to": "FR-015 (single-provider commission edit)"}}
-  - {"op": "add_edge", "from": "STP-015-174", "verb": "next", "to": "STP-017-067", "attrs": {}}
-  - {"op": "update_node", "id": "STP-017-067", "attrs": {"handoff_from": null}}
-  - {"op": "update_node", "id": "STP-015-174", "attrs": {"handoff_to": null}}
   - {"op": "add_edge", "from": "STP-017-074", "verb": "next", "to": "STP-034-032", "attrs": {}}
   - {"op": "update_node", "id": "STP-017-074", "attrs": {"handoff_to": null}}

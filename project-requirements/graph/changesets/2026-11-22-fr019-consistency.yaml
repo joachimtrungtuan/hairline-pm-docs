@@ -1,0 +1,10 @@
+reason: "FR-019 consistency review: references link to FR-001 anonymization rule, reconciliation event rule, discount-code write at the admin stage, and the two inbound hand-offs from FR-004 and FR-005."
+by: controller
+operations:
+  - {"op": "add_edge", "from": "FR-019", "verb": "references", "to": "REQ-001-015"}
+  - {"op": "add_edge", "from": "REQ-019-071", "verb": "applies to", "to": "EVT-promotion-reconciliation-requested"}
+  - {"op": "add_edge", "from": "STG-admin-02-operations", "verb": "writes", "to": "ENT-discount-code"}
+  - {"op": "add_edge", "from": "STP-004-010", "verb": "next", "to": "STP-019-002"}
+  - {"op": "update_node", "id": "STP-019-002", "attrs": {"handoff_from": null}}
+  - {"op": "add_edge", "from": "STP-005-015", "verb": "next", "to": "STP-019-016"}
+  - {"op": "update_node", "id": "STP-019-016", "attrs": {"handoff_from": null}}
