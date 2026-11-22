@@ -12,7 +12,7 @@
 
 Provide centralized management of legal content (Terms & Conditions, Privacy Policy, Consent forms, Cancellation Policy) with versioning, preview, publishing, acceptance tracking, and audit trail. Admins can draft and preview content, publish new versions, and require users (patients and providers) to accept the latest terms where applicable. The system records which user accepted which version and when, while preserving full version history and logging all changes. This improves compliance, transparency, and reduces risk from untracked changes.
 
-> **Note on Cancellation Policy**: Cancellation Policy is a read-only informational document that does NOT require user acceptance or consent confirmation. It is managed through the same versioning and publishing pipeline as other legal documents but the `Requires Acceptance` flag is always `No`. It is surfaced to patients in the quote acceptance context (FR-005) for transparency.
+> **Note on Cancellation Policy**: Cancellation Policy is a read-only informational document that does NOT require user acceptance or consent confirmation. It is managed through the same versioning and publishing pipeline as other legal documents but the `Requires Acceptance` flag is always `No`. It is surfaced to patients in the quote acceptance context (FR-005) for transparency. (REQ-027-026)
 
 ---
 
@@ -29,18 +29,18 @@ Provide centralized management of legal content (Terms & Conditions, Privacy Pol
 
 **Patient Platform (P-01)**:
 
-- View latest Terms & Conditions, Privacy Policy, Cancellation Policy, and relevant Consent forms
+- View latest Terms & Conditions, Privacy Policy, Cancellation Policy, and relevant Consent forms (REQ-027-017)
 - Accept latest versions when prompted; acceptance recorded with timestamp and version ID
 
 **Provider Platform (PR-01/PR-06)**:
 
-- View and accept latest legal content as a provider user
+- View and accept latest legal content as a provider user (REQ-027-019)
 
 **Admin Platform (A-09)**:
 
 - Draft, edit, preview, and publish legal documents
 - Maintain version history and compare versions (diff summary)
-- Configure acceptance rules: who must accept, and when enforcement applies
+- Configure acceptance rules: who must accept, and when enforcement applies (REQ-027-021)
 - Monitor acceptance coverage and outstanding users
 
 **Shared Services (S-XX)**:
@@ -54,19 +54,19 @@ Provide centralized management of legal content (Terms & Conditions, Privacy Pol
 **In Scope**:
 
 - In‑app prompts to accept new versions
-- Admin notifications when publication succeeds and when acceptance coverage thresholds are unmet
+- Admin notifications when publication succeeds and when acceptance coverage thresholds are unmet (REQ-027-022, REQ-027-023)
 - User reminders to accept pending legal content (rate‑limited)
 
 **Out of Scope**:
 
-- Real‑time chat or legal counsel workflows
-- External e‑signature platforms (future consideration)
+- Real‑time chat or legal counsel workflows (REQ-027-025)
+- External e‑signature platforms (future consideration) (REQ-027-025)
 
 ### Entry Points
 
-- Admin: Settings → Legal Content → Documents (T&C, Privacy, Consent, Cancellation Policy) → Draft/Preview/Publish
-- Patient: First‑run or on change → Acceptance prompt; Settings → Terms & Conditions; Settings → Privacy & Security → Privacy Policy
-- Provider: First‑run or on change → Acceptance prompt; Settings → Legal → View documents
+- Admin: Settings → Legal Content → Documents (T&C, Privacy, Consent, Cancellation Policy) → Draft/Preview/Publish (REQ-027-016)
+- Patient: First‑run or on change → Acceptance prompt; Settings → Terms & Conditions; Settings → Privacy & Security → Privacy Policy (REQ-027-016)
+- Provider: First‑run or on change → Acceptance prompt; Settings → Legal → View documents (REQ-027-016)
 
 ---
 
@@ -129,28 +129,28 @@ Provide centralized management of legal content (Terms & Conditions, Privacy Pol
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Document Type | select | Yes | T&C, Privacy, Consent, Cancellation Policy | Must be one of supported types |
-| Locale | select | Yes | Display locale for translation; global content only | Must be supported locale |
-| Version | text | Yes | Version identifier | Must be unique per document type |
-| Status | badge | Yes | Draft / Scheduled / Current / Archived | Only one Current per type; a published version with a future effective date is Scheduled until then |
-| Effective Date | date | Yes | Scheduled go-live date | Must be today or future |
-| Requires Acceptance | boolean | Yes | Indicates if material change gating applies | Tied to Material flag from draft |
-| Last Updated By/At | text | Yes | Audit info | Read-only |
-| Actions | buttons | Yes | Draft new version, Edit draft, View history, Preview, Publish (if draft ready) | Edit shown for Draft versions only; Publish disabled unless draft passes validation |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Document Type | select | Yes | T&C, Privacy, Consent, Cancellation Policy | Must be one of supported types | ENT-legal-document.document_type |
+| Locale | select | Yes | Display locale for translation; global content only | Must be supported locale (REQ-027-046) | ENT-legal-document.locale |
+| Version | text | Yes | Version identifier | Must be unique per document type (REQ-027-040) | ENT-legal-document.version |
+| Status | badge | Yes | Draft / Scheduled / Current / Archived | See REQ-027-029 and REQ-027-030. | ENT-legal-document.status |
+| Effective Date | date | Yes | Scheduled go-live date | Must be today or future (REQ-027-041) | ENT-legal-document.effective_date |
+| Requires Acceptance | boolean | Yes | Indicates if material change gating applies | Tied to Material flag from draft (REQ-027-027) | ENT-legal-document.requires_acceptance |
+| Last Updated By/At | text | Yes | Audit info | Read-only | ENT-legal-document.last_updated_by, ENT-legal-document.last_updated_at |
+| Actions | buttons | Yes | Draft new version, Edit draft, View history, Preview, Publish (if draft ready) | See REQ-027-049 and REQ-027-050. | no graph field (control) |
 
 **Business Rules**:
 
-- Only authorized Admin roles can access this list.
-- Only one Current version per document type at a time; when a newly published version becomes Current, the prior Current is auto-archived.
-- Publish action is global (no region targeting); locale is for translation display only.
-- Edit action opens the Draft/Edit screen for Draft versions; Current/Archived versions are view-only (preview/history).
+- See REQ-027-011.
+- Only one Current version per document type at a time; when a newly published version becomes Current, the prior Current is auto-archived. (REQ-027-029)
+- Publish action is global (no region targeting); locale is for translation display only. (REQ-027-003)
+- Edit action opens the Draft/Edit screen for Draft versions; Current/Archived versions are view-only (preview/history). (REQ-027-049)
 
 **Notes**:
 
 - Provide filters by Document Type, Status, and Locale.
-- Show warning banners for pending acceptance coverage below the Admin-set threshold.
+- Show warning banners for pending acceptance coverage below the Admin-set threshold. (REQ-027-024)
 
 ---
 
@@ -160,27 +160,27 @@ Provide centralized management of legal content (Terms & Conditions, Privacy Pol
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Document Type | select | Yes | T&C, Privacy, Consent, Cancellation Policy | Locked after version creation |
-| Locale | select | Yes | Translation locale for the current version's content. Multiple locales can exist for a single version. | Must be supported locale |
-| Content | rich text editor with Markdown toggle | Yes | Full legal text | Min 200 chars; max 50k chars |
-| Change Summary | textarea | Yes | Human-readable summary of changes | Max 500 chars |
-| Material Change | boolean | Yes | Marks if re-acceptance required | Required to set acceptance gating |
-| Effective Date | date/time | Yes | When this version becomes current | Cannot be in the past |
-| Version Label | text | Yes | Semantic or numeric label | Must be unique per type |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Document Type | select | Yes | T&C, Privacy, Consent, Cancellation Policy | Locked after version creation (REQ-027-044) | ENT-legal-document.document_type |
+| Locale | select | Yes | Translation locale for the current version's content. Multiple locales can exist for a single version. | See REQ-027-046. | ENT-legal-document.locale |
+| Content | rich text editor with Markdown toggle | Yes | Full legal text | Min 200 chars; max 50k chars (REQ-027-042) | ENT-legal-document.content |
+| Change Summary | textarea | Yes | Human-readable summary of changes | Max 500 chars (REQ-027-043) | ENT-legal-document.change_summary |
+| Material Change | boolean | Yes | Marks if re-acceptance required | Required to set acceptance gating (REQ-027-045) | ENT-legal-document.material_change |
+| Effective Date | date/time | Yes | When this version becomes current | See REQ-027-041. | ENT-legal-document.effective_date |
+| Version Label | text | Yes | Semantic or numeric label | See REQ-027-040. | ENT-legal-document.version |
 
 **Business Rules**:
 
-- Autosave drafts; warn on unsaved changes before exit.
-- Material Change=true triggers acceptance requirement after publish.
-- Effective Date controls activation; content remains Draft until published.
+- Autosave drafts; warn on unsaved changes before exit. (REQ-027-047)
+- Material Change=true triggers acceptance requirement after publish. (REQ-027-004)
+- Effective Date controls activation; content remains Draft until published. (REQ-027-048)
 
 **Notes**:
 
 - Provide side-by-side preview while editing.
 - Show prior version summary for context.
-- Editor supports toolbar for headings, lists, links, tables; allows paste with cleanup; block quotes disabled to avoid nesting signatures.
+- Editor supports toolbar for headings, lists, links, tables; allows paste with cleanup; block quotes disabled to avoid nesting signatures. (REQ-027-051)
 
 ---
 
@@ -190,24 +190,24 @@ Provide centralized management of legal content (Terms & Conditions, Privacy Pol
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Content Preview | read-only | Yes | Rendered legal text | N/A |
-| Version Diff Summary | read-only | Yes | Key changes vs. prior version | Must be generated from draft |
-| Effective Date | read-only | Yes | Activation time | Must be set in draft |
-| Material Change | read-only | Yes | Indicates acceptance requirement | Must match draft flag |
-| Publish Button | button | Yes | Executes publish | Disabled until all validations pass |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Content Preview | read-only | Yes | Rendered legal text | N/A | ENT-legal-document.content |
+| Version Diff Summary | read-only | Yes | Key changes vs. prior version | Must be generated from draft (REQ-027-050) | ENT-legal-document.version_diff_summary |
+| Effective Date | read-only | Yes | Activation time | Must be set in draft (REQ-027-050) | ENT-legal-document.effective_date |
+| Material Change | read-only | Yes | Indicates acceptance requirement | Must match draft flag (REQ-027-050) | ENT-legal-document.material_change |
+| Publish Button | button | Yes | Executes publish | Disabled until all validations pass (REQ-027-050) | no graph field (control) |
 
 **Business Rules**:
 
-- Publish sets status to Current on Effective Date; prior Current auto-archives.
-- Publishing logs an audit entry (who/when/what) and triggers acceptance prompts if Material Change=true.
-- Publication is global; no regional/locale targeting.
-- When a version is published globally, the system validates that at least the English (en-US) locale content is complete. If other locales are configured for this version, the Admin UI will provide a summary of their completeness, but publishing will proceed using the platform default language (English, en-US) version as the single fallback if a specific locale is missing or incomplete (as per CL-3).
+- See REQ-027-029 and REQ-027-030.
+- Publishing logs an audit entry (REQ-027-007) and triggers acceptance prompts if Material Change=true (REQ-027-004).
+- See REQ-027-003.
+- When a version is published globally, the system validates that at least the English (en-US) locale content is complete. If other locales are configured for this version, the Admin UI will provide a summary of their completeness, but publishing will proceed using the platform default language (English, en-US) version as the single fallback if a specific locale is missing or incomplete (as per CL-3). (REQ-027-036)
 
 **Notes**:
 
-- Show acceptance impact summary (number of users who must re-accept).
+- Show acceptance impact summary (number of users who must re-accept; REQ-027-052; ENT-legal-document.reaccept_user_count).
 - Provide link back to edit draft if issues are found.
 
 ---
@@ -218,24 +218,24 @@ Provide centralized management of legal content (Terms & Conditions, Privacy Pol
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Document Type | select | Yes | Filter by T&C, Privacy, Consent, Cancellation Policy | Must be supported type |
-| Version | select | Yes | Target version for coverage view | Must exist |
-| Published/Eff. Dates | text | Yes | Publication and activation timestamps | Read-only |
-| Material Change | badge | Yes | Indicates gating requirement | Read-only |
-| Acceptance Rate | metric | Yes | % accepted, out of the users who must accept that document | Computed from acceptance ledger |
-| Pending Users | list/count | Yes | Users who haven’t accepted | Supports pagination/export |
-| Reminders Sent | count | Yes | Reminder notifications issued | Read-only |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Document Type | select | Yes | Filter by T&C, Privacy, Consent, Cancellation Policy | Must be supported type | ENT-legal-document.document_type |
+| Version | select | Yes | Target version for coverage view | Must exist | ENT-legal-document.version |
+| Published/Eff. Dates | text | Yes | Publication and activation timestamps | Read-only | ENT-legal-document.published_at, ENT-legal-document.effective_date |
+| Material Change | badge | Yes | Indicates gating requirement | Read-only | ENT-legal-document.material_change |
+| Acceptance Rate | metric | Yes | % accepted, out of the users who must accept that document | Computed from acceptance ledger (REQ-027-053) | ENT-legal-document.acceptance_rate |
+| Pending Users | list/count | Yes | Users who haven’t accepted (REQ-027-053) | Supports pagination/export | ENT-legal-document.pending_user_count |
+| Reminders Sent | count | Yes | Reminder notifications issued | Read-only | ENT-legal-document.reminders_sent_count |
 
 **Business Rules**:
 
-- Data is read-only; reminders respect the Admin-set reminder limit.
+- Data is read-only; reminders respect the Admin-set reminder limit. (REQ-027-054, REQ-027-014)
 - Filters by document type and version; supports date range for trend.
 
 **Notes**:
 
-- Export pending list (CSV) for follow-up.
+- Export pending list (CSV) for follow-up. (REQ-027-055)
 - Show audit link for the publication event.
 
 ---
@@ -246,23 +246,23 @@ Provide centralized management of legal content (Terms & Conditions, Privacy Pol
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Document Type | select | Yes | T&C, Privacy, Consent | Must be supported type |
-| Version | select | Yes | Version for the detail list | Must exist |
-| User Filter | search/filter | No | Search by name/email/user ID | Input sanitized |
-| Status Filter | select | Yes | Accepted / Pending | Defaults to Pending |
-| Locale | select | No | Filter by locale | Must be supported locale |
-| Acceptance Timestamp | text | Yes (when accepted) | When the user accepted | Read-only |
-| Acceptance Channel | text | No | Web / Mobile | Read-only |
-| Reminder Status | text | No | Last reminder sent timestamp | Read-only |
-| Export | button | No | Export current filtered set (CSV) | Enforces rate limits |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Document Type | select | Yes | T&C, Privacy, Consent | Must be supported type | ENT-legal-acceptance.document_type |
+| Version | select | Yes | Version for the detail list | Must exist | ENT-legal-acceptance.version |
+| User Filter | search/filter | No | Search by name/email/user ID | Input sanitized (REQ-027-057) | ENT-legal-acceptance.user_id |
+| Status Filter | select | Yes | Accepted / Pending | See REQ-027-056. | no graph field (control) |
+| Locale | select | No | Filter by locale | See REQ-027-046. | ENT-legal-acceptance.locale |
+| Acceptance Timestamp | text | Yes (when accepted) | When the user accepted | Read-only | ENT-legal-acceptance.accepted_at |
+| Acceptance Channel | text | No | Web / Mobile | Read-only | ENT-legal-acceptance.channel |
+| Reminder Status | text | No | Last reminder sent timestamp | Read-only | ENT-legal-reminder.sent_at |
+| Export | button | No | Export current filtered set (CSV) | See REQ-027-055. | no graph field (control) |
 
 **Business Rules**:
 
-- Mirrors filters from Screen 4 and inherits selected version/type.
-- Status defaults to Pending to focus on outstanding users.
-- Export constrained by role permissions and rate limits.
+- Mirrors filters from Screen 4 and inherits selected version/type. (REQ-027-056)
+- Status defaults to Pending to focus on outstanding users. (REQ-027-056)
+- Export constrained by role permissions and rate limits. (REQ-027-055)
 
 **Notes**:
 
@@ -293,7 +293,7 @@ As a Patient or Provider user, I must review and accept the latest legal documen
 **Acceptance Scenarios**:
 
 1. Given a new required version, When a user signs in, Then the system prompts for acceptance before accessing core features
-2. Given acceptance is recorded, When the user resumes activity, Then no further prompts are shown until the next version
+2. Given acceptance is recorded, When the user resumes activity, Then no further prompts are shown until the next version (REQ-027-035)
 
 ### User Story 3 — View Acceptance Coverage (Priority: P2)
 
@@ -307,10 +307,10 @@ As an Admin, I can view acceptance coverage (who has accepted which version) and
 
 ### Edge Cases
 
-- Minor updates vs. material changes: non‑material edits may not require re‑acceptance; material changes do — rules configurable
-- Existing users with pending procedures: allow read‑only access until acceptance; surface prompts at safe checkpoints
-- Locale mismatch: fall back to the platform default language (English) if a localized version is not available; log gaps for Admin
-- Restoring an earlier text after partial acceptance: the restored text is published as a new version; existing acceptance records are preserved; users who accepted only the version that was replaced are asked to accept the restored version
+- Minor updates vs. material changes: non‑material edits may not require re‑acceptance; material changes do — rules configurable (REQ-027-004)
+- Existing users with pending procedures: allow read‑only access until acceptance; surface prompts at safe checkpoints (REQ-027-034)
+- Locale mismatch: fall back to the platform default language (English) if a localized version is not available; log gaps for Admin (REQ-027-036, REQ-027-037)
+- Restoring an earlier text after partial acceptance: the restored text is published as a new version; existing acceptance records are preserved; users who accepted only the version that was replaced are asked to accept the restored version (REQ-027-031, REQ-027-032)
 
 ---
 
@@ -345,60 +345,17 @@ As an Admin, I can view acceptance coverage (who has accepted which version) and
 
 ### Clarifications (Resolved)
 
-- CL‑1: Enforcement for existing users — Block core actions until acceptance; allow read‑only access where safe. Show rate‑limited reminders. Gating occurs at sign‑in and before core transactional flows.
-- CL‑2: Material vs. minor changes — Material includes changes to obligations, data use/sharing, user rights, or liability; Minor includes formatting, typo fixes, or clarifications without policy change. Only material changes require re‑acceptance; Admin marks the publish accordingly.
-- CL‑3: Locale handling — If a localized version is unavailable, fall back to the platform default language (English) and display a discreet notice. Log a task to add the missing locale. Acceptance using the fallback is considered valid.
-- CL‑4: Regional customization — Legal content is uniform globally; no location‑based variants or region‑specific publication paths are required.
+- CL‑1: Enforcement for existing users — Block core actions until acceptance; allow read‑only access where safe. Show rate‑limited reminders. Gating occurs at sign‑in and before core transactional flows. (REQ-027-033)
+- CL‑2: Material vs. minor changes — Material includes changes to obligations, data use/sharing, user rights, or liability; Minor includes formatting, typo fixes, or clarifications without policy change. Only material changes require re‑acceptance; Admin marks the publish accordingly. (REQ-027-028)
+- CL‑3: Locale handling — If a localized version is unavailable, fall back to the platform default language (English) and display a discreet notice. Log a task to add the missing locale. Acceptance using the fallback is considered valid. (REQ-027-036, REQ-027-037, REQ-027-038)
+- CL‑4: Regional customization — Legal content is uniform globally; no location‑based variants or region‑specific publication paths are required. (REQ-027-003)
 - CL‑5: Admin-set limits — The acceptance coverage warning threshold, the reminder limit and the export limit are set by Admin; none has a default value. FR-027 owns the acceptance rules setting (who must accept and when enforcement applies) and the acceptance coverage threshold setting.
-
----
-
-## Key Entities
-
-- Legal Document: type (T&C, Privacy, Consent, Cancellation Policy), locale, version, status, effective date, content, change summary  
-  Relationships: has many versions; one Current version per document type  
-  Note: Cancellation Policy type has `Requires Acceptance` = No (read-only informational document)
-
-- Acceptance Record: user reference, document type, version, locale, timestamp, channel  
-  Relationships: belongs to user and document type/version
-
-- Legal Acceptance Reminder: user reference, document type, version, sent at  
-  Relationships: belongs to user and document type/version; one record per reminder sent, shown as Reminders Sent (Screen 4) and Reminder Status (Screen 4A)
-
-- Audit Entry: actor, action (create/edit/publish), timestamp, object reference, summary  
-  Relationships: references Admin actor and document version
 
 ---
 
 ## Dependencies
 
-### Internal Dependencies
-
-- P-01: Auth & Profile — for gating and acceptance at sign‑in and profile areas
-- PR-01/PR-06: Provider Auth/Settings — provider user acceptance and settings visibility; FR-009 (Provider Team & Role Management) owns provider team and role management
-- A-09: System Settings — legal content management and publication
-
-### Transcription References
-
-- Admin desire to “update terms and conditions, consent, all of these different resources” in settings: AdminPlatformPart2.txt:14–15
-
----
-
-## Success Criteria
-
-- 100% of legal content publish actions captured in audit logs with who/when/what
-- ≥ 95% of active users accept required versions within 14 days of publication
-- 0% access to core actions for users with pending required acceptance (when enforcement enabled)
-- Restoring an earlier text (new draft published as a new version) completes in ≤ 5 minutes with prompts updated accordingly
-- Acceptance coverage report matches user totals with ≤ 0.5% variance
-
----
-
-## Assumptions
-
-- Admins will manage all legal content centrally within A‑09 settings
-- Users will accept legal content on sign‑in or when accessing core flows after a new required version is published
-- Locale coverage will follow product language availability; missing locales fall back to the platform default language (English) until added
+Related FRs: FR-005 (quote acceptance context where the Cancellation Policy is shown), FR-009 (provider team and role management). Platform areas: P-01 Auth & Profile (gating and acceptance at sign-in and profile areas); PR-01/PR-06 Provider Auth/Settings (provider user acceptance and settings visibility); A-09 System Settings (legal content management and publication).
 
 ---
 
@@ -406,11 +363,7 @@ As an Admin, I can view acceptance coverage (who has accepted which version) and
 
 | Date       | Version | Changes                | Author       |
 |------------|---------|------------------------|--------------|
-| 2025-11-12 | 1.0     | Initial PRD creation   | AI Assistant |
-| 2025-12-11 | 1.1     | Marked Verified & Approved; added locale clarifications and screen specs | AI Assistant |
-| 2026-02-06 | 1.2     | Updated Patient Platform entry points to match patient Settings IA (FR-001): Settings → Terms & Conditions and Settings → Privacy & Security → Privacy Policy. | AI Assistant |
-| 2026-02-11 | 1.3     | Added "Cancellation Policy" as a 4th supported document type. Cancellation Policy is a read-only informational document (Requires Acceptance = No) surfaced to patients in the quote acceptance context (FR-005). Updated description, Screen 1/2/4/5 Document Type enums, REQ-027-001, Key Entities, and Patient Platform scope. | AI |
-| 2026-11-20 | 1.4     | Requirements graph programme baseline: owner rulings applied. Main changes: new Scheduled status (the previous version stays Current until the effective date); no revert button, an earlier text is restored as a new draft published as a new version, and users who accepted only the replaced version are asked again; one fallback for a missing translation (the platform default language, English); removed the patient prior-acceptance history and the provider read-only view of their organization's acceptance status; Acceptance Rate counts only users who must accept that document; coverage warning threshold, reminder limit and export limit are Admin-set with no default, and FR-027 owns the acceptance rules and coverage threshold settings; added Legal Acceptance Reminder key entity; Cancellation Policy added to Screen 2 document types; only Draft versions are editable; FR-009 named as a dependency; REQ-027-011 covers access to the Legal Documents list. | AI |
+| 2026-11-22 | 1.5 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.4) is in `archived/prd-baseline-2026-11-08/fr027-legal-content-management/` and in git history. The PRD names no change request. | Product Owner / Documentation |
 
 ---
 
@@ -427,4 +380,4 @@ As an Admin, I can view acceptance coverage (who has accepted which version) and
 **Template Version**: 2.0.0 (Constitution-Compliant)  
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)  
 **Based on**: FR-027 Legal Content Management  
-**Last Updated**: 2026-11-20
+**Last Updated**: 2026-11-22
