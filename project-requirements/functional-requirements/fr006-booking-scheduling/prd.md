@@ -930,6 +930,11 @@ All payment fields and actions are hidden. Patient can only view the blocked sta
 - **Rescheduling is deferred to V2**: The provider pre-schedules the appointment in the subquote; acceptance fixes the chosen appointment and reserves its slot, and successful payment confirms the booking. Rescheduling functionality will be evaluated for V2 based on business needs. (REQ-006-067)
 - **Current Behavior**: The patient cannot reschedule. Date changes require the audited admin appointment change (Screen 8), which sends `booking.rescheduled`, or an admin cancellation per cancellation policy. (REQ-006-067)
 
+**Carried from dropped sections (original wording)**:
+
+- **FR-029 / Module A-09**: Payment System Configuration; deposit, split payment, refund ladder, payment options per region and currency, and commission settings are managed here (deposit rate, its calculation, and the new-bookings-only rule: REQ-029-013, REQ-029-015, REQ-029-016; installment options and cutoff rules; commission default 15-25% range, per-provider or global settings).
+- Payment processor for deposits/installments/refunds (PCI compliant); retry with backoff within the fixed post-acceptance hold; failure never extends the hold.
+
 ---
 
 ## Dependencies
@@ -1079,6 +1084,7 @@ A late cancellation performed by an admin at the patient's request applies the r
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2026-11-22 | 2.16 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v2.15) and the change requests CR-FR006-20260915-01, CR-FR006-20261016-01, CR-FR006-20261027-01 and CR-FR006-20261027-02 (also cited: CR-FR015-20261013-01) are in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
+| 2026-11-23 | 2.17 | Independent compression review: 2 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
 
 ---
 
