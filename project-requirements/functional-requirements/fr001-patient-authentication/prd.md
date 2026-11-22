@@ -1069,6 +1069,15 @@ flowchart TD
 - Healthcare data handling meets regulatory requirements (HIPAA/GDPR compliance) (REQ-SYS-011)
 - **AuditLog** key attributes: Immutable log entry, change tracking, audit trail (REQ-001-126)
 
+**Carried from dropped sections (original wording)**:
+
+- **analyticsConsent**: yes/no consent for analytics, kept on the patient record; the compliance feature (FR-023) reads it
+- **emailDeliveryIssue**: flag on the patient account set when an email to the patient bounces; the notification feature (FR-030) sets it
+- **Not kept here**: flags and alerts (owned by FR-016) and preferred region (owned by FR-021); notification preference records are owned by FR-030
+- **Relationships**: Belongs to Patient; can be revoked independently
+- **OTPCode**: otpId, email, code (hashed), type (verification/reset), expiresAt, used, attempts, createdAt
+- **Relationships**: Linked to email address; one-time use
+
 ## Dependencies
 
 - **FR-003**: Inquiry Submission & Distribution (requires completed profile)
@@ -1212,6 +1221,7 @@ A patient successfully updates their profile information and manages account set
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2026-11-22 | 1.7 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.6) is in `archived/prd-baseline-2026-11-08/fr001-patient-authentication/` and in git history. | AI |
+| 2026-11-23 | 1.8 | Independent compression review: 6 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | AI |
 
 ## Appendix: Approvals
 
