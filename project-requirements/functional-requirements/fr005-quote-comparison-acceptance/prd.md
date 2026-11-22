@@ -5,7 +5,6 @@
 **Created**: 2025-11-03  
 **Status**: 🟡 Revised — Pending Consolidated Verification
 **Source**: FR-005 from system-prd.md; SRC-MTG-002 and CR-FR005-20260915-01
-**Change Request**: [CR-FR005-20261016-01 — MTG-002 quote model alignment](change-request-2026-10-16-mtg002-quote-model-alignment.md)
 
 ---
 
@@ -38,7 +37,7 @@ The Quote Comparison & Acceptance module enables patients to review quotes from 
 
 **Provider Platform (PR-02)**:
 
-- Read-only visibility of the accepted or non-selected outcome for parent quotes and subquotes.
+- Read-only visibility of the accepted or non-selected outcome for parent quotes and subquotes. (REQ-005-032)
 - Competing parent quotes auto-cancelled with reason “Other subquote accepted”; sibling subquotes in the accepted parent quote become “Not Selected”.
 - No patient PII is revealed by acceptance; full details remain locked until payment confirmation per constitution.
 
@@ -46,7 +45,7 @@ The Quote Comparison & Acceptance module enables patients to review quotes from 
 
 - Global oversight of quote states and acceptance events across patients/providers.  
 - Audited "Add note or correction" annotations on acceptance records. Acceptance events, accepted subquotes, and their parent quotes cannot be deleted or restored, and an annotation never alters the AcceptanceEvent, its snapshot, or any quote state. After acceptance an admin may edit the accepted quote in any field except price, currency, and promotion, with a mandatory reason and full before/after history; the edit is stored as a new version beside the acceptance snapshot, which keeps the terms as accepted (REQ-005-023).
-- Investigation of flagged acceptance races or errors (rare): the system sets the flag automatically when a second acceptance is rejected, the first valid acceptance stands, and the admin records findings as an annotation.
+- Investigation of flagged acceptance races or errors (rare): the system sets the flag automatically when a second acceptance is rejected, the first valid acceptance stands, and the admin records findings as an annotation. (REQ-005-033, REQ-005-065)
 - Provider-fault transfer after acceptance is performed through FR-006; it creates a new admin-authored acceptance record linked to the original instead of changing the original.
 
 **Shared Services (S-03, S-06)**:
@@ -74,9 +73,7 @@ The Quote Comparison & Acceptance module enables patients to review quotes from 
 
 ### Entry Points
 
-- Patient accesses from Inquiry Dashboard (FR-003 Screen 8) where quotes are displayed within the inquiry context, or via push/email notification.  
-- Acceptance is available only while the target subquote and its parent quote are eligible.
-- Upon subquote acceptance, system locks the accepted selection, resolves sibling/competing outcomes, and triggers booking handoff.
+- Patient accesses from Inquiry Dashboard (FR-003 Screen 8) where quotes are displayed within the inquiry context, or via push/email notification. (REQ-005-031)
 
 ---
 
@@ -96,9 +93,9 @@ The Quote Comparison & Acceptance module enables patients to review quotes from 
 4. Patient opens one subquote and taps "Accept". Before confirming, the patient may enter a promotion code on that named subquote (Alternative Flow A8).
 5. Patient confirms the exact subquote with terms acknowledgment and a complete selection summary.
 6. System atomically revalidates the inquiry, parent quote, and subquote, and confirms the owning provider is still `Active` (not `Suspended` or `Deactivated` under FR-015); confirms that no prior subquote has been accepted for the inquiry; verifies that the presented parent aggregate `QuoteVersion` is current; and acquires one fixed, exclusive slot hold keyed by provider, appointment date/time, and time zone for the FR-026 slot-hold duration (default 48 hours), starting at acceptance. The derived `subquoteVersion` MUST equal that same version. If another pending or confirmed booking already holds or blocks the same slot, acceptance is rejected before an AcceptanceEvent or booking handoff is created.
-7. After the exclusive hold succeeds, System records the selected subquote as Accepted, locks its inherited parent context and commercial details, sets the parent quote and inquiry to Accepted, records the acceptance snapshot (including the exchange rate and its timestamp) and the slot-hold reference, and writes the accepted subquote price as the parent quote's accepted total (FR-004 `acceptedTotal`), read from the snapshot. No appointment record is created at acceptance; FR-006 creates it only on successful first payment.
+7. After the exclusive hold succeeds, System records the selected subquote as Accepted, locks its inherited parent context and commercial details, sets the parent quote and inquiry to Accepted, records the acceptance snapshot (including the exchange rate and its timestamp) and the slot-hold reference, and writes the accepted subquote price as the parent quote's accepted total (FR-004 `acceptedTotal`), read from the snapshot. No appointment record is created at acceptance; FR-006 creates it only on successful first payment. (REQ-005-037)
 8. System marks every sibling subquote in the accepted parent quote as Not Selected and auto-cancels every competing parent quote for the inquiry with reason "Other subquote accepted." If the accepted subquote carries an auto-applied promotion, the promotion use reserved when its parent quote was sent is consumed now. If the accepted parent quote holds a reserved automatic-promotion use but the accepted subquote does not carry that promotion, the reservation is released with reason `not_applied`. The use reserved by every parent quote that ends Not Selected or auto-cancelled is released (FR-019).
-9. System sends notifications to the patient and all affected providers without disclosing the selected provider or accepted price to non-selected providers. Recipients, content, and whether a notice can be switched off are set by the notification Rules: REQ-020-012 for the provider outcome notices (one per sent parent quote, none for unsent drafts, no `quote.declined`) and REQ-020-019 for the patient notice at acceptance (FR-020).
+9. System sends notifications to the patient and all affected providers without disclosing the selected provider or accepted price to non-selected providers. Recipients, content, and whether a notice can be switched off are set by the notification Rules: REQ-020-012 for the provider outcome notices (one per sent parent quote, none for unsent drafts, no `quote.declined`) and REQ-020-019 for the patient notice at acceptance (FR-020). (REQ-005-038)
 10. System sends the accepted subquote and its inherited context to Booking & Payment; no funds are collected in FR-005.
 11. System writes immutable audit entries for the selection and every resulting state transition.
 
@@ -108,7 +105,7 @@ The Quote Comparison & Acceptance module enables patients to review quotes from 
 
 - Trigger: Countdown reaches zero while patient is viewing details.  
 - Steps: System disables Accept button; shows “Expired” badge and guidance to choose another quote.  
-- Outcome: Every subquote under that parent quote becomes ineligible. Patient can choose another eligible subquote from another parent quote if one exists. If none remains, the patient may cancel the inquiry and submit a new one, or contact support.
+- Outcome: Every subquote under that parent quote becomes ineligible. Patient can choose another eligible subquote from another parent quote if one exists. If none remains, the patient may cancel the inquiry and submit a new one, or contact support. (REQ-005-040)
 
 **A2: Simultaneous Acceptance Attempt**:
 
@@ -128,7 +125,7 @@ The Quote Comparison & Acceptance module enables patients to review quotes from 
 - Trigger: Patient cancels the parent inquiry (FR-003 Workflow 5) while the inquiry is in the Inquiry or Quoted stage, before any subquote is accepted.
 - Steps: System cancels inquiry; all parent quotes and their subquotes become ineligible with status "Cancelled (Inquiry Cancelled)"; all Accept/Compare actions are disabled; dashboard shows "Cancelled" badge.
 - Outcome: Inquiry dashboard becomes read-only. Patient can create a new inquiry immediately.
-- After acceptance the patient cannot cancel the inquiry. The patient sees a "Contact support" action instead, and an admin performs any booking cancellation through FR-006 with a mandatory reason and audit. That cancellation moves the booking to `Cancelled` and the inquiry to `Cancelled`, releases any active slot hold immediately, and leaves the accepted subquote and its parent quote `accepted`; refunds and fees follow the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault).
+- After acceptance the patient cannot cancel the inquiry. The patient sees a "Contact support" action instead, and an admin performs any booking cancellation through FR-006 with a mandatory reason and audit. That cancellation moves the booking to `Cancelled` and the inquiry to `Cancelled`, releases any active slot hold immediately, and leaves the accepted subquote and its parent quote `accepted`; refunds and fees follow the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault). (REQ-003-012)
 
 **A5: Appointment Slot Already Reserved**:
 
@@ -140,7 +137,7 @@ The Quote Comparison & Acceptance module enables patients to review quotes from 
 
 - Trigger: The owning provider's `Suspended` or `Deactivated` status becomes effective (FR-015 Alternative Flow A5 and Screen 4) before, during, or after subquote acceptance.
 - Steps: From the effective time, Accept is blocked for every subquote of that provider and a confirmation already in flight is rejected before an AcceptanceEvent or hold is created. If the inquiry is still comparing providers, FR-004 cancels that provider's parent quotes once each; their subquotes become unavailable, while subquotes from other providers remain acceptable and the inquiry keeps its stage with `supportRequired = true` (FR-003 Workflow 2 Alternative Flow B4). If the accepted subquote belongs to that provider, the provider-fault transfer in Business Rule 1 applies: the booking closes with cause `ProviderSuspended` or `ProviderDeactivated` (FR-006 Alternative Flow B4, which routes to B5), any active hold is released, booking-confirming payment from the original provider is blocked, and an admin rehomes the patient to a replacement provider within the same inquiry through a new admin-authored acceptance record (Alternative Flow A9); the supersession record that links the original AcceptanceEvent to the replacement, with that cause, is written at the replacement acceptance. The inquiry is not cancelled, and the AcceptanceEvent, accepted IDs/versions, and acceptance snapshot are retained without rewriting.
-- Outcome: Before acceptance, when Accept is blocked, the patient sees the inline error "This provider is no longer available. Please contact support." with a Contact Admin/Support action, not the A4 patient-cancellation messaging. After acceptance, when the deposit or booking-confirming payment is blocked because the provider became Suspended or Deactivated, the patient sees the inline error "This clinic can no longer perform your treatment. An admin will arrange a replacement clinic within the same inquiry."; the patient is not asked to start a new inquiry or re-enter anything. Both are on-screen errors shown in the app, not FR-020 notifications, and are localized through FR-021 like other UI text. The FR-020 patient notices for the same events (`provider.status_cancellation_patient` before acceptance, `booking.provider_fault_replacement` after acceptance; FR-015 and FR-003) are separate and unchanged. Late acceptance requests or payment callbacks cannot revive the original selection, and later reactivation does not restore it.
+- Outcome: Before acceptance, when Accept is blocked, the patient sees the inline error "This provider is no longer available. Please contact support." with a Contact Admin/Support action, not the A4 patient-cancellation messaging. After acceptance, when the deposit or booking-confirming payment is blocked because the provider became Suspended or Deactivated, the patient sees the inline error "This clinic can no longer perform your treatment. An admin will arrange a replacement clinic within the same inquiry."; the patient is not asked to start a new inquiry or re-enter anything. Both are on-screen errors shown in the app, not FR-020 notifications, and are localized through FR-021 like other UI text. The FR-020 patient notices for the same events (`provider.status_cancellation_patient` before acceptance, `booking.provider_fault_replacement` after acceptance; FR-015 and FR-003) are separate and unchanged. Late acceptance requests or payment callbacks cannot revive the original selection, and later reactivation does not restore it. (REQ-005-043, REQ-005-044)
 
 **A7: Payment Window Expires After Acceptance**:
 
@@ -158,9 +155,9 @@ The Quote Comparison & Acceptance module enables patients to review quotes from 
 
 - Trigger: Before treatment starts (booking `Accepted` or `Confirmed`), the accepted provider withdraws, drops out, or has a suspension or deactivation take effect, and FR-006 closes the booking with the provider-fault cause (FR-006 Alternative Flows B4 and B5).
 - Steps: The closure is recorded on the booking as its cancellation cause; no supersession record is written at closure. The admin authors a replacement quote for the replacement provider inside the same inquiry (FR-004 Screen 8). Through the FR-006 transfer, the admin then records a new AcceptanceEvent with `actorType = admin` that points to that replacement quote, one of its Quote Options, and one of its option/date-price rows, exactly like a patient acceptance. In the same operation the system writes one AcceptanceSupersession record that links the closed AcceptanceEvent to the new one; the record is inserted once and never updated. The new acceptance acquires the slot hold and creates the replacement booking through FR-006. The patient receives the mandatory `booking.scheduled` notice and the replacement provider receives `quote.accepted`.
-- Replacement quote not accepted: If no replacement acceptance is recorded, the replacement quote expires under the normal FR-004 quote expiry and no AcceptanceEvent or AcceptanceSupersession record is written. The inquiry stays flagged `supportRequired` and is not cancelled automatically; the admin may author another replacement quote (FR-004 Screen 8) or cancel the inquiry and booking from the FR-006 admin screen.
+- Replacement quote not accepted: If no replacement acceptance is recorded, the replacement quote expires under the normal FR-004 quote expiry and no AcceptanceEvent or AcceptanceSupersession record is written. The inquiry stays flagged `supportRequired` and is not cancelled automatically; the admin may author another replacement quote (FR-004 Screen 8) or cancel the inquiry and booking from the FR-006 admin screen. (REQ-005-045)
 - Outcome: The inquiry keeps one active acceptance, the original AcceptanceEvent and snapshot stay unchanged as history, and the patient re-enters nothing.
-- Boundary: If the provider fault happens while the booking is `In Progress`, no replacement acceptance is created; the admin either moves the booking to Aftercare with an aftercare reassignment or cancels it in FR-006. If the provider fault happens in Aftercare, after treatment is done, no replacement acceptance is created. The admin reassigns only the aftercare provider or team in FR-006; the booking and treatment record stay, and no new payment is taken.
+- Boundary: If the provider fault happens while the booking is `In Progress`, no replacement acceptance is created; the admin either moves the booking to Aftercare with an aftercare reassignment or cancels it in FR-006. If the provider fault happens in Aftercare, after treatment is done, no replacement acceptance is created. The admin reassigns only the aftercare provider or team in FR-006; the booking and treatment record stay, and no new payment is taken. (REQ-005-046)
 
 ---
 
@@ -178,65 +175,62 @@ The Quote Comparison & Acceptance module enables patients to review quotes from 
 
 **Inquiry-Level Fields** (always visible; one instance per screen):
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Current Stage | badge | Yes | Inquiry stage (Inquiry/Quoted/Accepted/Cancelled/...) | Valid lifecycle value; includes "Cancelled" per FR-003 |
-| Timeline | timeline | Yes | Chronological status changes | Timestamps present |
-| Inquiry Summary | group | Yes | Read-only inquiry info | Complete and consistent |
-| Medical Alerts | chips | Yes | Patient medical risk level | Read-only; from FR-003 |
-| Deadlines | datetime | Yes | Response/expiry deadlines | Future or past allowed |
-| Next Actions | actions | Yes | Available user actions | Based on stage/permissions |
+| Field Name | Type | Required | Description | Validation Rules | Graph Fields |
+|------------|------|----------|-------------|------------------|-------------|
+| Current Stage | badge | Yes | Inquiry stage (Inquiry/Quoted/Accepted/Cancelled/...) | Valid lifecycle value; includes "Cancelled" per FR-003 | ENT-inquiry.stage |
+| Timeline | timeline | Yes | Chronological status changes | Timestamps present | ENT-inquiry.status_timeline |
+| Inquiry Summary | group | Yes | Read-only inquiry info | Complete and consistent | ENT-inquiry.problem_concern, ENT-inquiry.treatment_countries, ENT-inquiry-date-range.start_date, ENT-inquiry-date-range.end_date |
+| Medical Alerts | chips | Yes | Patient medical risk level | Read-only; from FR-003 | ENT-risk-tag.severity |
+| Deadlines | datetime | Yes | Response/expiry deadlines | Future or past allowed | ENT-inquiry.response_deadline, ENT-quote.expires_at |
+| Next Actions | actions | Yes | Available user actions | Based on stage/permissions | no graph field (control) |
 
 **Parent Quote Group Fields** (repeated for each parent quote):
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Provider | group | Yes | Provider identity and summary shown under patient privacy rules | Read-only; one provider per parent quote |
-| Parent Quote Reference | text | Yes | Stable reference for one provider response | Read-only; must not be presented as the selectable item |
-| Treatment and Shared Clinical Information | group | Yes | Treatment, graft information, visual plan, clinicians, notes, requirements, and attachments inherited by every child subquote | Read-only; sourced from the parent quote |
-| Provider Reviews | rating/number | No | Review rating and count | Read-only; sourced from FR-013 |
-| Provider Credentials Summary | text | Yes | Certifications and awards summary; the medical license number is never shown to the patient | Read-only; sourced from FR-015 |
-| Expiry Timer | timer | Yes | Countdown for the parent quote; shows static "Expired on [date]" when expired | Applies to every child subquote |
-| Subquotes | list | Yes | All patient-visible subquotes contained by the parent quote | One or more; ordered; each rendered using the subquote fields below |
-| Message Provider | button | Yes | Ask the provider about this quote response | Opens that provider's conversation in the dedicated FR-012 Messages/Inbox; does not embed chat in the quote screen |
+| Field Name | Type | Required | Description | Validation Rules | Graph Fields |
+|------------|------|----------|-------------|------------------|-------------|
+| Provider | group | Yes | Provider identity and summary shown under patient privacy rules | Read-only; one provider per parent quote | ENT-provider.name, ENT-quote.provider_id |
+| Parent Quote Reference | text | Yes | Stable reference for one provider response | Read-only; must not be presented as the selectable item | ENT-quote.id |
+| Treatment and Shared Clinical Information | group | Yes | Treatment, graft information, visual plan, clinicians, notes, requirements, and attachments inherited by every child subquote | Read-only; sourced from the parent quote | ENT-quote.treatment_id, ENT-quote.estimated_grafts, ENT-quote.graft_description, ENT-quote.graft_visual_plan, ENT-quote.clinician_ids, ENT-quote.common_notes, ENT-quote.common_requirements, ENT-quote.attachment_ids |
+| Provider Reviews | rating/number | No | Review rating and count | Read-only; sourced from FR-013 | ENT-provider-review-summary.average_rating, ENT-provider-review-summary.review_count |
+| Provider Credentials Summary | text | Yes | Certifications and awards summary; the medical license number is never shown to the patient | Read-only; sourced from FR-015 | ENT-provider.credentials_summary |
+| Expiry Timer | timer | Yes | Countdown for the parent quote; shows static "Expired on [date]" when expired | Applies to every child subquote (REQ-005-040) | ENT-quote.expires_at |
+| Subquotes | list | Yes | All patient-visible subquotes contained by the parent quote | One or more; ordered; each rendered using the subquote fields below | no graph field (list of the per-subquote rows below) |
+| Message Provider | button | Yes | Ask the provider about this quote response | Opens that provider's conversation in the dedicated FR-012 Messages/Inbox; does not embed chat in the quote screen (REQ-005-015) | no graph field (control) |
 
 **Per-Subquote Fields** (repeated for every selectable subquote):
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Subquote Reference | text | Yes | Stable identifier and version for the atomic patient choice | Resolves one Quote Option ID and one Option/date-price ID under exactly one parent quote; `subquoteVersion` equals the owning parent aggregate `QuoteVersion` |
-| Package | group | Yes | Selected package snapshot for this subquote | Includes package name, description, and source/version provenance |
-| Included and Custom Services | checklist | Yes | Services included in this subquote | Read-only quote-owned snapshot |
-| Date Range | date range | Yes | Applicable patient-requested treatment range for this subquote | Exactly one range in the selectable subquote |
-| Appointment Details | group | Yes | Provider-defined appointment date, time, and timezone | Must fall within the subquote date range |
-| Price | amount | Yes | Offered price for this subquote as entered by the provider, before any promotion (FR-004), with the price after promotion shown next to it when a promotion applies | Uses the parent quote currency snapshot; no patient editing |
-| Promotion | group | No | Structured promotion attached to this subquote, with its discount shown separately from the offered price | Read-only; show terms when present |
-| Price per Graft | number | Yes | Subquote price divided by inherited graft count | Calculated; non-editable |
-| Treatment Plan | ordered list | Yes | Relative day-to-day plan for this subquote | Inherits appointment as the schedule anchor; no stored calendar dates derived here |
-| State | badge | Yes | Available, Accepted, Not Selected, Expired, Withdrawn, or Cancelled | Derived from parent/subquote lifecycle |
-| Actions | buttons | Yes | View Details and Accept | Accept enabled only for a current eligible subquote |
+| Field Name | Type | Required | Description | Validation Rules | Graph Fields |
+|------------|------|----------|-------------|------------------|-------------|
+| Subquote Reference | text | Yes | Stable identifier and version for the atomic patient choice | Resolves one Quote Option ID and one Option/date-price ID under exactly one parent quote; `subquoteVersion` equals the owning parent aggregate `QuoteVersion` | ENT-subquote.id, ENT-subquote.parent_quote_id, ENT-subquote.quote_option_id, ENT-subquote.option_date_price_id, ENT-subquote.version |
+| Package | group | Yes | Selected package snapshot for this subquote | Includes package name, description, and source/version provenance | ENT-subquote.package_snapshot |
+| Included and Custom Services | checklist | Yes | Services included in this subquote | Read-only quote-owned snapshot | ENT-subquote.included_and_custom_services |
+| Date Range | date range | Yes | Applicable patient-requested treatment range for this subquote | Exactly one range in the selectable subquote | ENT-subquote.date_range |
+| Appointment Details | group | Yes | Provider-defined appointment date, time, and timezone | Must fall within the subquote date range | ENT-subquote.appointment_at, ENT-subquote.appointment_timezone |
+| Price | amount | Yes | Offered price for this subquote as entered by the provider, before any promotion (FR-004), with the price after promotion shown next to it when a promotion applies | Uses the parent quote currency snapshot; no patient editing (REQ-005-050) | ENT-subquote.offered_price, ENT-subquote.price_after_promotion, ENT-quote.currency_snapshot |
+| Promotion | group | No | Structured promotion attached to this subquote, with its discount shown separately from the offered price | Read-only; show terms when present (REQ-005-050) | ENT-subquote.promotion_snapshot |
+| Price per Graft | number | Yes | Subquote price divided by inherited graft count | Calculated; non-editable (REQ-005-051) | ENT-subquote.price_per_graft |
+| Treatment Plan | ordered list | Yes | Relative day-to-day plan for this subquote | Inherits appointment as the schedule anchor; no stored calendar dates derived here | ENT-subquote.treatment_plan |
+| State | badge | Yes | Available, Accepted, Not Selected, Expired, Withdrawn, or Cancelled | Derived from parent/subquote lifecycle (REQ-005-052) | ENT-subquote.acceptance_state |
+| Actions | buttons | Yes | View Details and Accept | Accept enabled only for a current eligible subquote (REQ-005-049) | no graph field (control) |
 
 **Subquote List & Comparison Panel Fields** (list controls always visible; comparison panel renders only when at least two subquotes are selected):
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Parent Quotes Received | grouped list | Yes | Parent quote responses grouped under their providers | Includes multiple providers and multiple parent quotes from the same provider |
-| Sort & Filter | controls | Yes | Sort/filter subquotes. The sort and filter options, the default sort, and the price-order currency handling are owned by FR-022 (`FR-005 / Screen 1`; REQ-005-053 and REQ-005-027 are retired in its favour). | Criteria evaluate the complete subquote plus inherited parent/provider values; see FR-022 |
-| Compare Selection | checkbox | No | Select subquotes to compare side-by-side | Maximum three eligible subquotes, regardless of parent quote/provider grouping |
-| Comparison View | panel | No | Side-by-side comparison of complete subquotes | Renders only when at least two are selected |
-| Comparison Differentiators | table | Conditional | Comparison rows across selected subquotes | Must include package, included/custom services, date range, appointment details, total price, currency, promotion, price per graft, inherited graft count, provider rating/count, provider credentials (certifications and awards only), and treatment plan |
+| Field Name | Type | Required | Description | Validation Rules | Graph Fields |
+|------------|------|----------|-------------|------------------|-------------|
+| Parent Quotes Received | grouped list | Yes | Parent quote responses grouped under their providers | Includes multiple providers and multiple parent quotes from the same provider (REQ-005-001) | ENT-quote.id, ENT-quote.provider_id |
+| Sort & Filter | controls | Yes | Sort/filter subquotes. The sort and filter options, the default sort, and the price-order currency handling are owned by FR-022 (`FR-005 / Screen 1`; REQ-005-053 and REQ-005-027 are retired in its favour). | Criteria evaluate the complete subquote plus inherited parent/provider values; see FR-022 (REQ-005-012) | no graph field (control) |
+| Compare Selection | checkbox | No | Select subquotes to compare side-by-side | Maximum three eligible subquotes, regardless of parent quote/provider grouping (REQ-005-013) | no graph field (control) |
+| Comparison View | panel | No | Side-by-side comparison of complete subquotes | Renders only when at least two are selected (REQ-005-047) | no graph field (control) |
+| Comparison Differentiators | table | Conditional | Comparison rows across selected subquotes | Must include package, included/custom services, date range, appointment details, total price, currency, promotion, price per graft, inherited graft count, provider rating/count, provider credentials (certifications and awards only), and treatment plan (REQ-005-014) | ENT-subquote.package_snapshot, ENT-subquote.included_and_custom_services, ENT-subquote.date_range, ENT-subquote.appointment_at, ENT-subquote.appointment_timezone, ENT-subquote.offered_price, ENT-subquote.promotion_snapshot, ENT-subquote.treatment_plan, ENT-quote.currency_snapshot, ENT-quote.estimated_grafts, ENT-provider-review-summary.average_rating, ENT-provider-review-summary.review_count, ENT-provider.credentials_summary |
 
 **Business Rules**:
 
 - Parent quotes are grouping and inheritance boundaries; they are not patient-selectable acceptance items.
-- A subquote is the lowest-level complete commercial choice and the only selectable acceptance item.
-- A parent quote offers up to (number of Quote Options × number of date ranges) subquotes. A provider may leave out an option and date-range pairing it cannot offer, so the actual count can be lower; every Quote Option has at least one date range.
-- The comparison panel always shows the current parent quote version. If the provider re-versions a parent quote, the panel refreshes to the current version; if a compared subquote no longer exists or becomes ineligible, it drops out of the panel and the patient is told why.
-- Expired or withdrawn parent quotes make all child subquotes ineligible; terminal child subquotes are visually disabled.
-- Exactly one subquote acceptance is permitted per inquiry.
-- Patient can sort/filter subquotes and compare up to three side-by-side, including siblings under one parent quote or subquotes from different parent quotes/providers.
-- Patient can view subquote details and accept an eligible subquote directly from the dashboard.
-- If inquiry stage is "Cancelled", all Accept buttons and Compare checkboxes are disabled; dashboard is read-only with "Cancelled" badge; quote data remains visible for reference (see FR-003 Workflow 5, Alternative Flow A4 above).
+- Every Quote Option has at least one date range (REQ-005-018).
+- The comparison panel always shows the current parent quote version. If the provider re-versions a parent quote, the panel refreshes to the current version; if a compared subquote no longer exists or becomes ineligible, it drops out of the panel and the patient is told why. (REQ-005-048)
+- Terminal child subquotes are visually disabled (REQ-005-004).
+- Patient can view subquote details and accept an eligible subquote directly from the dashboard. (REQ-005-049)
+- If inquiry stage is "Cancelled", all Accept buttons and Compare checkboxes are disabled; dashboard is read-only with "Cancelled" badge; quote data remains visible for reference (see FR-003 Workflow 5, Alternative Flow A4 above). (REQ-005-041)
 
 #### Screen 2: Subquote Detail with Accept Action (Extension of FR-004 Screen 4)
 
@@ -246,23 +240,21 @@ The Quote Comparison & Acceptance module enables patients to review quotes from 
 
 **Enhancements to FR-004 Screen 4**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Terms Acknowledgment | checkbox | Yes | Confirm understanding of policies | Required to proceed with acceptance |
-| Selected Subquote Summary | group | Yes | Package, included/custom services, date range, appointment, price, promotion, and treatment plan | Must identify the exact current parent aggregate `QuoteVersion`, also recorded as `subquoteVersion` |
-| Promotion Code | text input | No | Patient-entered promotion code for this named subquote | Validated through FR-019 before acceptance; applies to this subquote only; discounted price shown when valid; not available after acceptance |
-| Inherited Parent Context | group | Yes | Provider, treatment, graft information, visual plan, clinicians, common notes/requirements, and attachments | Read-only; inherited from parent quote |
-| Accept Button | button | Yes | Accept this subquote | Disabled when the subquote or parent quote is ineligible or another subquote is accepted |
-| Acceptance Confirmation Modal | modal | Yes | Summary confirmation before finalizing | Shows the complete subquote and inherited context |
+| Field Name | Type | Required | Description | Validation Rules | Graph Fields |
+|------------|------|----------|-------------|------------------|-------------|
+| Terms Acknowledgment | checkbox | Yes | Confirm understanding of policies | Required to proceed with acceptance (REQ-005-035) | ENT-acceptance-event.terms_acknowledged_at |
+| Selected Subquote Summary | group | Yes | Package, included/custom services, date range, appointment, price, promotion, and treatment plan | Must identify the exact current parent aggregate `QuoteVersion`, also recorded as `subquoteVersion` | ENT-subquote.id, ENT-subquote.version, ENT-subquote.package_snapshot, ENT-subquote.included_and_custom_services, ENT-subquote.date_range, ENT-subquote.appointment_at, ENT-subquote.appointment_timezone, ENT-subquote.offered_price, ENT-subquote.price_after_promotion, ENT-subquote.promotion_snapshot, ENT-subquote.treatment_plan, ENT-quote.currency_snapshot |
+| Promotion Code | text input | No | Patient-entered promotion code for this named subquote | Validated through FR-019 before acceptance; applies to this subquote only; discounted price shown when valid; not available after acceptance (REQ-005-026) | ENT-acceptance-event.promotion_code, ENT-acceptance-event.discounted_price |
+| Inherited Parent Context | group | Yes | Provider, treatment, graft information, visual plan, clinicians, common notes/requirements, and attachments | Read-only; inherited from parent quote | ENT-provider.name, ENT-quote.treatment_id, ENT-quote.estimated_grafts, ENT-quote.graft_description, ENT-quote.graft_visual_plan, ENT-quote.clinician_ids, ENT-quote.common_notes, ENT-quote.common_requirements, ENT-quote.attachment_ids |
+| Accept Button | button | Yes | Accept this subquote | Disabled when the subquote or parent quote is ineligible or another subquote is accepted | ENT-subquote.acceptance_state |
+| Acceptance Confirmation Modal | modal | Yes | Summary confirmation before finalizing | Shows the complete subquote and inherited context | no graph field (control) |
 
 **Business Rules**:
 
-- All relevant parent quote and subquote details from FR-004 Screen 4 are displayed read-only.
-- Terms acknowledgment checkbox must be checked before Accept button is enabled.  
-- Accept button is disabled if the subquote or parent quote is expired, withdrawn, cancelled, superseded, or stale, or another subquote is already accepted.
-- Tapping Accept opens the confirmation modal with the complete subquote summary, inherited context, and next steps.
-- Detail reflects the latest provider edits; confirmation rejects a stale version; the accepted subquote and inherited context lock on acceptance.
-- A patient-entered promotion code (Alternative Flow A8) applies only to this subquote; the discounted price is shown in the summary and frozen into the acceptance snapshot on confirmation.
+- All relevant parent quote and subquote details from FR-004 Screen 4 are displayed read-only. (REQ-005-054)
+- Terms acknowledgment checkbox must be checked before Accept button is enabled. (REQ-005-035)
+- Tapping Accept opens the confirmation modal with the complete subquote summary, inherited context, and next steps. (REQ-005-055)
+- Detail reflects the latest provider edits. (REQ-005-054)
 
 #### Screen 3: Acceptance Confirmation Modal
 
@@ -270,21 +262,18 @@ The Quote Comparison & Acceptance module enables patients to review quotes from 
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Subquote Summary | group | Yes | Exact package, services, date range, appointment details, pricing, promotion, treatment plan, provider, and inherited treatment facts | Must reflect the latest subquote and parent versions |
-| Terms Acknowledgment | checkbox | Yes | Confirm understanding (if not already acknowledged) | Required if not already checked |
-| Next Steps | note | Yes | Booking & Payment handoff information | Read-only |
-| Confirm | action | Yes | Finalize acceptance | Enabled when eligible |
-| Cancel | action | Yes | Return to quote detail | Always available |
+| Field Name | Type | Required | Description | Validation Rules | Graph Fields |
+|------------|------|----------|-------------|------------------|-------------|
+| Subquote Summary | group | Yes | Exact package, services, date range, appointment details, pricing, promotion, treatment plan, provider, and inherited treatment facts | Must reflect the latest subquote and parent versions | ENT-subquote.id, ENT-subquote.version, ENT-subquote.package_snapshot, ENT-subquote.included_and_custom_services, ENT-subquote.date_range, ENT-subquote.appointment_at, ENT-subquote.appointment_timezone, ENT-subquote.offered_price, ENT-subquote.price_after_promotion, ENT-subquote.promotion_snapshot, ENT-subquote.treatment_plan, ENT-acceptance-event.discounted_price, ENT-quote.currency_snapshot, ENT-provider.name, ENT-quote.treatment_id, ENT-quote.estimated_grafts |
+| Terms Acknowledgment | checkbox | Yes | Confirm understanding (if not already acknowledged) | Required if not already checked | ENT-acceptance-event.terms_acknowledged_at |
+| Next Steps | note | Yes | Booking & Payment handoff information | Read-only | no graph field (control) |
+| Confirm | action | Yes | Finalize acceptance | Enabled when eligible | no graph field (control) |
+| Cancel | action | Yes | Return to quote detail | Always available | no graph field (control) |
 
 **Business Rules**:
 
-- Modal appears after patient taps Accept on a subquote detail screen.
-- Confirmation is idempotent; duplicate confirmations do nothing.  
-- If the slot is taken by another acceptance before confirmation completes, the modal shows the error state "This appointment slot was just taken. Please choose another subquote.", no acceptance is recorded, and the patient returns to the inquiry dashboard (Alternative Flow A5).
-- Post-confirmation, modal closes and patient is directed to booking/payment entry.  
-- Patient can cancel to return to quote detail screen.
+- Confirmation is idempotent; duplicate confirmations do nothing. Idempotent acceptance keyed to inquiry and accepted subquote: repeat requests do not create multiple accepted states. (REQ-005-056)
+- Post-confirmation, modal closes and patient is directed to booking/payment entry. (REQ-005-057)
 
 ### Provider Platform (Read-only in this module)
 
@@ -294,13 +283,13 @@ The Quote Comparison & Acceptance module enables patients to review quotes from 
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Parent Quote Outcome | badge | Yes | Accepted, Expired, Withdrawn, Cancelled (other accepted), or Cancelled (Inquiry Cancelled) | Read-only parent lifecycle state |
-| Subquote Outcome | badge/list | Yes | Accepted, Not Selected, Expired, Withdrawn, or Cancelled for each child choice | Exactly one Accepted across the inquiry |
-| Selected Subquote | group | Conditional | Package, date range, appointment details, price, currency, and promotion accepted from this provider, read from the acceptance snapshot | Shown only to the selected provider; read-only |
-| Reason | text | No | If non-selected: "Other subquote accepted" or "Inquiry cancelled by patient" | Must not identify another provider or disclose accepted price |
-| Audit Link | link | Yes | View version/audit history | Read-only |
+| Field Name | Type | Required | Description | Validation Rules | Graph Fields |
+|------------|------|----------|-------------|------------------|-------------|
+| Parent Quote Outcome | badge | Yes | Accepted, Expired, Withdrawn, Cancelled (other accepted), or Cancelled (Inquiry Cancelled) | Read-only parent lifecycle state | ENT-quote.status |
+| Subquote Outcome | badge/list | Yes | Accepted, Not Selected, Expired, Withdrawn, or Cancelled for each child choice | Exactly one Accepted across the inquiry | ENT-subquote.acceptance_state |
+| Selected Subquote | group | Conditional | Package, date range, appointment details, price, currency, and promotion accepted from this provider, read from the acceptance snapshot | Shown only to the selected provider; read-only (REQ-005-058) | ENT-acceptance-event.snapshot |
+| Reason | text | No | If non-selected: "Other subquote accepted" or "Inquiry cancelled by patient" | Must not identify another provider or disclose accepted price (REQ-005-039) | ENT-quote.cancellation_provenance |
+| Audit Link | link | Yes | View version/audit history | Read-only | ENT-quote-audit.action, ENT-quote-version.version |
 
 ### Admin Platform
 
@@ -310,14 +299,14 @@ The Quote Comparison & Acceptance module enables patients to review quotes from 
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Global Acceptance Table | table | Yes | All subquote acceptance events with parent quote/provider references and filters | Admin-only; status filter includes active, booking cancelled (derived from the FR-006 booking cancellation, with no supersession record), and superseded (provider fault, including provider suspension or deactivation, derived from linked supersession records) |
-| Accepted Selection | group | Yes | Accepted subquote package, date range, appointment details, price, currency, exchange rate and its timestamp, promotion, and inherited context | Immutable acceptance snapshot |
-| Supersession Indicator | badge | No | Shows if acceptance was superseded by a provider-fault transfer, or that its booking was cancelled | "Superseded — Provider Fault" links to the replacement admin-authored acceptance record; "Booking Cancelled" is read from the FR-006 booking cancellation and links to its audit trail; no supersession record exists for a cancellation |
-| Conflicts | badge | No | Flagged races or errors; the flag is set automatically by the system when a second acceptance is rejected (REQ-005-065) | Investigated by admin; the first valid acceptance stands; findings recorded as an annotation |
-| Annotations | list | No | Admin notes and corrections recorded next to the acceptance | Append-only; each shows author, time, and reason |
-| Actions | actions | Yes | Add note or correction with reason | Audited; appends an annotation and never alters the AcceptanceEvent, its snapshot, or any quote state; no delete or restore action exists |
+| Field Name | Type | Required | Description | Validation Rules | Graph Fields |
+|------------|------|----------|-------------|------------------|-------------|
+| Global Acceptance Table | table | Yes | All subquote acceptance events with parent quote/provider references and filters | Admin-only; status filter includes active, booking cancelled (derived from the FR-006 booking cancellation, with no supersession record), and superseded (provider fault, including provider suspension or deactivation, derived from linked supersession records) (REQ-005-059) | ENT-acceptance-event.id, ENT-acceptance-event.inquiry_id, ENT-acceptance-event.accepted_parent_quote_id, ENT-acceptance-event.accepted_subquote_id, ENT-acceptance-event.actor_type, ENT-acceptance-event.accepted_at, ENT-acceptance-event.oversight_status, ENT-quote.provider_id |
+| Accepted Selection | group | Yes | Accepted subquote package, date range, appointment details, price, currency, exchange rate and its timestamp, promotion, and inherited context | Immutable acceptance snapshot | ENT-acceptance-event.snapshot |
+| Supersession Indicator | badge | No | Shows if acceptance was superseded by a provider-fault transfer, or that its booking was cancelled | "Superseded — Provider Fault" links to the replacement admin-authored acceptance record; "Booking Cancelled" is read from the FR-006 booking cancellation and links to its audit trail; no supersession record exists for a cancellation (REQ-005-059) | ENT-acceptance-event.oversight_status, ENT-acceptance-supersession.cause, ENT-acceptance-supersession.replacement_acceptance_event_id, ENT-booking.status |
+| Conflicts | badge | No | Flagged races or errors; the flag is set automatically by the system when a second acceptance is rejected (REQ-005-065) | Investigated by admin; the first valid acceptance stands; findings recorded as an annotation (REQ-005-033) | ENT-acceptance-event.conflict_flagged |
+| Annotations | list | No | Admin notes and corrections recorded next to the acceptance | Append-only; each shows author, time, and reason | ENT-acceptance-annotation.author_id, ENT-acceptance-annotation.created_at, ENT-acceptance-annotation.reason, ENT-acceptance-annotation.text, ENT-acceptance-annotation.type |
+| Actions | actions | Yes | Add note or correction with reason | Audited; appends an annotation and never alters the AcceptanceEvent, its snapshot, or any quote state; no delete or restore action exists (REQ-005-023) | ENT-acceptance-annotation.type, ENT-acceptance-annotation.text, ENT-acceptance-annotation.reason |
 
 ---
 
@@ -325,157 +314,52 @@ The Quote Comparison & Acceptance module enables patients to review quotes from 
 
 ### General Module Rules
 
-1. A patient can accept exactly one subquote per inquiry; a parent quote cannot be accepted directly. Subsequent acceptance attempts are blocked with guidance, including after `Payment Window Expired` (Alternative Flow A7). The one exception is a provider-fault transfer handled in FR-006: when, after acceptance, the accepted provider withdraws, drops out, or has a suspension or deactivation take effect (Alternative Flow A6), an admin authors a replacement quote for the replacement provider (FR-004 Screen 8) and records a new admin-authored acceptance that points to that quote, option, and option/date-price row (Alternative Flow A9). The original AcceptanceEvent is never edited. The closure itself is recorded on the booking as its cause; one supersession record, written once at the replacement acceptance, links the closed acceptance to the new one with the provider-fault cause (`ProviderFault`, `ProviderSuspended`, or `ProviderDeactivated`). This applies only before treatment starts; in Aftercare an admin reassigns only the aftercare provider or team, with no new acceptance or payment. The patient keeps the same inquiry and re-enters nothing. Money already paid is refunded to the patient in full, with no cancellation fee, and the replacement booking takes a new payment (FR-006 Alternative Flows B4 and B5); the exact payment mechanics are defined in the payment requirements (FR-007, FR-007b, FR-017).
-2. A valid subquote acceptance atomically acquires an exclusive hold on its appointment slot, locks that subquote and its inherited parent context, marks its sibling subquotes Not Selected, and auto-cancels every competing parent quote for the same inquiry with clear reasons and notifications. If the slot is already held or blocked, the acceptance attempt fails before any of those state changes.
-3. Acceptance does not reveal patient full identity to provider; full PII becomes accessible only after successful payment confirmation, per constitution. The identity masking itself is the one platform-wide Rule in the system PRD (REQ-005-008 is retired in its favour).  
-4. All acceptance-related state transitions are immutably audited (who, when, what, reason).  
-5. A subquote is ineligible if it or its parent quote is expired, withdrawn, cancelled, archived, superseded, or no longer the version presented to the patient, or if its owning provider is `Suspended` or `Deactivated` (FR-015).
-6. See system PRD, Platform-Wide Rules: Soft deletes only. How long records are kept follows the single platform retention Rule (one 10-year period for all record types). AcceptanceEvents, accepted subquotes, and their parent quotes are never deleted or restored, and an AcceptanceEvent and its snapshot are never edited; admins add audited annotations next to them. An admin edit of the accepted quote after acceptance follows REQ-005-023.
-7. Notifications sent to non-selected providers (due to auto-cancellation) MUST NOT reveal the identity of the selected provider or the accepted price.
-8. Provider-status handling (Alternative Flow A6; FR-015 A5/Screen 4) uses cause `ProviderSuspended` or `ProviderDeactivated` with an independent `supportRequired` marker. Before acceptance, it blocks Accept and cancels that provider's parent quotes. After acceptance, it follows the provider-fault transfer in Business Rule 1: the booking closes with that cause, the hold is released, and an admin rehomes the patient within the same inquiry; the AcceptanceEvent is superseded through a linked supersession record written when the replacement acceptance is recorded. It is distinct from patient inquiry cancellation (A4) and Payment Window Expired, and does not reclassify Completed or already-terminal history.
+1. Subsequent acceptance attempts are blocked with guidance, including after `Payment Window Expired` (Alternative Flow A7). The one exception is a provider-fault transfer handled in FR-006 (REQ-005-002, REQ-005-024; Alternative Flows A6 and A9). The supersession record carries the provider-fault cause (`ProviderFault`, `ProviderSuspended`, or `ProviderDeactivated`), copied from the closed booking's cancellation cause. Money already paid is refunded to the patient in full, with no cancellation fee, and the replacement booking takes a new payment (FR-006 Alternative Flows B4 and B5); the exact payment mechanics are defined in the payment requirements (FR-007, FR-007b, FR-017).
+2. Acceptance does not reveal patient full identity to provider; full PII becomes accessible only after successful payment confirmation, per constitution. The identity masking itself is the one platform-wide Rule in the system PRD (REQ-SYS-001; REQ-005-008 is retired in its favour).
+3. All acceptance-related state transitions are immutably audited (who, when, what, reason). Audit logs must record the accepted subquote, inherited parent snapshot, actor, presented versions, and every affected parent quote and sibling subquote. (REQ-005-034)
+4. See system PRD, Platform-Wide Rules: Soft deletes only (REQ-SYS-003; REQ-005-060 is retired in its favour). How long records are kept follows the single platform retention Rule (REQ-SYS-002; REQ-005-007). What may never be deleted, restored, or edited after acceptance is stated in REQ-005-023.
+5. Notifications sent to non-selected providers (due to auto-cancellation) MUST NOT reveal the identity of the selected provider or the accepted price. (REQ-005-039)
+6. Provider-status handling (Alternative Flow A6; FR-015 A5/Screen 4) uses cause `ProviderSuspended` or `ProviderDeactivated` with an independent `supportRequired` marker (REQ-005-022). It is distinct from patient inquiry cancellation (A4) and Payment Window Expired, and does not reclassify Completed or already-terminal history.
+7. Patients do not have an explicit "decline" action; sibling subquotes become Not Selected and competing parent quotes auto-cancel on acceptance or expire by policy. (REQ-005-063)
 
 ### Data & Privacy Rules
 
-1. Patient identifiers remain anonymized to providers at this stage.  
-2. See system PRD, Platform-Wide Rules: Encryption in transit and at rest.  
-3. Audit logs must record the accepted subquote, inherited parent snapshot, actor, presented versions, and every affected parent quote and sibling subquote.
-4. Retention: acceptance and related quote/subquote records follow the system PRD, Platform-Wide Rules: One 10-year retention period.
+- See system PRD, Platform-Wide Rules: Encryption in transit and at rest (REQ-SYS-004; REQ-005-009 is retired in its favour); Role-based, audited access (REQ-SYS-009).
 
 ### Admin Editability Rules
 
 **Editable by Admin**:
 
-- Add a note or correction next to an acceptance record with reason (audited annotation). An annotation never alters the AcceptanceEvent, its snapshot, the accepted IDs/versions, or any quote, subquote, or inquiry state. A flagged race or error is investigated and recorded the same way; the first valid acceptance stands.
-- Edit an accepted quote after acceptance in any field except price, currency, and promotion, with a mandatory reason and full before/after history; the edit is stored as a new version beside the unchanged acceptance snapshot (REQ-005-023).
-- Perform a provider-fault transfer through FR-006, authoring the replacement quote on FR-004 Screen 8 and recording the new linked admin-authored acceptance record (Business Rule 1, Alternative Flow A9).
+- Add a note or correction next to an acceptance record with reason (audited annotation; REQ-005-023). A flagged race or error is investigated and recorded the same way (REQ-005-033).
+- Edit an accepted quote after acceptance in any field except price, currency, and promotion, with a mandatory reason and full before/after history (REQ-005-023).
+- Perform a provider-fault transfer through FR-006 (REQ-005-024; Business Rule 1, Alternative Flow A9).
 - Cancel a booking after acceptance, from any booking state, through FR-006 with a mandatory reason and audit, when the patient contacts support (Alternative Flow A4).
 - Configure notification behaviors via centralized settings (FR-030).
 
 **Fixed in Codebase (Not Editable)**:
 
-- Patient identity reveal policy: only post-payment confirmation.  
-- Subquote acceptance uniqueness constraint per inquiry.
-- Soft delete policy (no hard deletes).
-- AcceptanceEvent immutability: no delete, restore, or edit of an AcceptanceEvent or its snapshot, and no delete or restore of an accepted subquote or its parent quote; admin notes are annotations only.
+- Patient identity reveal policy: only post-payment confirmation (REQ-SYS-001).
+- Subquote acceptance uniqueness constraint per inquiry (REQ-005-024).
+- Soft delete policy (no hard deletes) (REQ-SYS-003).
+- AcceptanceEvent immutability (REQ-005-023); admin notes are annotations only.
 
 **Configurable with Restrictions**:
 
-- Acceptance confirmation copy/UX notes (content-managed); legal text controlled centrally.
+- Acceptance confirmation copy/UX notes (content-managed); legal text controlled centrally. (REQ-005-061)
 
 ### Payment & Billing Rules (for Handoff)
 
-- Acceptance prepares booking/payment handoff; no funds are collected in this module.  
-- The accepted subquote is the complete handoff unit. It carries the selected package, date range, appointment date/time/timezone, offered price, promotion when applicable, and references to the inherited parent quote/provider/treatment context.
-- Patient acceptance of the subquote constitutes acceptance of its exact appointment and price. FR-006 must not ask the patient to select another package, date range, appointment, or quote price.
-- The exchange rate lock at acceptance, including the rule for a cached rate older than 24 hours, is owned by FR-029 (REQ-029-044). The acceptance snapshot records the rate and its timestamp (REQ-005-006).
-- Pricing and promotions shown are those attached to the subquote, plus any patient-entered promotion code applied to that subquote before acceptance (Alternative Flow A8). The resulting price and promotion are frozen into the acceptance snapshot; nothing after acceptance changes them except the provider-fault transfer in Business Rule 1, which creates a new linked record.
-- Auto-applied promotion use: a sent parent quote carrying an auto-applied promotion holds at most one reserved use under FR-019; re-sending a new version keeps it, creates one only if the new version newly carries the promotion, and releases it if the new version no longer does. Acceptance consumes the reservation for the accepted parent quote and releases the reservations of sibling and competing parent quotes when they end Not Selected or auto-cancelled. If the booking reaches `Payment Window Expired` or is cancelled before the first payment, the consumed use returns to the limit; an admin revive takes it again only if the limit has room, as defined by FR-019. Provider-selected promotions and patient-entered codes keep the FR-019 lifecycle of reserve at acceptance and consume at first payment. Promotion usage limits count reservations plus consumed uses, so they cannot be exceeded.
-- Binding snapshot fields: price, currency, date range, appointment, and promotion are the binding fields and are read from the acceptance snapshot by every downstream module; the snapshot never changes after acceptance. The appointment in the snapshot is the accepted baseline: an admin may later change the booking's appointment through FR-006, which emits `booking.rescheduled`, and every booking notice reads the booking's current appointment rather than the snapshot. The treatment details in the snapshot (treatment plan, clinicians, graft information) are the original record at acceptance. After acceptance, only the clinic or an admin may change the plan, clinicians, or grafts, through FR-010 only; each change is audited and the patient is notified, and the snapshot itself is never edited.
-- Post-Acceptance Hold: Acceptance and exclusive slot reservation are one atomic operation, and a second acceptance targeting the held or blocked slot is rejected. The hold itself (what keys it, its FR-026 duration, no extension on payment failure, appointment created only on first payment, and `Payment Window Expired` on expiry) is owned by FR-006 REQ-006-005; see Alternative Flow A7 for the patient's recovery route.
-- Cancellation During Hold: The patient cannot cancel the inquiry after acceptance and is offered "Contact support" instead (FR-003 REQ-003-012). If an admin cancels the booking through FR-006 while the appointment slot hold is active, the hold is released immediately and the slot is returned to the provider's availability; the booking and the inquiry become `Cancelled`, and the accepted subquote and its parent quote stay `accepted`. See FR-026 for the slot-hold duration and FR-006 for the admin cancellation and booking-side guard rules.
-- Provider Status Change During Hold: If the accepted subquote's provider becomes `Suspended` or `Deactivated` while the hold is active, the hold is released even if time remains, FR-006 closes the booking with cause `ProviderSuspended` or `ProviderDeactivated` and blocks booking-confirming payment to that provider, and the provider-fault transfer in Business Rule 1 applies: an admin rehomes the patient to a replacement provider within the same inquiry, and the supersession record is written when the replacement acceptance is recorded (Alternative Flow A9). The acceptance snapshot and locked price/exchange rate are retained unchanged, and money already paid follows the Business Rule 1 placeholder.
-
----
-
-## Success Criteria
-
-### Patient Experience Metrics
-
-- **SC-001**: 95% of patients can compare and accept a subquote within 3 minutes.
-- **SC-002**: <2% of acceptance attempts fail due to expired quotes (clear guidance shown).  
-- **SC-003**: Patient satisfaction for quote review flow ≥ 4.5/5.
-
-### Provider Efficiency Metrics
-
-- **SC-004**: 100% of sibling subquotes and competing parent quotes receive the correct non-selected/cancelled outcome within 10 seconds of acceptance.
-- **SC-005**: 100% acceptance outcomes correctly reflected in provider dashboards.
-
-### Admin Management Metrics
-
-- **SC-006**: 100% acceptance events fully auditable with immutable logs.  
-- **SC-007**: 95% of conflicts (if any) resolved within one business day.
-
-### System Performance Metrics
-
-- **SC-008**: Acceptance action completes in ≤ 2 seconds for 95th percentile.  
-- **SC-009**: Notifications delivered within 30 seconds for 95% of events.  
-- **SC-010**: Zero hard deletes; archival retrieval success = 100%.
-
-### Business Impact Metrics
-
-- **SC-011**: ≥ 30% of inquiries with quotes proceed to acceptance.  
-- **SC-012**: ≥ 90% of accepted subquotes proceed to booking initiation (next FR) within the configured hold window (default 48 hours).
+- The accepted subquote is the complete handoff unit. It carries the selected package, date range, appointment date/time/timezone, offered price, promotion when applicable, and references to the inherited parent quote/provider/treatment context. (REQ-005-011)
+- Patient acceptance of the subquote constitutes acceptance of its exact appointment and price. FR-006 must not ask the patient to select another package, date range, appointment, or quote price. (REQ-005-062)
+- Auto-applied promotion use: a sent parent quote carrying an auto-applied promotion holds at most one reserved use under FR-019; re-sending a new version keeps it, creates one only if the new version newly carries the promotion, and releases it if the new version no longer does (consumption and release at acceptance: REQ-005-028). If the booking reaches `Payment Window Expired` or is cancelled before the first payment, the consumed use returns to the limit; an admin revive takes it again only if the limit has room, as defined by FR-019. Provider-selected promotions and patient-entered codes keep the FR-019 lifecycle of reserve at acceptance and consume at first payment. Promotion usage limits count reservations plus consumed uses, so they cannot be exceeded.
+- Binding snapshot fields: price, currency, date range, appointment, and promotion are read from the acceptance snapshot by every downstream module (REQ-005-006). An admin may later change the booking's appointment through FR-006, which emits `booking.rescheduled`. After acceptance, only the clinic or an admin may change the plan, clinicians, or grafts, through FR-010 only; each change is audited and the patient is notified.
+- Cancellation During Hold: when an admin cancels the booking through FR-006 while the slot hold is active, the slot is returned to the provider's availability (Alternative Flow A4). See FR-026 for the slot-hold duration and FR-006 for the admin cancellation and booking-side guard rules.
 
 ---
 
 ## Dependencies
 
-### Internal Dependencies (Other FRs/Modules)
-
-- **FR-003 / P-02, PR-02, A-01**: Inquiry submission & distribution (source inquiry and medical context).  
-- **FR-004 / PR-02**: Parent quote, Quote Option, option/date-price, expiry, withdrawal, aggregate `QuoteVersion`, and audit contracts. FR-005 combines one Quote Option and one option/date-price record into one complete patient-selectable subquote whose `subquoteVersion` equals the owning parent `QuoteVersion`.
-- **FR-020 / S-03**: Notifications & alerts (event delivery).  
-- **FR-030 / A-09, S-03**: Notification rules & configuration (admin-configured event-to-notification mappings, channels, and templates).
-- **FR-022**: Search & filtering owns the sort and filter options, defaults, and price-order currency handling of the quote list (Screen 1).
-- **FR-029**: Payment System Configuration owns the currency conversion rate lock at acceptance (REQ-029-044).
-- **FR-012 / P-06, PR-07, A-10**: Messaging & communication (Patient ↔ Provider quote questions through the dedicated Messages/Inbox; Admin monitors and intervenes only under FR-012 policy).
-- **FR-013 / P-02, A-01**: Reviews & Ratings (source for provider review rating/count shown in comparison).  
-- **FR-015 / A-02**: Provider Management & Onboarding (source for provider certifications and awards summary, provider status eligibility, and the suspension/deactivation cancellation cascade in Alternative Flow A5 and Screen 4).  
-- **FR-006 / P-03, PR-02, A-01**: Booking & Scheduling consumes the FR-005 `AcceptanceEvent`, accepted parent quote ID/version, accepted subquote ID/version, immutable acceptance snapshot, and pre-scheduled slot without package, date, appointment, or price reselection; it owns payment initiation, booking confirmation, and post-payment PII reveal.
-- **A-09**: System settings (legal copy and terms acknowledgment text).
-- **FR-026 / A-09**: App Settings & Security owns the versioned, audited slot-hold duration (default 48 hours) applied from acceptance.
-- **FR-019**: Promotions & Discounts validates patient-entered promotion codes before acceptance and owns promotion usage-limit handling.
-- **FR-010**: Treatment Execution is the only route for post-acceptance changes to treatment plan, clinicians, and grafts, with audit and patient notice.
-
-### External Dependencies
-
-- None specific beyond shared notification services and standard platform integrations.
-
-### Data Dependencies
-
-- Inquiry (from FR-003), parent quotes and complete subquotes (from FR-004), Notification endpoints (FR-020), and legal/policy configuration (A-09) and slot-hold configuration (FR-026).
-
----
-
-## Assumptions
-
-### User Behavior Assumptions
-
-- Patient has exactly one active inquiry for which quotes exist.  
-- Patients do not have an explicit "decline" action; sibling subquotes become Not Selected and competing parent quotes auto-cancel on acceptance or expire by policy.
-
-### Technology Assumptions
-
-- Providers have submitted valid parent quotes containing one or more complete, patient-visible subquotes per FR-004.
-- Booking & Payment module is available for immediate handoff post-acceptance.
-
-### Business Process Assumptions
-
-- Acceptance alone does not disclose patient full identity to provider; reveal occurs after successful payment confirmation.  
-- Admin legal copy and acknowledgment text are centrally managed.  
-
----
-
-## Implementation Notes
-
-### Technical Considerations
-
-- Idempotent acceptance keyed to inquiry and accepted subquote: repeat requests do not create multiple accepted states.
-- Concurrency control prevents races across any subquotes belonging to the same inquiry.
-- Confirmation validates the presented parent aggregate `QuoteVersion` and rejects the selection unless `subquoteVersion` equals that current version before locking an immutable acceptance snapshot.
-- Append-only audit trail covers acceptance, sibling Not Selected outcomes, and competing parent quote cancellations.
-
-### Integration Points
-
-- Consumes parent quote and subquote data from FR-004; updates inquiry, parent quote, and subquote states; triggers notification service; emits the accepted subquote handoff payload.
-
-### Scalability Considerations
-
-- Support high-volume acceptance during peak times without delays to notification or state transitions.
-
-### Security Considerations
-
-- Enforce privacy rules: no PII reveal on acceptance; full audit of state transitions. Encryption and role-based access follow the system PRD, Platform-Wide Rules: Encryption in transit and at rest; Role-based, audited access.
+Related FRs: FR-003, FR-004, FR-006, FR-010, FR-012, FR-013, FR-015, FR-019, FR-020, FR-022, FR-026, FR-029, FR-030. System settings: A-09 (legal copy and terms acknowledgment text).
 
 ---
 
@@ -558,16 +442,15 @@ The system rejects unsafe acceptances and handles the end of the payment window 
 
 ### Edge Cases
 
-- Network loss during acceptance: system retries safely; no duplicate accept states.  
-- Simultaneous accept attempts across devices: first valid acceptance wins; others see informative message.  
-- Provider withdraws the parent quote during confirmation: subquote acceptance is blocked with explanation; return to inquiry dashboard.
-- Admin finds a quote or subquote was cancelled by mistake: no restore action exists; the admin records the finding as an audited annotation, prior acceptance is not overridden, and the patient uses the recovery routes in Alternative Flows A1 and A7.
-- Patient accepts a subquote then immediately wants to cancel: no patient cancel action exists after acceptance; the patient is offered "Contact support", and an admin cancellation through FR-006 moves the booking and inquiry to `Cancelled`, keeps the accepted subquote and parent quote `accepted`, writes no supersession record, and releases the slot hold.
-- Patient attempts to accept a subquote while inquiry cancellation is being processed: system checks inquiry status at confirmation; if cancelled, blocks acceptance with message "This inquiry has been cancelled."
-- Provider edits either the parent quote or selected subquote after the patient opens confirmation: system rejects the stale confirmation and requires review of the current version.
-- Patient cancels inquiry while on the acceptance confirmation modal (Screen 3): modal dismissed; inquiry dashboard refreshes to show "Cancelled" badge; all actions disabled.
-- Provider becomes `Suspended` or `Deactivated` while the patient is on the confirmation modal: confirmation is rejected at revalidation; the patient sees the inline error "This provider is no longer available. Please contact support." with a Contact Admin/Support action (Alternative Flow A6) and may choose another provider's eligible subquote if the inquiry is still comparing.
-- Provider-status cascade is replayed or a stale acceptance request arrives afterward: no duplicate cancellation, notification, AcceptanceEvent, or hold is created.
+- Network loss during acceptance: system retries safely; no duplicate accept states. (REQ-005-056)
+- Simultaneous accept attempts across devices: first valid acceptance wins; others see informative message. (REQ-005-002)
+- Admin finds a quote or subquote was cancelled by mistake: no restore action exists; the admin records the finding as an audited annotation, prior acceptance is not overridden, and the patient uses the recovery routes in Alternative Flows A1 and A7. (REQ-005-064)
+- Patient accepts a subquote then immediately wants to cancel: no patient cancel action exists after acceptance; the patient is offered "Contact support", and an admin cancellation through FR-006 moves the booking and inquiry to `Cancelled`, keeps the accepted subquote and parent quote `accepted`, writes no supersession record, and releases the slot hold. (REQ-005-042)
+- Patient attempts to accept a subquote while inquiry cancellation is being processed: system checks inquiry status at confirmation; if cancelled, blocks acceptance with message "This inquiry has been cancelled." (REQ-005-036)
+- Provider edits either the parent quote or selected subquote after the patient opens confirmation: system rejects the stale confirmation and requires review of the current version. (REQ-005-019)
+- Patient cancels inquiry while on the acceptance confirmation modal (Screen 3): modal dismissed; inquiry dashboard refreshes to show "Cancelled" badge; all actions disabled. (REQ-005-041)
+- Provider becomes `Suspended` or `Deactivated` while the patient is on the confirmation modal: confirmation is rejected at revalidation; the patient sees the inline error "This provider is no longer available. Please contact support." with a Contact Admin/Support action (Alternative Flow A6) and may choose another provider's eligible subquote if the inquiry is still comparing. (REQ-005-043)
+- Provider-status cascade is replayed or a stale acceptance request arrives afterward: no duplicate cancellation, notification, AcceptanceEvent, or hold is created. (REQ-005-044)
 
 ---
 
@@ -618,58 +501,16 @@ The system rejects unsafe acceptances and handles the end of the payment window 
 
 ---
 
-## Key Entities
-
-- **Subquote**: id, parentQuoteId, quoteOptionId, optionDatePriceId, version, packageSnapshot, includedAndCustomServices, dateRange, appointmentAt, appointmentTimezone, offeredPrice, promotionSnapshot, treatmentPlan, state
-  - Atomic unit displayed, compared, and accepted by the patient.
-  - Resolves one FR-004 Quote Option and one applicable Option/date-price record; neither underlying record is accepted independently in FR-005.
-  - `version` is the owning parent quote's aggregate `QuoteVersion`; a subquote has no independent revision counter.
-  - Inherits provider and shared treatment/clinical context from exactly one parent Quote.
-  - FR-005 owns `id` and `state`; `id` is derived deterministically from `quoteOptionId` and `optionDatePriceId`.
-- **AcceptanceEvent**: id, inquiryId, acceptedParentQuoteId, acceptedParentQuoteVersion, acceptedSubquoteId, acceptedSubquoteVersion, quoteOptionId, optionDatePriceId, reservedSlotId, actorId, actorType (patient, or admin for a provider-fault transfer record), acceptedAt, acceptanceSnapshot, handoffMetadata
-  - `acceptedSubquoteVersion` MUST equal `acceptedParentQuoteVersion`.
-  - `acceptanceSnapshot` preserves the complete subquote plus inherited parent context at acceptance, including the exchange rate and its timestamp and any patient-applied promotion code (REQ-005-006).
-  - `reservedSlotId` references the fixed slot hold keyed by provider, appointment date/time, and time zone; it is not an appointment record.
-  - The event is append-only: it is never edited, deleted, or restored. Supersession and admin notes are separate linked records.
-  - If an admin cancels the booking after acceptance, the event is retained unchanged and no AcceptanceSupersession record is written; the accepted subquote and parent Quote stay `accepted`.
-  - If the provider becomes `Suspended` or `Deactivated` after acceptance, the event, accepted IDs/versions, and snapshot are retained unchanged; the cause is recorded on the booking, and the AcceptanceSupersession record with cause `ProviderSuspended` or `ProviderDeactivated` is written when the provider-fault transfer records the replacement acceptance (Alternative Flows A6 and A9).
-  - An admin-authored replacement event (`actorType = admin`) references an admin-authored FR-004 replacement quote, Quote Option, and option/date-price row like any other event.
-  - Relationships: belongsTo Inquiry; belongsTo accepted parent Quote; belongsTo accepted Subquote.
-- **AcceptanceSupersession**: id, supersededAcceptanceEventId, cause (ProviderFault, ProviderSuspended, or ProviderDeactivated, copied from the closed booking's cancellation cause), replacementAcceptanceEventId (always set), actorId, reason, createdAt
-  - Linked, append-only record that marks an AcceptanceEvent superseded without editing it. It is inserted only at a provider-fault replacement acceptance, once, and never updated; no other event (including admin cancellation) writes one.
-- **AcceptanceAnnotation**: id, acceptanceEventId, authorId (admin), type (note or correction), text, reason, createdAt
-  - Audited, append-only admin note; never alters the AcceptanceEvent, its snapshot, or any state.
-- **Quote** (from FR-004): id, providerId, version, status, expiresAt; parent and inheritance boundary, never the direct patient acceptance target.
-- **AuditEntry**: entityType, entityId, action, actorId, reason, before, after, timestamp
-
----
-
 ## Appendix: Change Log
 
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
-| 2025-11-03 | 1.0 | Initial PRD creation for FR-005 | Product & Engineering |
-| 2025-11-04 | 1.1 | PRD reviewed and verified | Product Owner |
-| 2025-11-04 | 1.2 | Template compliance: moved Multi-Tenant Architecture to Module Scope; added MTA bullets; renamed Entry Points; restructured Assumptions into subsections | Product & Engineering |
-| 2026-02-05 | 1.3 | Added Alternative Flow A4 (inquiry cancelled during quote review), "Cancelled" to Screen 1 stage badge, read-only blocking rule for cancelled inquiries, appointment slot hold release on inquiry cancellation in Payment & Billing Rules. See FR-003 Workflow 5 and cancel-inquiry-fr-impact-report.md | Product & Engineering |
-| 2026-02-08 | 1.4 | Cancellation integrity fixes: Added "Cancelled (Inquiry Cancelled)" to Screen 4 (Provider Outcome) badge and Key Entities Quote status. Added supersededByCancellation field to AcceptanceEvent entity. Added cancellation visibility to Admin Screen 5. Added User Story 3 (inquiry cancellation during quote review) with 4 acceptance scenarios. Added 3 cancellation race-condition edge cases. | AI |
-| 2026-02-11 | 1.5 | Clarified Alternative Flow A1 outcome: removed ambiguous "await new quotes" phrasing; explicitly stated patient options are to pick another non-expired quote, cancel inquiry and start new, or contact support. No re-quoting mechanism exists for the same inquiry. Restructured Screen 1 Data Fields into 3 grouped sub-tables (Inquiry-Level Fields, Per-Quote Card Fields, Quote List & Comparison Panel Fields) with explicit Comparison Differentiators field per REQ-005-014. Updated comparison criteria business rule to reference the new table structure. Added "Expired on [date]" display to Expiry Timer for expired state. Added "disabled for expired/withdrawn quotes" to Compare Selection. Renamed "Ask Question" button to "Contact Support" with routing to Hairline Support via FR-012 secure messaging. | AI |
-| 2026-04-12 | 1.5.1 | Screen 1 Sort & Filter: replaced "Criteria list must be defined" placeholder with defined sort/filter options; added cross-reference to FR-022 as authoritative source. Originally recorded as a second v1.5 revision; renumbered 1.5.1 on 2026-10-18 so each version has one date. | AI |
-| 2026-09-15 | 2.0 | Replaced parent-quote acceptance with atomic subquote comparison and acceptance. A subquote now represents one complete package/date-range/appointment/price choice and inherits upper-level provider and clinical context. Added grouped parent quote presentation, subquote comparison/detail fields, version-safe acceptance snapshot, sibling Not Selected handling, competing parent quote cancellation, complete FR-006 handoff, distinct parent/subquote analytics, REQ-005-018 through REQ-005-020, and CR-FR005-20260915-01. Status reset pending consolidated verification. | Product Owner / Documentation |
-| 2026-09-16 | 2.1 | Resolved post-verification contract findings: bound `subquoteVersion` and `acceptedSubquoteVersion` to the owning parent aggregate `QuoteVersion`, and replaced the generic Upcoming FR dependency with the explicit FR-006 accepted-subquote handoff contract. Verification status remains pending consolidated review. | Product Owner / Verification alignment |
-| 2026-09-16 | 2.2 | Aligned quote questions with FR-012 Patient ↔ Provider messaging through the dedicated Messages/Inbox, and aligned the post-acceptance slot hold with FR-006/A-09 as configurable with a 48-hour default. Consolidated verification remains pending. | Product Owner / Verification alignment |
-| 2026-09-16 | 2.3 | Resolved the acceptance-slot concurrency contract: subquote acceptance now atomically acquires an exclusive appointment hold and rejects a second acceptance before creating an AcceptanceEvent or booking handoff. Consolidated verification remains pending. | Product Owner / Verification resolution |
-| 2026-10-14 | 2.4 | Aligned provider suspension/deactivation cancellation cascade per CR-FR015-20261013-01 and FR-015 v1.9: provider-status revalidation at acceptance (Main Flow step 6), Alternative Flow A6, General Module Rules 5 and 8, provider-status hold release in Payment & Billing Rules, edge cases, REQ-005-022, AcceptanceEvent retention note, and FR-015 dependency. Consolidated verification remains pending. | Vân Tay Media |
-| 2026-10-16 | 2.5 | MTG-002 quote-model alignment (CR-FR005-20261016-01). Removed soft-delete/restore of acceptance, parent quote, and subquote records and the undefined conflict resolution; added audited annotation only (FR-005-4, D4). Rule 1 and REQ-005-024 now name the single exception: a provider-fault transfer creates a new admin-authored acceptance record linked to the original through a supersession record, with the paid-money placeholder (S1-3, D6, D6-M, D3). Added Alternative Flow A7 for Payment Window Expired recovery with the first-payment-only boundary (S1-1, D1, D2) and REQ-005-025. Hold restated as one fixed hold from acceptance for the FR-026 duration, keyed by provider, appointment date/time, and time zone; appointment created only at first payment (S1-2, S1-6, M3, M4, D14). Snapshot records exchange rate and timestamp; stale cached rate proceeds and is recorded (FR-017-1, D19). Added Alternative Flow A8, Screen 2 Promotion Code, and REQ-005-026 for patient promotion codes frozen at acceptance (FR-019-1, D8, D9). Defined binding money fields and the FR-010-only route for treatment changes (M2), with full snapshot field list (S1-4). Up to options × date ranges subquotes (M1). A3 points to FR-006 for withdrawal after acceptance (S1-3, D3). Added User Story 4 acceptance-outcome notices (FR-020-4, M16, D20, P2) and User Story 5 exception scenarios (FR-005-10). Minors: currency and promotion in comparison and provider outcome (FR-005-7), acceptedTotal write (FR-005-8), compare-panel refresh (FR-005-9), subquote ID ownership and option IDs on AcceptanceEvent (S1-5), AcceptanceEvent id (S1-10), append-only supersession replacing the mutable flag, approvals row, and change-log order (FR-005-11). Corrected stale system-documents line in CR-FR005-20260915-01 (R7-1). Provider suspension or deactivation after acceptance now follows the provider-fault transfer: booking closes with cause ProviderSuspended or ProviderDeactivated (FR-006 B4 to B5), hold released, AcceptanceEvent superseded through the linked record with these causes, admin rehomes the patient in the same inquiry, paid-money placeholder applies; before acceptance unchanged (A6, Rules 1 and 8, Provider Status Change During Hold, REQ-005-022, Key Entities; M18). Consolidated verification remains pending. | Product Owner / Documentation |
-| 2026-10-16 | 2.6 | Product Owner Q-series alignment (CR-FR005-20261016-01). Price sort converts to the display currency at the current rate for ordering only, cards keep their own currency, mixed-currency order labelled approximate (Screen 1, REQ-005-027; Q8). Auto-applied promotion use reserved at send is consumed at acceptance and released for quotes that end Not Selected or auto-cancelled (Main Flow step 8, Payment and Billing Rules, US5 scenario 11, REQ-005-028; Q6, Q29 at most one reservation per sent quote across re-sent versions; Q30 consumed use returns to the limit on Payment Window Expired or cancellation before first payment and is re-taken on revive if room remains). Patient receives only `booking.scheduled` at acceptance; `quote.accepted` goes to providers only (Main Flow step 9, US4 scenario 6, REQ-005-029; Q10). Concurrent second acceptance fails on the existing active hold with the "slot was just taken" message and no Accepted state (A5, Screen 3, US5 scenarios 1 and 10, REQ-005-021; Q23). Consolidated verification remains pending. | Product Owner / Documentation |
-| 2026-10-18 | 2.7 | Consolidated verification corrections (CR-FR005-20261016-01; decision D14): Payment & Billing Rules, Inquiry Cancellation During Hold, now points to FR-026 for the slot-hold duration and to FR-006 for booking-side guard rules. Consolidated verification remains pending. | Product Owner / Verification alignment |
-| 2026-10-18 | 2.8 | Final audit corrections (CR-FR005-20261016-01; decisions Q35, Q36, Q37, Q39, Q42): added Alternative Flow A9 for the admin-authored replacement acceptance, with supersession written once at the replacement acceptance and no new acceptance in Aftercare. Patient cancellation is limited to Inquiry and Quoted; from acceptance onward the patient uses Contact support and an admin cancels the booking, the hold is released and the accepted quote stays `accepted` (A4, A7, Cancellation During Hold, User Story 3, REQ-005-030). Unselected reserved automatic promotions are released with `not_applied`. `booking.scheduled` is patient-only and mandatory; the provider is told through `quote.accepted`; booking notices read the current appointment while the snapshot keeps the baseline. Screen 1 price and promotion fields aligned with FR-004; `supportRequired` named on the booking and ProviderInquiry (REQ-005-022). Renumbered the 2026-04-12 change log row to 1.5.1 and added a document footer. Round-two corrections (Q45, Q49): in Alternative Flow A9 a replacement quote that is not accepted expires under the normal quote expiry, the inquiry stays `supportRequired`, and the admin may author another replacement quote or cancel; the A9 boundary states that an `In Progress` provider fault creates no replacement acceptance. AcceptanceSupersession causes now match the schema (`ProviderFault`, `ProviderSuspended`, `ProviderDeactivated`; `InquiryCancelled` removed), and admin booking cancellation writes no supersession record (AcceptanceEvent entity, Screen 3 acceptance table and indicator, User Story 3 scenarios 2 and 4). | Product Owner |
-| 2026-10-28 | 2.9 | Product Owner decision 2026-10-28 (FR-015 backend confirmations); clarification, no Change Request. Alternative Flow A6 Outcome and the confirmation-modal edge case now give the patient copy for a Suspended or Deactivated provider: before acceptance (Accept blocked) "This provider is no longer available. Please contact support." with a Contact Admin/Support action; after acceptance (deposit or booking-confirming payment blocked) "This clinic can no longer perform your treatment. An admin will arrange a replacement clinic within the same inquiry." Both are inline on-screen errors localized through FR-021, not FR-020 notifications. Review follow-up (same day): the action is named Contact Admin/Support, the existing UI action label used in FR-003 and FR-015 | Claude (AI Assistant) |
-| 2026-11-20 | 3.0 | Requirements graph programme baseline: owner rulings applied. Main changes: REQ-005-008 (identity masked until payment), REQ-005-017 (rate lock at acceptance), REQ-005-025 (slot hold), REQ-005-027 (price sort across currencies) and REQ-005-030 (no patient cancel after acceptance) retired and pointed to their owning Rules (system PRD identity Rule, REQ-029-044, REQ-006-005, FR-022, REQ-003-012); Screen 1 sort and filter options now owned by FR-022 (REQ-005-053 retired); REQ-005-015, REQ-005-029 and the Main Flow step 9 notice text shortened and pointed to REQ-012-006, REQ-020-019 and REQ-020-012; REQ-005-004 now includes the provider-status check; REQ-005-020 carries the merged parent/subquote counting wording; REQ-005-023 and the admin rules allow an admin to edit an accepted quote except price, currency and promotion, stored as a new version beside the unchanged acceptance snapshot; soft deletes now platform-wide and following the single 10-year retention Rule (REQ-005-060); new REQ-005-065 (the Conflicts flag is set automatically by the system); notification configuration now names FR-030; edge case on patient cancel after acceptance corrected (no supersession record on admin cancellation); cross-document reconciliation (retention, system rule citations, analytics counting wording). | Product Owner / Documentation |
+| 2026-11-20 | 3.0 | Requirements graph programme baseline: owner rulings applied and the PRD compressed to the checklist structure. Earlier history (v1.0 to v2.9) and the change requests CR-FR005-20260915-01 and CR-FR005-20261016-01 are in `archived/prd-baseline-2026-11-08/fr005-quote-comparison-acceptance/`. | Product Owner / Documentation |
 | 2026-11-22 | 3.1 | Owner answer of 2026-11-22 (requirements graph programme, Phase 4 re-check): the patient sees the provider's certifications and awards only, never the medical license number. Screen 1 Provider Credentials Summary, Comparison Differentiators and REQ-005-014 reworded. | Product Owner / Documentation |
 | 2026-11-22 | 3.2 | Audit follow-up to the owner answers of 2026-11-22: the FR-015 dependency line no longer mentions licenses. | Product Owner / Documentation |
 | 2026-11-22 | 3.3 | Owner ruling 2026-11-22 and the earlier provider-fault ruling: on a provider-fault or provider-status replacement the patient is refunded in full and the replacement booking takes a new payment; the credit wording is removed (Business Rule 1). | Product Owner / Documentation |
 | 2026-11-22 | 3.4 | Wording clean-up after the cross-FR consistency review: the stale 'payment placeholder' pointer is replaced by a pointer to the refund rules FR-006 already states (the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault). No rule changes. | Product Owner / Documentation |
+| 2026-11-22 | 3.5 | Compressed PRD applied (requirements graph programme, Phase 9; draft read and approved by the owner on 2026-11-22): each rule stated once with REQ id citations, field rows tagged with graph field ids, Success Criteria, Assumptions, Implementation Notes and Key Entities removed, Dependencies reduced to one list. No rule changes. The uncompressed text is in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
 
 ---
 
@@ -677,10 +518,7 @@ The system rejects unsafe acceptances and handles the end of the payment window 
 
 | Role | Name | Date | Signature/Approval |
 |------|------|------|--------------------|
-| Product Owner | Product Owner | 2026-10-18 | Documentation approved through v2.7: v2.0 to v2.3 on 2026-09-16, v2.4 alignment per CR-FR015-20261013-01, v2.5 and v2.6 via the MTG-002 quote-model decision log of 2026-10-16 (CR-FR005-20261016-01), and the v2.7 consolidated verification correction of 2026-10-18 applying decision D14; consolidated verification pending |
-| Product Owner | Product Owner | 2026-10-18 | Approved via MTG-002 decision log (documentation only), v2.8 final audit corrections (CR-FR005-20261016-01); consolidated verification pending |
-| Technical Lead | [Name] | [Date] | [Status] |
-| Stakeholder | [Name] | [Date] | [Status] |
+| Product Owner | Product Owner | 2026-10-18 | Documentation approved through v2.8 (documentation only): MTG-002 decision log of 2026-10-16 (CR-FR005-20261016-01) and the v2.8 final audit corrections; consolidated verification pending |
 
 ---
 
