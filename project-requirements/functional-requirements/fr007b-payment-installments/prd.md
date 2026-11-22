@@ -163,7 +163,7 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 - **Steps**:
   1. Patient requests cancellation through Contact Support; after subquote acceptance the patient cannot cancel in the app (FR-006), and the request reaches the admin queue in FR-016
   2. System calculates paid installments to date and applicable refund per cancellation policy
-  3. Admin reviews the request and cancels the booking through the FR-006 Cancel Booking action with a mandatory reason and audit entry; the refund amount follows the FR-006 payment placeholder
+  3. Admin reviews the request and cancels the booking through the FR-006 Cancel Booking action with a mandatory reason and audit entry; the refund amount follows the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault)
   4. System processes refund as a percentage of the amount paid so far, per the refund ladder owned by FR-029
   5. System cancels remaining scheduled installments
   6. System records the partial refund outcome on the instalment plan; booking status moves to `Cancelled` per FR-006
@@ -895,6 +895,7 @@ Patient requests booking cancellation after paying 2 of 4 installments; admin re
 | 2026-11-22 | 1.9 | Alternative Flow B4 Outcome line aligned with step 2 and REQ-007b-027: full refund on a provider withdrawal or drop-out, placeholder for suspension or deactivation | Product Owner / Documentation |
 | 2026-11-22 | 1.10 | Owner ruling 2026-11-22: a provider suspension or deactivation follows the same terms as a withdrawal or drop-out in Alternative Flow B4 step 2, its Outcome line and REQ-007b-027 (every paid installment refunded in full, remaining installments cancelled with no cancellation fee, replacement booking takes a new payment); the credit-moves-with-the-patient placeholder is removed | Product Owner / Documentation |
 | 2026-11-22 | 1.11 | Wording clarification: the FR-006 dependency line now names this PRD's Alternative Flow B4 and FR-006 Alternative Flows B4 and B5 for a provider fault after acceptance (it said only Alternative Flow B5, which this PRD does not have). | Product Owner / Documentation |
+| 2026-11-22 | 1.12 | Wording clean-up after the cross-FR consistency review: the stale 'payment placeholder' pointer is replaced by a pointer to the refund rules FR-006 already states (the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault). No rule changes. | Product Owner / Documentation |
 
 ---
 

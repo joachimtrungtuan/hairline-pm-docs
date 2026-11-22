@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-22T14:13:59Z",
+  "generated_at": "2026-11-22T14:24:46Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -42477,9 +42477,9 @@
       "owner_fr": "FR-003",
       "title": "Admin cancels from acceptance onward with reason and audit",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "From acceptance onward, only an admin can cancel, through the FR-006 booking cancellation, from any booking state, with a mandatory reason and an audit entry. The booking and the inquiry become Cancelled, any active appointment hold is released, and the accepted quote keeps the status accepted. Refunds and fees follow the payment placeholder.",
+        "statement": "From acceptance onward, only an admin can cancel, through the FR-006 booking cancellation, from any booking state, with a mandatory reason and an audit entry. The booking and the inquiry become Cancelled, any active appointment hold is released, and the accepted quote keeps the status accepted. Refunds and fees follow the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault).",
         "rationale": "PRD Cancellation Rules 4 (1062), Alternative Flow E2 (434-449), User Story 4 scenario 3."
       }
     },
@@ -47138,9 +47138,9 @@
       "owner_fr": "FR-007B",
       "title": "Patient cancellation goes through Contact Support and an admin cancels",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "The patient requests cancellation through Contact Support; after subquote acceptance the patient cannot cancel in the app (FR-006) and the request reaches the admin queue in FR-016. The admin reviews the request and cancels the booking through the FR-006 Cancel Booking action with a mandatory reason and audit entry; the refund amount follows the FR-006 payment placeholder.",
+        "statement": "The patient requests cancellation through Contact Support; after subquote acceptance the patient cannot cancel in the app (FR-006) and the request reaches the admin queue in FR-016. The admin reviews the request and cancels the booking through the FR-006 Cancel Booking action with a mandatory reason and audit entry; the refund amount follows the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault).",
         "rationale": "PRD prose rule, no id. prd.md line 161 (Alternative Flows)."
       }
     },
@@ -51404,10 +51404,10 @@
       "owner_fr": "FR-010",
       "title": "FR-010 never reassigns the treating provider; hand-off to FR-006 flows",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "FR-010 never reassigns the treating provider. Provider withdrawal, drop-out, or replacement after acceptance and before Check In is handed to the FR-006 Alternative Flow B5 provider-fault transfer (Alternative Flow B6); after Check In it is handed to the FR-006 Alternative Flow B7 admin decision (move to Aftercare with an aftercare reassignment, or cancel), with no replacement acceptance. The B5 payment terms apply to the transfer: the patient is refunded in full everything paid, pays no cancellation fee, and the replacement booking takes a new payment.",
-        "rationale": "Restates REQ-010-029 and adds the payment placeholder; possible duplicate within this FR. Archived FR-010 PRD baseline, lines 567."
+        "rationale": "Restates REQ-010-029 and adds the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault); possible duplicate within this FR. Archived FR-010 PRD baseline, lines 567."
       }
     },
     {
@@ -51764,9 +51764,9 @@
       "owner_fr": "FR-010",
       "title": "Patient no-show: Report Issue Before Check In notifies admin; booking stays Confirmed",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Provider clicks Report Issue Before Check In; selects reason: No-show; adds note System notifies admin; the booking stays Confirmed. The admin rebooks through the FR-006 Change Appointment action (FR-006 Screen 8) or cancels through the FR-006 Cancel Booking action (FR-006 Screen 9); deposit retention follows the FR-006 payment placeholder. No-Show is an admin-managed case label, not a system-defined booking pipeline status",
+        "statement": "Provider clicks Report Issue Before Check In; selects reason: No-show; adds note System notifies admin; the booking stays Confirmed. The admin rebooks through the FR-006 Change Appointment action (FR-006 Screen 8) or cancels through the FR-006 Cancel Booking action (FR-006 Screen 9); deposit retention follows the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault). No-Show is an admin-managed case label, not a system-defined booking pipeline status",
         "rationale": "Alternative Flow B1. The outcome states no financial penalty; the admin decides rebook or cancel and handles deposit retention."
       }
     },
@@ -51788,9 +51788,9 @@
       "owner_fr": "FR-010",
       "title": "Interrupted treatment: reason in day note; case stays In Progress until admin acts",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Provider documents interruption reason in the affected day's note field Provider sets day status to Cancelled/Deferred; clicks Cancel/Close Case; documents reason System notifies admin; the case stays In Progress until the admin acts. The admin lets the case resume later, changes treatment details through Screen 9, or cancels the booking through the FR-006 Cancel Booking action (FR-006 Screen 9); financial reconciliation follows the FR-006 payment placeholder",
+        "statement": "Provider documents interruption reason in the affected day's note field Provider sets day status to Cancelled/Deferred; clicks Cancel/Close Case; documents reason System notifies admin; the case stays In Progress until the admin acts. The admin lets the case resume later, changes treatment details through Screen 9, or cancels the booking through the FR-006 Cancel Booking action (FR-006 Screen 9); financial reconciliation follows the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault)",
         "rationale": "Alternative Flow B3. Archived FR-010 PRD baseline, lines 201, 204, 205."
       }
     },
@@ -51956,9 +51956,9 @@
       "owner_fr": "FR-010",
       "title": "No automatic financial resolution on case cancellation",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Case cancellation is performed by an admin through the FR-006 Cancel Booking action; financial reconciliation follows the FR-006 payment placeholder and the platform does not perform automatic financial resolution.",
+        "statement": "Case cancellation is performed by an admin through the FR-006 Cancel Booking action; financial reconciliation follows the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault) and the platform does not perform automatic financial resolution.",
         "rationale": "Archived FR-010 PRD baseline, lines 514."
       }
     },
@@ -53076,9 +53076,9 @@
       "owner_fr": "FR-011",
       "title": "Reassignment keeps the case and the previous provider read-only history",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "A reassignment changes only the aftercare provider or team; the plan, milestones, scans, questionnaire responses, medications and communication history stay with the case, the new assignee gets the aftercare actions from the moment of confirmation, the previous provider loses them and keeps read-only access to history it recorded, and money effects, if any, follow the FR-006 payment placeholder.",
+        "statement": "A reassignment changes only the aftercare provider or team; the plan, milestones, scans, questionnaire responses, medications and communication history stay with the case, the new assignee gets the aftercare actions from the moment of confirmation, the previous provider loses them and keeps read-only access to history it recorded, and money effects, if any, follow the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault).",
         "rationale": "Workflow 4 D5 and Screen 19 business rules."
       }
     },
@@ -61107,10 +61107,10 @@
       "owner_fr": "FR-016",
       "title": "Cancel or change a booking from FR-016 except through the FR-006 Cancel",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "System MUST NOT cancel or change a booking from FR-016 except through the FR-006 Cancel Booking or Change Appointment action, including cancellations caused by patient account suspension",
-        "rationale": "Stated in prd.md, Admin Intervention Requirements (line 1121). Restated: prd.md line 248: \"System cancels each active booking through the FR-006 admin booking cancellation, using the suspension justification as the cancellation reason; refunds follow the FR-006 payment placeholder\" prd.md line 265: \"Outcome: Every post-acceptance cancellation or change goes through one audited FR-006 action, and the patient's request has a recorded outcome\""
+        "rationale": "Stated in prd.md, Admin Intervention Requirements (line 1121). Restated: prd.md line 248: \"System cancels each active booking through the FR-006 admin booking cancellation, using the suspension justification as the cancellation reason; refunds follow the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault)\" prd.md line 265: \"Outcome: Every post-acceptance cancellation or change goes through one audited FR-006 action, and the patient's request has a recorded outcome\""
       }
     },
     {
@@ -61659,10 +61659,10 @@
       "owner_fr": "FR-016",
       "title": "Admins can cancel a booking only through the FR-006 Cancel Booking action",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "Editable by admin: Booking cancellation only through the FR-006 Cancel Booking action: allowed from `Accepted` through `Aftercare`, on an admin decision or a support-routed patient request, with a mandatory reason, confirmation, and audit entry (Flow A8, Screen 9)",
-        "rationale": "Stated in prd.md, Admin Editability Rules (line 708). Restated: prd.md line 261: \"For a cancellation request, admin opens the FR-006 Cancel Booking action (FR-006 Screen 9), which applies to any booking state from `Accepted` to `Aftercare`, enters the mandatory reason, and confirms; the booking and inquiry become `Cancelled`, the accepted quote stays accepted, the patient and provider receive `booking.cancelled`, and refunds follow the FR-006 payment placeholder\""
+        "rationale": "Stated in prd.md, Admin Editability Rules (line 708). Restated: prd.md line 261: \"For a cancellation request, admin opens the FR-006 Cancel Booking action (FR-006 Screen 9), which applies to any booking state from `Accepted` to `Aftercare`, enters the mandatory reason, and confirms; the booking and inquiry become `Cancelled`, the accepted quote stays accepted, the patient and provider receive `booking.cancelled`, and refunds follow the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault)\""
       }
     },
     {
@@ -62847,9 +62847,9 @@
       "owner_fr": "FR-016",
       "title": "Refund amounts and cancellation fees are not set on Screen 9",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Refund amounts and cancellation fees are not set here; they follow the FR-006 payment placeholder",
+        "statement": "Refund amounts and cancellation fees are not set here; they follow the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault)",
         "rationale": "Stated in prd.md, Screen 9: Booking Support Requests (Cancellation and Change) (line 675)."
       }
     },
@@ -419150,6 +419150,29 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261122-142417-d1cc5b2c",
+      "at": "2026-11-22T14:24:17.688831+00:00",
+      "changed_by": "controller",
+      "reason": "Stale payment placeholder pointers replaced by the refund rules FR-006 already states (FR-029 refund ladder or provider-fault terms); FR-010 pointer to the In Progress provider-fault flow corrected to B7. Wording only.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-003-110",
+        "REQ-007B-053",
+        "REQ-010-044",
+        "REQ-010-076",
+        "REQ-010-078",
+        "REQ-010-092",
+        "REQ-011-075",
+        "REQ-016-032",
+        "REQ-016-078",
+        "REQ-016-179"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 10
+    },
     {
       "id": "cs-20261122-141304-40c4c18d",
       "at": "2026-11-22T14:13:04.616078+00:00",

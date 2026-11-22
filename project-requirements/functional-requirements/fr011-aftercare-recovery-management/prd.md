@@ -363,7 +363,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
   - The FR-006 booking stays `Aftercare` and the FR-010 treatment record stays unchanged; there is no new quote, acceptance, or payment
   - The aftercare plan, milestones, scans, questionnaire responses, medications, and communication history move with the case unchanged; the previous provider keeps read-only access to the history it recorded and loses all aftercare actions
   - The reassignment needs a mandatory reason and confirmation, is recorded in the audit trail, resolves the `supportRequired` marker when one is set, and sends the `aftercare.provider_reassigned` notice (recipients, content, and the mandatory status of the notice are defined by the FR-030 notification Rule, not here)
-  - Boundary: money effects, if any, follow the FR-006 payment placeholder; this flow never reassigns the treating provider of an earlier treatment stage
+  - Boundary: money effects, if any, follow the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault); this flow never reassigns the treating provider of an earlier treatment stage
 
 ## Screen Specifications
 
@@ -1300,7 +1300,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 - The aftercare plan, milestones, scans, questionnaire responses, medications, and communication history stay with the case. The new assignee gets the case's aftercare actions from the moment of confirmation; the previous provider loses them.
 - The change is saved only after confirmation, is recorded in the audit trail with admin identity, timestamp, reason, previous assignee, and new assignee, and, when selected, records the audited resolution of the `supportRequired` marker.
 - On save, System sends the `aftercare.provider_reassigned` notice. FR-011 is the producer of this FR-030 event; recipients, content, and the mandatory status of the notice are defined by the FR-030 notification Rule.
-- Money effects, if any, follow the FR-006 payment placeholder.
+- Money effects, if any, follow the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault).
 
 ## Business Rules
 
@@ -1725,6 +1725,7 @@ Acceptance Scenarios:
 | 2026-10-28 | 1.7 | Product Owner decision 2026-10-28 (FR-015 backend confirmations); clarification, no Change Request. Entry Points now list exactly two entry routes, treatment-linked (from an accepted and treated Hairline quote, including the Workflow 2b add-on) and standalone (outside-clinic patients, no inquiry or quote); admin assignment is described as a step inside those routes, not a third entry point. Workflow 2b states that the add-on creates treatment-linked aftercare linked to the accepted quote of the completed treatment. Matches system data schema v1.13.1 §13. Review follow-up (same day): header Status line updated to this revision | Claude (AI Assistant) |
 | 2026-11-20 | 1.8 | Requirements graph programme baseline: owner rulings applied. Main changes: standalone aftercare (Workflow 2) reordered to request, admin assigns provider, provider configures plan, payment activates (assign first, pay last), with refund wording limited to payments already taken and unassigned requests ending as Rejected after 7 days; one platform fee taken from the price and not added to the total, commission also applies to add-on payments; "Pricing option" (fixed price or monthly subscription) and "Payment method" (card, PayPal) separated everywhere, Screen 15 shows both; Overdue is a flag on tasks and plans, not a status, with escalation at 48 hours; progress is completed tasks over total tasks; questionnaire retake allowed while the task is open; patient chooses the service type; Adherence Period calculated from doses; milestone sequence kept; medication picked only from the admin list owned by FR-024; Surgeon Notes read from the FR-010 treatment record; default patient progress reminder added (REQ-011-088); REQ-011-009, REQ-011-011 and REQ-011-022 retired in favour of single system PRD and FR-020 rules, REQ-011-008 and REQ-011-015 now point to the owning records; aftercare specialist assignment owned by FR-011; real module codes and cited Rules filled in Dependencies; automated provider assignment marked Future phase; cross-document reconciliation (retention, system rule citations, medication list pointer to FR-024, standalone payment Rule cited as REQ-007-088) | Claude (AI Assistant) |
 | 2026-11-22 | 1.9 | Consistency review: treatment area and treatment type validation now refer to the catalog-driven lists (FR-003, FR-004) instead of a fixed Enum label. | Claude (AI Assistant) |
+| 2026-11-22 | 1.10 | Wording clean-up after the cross-FR consistency review: the stale 'payment placeholder' pointer is replaced by a pointer to the refund rules FR-006 already states (the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault). No rule changes. | Claude (AI Assistant) |
 
 ## Appendix: Approvals
 

@@ -128,7 +128,7 @@ The Quote Comparison & Acceptance module enables patients to review quotes from 
 - Trigger: Patient cancels the parent inquiry (FR-003 Workflow 5) while the inquiry is in the Inquiry or Quoted stage, before any subquote is accepted.
 - Steps: System cancels inquiry; all parent quotes and their subquotes become ineligible with status "Cancelled (Inquiry Cancelled)"; all Accept/Compare actions are disabled; dashboard shows "Cancelled" badge.
 - Outcome: Inquiry dashboard becomes read-only. Patient can create a new inquiry immediately.
-- After acceptance the patient cannot cancel the inquiry. The patient sees a "Contact support" action instead, and an admin performs any booking cancellation through FR-006 with a mandatory reason and audit. That cancellation moves the booking to `Cancelled` and the inquiry to `Cancelled`, releases any active slot hold immediately, and leaves the accepted subquote and its parent quote `accepted`; refunds and fees follow the FR-006 payment placeholder.
+- After acceptance the patient cannot cancel the inquiry. The patient sees a "Contact support" action instead, and an admin performs any booking cancellation through FR-006 with a mandatory reason and audit. That cancellation moves the booking to `Cancelled` and the inquiry to `Cancelled`, releases any active slot hold immediately, and leaves the accepted subquote and its parent quote `accepted`; refunds and fees follow the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault).
 
 **A5: Appointment Slot Already Reserved**:
 
@@ -669,6 +669,7 @@ The system rejects unsafe acceptances and handles the end of the payment window 
 | 2026-11-22 | 3.1 | Owner answer of 2026-11-22 (requirements graph programme, Phase 4 re-check): the patient sees the provider's certifications and awards only, never the medical license number. Screen 1 Provider Credentials Summary, Comparison Differentiators and REQ-005-014 reworded. | Product Owner / Documentation |
 | 2026-11-22 | 3.2 | Audit follow-up to the owner answers of 2026-11-22: the FR-015 dependency line no longer mentions licenses. | Product Owner / Documentation |
 | 2026-11-22 | 3.3 | Owner ruling 2026-11-22 and the earlier provider-fault ruling: on a provider-fault or provider-status replacement the patient is refunded in full and the replacement booking takes a new payment; the credit wording is removed (Business Rule 1). | Product Owner / Documentation |
+| 2026-11-22 | 3.4 | Wording clean-up after the cross-FR consistency review: the stale 'payment placeholder' pointer is replaced by a pointer to the refund rules FR-006 already states (the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault). No rule changes. | Product Owner / Documentation |
 
 ---
 

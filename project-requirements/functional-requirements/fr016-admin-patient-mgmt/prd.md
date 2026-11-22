@@ -245,7 +245,7 @@ This is a critical operational module that ensures the platform can provide effe
   7. Admin selects suspension duration: 30 days, 90 days, Permanent
   8. Admin confirms suspension
   9. System immediately revokes patient authentication tokens
-  10. System cancels each active booking through the FR-006 admin booking cancellation, using the suspension justification as the cancellation reason; refunds follow the FR-006 payment placeholder
+  10. System cancels each active booking through the FR-006 admin booking cancellation, using the suspension justification as the cancellation reason; refunds follow the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault)
   11. System sends suspension notification to patient with appeal process information
   12. System logs suspension in audit trail with full justification
 - **Outcome**: Account suspended, patient locked out, audit trail created; a 30-day or 90-day suspension ends by itself on its end date (General Module Rule 9)
@@ -258,7 +258,7 @@ This is a critical operational module that ensures the platform can provide effe
 - **Steps**:
   1. Admin opens the request from Screen 9 (Booking Support Requests) or from the patient's Overview tab
   2. Admin reviews the booking reference, current booking status, current appointment, and the patient's stated reason
-  3. For a cancellation request, admin opens the FR-006 Cancel Booking action (FR-006 Screen 9), which applies to any booking state from `Accepted` to `Aftercare`, enters the mandatory reason, and confirms; the booking and inquiry become `Cancelled`, the accepted quote stays accepted, the patient and provider receive `booking.cancelled`, and refunds follow the FR-006 payment placeholder
+  3. For a cancellation request, admin opens the FR-006 Cancel Booking action (FR-006 Screen 9), which applies to any booking state from `Accepted` to `Aftercare`, enters the mandatory reason, and confirms; the booking and inquiry become `Cancelled`, the accepted quote stays accepted, the patient and provider receive `booking.cancelled`, and refunds follow the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault)
   4. For a change request, admin opens the FR-006 Change Appointment action (FR-006 Screen 8), which applies to `Accepted` or `Confirmed` bookings; the patient and provider receive `booking.rescheduled`
   5. If the admin declines the request, admin records a decline reason, and the patient is answered through the FR-034 support case
   6. System links the outcome to the request, marks it Resolved or Declined, and logs the action on Screen 7
@@ -679,7 +679,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 - The admin performs a cancellation or appointment change only through the FR-006 action; FR-006 holds the mandatory reason, confirmation, audit entry, and notice (`booking.cancelled` or `booking.rescheduled`) for that action
 - A request becomes Resolved when its FR-006 action completes, and Declined when the admin records a decline reason; the patient is answered through the FR-034 support case in both cases
 - Every action on this screen is logged on Screen 7 with the request and booking references
-- Refund amounts and cancellation fees are not set here; they follow the FR-006 payment placeholder
+- Refund amounts and cancellation fees are not set here; they follow the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault)
 - Each request is an FR-034 support case whose Ticket Source shows that the patient raised it through Contact Support on an FR-006 booking screen; the Ticket Source values are defined by FR-034
 - The request type, request status (Open, Resolved, Declined), decline reason, and outcome are owned by FR-034 on the support case; this screen only shows them
 
@@ -1201,6 +1201,7 @@ A provider is suspended or deactivated (FR-015 A5) and the patient's case is can
 | 2026-11-20 | 1.11 | Requirements graph programme baseline: owner rulings applied. Main changes: Locked added to the patient account statuses; Rule 4 and REQ-016-020 widened to the five high-impact actions; admins can edit a patient's medical questionnaire responses and alerts with a typed reason that is logged (patient scans unchanged, still to be ruled); a 30-day or 90-day suspension ends by itself with a visible end date; no inline editing on the patient list (Edit Patient only); Screen 4 gains an uploaded documents list; Send Notification and bulk send rules recorded; Screen 7 gains four action types (booking change or cancellation, request decline, conversation flag or unflag, payment retry); Screen 8 queue gains the Verification Required status and a validate action (the 30-day due date does not pause) and states that FR-023 owns the deletion request record; Screen 9 states that FR-034 owns the request type, status, decline reason, and outcome and that each request shows its Ticket Source; REQ-016-027 shortened to point to the FR-020 notification rules; Dependencies lines cite the specific Rules they rely on, and the FR-034 line cites the support-case link Rule; cross-document reconciliation (retention, system rule citations). | Product Owner / Documentation |
 | 2026-11-22 | 1.12 | Owner answers of 2026-11-22 (requirements graph programme, Phase 4 re-check): besides head photos and scans a patient may upload additional documents as PDF or image files only, at most 5 files, within the existing upload size limits (Medical Data tab: Uploaded Documents field and business rules). | Product Owner / Documentation |
 | 2026-11-22 | 1.13 | Alternative Flow B5 step 8 aligned with FR-023, which owns data deletion: the system sends the outcome notice with actions taken and legal basis; the admin no longer sends a fixed confirmation text | Product Owner / Documentation |
+| 2026-11-22 | 1.14 | Wording clean-up after the cross-FR consistency review: the stale 'payment placeholder' pointer is replaced by a pointer to the refund rules FR-006 already states (the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault). No rule changes. | Product Owner / Documentation |
 
 ---
 
