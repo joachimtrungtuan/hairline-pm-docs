@@ -46,13 +46,13 @@ The module delivers value by:
 - Patients see deposit amount calculated based on admin-configured deposit rate (20-30%)
 - Patients see available installment plan options (2-9 installments) filtered by cutoff date rule
 - Patients see prices displayed in their selected currency using admin-configured conversion rates
-- Patients cannot view or modify payment system configuration settings
+- Patients cannot view or modify payment system configuration settings (REQ-029-061)
 - Patients experience seamless payment processing using the appropriate Stripe account for their region
 
 **Provider Platform (PR-05: Financial Management & Reporting)**:
 
-- Patient payments are collected into the Stripe account mapped to the patient’s region; provider payouts are later executed in FR-017 using those funds (provider bank details in FR-032). Providers do not configure Stripe accounts here.
-- Providers have no direct interaction with payment system configuration
+- Patient payments are collected into the Stripe account mapped to the patient’s region; provider payouts are later executed in FR-017 using those funds (provider bank details in FR-032). Providers do not configure Stripe accounts here. (REQ-029-062)
+- Providers have no direct interaction with payment system configuration (REQ-029-061)
 - Providers see booking payments processed according to deposit rates and installment rules
 - Payout to a clinic follows its payout rail: automatic release on the Stripe Connect rail, or the one platform-wide settlement period set in this module for manually paid clinics; payout processing is handled in FR-017 (Admin Billing & Financial Management)
 
@@ -84,25 +84,25 @@ The module delivers value by:
 
 **In Scope**:
 
-- Email notifications to admins when payment configuration changes are published
-- System alerts when currency conversion rates exceed configured thresholds (rate protection)
-- Admin dashboard notifications for Stripe account connection failures or API errors
-- Audit log notifications for payment configuration changes requiring compliance review
+- Email notifications to admins when payment configuration changes are published (REQ-029-063)
+- System alerts when currency conversion rates exceed configured thresholds (rate protection) (REQ-029-063)
+- Admin dashboard notifications for Stripe account connection failures or API errors (REQ-029-063)
+- Audit log notifications for payment configuration changes requiring compliance review (REQ-029-063)
 
 **Out of Scope**:
 
-- Patient notifications about payment configuration changes (handled by P-03: Booking & Payment module)
-- Provider notifications about payout schedule changes (handled by separate provider payout module)
-- SMS notifications for payment failures or processing issues (handled by S-03: Notification Service; **no SMS is sent in MVP and this channel is reserved for future implementation once S-03 SMS delivery is enabled**)
-- In-app chat or support messaging (handled by separate support module)
+- Patient notifications about payment configuration changes (handled by P-03: Booking & Payment module) (REQ-029-064)
+- Provider notifications about payout schedule changes (handled by separate provider payout module) (REQ-029-064)
+- SMS notifications for payment failures or processing issues (handled by S-03: Notification Service; **no SMS is sent in MVP and this channel is reserved for future implementation once S-03 SMS delivery is enabled**) (REQ-029-064)
+- In-app chat or support messaging (handled by separate support module) (REQ-029-064)
 
 ### Entry Points
 
-- **Admin-initiated**: Admin accesses "Payment Configuration" section from admin dashboard settings menu
-- **System-triggered**: Payment Processing Service queries payment configuration during every booking transaction
-- **API-accessed**: External integrations (if authorized) can query currency conversion rates via read-only API
-- **Scheduled jobs**: Currency conversion rate sync runs on scheduled intervals (e.g., every 6 hours) to update cached rates
-- **Alert-triggered**: Rate protection system alerts admins when currency fluctuations exceed configured thresholds
+- **Admin-initiated**: Admin accesses "Payment Configuration" section from admin dashboard settings menu (REQ-029-060)
+- **System-triggered**: Payment Processing Service queries payment configuration during every booking transaction (REQ-029-060)
+- **API-accessed**: External integrations (if authorized) can query currency conversion rates via read-only API (REQ-029-060)
+- **Scheduled jobs**: Currency conversion rate sync runs on scheduled intervals (e.g., every 6 hours) to update cached rates (REQ-029-060)
+- **Alert-triggered**: Rate protection system alerts admins when currency fluctuations exceed configured thresholds (REQ-029-060)
 
 ---
 
@@ -173,9 +173,9 @@ The module delivers value by:
 8. System validates deposit percentage is within allowed range (20-30%)
 9. System stores deposit rate configuration with effective date (now) and scope (global or provider IDs)
 10. System propagates configuration to Payment Processing Service with cache TTL of 5 minutes
-11. System displays confirmation message: "Deposit rate updated. New bookings will use [X]% deposit rate."
+11. System displays confirmation message: "Deposit rate updated. New bookings will use [X]% deposit rate." (REQ-029-066)
 12. System logs configuration change to audit trail with admin ID, timestamp, scope, and rate value
-13. System sends email notification to affected providers (if provider-specific change)
+13. System sends email notification to affected providers (if provider-specific change) (REQ-029-065)
 
 ### Main Flow: Configure Commission Rates
 
@@ -194,11 +194,11 @@ The module delivers value by:
 7. System displays a provider-scope modal with Selected Providers, Commission Model (Percentage / Flat Rate; default Percentage), Provider Commission Value, Flat Rate Currency (Flat Rate only), Effective Date, and a preview calculation
 8. Admin searches for and selects one or more providers
 9. Admin selects the commission model, enters the provider-specific commission value (and currency for Flat Rate), and sets the effective date
-10. System validates selected providers have status Active or Suspended (Deactivated providers cannot be selected; their existing scopes are read-only) and the commission value matches the selected model: Percentage 0-100% (0.1% precision); Flat Rate amount > 0 in an enabled currency
+10. System validates selected providers have status Active or Suspended (Deactivated providers cannot be selected; their existing scopes are read-only) and the commission value matches the selected model: Percentage 0-100% (0.1% precision); Flat Rate amount > 0 in an enabled currency (REQ-029-117)
 11. Admin confirms the add or edit action
 12. System stores the provider-specific commission scope with provider IDs and effective date
 13. System propagates updated commission configuration to Payment Processing Service with cache TTL of 5 minutes
-14. System displays confirmation message: "Commission settings updated. New bookings will use the new effective commission configuration."
+14. System displays confirmation message: "Commission settings updated. New bookings will use the new effective commission configuration." (REQ-029-066)
 15. System logs each global-default or provider-scope change to audit trail with admin ID, timestamp, scope, and before/after state
 16. If the affected provider is opened in FR-015, the Commission & Financials tab reflects the updated provider-specific commission model and value
 
@@ -222,7 +222,7 @@ The module delivers value by:
 10. System stores split payment rules with enabled installment options and cutoff date
 11. System propagates configuration to Payment Processing Service with cache TTL of 5 minutes
 12. System calculates which installment options will be available to patients based on booking date and procedure date
-13. System displays confirmation message: "Split payment options updated. Patients will see [X] installment options."
+13. System displays confirmation message: "Split payment options updated. Patients will see [X] installment options." (REQ-029-066)
 14. System logs configuration change to audit trail
 15. System sends email notification to admin confirming split payment configuration
 
@@ -234,7 +234,7 @@ The module delivers value by:
 - **Steps**:
   1. Admin attempts to assign countries to new Stripe account that overlap with existing account
   2. System detects conflict and displays warning: "Countries [list] are already assigned to Stripe account [name]"
-  3. Admin must choose "Override" to replace existing assignment (no secondary accounts; one account per country/regional grouping)
+  3. Admin must choose "Override" to replace existing assignment (no secondary accounts; one account per country/regional grouping) (REQ-029-068)
   4. Admin confirms override action
   5. System updates country-to-account mappings, replacing prior assignment with the new account
   6. System propagates updated mappings to Payment Processing Service
@@ -290,8 +290,8 @@ The module delivers value by:
   1. Admin submits Stripe account configuration with API credentials
   2. System attempts to validate credentials by calling Stripe API
   3. Stripe API returns authentication error or connection timeout
-  4. System displays error message: "Unable to connect to Stripe. Please verify API keys are correct and your Stripe account is active."
-  5. System highlights fields with credential errors (publishable key, secret key, webhook secret)
+  4. System displays error message: "Unable to connect to Stripe. Please verify API keys are correct and your Stripe account is active." (REQ-029-067)
+  5. System highlights fields with credential errors (publishable key, secret key, webhook secret) (REQ-029-067)
   6. Admin corrects API credentials or troubleshoots connection issue
   7. Admin clicks "Retry Connection"
   8. System re-attempts validation
@@ -307,7 +307,7 @@ The module delivers value by:
   4. System continues using the pair's last successfully fetched rate (cached rate with timestamp)
   5. System updates the pair's status indicator to red/error on the pair list (Screen 2A)
   6. System sends alert notification to admin: "Sync failed for USD/EUR (source: xe.com). Using cached rate from [timestamp]."
-  7. System retries sync after exponential backoff (e.g., retry in 15 minutes, then 30 minutes, then 1 hour)
+  7. System retries sync after exponential backoff (e.g., retry in 15 minutes, then 30 minutes, then 1 hour) (REQ-029-095)
   8. If source remains down, the source's status indicator on Screen 2A Section 2 also turns red, making it visible that multiple pairs may be affected
   9. Admin investigates source status, fixes credentials, or switches affected pairs to a different source or manual mode
 - **Outcome**: System gracefully handles per-pair API failure by using cached rates, showing visual status cues, and alerting admin
@@ -345,12 +345,12 @@ The module delivers value by:
 - **Steps**:
   1. System fetches the current rate for USD/EUR from its assigned source during the pair's scheduled sync
   2. System compares the new rate to the pair's previously cached rate
-  3. System detects the USD/EUR rate changed by 4.5% in the last 24 hours (exceeds the 3% global threshold)
+  3. System detects the USD/EUR rate changed by 4.5% in the last 24 hours (exceeds the 3% global threshold) (REQ-029-096)
   4. System updates the pair's status indicator to yellow/warning on the pair list (Screen 2A)
   5. System sends urgent alert notification to admin: "Currency alert: USD/EUR rate changed 4.5% in 24 hours (threshold: 3%). Review markup for this pair."
   6. Admin sees the yellow warning badge on the pair list, clicks into the pair (Screen 2B) to review
   7. Admin reviews the current base rate, markup %, and effective rate
-  8. Admin decides to increase the per-pair markup from 5% to 7% to protect against the unfavorable rate
+  8. Admin decides to increase the per-pair markup from 5% to 7% to protect against the unfavorable rate (REQ-029-096)
   9. Admin saves the updated markup; system recalculates the effective rate and logs the change to audit trail
   10. The pair's status badge returns to green after the next sync shows the rate change is within threshold
 - **Outcome**: Admin is alerted per-pair to significant rate fluctuations via both visual cues on the list and email notification, and can adjust the specific pair's markup to protect revenue
@@ -378,44 +378,44 @@ The module delivers value by:
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Account Name | text | Yes | Friendly name for Stripe account (e.g., "US & Canada Account", "EU Account") | Max 100 chars, must be unique |
-| Publishable Key | text | Yes | Stripe publishable API key (starts with pk_) | Must start with "pk_test_" or "pk_live_", max 200 chars |
-| Secret Key | password | Yes | Stripe secret API key (starts with sk_) | Must start with "sk_test_" or "sk_live_", max 200 chars |
-| Webhook Secret | password | Yes | Stripe webhook signing secret | Min 32 chars, max 200 chars |
-| Account Mode | select | Yes | Test Mode or Live Mode | Must select one option |
-| Global Fallback | toggle | No | If enabled, this Stripe account is used when no country/regional grouping mapping exists for the patient | At most 1 Stripe account can be marked as Global Fallback. If enabled: Assigned Countries must be empty and Account Status must be Active. |
-| Assigned Countries | multi-select | Conditional | Countries **or** regional groupings served by this account (mutually exclusive per record: choose groups or countries, not both) | Required unless Global Fallback is enabled. Each country/grouping can map to only one Stripe account (overrides required to reassign). If a country mapping exists, it overrides any group-level account for that country. |
-| Supported Currencies | multi-select | Yes | Currencies this Stripe account can process (e.g., USD, EUR, GBP) | Must select at least one currency |
-| Default Currency | select | Yes | Default currency for this account | Must be one of selected supported currencies |
-| Account Status | toggle | Yes | Active or Inactive | Boolean (active = enabled for processing) |
-| Enabled Payment Methods | multi-select | Yes | Payment methods offered to patients for the regions and currencies this account serves. The method records are owned by FR-007B; this setting only turns each method on or off | Must select at least one method; a method can be offered only in a currency the account supports |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Account Name | text | Yes | Friendly name for Stripe account (e.g., "US & Canada Account", "EU Account") | Max 100 chars, must be unique | ENT-stripe-account.account_name (REQ-029-131) |
+| Publishable Key | text | Yes | Stripe publishable API key (starts with pk_) | Must start with "pk_test_" or "pk_live_", max 200 chars | ENT-stripe-account.publishable_key (REQ-029-132) |
+| Secret Key | password | Yes | Stripe secret API key (starts with sk_) | Must start with "sk_test_" or "sk_live_", max 200 chars | ENT-stripe-account.secret_key_encrypted (REQ-029-133) |
+| Webhook Secret | password | Yes | Stripe webhook signing secret | Min 32 chars, max 200 chars | ENT-stripe-account.webhook_secret_encrypted (REQ-029-134) |
+| Account Mode | select | Yes | Test Mode or Live Mode | Must select one option | ENT-stripe-account.mode |
+| Global Fallback | toggle | No | If enabled, this Stripe account is used when no country/regional grouping mapping exists for the patient | At most 1 Stripe account can be marked as Global Fallback. If enabled: Assigned Countries must be empty and Account Status must be Active. | ENT-stripe-account.is_global_fallback (REQ-029-139) |
+| Assigned Countries | multi-select | Conditional | Countries **or** regional groupings served by this account (mutually exclusive per record: choose groups or countries, not both) | Required unless Global Fallback is enabled. Each country/grouping can map to only one Stripe account (overrides required to reassign). If a country mapping exists, it overrides any group-level account for that country. | ENT-stripe-account.assigned_countries (REQ-029-071) |
+| Supported Currencies | multi-select | Yes | Currencies this Stripe account can process (e.g., USD, EUR, GBP) | Must select at least one currency | ENT-stripe-account.supported_currencies |
+| Default Currency | select | Yes | Default currency for this account | Must be one of selected supported currencies | ENT-stripe-account.default_currency (REQ-029-135) |
+| Account Status | toggle | Yes | Active or Inactive | Boolean (active = enabled for processing) | ENT-stripe-account.status |
+| Enabled Payment Methods | multi-select | Yes | Payment methods offered to patients for the regions and currencies this account serves. The method records are owned by FR-007B; this setting only turns each method on or off | Must select at least one method; a method can be offered only in a currency the account supports | no graph field (setting SET-supported-payment-methods) |
 
 **Business Rules**:
 
 - Payment methods are enabled or disabled per region and currency; FR-007 offers a patient only the methods enabled for the patient's region and the booking currency
 - Stripe API credentials must be validated before account can be activated (test connection to Stripe API)
 - One account per country/regional grouping (from FR-028); reassignments require explicit override
-- Country-level assignment supersedes group-level assignment for any country already in that group (most-specific mapping wins)
-- At most one Stripe account can be marked as Global Fallback; Global Fallback cannot have explicit country/regional grouping assignments
+- Country-level assignment supersedes group-level assignment for any country already in that group (most-specific mapping wins) (REQ-029-069)
+- At most one Stripe account can be marked as Global Fallback; Global Fallback cannot have explicit country/regional grouping assignments (REQ-029-070)
 - Cannot delete Stripe account if it has processed transactions in last 90 days (archive instead)
-- Admin can test Stripe connection at any time by clicking "Test Connection" button
+- Admin can test Stripe connection at any time by clicking "Test Connection" button (REQ-029-073)
 - Webhook secret is required for payment event verification and cannot be left blank
-- Supported currencies must be compatible with assigned countries (e.g., EUR for European countries)
+- Supported currencies must be compatible with assigned countries (e.g., EUR for European countries) (REQ-029-072)
 - Changes to Stripe account configuration propagate to Payment Processing Service within 5 minutes (cache TTL)
 
 **Notes**:
 
-- Display last successful connection test timestamp below API credential fields
-- Show warning icon if Stripe account hasn't been tested in over 30 days
+- Display last successful connection test timestamp below API credential fields (ENT-stripe-account.last_tested_date)
+- Show warning icon if Stripe account hasn't been tested in over 30 days (REQ-029-073)
 - Provide inline help text explaining difference between Test Mode and Live Mode
 - Display transaction count and total volume processed by each account (last 30 days) for admin reference
 - Use password masking for Secret Key and Webhook Secret fields, with "Show" toggle button
 - Include "Test Connection" action button that opens a modal/sub-screen:
   - Shows account name, mode (Test/Live), and endpoint being validated
   - On submit, system calls Stripe with provided keys/webhook secret; displays success/failure with error details
-  - Logs test attempt (admin, timestamp, result) and updates "Last Tested" timestamp/status badge
+  - Logs test attempt (admin, timestamp, result) and updates "Last Tested" timestamp/status badge (REQ-029-073)
 
 ---
 
@@ -425,76 +425,76 @@ The module delivers value by:
 
 #### Section 1: Global Settings
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Global Default Markup % | number | Yes | Default markup percentage applied to any currency pair that does not have a per-pair override | Range: 0-20%, decimal precision: 0.01% |
-| Global Default Sync Frequency | select | Yes | Default sync interval for auto-fetched pairs that do not have a per-pair override | Options: 1h, 3h, 6h, 12h, 24h |
-| Rate Protection Threshold | number | Yes | Alert if any pair's rate changes more than this percentage within 24 hours | Range: 1-50%, decimal precision: 0.1% |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Global Default Markup % | number | Yes | Default markup percentage applied to any currency pair that does not have a per-pair override | Range: 0-20%, decimal precision: 0.01% | ENT-currency-conversion-settings.global_default_markup_percentage |
+| Global Default Sync Frequency | select | Yes | Default sync interval for auto-fetched pairs that do not have a per-pair override | Options: 1h, 3h, 6h, 12h, 24h | ENT-currency-conversion-settings.global_default_sync_frequency |
+| Rate Protection Threshold | number | Yes | Alert if any pair's rate changes more than this percentage within 24 hours | Range: 1-50%, decimal precision: 0.1% | ENT-currency-conversion-settings.rate_protection_threshold |
 
 **Business Rules (Global Settings)**:
 
 - Global Default Markup % is used as fallback when a currency pair does not specify its own markup percentage
 - Global Default Sync Frequency is used as fallback when an auto-fetched pair does not specify its own sync interval
 - Rate Protection Threshold applies to all auto-fetched pairs; system monitors each pair independently and flags those exceeding the threshold
-- Rate protection alerts do not automatically stop payments; they surface visual cues and send admin notifications
+- Rate protection alerts do not automatically stop payments; they surface visual cues and send admin notifications (REQ-029-082)
 - Any currency pair not configured in this module results in the system collecting payment in USD (no conversion attempted)
 
 #### Section 2: Rate Sources
 
 **Purpose**: Manage the list of external API providers used to auto-fetch exchange rates. Each source bundles its provider type with API credentials.
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Source Name | text | Yes | Admin-friendly label for this source (e.g., "xe.com — Production") | Max 100 chars, must be unique |
-| Provider Type | select | Yes | API provider | Options: xe.com, fixer.io (extensible) |
-| API Key | text | Yes | API key / credentials for this provider | Non-empty; masked after save (show last 4 chars) |
-| Status | display-only | N/A | Connection health indicator | Auto-populated: green (healthy), yellow (degraded), red (down/error) |
-| Last Tested | display-only | N/A | Timestamp of last successful connection test | Auto-populated by system |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Source Name | text | Yes | Admin-friendly label for this source (e.g., "xe.com — Production") | Max 100 chars, must be unique | ENT-rate-source.source_name (REQ-029-131) |
+| Provider Type | select | Yes | API provider | Options: xe.com, fixer.io (extensible) | ENT-rate-source.provider_type |
+| API Key | text | Yes | API key / credentials for this provider | Non-empty; masked after save (show last 4 chars) | ENT-rate-source.api_key_encrypted |
+| Status | display-only | N/A | Connection health indicator | Auto-populated: green (healthy), yellow (degraded), red (down/error) | ENT-rate-source.status |
+| Last Tested | display-only | N/A | Timestamp of last successful connection test | Auto-populated by system | ENT-rate-source.last_tested_timestamp |
 
 **Actions**:
 
 - **Add Source**: Opens inline form / modal to create a new source. Requires all fields above. System runs a test connection upon save; source is only persisted if the test succeeds.
-- **Edit Source**: Admin can update source name, API key. System re-runs test connection on save.
+- **Edit Source**: Admin can update source name, API key. System re-runs test connection on save. (REQ-029-078)
 - **Delete Source**: Admin can delete a source only if no currency pairs reference it. If pairs reference the source, system displays warning listing affected pairs and requires admin to reassign or switch those pairs to manual before deletion.
-- **Test Connection**: Available per source at any time. Calls the provider API, updates Status and Last Tested.
+- **Test Connection**: Available per source at any time. Calls the provider API, updates Status and Last Tested. (REQ-029-079)
 
 **Business Rules (Rate Sources)**:
 
-- API credentials are encrypted at rest (AES-256) and never logged in plain text (mask all but last 4 characters)
+- API credentials are encrypted at rest (AES-256) and never logged in plain text (mask all but last 4 characters) (REQ-029-080)
 - A source cannot be saved without passing a test connection first
-- Deleting a source that is referenced by existing pairs is blocked; admin must reassign or convert affected pairs to manual mode first. This is the graceful deletion pattern.
-- System periodically checks source health during scheduled syncs and updates the Status indicator. If a source becomes unhealthy, all pairs using that source display a visual warning badge (yellow/red) on the pair list.
+- Deleting a source that is referenced by existing pairs is blocked; admin must reassign or convert affected pairs to manual mode first. This is the graceful deletion pattern. (REQ-029-091)
+- System periodically checks source health during scheduled syncs and updates the Status indicator. If a source becomes unhealthy, all pairs using that source display a visual warning badge (yellow/red) on the pair list. (REQ-029-081)
 
 #### Section 3: Currency Pair List
 
 **Purpose**: Table listing all configured currency pairs with their current mode, rate, source, markup, and status.
 
-| Column | Description |
-|--------|-------------|
-| Pair | Always displayed as USD/{Target} (e.g., USD/EUR, USD/GBP). All pairs use USD as base. |
-| Mode | "Auto" or "Manual" — indicates how the base rate is determined |
-| Source | Name of the rate source (if auto-fetched); "—" if manual |
-| Base Rate | The raw exchange rate (fetched from API or manually entered) |
-| Markup % | Per-pair markup percentage; shows "(global)" suffix if using the global default |
-| Effective Rate | Calculated: Base Rate × (1 + Markup %). This is the rate applied to patient-facing prices. |
-| Sync Frequency | Per-pair sync interval; shows "(global)" suffix if using the global default (auto-fetch pairs only) |
-| Last Updated | Timestamp of last rate update (auto-sync or manual save) |
-| Status | Visual indicator: green checkmark (healthy), yellow warning (rate protection threshold breached or source degraded), red error (source down / fetch failed) |
+| Column | Description | Graph field |
+|--------|-------------|-------------|
+| Pair | Always displayed as USD/{Target} (e.g., USD/EUR, USD/GBP). All pairs use USD as base. | ENT-currency-pair.target_currency |
+| Mode | "Auto" or "Manual" — indicates how the base rate is determined | ENT-currency-pair.rate_mode |
+| Source | Name of the rate source (if auto-fetched); "—" if manual | ENT-currency-pair.source_id |
+| Base Rate | The raw exchange rate (fetched from API or manually entered) | ENT-currency-pair.current_base_rate |
+| Markup % | Per-pair markup percentage; shows "(global)" suffix if using the global default | ENT-currency-pair.markup_percentage_override |
+| Effective Rate | Calculated: Base Rate × (1 + Markup %). This is the rate applied to patient-facing prices. | ENT-currency-pair.current_effective_rate |
+| Sync Frequency | Per-pair sync interval; shows "(global)" suffix if using the global default (auto-fetch pairs only) | ENT-currency-pair.sync_frequency_override |
+| Last Updated | Timestamp of last rate update (auto-sync or manual save) | ENT-currency-pair.last_updated_timestamp |
+| Status | Visual indicator: green checkmark (healthy), yellow warning (rate protection threshold breached or source degraded), red error (source down / fetch failed) | ENT-currency-pair.status |
 
 **Actions on List**:
 
 - **Add Pair**: Navigates to Screen 2B (Add/Edit Currency Pair) to create a new pair
 - **Edit Pair**: Click row or edit icon to navigate to Screen 2B pre-populated with pair data
-- **Delete Pair**: Remove a currency pair. System warns: "Deleting this pair means payments involving {Target} currency will fall back to USD. Continue?" Requires confirmation.
-- **Sync Now (per pair)**: For auto-fetched pairs, triggers an immediate rate fetch outside the scheduled sync
+- **Delete Pair**: Remove a currency pair. System warns: "Deleting this pair means payments involving {Target} currency will fall back to USD. Continue?" Requires confirmation. (REQ-029-086)
+- **Sync Now (per pair)**: For auto-fetched pairs, triggers an immediate rate fetch outside the scheduled sync (REQ-029-089)
 
 **Business Rules (Pair List)**:
 
-- All pairs MUST use USD as the base currency. Admin selects only the target currency when adding a pair.
-- Currency pairs must reference currencies that are enabled in the Currency Management screen (Screen 6)
+- All pairs MUST use USD as the base currency. Admin selects only the target currency when adding a pair. (REQ-029-085)
+- Currency pairs must reference currencies that are enabled in the Currency Management screen (Screen 6) (REQ-029-083)
 - If a pair is deleted or not configured for a target currency, the system collects payment in USD for transactions involving that currency (no conversion attempted). A note on this screen states: "Currency pairs not listed here will default to USD for payment collection."
-- Each pair independently tracks its own status. A source failure affects only pairs using that source; manual pairs are unaffected.
-- Status badges update automatically: green when last fetch succeeded and rate change is within threshold; yellow when the last sync breached the rate protection threshold or the source is degraded; red when last fetch failed or source is down. A yellow badge returns to green on the pair's next normal sync; there is no acknowledge action.
+- Each pair independently tracks its own status. A source failure affects only pairs using that source; manual pairs are unaffected. (REQ-029-088)
+- Status badges update automatically: green when last fetch succeeded and rate change is within threshold; yellow when the last sync breached the rate protection threshold or the source is degraded; red when last fetch failed or source is down. A yellow badge returns to green on the pair's next normal sync; there is no acknowledge action. (REQ-029-087)
 
 **Notes**:
 
@@ -511,16 +511,16 @@ The module delivers value by:
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Base Currency | display-only | N/A | Always "USD" — not editable | Fixed: USD |
-| Target Currency | select | Yes | The target currency for this pair (e.g., EUR, GBP, TRY) | Must be an enabled currency from Currency Management (Screen 6); cannot duplicate an existing pair |
-| Rate Mode | radio | Yes | How the base rate is determined | Options: "Auto-fetch from source" or "Manual input" |
-| Source | select | Conditional | Which rate source to use for auto-fetching | Required if Rate Mode = Auto-fetch. Populated from sources configured in Screen 2A Section 2. |
-| Manual Base Rate | number | Conditional | The admin-entered base exchange rate (how many units of target currency per 1 USD) | Required if Rate Mode = Manual. Must be > 0, decimal precision: 6 digits. |
-| Markup % | number | No | Per-pair markup percentage override. If left blank, the global default markup % from Screen 2A is used. | Range: 0-20%, decimal precision: 0.01%. Leave blank to inherit global default. |
-| Sync Frequency | select | No | Per-pair sync frequency override. If left blank, the global default sync frequency from Screen 2A is used. Only applicable for auto-fetch mode. | Options: 1h, 3h, 6h, 12h, 24h. Leave blank to inherit global default. Ignored if Rate Mode = Manual. |
-| Effective Rate | display-only | N/A | Calculated preview: Base Rate × (1 + Markup %) | Auto-calculated in real-time as admin edits Base Rate or Markup % |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Base Currency | display-only | N/A | Always "USD" — not editable | Fixed: USD | ENT-currency-pair.base_currency |
+| Target Currency | select | Yes | The target currency for this pair (e.g., EUR, GBP, TRY) | Must be an enabled currency from Currency Management (Screen 6); cannot duplicate an existing pair | ENT-currency-pair.target_currency |
+| Rate Mode | radio | Yes | How the base rate is determined | Options: "Auto-fetch from source" or "Manual input" | ENT-currency-pair.rate_mode |
+| Source | select | Conditional | Which rate source to use for auto-fetching | Required if Rate Mode = Auto-fetch. Populated from sources configured in Screen 2A Section 2. | ENT-currency-pair.source_id |
+| Manual Base Rate | number | Conditional | The admin-entered base exchange rate (how many units of target currency per 1 USD) | Required if Rate Mode = Manual. Must be > 0, decimal precision: 6 digits. | ENT-currency-pair.manual_base_rate (REQ-029-136) |
+| Markup % | number | No | Per-pair markup percentage override. If left blank, the global default markup % from Screen 2A is used. | Range: 0-20%, decimal precision: 0.01%. Leave blank to inherit global default. | ENT-currency-pair.markup_percentage_override |
+| Sync Frequency | select | No | Per-pair sync frequency override. If left blank, the global default sync frequency from Screen 2A is used. Only applicable for auto-fetch mode. | Options: 1h, 3h, 6h, 12h, 24h. Leave blank to inherit global default. Ignored if Rate Mode = Manual. | ENT-currency-pair.sync_frequency_override |
+| Effective Rate | display-only | N/A | Calculated preview: Base Rate × (1 + Markup %) | Auto-calculated in real-time as admin edits Base Rate or Markup % | ENT-currency-pair.current_effective_rate |
 
 **Actions**:
 
@@ -532,7 +532,7 @@ The module delivers value by:
 
 - All pairs use USD as the base currency (non-negotiable, enforced by UI)
 - Target currency dropdown is populated from enabled currencies in the Currency Management screen (Screen 6); cannot create a pair for a disabled currency
-- Cannot create a duplicate pair (one pair per target currency; USD/EUR can only exist once)
+- Cannot create a duplicate pair (one pair per target currency; USD/EUR can only exist once) (REQ-029-084)
 - **Auto-fetch mode**:
   - Admin must select a source from the configured sources in Screen 2A Section 2
   - Admin **must run "Test Connection & Fetch Rate" before saving** to verify the source can provide a rate for this pair. Save button is disabled until test succeeds.
@@ -540,24 +540,24 @@ The module delivers value by:
   - If a scheduled fetch fails, the system keeps the last successfully fetched rate, marks the pair status as red/error on the list, and sends an alert notification to the admin
   - A source assigned to this pair cannot be deleted while the pair references it. To remove the source, the admin first reassigns the pair to another source or converts it to manual mode, which pre-fills the last fetched rate as the manual base rate. No pair switches to manual mode automatically.
 - **Manual mode**:
-  - Admin enters the base rate directly in the Manual Base Rate field
-  - No sync schedule is created; rate only changes when admin manually edits and saves
+  - Admin enters the base rate directly in the Manual Base Rate field (REQ-029-092)
+  - No sync schedule is created; rate only changes when admin manually edits and saves (REQ-029-092)
   - Source field is hidden / not applicable
   - Sync Frequency field is hidden / not applicable
 - **Switching modes on an existing pair**:
-  - Auto → Manual: System pre-fills Manual Base Rate with the last fetched rate so admin doesn't start from zero. Sync schedule is removed.
-  - Manual → Auto: System requires admin to select a source and run "Test Connection & Fetch Rate" before saving. The fetched rate replaces the manual rate.
+  - Auto → Manual: System pre-fills Manual Base Rate with the last fetched rate so admin doesn't start from zero. Sync schedule is removed. (REQ-029-093)
+  - Manual → Auto: System requires admin to select a source and run "Test Connection & Fetch Rate" before saving. The fetched rate replaces the manual rate. (REQ-029-093)
 - **Markup % inheritance**: If Markup % is left blank, the pair uses the Global Default Markup % from Screen 2A. If specified, the per-pair value overrides the global default. The Effective Rate preview always shows the actual markup being applied (whether inherited or overridden).
 - **Sync Frequency inheritance**: If Sync Frequency is left blank (auto-fetch mode), the pair uses the Global Default Sync Frequency. If specified, the per-pair value overrides. Display "(using global default: Xh)" hint text when blank.
-- The Effective Rate preview updates in real-time as admin changes Base Rate or Markup %, giving immediate visibility into the patient-facing rate.
+- The Effective Rate preview updates in real-time as admin changes Base Rate or Markup %, giving immediate visibility into the patient-facing rate. (REQ-029-094)
 
 **Notes**:
 
 - Show inline help text: "Base Rate = how many {Target} per 1 USD. Example: 0.92 means 1 USD = 0.92 EUR."
 - For auto-fetch pairs, show the source's current status indicator (green/yellow/red) next to the source dropdown
 - Show estimated conversion rate impact: "5% markup on 0.92 USD/EUR = 0.966 effective rate"
-- Display last sync timestamp and next scheduled sync time (for auto-fetch pairs) below the form
-- When editing an existing pair, show a "Rate History" link/section displaying rate changes over the last 30 days (chart + table)
+- Display last sync timestamp and next scheduled sync time (for auto-fetch pairs) below the form (ENT-currency-pair.last_updated_timestamp, ENT-currency-pair.next_sync_timestamp)
+- When editing an existing pair, show a "Rate History" link/section displaying rate changes over the last 30 days (chart + table) (REQ-029-099)
 
 ---
 
@@ -567,15 +567,15 @@ The module delivers value by:
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Configuration Scope | radio | Yes | Global Default or Provider-Specific | Must select one option |
-| Global Deposit Rate | number | Conditional | Default deposit percentage for all providers | Range: 20-30%, decimal precision: 0.1%, required if scope is Global |
-| Provider Search | search | Conditional | Search for provider by name or ID | Required if scope is Provider-Specific |
-| Selected Providers | list | Conditional | List of providers for custom deposit rate | Required if scope is Provider-Specific |
-| Provider Deposit Rate | number | Conditional | Custom deposit percentage for selected providers | Range: 20-30%, decimal precision: 0.1%, required if scope is Provider-Specific |
-| Effective Date | display-only | N/A | Shows when this rate takes effect (immediately for new bookings) | Auto-populated: current timestamp |
-| Affected Bookings | display-only | N/A | Shows booking count that will use this rate (estimates based on historical data) | Auto-calculated by system |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Configuration Scope | radio | Yes | Global Default or Provider-Specific | Must select one option | ENT-deposit-rate-config.scope |
+| Global Deposit Rate | number | Conditional | Default deposit percentage for all providers | Range: 20-30%, decimal precision: 0.1%, required if scope is Global | ENT-deposit-rate-config.deposit_percentage |
+| Provider Search | search | Conditional | Search for provider by name or ID | Required if scope is Provider-Specific | no graph field (control) |
+| Selected Providers | list | Conditional | List of providers for custom deposit rate | Required if scope is Provider-Specific | ENT-deposit-rate-config.provider_id |
+| Provider Deposit Rate | number | Conditional | Custom deposit percentage for selected providers | Range: 20-30%, decimal precision: 0.1%, required if scope is Provider-Specific | ENT-deposit-rate-config.deposit_percentage |
+| Effective Date | display-only | N/A | Shows when this rate takes effect (immediately for new bookings) | Auto-populated: current timestamp | ENT-deposit-rate-config.effective_date |
+| Affected Bookings | display-only | N/A | Shows booking count that will use this rate (estimates based on historical data) | Auto-calculated by system | ENT-deposit-rate-config.affected_bookings_estimate |
 
 **Business Rules**:
 
@@ -603,27 +603,27 @@ The module delivers value by:
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Enable Split Payments | toggle | Yes | Master switch to enable or disable split payment feature globally | Boolean (enabled = feature active) |
-| Available Installments | checkbox-group | Yes | Select which installment options to offer (2, 3, 4, 5, 6, 7, 8, 9) | Must select at least one if feature enabled |
-| Cutoff Days | number | Yes | Days before procedure date that full payment must be completed | Range: 30-90 days, integer only |
-| Minimum Booking Amount | number | Yes | Minimum booking total required to qualify for installments (in USD) | Range: $100-$10,000, integer only |
-| Installment Frequency | display-only | N/A | Payment schedule frequency | Fixed: Monthly (30-day intervals) |
-| Late Payment Grace Period | number | Yes | Days after a missed installment due date during which reminders are sent before the late fee is charged (the booking is never cancelled automatically) | Range: 0-14 days, integer only |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Enable Split Payments | toggle | Yes | Master switch to enable or disable split payment feature globally | Boolean (enabled = feature active) | ENT-split-payment-config.feature_enabled |
+| Available Installments | checkbox-group | Yes | Select which installment options to offer (2, 3, 4, 5, 6, 7, 8, 9) | Must select at least one if feature enabled | ENT-split-payment-config.available_installments |
+| Cutoff Days | number | Yes | Days before procedure date that full payment must be completed | Range: 30-90 days, integer only | ENT-split-payment-config.cutoff_days |
+| Minimum Booking Amount | number | Yes | Minimum booking total required to qualify for installments (in USD) | Range: $100-$10,000, integer only | ENT-split-payment-config.minimum_booking_amount |
+| Installment Frequency | display-only | N/A | Payment schedule frequency | Fixed: Monthly (30-day intervals) | ENT-split-payment-config.installment_frequency |
+| Late Payment Grace Period | number | Yes | Days after a missed installment due date during which reminders are sent before the late fee is charged (the booking is never cancelled automatically) | Range: 0-14 days, integer only | ENT-split-payment-config.late_payment_grace_period_days |
 
 **Business Rules**:
 
 - Cutoff days ensures patients complete full payment before procedure date (default: 30 days)
 - System automatically calculates available installment options based on booking date and procedure date
-- If time between booking and procedure is insufficient for selected installments given cutoff, system offers fewer installments
+- If time between booking and procedure is insufficient for selected installments given cutoff, system offers fewer installments (REQ-029-109)
 - Installment amount calculation is always equal-split: booking total ÷ installment count (rounded to each currency's own minor units; last installment absorbs rounding difference)
 - Minimum booking amount prevents installments for low-value bookings (reduces administrative overhead); it is stated in USD, and a booking total in another currency is converted to USD at the rate locked at FR-005 subquote acceptance before the comparison
 - Late payment grace period is the number of days after a missed installment due date during which the patient receives reminders and is not yet charged the late fee (0 = no grace period); when it passes without payment, the late payment fee set on Screen 7 is charged. A missed installment never cancels the booking automatically
 - This is one global configuration: there are no tiers, and no separate installment plan by booking amount or by region
 - Split payment configuration propagates to Payment Processing Service within 5 minutes (cache TTL)
 - Cannot modify split payment rules for bookings with active installment plans (changes apply to new bookings only)
-- System enforces a minimum 30-day cutoff before procedure date (per system booking/payment rules); admins may increase the cutoff up to 90 days
+- System enforces a minimum 30-day cutoff before procedure date (per system booking/payment rules); admins may increase the cutoff up to 90 days (REQ-029-108)
 
 **Notes**:
 
@@ -643,32 +643,32 @@ The module delivers value by:
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Global Commission Rate | number | Yes | Default commission percentage applied platform-wide when no provider-specific commission configuration exists for a provider | Range: 15-25%, decimal precision: 0.1% |
-| Global Last Updated | display-only | N/A | Shows when the global default was last changed | Auto-populated timestamp |
-| Selected Providers | async multi-select / chips | Yes | Provider list covered by a provider-specific commission scope | Minimum 1 provider with status Active or Suspended (Deactivated providers cannot be selected; FR-015 Tab 7 applies the same rule); a provider already in another active provider-specific scope cannot be selected (it must first be removed from that scope) |
-| Commission Model | radio | Yes | Provider-specific commission model for the selected provider scope: "Percentage" or "Flat Rate" (same models as FR-015 Tab 7) | Default: Percentage |
-| Provider Commission Value | number | Yes | Percentage model: commission percentage of the booking total. Flat Rate model: fixed amount deducted once per completed procedure | Percentage: 0-100%, decimal precision: 0.1%. Flat Rate: amount > 0, precision per the currency's minor units (Screen 6) |
-| Flat Rate Currency | select | Conditional | Currency of the Flat Rate amount; shown only when Commission Model = Flat Rate | Required for Flat Rate; must be an enabled currency from Screen 6; defaults to the system default currency |
-| Effective Date | date | Yes | Date when the provider-specific scope becomes active for new bookings | Today or future date |
-| Scope Status | badge | Yes | State of the provider-specific commission scope | Active / Archived |
-| Actions | menu | Yes | Scope-level actions | Edit, Archive |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Global Commission Rate | number | Yes | Default commission percentage applied platform-wide when no provider-specific commission configuration exists for a provider | Range: 15-25%, decimal precision: 0.1% | ENT-commission-rate-config.commission_percentage |
+| Global Last Updated | display-only | N/A | Shows when the global default was last changed | Auto-populated timestamp | ENT-commission-rate-config.updated_date |
+| Selected Providers | async multi-select / chips | Yes | Provider list covered by a provider-specific commission scope | Minimum 1 provider with status Active or Suspended (Deactivated providers cannot be selected; FR-015 Tab 7 applies the same rule); a provider already in another active provider-specific scope cannot be selected (it must first be removed from that scope) | ENT-commission-rate-config.provider_ids |
+| Commission Model | radio | Yes | Provider-specific commission model for the selected provider scope: "Percentage" or "Flat Rate" (same models as FR-015 Tab 7) | Default: Percentage | ENT-commission-rate-config.commission_model |
+| Provider Commission Value | number | Yes | Percentage model: commission percentage of the booking total. Flat Rate model: fixed amount deducted once per completed procedure | Percentage: 0-100%, decimal precision: 0.1%. Flat Rate: amount > 0, precision per the currency's minor units (Screen 6) | ENT-commission-rate-config.commission_percentage, ENT-commission-rate-config.flat_rate_amount |
+| Flat Rate Currency | select | Conditional | Currency of the Flat Rate amount; shown only when Commission Model = Flat Rate | Required for Flat Rate; must be an enabled currency from Screen 6; defaults to the system default currency | ENT-commission-rate-config.flat_rate_currency (REQ-029-137) |
+| Effective Date | date | Yes | Date when the provider-specific scope becomes active for new bookings | Today or future date | ENT-commission-rate-config.effective_date (REQ-029-138) |
+| Scope Status | badge | Yes | State of the provider-specific commission scope | Active / Archived | ENT-commission-rate-config.status |
+| Actions | menu | Yes | Scope-level actions | Edit, Archive | no graph field (control) |
 
 **Business Rules**:
 
 - Commission changes apply to new bookings only (existing bookings retain the commission model and value snapshot captured at FR-006 booking confirmation)
-- Provider-specific commission scopes take precedence over the global default at booking confirmation
+- Provider-specific commission scopes take precedence over the global default at booking confirmation (REQ-029-113)
 - FR-029 Screen 5 is the central commission-settings screen; FR-015 / A-02 Tab 7 remains a synchronized single-provider edit surface for the same provider-specific commission data
 - Changes made in FR-015 to a provider-specific commission model or value MUST be reflected in Screen 5 for that provider, and changes made in Screen 5 MUST be reflected in FR-015
-- A provider-specific commission scope may cover one or multiple providers and may be archived when no longer needed
+- A provider-specific commission scope may cover one or multiple providers and may be archived when no longer needed (REQ-029-114)
 - **One active scope per provider**: A provider belongs to at most one active provider-specific commission scope, so the effective configuration at booking confirmation is never ambiguous.
-- **Single-provider edit from FR-015**: When an admin edits commission in FR-015 Tab 7 for a provider covered by a scope shared with other providers, the system removes that provider from the shared scope and creates a single-provider scope for it with the new values; the shared scope and its other providers are unchanged. The split is audit-logged with before/after state.
-- **Scheduled configuration**: Each provider has at most one pending future-dated configuration. Saving another future-dated configuration for the same provider replaces the pending one (logged); on its Effective Date the pending configuration becomes the active one automatically. Screen 5 and FR-015 Tab 7 show the same pending configuration, which FR-032 Screen 4 displays read-only to the provider.
-- The global default is percentage-only; the Flat Rate model is available for provider-specific scopes only
-- **Percentage model** (global default or provider scope): commission amount = booking total (the accepted subquote price after promotion, in the quote currency, from the acceptance snapshot) × snapshotted commission percentage (rounded to the quote currency's own minor units; last payment absorbs rounding difference if needed)
-- **Flat Rate model** (provider scope only): commission amount = the snapshotted fixed amount, deducted once per completed procedure (FR-010 completion milestone), regardless of procedure price; it is not charged per package, per Subquote, or per installment
-- Flat Rate amounts are stored and snapshotted in their configured currency; this screen introduces no new currency conversion rule, and any conversion follows the existing FR-029 currency configuration and downstream FR-017 reconciliation handling
+- **Single-provider edit from FR-015**: When an admin edits commission in FR-015 Tab 7 for a provider covered by a scope shared with other providers, the system removes that provider from the shared scope and creates a single-provider scope for it with the new values; the shared scope and its other providers are unchanged. The split is audit-logged with before/after state. (REQ-029-115)
+- **Scheduled configuration**: Each provider has at most one pending future-dated configuration. Saving another future-dated configuration for the same provider replaces the pending one (logged); on its Effective Date the pending configuration becomes the active one automatically. Screen 5 and FR-015 Tab 7 show the same pending configuration, which FR-032 Screen 4 displays read-only to the provider. (REQ-029-116)
+- The global default is percentage-only; the Flat Rate model is available for provider-specific scopes only (REQ-029-121)
+- **Percentage model** (global default or provider scope): commission amount = booking total (the accepted subquote price after promotion, in the quote currency, from the acceptance snapshot) × snapshotted commission percentage (rounded to the quote currency's own minor units; last payment absorbs rounding difference if needed) (REQ-029-118)
+- **Flat Rate model** (provider scope only): commission amount = the snapshotted fixed amount, deducted once per completed procedure (FR-010 completion milestone), regardless of procedure price; it is not charged per package, per Subquote, or per installment (REQ-029-119)
+- Flat Rate amounts are stored and snapshotted in their configured currency; this screen introduces no new currency conversion rule, and any conversion follows the existing FR-029 currency configuration and downstream FR-017 reconciliation handling (REQ-029-120)
 - Commission configuration propagates to Payment Processing Service within 5 minutes (cache TTL)
 - All commission configuration changes (model, value, currency, providers, effective date, status) must be logged to audit trail with before/after state
 
@@ -686,31 +686,31 @@ The module delivers value by:
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Search | text | No | Filter currencies by code or name | Max 100 chars |
-| Currency Code | display-only | - | ISO 4217 code (e.g., USD, EUR, GBP) | From master catalog |
-| Currency Name | display-only | - | Human-readable currency name | From master catalog |
-| Symbol | display-only | - | Currency symbol (e.g., $, €, £) | From master catalog |
-| Minor Units | display-only | - | Decimal precision (e.g., 2 for USD/EUR/GBP, 0 for JPY/KRW) | From master catalog |
-| Enabled | toggle | Yes | Whether this currency is available for selection across the system | Must keep at least 1 enabled currency; cannot be turned off while quotes, bookings, or instalment plans still use the currency (see Business Rules) |
-| Default Currency | radio/select | Yes | Which enabled currency is the system default | Exactly 1 default; default must be enabled |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Search | text | No | Filter currencies by code or name | Max 100 chars | no graph field (control) |
+| Currency Code | display-only | - | ISO 4217 code (e.g., USD, EUR, GBP) | From master catalog | ENT-currency.code |
+| Currency Name | display-only | - | Human-readable currency name | From master catalog | ENT-currency.name |
+| Symbol | display-only | - | Currency symbol (e.g., $, €, £) | From master catalog | ENT-currency.symbol |
+| Minor Units | display-only | - | Decimal precision (e.g., 2 for USD/EUR/GBP, 0 for JPY/KRW) | From master catalog | ENT-currency.minor_units |
+| Enabled | toggle | Yes | Whether this currency is available for selection across the system | Must keep at least 1 enabled currency; cannot be turned off while quotes, bookings, or instalment plans still use the currency (see Business Rules) | ENT-currency.enabled |
+| Default Currency | radio/select | Yes | Which enabled currency is the system default | Exactly 1 default; default must be enabled | ENT-currency.is_default |
 
 **Business Rules**:
 
-- Currency codes are immutable and come from a system-maintained catalog; admins cannot add non-ISO or custom codes.
-- At least one currency must remain enabled at all times.
-- Exactly one enabled currency must be set as the system default.
-- If an admin attempts to disable a currency referenced only by configuration items (e.g., used in Stripe account supported currencies, location starting prices, or active pricing configs), the system MUST warn and provide a safe resolution path (e.g., update dependent configs first) before allowing the disable. A currency still used by quotes, bookings or instalment plans is not a warning case: it is blocked by the rule below.
-- Enabling/disabling currencies affects new configuration choices immediately; existing records retain their stored currency codes.
+- Currency codes are immutable and come from a system-maintained catalog; admins cannot add non-ISO or custom codes. (REQ-029-122)
+- At least one currency must remain enabled at all times. (REQ-029-123)
+- Exactly one enabled currency must be set as the system default. (REQ-029-123)
+- If an admin attempts to disable a currency referenced only by configuration items (e.g., used in Stripe account supported currencies, location starting prices, or active pricing configs), the system MUST warn and provide a safe resolution path (e.g., update dependent configs first) before allowing the disable. A currency still used by quotes, bookings or instalment plans is not a warning case: it is blocked by the rule below. (REQ-029-124)
+- Enabling/disabling currencies affects new configuration choices immediately; existing records retain their stored currency codes. (REQ-029-125)
 - Disabling a currency is blocked while any sent quote that is not yet in a terminal state, any accepted booking that is not yet paid, or any open booking or instalment plan uses that currency. The admin sees the count of records still using it, and can disable the currency only when that count reaches zero.
 - Changing the Default Currency creates a new FR-026 Quote Configuration version, so the configuration version recorded on a quote identifies both the quote hours and the currency used. Quotes already sent keep the currency copied onto them at first send.
 - When the Default Currency changes, open quote drafts keep the numbers the provider typed and switch to the new currency without conversion. Before the provider can send such a draft, the quote screen (owned by FR-004) shows a "currency changed, check your prices" banner that the provider must acknowledge.
 
 **Notes**:
 
-- This screen is the source of truth for currency dropdowns across Admin/Provider/Patient experiences (where applicable).
-- FR-017 Screen 1 ("Financial Reporting - Revenue Dashboard") initializes its reporting currency selector from this system default currency; the MVP seed value is USD unless an admin changes it later.
+- This screen is the source of truth for currency dropdowns across Admin/Provider/Patient experiences (where applicable). (REQ-029-126)
+- FR-017 Screen 1 ("Financial Reporting - Revenue Dashboard") initializes its reporting currency selector from this system default currency; the MVP seed value is USD unless an admin changes it later. (REQ-029-126)
 - Provide quick actions: “Enable common set” (e.g., USD/EUR/GBP) and “Set Default” for an enabled currency.
 
 ---
@@ -721,21 +721,21 @@ The module delivers value by:
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Refund Ladder | band table | Yes | Refund percentage by how many days before the procedure date the booking is cancelled. Launch default: more than 30 days, 90 percent; 15 to 30 days, 50 percent; under 15 days, 0 percent | Percentage 0-100 per band; every number of days before the procedure date falls in exactly one band |
-| Late Payment Fee Type | radio | Yes | How the late payment fee is calculated: fixed amount or percentage | Fixed amount / Percentage |
-| Late Payment Fee Value | number | Yes | Value of the late payment fee, charged when the late payment grace period (Screen 4) passes without the installment being paid | Fixed amount: in the system default currency, precision per its minor units. Percentage: 0-100 percent |
-| Rescheduling Fee Type | radio | Yes | How the fee for rescheduling a booking is calculated: fixed amount or percentage | Fixed amount / Percentage |
-| Rescheduling Fee Value | number | Yes | Value of the rescheduling fee | Fixed amount: in the system default currency, precision per its minor units. Percentage: 0-100 percent |
-| Deposit Plan Balance Due Days | number | Yes | How many days before the treatment date the balance of a deposit plan is due. Default: 7 days | Whole number of days |
-| Unpaid Balance Cancellation Point | number | Yes | The point at which a deposit plan balance that is still unpaid cancels the booking (FR-006 Boundary). A separate setting from the balance due date; it has no default and an admin must set it | Set by an admin before use; no starting value |
-| Hairline Share of Patient Cancellation Fee | number | Yes | The percentage of a patient cancellation fee kept by Hairline; the rest goes to the clinic (FR-007 REQ-007-092). It has no starting value and an admin must set it | Percentage 0-100; set by an admin before use; no starting value |
-| Patient Confirmation Window | number | Yes | Days after a clinic marks a procedure complete during which the patient may raise a problem before the clinic share is released (FR-007 Fund Release & Money Routing Rules). Default: 7 days | Whole number of days; no minimum and no maximum |
-| Settlement Period | selection | Yes | The one settlement period that applies to all manually paid clinics (manual bank transfer rail). Default: weekly | No per-clinic value exists |
-| Settlement Cutoff Day | selection | Yes | The day the settlement period closes. Default: Sunday | Day of the week |
-| Settlement Payout Day | selection | Yes | The day the settlement statement is paid out. Default: Wednesday | Day of the week |
-| Last Updated | display-only | N/A | When the record was last saved and by which admin | Auto-populated |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Refund Ladder | band table | Yes | Refund percentage by how many days before the procedure date the booking is cancelled. Launch default: more than 30 days, 90 percent; 15 to 30 days, 50 percent; under 15 days, 0 percent | Percentage 0-100 per band; every number of days before the procedure date falls in exactly one band | ENT-refund-fee-settings.refund_ladder |
+| Late Payment Fee Type | radio | Yes | How the late payment fee is calculated: fixed amount or percentage | Fixed amount / Percentage | ENT-refund-fee-settings.late_payment_fee_type |
+| Late Payment Fee Value | number | Yes | Value of the late payment fee, charged when the late payment grace period (Screen 4) passes without the installment being paid | Fixed amount: in the system default currency, precision per its minor units. Percentage: 0-100 percent | ENT-refund-fee-settings.late_payment_fee_value |
+| Rescheduling Fee Type | radio | Yes | How the fee for rescheduling a booking is calculated: fixed amount or percentage | Fixed amount / Percentage | ENT-refund-fee-settings.rescheduling_fee_type |
+| Rescheduling Fee Value | number | Yes | Value of the rescheduling fee | Fixed amount: in the system default currency, precision per its minor units. Percentage: 0-100 percent | ENT-refund-fee-settings.rescheduling_fee_value |
+| Deposit Plan Balance Due Days | number | Yes | How many days before the treatment date the balance of a deposit plan is due. Default: 7 days | Whole number of days | ENT-refund-fee-settings.deposit_plan_balance_due_days |
+| Unpaid Balance Cancellation Point | number | Yes | The point at which a deposit plan balance that is still unpaid cancels the booking (FR-006 Boundary). A separate setting from the balance due date; it has no default and an admin must set it | Set by an admin before use; no starting value | ENT-refund-fee-settings.unpaid_balance_cancellation_point |
+| Hairline Share of Patient Cancellation Fee | number | Yes | The percentage of a patient cancellation fee kept by Hairline; the rest goes to the clinic (FR-007 REQ-007-092). It has no starting value and an admin must set it | Percentage 0-100; set by an admin before use; no starting value | ENT-refund-fee-settings.hairline_cancellation_fee_share |
+| Patient Confirmation Window | number | Yes | Days after a clinic marks a procedure complete during which the patient may raise a problem before the clinic share is released (FR-007 Fund Release & Money Routing Rules). Default: 7 days | Whole number of days; no minimum and no maximum | ENT-refund-fee-settings.patient_confirmation_window_days |
+| Settlement Period | selection | Yes | The one settlement period that applies to all manually paid clinics (manual bank transfer rail). Default: weekly | No per-clinic value exists | ENT-refund-fee-settings.settlement_period |
+| Settlement Cutoff Day | selection | Yes | The day the settlement period closes. Default: Sunday | Day of the week | ENT-refund-fee-settings.settlement_cutoff_day |
+| Settlement Payout Day | selection | Yes | The day the settlement statement is paid out. Default: Wednesday | Day of the week | ENT-refund-fee-settings.settlement_payout_day |
+| Last Updated | display-only | N/A | When the record was last saved and by which admin | Auto-populated | ENT-refund-fee-settings.updated_date |
 
 **Business Rules**:
 
@@ -760,10 +760,10 @@ The module delivers value by:
 
 ### General Module Rules
 
-- **Rule 1**: Payment configuration changes never alter a value that has already been locked. Each configuration is locked at a named point: (a) the currency conversion rate (including markup) is locked when the patient accepts a subquote in FR-005 and is stored in the acceptance snapshot; (b) the effective commission configuration, the deposit rate, and the split payment (installment) settings are locked at FR-006 booking confirmation and stored with the booking; (c) no payment configuration is frozen when a parent quote or subquote is created or sent in FR-004. Before its lock point, a quote or accepted-but-unconfirmed subquote follows the configuration that is effective at that moment, and an active installment plan keeps the settings locked at its booking confirmation. When FR-019 expresses a fixed-amount promotion in the quote currency at quote send, it uses the currency conversion rate (including markup) in effect at send; this sets the promotion amount on the quote only and does not lock the conversion rate for payment, which stays locked at acceptance under (a).
+- **Rule 1**: Payment configuration changes never alter a value that has already been locked. Each configuration is locked at a named point: (a) the currency conversion rate (including markup) is locked when the patient accepts a subquote in FR-005 and is stored in the acceptance snapshot; (b) the effective commission configuration, the deposit rate, and the split payment (installment) settings are locked at FR-006 booking confirmation and stored with the booking; (c) no payment configuration is frozen when a parent quote or subquote is created or sent in FR-004. Before its lock point, a quote or accepted-but-unconfirmed subquote follows the configuration that is effective at that moment, and an active installment plan keeps the settings locked at its booking confirmation. When FR-019 expresses a fixed-amount promotion in the quote currency at quote send, it uses the currency conversion rate (including markup) in effect at send; this sets the promotion amount on the quote only and does not lock the conversion rate for payment, which stays locked at acceptance under (a). (REQ-029-101)
 - **Rule 2**: All payment configuration changes must be logged to audit trail with admin ID, timestamp, and change details for compliance
 - **Rule 3**: Configuration cache propagates to Payment Processing Service within 5 minutes maximum (cache TTL)
-- **Rule 4**: System must gracefully handle payment processing when configuration data is unavailable (use last known good configuration)
+- **Rule 4**: System must gracefully handle payment processing when configuration data is unavailable (use last known good configuration) (REQ-029-102)
 - **Rule 5**: Admin cannot delete Stripe accounts, deposit rates, or split payment rules with active references (archive instead)
 
 ### Data & Privacy Rules
@@ -771,10 +771,10 @@ The module delivers value by:
 - **Privacy Rule 1**: Stripe API secret keys and webhook secrets must be encrypted at rest using AES-256 encryption
 - **Privacy Rule 2**: Stripe secret keys must never be logged in plain text to audit logs or error logs (mask all but last 4 characters)
 - **Privacy Rule 3**: Admin access to payment configuration must require elevated permissions (not available to standard admin users)
-- **Privacy Rule 4**: Moved to the system PRD. See system PRD, Platform-Wide Rules: No card numbers stored (includes webhook signature verification)
+- **Privacy Rule 4**: Moved to the system PRD. See system PRD, Platform-Wide Rules: No card numbers stored (includes webhook signature verification) (REQ-SYS-005)
 - **Audit Rule**: All payment configuration changes must be logged with before/after state for audit compliance
-- **Compliance Rule**: See system PRD, Platform-Wide Rules: No card numbers stored (PCI DSS compliance through the payment processor)
-- **Data Retention**: Payment configuration audit history is kept; retention follows the system PRD, Platform-Wide Rules: One 10-year retention period
+- **Compliance Rule**: See system PRD, Platform-Wide Rules: No card numbers stored (PCI DSS compliance through the payment processor) (REQ-SYS-005)
+- **Data Retention**: Payment configuration audit history is kept; retention follows the system PRD, Platform-Wide Rules: One 10-year retention period (REQ-SYS-002)
 
 ### Admin Editability Rules
 
@@ -797,13 +797,13 @@ The module delivers value by:
 
 **Fixed in Codebase (Not Editable)**:
 
-- Deposit rate allowed range (20-30% hard-coded business rule)
-- Split payment installment range (2-9 installments hard-coded limit)
-- Cutoff days allowed range (30-90 days hard-coded limits)
-- Installment frequency (monthly; 30-day intervals)
+- Deposit rate allowed range (20-30% hard-coded business rule) (REQ-029-112)
+- Split payment installment range (2-9 installments hard-coded limit) (REQ-029-112)
+- Cutoff days allowed range (30-90 days hard-coded limits) (REQ-029-112)
+- Installment frequency (monthly; 30-day intervals) (REQ-029-112)
 - Encryption algorithms for Stripe secret keys (AES-256)
 - Cache TTL for configuration propagation (5 minutes hard-coded)
-- Payment audit logging requirements (always enabled, cannot be disabled)
+- Payment audit logging requirements (always enabled, cannot be disabled) (REQ-029-112)
 - Currency master catalog (ISO 4217 metadata: name/symbol/minor units) used to populate the Currency Management screen
 
 **Configurable with Restrictions**:
@@ -815,231 +815,42 @@ The module delivers value by:
 
 ### Payment & Billing Rules
 
-- **Payment Rule 1**: Payment Processing Service routes transactions to the appropriate Stripe account based on the country on the patient's profile (not the patient's current physical location)
+- **Payment Rule 1**: Payment Processing Service routes transactions to the appropriate Stripe account based on the country on the patient's profile (not the patient's current physical location) (REQ-029-004)
 - **Payment Rule 2**: If patient's country has no assigned Stripe account, system uses the Stripe account marked as Global Fallback (if configured) or blocks payment
-- **Payment Rule 3**: Currency conversion markup applies to all transactions involving currency conversion (protects against bank rate differences)
-- **Booking Total Rule**: Throughout this FR, "booking total" means the accepted subquote price after any promotion, in the quote currency, read from the FR-005 acceptance snapshot. The same rule applies to every discount type, including discounts funded only by Hairline: commission is always calculated on the price after promotion. It is never recomputed from the live quote, option, or date-range price. This single figure is the base for the Percentage commission, the deposit amount, and the installment split; any display or charge in another currency uses the rate locked under Currency Rule 2.
+- **Payment Rule 3**: Currency conversion markup applies to all transactions involving currency conversion (protects against bank rate differences) (REQ-029-103)
+- **Booking Total Rule**: Throughout this FR, "booking total" means the accepted subquote price after any promotion, in the quote currency, read from the FR-005 acceptance snapshot. The same rule applies to every discount type, including discounts funded only by Hairline: commission is always calculated on the price after promotion. It is never recomputed from the live quote, option, or date-range price. This single figure is the base for the Percentage commission, the deposit amount, and the installment split; any display or charge in another currency uses the rate locked under Currency Rule 2. (REQ-029-100)
 - **Payment Rule 4**: Deposit amount calculated by multiplying booking total by configured deposit rate percentage (rounded to each currency's own minor units)
 - **Payment Rule 5**: Installment payment schedules calculated based on booking date, procedure date, cutoff days, and selected installment count
 - **Settlement Period Rule**: There is no per-clinic payout frequency. On the manual bank transfer rail, one settlement-period setting owned by FR-029 (default weekly, Sunday cutoff, Wednesday payout, admin-editable) applies to all manually paid clinics; on the Stripe Connect rail release is automatic. FR-015 and FR-017 point to this setting
-- **Payment Rule 6**: A missed installment never cancels the booking automatically. The system sends reminders during the grace period and retries the payment three times (day 1, day 3 and day 7, as owned by FR-007B); when the retries have failed, an admin is flagged to follow up. The late payment fee is charged when the grace period passes without payment (Late Fee Rule)
+- **Payment Rule 6**: A missed installment never cancels the booking automatically. The system sends reminders during the grace period and retries the payment three times (day 1, day 3 and day 7, as owned by FR-007B); when the retries have failed, an admin is flagged to follow up. The late payment fee is charged when the grace period passes without payment (Late Fee Rule) (REQ-029-105)
 - **Billing Rule 1**: Installments are equal-split: booking total ÷ installment count (rounded to each currency's own minor units; last installment absorbs rounding difference)
-- **Currency Rule 1**: Prices always displayed to patients in their selected currency using admin-configured conversion rates with markup
+- **Currency Rule 1**: Prices always displayed to patients in their selected currency using admin-configured conversion rates with markup (REQ-029-104)
 - **Currency Rule 2**: Currency conversion rate (including markup) MUST be locked at FR-005 subquote acceptance and stored in that acceptance snapshot, then copied to the booking and its transactions; subsequent displays and deposit/installment/final payments use the locked rate (no rate fluctuation after subquote acceptance). The parent quote never owns a locked rate. The snapshot records the rate together with its timestamp; if the cached rate is older than 24 hours, acceptance still proceeds.
 - **Commission Rule**: The effective commission configuration (global default or provider-specific) MUST be resolved at FR-006 booking confirmation and its model (Percentage or Flat Rate), value, currency (Flat Rate), source configuration ID, and scope type (global or provider-specific) stored per booking/transaction for payout and reconciliation consistency; a Flat Rate snapshot is deducted once at the FR-010 completed-procedure milestone, not per package, Subquote, or installment. The Percentage model applies to the booking total defined in the Booking Total Rule. An accepted-but-unpaid subquote has not yet fixed its commission, so a configuration that becomes effective before booking confirmation applies to it.
 - **Indicative Commission Rule**: Any commission shown before booking confirmation, including the FR-004 quote screen, is indicative only. It shows the model and value (percentage or flat amount) from the configuration effective at the time of display, labelled "indicative, final at booking confirmation". Only the booking-confirmation snapshot is authoritative for payout, invoicing, and reconciliation.
-- **Refund Rule**: Refunds on a cancelled booking follow the refund ladder set on Screen 7: the refund percentage depends on how many days before the procedure date the booking is cancelled. The launch default is more than 30 days, 90 percent; 15 to 30 days, 50 percent; under 15 days, 0 percent. It is one global setting that FR-006, FR-007, FR-007B and FR-017 read; each provider's own cancellation terms do not replace it
+- **Refund Rule**: Refunds on a cancelled booking follow the refund ladder set on Screen 7: the refund percentage depends on how many days before the procedure date the booking is cancelled. The launch default is more than 30 days, 90 percent; 15 to 30 days, 50 percent; under 15 days, 0 percent. It is one global setting that FR-006, FR-007, FR-007B and FR-017 read; each provider's own cancellation terms do not replace it (REQ-029-110)
 - **Minimum Booking Conversion Rule**: The Minimum Booking Amount for installments is stated in USD. A booking total in another currency is converted to USD at the conversion rate locked at FR-005 subquote acceptance (Currency Rule 2) before it is compared with the minimum
 - **Late Fee Rule**: When the late payment grace period passes without the installment being paid, the late payment fee set on Screen 7 is charged. Hairline keeps the late payment fee and the rescheduling fee; neither changes a provider payout
 
----
+### Failure Handling and Operational Rules
 
-## Success Criteria
-
-### Patient Experience Metrics
-
-- **SC-001**: Patients can complete booking payment with deposit (20-30% of total) in under 60 seconds for 95% of transactions
-- **SC-002**: Patients see available installment plan options that fit their booking timeline and cutoff date constraints with 100% accuracy
-- **SC-003**: Patients see prices displayed in their selected currency with conversion rates updated within 6 hours of market changes
-- **SC-004**: 90% of patients who select installment plans successfully complete all scheduled payments before cutoff date
-
-### Provider Efficiency Metrics
-
-- **SC-005**: Deposit payments are captured successfully upon booking confirmation with 99.5% reliability
-- **SC-006**: Provider payout schedules align with Stripe account configuration for their region with zero discrepancies
-- **SC-007**: Providers experience zero payment processing delays due to misconfigured Stripe accounts or currency conversion issues
-
-### Admin Management Metrics
-
-- **SC-008**: Admins can add and activate new Stripe account in under 5 minutes for 90% of configurations
-- **SC-009**: Admins can configure or update currency conversion markup percentages in under 2 minutes for 95% of changes
-- **SC-010**: Admins can set global or provider-specific deposit rates in under 3 minutes for 90% of configurations
-- **SC-011**: Admins can configure split payment rules (installments, cutoff) in under 5 minutes for 95% of configurations
-- **SC-012**: Admins receive rate protection alerts within 15 minutes of currency rate exceeding configured threshold for 100% of threshold breaches
-- **SC-013**: Admins can audit complete payment configuration change history for any time period with 100% accuracy
-
-### System Performance Metrics
-
-- **SC-014**: Payment configuration changes propagate to Payment Processing Service within 5 minutes for 99% of updates
-- **SC-015**: Currency conversion rate sync completes within 30 seconds for 95% of scheduled syncs
-- **SC-016**: System routes payment to correct regional Stripe account based on the country on the patient's profile with 99.9% accuracy
-- **SC-017**: Payment Processing Service applies correct deposit rate (global or provider-specific) with 100% accuracy
-- **SC-018**: Installment schedule calculations account for cutoff date constraints with zero calculation errors
-- **SC-019**: System handles currency conversion API failures gracefully by using cached rates with 100% uptime (no payment blocking)
-
-### Business Impact Metrics
-
-- **SC-020**: Booking conversion rate increases by 15% after enabling split payment installment options (measured over 90-day period)
-- **SC-021**: Revenue protection from currency conversion markup prevents losses on 99% of transactions involving currency conversion
-- **SC-022**: Multi-regional Stripe account configuration enables payment processing in 20+ countries with localized payment methods
-- **SC-023**: Automated currency rate syncing reduces admin manual rate update overhead by 90% (measured in admin hours per month)
-- **SC-024**: Provider-specific deposit rate flexibility increases provider satisfaction scores by 10% (measured via provider surveys)
+- **Failure handling**: If Stripe API unavailable, queue payment transactions for retry with exponential backoff, notify admin of Stripe outage (REQ-029-076)
+- **Failure handling**: If email service unavailable, log notification failures and display in-app notification to admin, retry with queue (REQ-029-128)
+- **Error handling**: If Configuration API unavailable, use last cached configuration and alert admin, retry with exponential backoff (REQ-029-102)
+- **Secret rotation**: Support for Stripe API key rotation without downtime (configure new keys, test, then deactivate old keys) (REQ-029-077)
+- **Encryption**: Stripe secret keys and webhook secrets encrypted at rest using AES-256, decrypted only in memory during API calls
+- **Concurrency**: See system PRD, Platform-Wide Rules: Concurrent admin edits: warn, then last save wins (REQ-SYS-012)
+- **Threat mitigation**: See system PRD, Platform-Wide Rules: Admin API rate limit (REQ-SYS-008)
+- S-02 also owns locale-aware number formatting (decimal separator, symbol position, digit grouping, and RTL currency rendering) as a shared service capability consumed by FR-021. (REQ-021-053)
 
 ---
+- **Integration point**: Payment Configuration queries regional groupings to map Stripe accounts to countries/regions; FR-028 enforces one-country-to-one-grouping, so Stripe account mapping must respect that uniqueness (conflicts resolved via override)
+- **Integration point**: Booking service queries Payment Configuration API for deposit rate, effective commission configuration, and split payment rules; provider-specific commission may be authored in FR-029 Screen 5 or FR-015 Tab 7, but the booking flow resolves a single effective record before storing the booking-time commission snapshot
+- **Integration point**: Payment Configuration uses provider IDs for provider-specific deposit assignment and provider-specific commission scopes; FR-015 provides the single-provider commission edit surface, payout destination details are managed in FR-032, and payout execution is handled in FR-017
 
 ## Dependencies
 
-### Internal Dependencies (Other FRs/Modules)
-
-- **FR-028 / Module A-09**: Regional Configuration & Pricing
-  - **Why needed**: Stripe account assignments must align with regional groupings defined in FR-028
-  - **Integration point**: Payment Configuration queries regional groupings to map Stripe accounts to countries/regions; FR-028 enforces one-country-to-one-grouping, so Stripe account mapping must respect that uniqueness (conflicts resolved via override)
-
-- **FR-006 / Module P-03**: Booking & Scheduling
-  - **Why needed**: Booking flow uses configured deposit rates and split payment rules to calculate deposit amount and determine feasible installment options at booking confirmation
-  - **Integration point**: Booking service queries Payment Configuration API for deposit rate, effective commission configuration, and split payment rules; provider-specific commission may be authored in FR-029 Screen 5 or FR-015 Tab 7, but the booking flow resolves a single effective record before storing the booking-time commission snapshot
-
-- **FR-004 / Module PR-02**: Quote Submission & Management
-  - **Why needed**: The quote screen shows the commission that would apply if the booking were confirmed now
-  - **Integration point**: FR-004 reads the currently effective commission configuration and shows its model and value labelled "indicative, final at booking confirmation"; FR-004 stores no binding commission and freezes no payment configuration at quote creation or sending
-
-- **FR-005 / Module P-02**: Quote Comparison & Acceptance
-  - **Why needed**: Subquote acceptance is the lock point for the currency conversion rate
-  - **Integration point**: FR-005 stores the effective conversion rate (including markup) in the acceptance snapshot, together with the accepted price after promotion and the quote currency that form the booking total
-
-- **FR-015 / Module A-02**: Provider Management & Onboarding
-  - **Why needed**: FR-015 exposes the single-provider commission edit surface used by admins inside the provider profile
-  - **Integration point**: FR-015 Commission & Financials reads and writes the same provider-specific commission records surfaced in Screen 5; there is no per-clinic payout frequency (one settlement-period setting for manually paid clinics is owned here, Screen 7)
-
-- **FR-017 / Module A-04**: Provider Payouts
-  - **Why needed**: FR-029 owns the one settlement-period setting (default weekly, Sunday cutoff, Wednesday payout) for all manually paid clinics; FR-029 no longer holds a payout buffer setting
-  - **Integration point**: FR-017 reads the refund ladder and the settlement period (Screen 7); the refund ladder decides how much of a cancelled booking is paid out
-
-- **FR-007 / Module S-02**: Payment Processing
-  - **Why needed**: Payment Processing Service implements all payment configuration rules for transaction routing
-  - **Integration point**: Payment service queries Payment Configuration API for Stripe account, currency pair effective rates, deposit rates, effective commission settings, and split payment rules; provider-specific commission changes made in FR-015 and FR-029 are consumed through the same resolved configuration response
-
-- **FR-007B / Module S-02**: Split Payment / Installment Plans
-  - **Why needed**: Installment calculation logic uses configured installment options, cutoff days, and schedule rules; the late payment grace period and late fee set here drive what FR-007B does when an installment is missed
-  - **Integration point**: Installment service queries Payment Configuration API for split payment rules, the late payment grace period, the late fee, and the enabled payment methods. FR-029 owns these settings; FR-007B owns the installment charging, the payment-method records and the retry and reminder behavior (reminders, three retries, then an admin flag), and never cancels a booking automatically
-
-- **FR-001 / Module P-01**: Patient Authentication & Profile Management
-  - **Why needed**: The country on the patient's profile (not the patient's current physical location) determines which Stripe account processes payments
-  - **Integration point**: Payment service queries patient profile for country to route payment to correct Stripe account
-
-- **FR-032 / Module PR-06**: Provider Dashboard Settings & Profile Management
-  - **Why needed**: Provider identity and profile context supports provider-scoped deposit overrides and payout alignment
-  - **Integration point**: Payment Configuration uses provider IDs for provider-specific deposit assignment and provider-specific commission scopes; FR-015 provides the single-provider commission edit surface, payout destination details are managed in FR-032, and payout execution is handled in FR-017
-
-- **FR-021 / Module A-09 + S-02**: Multi-Language & Localization
-  - **Why needed**: FR-021 consumes S-02 currency conversion outputs for localized price display. S-02 also owns locale-aware number formatting (decimal separator, symbol position, digit grouping, and RTL currency rendering) as a shared service capability consumed by FR-021.
-  - **Integration point**: S-02 exposes currency conversion rates, markup, and locale-aware formatting rules; FR-021 reads these to render prices in user locale/currency context without duplicating conversion or formatting logic.
-
-### External Dependencies (APIs, Services)
-
-- **External Service 1**: Stripe Payment API
-  - **Purpose**: Processes all payment transactions using configured Stripe accounts
-  - **Integration**: RESTful API calls for payment intent creation, charge capture, payout management
-  - **Failure handling**: If Stripe API unavailable, queue payment transactions for retry with exponential backoff, notify admin of Stripe outage
-
-- **External Service 2**: Currency Conversion Rate API (e.g., xe.com, fixer.io)
-  - **Purpose**: Fetches real-time currency conversion rates for markup calculation
-  - **Integration**: HTTP API calls to fetch current rates for configured currency pairs
-  - **Failure handling**: If API unavailable, use last successfully cached rates and alert admin, retry sync with exponential backoff
-
-- **External Service 3**: Admin Email Service
-  - **Purpose**: Sends email notifications to admins for configuration changes and rate protection alerts
-  - **Integration**: SMTP or transactional email API (e.g., SendGrid, AWS SES)
-  - **Failure handling**: If email service unavailable, log notification failures and display in-app notification to admin, retry with queue
-
-### Data Dependencies
-
-- **Entity 1**: Active Provider Profiles with Region Data
-  - **Why needed**: Cannot assign provider-specific deposit rates without provider IDs and regional context
-  - **Source**: Provider Onboarding & Profile Management module (PR-01)
-
-- **Entity 2**: Regional Groupings and Country Mappings
-  - **Why needed**: Cannot map Stripe accounts to regions without defined regional groupings
-  - **Source**: Regional Configuration & Pricing module (FR-028 / A-09), which enforces one country per grouping; Stripe mappings must honor that uniqueness
-
-- **Entity 3**: Active Booking Records with Procedure Dates
-  - **Why needed**: Cannot calculate installment schedules without knowing booking date and procedure date
-  - **Source**: Booking & Scheduling module (FR-006 / P-03)
-
-- **State 1**: Patient Profile Country
-  - **Why needed**: Cannot route payments to correct regional Stripe account without the country on the patient's profile
-  - **Source**: Patient Authentication & Profile Management module (FR-001 / P-01)
-
----
-
-## Assumptions
-
-### User Behavior Assumptions
-
-- **Assumption 1**: Admins have Stripe account credentials available when configuring payment accounts (publishable key, secret key, webhook secret)
-- **Assumption 2**: Admins understand currency conversion markup concept and can determine appropriate markup percentages for their business (typically 3-10%)
-- **Assumption 3**: Admins will monitor rate protection alerts and respond within 24 hours to adjust markup if needed
-- **Assumption 4**: Admins will configure at most one Stripe account as Global Fallback for countries without specific account assignment
-- **Assumption 5**: Admins will test Stripe account connections after initial configuration to verify credentials are correct
-
-### Technology Assumptions
-
-- **Assumption 1**: Platform has secure storage infrastructure for encrypting Stripe API secret keys at rest (AES-256)
-- **Assumption 2**: Admin web app accessed via modern browsers supporting password field masking and secure form submission (Chrome, Safari, Firefox - last 2 versions)
-- **Assumption 3**: Payment Processing Service has reliable internet connectivity to Stripe API and currency conversion APIs
-- **Assumption 4**: System has caching infrastructure to store payment configuration with 5-minute TTL (e.g., Redis, Memcached)
-- **Assumption 5**: Currency conversion API providers (xe.com, fixer.io) have 99%+ uptime and provide rate data in standard JSON format
-
-### Business Process Assumptions
-
-- **Assumption 1**: Admins configure Stripe accounts before launching in new geographic regions (cannot process payments without configured account)
-- **Assumption 2**: Admins review currency conversion rates at least weekly to ensure markup percentages are appropriate
-- **Assumption 3**: Deposit rate percentage (20-30% range) is acceptable to both patients (affordability) and providers (cash flow)
-- **Assumption 4**: 30-day cutoff before procedure date is standard business rule, but admins may adjust for specific business needs (30-90 day range)
-- **Assumption 5**: Provider-specific deposit rates are exception rather than norm (most providers use global default rate)
-
----
-
-## Implementation Notes
-
-### Technical Considerations
-
-- **Architecture**: Payment configuration data must be cached with 5-minute TTL to minimize database queries during high-volume payment processing
-- **Technology**: Stripe API credentials (secret keys) must be encrypted at rest using AES-256 and never logged in plain text
-- **Performance**: Currency conversion rate sync should run as background job on scheduled intervals (not synchronous during payment processing)
-- **Storage**: Payment configuration history requires time-series storage for audit trail (retention follows the system PRD, Platform-Wide Rules: One 10-year retention period)
-- **Concurrency**: See system PRD, Platform-Wide Rules: Concurrent admin edits: warn, then last save wins
-
-### Integration Points
-
-- **Integration 1**: Admin web app sends payment configuration updates to Payment Configuration API via REST
-  - **Data format**: JSON payload with configuration type (Stripe account, rate sources, currency pairs, deposit rates, split payment rules)
-  - **Authentication**: OAuth 2.0 bearer tokens with elevated admin permissions
-  - **Error handling**: Validation errors returned with 400 Bad Request, server errors trigger retry with exponential backoff
-
-- **Integration 2**: Payment Processing Service queries Payment Configuration API for transaction routing and calculation rules
-  - **Data format**: RESTful API calls for Stripe account lookup (by country), currency conversion rates, deposit rates, installment rules
-  - **Authentication**: Internal service authentication using API keys or mutual TLS
-  - **Error handling**: If Configuration API unavailable, use last cached configuration and alert admin, retry with exponential backoff
-
-- **Integration 3**: Per-pair currency conversion rate sync jobs fetch rates from the pair's assigned source (xe.com, fixer.io)
-  - **Data format**: HTTP GET requests returning JSON with currency pair rates
-  - **Authentication**: API key authentication per rate source (credentials stored in Rate Source entity)
-  - **Error handling**: If source API unavailable, keep pair's last cached rate, mark pair status as error, mark source status as down, alert admin. Retry sync with exponential backoff (15 min, 30 min, 1 hour).
-
-- **Integration 4**: Admin email notification service sends alerts for configuration changes and rate protection events
-  - **Data format**: SMTP or transactional email API with HTML email templates
-  - **Authentication**: SMTP credentials or API keys for email service
-  - **Error handling**: If email service unavailable, log notification and display in-app alert to admin
-
-### Scalability Considerations
-
-- **Current scale**: Expected 1,000 payment transactions per day at launch across 10 countries with 3-5 Stripe accounts
-- **Growth projection**: Plan for 10,000 transactions per day within 12 months, expanding to 30+ countries with 10-15 Stripe accounts
-- **Peak load**: Handle 5x normal transaction volume during promotional campaigns or seasonal booking spikes
-- **Configuration data volume**: Payment configuration data is relatively small (< 1MB), but audit log grows over time (estimate 10GB per year)
-- **Scaling strategy**: Horizontal scaling of Payment Configuration API, distributed caching (Redis cluster), read replicas for audit log queries
-
-### Security Considerations
-
-- **Authentication**: Elevated admin permissions required to access payment configuration (role-based access control)
-- **Authorization**: Only admins with "PaymentConfigAdmin" role can modify Stripe accounts, rate sources, currency pairs, deposit rates, split payment rules
-- **Encryption**: Stripe secret keys and webhook secrets encrypted at rest using AES-256, decrypted only in memory during API calls
-- **Audit trail**: All payment configuration changes logged with admin ID, timestamp, IP address, before/after state
-- **Threat mitigation**: See system PRD, Platform-Wide Rules: Admin API rate limit
-- **Compliance**: See system PRD, Platform-Wide Rules: No card numbers stored
-- **API security**: See system PRD, Platform-Wide Rules: Encryption in transit and at rest
-- **Secret rotation**: Support for Stripe API key rotation without downtime (configure new keys, test, then deactivate old keys)
+Related FRs: FR-001, FR-004, FR-005, FR-006, FR-007, FR-007B, FR-015, FR-017, FR-021, FR-028, FR-032.
 
 ---
 
@@ -1157,7 +968,7 @@ As a platform administrator managing provider commission, I need the commission 
 
 1. **Given** a provider is on the 20% global default and a provider-specific 18% scope is scheduled to become effective on Day 7, **When** the patient accepts a subquote on Day 6 and booking confirmation happens on Day 8, **Then** the booking snapshot stores 18% with the provider-specific scope's configuration ID and scope type, and the quote screen had shown 20% labelled "indicative, final at booking confirmation".
 2. **Given** a provider's scope switches from Percentage to Flat Rate after a subquote is accepted but before booking confirmation, **When** booking confirmation happens, **Then** the booking snapshot stores the Flat Rate model, amount, and currency, and the commission is deducted once at the FR-010 completed-procedure milestone.
-3. **Given** an accepted subquote reaches Payment Window Expired and an admin later revives the booking through FR-006, **When** the revived booking is confirmed, **Then** commission, deposit rate, and split payment settings are resolved from the configuration effective at that confirmation, and the currency conversion rate stays the one locked in the original acceptance snapshot, because a revive keeps the original acceptance unchanged. If the patient instead starts a new inquiry, that inquiry's own acceptance locks its own rate.
+3. **Given** an accepted subquote reaches Payment Window Expired and an admin later revives the booking through FR-006, **When** the revived booking is confirmed, **Then** commission, deposit rate, and split payment settings are resolved from the configuration effective at that confirmation, and the currency conversion rate stays the one locked in the original acceptance snapshot, because a revive keeps the original acceptance unchanged. If the patient instead starts a new inquiry, that inquiry's own acceptance locks its own rate. (REQ-029-130)
 4. **Given** an accepted subquote of $3,000 with a $300 promotion in the quote currency and a 20% Percentage commission, **When** booking confirmation happens, **Then** the commission is $540 (20% of the $2,700 booking total), and the deposit and installments use the same $2,700 base.
 5. **Given** a provider is covered by a shared provider-specific scope, **When** an admin edits that provider's commission in FR-015 Tab 7 before a pending booking is confirmed, **Then** the provider moves to its own single-provider scope and the booking snapshot records that new scope's configuration ID.
 
@@ -1167,19 +978,19 @@ As a platform administrator managing provider commission, I need the commission 
 
 - What happens when admin attempts to delete Stripe account that processed transactions in last 90 days? **System prevents deletion and displays error: "Cannot delete Stripe account with recent transactions. Archive instead."** System archives account, marking as inactive but retaining configuration for audit purposes.
 
-- How does system handle a rate source being completely unavailable for 24+ hours? **For each auto-fetch pair using the affected source: system continues using the pair's last successfully cached rate, marks the pair's status as red/error on the pair list (Screen 2A), and marks the source's status as red in the Sources section.** System sends daily email digest to admin summarizing the source outage and listing all affected pairs. When the source recovers, the next scheduled sync for each affected pair fetches the latest rate and restores green status. Admin can also switch affected pairs to a different source or manual mode at any time during the outage.
+- How does system handle a rate source being completely unavailable for 24+ hours? **For each auto-fetch pair using the affected source: system continues using the pair's last successfully cached rate, marks the pair's status as red/error on the pair list (Screen 2A), and marks the source's status as red in the Sources section.** System sends daily email digest to admin summarizing the source outage and listing all affected pairs. When the source recovers, the next scheduled sync for each affected pair fetches the latest rate and restores green status. Admin can also switch affected pairs to a different source or manual mode at any time during the outage. (REQ-029-098)
 
-- What occurs if admin configures cutoff date (e.g., 60 days) that prevents any installment options from being offered for most bookings? **System displays warning during configuration: "Current cutoff date [60 days] may prevent installment options for most bookings. Only bookings made 75+ days in advance will see installments."** Admin can choose to proceed with restrictive cutoff or adjust to more reasonable value (e.g., 30 days). System logs warning to admin activity log.
+- What occurs if admin configures cutoff date (e.g., 60 days) that prevents any installment options from being offered for most bookings? **System displays warning during configuration: "Current cutoff date [60 days] may prevent installment options for most bookings. Only bookings made 75+ days in advance will see installments."** Admin can choose to proceed with restrictive cutoff or adjust to more reasonable value (e.g., 30 days). System logs warning to admin activity log. (REQ-029-129)
 
-- How to manage patient attempting payment from country with no assigned Stripe account and no Global Fallback configured? **System checks the country on the patient's profile, finds no Stripe account assigned, checks for Global Fallback, finds none. System displays error to patient: "Payment processing not available for your location. Please contact support."** System sends urgent alert to admin: "Payment blocked for [Country]: No Stripe account configured. Expand regional coverage."** Payment attempt logged to admin dashboard for follow-up.
+- How to manage patient attempting payment from country with no assigned Stripe account and no Global Fallback configured? **System checks the country on the patient's profile, finds no Stripe account assigned, checks for Global Fallback, finds none. System displays error to patient: "Payment processing not available for your location. Please contact support."** System sends urgent alert to admin: "Payment blocked for [Country]: No Stripe account configured. Expand regional coverage."** Payment attempt logged to admin dashboard for follow-up. (REQ-029-074)
 
-- What happens when patient books procedure 35 days before procedure date with 30-day cutoff enabled, and selects 3 installments? **System calculates time between booking date (35 days before) and cutoff date (30 days before) = 5 days available for installments. System determines 3 installments not feasible (would require payments every 1.67 days). System displays error: "Insufficient time for 3 installments. Please select 2 installments or pay in full."** Patient must select fewer installments or pay deposit + remaining balance immediately.
+- What happens when patient books procedure 35 days before procedure date with 30-day cutoff enabled, and selects 3 installments? **System calculates time between booking date (35 days before) and cutoff date (30 days before) = 5 days available for installments. System determines 3 installments not feasible (would require payments every 1.67 days). System displays error: "Insufficient time for 3 installments. Please select 2 installments or pay in full."** Patient must select fewer installments or pay deposit + remaining balance immediately. (REQ-029-106)
 
-- How does system handle rapid currency fluctuation exceeding rate protection threshold multiple times in single day for one pair (e.g., USD/EUR changes 3% at 8am, another 3% at 2pm, another 3% at 8pm)? **System sends first alert at 8am when the pair's initial 3% threshold is crossed and marks the pair's status as yellow/warning on the pair list. System applies rate-limiting to alerts (maximum one alert per currency pair per 6 hours) to prevent alert fatigue. System accumulates rate changes and sends second alert at 2pm showing cumulative change: "USD/EUR increased 6% in 6 hours."** The pair's yellow/warning status returns to green on the pair's next normal sync (when the rate is back within the protection threshold); there is no acknowledge action. Admin receives summary of all rate changes across all pairs in daily digest email.
+- How does system handle rapid currency fluctuation exceeding rate protection threshold multiple times in single day for one pair (e.g., USD/EUR changes 3% at 8am, another 3% at 2pm, another 3% at 8pm)? **System sends first alert at 8am when the pair's initial 3% threshold is crossed and marks the pair's status as yellow/warning on the pair list. System applies rate-limiting to alerts (maximum one alert per currency pair per 6 hours) to prevent alert fatigue. System accumulates rate changes and sends second alert at 2pm showing cumulative change: "USD/EUR increased 6% in 6 hours."** The pair's yellow/warning status returns to green on the pair's next normal sync (when the rate is back within the protection threshold); there is no acknowledge action. Admin receives summary of all rate changes across all pairs in daily digest email. (REQ-029-097)
 
 - What occurs if admin configures two different Stripe accounts for overlapping countries (e.g., Account A for US/Canada/Mexico, Account B for US/UK)? **System detects country overlap (US) during configuration and displays warning: "US is already assigned to Account A. Override assignment?"** Admin selects: "Override" (US moves to Account B, no longer uses Account A) or "Cancel" (keep current assignment). System logs conflict resolution to audit trail. If admin overrides, system uses most recently configured account for overlapping country (Account B for US in this example).
 
-- How to manage admin accidentally entering incorrect Stripe secret key that initially validates but later fails during actual payment processing? **During configuration, system validates Stripe credentials by making test API call to Stripe. If credentials are syntactically correct but have insufficient permissions or are later revoked by Stripe, first payment attempt will fail. Payment Processing Service logs error: "Stripe authentication failed for account [name]."** System sends urgent alert to admin: "Stripe account [name] failed authentication. Verify API keys are active and have required permissions."** System temporarily routes payments to Global Fallback (if configured) and displays error banner to admin.
+- How to manage admin accidentally entering incorrect Stripe secret key that initially validates but later fails during actual payment processing? **During configuration, system validates Stripe credentials by making test API call to Stripe. If credentials are syntactically correct but have insufficient permissions or are later revoked by Stripe, first payment attempt will fail. Payment Processing Service logs error: "Stripe authentication failed for account [name]."** System sends urgent alert to admin: "Stripe account [name] failed authentication. Verify API keys are active and have required permissions."** System temporarily routes payments to Global Fallback (if configured) and displays error banner to admin. (REQ-029-075)
 
 ---
 
@@ -1191,17 +1002,17 @@ As a platform administrator managing provider commission, I need the commission 
 - **REQ-029-002**: System MUST allow admins to assign Stripe accounts to specific countries or regional groupings (multi-select assignment)
 - **REQ-029-003**: System MUST validate Stripe API credentials by testing connection to Stripe API before activating account
 - **REQ-029-004**: System MUST route payment transactions to appropriate Stripe account based on patient's country location
-- **REQ-029-004b**: System MUST support an optional Stripe account marked as Global Fallback used only when no country/regional grouping mapping exists (at most 1 Global Fallback account)
+- **REQ-029-004b**: System MUST support an optional Stripe account marked as Global Fallback used only when no country/regional grouping mapping exists (at most 1 Global Fallback account) (REQ-029-055)
 - **REQ-029-005**: System MUST support multiple currencies per Stripe account and allow admins to configure supported currencies
 - **REQ-029-006**: System MUST allow admins to manage rate sources (add, edit, delete) where each source bundles a provider type (xe.com, fixer.io) with its API credentials. Source creation requires a successful test connection before saving. Source deletion is blocked if currency pairs reference it; admin must reassign or convert affected pairs first.
-- **REQ-029-006b**: System MUST allow admins to create and manage currency pairs (CRUD), where each pair has USD as the mandatory base currency and a configurable rate mode: auto-fetch (from a configured source) or manual input (admin-entered base rate).
+- **REQ-029-006b**: System MUST allow admins to create and manage currency pairs (CRUD), where each pair has USD as the mandatory base currency and a configurable rate mode: auto-fetch (from a configured source) or manual input (admin-entered base rate). (REQ-029-056)
 - **REQ-029-007**: System MUST allow admins to set a global default markup percentage (0-20% range) and optionally override it per currency pair (0-20% range). If a pair has no per-pair markup, the global default applies.
-- **REQ-029-007b**: System MUST allow admins to set a global default sync frequency (1h, 3h, 6h, 12h, 24h) and optionally override it per auto-fetch currency pair. If an auto-fetch pair has no per-pair sync frequency, the global default applies. Each pair's sync schedule is calculated from the time it was saved (e.g., saved at 12:36 with 6h interval → next sync at 18:36).
+- **REQ-029-007b**: System MUST allow admins to set a global default sync frequency (1h, 3h, 6h, 12h, 24h) and optionally override it per auto-fetch currency pair. If an auto-fetch pair has no per-pair sync frequency, the global default applies. Each pair's sync schedule is calculated from the time it was saved (e.g., saved at 12:36 with 6h interval → next sync at 18:36). (REQ-029-057)
 - **REQ-029-008**: System MUST fetch currency conversion rates automatically for each auto-fetch pair on its configured sync schedule (per-pair or inherited global frequency). Manual-mode pairs are not synced.
 - **REQ-029-009**: System MUST calculate and display the effective rate for each pair as: Base Rate × (1 + Markup %). This effective rate is applied to patient-facing prices.
 - **REQ-029-010**: System MUST allow admins to configure a global rate protection threshold (1-50% range). System monitors each auto-fetch pair independently and marks the pair's status as yellow/warning and sends an alert notification when the pair's rate changes more than the threshold within 24 hours.
 - **REQ-029-011**: System MUST require a successful "Test Connection & Fetch Rate" action before saving any new auto-fetch currency pair. The Save button is disabled until this test succeeds.
-- **REQ-029-011b**: For any currency not configured as a pair, the system MUST fall back to collecting payment in USD (no conversion attempted). The admin dashboard MUST display a note informing admins of this fallback behavior.
+- **REQ-029-011b**: For any currency not configured as a pair, the system MUST fall back to collecting payment in USD (no conversion attempted). The admin dashboard MUST display a note informing admins of this fallback behavior. (REQ-029-058)
 - **REQ-029-012**: System MUST gracefully handle per-pair rate source failures by keeping the last successfully fetched rate, marking the pair's status as red/error on the pair list, and alerting admin. Deleting a rate source MUST be blocked while any pair still references it; the admin must first reassign those pairs to another source or convert them to manual mode (with the last fetched rate pre-filled), and no pair switches to manual mode automatically.
 - **REQ-029-013**: System MUST allow admins to configure deposit rate percentage (20-30% range) globally for all providers
 - **REQ-029-014**: System MUST allow admins to configure provider-specific deposit rates that override global default for selected providers
@@ -1215,7 +1026,7 @@ As a platform administrator managing provider commission, I need the commission 
 - **REQ-029-022**: System MUST generate installment payment schedules using equal-split amounts: booking total ÷ installment count (rounded to each currency's own minor units; last installment absorbs rounding difference)
 - **REQ-029-023**: System MUST allow admins to configure the late payment grace period (0-14 days): the number of days after a missed installment due date during which reminders are sent and before the late fee is charged. A missed installment never cancels the booking automatically
 - **REQ-029-043**: System MUST allow admins to configure both the platform commission global default (percentage only, allowed range 15-25%) and provider-specific commission scopes (Percentage model 0-100% or Flat Rate model with a fixed amount > 0 per completed procedure) in Screen 5; changes apply to new bookings only and existing bookings retain the commission snapshot captured at booking confirmation
-- **REQ-029-043b**: System MUST keep provider-specific commission models and values synchronized between FR-029 Screen 5 and FR-015 Tab 7 because both screens are valid admin management surfaces for the same provider-specific commission data
+- **REQ-029-043b**: System MUST keep provider-specific commission models and values synchronized between FR-029 Screen 5 and FR-015 Tab 7 because both screens are valid admin management surfaces for the same provider-specific commission data (REQ-029-059)
 - **REQ-029-044**: System MUST lock currency conversion rates (including markup) at FR-005 subquote acceptance, store them with their timestamp in the acceptance snapshot, and copy them to the booking and its transactions (no rate fluctuation after subquote acceptance). If the cached rate is older than 24 hours, acceptance still proceeds and the snapshot records the rate and its timestamp
 - **REQ-029-045**: System MUST snapshot the effective commission model and value (and Flat Rate currency), with the source configuration ID and scope type, at booking confirmation and store it per booking/transaction for payout and reconciliation consistency; Flat Rate snapshots are deducted once per completed procedure
 
@@ -1231,9 +1042,9 @@ As a platform administrator managing provider commission, I need the commission 
 - **REQ-029-028**: System MUST encrypt Stripe API secret keys and webhook secrets at rest using AES-256 encryption
 - **REQ-029-029**: System MUST never log Stripe secret keys in plain text to audit logs or error logs (mask all but last 4 characters)
 - **REQ-029-030**: System MUST require elevated admin permissions ("PaymentConfigAdmin" role) to access payment configuration functionality
-- **REQ-029-031**: Moved to the system PRD. See system PRD, Platform-Wide Rules: Encryption in transit and at rest; TLS 1.3 for connections to the Payment Configuration API is recorded once in the [system PRD](../../system-prd.md), which this module follows
-- **REQ-029-032**: Moved to the system PRD. See system PRD, Platform-Wide Rules: No card numbers stored; PCI DSS compliance for payment data handling is recorded once in the [system PRD](../../system-prd.md), which this module follows
-- **REQ-029-046**: Retired. Moved to the system PRD. See system PRD, Platform-Wide Rules: No card numbers stored (includes webhook signature verification), which this module follows
+- **REQ-029-031**: Moved to the system PRD. See system PRD, Platform-Wide Rules: Encryption in transit and at rest; TLS 1.3 for connections to the Payment Configuration API is recorded once in the [system PRD](../../system-prd.md), which this module follows (REQ-SYS-004)
+- **REQ-029-032**: Moved to the system PRD. See system PRD, Platform-Wide Rules: No card numbers stored; PCI DSS compliance for payment data handling is recorded once in the [system PRD](../../system-prd.md), which this module follows (REQ-SYS-005)
+- **REQ-029-046**: Retired. Moved to the system PRD. See system PRD, Platform-Wide Rules: No card numbers stored (includes webhook signature verification), which this module follows (REQ-SYS-005)
 
 ### Integration Requirements
 
@@ -1271,70 +1082,11 @@ As a platform administrator managing provider commission, I need the commission 
 
 ---
 
-## Key Entities
-
-- **Entity 1 - Stripe Account Configuration**:
-  - **Key attributes**: account_id, account_name, publishable_key, secret_key_encrypted, webhook_secret_encrypted, mode (test/live), is_global_fallback (boolean), assigned_countries[], supported_currencies[], default_currency, status (active/inactive), created_date, last_tested_date
-  - **Relationships**: One Stripe account assigned to many countries; one country can map to one Stripe account. If no mapping exists for a patient country, the system uses the Stripe account marked as Global Fallback (if configured).
-
-- **Entity 2a - Currency Conversion Global Settings**:
-  - **Key attributes**: config_id, global_default_markup_percentage, global_default_sync_frequency, rate_protection_threshold, created_by_admin_id, updated_date
-  - **Relationships**: One global settings record; provides defaults inherited by currency pairs that do not specify per-pair overrides
-
-- **Entity 2b - Rate Source**:
-  - **Key attributes**: source_id, source_name, provider_type (xe.com/fixer.io), api_key_encrypted, status (healthy/degraded/down), last_tested_timestamp, created_by_admin_id, created_date
-  - **Relationships**: One source serves many currency pairs (auto-fetch mode); deleting a source requires reassigning or converting all referencing pairs first
-
-- **Entity 2c - Currency Pair Configuration**:
-  - **Key attributes**: pair_id, base_currency (always USD), target_currency, rate_mode (auto/manual), source_id (nullable; required if auto), manual_base_rate (nullable; required if manual), markup_percentage_override (nullable; if null, inherits global default), sync_frequency_override (nullable; if null, inherits global default; ignored if manual), current_base_rate, current_effective_rate, last_updated_timestamp, next_sync_timestamp (nullable; auto-fetch only), status (healthy/warning/error), created_by_admin_id, created_date
-  - **Relationships**: One pair per target currency (unique constraint on target_currency); many acceptance snapshots reference the pair's effective rate captured at FR-005 subquote acceptance, and bookings and transactions copy it from there; one pair references one source (if auto-fetch)
-
-- **Entity 3 - Deposit Rate Configuration**:
-  - **Key attributes**: config_id, scope (global/provider_specific), provider_id (null for global), deposit_percentage, effective_date, created_by_admin_id, created_date
-  - **Relationships**: One global deposit rate; many provider-specific deposit rate overrides (one per provider); many bookings reference deposit rate configuration
-
-- **Entity 4 - Split Payment Configuration**:
-  - **Key attributes**: config_id, feature_enabled (boolean), available_installments[] (2-9), cutoff_days, minimum_booking_amount, late_payment_grace_period_days, effective_date, created_by_admin_id
-  - **Relationships**: One split payment configuration (global); many bookings reference split payment rules; many installment schedules generated based on configuration
-
-- **Entity 5 - Payment Configuration Audit Log**:
-  - **Key attributes**: audit_id, config_type (stripe_account/currency_conversion/deposit_rate/commission_rate/split_payment/rate_source/currency_management), action (create/update/delete/archive), admin_id, timestamp, ip_address, before_state_json, after_state_json, change_summary
-  - **Relationships**: Many audit log entries per payment configuration entity; one admin user creates many audit log entries
-
-- **Entity 6 - Commission Rate Configuration**:
-  - **Key attributes**: config_id, scope (global/provider_specific), provider_ids[] (nullable for global), commission_model (percentage/flat_rate; global is always percentage), commission_percentage (nullable when flat_rate), flat_rate_amount (nullable when percentage), flat_rate_currency (nullable when percentage), effective_date, status (active/archived), created_by_admin_id, created_date, updated_date
-  - **Relationships**: One active global commission default configuration; many provider-specific commission scope records; FR-015 Tab 7 reads/writes the same provider-specific commission data for single-provider management; bookings and payouts reference the commission model/value snapshot captured at booking confirmation, which records this record's config_id and scope
-
-- **Entity 7 - Currency Exchange Rate**:
-  - **Key attributes**: date, base_currency, target_currency, exchange_rate, fetched_at
-  - **Relationships**: Rates are recorded by date and currency pair. FR-029 owns this entity (moved in from FR-014); FR-014 reads the daily rates and does not define the entity.
-
-- **Entity 8 - Refund Ladder and Fee Settings**:
-  - **Key attributes**: refund ladder bands (days before the procedure date, refund percentage), late fee (type fixed amount or percentage, value), rescheduling fee (type fixed amount or percentage, value), deposit plan balance due days (default 7), unpaid balance cancellation point (no default), Hairline share of patient cancellation fee (no default), patient confirmation window (default 7 days, no minimum or maximum), settlement period (default weekly), settlement cutoff day (default Sunday), settlement payout day (default Wednesday), updated_date, updated_by_admin_id
-  - **Relationships**: One global record (Screen 7); FR-006, FR-007, FR-007B, FR-015 and FR-017 read it for cancellations, late installments, rescheduling, balance due dates, the confirmation window and the settlement period of manually paid clinics
-
----
-
 ## Appendix: Change Log
 
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
-| 2025-11-13 | 1.0 | Initial PRD creation for FR-029: Payment System Configuration | Claude (AI Assistant) |
-| 2025-12-16 | 1.1 | Major revisions: Added commission rate configuration (global + provider-specific) and aligned split payment rules with cross-FR constraints (monthly cadence, 30+ day cutoff). Added Constitution compliance requirements (webhook signature verification, FX and commission snapshot at booking, audit retention 10 years). Fixed module code placeholders and corrected currency conversion example. | AI |
-| 2025-12-16 | 1.2 | Status updated to Verified & Approved; All approvals completed | Product Team |
-| 2026-01-14 | 1.3 | Added Currency Management screen (central supported currency list) and aligned admin editability rules | AI |
-| 2026-02-10 | 1.4 | **Major redesign of Currency Conversion Configuration (Screen 2).** Replaced flat form with two-screen model: Screen 2A (pair list + global settings + rate sources) and Screen 2B (add/edit pair). Key changes: (1) Rate sources are now first-class entities bundling provider type with API credentials; (2) Each currency pair independently chooses auto-fetch or manual mode; (3) Markup % and sync frequency support global defaults with per-pair overrides; (4) Sync schedule per pair is calculated from pair save timestamp; (5) USD fallback for unconfigured currencies; (6) Graceful source deletion (pairs switch to manual with last rate pre-filled); (7) Visual status indicators per pair and per source. Updated Main Flow, Alternative Flows (A3/A3b), Boundary Flows (B2/B5), Edge Cases, User Stories 2 & 5, REQ-029-006 through REQ-029-012, Key Entities (2a/2b/2c), Admin Editability Rules, Integration Points, and Security references. | AI |
-| 2026-04-02 | 1.5 | Ownership split alignment with FR-015 and FR-017: FR-029 now defines the global platform commission default and booking-time snapshot behavior only; provider-specific commission overrides remain in FR-015, while FR-017 consumes the effective commission snapshot for payout and reconciliation flows | Codex |
-| 2026-04-02 | 1.6 | Currency default alignment: documented Screen 6 as the source of truth for FR-017 Screen 1 reporting-currency initialization and recorded USD as the MVP seed value for the system default currency | Codex |
-| 2026-04-02 | 1.7 | Restored the implemented Commission Rate design: FR-029 Screen 5 now manages both the global commission default and provider-specific commission scopes, FR-015 remains the synchronized single-provider commission edit surface, and downstream booking/payout dependencies were updated to consume the shared effective commission configuration model | Codex |
-| 2026-10-14 | 1.8 | Provider-specific commission alignment with FR-015 (CR-FR029-20261014-01): Screen 5 provider scopes now support Commission Model Percentage (0-100%, 0.1% precision) or Flat Rate (fixed amount > 0 in an enabled currency, deducted once per FR-010 completed procedure, not per package/Subquote/installment); global default remains percentage-only at 15-25%. Updated Main Flow, Module Scope, Screen 5 fields/rules/preview, Admin Editability Rules, Commission Rule, REQ-029-043/043b/045, new REQ-029-047, and Entity 6 so the booking-confirmation snapshot captures model and value. Status set to revised pending consolidated verification; implementation reconciliation required. | Vân Tay Media |
-| 2026-10-15 | 1.9 | FR-015 v1.12 alignment (CR-FR029-20261015-01): a provider belongs to at most one active provider-specific scope (Selected Providers validation); an FR-015 Tab 7 edit to a provider in a shared scope splits it into a single-provider scope without changing the others; at most one pending future-dated configuration per provider, replaced by a newer one and applied automatically on its Effective Date. Added Screen 5 business rules and REQ-029-048. Implementation reconciliation required. | Claude |
-| 2026-10-15 | 1.10 | FR-015 v1.16 alignment (CR-FR029-20261015-02): provider-specific scopes accept Active and Suspended providers (step 10, Selected Providers validation); Deactivated providers cannot be selected and their scopes are read-only, matching FR-015 Tab 7 edit eligibility. Implementation reconciliation required. | Claude |
-| 2026-10-16 | 1.11 | MTG-002 quote model alignment (CR-FR029-20261016-01): Rule 1 now names each lock point (exchange rate at FR-005 subquote acceptance; commission, deposit rate and split payment settings at FR-006 booking confirmation; nothing at quote creation) (FR-029-1, M5); added Booking Total Rule defining the base as the accepted subquote price after promotion, in the quote currency, from the acceptance snapshot (FR-029-2, D12); added Indicative Commission Rule and FR-004/FR-005 dependencies so the quote screen shows an indicative model and value only (S2-4, D13); Currency Rule 2, REQ-029-044 and Entity 2c use subquote acceptance vocabulary (FR-029-5); commission snapshot records source configuration ID and scope type (FR-029-6); Commission Rule states accepted-but-unpaid subquotes are not yet fixed (FR-029-7); added User Story 6 and REQ-029-049 to REQ-029-051 (FR-029-4). Implementation reconciliation required. | Claude |
-| 2026-10-16 | 1.12 | Product Owner follow-up decisions (CR-FR029-20261016-01): disabling a currency is blocked while any non-terminal sent quote, unpaid accepted booking, or open booking or instalment plan uses it, with the blocking-record count shown (Q7); a Default Currency change creates a new FR-026 Quote Configuration version (Q14) and open drafts keep typed numbers, switch currency, and need a must-acknowledge banner before send, FR-004 owning the screen (Q4); commission is on the price after promotion for every discount type, including Hairline-funded discounts (Q5). Booking total as the single base for deposit, instalments and commission confirmed already compliant (Q25). Updated Screen 6 (Enabled validation and business rules), Booking Total Rule, and new REQ-029-052 to REQ-029-054. | Product Owner / Documentation |
-| 2026-10-18 | 1.13 | Consolidated verification corrections (CR-FR029-20261016-01): User Story 6 scenario 3 now describes an admin revive of a Payment Window Expired booking, which resolves commission, deposit rate and split payment settings at the later confirmation and keeps the exchange rate from the original acceptance snapshot; a new inquiry gets its own acceptance rate. There is no second acceptance on the same inquiry (D1, D2). | Product Owner / Documentation |
-| 2026-10-18 | 1.14 | Final audit corrections (CR-FR029-20261016-01): Rule 1 states that the FR-019 conversion of a fixed-amount promotion into the quote currency at quote send uses the rate in effect at send and does not move the payment rate lock from acceptance (final audit money finding F11); Product Owner approval row added. Rule 1(b) wording on deposit and instalment settings is unchanged; their storage belongs to the schema. | Product Owner / Documentation |
-| 2026-11-20 | 1.15 | Requirements graph programme baseline: owner rulings applied. Main changes: deleting a rate source is blocked until its pairs are reassigned or converted to manual (no automatic switch); a pair's yellow badge returns to green on the next normal sync with no acknowledge action; the country on the patient's profile decides the Stripe account; the minimum booking amount for installments is compared in USD at the locked rate (new REQ-029-140); deposit, installment and commission amounts are rounded to each currency's minor units; installments are never cancelled automatically (reminders, retries, then an admin flag) and the late payment grace period now sets when a late fee is charged; one global split payment configuration (tiered installment flow A4 and its Rule removed); new admin settings for supported payment methods (REQ-029-141), the refund ladder (REQ-029-142, default 90 / 50 / 0) and the late fee and rescheduling fee (REQ-029-143, REQ-029-144) on new Screen 7; payout buffer window setting removed (replaced by the one settlement-period setting with its cutoff day and payout day); REQ-029-044 gains the timestamp and cached-rate-older-than-24-hours rule; REQ-029-015, REQ-029-051, REQ-029-053 and REQ-029-054 carry the merged wording; currency disable warning narrowed to configuration items beside the block for records; Stripe account override replaces (never supplements); concurrent edits follow the platform-wide warn-then-last-save-wins Rule; TLS 1.3 and PCI DSS point to the system PRD; Currency Exchange Rate entity moved in from FR-014; audit types rate_source and currency_management added; cross-document reconciliation (retention, system rule citations, payout wording, settlement-period and fund-release settings). | Product Owner / Documentation |
+| 2026-11-22 | 1.15 | Requirements graph programme baseline: PRD compressed to the checklist structure (dropped classes removed, field rows tagged with graph field ids, rule citations added). No rule changes. Earlier history (v1.0 to v1.14) and the four change requests (CR-FR029-20261014-01, CR-FR029-20261015-01, CR-FR029-20261015-02, CR-FR029-20261016-01; their files stay beside this PRD) are in `archived/prd-baseline-2026-11-08/fr029-payment-system-config/` and in git history. | Product Owner / Documentation |
 
 ---
 
@@ -1352,4 +1104,4 @@ As a platform administrator managing provider commission, I need the commission 
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-029 from system-prd.md + Hairline-AdminPlatformPart2.txt transcription
-**Last Updated**: 2026-11-20
+**Last Updated**: 2026-11-22
