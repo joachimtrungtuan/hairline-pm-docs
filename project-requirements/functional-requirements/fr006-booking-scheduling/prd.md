@@ -5,7 +5,6 @@
 **Created**: 2025-11-04
 **Status**: 🟡 Revised — Pending Consolidated Verification
 **Source**: FR-006 from `system-prd.md`; SRC-MTG-002, CR-FR006-20260915-01 and CR-FR006-20261016-01; continuation from FR-004 (Quote Submission) and FR-005 v2.3 (Subquote Comparison & Acceptance); coordinated with FR-007/FR-007B (Payments)
-**Change Request**: [CR-FR006-20261027-02 — Admin booking actions require an Active provider](change-request-2026-10-27-admin-actions-require-active-provider.md) (previous: [CR-FR006-20261027-01 — Legacy status value migration](change-request-2026-10-27-legacy-status-value-migration.md), [CR-FR006-20261016-01 — MTG-002 quote model alignment](change-request-2026-10-16-mtg002-quote-model-alignment.md))
 
 ---
 
@@ -35,7 +34,7 @@ Enable patients to convert one accepted subquote into a confirmed procedure book
 
 **Provider Platform (PR-02)**:
 
-- View accepted/confirmed bookings in table list format (no calendar view); receive confirmation notifications; enforce check-in workflow on arrival (handoff to FR-010).
+- View accepted/confirmed bookings in table list format (no calendar view) (REQ-006-022); receive confirmation notifications; enforce check-in workflow on arrival (handoff to FR-010).
 - View deposit state and payment status (no card details); apply cancellation policy outcomes.
 - Monitor booking status transitions and patient arrival readiness.
 
@@ -56,19 +55,19 @@ Enable patients to convert one accepted subquote into a confirmed procedure book
 
 **In Scope**:
 
-- Email/push confirmations for booking creation, payment receipt, reminders, reschedule outcomes, cancellation outcomes.
-- In-app notifications for booking state changes and reminders.
+- Email/push confirmations for booking creation, payment receipt, reminders, reschedule outcomes, cancellation outcomes. (REQ-006-026)
+- In-app notifications for booking state changes and reminders. (REQ-006-026)
 
 **Out of Scope**:
 
-- Direct patient↔provider chat (handled by FR-012 scope); SMS optionality is handled by S-03 settings and **does not exist in MVP (no SMS booking notifications are sent until a future phase explicitly enables SMS in S-03/FR-020/FR-030)**.
+- Direct patient↔provider chat (handled by FR-012 scope); SMS optionality is handled by S-03 settings and **does not exist in MVP (no SMS booking notifications are sent until a future phase explicitly enables SMS in S-03/FR-020/FR-030)**. (REQ-006-027)
 - Travel booking details (handled by FR-008) beyond minimal itinerary placeholders.
 
 ### Entry Points
 
-- Patient-initiated via mobile from the Accepted Subquote detail view.
-- Activation: Becomes available immediately after FR-005 subquote acceptance.
-- Confirmation: Occurs after successful deposit (or first installment) per FR-007/FR-007B, which also unmask patient identity and blocks provider calendar.
+- Patient-initiated via mobile from the Accepted Subquote detail view. (REQ-006-021)
+- Activation: Becomes available immediately after FR-005 subquote acceptance. (REQ-006-021)
+- Confirmation: Occurs after successful deposit (or first installment) per FR-007/FR-007B, which also unmask patient identity and blocks provider calendar. (REQ-006-021)
 
 ---
 
@@ -80,18 +79,18 @@ Enable patients to convert one accepted subquote into a confirmed procedure book
 **Trigger**: Patient accepts one subquote in FR-005; its appointment slot was pre-scheduled on the resolved FR-004 Option/date-price record
 **Outcome**: Booking confirmed; deposit paid; provider calendar blocked; confirmations sent
 
-**Booking Creation**: The booking record is created with status `Accepted` in the same transaction as the FR-005 AcceptanceEvent and the exclusive slot hold. The appointment record (`schedules`) is not created at acceptance; it is created only at the first successful payment (step 7).
+**Booking Creation**: The booking record is created with status `Accepted` in the same transaction as the FR-005 AcceptanceEvent and the exclusive slot hold. The appointment record (`schedules`) is not created at acceptance; it is created only at the first successful payment (step 7). (REQ-006-028)
 
 **Pre-Booking Validation**: Before entering the booking/payment flow, system MUST verify:
 
 - The parent inquiry is NOT in "Cancelled" status (FR-003 Workflow 5). If cancelled, system blocks entry with message: "This inquiry has been cancelled. Booking is no longer available."
-- The accepted subquote and parent quote are still in "Accepted" status, their versions match the FR-005 AcceptanceEvent, and the AcceptanceEvent owns the slot's valid exclusive payment-window hold.
+- The accepted subquote and parent quote are still in "Accepted" status, their versions match the FR-005 AcceptanceEvent, and the AcceptanceEvent owns the slot's valid exclusive payment-window hold. (REQ-006-029)
 
 **Steps**:
 
 1. Patient opens the Accepted Subquote detail view and reviews the immutable accepted selection and inherited parent context; no commercial or appointment field can be reselected.
 2. Patient proceeds directly to payment screen (pay in full or in installments per FR-029 split payment configuration and FR-007B eligibility; the deposit is the first payment step).
-3. System uses the FR-029 calculation for the first payment (REQ-029-016) and presents the cancellation policy.
+3. System uses the FR-029 calculation for the first payment (REQ-029-016) and presents the cancellation policy. (REQ-006-030)
 4. Patient confirms and submits payment.
 5. Payment Service authorizes and captures deposit (or schedules installments).
 6. System sets booking to Confirmed, unmasking patient identity to provider per constitution.
@@ -139,12 +138,12 @@ Enable patients to convert one accepted subquote into a confirmed procedure book
 **B2: Booking Cancellation (Admin Only)**:
 
 - **Trigger**: From acceptance onward, the patient asks support to cancel through the "Contact support" action (the patient has no in-app cancel action after acceptance), or an admin decides a cancellation is needed (for example to settle a dispute). Only an admin performs the cancellation.
-- **Allowed source states**: `Accepted`, `Payment Window Expired`, `Confirmed`, `In Progress`, and `Aftercare`. `Cancelled` and `Completed` are terminal and cannot be cancelled again.
+- **Allowed source states**: `Accepted`, `Payment Window Expired`, `Confirmed`, `In Progress`, and `Aftercare`. `Cancelled` and `Completed` are terminal and cannot be cancelled again. (REQ-006-052)
 - **Steps**:
   1. Admin opens Cancel Booking on Screen 6, which opens Screen 9, selects the request source (patient request through support, or admin decision), and enters a mandatory reason.
   2. Admin confirms the cancellation in a confirmation dialog that states the effects below.
   3. System transitions the booking to `Cancelled` with the admin's reason as the cancellation reason and the inquiry to `Cancelled`. The accepted parent quote stays `accepted` for history. The AcceptanceEvent and accepted snapshot stay unchanged; no supersession record is written.
-  4. System releases any active hold or calendar block and blocks further payment against the accepted selection.
+  4. System releases any active hold or calendar block and blocks further payment against the accepted selection. (REQ-006-051)
   5. System writes an audit entry (admin, timestamp, source state, request source, reason) and sends `booking.cancelled` to the patient and the provider, including the cancellation reason.
   6. A full refund applies only when the provider withdraws or drops out (Alternative Flow B5); every other cancellation follows the refund ladder set in FR-029. The refund step, its event, and the other money mechanics are owned by FR-007, FR-007B, and FR-017.
   7. The patient sees the cancellation fee and the refund in the support reply to the cancellation request; nothing forces the admin to include them.
@@ -159,7 +158,7 @@ Enable patients to convert one accepted subquote into a confirmed procedure book
   2. For each cancelled booking, System immediately releases any active appointment hold, reservation, or confirmed calendar slot and blocks further payment against the accepted selection, even if the original hold had time remaining.
   3. The FR-005 AcceptanceEvent, accepted snapshot, and booking/payment history are kept unchanged. The closure is recorded on the booking as its cancellation cause; no supersession record is written at this point. The supersession record is written once, when the replacement acceptance is created in Alternative Flow B5.
   4. An admin rehomes each affected patient to a replacement provider in the same inquiry through the provider-fault transfer in Alternative Flow B5 (steps 4 to 6). The payment terms are the same as for a provider withdrawal or drop-out in Alternative Flow B5: the patient is refunded everything paid, pays no cancellation fee, and the replacement booking takes a new payment.
-  5. Patient and admin notifications and the admin support handoff follow FR-015 Screen 4; FR-006 does not send a patient-cancellation or payment-retry message for these bookings.
+  5. Patient and admin notifications and the admin support handoff follow FR-015 Screen 4; FR-006 does not send a patient-cancellation or payment-retry message for these bookings. (REQ-006-055)
 - **Outcome**: Bookings before treatment starts are cancelled with a provider-status cause, flagged for admin support, and rehomed by admin through Alternative Flow B5 in the same inquiry; `In Progress` bookings keep their status and wait for the admin decision in Alternative Flow B7; `Aftercare` bookings keep their status and move to aftercare reassignment through Alternative Flow B6.
 - **Boundary**: B4 is the trigger for provider-status cases; the transfer itself follows B5, the `In Progress` decision follows B7, and the aftercare reassignment follows B6. Distinct from admin cancellation (B2/B3), provider-requested Cancel/Close Case (FR-010), and `Payment Window Expired` (B1). Provider reactivation never restores cancelled bookings, holds, or payment windows. A later deactivation does not overwrite an earlier `ProviderSuspended` cause.
 
@@ -174,7 +173,7 @@ Enable patients to convert one accepted subquote into a confirmed procedure book
   5. The admin selects one option and one date-price row of the replacement quote and confirms. System creates a new admin-authored AcceptanceEvent that points to that replacement quote, option, and date-price row like any other acceptance, so price, promotion, commission, and the acceptance snapshot work unchanged. In the same transaction System writes the single supersession record owned by FR-005 that links the closed original AcceptanceEvent to the new one (append-only single insert, cause taken from the original booking), and acquires the slot hold for the replacement appointment. The patient re-enters nothing.
   6. A replacement booking is created from the new acceptance and follows the main flow from that record.
   7. Notifications: when the provider withdraws, FR-004 sends the mandatory `quote.withdrawn` notice and FR-006 does not send it again. The patient and admin are notified of the transfer through `booking.provider_fault_replacement` (FR-020 and FR-030). The replacement acceptance sends the patient the mandatory `booking.scheduled` notice with the replacement payment deadline, and the replacement provider learns of the booking through `quote.accepted` (outcome `selected_subquote_accepted`). The original provider is not notified by these events.
-  8. Travel carries over through FR-008: when the replacement booking's travel context is created, the patient's passport record carries over to it, and the flight and hotel records are copied to it and flagged "travel-date review required" for admin review. The original travel records stay read-only on the closed booking, and the patient re-enters nothing.
+  8. Travel carries over through FR-008: when the replacement booking's travel context is created, the patient's passport record carries over to it, and the flight and hotel records are copied to it and flagged "travel-date review required" for admin review. The original travel records stay read-only on the closed booking, and the patient re-enters nothing. (REQ-006-057)
 - **Replacement quote not accepted**: If the admin does not record a replacement acceptance, the replacement quote expires under the normal FR-004 quote expiry. The inquiry stays flagged `supportRequired` and is not cancelled automatically. The admin may author another replacement quote through FR-004 Screen 8, or cancel the inquiry and booking through Alternative Flow B2 (Screen 9).
 - **Payment terms**: When the provider withdraws or drops out (cause `ProviderFault`), the patient is refunded everything paid and the replacement booking takes a new payment; the patient pays no cancellation fee because the fault is not theirs. The clinic is charged a fixed amount set by the admin, with no default value, deducted from its next payout. The patient-side terms also apply to the provider-status cancellation entered from B4 (Payment & Billing Rules, Provider-Status Cancellation); the clinic charge in this bullet is set for withdrawal or drop-out only and is not extended to B4. The in-treatment fault (B7) follows its own admin-set refund. Exact refund, fund-release, and payment-allocation override mechanics are defined in FR-007, FR-007B, and FR-017.
 - **Outcome**: The patient keeps the same inquiry and moves to a replacement provider without a new patient acceptance. Every admin action in the transfer is audited.
@@ -184,8 +183,8 @@ Enable patients to convert one accepted subquote into a confirmed procedure book
 
 - **Trigger**: While the booking is `Aftercare` (treatment done), the provider withdraws or drops out of aftercare, or the provider's suspension or deactivation takes effect (entered from Alternative Flow B4).
 - **Steps**:
-  1. The booking stays `Aftercare` and the treatment record stays unchanged. No new quote, no new acceptance, and no new payment are created, and the AcceptanceEvent is not superseded.
-  2. When entered from B4, the booking carries the provider-status cause and the `supportRequired` marker; the original provider loses aftercare actions on the case.
+  1. The booking stays `Aftercare` and the treatment record stays unchanged. No new quote, no new acceptance, and no new payment are created, and the AcceptanceEvent is not superseded. (REQ-006-056)
+  2. When entered from B4, the booking carries the provider-status cause and the `supportRequired` marker; the original provider loses aftercare actions on the case. (REQ-006-056)
   3. An admin opens Reassign Aftercare on Screen 6, which links to the FR-011 aftercare reassignment screen, and reassigns the aftercare case to another provider or to the Hairline aftercare team, with a mandatory reason, confirmation, and audit entry, following FR-011.
   4. The admin's reassignment resolves the `supportRequired` marker with an audited resolution.
 - **Outcome**: The patient continues aftercare with the new provider or team on the same booking.
@@ -218,44 +217,44 @@ Enable patients to convert one accepted subquote into a confirmed procedure book
 
 **Data Fields** (Continuation from FR-005):
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Parent Quote Reference | text | Yes | Accepted parent quote identifier and version | Read-only; from AcceptanceEvent |
-| Accepted Subquote Reference | text | Yes | Accepted subquote identifier and version | Read-only; from AcceptanceEvent; version MUST equal the accepted parent quote version |
-| Accepted Selection Summary | group | Yes | Package, services, date range, appointment, price, promotion, and treatment plan plus inherited treatment context | Read-only; from acceptance snapshot |
-| Pre-Scheduled Appointment | datetime | Yes | Appointment selected by the accepted subquote | Read-only; the booking's current appointment (the accepted appointment unless an admin changed it on Screen 8) |
-| Provider Name | text | Yes | Provider/clinic name | Read-only; inherited parent context |
-| Treatment Type | text | Yes | Accepted treatment and technique context | Read-only; inherited parent snapshot |
-| Estimated Graft Count | number | Yes | Accepted graft estimate | Read-only; inherited parent snapshot |
-| Clinician Assigned | text | Yes | Clinician attached to the accepted parent quote | Read-only; inherited parent snapshot |
-| Provider Notes | text | No | Provider notes attached to the accepted parent quote | Read-only; inherited parent snapshot |
-| Visual Plan | link/viewer | No | Accepted visual treatment plan | Read-only; inherited parent snapshot |
-| Provider Requirements | group | No | Provider requirements attached to the accepted parent quote | Read-only; inherited parent snapshot |
-| Quote Attachments | links | No | Documents and media attached to the accepted parent quote | Read-only; inherited parent snapshot |
-| Parent Quote Expiry | datetime | Yes | Expiry captured when the subquote was accepted | Read-only; inherited parent snapshot |
-| Acceptance Audit Context | group | Yes | AcceptanceEvent reference, actor, timestamp, and source aggregate version | Read-only; from AcceptanceEvent and acceptance snapshot |
-| Total Amount | number | Yes | Booking total: the accepted price after promotion | Read-only; from acceptance snapshot |
-| Deposit Amount | number | Yes | Deposit from the FR-029 calculation | Read-only; within the bounds set in FR-029 |
-| Deposit Percentage | text | Yes | Display deposit percentage used | Read-only; for transparency |
-| Remaining Balance | number | Yes | Total - Deposit | Calculated automatically |
-| Payment Option | select | Yes | Full payment or Installments (2–9) | Feasible installment options based on FR-029 split payment settings and FR-007B schedule rules (completion ≥30 days before procedure) |
-| Installment Plan | select | Conditional | Number of installments if selected | Only shown if installment option selected |
-| Currency | text | Yes | Payment currency and locked exchange-rate context | Read-only; from acceptance snapshot |
-| Cancellation Policy | text | Yes | Policy summary with refund schedule | Read-only; admin-configured |
-| Cancellation Policy Ack | checkbox | Yes | User acknowledges policy | Must be checked before payment |
-| Terms & Conditions Ack | checkbox | Yes | User acknowledges T&C | Must be checked before payment |
-| Contact Support | button | Yes | Opens a support request to cancel or change the booking | Always shown; there is no in-app cancel action after acceptance |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Parent Quote Reference | text | Yes | Accepted parent quote identifier and version | Read-only; from AcceptanceEvent | ENT-booking.accepted_parent_quote_id, ENT-booking.accepted_parent_quote_version |
+| Accepted Subquote Reference | text | Yes | Accepted subquote identifier and version | Read-only; from AcceptanceEvent; version MUST equal the accepted parent quote version | ENT-booking.accepted_subquote_id, ENT-booking.accepted_subquote_version |
+| Accepted Selection Summary | group | Yes | Package, services, date range, appointment, price, promotion, and treatment plan plus inherited treatment context | Read-only; from acceptance snapshot | ENT-booking.acceptance_snapshot |
+| Pre-Scheduled Appointment | datetime | Yes | Appointment selected by the accepted subquote | Read-only; the booking's current appointment (the accepted appointment unless an admin changed it on Screen 8) | ENT-booking.hold_appointment_at, ENT-booking.hold_appointment_timezone |
+| Provider Name | text | Yes | Provider/clinic name | Read-only; inherited parent context | ENT-provider.name |
+| Treatment Type | text | Yes | Accepted treatment and technique context | Read-only; inherited parent snapshot | ENT-quote.treatment_id |
+| Estimated Graft Count | number | Yes | Accepted graft estimate | Read-only; inherited parent snapshot | ENT-quote.estimated_grafts |
+| Clinician Assigned | text | Yes | Clinician attached to the accepted parent quote | Read-only; inherited parent snapshot | ENT-quote.clinician_ids |
+| Provider Notes | text | No | Provider notes attached to the accepted parent quote | Read-only; inherited parent snapshot | ENT-quote.common_notes |
+| Visual Plan | link/viewer | No | Accepted visual treatment plan | Read-only; inherited parent snapshot | ENT-quote.graft_visual_plan |
+| Provider Requirements | group | No | Provider requirements attached to the accepted parent quote | Read-only; inherited parent snapshot | ENT-quote.common_requirements |
+| Quote Attachments | links | No | Documents and media attached to the accepted parent quote | Read-only; inherited parent snapshot | ENT-quote.attachment_ids |
+| Parent Quote Expiry | datetime | Yes | Expiry captured when the subquote was accepted | Read-only; inherited parent snapshot | ENT-quote.expires_at |
+| Acceptance Audit Context | group | Yes | AcceptanceEvent reference, actor, timestamp, and source aggregate version | Read-only; from AcceptanceEvent and acceptance snapshot | ENT-acceptance-event.id, ENT-acceptance-event.accepted_at, ENT-acceptance-event.actor_id |
+| Total Amount | number | Yes | Booking total: the accepted price after promotion | Read-only; from acceptance snapshot | ENT-subquote.price_after_promotion |
+| Deposit Amount | number | Yes | Deposit from the FR-029 calculation | Read-only; within the bounds set in FR-029 | ENT-booking.deposit_amount |
+| Deposit Percentage | text | Yes | Display deposit percentage used | Read-only; for transparency | ENT-booking.deposit_percentage |
+| Remaining Balance | number | Yes | Total - Deposit | Calculated automatically (REQ-006-070) | ENT-booking.remaining_balance |
+| Payment Option | select | Yes | Full payment or Installments (2–9) | Feasible installment options based on FR-029 split payment settings and FR-007B schedule rules (completion ≥30 days before procedure) | ENT-booking.payment_option |
+| Installment Plan | select | Conditional | Number of installments if selected | Only shown if installment option selected (REQ-006-075) | ENT-booking.installment_count |
+| Currency | text | Yes | Payment currency and locked exchange-rate context | Read-only; from acceptance snapshot | ENT-quote.currency_snapshot, ENT-quote.locked_exchange_rate_snapshot |
+| Cancellation Policy | text | Yes | Policy summary with refund schedule | Read-only; admin-configured | no graph field |
+| Cancellation Policy Ack | checkbox | Yes | User acknowledges policy | Must be checked before payment | ENT-booking.cancellation_policy_acknowledged_at |
+| Terms & Conditions Ack | checkbox | Yes | User acknowledges T&C | Must be checked before payment | ENT-booking.terms_acknowledged_at |
+| Contact Support | button | Yes | Opens a support request to cancel or change the booking | Always shown; there is no in-app cancel action after acceptance | no graph field (control) |
 
 **Blocked State (Inquiry Cancelled)**:
 
 If pre-booking validation fails (parent inquiry cancelled, by the patient before acceptance per FR-003 Workflow 5 or by an admin after acceptance), this screen displays a read-only blocked state instead of the payment form:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Blocked Banner | banner | Yes | "This inquiry has been cancelled. Booking is no longer available." | Full-width, prominent styling |
-| Accepted Selection Summary | group | Yes | Accepted subquote and inherited parent context | Read-only; greyed out |
-| Cancellation Timestamp | datetime | Yes | When the inquiry was cancelled | Read-only; from inquiry |
-| Back to Dashboard | button | Yes | Returns patient to Inquiry Dashboard (FR-003 Screen 8) | Always enabled |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Blocked Banner | banner | Yes | "This inquiry has been cancelled. Booking is no longer available." | Full-width, prominent styling | no graph field |
+| Accepted Selection Summary | group | Yes | Accepted subquote and inherited parent context | Read-only; greyed out | ENT-booking.acceptance_snapshot |
+| Cancellation Timestamp | datetime | Yes | When the inquiry was cancelled | Read-only; from inquiry | ENT-inquiry.cancelled_at |
+| Back to Dashboard | button | Yes | Returns patient to Inquiry Dashboard (FR-003 Screen 8) | Always enabled | no graph field (control) |
 
 All payment fields and actions are hidden. Patient can only view the blocked state and navigate back.
 
@@ -264,13 +263,13 @@ All payment fields and actions are hidden. Patient can only view the blocked sta
 - All accepted subquote and inherited parent details from the FR-005 acceptance snapshot are displayed read-only.
 - Appointment is already selected by the accepted subquote and its slot is held for payment; no selection is available here. The booking is confirmed only after successful payment.
 - If parent inquiry is in "Cancelled" status, screen enters blocked state (see above) — payment form is hidden, blocked banner is displayed.
-- If the booking is `Payment Window Expired` or `Cancelled` for any other cause (provider withdrawal or fault, provider suspension or deactivation), the screen shows the same read-only blocked layout with a banner that names the cause; all payment fields and actions are hidden.
-- Deposit amount comes from the FR-029 calculation (REQ-029-016); FR-006 does not restate the percentage or the formula.
-- Disable Pay button until all required acknowledgments (cancellation policy, T&C) are checked.
+- If the booking is `Payment Window Expired` or `Cancelled` for any other cause (provider withdrawal or fault, provider suspension or deactivation), the screen shows the same read-only blocked layout with a banner that names the cause; all payment fields and actions are hidden. (REQ-006-037)
+- Deposit amount comes from the FR-029 calculation (REQ-029-016); FR-006 does not restate the percentage or the formula. (REQ-006-030)
+- Disable Pay button until all required acknowledgments (cancellation policy, T&C) are checked. (REQ-006-038)
 - The payment breakdown shown before payment (total amount, deposit amount, remaining balance, currency) is owned by FR-007 (REQ-007-033); FR-006 cites it and does not restate it.
 - Display time zone relative labels and local time conversions for appointment slot.
 - If installment plan selected, show installment schedule and completion date (must be ≥30 days before procedure).
-- Only show installment options returned as feasible per FR-029 configuration + FR-007B schedule rules; if none are feasible, allow Pay-in-Full only with a clear explanation.
+- Only show installment options returned as feasible per FR-029 configuration + FR-007B schedule rules; if none are feasible, allow Pay-in-Full only with a clear explanation. (REQ-006-033)
 
 **Notes**:
 
@@ -286,40 +285,40 @@ All payment fields and actions are hidden. Patient can only view the blocked sta
 
 **Data Fields** (Continuation from Screen 1):
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Booking Reference | text | Yes | Unique booking reference number | Format per HPID/booking scheme |
-| Booking Status | badge | Yes | Confirmed | Must be "Confirmed" |
-| Parent Quote Reference | text | Yes | Accepted parent quote identifier/version | Read-only; from AcceptanceEvent |
-| Accepted Subquote Reference | text | Yes | Accepted subquote identifier/version | Read-only; from AcceptanceEvent |
-| Provider Name | text | Yes | Provider/clinic name | Read-only; inherited parent context |
-| Provider Contact | group | Yes | Clinic address, phone, email | Read-only; unmasked after payment |
-| Procedure Date | datetime | Yes | Confirmed appointment slot | Read-only; the booking's current appointment (the accepted appointment unless an admin changed it on Screen 8) |
-| Procedure Time | time | Yes | Appointment start time | Read-only; the booking's current appointment (the accepted appointment unless an admin changed it on Screen 8) |
-| Treatment Type | text | Yes | Inherited treatment name (FUE, FUT, etc.) | Read-only; from parent snapshot |
-| Total Amount | number | Yes | Total booking amount | Read-only; from accepted subquote snapshot |
-| Currency | text | Yes | Currency of the accepted price | Read-only; from acceptance snapshot |
-| Deposit Paid | number | Yes | Deposit amount paid | Read-only; from payment |
-| Payment Status | badge | Yes | The single "Payment status" owned by FR-007: Unpaid, Deposit only, Installments active, Full paid, Refunded, At Risk; Overdue is a calculated flag, not a value | Must reflect latest payment state; read from FR-007 |
-| Remaining Balance | number | Yes | Amount remaining to pay | Calculated automatically |
-| Next Payment Due | datetime | Conditional | Next installment due date | Only shown if installments active |
-| Payment Method | text | Yes | Payment method used | Read-only; from payment |
-| Cancellation Policy | link | Yes | Link to full cancellation policy | Read-only |
-| Contact Support | button | Yes | Opens a support request for cancellation or other booking changes | Always shown; there is no in-app cancel action after acceptance |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Booking Reference | text | Yes | Unique booking reference number | Format per HPID/booking scheme | ENT-booking.booking_reference |
+| Booking Status | badge | Yes | Confirmed | Must be "Confirmed" | ENT-booking.status |
+| Parent Quote Reference | text | Yes | Accepted parent quote identifier/version | Read-only; from AcceptanceEvent | ENT-booking.accepted_parent_quote_id, ENT-booking.accepted_parent_quote_version |
+| Accepted Subquote Reference | text | Yes | Accepted subquote identifier/version | Read-only; from AcceptanceEvent | ENT-booking.accepted_subquote_id, ENT-booking.accepted_subquote_version |
+| Provider Name | text | Yes | Provider/clinic name | Read-only; inherited parent context | ENT-provider.name |
+| Provider Contact | group | Yes | Clinic address, phone, email | Read-only; unmasked after payment | ENT-provider.address, ENT-provider.phone, ENT-provider.email |
+| Procedure Date | datetime | Yes | Confirmed appointment slot | Read-only; the booking's current appointment (the accepted appointment unless an admin changed it on Screen 8) | ENT-booking.hold_appointment_at |
+| Procedure Time | time | Yes | Appointment start time | Read-only; the booking's current appointment (the accepted appointment unless an admin changed it on Screen 8) | ENT-booking.hold_appointment_at |
+| Treatment Type | text | Yes | Inherited treatment name (FUE, FUT, etc.) | Read-only; from parent snapshot | ENT-quote.treatment_id |
+| Total Amount | number | Yes | Total booking amount | Read-only; from accepted subquote snapshot | ENT-subquote.price_after_promotion |
+| Currency | text | Yes | Currency of the accepted price | Read-only; from acceptance snapshot | ENT-quote.currency_snapshot |
+| Deposit Paid | number | Yes | Deposit amount paid | Read-only; from payment | ENT-booking.deposit_amount |
+| Payment Status | badge | Yes | The single "Payment status" owned by FR-007: Unpaid, Deposit only, Installments active, Full paid, Refunded, At Risk; Overdue is a calculated flag, not a value | Must reflect latest payment state; read from FR-007 | ENT-booking.payment_status |
+| Remaining Balance | number | Yes | Amount remaining to pay | Calculated automatically | ENT-booking.remaining_balance |
+| Next Payment Due | datetime | Conditional | Next installment due date | Only shown if installments active | ENT-booking.next_payment_due_at |
+| Payment Method | text | Yes | Payment method used | Read-only; from payment | ENT-booking.payment_method |
+| Cancellation Policy | link | Yes | Link to full cancellation policy | Read-only | no graph field |
+| Contact Support | button | Yes | Opens a support request for cancellation or other booking changes | Always shown; there is no in-app cancel action after acceptance | no graph field (control) |
 
 **Business Rules**:
 
 - Trigger notifications to patient/provider upon display.
 - Display all booking details clearly with appointment slot prominently shown.
 - Show payment status and next steps (if installments, show schedule).
-- Provide "Add to Calendar" functionality (ICS file download).
-- Link to travel booking (FR-008) when available.
+- Provide "Add to Calendar" functionality (ICS file download). (REQ-006-041)
+- Link to travel booking (FR-008) when available. (REQ-006-042)
 
 **Notes**:
 
 - This screen appears immediately after successful payment.
 - All data continues from the accepted subquote snapshot and the payment record.
-- Include provider contact information (now unmasked after payment confirmation).
+- Include provider contact information (now unmasked after payment confirmation). (REQ-006-040)
 
 ---
 
@@ -333,38 +332,38 @@ All payment fields and actions are hidden. Patient can only view the blocked sta
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Booking Reference | text | Yes | Unique booking reference | Sortable, filterable |
-| Patient Name | text | Yes | Anonymized (e.g., "Mark P. - PAT-00123") or full name if confirmed | Unmask only after payment |
-| Patient Code | text | Yes | Patient identifier | Read-only |
-| Inquiry Reference | text | Yes | Original inquiry HPID | Link to inquiry details |
-| Accepted Subquote Reference | text | Yes | Accepted subquote identifier | Link to accepted selection details |
-| Parent Quote Reference | text | Yes | Source parent quote identifier | Link to parent quote audit details |
-| Booking Status | badge | Yes | Accepted / Payment Window Expired / Confirmed / In Progress / Aftercare / Completed / Cancelled | Filterable by status |
-| Appointment Date | datetime | Yes | Pre-scheduled appointment slot | Sortable by date |
-| Treatment Type | text | Yes | Treatment name | Filterable |
-| Total Amount | number | Yes | Accepted price and currency | Sortable; from acceptance snapshot |
-| Deposit Status | badge | Yes | Pending / Paid / Partial | Filterable |
-| Deposit Amount | number | Yes | Deposit amount (if paid) | Read-only |
-| Payment Status | badge | Yes | The single "Payment status" list owned by FR-007 | Read-only; read from FR-007 |
-| Created Date | datetime | Yes | Booking creation timestamp | Sortable |
-| Actions | buttons | Yes | View Details, Check In (when the FR-010 Check In rule allows it) | RBAC enforced |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Booking Reference | text | Yes | Unique booking reference | Sortable, filterable | ENT-booking.booking_reference |
+| Patient Name | text | Yes | Anonymized (e.g., "Mark P. - PAT-00123") or full name if confirmed | Unmask only after payment | ENT-patient.name |
+| Patient Code | text | Yes | Patient identifier | Read-only | ENT-patient.anonymized_id |
+| Inquiry Reference | text | Yes | Original inquiry HPID | Link to inquiry details | ENT-inquiry.reference |
+| Accepted Subquote Reference | text | Yes | Accepted subquote identifier | Link to accepted selection details | ENT-booking.accepted_subquote_id |
+| Parent Quote Reference | text | Yes | Source parent quote identifier | Link to parent quote audit details | ENT-booking.accepted_parent_quote_id |
+| Booking Status | badge | Yes | Accepted / Payment Window Expired / Confirmed / In Progress / Aftercare / Completed / Cancelled | Filterable by status | ENT-booking.status |
+| Appointment Date | datetime | Yes | Pre-scheduled appointment slot | Sortable by date | ENT-booking.hold_appointment_at |
+| Treatment Type | text | Yes | Treatment name | Filterable | ENT-quote.treatment_id |
+| Total Amount | number | Yes | Accepted price and currency | Sortable; from acceptance snapshot | ENT-subquote.price_after_promotion |
+| Deposit Status | badge | Yes | Pending / Paid / Partial | Filterable | ENT-booking.deposit_status |
+| Deposit Amount | number | Yes | Deposit amount (if paid) | Read-only | ENT-booking.deposit_amount |
+| Payment Status | badge | Yes | The single "Payment status" list owned by FR-007 | Read-only; read from FR-007 | ENT-booking.payment_status |
+| Created Date | datetime | Yes | Booking creation timestamp | Sortable | ENT-booking.created_at |
+| Actions | buttons | Yes | View Details, Check In (when the FR-010 Check In rule allows it) | RBAC enforced | no graph field (control) |
 
 **Business Rules**:
 
-- Table list format only (no calendar view).
-- Auto-block appointment slot upon booking confirmation (enforced at database level).
+- Table list format only (no calendar view). (REQ-006-022)
+- Auto-block appointment slot upon booking confirmation (enforced at database level). (REQ-006-068)
 - Patient identity remains masked until booking status is "Confirmed" (payment success).
-- Filtering options: Status, Date Range, Treatment Type, Payment Status.
-- Sorting options: Date, Amount, Status, Created Date.
-- Clicking on booking row opens booking detail view (Screen 4).
+- Filtering options: Status, Date Range, Treatment Type, Payment Status. (REQ-006-044)
+- Sorting options: Date, Amount, Status, Created Date. (REQ-006-044)
+- Clicking on booking row opens booking detail view (Screen 4). (REQ-006-076)
 - FR-005 prevents a second acceptance from acquiring a slot already held or blocked by another pending or confirmed booking. FR-006 revalidates exclusive hold ownership before payment initiation and, after successful payment, atomically creates the appointment record and converts that hold into the confirmed calendar block.
 
 **Notes**:
 
 - Consistent with provider interface patterns from FR-004 and FR-005.
-- Show payment summary figures without revealing card details.
+- Show payment summary figures without revealing card details. (REQ-006-046)
 - Appointment slot blocking is automatic and enforced - no manual calendar management needed.
 
 ---
@@ -377,116 +376,116 @@ All payment fields and actions are hidden. Patient can only view the blocked sta
 
 **Section 1: Booking & Scheduling Information** (from FR-006):
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Booking Reference | text | Yes | Unique booking reference | Read-only |
-| Booking Status | badge | Yes | Current status (Accepted/Payment Window Expired/Confirmed/In Progress/Aftercare/Completed/Cancelled) | Read-only |
-| Booking Created Date | datetime | Yes | Booking creation timestamp | Read-only |
-| Appointment Date | datetime | Yes | Appointment slot | Read-only; the booking's current appointment (the accepted appointment unless an admin changed it on Screen 8) |
-| Appointment Time | time | Yes | Appointment start time | Read-only |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Booking Reference | text | Yes | Unique booking reference | Read-only | ENT-booking.booking_reference |
+| Booking Status | badge | Yes | Current status (Accepted/Payment Window Expired/Confirmed/In Progress/Aftercare/Completed/Cancelled) | Read-only | ENT-booking.status |
+| Booking Created Date | datetime | Yes | Booking creation timestamp | Read-only | ENT-booking.created_at |
+| Appointment Date | datetime | Yes | Appointment slot | Read-only; the booking's current appointment (the accepted appointment unless an admin changed it on Screen 8) | ENT-booking.hold_appointment_at |
+| Appointment Time | time | Yes | Appointment start time | Read-only | ENT-booking.hold_appointment_at |
 
 **Section 2: Patient Information** (from FR-003, unmasked if Confirmed):
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Patient Anonymized ID | text | Yes | Patient code (always visible) | Read-only |
-| Patient Name | text | Conditional | Full name (if Confirmed) or masked (e.g., "Mark P. - PAT-00123") | Unmask only if status = Confirmed |
-| Patient Email | text | Conditional | Email address (if Confirmed) | Unmask only if status = Confirmed |
-| Patient Phone | text | Conditional | Phone number (if Confirmed) | Unmask only if status = Confirmed |
-| Patient Location | text | Yes | Country/city | Read-only; from inquiry |
-| Patient Age | number | Yes | Patient age | Read-only; from inquiry |
-| Patient Gender | text | Yes | Gender | Read-only; from inquiry |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Patient Anonymized ID | text | Yes | Patient code (always visible) | Read-only | ENT-patient.anonymized_id |
+| Patient Name | text | Conditional | Full name (if Confirmed) or masked (e.g., "Mark P. - PAT-00123") | Unmask only if status = Confirmed | ENT-patient.name |
+| Patient Email | text | Conditional | Email address (if Confirmed) | Unmask only if status = Confirmed | ENT-patient.email |
+| Patient Phone | text | Conditional | Phone number (if Confirmed) | Unmask only if status = Confirmed | ENT-patient.phone |
+| Patient Location | text | Yes | Country/city | Read-only; from inquiry | ENT-patient.country, ENT-patient.city |
+| Patient Age | number | Yes | Patient age | Read-only; from inquiry | ENT-patient.age |
+| Patient Gender | text | Yes | Gender | Read-only; from inquiry | ENT-patient.gender |
 
 **Section 3: Problem & Concern Information** (from FR-003):
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Treatment Area Requested | text | Yes | The treatment area the patient requested | Read-only; from the inquiry treatment area snapshot |
-| Problem/Concern Description | text | Yes | Patient's hair concern description | Read-only; from inquiry |
-| Duration of Concern | text | Yes | How long patient has had the concern | Read-only; from inquiry |
-| Previous Treatments | text | No | Previous treatments tried | Read-only; from inquiry |
-| Symptom Severity | number | Yes | Severity rating (1-10) | Read-only; from inquiry |
-| Lifestyle Factors | text | No | Relevant lifestyle information | Read-only; from inquiry |
-| Additional Notes | text | No | Patient's additional notes | Read-only; from inquiry |
-| Media Files | links | No | Photos/videos uploaded by patient | Read-only; from inquiry |
-| 3D Scan | link/viewer | Yes | Link to patient 3D scan with viewer | Read-only; from inquiry |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Treatment Area Requested | text | Yes | The treatment area the patient requested | Read-only; from the inquiry treatment area snapshot | ENT-inquiry.treatment_area_snapshot |
+| Problem/Concern Description | text | Yes | Patient's hair concern description | Read-only; from inquiry | ENT-inquiry.problem_concern |
+| Duration of Concern | text | Yes | How long patient has had the concern | Read-only; from inquiry | ENT-inquiry.problem_duration |
+| Previous Treatments | text | No | Previous treatments tried | Read-only; from inquiry | ENT-inquiry.previous_treatments |
+| Symptom Severity | number | Yes | Severity rating (1-10) | Read-only; from inquiry | ENT-inquiry.symptom_severity |
+| Lifestyle Factors | text | No | Relevant lifestyle information | Read-only; from inquiry | ENT-inquiry.lifestyle_factors |
+| Additional Notes | text | No | Patient's additional notes | Read-only; from inquiry | ENT-inquiry.additional_notes |
+| Media Files | links | No | Photos/videos uploaded by patient | Read-only; from inquiry | ENT-inquiry.media |
+| 3D Scan | link/viewer | Yes | Link to patient 3D scan with viewer | Read-only; from inquiry | ENT-inquiry.scan_ref |
 
 **Section 4: Medical Information** (from FR-003):
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Medical Alerts | chips | Yes | Patient medical risk flags (Critical/Standard/None) | Read-only; color-coded |
-| Medical Questionnaire | link | Yes | Link to full medical questionnaire responses | Read-only; from inquiry |
-| Allergies | text | No | Known allergies | Read-only; from questionnaire |
-| Current Medications | text | No | Current medications | Read-only; from questionnaire |
-| Chronic Conditions | text | No | Chronic health conditions | Read-only; from questionnaire |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Medical Alerts | chips | Yes | Patient medical risk flags (Critical/Standard/None) | Read-only; color-coded | ENT-risk-tag.severity |
+| Medical Questionnaire | link | Yes | Link to full medical questionnaire responses | Read-only; from inquiry | ENT-medical-questionnaire-response.answer |
+| Allergies | text | No | Known allergies | Read-only; from questionnaire | ENT-medical-questionnaire-response.answer |
+| Current Medications | text | No | Current medications | Read-only; from questionnaire | ENT-medical-questionnaire-response.answer |
+| Chronic Conditions | text | No | Chronic health conditions | Read-only; from questionnaire | ENT-medical-questionnaire-response.answer |
 
 **Section 5: Accepted Selection Information** (from FR-004 and FR-005):
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Parent Quote Reference | text | Yes | Accepted parent quote identifier/version | Read-only; link to parent quote audit |
-| Accepted Subquote Reference | text | Yes | Accepted subquote identifier/version | Read-only; link to AcceptanceEvent |
-| Accepted Date | datetime | Yes | Subquote acceptance date | Read-only; from AcceptanceEvent |
-| Accepted Provider | text | Yes | Provider/clinic captured at acceptance | Read-only; inherited parent snapshot |
-| Treatment Type | text | Yes | Selected treatment (FUE, FUT, DHI, etc.) | Read-only; inherited parent snapshot |
-| Estimated Graft Count | number | Yes | Estimated number of grafts | Read-only; inherited parent snapshot |
-| Technique Specifications | text | No | Technique details | Read-only; inherited parent snapshot |
-| Visual Plan | link/viewer | No | Accepted visual treatment plan | Read-only; inherited parent snapshot |
-| Selected Package and Services | group | Yes | Exact package snapshot and included/custom services | Read-only; accepted subquote snapshot |
-| Clinician Assigned | text | Yes | Clinician who will perform procedure | Read-only; inherited parent snapshot |
-| Provider Notes | text | No | Provider's notes to patient | Read-only; inherited parent snapshot |
-| Provider Requirements | group | No | Provider requirements attached to the accepted parent quote | Read-only; inherited parent snapshot |
-| Quote Attachments | links | No | Documents and media attached to the accepted parent quote | Read-only; inherited parent snapshot |
-| Parent Quote Expiry | datetime | Yes | Expiry captured when the subquote was accepted | Read-only; inherited parent snapshot |
-| Acceptance Audit Context | group | Yes | AcceptanceEvent reference, actor, timestamp, and source aggregate version | Read-only; from AcceptanceEvent and acceptance snapshot |
-| Selected Date Range | date range | Yes | Accepted patient-requested range | Read-only; accepted subquote snapshot |
-| Treatment Plan (per-day) | table | Yes | Day-by-day treatment plan shown as relative days (Day 1, Day 2...) | Read-only; accepted subquote snapshot; never converted to calendar dates |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Parent Quote Reference | text | Yes | Accepted parent quote identifier/version | Read-only; link to parent quote audit | ENT-booking.accepted_parent_quote_id, ENT-booking.accepted_parent_quote_version |
+| Accepted Subquote Reference | text | Yes | Accepted subquote identifier/version | Read-only; link to AcceptanceEvent | ENT-booking.accepted_subquote_id, ENT-booking.accepted_subquote_version |
+| Accepted Date | datetime | Yes | Subquote acceptance date | Read-only; from AcceptanceEvent | ENT-acceptance-event.accepted_at |
+| Accepted Provider | text | Yes | Provider/clinic captured at acceptance | Read-only; inherited parent snapshot | ENT-booking.provider_id |
+| Treatment Type | text | Yes | Selected treatment (FUE, FUT, DHI, etc.) | Read-only; inherited parent snapshot | ENT-quote.treatment_id |
+| Estimated Graft Count | number | Yes | Estimated number of grafts | Read-only; inherited parent snapshot | ENT-quote.estimated_grafts |
+| Technique Specifications | text | No | Technique details | Read-only; inherited parent snapshot | ENT-treatment.technique_details |
+| Visual Plan | link/viewer | No | Accepted visual treatment plan | Read-only; inherited parent snapshot | ENT-quote.graft_visual_plan |
+| Selected Package and Services | group | Yes | Exact package snapshot and included/custom services | Read-only; accepted subquote snapshot | ENT-subquote.package_snapshot, ENT-subquote.included_and_custom_services |
+| Clinician Assigned | text | Yes | Clinician who will perform procedure | Read-only; inherited parent snapshot | ENT-quote.clinician_ids |
+| Provider Notes | text | No | Provider's notes to patient | Read-only; inherited parent snapshot | ENT-quote.common_notes |
+| Provider Requirements | group | No | Provider requirements attached to the accepted parent quote | Read-only; inherited parent snapshot | ENT-quote.common_requirements |
+| Quote Attachments | links | No | Documents and media attached to the accepted parent quote | Read-only; inherited parent snapshot | ENT-quote.attachment_ids |
+| Parent Quote Expiry | datetime | Yes | Expiry captured when the subquote was accepted | Read-only; inherited parent snapshot | ENT-quote.expires_at |
+| Acceptance Audit Context | group | Yes | AcceptanceEvent reference, actor, timestamp, and source aggregate version | Read-only; from AcceptanceEvent and acceptance snapshot | ENT-acceptance-event.id, ENT-acceptance-event.accepted_at, ENT-acceptance-event.actor_id |
+| Selected Date Range | date range | Yes | Accepted patient-requested range | Read-only; accepted subquote snapshot | ENT-subquote.date_range |
+| Treatment Plan (per-day) | table | Yes | Day-by-day treatment plan shown as relative days (Day 1, Day 2...) | Read-only; accepted subquote snapshot; never converted to calendar dates | ENT-subquote.treatment_plan |
 
 **Section 6: Pricing & Payment Information** (from FR-004, FR-006, FR-007):
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Currency | text | Yes | Payment currency and locked exchange-rate context | Read-only; acceptance snapshot |
-| Offered Price | number | Yes | Offered price of the accepted subquote, as entered before any promotion | Read-only; acceptance snapshot |
-| Promotion Applied | group | No | Structured promotion included in the accepted price | Read-only; acceptance snapshot |
-| Accepted Price | number | Yes | Booking total: the accepted price after promotion | Read-only; acceptance snapshot |
-| Deposit Percentage | text | Yes | Deposit percentage used | Read-only; admin-configured |
-| Deposit Amount | number | Yes | Deposit amount required/paid | Read-only |
-| Deposit Status | badge | Yes | Pending/Paid/Partial | Read-only |
-| Deposit Paid Date | datetime | Conditional | Date deposit was paid | Read-only; if paid |
-| Payment Method | text | Conditional | Payment method used | Read-only; if paid |
-| Payment Status | badge | Yes | The single "Payment status" list owned by FR-007 | Read-only; read from FR-007 |
-| Payment Schedule | table | Conditional | Installment schedule (if applicable) | Only shown if installments |
-| Remaining Balance | number | Yes | Amount remaining to pay | Calculated |
-| Final Payment Due Date | datetime | Conditional | Final payment due date | Read-only; if applicable |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Currency | text | Yes | Payment currency and locked exchange-rate context | Read-only; acceptance snapshot | ENT-quote.currency_snapshot |
+| Offered Price | number | Yes | Offered price of the accepted subquote, as entered before any promotion | Read-only; acceptance snapshot | ENT-subquote.offered_price |
+| Promotion Applied | group | No | Structured promotion included in the accepted price | Read-only; acceptance snapshot | ENT-subquote.promotion_snapshot |
+| Accepted Price | number | Yes | Booking total: the accepted price after promotion | Read-only; acceptance snapshot | ENT-subquote.price_after_promotion |
+| Deposit Percentage | text | Yes | Deposit percentage used | Read-only; admin-configured | ENT-booking.deposit_percentage |
+| Deposit Amount | number | Yes | Deposit amount required/paid | Read-only | ENT-booking.deposit_amount |
+| Deposit Status | badge | Yes | Pending/Paid/Partial | Read-only | ENT-booking.deposit_status |
+| Deposit Paid Date | datetime | Conditional | Date deposit was paid | Read-only; if paid | ENT-booking.deposit_paid_at |
+| Payment Method | text | Conditional | Payment method used | Read-only; if paid | ENT-booking.payment_method |
+| Payment Status | badge | Yes | The single "Payment status" list owned by FR-007 | Read-only; read from FR-007 | ENT-booking.payment_status |
+| Payment Schedule | table | Conditional | Installment schedule (if applicable) | Only shown if installments | ENT-booking.payment_schedule |
+| Remaining Balance | number | Yes | Amount remaining to pay | Calculated | ENT-booking.remaining_balance |
+| Final Payment Due Date | datetime | Conditional | Final payment due date | Read-only; if applicable | ENT-booking.final_payment_due_at |
 
 **Section 7: Inquiry Context** (from FR-003):
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Inquiry Reference | text | Yes | Original inquiry HPID | Read-only; link to inquiry |
-| Requested Countries | list | Yes | Countries patient selected for treatment | Read-only; from inquiry |
-| Requested Date Ranges | list | Yes | All date ranges patient requested | Read-only; from inquiry |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Inquiry Reference | text | Yes | Original inquiry HPID | Read-only; link to inquiry | ENT-inquiry.reference |
+| Requested Countries | list | Yes | Countries patient selected for treatment | Read-only; from inquiry | ENT-inquiry.treatment_countries |
+| Requested Date Ranges | list | Yes | All date ranges patient requested | Read-only; from inquiry | ENT-inquiry-date-range.start_date, ENT-inquiry-date-range.end_date |
 
 **Actions**:
 
-| Action | Type | Condition | Description |
-|--------|------|-----------|-------------|
-| Check In | button | Available only when the Check In rule owned by FR-010 allows it | Mark patient as arrived (handoff to FR-010) |
-| View Inquiry | link | Always | Open full inquiry details (FR-003) |
-| View Accepted Selection | link | Always | Open accepted subquote and AcceptanceEvent details (FR-005) |
-| View Parent Quote | link | Always | Open source parent quote details (FR-004) |
-| View 3D Scan | link | Always | Open 3D scan viewer |
-| View Medical Questionnaire | link | Always | Open medical questionnaire |
+| Action | Type | Condition | Description | Graph field |
+|--------|------|-----------|-------------|-------------|
+| Check In | button | Available only when the Check In rule owned by FR-010 allows it | Mark patient as arrived (handoff to FR-010) | no graph field (control) |
+| View Inquiry | link | Always | Open full inquiry details (FR-003) | no graph field (control) |
+| View Accepted Selection | link | Always | Open accepted subquote and AcceptanceEvent details (FR-005) | no graph field (control) |
+| View Parent Quote | link | Always | Open source parent quote details (FR-004) | no graph field (control) |
+| View 3D Scan | link | Always | Open 3D scan viewer | no graph field (control) |
+| View Medical Questionnaire | link | Always | Open medical questionnaire | no graph field (control) |
 
 **Business Rules**:
 
 - Patient full identity only visible if booking status is "Confirmed" (payment successful).
 - All booking data is read-only (cannot be edited by provider).
 - The Check In button follows the Check In rule owned by FR-010 (a confirmed, fully paid booking); FR-006 does not restate its conditions.
-- All sections display data from previous stages (inquiry → parent quote/subquote → acceptance → booking) in chronological order.
-- Links to the inquiry, accepted selection, and source parent quote provide full context and audit trail.
+- All sections display data from previous stages (inquiry → parent quote/subquote → acceptance → booking) in chronological order. (REQ-006-047)
+- Links to the inquiry, accepted selection, and source parent quote provide full context and audit trail. (REQ-006-077)
 
 **Notes**:
 
@@ -505,26 +504,26 @@ All payment fields and actions are hidden. Patient can only view the blocked sta
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Booking Reference | text | Yes | Unique booking reference | Sortable, filterable, searchable |
-| Patient Name | text | Yes | Full patient name | Searchable |
-| Patient Email | text | Yes | Patient email | Searchable |
-| Provider Name | text | Yes | Provider/clinic name | Filterable |
-| Booking Status | badge | Yes | Accepted / Payment Window Expired / Confirmed / In Progress / Aftercare / Completed / Cancelled | Filterable |
-| Appointment Date | datetime | Yes | Appointment slot | Sortable, filterable by date range |
-| Treatment Type | text | Yes | Treatment name | Filterable |
-| Total Amount | number | Yes | Accepted price and currency | Sortable; from acceptance snapshot |
-| Deposit Status | badge | Yes | Pending / Paid / Partial | Filterable |
-| Payment Status | badge | Yes | The single "Payment status" list owned by FR-007 | Filterable; read from FR-007 |
-| Created Date | datetime | Yes | Booking creation timestamp | Sortable |
-| Actions | buttons | Yes | View Details, Emergency Edit (non-money booking details), Cancel, Process Refund | RBAC enforced |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Booking Reference | text | Yes | Unique booking reference | Sortable, filterable, searchable | ENT-booking.booking_reference |
+| Patient Name | text | Yes | Full patient name | Searchable | ENT-patient.name |
+| Patient Email | text | Yes | Patient email | Searchable | ENT-patient.email |
+| Provider Name | text | Yes | Provider/clinic name | Filterable | ENT-provider.name |
+| Booking Status | badge | Yes | Accepted / Payment Window Expired / Confirmed / In Progress / Aftercare / Completed / Cancelled | Filterable | ENT-booking.status |
+| Appointment Date | datetime | Yes | Appointment slot | Sortable, filterable by date range | ENT-booking.hold_appointment_at |
+| Treatment Type | text | Yes | Treatment name | Filterable | ENT-quote.treatment_id |
+| Total Amount | number | Yes | Accepted price and currency | Sortable; from acceptance snapshot | ENT-subquote.price_after_promotion |
+| Deposit Status | badge | Yes | Pending / Paid / Partial | Filterable | ENT-booking.deposit_status |
+| Payment Status | badge | Yes | The single "Payment status" list owned by FR-007 | Filterable; read from FR-007 | ENT-booking.payment_status |
+| Created Date | datetime | Yes | Booking creation timestamp | Sortable | ENT-booking.created_at |
+| Actions | buttons | Yes | View Details, Emergency Edit (non-money booking details), Cancel, Process Refund | RBAC enforced | no graph field (control) |
 
 **Business Rules**:
 
 - Full access to all booking data across all providers and patients.
-- Search functionality: by booking reference, patient name, patient email, provider name.
-- Filtering: Status, Provider, Date Range, Treatment Type, Payment Status.
+- Search functionality: by booking reference, patient name, patient email, provider name. (REQ-006-045)
+- Filtering: Status, Provider, Date Range, Treatment Type, Payment Status. (REQ-006-045)
 - Admin can intervene in bookings only through the governed actions and the audited emergency edit of non-money booking details (REQ-006-074), with audit trail.
 - Admin can process cancellations and refunds per policy.
 - All admin actions require audit logging with reason/justification.
@@ -544,150 +543,150 @@ All payment fields and actions are hidden. Patient can only view the blocked sta
 
 **Section 1: Booking & Scheduling Information** (from FR-006):
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Booking Reference | text | Yes | Unique booking reference | Read-only |
-| Booking Status | badge | Yes | Current status | Read-only; changed only through the governed intervention actions below (revive, cancel, provider-fault transfer); never set by the emergency edit |
-| Booking Created Date | datetime | Yes | Booking creation timestamp | Read-only |
-| Appointment Date | datetime | Yes | Current appointment slot | Read-only; changed only through Change Appointment (Screen 8) |
-| Appointment Time | time | Yes | Current appointment start time | Read-only; changed only through Change Appointment (Screen 8) |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Booking Reference | text | Yes | Unique booking reference | Read-only | ENT-booking.booking_reference |
+| Booking Status | badge | Yes | Current status | Read-only; changed only through the governed intervention actions below (revive, cancel, provider-fault transfer); never set by the emergency edit | ENT-booking.status |
+| Booking Created Date | datetime | Yes | Booking creation timestamp | Read-only | ENT-booking.created_at |
+| Appointment Date | datetime | Yes | Current appointment slot | Read-only; changed only through Change Appointment (Screen 8) | ENT-booking.hold_appointment_at |
+| Appointment Time | time | Yes | Current appointment start time | Read-only; changed only through Change Appointment (Screen 8) | ENT-booking.hold_appointment_at |
 
 **Section 2: Patient Information** (from FR-003, always visible to admin):
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Patient ID | text | Yes | Patient code | Read-only |
-| Patient Name | text | Yes | Full name | Read-only |
-| Patient Email | text | Yes | Email address | Read-only |
-| Patient Phone | text | Yes | Phone number | Read-only |
-| Patient Address | text | No | Full address | Read-only; from profile |
-| Patient Location | text | Yes | Country/city | Read-only; from inquiry |
-| Patient Age | number | Yes | Patient age | Read-only; from inquiry |
-| Patient Gender | text | Yes | Gender | Read-only; from inquiry |
-| Patient Date of Birth | date | Yes | Date of birth | Read-only; from profile |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Patient ID | text | Yes | Patient code | Read-only | ENT-patient.anonymized_id |
+| Patient Name | text | Yes | Full name | Read-only | ENT-patient.name |
+| Patient Email | text | Yes | Email address | Read-only | ENT-patient.email |
+| Patient Phone | text | Yes | Phone number | Read-only | ENT-patient.phone |
+| Patient Address | text | No | Full address | Read-only; from profile | ENT-patient.address |
+| Patient Location | text | Yes | Country/city | Read-only; from inquiry | ENT-patient.country, ENT-patient.city |
+| Patient Age | number | Yes | Patient age | Read-only; from inquiry | ENT-patient.age |
+| Patient Gender | text | Yes | Gender | Read-only; from inquiry | ENT-patient.gender |
+| Patient Date of Birth | date | Yes | Date of birth | Read-only; from profile | ENT-patient.date_of_birth |
 
 **Section 3: Problem & Concern Information** (from FR-003):
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Treatment Area Requested | text | Yes | The treatment area the patient requested | Read-only; from the inquiry treatment area snapshot |
-| Problem/Concern Description | text | Yes | Patient's hair concern description | Read-only; from inquiry |
-| Duration of Concern | text | Yes | How long patient has had the concern | Read-only; from inquiry |
-| Previous Treatments | text | No | Previous treatments tried | Read-only; from inquiry |
-| Symptom Severity | number | Yes | Severity rating (1-10) | Read-only; from inquiry |
-| Lifestyle Factors | text | No | Relevant lifestyle information | Read-only; from inquiry |
-| Additional Notes | text | No | Patient's additional notes | Read-only; from inquiry |
-| Media Files | links | No | Photos/videos uploaded by patient | Read-only; from inquiry |
-| 3D Scan | link/viewer | Yes | Link to patient 3D scan with viewer | Read-only; from inquiry |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Treatment Area Requested | text | Yes | The treatment area the patient requested | Read-only; from the inquiry treatment area snapshot | ENT-inquiry.treatment_area_snapshot |
+| Problem/Concern Description | text | Yes | Patient's hair concern description | Read-only; from inquiry | ENT-inquiry.problem_concern |
+| Duration of Concern | text | Yes | How long patient has had the concern | Read-only; from inquiry | ENT-inquiry.problem_duration |
+| Previous Treatments | text | No | Previous treatments tried | Read-only; from inquiry | ENT-inquiry.previous_treatments |
+| Symptom Severity | number | Yes | Severity rating (1-10) | Read-only; from inquiry | ENT-inquiry.symptom_severity |
+| Lifestyle Factors | text | No | Relevant lifestyle information | Read-only; from inquiry | ENT-inquiry.lifestyle_factors |
+| Additional Notes | text | No | Patient's additional notes | Read-only; from inquiry | ENT-inquiry.additional_notes |
+| Media Files | links | No | Photos/videos uploaded by patient | Read-only; from inquiry | ENT-inquiry.media |
+| 3D Scan | link/viewer | Yes | Link to patient 3D scan with viewer | Read-only; from inquiry | ENT-inquiry.scan_ref |
 
 **Section 4: Medical Information** (from FR-003):
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Medical Alerts | chips | Yes | Patient medical risk flags (Critical/Standard/None) | Read-only; color-coded |
-| Medical Questionnaire | link | Yes | Link to full medical questionnaire responses | Read-only; from inquiry |
-| Allergies | text | No | Known allergies | Read-only; from questionnaire |
-| Current Medications | text | No | Current medications | Read-only; from questionnaire |
-| Chronic Conditions | text | No | Chronic health conditions | Read-only; from questionnaire |
-| Previous Surgeries | text | No | Previous surgical procedures | Read-only; from questionnaire |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Medical Alerts | chips | Yes | Patient medical risk flags (Critical/Standard/None) | Read-only; color-coded | ENT-risk-tag.severity |
+| Medical Questionnaire | link | Yes | Link to full medical questionnaire responses | Read-only; from inquiry | ENT-medical-questionnaire-response.answer |
+| Allergies | text | No | Known allergies | Read-only; from questionnaire | ENT-medical-questionnaire-response.answer |
+| Current Medications | text | No | Current medications | Read-only; from questionnaire | ENT-medical-questionnaire-response.answer |
+| Chronic Conditions | text | No | Chronic health conditions | Read-only; from questionnaire | ENT-medical-questionnaire-response.answer |
+| Previous Surgeries | text | No | Previous surgical procedures | Read-only; from questionnaire | ENT-medical-questionnaire-response.answer |
 
 **Section 5: Accepted Selection Information** (from FR-004 and FR-005):
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Parent Quote Reference | text | Yes | Accepted parent quote identifier/version | Read-only; link to parent quote audit |
-| Accepted Subquote Reference | text | Yes | Accepted subquote identifier/version | Read-only; link to AcceptanceEvent |
-| Accepted Date | datetime | Yes | Subquote acceptance date | Read-only; from AcceptanceEvent |
-| Accepted Provider | text | Yes | Provider/clinic captured at acceptance | Read-only; inherited parent snapshot |
-| Treatment Type | text | Yes | Selected treatment (FUE, FUT, DHI, etc.) | Read-only; inherited parent snapshot |
-| Estimated Graft Count | number | Yes | Estimated number of grafts | Read-only; inherited parent snapshot |
-| Technique Specifications | text | No | Technique details | Read-only; inherited parent snapshot |
-| Visual Plan | link/viewer | No | Accepted visual treatment plan | Read-only; inherited parent snapshot |
-| Selected Package and Services | group | Yes | Exact package snapshot and included/custom services | Read-only; accepted subquote snapshot |
-| Clinician Assigned | text | Yes | Clinician who will perform procedure | Read-only; inherited parent snapshot |
-| Provider Notes | text | No | Provider's notes to patient | Read-only; inherited parent snapshot |
-| Provider Requirements | group | No | Provider requirements attached to the accepted parent quote | Read-only; inherited parent snapshot |
-| Quote Attachments | links | No | Documents and media attached to the accepted parent quote | Read-only; inherited parent snapshot |
-| Parent Quote Expiry | datetime | Yes | Expiry captured when the subquote was accepted | Read-only; inherited parent snapshot |
-| Acceptance Audit Context | group | Yes | AcceptanceEvent reference, actor, timestamp, and source aggregate version | Read-only; from AcceptanceEvent and acceptance snapshot |
-| Selected Date Range | date range | Yes | Accepted patient-requested range | Read-only; accepted subquote snapshot |
-| Treatment Plan (per-day) | table | Yes | Day-by-day treatment plan shown as relative days (Day 1, Day 2...) | Read-only; accepted subquote snapshot; never converted to calendar dates |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Parent Quote Reference | text | Yes | Accepted parent quote identifier/version | Read-only; link to parent quote audit | ENT-booking.accepted_parent_quote_id, ENT-booking.accepted_parent_quote_version |
+| Accepted Subquote Reference | text | Yes | Accepted subquote identifier/version | Read-only; link to AcceptanceEvent | ENT-booking.accepted_subquote_id, ENT-booking.accepted_subquote_version |
+| Accepted Date | datetime | Yes | Subquote acceptance date | Read-only; from AcceptanceEvent | ENT-acceptance-event.accepted_at |
+| Accepted Provider | text | Yes | Provider/clinic captured at acceptance | Read-only; inherited parent snapshot | ENT-booking.provider_id |
+| Treatment Type | text | Yes | Selected treatment (FUE, FUT, DHI, etc.) | Read-only; inherited parent snapshot | ENT-quote.treatment_id |
+| Estimated Graft Count | number | Yes | Estimated number of grafts | Read-only; inherited parent snapshot | ENT-quote.estimated_grafts |
+| Technique Specifications | text | No | Technique details | Read-only; inherited parent snapshot | ENT-treatment.technique_details |
+| Visual Plan | link/viewer | No | Accepted visual treatment plan | Read-only; inherited parent snapshot | ENT-quote.graft_visual_plan |
+| Selected Package and Services | group | Yes | Exact package snapshot and included/custom services | Read-only; accepted subquote snapshot | ENT-subquote.package_snapshot, ENT-subquote.included_and_custom_services |
+| Clinician Assigned | text | Yes | Clinician who will perform procedure | Read-only; inherited parent snapshot | ENT-quote.clinician_ids |
+| Provider Notes | text | No | Provider's notes to patient | Read-only; inherited parent snapshot | ENT-quote.common_notes |
+| Provider Requirements | group | No | Provider requirements attached to the accepted parent quote | Read-only; inherited parent snapshot | ENT-quote.common_requirements |
+| Quote Attachments | links | No | Documents and media attached to the accepted parent quote | Read-only; inherited parent snapshot | ENT-quote.attachment_ids |
+| Parent Quote Expiry | datetime | Yes | Expiry captured when the subquote was accepted | Read-only; inherited parent snapshot | ENT-quote.expires_at |
+| Acceptance Audit Context | group | Yes | AcceptanceEvent reference, actor, timestamp, and source aggregate version | Read-only; from AcceptanceEvent and acceptance snapshot | ENT-acceptance-event.id, ENT-acceptance-event.accepted_at, ENT-acceptance-event.actor_id |
+| Selected Date Range | date range | Yes | Accepted patient-requested range | Read-only; accepted subquote snapshot | ENT-subquote.date_range |
+| Treatment Plan (per-day) | table | Yes | Day-by-day treatment plan shown as relative days (Day 1, Day 2...) | Read-only; accepted subquote snapshot; never converted to calendar dates | ENT-subquote.treatment_plan |
 
 **Section 6: Provider Information** (from provider profile):
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Provider Name | text | Yes | Provider/clinic name | Read-only |
-| Provider Contact | text | Yes | Clinic contact information | Read-only |
-| Provider Address | text | Yes | Clinic address | Read-only |
-| Provider Email | text | Yes | Provider email | Read-only |
-| Provider Phone | text | Yes | Provider phone | Read-only |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Provider Name | text | Yes | Provider/clinic name | Read-only | ENT-provider.name |
+| Provider Contact | text | Yes | Clinic contact information | Read-only | ENT-provider.address, ENT-provider.phone, ENT-provider.email |
+| Provider Address | text | Yes | Clinic address | Read-only | ENT-provider.address |
+| Provider Email | text | Yes | Provider email | Read-only | ENT-provider.email |
+| Provider Phone | text | Yes | Provider phone | Read-only | ENT-provider.phone |
 
 **Section 7: Pricing & Payment Information** (from FR-004, FR-006, FR-007):
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Currency | text | Yes | Payment currency and locked exchange-rate context | Read-only; acceptance snapshot |
-| Offered Price | number | Yes | Offered price of the accepted subquote, as entered before any promotion | Read-only; acceptance snapshot |
-| Promotion Applied | group | No | Structured promotion included in the accepted price | Read-only; acceptance snapshot |
-| Accepted Price | number | Yes | Booking total: the accepted price after promotion | Read-only; acceptance snapshot |
-| Deposit Percentage | text | Yes | Deposit percentage used | Read-only; admin-configured |
-| Deposit Amount | number | Yes | Deposit amount required/paid | Read-only |
-| Deposit Status | badge | Yes | Pending/Paid/Partial | Read-only |
-| Payment History | table | Yes | All payments (deposit, installments, final) with dates, amounts, methods | Read-only |
-| Payment Status | badge | Yes | The single "Payment status" list owned by FR-007 | Read-only; read from FR-007 |
-| Payment Schedule | table | Conditional | Installment schedule (if applicable) | Only shown if installments |
-| Remaining Balance | number | Yes | Amount remaining to pay | Calculated |
-| Final Payment Due Date | datetime | Conditional | Final payment due date | Read-only; if applicable |
-| Refund History | table | Yes | All refunds processed with dates, amounts, reasons | Read-only |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Currency | text | Yes | Payment currency and locked exchange-rate context | Read-only; acceptance snapshot | ENT-quote.currency_snapshot |
+| Offered Price | number | Yes | Offered price of the accepted subquote, as entered before any promotion | Read-only; acceptance snapshot | ENT-subquote.offered_price |
+| Promotion Applied | group | No | Structured promotion included in the accepted price | Read-only; acceptance snapshot | ENT-subquote.promotion_snapshot |
+| Accepted Price | number | Yes | Booking total: the accepted price after promotion | Read-only; acceptance snapshot | ENT-subquote.price_after_promotion |
+| Deposit Percentage | text | Yes | Deposit percentage used | Read-only; admin-configured | ENT-booking.deposit_percentage |
+| Deposit Amount | number | Yes | Deposit amount required/paid | Read-only | ENT-booking.deposit_amount |
+| Deposit Status | badge | Yes | Pending/Paid/Partial | Read-only | ENT-booking.deposit_status |
+| Payment History | table | Yes | All payments (deposit, installments, final) with dates, amounts, methods | Read-only | ENT-booking.payment_history |
+| Payment Status | badge | Yes | The single "Payment status" list owned by FR-007 | Read-only; read from FR-007 | ENT-booking.payment_status |
+| Payment Schedule | table | Conditional | Installment schedule (if applicable) | Only shown if installments | ENT-booking.payment_schedule |
+| Remaining Balance | number | Yes | Amount remaining to pay | Calculated | ENT-booking.remaining_balance |
+| Final Payment Due Date | datetime | Conditional | Final payment due date | Read-only; if applicable | ENT-booking.final_payment_due_at |
+| Refund History | table | Yes | All refunds processed with dates, amounts, reasons | Read-only | ENT-booking.refund_history |
 
 **Section 8: Inquiry Context** (from FR-003):
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Inquiry Reference | text | Yes | Original inquiry HPID | Read-only; link to inquiry |
-| Requested Countries | list | Yes | Countries patient selected for treatment | Read-only; from inquiry |
-| Requested Date Ranges | list | Yes | All date ranges patient requested | Read-only; from inquiry |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Inquiry Reference | text | Yes | Original inquiry HPID | Read-only; link to inquiry | ENT-inquiry.reference |
+| Requested Countries | list | Yes | Countries patient selected for treatment | Read-only; from inquiry | ENT-inquiry.treatment_countries |
+| Requested Date Ranges | list | Yes | All date ranges patient requested | Read-only; from inquiry | ENT-inquiry-date-range.start_date, ENT-inquiry-date-range.end_date |
 
 **Section 9: Audit & History**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Audit Log | table | Yes | All status changes and admin actions with timestamps, users, reasons | Read-only; immutable |
-| Status History | timeline | Yes | Chronological status changes | Read-only |
-| Internal Notes | table | Yes | Admin internal notes (not visible to patient/provider) | Editable by admin |
-| Version History | table | Yes | Parent quote and subquote version history captured at acceptance | Read-only |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Audit Log | table | Yes | All status changes and admin actions with timestamps, users, reasons | Read-only; immutable | ENT-audit-entry.action, ENT-audit-entry.actor_id, ENT-audit-entry.reason, ENT-audit-entry.timestamp |
+| Status History | timeline | Yes | Chronological status changes | Read-only | ENT-booking.status_history |
+| Internal Notes | table | Yes | Admin internal notes (not visible to patient/provider) | Editable by admin | ENT-booking.internal_notes |
+| Version History | table | Yes | Parent quote and subquote version history captured at acceptance | Read-only | ENT-booking.accepted_parent_quote_version, ENT-booking.accepted_subquote_version |
 
 **Intervention Actions**:
 
-| Action | Type | Condition | Description |
-|--------|------|-----------|-------------|
-| Revive Booking | button | Booking is `Payment Window Expired` | Opens Screen 7; revives the booking to `Accepted` only (mandatory reason; guarded per Admin Status and Date Intervention rules) |
-| Change Appointment | button | Booking is `Accepted` or `Confirmed` | Opens Screen 8; changes the appointment date/time (mandatory reason and slot availability check), sends `booking.rescheduled`, and triggers an FR-008 travel-date review for any linked travel records |
-| Cancel Booking | button | Booking is `Accepted`, `Payment Window Expired`, `Confirmed`, `In Progress`, or `Aftercare` | Opens Screen 9; cancels the booking on an admin decision or a support-routed patient request (mandatory reason) |
-| Start Provider-Fault Transfer | button | Booking is `Accepted` or `Confirmed` with a provider fault (withdrawal, drop-out, or provider-status cancellation with `supportRequired`); never shown for `In Progress` or `Aftercare` | Opens Screen 10; cancels the original booking with the provider-fault cause if not already cancelled, and assigns a replacement provider through an admin-authored replacement quote |
-| Resolve In-Progress Provider Fault | button | Booking is `In Progress` with a provider fault and `supportRequired` | Opens Screen 11; the admin either moves the booking to `Aftercare` and reassigns the aftercare provider through FR-011 Screen 19, or cancels the booking through Screen 9 (Alternative Flow B7) |
-| Reassign Aftercare | link | Booking is `Aftercare` with a provider fault or `supportRequired` | Opens the FR-011 aftercare reassignment screen for this booking's aftercare case (Alternative Flow B6) |
-| Change Treatment Details | link | Booking is `Confirmed`, `In Progress`, `Aftercare`, or `Completed` | Opens the FR-010 Change Treatment Details screen (FR-010 Screen 9) for plan days, clinician set, and estimated graft count; mandatory reason, audit entry, and `treatment.plan_changed` |
-| Emergency Edit | button | Any booking | Opens the audited emergency edit of non-money booking details (mandatory reason; full before and after history; never sets the booking status; payment records and money terms stay immutable; REQ-006-074) |
-| Process Refund | button | Booking cancelled or eligible | Process refund per the refund ladder set in FR-029; the refund step and its event are owned by FR-007 (mechanics in FR-007, FR-007B, and FR-017) |
-| Add Internal Note | button | Always | Add admin-only note |
-| View Inquiry | link | Always | Open full inquiry details (FR-003) |
-| View Accepted Selection | link | Always | Open accepted subquote and AcceptanceEvent details (FR-005) |
-| View Parent Quote | link | Always | Open source parent quote details (FR-004) |
-| View 3D Scan | link | Always | Open 3D scan viewer |
-| View Medical Questionnaire | link | Always | Open medical questionnaire |
+| Action | Type | Condition | Description | Graph field |
+|--------|------|-----------|-------------|-------------|
+| Revive Booking | button | Booking is `Payment Window Expired` | Opens Screen 7; revives the booking to `Accepted` only (mandatory reason; guarded per Admin Status and Date Intervention rules) | no graph field (control) |
+| Change Appointment | button | Booking is `Accepted` or `Confirmed` | Opens Screen 8; changes the appointment date/time (mandatory reason and slot availability check), sends `booking.rescheduled`, and triggers an FR-008 travel-date review for any linked travel records | no graph field (control) |
+| Cancel Booking | button | Booking is `Accepted`, `Payment Window Expired`, `Confirmed`, `In Progress`, or `Aftercare` | Opens Screen 9; cancels the booking on an admin decision or a support-routed patient request (mandatory reason) | no graph field (control) |
+| Start Provider-Fault Transfer | button | Booking is `Accepted` or `Confirmed` with a provider fault (withdrawal, drop-out, or provider-status cancellation with `supportRequired`); never shown for `In Progress` or `Aftercare` | Opens Screen 10; cancels the original booking with the provider-fault cause if not already cancelled, and assigns a replacement provider through an admin-authored replacement quote | no graph field (control) |
+| Resolve In-Progress Provider Fault | button | Booking is `In Progress` with a provider fault and `supportRequired` | Opens Screen 11; the admin either moves the booking to `Aftercare` and reassigns the aftercare provider through FR-011 Screen 19, or cancels the booking through Screen 9 (Alternative Flow B7) | no graph field (control) |
+| Reassign Aftercare | link | Booking is `Aftercare` with a provider fault or `supportRequired` | Opens the FR-011 aftercare reassignment screen for this booking's aftercare case (Alternative Flow B6) | no graph field (control) |
+| Change Treatment Details | link | Booking is `Confirmed`, `In Progress`, `Aftercare`, or `Completed` | Opens the FR-010 Change Treatment Details screen (FR-010 Screen 9) for plan days, clinician set, and estimated graft count; mandatory reason, audit entry, and `treatment.plan_changed` | no graph field (control) |
+| Emergency Edit | button | Any booking | Opens the audited emergency edit of non-money booking details (mandatory reason; full before and after history; never sets the booking status; payment records and money terms stay immutable; REQ-006-074) | no graph field (control) |
+| Process Refund | button | Booking cancelled or eligible | Process refund per the refund ladder set in FR-029; the refund step and its event are owned by FR-007 (mechanics in FR-007, FR-007B, and FR-017) | no graph field (control) |
+| Add Internal Note | button | Always | Add admin-only note | no graph field (control) |
+| View Inquiry | link | Always | Open full inquiry details (FR-003) | no graph field (control) |
+| View Accepted Selection | link | Always | Open accepted subquote and AcceptanceEvent details (FR-005) | no graph field (control) |
+| View Parent Quote | link | Always | Open source parent quote details (FR-004) | no graph field (control) |
+| View 3D Scan | link | Always | Open 3D scan viewer | no graph field (control) |
+| View Medical Questionnaire | link | Always | Open medical questionnaire | no graph field (control) |
 
 **Business Rules**:
 
-- Admin has full visibility to all patient and provider information (no masking).
+- Admin has full visibility to all patient and provider information (no masking). (REQ-006-048)
 - Admin can revive a `Payment Window Expired` booking, change an appointment, cancel a booking, start the provider-fault transfer, resolve an `In Progress` provider fault, and open the aftercare reassignment only through the actions above and under the Admin Status and Date Intervention rules, each with a mandatory reason. The emergency edit changes only non-money booking details, with a mandatory reason and full before and after history. No other manual status change is allowed; the Booking Status field is never edited directly, including through the emergency edit.
 - Dispute resolution uses only these governed actions and the emergency edit; there is no separate status-override action.
 - All modifications are logged in audit trail with who/when/what/why.
 - Admin can process refunds per the refund ladder set in FR-029.
-- Admin can add internal notes to booking (not visible to patient/provider).
-- All sections display data from previous stages (inquiry → parent quote/subquote → acceptance → booking) in chronological order.
-- Links to the inquiry, accepted selection, and source parent quote provide full context and audit trail.
+- Admin can add internal notes to booking (not visible to patient/provider). (REQ-006-049)
+- See REQ-006-047.
+- See REQ-006-077.
 
 **Notes**:
 
@@ -703,19 +702,19 @@ All payment fields and actions are hidden. Patient can only view the blocked sta
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Booking Reference | text | Yes | Booking being revived | Read-only |
-| Current Status | badge | Yes | Must be `Payment Window Expired` | Read-only; action unavailable for any other status |
-| Appointment | datetime | Yes | Booking's current appointment date/time and time zone | Read-only; slot availability is re-checked on confirm |
-| Promotion Use Check | indicator | Conditional | Shown when the accepted promotion has a usage limit; states whether one use can be taken again | Read-only; revive blocked when the limit has no room |
-| New Payment Deadline | datetime | Yes | Revive time plus the FR-026 slot-hold duration | Read-only; calculated |
-| Reason | textarea | Yes | Why the booking is revived | Mandatory; 10 to 500 characters |
-| Confirm | checkbox | Yes | Admin confirms the revive and the new hold | Must be checked before submit |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Booking Reference | text | Yes | Booking being revived | Read-only | ENT-booking.booking_reference |
+| Current Status | badge | Yes | Must be `Payment Window Expired` | Read-only; action unavailable for any other status | ENT-booking.status |
+| Appointment | datetime | Yes | Booking's current appointment date/time and time zone | Read-only; slot availability is re-checked on confirm | ENT-booking.hold_appointment_at, ENT-booking.hold_appointment_timezone |
+| Promotion Use Check | indicator | Conditional | Shown when the accepted promotion has a usage limit; states whether one use can be taken again | Read-only; revive blocked when the limit has no room | no graph field |
+| New Payment Deadline | datetime | Yes | Revive time plus the FR-026 slot-hold duration | Read-only; calculated | ENT-slot-hold.hold_expires_at |
+| Reason | textarea | Yes | Why the booking is revived | Mandatory; 10 to 500 characters (REQ-006-050) | ENT-audit-entry.reason |
+| Confirm | checkbox | Yes | Admin confirms the revive and the new hold | Must be checked before submit (REQ-006-078) | no graph field (control) |
 
 **Business Rules**:
 
-- On submit, System checks that the booking's provider is `Active` (FR-015 Rule 9). If the provider is `Suspended` or `Deactivated`, the revive is blocked with the message "This provider is suspended or deactivated, so this booking cannot be revived. Use the provider-fault transfer instead." and nothing changes.
+- On submit, System checks that the booking's provider is `Active` (FR-015 Rule 9). If the provider is `Suspended` or `Deactivated`, the revive is blocked with the message "This provider is suspended or deactivated, so this booking cannot be revived. Use the provider-fault transfer instead." and nothing changes. (REQ-006-020)
 - On submit, System re-checks that the slot is free and that the promotion limit has room; if either check fails, the revive is rejected with the reason shown and nothing changes.
 - On success, the booking returns to `Accepted`, a new hold of the FR-026 duration starts, and the AcceptanceEvent and snapshot stay unchanged.
 - Audit entry: admin, timestamp, reason, old and new status, new hold expiry.
@@ -727,22 +726,22 @@ All payment fields and actions are hidden. Patient can only view the blocked sta
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Booking Reference | text | Yes | Booking being changed | Read-only |
-| Current Appointment | datetime | Yes | Booking's current appointment date/time and time zone | Read-only |
-| Accepted Appointment | datetime | Yes | Appointment captured in the acceptance snapshot | Read-only; never changed |
-| New Appointment Date | date | Yes | New appointment date | Required; must differ from the current appointment; not in the past |
-| New Appointment Time | time | Yes | New appointment start time | Required; in the provider's time zone |
-| Reason | textarea | Yes | Why the appointment changes | Mandatory; 10 to 500 characters |
-| Travel Review Notice | indicator | Conditional | Shown when travel records are linked; states that an FR-008 travel-date review will be raised | Read-only |
-| Confirm | checkbox | Yes | Admin confirms the change | Must be checked before submit |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Booking Reference | text | Yes | Booking being changed | Read-only | ENT-booking.booking_reference |
+| Current Appointment | datetime | Yes | Booking's current appointment date/time and time zone | Read-only | ENT-booking.hold_appointment_at, ENT-booking.hold_appointment_timezone |
+| Accepted Appointment | datetime | Yes | Appointment captured in the acceptance snapshot | Read-only; never changed | ENT-subquote.appointment_at |
+| New Appointment Date | date | Yes | New appointment date | Required; must differ from the current appointment; not in the past | ENT-audit-entry.after |
+| New Appointment Time | time | Yes | New appointment start time | Required; in the provider's time zone | ENT-audit-entry.after |
+| Reason | textarea | Yes | Why the appointment changes | Mandatory; 10 to 500 characters (REQ-006-050) | ENT-audit-entry.reason |
+| Travel Review Notice | indicator | Conditional | Shown when travel records are linked; states that an FR-008 travel-date review will be raised | Read-only (REQ-006-079) | no graph field |
+| Confirm | checkbox | Yes | Admin confirms the change | Must be checked before submit (REQ-006-078) | no graph field (control) |
 
 **Business Rules**:
 
 - Available only while the booking is `Accepted` or `Confirmed`.
-- On submit, System checks that the booking's provider is `Active` (FR-015 Rule 9). If the provider is `Suspended` or `Deactivated`, the change is blocked with the message "This provider is suspended or deactivated, so this appointment cannot be changed. Use the provider-fault transfer instead." and nothing changes.
-- On submit, System checks that the new provider date/time and time zone are free and rejects the change if not; the hold (for `Accepted`) or calendar block (for `Confirmed`) moves only on success. An `Accepted` booking keeps its original hold expiry.
+- On submit, System checks that the booking's provider is `Active` (FR-015 Rule 9). If the provider is `Suspended` or `Deactivated`, the change is blocked with the message "This provider is suspended or deactivated, so this appointment cannot be changed. Use the provider-fault transfer instead." and nothing changes. (REQ-006-020)
+- On submit, System checks that the new provider date/time and time zone are free and rejects the change if not; the hold (for `Accepted`) or calendar block (for `Confirmed`) moves only on success. An `Accepted` booking keeps its original hold expiry. (REQ-006-059)
 - The booking's current appointment is updated; the acceptance snapshot keeps the accepted appointment as the baseline. Booking notices read the booking's current appointment.
 - Audit entry: admin, timestamp, reason, old and new appointment.
 - Resulting notice: the mandatory `booking.rescheduled` notice to the patient and the provider, with the old and new appointment. Linked travel records get an FR-008 travel-date review.
@@ -754,15 +753,15 @@ All payment fields and actions are hidden. Patient can only view the blocked sta
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Booking Reference | text | Yes | Booking being cancelled | Read-only |
-| Current Status | badge | Yes | Source booking state | Read-only; must be `Accepted`, `Payment Window Expired`, `Confirmed`, `In Progress`, or `Aftercare` |
-| Request Source | select | Yes | Patient request through support, or admin decision | Required |
-| Support Ticket Reference | text | Conditional | Support case that carries the patient's request | Required when Request Source is patient request |
-| Reason | textarea | Yes | Cancellation reason shown to the patient and provider | Mandatory; 10 to 500 characters |
-| Effects Summary | text | Yes | States that the booking and inquiry become `Cancelled`, the accepted quote stays `accepted`, any hold or calendar block is released, and refunds follow the refund ladder set in FR-029 | Read-only |
-| Confirm | checkbox | Yes | Admin confirms the cancellation | Must be checked before submit |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Booking Reference | text | Yes | Booking being cancelled | Read-only | ENT-booking.booking_reference |
+| Current Status | badge | Yes | Source booking state | Read-only; must be `Accepted`, `Payment Window Expired`, `Confirmed`, `In Progress`, or `Aftercare` | ENT-booking.status |
+| Request Source | select | Yes | Patient request through support, or admin decision | Required | ENT-booking.cancellation_request_source |
+| Support Ticket Reference | text | Conditional | Support case that carries the patient's request | Required when Request Source is patient request | ENT-booking.support_ticket_reference |
+| Reason | textarea | Yes | Cancellation reason shown to the patient and provider | Mandatory; 10 to 500 characters (REQ-006-050) | ENT-booking.cancellation_reason |
+| Effects Summary | text | Yes | States that the booking and inquiry become `Cancelled`, the accepted quote stays `accepted`, any hold or calendar block is released, and refunds follow the refund ladder set in FR-029 | Read-only | no graph field |
+| Confirm | checkbox | Yes | Admin confirms the cancellation | Must be checked before submit (REQ-006-078) | no graph field (control) |
 
 **Business Rules**:
 
@@ -780,23 +779,23 @@ All payment fields and actions are hidden. Patient can only view the blocked sta
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Original Booking | text | Yes | Booking reference, provider, status, and cause | Read-only |
-| Fault Type | select | Conditional | Provider withdrawal or provider drop-out | Required when the booking is not already cancelled by the provider-status cascade; prefilled as `ProviderSuspended` or `ProviderDeactivated` otherwise |
-| Replacement Provider | search select | Yes | Provider who takes over the patient | Required; must be active and not the original provider; status re-checked on submit |
-| Replacement Quote | form | Yes | Quote for the replacement provider in the same inquiry, using the FR-004 quote fields (treatment, package, options, date-price rows with appointment, price, and currency) | Required; validated as an FR-004 quote; authored by the admin |
-| Selected Option and Date-Price Row | select | Yes | The option and date-price row that becomes the replacement acceptance | Required; exactly one; the appointment slot must be free |
-| Adjustment Reason | textarea | Yes | Why the package or price differs from the original accepted selection | Mandatory; 10 to 500 characters |
-| Paid Amount on Original Booking | text | Yes | Amounts already paid on the original booking | Read-only; on a provider withdrawal or drop-out the patient is refunded everything paid and the replacement booking takes a new payment; a provider-status cancellation entered from B4 follows the same terms |
-| Confirm | checkbox | Yes | Admin confirms the transfer | Must be checked before submit |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Original Booking | text | Yes | Booking reference, provider, status, and cause | Read-only | ENT-booking.booking_reference, ENT-booking.closure_cause |
+| Fault Type | select | Conditional | Provider withdrawal or provider drop-out | Required when the booking is not already cancelled by the provider-status cascade; prefilled as `ProviderSuspended` or `ProviderDeactivated` otherwise | ENT-booking.closure_cause |
+| Replacement Provider | search select | Yes | Provider who takes over the patient | Required; must be active and not the original provider; status re-checked on submit | ENT-quote.provider_id |
+| Replacement Quote | form | Yes | Quote for the replacement provider in the same inquiry, using the FR-004 quote fields (treatment, package, options, date-price rows with appointment, price, and currency) | Required; validated as an FR-004 quote; authored by the admin | no graph field |
+| Selected Option and Date-Price Row | select | Yes | The option and date-price row that becomes the replacement acceptance | Required; exactly one; the appointment slot must be free | ENT-acceptance-event.quote_option_id, ENT-acceptance-event.option_date_price_id |
+| Adjustment Reason | textarea | Yes | Why the package or price differs from the original accepted selection | Mandatory; 10 to 500 characters (REQ-006-050) | ENT-audit-entry.reason |
+| Paid Amount on Original Booking | text | Yes | Amounts already paid on the original booking | Read-only; on a provider withdrawal or drop-out the patient is refunded everything paid and the replacement booking takes a new payment; a provider-status cancellation entered from B4 follows the same terms | ENT-booking.paid_amount |
+| Confirm | checkbox | Yes | Admin confirms the transfer | Must be checked before submit (REQ-006-078) | no graph field (control) |
 
 **Business Rules**:
 
 - Available only for `Accepted` or `Confirmed` bookings with a provider fault, including bookings already cancelled by the provider-status cascade with `supportRequired`. An `In Progress` provider fault uses Screen 11 instead.
 - The replacement quote is authored through FR-004 Workflow 7 and FR-004 Screen 8. If no replacement acceptance is recorded, the replacement quote expires under the normal FR-004 quote expiry; the inquiry stays `supportRequired` and is not cancelled automatically, and the admin may author another replacement quote or cancel the inquiry and booking through Screen 9.
-- On submit, System re-checks that the replacement provider is `Active` (FR-015 Rule 9). If it is `Suspended` or `Deactivated`, the acceptance is blocked with the message "This provider is suspended or deactivated, so this replacement quote cannot be accepted. Choose another replacement provider." and nothing changes.
-- If the original booking is not yet cancelled, submit first cancels it with cause `ProviderFault` and releases its hold or calendar block.
+- On submit, System re-checks that the replacement provider is `Active` (FR-015 Rule 9). If it is `Suspended` or `Deactivated`, the acceptance is blocked with the message "This provider is suspended or deactivated, so this replacement quote cannot be accepted. Choose another replacement provider." and nothing changes. (REQ-006-020)
+- If the original booking is not yet cancelled, submit first cancels it with cause `ProviderFault` and releases its hold or calendar block. (REQ-006-058)
 - On submit, System saves the replacement quote, creates the admin-authored AcceptanceEvent that points to the selected replacement quote, option, and date-price row, writes the single FR-005 supersession record linking the original AcceptanceEvent to the new one, acquires the replacement slot hold, and creates the replacement booking in `Accepted`. The admin-authored replacement quote is the only quote that may be created after an inquiry has an acceptance.
 - Audit entry: admin, timestamp, fault type, replacement provider, replacement quote reference, selected option and row, adjustment reason; the `supportRequired` marker is resolved with an audited resolution.
 - Resulting notices: `booking.provider_fault_replacement` to the patient and admin; `booking.scheduled` to the patient with the replacement payment deadline; `quote.accepted` (outcome `selected_subquote_accepted`) to the replacement provider.
@@ -807,17 +806,17 @@ All payment fields and actions are hidden. Patient can only view the blocked sta
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Booking Reference | text | Yes | Booking, provider, and current treatment day | Read-only |
-| Current Status | badge | Yes | Source booking state | Read-only; must be `In Progress` with `supportRequired` |
-| Fault Cause | text | Yes | `ProviderFault`, `ProviderSuspended`, or `ProviderDeactivated` | Read-only |
-| Resolution Route | radio | Yes | Move to Aftercare and reassign the aftercare provider, or cancel the booking | Exactly one |
-| Paid Amount | text | Yes | Total amount the patient has paid on the booking | Read-only |
-| Patient Refund Amount | number | Yes | Refund the admin sets for the patient, from zero up to the full amount paid | Mandatory; zero to the Paid Amount, inclusive; applies to either resolution route |
-| Reason | textarea | Yes | Why the admin chose this route and this refund amount | Mandatory; 10 to 500 characters |
-| Effects Summary | text | Yes | For Move to Aftercare: the booking becomes `Aftercare`, the treatment record is kept as recorded, and FR-011 Screen 19 opens for the reassignment. For Cancel: Screen 9 opens with the reason prefilled | Read-only |
-| Confirm | checkbox | Yes | Admin confirms the decision | Must be checked before submit |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| Booking Reference | text | Yes | Booking, provider, and current treatment day | Read-only | ENT-booking.booking_reference, ENT-booking.current_treatment_day |
+| Current Status | badge | Yes | Source booking state | Read-only; must be `In Progress` with `supportRequired` | ENT-booking.status |
+| Fault Cause | text | Yes | `ProviderFault`, `ProviderSuspended`, or `ProviderDeactivated` | Read-only | ENT-booking.closure_cause |
+| Resolution Route | radio | Yes | Move to Aftercare and reassign the aftercare provider, or cancel the booking | Exactly one | ENT-booking.support_required_resolution |
+| Paid Amount | text | Yes | Total amount the patient has paid on the booking | Read-only | ENT-booking.paid_amount |
+| Patient Refund Amount | number | Yes | Refund the admin sets for the patient, from zero up to the full amount paid | Mandatory; zero to the Paid Amount, inclusive; applies to either resolution route | no graph field |
+| Reason | textarea | Yes | Why the admin chose this route and this refund amount | Mandatory; 10 to 500 characters (REQ-006-050) | ENT-audit-entry.reason |
+| Effects Summary | text | Yes | For Move to Aftercare: the booking becomes `Aftercare`, the treatment record is kept as recorded, and FR-011 Screen 19 opens for the reassignment. For Cancel: Screen 9 opens with the reason prefilled | Read-only | no graph field |
+| Confirm | checkbox | Yes | Admin confirms the decision | Must be checked before submit (REQ-006-078) | no graph field (control) |
 
 **Business Rules**:
 
@@ -835,45 +834,62 @@ All payment fields and actions are hidden. Patient can only view the blocked sta
 
 - Booking is confirmed only after successful deposit or first installment charge.
 - Appointment slot is selected by the accepted subquote and held for payment; no additional slot selection is permitted.
-- Provider calendars must be accurate; confirmed bookings auto-block times at database level; overlapping appointments are prevented.
-- All timestamps shown in patient's local timezone; provider view shows both local and clinic time.
-- **Overlapping Appointment Prevention**: FR-005 atomically acquires an exclusive slot hold when acceptance is created. A second acceptance for a held or blocked slot is rejected before any AcceptanceEvent or booking handoff is created. Exclusivity is enforced by a uniqueness rule on active holds (provider, appointment date/time, and time zone), so a concurrent second acceptance for the same slot fails and the patient is told the slot was just taken. FR-006 verifies hold ownership before payment and converts the hold into a confirmed calendar block on payment success; stale or invalid handoffs are rejected before the payment gateway is called.
+- Provider calendars must be accurate; confirmed bookings auto-block times at database level; overlapping appointments are prevented. (REQ-006-068)
+- All timestamps shown in patient's local timezone; provider view shows both local and clinic time. (REQ-006-032)
+- **Overlapping Appointment Prevention**: FR-005 atomically acquires an exclusive slot hold when acceptance is created. A second acceptance for a held or blocked slot is rejected before any AcceptanceEvent or booking handoff is created. Exclusivity is enforced by a uniqueness rule on active holds (provider, appointment date/time, and time zone), so a concurrent second acceptance for the same slot fails and the patient is told the slot was just taken. FR-006 verifies hold ownership before payment and converts the hold into a confirmed calendar block on payment success; stale or invalid handoffs are rejected before the payment gateway is called. (REQ-006-003)
+- **Status values**: `Accepted` (subquote accepted, awaiting payment) → `Confirmed` (deposit paid) → `In Progress` (procedure started, via FR-010) → `Aftercare` (treatment complete; aftercare active via FR-011) → `Completed` (aftercare complete / final review submitted). An `In Progress` booking with a provider fault moves to `Aftercare` only through the admin decision on Screen 11 (Alternative Flow B7). From `Accepted`, hold expiry transitions to `Payment Window Expired`. From `Payment Window Expired`, only the audited admin revive returns the booking to `Accepted` with a new hold. `Confirmed` is a booking status only, never a quote status. `supportRequired` is a marker, not a status. (REQ-006-060)
+- **Cancelled entries** (source state, actor, cause): (1) `Accepted`, `Payment Window Expired`, `Confirmed`, `In Progress`, or `Aftercare` → `Cancelled` by admin cancellation (Screen 9), including support-routed patient requests, with the admin's reason; the inquiry also becomes `Cancelled` and the accepted quote stays `accepted` (Alternative Flows B2 and B3). (2) `Accepted` or `Confirmed` → `Cancelled` by the provider-fault transfer, cause `ProviderFault` (Alternative Flow B5). (3) `Accepted` or `Confirmed` → `Cancelled` by the system on an effective provider suspension or deactivation, cause `ProviderSuspended` or `ProviderDeactivated` with `supportRequired = true` (Alternative Flow B4), followed by the B5 transfer. (4) `Confirmed` → `Cancelled` by the system when the unpaid balance of a deposit plan is still unpaid at the point set for it (FR-029); the refund ladder applies and the cancellation is recorded with that reason. A provider fault or provider-status event while `In Progress` does not cancel the booking; it stays `In Progress` with `supportRequired` until the admin moves it to `Aftercare` with an aftercare reassignment or cancels it through entry (1) (Alternative Flow B7). A provider fault or provider-status event during `Aftercare` does not cancel the booking; it stays `Aftercare` and follows the aftercare reassignment (Alternative Flow B6). `Completed` and `Cancelled` are terminal. (REQ-006-061)
+- **Release triggers**: (1) Post-acceptance hold expiry without successful first payment (FR-026 duration, 48h default), (2) Admin cancellation during the hold period, including a support-routed patient request (immediate release per B3 flow), (3) Admin booking cancellation per B2 flow, (4) Provider suspension/deactivation cascade per B4 flow (immediate release, including holds with time remaining), (5) Provider fault before treatment starts per B5 flow, (6) Admin appointment change per Screen 8 (the hold or block moves to the new appointment). (REQ-006-062)
+- FR-006 keeps the booking status and cause only; every payment field of the booking (the single "Payment status", refund state, installment progress) is owned by FR-007 and is read from there.
+- **Integration point**: Booking flow requires verified patient and profile data.
+- Admins process edge-case cancellations within published SLAs.
+- Idempotent booking creation with slot holds to prevent race conditions; atomic confirm and appointment-record creation on payment success. (REQ-006-069)
+- Calendar conflict detection and prevention; status transitions auditable.
+- Resilient to payment gateway latency; clear user states during processing.
+- Patient app to booking API for payment initiation (slot is pre-scheduled and read-only).
+  - Data: AcceptanceEvent ID, accepted parent quote ID/version, accepted subquote ID/version, immutable acceptance snapshot, pre-scheduled slot ID, payment choice, and acknowledgments. The accepted subquote and parent version values MUST be equal.
+  - Auth: patient token; RBAC enforcing ownership.
+  - Errors: validation feedback; recoverable payment failures.
+- Provider calendar API for blocking/unblocking; admin oversight API for audit and dispute actions.
 
 ### Data & Privacy Rules
 
 - Patient identity remains masked to provider until booking is Confirmed (payment success).
 - Booking, payment, and personal data are encrypted at rest and in transit; audit logs are immutable; retention follows the system PRD, Platform-Wide Rules: One 10-year retention period.
 - Retention of booking and financial records follows the system PRD, Platform-Wide Rules: One 10-year retention period; hard deletes prohibited (soft-delete/archive only).
+- MFA is a **planned mandatory control** for Admin and Provider tenants and MUST be treated as a future (non-MVP) requirement until the shared MFA stack is delivered (per Constitution / FR-026 / FR-031). Until then, enforce strong password policies, throttling, and re-authentication flows where appropriate; RBAC everywhere.
+- TLS 1.3 in transit; AES-256 at rest; no storage of card PANs; webhook signature verification.
+- Full audit trail on state changes and access; rate limiting and anti-abuse protections on booking/payment endpoints.
 
 ### Admin Editability Rules
 
 **Editable by Admin** (via A-09: System Settings & Configuration):
 
 - **Deposit Rate**: Owned by **FR-029: Payment System Configuration** (REQ-029-013 for the setting, REQ-029-015 for new bookings only, REQ-029-016 for the calculation); FR-006 does not restate it.
-- Cancellation policy schedule (thresholds and refund percentages). The refund ladder setting is owned by **FR-029**; FR-006 points to it.
+- Cancellation policy schedule (thresholds and refund percentages). The refund ladder setting is owned by **FR-029**; FR-006 points to it. (REQ-006-064)
 - The clinic cancellation charge for a provider withdrawal or drop-out (Alternative Flow B5) is a fixed amount set by the admin, with no default value.
-- Slot-hold duration and the "hold expiring soon" reminder lead time are owned by **FR-026** (versioned and audited; hold default 48 hours). FR-006 consumes them and has no separate hold setting.
-- Notification templates for booking confirmations/reminders; booking confirmation content (configured via **FR-030: Notification Rules & Configuration**).
+- Slot-hold duration and the "hold expiring soon" reminder lead time are owned by **FR-026** (versioned and audited; hold default 48 hours). FR-006 consumes them and has no separate hold setting. (REQ-006-013)
+- Notification templates for booking confirmations/reminders; booking confirmation content (configured via **FR-030: Notification Rules & Configuration**). (REQ-006-065)
 - Commission settings (FR-029); commission is fixed at booking confirmation.
 
 **Confirmed Booking Data Integrity (Admin Override)**:
 
-- Confirmed bookings are **read-only for patients and providers**.
-- Admins MAY perform the guarded interventions in the Admin Status and Date Intervention rules below and the audited emergency edit of non-money booking details, but MUST do so as **append-only, versioned intervention events** (who/when/what/why) rather than overwriting historical records.
-- Financial transactions (payments/refunds) remain immutable once confirmed; admin actions reference the original transaction IDs and create new adjustment/refund events as needed.
+- Confirmed bookings are **read-only for patients and providers**. (REQ-006-023)
+- Admins MAY perform the guarded interventions in the Admin Status and Date Intervention rules below and the audited emergency edit of non-money booking details, but MUST do so as **append-only, versioned intervention events** (who/when/what/why) rather than overwriting historical records. (REQ-006-024)
+- Financial transactions (payments/refunds) remain immutable once confirmed; admin actions reference the original transaction IDs and create new adjustment/refund events as needed. (REQ-006-025)
 
 **Admin Status and Date Intervention Rules**:
 
-- **Revive `Payment Window Expired`**: Admin MAY move a booking from `Payment Window Expired` back to `Accepted` only with a mandatory reason. The system re-checks that the slot (provider, appointment date/time, and time zone) is free and rejects the revive if it is not. On success, a new hold of the FR-026 slot-hold duration starts at the revive time. If the accepted promotion has a usage limit, the revive needs one use again: a provider-selected promotion or patient code re-reserves one use, and an automatic promotion takes one use again. The system rejects the revive if the limit has no room. The action is audited, the AcceptanceEvent and snapshot stay unchanged, and the system sends the mandatory "booking revived" notice to the patient (with the new payment deadline) and to the provider (slot held again).
-- **Change appointment date/time**: Allowed only for `Accepted` or `Confirmed` bookings with a mandatory reason (Screen 8). The system checks that the new provider date/time and time zone are free and rejects the change if not; the hold or calendar block moves only on success. The booking's current appointment changes; the acceptance snapshot keeps the accepted appointment as the baseline, and booking notices read the booking's current appointment. The change is audited, sends the mandatory `booking.rescheduled` notice to the patient and the provider with the old and new appointment, and triggers an FR-008 travel-date review for any travel records already linked to the booking.
-- **Cancel booking**: Only an admin cancels a booking, from `Accepted`, `Payment Window Expired`, `Confirmed`, `In Progress`, or `Aftercare`, with a mandatory reason, a confirmation, and an audit entry (Screen 9; Alternative Flow B2). The booking and the inquiry become `Cancelled`, the accepted quote stays `accepted`, and `booking.cancelled` is sent to the patient and the provider. Patient requests to cancel after acceptance reach the admin through support.
-- **Provider must be Active for admin booking actions** (FR-015 Rule 9): On submit, System checks the provider's status for each admin action below and, when the provider is `Suspended` or `Deactivated`, blocks the action, changes nothing, and shows the message for that action.
+- **Revive `Payment Window Expired`**: Admin MAY move a booking from `Payment Window Expired` back to `Accepted` only with a mandatory reason. The system re-checks that the slot (provider, appointment date/time, and time zone) is free and rejects the revive if it is not. On success, a new hold of the FR-026 slot-hold duration starts at the revive time. If the accepted promotion has a usage limit, the revive needs one use again: a provider-selected promotion or patient code re-reserves one use, and an automatic promotion takes one use again. The system rejects the revive if the limit has no room. The action is audited, the AcceptanceEvent and snapshot stay unchanged, and the system sends the mandatory "booking revived" notice to the patient (with the new payment deadline) and to the provider (slot held again). (REQ-006-017)
+- **Change appointment date/time**: Allowed only for `Accepted` or `Confirmed` bookings with a mandatory reason (Screen 8). The system checks that the new provider date/time and time zone are free and rejects the change if not; the hold or calendar block moves only on success. The booking's current appointment changes; the acceptance snapshot keeps the accepted appointment as the baseline, and booking notices read the booking's current appointment. The change is audited, sends the mandatory `booking.rescheduled` notice to the patient and the provider with the old and new appointment, and triggers an FR-008 travel-date review for any travel records already linked to the booking. (REQ-006-017)
+- **Cancel booking**: Only an admin cancels a booking, from `Accepted`, `Payment Window Expired`, `Confirmed`, `In Progress`, or `Aftercare`, with a mandatory reason, a confirmation, and an audit entry (Screen 9; Alternative Flow B2). The booking and the inquiry become `Cancelled`, the accepted quote stays `accepted`, and `booking.cancelled` is sent to the patient and the provider. Patient requests to cancel after acceptance reach the admin through support. (REQ-006-004)
+- **Provider must be Active for admin booking actions** (FR-015 Rule 9): On submit, System checks the provider's status for each admin action below and, when the provider is `Suspended` or `Deactivated`, blocks the action, changes nothing, and shows the message for that action. (REQ-006-020)
   - Admin revive (Screen 7), for the booking's provider: "This provider is suspended or deactivated, so this booking cannot be revived. Use the provider-fault transfer instead."
   - Admin appointment change (Screen 8), for the booking's provider: "This provider is suspended or deactivated, so this appointment cannot be changed. Use the provider-fault transfer instead."
   - Admin-authored acceptance (the replacement acceptance in Alternative Flow B5, Screen 10), for the replacement provider, re-checked at acceptance even though it was `Active` when selected: "This provider is suspended or deactivated, so this replacement quote cannot be accepted. Choose another replacement provider."
 - **Provider-fault transfer**: Only an admin starts the transfer and authors the replacement quote (Screen 10; Alternative Flow B5), with a mandatory reason and audit entry.
 - **Aftercare reassignment**: A provider fault during `Aftercare` is handled by the FR-011 aftercare reassignment (Alternative Flow B6); the booking status does not change.
-- **In-Progress provider fault**: A provider fault while the booking is `In Progress` keeps the booking `In Progress` with `supportRequired`; only an admin resolves it on Screen 11 (Alternative Flow B7), either by moving the booking to `Aftercare` and reassigning the aftercare provider through FR-011 Screen 19, or by cancelling the booking through Screen 9, with a mandatory reason and audit entry.
+- **In-Progress provider fault**: A provider fault while the booking is `In Progress` keeps the booking `In Progress` with `supportRequired`; only an admin resolves it on Screen 11 (Alternative Flow B7), either by moving the booking to `Aftercare` and reassigning the aftercare provider through FR-011 Screen 19, or by cancelling the booking through Screen 9, with a mandatory reason and audit entry. (REQ-006-019)
 - **Emergency edit**: Besides the guarded actions above, an admin MAY change other non-money booking details through a separate audited emergency edit with a mandatory reason; every edit keeps its full before and after history. An emergency edit never sets the booking status, and payment records and money terms stay immutable. Revive, appointment change, cancellation, and the provider-fault transfer keep their own checks and cannot be bypassed through it (REQ-006-074).
 - **No other status jumps**: Admin cannot set any other booking status manually, including through the emergency edit. All other transitions follow the governed flows (payment, admin cancellation, FR-010 treatment progress, provider-status cascade, provider-fault transfer, and the In-Progress provider-fault move to `Aftercare`).
 
@@ -885,148 +901,51 @@ All payment fields and actions are hidden. Patient can only view the blocked sta
 
 **Configurable with Restrictions**:
 
-- Payment options availability per region/currency (cannot alter gateway compliance requirements); the setting is owned by FR-029.
+- Payment options availability per region/currency (cannot alter gateway compliance requirements); the setting is owned by FR-029. (REQ-006-066)
 
 ### Payment & Billing Rules
 
 - **Deposit Rate**: The deposit percentage, its calculation, and the rule that a change applies to new bookings only are owned by FR-029 (REQ-029-013, REQ-029-015, REQ-029-016).
 - Deposit required to confirm booking; final payment per FR-007 schedule.
-- Installments must complete ≥30 days before procedure; failures trigger retries, then flag for admin.
-- **Post-Acceptance Hold**: Subquote acceptance places one temporary exclusive hold keyed by provider, appointment date/time, and time zone. The hold blocks other patients from that slot for the FR-026 slot-hold duration (default 48 hours), which starts at acceptance. The hold is fixed: payment failure or retry never extends or restarts it. The patient must complete the first payment step (deposit or first installment) before the hold expires. The appointment record is created only on successful payment; if the hold expires, it is released and no appointment exists.
-- **Hold Expiring Soon**: Before the hold expires, the patient receives the `booking.hold_expiring_soon` reminder; the lead time is set by admin in FR-026, and the notice details are in the notification Rule (REQ-020-086).
-- **Payment Window Expired**: Hold expiry moves the pending booking from `Accepted` to `Payment Window Expired`: the hold is released, payment is disabled, the AcceptanceEvent/snapshot remain immutable, neither the parent quote nor accepted subquote is reopened, and the mandatory Payment Window Expired notice goes to patient and provider. The outcome is final for that accepted selection except for the audited admin revive (Admin Status and Date Intervention Rules).
-- **Payment Window Expired Recovery**: The patient contacts support; an admin either performs the audited revive (Screen 7) or cancels the booking (Screen 9), after which the patient may start a new inquiry. One acceptance per inquiry still applies.
-- **First-Payment Boundary**: `Payment Window Expired` applies only to the first payment step (acceptance to deposit or first installment). A missed later installment or final payment never causes `Payment Window Expired`, booking cancellation, or inquiry cancellation; it is handled by FR-007 and FR-007B. The one exception is a deposit plan: when its unpaid balance is still unpaid at the point set for it (FR-029), the booking is cancelled at that point and the refund ladder applies.
+- Installments must complete ≥30 days before procedure; failures trigger retries, then flag for admin. (REQ-006-034)
+- **Post-Acceptance Hold**: Subquote acceptance places one temporary exclusive hold keyed by provider, appointment date/time, and time zone. The hold blocks other patients from that slot for the FR-026 slot-hold duration (default 48 hours), which starts at acceptance. The hold is fixed: payment failure or retry never extends or restarts it. The patient must complete the first payment step (deposit or first installment) before the hold expires. The appointment record is created only on successful payment; if the hold expires, it is released and no appointment exists. (REQ-006-005)
+- **Hold Expiring Soon**: Before the hold expires, the patient receives the `booking.hold_expiring_soon` reminder; the lead time is set by admin in FR-026, and the notice details are in the notification Rule (REQ-020-086). (REQ-006-036)
+- **Payment Window Expired**: Hold expiry moves the pending booking from `Accepted` to `Payment Window Expired`: the hold is released, payment is disabled, the AcceptanceEvent/snapshot remain immutable, neither the parent quote nor accepted subquote is reopened, and the mandatory Payment Window Expired notice goes to patient and provider. The outcome is final for that accepted selection except for the audited admin revive (Admin Status and Date Intervention Rules). (REQ-006-005)
+- **Payment Window Expired Recovery**: The patient contacts support; an admin either performs the audited revive (Screen 7) or cancels the booking (Screen 9), after which the patient may start a new inquiry. One acceptance per inquiry still applies. (REQ-006-005)
+- **First-Payment Boundary**: `Payment Window Expired` applies only to the first payment step (acceptance to deposit or first installment). A missed later installment or final payment never causes `Payment Window Expired`, booking cancellation, or inquiry cancellation; it is handled by FR-007 and FR-007B. The one exception is a deposit plan: when its unpaid balance is still unpaid at the point set for it (FR-029), the booking is cancelled at that point and the refund ladder applies. (REQ-006-016)
 - **Payment Failure Handling**:
   - If the first payment fails, Payment Service applies retry policy per FR-007 (exponential backoff) and surfaces failures for patient action when needed.
-  - The patient can retry payment from the Accepted Subquote view only while the original hold is active.
+  - The patient can retry payment from the Accepted Subquote view only while the original hold is active. (REQ-006-035)
   - If no payment succeeds before the hold expires, the hold is released, further payment against it is blocked, and the booking becomes `Payment Window Expired`.
-- A full refund applies when the provider withdraws, drops out, or is suspended or deactivated before treatment starts; an in-treatment provider fault takes an admin-set refund; every other cancellation follows the refund ladder set in FR-029. When the provider withdraws or drops out after acceptance and before treatment starts (Alternative Flow B5), or the booking is cancelled by a provider suspension or deactivation (Alternative Flow B4), the patient is refunded everything paid, pays no cancellation fee, and a replacement booking takes a new payment. While `In Progress` the case follows Alternative Flow B7: the admin sets the patient refund amount from zero up to the full amount paid, with a mandatory reason and an audit entry, and the provider's payout for the booking is held until the admin decides.
+- A full refund applies when the provider withdraws, drops out, or is suspended or deactivated before treatment starts; an in-treatment provider fault takes an admin-set refund; every other cancellation follows the refund ladder set in FR-029. When the provider withdraws or drops out after acceptance and before treatment starts (Alternative Flow B5), or the booking is cancelled by a provider suspension or deactivation (Alternative Flow B4), the patient is refunded everything paid, pays no cancellation fee, and a replacement booking takes a new payment. While `In Progress` the case follows Alternative Flow B7: the admin sets the patient refund amount from zero up to the full amount paid, with a mandatory reason and an audit entry, and the provider's payout for the booking is held until the admin decides. (REQ-006-053)
+- Refund processing SLA ≤ 3 business days for eligible cases.
 - **Clinic cancellation charge**: A provider withdrawal or drop-out (Alternative Flow B5 only) charges the clinic a fixed amount set by the admin, with no default value, deducted from the clinic's next payout. It does not apply to the provider-status cancellation (Alternative Flow B4) or to an in-treatment provider fault (Alternative Flow B7).
 - **Money movement (Stripe Connect)**: The product owner's Stripe Connect money-movement decisions replace the missing Payment Routing Spec. After the clinic's share has moved to the clinic's locked Stripe balance, an admin cancellation refunds the patient per the refund ladder, pulls the share back from that balance, and deducts any shortfall from the clinic's next payout; an admin appointment change pulls the share back and moves it again 60 days before the new appointment (30 days for installments once fully paid). Mechanics are owned by FR-007 and FR-017.
-- **Provider-Status Cancellation**: Bookings cancelled by an effective provider suspension/deactivation (Alternative Flow B4) are rehomed by admin to a replacement provider in the same inquiry through the Alternative Flow B5 transfer. The payment terms are the same as for a provider withdrawal or drop-out (Alternative Flow B5): the patient is refunded everything paid, pays no cancellation fee, and the replacement booking takes a new payment; exact mechanics are defined in FR-007, FR-007B, and FR-017. Provider eligibility is revalidated at booking-confirming payment (FR-015 Rule 9). A payment captured while suspension/deactivation becomes effective is recorded and treated as paid money, refunded in full under these B4 terms; it never confirms or revives the booking.
+- **Provider-Status Cancellation**: Bookings cancelled by an effective provider suspension/deactivation (Alternative Flow B4) are rehomed by admin to a replacement provider in the same inquiry through the Alternative Flow B5 transfer. The payment terms are the same as for a provider withdrawal or drop-out (Alternative Flow B5): the patient is refunded everything paid, pays no cancellation fee, and the replacement booking takes a new payment; exact mechanics are defined in FR-007, FR-007B, and FR-017. Provider eligibility is revalidated at booking-confirming payment (FR-015 Rule 9). A payment captured while suspension/deactivation becomes effective is recorded and treated as paid money, refunded in full under these B4 terms; it never confirms or revives the booking. (REQ-006-054)
 - Prices shown in patient's currency; exchange rate locked in the subquote acceptance snapshot; payouts use that locked rate.
-- **Promotion and Commission**: The promotion and accepted price are frozen at subquote acceptance and never change in FR-006, except through a new linked acceptance record in Alternative Flow B5. Commission is fixed at booking confirmation on the accepted price after promotion, in the quote currency, read from the acceptance snapshot (FR-029). The commission figure shown on the FR-004 quote screen is indicative only.
+- **Promotion and Commission**: The promotion and accepted price are frozen at subquote acceptance and never change in FR-006, except through a new linked acceptance record in Alternative Flow B5. Commission is fixed at booking confirmation on the accepted price after promotion, in the quote currency, read from the acceptance snapshot (FR-029). The commission figure shown on the FR-004 quote screen is indicative only. (REQ-006-063)
 
 ### Rescheduling Rules
 
-- **Rescheduling is deferred to V2**: The provider pre-schedules the appointment in the subquote; acceptance fixes the chosen appointment and reserves its slot, and successful payment confirms the booking. Rescheduling functionality will be evaluated for V2 based on business needs.
-- **Current Behavior**: The patient cannot reschedule. Date changes require the audited admin appointment change (Screen 8), which sends `booking.rescheduled`, or an admin cancellation per cancellation policy.
-
----
-
-## Success Criteria
-
-### Patient Experience Metrics
-
-- **SC-001**: Patients can confirm a booking in ≤3 minutes from an accepted subquote.
-- **SC-002**: 90% of patients complete deposit on first attempt.
-- **SC-003**: Booking confirmation and receipts delivered within 1 minute of payment.
-
-### Provider Efficiency Metrics
-
-- **SC-004**: Calendar auto-block occurs within 10 seconds of booking confirmation.
-- **SC-005**: 0% double-bookings due to system-enforced conflicts.
-- **SC-006**: 0% overlapping appointments due to system-enforced conflict prevention.
-
-### Admin Management Metrics
-
-- **SC-007**: 100% of booking lifecycle events are auditable with user/timestamp.
-- **SC-008**: Support tickets related to scheduling decrease by 30% within 2 months of launch.
-- **SC-009**: Refund processing SLA ≤ 3 business days for eligible cases.
-
-### System Performance Metrics
-
-- **SC-010**: Booking creation completes in <2 seconds p95 (excluding external payment time).
-- **SC-011**: Supports 1,000 concurrent booking attempts without degradation.
-- **SC-012**: 99.5%+ uptime for booking flows.
-- **SC-013**: Zero lost confirmed bookings.
-
-### Business Impact Metrics
-
-- **SC-014**: 85% of accepted subquotes convert to confirmed bookings (aligned with system targets).
-- **SC-015**: Deposit capture rate ≥ 80% within 24 hours of subquote acceptance.
-- **SC-016**: Refund disputes < 2% of total bookings.
+- **Rescheduling is deferred to V2**: The provider pre-schedules the appointment in the subquote; acceptance fixes the chosen appointment and reserves its slot, and successful payment confirms the booking. Rescheduling functionality will be evaluated for V2 based on business needs. (REQ-006-067)
+- **Current Behavior**: The patient cannot reschedule. Date changes require the audited admin appointment change (Screen 8), which sends `booking.rescheduled`, or an admin cancellation per cancellation policy. (REQ-006-067)
 
 ---
 
 ## Dependencies
 
-### Internal Dependencies (Other FRs/Modules)
+Related FRs:
 
-- **FR-001 / Module P-01**: Auth & Profile; required for authenticated patient actions and identity unmasking post-payment.
-  - **Integration point**: Booking flow requires verified patient and profile data.
-- **FR-004 / Module PR-02**: Quote Submission; provides the Option/date-price records that carry the pre-scheduled appointment and price.
-- **FR-005 / Module P-02**: Subquote Comparison & Acceptance; supplies the immutable accepted subquote and inherited parent snapshot and triggers booking entry.
-- **FR-007 & FR-007B / Modules P-03, S-02**: Payments and Installments; deposit capture, schedules, refunds. FR-007 owns every payment field of the booking (the single "Payment status" list, refund state, installment progress) and the payment breakdown shown before payment (REQ-007-033).
-- **FR-020 / S-03**: Notifications; confirmations, reminders, and alerts.
-- **FR-030 / Module A-09**: Notification Rules & Configuration; booking confirmation/reminder templates and notification policy rules consumed by S-03, including the events FR-006 triggers (`booking.scheduled`, `booking.hold_expiring_soon`, `booking.payment_window_expired`, `booking.revived`, `booking.rescheduled`, `booking.cancelled`, `booking.provider_fault_replacement`, `booking.confirmed`, `booking.appointment_reminder`). FR-004 produces `quote.withdrawn`; FR-006 reacts to it by starting the provider-fault transfer.
-- **FR-026 / Module A-09**: App Settings & Security; owns the slot-hold duration (default 48 hours) and the "hold expiring soon" reminder lead time.
-- **FR-010 / PR-03**: Post-confirmation treatment execution starts on arrival; FR-010 owns the Check In rule (a confirmed, fully paid booking).
-- **FR-011 / Module A-03**: Aftercare & Recovery Management; owns the aftercare reassignment screen used when a provider fault occurs during `Aftercare` (Alternative Flow B6).
-- **FR-029 / Module A-09**: Payment System Configuration; deposit, split payment, refund ladder, payment options per region and currency, and commission settings are managed here (deposit rate, its calculation, and the new-bookings-only rule: REQ-029-013, REQ-029-015, REQ-029-016; installment options and cutoff rules; commission default 15-25% range, per-provider or global settings).
-
-### External Dependencies (APIs, Services)
-
-- Payment processor for deposits/installments/refunds (PCI compliant); retry with backoff within the fixed post-acceptance hold; failure never extends the hold.
-- Calendar/ICS generation for add-to-calendar links.
-
-### Data Dependencies
-
-- Active provider calendars with pre-scheduled slots from FR-004 Option/date-price records (PR-02).
-- FR-005 AcceptanceEvent with accepted subquote/parent identifiers and versions, complete snapshot, locked currency/exchange rate, and promotion data (FR-004/FR-019).
-- Patient verified profile and medical status flags (P-01/P-02) for provider readiness.
-
----
-
-## Assumptions
-
-### User Behavior Assumptions
-
-- Patients complete the first payment within the post-acceptance slot-hold window (default 48 hours).
-- Patients understand and accept cancellation terms before paying.
-- Majority use mobile; need clear time zone handling.
-
-### Technology Assumptions
-
-- Patient devices support secure payments and push notifications.
-- Provider/admin access via modern browsers; stable connectivity expected at clinics.
-- Notification service can deliver emails/push near real-time.
-
-### Business Process Assumptions
-
-- Providers maintain accurate calendars and honor confirmed slots.
-- Admins process edge-case cancellations within published SLAs.
-- Promotion and accepted price are frozen at subquote acceptance; commission is fixed at booking confirmation on the accepted price after promotion (the FR-004 quote-screen commission figure is indicative).
-
----
-
-## Implementation Notes
-
-### Technical Considerations
-
-- Idempotent booking creation with slot holds to prevent race conditions; atomic confirm and appointment-record creation on payment success.
-- Calendar conflict detection and prevention; status transitions auditable.
-- Resilient to payment gateway latency; clear user states during processing.
-
-### Integration Points
-
-- Patient app to booking API for payment initiation (slot is pre-scheduled and read-only).
-  - Data: AcceptanceEvent ID, accepted parent quote ID/version, accepted subquote ID/version, immutable acceptance snapshot, pre-scheduled slot ID, payment choice, and acknowledgments. The accepted subquote and parent version values MUST be equal.
-  - Auth: patient token; RBAC enforcing ownership.
-  - Errors: validation feedback; recoverable payment failures.
-- Provider calendar API for blocking/unblocking; admin oversight API for audit and dispute actions.
-
-### Scalability Considerations
-
-- Expect hundreds of concurrent bookings during campaigns; ensure slot-hold locking performs under load.
-- Background jobs for reminders and installment schedules; horizontal scaling for booking endpoints.
-
-### Security Considerations
-
-- MFA is a **planned mandatory control** for Admin and Provider tenants and MUST be treated as a future (non-MVP) requirement until the shared MFA stack is delivered (per Constitution / FR-026 / FR-031). Until then, enforce strong password policies, throttling, and re-authentication flows where appropriate; RBAC everywhere.
-- TLS 1.3 in transit; AES-256 at rest; no storage of card PANs; webhook signature verification.
-- Full audit trail on state changes and access; rate limiting and anti-abuse protections on booking/payment endpoints.
+- FR-001: Auth & Profile; required for authenticated patient actions and identity unmasking post-payment.
+- FR-004: Quote Submission; provides the Option/date-price records that carry the pre-scheduled appointment and price.
+- FR-005: Subquote Comparison & Acceptance; supplies the immutable accepted subquote and inherited parent snapshot and triggers booking entry.
+- FR-007 and FR-007B: Payments and Installments; deposit capture, schedules, refunds.
+- FR-020: Notifications; confirmations, reminders, and alerts.
+- FR-030: Notification Rules & Configuration; booking confirmation/reminder templates and notification policy rules.
+- FR-026: App Settings & Security; owns the slot-hold duration and the "hold expiring soon" reminder lead time.
+- FR-010: Post-confirmation treatment execution starts on arrival; owns the Check In rule.
+- FR-011: Aftercare & Recovery Management; owns the aftercare reassignment screen.
+- FR-029: Payment System Configuration; deposit, split payment, refund ladder, payment options per region and currency, and commission settings.
 
 ---
 
@@ -1102,7 +1021,7 @@ A late cancellation performed by an admin at the patient's request applies the r
 
 - Payment succeeds but confirmation email fails: confirmation must still be visible in-app; retry email (REQ-006-071).
 - A stale or forged booking handoff references a slot not exclusively held by its AcceptanceEvent: reject it before payment initiation and leave the valid reservation unchanged.
-- Installment plan default before deadline: flag booking, notify admin, patient and provider; apply policy (FR-007B REQ-007B-019 and REQ-007B-020).
+- Installment plan default before deadline: flag booking, notify admin, patient and provider; apply policy (FR-007B REQ-007B-019 and REQ-007B-020). (REQ-006-080)
 - Provider emergency closure after acceptance: handled as provider fault; before treatment starts the admin transfers the patient to a replacement provider in the same inquiry (Alternative Flow B5); while `In Progress` the admin moves the booking to `Aftercare` with an aftercare reassignment or cancels it (Alternative Flow B7).
 - Provider suspended or deactivated while the patient is paying: the booking-confirming payment step revalidates provider eligibility and rejects the payment before the gateway is called. If a capture still completes concurrently, record it, keep the booking `Cancelled` with the provider-status cause and `supportRequired`, and treat the captured amount as paid money refunded in full under the B4 payment terms (see Provider-Status Cancellation) while the admin rehomes the patient (Alternative Flows B4 and B5).
 - Payment failure after subquote acceptance: the single hold that started at acceptance (FR-026 duration, default 48 hours) is never extended; retry is allowed only while it is active; on expiry, set `Payment Window Expired`, release the hold, block payment against that selection, and do not reopen the parent quote or accepted subquote.
@@ -1153,57 +1072,13 @@ A late cancellation performed by an admin at the patient's request applies the r
 - **REQ-006-013**: System MUST read the slot-hold duration (default: 48 hours) and the "hold expiring soon" reminder lead time from FR-026 and MUST NOT keep a separate FR-006 hold setting.
 - **REQ-006-014**: System MUST verify the parent inquiry is not in "Cancelled" status before allowing entry to the booking/payment flow. If cancelled, system MUST block entry and display a read-only blocked state (Screen 1 blocked state) with clear messaging.
 
-### Marking Unclear Requirements
-
-- None open for provider-fault routing: before treatment starts the transfer applies (Alternative Flow B5), while `In Progress` the admin decides case by case (Alternative Flow B7), and during `Aftercare` the aftercare reassignment applies (Alternative Flow B6).
-
----
-
-## Key Entities
-
-- **Entity 1 - Booking**: Represents a confirmed or pending booking derived from one accepted subquote and its inherited parent context.
-  - **Key attributes**: booking reference, acceptanceEventId, acceptedParentQuoteId, acceptedParentQuoteVersion, acceptedSubquoteId, acceptedSubquoteVersion, acceptanceSnapshot, providerId, patientId, holdAppointmentAt and holdAppointmentTimezone (the hold key with providerId; they follow the booking's current appointment), status, cancellationReason, supportRequired (with audited admin resolution). FR-006 keeps the booking status and cause only; every payment field of the booking (the single "Payment status", refund state, installment progress) is owned by FR-007 and is read from there.
-  - **Version invariant**: `acceptedSubquoteVersion = acceptedParentQuoteVersion`; both identify the accepted FR-004 aggregate revision.
-  - **Status values**: `Accepted` (subquote accepted, awaiting payment) → `Confirmed` (deposit paid) → `In Progress` (procedure started, via FR-010) → `Aftercare` (treatment complete; aftercare active via FR-011) → `Completed` (aftercare complete / final review submitted). An `In Progress` booking with a provider fault moves to `Aftercare` only through the admin decision on Screen 11 (Alternative Flow B7). From `Accepted`, hold expiry transitions to `Payment Window Expired`. From `Payment Window Expired`, only the audited admin revive returns the booking to `Accepted` with a new hold. `Confirmed` is a booking status only, never a quote status. `supportRequired` is a marker, not a status.
-  - **Cancelled entries** (source state, actor, cause): (1) `Accepted`, `Payment Window Expired`, `Confirmed`, `In Progress`, or `Aftercare` → `Cancelled` by admin cancellation (Screen 9), including support-routed patient requests, with the admin's reason; the inquiry also becomes `Cancelled` and the accepted quote stays `accepted` (Alternative Flows B2 and B3). (2) `Accepted` or `Confirmed` → `Cancelled` by the provider-fault transfer, cause `ProviderFault` (Alternative Flow B5). (3) `Accepted` or `Confirmed` → `Cancelled` by the system on an effective provider suspension or deactivation, cause `ProviderSuspended` or `ProviderDeactivated` with `supportRequired = true` (Alternative Flow B4), followed by the B5 transfer. (4) `Confirmed` → `Cancelled` by the system when the unpaid balance of a deposit plan is still unpaid at the point set for it (FR-029); the refund ladder applies and the cancellation is recorded with that reason. A provider fault or provider-status event while `In Progress` does not cancel the booking; it stays `In Progress` with `supportRequired` until the admin moves it to `Aftercare` with an aftercare reassignment or cancels it through entry (1) (Alternative Flow B7). A provider fault or provider-status event during `Aftercare` does not cancel the booking; it stays `Aftercare` and follows the aftercare reassignment (Alternative Flow B6). `Completed` and `Cancelled` are terminal.
-  - **Relationships**: One booking links to one AcceptanceEvent, one accepted subquote and parent quote context, one provider calendar entry, and one patient.
-
-- **Entity 2 - Calendar Slot**: Represents a provider's pre-scheduled appointment time.
-  - **Key attributes**: provider ID, appointment date/time, time zone, start/end, hold/blocked flags, hold start, hold expiry.
-  - **Hold and appointment**: Acceptance places a temporary exclusive hold keyed by provider, appointment date/time, and time zone that blocks other patients for the FR-026 slot-hold duration. The appointment record is created only on successful payment. On hold expiry the hold is released and no appointment exists.
-  - **Release triggers**: (1) Post-acceptance hold expiry without successful first payment (FR-026 duration, 48h default), (2) Admin cancellation during the hold period, including a support-routed patient request (immediate release per B3 flow), (3) Admin booking cancellation per B2 flow, (4) Provider suspension/deactivation cascade per B4 flow (immediate release, including holds with time remaining), (5) Provider fault before treatment starts per B5 flow, (6) Admin appointment change per Screen 8 (the hold or block moves to the new appointment).
-  - **Relationships**: One provider, appointment date/time, and time zone can be held or blocked by at most one pending or confirmed booking; acceptance and hold acquisition are atomic.
-
 ---
 
 ## Appendix: Change Log
 
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
-| 2025-11-04 | 1.0 | Initial PRD creation | AI |
-| 2025-11-04 | 1.1 | Major revisions: Removed slot selection step (slot auto-confirmed on quote acceptance); Added deposit rate management (admin-configurable); Deferred rescheduling to V2; Defined payment failure handling (48-hour hold); Added all 3 tenant screen specifications with data continuity; Updated provider dashboard to table-only format; Added overlapping appointment prevention logic | AI |
-| 2025-11-04 | 1.2 | Enhanced booking detail screens: Added comprehensive data from all previous stages (FR-003 inquiry, FR-004 quote, FR-005 acceptance) to provider and admin booking detail screens; Clarified deposit rate management is handled in FR-029: Payment System Configuration | AI |
-| 2025-11-12 | 1.3 | Status updated to Verified & Approved; All approvals completed | Product Team |
-| 2025-12-16 | 1.4 | Documentation alignment: Clarified installment option eligibility and payment option wording to reference FR-029 as the configuration source for deposit/split payment/commission settings (no functional change). | AI |
-| 2026-02-05 | 1.5 | Added pre-booking validation guard (inquiry not cancelled), Alternative Flow B3 (patient cancels inquiry during 48h slot hold with immediate release). See FR-003 Workflow 5 and cancel-inquiry-fr-impact-report.md | Product & Engineering |
-| 2026-02-09 | 1.6 | Integrity fixes: Added Screen 1 blocked state spec (cancelled inquiry UI), REQ-006-014 (pre-booking cancellation guard requirement), concurrent payment+cancellation race edge cases, explicit Booking status enum, Calendar Slot release triggers, fixed Last Updated date. | AI |
-| 2026-03-03 | 1.7 | Cross-FR alignment: Added `Aftercare` to booking status enum and booking status filters; clarified Check In requires Payment Status = Full paid (no outstanding balance) to align with FR-010/FR-007. | Product alignment (2026-03-03) |
-| 2026-09-15 | 2.0 | Reconciled FR-006 with FR-005 v2.0: booking now consumes one immutable accepted subquote and inherited parent context; screens and entities carry parent/subquote identifiers and versions; package/date/appointment/price reselection is prohibited; payment-expiry and slot-conflict handling preserve the AcceptanceEvent instead of reopening a parent quote. See CR-FR006-20260915-01. Status reset pending consolidated verification. | Product Owner / Documentation |
-| 2026-09-16 | 2.1 | Post-verification clarification: defined `acceptedSubquoteVersion` as equal to `acceptedParentQuoteVersion`, both sourced from the accepted FR-004 aggregate `QuoteVersion`; applied the invariant to the booking handoff, screen provenance, requirement, and entity contract. Verification status remains pending consolidated review. | Product Owner / Verification alignment |
-| 2026-09-16 | 2.2 | Reconciled payment-hold expiry: introduced terminal `Payment Window Expired`, removed the contradictory post-expiry retry path, permanently blocks payment against the expired accepted selection, and requires a new current subquote or audited admin intervention without reopening prior quote records. Verification status remains pending consolidated review. | Product Owner / Verification alignment |
-| 2026-09-16 | 2.3 | Clarified the appointment lifecycle boundary: subquote acceptance fixes the appointment choice and reserves the slot for the payment window; only successful deposit or first-installment payment confirms the booking. Removed remaining wording that equated acceptance with slot/booking confirmation. | Product Owner / Documentation |
-| 2026-09-16 | 2.4 | Resolved the slot-reservation concurrency contract: FR-005 acceptance atomically acquires one exclusive appointment hold; a second acceptance is rejected before AcceptanceEvent or booking-handoff creation; FR-006 revalidates hold ownership before payment and converts it to a confirmed calendar block on success. | Product Owner / Verification resolution |
-| 2026-09-16 | 2.5 | Completed accepted-snapshot screen provenance: Patient Screen 1 and Provider/Admin booking details now enumerate inherited provider, treatment, graft, clinician, note, visual-plan, requirement, attachment, expiry, version, and acceptance-audit context as read-only snapshot data. Consolidated verification remains pending. | Product Owner / Verification resolution |
-| 2026-10-14 | 2.6 | Aligned provider suspension/deactivation cancellation cascade per CR-FR015-20261013-01 and FR-015 v1.9: added Alternative Flow B4, Provider-Status Cancellation payment rule, racing-capture edge case, REQ-006-015, Booking cancellationReason/supportRequired attributes, and the cascade slot-release trigger. Consolidated verification remains pending. | Vân Tay Media |
-| 2026-10-16 | 2.7 | MTG-002 quote model alignment: one fixed post-acceptance hold for the FR-026 duration keyed by provider, appointment date/time and time zone, never extended by payment failure, with the appointment record created only on payment (S1-2, S2-5, S1-6; M3, M4, D14); first-payment-only Payment Window Expired boundary and recovery route (S1-1; D1); guarded admin revive and date change replacing unrestricted status/date edits (FR-006-3; D2, D11, M17); new Alternative Flow B5 provider-fault transfer with payment placeholder (S1-3; D3, D6, D6-M); promotion and commission wording (S2-4; D12, D13, M5); triggered FR-030 events (S4-1, S4-2; D22, M13, M17); booking-only `Confirmed` (D23); REQ-006-016 to REQ-006-018 added. Provider suspension or deactivation after acceptance now closes the booking and hands off to the B5 transfer with the payment placeholder, replacing "no automatic refund or rebooking"; B3 supersession via linked record (M18, FR-006-8). Minors: FR-006-5, FR-006-6, FR-006-7, S1-9, FR-006-9 (O), FR-006-10 (O). Cross-FR alignment: REQ-006-011 now names the exact FR-030 event keys; REQ-006-017 routes admin date changes to an FR-008 travel review. See CR-FR006-20261016-01. Consolidated verification pending. | Product Owner / Documentation |
-| 2026-10-16 | 2.8 | Product Owner Q-series follow-up (Q18, Q23): Alternative Flow B5 step 7 and REQ-006-018 now state that the replacement booking receives the carried-over passport and copied flight and hotel records flagged "travel-date review required" per FR-008, with originals read-only on the closed booking; Overlapping Appointment Prevention rule and User Story 3 scenario 1 now state that the active-hold uniqueness rule (provider, appointment date/time, time zone) makes a concurrent second acceptance fail and the patient is told the slot was just taken. See [CR-FR006-20261016-01](./change-request-2026-10-16-mtg002-quote-model-alignment.md). Consolidated verification pending. | Product Owner / Documentation |
-| 2026-10-18 | 2.9 | Consolidated verification corrections: booking Total Amount on Screen 1 is the accepted price after promotion, and Screens 4 and 6 add an Accepted Price row beside the pre-promotion Offered Price (Q25, D12); B2 trigger is patient-only and User Story 4 routes provider withdrawal or drop-out to the Alternative Flow B5 transfer, with refund amounts left to the payment placeholder (D6, D6-M); REQ-006-011 and Dependencies no longer list `quote.withdrawn` as an FR-006 event (FR-004 is the only producer; FR-006 reacts by starting B5), add admin exception recipients for hold expiring soon, Payment Window Expired and provider-fault replacement, and B5 step 6 notifies patient and admin instead of both providers (Q11, Q31, Q32); admin revive takes one promotion use again by source (re-reserved for provider-selected promotions and patient codes, taken again for automatic promotions) (Q30); admin date change on Screen 6 and in the intervention rules triggers an FR-008 travel-date review. See CR-FR006-20261016-01. | Product Owner / Documentation |
-| 2026-10-18 | 2.10 | Final audit corrections (Q35, Q36, Q37, Q42, Q43): Alternative Flow B5 now uses an admin-authored replacement quote for the replacement provider in the same inquiry, and the replacement AcceptanceEvent points to its quote, option and date-price row; the single supersession record is written at the replacement acceptance, while the B4 and B5 closures are recorded on the booking as its cause. New Alternative Flow B6: a provider fault during `Aftercare` keeps the booking and treatment record and hands the case to the FR-011 aftercare reassignment with no new acceptance or payment; B4 no longer cancels `Aftercare` bookings. B2 and B3 are admin-only cancellations (support-routed patient requests from acceptance onward), from any non-terminal booking state, with the booking and inquiry `Cancelled` and the accepted quote kept `accepted`; Payment Window Expired recovery is support-routed; patient Screens 1 and 2 show Contact Support. Booking entity lists every `Cancelled` entry by source state, actor and cause. FR-006 now produces `booking.rescheduled` (mandatory, patient and provider) on the admin appointment change and `booking.cancelled` on admin cancellation; booking notices read the booking's current appointment; `booking.scheduled` is patient-only and mandatory and also fires on the replacement acceptance, and the replacement provider is told by `quote.accepted`. Screen 6 Booking Status and appointment fields are read-only and its actions open new admin Screens 7 (Revive Booking), 8 (Change Appointment), 9 (Cancel Booking) and 10 (Provider-Fault Transfer and Replacement Quote), plus a Reassign Aftercare link to FR-011. Booking key attributes use the hold-key fields instead of `slotId`. The `In Progress` provider-fault route is listed under Marking Unclear Requirements. User Story 4, REQ-006-004, REQ-006-005, REQ-006-011, REQ-006-017 and REQ-006-018 updated. Round-two corrections (Q45, Q49): a provider fault while `In Progress` keeps the booking `In Progress` with `supportRequired` (B4 no longer cancels `In Progress` bookings), and new Alternative Flow B7 and admin Screen 11 let the admin either move the booking to `Aftercare` and reassign the aftercare provider through FR-011 Screen 19 or cancel it through Screen 9; the B5 transfer, Screen 10 and the Start Provider-Fault Transfer action are limited to bookings before treatment starts, the Marking Unclear entry is resolved, and REQ-006-019 is added. B5 now cites FR-004 Workflow 7 and Screen 8 for the replacement quote, and a replacement quote that is not accepted expires normally while the inquiry stays `supportRequired` and the admin may author another or cancel. Admin cancellation (B2, B3, Screen 9) no longer writes a supersession record, matching the schema's supersession causes (`ProviderFault`, `ProviderSuspended`, `ProviderDeactivated`). See CR-FR006-20261016-01. | Product Owner / Documentation |
-| 2026-10-27 | 2.11 | Product Owner decisions on the FR-015 follow-up questions (F3, F14, F1, F2). Clarification (F3): the Main Flow now states that the booking is created with status `Accepted` in the same transaction as the FR-005 AcceptanceEvent and the slot hold, and that the appointment record (`schedules`) is created only at the first successful payment; Alternative Flow B1 step 4 now separates the booking record, which stays as `Payment Window Expired`, from the appointment record, which is never created. Change (F14): admin revive (Screen 7), admin appointment change (Screen 8), and the admin-authored replacement acceptance (Screen 10) are blocked when the provider concerned is `Suspended` or `Deactivated`; new Admin Status and Date Intervention rule and REQ-006-020. See [CR-FR006-20261027-02](./change-request-2026-10-27-admin-actions-require-active-provider.md). The legacy booking status value migration is recorded in [CR-FR006-20261027-01](./change-request-2026-10-27-legacy-status-value-migration.md); the requirement values are unchanged. | Product Owner |
-| 2026-11-20 | 2.12 | Requirements graph programme baseline: owner rulings applied. Main changes: the deposit percentage setting, its calculation and the new-bookings-only rule now live in FR-029 (REQ-006-012 retired; REQ-006-030 shortened; deposit-change rule not kept here); the refund ladder setting moves to FR-029; every payment field on the Booking moves to FR-007 and Booking keeps status and cause; one "Payment status" list owned by FR-007 (labels Unpaid, Deposit only, Installments active, Full paid, Refunded, At Risk; Overdue stays a calculated flag); the payment breakdown is owned by FR-007; the Check In rule is owned by FR-010; REQ-006-005 gains the hold key and the "Contact support" route; REQ-006-017 states that a revive does not extend the expired hold and that the Initial Payment Guard runs against the new hold; REQ-006-011 and the event list shortened to point at the FR-020 and FR-030 notification Rules, with `booking.confirmed` and `booking.appointment_reminder` added; audit logs kept 10 years; admin tools list reads Screens 6 to 11; treatment field reads the inquiry treatment area snapshot and Budget Range removed; installment progress read from the installment plan; provider-fault withdrawal (B5) refunds the patient everything paid and a replacement booking takes a new payment, with no default clinic cancellation charge; a deposit-plan balance unpaid at the set cancellation point cancels the booking; admin emergency edit of non-money booking details added (mandatory reason, full before and after history, payment records immutable); Ticket Source values read from FR-034; Stripe Connect money-movement decisions noted as replacing the missing Payment Routing Spec; new Rules REQ-006-071 to REQ-006-074; cross-document reconciliation (retention, refund wording, support-reply sentence). | Product Owner / Documentation |
-| 2026-11-22 | 2.13 | Owner answer of 2026-11-22 (requirements graph programme, Phase 4 re-check): an installment plan default notifies the admin, the patient and the provider (edge case in Booking and payment edge cases reworded; matches FR-007B REQ-007b-020). | Product Owner / Documentation |
-| 2026-11-22 | 2.14 | Owner ruling 2026-11-22: a booking cancelled by a provider suspension or deactivation (Alternative Flow B4) takes the same patient payment terms as a provider withdrawal or drop-out (B5): full refund of everything paid, no cancellation fee, new payment on the replacement booking; the "credit moves with the patient" placeholder is removed (B4 step 4, B5 Payment terms, Screen 10 field note, refund rules, Provider-Status Cancellation, racing-capture edge case, REQ-006-015). A treatment already started and interrupted by the provider's fault (B7): an admin reviews each case and sets the patient refund amount from zero up to the full amount paid with a mandatory reason and an audit entry, and the provider's payout for the booking is held until the admin decides (B7 Payment terms, Screen 11 fields and rules, REQ-006-019); Acceptance Scenarios 5 and 6 added to User Story 4. The clinic charge stays with B5 only. | Product Owner / Documentation |
-| 2026-11-22 | 2.15 | Wording clean-up after the cross-FR consistency review: the stale 'payment placeholder' pointer is replaced by a pointer to the refund rules FR-006 already states (the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault). No rule changes. | Product Owner / Documentation |
+| 2026-11-22 | 2.16 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v2.15) and the change requests CR-FR006-20260915-01, CR-FR006-20261016-01, CR-FR006-20261027-01 and CR-FR006-20261027-02 (also cited: CR-FR015-20261013-01) are in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
 
 ---
 
