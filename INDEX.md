@@ -188,29 +188,29 @@ For each doc type: where its structure is **defined** (template/source) and the 
 
 > **Change Requests** are project-owned supplements, not Spec Kit inputs. Create one beside each affected FR PRD only for a major event: a new or materially revised FR changes a verified or implemented FR, or an approved restructure substantially changes requirements, ownership, workflow, data, security, or integration contracts. Small corrections remain in the PRD change log and normal update log. A Change Request records the approved documentation delta separately from implementation reconciliation; it never proves that the deployed system already matches the new contract.
 
-### C.1 — FR PRD scaffold (identical across all 38 FRs)
+### C.1 — FR PRD scaffold (compressed structure, all 38 FRs)
 
 ```md
 ## Executive Summary
 ## Module Scope            (Multi-Tenant Architecture / Breakdown, Entry Points)
 ## Business Workflows      (Main Flows, Alternative Flows)
-## Screen Specifications   ← usually the LARGEST block; range-read one platform only
-      ### 1. Patient Platform Screens
-      ### 2. Provider Platform Screens
-      ### 3. Admin Platform Screens
-## Business Rules
-## Success Criteria
-## Dependencies            (Internal / External / Data)
-## Assumptions
-## Implementation Notes
-## User Scenarios & Testing
+## Screen Specifications   ← usually the LARGEST block; range-read one screen only
+      field tables end with a `Graph field` column (graph field id per row)
+## Business Rules          each rule stated once, cited by its REQ id; rescued clauses sit here
+## Dependencies            one list of related FR ids
+## User Scenarios & Testing   (user stories, acceptance scenarios, edge cases)
 ## Functional Requirements Summary
-## Key Entities
-## Appendix: Change Log
+## Appendix: Change Log    restarted on 2026-11-22; earlier rows are in the archive
 ## Appendix: Approvals
 ```
 
-Matches `project-requirements/templates/prd-template.md` (canonical; also available through the
+The 38 PRDs were compressed on 2026-11-22 and 2026-11-23 under
+`project-requirements/graph/checklists/prd-structure.md` v1.0. Success Criteria, Assumptions,
+Implementation Notes and Key Entities are no longer PRD sections: entities and fields live in the
+requirements graph, and the pre-compression PRDs and all change-request files are kept in the
+workspace-root archive `archived/prd-baseline-2026-11-08/` (one folder per FR).
+
+`project-requirements/templates/prd-template.md` still carries the pre-compression section list (canonical; also available through the
 `.specify/templates/prd-template.md` compatibility path). Confirm live anchors with
 `rg -n "^## " <prd.md>` — a few early FRs may omit the trailing appendices.
 
