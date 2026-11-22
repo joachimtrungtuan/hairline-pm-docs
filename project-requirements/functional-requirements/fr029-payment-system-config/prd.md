@@ -842,11 +842,11 @@ The module delivers value by:
 - **Concurrency**: See system PRD, Platform-Wide Rules: Concurrent admin edits: warn, then last save wins (REQ-SYS-012)
 - **Threat mitigation**: See system PRD, Platform-Wide Rules: Admin API rate limit (REQ-SYS-008)
 - S-02 also owns locale-aware number formatting (decimal separator, symbol position, digit grouping, and RTL currency rendering) as a shared service capability consumed by FR-021. (REQ-021-053)
-
----
 - **Integration point**: Payment Configuration queries regional groupings to map Stripe accounts to countries/regions; FR-028 enforces one-country-to-one-grouping, so Stripe account mapping must respect that uniqueness (conflicts resolved via override)
 - **Integration point**: Booking service queries Payment Configuration API for deposit rate, effective commission configuration, and split payment rules; provider-specific commission may be authored in FR-029 Screen 5 or FR-015 Tab 7, but the booking flow resolves a single effective record before storing the booking-time commission snapshot
 - **Integration point**: Payment Configuration uses provider IDs for provider-specific deposit assignment and provider-specific commission scopes; FR-015 provides the single-provider commission edit surface, payout destination details are managed in FR-032, and payout execution is handled in FR-017
+
+---
 
 ## Dependencies
 
