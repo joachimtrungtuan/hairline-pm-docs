@@ -3,29 +3,9 @@
 **Module**: A-02: Provider Management & Onboarding
 **Feature Branch**: `fr015-provider-management`
 **Created**: 2025-11-11
-**Version**: 1.25
+**Version**: 1.26
 **Status**: Revised 2026-11-22 (owner ruling: provider-status cancellation payment terms); previously revised 2026-11-20 (requirements graph programme baseline: owner rulings applied); previously revised 2026-10-28 (backend confirmations: seat usage member statuses, changed-fields-only saves, Owner login email change notice); previously revised 2026-10-27 (dev-team follow-up question resolution: save conflicts, data encryption, seat usage, impersonation, notification timing and recipients, cascade timing), pending consolidated verification; implementation reconciliation pending
 **Source**: FR-015 from system-prd.md (§ FR-015: Provider Management (Admin-Initiated))
-**Change Request**: [CR-FR015-20261013-01 — Provider lifecycle and accepted subquote contracts](change-request-2026-10-13-provider-lifecycle-subquote-contracts.md)
-**Change Request**: [CR-FR015-20261016-01 — MTG-002 quote model alignment](change-request-2026-10-16-mtg002-quote-model-alignment.md)
-**Change Request**: [CR-FR015-20261027-01 — Last-save-wins edits, at-rest encryption of provider contact data, and seat usage](change-request-2026-10-27-save-conflict-encryption-seat-usage.md)
-**Related Change Request**: [CR-FR009-20261028-01 — Invitation and team member model, seat usage](../fr009-provider-team-roles/change-request-2026-10-28-invitation-member-model.md) — seat usage counts Active and Suspended non-Owner members plus valid pending invitations
-**Related Change Request**: [CR-FR032-20261015-01](../fr032-provider-dashboard-settings/change-request-2026-10-15-provider-commission-panel-suspension-banner.md) — FR-032 Commission & Payout panel and provider account-status banner
-**Related Change Request**: [CR-FR029-20261014-01 — Provider-specific Flat Rate commission in FR-029](../fr029-payment-system-config/change-request-2026-10-14-provider-flat-rate-commission.md)
-**Related Change Request**: [CR-FR029-20261015-01 — Single-provider scope edits and scheduled commission configuration](../fr029-payment-system-config/change-request-2026-10-15-single-provider-scope-scheduled-commission.md)
-**Related Change Request**: [CR-FR009-20261015-01 — Admin per-provider staff invite and limited-write impersonation](../fr009-provider-team-roles/change-request-2026-10-15-admin-staff-invite-impersonation.md)
-**Related Change Request**: [CR-FR017-20261015-01 — Post-suspension payment reconciliation](../fr017-admin-billing-finance/change-request-2026-10-15-post-suspension-payment-reconciliation.md)
-**Related Change Request**: [CR-FR026-20261015-01 — Managed Provider Specialties list](../fr026-app-settings-security/change-request-2026-10-15-provider-specialty-list.md)
-**Related Change Request**: [CR-FR032-20261015-02 — Account closure as an admin-processed deactivation request](../fr032-provider-dashboard-settings/change-request-2026-10-15-account-closure-deactivation-request.md)
-**Related Change Request**: [CR-FR020-20261015-01 — Mandatory provider lifecycle events](../fr020-notifications-alerts/change-request-2026-10-15-provider-lifecycle-events.md)
-**Related Change Request**: [CR-FR030-20261015-01 — Provider lifecycle events in the notification catalog](../fr030-notification-rules-config/change-request-2026-10-15-provider-lifecycle-events.md)
-**Related Change Request**: [CR-FR009-20261015-02 — Global provider email identity rule](../fr009-provider-team-roles/change-request-2026-10-15-global-provider-email-identity.md)
-**Related Change Request**: [CR-FR032-20261015-03 — Closure request notifications and admin marker](../fr032-provider-dashboard-settings/change-request-2026-10-15-closure-request-notifications.md)
-**Related Change Request**: [CR-FR020-20261015-02 — Provider closure request events](../fr020-notifications-alerts/change-request-2026-10-15-provider-closure-request-events.md)
-**Related Change Request**: [CR-FR030-20261015-02 — Provider closure request events in the notification catalog](../fr030-notification-rules-config/change-request-2026-10-15-provider-closure-request-events.md)
-**Related Change Request**: [CR-FR029-20261015-02 — Suspended providers in provider-specific commission scopes](../fr029-payment-system-config/change-request-2026-10-15-suspended-provider-commission-scopes.md)
-**Related Change Request**: [CR-FR003-20261015-01 — Distribution requires a set password](../fr003-inquiry-submission/change-request-2026-10-15-distribution-requires-password-set.md)
-**Related Change Request**: [CR-FR020-20261027-01 — Admin-support alert recipients and provider status email timing](../fr020-notifications-alerts/change-request-2026-10-27-admin-support-recipients-status-email-timing.md)
 
 ---
 
@@ -45,7 +25,7 @@ The Provider Management module enables administrators to onboard and manage hair
 
 ### Multi-Tenant Architecture
 
-- **Patient Platform (P-02)**: Views featured provider listings (data consumed from A-02). **[P2 - Post-MVP]**: patient-facing display ships with FR-022 patient provider search; the admin featured flag and 10-provider cap are MVP.
+- **Patient Platform (P-02)**: Views featured provider listings (data consumed from A-02). **[P2 - Post-MVP]**: patient-facing display ships with FR-022 patient provider search; the admin featured flag and 10-provider cap are MVP. (REQ-015-046)
 - **Provider Platform (PR-01, PR-06)**: Providers sign in via PR-01 (FR-009) and view their profile status and uploaded documents in PR-06 (FR-032). They read data managed by A-02 and edit the allowed fields via FR-032. **Fields must align with FR-032**.
 - **Admin Platform (A-02)**: Full provider lifecycle management including creation, document upload (record-keeping), commission configuration, and status changes.
 - **Shared Services (S-03, S-05, S-06)**: S-03 (Notification Service) for provider lifecycle emails; S-05 (Media Storage) for profile images and document storage; S-06 (Audit Log Service) for creation and status-change logs.
@@ -59,9 +39,9 @@ The Provider Management module enables administrators to onboard and manage hair
 
 **Provider Platform (PR-01, PR-06)**:
 
-- Providers view their own profile (synced with A-02).
-- Providers see uploaded documents (for reference).
-- Providers view configured commission rates (read-only) in the FR-032 Screen 4 Commission & Payout panel.
+- Providers view their own profile (synced with A-02). (REQ-015-047)
+- Providers see uploaded documents (for reference). (REQ-015-047)
+- Providers view configured commission rates (read-only) in the FR-032 Screen 4 Commission & Payout panel. (REQ-015-047)
 - **Note**: Providers can edit profile fields (Bio, Languages, Awards, Profile Picture, Contact details) via **FR-032: Provider Dashboard Settings & Profile Management**, which updates the A-02 record. All editable fields must align between FR-015 and FR-032 to ensure consistency.
 
 **Admin Platform (A-02)**:
@@ -84,7 +64,7 @@ The Provider Management module enables administrators to onboard and manage hair
 
 - Email notifications to providers when account is created/activated.
 - Notification to providers when their account is suspended/deactivated.
-- Mandatory cancellation notifications to affected patients and support alerts to admins when provider status changes cancel cases. Patient messages must explain the provider-related cancellation and direct the patient to contact admins; the optional provider-email checkbox does not disable these notifications.
+- Mandatory cancellation notifications to affected patients and support alerts to admins when provider status changes cancel cases. Patient messages must explain the provider-related cancellation and direct the patient to contact admins; the optional provider-email checkbox does not disable these notifications. (REQ-015-019)
 
 **Out of Scope**:
 
@@ -93,9 +73,9 @@ The Provider Management module enables administrators to onboard and manage hair
 
 ### Entry Points
 
-- **Admin-Initiated**: Admin accesses "Provider Management" section in Admin Platform dashboard → selects "Add New Provider" to initiate provider creation workflow
+- **Admin-Initiated**: Admin accesses "Provider Management" section in Admin Platform dashboard → selects "Add New Provider" to initiate provider creation workflow (REQ-015-051)
 - **Admin Oversight**: Admin opens "Providers" list view to see all providers across all statuses (active, suspended, deactivated) with filtering and search
-- **Provider Profile Access (Provider-Side)**: Provider logs into Provider Platform → views account status (FR-032 Rule 6 banner when Suspended), uploaded documents (FR-032 Tab 6: Documents), and commission configuration read-only in FR-032 Screen 4: Billing Settings (Commission & Payout panel, Owner role only)
+- **Provider Profile Access (Provider-Side)**: Provider logs into Provider Platform → views account status (FR-032 Rule 6 banner when Suspended), uploaded documents (FR-032 Tab 6: Documents), and commission configuration read-only in FR-032 Screen 4: Billing Settings (Commission & Payout panel, Owner role only) (REQ-015-054)
 
 ---
 
@@ -261,29 +241,29 @@ The Provider Management module enables administrators to onboard and manage hair
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Search Bar | text | No | Free-text search by provider name, clinic name, email, license number | Max 200 chars |
-| Status Filter | multi-select dropdown | No | Filter providers by status (Active, Suspended, Deactivated) | Multiple selections allowed |
-| Featured Filter | checkbox | No | Filter to show only featured providers | Boolean toggle |
-| Commission Type Filter | select | No | Filter by commission structure (Percentage, Flat Rate, All) | Single selection |
-| Closure Requested Filter | checkbox | No | Show only providers with a pending FR-032 account-closure request (status Pending Admin Review) | Boolean toggle |
-| Date Range Filter | date range picker | No | Filter by provider creation date or Last Activity Date. Last Activity Date is system-derived: the most recent of the provider's last FR-004 Parent Quote submission and last FR-006 booking confirmation (empty if neither has occurred) | Valid date range required; providers with no Last Activity Date are excluded when filtering by it |
-| Status Count Tiles | display | N/A | Counts of Active, Suspended, and Deactivated providers shown above the table (SC-012) | System calculated from provider status; counts all providers regardless of active filters; refresh with real-time status updates |
-| Provider List Table | data table | N/A | Displays provider rows with columns: Name, Clinic, Status, Featured, Commission Rate, Created Date, Actions | Paginated (50 rows per page) |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------ | --- |
+| Search Bar | text | No | Free-text search by provider name, clinic name, email, license number | Max 200 chars | no graph field (control) |
+| Status Filter | multi-select dropdown | No | Filter providers by status (Active, Suspended, Deactivated) | Multiple selections allowed | ENT-provider.status |
+| Featured Filter | checkbox | No | Filter to show only featured providers | Boolean toggle | ENT-provider.featured |
+| Commission Type Filter | select | No | Filter by commission structure (Percentage, Flat Rate, All) | Single selection | ENT-commission-rate-config.commission_model |
+| Closure Requested Filter | checkbox | No | Show only providers with a pending FR-032 account-closure request (status Pending Admin Review) | Boolean toggle | no graph field (control) |
+| Date Range Filter | date range picker | No | Filter by provider creation date or Last Activity Date. Last Activity Date is system-derived: the most recent of the provider's last FR-004 Parent Quote submission and last FR-006 booking confirmation (empty if neither has occurred) | Valid date range required; providers with no Last Activity Date are excluded when filtering by it (REQ-015-093) | ENT-provider.created_at, ENT-provider.last_activity_date |
+| Status Count Tiles | display | N/A | Counts of Active, Suspended, and Deactivated providers shown above the table (SC-012) | System calculated from provider status; counts all providers regardless of active filters; refresh with real-time status updates (REQ-015-094) | ENT-provider.status |
+| Provider List Table | data table | N/A | Displays provider rows with columns: Name, Clinic, Status, Featured, Commission Rate, Created Date, Actions | Paginated (50 rows per page) | ENT-provider.name, ENT-provider-profile.clinic_name, ENT-provider.status, ENT-provider.featured, ENT-commission-rate-config.commission_model, ENT-commission-rate-config.commission_percentage, ENT-commission-rate-config.flat_rate_amount, ENT-commission-rate-config.flat_rate_currency, ENT-provider.created_at |
 
 **Business Rules**:
 
-- **Default View**: Dashboard displays all providers with status = "Active" by default on initial load
-- **Search**: Search queries match against provider name, clinic name, email, medical license number (case-insensitive)
-- **Status Badge Colors**: Active (green), Suspended (yellow), Deactivated (red)
-- **Featured Badge**: Gold star icon displayed next to provider name if featured = true
-- **Quick Actions**: Each row includes action buttons: "View Profile", "Edit", "Set Featured" (if active and not featured), "Unset Featured" (if featured), "Suspend" (if active), "Reactivate" (if suspended; opens Screen 5), "Deactivate" (if active/suspended), "Cancel Scheduled Change" (if a scheduled suspension/deactivation is pending)
-- **Closure Requested Marker**: Rows with a pending FR-032 account-closure request show a "Closure Requested — DD-MM-YYYY" badge (request date) next to the status badge, linking to the request in the provider profile (A7). While a deactivation scheduled from the request is pending, the badge reads "Closure requested, deactivation scheduled DD-MM-YYYY" (Effective Date). The marker clears when the request is Approved (the deactivation has taken effect) or Rejected
+- **Default View**: Dashboard displays all providers with status = "Active" by default on initial load (REQ-015-089)
+- **Search**: Search queries match against provider name, clinic name, email, medical license number (case-insensitive) (REQ-015-089)
+- **Status Badge Colors**: Active (green), Suspended (yellow), Deactivated (red) (REQ-015-095)
+- **Featured Badge**: Gold star icon displayed next to provider name if featured = true (REQ-015-095)
+- **Quick Actions**: Each row includes action buttons: "View Profile", "Edit", "Set Featured" (if active and not featured), "Unset Featured" (if featured), "Suspend" (if active), "Reactivate" (if suspended; opens Screen 5), "Deactivate" (if active/suspended), "Cancel Scheduled Change" (if a scheduled suspension/deactivation is pending) (REQ-015-090, REQ-015-122)
+- **Closure Requested Marker**: Rows with a pending FR-032 account-closure request show a "Closure Requested — DD-MM-YYYY" badge (request date) next to the status badge, linking to the request in the provider profile (A7). While a deactivation scheduled from the request is pending, the badge reads "Closure requested, deactivation scheduled DD-MM-YYYY" (Effective Date). The marker clears when the request is Approved (the deactivation has taken effect) or Rejected (REQ-015-088, REQ-015-087)
 - **Scheduled Change Marker**: Rows with a pending scheduled status change show "Scheduled: Suspend on DD-MM-YYYY" or "Scheduled: Deactivate on DD-MM-YYYY" next to the status badge
-- **Sorting**: Table columns sortable by name (alphabetical), created date (chronological), and commission rate. Commission rate sorting groups by model: all Percentage providers first, ordered by percentage value, then all Flat Rate providers, ordered by Flat Rate Currency (ISO code) and then amount. Descending order reverses the value order within each group; amounts in different currencies are never compared. A provider on the FR-029 global default sorts by the default value, in the group of the default model
-- **Commission Rate Column**: Shows the provider's current effective commission. A provider on the FR-029 global default shows the default rate with "(Default)", for example "15% (Default)". A provider whose only provider-specific configuration is future-dated shows its current effective rate (the global default until the Effective Date) plus a "Scheduled" tag
-- **Pagination**: Display 50 providers per page, with page navigation controls
+- **Sorting**: Table columns sortable by name (alphabetical), created date (chronological), and commission rate. Commission rate sorting groups by model: all Percentage providers first, ordered by percentage value, then all Flat Rate providers, ordered by Flat Rate Currency (ISO code) and then amount. Descending order reverses the value order within each group; amounts in different currencies are never compared. A provider on the FR-029 global default sorts by the default value, in the group of the default model (REQ-015-091)
+- **Commission Rate Column**: Shows the provider's current effective commission. A provider on the FR-029 global default shows the default rate with "(Default)", for example "15% (Default)". A provider whose only provider-specific configuration is future-dated shows its current effective rate (the global default until the Effective Date) plus a "Scheduled" tag (REQ-015-092)
+- **Pagination**: Display 50 providers per page, with page navigation controls (REQ-015-095)
 
 **Notes**:
 
@@ -304,60 +284,60 @@ The Provider Management module enables administrators to onboard and manage hair
 
 #### Step 1: Basic Information
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Profile Picture / Logo | file upload | No | Provider's photo or clinic logo (aligns with FR-032 Tab 1) | Max 5MB, JPEG/PNG, min 200x200px, recommended 500x500px |
-| Cover Image | file upload | No | Large banner image for clinic profile (aligns with FR-032 Tab 1) | Max 10MB, JPEG/PNG, recommended 1920x300px |
-| First Name | text | Yes | Provider's legal first name | Max 50 chars |
-| Last Name | text | Yes | Provider's legal last name | Max 50 chars |
-| Email Address | email | Yes | Primary email (login ID) | Valid email; must satisfy the FR-009 global provider email identity rule (Rule 3, REQ-009-008): not used by another provider organization as Owner, team member, or pending invitation; Deactivated providers' emails are freed for reuse |
-| Phone Number | phone | Yes | Contact phone with country code | Valid format |
-| Bio / Description | textarea | Yes | Public-facing provider biography (aligns with FR-032 Tab 1 "About/Description") | Max 500 chars, min 50 chars |
-| Seat Limit | number | No | Maximum number of team members (staff) the provider can invite (aligns with FR-009 team management). Seat usage counts non-Owner team members with status Active or Suspended plus invitations with status Pending that are not past expiry; the Owner, Removed members, and Expired, Cancelled, or Accepted invitations do not count (FR-009 Rule 6, CR-FR009-20261028-01) | Integer, range 1-500, default: 100. Can be adjusted later by admin if provider requests increase |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------ | --- |
+| Profile Picture / Logo | file upload | No | Provider's photo or clinic logo (aligns with FR-032 Tab 1) | Max 5MB, JPEG/PNG, min 200x200px, recommended 500x500px | ENT-provider-profile.logo_url |
+| Cover Image | file upload | No | Large banner image for clinic profile (aligns with FR-032 Tab 1) | Max 10MB, JPEG/PNG, recommended 1920x300px | ENT-provider-profile.cover_image_url |
+| First Name | text | Yes | Provider's legal first name | Max 50 chars (REQ-015-096) | ENT-provider.first_name |
+| Last Name | text | Yes | Provider's legal last name | Max 50 chars | ENT-provider.last_name |
+| Email Address | email | Yes | Primary email (login ID) | Valid email; must satisfy the FR-009 global provider email identity rule (Rule 3, REQ-009-008): not used by another provider organization as Owner, team member, or pending invitation; Deactivated providers' emails are freed for reuse | ENT-provider.email |
+| Phone Number | phone | Yes | Contact phone with country code | Valid format (REQ-015-129) | ENT-provider.phone |
+| Bio / Description | textarea | Yes | Public-facing provider biography (aligns with FR-032 Tab 1 "About/Description") | Max 500 chars, min 50 chars (REQ-015-096) | ENT-provider.bio |
+| Seat Limit | number | No | Maximum number of team members (staff) the provider can invite (aligns with FR-009 team management). Seat usage counts non-Owner team members with status Active or Suspended plus invitations with status Pending that are not past expiry; the Owner, Removed members, and Expired, Cancelled, or Accepted invitations do not count (FR-009 Rule 6, CR-FR009-20261028-01) | Integer, range 1-500, default: 100. Can be adjusted later by admin if provider requests increase | ENT-provider.seat_limit |
 
 #### Step 2: Professional Details
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Specialty | select | Yes | Primary medical specialty | Values from the centrally managed Provider Specialties list (FR-026 Screen 5f); active values only |
-| Medical License Number | text | Yes | License identifier (for record) | Max 50 chars |
-| Years of Experience | number | Yes | Years practicing | Numeric, 0-60 |
-| Languages Spoken | multi-select chip/pill | Yes | Languages spoken at clinic (aligns with FR-032 Tab 2) | At least 1 language required; consumes the central language catalog owned by FR-021 (Multi-Language & Localization) |
-| Awards & Recognition | dynamic list | No | List of awards (aligns with FR-032 Tab 4) | Each award: name (max 100 chars), issuer/organization (max 150 chars, optional), description (max 300 chars), year (1900-current), award image (max 2MB, JPEG/PNG) |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------ | --- |
+| Specialty | select | Yes | Primary medical specialty | Values from the centrally managed Provider Specialties list (FR-026 Screen 5f); active values only (REQ-015-097) | ENT-provider.specialty |
+| Medical License Number | text | Yes | License identifier (for record) | Max 50 chars | ENT-provider.medical_license_number |
+| Years of Experience | number | Yes | Years practicing | Numeric, 0-60 | ENT-provider.years_experience |
+| Languages Spoken | multi-select chip/pill | Yes | Languages spoken at clinic (aligns with FR-032 Tab 2) | At least 1 language required; consumes the central language catalog owned by FR-021 (Multi-Language & Localization) (REQ-015-098) | ENT-provider-profile.supported_languages |
+| Awards & Recognition | dynamic list | No | List of awards (aligns with FR-032 Tab 4) | Each award: name (max 100 chars), issuer/organization (max 150 chars, optional), description (max 300 chars), year (1900-current), award image (max 2MB, JPEG/PNG) | ENT-provider.awards |
 
 #### Step 3: Clinic Information
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Clinic Name | text | Yes | Name of practice/clinic (aligns with FR-032 Tab 1) | Min 3, max 200 chars |
-| Clinic Address | address | Yes | Full physical address (admin-only record) | Google Places or manual entry |
-| Contact Email | email | Yes | Public clinic contact email shown on provider profile (aligns with FR-032 Tab 1 "Contact Email") | Valid email format; unique among Active and Suspended providers (Deactivated records ignored) |
-| Location - City | text | No | Public display city shown to patients (aligns with FR-032 Tab 1); pre-filled from Clinic Address and editable separately | Max 100 chars |
-| Location - Country | dropdown | No | Public display country shown to patients (aligns with FR-032 Tab 1); pre-filled from Clinic Address and editable separately | Values from centrally managed country list (FR-026) |
-| Contact Phone (Public) | phone | No | Public clinic phone number (aligns with FR-032 "Contact Phone (Public)") | Contains Country Code (dropdown, FR-026) and Number (numeric only, length validated per country code) |
-| Website URL | url | No | Public-facing clinic website (aligns with FR-032 Tab 1) | Valid URL format (http/https); auto-prepends https:// if protocol missing |
-| Operating Hours | text | No | e.g., "Mon-Fri 9am-5pm" | Free text |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------ | --- |
+| Clinic Name | text | Yes | Name of practice/clinic (aligns with FR-032 Tab 1) | Min 3, max 200 chars | ENT-provider-profile.clinic_name |
+| Clinic Address | address | Yes | Full physical address (admin-only record) | Google Places or manual entry | ENT-provider-profile.address_fields |
+| Contact Email | email | Yes | Public clinic contact email shown on provider profile (aligns with FR-032 Tab 1 "Contact Email") | Valid email format; unique among Active and Suspended providers (Deactivated records ignored) | ENT-provider-profile.contact_email |
+| Location - City | text | No | Public display city shown to patients (aligns with FR-032 Tab 1); pre-filled from Clinic Address and editable separately | Max 100 chars | ENT-provider-profile.city |
+| Location - Country | dropdown | No | Public display country shown to patients (aligns with FR-032 Tab 1); pre-filled from Clinic Address and editable separately | Values from centrally managed country list (FR-026) | ENT-provider-profile.country |
+| Contact Phone (Public) | phone | No | Public clinic phone number (aligns with FR-032 "Contact Phone (Public)") | Contains Country Code (dropdown, FR-026) and Number (numeric only, length validated per country code) (REQ-015-129) | ENT-provider-profile.public_phone |
+| Website URL | url | No | Public-facing clinic website (aligns with FR-032 Tab 1) | Valid URL format (http/https); auto-prepends https:// if protocol missing | ENT-provider-profile.website_url |
+| Operating Hours | text | No | e.g., "Mon-Fri 9am-5pm" | Free text | ENT-provider-profile.operating_hours |
 
 #### Step 4: Documents (Record Keeping)
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Medical License | file upload | Yes | Copy of license (stored as document type "Medical License", uploaded by Admin) | PDF, JPG, PNG, DOCX, XLSX; Max 10MB (same as FR-032 Tab 6) |
-| Board Certification | file upload | No | Copy of certification (type "Board Certification") | PDF, JPG, PNG, DOCX, XLSX; Max 10MB |
-| Insurance Certificate | file upload | No | Proof of malpractice insurance (type "Malpractice Insurance") | PDF, JPG, PNG, DOCX, XLSX; Max 10MB |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------ | --- |
+| Medical License | file upload | Yes | Copy of license (stored as document type "Medical License", uploaded by Admin) | PDF, JPG, PNG, DOCX, XLSX; Max 10MB (same as FR-032 Tab 6) | ENT-provider-document.document_type, ENT-provider-document.file_url |
+| Board Certification | file upload | No | Copy of certification (type "Board Certification") | PDF, JPG, PNG, DOCX, XLSX; Max 10MB | ENT-provider-document.document_type, ENT-provider-document.file_url |
+| Insurance Certificate | file upload | No | Proof of malpractice insurance (type "Malpractice Insurance") | PDF, JPG, PNG, DOCX, XLSX; Max 10MB | ENT-provider-document.document_type, ENT-provider-document.file_url |
 
-*Note: The Medical License file is required to complete the wizard as a record-keeping baseline. Documents are pre-verified outside the system; the system never checks document authenticity or status, and later document changes never alter provider status.*
+*Note: The Medical License file is required to complete the wizard as a record-keeping baseline. Documents are pre-verified outside the system; the system never checks document authenticity or status, and later document changes never alter provider status.* (REQ-015-045)
 
 #### Step 5: Commission & Settings
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Commission Model | radio | Yes | "Percentage" or "Flat Rate" | Default: Percentage |
-| Commission Value | number | Yes | % or Fixed Currency Amount | 0-100 with 0.1% precision (if %) or >0 in the Flat Rate Currency's minor units (if Flat), per FR-029 |
-| Flat Rate Currency | select | Conditional | Currency of the Flat Rate amount (aligns with FR-029 Screen 5 "Flat Rate Currency") | Required when Commission Model = Flat Rate; values from the FR-029 enabled currency list; defaults to the system default currency; hidden for Percentage |
-| Payout Method | radio | Yes | How the clinic's share is paid out, chosen by the admin: "Stripe Connect" or "Manual bank transfer". The clinic cannot choose it and completes Stripe's own sign-up itself; creation does not wait for payout readiness | One of: "Stripe Connect", "Manual bank transfer"; no preselected value |
-| Commission Start Date | date | Yes | Effective date of this commission configuration for newly confirmed bookings; stored as the FR-029 provider-specific commission Effective Date (`effective_date`) | Format: DD-MM-YYYY; today (current UTC date) or a future date |
-| Featured Provider | toggle | No | Highlight in patient search | Default: Off; subject to the 10-provider cap (Rule 8) |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------ | --- |
+| Commission Model | radio | Yes | "Percentage" or "Flat Rate" | Default: Percentage | ENT-commission-rate-config.commission_model |
+| Commission Value | number | Yes | % or Fixed Currency Amount | 0-100 with 0.1% precision (if %) or >0 in the Flat Rate Currency's minor units (if Flat), per FR-029 (REQ-015-100) | ENT-commission-rate-config.commission_percentage, ENT-commission-rate-config.flat_rate_amount |
+| Flat Rate Currency | select | Conditional | Currency of the Flat Rate amount (aligns with FR-029 Screen 5 "Flat Rate Currency") | Required when Commission Model = Flat Rate; values from the FR-029 enabled currency list; defaults to the system default currency; hidden for Percentage | ENT-commission-rate-config.flat_rate_currency |
+| Payout Method | radio | Yes | How the clinic's share is paid out, chosen by the admin: "Stripe Connect" or "Manual bank transfer". The clinic cannot choose it and completes Stripe's own sign-up itself; creation does not wait for payout readiness | One of: "Stripe Connect", "Manual bank transfer"; no preselected value | ENT-provider.payout_method |
+| Commission Start Date | date | Yes | Effective date of this commission configuration for newly confirmed bookings; stored as the FR-029 provider-specific commission Effective Date (`effective_date`) | Format: DD-MM-YYYY; today (current UTC date) or a future date | ENT-commission-rate-config.effective_date |
+| Featured Provider | toggle | No | Highlight in patient search | Default: Off; subject to the 10-provider cap (Rule 8) | ENT-provider.featured |
 
 #### Step 6: Review & Create
 
@@ -366,9 +346,9 @@ The Provider Management module enables administrators to onboard and manage hair
   - "Back": Navigate to previous steps.
   - "Create Provider": Finalizes creation and sets status to **Active**.
 
-**Leaving the wizard**: The wizard does not save drafts. If the admin has entered any data and tries to leave the wizard before "Create Provider" succeeds (in-app navigation, browser Back, or closing/reloading the tab), the system shows the FR-032 unsaved-changes message text, "You have unsaved changes. Are you sure you want to leave?", with only "Stay" and "Leave" actions. The FR-032 Save option is not offered, because the wizard has no drafts. "Leave" discards all entered data; for tab close or reload the browser's native leave-page prompt is used.
+**Leaving the wizard**: The wizard does not save drafts. If the admin has entered any data and tries to leave the wizard before "Create Provider" succeeds (in-app navigation, browser Back, or closing/reloading the tab), the system shows the FR-032 unsaved-changes message text, "You have unsaved changes. Are you sure you want to leave?", with only "Stay" and "Leave" actions. The FR-032 Save option is not offered, because the wizard has no drafts. "Leave" discards all entered data; for tab close or reload the browser's native leave-page prompt is used. (REQ-015-099)
 
-**Upload error messages**: Every admin file upload in this FR (wizard Steps 1, 2 and 4, the profile images and award images on the provider detail tabs, and the Tab 6 Upload Document modal and Replace) validates the file before saving it and shows one inline message under the field. The file is not saved.
+**Upload error messages**: Every admin file upload in this FR (wizard Steps 1, 2 and 4, the profile images and award images on the provider detail tabs, and the Tab 6 Upload Document modal and Replace) validates the file before saving it and shows one inline message under the field. The file is not saved. (REQ-015-064)
 - Wrong format: "Unsupported file type. Allowed: {types}." ({types} is the field's list, e.g. "JPEG, PNG" or "PDF, JPG, PNG, DOCX, XLSX")
 - Too large: "File is too large. Maximum size is {limit} MB." ({limit}: Profile Picture / Logo 5, Cover Image 10, award image 2, documents 10)
 - Below the minimum dimensions (Profile Picture / Logo only): "Image is too small. Minimum size is 200 × 200 pixels."
@@ -387,8 +367,8 @@ The English text is the source copy; other languages follow the normal translati
 
 - **Provider Name / Status Badge** (Active/Suspended/etc.)
 - **Quick Actions**:
-  - "Edit Profile" (opens all tabs in edit mode)
-  - "Resend Activation Email" (requires the FR-031 Edit Providers permission; visible only if password not yet set and status = Active, so it is hidden for Suspended and Deactivated providers, matching Alternative Flow A1; sends new one-time password setup link)
+  - "Edit Profile" (opens all tabs in edit mode) (REQ-015-122)
+  - "Resend Activation Email" (requires the FR-031 Edit Providers permission; visible only if password not yet set and status = Active, so it is hidden for Suspended and Deactivated providers, matching Alternative Flow A1; sends new one-time password setup link) (REQ-015-058)
   - "Suspend/Deactivate" (status management; opens Screen 4)
   - "Reactivate" (visible only if Suspended; opens Screen 5)
   - "Cancel Scheduled Change" (visible only if a scheduled suspension/deactivation is pending; see Screen 4)
@@ -396,7 +376,7 @@ The English text is the source copy; other languages follow the normal translati
 
 **Login as Provider rules**:
 
-- Login as Provider is allowed when the provider is Active or Suspended. It is blocked when the provider is Deactivated, with the message: "Login as Provider is not available for a deactivated provider." These rules apply both to impersonating the Owner and to impersonating a team member (FR-009 REQ-009-023).
+- Login as Provider is allowed when the provider is Active or Suspended. It is blocked when the provider is Deactivated, with the message: "Login as Provider is not available for a deactivated provider." These rules apply both to impersonating the Owner and to impersonating a team member (FR-009 REQ-009-023). (REQ-015-121)
 - During a session for a Suspended provider, the admin is limited to the same read-only rules as the provider (FR-032 Rule 6); the write actions allowed below apply only to an Active provider.
 - Before starting, the Super Admin must enter a reason (min 20 chars) and re-authenticate (password re-entry in MVP; MFA once the FR-026 / FR-031 MFA stack is delivered).
 - The impersonated Provider Platform session shows a persistent banner: "You are viewing as [Provider Name] — admin session by [Admin Name]" with an "End Session" action.
@@ -413,49 +393,49 @@ The English text is the source copy; other languages follow the normal translati
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules | Admin/Provider Editable |
-|------------|------|----------|-------------|------------------|------------------------|
-| Profile Picture / Logo | image upload | No | Clinic branding image | Max 5MB, JPEG/PNG, min 200x200px, recommended 500x500px | Both (Provider via FR-032) |
-| Cover Image | image upload | No | Large banner image for clinic profile | Max 10MB, JPEG/PNG, recommended 1920x300px | Both (Provider via FR-032) |
-| First Name | text | Yes | Provider's legal first name | Max 50 chars | Admin only |
-| Last Name | text | Yes | Provider's legal last name | Max 50 chars | Admin only |
-| Email Address | email | Yes | Primary email (login ID) | Valid email; must satisfy the FR-009 global provider email identity rule (Rule 3, REQ-009-008) (re-checked whenever changed); Deactivated providers' emails are freed for reuse | Admin only |
-| Phone Number | phone | Yes | Primary contact phone | Valid format with country code | Admin only |
-| Bio / Description | textarea | Yes | Public-facing provider biography | Max 500 chars, min 50 chars | Both (Provider via FR-032) |
-| Specialty | select | Yes | Primary medical specialty | Values from the centrally managed Provider Specialties list (FR-026 Screen 5f); a stored value later deactivated in FR-026 still displays but cannot be newly selected | Admin only |
-| Medical License Number | text | Yes | License identifier (for record) | Max 50 chars | Admin only |
-| Years of Experience | number | Yes | Years practicing | Numeric, 0-60 | Admin only |
-| Clinic Name | text | Yes | Name of practice/clinic | Min 3, max 200 chars | Both (Provider via FR-032) |
-| Clinic Address | address | Yes | Full physical address | Google Places or manual entry | Admin only |
-| Location - City | text | No | City where clinic is located | Max 100 chars | Both (Provider via FR-032) |
-| Location - Country | dropdown | No | Country where clinic is located | Values from FR-026 country list | Both (Provider via FR-032) |
-| Contact Phone (Public) | phone | No | Public clinic phone number | Country Code dropdown + Number | Both (Provider via FR-032) |
-| Contact Email | email | Yes | Public clinic contact email (captured in Screen 2 Step 3) | Valid email format; unique among Active and Suspended providers, Deactivated records ignored (re-checked whenever changed, per FR-032) | Both (Provider via FR-032) |
-| Website URL | url | No | Public-facing clinic website | Valid URL, auto-prepends https:// | Both (Provider via FR-032) |
-| Operating Hours | text | No | Operating hours (e.g., "Mon-Fri 9am-5pm") | Free text | Admin only |
-| Seat Limit | number | No | Maximum team members (staff) capacity. Seat usage counts non-Owner team members with status Active or Suspended plus invitations with status Pending that are not past expiry; the Owner, Removed members, and Expired, Cancelled, or Accepted invitations do not count (FR-009 Rule 6, CR-FR009-20261028-01) | Integer, range 1-500, default 100 | Admin only |
-| Commission Summary | display | N/A | Read-only summary of the current commission configuration (model, value, Flat Rate Currency when applicable, Effective Date), with a "Manage in Commission & Financials" link to Tab 7. A provider on the FR-029 global default shows the default rate with "(Default)", for example "15% (Default)"; a provider whose only provider-specific configuration is future-dated shows its current effective rate plus a "Scheduled" tag | Retrieved from Tab 7 (FR-029 provider-specific configuration or global default); not editable in this tab | Read-only |
-| Featured Provider | toggle | No | Admin-only control, positioned at the bottom of Basic Information, to highlight in patient search | Boolean, default: Off; maximum 10 featured providers; only for Active providers; cleared automatically on suspension or deactivation (Rule 6) | Admin only |
-| Status | badge/display | Yes | Provider account status | Enum: Active, Suspended, Deactivated | Admin only |
-| Completed Procedures | display | No | Count of distinct procedures that reached FR-010 treatment completion for this provider | One count per completed procedure, not per Parent Quote, option, date alternative, or installment | Read-only |
-| Average Rating | display | No | Average rating from patient reviews | Read-only, format: X.X/5.0 stars | Read-only |
-| Starting Price | display | N/A | Calculated, not typed in: the lowest standard price among the provider's active packages (FR-024), converted to the patient's currency | Read-only; changes when the provider's active packages or their standard prices change | Read-only |
+| Field Name | Type | Required | Description | Validation Rules | Admin/Provider Editable | Graph field |
+|------------|------|----------|-------------|------------------|------------------------ | --- |
+| Profile Picture / Logo | image upload | No | Clinic branding image | Max 5MB, JPEG/PNG, min 200x200px, recommended 500x500px | Both (Provider via FR-032) | ENT-provider-profile.logo_url |
+| Cover Image | image upload | No | Large banner image for clinic profile | Max 10MB, JPEG/PNG, recommended 1920x300px | Both (Provider via FR-032) | ENT-provider-profile.cover_image_url |
+| First Name | text | Yes | Provider's legal first name | Max 50 chars | Admin only | ENT-provider.first_name |
+| Last Name | text | Yes | Provider's legal last name | Max 50 chars | Admin only | ENT-provider.last_name |
+| Email Address | email | Yes | Primary email (login ID) | Valid email; must satisfy the FR-009 global provider email identity rule (Rule 3, REQ-009-008) (re-checked whenever changed); Deactivated providers' emails are freed for reuse | Admin only | ENT-provider.email |
+| Phone Number | phone | Yes | Primary contact phone | Valid format with country code | Admin only | ENT-provider.phone |
+| Bio / Description | textarea | Yes | Public-facing provider biography | Max 500 chars, min 50 chars | Both (Provider via FR-032) | ENT-provider.bio |
+| Specialty | select | Yes | Primary medical specialty | Values from the centrally managed Provider Specialties list (FR-026 Screen 5f); a stored value later deactivated in FR-026 still displays but cannot be newly selected | Admin only | ENT-provider.specialty |
+| Medical License Number | text | Yes | License identifier (for record) | Max 50 chars | Admin only | ENT-provider.medical_license_number |
+| Years of Experience | number | Yes | Years practicing | Numeric, 0-60 | Admin only | ENT-provider.years_experience |
+| Clinic Name | text | Yes | Name of practice/clinic | Min 3, max 200 chars | Both (Provider via FR-032) | ENT-provider-profile.clinic_name |
+| Clinic Address | address | Yes | Full physical address | Google Places or manual entry | Admin only | ENT-provider-profile.address_fields |
+| Location - City | text | No | City where clinic is located | Max 100 chars | Both (Provider via FR-032) | ENT-provider-profile.city |
+| Location - Country | dropdown | No | Country where clinic is located | Values from FR-026 country list | Both (Provider via FR-032) | ENT-provider-profile.country |
+| Contact Phone (Public) | phone | No | Public clinic phone number | Country Code dropdown + Number | Both (Provider via FR-032) | ENT-provider-profile.public_phone |
+| Contact Email | email | Yes | Public clinic contact email (captured in Screen 2 Step 3) | Valid email format; unique among Active and Suspended providers, Deactivated records ignored (re-checked whenever changed, per FR-032) | Both (Provider via FR-032) | ENT-provider-profile.contact_email |
+| Website URL | url | No | Public-facing clinic website | Valid URL, auto-prepends https:// | Both (Provider via FR-032) | ENT-provider-profile.website_url |
+| Operating Hours | text | No | Operating hours (e.g., "Mon-Fri 9am-5pm") | Free text | Admin only | ENT-provider-profile.operating_hours |
+| Seat Limit | number | No | Maximum team members (staff) capacity. Seat usage counts non-Owner team members with status Active or Suspended plus invitations with status Pending that are not past expiry; the Owner, Removed members, and Expired, Cancelled, or Accepted invitations do not count (FR-009 Rule 6, CR-FR009-20261028-01) | Integer, range 1-500, default 100 | Admin only | ENT-provider.seat_limit |
+| Commission Summary | display | N/A | Read-only summary of the current commission configuration (model, value, Flat Rate Currency when applicable, Effective Date), with a "Manage in Commission & Financials" link to Tab 7. A provider on the FR-029 global default shows the default rate with "(Default)", for example "15% (Default)"; a provider whose only provider-specific configuration is future-dated shows its current effective rate plus a "Scheduled" tag | Retrieved from Tab 7 (FR-029 provider-specific configuration or global default); not editable in this tab | Read-only | ENT-commission-rate-config.commission_model, ENT-commission-rate-config.commission_percentage, ENT-commission-rate-config.flat_rate_amount, ENT-commission-rate-config.flat_rate_currency, ENT-commission-rate-config.effective_date |
+| Featured Provider | toggle | No | Admin-only control, positioned at the bottom of Basic Information, to highlight in patient search | Boolean, default: Off; maximum 10 featured providers; only for Active providers; cleared automatically on suspension or deactivation (Rule 6) | Admin only | ENT-provider.featured |
+| Status | badge/display | Yes | Provider account status | Enum: Active, Suspended, Deactivated | Admin only | ENT-provider.status |
+| Completed Procedures | display | No | Count of distinct procedures that reached FR-010 treatment completion for this provider | One count per completed procedure, not per Parent Quote, option, date alternative, or installment | Read-only | ENT-provider.completed_procedures_count |
+| Average Rating | display | No | Average rating from patient reviews | Read-only, format: X.X/5.0 stars | Read-only | ENT-provider-review-summary.average_rating |
+| Starting Price | display | N/A | Calculated, not typed in: the lowest standard price among the provider's active packages (FR-024), converted to the patient's currency | Read-only; changes when the provider's active packages or their standard prices change | Read-only | ENT-provider.starting_price |
 
 **Business Rules**:
 
-- Fields marked "Both" can be edited by provider via FR-032 and changes sync to admin view in real-time
-- Fields marked "Admin only" can only be edited by admin users with provider management permissions
-- Profile changes logged in audit trail with timestamp, user, and changed fields
-- **Changed fields only**: An admin save (FR-015) or provider save (FR-032) applies only the fields the user changed; untouched fields are not rewritten. Last save wins only when two people change the same field. There is no conflict check and no conflict message.
+- Fields marked "Both" can be edited by provider via FR-032 and changes sync to admin view in real-time (REQ-015-123)
+- Fields marked "Admin only" can only be edited by admin users with provider management permissions (REQ-015-039)
+- Profile changes logged in audit trail with timestamp, user, and changed fields (REQ-015-038)
+- **Changed fields only**: An admin save (FR-015) or provider save (FR-032) applies only the fields the user changed; untouched fields are not rewritten. Last save wins only when two people change the same field. There is no conflict check and no conflict message. (REQ-015-112)
 - **Admin change reason**: When an admin saves changes to any provider data (Tabs 1, 2, 4, 6 notes, and 7), the system requires a "Reason for change" (min 10 chars, max 500 chars) before saving. The reason is stored with the audit entry and shown in Tab 8. Provider self-edits via FR-032 do not require a reason. Exception: the Featured Provider toggle (and the Provider-list Set/Unset Featured quick actions) never asks for a reason; the change is still logged in Tab 8.
-- Current profile edits must not alter an FR-005 accepted snapshot, historical appointment/price/package context, or an FR-006 booking commission snapshot. This does not prevent normal current-profile synchronization with FR-032.
+- Current profile edits must not alter an FR-005 accepted snapshot, historical appointment/price/package context, or an FR-006 booking commission snapshot. This does not prevent normal current-profile synchronization with FR-032. (REQ-015-113)
 - Completed Procedures uses the FR-010 treatment-completion milestone, not acceptance, payment confirmation, or final aftercare completion. Cancellation during Aftercare must not erase an already recorded completed procedure; no new procedure-completion rule is introduced here.
 - Commission is edited only in Tab 7; Tab 1 shows it read-only.
-- **Owner login email change**: Changing the Email Address (the Owner's login ID) requires admin password re-authentication and a reason (the admin change reason above). The new address is validated against the FR-009 global provider email identity rule (REQ-015-014) before saving. The Owner does not confirm the new address. On save, the system:
+- **Owner login email change**: Changing the Email Address (the Owner's login ID) requires admin password re-authentication and a reason (the admin change reason above). The new address is validated against the FR-009 global provider email identity rule (REQ-015-014) before saving. The Owner does not confirm the new address. On save, the system: (REQ-015-114)
   - sends FR-020 `provider.login_email_changed` (mandatory security notice) to the old address, saying the login email was changed to the new address (partly masked) by a Hairline admin, with the date and time and a prompt to contact support if unexpected, and to the new address, saying it is now the login email for the clinic;
   - signs the Owner out of all sessions and revokes the Owner's tokens;
   - if `password_set` is false, invalidates the pending activation link and sends a new activation email (FR-020 `provider.activation`) to the new address.
-- Seat Limit changes require admin re-authentication for security. In MVP this is implemented as password re-entry; once the shared MFA stack from FR-026 / FR-031 is delivered, these actions MUST use MFA-based re-authentication and any MFA references in this FR are to be understood as future (non-MVP) behavior.
+- Seat Limit changes require admin re-authentication for security. In MVP this is implemented as password re-entry; once the shared MFA stack from FR-026 / FR-031 is delivered, these actions MUST use MFA-based re-authentication and any MFA references in this FR are to be understood as future (non-MVP) behavior. (REQ-015-111)
 
 **Notes**:
 
@@ -471,15 +451,15 @@ The English text is the source copy; other languages follow the normal translati
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules | Admin/Provider Editable |
-|------------|------|----------|-------------|------------------|------------------------|
-| Supported Languages | chip/pill list | Yes | Languages spoken at clinic | At least 1 language required; consumes the central language catalog owned by FR-021 (Multi-Language & Localization) | Both (Provider via FR-032) |
+| Field Name | Type | Required | Description | Validation Rules | Admin/Provider Editable | Graph field |
+|------------|------|----------|-------------|------------------|------------------------ | --- |
+| Supported Languages | chip/pill list | Yes | Languages spoken at clinic | At least 1 language required; consumes the central language catalog owned by FR-021 (Multi-Language & Localization) | Both (Provider via FR-032) | ENT-provider-profile.supported_languages |
 
 **Business Rules**:
 
 - Languages displayed as removable chips/pills with X button on each chip
 - Admin can add/remove languages; provider can also manage via FR-032 Tab 2
-- At least 1 language must be selected (validation prevents removing last language); attempting to save with none shows: "At least one language is required."
+- At least 1 language must be selected (validation prevents removing last language); attempting to save with none shows: "At least one language is required." (REQ-015-098)
 - Changes logged in audit trail with timestamp and user
 - Language list consumed from the FR-021 central language catalog; chips mean languages spoken at the clinic, not UI language
 
@@ -487,7 +467,7 @@ The English text is the source copy; other languages follow the normal translati
 
 - Admin view identical to FR-032 Tab 2 (same interface, same functionality)
 - Changes made by provider in FR-032 reflect immediately in admin view
-- Drag-and-drop reordering supported to prioritize languages
+- Drag-and-drop reordering supported to prioritize languages (REQ-015-130)
 
 ---
 
@@ -500,9 +480,9 @@ The English text is the source copy; other languages follow the normal translati
 **Business Rules**:
 
 - Lists this provider's team members with name, email, role, ownership flag, status, and last login (fields and actions per FR-009).
-- "Invite Staff Member": admin enters an email and selects one of the provider's existing roles (not Owner); the invitation uses FR-009's normal invitation email, acceptance, and expiry flow.
-- Invite is blocked when the provider's Seat Limit (Rule 7) is reached and when provider status is Suspended or Deactivated.
-- Requires the FR-031 "Edit Providers" permission; the invite and the inviting admin are logged in FR-009's audit trail and Tab 8.
+- "Invite Staff Member": admin enters an email and selects one of the provider's existing roles (not Owner); the invitation uses FR-009's normal invitation email, acceptance, and expiry flow. (REQ-015-116)
+- Invite is blocked when the provider's Seat Limit (Rule 7) is reached and when provider status is Suspended or Deactivated. (REQ-015-116)
+- Requires the FR-031 "Edit Providers" permission; the invite and the inviting admin are logged in FR-009's audit trail and Tab 8. (REQ-015-069)
 - Existing FR-009 admin actions (force suspend member, reset invitation, view audit log, impersonate) remain available.
 
 ---
@@ -513,16 +493,16 @@ The English text is the source copy; other languages follow the normal translati
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules | Admin/Provider Editable |
-|------------|------|----------|-------------|------------------|------------------------|
-| Awards List | card/list | No | Clinic awards, certifications, recognitions | Each award: name (max 100 chars), issuer/organization (max 150 chars, optional), description (max 300 chars), year (1900-current year), award image (max 2MB, JPEG/PNG) | Both (Provider via FR-032) |
+| Field Name | Type | Required | Description | Validation Rules | Admin/Provider Editable | Graph field |
+|------------|------|----------|-------------|------------------|------------------------ | --- |
+| Awards List | card/list | No | Clinic awards, certifications, recognitions | Each award: name (max 100 chars), issuer/organization (max 150 chars, optional), description (max 300 chars), year (1900-current year), award image (max 2MB, JPEG/PNG) | Both (Provider via FR-032) | ENT-provider.awards |
 
 **Business Rules**:
 
 - Awards displayed as cards with: award image thumbnail, name, issuer, year, description
 - Admin can add/edit/delete awards; provider can also manage via FR-032 Tab 4
-- Awards support drag-and-drop reordering to prioritize most important awards
-- Award image upload supports drag-and-drop; max 2MB, JPEG/PNG only
+- Awards support drag-and-drop reordering to prioritize most important awards (REQ-015-131)
+- Award image upload supports drag-and-drop; max 2MB, JPEG/PNG only (REQ-015-131)
 - Changes logged in audit trail with timestamp and user
 
 **Notes**:
@@ -539,20 +519,20 @@ The English text is the source copy; other languages follow the normal translati
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules | Admin/Provider Editable |
-|------------|------|----------|-------------|------------------|------------------------|
-| Overall Rating Summary | display | No | Average rating and total review count | Read-only; calculated from Reviews service | Read-only |
-| Rating Distribution | bar chart | No | Percentage/count visualization for 5★ through 1★ reviews | Read-only; calculated from Reviews service | Read-only |
-| Review List | list | No | List of individual patient reviews with rating, comment, date, patient name | Read-only; sourced from Reviews service | Read-only |
-| Rating Filters | checkbox/pill | No | Filter reviews by rating (5★, 4★, 3★, 2★, 1★) | Multiple selections allowed | Interactive filter |
-| Add Review Button | button | No | Opens FR-013 Screen 8 (Admin – Review Detail, Insert & Edit) in insert mode, pre-scoped to this provider, to add an authenticated off-platform review | Admin users with review management permission | Admin only |
-| Review Actions | button group | No | Per review: "Edit" or "Remove" opens FR-013 Screen 8 for that review | Rules, validation, and audit owned by FR-013 | Admin only |
+| Field Name | Type | Required | Description | Validation Rules | Admin/Provider Editable | Graph field |
+|------------|------|----------|-------------|------------------|------------------------ | --- |
+| Overall Rating Summary | display | No | Average rating and total review count | Read-only; calculated from Reviews service | Read-only | ENT-provider-review-summary.average_rating, ENT-provider-review-summary.review_count |
+| Rating Distribution | bar chart | No | Percentage/count visualization for 5★ through 1★ reviews | Read-only; calculated from Reviews service | Read-only | no graph field (display) |
+| Review List | list | No | List of individual patient reviews with rating, comment, date, patient name | Read-only; sourced from Reviews service | Read-only | no graph field (display) |
+| Rating Filters | checkbox/pill | No | Filter reviews by rating (5★, 4★, 3★, 2★, 1★) | Multiple selections allowed | Interactive filter | no graph field (control) |
+| Add Review Button | button | No | Opens FR-013 Screen 8 (Admin – Review Detail, Insert & Edit) in insert mode, pre-scoped to this provider, to add an authenticated off-platform review | Admin users with review management permission | Admin only | no graph field (control) |
+| Review Actions | button group | No | Per review: "Edit" or "Remove" opens FR-013 Screen 8 for that review | Rules, validation, and audit owned by FR-013 | Admin only | no graph field (control) |
 
 **Business Rules**:
 
 - Reviews displayed with: star rating, patient name (anonymized if requested), date, review text
 - Admin can filter by rating, search by keyword, sort by date/rating
-- Admin insert, edit, and remove actions follow FR-013 (including the "Verified Off-platform" label, verification source/date, and audit trail); FR-015 does not define its own review editing rules
+- Admin insert, edit, and remove actions follow FR-013 (including the "Verified Off-platform" label, verification source/date, and audit trail); FR-015 does not define its own review editing rules (REQ-015-117)
 - Providers cannot edit or delete reviews; they can only respond via FR-013 Screen 6
 - Review data sourced from Reviews service (FR-013)
 
@@ -570,50 +550,50 @@ The English text is the source copy; other languages follow the normal translati
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules | Admin/Provider Editable |
-|------------|------|----------|-------------|------------------|------------------------|
-| Upload Document Button | button | No | Admin action to upload additional documents | Opens the Upload Document modal (fields below) | Admin only |
-| Document List | list/cards | No | List of all provider and admin-uploaded documents | Displays: document name, type, upload date, file size, uploaded by (Provider/Admin) | View-only for admin; sortable/filterable |
-| Document Name | text (display) | N/A | Filename of uploaded document | Auto-generated from file; max 200 chars | Display only |
-| Document Type | badge (display) | N/A | Type of document | Enum: Medical License, Board Certification, Insurance (general), Malpractice Insurance, Business License, Other | Display only |
-| Upload Date | datetime (display) | N/A | When document was uploaded | Auto-generated timestamp; format: "MMM DD, YYYY HH:mm" | Display only |
-| Uploaded By | badge (display) | N/A | Who uploaded document: "Provider" or "Admin [Name]" | Badge displays "Provider" for provider uploads, "Admin - [admin name]" for admin uploads | Display only |
-| File Size | text (display) | N/A | Document file size | Format: "X.X MB" or "X KB" | Display only |
-| Notes | text (display/edit) | No | Optional notes about document | Max 500 chars; admin can add/edit notes | Admin editable (via "Edit Notes" action) |
-| Actions | button group | No | View, Download, Replace, Delete actions | Context menu or action buttons per document | Admin only (view/download/replace/delete) |
+| Field Name | Type | Required | Description | Validation Rules | Admin/Provider Editable | Graph field |
+|------------|------|----------|-------------|------------------|------------------------ | --- |
+| Upload Document Button | button | No | Admin action to upload additional documents | Opens the Upload Document modal (fields below) | Admin only | no graph field (control) |
+| Document List | list/cards | No | List of all provider and admin-uploaded documents | Displays: document name, type, upload date, file size, uploaded by (Provider/Admin) | View-only for admin; sortable/filterable (REQ-015-132) | ENT-provider-document.document_name, ENT-provider-document.document_type, ENT-provider-document.uploaded_at, ENT-provider-document.file_size, ENT-provider-document.uploaded_by |
+| Document Name | text (display) | N/A | Filename of uploaded document | Auto-generated from file; max 200 chars | Display only | ENT-provider-document.document_name |
+| Document Type | badge (display) | N/A | Type of document | Enum: Medical License, Board Certification, Insurance (general), Malpractice Insurance, Business License, Other | Display only (REQ-015-063) | ENT-provider-document.document_type |
+| Upload Date | datetime (display) | N/A | When document was uploaded | Auto-generated timestamp; format: "MMM DD, YYYY HH:mm" | Display only | ENT-provider-document.uploaded_at |
+| Uploaded By | badge (display) | N/A | Who uploaded document: "Provider" or "Admin [Name]" | Badge displays "Provider" for provider uploads, "Admin - [admin name]" for admin uploads | Display only | ENT-provider-document.uploaded_by |
+| File Size | text (display) | N/A | Document file size | Format: "X.X MB" or "X KB" | Display only | ENT-provider-document.file_size |
+| Notes | text (display/edit) | No | Optional notes about document | Max 500 chars; admin can add/edit notes | Admin editable (via "Edit Notes" action) | ENT-provider-document.notes |
+| Actions | button group | No | View, Download, Replace, Delete actions | Context menu or action buttons per document | Admin only (view/download/replace/delete) | no graph field (control) |
 
 **Upload Document Modal Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| File | file upload | Yes | Document file received from the provider via an external channel | Formats: PDF, JPG, PNG, DOCX, XLSX; max 10MB |
-| Document Type | dropdown | Yes | Type of document (admin selects) | Enum: Medical License, Board Certification, Insurance (general), Malpractice Insurance, Business License, Other |
-| Notes | textarea | No | Optional notes about the document | Max 500 chars |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------ | --- |
+| File | file upload | Yes | Document file received from the provider via an external channel | Formats: PDF, JPG, PNG, DOCX, XLSX; max 10MB | ENT-provider-document.file_url |
+| Document Type | dropdown | Yes | Type of document (admin selects) | Enum: Medical License, Board Certification, Insurance (general), Malpractice Insurance, Business License, Other (REQ-015-063) | ENT-provider-document.document_type |
+| Notes | textarea | No | Optional notes about the document | Max 500 chars | ENT-provider-document.notes |
 
 On save, Document Name, File Size, Upload Date, and Uploaded By ("Admin - [admin name]") are set by the system.
 
 **Business Rules**:
 
-- **Provider Document Management**: Providers upload, replace, delete their documents via **FR-032 Tab 6: Documents**. Provider-uploaded documents sync to FR-015 within 1 minute
+- **Provider Document Management**: Providers upload, replace, delete their documents via **FR-032 Tab 6: Documents**. Provider-uploaded documents sync to FR-015 within 1 minute (REQ-015-061)
 - **Admin Oversight**: Admins can view all provider-uploaded documents for compliance and oversight purposes
 - **Admin Additional Uploads**: Admins can upload additional documents received externally (e.g., documents sent via email, postal mail, scanned at in-person meeting). These admin-uploaded documents display "Admin - [admin name]" badge
 - **Document Permissions**:
-  - Provider-uploaded documents: Admin can view, download, add notes, but **cannot replace or delete** (only provider can via FR-032)
-  - Admin-uploaded documents: Admin has full control (view, download, replace, delete, add notes)
+  - Provider-uploaded documents: Admin can view, download, add notes, but **cannot replace or delete** (only provider can via FR-032) (REQ-015-059)
+  - Admin-uploaded documents: Admin has full control (view, download, replace, delete, add notes) (REQ-015-059)
   - **Replace**: Replacing a document uploads the new file as the current version and archives the old file (soft-deleted and retained per the Soft Delete rule, logged in Tab 8). Replace does not require an admin change reason
-- **Document Requirements**: A Medical License file is required once, when completing the Screen 2 wizard. After creation, the absence, replacement, or deletion of any document never changes provider status or blocks activity
-- **Audit Logging**: All document actions (upload/view/download/replace/delete/note edits) logged in Tab 8: Activity Log with timestamp, user (admin/provider), action type, and IP address
-- **Soft Delete**: Deleted documents (by provider or admin) retained in archive for compliance; visible in Activity Log but not in main document list
+- **Document Requirements**: A Medical License file is required once, when completing the Screen 2 wizard. After creation, the absence, replacement, or deletion of any document never changes provider status or blocks activity (REQ-015-045)
+- **Audit Logging**: All document actions (upload/view/download/replace/delete/note edits) logged in Tab 8: Activity Log with timestamp, user (admin/provider), action type, and IP address (REQ-015-062)
+- **Soft Delete**: Deleted documents (by provider or admin) retained in archive for compliance; visible in Activity Log but not in main document list (REQ-015-060)
 - **File Validation**: Same as FR-032 - Accepted formats: PDF, JPG, PNG, DOCX, XLSX; Max 10MB per file
-- **Sort/Filter Options**:
-  - Sort by: Upload Date (newest first - default), Document Type, Uploaded By
-  - Filter by: Document Type, Uploaded By (Provider/Admin)
+- **Sort/Filter Options**: (REQ-015-132)
+  - Sort by: Upload Date (newest first - default), Document Type, Uploaded By (REQ-015-132)
+  - Filter by: Document Type, Uploaded By (Provider/Admin) (REQ-015-132)
 
 **Notes**:
 
 - **Primary Document Management**: Providers manage their documents via FR-032 Tab 6; admins use FR-015 Tab 6 for oversight and supplementary uploads
 - **Use Case for Admin Uploads**: Admin receives provider's license via email → Admin uploads to FR-015 Tab 6 → Document visible to provider in FR-032 with "Admin" badge
-- **Document Sync**: Provider uploads in FR-032 → Syncs to FR-015 within 1 minute. Admin uploads in FR-015 → Syncs to FR-032 within 1 minute
+- **Document Sync**: Provider uploads in FR-032 → Syncs to FR-015 within 1 minute. Admin uploads in FR-015 → Syncs to FR-032 within 1 minute (REQ-015-061)
 - **Empty State**: If no documents uploaded yet, display message: "No documents on file yet. Provider can upload documents via their dashboard, or you can upload documents received externally."
 - **Document Verification**: Performed externally; system treats all documents as pre-verified records
 - Document cards/rows display icon based on file type (PDF icon, image icon, doc icon) and "Uploaded By" badge (green for Provider, blue for Admin)
@@ -628,32 +608,32 @@ On save, Document Name, File Size, Upload Date, and Uploaded By ("Admin - [admin
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules | Admin/Provider Editable |
-|------------|------|----------|-------------|------------------|------------------------|
-| Commission Model | radio (display/edit) | Yes | "Percentage" or "Flat Rate" | Default: Percentage | Admin only (edit) |
-| Commission Value | number (display/edit) | Yes | % or Fixed Currency Amount | 0-100 with 0.1% precision (if %) or >0 in the Flat Rate Currency's minor units (if Flat), per FR-029 | Admin only (edit) |
-| Payout Method | radio (display/edit) | Yes | How this clinic's share is paid out: "Stripe Connect" or "Manual bank transfer" (set in Screen 2 Step 5). The clinic sees it read-only | One of: "Stripe Connect", "Manual bank transfer" | Admin only (edit); the clinic asks Hairline for a change |
-| Payout Readiness | display | N/A | The state of the clinic's own Stripe payout setup, one of four states: Not started, In progress, Ready, Restricted; shown for Stripe Connect clinics. The clinic completes the Stripe sign-up itself and sees the same status read-only | Read-only | Display only |
-| Flat Rate Currency | select (display/edit) | Conditional | Currency of the Flat Rate amount (aligns with FR-029 Screen 5) | Required when Commission Model = Flat Rate; FR-029 enabled currency list; defaults to the system default currency | Admin only (edit) |
-| Commission Start Date / Effective Date | date (display/edit) | Yes | Date from which the commission configuration applies to newly confirmed bookings (FR-029 `effective_date`). First set in Screen 2 Step 5; every later model, value, or currency edit sets its own Effective Date | Format: DD-MM-YYYY; today or a future date, where "today" is the current UTC date | Admin only (edit, with change reason) |
-| Featured Provider | display | N/A | Current featured status; managed from the Provider-list quick action or the Basic Information toggle | Read-only | Display only |
-| Current Configuration | display | N/A | Summary of commission configuration applicable to newly confirmed bookings | Examples: "15%" or "£200 per completed procedure"; indicate that existing bookings retain their confirmation-time snapshot | Display only |
-| Scheduled Configuration | display | N/A | The pending future-dated commission configuration (model, value, Flat Rate Currency, Effective Date), if one exists, with a "Cancel Scheduled Configuration" action | Hidden when none is pending; at most one per provider; cancellation requires a change reason and re-authentication | Display only (cancel: Admin only) |
-| Commission History | list | No | Audit log of past commission and payout setting changes | Each entry: date, admin user, old value, new value, reason | Display only |
+| Field Name | Type | Required | Description | Validation Rules | Admin/Provider Editable | Graph field |
+|------------|------|----------|-------------|------------------|------------------------ | --- |
+| Commission Model | radio (display/edit) | Yes | "Percentage" or "Flat Rate" | Default: Percentage | Admin only (edit) | ENT-commission-rate-config.commission_model |
+| Commission Value | number (display/edit) | Yes | % or Fixed Currency Amount | 0-100 with 0.1% precision (if %) or >0 in the Flat Rate Currency's minor units (if Flat), per FR-029 | Admin only (edit) (REQ-015-100) | ENT-commission-rate-config.commission_percentage, ENT-commission-rate-config.flat_rate_amount |
+| Payout Method | radio (display/edit) | Yes | How this clinic's share is paid out: "Stripe Connect" or "Manual bank transfer" (set in Screen 2 Step 5). The clinic sees it read-only | One of: "Stripe Connect", "Manual bank transfer" | Admin only (edit); the clinic asks Hairline for a change | ENT-provider.payout_method |
+| Payout Readiness | display | N/A | The state of the clinic's own Stripe payout setup, one of four states: Not started, In progress, Ready, Restricted; shown for Stripe Connect clinics. The clinic completes the Stripe sign-up itself and sees the same status read-only | Read-only | Display only (REQ-015-135) | no graph field (display) |
+| Flat Rate Currency | select (display/edit) | Conditional | Currency of the Flat Rate amount (aligns with FR-029 Screen 5) | Required when Commission Model = Flat Rate; FR-029 enabled currency list; defaults to the system default currency | Admin only (edit) | ENT-commission-rate-config.flat_rate_currency |
+| Commission Start Date / Effective Date | date (display/edit) | Yes | Date from which the commission configuration applies to newly confirmed bookings (FR-029 `effective_date`). First set in Screen 2 Step 5; every later model, value, or currency edit sets its own Effective Date | Format: DD-MM-YYYY; today or a future date, where "today" is the current UTC date | Admin only (edit, with change reason) | ENT-commission-rate-config.effective_date |
+| Featured Provider | display | N/A | Current featured status; managed from the Provider-list quick action or the Basic Information toggle | Read-only | Display only | ENT-provider.featured |
+| Current Configuration | display | N/A | Summary of commission configuration applicable to newly confirmed bookings | Examples: "15%" or "£200 per completed procedure"; indicate that existing bookings retain their confirmation-time snapshot | Display only | ENT-commission-rate-config.commission_model, ENT-commission-rate-config.commission_percentage, ENT-commission-rate-config.flat_rate_amount, ENT-commission-rate-config.flat_rate_currency |
+| Scheduled Configuration | display | N/A | The pending future-dated commission configuration (model, value, Flat Rate Currency, Effective Date), if one exists, with a "Cancel Scheduled Configuration" action | Hidden when none is pending; at most one per provider; cancellation requires a change reason and re-authentication | Display only (cancel: Admin only) | ENT-commission-rate-config.commission_model, ENT-commission-rate-config.commission_percentage, ENT-commission-rate-config.flat_rate_amount, ENT-commission-rate-config.flat_rate_currency, ENT-commission-rate-config.effective_date |
+| Commission History | list | No | Audit log of past commission and payout setting changes | Each entry: date, admin user, old value, new value, reason | Display only | no graph field (display) |
 
 **Business Rules**:
 
 - Commission configuration displayed prominently with current model and value
-- **Edit eligibility**: Commission settings can be edited for Active and Suspended providers (so terms can be fixed before reactivation). For Deactivated providers Tab 7 is read-only; history stays visible. FR-029 Screen 5 applies the same rule (CR-FR029-20261015-02). When a deactivation takes effect, the system automatically cancels any pending Scheduled Configuration and logs the cancellation in Commission History
-- Admin can edit commission settings (requires re-authentication). In MVP this is implemented as password re-entry; once the shared MFA stack from FR-026 / FR-031 is delivered, these actions MUST use MFA-based re-authentication and any MFA references in this FR are to be understood as future (non-MVP) behavior.
-- FR-029 / A-09 owns the central commission-settings screen (global default + provider-specific commission scopes) and the booking-time snapshot policy; this tab remains the single-provider management surface for provider-specific commission configuration
-- Commission edits apply to bookings confirmed after the configuration becomes effective, not to every later payment transaction. Resolve the effective provider-specific configuration (or global default) and snapshot its model/value (and Flat Rate currency) at FR-006 booking confirmation under FR-029. Until a new configuration's Effective Date, the previous configuration remains effective. Existing confirmed bookings retain that snapshot for subsequent installments, deductions, and payout reconciliation.
+- **Edit eligibility**: Commission settings can be edited for Active and Suspended providers (so terms can be fixed before reactivation). For Deactivated providers Tab 7 is read-only; history stays visible. FR-029 Screen 5 applies the same rule (CR-FR029-20261015-02). When a deactivation takes effect, the system automatically cancels any pending Scheduled Configuration and logs the cancellation in Commission History (REQ-015-102)
+- Admin can edit commission settings (requires re-authentication). In MVP this is implemented as password re-entry; once the shared MFA stack from FR-026 / FR-031 is delivered, these actions MUST use MFA-based re-authentication and any MFA references in this FR are to be understood as future (non-MVP) behavior. (REQ-015-110)
+- FR-029 / A-09 owns the central commission-settings screen (global default + provider-specific commission scopes) and the booking-time snapshot policy; this tab remains the single-provider management surface for provider-specific commission configuration (REQ-015-108)
+- Commission edits apply to bookings confirmed after the configuration becomes effective, not to every later payment transaction. Resolve the effective provider-specific configuration (or global default) and snapshot its model/value (and Flat Rate currency) at FR-006 booking confirmation under FR-029. Until a new configuration's Effective Date, the previous configuration remains effective. Existing confirmed bookings retain that snapshot for subsequent installments, deductions, and payout reconciliation. (REQ-015-109)
 - Patient price/currency/exchange-rate context is locked at FR-005 acceptance; commission is locked at booking confirmation; nothing is fixed at quote creation. An accepted-but-unpaid selection has not yet fixed its commission snapshot. The Percentage and Flat Rate models remain unchanged; a flat fee remains one deduction per completed procedure, not one per package, Subquote, or installment.
-- **Scheduled configuration**: "Today" means the current UTC date (the same calendar used by the midnight UTC jobs). An edit with an Effective Date of today applies immediately to newly confirmed bookings. An edit with a future Effective Date is stored as the provider's Scheduled Configuration; at most one may be pending per provider. Saving another future-dated edit replaces the pending one (the replacement is logged in Commission History with both values). On its Effective Date the scheduled configuration becomes the current configuration automatically. The pending configuration is shown read-only to the provider in the FR-032 Screen 4 Commission & Payout panel.
+- **Scheduled configuration**: "Today" means the current UTC date (the same calendar used by the midnight UTC jobs). An edit with an Effective Date of today applies immediately to newly confirmed bookings. An edit with a future Effective Date is stored as the provider's Scheduled Configuration; at most one may be pending per provider. Saving another future-dated edit replaces the pending one (the replacement is logged in Commission History with both values). On its Effective Date the scheduled configuration becomes the current configuration automatically. The pending configuration is shown read-only to the provider in the FR-032 Screen 4 Commission & Payout panel. (REQ-015-103)
 - **Payout method**: Only an admin sets or changes the clinic's payout method (Payout Method Rule); the clinic sees the method and its payout readiness read-only and completes Stripe's own sign-up itself. Clinic activation does not wait for payout readiness, and a share due to move while the clinic is not Ready stays with Hairline until it is Ready (Payout Readiness Rule)
-- Changes made to provider-specific commission values here MUST stay synchronized with the provider-specific commission data shown in FR-029 Screen 5 for the same provider
-- **Shared FR-029 scopes**: A provider belongs to at most one active provider-specific commission scope. If this provider is currently covered by an FR-029 scope shared with other providers, saving a commission edit here removes this provider from that shared scope and creates a single-provider scope for it with the new values; the other providers in the shared scope are unchanged. The tab warns the admin before saving, and the split is logged in Commission History and the FR-029 audit trail.
-- All changes to commission and payout settings logged in history with timestamp, admin user, old/new values
+- Changes made to provider-specific commission values here MUST stay synchronized with the provider-specific commission data shown in FR-029 Screen 5 for the same provider (REQ-015-107)
+- **Shared FR-029 scopes**: A provider belongs to at most one active provider-specific commission scope. If this provider is currently covered by an FR-029 scope shared with other providers, saving a commission edit here removes this provider from that shared scope and creates a single-provider scope for it with the new values; the other providers in the shared scope are unchanged. The tab warns the admin before saving, and the split is logged in Commission History and the FR-029 audit trail. (REQ-015-104)
+- All changes to commission and payout settings logged in history with timestamp, admin user, old/new values (REQ-015-106)
 - Provider can view commission model, value, Flat Rate Currency, and Effective Date read-only in the FR-032 Screen 4 Commission & Payout panel (but not edit); the provider also sees its payout method and payout readiness read-only in its own dashboard (FR-032)
 
 **Notes**:
@@ -670,18 +650,18 @@ On save, Document Name, File Size, Upload Date, and Uploaded By ("Admin - [admin
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules | Admin/Provider Editable |
-|------------|------|----------|-------------|------------------|------------------------|
-| Activity Log List | list | No | Chronological list of account actions | Each entry: timestamp, user (admin or provider), action type, changed fields, IP address | Read-only |
+| Field Name | Type | Required | Description | Validation Rules | Admin/Provider Editable | Graph field |
+|------------|------|----------|-------------|------------------|------------------------ | --- |
+| Activity Log List | list | No | Chronological list of account actions | Each entry: timestamp, user (admin or provider), action type, changed fields, IP address | Read-only | ENT-provider-activity-log-entry.occurred_at, ENT-provider-activity-log-entry.user_id, ENT-provider-activity-log-entry.action_type, ENT-provider-activity-log-entry.changed_fields, ENT-provider-activity-log-entry.ip_address, ENT-provider-activity-log-entry.reason |
 
 **Business Rules**:
 
-- Activity log displays all actions: profile edits, status changes, document uploads, logins, commission changes
-- Each log entry includes: timestamp, user (admin or provider via FR-032), action type, changed fields, IP address
+- Activity log displays all actions: profile edits, status changes, document uploads, logins, commission changes (REQ-015-118)
+- Each log entry includes: timestamp, user (admin or provider via FR-032), action type, changed fields, IP address (REQ-015-118)
 - Logs are immutable (cannot be edited or deleted)
-- Suspension/deactivation entries must link the affected case/inquiry references, prior stages, cancellation causes, support markers, slot-release results, and notification outcomes. Display `Admin Support Required` for unresolved provider-caused cancellations with a link to the existing FR-016 patient intervention/support context; do not add a case-management editor to this tab.
+- Suspension/deactivation entries must link the affected case/inquiry references, prior stages, cancellation causes, support markers, slot-release results, and notification outcomes. Display `Admin Support Required` for unresolved provider-caused cancellations with a link to the existing FR-016 patient intervention/support context; do not add a case-management editor to this tab. (REQ-015-119)
 - Admin can filter by action type, date range, user
-- Admin can export the activity log for compliance reporting as a CSV file of the rows matching the current filters. Export is available to every admin who can view Tab 8 (FR-031 View Providers). IP addresses are included unmasked. The export action itself is logged in Tab 8
+- Admin can export the activity log for compliance reporting as a CSV file of the rows matching the current filters. Export is available to every admin who can view Tab 8 (FR-031 View Providers). IP addresses are included unmasked. The export action itself is logged in Tab 8 (REQ-015-120)
 
 **Notes**:
 
@@ -696,43 +676,43 @@ On save, Document Name, File Size, Upload Date, and Uploaded By ("Admin - [admin
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Action Type | text (display only) | N/A | Shows "Suspend Provider" or "Deactivate Provider" as modal title | Display only |
-| Provider Name | text (display only) | N/A | Confirms which provider is being suspended/deactivated | Display only |
-| Affected Cases & Quotes | read-only summary/list | N/A | Shows outstanding Parent Quotes and affected cases with links, prior stages, and the cancellation/support impact of the selected action | Suspension and deactivation both include Accepted, Confirmed, In Progress, and Aftercare (In Progress cases are shown as staying open for an admin decision and Aftercare cases as moving to aftercare reassignment; neither is closed); terminal history is not reclassified; revalidate at effective time |
-| Reason | textarea | Yes | Admin must provide detailed reason for suspension/deactivation | Min 20 chars, max 500 chars |
-| Notify Provider | checkbox | No | Option to send notification email to provider with reason | Default checked (true); checked and locked when deactivating from an account-closure request (A7); does not disable mandatory patient cancellation messages or admin support alerts |
-| Effective Date | date picker | No | Optional. Blank or today applies the change immediately on submit; a future date schedules it | Must be today or future date; "today" is the current UTC date |
-| Admin Password | password | Yes | Re-authentication before the status change (MFA once FR-026 / FR-031 MFA stack is delivered) | Must match the acting admin's password |
-| Confirm Action | checkbox | Yes | Admin must check "I confirm this action" before submitting | Must be checked to enable submit button |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------ | --- |
+| Action Type | text (display only) | N/A | Shows "Suspend Provider" or "Deactivate Provider" as modal title | Display only | ENT-pending-provider-status-change.change_type |
+| Provider Name | text (display only) | N/A | Confirms which provider is being suspended/deactivated | Display only | ENT-provider.name |
+| Affected Cases & Quotes | read-only summary/list | N/A | Shows outstanding Parent Quotes and affected cases with links, prior stages, and the cancellation/support impact of the selected action | Suspension and deactivation both include Accepted, Confirmed, In Progress, and Aftercare (In Progress cases are shown as staying open for an admin decision and Aftercare cases as moving to aftercare reassignment; neither is closed); terminal history is not reclassified; revalidate at effective time (REQ-015-084) | no graph field (display) |
+| Reason | textarea | Yes | Admin must provide detailed reason for suspension/deactivation | Min 20 chars, max 500 chars | ENT-pending-provider-status-change.reason |
+| Notify Provider | checkbox | No | Option to send notification email to provider with reason | Default checked (true); checked and locked when deactivating from an account-closure request (A7); does not disable mandatory patient cancellation messages or admin support alerts (REQ-015-086) | ENT-pending-provider-status-change.notify_provider |
+| Effective Date | date picker | No | Optional. Blank or today applies the change immediately on submit; a future date schedules it | Must be today or future date; "today" is the current UTC date | ENT-pending-provider-status-change.effective_date |
+| Admin Password | password | Yes | Re-authentication before the status change (MFA once FR-026 / FR-031 MFA stack is delivered) | Must match the acting admin's password | no graph field (control) |
+| Confirm Action | checkbox | Yes | Admin must check "I confirm this action" before submitting | Must be checked to enable submit button | no graph field (control) |
 
 **Business Rules**:
 
-- **Required Reason**: Admin cannot suspend or deactivate provider without providing detailed reason (minimum 20 characters)
+- **Required Reason**: Admin cannot suspend or deactivate provider without providing detailed reason (minimum 20 characters) (REQ-015-081)
 - **Suspension vs. Deactivation**:
   - **Suspension**: Temporary status change; provider account remains in system and can be reactivated later
     - Block new inquiry allocations, quote submissions, patient acceptances, and further payment against this provider's affected selections as soon as suspension is effective.
     - Automatically cancel this provider's outstanding unaccepted quotes (FR-004 `cancelled_provider_status`) and close all related non-terminal bookings in the FR-006 booking stages `Accepted` or `Confirmed`, using Alternative Flow A5. `In Progress` bookings are not closed; they stay `In Progress` with the support marker until an admin decides them through FR-006 Alternative Flow B7: move to `Aftercare` with aftercare reassignment, or cancel with a reason. Closed accepted bookings enter the FR-006 provider-fault transfer (Alternative Flows B4 and B5), where an admin rehomes the patient to a replacement provider in the same inquiry. `Aftercare` bookings and FR-011 standalone aftercare cases assigned to this provider are not closed; they move to aftercare reassignment (FR-006 Alternative Flow B6 and FR-011). Existing upcoming bookings do not remain active with this provider.
-    - Record `ProviderSuspended` as the cancellation reason and `supportRequired = true`; display `Cancelled — Provider Suspended` with a separate `Admin Support Required` marker on affected cases and affected inquiries. In Progress and Aftercare cases keep their status and show the `Admin Support Required` marker with the provider-status cause. An inquiry with a closed accepted booking stays open for the replacement-provider transfer and is not cancelled. For shared unaccepted inquiries, preserve the inquiry's normal stage and other providers' offers while flagging the suspended provider's participation and support need.
-    - Provider can still log in to Provider Platform but sees "Account Suspended" banner; the same applies to all of the provider's FR-009 team members. The banner and the suspended read-only behavior are specified in FR-032 (Rule 6). Read-only includes `In Progress` bookings: the suspended provider cannot check in, end treatment, or edit the treatment plan; the admin decides the case through FR-006 Alternative Flow B7. The suspended provider may still chat with patients on its open `In Progress` and `Aftercare` cases. Clinical notes, photos, and aftercare answers and actions stay blocked until the admin reassigns or decides the case
+    - Record `ProviderSuspended` as the cancellation reason and `supportRequired = true`; display `Cancelled — Provider Suspended` with a separate `Admin Support Required` marker on affected cases and affected inquiries. In Progress and Aftercare cases keep their status and show the `Admin Support Required` marker with the provider-status cause. An inquiry with a closed accepted booking stays open for the replacement-provider transfer and is not cancelled. For shared unaccepted inquiries, preserve the inquiry's normal stage and other providers' offers while flagging the suspended provider's participation and support need. (REQ-015-018)
+    - Provider can still log in to Provider Platform but sees "Account Suspended" banner; the same applies to all of the provider's FR-009 team members. The banner and the suspended read-only behavior are specified in FR-032 (Rule 6). Read-only includes `In Progress` bookings: the suspended provider cannot check in, end treatment, or edit the treatment plan; the admin decides the case through FR-006 Alternative Flow B7. The suspended provider may still chat with patients on its open `In Progress` and `Aftercare` cases. Clinical notes, photos, and aftercare answers and actions stay blocked until the admin reassigns or decides the case (REQ-015-077)
   - **Deactivation**: Permanent status change; provider account cannot be reactivated (final removal from platform)
     - Automatically cancel this provider's outstanding unaccepted quotes and close all related non-terminal bookings in `Accepted` (including accepted-but-unpaid selections) or `Confirmed`, using the same Alternative Flow A5 cascade as suspension, including the hand-off of accepted bookings to the FR-006 provider-fault transfer; `In Progress` bookings stay open for the admin decision as for suspension; `Aftercare` bookings and FR-011 standalone aftercare cases move to aftercare reassignment as for suspension. Block new inquiry allocations, quote submissions, acceptances, and payment; release active reservations and retain accepted snapshots.
     - Use `ProviderDeactivated` as the cancellation reason and the same separate admin-support marker and patient/admin notification handoff. In Progress bookings awaiting the admin decision and Aftercare reassignments must reach admins for clinical continuity and recovery support (FR-010/FR-011 admin workflows). Deactivation must not overwrite the reason on cases already cancelled by suspension.
-    - Provider login disabled immediately for the provider account and all of its FR-009 team members
+    - Provider login disabled immediately for the provider account and all of its FR-009 team members (REQ-015-076)
     - Provider data retained for audit/legal purposes but marked as deactivated
-- **History and care continuity**: `Completed`, already `Cancelled`, and `Payment Window Expired` cases are not relabelled as new suspension or deactivation cancellations. Retain clinical notes, photos, completion milestones, accepted identifiers/versions, and payment/refund history. In Progress bookings awaiting the admin decision and Aftercare reassignments caused by suspension or deactivation must reach admins for clinical continuity and recovery support; automatic lifecycle cancellation does not itself transfer care or settle money; the admin replacement-provider transfer and its payment terms (full refund, no cancellation fee, new payment on the replacement booking) follow FR-006 Alternative Flow B5, and the aftercare reassignment follows FR-006 Alternative Flow B6 with no new acceptance or payment.
+- **History and care continuity**: `Completed`, already `Cancelled`, and `Payment Window Expired` cases are not relabelled as new suspension or deactivation cancellations. Retain clinical notes, photos, completion milestones, accepted identifiers/versions, and payment/refund history. In Progress bookings awaiting the admin decision and Aftercare reassignments caused by suspension or deactivation must reach admins for clinical continuity and recovery support; automatic lifecycle cancellation does not itself transfer care or settle money; the admin replacement-provider transfer and its payment terms (full refund, no cancellation fee, new payment on the replacement booking) follow FR-006 Alternative Flow B5, and the aftercare reassignment follows FR-006 Alternative Flow B6 with no new acceptance or payment. (REQ-015-085)
 - **Admin action links**: Each affected record in Affected Cases & Quotes links to the admin screen that resolves it: a closed booking before treatment starts links to Start Provider-Fault Transfer on FR-006 Screen 6 (FR-006 Screen 10); an `In Progress` booking links to FR-006 Screen 6, where the admin moves it to `Aftercare` with reassignment or cancels it; an Aftercare booking links to Reassign Aftercare on FR-006 Screen 6, which opens the FR-011 aftercare reassignment screen; an FR-011 standalone aftercare case links to the FR-011 aftercare reassignment screen; flagged inquiries and cases link to the FR-016 Admin Support Required view. Each of those screens records a mandatory reason, confirmation, and audit entry as its owning FR defines.
-- **Admin Support Required**: This is an independent support marker, not a new patient journey stage or provider account status. Affected cases/inquiries must be identifiable and filterable through FR-016's admin workflow, with mandatory admin alerts through FR-020. The FR-020 admin-support alert goes to admins with the FR-031 Respond to Support permission. Opening the FR-016 list requires FR-031 View Patients, and Resolve Support requires Respond to Support. Admin resolution records a reason and audit event before clearing the marker; the cancellation cause remains. An inquiry's marker stays set while any linked provider-caused impact is unresolved. If an FR-034 support case is created/linked during assistance, retain its existing Open → In Progress → Resolved → Closed workflow. Automatic ticket creation is not introduced here.
+- **Admin Support Required**: This is an independent support marker, not a new patient journey stage or provider account status. Affected cases/inquiries must be identifiable and filterable through FR-016's admin workflow, with mandatory admin alerts through FR-020. The FR-020 admin-support alert goes to admins with the FR-031 Respond to Support permission. Opening the FR-016 list requires FR-031 View Patients, and Resolve Support requires Respond to Support. Admin resolution records a reason and audit event before clearing the marker; the cancellation cause remains. An inquiry's marker stays set while any linked provider-caused impact is unresolved. If an FR-034 support case is created/linked during assistance, retain its existing Open → In Progress → Resolved → Closed workflow. Automatic ticket creation is not introduced here. (REQ-015-078)
 - **Patient communication**: Every affected patient is notified: `provider.status_cancellation_patient` for a cancelled unaccepted offer (before acceptance only), and `booking.provider_fault_replacement` (mandatory) for a closed accepted booking. Recipients, content and variants are defined in the FR-030 notification catalogue. Notification failures are retried without restoring cancelled cases.
-- **Reactivation**: Performed through Screen 5 (Suspended providers only). Reactivation cancels any pending scheduled suspension or deactivation and permits new eligible activity only. It must not restore cancelled quotes/cases, reopen accepted selections, reinstate old reservations, restart payment windows, clear unresolved support markers, or restore the Featured flag.
+- **Reactivation**: Performed through Screen 5 (Suspended providers only). Reactivation cancels any pending scheduled suspension or deactivation and permits new eligible activity only. It must not restore cancelled quotes/cases, reopen accepted selections, reinstate old reservations, restart payment windows, clear unresolved support markers, or restore the Featured flag. (REQ-015-021, REQ-015-079)
 - **Featured flag**: When suspension or deactivation becomes effective, the system clears `featured` automatically (freeing a slot under Rule 8) and logs it in Tab 8.
 - **Notification Email**: If "Notify Provider" checkbox enabled (default), system sends email (FR-020 `provider.suspended` or `provider.deactivated`). Its content is defined in the FR-030 notification catalogue.
-- **Email timing**: For an immediate change the email is sent once. For a scheduled change with "Notify Provider" checked, the email is sent when the scheduled change is created (with the Effective Date) and again when it takes effect. If "Notify Provider" is unchecked, no provider email is sent at either point; patient messages and admin-support alerts are still mandatory.
-- **Email recipient**: Recipients of the provider status emails (`provider.suspended`, `provider.deactivated`, `provider.reactivated`, and `provider.scheduled_change_cancelled`) are set in the FR-030 notification catalogue. Team members learn of the status through the FR-032 Rule 6 banner or the deactivated-login message.
-- **Scheduled Status Change**: A blank or today's Effective Date is treated as immediate and is never queued for the midnight UTC job. If admin selects a future Effective Date, the suspension or deactivation is stored as pending and applied automatically on that date (job processes scheduled suspensions and deactivations daily at midnight UTC), recalculating affected records at that time (A5). Until then the provider keeps its current status, and Screen 1 and the Screen 3 header show "Scheduled: Suspend/Deactivate on DD-MM-YYYY". Only one pending change per provider is allowed; an immediate suspension or deactivation replaces any pending change. Reactivating a provider through Screen 5 cancels any pending change automatically (logged in Tab 8 with the reactivation reason).
-- **Cancel Scheduled Change**: Before the Effective Date, an admin can cancel the pending change from Screen 1 or the Screen 3 header by entering a reason (min 20 chars) and re-authenticating. Scheduling, cancellation, and application are logged in Tab 8; the provider Owner is emailed about the cancellation (FR-020 `provider.scheduled_change_cancelled`) if they were notified of the scheduled change.
-- **Confirmation Requirement**: Admin must explicitly check "I confirm this action" checkbox before "Submit" button enabled (prevents accidental suspension/deactivation)
+- **Email timing**: For an immediate change the email is sent once. For a scheduled change with "Notify Provider" checked, the email is sent when the scheduled change is created (with the Effective Date) and again when it takes effect. If "Notify Provider" is unchecked, no provider email is sent at either point; patient messages and admin-support alerts are still mandatory. (REQ-015-050)
+- **Email recipient**: Recipients of the provider status emails (`provider.suspended`, `provider.deactivated`, `provider.reactivated`, and `provider.scheduled_change_cancelled`) are set in the FR-030 notification catalogue. Team members learn of the status through the FR-032 Rule 6 banner or the deactivated-login message. (REQ-015-049)
+- **Scheduled Status Change**: A blank or today's Effective Date is treated as immediate and is never queued for the midnight UTC job. If admin selects a future Effective Date, the suspension or deactivation is stored as pending and applied automatically on that date (job processes scheduled suspensions and deactivations daily at midnight UTC), recalculating affected records at that time (A5). Until then the provider keeps its current status, and Screen 1 and the Screen 3 header show "Scheduled: Suspend/Deactivate on DD-MM-YYYY". Only one pending change per provider is allowed; an immediate suspension or deactivation replaces any pending change. Reactivating a provider through Screen 5 cancels any pending change automatically (logged in Tab 8 with the reactivation reason). (REQ-015-082)
+- **Cancel Scheduled Change**: Before the Effective Date, an admin can cancel the pending change from Screen 1 or the Screen 3 header by entering a reason (min 20 chars) and re-authenticating. Scheduling, cancellation, and application are logged in Tab 8; the provider Owner is emailed about the cancellation (FR-020 `provider.scheduled_change_cancelled`) if they were notified of the scheduled change. (REQ-015-083)
+- **Confirmation Requirement**: Admin must explicitly check "I confirm this action" checkbox before "Submit" button enabled (prevents accidental suspension/deactivation) (REQ-015-081)
 
 **Notes**:
 
@@ -749,20 +729,20 @@ On save, Document Name, File Size, Upload Date, and Uploaded By ("Admin - [admin
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Provider Name | text (display only) | N/A | Confirms which provider is being reactivated | Display only |
-| Current Suspension | text (display only) | N/A | Suspension date and the reason recorded in Screen 4 | Retrieved from the latest suspension status event |
-| Pending Scheduled Change | warning (display only) | N/A | Shown only when a scheduled suspension or deactivation is pending: "Reactivating will cancel the scheduled [Suspension/Deactivation] on DD-MM-YYYY" | Retrieved from the Pending Provider Status Change record (Key Entity 4) |
-| Unresolved Support Items | number (display only) | N/A | Count of this provider's affected inquiries and cases (bookings, In Progress/Aftercare cases, standalone aftercare) still marked Admin Support Required; each affected record counts once, matching the FR-020 `provider.status_cancellation_admin_support` unit (one per affected inquiry/case). Links to the FR-016 list filtered to this provider and Admin Support Required | Calculated from cancellation/support context; informational, does not block reactivation |
-| Reason | textarea | Yes | Why the provider is being reactivated | Min 20 chars, max 500 chars |
-| Notify Provider | checkbox | No | Send reactivation email to the provider Owner including the reason | Default checked (true) |
-| Admin Password | password | Yes | Re-authentication before the status change (MFA once FR-026 / FR-031 MFA stack is delivered) | Must match the acting admin's password |
-| Confirm Action | checkbox | Yes | "I confirm this action" | Must be checked to enable submit button |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------ | --- |
+| Provider Name | text (display only) | N/A | Confirms which provider is being reactivated | Display only | ENT-provider.name |
+| Current Suspension | text (display only) | N/A | Suspension date and the reason recorded in Screen 4 | Retrieved from the latest suspension status event | ENT-provider-status-event.effective_at, ENT-provider-status-event.reason |
+| Pending Scheduled Change | warning (display only) | N/A | Shown only when a scheduled suspension or deactivation is pending: "Reactivating will cancel the scheduled [Suspension/Deactivation] on DD-MM-YYYY" | Retrieved from the Pending Provider Status Change record (Key Entity 4) | ENT-pending-provider-status-change.change_type, ENT-pending-provider-status-change.effective_date |
+| Unresolved Support Items | number (display only) | N/A | Count of this provider's affected inquiries and cases (bookings, In Progress/Aftercare cases, standalone aftercare) still marked Admin Support Required; each affected record counts once, matching the FR-020 `provider.status_cancellation_admin_support` unit (one per affected inquiry/case). Links to the FR-016 list filtered to this provider and Admin Support Required | Calculated from cancellation/support context; informational, does not block reactivation (REQ-015-134) | no graph field (display) |
+| Reason | textarea | Yes | Why the provider is being reactivated | Min 20 chars, max 500 chars | ENT-provider-status-event.reason |
+| Notify Provider | checkbox | No | Send reactivation email to the provider Owner including the reason | Default checked (true) | ENT-provider-status-event.notify_provider |
+| Admin Password | password | Yes | Re-authentication before the status change (MFA once FR-026 / FR-031 MFA stack is delivered) | Must match the acting admin's password | no graph field (control) |
+| Confirm Action | checkbox | Yes | "I confirm this action" | Must be checked to enable submit button | no graph field (control) |
 
 **Business Rules**:
 
-- Available only when provider status = Suspended; Deactivated providers can never be reactivated (Rule 4)
+- Available only when provider status = Suspended; Deactivated providers can never be reactivated (Rule 4) (REQ-015-080)
 - On submit, status changes to Active immediately; the status event (reason, admin, timestamp) is logged in Tab 8
 - Reactivation follows the Screen 4 Reactivation rule: nothing cancelled by the suspension is restored, and the Featured flag stays cleared
 - On submit, any pending scheduled suspension or deactivation is cancelled automatically; the cancellation is logged in Tab 8 with the reactivation reason and admin, and the reactivation email states that the scheduled change no longer applies (if the provider had been notified of it)
@@ -774,25 +754,67 @@ On save, Document Name, File Size, Upload Date, and Uploaded By ("Admin - [admin
 ### General Module Rules
 
 - **Rule 1**: All provider accounts must be created by admins—no self-service provider registration allowed.
-- **Rule 2**: Provider creation (and therefore activation) requires every field marked Required in the Screen 2 wizard: First Name, Last Name, Email, Phone Number, Bio/Description (50-500 chars), Specialty, Medical License Number, Years of Experience, at least 1 Language, Clinic Name, Clinic Address, Contact Email, Medical License file, Commission Model and Value, Flat Rate Currency (when Commission Model = Flat Rate), Payout Method, and Commission Start Date. The Medical License file is a record-keeping baseline only; document authenticity or later document changes never block activation or change status. Payout readiness (the clinic's own Stripe sign-up being Ready) is not required for creation or activation (Payout Readiness Rule). A field marked "Required" in a screen table means it is needed to submit or save that screen only; it does not by itself make the stored provider attribute mandatory.
-- **Rule 3**: Provider statuses are Active, Suspended, and Deactivated (there is no Draft status). Providers are created as Active when all required fields are complete. Allowed transitions: Active → Suspended (Screen 4), Suspended → Active (Screen 5), Active or Suspended → Deactivated (Screen 4). "Password not yet set" is tracked by `password_set = false`, not by a separate status. An Active provider with `password_set = false` is excluded from FR-003 inquiry distribution (including explicit patient selection and reassignment) until the password is set; it may still be featured or edited by admins.
-- **Rule 4**: Deactivation is permanent—deactivated providers cannot be reactivated; admin must create new provider account if re-onboarding required. Deactivation frees the provider's emails: Contact Email uniqueness counts only Active and Suspended providers, and login Email follows the FR-009 global provider email identity rule (Rule 3, REQ-009-008), under which the Owner, team member, and pending-invitation emails of a Deactivated provider are freed. The new account may reuse those emails; the deactivated record and its history are retained unchanged.
+- **Rule 2**: Provider creation (and therefore activation) requires every field marked Required in the Screen 2 wizard: First Name, Last Name, Email, Phone Number, Bio/Description (50-500 chars), Specialty, Medical License Number, Years of Experience, at least 1 Language, Clinic Name, Clinic Address, Contact Email, Medical License file, Commission Model and Value, Flat Rate Currency (when Commission Model = Flat Rate), Payout Method, and Commission Start Date. The Medical License file is a record-keeping baseline only; document authenticity or later document changes never block activation or change status. Payout readiness (the clinic's own Stripe sign-up being Ready) is not required for creation or activation (Payout Readiness Rule). A field marked "Required" in a screen table means it is needed to submit or save that screen only; it does not by itself make the stored provider attribute mandatory. (REQ-015-030)
+- **Rule 3**: Provider statuses are Active, Suspended, and Deactivated (there is no Draft status). Providers are created as Active when all required fields are complete. Allowed transitions: Active → Suspended (Screen 4), Suspended → Active (Screen 5), Active or Suspended → Deactivated (Screen 4). "Password not yet set" is tracked by `password_set = false`, not by a separate status. An Active provider with `password_set = false` is excluded from FR-003 inquiry distribution (including explicit patient selection and reassignment) until the password is set; it may still be featured or edited by admins. (REQ-015-031, REQ-015-052)
+- **Rule 4**: Deactivation is permanent—deactivated providers cannot be reactivated; admin must create new provider account if re-onboarding required. Deactivation frees the provider's emails: Contact Email uniqueness counts only Active and Suspended providers, and login Email follows the FR-009 global provider email identity rule (Rule 3, REQ-009-008), under which the Owner, team member, and pending-invitation emails of a Deactivated provider are freed. The new account may reuse those emails; the deactivated record and its history are retained unchanged. (REQ-015-032, REQ-015-070)
 - **Rule 5**: Commission configuration applies at booking confirmation under FR-029; later configuration edits never replace an existing confirmed booking's commission snapshot.
-- **Rule 6**: Featured provider designation only available for providers with status = "Active". When suspension or deactivation becomes effective, the system clears the Featured flag automatically; it is not restored on reactivation.
-- **Rule 7**: Seat limit (maximum team members) defaults to 100 and can be adjusted by admin (range 1-500). Providers request seat limit increases via FR-009 "Request more seats", which opens an FR-034 support case pre-filled as a seat-increase request; if approved, the admin edits Seat Limit in Screen 3 Tab 1. Seat limit blocks staff invitations when reached (enforced by FR-009).
-- **Rule 8**: At most 10 active providers may be featured. Admin can set or unset featured status from the Provider-list quick action or the Basic Information toggle. A request to feature an eleventh provider must be rejected without changing data and must clearly tell the admin to unfeature another provider first, using the message: "Maximum of 10 featured providers reached. Unfeature another provider first." Featuring or unfeaturing does not require an admin change reason (Tab 8 still logs it). This limit must be enforced server-side for every write path.
+- **Rule 6**: Featured provider designation only available for providers with status = "Active". When suspension or deactivation becomes effective, the system clears the Featured flag automatically; it is not restored on reactivation. (REQ-015-033)
+- **Rule 7**: Seat limit (maximum team members) defaults to 100 and can be adjusted by admin (range 1-500). Providers request seat limit increases via FR-009 "Request more seats", which opens an FR-034 support case pre-filled as a seat-increase request; if approved, the admin edits Seat Limit in Screen 3 Tab 1. Seat limit blocks staff invitations when reached (enforced by FR-009). (REQ-015-035)
+- **Rule 8**: At most 10 active providers may be featured. Admin can set or unset featured status from the Provider-list quick action or the Basic Information toggle. A request to feature an eleventh provider must be rejected without changing data and must clearly tell the admin to unfeature another provider first, using the message: "Maximum of 10 featured providers reached. Unfeature another provider first." Featuring or unfeaturing does not require an admin change reason (Tab 8 still logs it). This limit must be enforced server-side for every write path. (REQ-015-034)
 - **Rule 9**: Provider-status eligibility must be revalidated at inquiry allocation (which also requires `password_set = true`, Rule 3), quote submission, Subquote acceptance, booking-confirming payment, and three FR-006 admin actions: admin Revive Booking, admin appointment change (reschedule), and admin acceptance of a replacement quote (FR-006 B5). Each of these requires the provider to be Active; FR-006 REQ-006-020 owns the blocking message ([CR-FR006-20261027-02](../fr006-booking-scheduling/change-request-2026-10-27-admin-actions-require-active-provider.md)). Once suspension/deactivation is effective, an in-flight request or delayed callback must not create an eligible quote, revive a cancelled case, or confirm a new booking for that provider. Any payment actually captured must remain recorded and reach admin financial reconciliation, not be hidden or treated as a successful new booking. FR-007 records such late captures; FR-017 owns flagging them for admin reconciliation, holding them from provider payout, and cancelling remaining scheduled installments on provider-cancelled bookings ([CR-FR017-20261015-01](../fr017-admin-billing-finance/change-request-2026-10-15-post-suspension-payment-reconciliation.md)). Before acceptance, the status change cancels the provider's unaccepted quotes (FR-004 `cancelled_provider_status`). After acceptance, the booking is closed and handed to the FR-006 provider-fault transfer (Alternative Flows B4 and B5), where an admin rehomes the patient to a replacement provider in the same inquiry; the inquiry is not cancelled. An `Aftercare` booking is not closed and moves to aftercare reassignment (FR-006 Alternative Flow B6).
-- **Rule 10**: Screen 4 and Alternative Flow A5 own provider-status cancellation and support effects; FR-006 Alternative Flow B5 owns the replacement-provider transfer for accepted bookings before treatment starts, FR-006 Alternative Flow B7 (on Screen 6) owns the admin decision for `In Progress` bookings (move to Aftercare with reassignment, or cancel), and FR-006 Alternative Flow B6 with FR-011 owns only the aftercare reassignment. The cascade is provider-scoped, preserves immutable accepted context, and must not count alternatives as independent treatments or cancel unrelated providers' unaccepted offers.
+- **Rule 10**: Screen 4 and Alternative Flow A5 own provider-status cancellation and support effects; FR-006 Alternative Flow B5 owns the replacement-provider transfer for accepted bookings before treatment starts, FR-006 Alternative Flow B7 (on Screen 6) owns the admin decision for `In Progress` bookings (move to Aftercare with reassignment, or cancel), and FR-006 Alternative Flow B6 with FR-011 owns only the aftercare reassignment. The cascade is provider-scoped, preserves immutable accepted context, and must not count alternatives as independent treatments or cancel unrelated providers' unaccepted offers. (REQ-015-036)
+- Admins must be authenticated and hold the FR-031 Provider Management (A-02) permissions: View Providers (Screen 1 and Screen 3 read access), Onboard Providers (Screen 2), Edit Providers (Screen 3 edits, documents, commission, seat limit, featured flag, Resend Activation Email), and Suspend Providers (Screens 4-5: suspension, deactivation, reactivation, scheduled-change cancellation). Login as Provider is restricted to Super Admin; re-authentication for suspend/deactivate/reactivate/Login as Provider uses the admin's credentials (REQ-015-069)
+- all default roles (Super Admin, Aftercare Specialist, Billing Staff, Support Staff) have View Providers; by default only Super Admin has Edit Providers, Onboard Providers, and Suspend Providers, which custom roles may also be granted per FR-031
+- P-02 queries A-02 provider data filtered by (status = "Active" AND featured = true) to populate featured provider listings; includes provider name, clinic, specialty, profile photo
+- The `provider.*` Events named in this FR are owned by FR-030 (notification catalogue), which holds their recipients, content and switch-off rules; FR-015 only says when each one fires. FR-020 owns delivery and recipient-scoped payloads, and the FR-030 retry rule applies to failed deliveries; provider-caused cancellation must not use FR-003's patient-cancellation message or expose confidential suspension reasons to patients.
+- Preserve the AcceptanceEvent, selected identifiers, equal accepted aggregate versions, and quote-local package snapshot; do not modify the reusable package library.
+- cancellation excludes a selection from active pending-payment exposure without deleting historical acceptance/price observations.
+- FR-032 owns field validation (Clinic Name 3-200 chars, unique Contact Email, document formats PDF/JPG/PNG/DOCX/XLSX) that FR-015 reuses.
+- No SMS delivery is available in MVP.
+- If email delivery fails, S-03 retries under the FR-030 notification retry rule; A-02 displays warning to admin: "Notification queued but not yet delivered." The same warning applies to activation emails and provider status emails (REQ-015-048)
+- If upload fails, A-02 displays error to admin: "Document upload failed. Please retry." Document upload retries automatically up to 3 times before failing (REQ-015-133)
+- A-02 retries upload up to 3 times with exponential backoff before failing (REQ-015-133)
+- Admins access Admin Platform via desktop/laptop computers (not mobile devices) due to complexity of provider creation forms and document review workflows
+- Providers access Provider Platform to view profile status via both desktop and mobile devices (responsive design required for provider profile view)
+- Providers will proactively provide updated documents when renewals occur without system-prompted reminders
+- Deactivated providers' data is retained for legal/audit purposes (retention follows the system PRD, Platform-Wide Rules: One 10-year retention period), then archived; it is never hard-deleted. GDPR/data deletion requests are handled via separate data privacy workflows (not in-scope for A-02) (REQ-015-068)
+- Document upload functionality should support chunked/resumable uploads for large files (up to 10MB) to handle unreliable admin connections
+- Commission rate validation enforced at both client-side (immediate feedback) and server-side (security) to prevent invalid configurations. (REQ-015-100)
+- A-02 returns empty array if no featured providers available; P-02 displays "No featured providers at this time" message
+- Revalidate eligibility during concurrent acceptance/payment; retry incomplete cascade processing without duplicate outcomes, and do not report a fully completed cascade while affected cases remain unprocessed. (REQ-015-072)
+- A-02 reads the active lists at form load and validates saved values against them.
+- A-02 reads active catalog languages at form load and validates saved values against them; a stored language later removed from the catalog still displays but cannot be newly selected. (REQ-015-098)
+- A-02 logs notification failures and displays warning to admin
+- No in-system document status workflow is tracked in this FR.
+- Affected inquiry/case owners retain the provider-status event reference, cancellation reason, and `supportRequired` marker with resolution audit.
 
 ### Data & Privacy Rules
 
-- **Privacy Rule 1**: Provider contact information (email, phone) visible only to admins; patients see clinic phone/email.
+- **Privacy Rule 1**: Provider contact information (email, phone) visible only to admins; patients see clinic phone/email. (REQ-015-037)
 - **Privacy Rule 2**: Uploaded provider documents (licenses, certifications, insurance) encrypted at rest using AES-256.
 - **Audit Rule**: All provider management actions logged with timestamp, admin user ID, action details, and the admin's reason or justification (Screen 3 Tab 1 admin change reason, Screens 4-5 status reasons, Login as Provider reason). Provider-status cancellation records include the triggering status event, effective time, affected inquiry/quote/booking/treatment identifiers, prior stage, cancellation cause, support marker, slot-release outcome, and notification outcome. Sensitive suspension reasons remain admin/provider context rather than patient notification content.
+- S-05 returns secure download URLs accessible only to authorized admins
+- A-02 sends audit log events to S-06 API with structured data (timestamp, admin user ID, action type, entity ID, before/after values); S-06 persists logs and provides query interface for admin reporting
+- 100% of provider management actions logged with timestamp, admin user ID, IP address, and action details; audit logs immutable (cannot be edited or deleted by admins)
+- Service-to-service authentication via API key in request header
+- OAuth 2.0 service account token for S-05 API access
+- OAuth 2.0 provider user token validated by A-02 API; provider can only access their own profile data (not other providers)
+- Public read-only REST endpoint (no authentication required for featured provider listings); returns only the public fields listed above and is rate limited, as the constitution requires for all public-facing APIs
+- Provider sensitive data (email, phone, medical license number) is stored in the database protected by database/disk encryption at rest, HTTPS/TLS in transit, and access control. It is not encrypted at application level, so the Screen 1 partial search and the login email uniqueness check keep working (REQ-015-067)
+- All API communication via HTTPS/TLS 1.3 (no unencrypted HTTP allowed)
+- Rate limiting on provider creation API (max 10 provider creations per admin per hour) to prevent bulk account creation abuse (REQ-015-066)
+- File upload validation (max 10MB per file, only PDF, JPG, PNG, DOCX, and XLSX allowed, matching FR-032; malware scanning via antivirus integration before storage) (REQ-015-065)
+- Input sanitization on all form fields (prevent SQL injection, XSS attacks)
+- Confidential handling of provider medical licenses and certifications (professional records, not patient PHI) with the same encryption and access controls
+- GDPR compliance for provider personal data (name, email, phone) with data retention following the system PRD, Platform-Wide Rules: One 10-year retention period (deactivated providers' data is then archived; never hard-deleted)
+- SOC 2 Type II audit trail requirements met via S-06 Audit Log Service integration
+- **Integration point**: FR-006 Alternative Flow B4 applies the provider-status cancellation cause, releases valid holds/reservations, blocks further payment, and retains all booking/payment history; FR-006 Alternative Flow B5 then performs the admin replacement-provider transfer in the same inquiry with its payment terms (full refund, no cancellation fee, new payment on the replacement booking). FR-006 Alternative Flow B7 (Provider Fault While In Progress, Admin Decision) decides an `In Progress` booking; FR-006 Alternative Flow B6 handles only the aftercare reassignment, both for `Aftercare` bookings (which are not closed) and for an `In Progress` booking the admin moves to `Aftercare`. Provider suspension is cancellation, not `Payment Window Expired`; exact payment mechanics retain their existing owners.
+- **Integration point**: Snapshot the effective model/value at booking confirmation, preserve existing booking snapshots, and keep provider-specific edits synchronized. Payout-cycle timing and fund-release rules are not redesigned here; the settlement period for manual-rail clinics is the one platform-wide FR-029 setting (REQ-015-128). FR-029 Screen 5 accepts the same provider-specific Percentage (0-100%) or Flat Rate model defined here ([CR-FR029-20261014-01](../fr029-payment-system-config/change-request-2026-10-14-provider-flat-rate-commission.md)).
+- Supply cancellation cause, affected case/inquiry references, prior stage, and support marker to FR-016 and FR-020. Patient messages provide Contact Admin/Support; confidential investigation details remain restricted. Support handling may link an existing/manual FR-034 case, but this change does not create a new automated ticket source or another ticket lifecycle.
 
 ### Admin Editability Rules
 
-**Editable by Admin**:
+**Editable by Admin**: (REQ-015-039)
 
 - Provider basic information (name, specialty, bio, languages, awards)
 - Clinic information (name, address, phone, logo, contact email)
@@ -825,266 +847,20 @@ On save, Document Name, File Size, Upload Date, and Uploaded By ("Admin - [admin
 
 ### Payment & Billing Rules
 
-- **Commission Rule 1**: Commissions apply to all provider earnings from patient bookings.
-- **Commission Rule 2**: **Percentage Model**: Calculated as `Booking Total * (Commission Rate / 100)`. The booking total is the accepted price after promotion, in the quote currency, read from the FR-005 acceptance snapshot; commission never reads the live quote or option record. The same base applies to every discount type, including discounts funded only by Hairline. The rate is the one fixed at booking confirmation (Commission Rule 4).
-- **Commission Rule 3**: **Flat Rate Model**: Fixed amount deducted per completed procedure (e.g., £150 flat fee).
+- **Commission Rule 1**: Commissions apply to all provider earnings from patient bookings. (REQ-015-040)
+- **Commission Rule 2**: **Percentage Model**: Calculated as `Booking Total * (Commission Rate / 100)`. The booking total is the accepted price after promotion, in the quote currency, read from the FR-005 acceptance snapshot; commission never reads the live quote or option record. The same base applies to every discount type, including discounts funded only by Hairline. The rate is the one fixed at booking confirmation (Commission Rule 4). (REQ-015-041)
+- **Commission Rule 3**: **Flat Rate Model**: Fixed amount deducted per completed procedure (e.g., £150 flat fee). (REQ-015-042)
 - **Commission Rule 4**: Resolve and snapshot the effective commission model/value when a booking is confirmed. Changes affect newly confirmed bookings only; existing snapshots govern later payments and commission recognition. Locking configuration at confirmation does not move the Flat Rate deduction away from its existing completed-procedure milestone.
-- **Cancellation Billing Rule**: Suspension or deactivation closes affected bookings and blocks further patient payment to that provider, but payment/refund/commission records remain intact. For a closed accepted booking, money follows the FR-006 Alternative Flow B5 payment terms: the patient is refunded in full everything paid, pays no cancellation fee, and the replacement booking takes a new payment. For an `In Progress` booking (treatment already started), an admin reviews each case and sets the patient refund amount, from zero up to the full amount paid, with a mandatory reason and an audit entry, and the provider's payout for that booking is held until the admin decides (FR-006 Alternative Flow B7 payment terms). Exact refund, fund-release, and allocation mechanics belong to FR-007, FR-007B, and FR-017; no new refund percentage or fee is defined here, and the payout method and payout-readiness rules below concern only a clinic's payout setup.
-- **Billing Rule 1**: There is no per-clinic payout frequency. On the Stripe Connect rail, release to the clinic is automatic through FR-017. A clinic paid by manual bank transfer follows the one settlement-period setting owned by FR-029 (default weekly, Sunday cutoff, Wednesday payout), which applies to all manually paid clinics.
+- **Cancellation Billing Rule**: Suspension or deactivation closes affected bookings and blocks further patient payment to that provider, but payment/refund/commission records remain intact. For a closed accepted booking, money follows the FR-006 Alternative Flow B5 payment terms: the patient is refunded in full everything paid, pays no cancellation fee, and the replacement booking takes a new payment. For an `In Progress` booking (treatment already started), an admin reviews each case and sets the patient refund amount, from zero up to the full amount paid, with a mandatory reason and an audit entry, and the provider's payout for that booking is held until the admin decides (FR-006 Alternative Flow B7 payment terms). Exact refund, fund-release, and allocation mechanics belong to FR-007, FR-007B, and FR-017; no new refund percentage or fee is defined here, and the payout method and payout-readiness rules below concern only a clinic's payout setup. (REQ-015-043)
+- **Billing Rule 1**: There is no per-clinic payout frequency. On the Stripe Connect rail, release to the clinic is automatic through FR-017. A clinic paid by manual bank transfer follows the one settlement-period setting owned by FR-029 (default weekly, Sunday cutoff, Wednesday payout), which applies to all manually paid clinics. (REQ-015-044)
 - **Payout Method Rule**: The admin chooses the clinic's payout method (Stripe Connect or Manual bank transfer) when creating the clinic (Screen 2 Step 5). The clinic sees its payout method and payout readiness read-only in its own dashboard (FR-032) and completes Stripe's own sign-up itself. After go-live only an admin changes the payout method (Tab 7); the clinic asks Hairline.
 - **Payout Readiness Rule**: Clinic activation does not wait for payout readiness. If a Stripe Connect clinic's payout setup is not Ready when a booking's share is due to move to the clinic, the share stays with Hairline, the clinic and the admin are told, and the share moves when the clinic becomes Ready. Nothing is paid out before then, even after treatment.
 
 ---
 
-## Success Criteria
-
-### Patient Experience Metrics
-
-- **SC-001** **[P2 - Post-MVP, with FR-022 patient provider search]**: Patients can discover and view featured provider profiles in Patient Platform within 1 second of search query (data sourced from A-02 featured providers)
-- **SC-002**: 100% of patient-facing provider information (name, clinic, specialty) displays accurately and matches admin-configured data in A-02 with no discrepancies
-- **SC-003**: Patients see only active providers in search results (no suspended/deactivated providers visible), ensuring trust and booking reliability
-
-### Provider Efficiency Metrics
-
-- **SC-004**: Providers receive account activation notification within 1 minute of admin activating their account, enabling immediate platform access
-- **SC-005**: Providers can view their uploaded documents list and commission configuration in Provider Platform within 2 seconds of navigation
-- **SC-006**: 90% of providers successfully log in and access their profile on first attempt after receiving activation credentials (low login failure rate)
-
-### Admin Management Metrics
-
-- **SC-007**: Admins can create a complete provider profile (all sections filled, documents uploaded, commission configured) in under 10 minutes on average
-- **SC-008**: Admins can filter and search provider list (1000+ providers) and retrieve results in under 2 seconds, enabling efficient provider oversight
-- **SC-009**: Providers and admins can upload and manage documents in under 30 seconds per document, streamlining record-keeping workflows. Document changes sync between FR-032 and FR-015 within 1 minute
-- **SC-010**: 100% of provider status changes (create as Active, suspend, reactivate via Screen 5, deactivate, schedule or cancel a scheduled change) and admin profile edits logged in audit trail with timestamp, admin user, and the mandatory reason (full accountability)
-- **SC-011**: System maintains complete audit trail of all document uploads, replacements, and deletions with 100% accuracy
-- **SC-012**: Admin dashboard displays real-time provider status counts (active, suspended, deactivated) with <1 second refresh latency
-
-### System Performance Metrics
-
-- **SC-013**: Provider creation/edit form submission completes within 3 seconds for 95% of requests (excluding large document uploads)
-- **SC-014**: Document upload (up to 10MB per file) completes within 10 seconds for 90% of uploads on standard broadband connections
-- **SC-015**: Provider profile page loads (all tabs: Basic Information, Languages, Staff List, Awards, Reviews, Documents, Commission & Financials, Activity Log) within 2 seconds for 95% of requests
-- **SC-016**: System supports 100 concurrent admin users managing providers without performance degradation
-- **SC-017**: 99.9% uptime for provider management functionality (excluding scheduled maintenance)
-
-### Business Impact Metrics
-
-- **SC-018**: Provider onboarding time reduced by 60% compared to manual/offline provider onboarding processes (baseline: 5 hours manual → target: 2 hours in-system)
-- **SC-019**: Provider document management errors reduced by 80% through structured upload validation and clear file type requirements
-- **SC-020**: 95% of providers have complete profiles (all required fields filled, commission configured) within 48 hours of initial account creation
-- **SC-021** **[P2 - Post-MVP, with FR-022 patient provider search]**: Featured provider designation increases patient booking conversion rate by 25% compared to non-featured providers (measured in Patient Platform analytics)
-
----
-
 ## Dependencies
 
-### Internal Dependencies (Other FRs/Modules)
-
-- **[FR-031: Admin Access Control & Permissions](../fr031-admin-access-control/prd.md) / Module A-09: System Settings & Configuration**
-  - **Why needed**: Admins must be authenticated and hold the FR-031 Provider Management (A-02) permissions: View Providers (Screen 1 and Screen 3 read access), Onboard Providers (Screen 2), Edit Providers (Screen 3 edits, documents, commission, seat limit, featured flag, Resend Activation Email), and Suspend Providers (Screens 4-5: suspension, deactivation, reactivation, scheduled-change cancellation). Login as Provider is restricted to Super Admin; re-authentication for suspend/deactivate/reactivate/Login as Provider uses the admin's credentials
-  - **Integration point**: A-02 verifies admin user session token and role permissions before allowing provider management actions; API endpoints protected by role-based access control (RBAC)
-
-- **[FR-009: Provider Team & Role Management](../fr009-provider-team-roles/prd.md) / Module PR-01: Auth & Team Management**
-  - **Why needed**: Providers created in A-02 must be able to log into Provider Platform to view their profile status, uploaded documents, and commission configuration (all sourced from A-02/FR-032).
-  - **Integration point**: A-02 creates provider user account credentials (email/password) and passes to PR-01 authentication service; providers authenticate via PR-01 to read profile data managed by A-02 and edit the allowed fields via FR-032. FR-009 also enforces the Seat Limit set in Screen 2 Step 1 when providers invite team members
-
-- **[FR-022: Search & Filtering](../fr022-search-filtering/prd.md) / Module P-02: Quote Request & Management (provider discovery and featured listing)**
-  - **Why needed**: Featured providers designated in A-02 must be displayed prominently in Patient Platform search and discovery interfaces. FR-022 patient provider search is P2 (Post-MVP); in MVP, FR-015 maintains the featured flag and cap only
-  - **Integration point**: P-02 queries A-02 provider data filtered by (status = "Active" AND featured = true) to populate featured provider listings; includes provider name, clinic, specialty, profile photo
-
-- **FR-020 / Module S-03: Notifications & Alerts**
-  - **Why needed**: Provider account events, mandatory patient cancellation messages, and admin-support alerts must be delivered with appropriate recipient privacy; SMS remains a future channel.
-  - **Integration point**: A-02 supplies the provider status event and affected record references. Provider account emails use FR-020 events `provider.activation` (mandatory, cannot be disabled; Main Flow step 13 and A1), `provider.suspended` / `provider.deactivated` (Screen 4), `provider.reactivated` (A6, Screen 5), and `provider.scheduled_change_cancelled` (Screen 4 Cancel Scheduled Change) per CR-FR020-20261015-01. An Owner login email change sends `provider.login_email_changed` (mandatory, to the old and new address; Screen 3 Tab 1). Account-closure requests (A7) use `provider.closure_requested` (to admins, on FR-032 submission) and `provider.closure_rejected` (to the provider, on rejection), both mandatory, per CR-FR020-20261015-02. The `provider.*` Events named in this FR are owned by FR-030 (notification catalogue), which holds their recipients, content and switch-off rules; FR-015 only says when each one fires. FR-020 owns delivery and recipient-scoped payloads, and the FR-030 retry rule applies to failed deliveries; provider-caused cancellation must not use FR-003's patient-cancellation message or expose confidential suspension reasons to patients.
-
-- **Shared Service S-05: Media Storage Service** (platform service; no dedicated FR)
-  - **Why needed**: Provider documents (licenses, certifications, insurance) must be securely stored with encryption and access controls
-  - **Integration point**: A-02 uploads documents to S-05 API with metadata (provider ID, document type, uploader type and ID); S-05 returns secure download URLs accessible only to authorized admins
-
-- **Shared Service S-06: Audit Log Service** (platform service; no dedicated FR)
-  - **Why needed**: All provider management actions (creation, edits, status changes, and document-related actions) must be logged for compliance and audit trails
-  - **Integration point**: A-02 sends audit log events to S-06 API with structured data (timestamp, admin user ID, action type, entity ID, before/after values); S-06 persists logs and provides query interface for admin reporting
-
-- **[FR-003: Inquiry Submission](../fr003-inquiry-submission/prd.md)**
-  - **Why needed**: Distinguish provider-caused cancellation from patient cancellation and avoid cancelling unrelated responses to a shared inquiry.
-  - **Integration point**: Distribute inquiries only to Active providers with `password_set = true` (CR-FR003-20261015-01). An inquiry whose accepted booking is closed by the cascade stays open for the FR-006 provider-fault transfer and is not cancelled; for an inquiry still comparing providers, cancel the affected ProviderInquiry participation/quotes only. Retain `ProviderSuspended` or `ProviderDeactivated` cause and the separate support marker in affected inquiry context.
-
-- **[FR-004: Quote Submission](../fr004-quote-submission/prd.md) / [FR-005: Quote Comparison & Acceptance](../fr005-quote-comparison-acceptance/prd.md)**
-  - **Why needed**: Multiple Parent Quotes from one provider and their package/date alternatives all depend on provider eligibility; only a Subquote is accepted.
-  - **Integration point**: Block ineligible submissions/acceptances and cancel affected unaccepted parents with FR-004 `cancelled_provider_status`; an accepted parent keeps `accepted` and its AcceptanceEvent stays unchanged; FR-005 writes the linked supersession record only when the admin accepts the replacement quote (FR-006 Alternative Flow B5). Preserve the AcceptanceEvent, selected identifiers, equal accepted aggregate versions, and quote-local package snapshot; do not modify the reusable package library.
-
-- **[FR-006: Booking & Scheduling](../fr006-booking-scheduling/prd.md) / [FR-007: Payment Processing](../fr007-payment-processing/prd.md)**
-  - **Why needed**: Accepted selections may still be awaiting initial payment, while other cases are confirmed or already undergoing treatment.
-  - **Integration point**: FR-006 Alternative Flow B4 applies the provider-status cancellation cause, releases valid holds/reservations, blocks further payment, and retains all booking/payment history; FR-006 Alternative Flow B5 then performs the admin replacement-provider transfer in the same inquiry with its payment terms (full refund, no cancellation fee, new payment on the replacement booking). FR-006 Alternative Flow B7 (Provider Fault While In Progress, Admin Decision) decides an `In Progress` booking; FR-006 Alternative Flow B6 handles only the aftercare reassignment, both for `Aftercare` bookings (which are not closed) and for an `In Progress` booking the admin moves to `Aftercare`. Provider suspension is cancellation, not `Payment Window Expired`; exact payment mechanics retain their existing owners.
-
-- **[FR-010: Treatment Execution](../fr010-treatment-execution/prd.md) / [FR-011: Aftercare & Recovery Management](../fr011-aftercare-recovery-management/prd.md)**
-  - **Why needed**: Suspension includes In Progress and Aftercare cases without deleting care already delivered.
-  - **Integration point**: Apply the provider-status cause and support marker, preserve clinical records/completion milestones, and route clinical continuity to admins. `In Progress` bookings are not cancelled automatically; an admin either moves them to `Aftercare` with aftercare reassignment or cancels them with a reason through FR-006 Alternative Flow B7. Aftercare bookings and FR-011 standalone aftercare cases are not cancelled; an admin reassigns them through the FR-011 aftercare reassignment screen (FR-006 Alternative Flow B6). FR-010's ordinary provider-requested Cancel/Close Case remains distinct.
-
-- **[FR-014: Provider Analytics & Reporting](../fr014-provider-analytics-reporting/prd.md)**
-  - **Why needed**: Provider-profile counts and reporting must not multiply one treatment by its quote alternatives or erase historical milestones after cancellation.
-  - **Integration point**: Completed Procedures counts distinct actual FR-010 completions; cancellation excludes a selection from active pending-payment exposure without deleting historical acceptance/price observations.
-
-- **[FR-016: Admin Patient Management](../fr016-admin-patient-mgmt/prd.md) / [FR-034: Support Center & Ticketing](../fr034-support-center-ticketing/prd.md)**
-  - **Why needed**: Provider-related cancellations require identifiable, filterable special admin support rather than an ordinary patient cancellation.
-  - **Integration point**: Surface affected inquiry/case references, cancellation cause, `supportRequired`, and any linked support case. The FR-016 list requires FR-031 View Patients, and Resolve Support requires Respond to Support, the same permission that receives the FR-020 admin-support alert. Admins record assistance/resolution; linked tickets use FR-034's existing status workflow. No automatic ticket creation is added.
-
-- **[FR-029: Payment System Configuration](../fr029-payment-system-config/prd.md) / [FR-017: Admin Billing & Finance](../fr017-admin-billing-finance/prd.md)**
-  - **Why needed**: FR-029 owns commission snapshot timing; FR-015 owns synchronized provider-specific configuration consumed by FR-017.
-  - **Integration point**: Snapshot the effective model/value at booking confirmation, preserve existing booking snapshots, and keep provider-specific edits synchronized. Payout-cycle timing and fund-release rules are not redesigned here; the settlement period for manual-rail clinics is the one platform-wide FR-029 setting (REQ-015-128). FR-029 Screen 5 accepts the same provider-specific Percentage (0-100%) or Flat Rate model defined here ([CR-FR029-20261014-01](../fr029-payment-system-config/change-request-2026-10-14-provider-flat-rate-commission.md)).
-
-- **[FR-032: Provider Dashboard Settings](../fr032-provider-dashboard-settings/prd.md) / Module PR-06: Profile & Settings Management**
-  - **Why needed**: Providers self-edit the profile fields listed under Admin Editability Rules and manage their own documents; FR-032 owns field validation (Clinic Name 3-200 chars, unique Contact Email, document formats PDF/JPG/PNG/DOCX/XLSX) that FR-015 reuses.
-  - **Integration point**: A-02 and FR-032 read and write the same provider, clinic, and document records; changes from either side sync within 1 minute and are logged in Tab 8. FR-032 Screen 4 shows the Tab 7 commission configuration read-only, and FR-032 Rule 6 owns the Suspended/Deactivated account-status banner ([CR-FR032-20261015-01](../fr032-provider-dashboard-settings/change-request-2026-10-15-provider-commission-panel-suspension-banner.md)).
-
-- **[FR-024: Treatment & Package Management](../fr024-treatment-package-management/prd.md)**
-  - **Why needed**: The provider's starting price is calculated, not typed in: the lowest standard price among the provider's active packages.
-  - **Integration point**: A-02 reads the active packages' `standard_price` and shows the lowest one, converted to the patient's currency.
-
-- **[FR-013: Reviews & Ratings](../fr013-reviews-ratings/prd.md)**
-  - **Why needed**: Tab 5 shows provider reviews; admin insert, edit, and removal of reviews is owned by FR-013.
-  - **Integration point**: Tab 5 reads review data and opens FR-013 Screen 8 for admin review actions; moderation rules follow FR-013 Screens 6-8.
-
-- **[FR-026: App Settings & Security Policies](../fr026-app-settings-security/prd.md) / Module A-09**
-  - **Why needed**: Supplies the managed country and Provider Specialties lists used in the wizard and Tab 1, and the admin security policies (MFA, re-authentication) applied to status changes and Login as Provider.
-  - **Integration point**: A-02 reads the active lists at form load and validates saved values against them.
-
-- **[FR-021: Multi-Language & Localization](../fr021-i18n-localization/prd.md)**
-  - **Why needed**: Owns the central language catalog used for Languages Spoken (Screen 2 Step 2) and Supported Languages (Tab 2).
-  - **Integration point**: A-02 reads active catalog languages at form load and validates saved values against them; a stored language later removed from the catalog still displays but cannot be newly selected.
-
-**Reconciliation boundary**: These are the FR-015 target handoffs. Downstream alignment for the suspension/deactivation cascade and the Flat Rate commission model is tracked by the 2026-10-14 Change Requests beside FR-003, FR-004, FR-010, FR-011, FR-016, FR-020, and FR-029, with change-log alignment in FR-005 and FR-006. Payments captured after suspension/deactivation are recorded by FR-007 and reconciled by FR-017 (CR-FR017-20261015-01). Admin per-provider staff invites and limited-write impersonation are aligned in FR-009 (CR-FR009-20261015-01), and the Provider Specialty list in FR-026 (CR-FR026-20261015-01). Provider account-closure requests are aligned in FR-032 (CR-FR032-20261015-02), and the provider lifecycle email events in FR-020 and FR-030 (CR-FR020-20261015-01, CR-FR030-20261015-01). Closure request notifications and the admin marker are aligned in FR-032, FR-020, and FR-030 (CR-FR032-20261015-03, CR-FR020-20261015-02, CR-FR030-20261015-02); Suspended-provider commission edits in FR-029 (CR-FR029-20261015-02); and the set-password distribution gate in FR-003 (CR-FR003-20261015-01). System documents and implementation remain subject to reconciliation.
-
-### External Dependencies (APIs, Services)
-
-- **External Service 1: Email Delivery Service (e.g., SendGrid, AWS SES)**
-  - **Purpose**: Sends provider notification emails (account activation and status changes)
-  - **Integration**: S-03 Notification Service integrates with email delivery API via REST/SMTP; A-02 does not directly call external email service
-  - **Failure handling**: If email delivery fails, S-03 retries under the FR-030 notification retry rule; A-02 displays warning to admin: "Notification queued but not yet delivered." The same warning applies to activation emails and provider status emails
-
-- **External Service 2: SMS Delivery Service (e.g., Twilio, AWS SNS)**
-  - **Purpose**: (Future) Sends SMS notifications to providers for critical status changes (account suspended, deactivated, or reactivated) once S-03 SMS support is implemented
-  - **Integration**: S-03 integrates with SMS API; A-02 would trigger SMS notifications via S-03 for high-priority events in a later phase
-  - **Failure handling**: SMS failures logged in S-03; A-02 fallback sends email notification if SMS delivery fails. **No SMS delivery is available in MVP.**
-
-- **External Service 3: Cloud File Storage (e.g., AWS S3, Google Cloud Storage)**
-  - **Purpose**: Stores uploaded provider documents (licenses, certifications, insurance) with encryption at rest
-  - **Integration**: S-05 Media Storage Service uploads documents to cloud storage via SDK/API with server-side encryption (AES-256)
-  - **Failure handling**: If upload fails, A-02 displays error to admin: "Document upload failed. Please retry." Document upload retries automatically up to 3 times before failing
-
-### Data Dependencies
-
-- **Entity 1: Admin User Roles and Permissions**
-  - **Why needed**: A-02 must verify admin has "Provider Management" permission before allowing provider creation, editing, or status changes
-  - **Source**: FR-031 Admin Access Control & Permissions (Module A-09) provides role-based access control (RBAC); all default roles (Super Admin, Aftercare Specialist, Billing Staff, Support Staff) have View Providers; by default only Super Admin has Edit Providers, Onboard Providers, and Suspend Providers, which custom roles may also be granted per FR-031
-
-- **Entity 2: Notification Templates (Email/SMS)**
-  - **Why needed**: Standardized notification messages for the FR-020 provider lifecycle events (`provider.activation`, `provider.suspended`, `provider.deactivated`, `provider.reactivated`, `provider.scheduled_change_cancelled`, `provider.login_email_changed`, `provider.closure_requested`, `provider.closure_rejected`) must exist; in MVP only email templates are used, with SMS templates reserved for future phases
-  - **Source**: Notification templates pre-configured in S-03 Notification Service; A-02 triggers the FR-020 event; the template for each event is configured in FR-030. SMS templates, if configured later, would be used only once SMS delivery is enabled.
-
-- **Entity 3: Document Type Configuration**
-  - **Why needed**: System must know which document types are required to be stored for each provider (medical license, board certification, malpractice insurance)
-  - **Source**: Document type definitions configured in admin settings or hardcoded in A-02 codebase; document types are Medical License, Board Certification, Insurance (general), Malpractice Insurance, Business License, and Other, with FR-032 validation rules (max 10MB; PDF, JPG, PNG, DOCX, XLSX). No in-system document status workflow is tracked in this FR.
-
-- **Accepted selection and booking context**: FR-005/FR-006 own the accepted Parent Quote/Subquote identifiers, versions, package/date/appointment/price snapshot, booking stage, and reservation. FR-015 references them for lifecycle impact and audit rather than copying a mutable quote into the Provider record.
-- **Cancellation/support context**: Affected inquiry/case owners retain the provider-status event reference, cancellation reason, and `supportRequired` marker with resolution audit. FR-016/FR-034 consume this context for assistance; commission snapshots remain on the confirmed booking/financial records, not on the current Provider profile alone.
-
----
-
-## Assumptions
-
-### User Behavior Assumptions
-
-- **Assumption 1**: Admins have direct access to provider documentation (licenses, certifications) either physically or digitally before initiating provider creation (e.g., provider sends documents via email or postal mail to admin)
-- **Assumption 2**: Admins will verify provider document authenticity manually (e.g., cross-reference medical license number with state medical board database) before or during provider onboarding
-- **Assumption 3**: Providers check their email regularly (at least daily) to receive account activation notifications
-- **Assumption 4**: Admins will proactively communicate with providers regarding document updates and renewals as needed through direct contact
-
-### Technology Assumptions
-
-- **Assumption 1**: Admins access Admin Platform via desktop/laptop computers (not mobile devices) due to complexity of provider creation forms and document review workflows
-- **Assumption 2**: Admins have reliable broadband internet connectivity for uploading provider documents (up to 10MB per file)
-- **Assumption 3**: Providers access Provider Platform to view profile status via both desktop and mobile devices (responsive design required for provider profile view)
-- **Assumption 4**: Media Storage Service (S-05) provides 99.99% availability for document uploads and retrieval
-
-### Business Process Assumptions
-
-- **Assumption 1**: Provider onboarding is admin-initiated only—providers cannot register themselves; admins control provider network quality through manual vetting
-- **Assumption 2**: Commission rate configuration occurs at provider creation time, but admins can adjust rates later as provider performance changes (e.g., reward high-performing providers with lower commission rates)
-- **Assumption 3**: Providers will proactively provide updated documents when renewals occur without system-prompted reminders
-- **Assumption 4**: Effective suspension or deactivation automatically closes all related non-terminal cases before treatment starts, with special admin support; In Progress cases are not cancelled automatically and wait for an admin decision (move to Aftercare with reassignment, or cancel), and Aftercare cases are not cancelled and move to admin aftercare reassignment. Existing completed history is retained; account reactivation does not restore cancelled cases.
-- **Assumption 5**: Deactivated providers' data is retained for legal/audit purposes (retention follows the system PRD, Platform-Wide Rules: One 10-year retention period), then archived; it is never hard-deleted. GDPR/data deletion requests are handled via separate data privacy workflows (not in-scope for A-02)
-
----
-
-## Implementation Notes
-
-### Technical Considerations
-
-- **Architecture**: Provider Management module follows admin-initiated CRUD (Create, Read, Update, Delete) pattern with state machine for status lifecycle (Active → Suspended → Active via Screen 5 reactivation, or → Deactivated; Active → Deactivated also allowed; no Draft status)
-- **Technology**: Document upload functionality should support chunked/resumable uploads for large files (up to 10MB) to handle unreliable admin connections
-- **Performance**: Provider list dashboard with 1000+ providers requires server-side pagination, filtering, and sorting, with indexing on status/created_date columns, for responsive UI
-- **Storage**: Provider documents stored in cloud object storage (S3-compatible) with server-side encryption (AES-256); document metadata (filename, upload date, document type, uploaded by) stored in relational database
-- **Validation**: Commission rate validation enforced at both client-side (immediate feedback) and server-side (security) to prevent invalid configurations. Percentage model: 0-100%; Flat Rate model: > 0 with a Flat Rate Currency from the FR-029 enabled currency list
-- **State Machine**: Provider status transitions implemented as finite state machine with validation rules (e.g., cannot transition from Deactivated to any other status; must include reason and admin re-authentication for Suspend/Deactivate/Reactivate transitions)
-
-### Integration Points
-
-- **Integration 1: Admin Platform (A-02) → Notification Service (S-03)**
-  - **Data format**: JSON payload with event type (an FR-020 provider lifecycle event, e.g., `provider.activation`), provider ID, recipient (provider email/phone), template ID, and dynamic variables (e.g., provider name, login URL)
-  - **Authentication**: Service-to-service authentication via API key in request header
-  - **Error handling**: S-03 returns 202 Accepted (notification queued) or 4xx/5xx error; A-02 logs notification failures and displays warning to admin
-
-- **Integration 2: Admin Platform (A-02) → Media Storage Service (S-05)**
-  - **Data format**: Multipart form-data for document uploads with metadata (provider ID, document type, uploader type and ID)
-  - **Authentication**: OAuth 2.0 service account token for S-05 API access
-  - **Error handling**: S-05 returns 200 OK with document URL or 4xx/5xx error; A-02 retries upload up to 3 times with exponential backoff before failing
-
-- **Integration 3: Provider Platform (PR-01) → Provider Data (A-02 Database)**
-  - **Data format**: REST API calls from PR-01 to fetch provider profile data for display in provider's profile view; edits to allowed fields go through FR-032
-  - **Authentication**: OAuth 2.0 provider user token validated by A-02 API; provider can only access their own profile data (not other providers)
-  - **Error handling**: A-02 API returns 200 OK with provider data or 403 Forbidden if provider attempts to access unauthorized data
-
-- **Integration 4: Patient Platform (P-02) → Featured Provider Data (A-02 Database)** **[P2 - Post-MVP]**
-  - **Data format**: REST API call (GET) from P-02 to fetch featured providers (status = Active AND featured = true) with fields: name, clinic, specialty, profile photo URL
-  - **Authentication**: Public read-only REST endpoint (no authentication required for featured provider listings); returns only the public fields listed above and is rate limited, as the constitution requires for all public-facing APIs
-  - **Error handling**: A-02 returns empty array if no featured providers available; P-02 displays "No featured providers at this time" message
-
-- **Integration 5: Provider lifecycle → inquiry, quote, booking, and care owners**
-  - Use the provider status event and effective time to revoke eligibility, identify affected records, apply the Screen 4 cancellation scope, and release reservations. Retain immutable accepted context and clinical/payment history. Revalidate eligibility during concurrent acceptance/payment; retry incomplete cascade processing without duplicate outcomes, and do not report a fully completed cascade while affected cases remain unprocessed.
-- **Integration 6: Cancellation → admin support and notifications**
-  - Supply cancellation cause, affected case/inquiry references, prior stage, and support marker to FR-016 and FR-020. Patient messages provide Contact Admin/Support; confidential investigation details remain restricted. Support handling may link an existing/manual FR-034 case, but this change does not create a new automated ticket source or another ticket lifecycle.
-- **Integration 7: Commission/profile data → confirmed bookings and reporting**
-  - Follow FR-029 for effective configuration and confirmation-time commission snapshots; FR-017 consumes those snapshots. Current provider-profile edits cannot rewrite historical selections, and Completed Procedures follows the distinct FR-010 completion milestone with FR-014 counting semantics.
-
-### Scalability Considerations
-
-- **Current scale**: Expected 100-200 providers onboarded in first 6 months (10-30 provider creations per month)
-- **Growth projection**: Plan for 1,000+ providers within 2 years as platform expands to new geographic markets
-- **Peak load**: Admin dashboard must support 100 concurrent admin users (SC-016) during provider onboarding campaigns without performance degradation
-- **Data volume**: Expect 300MB of provider documents uploaded per month (3 documents × 10MB avg per provider × 10 providers/month); plan for 10GB storage per year
-- **Scaling strategy**:
-  - Database indexing on provider.status, provider.created_at, provider.featured for fast dashboard queries
-  - Document storage in cloud object storage (S3) with CDN for admin document preview (reduces server load)
-  - Pagination and lazy loading in provider dashboard (load 50 providers per page) to minimize initial page load time
-  - Async document upload processing (upload to S-05 asynchronously, update database when complete) to prevent blocking admin UI
-
-### Security Considerations
-
-- **Authentication**: Only authenticated admins holding at least the FR-031 View Providers permission can access A-02 provider management features; enforced via role-based access control (RBAC) middleware
-- **Authorization**: Each action checks its FR-031 permission: View Providers (read-only access), Onboard Providers (create), Edit Providers (profile, documents, commission, seat limit, featured flag), Suspend Providers (all status changes). Resend Activation Email requires Edit Providers. Login as Provider is Super Admin only. Roles are defined in FR-031, not in this FR
-- **Encryption**:
-  - Provider documents encrypted at rest in cloud storage (AES-256 server-side encryption)
-  - Provider sensitive data (email, phone, medical license number) is stored in the database protected by database/disk encryption at rest, HTTPS/TLS in transit, and access control. It is not encrypted at application level, so the Screen 1 partial search and the login email uniqueness check keep working
-  - All API communication via HTTPS/TLS 1.3 (no unencrypted HTTP allowed)
-- **Audit trail**: 100% of provider management actions logged with timestamp, admin user ID, IP address, and action details; audit logs immutable (cannot be edited or deleted by admins)
-- **Threat mitigation**:
-  - Rate limiting on provider creation API (max 10 provider creations per admin per hour) to prevent bulk account creation abuse
-  - File upload validation (max 10MB per file, only PDF, JPG, PNG, DOCX, and XLSX allowed, matching FR-032; malware scanning via antivirus integration before storage)
-  - Input sanitization on all form fields (prevent SQL injection, XSS attacks)
-- **Compliance**:
-  - Confidential handling of provider medical licenses and certifications (professional records, not patient PHI) with the same encryption and access controls
-  - GDPR compliance for provider personal data (name, email, phone) with data retention following the system PRD, Platform-Wide Rules: One 10-year retention period (deactivated providers' data is then archived; never hard-deleted)
-  - SOC 2 Type II audit trail requirements met via S-06 Audit Log Service integration
+Related FRs: FR-031 (admin permissions: View, Onboard, Edit, Suspend Providers), FR-009 (provider login, Seat Limit enforcement), FR-022 (featured listing; patient provider search is P2), FR-020 (provider lifecycle email events), FR-003 (distribute inquiries only to Active providers with password_set = true), FR-004 (unaccepted quotes cancelled with cancelled_provider_status), FR-005 (accepted selection; supersession on admin replacement acceptance), FR-006 (provider-fault transfer, Alternative Flows B4 to B7), FR-007 (payment mechanics; late captures recorded), FR-010 (In Progress bookings not cancelled automatically), FR-011 (aftercare reassignment), FR-014 (Completed Procedures counts), FR-016 (admin patient management; affected case references), FR-034 (support case linking), FR-029 (commission snapshot at booking confirmation), FR-017 (consumes commission snapshots; payout holds), FR-032 (provider self-edit and documents; shared records), FR-024 (starting price: lowest standard price among active packages), FR-013 (Tab 5 reviews; admin review actions), FR-026 (country and Provider Specialties lists; MFA and re-authentication), FR-021 (language catalog). Shared services without a dedicated FR: S-05 Media Storage Service, S-06 Audit Log Service.
 
 ---
 
@@ -1164,25 +940,25 @@ Admin configures a provider account with a fixed commission fee (e.g., £200 per
 
 ### Edge Cases
 
-- What happens when **admin attempts to create provider with email already used by another provider**? Login email follows the FR-009 global provider email identity rule (Rule 3, REQ-009-008); Deactivated providers' emails are freed (see Rule 4). If another provider organization uses the email as Owner, team member, or pending invitation, system displays validation error: "Email address already in use by another provider (Provider Name: [existing provider]). Please use a different email or edit the existing provider." Provider creation blocked until unique email provided.
-- How does system handle **provider document upload fails mid-upload (network interruption)**? System supports resumable uploads; if upload interrupted, admin can retry upload (system may resume from last successful chunk if implemented, otherwise restarts upload).
-- What occurs if **admin activates provider but notification email delivery fails (email service down)**? System retries the delivery under the FR-030 notification retry rule; admin sees warning message: "Notification queued but not yet delivered." Admin can manually resend via the "Resend Activation Email" button in Screen 3.
-- How to manage **two admins, or an admin and the provider, editing the same provider profile at the same time**? The last save wins, and only for a field that both people changed: a save applies only the fields the user changed and does not rewrite untouched fields. There is no conflict check and no conflict message, for admin saves (FR-015) and provider saves (FR-032) alike. Every save is logged in Tab 8 with its changed fields, so an overwritten value can be traced.
+- What happens when **admin attempts to create provider with email already used by another provider**? Login email follows the FR-009 global provider email identity rule (Rule 3, REQ-009-008); Deactivated providers' emails are freed (see Rule 4). If another provider organization uses the email as Owner, team member, or pending invitation, system displays validation error: "Email address already in use by another provider (Provider Name: [existing provider]). Please use a different email or edit the existing provider." Provider creation blocked until unique email provided. (REQ-015-070)
+- How does system handle **provider document upload fails mid-upload (network interruption)**? System supports resumable uploads; if upload interrupted, admin can retry upload (system may resume from last successful chunk if implemented, otherwise restarts upload). (REQ-015-133)
+- What occurs if **admin activates provider but notification email delivery fails (email service down)**? System retries the delivery under the FR-030 notification retry rule; admin sees warning message: "Notification queued but not yet delivered." Admin can manually resend via the "Resend Activation Email" button in Screen 3. (REQ-015-048)
+- How to manage **two admins, or an admin and the provider, editing the same provider profile at the same time**? The last save wins, and only for a field that both people changed: a save applies only the fields the user changed and does not rewrite untouched fields. There is no conflict check and no conflict message, for admin saves (FR-015) and provider saves (FR-032) alike. Every save is logged in Tab 8 with its changed fields, so an overwritten value can be traced. (REQ-015-112)
 - What happens when **admin deactivates provider with 10 upcoming patient bookings and active treatment/aftercare cases**? The impact modal lists all non-terminal Accepted, Confirmed, In Progress, and Aftercare cases. On confirmation, the Accepted and Confirmed cases are cancelled with `ProviderDeactivated` (same cascade as suspension), In Progress cases stay `In Progress` with the cause and support marker for an admin decision, reservations released, further payment blocked, patients notified to contact admins, and affected records flagged for support. Historical selections remain. Aftercare cases keep their status with the `ProviderDeactivated` cause and move to admin aftercare reassignment (FR-006 Alternative Flow B6). Each affected inquiry stays open, and an admin rehomes each patient to a replacement provider through the FR-006 provider-fault transfer (Alternative Flow B5), with each patient refunded in full everything paid, charged no cancellation fee, and taking a new payment on the replacement booking.
-- What happens if **admin attempts to create provider without filling required fields**? System validates every field marked Required in the Screen 2 wizard tables on each step (see Rule 2). System displays error: "Please complete all required fields before proceeding" and highlights missing fields in red.
-- What occurs if **admin attempts to set invalid commission rate (e.g., negative percentage or zero flat rate)**? System displays client-side validation error immediately: "Percentage must be between 0-100%" or "Flat rate must be greater than 0." Server-side validation also enforces rules; the API returns a 422 validation error whose field message uses the same PRD wording if an invalid rate is submitted.
-- How to manage **provider requests account closure (wants to be deactivated)**? Provider submits an account-closure request in FR-032 (Request account closure) or contacts admin; there is no self-service deactivation. Admin processes it per Alternative Flow A7: opens the provider profile → clicks "Deactivate Provider" → enters reason: "Provider requested account closure on [date]" → confirms deactivation. System deactivates account, cancels all non-terminal cases under the Screen 4 cascade, marks any FR-032 closure request Approved, and sends the deactivation email (FR-020 `provider.deactivated`; "Notify Provider" is locked on for closure deactivations). If the admin rejects the request, the provider stays Active and receives FR-020 `provider.closure_rejected` with the review notes.
-- What happens if **admin sets seat limit below current team size**? System validates seat limit against current team size, meaning FR-009 seat usage (non-Owner team members with status Active or Suspended plus invitations with status Pending that are not past expiry; the Owner, Removed members, and Expired, Cancelled, or Accepted invitations do not count (FR-009 Rule 6, CR-FR009-20261028-01)). If seat limit is set below current count (e.g., provider has 50 staff but admin sets limit to 30), system displays warning: "Current team size (50) exceeds new seat limit (30). Existing team members will not be removed, but no new invitations can be sent until limit is increased or team size is reduced." Admin must confirm to proceed. Existing team members remain active; only new invitations are blocked.
-- What happens if **provider doesn't receive activation email**? Provider can click "Didn't receive activation email?" link on login page, enter their email, and request resend. System generates new one-time password setup link (expires 24 hours), invalidates previous link, and sends new email. Rate limited to 3 resend requests per hour per email. Admin can also manually resend from provider profile in FR-015 by clicking "Resend Activation Email" button in Quick Actions (visible only if password not yet set).
-- What happens if **activation link expires (24 hours passed)**? Provider can request new activation email via login page resend flow or contact admin. Admin can manually resend from provider profile. When provider clicks expired link, system displays: "This activation link has expired. Request a new activation email or contact support."
-- What happens if **provider tries to request activation resend but already activated account**? System displays generic message: "If an account exists with this email, an activation link will be sent." (doesn't reveal if account already activated for security). No email sent. This prevents email enumeration attacks.
-- What happens if **admin accidentally creates duplicate provider with same email**? System validates the login email against the FR-009 global provider email identity rule (Rule 3, REQ-009-008) during provider creation. If an Active or Suspended provider already uses the email as its Owner login, system displays error: "Email address already in use by another provider (Provider Name: [existing provider]). Please use a different email or edit the existing provider." Creation blocked until unique email provided.
-- What happens if **acceptance or initial payment races with suspension**? Eligibility must be checked against the effective provider status. No cancelled selection may be confirmed or revived; any real captured payment remains recorded and is routed to admin financial resolution.
+- What happens if **admin attempts to create provider without filling required fields**? System validates every field marked Required in the Screen 2 wizard tables on each step (see Rule 2). System displays error: "Please complete all required fields before proceeding" and highlights missing fields in red. (REQ-015-055)
+- What occurs if **admin attempts to set invalid commission rate (e.g., negative percentage or zero flat rate)**? System displays client-side validation error immediately: "Percentage must be between 0-100%" or "Flat rate must be greater than 0." Server-side validation also enforces rules; the API returns a 422 validation error whose field message uses the same PRD wording if an invalid rate is submitted. (REQ-015-100)
+- How to manage **provider requests account closure (wants to be deactivated)**? Provider submits an account-closure request in FR-032 (Request account closure) or contacts admin; there is no self-service deactivation. Admin processes it per Alternative Flow A7: opens the provider profile → clicks "Deactivate Provider" → enters reason: "Provider requested account closure on [date]" → confirms deactivation. System deactivates account, cancels all non-terminal cases under the Screen 4 cascade, marks any FR-032 closure request Approved, and sends the deactivation email (FR-020 `provider.deactivated`; "Notify Provider" is locked on for closure deactivations). If the admin rejects the request, the provider stays Active and receives FR-020 `provider.closure_rejected` with the review notes. (REQ-015-086, REQ-015-087)
+- What happens if **admin sets seat limit below current team size**? System validates seat limit against current team size, meaning FR-009 seat usage (non-Owner team members with status Active or Suspended plus invitations with status Pending that are not past expiry; the Owner, Removed members, and Expired, Cancelled, or Accepted invitations do not count (FR-009 Rule 6, CR-FR009-20261028-01)). If seat limit is set below current count (e.g., provider has 50 staff but admin sets limit to 30), system displays warning: "Current team size (50) exceeds new seat limit (30). Existing team members will not be removed, but no new invitations can be sent until limit is increased or team size is reduced." Admin must confirm to proceed. Existing team members remain active; only new invitations are blocked. (REQ-015-115)
+- What happens if **provider doesn't receive activation email**? Provider can click "Didn't receive activation email?" link on login page, enter their email, and request resend. System generates new one-time password setup link (expires 24 hours), invalidates previous link, and sends new email. Rate limited to 3 resend requests per hour per email. Admin can also manually resend from provider profile in FR-015 by clicking "Resend Activation Email" button in Quick Actions (visible only if password not yet set). (REQ-015-016, REQ-015-057, REQ-015-053)
+- What happens if **activation link expires (24 hours passed)**? Provider can request new activation email via login page resend flow or contact admin. Admin can manually resend from provider profile. When provider clicks expired link, system displays: "This activation link has expired. Request a new activation email or contact support." (REQ-015-057)
+- What happens if **provider tries to request activation resend but already activated account**? System displays generic message: "If an account exists with this email, an activation link will be sent." (doesn't reveal if account already activated for security). No email sent. This prevents email enumeration attacks. (REQ-015-056)
+- What happens if **admin accidentally creates duplicate provider with same email**? System validates the login email against the FR-009 global provider email identity rule (Rule 3, REQ-009-008) during provider creation. If an Active or Suspended provider already uses the email as its Owner login, system displays error: "Email address already in use by another provider (Provider Name: [existing provider]). Please use a different email or edit the existing provider." Creation blocked until unique email provided. (REQ-015-070)
+- What happens if **acceptance or initial payment races with suspension**? Eligibility must be checked against the effective provider status. No cancelled selection may be confirmed or revived; any real captured payment remains recorded and is routed to admin financial resolution. (REQ-015-071)
 - What happens if **a scheduled suspension or deactivation becomes effective after more cases were created**? Recalculate affected records at effective time rather than using the old preview. The scheduled rule does not delay cancellation until each patient requests support.
-- What happens if **cancellation/support notifications fail or cascade processing retries**? Keep provider eligibility revoked and cancelled records cancelled. Retry incomplete work using the same status event/case references without duplicate cancellations, alerts, or slot releases; retain visible unresolved processing failures for admins.
-- What happens if **a quote contains five packages with several date alternatives**? They remain alternatives of the same Parent Quote. Cancel its availability once; do not create a treatment or support item per unselected alternative.
-- What happens if **a provider is deactivated after suspension already cancelled cases**? Do not overwrite ProviderSuspended or create another cancellation for terminal records; retain unresolved support markers and the original audit chain.
-- What happens if **suspension affects an Aftercare case after the procedure was completed**? The case is not cancelled. It keeps its status, the FR-010 completion milestone, and its single Completed Procedures count; an admin reassigns aftercare to another provider or the Hairline aftercare team through the FR-011 aftercare reassignment screen. Performed care and payment history are not erased.
+- What happens if **cancellation/support notifications fail or cascade processing retries**? Keep provider eligibility revoked and cancelled records cancelled. Retry incomplete work using the same status event/case references without duplicate cancellations, alerts, or slot releases; retain visible unresolved processing failures for admins. (REQ-015-072)
+- What happens if **a quote contains five packages with several date alternatives**? They remain alternatives of the same Parent Quote. Cancel its availability once; do not create a treatment or support item per unselected alternative. (REQ-015-073)
+- What happens if **a provider is deactivated after suspension already cancelled cases**? Do not overwrite ProviderSuspended or create another cancellation for terminal records; retain unresolved support markers and the original audit chain. (REQ-015-075)
+- What happens if **suspension affects an Aftercare case after the procedure was completed**? The case is not cancelled. It keeps its status, the FR-010 completion milestone, and its single Completed Procedures count; an admin reassigns aftercare to another provider or the Hairline aftercare team through the FR-011 aftercare reassignment screen. Performed care and payment history are not erased. (REQ-015-074)
 
 ---
 
@@ -1233,62 +1009,11 @@ Admin configures a provider account with a fixed commission fee (e.g., £200 per
 
 ---
 
-## Key Entities
-
-- **Entity 1 - Provider**
-  - **Key attributes**: provider_id (UUID), first_name, last_name, email (login email; FR-009 global provider email identity rule), phone, bio, languages (JSON), awards (JSON), medical_license_number, specialty, years_experience, status (enum: active, suspended, deactivated), featured (boolean), seat_limit (integer, default 100, range 1-500), payout_method (enum: stripe_connect, manual_bank_transfer; chosen by an admin at creation, changed only by an admin afterwards), address (copy of the Clinic Address), country (copy of the Location - Country), avatar (copy of the Profile Picture / Logo), availability_status, timezone (the provider's own time zone, set by the provider in FR-032 account settings), starting_price (calculated, not typed in: the lowest standard price among the provider's active packages, FR-024 `standard_price`, converted to the patient's currency), password_hash (bcrypt hash), password_set (boolean, default false), activation_token (UUID, nullable), activation_token_expiry (timestamp, nullable), activation_email_sent_count (integer, for rate limiting), last_activation_email_sent_at (timestamp), created_at, updated_at.
-  - **Relationships**: One provider has many documents, status history records, and FR-004 Parent Quotes (including several for the same inquiry); one provider has one clinic and many FR-006 bookings, each linked to one accepted FR-005 Subquote/AcceptanceEvent. Seat limit is enforced by FR-009. Commission model, value, Flat Rate Currency, and start date (the FR-029 `effective_date`) are not Provider attributes; they are stored as the provider's FR-029 commission configuration (`provider_commissions`), captured in Step 5 and edited in Tab 7. Quote-owned package snapshots and historical booking commission snapshots are not mutable fields of the current Provider profile. Payout readiness (the state of a Stripe Connect clinic's own payout setup: Not started, In progress, Ready, or Restricted) is shown to admins and to the clinic read-only; the clinic completes that setup itself in Stripe.
-
-- **Entity 2 - Provider Document** (owned by FR-032 Provider Dashboard Settings; this FR reads and adds to it for Tab 6)
-  - **Key attributes**: document_id (UUID), provider_id (foreign key), document_name, document_type (enum: medical_license, board_certification, insurance, malpractice_insurance, business_license, other), file_url, file_format (PDF, JPG, PNG, DOCX, XLSX), file_size (bytes; max 10MB), upload_date, uploader_type (enum: provider, admin; says whether the provider or an admin uploaded it, shown as the "Uploaded By" badge), uploader_id (the person who uploaded it), notes (admin-only), deleted (boolean for soft delete), deleted_at (timestamp).
-  - **Relationships**: Many documents belong to one provider.
-
-- **Entity 3 - Clinic Information**
-  - **Key attributes**: clinic_id, provider_id, clinic_name (3-200 chars), contact_email (unique among active and suspended providers), logo_url (profile picture), cover_image_url, address_fields, location_city, location_country, contact_phone, website_url, operating_hours.
-  - **Relationships**: One clinic belongs to one provider (one-to-one).
-
-- **Entity 4 - Pending Provider Status Change**
-  - **Key attributes**: pending_change_id (UUID), provider_id (foreign key), change_type (enum: suspend, deactivate), effective_date (date, future), reason (min 20 chars), notify_provider (boolean), scheduled_by (admin ID), scheduled_at (timestamp), state (enum: pending, applied, cancelled), cancelled_by (admin ID, nullable), cancellation_reason (nullable; includes automatic cancellation on reactivation), resolved_at (timestamp, nullable).
-  - **Relationships**: At most one pending record per provider; an immediate suspension/deactivation or a Screen 5 reactivation cancels it. Every state change is written to the provider's status history and Tab 8.
-
-- **Entity 5 - Provider Status Event**
-  - **Key attributes**: status_event_id (UUID), provider_id (foreign key), from_status, to_status (enum: active, suspended, deactivated), cause (enum: ProviderSuspended, ProviderDeactivated, ProviderReactivated), reason (admin reason), effective_at (timestamp, UTC), admin_id, notify_provider (boolean), pending_change_id (nullable; set when a Key Entity 4 scheduled change was applied), closure_request_id (nullable; A7), created_at.
-  - **Relationships**: One provider has many status events (append-only; never updated after creation). This is the "provider status event" referenced by REQ-015-024 and by the `provider_status_event_id` / `deactivation_event_id` columns on the owning inquiry, booking, aftercare, payment, and closure-request records (`provider_status_events` in system-data-schema.md). Tab 8 displays it but the Tab 8 activity log is not the event record.
-
-**Cross-module lifecycle context (not a new Provider-owned case table)**: Inquiry/ProviderInquiry and Booking/Treatment owners retain the applicable cancellation reason (`ProviderSuspended` or `ProviderDeactivated`), `supportRequired`, triggering provider-status event, effective time, previous stage, and resolution audit. An inquiry with a closed accepted booking stays open while an admin rehomes the patient through the FR-006 provider-fault transfer; an unaccepted shared inquiry retains its normal stage and only the affected provider participation is cancelled. Optional linked FR-034 support-case references retain the existing ticket workflow. The AcceptanceEvent retains the historical accepted IDs, equal aggregate versions, and snapshot, and is superseded only through a linked FR-005 supersession record. The confirmed Booking/financial record retains the confirmation-time commission configuration.
-
----
-
 ## Appendix: Change Log
 
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
-| 2025-11-11 | 1.0 | Initial PRD creation for FR-015 Provider Management (Admin-Initiated) | Claude (AI Assistant) |
-| 2025-12-07 | 1.1 | **Major alignment update with FR-032:** <br>• Added cross-module integration notes linking to FR-032 (Provider Dashboard Settings) in Executive Summary and Module Scope<br>• Removed all document expiration date fields and related workflows (documents are for record-keeping only)<br>• Removed all out-of-scope items: Save Draft functionality, Tier-based commission references, Document verification workflow (approve/reject)<br>• Aligned all profile fields with FR-032: Profile Picture (5MB, 200x200px min), Cover Image (10MB, 1920x300px), Bio/Description (500 chars, min 50), Languages (multi-select chips from FR-026), Awards (with issuer, description, year, image), Contact Phone, Location (City, Country), Website URL<br>• Clarified activation logic: only required fields block activation (First Name, Last Name, Email, Clinic Name, Bio min 50 chars, at least 1 Language); documents do NOT block activation<br>• Updated Success Criteria to remove verification/expiration references and focus on record-keeping approach<br>• Updated Business Workflows, Screen Specifications (Wizard Steps and Tabbed View), User Stories, Edge Cases, and Entity definitions<br>• Added Admin Editability Rules section distinguishing admin-only vs provider-editable fields (via FR-032)<br>• Updated document entity to include document_type, uploaded_by, soft delete fields<br>• **Added Seat Limit field** to Screen 2 Step 1 (Basic Information): Maximum team members (staff) capacity per provider, default 100, range 1-500, adjustable by admin. Aligns with FR-009 team management enforcement. Added to Business Rules (Rule 7), Entity definitions, Functional Requirements (REQ-015-009), and Edge Cases<br>• **Completely restructured Screen 3** to table format matching FR-032 structure with all 5 tabs: (1) Basic Information, (2) Languages, (3) Staff List, (4) Awards, (5) Reviews, plus admin-only tabs: (6) Documents, (7) Commission & Financials, (8) Activity Log. All fields now documented in table format with Admin/Provider editability clearly marked<br>• **Added provider onboarding workflow** to Main Flow: Secure password setup via one-time email link (expires 24 hours), first login prompts profile completion via FR-032, changes sync to admin view<br>• **Added activation email resend functionality** (Alternative Flow A1): Provider self-service resend via login page + Admin manual resend via Quick Actions button in Screen 3. Rate limited to 3 requests/hour, previous tokens invalidated, secure handling of expired links. Added to Edge Cases, Functional Requirements (REQ-015-006, REQ-015-011, REQ-015-015, REQ-015-016), and Entity definitions with activation_token fields<br>• **Enhanced User Story 3** with detailed suspension workflow scenarios including existing appointments handling, suspended login experience, and reactivation process<br>• **Removed redundant User Stories 5 & 6** (provider-side actions) as these are fully covered in FR-032 User Story 1 | Claude (AI Assistant) |
-| 2025-12-07 | 1.2 | **Major cross-module update - Document management redesign:** Completely restructured Tab 6: Documents to reflect new document management model. Removed "Admin-Only" designation. Providers now manage their own documents via FR-032 Tab 6 (upload, replace, delete); admin role shifted to oversight and supplementary uploads. Updated tab to display all documents with "Uploaded By" badge (Provider/Admin); Admin can view all documents, upload additional documents received externally (email, postal mail), and add notes, but cannot replace/delete provider-uploaded documents (only provider can via FR-032); Admin-uploaded documents show "Admin - [name]" badge and admin has full control over these. Added bidirectional document sync (FR-032 ↔ FR-015 within 1 minute); Updated Business Rules to clarify provider primary management vs. admin oversight model; Added sort/filter options, audit logging enhancements, and comprehensive use case notes. Aligns with FR-032 v1.2 which added full document management capabilities for providers | Claude (AI Assistant) |
-| 2025-12-08 | 1.3 | **Constitution & System PRD alignment update:** <br>• Updated REQ-015-015 to reference the platform-wide password policy from the Hairline Platform Constitution and shared authentication spec (minimum 12 characters, required character classes, bcrypt with minimum cost factor 12, not configurable per FR)<br>• Clarified that sensitive actions (Commission and Seat Limit changes, Commission editing) require admin re-authentication via password in MVP, and MUST transition to MFA-based re-authentication once the shared MFA stack from FR-026 / FR-031 is delivered (all MFA references in this FR are future, non-MVP behavior)<br>• Aligned high-level system behaviour with system-prd.md FR-015 by explicitly reflecting the record-keeping-only document model and Percentage/Flat Rate commission configuration (tier-based commissions deferred to a future FR) | Claude (AI Assistant) |
-| 2026-04-02 | 1.4 | Clarified ownership split with FR-029 and FR-017: FR-029 / A-09 remains owner of the global platform commission default and booking-time snapshot policy, while FR-015 / A-02 owns provider-specific commission overrides and payout frequency consumed by FR-017 payout workflows | Codex |
-| 2026-04-02 | 1.5 | Restored dual management for provider-specific commission settings: FR-015 remains the single-provider commission and payout-frequency screen, while FR-029 Screen 5 now also manages provider-specific commission scopes centrally; the two admin surfaces are documented as synchronized for the same provider commission data | Codex |
-| 2026-04-12 | 1.6 | Cross-FR cleanup: corrected Screen 1 Provider Management Dashboard commission filter from stale "Tier-based" to "Flat Rate" so the list filter matches the module-wide Percentage/Flat Rate commission model and FR-022 search/filter alignment | Codex |
-| 2026-08-11 | 1.7 | Aligned featured-provider management with the Sprint 1 A-02 readiness finding: added `Set Featured` / `Unset Featured` Provider-list quick actions, made the Basic Information toggle the existing-provider edit control, changed Commission & Financials to read-only featured-status display, and added the maximum-10 featured-provider rule with required rejection feedback and server-side enforcement | Vân Tay Media |
-| 2026-10-13 | 1.8 | Documentation-approved provider lifecycle/subquote alignment through CR-FR015-20261013-01: suspension automatically cancels non-terminal cases with ProviderSuspended and a separate admin-support marker; clarified future-booking deactivation, immutable accepted history, eligibility/payment guards, patient/admin notifications, and no automatic restoration. Aligned commission changes with confirmation-time snapshots and renamed the completed-procedure profile count. Added affected-owner dependencies, requirements, and validation scenarios; related-PRD alignment, consolidated verification, and implementation reconciliation remain pending. | Vân Tay Media |
-| 2026-10-14 | 1.9 | FR-015 verification fixes (Product Owner decisions, 2026-10-14):<br>• Commission: FR-029 Screen 5 aligned to the FR-015 provider Percentage (0-100%) or Flat Rate model via CR-FR029-20261014-01<br>• Wizard and entities: added Contact Email (required, unique), Payout Frequency, and Commission Start Date to Screen 2 and Key Entities; Clinic Name 3-200 chars; required set equals the wizard's Required fields, Medical License file required at creation only (Rule 2)<br>• Lifecycle: removed Draft status everywhere; added Screen 5 Provider Reactivation Modal and Alternative Flow A6; deactivation now cancels all non-terminal Accepted, Confirmed, In Progress, and Aftercare cases with `ProviderDeactivated` (downstream CRs beside FR-003, FR-004, FR-010, FR-011, FR-016, FR-020; FR-005 and FR-006 change-log alignment)<br>• Admin controls: mandatory admin change reason (REQ-015-025); Login as Provider reason, re-authentication, banner, restrictions, audit (REQ-015-026); automatic unfeaturing on suspend/deactivate (Rule 6, REQ-015-027)<br>• Documents: FR-032 formats (PDF, JPG, PNG, DOCX, XLSX); 6-type enum; A4 limited to admin-uploaded documents; uploader_type/uploader_id<br>• Reviews: Tab 5 linked to FR-013 Screens 6-8 for admin insert/edit/remove<br>• Dependencies: FR-001/A-01 replaced by FR-031; FR-XXX placeholders resolved (FR-009, FR-022, shared S-05/S-06); added FR-032, FR-013, FR-026<br>• Cascade scope includes FR-011 standalone aftercare (REQ-015-017)<br>• Minor: retention minimum 7 years then archive, never hard-delete; optimistic locking without last-write-wins; concurrency figure aligned to 100; section-name source references<br>• Follow-up (Product Owner, 2026-10-14): flat model named `flat_rate`; commission settings stored in FR-029 `provider_commissions` | Vân Tay Media |
-| 2026-10-14 | 1.10 | FR-015 re-verification fixes (Product Owner decisions, 2026-10-14):<br>• Commission: added Flat Rate Currency (FR-029 enabled currency list, default system currency) to Step 5, Tab 1, Tab 7, A2, Key Entities, REQ-015-009 and validation, matching FR-029 Screen 5 and `flat_rate_currency`; snapshot includes the currency<br>• Commission Start Date is the FR-029 provider-specific `effective_date` for newly confirmed bookings; each later commission edit sets its own Effective Date; payout cycles follow Payout Frequency (FR-017 wording aligned)<br>• Screen 4: added Admin Password re-authentication (REQ-015-003 consistency)<br>• Scheduled status changes: pending marker, Cancel Scheduled Change with reason and re-authentication, scheduled deactivation covered (REQ-015-028)<br>• Featured: admin flag and cap stay MVP; patient-facing display, SC-001, SC-021, Integration 4 and US1 scenario 3 marked P2 with FR-022 patient provider search<br>• Removed the undefined Screen 1 Documents Status column<br>• Tab 7 note: payout-frequency and amount-or-percentage pattern applies to providers (FR-015) and affiliates (FR-018, already monthly-only)<br>• Minor: removed residual verification wording (SC-003, Screen 4 example reason), Billing Rule 1 follows Payout Frequency, password_hash is a bcrypt hash, provider licences not labelled PHI, Clinic Address vs public City/Country clarified, Screen 1 "Activate" renamed "Reactivate", suspension/deactivation effect on FR-009 team logins stated | Vân Tay Media |
-| 2026-10-15 | 1.11 | FR-015 third verification pass fixes (Product Owner decisions, 2026-10-15):<br>• Provider commission visibility: provider-side read-only commission and payout frequency now point to the FR-032 Screen 4 Commission & Payout panel ([CR-FR032-20261015-01](../fr032-provider-dashboard-settings/change-request-2026-10-15-provider-commission-panel-suspension-banner.md))<br>• Suspended banner: FR-032 Rule 6 owns the Account Suspended banner and read-only behavior<br>• Screen 1: defined Last Activity Date (latest FR-004 Parent Quote submission or FR-006 booking confirmation); added Status Count Tiles (SC-012); commission sort grouped by model, then currency and value<br>• Permissions: replaced undefined Provider Manager and Read-Only Admin roles with FR-031 View, Onboard, Edit, and Suspend Providers permissions; corrected A-01 to FR-031 / A-09<br>• Screen 4: blank or today Effective Date applies immediately<br>• Rule 2: added conditional Flat Rate Currency; Implementation Notes: server-side filtering and sorting | Claude |
-| 2026-10-15 | 1.12 | FR-015 fourth verification pass fixes (Product Owner decisions, 2026-10-15):<br>• Tab 7: added Scheduled Configuration (at most one pending future-dated commission configuration per provider; a new future-dated edit replaces it; cancellable with reason and re-authentication; applied automatically on its Effective Date), giving the FR-032 Screen 4 "Scheduled Configuration" field its source<br>• Tab 1: commission fields replaced by a read-only Commission Summary linking to Tab 7; Tab 7 is the only FR-015 commission edit surface<br>• Shared FR-029 scopes: a provider belongs to at most one active provider-specific scope; a Tab 7 edit splits the provider into its own single-provider scope without changing the others ([CR-FR029-20261015-01](../fr029-payment-system-config/change-request-2026-10-15-single-provider-scope-scheduled-commission.md))<br>• A5 and Screen 4: cascade text explicitly includes FR-011 standalone aftercare cases, matching REQ-015-017<br>• Screen 3: admin "Resend Activation Email" shown only when password is not set and status = Active, matching A1 | Claude |
-| 2026-10-15 | 1.13 | FR-015 fifth verification pass fixes (Product Owner decisions, 2026-10-15):<br>• Login as Provider: FR-015 limited-write rules kept; FR-009 Impersonate aligned to them ([CR-FR009-20261015-01](../fr009-provider-team-roles/change-request-2026-10-15-admin-staff-invite-impersonation.md))<br>• Tab 3 Staff List: shows only this provider's team and adds Invite Staff Member within the Seat Limit (same CR)<br>• Reactivation: Screen 5 cancels any pending scheduled suspension/deactivation after a warning; logged in Tab 8 (A6, Screen 4, Screen 5); added Key Entity 4 Pending Provider Status Change<br>• Rule 9: FR-017 owns reconciliation of payments captured after suspension/deactivation and stopping remaining installments ([CR-FR017-20261015-01](../fr017-admin-billing-finance/change-request-2026-10-15-post-suspension-payment-reconciliation.md)); Reconciliation boundary lists FR-005, FR-006, FR-007, FR-009, FR-017, FR-026<br>• Specialty: values from the FR-026 managed Provider Specialties list ([CR-FR026-20261015-01](../fr026-app-settings-security/change-request-2026-10-15-provider-specialty-list.md))<br>• Minor: SC-010 says create (Active) and covers scheduled changes; SC-015 lists the real tabs; User Story 3 raised to P1 | Claude |
-| 2026-10-15 | 1.14 | FR-015 sixth verification pass fixes (Product Owner decisions, 2026-10-15):<br>• Account closure: added A7 Admin Processes a Provider Account-Closure Request; FR-032 Delete Account becomes a closure request processed as Screen 4 deactivation, with no "Deleted" status ([CR-FR032-20261015-02](../fr032-provider-dashboard-settings/change-request-2026-10-15-account-closure-deactivation-request.md)); closure edge case updated<br>• Notifications: Main Flow step 13, A1, A6, Screen 4 and the FR-020 dependency reference the new mandatory FR-020 events `provider.activation`, `provider.reactivated`, `provider.scheduled_change_cancelled` ([CR-FR020-20261015-01](../fr020-notifications-alerts/change-request-2026-10-15-provider-lifecycle-events.md))<br>• Rule 7: seat-limit increases come from FR-009 "Request more seats" as an FR-034 support case; admin edits Seat Limit in Tab 1<br>• Email uniqueness: login Email and Contact Email are unique among Active and Suspended providers only (Rule 4, Step 1, Step 3, Tab 1, REQ-015-014, Key Entities 1 and 3, duplicate-email edge cases)<br>• Provider-side view: Entry Points and User Story 1 scenario 2 point to FR-032 Screen 4 Billing Settings (Owner only), Tab 6 and the Rule 6 banner<br>• Minor: Main Flow step 6 lists Location City/Country, Contact Phone (Public), Website URL; Step 3 field renamed Contact Phone (Public); commission attributes moved out of Key Entity 1 into a FR-029 `provider_commissions` link note | Claude |
-| 2026-10-15 | 1.15 | FR-015 seventh verification pass fixes (Product Owner decisions, 2026-10-15):<br>• Login email: Screen 2 Step 1, Tab 1, Rule 4, REQ-015-014, Key Entity 1, and the duplicate-email edge cases now follow the FR-009 global provider email identity rule (Owners, team members, and pending invitations across all providers; Deactivated providers' emails freed) ([CR-FR009-20261015-02](../fr009-provider-team-roles/change-request-2026-10-15-global-provider-email-identity.md)); Contact Email rule unchanged<br>• Notifications: Integration 1 and Data Dependency Entity 2 use the FR-020 provider lifecycle events (`provider.activation` and others); removed the template ID example<br>• Tab 6: added Upload Document Modal Fields (File, Document Type, Notes)<br>• Minor: module placeholders replaced (P-02, PR-01/PR-06, S-03/S-05/S-06); provider-side "read-only" wording now says providers edit allowed fields via FR-032; Key Entity 2 gains file_size; Data Dependency Entity 1 matches the FR-031 default permission matrix | Claude |
-| 2026-10-15 | 1.16 | FR-015 eighth verification pass fixes (Product Owner decisions, 2026-10-15):<br>• Languages: Step 2 and Tab 2 now use the FR-021 central language catalog; added FR-021 dependency; FR-026 dependency no longer claims the language list<br>• Account closure: Notify Provider locked on for closure deactivations (A7, Screen 4, edge case); Screen 1 Closure Requested filter and marker; new FR-020 events `provider.closure_requested` (admins) and `provider.closure_rejected` (provider) ([CR-FR032-20261015-03](../fr032-provider-dashboard-settings/change-request-2026-10-15-closure-request-notifications.md), [CR-FR020-20261015-02](../fr020-notifications-alerts/change-request-2026-10-15-provider-closure-request-events.md), [CR-FR030-20261015-02](../fr030-notification-rules-config/change-request-2026-10-15-provider-closure-request-events.md))<br>• Commission: Tab 7 edits allowed for Active and Suspended providers, read-only for Deactivated ([CR-FR029-20261015-02](../fr029-payment-system-config/change-request-2026-10-15-suspended-provider-commission-scopes.md)); Step 5 and Tab 7 Commission Value precision follows FR-029 (0.1% or currency minor units)<br>• Distribution: providers with `password_set = false` are excluded from inquiry distribution (Main Flow steps 12 and 21, Rules 3 and 9, FR-003 dependency; [CR-FR003-20261015-01](../fr003-inquiry-submission/change-request-2026-10-15-distribution-requires-password-set.md))<br>• Integration 4: REST only, public read-only endpoint with rate limiting | Claude |
-| 2026-10-16 | 1.17 | MTG-002 quote model alignment ([CR-FR015-20261016-01](change-request-2026-10-16-mtg002-quote-model-alignment.md)):<br>• Commission Rule 2: the Percentage base is the booking total, defined as the accepted price after promotion, in the quote currency, read from the FR-005 acceptance snapshot; commission settings still lock at booking confirmation (FR-015-1; D12, M5)<br>• Provider suspension or deactivation after acceptance: A5, Screen 4, Rule 9, Rule 10, Cancellation Billing Rule, FR-003/FR-004/FR-005/FR-006 dependencies, US3, the deactivation edge case, REQ-015-017 to REQ-015-019, and Key Entities now hand closed accepted bookings to the FR-006 B4/B5 provider-fault transfer; the inquiry stays open, the accepted parent quote keeps `accepted`, the AcceptanceEvent is superseded through a linked FR-005 record, an admin rehomes the patient to a replacement provider, and money follows the B5 payment placeholder; removed inquiry cancellation and the "no automatic refund or reselection" wording. Before acceptance, unaccepted quotes are still cancelled with `cancelled_provider_status` (M18, D6, D6-M; FR-015-3, FR-015-4)<br>• Patient notice for closed accepted bookings: an admin will arrange a replacement provider via FR-020/FR-030 `booking.provider_fault_replacement`; `provider.status_cancellation_patient` now applies only before acceptance (M18)<br>• Key Entities: the AcceptanceEvent keeps accepted IDs, versions and snapshot; the confirmed booking/financial record keeps the confirmation-time commission configuration (FR-015-2)<br>• A5 and Screen 4 name `Accepted` as an FR-006 booking stage (FR-015-6)<br>• CR-FR015-20261016-01 added (P1) | Claude (AI Assistant) |
-| 2026-10-16 | 1.18 | Product Owner follow-up decision ([CR-FR015-20261016-01](change-request-2026-10-16-mtg002-quote-model-alignment.md)):<br>• Commission Rule 2: states that commission is on the price after promotion for every discount type, including Hairline-funded discounts (Q5). | Product Owner / Documentation |
-| 2026-10-18 | 1.19 | Consolidated verification corrections ([CR-FR015-20261016-01](change-request-2026-10-16-mtg002-quote-model-alignment.md)): REQ-015-017 now cancels only the provider's unaccepted Parent Quotes with `cancelled_provider_status` and closes non-terminal bookings, and states that an accepted Parent Quote keeps `accepted` (M18). | Product Owner / Documentation |
-| 2026-10-26 | 1.21 | Dev-team question resolution (Product Owner decisions, 2026-10-26):<br>• Added Key Entity 5 Provider Status Event (dedicated append-only table `provider_status_events`) as the target of every `provider_status_event_id` / `deactivation_event_id` reference<br>• Screen 5 Unresolved Support Items counts affected inquiries and cases (one per record, matching the FR-020 admin-support alert unit)<br>• Suspended providers are read-only on `In Progress` bookings; the admin decides via FR-006 B7<br>• "Today" for Screen 4 and Tab 7 Effective Dates is the current UTC date<br>• Login as Provider opens in a new tab and ends on End Session or 30-minute inactivity (no absolute cap)<br>• Screen 2 leave-wizard prompt reuses the FR-032 unsaved-changes text (no drafts); creation success message; Tab 2 empty-language message; Rule 8 featured-cap message<br>• Featured toggle and document Replace need no change reason; Replace archives the old file<br>• Invalid commission rate returns 422 with PRD wording (was 400)<br>• Review follow-up: Step 5 Commission Start Date "today" is the UTC date; seat-limit team size is FR-009 seat usage (members plus pending invitations)<br>• Open-item follow-up: upload error messages (wrong format, too large, below minimum dimensions) added after the wizard steps; REQ-015-011 `password_set` belongs to the owner's login | Claude (AI Assistant) |
-| 2026-10-18 | 1.20 | Final audit corrections ([CR-FR015-20261016-01](change-request-2026-10-16-mtg002-quote-model-alignment.md)):<br>• A5, Screen 4, Rules 9 and 10, dependencies, Assumption 4, User Story 3, edge cases, and REQ-015-017: `Aftercare` bookings and FR-011 standalone aftercare cases are no longer closed; they keep their status, get the cause and support marker, and move to admin aftercare reassignment through FR-006 Alternative Flow B6 and FR-011, with no new acceptance or payment (Q36).<br>• A5 step 7: the transfer starts from Start Provider-Fault Transfer on FR-006 Screen 6 (Screen 10) with an admin-authored replacement quote (Q35).<br>• Screen 4: new Admin action links rule and REQ-015-029 linking each affected record to its resolving admin screen (Q43).<br>• Later the same day: an `In Progress` booking under a provider-status event is no longer closed; it stays `In Progress` with `supportRequired` and an admin decides on FR-006 Screen 6 to move it to Aftercare with aftercare reassignment or cancel it (Alternative Flow A5 steps 3 to 5 and 7, Outcome, Deactivation, Screen 4, Rule 10, FR-010/FR-011 dependency, Assumption 4, REQ-015-017, User Story scenarios) (Q45). The aftercare reassignment patient notice is named as the FR-011 event `aftercare.provider_reassigned` (Q47). | Product Owner / Documentation |
-| 2026-10-27 | 1.22 | Dev-team follow-up question resolution (Product Owner decisions, 2026-10-27; [CR-FR015-20261027-01](change-request-2026-10-27-save-conflict-encryption-seat-usage.md)):<br>• Concurrent edits: removed optimistic locking; the last save wins for admin (FR-015) and provider (FR-032) saves, with no conflict message (CR)<br>• Security: provider email, phone, and medical license number are protected by database/disk encryption at rest, HTTPS/TLS, and access control instead of application-level encryption, so partial search and email uniqueness keep working (CR)<br>• Seat usage: accepted non-Owner team members plus pending invitations; the Owner and expired invitations do not count (Seat Limit fields and edge case; CR, with FR-009)<br>• Login as Provider: allowed for Active and Suspended providers, blocked for Deactivated; read-only per FR-032 Rule 6 for a Suspended provider; applies to the Owner and team members (REQ-015-026)<br>• Rule 9 and REQ-015-020: admin Revive Booking, admin appointment change (reschedule), and admin acceptance of a replacement quote (FR-006 B5) also require an Active provider (FR-006 REQ-006-020, [CR-FR006-20261027-02](../fr006-booking-scheduling/change-request-2026-10-27-admin-actions-require-active-provider.md))<br>• Tab 1: Owner login email change requires password re-authentication and a reason, notifies the old and new addresses, signs the Owner out and revokes tokens, and re-sends a pending activation link to the new address<br>• Screen 4: provider status emails are sent when a scheduled change is created and again when it takes effect (only with Notify Provider), and go to the Owner only; a suspended provider may still chat with patients on open In Progress and Aftercare cases<br>• A5 and REQ-015-020: status change and status event in one transaction; the cascade runs as an idempotent background job (target 5 minutes); reactivation does not stop a running cascade<br>• Tab 7, Screen 1, Tab 1: deactivation cancels a pending scheduled commission configuration; global default shown as "(Default)"; future-only configuration shows a "Scheduled" tag<br>• A7 and Screen 1: a closure request with a scheduled deactivation stays pending until the deactivation takes effect; cancelling the scheduled change leaves it pending<br>• Admin-support alert and Resolve Support follow FR-031 Respond to Support; the FR-016 list needs View Patients (aligned with [CR-FR020-20261027-01](../fr020-notifications-alerts/change-request-2026-10-27-admin-support-recipients-status-email-timing.md))<br>• Wording: one creation success message (User Story 1), one email-delay warning, FR-005 supersession only when the admin accepts the replacement quote, Tab 8 CSV export rules, Resend Activation Email permission, wizard leave prompt without Save | Product Owner / Documentation |
-| 2026-10-28 | 1.23 | Product Owner decision 2026-10-28 (FR-015 backend confirmations); clarifications recorded here, with the member model change in [CR-FR009-20261028-01](../fr009-provider-team-roles/change-request-2026-10-28-invitation-member-model.md):<br>• Seat usage (Screen 2 Step 1 and Tab 1 Seat Limit, seat-limit edge case): "accepted non-Owner team members" means non-Owner members with status Active or Suspended; Pending invitations count while not past expiry; Removed members and Expired, Cancelled, or Accepted invitations do not count<br>• Last save wins (Tab 1 business rules, concurrent-edit edge case): a save applies only the changed fields and never rewrites untouched fields, so last save wins only when two people change the same field; no conflict check or message (unchanged); noted in the CR-FR015-20261027-01 Approved State<br>• Owner login email change: the notices to the old and new address are the new mandatory FR-020 event `provider.login_email_changed` (FR-020 v2.13, FR-030 v1.17), and the new address is validated against REQ-015-014<br>• Review follow-up (same day): `provider.login_email_changed` added to the FR-020 event lists in Internal Dependencies (A-02 integration point) and External Dependencies (notification templates) | Claude (AI Assistant) |
-| 2026-11-20 | 1.24 | Requirements graph programme baseline: owner rulings applied:<br>• Payout: the admin chooses the clinic's payout method (Stripe Connect or Manual bank transfer) when creating the clinic, and only an admin changes it after go-live; the clinic sees method and readiness read-only and completes Stripe's own sign-up itself; activation does not wait for payout readiness; a share due to move while the clinic is not Ready stays with Hairline until Ready (REQ-015-124 to REQ-015-127)<br>• Payout frequency: one platform-wide settlement period replaces the per-clinic Payout Frequency for manual-rail clinics (REQ-015-128); Weekly, 2x a Month (`twice_monthly`) and Monthly stay for Stripe Connect clinics<br>• Provider record: added address, country and avatar (copies of the clinic address, location country and logo), availability status, timezone, and a calculated starting price (lowest standard price among the provider's active packages, FR-024, converted to the patient's currency); `password_set` and the activation token stay on the Provider record (REQ-015-011)<br>• Notifications: recipients, content and switch-off rules for provider status, activation and patient/admin cancellation notices are owned by the FR-030 catalogue and the FR-015 Rules now only say when they fire (REQ-015-019, REQ-015-049, REQ-015-050, REQ-015-053); retry numbers removed in favour of the FR-030 retry rule (REQ-015-048); the provider.* Events are cited from FR-030<br>• Wording: duplicate provider email error uses the long message everywhere (REQ-015-070); In Progress decision of a suspended provider cites FR-006 Alternative Flow B7 (B6 stays the aftercare reassignment); one sentence defines "immediately" and "real-time" as at most 1 minute; the legacy "Affiliate Pay Details" note on Tab 7 is dropped; a screen-table "Required" flag means needed on that screen (Rule 2); Provider Document is owned by FR-032 (Key Entity 2); cross-document reconciliation (retention, system rule citations, payout wording) | Claude (AI Assistant) |
-| 2026-11-22 | 1.25 | Owner ruling 2026-11-22: payment terms of a provider suspension or deactivation:<br>• A booking cancelled because the provider is suspended or deactivated follows the same patient payment terms as a provider withdrawal or drop-out (FR-006 Alternative Flow B5): the patient is refunded in full everything paid, pays no cancellation fee, and the replacement booking takes a new payment; the earlier "paid amounts move as credit" placeholder is removed (A5 step 7, Cancellation Billing Rule REQ-015-043, REQ-015-085, Integration 1, edge case)<br>• A treatment already `In Progress` when the provider is suspended or deactivated follows FR-006 Alternative Flow B7 payment terms: an admin sets the patient refund amount case by case, from zero up to the full amount paid, with a mandatory reason and an audit entry, and the provider's payout for that booking is held until the admin decides (A5 step 3, REQ-015-043) | Claude (AI Assistant) |
+| 2026-11-22 | 1.26 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (versions 1.0 to 1.25) and the change requests (CR-FR015-20261013-01, CR-FR015-20261016-01, CR-FR015-20261027-01, CR-FR009-20261028-01, CR-FR032-20261015-01, CR-FR029-20261014-01, CR-FR029-20261015-01, CR-FR009-20261015-01, CR-FR017-20261015-01, CR-FR026-20261015-01, CR-FR032-20261015-02, CR-FR020-20261015-01, CR-FR030-20261015-01, CR-FR009-20261015-02, CR-FR032-20261015-03, CR-FR020-20261015-02, CR-FR030-20261015-02, CR-FR029-20261015-02, CR-FR003-20261015-01, CR-FR020-20261027-01, CR-FR006-20261027-02) are in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
 
 ---
 
