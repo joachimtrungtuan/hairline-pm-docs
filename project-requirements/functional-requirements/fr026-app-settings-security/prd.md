@@ -1419,7 +1419,7 @@ Admin needs one versioned source for the thresholds and targets used by FR-014 a
   - **Relationships**: Many Audit Log Entries belong to one Setting Group; Many Audit Log Entries belong to one Admin
 
 - **Entity 4 - Country**: Centrally managed country data
-  - **Key attributes**: country_id, country_name, iso_code, calling_code, flag_url (text, nullable — URL to S-05-stored flag asset), display_order, active, created_at, updated_at
+  - **Key attributes**: country_id, country_name, iso_code, calling_code, flag_url (text, required — URL to S-05-stored flag asset; uploaded by an admin on Screen 8), display_order, active, created_at, updated_at
   - **Relationships**: Referenced by Patient profiles, Provider profiles
 
 - **Entity 5 - Discovery Question Option**: Centrally managed discovery question answer choices
@@ -1480,6 +1480,7 @@ Admin needs one versioned source for the thresholds and targets used by FR-014 a
 | 2026-10-16 | 1.13 | Product Owner follow-up decisions: reminder defaults kept at 12 hours with validation bounds (quote expiry window 24 to 336 hours; slot-hold duration 24 to 168 hours; each lead time at least 1 hour and at most half of its window), and an FR-029 Default Currency change explicitly creates a new Quote Configuration version. Updated A7, Screen 5d, REQ-026-012f, and User Story 8. Decisions Q13, Q14. See [Change Request](./change-request-2026-10-16-mtg002-quote-model-alignment.md) (CR-FR026-20261016-01). | Product Owner / Documentation |
 | 2026-11-20 | 1.14 | Requirements graph programme baseline: owner rulings applied. Main changes: new Screen 8 (Platform Settings Editor) describing the 12 platform Settings FR-026 keeps for other FRs plus the re-verification threshold, landing background, profile photo limits, and the two support emergency contact Settings (REQ-026-112 to REQ-026-121); field limits and screen behaviours recorded as Rules (REQ-026-122 to REQ-026-132); Settings API rate limit (REQ-026-018) moved to the system PRD; roles and permission names deferred to FR-031; treatment-area list starts empty; OTP resend counter is a rolling window, up to 10 requests per hour; deletion-reason explanation is optional; cached settings are kept until the next successful poll; {app_name} added to template variables; analytics added to setting group categories; cross-document reconciliation (retention, system rule citations). | Product Owner / Documentation |
 | 2026-11-22 | 1.15 | Owner answers of 2026-11-22 (requirements graph programme, Phase 4 re-check): (1) the country flag is required and uploaded by the admin on Screen 4 (REQ-026-011 no longer nullable). (2) FR-026 owns the problem-duration list: added to Screen 5c with five starting values (new REQ-026-139; consumer FR-003). (3) One shared failed-login setting: the separate Admin Maximum Failed Logins setting is removed from Screen 8, Rule text, the setting-group list and REQ-026-116; admins use Max Login Attempts on Screen 2. | Product Owner / Documentation |
+| 2026-11-22 | 1.16 | Audit follow-up to the owner answers of 2026-11-22: the Country entity now lists flag_url as required, matching Screen 8. | Product Owner / Documentation |
 
 ---
 
@@ -1497,4 +1498,4 @@ Admin needs one versioned source for the thresholds and targets used by FR-014 a
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (PRD Standards & Requirements)
 **Based on**: FR-011 Aftercare & Recovery Management PRD, FR-026 from system-prd.md
-**Last Updated**: 2026-11-20
+**Last Updated**: 2026-11-22

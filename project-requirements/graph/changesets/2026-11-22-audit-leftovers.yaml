@@ -1,0 +1,6 @@
+reason: "Audit follow-up to the owner answers of 2026-11-22: three Rule texts still carried the wording the PRDs dropped (maximum discount value, provider Admin role)."
+by: controller
+operations:
+  - {"op": "update_node", "id": "REQ-019-093", "attrs": {"statement": "Discount categories, code format policy, the maximum discount value (one Setting; applies to percentage discounts only and starts at 50 percent; fixed amounts have no cap), and campaign dates. Targeting rules (all providers vs. subsets) and approval routing. Notification templates for approvals and status: managed in FR-030 (setting: promotion notification templates). Minimum number of quotes on each side before Conversion Lift is shown (launch default: 20 quotes on each side)."}}
+  - {"op": "update_node", "id": "REQ-009-103", "attrs": {"statement": "Access Control: Accessible by Owners and Managers only. Team members cannot view other members' detail pages (except their own profile in account settings)."}}
+  - {"op": "update_node", "id": "REQ-009-155", "attrs": {"statement": "Privacy Rule 2: Team member activity logs are accessible only to Owners and Managers within same organization"}}

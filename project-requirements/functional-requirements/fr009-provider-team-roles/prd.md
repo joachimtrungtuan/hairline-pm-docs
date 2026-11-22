@@ -384,6 +384,7 @@ The provider platform starts with four protected clinic-side roles that directly
 - Owner records show disabled form with callout: "Primary Owner role cannot be changed."
 - The affected team member is always notified by email of a role change; there is no option to suppress the notification.
 - Cannot change own role.
+- A Manager can change the role of Clinical Staff and Billing Staff only; a Manager cannot change the role of the Owner or of another Manager.
 - Permissions diff highlights removals (red) and additions (green).
 - Confirmation modal summarises risk (e.g., losing billing access).
 
@@ -472,7 +473,7 @@ The provider platform starts with four protected clinic-side roles that directly
 |------------|------|----------|-------------|------------------|
 | Member Since | display (date) | N/A | Account creation / invitation acceptance date | Read-only |
 | Phone Number | display (tel) | Yes | Contact phone (required at account setup, Screen 8) | Masked for privacy |
-| Department/Specialty | text | No | Optional organizational label (e.g., "Surgeon", "Reception") | Max 50 chars; editable by Owner/Admin |
+| Department/Specialty | text | No | Optional organizational label (e.g., "Surgeon", "Reception") | Max 50 chars; editable by Owner/Manager |
 | Current Workload Summary | card/widget | N/A | Active inquiries (count), Draft quotes (count), Upcoming appointments (count), Unread messages (count) | Click counts to filter relevant lists |
 | Permissions Matrix | table | N/A | Read-only table showing what this role can/cannot do | Grouped by feature area; links to Screen 3 for role changes |
 
@@ -789,7 +790,7 @@ The provider platform starts with four protected clinic-side roles that directly
 ### Data & Privacy Rules
 
 - **Privacy Rule 1**: Team member email addresses are visible only within their own provider organization
-- **Privacy Rule 2**: Team member activity logs are accessible only to Owners and Admins within same organization
+- **Privacy Rule 2**: Team member activity logs are accessible only to Owners and Managers within same organization
 - **Privacy Rule 3**: IP addresses in team member activity logs are retained in full for security and compliance investigations, subject to the global audit log retention and access rules defined in the Constitution
 - **Privacy Rule 4**: Removed team members' historical records are archived (not deleted) for compliance—visible only to Owners and platform admins
 - **Audit Rule**: All access to team member data must be logged with timestamp, accessing user, and action performed
@@ -1097,8 +1098,8 @@ Each clinic has exactly one primary Owner account. All other elevated users are 
 **Acceptance Scenarios**:
 
 1. **Given** provider Owner opens the "Invite Team Member" form, **When** they open the Role dropdown, **Then** Owner is visible as a non-selectable option with tooltip "Primary Owner cannot be set or changed from this screen."
-2. **Given** any provider user (Owner or Admin) opens the role edit dialog for the current Owner, **When** they attempt to change the role, **Then** the form is disabled and displays callout: "Primary Owner role cannot be changed."
-3. **Given** an Admin attempts to update a team member's role to Owner via any provider UI, **When** they submit the change, **Then** system blocks the request with error: "Cannot assign the primary Owner role from the provider portal."
+2. **Given** any provider user (Owner or Manager) opens the role edit dialog for the current Owner, **When** they attempt to change the role, **Then** the form is disabled and displays callout: "Primary Owner role cannot be changed."
+3. **Given** a Manager attempts to update a team member's role to Owner via any provider UI, **When** they submit the change, **Then** system blocks the request with error: "Cannot assign the primary Owner role from the provider portal."
 
 ---
 
@@ -1231,6 +1232,7 @@ Implementation teams MUST treat the above as **non-blocking, non-MVP requirement
 | 2026-11-04 | 1.7 (proposed) | Minor correction (Product Owner decision, manual test PR01-FR009-12): a role change refreshes the member's permissions in place on their next request without forcing logout; the previous permissions stop applying within 5 seconds. Removal still invalidates all active sessions. Aligned REQ-009-014, Implementation Notes (Caching, Integration 2 error handling, Security threat mitigation) with User Story 2 scenario 4. | Documentation |
 | 2026-11-20 | 1.8 (proposed) | Requirements graph programme baseline: owner rulings applied. Main changes: (1) Custom provider roles removed; the clinic roles are Owner, Manager, Clinical Staff, and Billing Staff only (Provider Role Model, flows, Screens 1-3, 11, 12, Rule 8, Key Entity 4, REQ-009-002, REQ-009-011); the 2026-09-29 custom-role change request is rejected. (2) Invitations and removals are done by the Provider Owner or Manager; a Manager can invite only Clinical Staff and Billing Staff. (3) Exactly one Owner at all times (REQ-009-006); new Owner handover performed by a Hairline admin (new Rule 11, new REQ-009-174, Screen 12). (4) Team activity log retention setting removed: audit logs are kept 10 years under the global audit-log rule, including the patient-data access log; Screen 11 date filter reaches 10 years. (5) A bounced invitation keeps status Pending with delivery state "Pending Send"; no Bounced status. (6) Concurrent role changes: the later change overwrites, no error. (7) Role-change notification toggle removed: the member is always notified. (8) Phone number is required; removal reason is required; Archive is offered only when nothing is outstanding; name is read-only on the member detail page. (9) Treatment documentation rights now point to FR-010 Rule 4 (REQ-009-172 retired). (10) Invitation email retry numbers replaced by the FR-030 retry rule (REQ-009-054). (11) Team member entity holds name, email, phone number, and password; audit action types extended to match the filters. | Documentation |
 | 2026-11-22 | 1.9 (proposed) | Owner answers of 2026-11-22 (requirements graph programme, Phase 4 re-check): (1) a Manager may change the role only of members below Manager (Clinical Staff, Billing Staff), never the Owner or another Manager (REQ-009-004, Screen 6 business rule; stale 'Admin' wording for the provider Manager role corrected in the Owner-modification alternative flow and Screen 6 access control). (2) Owner handover stays in FR-009: the new Owner must be an active team member, the previous Owner becomes a Manager, a reason is required and both are emailed (Rule 11, REQ-009-174). | Documentation |
+| 2026-11-22 | 1.10 (proposed) | Audit follow-up to the owner answers of 2026-11-22: remaining Admin wording for the provider role replaced with Manager (department field, Privacy Rule 2, role-change scenarios) and the Manager limit on role changes added to Screen 3. | Documentation |
 
 ---
 
@@ -1249,4 +1251,4 @@ Implementation teams MUST treat the above as **non-blocking, non-MVP requirement
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B
 **Based on**: FR-009 from system-prd.md
-**Last Updated**: 2026-11-20 (proposed revision v1.8; prior approval status unchanged)
+**Last Updated**: 2026-11-22 (proposed revision v1.10; prior approval status unchanged)

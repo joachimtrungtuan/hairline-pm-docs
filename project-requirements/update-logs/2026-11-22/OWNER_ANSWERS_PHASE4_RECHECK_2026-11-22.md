@@ -8,7 +8,7 @@
 
 ## Summary
 
-The owner answered the 17 items left by the completeness re-check of 2026-11-21. Fourteen needed changes; three (layout lines, merged aftercare pairs, and FR-031 and FR-003 wording that already matched) needed none. All are applied. Graph lint stays at 102 findings (90 Phase 8 hand-offs, 10 accepted, 2 known); no live node points at a retired node.
+The owner answered the 17 items left by the completeness re-check of 2026-11-21. Fifteen needed changes; two (layout lines, merged aftercare pairs, and FR-031 and FR-003 wording that already matched) needed none. All are applied. Graph lint stays at 102 findings (90 Phase 8 hand-offs, 10 accepted, 2 known); no live node points at a retired node.
 
 ## What changed
 
@@ -37,3 +37,14 @@ The owner answered the 17 items left by the completeness re-check of 2026-11-21.
 ## Follow-up (implementation backlog)
 
 - Country flag is now required: the starting country list and the bulk CSV import (FR-026 Screen 4) need a flag for every country.
+
+## Audit follow-up (same day)
+
+An independent review of Phase 4 against its Definition of done found the phase met, with wording left over from the old text. Fixed:
+
+- FR-026 v1.16: the Country entity lists `flag_url` as required, matching Screen 8.
+- FR-009 v1.10 (proposed): the remaining "Admin" wording for the provider role is now "Manager" (department field, Privacy Rule 2, two role-change scenarios); Screen 3 states that a Manager can change the role of Clinical Staff and Billing Staff only.
+- FR-005 v3.2: the FR-015 dependency line no longer mentions licenses.
+- FR-030 v1.19: the email change code has its own row in the notification catalogue (`account.email_change_code`).
+- Graph (`graph/changesets/2026-11-22-audit-leftovers.yaml`): Rule texts REQ-019-093, REQ-009-103 and REQ-009-155 now match the PRDs.
+- "Last Updated" footers of the PRDs edited today now read 2026-11-22.
