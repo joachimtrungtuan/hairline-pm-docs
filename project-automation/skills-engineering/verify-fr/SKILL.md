@@ -131,6 +131,14 @@ For each dependent FR from system PRD:
 4. **Shared component alignment**: API contracts, module boundaries
 5. Flag integration-breaking contradictions as critical
 
+### 5a. Compression pass checks (compressed PRDs)
+
+Run this step when the PRD's Change Log points to `archived/prd-baseline-2026-11-08/` (a PRD compressed under `local-docs/project-requirements/graph/checklists/prd-structure.md`). That checklist is authoritative; a failed check is a critical issue.
+
+1. **Completeness against the graph**: every active Rule the FR owns in the requirements graph (`local-docs/project-requirements/graph/`, `scripts/query.py fr FR-###`) is cited by its REQ id in the PRD, and every business line of the baseline PRD is present or its removal falls under a dropped class or a repetition whose source survives. Zero missing, zero partial.
+2. **Section list**: only the classes the checklist marks Keep, Keep tagged, Keep stated once, Reduce, Keep restarted or Keep short remain. Success Criteria, Assumptions, Implementation Notes, Key Entities and open questions are absent; Dependencies is one list of related FR ids.
+3. **FR position**: the PRD's flows, entry points, screens and stages match the graph (`query.py fr`, `query.py lifecycle`), and its hand-offs and dependency FR list match the graph's cross-FR edges. Compression must not change what the FR owns or which FRs it hands to and receives from.
+
 ### 6. Compile issue report
 
 Group by severity, deduplicate, prioritize by impact.
