@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-22T12:49:21Z",
+  "generated_at": "2026-11-22T12:54:28Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -38237,7 +38237,7 @@
       "owner_fr": null,
       "title": "Booking & Scheduling",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "module": "fr006-booking-scheduling",
         "prd_path": "project-requirements/functional-requirements/fr006-booking-scheduling/prd.md",
@@ -38250,7 +38250,7 @@
       "owner_fr": null,
       "title": "Payment Processing",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "module": "fr007-payment-processing",
         "prd_path": "project-requirements/functional-requirements/fr007-payment-processing/prd.md",
@@ -38263,7 +38263,7 @@
       "owner_fr": null,
       "title": "Split Payment / Installment Plans",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "module": "fr007b-payment-installments",
         "prd_path": "project-requirements/functional-requirements/fr007b-payment-installments/prd.md",
@@ -38276,7 +38276,7 @@
       "owner_fr": null,
       "title": "Travel & Logistics Coordination",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "module": "fr008-travel-booking-integration",
         "prd_path": "project-requirements/functional-requirements/fr008-travel-booking-integration/prd.md",
@@ -46835,9 +46835,9 @@
       "owner_fr": "FR-007B",
       "title": "Provider fault after acceptance cancels remaining installments and credits paid ones",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "When the provider fails after acceptance, System MUST cancel remaining installments and treat paid installments as credit toward the replacement booking per FR-006 Alternative Flow B5, with any unused part refunded and no patient cancellation fee",
+        "statement": "When the provider fails after acceptance, System MUST cancel remaining installments with no patient cancellation fee. On a provider withdrawal or drop-out, System MUST refund in full every installment already paid, and the replacement booking takes a new payment per FR-006 Alternative Flow B5. On a suspension or deactivation, paid installments follow the FR-006 provider-status placeholder (credit toward the replacement booking, any unused part refunded), which is not yet ruled",
         "rationale": "PRD id REQ-007b-027 (prd.md line 860). Restated by Alternative Flow B4 steps 1 and 2 and its outcome (the patient keeps the value already paid and continues with the replacement provider in the same inquiry), and the FR-006 dependency note."
       }
     },
@@ -105061,7 +105061,7 @@
       "owner_fr": "FR-005",
       "title": "System sends the accepted subquote to Booking and Payment",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 10"
       }
@@ -105094,7 +105094,7 @@
       "owner_fr": "FR-006",
       "title": "Patient proceeds directly to the payment screen",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow step 2"
       }
@@ -105138,7 +105138,7 @@
       "owner_fr": "FR-006",
       "title": "System sets the booking to Confirmed and unmasks patient identity to the provider",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 6"
       }
@@ -105303,10 +105303,9 @@
       "owner_fr": "FR-006",
       "title": "Refunds follow the refund ladder set in FR-029; the refund step, its event and the other money mechanics are owned by FR-007, FR-007B and FR-017",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Alternative Flow B2 step 6",
-        "handoff_to": "FR-007: refund step and its event for an admin cancellation (refund ladder set in FR-029)"
+        "prd_ref": "Alternative Flow B2 step 6"
       }
     },
     {
@@ -105414,10 +105413,9 @@
       "owner_fr": "FR-006",
       "title": "Patient and admin notifications and the support handoff follow FR-015 Screen 4",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow B4 step 5",
-        "handoff_to": "FR-015: Screen 4 provider suspension notifications"
+        "prd_ref": "Alternative Flow B4 step 5"
       }
     },
     {
@@ -105426,7 +105424,7 @@
       "owner_fr": "FR-006",
       "title": "System cancels the original booking with the provider-fault cause and the support-required marker",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B5 step 1"
       }
@@ -105437,7 +105435,7 @@
       "owner_fr": "FR-006",
       "title": "System releases the original hold or calendar block and blocks further payment",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B5 step 2"
       }
@@ -105504,10 +105502,9 @@
       "owner_fr": "FR-006",
       "title": "Travel records carry over to the replacement booking through FR-008",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Alternative Flow B5 step 8",
-        "handoff_to": "FR-008: travel carry-over to the replacement booking"
+        "prd_ref": "Alternative Flow B5 step 8"
       }
     },
     {
@@ -105538,10 +105535,9 @@
       "owner_fr": "FR-006",
       "title": "Admin opens Reassign Aftercare on Screen 6 and reassigns the aftercare case with a mandatory reason",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow B6 step 3",
-        "handoff_to": "FR-011: Screen 19 aftercare reassignment"
+        "prd_ref": "Alternative Flow B6 step 3"
       }
     },
     {
@@ -105594,10 +105590,9 @@
       "owner_fr": "FR-007",
       "title": "Patient reviews the accepted subquote summary, payable booking total, deposit amount and remaining balance",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Main Flow step 1",
-        "handoff_from": "STP-006-002"
+        "prd_ref": "Main Flow step 1"
       }
     },
     {
@@ -105672,10 +105667,9 @@
       "owner_fr": "FR-007",
       "title": "Provider payout becomes eligible after treatment completion",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Main Flow step 8",
-        "handoff_to": "FR-017: payout execution"
+        "prd_ref": "Main Flow step 8"
       }
     },
     {
@@ -105717,10 +105711,9 @@
       "owner_fr": "FR-007",
       "title": "Admin reviews cancellation timing and the applicable refund schedule",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Alternative Flow A2 step 1",
-        "handoff_from": "FR-006: Alternative Flow B2 (booking cancellation)"
+        "prd_ref": "Alternative Flow A2 step 1"
       }
     },
     {
@@ -105859,12 +105852,11 @@
       "id": "STP-007-062",
       "type": "Step",
       "owner_fr": "FR-007",
-      "title": "Payment against the closed booking is blocked and money already paid follows the FR-006 placeholder",
+      "title": "Payment against the closed booking is blocked; on a provider withdrawal or drop-out the patient is refunded in full, while a suspension or deactivation follows the FR-006 placeholder",
       "status": "active",
-      "version": 1,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Alternative Flow B4 step 2",
-        "handoff_from": "FR-006: Alternative Flow B5"
+        "prd_ref": "Alternative Flow B4 step 2"
       }
     },
     {
@@ -106193,10 +106185,9 @@
       "owner_fr": "FR-007B",
       "title": "Admin reviews and contacts the patient to resolve the payment issue",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow B1 step 8",
-        "handoff_to": "FR-006: Cancel Booking action (admin cancels with a mandatory reason)"
+        "prd_ref": "Alternative Flow B1 step 8"
       }
     },
     {
@@ -106216,10 +106207,9 @@
       "owner_fr": "FR-007B",
       "title": "Patient requests cancellation through Contact Support",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "prd_ref": "Alternative Flow B2 step 1",
-        "handoff_to": "FR-016: admin queue (Booking Support Requests)"
+        "prd_ref": "Alternative Flow B2 step 1"
       }
     },
     {
@@ -106239,10 +106229,9 @@
       "owner_fr": "FR-007B",
       "title": "Admin reviews the request and cancels the booking with a mandatory reason",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow B2 step 3",
-        "handoff_to": "FR-006: Cancel Booking action"
+        "prd_ref": "Alternative Flow B2 step 3"
       }
     },
     {
@@ -106329,10 +106318,9 @@
       "owner_fr": "FR-007B",
       "title": "Patient pays the remaining balance immediately, or the admin cancels the booking through the FR-006 Cancel Booking action",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow B3 step 5",
-        "handoff_to": "FR-006: Cancel Booking action"
+        "prd_ref": "Alternative Flow B3 step 5"
       }
     },
     {
@@ -106352,19 +106340,18 @@
       "owner_fr": "FR-007B",
       "title": "System cancels the remaining installments of the original booking",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Alternative Flow B4 step 1",
-        "handoff_from": "FR-006: Alternative Flow B5"
+        "prd_ref": "Alternative Flow B4 step 1"
       }
     },
     {
       "id": "STP-007B-702",
       "type": "Step",
       "owner_fr": "FR-007B",
-      "title": "Paid installments become credit toward the replacement booking, unused part refunded",
+      "title": "Paid installments are refunded in full on a provider withdrawal or drop-out; on a suspension or deactivation they follow the provider-status placeholder (credit)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B4 step 2"
       }
@@ -106386,10 +106373,9 @@
       "owner_fr": "FR-008",
       "title": "Patient submits the passport photo and form",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Main Flow 1 step A3 (and A1S1)",
-        "handoff_from": "FR-006: Main Flow, booking becomes Confirmed (travel path A)"
+        "prd_ref": "Main Flow 1 step A3 (and A1S1)"
       }
     },
     {
@@ -106453,10 +106439,9 @@
       "owner_fr": "FR-008",
       "title": "Patient answers the travel requirement check",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Main Flow 2 step B3 (and B1S2)",
-        "handoff_from": "FR-006: Main Flow, booking becomes Confirmed (travel path B)"
+        "prd_ref": "Main Flow 2 step B3 (and B1S2)"
       }
     },
     {
@@ -106597,10 +106582,9 @@
       "owner_fr": "FR-008",
       "title": "Admin confirms or corrects the copied flight and hotel dates",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow B2 step B2S7",
-        "handoff_from": "FR-006: Alternative Flow B5, provider-fault transfer to a replacement booking"
+        "prd_ref": "Alternative Flow B2 step B2S7"
       }
     },
     {
@@ -108580,10 +108564,9 @@
       "owner_fr": "FR-011",
       "title": "Admin reassigns only the aftercare provider or team on Screen 19 with a reason and confirmation",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Workflow 4 Alternative Flow D5",
-        "handoff_from": "FR-006: Alternative Flows B6 and B7, booking is Aftercare after a provider fault"
+        "prd_ref": "Workflow 4 Alternative Flow D5"
       }
     },
     {
@@ -169275,6 +169258,36 @@
     {
       "from_id": "FR-006",
       "verb": "references",
+      "to_id": "REQ-001-015",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-006",
+      "verb": "references",
+      "to_id": "REQ-002-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-006",
+      "verb": "references",
+      "to_id": "REQ-003-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-006",
+      "verb": "references",
+      "to_id": "REQ-004-001",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-006",
+      "verb": "references",
+      "to_id": "REQ-005-023",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-006",
+      "verb": "references",
       "to_id": "REQ-007-017",
       "attrs": {}
     },
@@ -169305,7 +169318,19 @@
     {
       "from_id": "FR-006",
       "verb": "references",
+      "to_id": "REQ-015-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-006",
+      "verb": "references",
       "to_id": "REQ-020-021",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-006",
+      "verb": "references",
+      "to_id": "REQ-024-013",
       "attrs": {}
     },
     {
@@ -169407,6 +169432,30 @@
     {
       "from_id": "FR-007",
       "verb": "references",
+      "to_id": "REQ-001-010",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-007",
+      "verb": "references",
+      "to_id": "REQ-003-055",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-007",
+      "verb": "references",
+      "to_id": "REQ-004-001",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-007",
+      "verb": "references",
+      "to_id": "REQ-005-023",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-007",
+      "verb": "references",
       "to_id": "REQ-006-002",
       "attrs": {}
     },
@@ -169456,6 +169505,24 @@
       "from_id": "FR-007",
       "verb": "references",
       "to_id": "REQ-006-054",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-007",
+      "verb": "references",
+      "to_id": "REQ-007B-094",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-007",
+      "verb": "references",
+      "to_id": "REQ-010-004",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-007",
+      "verb": "references",
+      "to_id": "REQ-015-007",
       "attrs": {}
     },
     {
@@ -169539,6 +169606,18 @@
     {
       "from_id": "FR-007B",
       "verb": "references",
+      "to_id": "REQ-001-010",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-007B",
+      "verb": "references",
+      "to_id": "REQ-006-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-007B",
+      "verb": "references",
       "to_id": "REQ-007-017",
       "attrs": {}
     },
@@ -169546,6 +169625,12 @@
       "from_id": "FR-007B",
       "verb": "references",
       "to_id": "REQ-007-019",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-007B",
+      "verb": "references",
+      "to_id": "REQ-015-007",
       "attrs": {}
     },
     {
@@ -169568,6 +169653,36 @@
         "rules": 81
       },
       "derived": true
+    },
+    {
+      "from_id": "FR-008",
+      "verb": "references",
+      "to_id": "REQ-001-010",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-008",
+      "verb": "references",
+      "to_id": "REQ-004-063",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-008",
+      "verb": "references",
+      "to_id": "REQ-005-018",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-008",
+      "verb": "references",
+      "to_id": "REQ-006-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-008",
+      "verb": "references",
+      "to_id": "REQ-015-007",
+      "attrs": {}
     },
     {
       "from_id": "FR-008",
@@ -350463,6 +350578,12 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-005-021",
+      "verb": "next",
+      "to_id": "STP-006-001",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-005-022",
       "verb": "applies",
       "to_id": "REQ-005-034",
@@ -350550,6 +350671,12 @@
       "from_id": "STP-006-002",
       "verb": "next",
       "to_id": "STP-006-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-002",
+      "verb": "next",
+      "to_id": "STP-007-001",
       "attrs": {}
     },
     {
@@ -350695,6 +350822,22 @@
       "verb": "next",
       "to_id": "STP-006-007",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-006-006",
+      "verb": "next",
+      "to_id": "STP-008-021",
+      "attrs": {
+        "label": "Booking Confirmed, provider-included travel path"
+      }
+    },
+    {
+      "from_id": "STP-006-006",
+      "verb": "next",
+      "to_id": "STP-008-025",
+      "attrs": {
+        "label": "Booking Confirmed, patient self-booked travel path"
+      }
     },
     {
       "from_id": "STP-006-007",
@@ -351141,6 +351284,12 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-006-306",
+      "verb": "next",
+      "to_id": "STP-007-021",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-006-401",
       "verb": "applies",
       "to_id": "REQ-006-004",
@@ -351419,6 +351568,12 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-006-505",
+      "verb": "next",
+      "to_id": "STP-015-155",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-006-601",
       "verb": "applies",
       "to_id": "REQ-006-018",
@@ -351449,6 +351604,12 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-006-601",
+      "verb": "next",
+      "to_id": "STP-007B-701",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-006-602",
       "verb": "applies",
       "to_id": "REQ-006-018",
@@ -351476,6 +351637,12 @@
       "from_id": "STP-006-602",
       "verb": "next",
       "to_id": "STP-006-603",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-602",
+      "verb": "next",
+      "to_id": "STP-007-062",
       "attrs": {}
     },
     {
@@ -351742,6 +351909,12 @@
       "from_id": "STP-006-703",
       "verb": "next",
       "to_id": "STP-006-704",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-703",
+      "verb": "next",
+      "to_id": "STP-011-054",
       "attrs": {}
     },
     {
@@ -352237,6 +352410,12 @@
       "from_id": "STP-007-008",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007-008",
+      "verb": "next",
+      "to_id": "STP-017-038",
       "attrs": {}
     },
     {
@@ -353560,6 +353739,12 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-007B-408",
+      "verb": "next",
+      "to_id": "STP-006-301",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-007B-409",
       "verb": "applies",
       "to_id": "REQ-007B-018",
@@ -353656,6 +353841,12 @@
       "from_id": "STP-007B-503",
       "verb": "done by",
       "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-503",
+      "verb": "next",
+      "to_id": "STP-006-301",
       "attrs": {}
     },
     {
@@ -353872,6 +354063,12 @@
       "from_id": "STP-007B-605",
       "verb": "done by",
       "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-605",
+      "verb": "next",
+      "to_id": "STP-006-301",
       "attrs": {}
     },
     {
@@ -422425,6 +422622,100 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261122-125428-cac497a2",
+      "at": "2026-11-22T12:54:28.327727+00:00",
+      "changed_by": "controller",
+      "reason": "Provider-fault payment wording aligned with the earlier ruling (full refund on a provider withdrawal or drop-out; suspension or deactivation not yet ruled): FR-007B requirement and step, and the FR-007 step title, now match FR-006 Alternative Flow B5 and FR-007 PRD text.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-007B-027",
+        "STP-007-062",
+        "STP-007B-702"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 3
+    },
+    {
+      "id": "cs-20261122-125428-91b638bd",
+      "at": "2026-11-22T12:54:28.048719+00:00",
+      "changed_by": "controller",
+      "reason": "Consistency review of FR-007B (Phase 8): references links for read-only data owned by FR-006, FR-001 and FR-015, and hand-offs to FR-006 and FR-016 stitched.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "FR-007B",
+        "STP-006-601",
+        "STP-007B-408",
+        "STP-007B-501",
+        "STP-007B-503",
+        "STP-007B-605",
+        "STP-007B-701"
+      ],
+      "edges_added": 7,
+      "edges_removed": 0,
+      "rows": 12
+    },
+    {
+      "id": "cs-20261122-125323-a1748152",
+      "at": "2026-11-22T12:53:23.099822+00:00",
+      "changed_by": "controller",
+      "reason": "Consistency review of FR-008: five references links to the Rules that define the data its Screens and path rule read from FR-001, FR-004, FR-005, FR-006 and FR-015; the two hand-offs from FR-006 Confirmed booking stitched to the Steps that open the two travel paths; the provider-fault hand-off attr cleared because FR-006 Step 608 already links to the transfer flow.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "FR-008",
+        "STP-006-006",
+        "STP-008-001",
+        "STP-008-007",
+        "STP-008-020"
+      ],
+      "edges_added": 7,
+      "edges_removed": 0,
+      "rows": 10
+    },
+    {
+      "id": "cs-20261122-125256-b61c2a67",
+      "at": "2026-11-22T12:52:56.198218+00:00",
+      "changed_by": "controller",
+      "reason": "FR-007 consistency review (Phase 8): references links to the owner FR Rules for data its Screens and Rules read from other FRs, and the four open hand-offs stitched with next links.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "FR-007",
+        "STP-006-002",
+        "STP-006-602",
+        "STP-007-001",
+        "STP-007-008",
+        "STP-007-062"
+      ],
+      "edges_added": 10,
+      "edges_removed": 0,
+      "rows": 13
+    },
+    {
+      "id": "cs-20261122-124945-bc2ace18",
+      "at": "2026-11-22T12:49:45.626686+00:00",
+      "changed_by": "controller",
+      "reason": "FR-006 consistency review: references links for the owner data its screens show read-only, open hand-offs stitched, and the FR-005 acceptance hand-off to the FR-006 main flow.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "FR-006",
+        "STP-005-021",
+        "STP-006-306",
+        "STP-006-505",
+        "STP-006-608",
+        "STP-006-703",
+        "STP-007-021",
+        "STP-011-054"
+      ],
+      "edges_added": 11,
+      "edges_removed": 0,
+      "rows": 17
+    },
     {
       "id": "cs-20261122-124921-9eda5e92",
       "at": "2026-11-22T12:49:21.735836+00:00",

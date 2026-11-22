@@ -27,3 +27,8 @@ Phase 8 checks the 38 FRs against each other. Its first step is in place: five q
 | coverage (Stages with no Actor) | 2 |
 
 Lint is unchanged at 102. The findings are reviewed FR by FR next; only real conflicts between PRDs go to the owner.
+
+## Later the same day
+
+- FR-007B PRD v1.8: Alternative Flow B4 step 2 and REQ-007b-027 aligned with the earlier ruling already written in FR-006 (Alternative Flow B5) and FR-007: a provider withdrawal or drop-out refunds every paid installment in full; a suspension or deactivation keeps the placeholder. Graph: `changesets/2026-11-22-provider-fault-refund-wording.yaml`.
+- Per-FR consistency reviews started; each applied change-set is `changesets/2026-11-22-frNNN-consistency.yaml` (reference links to data-owner FRs and stitched hand-offs between flows).

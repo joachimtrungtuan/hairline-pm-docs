@@ -1,0 +1,6 @@
+reason: "Provider-fault payment wording aligned with the earlier ruling (full refund on a provider withdrawal or drop-out; suspension or deactivation not yet ruled): FR-007B requirement and step, and the FR-007 step title, now match FR-006 Alternative Flow B5 and FR-007 PRD text."
+by: controller
+operations:
+  - {"op": "update_node", "id": "REQ-007B-027", "attrs": {"statement": "When the provider fails after acceptance, System MUST cancel remaining installments with no patient cancellation fee. On a provider withdrawal or drop-out, System MUST refund in full every installment already paid, and the replacement booking takes a new payment per FR-006 Alternative Flow B5. On a suspension or deactivation, paid installments follow the FR-006 provider-status placeholder (credit toward the replacement booking, any unused part refunded), which is not yet ruled"}}
+  - {"op": "update_node", "id": "STP-007B-702", "title": "Paid installments are refunded in full on a provider withdrawal or drop-out; on a suspension or deactivation they follow the provider-status placeholder (credit)"}
+  - {"op": "update_node", "id": "STP-007-062", "title": "Payment against the closed booking is blocked; on a provider withdrawal or drop-out the patient is refunded in full, while a suspension or deactivation follows the FR-006 placeholder"}

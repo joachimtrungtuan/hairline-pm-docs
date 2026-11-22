@@ -1,0 +1,16 @@
+reason: "FR-007 consistency review (Phase 8): references links to the owner FR Rules for data its Screens and Rules read from other FRs, and the four open hand-offs stitched with next links."
+by: controller
+operations:
+  - {"op": "add_edge", "from": "FR-007", "verb": "references", "to": "REQ-001-010"}
+  - {"op": "add_edge", "from": "FR-007", "verb": "references", "to": "REQ-003-055"}
+  - {"op": "add_edge", "from": "FR-007", "verb": "references", "to": "REQ-004-001"}
+  - {"op": "add_edge", "from": "FR-007", "verb": "references", "to": "REQ-005-023"}
+  - {"op": "add_edge", "from": "FR-007", "verb": "references", "to": "REQ-007B-094"}
+  - {"op": "add_edge", "from": "FR-007", "verb": "references", "to": "REQ-010-004"}
+  - {"op": "add_edge", "from": "FR-007", "verb": "references", "to": "REQ-015-007"}
+  - {"op": "add_edge", "from": "STP-006-002", "verb": "next", "to": "STP-007-001"}
+  - {"op": "update_node", "id": "STP-007-001", "attrs": {"handoff_from": null}}
+  - {"op": "add_edge", "from": "STP-007-008", "verb": "next", "to": "STP-017-038"}
+  - {"op": "update_node", "id": "STP-007-008", "attrs": {"handoff_to": null}}
+  - {"op": "add_edge", "from": "STP-006-602", "verb": "next", "to": "STP-007-062"}
+  - {"op": "update_node", "id": "STP-007-062", "attrs": {"handoff_from": null}}

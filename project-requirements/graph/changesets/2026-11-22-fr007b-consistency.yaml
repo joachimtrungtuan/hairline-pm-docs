@@ -1,0 +1,15 @@
+reason: "Consistency review of FR-007B (Phase 8): references links for read-only data owned by FR-006, FR-001 and FR-015, and hand-offs to FR-006 and FR-016 stitched."
+by: controller
+operations:
+  - {"op": "add_edge", "from": "FR-007B", "verb": "references", "to": "REQ-006-002"}
+  - {"op": "add_edge", "from": "FR-007B", "verb": "references", "to": "REQ-001-010"}
+  - {"op": "add_edge", "from": "FR-007B", "verb": "references", "to": "REQ-015-007"}
+  - {"op": "add_edge", "from": "STP-007B-408", "verb": "next", "to": "STP-006-301"}
+  - {"op": "update_node", "id": "STP-007B-408", "attrs": {"handoff_to": null}}
+  - {"op": "update_node", "id": "STP-007B-501", "attrs": {"handoff_to": null}}
+  - {"op": "add_edge", "from": "STP-007B-503", "verb": "next", "to": "STP-006-301"}
+  - {"op": "update_node", "id": "STP-007B-503", "attrs": {"handoff_to": null}}
+  - {"op": "add_edge", "from": "STP-007B-605", "verb": "next", "to": "STP-006-301"}
+  - {"op": "update_node", "id": "STP-007B-605", "attrs": {"handoff_to": null}}
+  - {"op": "add_edge", "from": "STP-006-601", "verb": "next", "to": "STP-007B-701"}
+  - {"op": "update_node", "id": "STP-007B-701", "attrs": {"handoff_from": null}}

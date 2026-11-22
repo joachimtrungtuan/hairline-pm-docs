@@ -1,0 +1,13 @@
+reason: "Consistency review of FR-008: five references links to the Rules that define the data its Screens and path rule read from FR-001, FR-004, FR-005, FR-006 and FR-015; the two hand-offs from FR-006 Confirmed booking stitched to the Steps that open the two travel paths; the provider-fault hand-off attr cleared because FR-006 Step 608 already links to the transfer flow."
+by: controller
+operations:
+  - {"op": "add_edge", "from": "FR-008", "verb": "references", "to": "REQ-001-010"}
+  - {"op": "add_edge", "from": "FR-008", "verb": "references", "to": "REQ-004-063"}
+  - {"op": "add_edge", "from": "FR-008", "verb": "references", "to": "REQ-005-018"}
+  - {"op": "add_edge", "from": "FR-008", "verb": "references", "to": "REQ-006-007"}
+  - {"op": "add_edge", "from": "FR-008", "verb": "references", "to": "REQ-015-007"}
+  - {"op": "add_edge", "from": "STP-006-006", "verb": "next", "to": "STP-008-021", "attrs": {"label": "Booking Confirmed, provider-included travel path"}}
+  - {"op": "add_edge", "from": "STP-006-006", "verb": "next", "to": "STP-008-025", "attrs": {"label": "Booking Confirmed, patient self-booked travel path"}}
+  - {"op": "update_node", "id": "STP-008-001", "attrs": {"handoff_from": null}}
+  - {"op": "update_node", "id": "STP-008-007", "attrs": {"handoff_from": null}}
+  - {"op": "update_node", "id": "STP-008-020", "attrs": {"handoff_from": null}}
