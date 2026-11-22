@@ -846,6 +846,15 @@ The module delivers value by:
 - **Integration point**: Booking service queries Payment Configuration API for deposit rate, effective commission configuration, and split payment rules; provider-specific commission may be authored in FR-029 Screen 5 or FR-015 Tab 7, but the booking flow resolves a single effective record before storing the booking-time commission snapshot
 - **Integration point**: Payment Configuration uses provider IDs for provider-specific deposit assignment and provider-specific commission scopes; FR-015 provides the single-provider commission edit surface, payout destination details are managed in FR-032, and payout execution is handled in FR-017
 
+**Carried from dropped sections (original wording)**:
+
+- **Integration 2**: Payment Processing Service queries Payment Configuration API for transaction routing and calculation rules
+- **Authentication**: Internal service authentication using API keys or mutual TLS
+- **Entity 3 - Deposit Rate Configuration**:
+- **Relationships**: One global deposit rate; many provider-specific deposit rate overrides (one per provider); many bookings reference deposit rate configuration
+- **Entity 7 - Currency Exchange Rate**:
+- **Relationships**: Rates are recorded by date and currency pair. FR-029 owns this entity (moved in from FR-014); FR-014 reads the daily rates and does not define the entity.
+
 ---
 
 ## Dependencies
@@ -1087,6 +1096,7 @@ As a platform administrator managing provider commission, I need the commission 
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2026-11-22 | 1.15 | Requirements graph programme baseline: PRD compressed to the checklist structure (dropped classes removed, field rows tagged with graph field ids, rule citations added). No rule changes. Earlier history (v1.0 to v1.14) and the four change requests (CR-FR029-20261014-01, CR-FR029-20261015-01, CR-FR029-20261015-02, CR-FR029-20261016-01; their files stay beside this PRD) are in `archived/prd-baseline-2026-11-08/fr029-payment-system-config/` and in git history. | Product Owner / Documentation |
+| 2026-11-23 | 1.16 | Independent compression review: 6 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
 
 ---
 
