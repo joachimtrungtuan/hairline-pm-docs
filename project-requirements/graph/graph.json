@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-22T13:27:24Z",
+  "generated_at": "2026-11-22T13:34:10Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -17519,15 +17519,6 @@
       "attrs": {
         "description": "Date on which a 30-day or 90-day suspension ends and the account returns to Active by itself. Empty for a permanent suspension."
       }
-    },
-    {
-      "id": "ENT-patient.treatment_type",
-      "type": "Field",
-      "owner_fr": "FR-022",
-      "title": "Treatment type",
-      "status": "active",
-      "version": 1,
-      "attrs": {}
     },
     {
       "id": "ENT-patient.updated_at",
@@ -73117,9 +73108,9 @@
       "owner_fr": "FR-022",
       "title": "Admin filters providers by status, featured, commission type and date",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST allow admins to filter providers by status, featured flag, commission type, and date range",
+        "statement": "System MUST allow admins to filter providers by status, featured flag, commission type, closure-requested flag, and date range",
         "rationale": "Restated by Module Scope A-02 (line 61) and Main Flow 2 filter node. Screen criteria: FR-015 / Screen 1 rule."
       }
     },
@@ -73142,9 +73133,9 @@
       "owner_fr": "FR-022",
       "title": "Search results paginated (25 admin/provider, 10 patient mobile)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST paginate search results (default 25 results per page for admin/provider; 10 per page for patient mobile)",
+        "statement": "System MUST paginate search results (default 25 results per page for admin/provider, except the admin provider list, which follows FR-015 Screen 1 at 50 rows per page; 10 per page for patient mobile)",
         "rationale": "Restated by General Module Rule 3 and Search Performance Rule 3 (pagination); Edge Case 2 shows the first page of 25. Admin-editable page size: SET-search-results-page-size."
       }
     },
@@ -74660,9 +74651,9 @@
       "owner_fr": "FR-023",
       "title": "Soft-delete only for protected categories, including cancelled inquiries and cascade records",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST support soft-deletes only for protected categories (Medical Records, Financial Records, Account Profile), preserving recoverability and auditability. Patient-cancelled inquiries (FR-003 Workflow 5) and all records generated from the cancellation cascade — including auto-cancelled quotes with status \"Cancelled (Inquiry Cancelled)\" per FR-004 — are subject to the same retention rules as completed inquiries and quotes. They are soft-deleted/archived, never hard-deleted before the retention period expires. This applies to inquiry records, quote records, acceptance events (including superseded AcceptanceEvents per FR-005), and associated audit trail entries.",
+        "statement": "System MUST support soft-deletes only for protected categories (Medical Records, Financial Records, Account Profile), preserving recoverability and auditability. Patient-cancelled inquiries (FR-003 Workflow 5) and all records generated from the cancellation cascade — including auto-cancelled quotes with status \"Cancelled (Inquiry Cancelled)\" per FR-004 — are subject to the same retention rules as completed inquiries and quotes. They are soft-deleted/archived, never hard-deleted before the retention period expires; AcceptanceEvents are retained and never deleted (FR-005 REQ-005-023). This applies to inquiry records, quote records, acceptance events (including superseded AcceptanceEvents per FR-005), and associated audit trail entries.",
         "rationale": "Restated by the Executive Summary (soft-deletion only for critical data) and Success Criteria (0% of critical records, medical and financial, hard-deleted before end of retention). The protected categories are Medical Records, Financial Records and Account Profile; the REQ-023-009 list has six categories.",
         "scope": "global"
       }
@@ -87075,9 +87066,9 @@
       "owner_fr": "FR-032",
       "title": "Account name, user name and login email validation",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Account Name: Max 200 chars; First Name and Last Name: 2-50 characters, letters, spaces, hyphens (same as FR-009); Account Email: Valid email format, unique in system",
+        "statement": "Account Name: Max 200 chars; First Name and Last Name: 2-50 characters, letters, spaces, hyphens (same as FR-009); Account Email: Valid email format, unique per FR-009 Rule 3 (an email belongs to at most one provider organization at a time)",
         "rationale": "Screen 2. First Name and Last Name share the same limit. Screen: SCR-032-06."
       }
     },
@@ -93809,11 +93800,11 @@
       "id": "REQ-038-066",
       "type": "Rule",
       "owner_fr": "FR-038",
-      "title": "Package selected and fields valid before checkout",
+      "title": "Package selected and fields valid before the aftercare request",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Patient selects an available aftercare package and continues to FR-011 checkout only when a package is selected and the fields are valid.",
+        "statement": "Patient selects an available aftercare package and continues to FR-011 to submit the standalone aftercare request only when a package is selected and the fields are valid.",
         "rationale": "prd.md lines 129."
       }
     },
@@ -105469,7 +105460,7 @@
       "owner_fr": "FR-006",
       "title": "Admin selects one option and date-price row of the replacement quote and confirms the replacement acceptance",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B5 step 5"
       }
@@ -106185,7 +106176,7 @@
       "owner_fr": "FR-007B",
       "title": "Admin reviews and contacts the patient to resolve the payment issue",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B1 step 8"
       }
@@ -106229,7 +106220,7 @@
       "owner_fr": "FR-007B",
       "title": "Admin reviews the request and cancels the booking with a mandatory reason",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B2 step 3"
       }
@@ -106318,7 +106309,7 @@
       "owner_fr": "FR-007B",
       "title": "Patient pays the remaining balance immediately, or the admin cancels the booking through the FR-006 Cancel Booking action",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B3 step 5"
       }
@@ -107737,7 +107728,7 @@
       "owner_fr": "FR-010",
       "title": "Admin opens the provider-fault action",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B6 step 2"
       }
@@ -107858,7 +107849,7 @@
       "owner_fr": "FR-010",
       "title": "System notifies the admin of the no-show",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B1 step 6",
         "handoff_to": "FR-006: Change Appointment (Screen 8); FR-006 has no flow or Step for it yet"
@@ -107870,7 +107861,7 @@
       "owner_fr": "FR-010",
       "title": "System notifies the admin of the medical postponement",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B2 step 4",
         "handoff_to": "FR-006: Change Appointment (Screen 8); FR-006 has no flow or Step for it yet"
@@ -107882,7 +107873,7 @@
       "owner_fr": "FR-010",
       "title": "System notifies the admin that the interrupted case stays In Progress",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B3 step 6"
       }
@@ -107904,7 +107895,7 @@
       "owner_fr": "FR-010",
       "title": "Admin reviews the closed case and cancels it through FR-006",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B4 step 4"
       }
@@ -109435,10 +109426,9 @@
       "owner_fr": "FR-014",
       "title": "Provider clicks a chart element to open the filtered operational list",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Alternative Flow A1",
-        "handoff_to": "Operational modules: Inquiries, Quotes, Bookings, Payments, Schedule (filtered list)"
+        "prd_ref": "Alternative Flow A1"
       }
     },
     {
@@ -109480,10 +109470,9 @@
       "owner_fr": "FR-014",
       "title": "Admin clicks a chart element to open the filtered operational list",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Alternative Flow A1",
-        "handoff_to": "Operational modules: Inquiries, Quotes, Bookings, Payments, Schedule (filtered list)"
+        "prd_ref": "Alternative Flow A1"
       }
     },
     {
@@ -111055,10 +111044,9 @@
       "owner_fr": "FR-017",
       "title": "Invalid bank account: admin contacts the provider, who updates bank details in Billing Settings; admin retries the payout",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "prd_ref": "Main Flow step 16c",
-        "handoff_to": "FR-034 (support contact)"
+        "prd_ref": "Main Flow step 16c"
       }
     },
     {
@@ -118085,9 +118073,9 @@
       "id": "STP-028-425",
       "type": "Step",
       "owner_fr": "FR-028",
-      "title": "System converts using the real-time exchange rate from the FR-029 currency service",
+      "title": "System converts using the admin-configured conversion rate with markup from FR-029",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A6: Patient's Currency Not Configured for Selected Location step 6"
       }
@@ -129482,9 +129470,9 @@
       "id": "STP-038-055",
       "type": "Step",
       "owner_fr": "FR-038",
-      "title": "Patient selects an available aftercare package and continues to FR-011 checkout",
+      "title": "Patient selects an available aftercare package and continues to FR-011 to submit the standalone request",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "A2 step 6"
       }
@@ -142363,14 +142351,6 @@
       "entity_id": "ENT-patient",
       "name": "suspension_end_date",
       "data_type": "date",
-      "required": false,
-      "calculated_by": null
-    },
-    {
-      "id": "ENT-patient.treatment_type",
-      "entity_id": "ENT-patient",
-      "name": "treatment_type",
-      "data_type": "text",
       "required": false,
       "calculated_by": null
     },
@@ -352211,7 +352191,9 @@
       "from_id": "STP-006-605",
       "verb": "next",
       "to_id": "STP-005-016",
-      "attrs": {}
+      "attrs": {
+        "back": true
+      }
     },
     {
       "from_id": "STP-006-605",
@@ -354208,7 +354190,9 @@
       "from_id": "STP-007B-408",
       "verb": "next",
       "to_id": "STP-006-301",
-      "attrs": {}
+      "attrs": {
+        "back": true
+      }
     },
     {
       "from_id": "STP-007B-409",
@@ -354313,7 +354297,9 @@
       "from_id": "STP-007B-503",
       "verb": "next",
       "to_id": "STP-006-301",
-      "attrs": {}
+      "attrs": {
+        "back": true
+      }
     },
     {
       "from_id": "STP-007B-503",
@@ -354535,7 +354521,9 @@
       "from_id": "STP-007B-605",
       "verb": "next",
       "to_id": "STP-006-301",
-      "attrs": {}
+      "attrs": {
+        "back": true
+      }
     },
     {
       "from_id": "STP-007B-606",
@@ -359543,7 +359531,9 @@
       "from_id": "STP-010-019",
       "verb": "next",
       "to_id": "STP-006-601",
-      "attrs": {}
+      "attrs": {
+        "back": true
+      }
     },
     {
       "from_id": "STP-010-019",
@@ -360037,7 +360027,9 @@
       "from_id": "STP-010-030",
       "verb": "next",
       "to_id": "STP-006-301",
-      "attrs": {}
+      "attrs": {
+        "back": true
+      }
     },
     {
       "from_id": "STP-010-031",
@@ -360067,7 +360059,9 @@
       "from_id": "STP-010-031",
       "verb": "next",
       "to_id": "STP-006-301",
-      "attrs": {}
+      "attrs": {
+        "back": true
+      }
     },
     {
       "from_id": "STP-010-032",
@@ -360097,7 +360091,9 @@
       "from_id": "STP-010-032",
       "verb": "next",
       "to_id": "STP-006-301",
-      "attrs": {}
+      "attrs": {
+        "back": true
+      }
     },
     {
       "from_id": "STP-010-033",
@@ -360165,7 +360161,9 @@
       "from_id": "STP-010-034",
       "verb": "next",
       "to_id": "STP-006-301",
-      "attrs": {}
+      "attrs": {
+        "back": true
+      }
     },
     {
       "from_id": "STP-010-034",
@@ -423386,6 +423384,65 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261122-133156-fef17521",
+      "at": "2026-11-22T13:31:56.153364+00:00",
+      "changed_by": "controller",
+      "reason": "Wording fixes from the consistency review, second batch: FR-032 email uniqueness follows FR-009 Rule 3; FR-022 provider filters and page size follow FR-015; the stale patient treatment_type search Field is retired (filter removed in FR-022 v2.2).",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "ENT-patient.treatment_type",
+        "REQ-022-004",
+        "REQ-022-006",
+        "REQ-032-063"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 4
+    },
+    {
+      "id": "cs-20261122-133056-0cea56e2",
+      "at": "2026-11-22T13:30:56.385465+00:00",
+      "changed_by": "controller",
+      "reason": "Wording fixes from the consistency review: the data-owner FR wording wins (FR-005 for acceptance events, FR-029 for conversion rates, FR-011 for the standalone aftercare request).",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-023-003",
+        "REQ-038-066",
+        "STP-028-425",
+        "STP-038-055"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 5
+    },
+    {
+      "id": "cs-20261122-133005-ff473361",
+      "at": "2026-11-22T13:30:05.614823+00:00",
+      "changed_by": "controller",
+      "reason": "Mark nine cross-FR next links that return to an earlier Stage as back links, and clear three hand-off notes that are already linked or name no single receiving flow.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "STP-006-605",
+        "STP-007B-408",
+        "STP-007B-503",
+        "STP-007B-605",
+        "STP-010-019",
+        "STP-010-030",
+        "STP-010-031",
+        "STP-010-032",
+        "STP-010-034",
+        "STP-014-014",
+        "STP-014-018",
+        "STP-017-008"
+      ],
+      "edges_added": 9,
+      "edges_removed": 9,
+      "rows": 21
+    },
     {
       "id": "cs-20261122-132724-b8ceae7d",
       "at": "2026-11-22T13:27:24.226519+00:00",

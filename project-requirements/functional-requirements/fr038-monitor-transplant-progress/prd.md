@@ -126,7 +126,7 @@ flowchart TD
     A2S2 --> A2S3["3. System pre-fills FR-011 standalone external-treatment intake"]
     A2S3 --> A2S4["4. Latest valid scan is selected by default; patient may choose another scan or retake"]
     A2S4 --> A2S5["5. Patient reviews and may edit any copied information"]
-    A2S5 --> A2S6["6. Patient selects an available aftercare package and continues to FR-011 checkout"]
+    A2S5 --> A2S6["6. Patient selects an available aftercare package and continues to FR-011 to submit the standalone aftercare request"]
     A2S6 --> A2S7["7. On successful standalone-request creation, system links records and completes monitoring case"]
     A2S7 --> A2S8["8. FR-011 owns payment, Admin assignment, provider activation, milestones, and managed aftercare"]
 ```
@@ -282,7 +282,7 @@ flowchart TD
 | Selected Head Scan | select/capture | No | Latest valid scan by default, another scan, or retake | FR-002 quality contract |
 | Monitoring Summary PDF | attachment | Yes | Current date-to-date report | System-generated PDF |
 | Available Aftercare Services | list | Yes | Purchasable FR-011 templates | FR-011 compatibility and availability |
-| Continue to Checkout | action | Yes | Continues to FR-011 Screen 7 | Package selected and fields valid |
+| Continue to Aftercare Request | action | Yes | Continues to FR-011 Screen 7, where the patient submits the standalone request and pays later per FR-011 Workflow 2 | Package selected and fields valid |
 
 **Business Rules**:
 
@@ -625,6 +625,7 @@ FR-038 reuses the shared monitoring entities owned by FR-037, told apart by case
 
 | Version | Date | Changes | Author |
 | --- | --- | --- | --- |
+| 1.3 | 2026-11-22 | Consistency review: conversion hand-off wording aligned to FR-011 (the owner): the patient submits a standalone aftercare request and pays later, not an immediate checkout. | Product Team |
 | 1.2 | 2026-11-20 | Requirements graph programme baseline: owner rulings applied. Main changes: monitoring entities now shared with FR-037 (case type transplant_progress; own audit entry kept); rules identical to FR-037 now refer to FR-037 instead of restating (optional logs, complete and export, conversion pre-fill, scan default, Admin version history, entries per date, own-entry edits, V1 scan meaning, read-only after completion, no history on a new case); one 10-year retention rule from FR-023 replaces the 7-year and 2-year lines; encryption and download-link expiry refer to the system-level rules; Admin correction may never erase historical values or provenance; events cited from the FR-030 catalogue (completed and export-ready shared with FR-037, two conversion events kept, aftercare-conversion-started notifies the patient only, export-ready also fires for the conversion PDF); reminder schedule is set by Admin in FR-030 notification settings, patient may change or switch it off; added rules for unavailable package during conversion, chronological Log Timeline, Download PDF only when ready, malware scan, out-of-scope statements, and asynchronous PDF generation; conversion continues into FR-011 Screen 7; cross-document reconciliation (retention and system rule citations) | AI Assistant |
 | 1.1 | 2026-08-17 | Grouped Screens 1-9 under explicit Patient Platform, Provider Platform, and Admin Platform ownership sections; documented that FR-038 has no Provider Dashboard screens | Product Team |
 | 1.0 | 2026-08-17 | Initial Draft: self-service transplant tracking, PDF export, and conversion to FR-011 standalone aftercare | Product Team |
@@ -642,7 +643,7 @@ FR-038 reuses the shared monitoring entities owned by FR-037, told apart by case
 
 ---
 
-**Document Version**: 1.2
+**Document Version**: 1.3
 **Template Version**: 2.0.0
 **Last Updated**: 2026-11-20
 **Next Review**: Before implementation planning

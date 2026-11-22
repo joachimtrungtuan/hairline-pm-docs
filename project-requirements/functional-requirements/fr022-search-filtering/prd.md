@@ -1062,7 +1062,8 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 | Filter | Type | Options | Default | Logic |
 |--------|------|---------|---------|-------|
-| Status | Multi-select | Inquiry, Quoted, Accepted, Scheduled, In-Progress, Aftercare, Completed, Cancelled, Suspended | All | OR (within field) |
+| Status | Multi-select | Inquiry, Quoted, Accepted, Confirmed, In Progress, Aftercare, Completed, Cancelled (the FR-003 stage list, per FR-016 Screen 1) | All | OR (within field) |
+| Account Status | Multi-select | Active, Suspended, Deactivated, Locked (per FR-016 Screen 1) | All | OR (within field) |
 | Date Range | Date range picker + type toggle | Custom; toggle: Registration Date / Last Activity | All dates — Registration Date | Filters by selected date type |
 | Location | Dropdown | All; country list from DB | All | Exact match |
 | Provider | Dropdown | All; provider list from DB | All | Exact match |
@@ -1129,6 +1130,7 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 | Status | Multi-select | Active, Suspended, Deactivated | Active | OR (within field); matches FR-015 Screen 1 Default View. Clearing the Status filter shows all statuses |
 | Featured | Checkbox | Featured only | Off | Single flag |
 | Commission Type | Dropdown | All, Percentage, Flat Rate | All | Exact match |
+| Closure Requested | Checkbox | Only providers with a pending FR-032 account-closure request (per FR-015 Screen 1) | Off | Single flag |
 | Date Range | Date range picker + type toggle | Custom; toggle: Creation Date / Last Activity | All dates — Creation Date | Filters by selected date type |
 
 ---
@@ -2095,7 +2097,7 @@ A patient has received two parent quotes from two providers. Each parent quote o
 - **REQ-022-001**: System MUST allow admins to search patients by name, email, phone number, and patient ID (HPID format)
 - **REQ-022-002**: System MUST allow admins to filter patients by status, location, registration date range, and provider
 - **REQ-022-003**: System MUST allow admins to search providers by provider name, clinic name, email, and license number
-- **REQ-022-004**: System MUST allow admins to filter providers by status, featured flag, commission type, and date range
+- **REQ-022-004**: System MUST allow admins to filter providers by status, featured flag, commission type, closure-requested flag, and date range
 - **REQ-022-010**: System MUST display patient status, location, and last activity date in search results
 - **REQ-022-011**: System MUST display provider status, location, rating, and active patient count in search results
 
@@ -2125,7 +2127,7 @@ A patient has received two parent quotes from two providers. Each parent quote o
 #### Shared Behavior Rules
 
 - **REQ-022-005**: System MUST return search results within 300ms for 95% of queries (p95 latency)
-- **REQ-022-006**: System MUST paginate search results (default 25 results per page for admin/provider; 10 per page for patient mobile)
+- **REQ-022-006**: System MUST paginate search results (default 25 results per page for admin/provider, except the admin provider list, which follows FR-015 Screen 1 at 50 rows per page; 10 per page for patient mobile)
 - **REQ-022-007**: System MUST support case-insensitive fuzzy matching for all text search fields
 - **REQ-022-008**: System MUST apply filters cumulatively using AND logic (all active criteria must match)
 - **REQ-022-012**: System MUST implement search input debounce (300–500ms depending on screen) to reduce server load
@@ -2167,7 +2169,7 @@ A patient has received two parent quotes from two providers. Each parent quote o
 
 - **Entity 1 - Patient and Provider Records** (owned by FR-001 and FR-015; no separate search records):
   - Admin search reads the Patient record (FR-001) and the Provider record (FR-015) directly
-  - **Patient fields the search uses beyond what the Patient record lists**: patient ID (HPID), name, phone, status, location, registration date, last activity date, treatment type
+  - **Patient fields the search uses beyond what the Patient record lists**: patient ID (HPID), name, phone, status, location, registration date, last activity date
   - **Provider fields the search uses beyond what the Provider record lists**: clinic name, location (city, country), specialties, rating, review count, years of experience, active patients, total procedures
   - **Relationships**: Patient record links to inquiries, quotes, bookings, payments; Provider record links to staff, certifications, reviews, treatments, bookings
 
@@ -2203,6 +2205,7 @@ A patient has received two parent quotes from two providers. Each parent quote o
 | 2026-10-22 | 2.18 | FR-015 alignment for A-02 provider search (B01 manual test findings): FR-015 / Screen 1 Status filter drops the non-existent Draft status and defaults to Active, matching FR-015 Screen 1 Default View; Main Flow 2 and User Story 2 scenarios 3 and 5 no longer reference Draft providers or an Approve action, since FR-015 creates providers Active. Product decision 2026-10-22. | AI |
 | 2026-11-20 | 2.19 | Requirements graph programme baseline: owner rulings applied. Main changes: (1) messaging inbox and provider messages search and filters move from P2 to P1, with REQ-022-070 as the one statement for the patient inbox (REQ-022-049, REQ-022-050 retired); (2) provider-facing results show Patient ID plus a masked name before payment (Privacy Rule 1, REQ-022-026); (3) new REQ-022-143 and Rule 10 for provider card starting price converted to the patient's currency, with REQ-022-058 and Rule 9 limited to cards carrying a quote; (4) REQ-022-009 (export), REQ-022-053 and REQ-022-086 (My Support Cases criteria, now owned by FR-032) retired; REQ-022-139 and REQ-022-142 retired and technical notes dropped (database joins, search engine notes, MySQL FULLTEXT, scaling strategy, collation clause); (5) admin settings search points to FR-031 Screen 5 for change history, Admin Analytics deferral line removed, A-03/A-05/A-07/A-10 lines trimmed to the owning screens; (6) option lists corrected to the owning FRs (FR-014 time range, FR-005 acceptance status, FR-031 admin status, FR-034 ticket status), page size setting covers admin and provider only, Help Centre search lists its content types, reviews and monitoring filters remembered; (7) B1 and B2 name patient, clinic user and admin as any-one-of doers, B1 drops the contact-support suggestion, B2 separates abandoning (all three) from contacting support (patient and clinic user); (8) Key Entities fold the search records into the Patient and Provider records; cross-document reconciliation (leftover technical notes removed: search engine and database dependency notes, Implementation Notes section, Database Index entity, database wording in Rule 2). | Product Owner / Documentation |
 | 2026-11-22 | 2.20 | Owner answer of 2026-11-22 (requirements graph programme, Phase 4 re-check): installment plan statuses are Active, Completed, Canceled, Defaulted; Overdue is a calculated flag with its own yes/no filter. FR-007b / Screen 5 filter table and the status reference table aligned with FR-007B. | Product Owner / Documentation |
+| 2026-11-22 | 2.21 | Consistency review: admin patient Status filter and new Account Status filter aligned to FR-016 Screen 1; Closure Requested filter added to the provider filters and REQ-022-004 per FR-015 Screen 1; REQ-022-006 notes the FR-015 provider list page size (50); stale treatment type removed from Key Entities. | Product Owner / Documentation |
 
 ---
 

@@ -1,0 +1,24 @@
+reason: "Mark nine cross-FR next links that return to an earlier Stage as back links, and clear three hand-off notes that are already linked or name no single receiving flow."
+by: controller
+operations:
+  - {"op": "remove_edge", "from": "STP-006-605", "verb": "next", "to": "STP-005-016"}
+  - {"op": "add_edge", "from": "STP-006-605", "verb": "next", "to": "STP-005-016", "attrs": {"back": true}}
+  - {"op": "remove_edge", "from": "STP-007B-408", "verb": "next", "to": "STP-006-301"}
+  - {"op": "add_edge", "from": "STP-007B-408", "verb": "next", "to": "STP-006-301", "attrs": {"back": true}}
+  - {"op": "remove_edge", "from": "STP-007B-503", "verb": "next", "to": "STP-006-301"}
+  - {"op": "add_edge", "from": "STP-007B-503", "verb": "next", "to": "STP-006-301", "attrs": {"back": true}}
+  - {"op": "remove_edge", "from": "STP-007B-605", "verb": "next", "to": "STP-006-301"}
+  - {"op": "add_edge", "from": "STP-007B-605", "verb": "next", "to": "STP-006-301", "attrs": {"back": true}}
+  - {"op": "remove_edge", "from": "STP-010-019", "verb": "next", "to": "STP-006-601"}
+  - {"op": "add_edge", "from": "STP-010-019", "verb": "next", "to": "STP-006-601", "attrs": {"back": true}}
+  - {"op": "remove_edge", "from": "STP-010-030", "verb": "next", "to": "STP-006-301"}
+  - {"op": "add_edge", "from": "STP-010-030", "verb": "next", "to": "STP-006-301", "attrs": {"back": true}}
+  - {"op": "remove_edge", "from": "STP-010-031", "verb": "next", "to": "STP-006-301"}
+  - {"op": "add_edge", "from": "STP-010-031", "verb": "next", "to": "STP-006-301", "attrs": {"back": true}}
+  - {"op": "remove_edge", "from": "STP-010-032", "verb": "next", "to": "STP-006-301"}
+  - {"op": "add_edge", "from": "STP-010-032", "verb": "next", "to": "STP-006-301", "attrs": {"back": true}}
+  - {"op": "remove_edge", "from": "STP-010-034", "verb": "next", "to": "STP-006-301"}
+  - {"op": "add_edge", "from": "STP-010-034", "verb": "next", "to": "STP-006-301", "attrs": {"back": true}}
+  - {"op": "update_node", "id": "STP-017-008", "attrs": {"handoff_to": null}}
+  - {"op": "update_node", "id": "STP-014-014", "attrs": {"handoff_to": null}}
+  - {"op": "update_node", "id": "STP-014-018", "attrs": {"handoff_to": null}}

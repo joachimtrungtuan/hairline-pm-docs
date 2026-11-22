@@ -558,7 +558,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 | Treatment Information | component | Cond. | Treatment details (if post-treatment add-on) | Auto-populated for post_treatment type |
 | External Treatment Details | form | Cond. | Treatment info form (if standalone) | Required for standalone type |
 | Treatment Date | date | Cond. | Date treatment performed | ISO 8601; required for standalone |
-| Treatment Type | select | Cond. | Type of treatment received | Valid treatment type enum; required for standalone |
+| Treatment Type | select | Cond. | Type of treatment received | Value from the admin-managed treatment catalog; required for standalone |
 | Treating Clinic | text | Cond. | Name of external clinic | Max 200 chars; required for standalone |
 | Upload Treatment Documentation | file | No | Optional treatment documentation | Max 10MB; PDF/JPG/PNG |
 | Available Aftercare Services | list | Yes | List of purchasable aftercare templates | Filtered by treatment type compatibility |
@@ -669,7 +669,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 | Patient Name | column | Yes | Avatar + full name + email | PII per role; sortable |
 | Phone Number | column | No | Contact number | E.164 format |
 | Age | column | No | Patient age | Integer 18–100 |
-| Problem | column | No | Treatment area (Hair/Both/Beard) | Enum |
+| Problem | column | No | Treatment area (Hair/Both/Beard) | Value from the catalog-driven list (per FR-003) |
 | Treatment & Package | column | Yes | Treatment + package | Read-only |
 | Aftercare Start Date | column | Yes | Start date | ISO 8601; sortable |
 | Current Milestone | column | Yes | Phase name | Must exist in plan |
@@ -929,7 +929,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 | Patient Name | column | Yes | Avatar + full name + email | PII admin-only |
 | Phone Number | column | No | Contact number | E.164 format |
 | Age | column | No | Patient age | Integer 18–100 |
-| Problem | column | No | Treatment area | Enum |
+| Problem | column | No | Treatment area | Value from the catalog-driven list (per FR-003) |
 | Treatment & Package | column | Yes | Treatment + package | Read-only |
 | Provider | column | Yes | Assigned provider name | Must exist |
 | Aftercare Type | column | Yes | Treatment-linked or Standalone | Enum |
@@ -1090,14 +1090,14 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 | **Template List** | | | | |
 | Template Name | text | Yes | Name of template | Max 200 chars; unique |
 | Template Description | text | No | Description of template | Max 1000 chars |
-| Treatment Type | text | Yes | Treatment type (FUE, FUT, DHI, etc.) | Valid treatment type enum |
+| Treatment Type | text | Yes | Treatment type (FUE, FUT, DHI, etc.) | Value from the admin-managed treatment catalog |
 | Duration | text | Yes | Duration (e.g., "12 months") | Valid duration enum |
 | Number of Milestones | number | Yes | Count of milestones in template | Positive integer |
 | Usage Count | number | Yes | How many patients currently using | Non-negative integer |
 | **Template Editor** | | | | |
 | Template Name (Edit) | text | Yes | Template name | Max 200 chars; unique |
 | Template Description (Edit) | textarea | No | Template description | Max 1000 chars |
-| Treatment Type Selection | select | Yes | Treatment type dropdown | Valid treatment type enum |
+| Treatment Type Selection | select | Yes | Treatment type dropdown | Value from the admin-managed treatment catalog |
 | Milestone Name | text | Yes | Name of milestone | Max 200 chars |
 | Milestone Duration | number | Yes | Duration in days | Positive integer |
 | 3D Scan Frequency | text | Yes | Frequency of scans (e.g., "Weekly") | Valid frequency enum |
@@ -1724,6 +1724,7 @@ Acceptance Scenarios:
 | 2026-10-18 | 1.5 | Final audit corrections (Q36, Q43): new Workflow 4 Alternative Flow D5 and Admin Screen 19 (Reassign Aftercare Provider) let an admin reassign only the aftercare provider or team for a provider fault during `Aftercare`, with fields, validation, mandatory reason, confirmation, audit entry and notice; the FR-006 booking stays `Aftercare` and the treatment record stays unchanged, with no new quote, acceptance or payment. D4, General Module Rule 4, the mid-aftercare suspension edge case and REQ-011-014 now cancel only standalone cases on provider suspension or deactivation; treatment-linked cases stay active for reassignment. Screen 14 Reassign Provider opens Screen 19. REQ-011-015 added. Round-two corrections (Q45, Q47): Screen 19, Alternative Flow D5 and REQ-011-015 now send the new mandatory FR-030 event `aftercare.provider_reassigned` (FR-011 producer) to the patient and the new aftercare provider, with no admin alert and no notice to the previous provider, replacing the note that the event was not registered; D5 and Screen 19 also accept a booking moved from `In Progress` to `Aftercare` by the FR-006 In-Progress provider-fault decision. See CR-FR011-20261016-01. | Product Owner / Documentation |
 | 2026-10-28 | 1.7 | Product Owner decision 2026-10-28 (FR-015 backend confirmations); clarification, no Change Request. Entry Points now list exactly two entry routes, treatment-linked (from an accepted and treated Hairline quote, including the Workflow 2b add-on) and standalone (outside-clinic patients, no inquiry or quote); admin assignment is described as a step inside those routes, not a third entry point. Workflow 2b states that the add-on creates treatment-linked aftercare linked to the accepted quote of the completed treatment. Matches system data schema v1.13.1 §13. Review follow-up (same day): header Status line updated to this revision | Claude (AI Assistant) |
 | 2026-11-20 | 1.8 | Requirements graph programme baseline: owner rulings applied. Main changes: standalone aftercare (Workflow 2) reordered to request, admin assigns provider, provider configures plan, payment activates (assign first, pay last), with refund wording limited to payments already taken and unassigned requests ending as Rejected after 7 days; one platform fee taken from the price and not added to the total, commission also applies to add-on payments; "Pricing option" (fixed price or monthly subscription) and "Payment method" (card, PayPal) separated everywhere, Screen 15 shows both; Overdue is a flag on tasks and plans, not a status, with escalation at 48 hours; progress is completed tasks over total tasks; questionnaire retake allowed while the task is open; patient chooses the service type; Adherence Period calculated from doses; milestone sequence kept; medication picked only from the admin list owned by FR-024; Surgeon Notes read from the FR-010 treatment record; default patient progress reminder added (REQ-011-088); REQ-011-009, REQ-011-011 and REQ-011-022 retired in favour of single system PRD and FR-020 rules, REQ-011-008 and REQ-011-015 now point to the owning records; aftercare specialist assignment owned by FR-011; real module codes and cited Rules filled in Dependencies; automated provider assignment marked Future phase; cross-document reconciliation (retention, system rule citations, medication list pointer to FR-024, standalone payment Rule cited as REQ-007-088) | Claude (AI Assistant) |
+| 2026-11-22 | 1.9 | Consistency review: treatment area and treatment type validation now refer to the catalog-driven lists (FR-003, FR-004) instead of a fixed Enum label. | Claude (AI Assistant) |
 
 ## Appendix: Approvals
 

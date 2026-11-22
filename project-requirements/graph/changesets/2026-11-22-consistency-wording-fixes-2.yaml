@@ -1,0 +1,7 @@
+reason: "Wording fixes from the consistency review, second batch: FR-032 email uniqueness follows FR-009 Rule 3; FR-022 provider filters and page size follow FR-015; the stale patient treatment_type search Field is retired (filter removed in FR-022 v2.2)."
+by: controller
+operations:
+  - {"op": "update_node", "id": "REQ-032-063", "attrs": {"statement": "Account Name: Max 200 chars; First Name and Last Name: 2-50 characters, letters, spaces, hyphens (same as FR-009); Account Email: Valid email format, unique per FR-009 Rule 3 (an email belongs to at most one provider organization at a time)"}}
+  - {"op": "update_node", "id": "REQ-022-004", "attrs": {"statement": "System MUST allow admins to filter providers by status, featured flag, commission type, closure-requested flag, and date range"}}
+  - {"op": "update_node", "id": "REQ-022-006", "attrs": {"statement": "System MUST paginate search results (default 25 results per page for admin/provider, except the admin provider list, which follows FR-015 Screen 1 at 50 rows per page; 10 per page for patient mobile)"}}
+  - {"op": "retire_node", "id": "ENT-patient.treatment_type"}

@@ -323,7 +323,7 @@ This module provides the administrative infrastructure to:
   3. If fallback exists, display fallback price
   4. If no fallback, display the system-wide default starting price (if an admin has set one)
   5. If there is no system-wide default, display price in location's default currency with conversion note: "Starting from €2,200 (approx. £2,500)"
-  6. Conversion uses real-time exchange rate from FR-029 currency service
+  6. Conversion uses the admin-configured conversion rate with markup from FR-029
 - **Outcome**: Patient sees estimated pricing with currency conversion note
 
 ---
@@ -750,7 +750,7 @@ This module provides the administrative infrastructure to:
 
 - **What happens when admin tries to assign a country to more than one regional grouping?** System blocks the change, shows error listing conflicting groupings, and requires admin to resolve by keeping the country in only one grouping.
 
-- **How does system handle location with no pricing configured for patient's currency?** System falls back to the fallback price for the patient's country (if configured), then to the system-wide default starting price (if set), then converts from location's default currency using real-time exchange rate (from FR-029), displaying converted price with note: "Starting from €2,200 (approx. £2,500)".
+- **How does system handle location with no pricing configured for patient's currency?** System falls back to the fallback price for the patient's country (if configured), then to the system-wide default starting price (if set), then converts from location's default currency using the admin-configured conversion rate with markup (from FR-029), displaying converted price with note: "Starting from €2,200 (approx. £2,500)".
 
 - **What occurs if admin deletes a regional grouping while patients are actively viewing destinations using that grouping?** Cached data serves existing sessions for up to 60 seconds (cache TTL). After cache expiration, patients see default location ordering. No errors displayed to patients - graceful degradation.
 
@@ -826,6 +826,7 @@ This module provides the administrative infrastructure to:
 | 2025-12-16 | 1.1 | Verification updates: Constitution-compliant 10-year audit retention; resolved destination ordering with FR-003 (regional config + proximity fallback); removed overlapping grouping priority logic; required change reason for all config writes; updated status to Verified & Approved | Product Team |
 | 2026-01-14 | 1.2 | Documentation alignment: Updated Currency Management navigation reference to live under Billing Settings (FR-029) | AI |
 | 2026-11-20 | 1.3 | Requirements graph programme baseline: owner rulings applied. Main changes: fallback price chosen by the patient's country; system-wide default starting price (empty at launch, set by admin on the pricing screen) used before the converted price; location default currency set per destination; a price stops showing after its expiry date and the fallback then the default shows; pricing history kept 10 years (was 3); CSV import/export dropped; admin API rate limit moved to the system PRD; default location ordering list removed (proximity is the fallback); enable/disable destinations marked future phase; 50 groupings is a soft limit; two settings tabs; prices reach patients within 1 minute; both grouping and price saves notify the saving admin; pricing alternative flows renumbered B4 to B6; non-overlapping grouping examples; Locations Displayed field added to Screen 1; cross-document reconciliation (retention pointer) | Product Team |
+| 2026-11-22 | 1.4 | Consistency review: currency conversion wording aligned to FR-029 (the rate owner): admin-configured conversion rate with markup, not a real-time exchange rate. | Product Team |
 
 ---
 
