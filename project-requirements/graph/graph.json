@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-22T12:54:28Z",
+  "generated_at": "2026-11-22T12:59:09Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -38289,7 +38289,7 @@
       "owner_fr": null,
       "title": "Provider Team & Role Management",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "module": "fr009-provider-team-roles",
         "prd_path": "project-requirements/functional-requirements/fr009-provider-team-roles/prd.md",
@@ -38302,7 +38302,7 @@
       "owner_fr": null,
       "title": "Treatment Execution & Documentation",
       "status": "active",
-      "version": 7,
+      "version": 8,
       "attrs": {
         "module": "fr010-treatment-execution",
         "prd_path": "project-requirements/functional-requirements/fr010-treatment-execution/prd.md",
@@ -38328,7 +38328,7 @@
       "owner_fr": null,
       "title": "Messaging & Communication",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "module": "fr012-secure-messaging",
         "prd_path": "project-requirements/functional-requirements/fr012-secure-messaging/prd.md",
@@ -49576,7 +49576,7 @@
       "owner_fr": "FR-009",
       "title": "B6: active patient conversations rerouted with patient message",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "System displays warning: \"This member has active patient conversations\" System prompts: \"New messages from patients will be routed to [reassigned team member]\" System updates message routing System sends automated message to patients: \"Your inquiry is now being handled by [new team member]\"",
         "rationale": "prd.md lines 285-290 (checked against the PRD text)."
@@ -51268,7 +51268,7 @@
       "owner_fr": "FR-010",
       "title": "Day-based progress synced to patient app and admin within 30 seconds",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "System MUST sync day-based treatment progress (accepted Quote Option ID, current treatment day number, day description from the case's current treatment plan, seeded from that option's `QuoteOptionPlanDay` records in the accepted snapshot, and day status) to patient app and admin dashboard in real-time (within 30 seconds of provider update) for transparency into day-to-day treatment progress *(day statuses only — clinical notes are provider-only)*",
         "rationale": "Renumbered from the PRD id REQ-010-007A (ids are digits only). Renumbered from the PRD id REQ-010-007A (ids are digits only). Day statuses only; clinical notes stay provider-only. Archived FR-010 PRD baseline, lines 946."
@@ -53625,7 +53625,7 @@
       "owner_fr": "FR-012",
       "title": "Audio and video calls through Twilio",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Audio and video call functionality using Twilio for real-time consultation and communication between patients and providers; Initiate or receive audio/video calls with providers for live consultations and discussions via Twilio; Initiate or receive audio/video calls with patients for consultations and detailed explanations via Twilio; Icon button in header; disabled if provider offline (optional)",
         "rationale": "prd.md lines 34, 46, 83, 250. Scope, Screen 2 Audio/Video Call buttons, Screen 4 Audio/Video Call buttons. The call buttons are UI controls, not Fields."
@@ -54357,7 +54357,7 @@
       "owner_fr": "FR-012",
       "title": "Automatic keyword flagging of off-platform solicitation and policy violations",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Automatic keyword flagging system to detect off-platform solicitation or policy violations (red flags); Keyword flags (red badges) automatically appear when policy violation terms detected; Keyword flags alert admins and deep-link to flagged conversations for review.",
         "rationale": "prd.md lines 57, 102, 429. Admin scope; Screen 5 business rules; Entry Points, Notifications. The terms are admin-configurable (Admin Editability)."
@@ -102464,7 +102464,7 @@
       "owner_fr": null,
       "title": "Quote",
       "status": "active",
-      "version": 16,
+      "version": 17,
       "attrs": {
         "timeline": "main",
         "sequence": 2,
@@ -102516,7 +102516,7 @@
       "owner_fr": null,
       "title": "In progress",
       "status": "active",
-      "version": 13,
+      "version": 14,
       "attrs": {
         "timeline": "main",
         "sequence": 6,
@@ -105138,7 +105138,7 @@
       "owner_fr": "FR-006",
       "title": "System sets the booking to Confirmed and unmasks patient identity to the provider",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow step 6"
       }
@@ -107539,10 +107539,9 @@
       "owner_fr": "FR-010",
       "title": "Provider opens the Confirmed list",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Main Flow step 1",
-        "handoff_from": "FR-006: Main Flow, booking becomes Confirmed"
+        "prd_ref": "Main Flow step 1"
       }
     },
     {
@@ -107738,10 +107737,9 @@
       "owner_fr": "FR-010",
       "title": "Admin opens the provider-fault action",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow B6 step 2",
-        "handoff_to": "FR-006: Alternative Flow B5 steps 3-5 (Confirmed) or Alternative Flow B7 (In Progress)"
+        "prd_ref": "Alternative Flow B6 step 2"
       }
     },
     {
@@ -107816,10 +107814,9 @@
       "owner_fr": "FR-010",
       "title": "System signals completion to FR-011 and sends post-op instructions and medication to the patient",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Main Flow step 14",
-        "handoff_to": "FR-011: Main Flow step 1"
+        "prd_ref": "Main Flow step 14"
       }
     },
     {
@@ -107861,10 +107858,10 @@
       "owner_fr": "FR-010",
       "title": "System notifies the admin of the no-show",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B1 step 6",
-        "handoff_to": "FR-006: Change Appointment (Screen 8) or Cancel Booking (Screen 9)"
+        "handoff_to": "FR-006: Change Appointment (Screen 8); FR-006 has no flow or Step for it yet"
       }
     },
     {
@@ -107873,10 +107870,10 @@
       "owner_fr": "FR-010",
       "title": "System notifies the admin of the medical postponement",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B2 step 4",
-        "handoff_to": "FR-006: Change Appointment (Screen 8) or Cancel Booking (Screen 9)"
+        "handoff_to": "FR-006: Change Appointment (Screen 8); FR-006 has no flow or Step for it yet"
       }
     },
     {
@@ -107885,10 +107882,9 @@
       "owner_fr": "FR-010",
       "title": "System notifies the admin that the interrupted case stays In Progress",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow B3 step 6",
-        "handoff_to": "FR-006: Cancel Booking (Screen 9)"
+        "prd_ref": "Alternative Flow B3 step 6"
       }
     },
     {
@@ -107908,10 +107904,9 @@
       "owner_fr": "FR-010",
       "title": "Admin reviews the closed case and cancels it through FR-006",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow B4 step 4",
-        "handoff_to": "FR-006: Cancel Booking (Screen 9) or Alternative Flow B6"
+        "prd_ref": "Alternative Flow B4 step 4"
       }
     },
     {
@@ -107920,10 +107915,9 @@
       "owner_fr": "FR-010",
       "title": "Provider suspension or deactivation becomes effective",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow B5 step 1",
-        "handoff_from": "FR-015: Alternative Flow A5"
+        "prd_ref": "Alternative Flow B5 step 1"
       }
     },
     {
@@ -107965,10 +107959,9 @@
       "owner_fr": "FR-010",
       "title": "Admin resolves the case on FR-006 Screen 11",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow B5 step 5",
-        "handoff_to": "FR-006: Alternative Flow B7 and FR-011 Screen 19"
+        "prd_ref": "Alternative Flow B5 step 5"
       }
     },
     {
@@ -107977,10 +107970,9 @@
       "owner_fr": "FR-011",
       "title": "Provider marks the treatment completed",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Workflow 1 Main Flow step 1",
-        "handoff_from": "FR-010: Main Flow step 14, treatment completion signalled"
+        "prd_ref": "Workflow 1 Main Flow step 1"
       }
     },
     {
@@ -109966,7 +109958,7 @@
       "owner_fr": "FR-015",
       "title": "Admin confirms suspension and new activity is blocked",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "A5 step 2"
       }
@@ -169718,6 +169710,18 @@
       "derived": true
     },
     {
+      "from_id": "FR-009",
+      "verb": "references",
+      "to_id": "REQ-015-010",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-009",
+      "verb": "references",
+      "to_id": "REQ-031-005",
+      "attrs": {}
+    },
+    {
       "from_id": "FR-010",
       "verb": "active in",
       "to_id": "STG-main-04-booking",
@@ -169734,6 +169738,12 @@
         "rules": 110
       },
       "derived": true
+    },
+    {
+      "from_id": "FR-010",
+      "verb": "references",
+      "to_id": "REQ-001-084",
+      "attrs": {}
     },
     {
       "from_id": "FR-010",
@@ -169852,7 +169862,19 @@
     {
       "from_id": "FR-010",
       "verb": "references",
+      "to_id": "REQ-015-039",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-010",
+      "verb": "references",
       "to_id": "REQ-020-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-010",
+      "verb": "references",
+      "to_id": "REQ-024-018",
       "attrs": {}
     },
     {
@@ -170170,6 +170192,12 @@
     {
       "from_id": "FR-012",
       "verb": "references",
+      "to_id": "REQ-015-039",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-012",
+      "verb": "references",
       "to_id": "REQ-020-028",
       "attrs": {}
     },
@@ -170213,6 +170241,12 @@
       "from_id": "FR-012",
       "verb": "references",
       "to_id": "REQ-031-016",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-012",
+      "verb": "references",
+      "to_id": "REQ-032-014",
       "attrs": {}
     },
     {
@@ -197545,6 +197579,12 @@
     {
       "from_id": "REQ-009-077",
       "verb": "applies to",
+      "to_id": "EVT-team-patient-handler-changed",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-077",
+      "verb": "applies to",
       "to_id": "SCR-009-04",
       "attrs": {}
     },
@@ -200594,6 +200634,12 @@
       "from_id": "REQ-010-032",
       "verb": "applies at",
       "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-010-032",
+      "verb": "applies to",
+      "to_id": "EVT-treatment-day-updated",
       "attrs": {}
     },
     {
@@ -205069,6 +205115,12 @@
     {
       "from_id": "REQ-012-032",
       "verb": "applies to",
+      "to_id": "EVT-call-initiated",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-012-032",
+      "verb": "applies to",
       "to_id": "SCR-012-02",
       "attrs": {}
     },
@@ -206270,6 +206322,12 @@
       "from_id": "REQ-012-094",
       "verb": "applies to",
       "to_id": "ENT-flag",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-012-094",
+      "verb": "applies to",
+      "to_id": "EVT-keyword-flag-raised",
       "attrs": {}
     },
     {
@@ -337960,6 +338018,12 @@
     {
       "from_id": "STG-main-02-quote",
       "verb": "reads",
+      "to_id": "ENT-attachment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-02-quote",
+      "verb": "reads",
       "to_id": "ENT-audit-entry",
       "attrs": {}
     },
@@ -338009,6 +338073,12 @@
       "from_id": "STG-main-02-quote",
       "verb": "reads",
       "to_id": "ENT-message",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-02-quote",
+      "verb": "reads",
+      "to_id": "ENT-messaging-audit-entry",
       "attrs": {}
     },
     {
@@ -339929,6 +339999,12 @@
       "from_id": "STG-main-06-treatment",
       "verb": "reads",
       "to_id": "ENT-installment-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-06-treatment",
+      "verb": "reads",
+      "to_id": "ENT-medication-instructions",
       "attrs": {}
     },
     {
@@ -350840,6 +350916,12 @@
       }
     },
     {
+      "from_id": "STP-006-006",
+      "verb": "next",
+      "to_id": "STP-010-001",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-006-007",
       "verb": "applies",
       "to_id": "REQ-006-003",
@@ -359075,6 +359157,18 @@
     },
     {
       "from_id": "STP-010-019",
+      "verb": "next",
+      "to_id": "STP-006-601",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-010-019",
+      "verb": "next",
+      "to_id": "STP-006-801",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-010-019",
       "verb": "on",
       "to_id": "SCR-010-08",
       "attrs": {}
@@ -359436,6 +359530,12 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-010-026",
+      "verb": "next",
+      "to_id": "STP-011-001",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-010-027",
       "verb": "applies",
       "to_id": "REQ-010-001",
@@ -359550,6 +359650,12 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-010-030",
+      "verb": "next",
+      "to_id": "STP-006-301",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-010-031",
       "verb": "applies",
       "to_id": "REQ-010-031",
@@ -359574,6 +359680,12 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-010-031",
+      "verb": "next",
+      "to_id": "STP-006-301",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-010-032",
       "verb": "applies",
       "to_id": "REQ-010-031",
@@ -359595,6 +359707,12 @@
       "from_id": "STP-010-032",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-010-032",
+      "verb": "next",
+      "to_id": "STP-006-301",
       "attrs": {}
     },
     {
@@ -359657,6 +359775,18 @@
       "from_id": "STP-010-034",
       "verb": "done by",
       "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-010-034",
+      "verb": "next",
+      "to_id": "STP-006-301",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-010-034",
+      "verb": "next",
+      "to_id": "STP-010-019",
       "attrs": {}
     },
     {
@@ -359785,6 +359915,18 @@
       "from_id": "STP-010-039",
       "verb": "done by",
       "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-010-039",
+      "verb": "next",
+      "to_id": "STP-006-802",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-010-039",
+      "verb": "next",
+      "to_id": "STP-011-054",
       "attrs": {}
     },
     {
@@ -365267,6 +365409,12 @@
       "from_id": "STP-015-152",
       "verb": "next",
       "to_id": "STP-003-067",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-015-152",
+      "verb": "next",
+      "to_id": "STP-010-035",
       "attrs": {}
     },
     {
@@ -422622,6 +422770,66 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261122-125852-9b5f485c",
+      "at": "2026-11-22T12:58:52.725708+00:00",
+      "changed_by": "controller",
+      "reason": "Consistency review of FR-012: two read-only data references to owner Rules (FR-015, FR-032), two Rules linked to the Events they react to, and two reads at the Stage where the PRD uses the stored data.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "FR-012",
+        "REQ-012-032",
+        "REQ-012-094",
+        "STG-main-02-quote"
+      ],
+      "edges_added": 6,
+      "edges_removed": 0,
+      "rows": 6
+    },
+    {
+      "id": "cs-20261122-125756-4cd5e740",
+      "at": "2026-11-22T12:57:56.293255+00:00",
+      "changed_by": "controller",
+      "reason": "Consistency review of FR-010: read-only display of data owned by FR-001, FR-015 and FR-024 gets one references link each; the day-update Event and the medication Entity get the Rule and Stage link the PRD states; open hand-offs are stitched to the receiving Steps of FR-006, FR-011 and FR-015.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "FR-010",
+        "REQ-010-032",
+        "STG-main-06-treatment",
+        "STP-006-006",
+        "STP-010-001",
+        "STP-010-019",
+        "STP-010-026",
+        "STP-010-030",
+        "STP-010-031",
+        "STP-010-032",
+        "STP-010-034",
+        "STP-010-035",
+        "STP-010-039",
+        "STP-011-001",
+        "STP-015-152"
+      ],
+      "edges_added": 17,
+      "edges_removed": 0,
+      "rows": 27
+    },
+    {
+      "id": "cs-20261122-125559-4a0c7108",
+      "at": "2026-11-22T12:55:59.506931+00:00",
+      "changed_by": "controller",
+      "reason": "Consistency review of FR-009: it reads provider role permissions (FR-031) and provider seat limit, name and id (FR-015) as the owners' read-only data, so it cites one Rule of each owner; the patient-handler-changed Event is reacted to by the FR-009 rerouting Rule.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "FR-009",
+        "REQ-009-077"
+      ],
+      "edges_added": 3,
+      "edges_removed": 0,
+      "rows": 3
+    },
     {
       "id": "cs-20261122-125428-cac497a2",
       "at": "2026-11-22T12:54:28.327727+00:00",

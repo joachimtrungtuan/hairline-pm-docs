@@ -1,0 +1,30 @@
+reason: "Consistency review of FR-010: read-only display of data owned by FR-001, FR-015 and FR-024 gets one references link each; the day-update Event and the medication Entity get the Rule and Stage link the PRD states; open hand-offs are stitched to the receiving Steps of FR-006, FR-011 and FR-015."
+by: controller
+operations:
+  - {"op": "add_edge", "from": "FR-010", "verb": "references", "to": "REQ-001-084"}
+  - {"op": "add_edge", "from": "FR-010", "verb": "references", "to": "REQ-015-039"}
+  - {"op": "add_edge", "from": "FR-010", "verb": "references", "to": "REQ-024-018"}
+  - {"op": "add_edge", "from": "REQ-010-032", "verb": "applies to", "to": "EVT-treatment-day-updated"}
+  - {"op": "add_edge", "from": "STG-main-06-treatment", "verb": "reads", "to": "ENT-medication-instructions"}
+  - {"op": "add_edge", "from": "STP-006-006", "verb": "next", "to": "STP-010-001"}
+  - {"op": "update_node", "id": "STP-010-001", "attrs": {"handoff_from": null}}
+  - {"op": "add_edge", "from": "STP-010-019", "verb": "next", "to": "STP-006-601"}
+  - {"op": "add_edge", "from": "STP-010-019", "verb": "next", "to": "STP-006-801"}
+  - {"op": "update_node", "id": "STP-010-019", "attrs": {"handoff_to": null}}
+  - {"op": "add_edge", "from": "STP-010-026", "verb": "next", "to": "STP-011-001"}
+  - {"op": "update_node", "id": "STP-010-026", "attrs": {"handoff_to": null}}
+  - {"op": "update_node", "id": "STP-011-001", "attrs": {"handoff_from": null}}
+  - {"op": "add_edge", "from": "STP-010-030", "verb": "next", "to": "STP-006-301"}
+  - {"op": "update_node", "id": "STP-010-030", "attrs": {"handoff_to": "FR-006: Change Appointment (Screen 8); FR-006 has no flow or Step for it yet"}}
+  - {"op": "add_edge", "from": "STP-010-031", "verb": "next", "to": "STP-006-301"}
+  - {"op": "update_node", "id": "STP-010-031", "attrs": {"handoff_to": "FR-006: Change Appointment (Screen 8); FR-006 has no flow or Step for it yet"}}
+  - {"op": "add_edge", "from": "STP-010-032", "verb": "next", "to": "STP-006-301"}
+  - {"op": "update_node", "id": "STP-010-032", "attrs": {"handoff_to": null}}
+  - {"op": "add_edge", "from": "STP-010-034", "verb": "next", "to": "STP-006-301"}
+  - {"op": "add_edge", "from": "STP-010-034", "verb": "next", "to": "STP-010-019"}
+  - {"op": "update_node", "id": "STP-010-034", "attrs": {"handoff_to": null}}
+  - {"op": "add_edge", "from": "STP-015-152", "verb": "next", "to": "STP-010-035"}
+  - {"op": "update_node", "id": "STP-010-035", "attrs": {"handoff_from": null}}
+  - {"op": "add_edge", "from": "STP-010-039", "verb": "next", "to": "STP-006-802"}
+  - {"op": "add_edge", "from": "STP-010-039", "verb": "next", "to": "STP-011-054"}
+  - {"op": "update_node", "id": "STP-010-039", "attrs": {"handoff_to": null}}

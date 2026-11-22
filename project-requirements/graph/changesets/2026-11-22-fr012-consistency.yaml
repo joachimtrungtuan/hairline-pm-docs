@@ -1,0 +1,9 @@
+reason: "Consistency review of FR-012: two read-only data references to owner Rules (FR-015, FR-032), two Rules linked to the Events they react to, and two reads at the Stage where the PRD uses the stored data."
+by: controller
+operations:
+  - {"op": "add_edge", "from": "FR-012", "verb": "references", "to": "REQ-015-039"}
+  - {"op": "add_edge", "from": "FR-012", "verb": "references", "to": "REQ-032-014"}
+  - {"op": "add_edge", "from": "REQ-012-032", "verb": "applies to", "to": "EVT-call-initiated"}
+  - {"op": "add_edge", "from": "REQ-012-094", "verb": "applies to", "to": "EVT-keyword-flag-raised"}
+  - {"op": "add_edge", "from": "STG-main-02-quote", "verb": "reads", "to": "ENT-attachment"}
+  - {"op": "add_edge", "from": "STG-main-02-quote", "verb": "reads", "to": "ENT-messaging-audit-entry"}

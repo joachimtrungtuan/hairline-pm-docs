@@ -1,0 +1,6 @@
+reason: "Consistency check (FR-013 flow): review photos are displayed by the review screens at the review stage, and the per-treatment review summary is read by the provider analytics widget (FR-014 REQ-013-023) and the admin treatment outcomes widget; both Entities were written and never read."
+by: controller
+operations:
+  - {"op": "add_edge", "from": "STG-main-09-review-close", "verb": "reads", "to": "ENT-review-photo"}
+  - {"op": "add_edge", "from": "STG-provider-03-active", "verb": "reads", "to": "ENT-provider-treatment-review-summary"}
+  - {"op": "add_edge", "from": "STG-admin-02-operations", "verb": "reads", "to": "ENT-provider-treatment-review-summary"}
