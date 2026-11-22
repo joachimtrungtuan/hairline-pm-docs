@@ -646,6 +646,12 @@ flowchart TD
 - **Entity 5 - Treatment Detail Change**
   - **Relationships**: Many per treatment record; append-only audit record; never alters the accepted snapshot or any money field
 
+**Carried from dropped sections (original wording)**:
+
+- **Why needed**: Clinician assignment and additional Clinical Staff selection require active staff members with appropriate roles
+- **Data format**: Multipart form upload with metadata (patient ID, treatment ID, photo type: "before"/"during"/"after", timestamp)
+- **Data format**: JSON payload with patient ID, treatment record ID, conclusion notes, prescription, advice, medication instructions, actual graft count, treatment completion date
+
 ---
 
 ## Dependencies
@@ -867,6 +873,7 @@ After a patient accepts one subquote, the case must use the accepted snapshot fo
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2026-11-22 | 2.9 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v2.8) and the change requests (CR-FR010-20261016-01, CR-FR010-20261014-01, CR-FR015-20261013-01, CR-FR010-20260909-01, the FR-004 change request `change-request-2026-09-09-quote-options-model.md`, and the FR-010 change request files `change-request-2026-09-09-clinician-cardinality-alignment.md`, `change-request-2026-09-10-quote-option-consumer-alignment.md`, `change-request-2026-10-14-provider-status-cancellation-cascade.md` and `change-request-2026-10-16-mtg002-quote-model-alignment.md`) are in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
+| 2026-11-23 | 2.10 | Independent compression review: 3 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
 
 ---
 
