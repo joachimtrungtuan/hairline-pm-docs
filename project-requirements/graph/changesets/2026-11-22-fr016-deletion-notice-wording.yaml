@@ -1,0 +1,5 @@
+reason: "Deletion outcome notice aligned with FR-023, the owner of data deletion: the system sends it and it lists the actions taken and the legal basis (FR-023 workflow step 5 and its acceptance scenario); FR-016 PRD Alternative Flow B5 step 8 edited to match."
+by: controller
+operations:
+  - {"op": "update_node", "id": "REQ-016-063", "attrs": {"statement": "System notifies the patient of the deletion outcome, listing the actions taken and the legal basis for any retained records (per FR-023); Admin closes the request"}}
+  - {"op": "update_node", "id": "STP-016-118", "title": "System notifies the patient of the deletion outcome with the actions taken and the legal basis"}

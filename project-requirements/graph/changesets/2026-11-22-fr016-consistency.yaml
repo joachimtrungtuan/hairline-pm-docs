@@ -1,0 +1,14 @@
+reason: "FR-016 consistency review: references to the FR-023 and FR-007B owner Rules, owner of four Fields moved to the FR whose PRD states them, and three hand-offs stitched (FR-016 to FR-006 Cancel Booking twice, FR-015 suspension alert into FR-016 Flow A7)."
+by: controller
+operations:
+  - {"op": "add_edge", "from": "FR-016", "verb": "references", "to": "REQ-023-004"}
+  - {"op": "add_edge", "from": "FR-016", "verb": "references", "to": "REQ-007B-008"}
+  - {"op": "update_node", "id": "ENT-conversation.flagged", "owner_fr": "FR-012"}
+  - {"op": "update_node", "id": "ENT-conversation.flag_reason", "owner_fr": "FR-012"}
+  - {"op": "update_node", "id": "ENT-inquiry.requested_treatment_window", "owner_fr": "FR-003"}
+  - {"op": "add_edge", "from": "STP-016-080", "verb": "next", "to": "STP-006-301"}
+  - {"op": "update_node", "id": "STP-016-080", "attrs": {"handoff_to": null}}
+  - {"op": "add_edge", "from": "STP-016-093", "verb": "next", "to": "STP-006-301"}
+  - {"op": "update_node", "id": "STP-016-093", "attrs": {"handoff_to": null}}
+  - {"op": "add_edge", "from": "STP-015-155", "verb": "next", "to": "STP-016-101"}
+  - {"op": "update_node", "id": "STP-016-101", "attrs": {"handoff_from": null}}

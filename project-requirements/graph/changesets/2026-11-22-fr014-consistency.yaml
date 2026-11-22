@@ -1,0 +1,9 @@
+reason: "FR-014 consistency review: the two accepted-selection data sets that FR-014 Screens 1, 4, 5, 7, 10 and 13 read get their Stage reads; the admin hand-off to provider management is stitched to FR-015."
+by: controller
+operations:
+  - {"op": "add_edge", "from": "STG-provider-03-active", "verb": "reads", "to": "ENT-accepted-price-observation"}
+  - {"op": "add_edge", "from": "STG-admin-02-operations", "verb": "reads", "to": "ENT-accepted-price-observation"}
+  - {"op": "add_edge", "from": "STG-provider-03-active", "verb": "reads", "to": "ENT-accepted-selection-aging-snapshot"}
+  - {"op": "add_edge", "from": "STG-admin-02-operations", "verb": "reads", "to": "ENT-accepted-selection-aging-snapshot"}
+  - {"op": "add_edge", "from": "STP-014-013", "verb": "next", "to": "STP-015-001"}
+  - {"op": "update_node", "id": "STP-014-013", "attrs": {"handoff_to": null}}

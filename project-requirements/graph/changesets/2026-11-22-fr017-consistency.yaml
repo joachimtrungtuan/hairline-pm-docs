@@ -1,0 +1,22 @@
+reason: "FR-017 consistency review: references to owner-FR Rules for data FR-017 shows read-only, Rules linked to the notification Events they trigger, writers for two entities FR-017 reads, and the open hand-offs stitched to the receiving Steps."
+by: controller
+operations:
+  - {"op": "add_edge", "from": "FR-017", "verb": "references", "to": "REQ-007B-007", "attrs": {}}
+  - {"op": "add_edge", "from": "FR-017", "verb": "references", "to": "REQ-001-010", "attrs": {}}
+  - {"op": "add_edge", "from": "FR-017", "verb": "references", "to": "REQ-006-028", "attrs": {}}
+  - {"op": "add_edge", "from": "FR-017", "verb": "references", "to": "REQ-024-001", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-017-111", "verb": "applies to", "to": "EVT-billing-dispute-payout-added", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-017-081", "verb": "applies to", "to": "EVT-billing-manual-payment-reminder", "attrs": {}}
+  - {"op": "add_edge", "from": "REQ-017-153", "verb": "applies to", "to": "EVT-billing-overdue-payout-alert", "attrs": {}}
+  - {"op": "add_edge", "from": "STG-payout-02-approval", "verb": "writes", "to": "ENT-currency-alert", "attrs": {}}
+  - {"op": "add_edge", "from": "STG-main-06-treatment", "verb": "writes", "to": "ENT-currency-alert", "attrs": {}}
+  - {"op": "add_edge", "from": "STG-main-03-acceptance", "verb": "writes", "to": "ENT-currency-rate-lock", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-017-008", "verb": "next", "to": "STP-032-138", "attrs": {}}
+  - {"op": "update_node", "id": "STP-017-008", "attrs": {"handoff_to": "FR-034 (support contact)"}}
+  - {"op": "add_edge", "from": "STP-017-033", "verb": "next", "to": "STP-029-041", "attrs": {}}
+  - {"op": "update_node", "id": "STP-017-033", "attrs": {"handoff_to": "FR-015 (single-provider commission edit)"}}
+  - {"op": "add_edge", "from": "STP-015-174", "verb": "next", "to": "STP-017-067", "attrs": {}}
+  - {"op": "update_node", "id": "STP-017-067", "attrs": {"handoff_from": null}}
+  - {"op": "update_node", "id": "STP-015-174", "attrs": {"handoff_to": null}}
+  - {"op": "add_edge", "from": "STP-017-074", "verb": "next", "to": "STP-034-032", "attrs": {}}
+  - {"op": "update_node", "id": "STP-017-074", "attrs": {"handoff_to": null}}

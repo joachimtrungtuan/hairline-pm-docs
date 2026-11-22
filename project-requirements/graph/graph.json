@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-22T12:59:24Z",
+  "generated_at": "2026-11-22T13:05:13Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -7134,10 +7134,10 @@
     {
       "id": "ENT-conversation.flag_reason",
       "type": "Field",
-      "owner_fr": "FR-016",
+      "owner_fr": "FR-012",
       "title": "Flag reason",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Why the conversation is flagged."
       }
@@ -7145,10 +7145,10 @@
     {
       "id": "ENT-conversation.flagged",
       "type": "Field",
-      "owner_fr": "FR-016",
+      "owner_fr": "FR-012",
       "title": "Flagged",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "True when flagged by automated keyword detection, a provider report or an admin."
       }
@@ -10928,10 +10928,10 @@
     {
       "id": "ENT-inquiry.requested_treatment_window",
       "type": "Field",
-      "owner_fr": "FR-016",
+      "owner_fr": "FR-003",
       "title": "Requested treatment window",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Upcoming or most recent requested treatment window, shown as Requested Date on Screen 1. Added for an orphan screen column."
       }
@@ -38367,7 +38367,7 @@
       "owner_fr": null,
       "title": "Provider Management (Admin-Initiated)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "module": "fr015-provider-management",
         "prd_path": "project-requirements/functional-requirements/fr015-provider-management/prd.md",
@@ -38380,7 +38380,7 @@
       "owner_fr": null,
       "title": "Admin Patient Management",
       "status": "active",
-      "version": 8,
+      "version": 9,
       "attrs": {
         "module": "fr016-admin-patient-mgmt",
         "prd_path": "project-requirements/functional-requirements/fr016-admin-patient-mgmt/prd.md",
@@ -61488,9 +61488,9 @@
       "owner_fr": "FR-016",
       "title": "Admin confirms the deletion to the patient and closes the request",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Admin sends confirmation to patient: \"Your data has been deleted per GDPR requirements\"; Admin closes the request",
+        "statement": "System notifies the patient of the deletion outcome, listing the actions taken and the legal basis for any retained records (per FR-023); Admin closes the request",
         "rationale": "Stated in prd.md, Note: Patient Support Center / Ticketing (line 300)."
       }
     },
@@ -102346,7 +102346,7 @@
       "owner_fr": null,
       "title": "Operations",
       "status": "active",
-      "version": 2,
+      "version": 4,
       "attrs": {
         "timeline": "platform-admin",
         "sequence": 2,
@@ -102555,7 +102555,7 @@
       "owner_fr": null,
       "title": "Review and close",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "timeline": "main",
         "sequence": 9,
@@ -102764,7 +102764,7 @@
       "owner_fr": null,
       "title": "Active",
       "status": "active",
-      "version": 25,
+      "version": 27,
       "attrs": {
         "timeline": "provider-account",
         "sequence": 3,
@@ -109424,10 +109424,9 @@
       "owner_fr": "FR-014",
       "title": "Admin takes action on flagged providers in provider management",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Main Flow: Admin Monitors Platform Health step 8",
-        "handoff_to": "FR-015: provider management (flagged provider review and action)"
+        "prd_ref": "Main Flow: Admin Monitors Platform Health step 8"
       }
     },
     {
@@ -109702,10 +109701,9 @@
       "owner_fr": "FR-015",
       "title": "Provider completes the profile via FR-032",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Main Flow step 20",
-        "handoff_to": "FR-032: Main Flow step 1"
+        "prd_ref": "Main Flow step 20"
       }
     },
     {
@@ -109714,10 +109712,9 @@
       "owner_fr": "FR-015",
       "title": "Provider becomes eligible for inquiry distribution",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Main Flow step 21",
-        "handoff_to": "FR-003: Main Flow step 1"
+        "prd_ref": "Main Flow step 21"
       }
     },
     {
@@ -109968,7 +109965,7 @@
       "owner_fr": "FR-015",
       "title": "System cancels unaccepted quotes and closes pre-treatment bookings",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A5 step 3"
       }
@@ -109990,7 +109987,7 @@
       "owner_fr": "FR-015",
       "title": "System notifies patients and alerts admins",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A5 step 5"
       }
@@ -110012,10 +110009,9 @@
       "owner_fr": "FR-015",
       "title": "Admin starts the provider-fault transfer and aftercare decisions",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "A5 step 7",
-        "handoff_to": "FR-006: Alternative Flow B5 step 1"
+        "prd_ref": "A5 step 7"
       }
     },
     {
@@ -110101,10 +110097,9 @@
       "owner_fr": "FR-015",
       "title": "System applies the deactivation cascade and notifications",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "A7 step 4",
-        "handoff_to": "FR-017: post-suspension payment reconciliation"
+        "prd_ref": "A7 step 4"
       }
     },
     {
@@ -110729,10 +110724,9 @@
       "owner_fr": "FR-016",
       "title": "System cancels each active booking through the FR-006 admin booking cancellation",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A6 step 10",
-        "handoff_to": "STP-006-301"
+        "prd_ref": "Alternative Flow A6 step 10"
       }
     },
     {
@@ -110785,10 +110779,9 @@
       "owner_fr": "FR-016",
       "title": "Admin opens the FR-006 Cancel Booking action, enters the mandatory reason and confirms",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Alternative Flow A8 step 3",
-        "handoff_to": "STP-006-301"
+        "prd_ref": "Alternative Flow A8 step 3"
       }
     },
     {
@@ -110831,10 +110824,9 @@
       "owner_fr": "FR-016",
       "title": "Admin filters Patient List by Admin Support Required: Unresolved or opens the alert deep link",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A7 step 1",
-        "handoff_from": "FR-015: Alternative Flow A5"
+        "prd_ref": "Alternative Flow A7 step 1"
       }
     },
     {
@@ -110962,9 +110954,9 @@
       "id": "STP-016-118",
       "type": "Step",
       "owner_fr": "FR-016",
-      "title": "Admin sends the deletion confirmation to the patient",
+      "title": "System notifies the patient of the deletion outcome with the actions taken and the legal basis",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B5 step 8"
       }
@@ -111461,10 +111453,9 @@
       "owner_fr": "FR-017",
       "title": "Provider-status event cancels the booking (ProviderSuspended or ProviderDeactivated)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow B3 step 1",
-        "handoff_from": "FR-015 (provider-status cancellation cascade)"
+        "prd_ref": "Alternative Flow B3 step 1"
       }
     },
     {
@@ -170881,6 +170872,24 @@
     {
       "from_id": "FR-015",
       "verb": "references",
+      "to_id": "REQ-003-111",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-015",
+      "verb": "references",
+      "to_id": "REQ-004-032",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-015",
+      "verb": "references",
+      "to_id": "REQ-006-015",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-015",
+      "verb": "references",
       "to_id": "REQ-009-008",
       "attrs": {}
     },
@@ -170942,6 +170951,24 @@
       "from_id": "FR-015",
       "verb": "references",
       "to_id": "REQ-013-062",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-015",
+      "verb": "references",
+      "to_id": "REQ-017-074",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-015",
+      "verb": "references",
+      "to_id": "REQ-029-043",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-015",
+      "verb": "references",
+      "to_id": "REQ-032-014",
       "attrs": {}
     },
     {
@@ -171067,6 +171094,12 @@
     {
       "from_id": "FR-016",
       "verb": "references",
+      "to_id": "REQ-007B-008",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-016",
+      "verb": "references",
       "to_id": "REQ-011-004",
       "attrs": {}
     },
@@ -171146,6 +171179,12 @@
       "from_id": "FR-016",
       "verb": "references",
       "to_id": "REQ-020-092",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-016",
+      "verb": "references",
+      "to_id": "REQ-023-004",
       "attrs": {}
     },
     {
@@ -336769,6 +336808,18 @@
     {
       "from_id": "STG-admin-02-operations",
       "verb": "reads",
+      "to_id": "ENT-accepted-price-observation",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-02-operations",
+      "verb": "reads",
+      "to_id": "ENT-accepted-selection-aging-snapshot",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-02-operations",
+      "verb": "reads",
       "to_id": "ENT-audit-entry",
       "attrs": {}
     },
@@ -336824,6 +336875,12 @@
       "from_id": "STG-admin-02-operations",
       "verb": "reads",
       "to_id": "ENT-provider-engagement-snapshot",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-02-operations",
+      "verb": "reads",
+      "to_id": "ENT-provider-treatment-review-summary",
       "attrs": {}
     },
     {
@@ -340447,6 +340504,12 @@
     {
       "from_id": "STG-main-09-review-close",
       "verb": "reads",
+      "to_id": "ENT-review-photo",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-09-review-close",
+      "verb": "reads",
       "to_id": "ENT-review-settings",
       "attrs": {}
     },
@@ -342319,6 +342382,18 @@
     {
       "from_id": "STG-provider-03-active",
       "verb": "reads",
+      "to_id": "ENT-accepted-price-observation",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-03-active",
+      "verb": "reads",
+      "to_id": "ENT-accepted-selection-aging-snapshot",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-03-active",
+      "verb": "reads",
       "to_id": "ENT-admin-user-account",
       "attrs": {}
     },
@@ -342644,6 +342719,12 @@
       "from_id": "STG-provider-03-active",
       "verb": "reads",
       "to_id": "ENT-provider-team-summary",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-03-active",
+      "verb": "reads",
+      "to_id": "ENT-provider-treatment-review-summary",
       "attrs": {}
     },
     {
@@ -364127,6 +364208,12 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-014-013",
+      "verb": "next",
+      "to_id": "STP-015-001",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-014-014",
       "verb": "applies",
       "to_id": "REQ-014-145",
@@ -364825,6 +364912,12 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-015-020",
+      "verb": "next",
+      "to_id": "STP-032-001",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-015-021",
       "verb": "applies",
       "to_id": "REQ-015-031",
@@ -364840,6 +364933,12 @@
       "from_id": "STP-015-021",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-015-021",
+      "verb": "next",
+      "to_id": "STP-003-017",
       "attrs": {}
     },
     {
@@ -365497,6 +365596,24 @@
     {
       "from_id": "STP-015-153",
       "verb": "next",
+      "to_id": "STP-006-501",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-015-153",
+      "verb": "next",
+      "to_id": "STP-006-701",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-015-153",
+      "verb": "next",
+      "to_id": "STP-006-801",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-015-153",
+      "verb": "next",
       "to_id": "STP-015-154",
       "attrs": {}
     },
@@ -365558,6 +365675,12 @@
       "from_id": "STP-015-155",
       "verb": "next",
       "to_id": "STP-015-156",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-015-155",
+      "verb": "next",
+      "to_id": "STP-016-101",
       "attrs": {}
     },
     {
@@ -365624,6 +365747,12 @@
       "from_id": "STP-015-157",
       "verb": "done by",
       "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-015-157",
+      "verb": "next",
+      "to_id": "STP-006-604",
       "attrs": {}
     },
     {
@@ -365881,6 +366010,12 @@
       "from_id": "STP-015-174",
       "verb": "next",
       "to_id": "STP-015-175",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-015-174",
+      "verb": "next",
+      "to_id": "STP-017-067",
       "attrs": {}
     },
     {
@@ -367416,6 +367551,12 @@
     {
       "from_id": "STP-016-080",
       "verb": "next",
+      "to_id": "STP-006-301",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-080",
+      "verb": "next",
       "to_id": "STP-016-081",
       "attrs": {}
     },
@@ -367582,6 +367723,12 @@
       "from_id": "STP-016-093",
       "verb": "done by",
       "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-093",
+      "verb": "next",
+      "to_id": "STP-006-301",
       "attrs": {}
     },
     {
@@ -422811,6 +422958,94 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261122-130513-c73d15ef",
+      "at": "2026-11-22T13:05:13.042038+00:00",
+      "changed_by": "controller",
+      "reason": "Deletion outcome notice aligned with FR-023, the owner of data deletion: the system sends it and it lists the actions taken and the legal basis (FR-023 workflow step 5 and its acceptance scenario); FR-016 PRD Alternative Flow B5 step 8 edited to match.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-016-063",
+        "STP-016-118"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 2
+    },
+    {
+      "id": "cs-20261122-130512-f8dc9423",
+      "at": "2026-11-22T13:05:12.863941+00:00",
+      "changed_by": "controller",
+      "reason": "FR-015 consistency review: FR-015 references one Rule of each owner FR whose data its Rules and Screens use (FR-003, FR-004, FR-006, FR-017, FR-029, FR-032); the four open hand-offs are stitched (FR-032 profile update, FR-003 inquiry distribution, FR-006 provider-fault transfer, FR-017 post-suspension reconciliation); the suspension cascade Step that closes bookings is linked to the first Steps of FR-006 Alternative Flows B4, B7 and B6, which the PRD names.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "FR-015",
+        "STP-015-020",
+        "STP-015-021",
+        "STP-015-153",
+        "STP-015-157",
+        "STP-015-174",
+        "STP-017-067"
+      ],
+      "edges_added": 13,
+      "edges_removed": 0,
+      "rows": 18
+    },
+    {
+      "id": "cs-20261122-130512-6068f596",
+      "at": "2026-11-22T13:05:12.542184+00:00",
+      "changed_by": "controller",
+      "reason": "FR-016 consistency review: references to the FR-023 and FR-007B owner Rules, owner of four Fields moved to the FR whose PRD states them, and three hand-offs stitched (FR-016 to FR-006 Cancel Booking twice, FR-015 suspension alert into FR-016 Flow A7).",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "ENT-conversation.flag_reason",
+        "ENT-conversation.flagged",
+        "ENT-inquiry.requested_treatment_window",
+        "FR-016",
+        "STP-015-155",
+        "STP-016-080",
+        "STP-016-093",
+        "STP-016-101"
+      ],
+      "edges_added": 5,
+      "edges_removed": 0,
+      "rows": 11
+    },
+    {
+      "id": "cs-20261122-130111-d1f012d0",
+      "at": "2026-11-22T13:01:11.118032+00:00",
+      "changed_by": "controller",
+      "reason": "FR-014 consistency review: the two accepted-selection data sets that FR-014 Screens 1, 4, 5, 7, 10 and 13 read get their Stage reads; the admin hand-off to provider management is stitched to FR-015.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "STG-admin-02-operations",
+        "STG-provider-03-active",
+        "STP-014-013"
+      ],
+      "edges_added": 5,
+      "edges_removed": 0,
+      "rows": 6
+    },
+    {
+      "id": "cs-20261122-125945-04e54440",
+      "at": "2026-11-22T12:59:45.167629+00:00",
+      "changed_by": "controller",
+      "reason": "Consistency check (FR-013 flow): review photos are displayed by the review screens at the review stage, and the per-treatment review summary is read by the provider analytics widget (FR-014 REQ-013-023) and the admin treatment outcomes widget; both Entities were written and never read.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "STG-admin-02-operations",
+        "STG-main-09-review-close",
+        "STG-provider-03-active"
+      ],
+      "edges_added": 3,
+      "edges_removed": 0,
+      "rows": 3
+    },
     {
       "id": "cs-20261122-125924-6b1dce93",
       "at": "2026-11-22T12:59:24.459266+00:00",
