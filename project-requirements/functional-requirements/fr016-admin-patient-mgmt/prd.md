@@ -759,6 +759,11 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 - Manual booking modifications during active treatment (handled on case detail screen)
 - See REQ-016-020.
 
+**Carried from dropped sections (original wording)**:
+
+- **SC-016**: Admin-flagged communications for policy violations reviewed and resolved within 48 hours
+- **Storage**: Audit log requires separate database or table with write-optimized schema (append-only, no updates/deletes)
+
 ---
 
 ## Dependencies
@@ -998,6 +1003,7 @@ A provider is suspended or deactivated (FR-015 A5) and the patient's case is can
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2026-11-22 | 1.15 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.14) and the change requests CR-FR016-20261014-01, CR-FR016-20261016-01, CR-FR020-20261027-01, CR-FR015-20261013-01 and CR-FR006-20261016-01 are in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
+| 2026-11-23 | 1.16 | Independent compression review: 2 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
 
 ---
 
