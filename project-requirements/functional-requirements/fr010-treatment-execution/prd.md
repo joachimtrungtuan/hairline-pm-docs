@@ -5,7 +5,6 @@
 **Created**: 2025-11-11
 **Status**: 🟡 Revised — Pending Consolidated Verification
 **Source**: FR-010 from system-prd.md; FR-015 v1.9 provider-status cancellation cascade
-**Change Request**: [CR-FR010-20261016-01 — MTG-002 quote model alignment](change-request-2026-10-16-mtg002-quote-model-alignment.md) (previous: [CR-FR010-20261014-01 — Provider status cancellation cascade](change-request-2026-10-14-provider-status-cancellation-cascade.md))
 
 ---
 
@@ -33,9 +32,9 @@ This module operates exclusively within the Provider Platform (PR-03) tenant, wi
 - Receives real-time status updates (booking moved to "In Progress" when patient arrives)
 - **Views current treatment day progress in real-time** (e.g., "Day 1 of 4: Consultation & Scans" or "Day 2 of 4: Hair Transplant Procedure") based on the accepted Quote Option's relative day plan
 - Receives treatment completion notification with post-op instructions
-- Views provider-authored treatment summary note after completion (high-level outcome, final graft count, treatment type)
-- Accesses before/after photos uploaded by provider (after completion)
-- NOT involved in clinical documentation (no access to detailed medical notes, complications, or real-time clinical data during procedure)
+- Views provider-authored treatment summary note after completion (high-level outcome, final graft count, treatment type) (REQ-010-062)
+- Accesses before/after photos uploaded by provider (after completion) (REQ-010-062)
+- NOT involved in clinical documentation (no access to detailed medical notes, complications, or real-time clinical data during procedure) (REQ-010-064)
 
 **Provider Platform (PR-03)**:
 
@@ -48,11 +47,11 @@ This module operates exclusively within the Provider Platform (PR-03) tenant, wi
 
 **Admin Platform (A-01)**:
 
-- View all active treatments across all providers (real-time "In Progress" list with current day and status)
-- **Monitor real-time treatment progress** for all active procedures (current day, day status)
+- View all active treatments across all providers (real-time "In Progress" list with current day and status) (REQ-010-065)
+- See REQ-010-065.
 - **Edit any treatment record** — admin can update day statuses, notes, and end-of-treatment fields, change treatment details (Screen 9), and trigger End Treatment on behalf of the provider; booking status changes only through the FR-006 governed actions (change appointment, cancel booking, provider-fault transfer, In-Progress provider-fault decision)
 - Access and audit complete treatment documentation for quality assurance
-- View payment status (outstanding balance / split pay) for operational follow-up (view only; no new screen part)
+- View payment status (outstanding balance / split pay) for operational follow-up (view only; no new screen part) (REQ-010-066)
 
 **Shared Services (S-05)**:
 
@@ -67,35 +66,35 @@ This module operates exclusively within the Provider Platform (PR-03) tenant, wi
 - Post-op instruction delivery to patient via email/in-app notification
 - Provider-to-patient medication prescription delivery
 - Admin notification of treatment completion for billing purposes
-- **Admin real-time visibility** into treatment progress across all active procedures (which day + day status + day description — for oversight)
+- **Admin real-time visibility** into treatment progress across all active procedures (which day + day status + day description — for oversight) (REQ-010-065)
 
 **Out of Scope**:
 
-- Real-time chat between patient and provider during treatment (patients are physically present; messaging stays available under FR-012)
-- Video documentation of procedure (future enhancement)
-- Live streaming of detailed treatment progress to third parties (e.g., patient's family) (future enhancement)
-- SMS notifications to patient's emergency contact (handled by S-03: Notification Service configuration; **no SMS treatment alerts are sent in MVP and this capability is reserved for a future phase once S-03 SMS support is enabled**)
+- Real-time chat between patient and provider during treatment (patients are physically present; messaging stays available under FR-012) (REQ-010-067)
+- Video documentation of procedure (future enhancement) (REQ-010-067)
+- Live streaming of detailed treatment progress to third parties (e.g., patient's family) (future enhancement) (REQ-010-067)
+- SMS notifications to patient's emergency contact (handled by S-03: Notification Service configuration; **no SMS treatment alerts are sent in MVP and this capability is reserved for a future phase once S-03 SMS support is enabled**) (REQ-010-068)
 
 ### Entry Points
 
 **Primary Entry Point**:
 
-1. Provider navigates to **"Confirmed"** section in Patient Management (Provider Platform dashboard)
+1. Provider navigates to **"Confirmed"** section in Patient Management (Provider Platform dashboard) (REQ-010-069)
 2. Provider selects a confirmed booking with procedure date = today or past and no outstanding balance
-3. System opens the case detail page in tabbed view (tabs: Treatment Plan | Note | Book hotel & Book flight | In Progress)
+3. System opens the case detail page in tabbed view (tabs: Treatment Plan | Note | Book hotel & Book flight | In Progress) (REQ-010-069)
 4. Provider clicks **"Check In"** button to begin the treatment
 5. System transitions booking status from "Confirmed" → "In Progress" — this is the moment the case changes stage; the In Progress tab becomes the active documentation workspace as part of this transition
 
 **Secondary Entry Points**:
 
-- Provider can resume documentation for "In Progress" treatments from the "In Progress" section in Patient Management
-- Provider can view completed treatments from "Completed" section (read-only mode)
+- Provider can resume documentation for "In Progress" treatments from the "In Progress" section in Patient Management (REQ-010-069)
+- Provider can view completed treatments from "Completed" section (read-only mode) (REQ-010-069)
 
 **Access Requirements**:
 
-- Provider must have role: Owner, Manager, or Clinical Staff (Billing Staff may view but cannot document treatments)
-- Patient must have "Confirmed" booking status (deposit paid) and no outstanding balance (full payment completed)
-- Procedure date must be today or in the past (cannot mark future appointments as "In Progress")
+- See REQ-010-017.
+- Patient must have "Confirmed" booking status (deposit paid) and no outstanding balance (full payment completed) (REQ-010-106)
+- See REQ-010-106.
 
 ---
 
@@ -135,7 +134,7 @@ flowchart TD
 **A1: Patient Arrives Early (Before Scheduled Time)**
 
 - **Trigger**: Patient arrives significantly before the scheduled procedure time
-- **Outcome**: Treatment proceeds earlier than scheduled; original appointment time preserved in booking record
+- **Outcome**: Treatment proceeds earlier than scheduled; original appointment time preserved in booking record (REQ-010-071)
 
 ```mermaid
 flowchart TD
@@ -165,7 +164,7 @@ flowchart TD
 **B1: Patient No-Show (Does Not Arrive)**
 
 - **Trigger**: Patient fails to arrive at clinic on scheduled procedure day
-- **Outcome**: Provider reports the no-show to the admin; the booking stays Confirmed; the admin decides case by case whether to rebook or cancel, and handles deposit retention and reconciliation (No-Show Rule)
+- **Outcome**: Provider reports the no-show to the admin; the booking stays Confirmed; the admin decides case by case whether to rebook or cancel, and handles deposit retention and reconciliation (No-Show Rule) (REQ-010-076)
 
 ```mermaid
 flowchart TD
@@ -180,7 +179,7 @@ flowchart TD
 **B2: Medical Complication Prevents Treatment Start**
 
 - **Trigger**: Pre-procedure review (Note tab) reveals an unmanaged medical condition or patient arrives unwell
-- **Outcome**: Treatment postponed without financial penalty; patient given medical clearance instructions
+- **Outcome**: Treatment postponed without financial penalty; patient given medical clearance instructions (REQ-010-077)
 
 ```mermaid
 flowchart TD
@@ -193,7 +192,7 @@ flowchart TD
 **B3: Treatment Interrupted During Procedure**
 
 - **Trigger**: Unexpected event during active treatment (medical emergency, power outage, equipment failure)
-- **Outcome**: Interruption documented in day note; case managed by admin if closure is required
+- **Outcome**: Interruption documented in day note; case managed by admin if closure is required (REQ-010-078)
 
 ```mermaid
 flowchart TD
@@ -208,7 +207,7 @@ flowchart TD
 **B4: Provider Cancels or Closes an In Progress Case**
 
 - **Trigger**: Provider needs to close an active case that cannot be completed (any reason: no-show discovered after Check In, patient decided not to proceed, operational failure)
-- **Outcome**: Admin notified; the case stays In Progress until the admin closes it through the FR-006 Cancel Booking action (FR-006 Screen 9), or, when the provider is at fault, through the FR-006 In-Progress provider-fault decision (Alternative Flow B7); financial reconciliation follows the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault)
+- **Outcome**: Admin notified; the case stays In Progress until the admin closes it through the FR-006 Cancel Booking action (FR-006 Screen 9), or, when the provider is at fault, through the FR-006 In-Progress provider-fault decision (Alternative Flow B7); financial reconciliation follows the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault) (REQ-010-079)
 
 ```mermaid
 flowchart TD
@@ -221,7 +220,7 @@ flowchart TD
 **B5: Provider Suspended or Deactivated While Case Is In Progress**
 
 - **Trigger**: The treating provider's `Suspended` or `Deactivated` status becomes effective under [FR-015 Alternative Flow A5 and Screen 4](../fr015-provider-management/prd.md#screen-4-provider-suspensiondeactivation-modal)
-- **Outcome**: The In Progress case is not cancelled automatically; it stays In Progress with the provider-status cause and `supportRequired`, clinical records are preserved, and an admin decides case by case through [FR-006 Alternative Flow B7](../fr006-booking-scheduling/prd.md) (FR-006 Screen 11): move the booking to Aftercare and reassign the aftercare provider through FR-011 Screen 19, or cancel the booking
+- **Outcome**: The In Progress case is not cancelled automatically; it stays In Progress with the provider-status cause and `supportRequired`, clinical records are preserved, and an admin decides case by case through [FR-006 Alternative Flow B7](../fr006-booking-scheduling/prd.md) (FR-006 Screen 11): move the booking to Aftercare and reassign the aftercare provider through FR-011 Screen 19, or cancel the booking (REQ-010-080)
 - **Boundary**: Distinct from B4 provider-requested Cancel/Close Case, which still does not auto-transition status. No replacement quote or replacement acceptance is created for an In Progress case; money follows the admin-set refund in FR-006 Alternative Flow B7 (exact mechanics are defined in FR-007, FR-007B, and FR-017). Provider reactivation does not restore the case; a later deactivation does not overwrite an earlier `ProviderSuspended` cause
 
 ```mermaid
@@ -236,7 +235,7 @@ flowchart TD
 **B6: Provider Drops Out or Must Be Replaced After Acceptance**
 
 - **Trigger**: After subquote acceptance, the treating provider withdraws, drops out before or during treatment, or an admin determines the case must move to a different provider
-- **Outcome**: FR-010 never reassigns the provider on the case. Before Check In (booking `Confirmed`), the case is handed to the [FR-006 Alternative Flow B5](../fr006-booking-scheduling/prd.md) provider-fault transfer: the booking is cancelled with cause `ProviderFault` and an admin transfers the patient to a replacement provider in the same inquiry. After Check In (booking `In Progress`), the booking stays In Progress with `supportRequired` and the admin decides case by case through FR-006 Alternative Flow B7: move the booking to Aftercare and reassign the aftercare provider through FR-011 Screen 19, or cancel the booking; no replacement acceptance is created
+- **Outcome**: FR-010 never reassigns the provider on the case. Before Check In (booking `Confirmed`), the case is handed to the [FR-006 Alternative Flow B5](../fr006-booking-scheduling/prd.md) provider-fault transfer: the booking is cancelled with cause `ProviderFault` and an admin transfers the patient to a replacement provider in the same inquiry. After Check In (booking `In Progress`), the booking stays In Progress with `supportRequired` and the admin decides case by case through FR-006 Alternative Flow B7: move the booking to Aftercare and reassign the aftercare provider through FR-011 Screen 19, or cancel the booking; no replacement acceptance is created (REQ-010-081, REQ-010-082)
 - **Boundary**: Distinct from B4 provider-requested Cancel/Close Case for patient or clinical reasons, and from B5 provider suspension/deactivation (which enters the same FR-006 In-Progress decision with its own cause). For the before-Check In transfer the FR-006 Alternative Flow B5 payment terms apply: the patient is refunded in full everything paid, pays no cancellation fee, and the replacement booking takes a new payment; for an In Progress case an admin sets the patient refund amount, from zero up to the full amount paid, with a mandatory reason and audit entry, and the provider's payout for the booking is held until the admin decides (FR-006 Alternative Flow B7). Exact mechanics are defined in FR-007, FR-007B, and FR-017
 
 ```mermaid
@@ -262,26 +261,26 @@ flowchart TD
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Case Status Badge | status badge | Yes (read-only) | "In Progress" badge displayed prominently | Display only |
-| Provider / Clinic Name | text | Yes (read-only) | Name of treating provider and clinic | Display only |
-| Treatment | text | Yes (read-only) | Treatment name from admin-curated catalog via the treatmentId in the accepted snapshot (e.g., "FUE - Follicular Unit Extraction") — defines the procedure type | Display only |
-| Accepted Quote Option | group | Yes (read-only) | The exact accepted subquote (Quote Option and date-range price row) selected by the patient, including its package snapshot, option-local inclusions, price, currency, date range, and promotion | Read from the accepted snapshot through the booking's AcceptanceEvent; never inferred from a singular quote package or from live FR-004 records |
-| Assigned Clinicians | list | Yes (read-only) | One or more clinicians currently assigned to the patient's case (seeded from the accepted snapshot; changed only through Alternative Flow A2) | Display only |
-| Procedure Date | date | Yes (read-only) | Current appointment date of the FR-006 booking; equals the accepted snapshot appointment unless an approved FR-006 admin date change applies | Display only |
-| Estimated Graft Count | number | Yes (read-only) | Current graft estimate (seeded from the accepted snapshot; changed only through Alternative Flow A2) — for patient reference | Display only |
-| Beginning Note | text area | No (read-only) | Provider's note at treatment start — visible to patient if entered | Hidden if provider has not entered it; no placeholder shown |
-| Overall Progress | progress indicator | Yes (read-only) | Summary of treatment completion (e.g., "2 of 3 days complete") | Display only; auto-calculated from day statuses |
-| Treatment Days | list | Yes (read-only) | One row per treatment day: day label, description, and current status badge | Tap a row to open Day Details Popup (Screen 2) |
-| Journey Timeline | timeline | Yes (read-only) | Case stage milestones: Inquiries → Quotes → Accepted → Confirmed → In Progress | Current stage highlighted; timestamps shown |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-----------|
+| Case Status Badge | status badge | Yes (read-only) | "In Progress" badge displayed prominently | Display only | ENT-booking.status |
+| Provider / Clinic Name | text | Yes (read-only) | Name of treating provider and clinic | Display only | ENT-provider.name |
+| Treatment | text | Yes (read-only) | Treatment name from admin-curated catalog via the treatmentId in the accepted snapshot (e.g., "FUE - Follicular Unit Extraction") — defines the procedure type | Display only | ENT-treatment.name |
+| Accepted Quote Option | group | Yes (read-only) | The exact accepted subquote (Quote Option and date-range price row) selected by the patient, including its package snapshot, option-local inclusions, price, currency, date range, and promotion | Read from the accepted snapshot through the booking's AcceptanceEvent; never inferred from a singular quote package or from live FR-004 records | ENT-acceptance-event.snapshot |
+| Assigned Clinicians | list | Yes (read-only) | One or more clinicians currently assigned to the patient's case (seeded from the accepted snapshot; changed only through Alternative Flow A2) | Display only | ENT-treatment-record.clinician_ids |
+| Procedure Date | date | Yes (read-only) | Current appointment date of the FR-006 booking; equals the accepted snapshot appointment unless an approved FR-006 admin date change applies | Display only | ENT-booking.appointment_at |
+| Estimated Graft Count | number | Yes (read-only) | Current graft estimate (seeded from the accepted snapshot; changed only through Alternative Flow A2) — for patient reference | Display only | ENT-treatment-record.estimated_grafts |
+| Beginning Note | text area | No (read-only) | Provider's note at treatment start — visible to patient if entered | Hidden if provider has not entered it; no placeholder shown (REQ-010-061) | ENT-treatment-record.beginning_note |
+| Overall Progress | progress indicator | Yes (read-only) | Summary of treatment completion (e.g., "2 of 3 days complete") | Display only; auto-calculated from day statuses (REQ-010-100) | ENT-treatment-record.days_status_summary |
+| Treatment Days | list | Yes (read-only) | One row per treatment day: day label, description, and current status badge | Tap a row to open Day Details Popup (Screen 2) | ENT-treatment-day-record.day_number, ENT-treatment-day-record.description, ENT-treatment-day-record.status |
+| Journey Timeline | timeline | Yes (read-only) | Case stage milestones: Inquiries → Quotes → Accepted → Confirmed → In Progress | Current stage highlighted; timestamps shown | ENT-booking.status_history |
 
 **Business Rules**:
 
-- Patient sees day status badges only — provider clinical notes are NOT visible to the patient.
-- Beginning note is visible to the patient only if the provider has entered it; otherwise the section is hidden.
-- Estimated graft count is shown for patient reference; actual graft count appears after End of Treatment.
-- All fields are read-only; the patient cannot take any action on this screen.
+- Patient sees day status badges only — provider clinical notes are NOT visible to the patient. (REQ-010-060)
+- Beginning note is visible to the patient only if the provider has entered it; otherwise the section is hidden. (REQ-010-061)
+- Estimated graft count is shown for patient reference; actual graft count appears after End of Treatment. (REQ-010-063)
+- All fields are read-only; the patient cannot take any action on this screen. (REQ-010-064)
 - When the clinic or an admin changes the plan, clinicians, or estimated graft count after acceptance (Alternative Flow A2), the patient is notified and this screen shows the updated details; price, currency, date range, appointment, and promotion always show the accepted snapshot values.
 
 ---
@@ -292,20 +291,20 @@ flowchart TD
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Day Label | text | Yes (read-only) | "Day 1", "Day 2", etc. | Display only |
-| Plan Day Position | text | Yes (read-only) | Relative position of this day in the treatment plan (e.g., "Day 2 of 4") | Display only; relative day number only, never converted to or shown as a calendar date |
-| Day Description | text | Yes (read-only) | Description from the case's current treatment plan (the accepted Quote Option's relative day plan, as changed through Alternative Flow A2) (e.g., "Hair Transplant Procedure") | Display only |
-| Status | status badge | Yes (read-only) | Current status for this day — synced from provider in real-time | Display only |
-| Close | button | — | Dismisses the popup | — |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-----------|
+| Day Label | text | Yes (read-only) | "Day 1", "Day 2", etc. | Display only | ENT-treatment-day-record.day_number |
+| Plan Day Position | text | Yes (read-only) | Relative position of this day in the treatment plan (e.g., "Day 2 of 4") | Display only; relative day number only, never converted to or shown as a calendar date (REQ-010-101) | ENT-treatment-day-record.plan_day_position |
+| Day Description | text | Yes (read-only) | Description from the case's current treatment plan (the accepted Quote Option's relative day plan, as changed through Alternative Flow A2) (e.g., "Hair Transplant Procedure") | Display only | ENT-treatment-day-record.description |
+| Status | status badge | Yes (read-only) | Current status for this day — synced from provider in real-time | Display only | ENT-treatment-day-record.status |
+| Close | button | — | Dismisses the popup | — | no graph field (control) |
 
 **Business Rules**:
 
-- Status is synced from provider in real-time; the patient sees the updated status immediately after provider saves.
-- Provider clinical notes for this day are NOT visible to the patient.
-- No editing or interaction is available to the patient.
-- Treatment plan days are relative (Day 1, Day 2, ...). They are never converted to, stored as, or displayed as calendar dates.
+- Status is synced from provider in real-time; the patient sees the updated status immediately after provider saves. (REQ-010-007A)
+- See REQ-010-060.
+- See REQ-010-064.
+- See REQ-010-028.
 
 ---
 
@@ -317,25 +316,25 @@ flowchart TD
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Search Bar | text input | No | Search by patient ID, name, or booking reference | Real-time filter |
-| Filter: Date Range | date range picker | No | Filter by treatment start date | Default: current month |
-| Filter: Clinician | dropdown | No | Filter by any assigned clinician | Dropdown of clinic's active clinicians |
-| Patient ID | text | Yes (read-only) | Unique patient identifier (e.g., HP202401) | Clickable — opens case detail (Screen 4) |
-| Patient Name | text | Yes (read-only) | Patient's full name | Display only |
-| Treatment | text | Yes (read-only) | Treatment name from catalog via treatmentId (e.g., "FUE - Follicular Unit Extraction") | Display only |
-| Assigned Clinicians | list | Yes (read-only) | One or more clinicians assigned at quote stage | Display only |
-| Procedure Date | date | Yes (read-only) | Current appointment date of the FR-006 booking; equals the accepted snapshot appointment unless an approved FR-006 admin date change applies | Display only |
-| Days Status Summary | progress indicator | Yes (read-only) | Completion summary e.g., "2 / 3 days complete" | Display only |
-| Current Day Status | status badge | Yes (read-only) | Status of the most recent active day | Display only |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-----------|
+| Search Bar | text input | No | Search by patient ID, name, or booking reference | Real-time filter | no graph field (control) |
+| Filter: Date Range | date range picker | No | Filter by treatment start date | Default: current month | no graph field (control) |
+| Filter: Clinician | dropdown | No | Filter by any assigned clinician | Dropdown of clinic's active clinicians | no graph field (control) |
+| Patient ID | text | Yes (read-only) | Unique patient identifier (e.g., HP202401) | Clickable — opens case detail (Screen 4) | ENT-booking.patient_id |
+| Patient Name | text | Yes (read-only) | Patient's full name | Display only | ENT-patient.name |
+| Treatment | text | Yes (read-only) | Treatment name from catalog via treatmentId (e.g., "FUE - Follicular Unit Extraction") | Display only | ENT-treatment.name |
+| Assigned Clinicians | list | Yes (read-only) | One or more clinicians assigned at quote stage | Display only | ENT-treatment-record.clinician_ids |
+| Procedure Date | date | Yes (read-only) | Current appointment date of the FR-006 booking; equals the accepted snapshot appointment unless an approved FR-006 admin date change applies | Display only | ENT-booking.appointment_at |
+| Days Status Summary | progress indicator | Yes (read-only) | Completion summary e.g., "2 / 3 days complete" | Display only (REQ-010-100) | ENT-treatment-record.days_status_summary |
+| Current Day Status | status badge | Yes (read-only) | Status of the most recent active day | Display only (REQ-010-100) | ENT-treatment-record.current_day_status |
 
 **Business Rules**:
 
-- List shows only cases in "In Progress" status for the provider's clinic.
-- Clicking a row opens Screen 4: In Progress Case Detail.
-- Search and filters apply in real-time without page reload.
-- Default sort: procedure date ascending.
+- List shows only cases in "In Progress" status for the provider's clinic. (REQ-010-102)
+- Clicking a row opens Screen 4: In Progress Case Detail. (REQ-010-102)
+- Search and filters apply in real-time without page reload. (REQ-010-102)
+- Default sort: procedure date ascending. (REQ-010-102)
 
 ---
 
@@ -345,50 +344,50 @@ flowchart TD
 
 **Stage A — Before Procedure**
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Case Status Badge | status badge | Yes (read-only) | Current status (Confirmed or In Progress) | Display only |
-| Patient ID | text | Yes (read-only) | Bold patient identifier | Display only |
-| Check In button | button | Conditional | Visible when status = Confirmed AND procedure date ≤ today AND no outstanding balance; triggers transition to In Progress | Disabled with tooltip if conditions not met |
-| Report Issue Before Check In button | button | Conditional | Visible when status = Confirmed (before Check In), next to the Check In button; secondary button style; opens a modal where the provider selects a reason (No-show or Medical postponement) and adds a note; only notifies the admin | Reason required; the booking stays Confirmed; no status or money action is triggered (Alternative Flows B1 and B2) |
-| End Treatment button | button | Conditional | Visible when status = In Progress; green button; opens End of Treatment modal (Screen 6) | Enabled only when ALL day records are in terminal status |
-| Cancel / Close Case button | button | Conditional | Visible when status = In Progress; secondary button style; opens Cancel modal | Provider selects reason and adds note; triggers admin notification |
-| Change Treatment Details button | button | Conditional | Visible to Owner, Manager, and Clinical Staff only while the booking is `Confirmed` and before Check In; hidden while the booking is `Accepted` (treatment details locked until confirmation); opens the treatment-detail change form (same fields and rules as Screen 9) for plan days, clinician set, and estimated graft count (Alternative Flow A2) | Reason required; at least one clinician must remain; plan days stay relative; money fields, provider, and appointment are not editable; change audited and patient notified |
-| Journey Timeline (Right Sidebar) | timeline | Yes (read-only) | Inquiries → Quotes → Accepted → Confirmed → In Progress, with timestamps | Active stage highlighted |
-| Beginning Note | text area | No | Provider's observations at treatment start — visible to patient | Max 2000 characters; auto-saved every 2 minutes |
-| Initial Head Scan Photo Set (V1) | file uploader | No | Standardized head scan photo set captured at treatment start (e.g., front/left/right/top/back) | JPG/PNG only; multiple uploads allowed |
-| Treatment Photos (Before) | file uploader | No | Regular photos of patient's condition before procedure (JPG/PNG) | Max 10MB per file; JPG/PNG only; multiple uploads allowed |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-----------|
+| Case Status Badge | status badge | Yes (read-only) | Current status (Confirmed or In Progress) | Display only | ENT-booking.status |
+| Patient ID | text | Yes (read-only) | Bold patient identifier | Display only | ENT-booking.patient_id |
+| Check In button | button | Conditional | Visible when status = Confirmed AND procedure date ≤ today AND no outstanding balance; triggers transition to In Progress | Disabled with tooltip if conditions not met | no graph field (control) |
+| Report Issue Before Check In button | button | Conditional | Visible when status = Confirmed (before Check In), next to the Check In button; secondary button style; opens a modal where the provider selects a reason (No-show or Medical postponement) and adds a note; only notifies the admin | Reason required; the booking stays Confirmed; no status or money action is triggered (Alternative Flows B1 and B2) | no graph field (control) |
+| End Treatment button | button | Conditional | Visible when status = In Progress; green button; opens End of Treatment modal (Screen 6) | Enabled only when ALL day records are in terminal status | no graph field (control) |
+| Cancel / Close Case button | button | Conditional | Visible when status = In Progress; secondary button style; opens Cancel modal | Provider selects reason and adds note; triggers admin notification | no graph field (control) |
+| Change Treatment Details button | button | Conditional | Visible to Owner, Manager, and Clinical Staff only while the booking is `Confirmed` and before Check In; hidden while the booking is `Accepted` (treatment details locked until confirmation); opens the treatment-detail change form (same fields and rules as Screen 9) for plan days, clinician set, and estimated graft count (Alternative Flow A2) | Reason required; at least one clinician must remain; plan days stay relative; money fields, provider, and appointment are not editable; change audited and patient notified | no graph field (control) |
+| Journey Timeline (Right Sidebar) | timeline | Yes (read-only) | Inquiries → Quotes → Accepted → Confirmed → In Progress, with timestamps | Active stage highlighted | ENT-booking.status_history |
+| Beginning Note | text area | No | Provider's observations at treatment start — visible to patient | Max 2000 characters; auto-saved every 2 minutes (REQ-010-054) | ENT-treatment-record.beginning_note |
+| Initial Head Scan Photo Set (V1) | file uploader | No | Standardized head scan photo set captured at treatment start (e.g., front/left/right/top/back) | JPG/PNG only; multiple uploads allowed | ENT-treatment-media.file_url |
+| Treatment Photos (Before) | file uploader | No | Regular photos of patient's condition before procedure (JPG/PNG) | Max 10MB per file; JPG/PNG only; multiple uploads allowed (REQ-010-053) | ENT-treatment-media.file_url |
 
 **Stage B — During Procedure (Day-by-Day Records)**
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Day Rows | list | Yes | One row per treatment day from the case's current treatment plan (relative days); discrete independent records, never consolidated | — |
-| Day Label | text | Yes (read-only) | "Day 1", "Day 2", etc., with calendar icon | Display only |
-| Day Description | text | Yes (read-only) | Pre-populated from the case's current treatment plan (the accepted Quote Option's relative day plan, as changed through Alternative Flow A2) (e.g., "Consultation & Scans") | Read-only |
-| Status Badge (per day) | status badge | Yes | Current status for this day; click row or Edit icon to open Day Edit modal (Screen 5) | Valid: Not started, In progress, Finished, Need caution/attention, or Cancelled/Deferred |
-| Note Preview (per day) | text | No | First line of saved day note; "+ Add note" if empty | Display only |
-| Edit icon | icon button | — | Opens Day Edit modal (Screen 5) | — |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-----------|
+| Day Rows | list | Yes | One row per treatment day from the case's current treatment plan (relative days); discrete independent records, never consolidated | — | ENT-treatment-day-record.day_number, ENT-treatment-day-record.description, ENT-treatment-day-record.status, ENT-treatment-day-record.note |
+| Day Label | text | Yes (read-only) | "Day 1", "Day 2", etc., with calendar icon | Display only | ENT-treatment-day-record.day_number |
+| Day Description | text | Yes (read-only) | Pre-populated from the case's current treatment plan (the accepted Quote Option's relative day plan, as changed through Alternative Flow A2) (e.g., "Consultation & Scans") | Read-only | ENT-treatment-day-record.description |
+| Status Badge (per day) | status badge | Yes | Current status for this day; click row or Edit icon to open Day Edit modal (Screen 5) | Valid: Not started, In progress, Finished, Need caution/attention, or Cancelled/Deferred | ENT-treatment-day-record.status |
+| Note Preview (per day) | text | No | First line of saved day note; "+ Add note" if empty | Display only | ENT-treatment-day-record.note |
+| Edit icon | icon button | — | Opens Day Edit modal (Screen 5) | — | no graph field (control) |
 
 **Stage C — End of Procedure**
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Head Scan Photo Set Upload (V1) | file uploader | No | Upload additional head scan photo set(s) captured during or after treatment | JPG/PNG only; multiple uploads allowed |
-| Treatment Photos (During/After) | file uploader | No | Regular photos captured during or after treatment (JPG/PNG) | Max 10MB per file; JPG/PNG only; multiple uploads allowed |
-| Estimated Graft Count | number | Yes (read-only) | Current graft estimate (seeded from the accepted snapshot; changed only through Alternative Flow A2) — reference only | Display only; prominently shown |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-----------|
+| Head Scan Photo Set Upload (V1) | file uploader | No | Upload additional head scan photo set(s) captured during or after treatment | JPG/PNG only; multiple uploads allowed | ENT-treatment-media.file_url |
+| Treatment Photos (During/After) | file uploader | No | Regular photos captured during or after treatment (JPG/PNG) | Max 10MB per file; JPG/PNG only; multiple uploads allowed | ENT-treatment-media.file_url |
+| Estimated Graft Count | number | Yes (read-only) | Current graft estimate (seeded from the accepted snapshot; changed only through Alternative Flow A2) — reference only | Display only; prominently shown | ENT-treatment-record.estimated_grafts |
 
 **Business Rules**:
 
 - **Tab activation**: The In Progress tab becomes the active workspace as the case transitions from Confirmed to In Progress at Check In. Other tabs remain accessible for reference.
-- **Day independence**: Each day record is a discrete, independent document. Day records are NEVER consolidated into a single multi-day record.
-- **Day status constraint**: Valid day statuses are: Not started | In progress | Finished | Need caution/attention | Cancelled/Deferred. "Pause" is NOT a valid status.
-- **Treatment plan lock**: While the booking is `Accepted`, treatment details are locked. From `Confirmed` until Check In, the clinic may change the treatment plan days, the assigned clinician set (one or more, seeded from the accepted snapshot's `clinicianIds[]`), and the estimated graft count only through Change Treatment Details (Alternative Flow A2). At Check In these are locked for the clinic. No plan, clinician, or graft-estimate changes are possible from this screen once In Progress; later changes are admin-only (Screen 8).
-- **End Treatment gate**: The "End Treatment" button is enabled only when ALL day records are in a terminal status (Finished, Need caution/attention, or Cancelled/Deferred). Days remaining in "Not started" or "In progress" block the button.
-- **Auto-save**: Beginning note auto-saved every 2 minutes.
-- **Day status sync**: Day status updates are synced to the patient app and admin dashboard in real-time. Provider clinical notes are NOT shared with the patient.
-- **Report Issue Before Check In**: Separate from Cancel / Close Case, which exists only while the case is In Progress (reasons listed in Alternative Flow B4). Before Check In the provider reports a no-show or a medical postponement through this control; the request only notifies the admin, who resolves it through the FR-006 governed actions, and the booking stays Confirmed.
-- **Cancel / Close Case**: Opens a modal for the provider to select a reason and add a note. The request notifies the admin, who resolves it only through the FR-006 governed actions (change appointment, cancel booking, or provider-fault transfer); financial reconciliation follows the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault).
+- **Day independence**: See REQ-010-038.
+- **Day status constraint**: See REQ-010-039. "Pause" is NOT a valid status.
+- **Treatment plan lock**: While the booking is `Accepted`, treatment details are locked. From `Confirmed` until Check In, the clinic may change the treatment plan days, the assigned clinician set (one or more, seeded from the accepted snapshot's `clinicianIds[]`), and the estimated graft count only through Change Treatment Details (Alternative Flow A2). At Check In these are locked for the clinic. No plan, clinician, or graft-estimate changes are possible from this screen once In Progress; later changes are admin-only (Screen 8). (REQ-010-037)
+- **End Treatment gate**: The "End Treatment" button is enabled only when ALL day records are in a terminal status (Finished, Need caution/attention, or Cancelled/Deferred). Days remaining in "Not started" or "In progress" block the button. (REQ-010-104)
+- **Auto-save**: See REQ-010-054.
+- **Day status sync**: See REQ-010-007A and REQ-010-060.
+- **Report Issue Before Check In**: Separate from Cancel / Close Case, which exists only while the case is In Progress (reasons listed in Alternative Flow B4). Before Check In the provider reports a no-show or a medical postponement through this control; the request only notifies the admin, who resolves it through the FR-006 governed actions, and the booking stays Confirmed. (REQ-010-107)
+- **Cancel / Close Case**: Opens a modal for the provider to select a reason and add a note. The request notifies the admin, who resolves it only through the FR-006 governed actions (change appointment, cancel booking, or provider-fault transfer); financial reconciliation follows the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault). (REQ-010-040, REQ-010-079)
 
 ---
 
@@ -398,21 +397,21 @@ flowchart TD
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Day Label | text | Yes (read-only) | "Day 1", "Day 2", etc. | Display only |
-| Day Description | text | Yes (read-only) | Description from the case's current treatment plan | Display only |
-| Status | select | Yes | Status for this day | Options: Not started, In progress, Finished, Need caution/attention, or Cancelled/Deferred |
-| Note | text area | No | Provider's clinical notes for this day — not visible to the patient | Max 2000 characters |
-| Cancel | button | — | Discard changes and close modal | — |
-| Save | button | Yes | Save day status and note; update day row in Screen 4 | — |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-----------|
+| Day Label | text | Yes (read-only) | "Day 1", "Day 2", etc. | Display only | ENT-treatment-day-record.day_number |
+| Day Description | text | Yes (read-only) | Description from the case's current treatment plan | Display only | ENT-treatment-day-record.description |
+| Status | select | Yes | Status for this day | Options: Not started, In progress, Finished, Need caution/attention, or Cancelled/Deferred | ENT-treatment-day-record.status |
+| Note | text area | No | Provider's clinical notes for this day — not visible to the patient | Max 2000 characters (REQ-010-054) | ENT-treatment-day-record.note |
+| Cancel | button | — | Discard changes and close modal | — | no graph field (control) |
+| Save | button | Yes | Save day status and note; update day row in Screen 4 | — | no graph field (control) |
 
 **Business Rules**:
 
 - "Pause" is NOT a valid day status and must not appear in the Status dropdown.
 - Clinical notes entered here are provider-only and are NOT visible to the patient.
 - Status changes are synced to the patient app and admin immediately upon save.
-- Provider may return to this modal at any time while the case is In Progress.
+- Provider may return to this modal at any time while the case is In Progress. (REQ-010-105)
 
 ---
 
@@ -424,25 +423,25 @@ flowchart TD
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Conclusion Notes | text area | Yes | Provider's summary of the treatment outcome | Max 2000 characters |
-| Prescription | text area | Yes | Prescribed medications and dosage instructions | Max 2000 characters |
-| Advice | text area | Yes | Post-op advice for patient recovery | Max 2000 characters |
-| Medication | text area | Yes | Medication instructions (drug name, dosage, frequency, duration) | Required; non-empty |
-| Actual Graft Count | number | Yes | Total grafts successfully transplanted — actual result | Min 0, max 10000; compared against estimated count for reference |
-| Final Head Scan Photo Set (V1) | file uploader | Yes | The entire standardized head scan photo set captured after procedure completion (e.g., front/left/right/top/back), used as the end-of-treatment evidence | Required; JPG/PNG only; multiple uploads supported |
-| Cancel | button | — | Discard and return to In Progress tab | — |
-| Save (Complete Treatment) | button | Yes | Finalise treatment documentation; signals treatment completion to FR-011 for aftercare setup | All required fields must be filled |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-----------|
+| Conclusion Notes | text area | Yes | Provider's summary of the treatment outcome | Max 2000 characters (REQ-010-054) | ENT-treatment-record.conclusion_notes |
+| Prescription | text area | Yes | Prescribed medications and dosage instructions | Max 2000 characters (REQ-010-054) | ENT-treatment-record.prescription |
+| Advice | text area | Yes | Post-op advice for patient recovery | Max 2000 characters (REQ-010-054) | ENT-treatment-record.advice |
+| Medication | text area | Yes | Medication instructions (drug name, dosage, frequency, duration) | Required; non-empty | ENT-treatment-record.medication_instructions |
+| Actual Graft Count | number | Yes | Total grafts successfully transplanted — actual result | Min 0, max 10000; compared against estimated count for reference (REQ-010-055) | ENT-treatment-record.actual_grafts, ENT-treatment-record.estimated_grafts |
+| Final Head Scan Photo Set (V1) | file uploader | Yes | The entire standardized head scan photo set captured after procedure completion (e.g., front/left/right/top/back), used as the end-of-treatment evidence | Required; JPG/PNG only; multiple uploads supported | ENT-treatment-media.file_url |
+| Cancel | button | — | Discard and return to In Progress tab | — | no graph field (control) |
+| Save (Complete Treatment) | button | Yes | Finalise treatment documentation; signals treatment completion to FR-011 for aftercare setup | All required fields must be filled | no graph field (control) |
 
 **Business Rules**:
 
-- This modal is accessible only after all day records are in terminal status.
-- Clicking Save finalises treatment documentation and signals completion to FR-011. FR-010 does NOT transition the booking status — FR-011 owns the aftercare template selection, status transition (In Progress → Aftercare), and aftercare plan activation.
-- Patient receives post-op instructions and medication instructions via in-app notification and email.
-- Admin receives treatment completion notification for billing reconciliation.
-- Once saved, the provider cannot return to edit In Progress documentation — an audit snapshot is captured.
-- Actual graft count is the definitive record; the current estimated graft count, and the original estimate in the accepted snapshot, are preserved for reference and audit.
+- See REQ-010-104.
+- Clicking Save finalises treatment documentation and signals completion to FR-011. FR-010 does NOT transition the booking status — FR-011 owns the aftercare template selection, status transition (In Progress → Aftercare), and aftercare plan activation. (REQ-010-006)
+- Patient receives post-op instructions and medication instructions via in-app notification and email. (REQ-010-008, REQ-010-022)
+- Admin receives treatment completion notification for billing reconciliation. (REQ-010-057)
+- Once saved, the provider cannot return to edit In Progress documentation — an audit snapshot is captured. (REQ-010-083)
+- Actual graft count is the definitive record; the current estimated graft count, and the original estimate in the accepted snapshot, are preserved for reference and audit. (REQ-010-084)
 
 ---
 
@@ -454,26 +453,26 @@ flowchart TD
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Search Bar | text input | No | Search by patient ID, name, booking reference, or provider name | Real-time filter |
-| Filter: Provider / Clinic | dropdown | No | Filter by provider or clinic | All providers in the platform |
-| Filter: Date Range | date range picker | No | Filter by procedure start date | Default: current month |
-| Filter: Clinician | dropdown | No | Filter by any assigned clinician | — |
-| Patient ID | text | Yes (read-only) | Unique patient identifier | Clickable — opens admin case detail (Screen 8) |
-| Patient Name | text | Yes (read-only) | Patient's full name | Display only |
-| Provider / Clinic | text | Yes (read-only) | Treating provider and clinic name | Display only |
-| Treatment | text | Yes (read-only) | Treatment name from catalog via treatmentId (e.g., "FUE - Follicular Unit Extraction") | Display only |
-| Assigned Clinicians | list | Yes (read-only) | Clinicians currently assigned to the case | Display only |
-| Procedure Date | date | Yes (read-only) | Current appointment date of the FR-006 booking; equals the accepted snapshot appointment unless an approved FR-006 admin date change applies | Display only |
-| Days Status Summary | progress indicator | Yes (read-only) | Completion summary e.g., "2 / 3 days complete" | Display only |
-| Action | button | — | Edit / View case | Opens Screen 8 |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-----------|
+| Search Bar | text input | No | Search by patient ID, name, booking reference, or provider name | Real-time filter (REQ-010-114) | no graph field (control) |
+| Filter: Provider / Clinic | dropdown | No | Filter by provider or clinic | All providers in the platform | no graph field (control) |
+| Filter: Date Range | date range picker | No | Filter by procedure start date | Default: current month | no graph field (control) |
+| Filter: Clinician | dropdown | No | Filter by any assigned clinician | — | no graph field (control) |
+| Patient ID | text | Yes (read-only) | Unique patient identifier | Clickable — opens admin case detail (Screen 8) | ENT-booking.patient_id |
+| Patient Name | text | Yes (read-only) | Patient's full name | Display only | ENT-patient.name |
+| Provider / Clinic | text | Yes (read-only) | Treating provider and clinic name | Display only | ENT-provider.name |
+| Treatment | text | Yes (read-only) | Treatment name from catalog via treatmentId (e.g., "FUE - Follicular Unit Extraction") | Display only | ENT-treatment.name |
+| Assigned Clinicians | list | Yes (read-only) | Clinicians currently assigned to the case | Display only | ENT-treatment-record.clinician_ids |
+| Procedure Date | date | Yes (read-only) | Current appointment date of the FR-006 booking; equals the accepted snapshot appointment unless an approved FR-006 admin date change applies | Display only | ENT-booking.appointment_at |
+| Days Status Summary | progress indicator | Yes (read-only) | Completion summary e.g., "2 / 3 days complete" | Display only (REQ-010-100) | ENT-treatment-record.days_status_summary |
+| Action | button | — | Edit / View case | Opens Screen 8 | no graph field (control) |
 
 **Business Rules**:
 
-- Admin listing shows all providers' In Progress cases — platform-wide visibility.
-- Clicking a row or the Action button opens Screen 8: In Progress Case Detail in editable mode.
-- Default sort: procedure date ascending.
+- Admin listing shows all providers' In Progress cases — platform-wide visibility. (REQ-010-103)
+- Clicking a row or the Action button opens Screen 8: In Progress Case Detail in editable mode. (REQ-010-103)
+- Default sort: procedure date ascending. (REQ-010-103)
 
 ---
 
@@ -483,39 +482,39 @@ flowchart TD
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Case Status | status badge | Yes (read-only) | Current booking status (Confirmed, In Progress, Aftercare, Completed, or Cancelled) | Display only; the status changes only through Check In, End Treatment, the FR-006 Cancel Booking action, the provider-fault transfer, or the FR-006 In-Progress provider-fault decision |
-| Patient ID | text | Yes (read-only) | Patient identifier | Display only |
-| Provider / Clinic | text | Yes (read-only) | Treating provider and clinic from the accepted snapshot | Display only; a provider change is never made here and follows the FR-006 Alternative Flow B5 provider-fault transfer (Alternative Flow B6) |
-| Assigned Clinicians | multiselect | Yes (editable) | Clinicians — admin can add or remove from `Confirmed` onward, before or after Check In (seeded from the accepted snapshot's `clinicianIds[]`) | Treatment-detail change (Alternative Flow A2): at least one must remain; reason required; edit audited; patient notified |
-| Procedure Date | date | Yes (read-only) | Current appointment date of the FR-006 booking; equals the accepted snapshot appointment unless an approved FR-006 admin date change applies | Display only; appointment changes follow FR-006 admin date-change rules |
-| Estimated Graft Count | number | Yes (editable) | Current graft estimate (seeded from the accepted snapshot) | Treatment-detail change (Alternative Flow A2): reason required; edit audited; patient notified |
-| Beginning Note | text area | No (editable) | Provider's beginning-of-treatment note — admin can edit | Max 2000 characters; edit logged |
-| Treatment Days | list | Yes (editable) | One row per day; admin can open any day via Day Edit modal | Day status and day note editable by admin; day descriptions and day count change only through a treatment-detail change (Alternative Flow A2), which is audited and notifies the patient; days stay relative |
-| Day Status (per day) | select | Yes (editable) | Admin can override any day's status | Valid: Not started, In progress, Finished, Need caution/attention, or Cancelled/Deferred |
-| Day Note (per day) | text area | No (editable) | Admin can view and edit provider's clinical notes | Edit logged |
-| Head Scan Photo Sets (V1) | file viewer / uploader | No (editable) | Admin can view, add, or archive (soft-delete) uploaded head scan photo sets | Changes logged; archived items retained/restorable |
-| Actual Graft Count | number | No (editable) | Admin can correct if submitted in error | Min 0, max 10000; edit logged |
-| End Treatment button | button | Conditional | Admin can trigger End of Treatment on behalf of provider | Opens End of Treatment modal (same fields as Screen 6); FR-011 handles aftercare setup separately; ending the treatment as admin starts the confirmation window, the same as when the clinic ends it |
-| Cancel / Close Case button | button | Conditional | Opens the FR-006 Cancel Booking action (FR-006 Screen 9) for this booking | Mandatory reason and confirmation in FR-006; audited; refunds follow the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault) |
-| Change Treatment Details button | button | Conditional | Admin opens Screen 9 to change plan days, clinician set, and estimated graft count (Alternative Flow A2) | Reason required; money fields, provider, and appointment are not editable; change audited and patient notified |
-| Provider-Fault Transfer button | button | Conditional | When the provider withdraws, drops out, or must be replaced (Alternative Flow B6): for a `Confirmed` case opens the FR-006 Alternative Flow B5 provider-fault transfer (FR-006 Screen 10); for an `In Progress` case opens the FR-006 In-Progress provider-fault decision (FR-006 Screen 11) | Reason required; audited; handled in FR-006 |
-| Audit Trail | expandable section | Yes (read-only) | Full log of all edits, status changes, and system events | Timestamped; actor-attributed |
-| Journey Timeline (Right Sidebar) | timeline | Yes (read-only) | Inquiries → Quotes → Accepted → Confirmed → In Progress with timestamps | Display only |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-----------|
+| Case Status | status badge | Yes (read-only) | Current booking status (Confirmed, In Progress, Aftercare, Completed, or Cancelled) | Display only; the status changes only through Check In, End Treatment, the FR-006 Cancel Booking action, the provider-fault transfer, or the FR-006 In-Progress provider-fault decision | ENT-booking.status |
+| Patient ID | text | Yes (read-only) | Patient identifier | Display only | ENT-booking.patient_id |
+| Provider / Clinic | text | Yes (read-only) | Treating provider and clinic from the accepted snapshot | Display only; a provider change is never made here and follows the FR-006 Alternative Flow B5 provider-fault transfer (Alternative Flow B6) | ENT-provider.name |
+| Assigned Clinicians | multiselect | Yes (editable) | Clinicians — admin can add or remove from `Confirmed` onward, before or after Check In (seeded from the accepted snapshot's `clinicianIds[]`) | Treatment-detail change (Alternative Flow A2): at least one must remain; reason required; edit audited; patient notified | ENT-treatment-record.clinician_ids |
+| Procedure Date | date | Yes (read-only) | Current appointment date of the FR-006 booking; equals the accepted snapshot appointment unless an approved FR-006 admin date change applies | Display only; appointment changes follow FR-006 admin date-change rules | ENT-booking.appointment_at |
+| Estimated Graft Count | number | Yes (editable) | Current graft estimate (seeded from the accepted snapshot) | Treatment-detail change (Alternative Flow A2): reason required; edit audited; patient notified | ENT-treatment-record.estimated_grafts |
+| Beginning Note | text area | No (editable) | Provider's beginning-of-treatment note — admin can edit | Max 2000 characters; edit logged | ENT-treatment-record.beginning_note |
+| Treatment Days | list | Yes (editable) | One row per day; admin can open any day via Day Edit modal | Day status and day note editable by admin; day descriptions and day count change only through a treatment-detail change (Alternative Flow A2), which is audited and notifies the patient; days stay relative | ENT-treatment-day-record.day_number, ENT-treatment-day-record.description, ENT-treatment-day-record.status, ENT-treatment-day-record.note |
+| Day Status (per day) | select | Yes (editable) | Admin can override any day's status | Valid: Not started, In progress, Finished, Need caution/attention, or Cancelled/Deferred | ENT-treatment-day-record.status |
+| Day Note (per day) | text area | No (editable) | Admin can view and edit provider's clinical notes | Edit logged | ENT-treatment-day-record.note |
+| Head Scan Photo Sets (V1) | file viewer / uploader | No (editable) | Admin can view, add, or archive (soft-delete) uploaded head scan photo sets | Changes logged; archived items retained/restorable | ENT-treatment-media.file_url |
+| Actual Graft Count | number | No (editable) | Admin can correct if submitted in error | Min 0, max 10000; edit logged (REQ-010-055) | ENT-treatment-record.actual_grafts |
+| End Treatment button | button | Conditional | Admin can trigger End of Treatment on behalf of provider | Opens End of Treatment modal (same fields as Screen 6); FR-011 handles aftercare setup separately; ending the treatment as admin starts the confirmation window, the same as when the clinic ends it | no graph field (control) |
+| Cancel / Close Case button | button | Conditional | Opens the FR-006 Cancel Booking action (FR-006 Screen 9) for this booking | Mandatory reason and confirmation in FR-006; audited; refunds follow the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault) | no graph field (control) |
+| Change Treatment Details button | button | Conditional | Admin opens Screen 9 to change plan days, clinician set, and estimated graft count (Alternative Flow A2) | Reason required; money fields, provider, and appointment are not editable; change audited and patient notified | no graph field (control) |
+| Provider-Fault Transfer button | button | Conditional | When the provider withdraws, drops out, or must be replaced (Alternative Flow B6): for a `Confirmed` case opens the FR-006 Alternative Flow B5 provider-fault transfer (FR-006 Screen 10); for an `In Progress` case opens the FR-006 In-Progress provider-fault decision (FR-006 Screen 11) | Reason required; audited; handled in FR-006 | no graph field (control) |
+| Audit Trail | expandable section | Yes (read-only) | Full log of all edits, status changes, and system events | Timestamped; actor-attributed | ENT-treatment-audit-entry.action_type, ENT-treatment-audit-entry.actor_id, ENT-treatment-audit-entry.after_values, ENT-treatment-audit-entry.before_values, ENT-treatment-audit-entry.occurred_at, ENT-treatment-audit-entry.reason |
+| Journey Timeline (Right Sidebar) | timeline | Yes (read-only) | Inquiries → Quotes → Accepted → Confirmed → In Progress with timestamps | Display only | ENT-booking.status_history |
 
 **Business Rules**:
 
-- Admin has full edit access to treatment documentation fields as confirmed in client requirements, except the accepted snapshot, the money fields read from it (price, currency, date range, appointment, promotion), and the treating provider, which are read-only in FR-010.
-- Treatment-detail changes (plan days, clinician set, estimated graft count) follow Alternative Flow A2: reason required, audited with before/after values, patient notified through the `treatment.plan_changed` event, and the accepted snapshot left unchanged.
-- Admin never reassigns the treating provider in FR-010. Provider withdrawal, drop-out, or replacement goes through the FR-006 Alternative Flow B5 provider-fault transfer before Check In, or the FR-006 Alternative Flow B7 decision while In Progress (Alternative Flow B6).
-- All edits by admin are logged in the audit trail with timestamp and admin identity; admin MUST provide a reason for each edit (stored alongside before/after values).
+- Admin has full edit access to treatment documentation fields as confirmed in client requirements, except the accepted snapshot, the money fields read from it (price, currency, date range, appointment, promotion), and the treating provider, which are read-only in FR-010. (REQ-010-087)
+- See REQ-010-042.
+- See REQ-010-044.
+- All edits by admin are logged in the audit trail with timestamp and admin identity; admin MUST provide a reason for each edit (stored alongside before/after values). (REQ-010-088)
 - Admin clinician reassignment overrides the provider-level lock applied at Check In; the edit is always logged with reason (previous value preserved in audit history).
-- Admin cannot set the case or booking status by hand. In Progress moves to Aftercare only when End Treatment is saved, which the admin may do on behalf of the provider, or through the FR-006 In-Progress provider-fault decision; cancellation uses the FR-006 Cancel Booking action, and provider replacement before Check In uses the provider-fault transfer.
-- Admin can trigger End Treatment on behalf of a provider; the End of Treatment modal collects the same required fields as Screen 6. When an admin ends a treatment, that starts the confirmation window (FR-007 Fund Release & Money Routing Rules), the same as when the clinic ends it.
-- Case cancellation is performed by an admin through the FR-006 Cancel Booking action; financial reconciliation follows the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault) and the platform does not perform automatic financial resolution.
-- Editing provider clinical notes by admin is permitted for legal or compliance corrections and is always logged.
-- Admin “remove” actions are archive/soft-delete only (no hard delete) for treatment documentation or media assets; archived items remain retained per policy and are restorable. Each archived item carries an archive flag (archived yes/no, when, by whom) on the treatment media record and on the documentation records (day records and medication instructions); archiving does not change the treatment status list.
+- Admin cannot set the case or booking status by hand. In Progress moves to Aftercare only when End Treatment is saved, which the admin may do on behalf of the provider, or through the FR-006 In-Progress provider-fault decision; cancellation uses the FR-006 Cancel Booking action, and provider replacement before Check In uses the provider-fault transfer. (REQ-010-031)
+- Admin can trigger End Treatment on behalf of a provider; the End of Treatment modal collects the same required fields as Screen 6. When an admin ends a treatment, that starts the confirmation window (FR-007 Fund Release & Money Routing Rules), the same as when the clinic ends it. (REQ-010-089)
+- Case cancellation is performed by an admin through the FR-006 Cancel Booking action; financial reconciliation follows the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault) and the platform does not perform automatic financial resolution. (REQ-010-092)
+- Editing provider clinical notes by admin is permitted for legal or compliance corrections and is always logged. (REQ-010-090)
+- Admin “remove” actions are archive/soft-delete only (no hard delete) for treatment documentation or media assets; archived items remain retained per policy and are restorable. Each archived item carries an archive flag (archived yes/no, when, by whom) on the treatment media record and on the documentation records (day records and medication instructions); archiving does not change the treatment status list. (REQ-010-091)
 
 ---
 
@@ -527,55 +526,59 @@ flowchart TD
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| Booking Reference and Status | text | Yes (read-only) | Booking reference and current booking status | Display only; the form is unavailable while the booking is `Accepted`, `Payment Window Expired`, or `Cancelled` |
-| Current Treatment Plan Days | editable list | No | Relative plan days (Day 1, Day 2, and so on) with their descriptions, prefilled from the case's current treatment plan | Days stay relative; no calendar dates; at least one day remains; days that already have a day status other than Not started cannot be removed |
-| Assigned Clinicians | multiselect | No | Clinicians assigned to the case, prefilled from the current set | At least one clinician remains; only clinicians on the treating provider's staff list |
-| Estimated Graft Count | number | No | Current graft estimate | Whole number from 0 to 10000 |
-| Change Reason | text area | Yes | Why the change is made | Mandatory; 10 to 1000 characters |
-| Locked Fields Notice | info | Yes (read-only) | States that price, currency, date range, appointment, promotion, and provider cannot be changed here | Display only |
-| Before and After Summary | panel | Yes (read-only) | Shows each changed value before and after | Shown on the confirmation step |
-| Confirm Change | button | Yes | Saves the change after the admin confirms the summary | Enabled only when at least one value changed and the reason is valid |
-| Cancel | button | No | Closes the form without saving | — |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-----------|
+| Booking Reference and Status | text | Yes (read-only) | Booking reference and current booking status | Display only; the form is unavailable while the booking is `Accepted`, `Payment Window Expired`, or `Cancelled` | ENT-booking.booking_reference, ENT-booking.status |
+| Current Treatment Plan Days | editable list | No | Relative plan days (Day 1, Day 2, and so on) with their descriptions, prefilled from the case's current treatment plan | Days stay relative; no calendar dates; at least one day remains; days that already have a day status other than Not started cannot be removed (REQ-010-072) | ENT-treatment-record.current_treatment_plan |
+| Assigned Clinicians | multiselect | No | Clinicians assigned to the case, prefilled from the current set | At least one clinician remains; only clinicians on the treating provider's staff list (REQ-010-072) | ENT-treatment-record.clinician_ids |
+| Estimated Graft Count | number | No | Current graft estimate | Whole number from 0 to 10000 (REQ-010-055) | ENT-treatment-record.estimated_grafts |
+| Change Reason | text area | Yes | Why the change is made | Mandatory; 10 to 1000 characters (REQ-010-072) | ENT-treatment-detail-change.reason |
+| Locked Fields Notice | info | Yes (read-only) | States that price, currency, date range, appointment, promotion, and provider cannot be changed here | Display only | no graph field (notice) |
+| Before and After Summary | panel | Yes (read-only) | Shows each changed value before and after | Shown on the confirmation step | ENT-treatment-detail-change.before_values, ENT-treatment-detail-change.after_values |
+| Confirm Change | button | Yes | Saves the change after the admin confirms the summary | Enabled only when at least one value changed and the reason is valid (REQ-010-072) | no graph field (control) |
+| Cancel | button | No | Closes the form without saving | — | no graph field (control) |
 
 **Business Rules**:
 
-- The admin may use this screen at any time from `Confirmed` onward, including after Check In, during `Aftercare`, and after `Completed`; it is never available while the booking is `Accepted`, `Payment Window Expired`, or `Cancelled`.
-- The change is saved only after the admin confirms the before and after summary.
-- Each saved change creates one Treatment Detail Change record (Entity 5) with actor, actor type, role, reason, timestamp, and before and after values, and adds an audit trail entry.
-- Each saved change emits `treatment.plan_changed` (FR-030), and the patient sees the updated details on Screens 1 and 2.
-- The accepted snapshot and every money field stay unchanged; provider changes follow the FR-006 provider-fault transfer and appointment changes follow the FR-006 Change Appointment action.
+- The admin may use this screen at any time from `Confirmed` onward, including after Check In, during `Aftercare`, and after `Completed`; it is never available while the booking is `Accepted`, `Payment Window Expired`, or `Cancelled`. (REQ-010-073)
+- The change is saved only after the admin confirms the before and after summary. (REQ-010-074)
+- Each saved change creates one Treatment Detail Change record (Entity 5) with actor, actor type, role, reason, timestamp, and before and after values, and adds an audit trail entry. (REQ-010-075)
+- Each saved change emits `treatment.plan_changed` (FR-030), and the patient sees the updated details on Screens 1 and 2. (REQ-010-042)
+- The accepted snapshot and every money field stay unchanged; provider changes follow the FR-006 provider-fault transfer and appointment changes follow the FR-006 Change Appointment action. (REQ-010-042)
 
 ## Business Rules
 
 ### General Module Rules
 
-- **Rule 1**: Booking status MUST transition through sequence: Confirmed → In Progress → Aftercare → Completed (no skipping stages). Exceptions: after a provider fault an admin may move an In Progress booking to Aftercare through the FR-006 In-Progress provider-fault decision (Rule 12), and an admin may cancel the booking from any non-terminal state through the FR-006 Cancel Booking action.
-- **Rule 2**: Treatment documentation MUST be initiated by the "Check In" action from the Confirmed list (cannot pre-document treatments). The treatment record itself is created at booking confirmation (first successful payment) in status "Awaiting Check In", seeded from the accepted snapshot, so audited treatment-detail changes before Check In have a record to change
+- **Rule 1**: Booking status MUST transition through sequence: Confirmed → In Progress → Aftercare → Completed (no skipping stages). Exceptions: after a provider fault an admin may move an In Progress booking to Aftercare through the FR-006 In-Progress provider-fault decision (Rule 12), and an admin may cancel the booking from any non-terminal state through the FR-006 Cancel Booking action. (REQ-010-033)
+- **Rule 2**: Treatment documentation MUST be initiated by the "Check In" action from the Confirmed list (cannot pre-document treatments). The treatment record itself is created at booking confirmation (first successful payment) in status "Awaiting Check In", seeded from the accepted snapshot, so audited treatment-detail changes before Check In have a record to change (REQ-010-034)
 - **Rule 3**: "Check In" MUST be available only when the booking status is Confirmed, the procedure date is today or in the past (future appointments cannot be checked in), and the booking is fully paid (no outstanding balance); when any condition is not met, Check In is disabled and the provider sees the reason. This is the one Check In rule (REQ-010-106)
-- **Rule 4**: Provider role MUST be Owner, Manager, or Clinical Staff to document treatments (Billing Staff can view but not edit)
-- **Rule 5**: All timestamps (check-in, end of treatment) MUST be recorded in UTC and displayed in provider's local timezone
-- **Rule 6**: Treatment documentation MUST be completed within 24 hours of Check In. The deadline is enforced only through reminders and a flag: the first reminder is sent at the reminder-timing setting (default 12 hours after Check In), the second at the configured completion deadline (default 24 hours), and the admin dashboard then flags the case as Overdue Documentation; nothing is blocked
-- **Rule 7**: Maximum one treatment can be "In Progress" per patient at any time (prevents duplicate documentation)
-- **Rule 8**: Treatment Plan (per-day) day descriptions, the assigned clinician set, and the estimated graft count are LOCKED for providers once Check In is performed — providers cannot modify them mid-procedure. While the booking is `Accepted` (unpaid) they are locked for everyone. From `Confirmed` until Check In the clinic may change them, and from `Confirmed` onward an admin may change them, only through the treatment-detail change (Rule 13). Each change MUST carry a reason and MUST be captured in the audit trail (previous values preserved).
-- **Rule 9**: Each treatment day is a discrete record — day records are NEVER consolidated into a single multi-day record
-- **Rule 10**: Valid day statuses are: **Not started** | **In progress** | **Finished** | **Need caution/attention** | **Cancelled/Deferred**. No other statuses are permitted.
-- **Rule 11**: The provider's Cancel / Close Case action does NOT auto-transition status or trigger financial actions. The admin resolves it only through the FR-006 governed actions (change appointment, cancel booking, or provider-fault transfer); no one sets a booking status by hand
-- **Rule 12**: An effective provider suspension/deactivation (FR-015 A5/Screen 4) does not cancel the provider's In Progress cases: each stays In Progress with cause `ProviderSuspended` or `ProviderDeactivated` and an independent `supportRequired` marker, and provider documentation is blocked (Alternative Flow B5). This cascade is distinct from Rule 11's provider-requested closure. Clinical notes, photos, head scan photo sets, and any already recorded completion milestone are preserved; an admin decides case by case through FR-006 Alternative Flow B7 to move the booking to Aftercare and reassign the aftercare provider through FR-011 Screen 19, or to cancel the booking. No replacement acceptance is created for an In Progress case. Reactivation never restores the provider's actions on the case.
-- **Rule 13**: After subquote acceptance, FR-010 is the only path for changing the treatment plan days, the assigned clinician set, and the estimated graft count. No change is allowed while the booking is `Accepted` (unpaid); changes are allowed only from `Confirmed`. Only the clinic (Owner, Manager, or Clinical Staff, from `Confirmed` until Check In) or an admin (from `Confirmed` onward) may make the change. Each change MUST record actor, role, reason, timestamp, and before/after values; MUST notify the patient through the FR-030 `treatment.plan_changed` event; MUST leave the accepted snapshot unchanged as the original record; and MUST NOT change price, currency, date range, appointment, or promotion (Alternative Flow A2). Admin changes use Screen 9.
-- **Rule 14**: Price, currency, date range, accepted appointment baseline, and promotion are read only from the accepted snapshot, reached through the FR-006 booking's AcceptanceEvent. The operative procedure date (Check In gate and displays) is the current FR-006 booking appointment, which equals the snapshot appointment unless an approved FR-006 admin date change applies. FR-010 never edits the snapshot or reads these values from live FR-004 records. The case's current treatment details are seeded from the same snapshot and then change only under Rule 13.
-- **Rule 15**: Treatment plan days are relative (Day 1, Day 2, ...). They are never converted to, stored as, or displayed as calendar dates on any FR-010 screen or record.
-- **Rule 16**: FR-010 never reassigns the treating provider. Provider withdrawal, drop-out, or replacement after acceptance and before Check In is handed to the FR-006 Alternative Flow B5 provider-fault transfer (Alternative Flow B6); after Check In it is handed to the FR-006 Alternative Flow B7 admin decision (move to Aftercare with an aftercare reassignment, or cancel), with no replacement acceptance. The B5 payment terms apply to the transfer: the patient is refunded in full everything paid, pays no cancellation fee, and the replacement booking takes a new payment.
+- **Rule 4**: Provider role MUST be Owner, Manager, or Clinical Staff to document treatments (Billing Staff can view but not edit) (REQ-010-002, REQ-010-017)
+- **Rule 5**: All timestamps (check-in, end of treatment) MUST be recorded in UTC and displayed in provider's local timezone (REQ-010-035)
+- **Rule 6**: Treatment documentation MUST be completed within 24 hours of Check In. See REQ-010-010.
+- **Rule 7**: Maximum one treatment can be "In Progress" per patient at any time (prevents duplicate documentation) (REQ-010-036)
+- **Rule 8**: Treatment Plan (per-day) day descriptions, the assigned clinician set, and the estimated graft count are LOCKED for providers once Check In is performed — providers cannot modify them mid-procedure. While the booking is `Accepted` (unpaid) they are locked for everyone. From `Confirmed` until Check In the clinic may change them, and from `Confirmed` onward an admin may change them, only through the treatment-detail change (Rule 13). Each change MUST carry a reason and MUST be captured in the audit trail (previous values preserved). (REQ-010-037)
+- **Rule 9**: Each treatment day is a discrete record — day records are NEVER consolidated into a single multi-day record (REQ-010-038)
+- **Rule 10**: Valid day statuses are: **Not started** | **In progress** | **Finished** | **Need caution/attention** | **Cancelled/Deferred**. No other statuses are permitted. (REQ-010-039)
+- **Rule 11**: The provider's Cancel / Close Case action does NOT auto-transition status or trigger financial actions. The admin resolves it only through the FR-006 governed actions (change appointment, cancel booking, or provider-fault transfer); no one sets a booking status by hand (REQ-010-040)
+- **Rule 12**: An effective provider suspension/deactivation (FR-015 A5/Screen 4) does not cancel the provider's In Progress cases: each stays In Progress with cause `ProviderSuspended` or `ProviderDeactivated` and an independent `supportRequired` marker, and provider documentation is blocked (Alternative Flow B5). This cascade is distinct from Rule 11's provider-requested closure. Clinical notes, photos, head scan photo sets, and any already recorded completion milestone are preserved; an admin decides case by case through FR-006 Alternative Flow B7 to move the booking to Aftercare and reassign the aftercare provider through FR-011 Screen 19, or to cancel the booking. No replacement acceptance is created for an In Progress case. Reactivation never restores the provider's actions on the case. (REQ-010-041)
+- **Rule 13**: After subquote acceptance, FR-010 is the only path for changing the treatment plan days, the assigned clinician set, and the estimated graft count. No change is allowed while the booking is `Accepted` (unpaid); changes are allowed only from `Confirmed`. Only the clinic (Owner, Manager, or Clinical Staff, from `Confirmed` until Check In) or an admin (from `Confirmed` onward) may make the change. Each change MUST record actor, role, reason, timestamp, and before/after values; MUST notify the patient through the FR-030 `treatment.plan_changed` event; MUST leave the accepted snapshot unchanged as the original record; and MUST NOT change price, currency, date range, appointment, or promotion (Alternative Flow A2). Admin changes use Screen 9. (REQ-010-042, REQ-010-027)
+- **Rule 14**: Price, currency, date range, accepted appointment baseline, and promotion are read only from the accepted snapshot, reached through the FR-006 booking's AcceptanceEvent. The operative procedure date (Check In gate and displays) is the current FR-006 booking appointment, which equals the snapshot appointment unless an approved FR-006 admin date change applies. FR-010 never edits the snapshot or reads these values from live FR-004 records. The case's current treatment details are seeded from the same snapshot and then change only under Rule 13. (REQ-010-043, REQ-010-026)
+- **Rule 15**: Treatment plan days are relative (Day 1, Day 2, ...). They are never converted to, stored as, or displayed as calendar dates on any FR-010 screen or record. (REQ-010-028)
+- **Rule 16**: FR-010 never reassigns the treating provider. Provider withdrawal, drop-out, or replacement after acceptance and before Check In is handed to the FR-006 Alternative Flow B5 provider-fault transfer (Alternative Flow B6); after Check In it is handed to the FR-006 Alternative Flow B7 admin decision (move to Aftercare with an aftercare reassignment, or cancel), with no replacement acceptance. The B5 payment terms apply to the transfer: the patient is refunded in full everything paid, pays no cancellation fee, and the replacement booking takes a new payment. (REQ-010-044, REQ-010-029)
 
 ### Data & Privacy Rules
 
-- **Privacy Rule 1**: Patient full name and contact details are visible to the provider ONLY after booking confirmation (first successful payment); before it the provider sees the anonymized ID only. The platform-wide identity-hiding rule is held once in the system PRD and this FR-010 rule is retired in its favour; the unlock point stated here is booking confirmation (first successful payment)
-- **Privacy Rule 2**: Treatment photos and head scan photo sets MUST be encrypted at rest using AES-256 (handled by S-05: Media Storage Service)
-- **Privacy Rule 3**: Treatment documentation retention follows the system PRD, Platform-Wide Rules: One 10-year retention period
-- **Privacy Rule 4**: Only assigned provider clinic can access patient's treatment documentation (other clinics cannot view)
-- **Audit Rule**: All changes to treatment documentation MUST be logged with timestamp, user ID, and action type (create, update, status change, archive/soft-delete, restore). Hard deletes are forbidden for treatment documentation and associated media assets.
-- **HIPAA/GDPR**: Treatment photos and medical notes constitute Protected Health Information (PHI) and MUST comply with data protection regulations
+- **Privacy Rule 1**: Patient full name and contact details are visible to the provider ONLY after booking confirmation (first successful payment); before it the provider sees the anonymized ID only. The platform-wide identity-hiding rule is held once in the system PRD and this FR-010 rule is retired in its favour; the unlock point stated here is booking confirmation (first successful payment) (REQ-SYS-001)
+- **Privacy Rule 2**: Treatment photos and head scan photo sets MUST be encrypted at rest using AES-256 (handled by S-05: Media Storage Service) (REQ-010-013, REQ-010-020)
+- **Privacy Rule 3**: Treatment documentation retention follows the system PRD, Platform-Wide Rules: One 10-year retention period (REQ-010-013, REQ-010-046, REQ-SYS-002)
+- **Privacy Rule 4**: Only assigned provider clinic can access patient's treatment documentation (other clinics cannot view) (REQ-010-015)
+- **Audit Rule**: All changes to treatment documentation MUST be logged with timestamp, user ID, and action type (create, update, status change, archive/soft-delete, restore). Hard deletes are forbidden for treatment documentation and associated media assets. (REQ-010-047)
+- **HIPAA/GDPR**: Treatment photos and medical notes constitute Protected Health Information (PHI) and MUST comply with data protection regulations (REQ-010-048)
+- **Authentication**: Providers must authenticate via OAuth 2.0 with role-based access control (RBAC). See REQ-010-017.
+- **Authorization**: Providers can only document treatments for their own clinic's bookings (cross-clinic access forbidden); system validates clinic ownership before allowing documentation (REQ-010-015)
+- **Encryption**: media transmitted over TLS 1.3
+- **Compliance**: Treatment documentation must comply with HIPAA-equivalent standards (access controls, audit trails, encryption); patient consent obtained during booking for photo storage and usage (REQ-010-098)
 
 ### Admin Editability Rules
 
@@ -589,207 +592,70 @@ flowchart TD
 
 **Fixed in Codebase (Not Editable)**:
 
-- Status transition sequence (Confirmed → In Progress → Aftercare → Completed cannot be changed)
-- Encryption standards (AES-256 for photos, TLS 1.3 for data in transit)
-- Audit log retention (10 years minimum, immutable)
-- Required fields for treatment completion (conclusion notes, prescription, advice, medication, actual graft count, final head scan photo set (V1))
+- Status transition sequence (Confirmed → In Progress → Aftercare → Completed cannot be changed) (REQ-010-033)
+- Encryption standards (AES-256 for photos, TLS 1.3 for data in transit) (REQ-010-016)
+- Audit log retention (10 years minimum, immutable) (REQ-010-049, REQ-010-014)
+- Required fields for treatment completion (conclusion notes, prescription, advice, medication, actual graft count, final head scan photo set (V1)) (REQ-010-052, REQ-010-004)
 
 **Configurable with Restrictions**:
 
-- Admin can adjust "treatment documentation completion deadline" (default 24 hours, range 12-48 hours)
-- Admin can configure reminder notification timing for the first reminder (default: 12 hours after Check In if not completed); the second reminder is sent at the completion deadline
-- Admin cannot disable required fields or bypass validation rules (ensures data quality)
+- Admin can adjust "treatment documentation completion deadline" (default 24 hours, range 12-48 hours) (REQ-010-051)
+- Admin can configure reminder notification timing for the first reminder (default: 12 hours after Check In if not completed); the second reminder is sent at the completion deadline (REQ-010-051)
+- Admin cannot disable required fields or bypass validation rules (ensures data quality) (REQ-010-052)
 
 ### Payment & Billing Rules
 
-- **Payment Rule 1**: FR-010 MUST NOT initiate payment capture. Final payment collection is handled in FR-007 / P-03: Booking & Payment.
-- **Payment Rule 2**: The fully paid condition of the Check In rule (Rule 3) blocks "Check In" when the booking has an outstanding balance (Payment Status ≠ Full paid). Provider sees a clear reason and admin is able to assist per billing ops.
-- **Billing Rule**: Treatment completion timestamp is used for billing reconciliation and reporting (admin notified on completion).
-- **Currency Rule**: Price, currency, and promotion are read from the accepted snapshot and never change in FR-010; neither treatment-detail changes nor treatment completion modify amounts (Rule 14).
-- **No-Show Rule**: If a case is flagged as No-Show, admin handles deposit retention and reconciliation per cancellation policy (EC-004).
+- **Payment Rule 1**: FR-010 MUST NOT initiate payment capture. Final payment collection is handled in FR-007 / P-03: Booking & Payment. (REQ-010-056, REQ-010-021)
+- **Payment Rule 2**: The fully paid condition of the Check In rule (Rule 3) blocks "Check In" when the booking has an outstanding balance (Payment Status ≠ Full paid). Provider sees a clear reason and admin is able to assist per billing ops. (REQ-010-070, REQ-010-106)
+- **Billing Rule**: Treatment completion timestamp is used for billing reconciliation and reporting (admin notified on completion). (REQ-010-057)
+- **Currency Rule**: Price, currency, and promotion are read from the accepted snapshot and never change in FR-010; neither treatment-detail changes nor treatment completion modify amounts (Rule 14). (REQ-010-058)
+- **No-Show Rule**: If a case is flagged as No-Show, admin handles deposit retention and reconciliation per cancellation policy (EC-004). (REQ-010-059)
+- Full payment is completed before treatment starts (e.g., by a configurable cutoff such as 30 days prior); FR-010 does not collect payments during treatment execution (REQ-010-056)
 
----
+### Upload, Sync and Integration Rules
 
-## Success Criteria
+- Treatment documentation interface accessed via modern web browsers (Chrome, Safari, Firefox, Edge - latest 2 versions)
+- Photo uploads should support chunked/resumable transfers for large files (10MB) on potentially unstable clinic internet connections
+- Photo uploads should complete asynchronously without blocking the provider workflow; processed images cached for fast retrieval
+- **Integration 1: Provider Platform → Patient Platform & Admin Platform (Real-Time Day-Based Progress Sync)**
+  - **Technology**: WebSocket connections or server-sent events (SSE) for real-time updates; fallback to 30-second polling if WebSocket unavailable
+  - **Authentication**: OAuth 2.0 bearer token with treatment record access validation
+  - **Error handling**: If real-time sync fails, queue update for retry; patient/admin see last known day status with "last updated [time] ago" indicator (REQ-010-096)
 
-### Patient Experience Metrics
+- **Integration 2: Provider Platform → Media Storage Service (S-05)**
+  - **Authentication**: OAuth 2.0 bearer token with provider identity
+  - **Error handling**: If upload fails, photos queued locally; retry with exponential backoff; provider notified of pending uploads (REQ-010-085)
 
-- **SC-001**: Patients receive treatment status updates in real-time (status change notifications delivered within 1 minute of provider action)
-- **SC-001A**: **Patients receive treatment day progress updates within 30 seconds of provider updating a treatment day’s status** (measured via timestamp comparison between provider update and patient app sync)
-- **SC-001B**: **95% of patients report day-based progress updates were helpful for understanding how their treatment day progressed** (measured via post-treatment survey)
-- **SC-002**: Patients receive post-op instructions within 5 minutes of treatment completion
-- **SC-003**: 95% of patients report receiving clear, understandable post-op instructions (measured via post-treatment survey)
-- **SC-004**: Patients can view their before/after photos in mobile app within 1 hour of treatment completion
+- **Integration 3: Provider Platform → Notification Service (S-03)**
+  - **Data format**: JSON payload with notification type ("treatment_started", "treatment_completed", "treatment_day_updated", "treatment.plan_changed"), recipient (patient ID), message content, delivery channels (email, push, in-app). `treatment.plan_changed` carries what changed (plan days, clinicians, or graft estimate) and the new values, never money fields
+  - **Authentication**: API key authentication (server-to-server)
+  - **Error handling**: If notification fails, queue for retry; notifications are informational, not critical to treatment workflow (REQ-010-097)
 
-### Provider Efficiency Metrics
+- **Integration 4: FR-010 → FR-011 (P-05 Aftercare Activation Signal)**
+  - **Authentication**: Internal service-to-service authentication
+  - **Error handling**: If signal to FR-011 fails, treatment still marked complete in FR-010, but admin notified to manually trigger aftercare setup in FR-011 (REQ-010-086)
 
-- **SC-005**: Providers complete treatment documentation within 1 hour of procedure end for 90% of treatments
-- **SC-006**: Providers spend less than 10 minutes on post-treatment documentation (conclusion notes, prescription, advice, medication, graft count, final head scan photo set (V1))
-- **SC-007**: 85% of providers report treatment documentation workflow as "easy to use" or "very easy to use" (measured via provider satisfaction survey)
-- **SC-008**: Provider can upload treatment photos in under 2 minutes per photo set
+### Treatment Record Rules
 
-### Admin Management Metrics
+- **Entity 1 - Treatment Record**
+  - status ("Awaiting Check In", "In Progress", "Completed", "Cancelled"; the record is created with status "Awaiting Check In" when the booking becomes `Confirmed`, seeded from the accepted snapshot, so treatment-detail changes before Check In have a record to change; Check In sets "In Progress"; saving End Treatment sets "Completed"; "Cancelled" is set when the booking is cancelled through the FR-006 Cancel Booking action, the provider-status cascade (before Check In), or the provider-fault transfer; when an admin moves an In Progress booking to Aftercare after a provider fault (FR-006 Alternative Flow B7), the record keeps what was documented and provider documentation stays blocked; cause and `supportRequired` are held on the booking) (REQ-010-099)
 
-- **SC-009**: Admins can view all active treatments (currently "In Progress") in real-time dashboard
-- **SC-009A**: **Admins can see current treatment day and day status for all active treatments with accuracy of 100%** (no stale data; updates within 30 seconds of provider changes)
-- **SC-010**: 100% of completed treatments have full documentation (no missing required fields)
-- **SC-011**: Admins can audit any treatment record within 30 seconds (search by patient ID, provider, date)
-- **SC-012**: Zero incidents of missing treatment documentation in completed bookings
+- **Entity 3 - Medication Instructions**
+  - **Notes**: Stored as a single free-text field in FR-010 (no structured schedule generation in this FR)
 
-### System Performance Metrics
-
-- **SC-013**: Status transition from "Confirmed" → "In Progress" completes within 2 seconds
-- **SC-014**: Photo uploads complete within 10 seconds per photo (for files up to 10MB on standard broadband)
-- **SC-015**: Treatment documentation auto-save occurs every 2 minutes with no data loss
-- **SC-016**: System supports 50 concurrent "In Progress" treatments across all providers without performance degradation
-- **SC-017**: 99.9% uptime for treatment documentation functionality during business hours
-
-### Business Impact Metrics
-
-- **SC-018**: Treatment completion rate (confirmed bookings that reach "Completed" status) exceeds 95%
-- **SC-019**: Final payment collection success rate exceeds 98% (for bookings with deposit-only payment)
-- **SC-020**: Zero financial discrepancies between documented treatments and billing records
-- **SC-021**: Provider payout processing time reduced by 40% compared to manual treatment record collection
+- **Entity 5 - Treatment Detail Change**
+  - **Relationships**: Many per treatment record; append-only audit record; never alters the accepted snapshot or any money field
 
 ---
 
 ## Dependencies
 
-### Internal Dependencies (Other FRs/Modules)
-
-- **FR-004 / Module PR-02: Inquiry & Quote Management**
-  - **Why needed**: FR-004 defines the Quote Option, its date-range price rows, and the relative day plan that the patient accepts; FR-004 blocks every quote edit after acceptance
-  - **Integration point**: FR-010 never reads live FR-004 records for an accepted case. All accepted data comes from the FR-005 accepted snapshot (see FR-005 below); later changes to plan, clinicians, and grafts are made only in FR-010
-  - **Rules relied on**: REQ-004-037 (no quote edits or new quotes after acceptance), REQ-004-065 (plan day numbers stay relative), REQ-004-084 (accepted terms never change), REQ-004-085 (edits only while draft or sent)
-
-- **FR-005 / Module P-02: Quote Comparison & Acceptance**
-  - **Why needed**: FR-005 owns the AcceptanceEvent and its immutable accepted snapshot, the supersession record, and the admin-authored replacement acceptance created by a provider-fault transfer
-  - **Integration point**: Through the booking, FR-010 reads the AcceptanceEvent ID, accepted subquote ID and version, Quote Option ID, option/date-price ID, and parent quote ID and version; the accepted snapshot supplies price, currency, date range, appointment, promotion, treatment, package, relative day plan, clinicians, and graft estimate
-  - **Rules relied on**: REQ-005-006 (immutable acceptance snapshot with binding fields), REQ-005-024 (only additional acceptance is the provider-fault replacement), REQ-005-023 (AcceptanceEvent immutable; admin annotations only), REQ-005-045 (unaccepted replacement quote)
-
-- **FR-006 + FR-007 / Module P-03: Booking & Payment**
-  - **Why needed**: Treatment can only be documented for "Confirmed" bookings (deposit paid) with no outstanding balance (full payment complete per billing rules); FR-006 owns the provider-fault transfer (Alternative Flow B5)
-  - **Integration point**: System validates booking status + payment state before enabling "Check In"; payment capture itself is handled by FR-007. The booking carries the AcceptanceEvent reference used to read the accepted snapshot. Provider withdrawal, drop-out, or replacement after acceptance is handed to FR-006 Alternative Flow B5
-  - **Rules relied on**: REQ-006-018 (provider withdrawal after acceptance cancels with ProviderFault; admin transfer), REQ-006-054 (provider-status cancellation money follows the B5 placeholder), REQ-007-005 (booking confirmed only on a successful initial charge; callbacks idempotent). The Check In half of this dependency rests on the one merged FR-010 Check In rule (REQ-010-106), not on a separate FR-006 rule
-
-- **FR-011 / Module P-05: Aftercare & Progress Monitoring**
-  - **Why needed**: FR-010 signals treatment completion to FR-011. FR-011 owns the aftercare template selection, status transition (In Progress → Aftercare), and aftercare plan activation
-  - **Integration point**: FR-010 Save (Complete Treatment) triggers FR-011 workflow; FR-011 presents aftercare template selection, generates milestones, activates aftercare plan, and transitions booking status to "Aftercare"
-  - **Rules relied on**: REQ-011-017 (treatment-linked aftercare activates automatically at treatment completion), REQ-011-055 (provider marks completion, configures plan from admin-created template), REQ-011-049 (assigned provider selects template, customizes and activates; patient onboarded), REQ-011-001 (treatment-linked and standalone activation paths)
-
-- **FR-009 / Module PR-01: Auth & Team Management**
-  - **Why needed**: Treatment documentation requires authenticated provider with appropriate role (Owner, Manager, or Clinical Staff); assigned clinicians originate from the provider clinic staff list (selected at quote stage)
-  - **Integration point**: System validates provider role before enabling treatment documentation; clinic staff list powers clinician assignment upstream in FR-004
-  - **Rules relied on**: REQ-009-033 (Clinical Staff role: medical staff), REQ-009-002 (the four protected provider roles), REQ-009-011 (protected role permission definitions). Who may document treatments is stated once, in Rule 4 of this PRD
-
-- **FR-020 + FR-030 / Module S-03: Notification Service**
-  - **Why needed**: Status transition notifications sent to patient (treatment started, treatment completed); post-op instructions and medication instructions delivered via email/push; patient notice of post-acceptance treatment-detail changes
-  - **Integration point**: Treatment documentation triggers notification events; FR-010 emits `treatment.plan_changed` for every treatment-detail change (Alternative Flow A2), registered in the FR-030 catalogue; notification service handles delivery to patient mobile app and email. The provider-facing Events treatment.documentation_completed and treatment.task_in_progress_reminder are owned by FR-030 (notification Events), not by FR-010
-  - **Rules relied on**: REQ-030-050 (catalog event: Treatment Details Changed After Acceptance), REQ-020-017 (mandatory quote and booking events; admin-configurable reminders), REQ-030-132 (treatment events may use the current plan but never changed money values)
-
-### External Dependencies (APIs, Services)
-
-- **External Service 1: S-05 Media Storage Service**
-  - **Purpose**: Secure storage for treatment photos and head scan photo sets (V1) with encryption and retrieval
-  - **Integration**: RESTful API for media uploads; encrypted storage
-  - **Failure handling**: If storage service unavailable, media queued locally and uploaded when service restored; treatment completion blocked until required media (final head scan photo set) uploads successfully
-
-### Data Dependencies
-
-- **Entity 1: Confirmed Booking Record**
-  - **Why needed**: Treatment documentation can only be initiated for bookings with status = "Confirmed" (deposit paid) and no outstanding balance (full payment completed)
-  - **Source**: P-03: Booking & Payment module; booking is confirmed on deposit payment and becomes fully paid when remaining balance is settled
-
-- **Entity 2: Accepted Snapshot (via the booking's AcceptanceEvent)**
-  - **Why needed**: The accepted snapshot is the only source of price, currency, date range, appointment, and promotion, and the original record of the treatment, package, inclusions, relative day plan, assigned clinicians, and estimated graft count that seed the case's current treatment details
-  - **Source**: FR-005 AcceptanceEvent, reached through the FR-006 booking; never edited by FR-010
-
-- **Entity 3: Aftercare Templates** *(owned by FR-011; referenced by FR-010 as a downstream dependency)*
-  - **Why needed**: FR-010 signals completion to FR-011, which uses aftercare templates to create the patient's aftercare plan. FR-010 does not directly interact with templates.
-  - **Source**: Admin Platform A-09: System Settings & Configuration; admin creates and manages aftercare templates
-
-- **Entity 4: Provider Clinic Staff List**
-  - **Why needed**: Clinician assignment and additional Clinical Staff selection require active staff members with appropriate roles
-  - **Source**: PR-01: Auth & Team Management module; provider creates staff accounts with roles (Owner, Manager, Clinical Staff, Billing Staff)
-
----
-
-## Assumptions
-
-### User Behavior Assumptions
-
-- **Assumption 1**: Providers will mark patients as "arrived" promptly when they check in (not hours later)
-- **Assumption 2**: Providers will document treatment progress in real-time or immediately after procedure (not days later from memory)
-- **Assumption 3**: Providers will upload before/after photos from same device used for treatment documentation (not separately)
-- **Assumption 4**: Aftercare template selection (handled by FR-011 after treatment completion) will be done appropriately by the provider based on treatment type and patient needs
-- **Assumption 5**: Patients will arrive on scheduled procedure date (no-show rate below 5%)
-
-### Technology Assumptions
-
-- **Assumption 1**: Providers use tablets or desktop computers in treatment rooms with stable internet connectivity
-- **Assumption 2**: Providers have access to digital cameras or smartphone cameras for before/after photos (or use device camera)
-- **Assumption 3**: Photo file sizes average 2-5MB per image (modern smartphone quality)
-- **Assumption 4**: Treatment documentation interface accessed via modern web browsers (Chrome, Safari, Firefox, Edge - latest 2 versions)
-- **Assumption 5**: Media storage service (S-05) has sufficient capacity for 10,000+ treatment photo sets per year
-
-### Business Process Assumptions
-
-- **Assumption 1**: Hair transplant procedures typically last 4-8 hours (treatment documentation designed for long-duration procedures)
-- **Assumption 2**: Providers perform 1-5 treatments per day (system designed for moderate concurrent treatment volume per clinic)
-- **Assumption 3**: Aftercare plans are standardized enough to use templates with minor customization (not fully bespoke per patient)
-- **Assumption 4**: Full payment is completed before treatment starts (e.g., by a configurable cutoff such as 30 days prior); FR-010 does not collect payments during treatment execution
-- **Assumption 5**: Providers prescribe 3-5 medications per patient on average (medication prescribing interface designed for this volume)
-
----
-
-## Implementation Notes
-
-### Technical Considerations
-
-- **Architecture**: Treatment documentation requires real-time data persistence with auto-save every 2 minutes to prevent data loss during long procedures
-- **Technology**: Photo uploads should support chunked/resumable transfers for large files (10MB) on potentially unstable clinic internet connections
-- **Performance**: Photo uploads should complete asynchronously without blocking the provider workflow; processed images cached for fast retrieval
-- **Storage**: Treatment photos require long-term archival storage for the retention period in the system PRD, Platform-Wide Rules: One 10-year retention period, with fast retrieval (< 5 seconds) for provider/admin/patient access
-
-### Integration Points
-
-- **Integration 1: Provider Platform → Patient Platform & Admin Platform (Real-Time Day-Based Progress Sync)**
-  - **Data format**: JSON payload with treatment ID, accepted Quote Option ID, current treatment day number, day description from the case's current treatment plan (seeded from the accepted option's `QuoteOptionPlanDay` records in the accepted snapshot), and day status
-  - **Technology**: WebSocket connections or server-sent events (SSE) for real-time updates; fallback to 30-second polling if WebSocket unavailable
-  - **Authentication**: OAuth 2.0 bearer token with treatment record access validation
-  - **Error handling**: If real-time sync fails, queue update for retry; patient/admin see last known day status with "last updated [time] ago" indicator
-
-- **Integration 2: Provider Platform → Media Storage Service (S-05)**
-  - **Data format**: Multipart form upload with metadata (patient ID, treatment ID, photo type: "before"/"during"/"after", timestamp)
-  - **Authentication**: OAuth 2.0 bearer token with provider identity
-  - **Error handling**: If upload fails, photos queued locally; retry with exponential backoff; provider notified of pending uploads
-
-- **Integration 3: Provider Platform → Notification Service (S-03)**
-  - **Data format**: JSON payload with notification type ("treatment_started", "treatment_completed", "treatment_day_updated", "treatment.plan_changed"), recipient (patient ID), message content, delivery channels (email, push, in-app). `treatment.plan_changed` carries what changed (plan days, clinicians, or graft estimate) and the new values, never money fields
-  - **Authentication**: API key authentication (server-to-server)
-  - **Error handling**: If notification fails, queue for retry; notifications are informational, not critical to treatment workflow
-
-- **Integration 4: FR-010 → FR-011 (P-05 Aftercare Activation Signal)**
-  - **Data format**: JSON payload with patient ID, treatment record ID, conclusion notes, prescription, advice, medication instructions, actual graft count, treatment completion date
-  - **Authentication**: Internal service-to-service authentication
-  - **Error handling**: If signal to FR-011 fails, treatment still marked complete in FR-010, but admin notified to manually trigger aftercare setup in FR-011
-
-### Scalability Considerations
-
-- **Current scale**: Expected 50-100 treatments per day across all providers at launch
-- **Growth projection**: Plan for 500 treatments per day within 12 months as provider network grows
-- **Peak load**: Handle 100 concurrent "In Progress" treatments (100 providers documenting simultaneously)
-- **Data volume**: Expect 200GB of treatment photos per month (average 10 photos per treatment, 5MB per photo, 1000 treatments/month)
-- **Scaling strategy**: Horizontal scaling of API servers; CDN for photo delivery; separate database for treatment records with read replicas for reporting
-
-### Security Considerations
-
-- **Authentication**: Providers must authenticate via OAuth 2.0 with role-based access control (RBAC); only Owner, Manager, and Clinical Staff roles can document treatments
-- **Authorization**: Providers can only document treatments for their own clinic's bookings (cross-clinic access forbidden); system validates clinic ownership before allowing documentation
-- **Encryption**: All treatment photos and head scan photo sets (V1) encrypted at rest (AES-256) in media storage service; media transmitted over TLS 1.3; patient medical data encrypted in database
-- **Audit trail**: All treatment documentation actions logged with timestamp, provider user ID, IP address, action type (create, update, status change); audit logs immutable and retained 10 years
-- **Threat mitigation**: Rate limiting on media uploads (max 50 uploads per hour per provider) to prevent abuse; file type validation (JPG, PNG for treatment photos and head scan photo sets (V1)) and virus scanning on uploads
-- **Compliance**: Treatment documentation must comply with HIPAA-equivalent standards (access controls, audit trails, encryption); patient consent obtained during booking for photo storage and usage
+- **FR-004 / Module PR-02: Inquiry & Quote Management**: FR-004 defines the Quote Option, its date-range price rows, and the relative day plan that the patient accepts; FR-004 blocks every quote edit after acceptance (REQ-004-037, REQ-004-065, REQ-004-084, REQ-004-085)
+- **FR-005 / Module P-02: Quote Comparison & Acceptance**: FR-005 owns the AcceptanceEvent and its immutable accepted snapshot, the supersession record, and the admin-authored replacement acceptance created by a provider-fault transfer (REQ-005-006, REQ-005-024, REQ-005-023, REQ-005-045)
+- **FR-006 + FR-007 / Module P-03: Booking & Payment**: Treatment can only be documented for "Confirmed" bookings (deposit paid) with no outstanding balance (full payment complete per billing rules); FR-006 owns the provider-fault transfer (Alternative Flow B5) (REQ-006-018, REQ-006-054, REQ-007-005)
+- **FR-011 / Module P-05: Aftercare & Progress Monitoring**: FR-010 signals treatment completion to FR-011. FR-011 owns the aftercare template selection, status transition (In Progress → Aftercare), and aftercare plan activation (REQ-011-017, REQ-011-055, REQ-011-049, REQ-011-001)
+- **FR-009 / Module PR-01: Auth & Team Management**: Treatment documentation requires authenticated provider with appropriate role (Owner, Manager, or Clinical Staff); assigned clinicians originate from the provider clinic staff list (selected at quote stage) (REQ-009-033, REQ-009-002, REQ-009-011)
+- **FR-020 + FR-030 / Module S-03: Notification Service**: Status transition notifications sent to patient (treatment started, treatment completed); post-op instructions and medication instructions delivered via email/push; patient notice of post-acceptance treatment-detail changes. The provider-facing Events treatment.documentation_completed and treatment.task_in_progress_reminder are owned by FR-030 (notification Events), not by FR-010 (REQ-030-050, REQ-020-017, REQ-030-132)
 
 ---
 
@@ -914,21 +780,21 @@ After a patient accepts one subquote, the case must use the accepted snapshot fo
 
 ### Edge Cases
 
-- **What happens when provider uploads too many head scan photo sets?** System enforces a reasonable per-case upload limit (configurable by admin). Upload interface shows current count and disables additional uploads when limit reached with a clear message.
+- **What happens when provider uploads too many head scan photo sets?** System enforces a reasonable per-case upload limit (configurable by admin). Upload interface shows current count and disables additional uploads when limit reached with a clear message. (REQ-010-053)
 
-- **How does system handle provider attempting to check in a future appointment?** "Check In" button disabled for bookings with procedure date > today; tooltip displays "Cannot check in future appointments. Wait until procedure date."
+- **How does system handle provider attempting to check in a future appointment?** "Check In" button disabled for bookings with procedure date > today; tooltip displays "Cannot check in future appointments. Wait until procedure date." (REQ-010-070)
 
-- **What occurs if provider closes browser during treatment documentation without manually saving?** Auto-save mechanism persists all field changes every 2 minutes to server; when provider re-opens treatment record, last auto-saved state restored; provider can continue from where they left off.
+- **What occurs if provider closes browser during treatment documentation without manually saving?** Auto-save mechanism persists all field changes every 2 minutes to server; when provider re-opens treatment record, last auto-saved state restored; provider can continue from where they left off. (REQ-010-093)
 
-- **How to manage two providers attempting to document same treatment simultaneously?** System implements optimistic locking: first provider to save changes succeeds; second provider receives warning "Another user has modified this treatment record. Reload to see latest version?" with option to review changes before overwriting.
+- **How to manage two providers attempting to document same treatment simultaneously?** System implements optimistic locking: first provider to save changes succeeds; second provider receives warning "Another user has modified this treatment record. Reload to see latest version?" with option to review changes before overwriting. (REQ-010-094)
 
-- **What happens when media storage service is unavailable during photo upload?** Media files (head scan photo sets and treatment photos) queued locally on provider device with status "Pending Upload"; background process retries upload every 5 minutes; provider sees upload progress indicator; treatment completion blocked until all required uploads (final head scan photo set) are successfully stored — optional treatment photos may remain queued without blocking completion.
+- **What happens when media storage service is unavailable during photo upload?** Media files (head scan photo sets and treatment photos) queued locally on provider device with status "Pending Upload"; background process retries upload every 5 minutes; provider sees upload progress indicator; treatment completion blocked until all required uploads (final head scan photo set) are successfully stored — optional treatment photos may remain queued without blocking completion. (REQ-010-085)
 
-- **How does system handle provider forgetting to complete treatment documentation?** System sends the first reminder to the provider at the reminder-timing setting (default 12 hours after Check In) if treatment is still "In Progress"; the second reminder follows at the configured completion deadline (default 24 hours); the admin dashboard then flags the treatment as "Overdue Documentation" for manual follow-up. Enforcement is reminders plus the flag only; nothing is blocked.
+- **How does system handle provider forgetting to complete treatment documentation?** System sends the first reminder to the provider at the reminder-timing setting (default 12 hours after Check In) if treatment is still "In Progress"; the second reminder follows at the configured completion deadline (default 24 hours); the admin dashboard then flags the treatment as "Overdue Documentation" for manual follow-up. Enforcement is reminders plus the flag only; nothing is blocked. (REQ-010-095)
 
-- **What occurs if booking has an outstanding balance at procedure time?** "Check In" is disabled with a clear message. Patient must complete payment through the booking/payment flow (FR-007) before treatment documentation can start.
+- **What occurs if booking has an outstanding balance at procedure time?** "Check In" is disabled with a clear message. Patient must complete payment through the booking/payment flow (FR-007) before treatment documentation can start. (REQ-010-070)
 
-- **What happens when the provider is suspended or deactivated mid-treatment?** The In Progress case is not cancelled; it stays In Progress with `ProviderSuspended` or `ProviderDeactivated` and `supportRequired`; provider documentation (including an unsaved End Treatment) is blocked, saved day records and media are retained read-only, and an admin either moves the booking to Aftercare with an FR-011 aftercare reassignment or cancels it through FR-006 Alternative Flow B7 (Alternative Flow B5). If the provider is suspended first and later deactivated, the `ProviderSuspended` cause is kept.
+- **What happens when the provider is suspended or deactivated mid-treatment?** The In Progress case is not cancelled; it stays In Progress with `ProviderSuspended` or `ProviderDeactivated` and `supportRequired`; provider documentation (including an unsaved End Treatment) is blocked, saved day records and media are retained read-only, and an admin either moves the booking to Aftercare with an FR-011 aftercare reassignment or cancels it through FR-006 Alternative Flow B7 (Alternative Flow B5). If the provider is suspended first and later deactivated, the `ProviderSuspended` cause is kept. (REQ-010-041)
 
 - **What happens if a provider or admin tries to edit the accepted quote in FR-004 after acceptance?** FR-004 rejects the edit; the case is unaffected. Changes to plan, clinicians, or grafts are made only through Change Treatment Details in FR-010 (Alternative Flow A2).
 
@@ -937,7 +803,7 @@ After a patient accepts one subquote, the case must use the accepted snapshot fo
 
 - **What happens when an admin needs to move the case to another provider?** FR-010 offers no provider reassignment. The admin starts the FR-006 Alternative Flow B5 provider-fault transfer (Alternative Flow B6); the patient keeps the same inquiry and pays no cancellation fee.
 
-- **How to manage issues with aftercare setup after completing treatment?** Provider cannot edit completed treatment record; aftercare template selection and plan activation are handled entirely by FR-011. If adjustments are needed, provider contacts admin; admin can modify the aftercare plan through FR-011's admin interface; audit trail logs admin intervention.
+- **How to manage issues with aftercare setup after completing treatment?** Provider cannot edit completed treatment record; aftercare template selection and plan activation are handled entirely by FR-011. If adjustments are needed, provider contacts admin; admin can modify the aftercare plan through FR-011's admin interface; audit trail logs admin intervention. (REQ-010-083)
 
 ---
 
@@ -951,7 +817,7 @@ After a patient accepts one subquote, the case must use the accepted snapshot fo
 - **REQ-010-004**: System MUST require minimum documentation before allowing treatment completion: conclusion notes, prescription, advice, medication (one text box, must not be empty), actual graft count, final head scan photo set (V1)
 - **REQ-010-006**: System MUST signal treatment completion to FR-011 upon provider saving the End of Treatment modal. FR-011 owns the status transition to "Aftercare" and aftercare plan activation
 - **REQ-010-007**: System MUST send real-time status notifications to patient mobile app when treatment starts ("In Progress") and when treatment completes ("Aftercare")
-- **REQ-010-007A**: System MUST sync day-based treatment progress (accepted Quote Option ID, current treatment day number, day description from the case's current treatment plan, seeded from that option's `QuoteOptionPlanDay` records in the accepted snapshot, and day status) to patient app and admin dashboard in real-time (within 30 seconds of provider update) for transparency into day-to-day treatment progress *(day statuses only — clinical notes are provider-only)*
+- **REQ-010-007A**: System MUST sync day-based treatment progress (accepted Quote Option ID, current treatment day number, day description from the case's current treatment plan, seeded from that option's `QuoteOptionPlanDay` records in the accepted snapshot, and day status) to patient app and admin dashboard in real-time (within 30 seconds of provider update) for transparency into day-to-day treatment progress *(day statuses only — clinical notes are provider-only)* (REQ-010-032)
 - **REQ-010-008**: System MUST generate and send post-op instruction sheet to patient via email and in-app notification within 5 minutes of treatment completion
 - **REQ-010-009**: System MUST signal treatment completion data (conclusion, prescription, advice, medication, graft count) to FR-011 for aftercare setup. FR-011 owns aftercare template selection, plan activation, milestone generation, scan schedules, and questionnaire cadence
 - **REQ-010-010**: System MUST send the first documentation reminder at the reminder-timing setting (default 12 hours after Check In) and the second at the configured completion deadline (default 24 hours) while documentation is incomplete, then flag the case as Overdue Documentation on the admin dashboard; enforcement is reminders plus the flag only and nothing is blocked
@@ -996,52 +862,11 @@ After a patient accepts one subquote, the case must use the accepted snapshot fo
 
 ---
 
-## Key Entities
-
-- **Entity 1 - Treatment Record**
-  - **Key attributes** (conceptual): Booking ID (foreign key), patient ID, provider clinic ID, **accepted selection identifiers** inherited through the FR-006 booking (AcceptanceEvent ID, accepted subquote ID and version, Quote Option ID, option/date-price ID, parent quote ID and version), assigned clinician IDs (one or more, seeded from the accepted snapshot's `clinicianIds[]`; changed only through the treatment-detail change from `Confirmed` onward — clinic until Check In, admin from `Confirmed` onward — with reason + audit history, at least one must remain), **current treatment plan** (relative plan days seeded from the accepted option's `QuoteOptionPlanDay` records in the accepted snapshot; changed only through the treatment-detail change; never stored as calendar dates), **day records** (one per day: day number, day description, day status, day note, last updated timestamp, archive flag: archived yes/no, archived at, archived by), beginning note, conclusion notes, prescription, advice, medication instructions (free-text), estimated graft count (seeded from the accepted snapshot; changed only through the treatment-detail change), actual graft count (entered at end of treatment), status ("Awaiting Check In", "In Progress", "Completed", "Cancelled"; the record is created with status "Awaiting Check In" when the booking becomes `Confirmed`, seeded from the accepted snapshot, so treatment-detail changes before Check In have a record to change; Check In sets "In Progress"; saving End Treatment sets "Completed"; "Cancelled" is set when the booking is cancelled through the FR-006 Cancel Booking action, the provider-status cascade (before Check In), or the provider-fault transfer; when an admin moves an In Progress booking to Aftercare after a provider fault (FR-006 Alternative Flow B7), the record keeps what was documented and provider documentation stays blocked; cause and `supportRequired` are held on the booking), check-in timestamp, completion timestamp
-  - **Relationships**: One booking has one treatment record; one treatment record belongs to one provider clinic; one treatment record references one AcceptanceEvent and its accepted snapshot (the original record, never edited); one treatment record has many treatment-detail change records; one treatment record has one or more assigned clinicians (from quote `clinicianIds[]`); one treatment record has multiple treatment photos / head scan photo sets (V1); **one treatment record tracks day-based progress changes over time for patient/admin visibility**
-
-- **Entity 2 - Treatment Photo / Head Scan Photo Set**
-  - **Key attributes**: Treatment record ID (foreign key), media type ("head_scan_before", "head_scan_after", "treatment_photo"), file URL (encrypted storage path), original file name, file size, upload timestamp, uploaded by (provider user ID), archive flag (archived yes/no, archived at, archived by; admin archive and restore only, never a hard delete)
-  - **Relationships**: One treatment record has many media assets (treatment photos + head scan photo sets); each media asset belongs to one treatment record
-
-- **Entity 3 - Medication Instructions**
-  - **Key attributes**: Treatment record ID (foreign key), medication instructions (free-text), author (provider user ID), updated timestamp, archive flag (archived yes/no, archived at, archived by)
-  - **Notes**: Stored as a single free-text field in FR-010 (no structured schedule generation in this FR)
-
-- **Entity 4 - Aftercare Plan** *(owned by FR-011; not an FR-010 entity)*
-  - FR-010 signals treatment completion data to FR-011. FR-011 owns aftercare plan creation, template selection, milestone generation, and plan activation. See FR-011 for entity definition.
-
-- **Entity 5 - Treatment Detail Change**
-  - **Key attributes**: Treatment record ID (foreign key), changed field group (plan days, clinicians, or estimated graft count), before values, after values, reason, actor user ID, actor type (clinic or admin), actor role, changed-at timestamp, notification event reference (`treatment.plan_changed`)
-  - **Relationships**: Many per treatment record; append-only audit record; never alters the accepted snapshot or any money field
-
----
-
 ## Appendix: Change Log
 
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
-| 2025-11-11 | 1.0 | Initial PRD creation for FR-010 Treatment Execution & Documentation | Claude (AI) |
-| 2026-01-14 | 1.1 | **Added real-time day-based treatment progress visibility**: (1) Patient app now displays current treatment day (e.g., "Day 2 of 4: Hair Transplant Procedure"), activity completion status, and elapsed time for current day's activities based on the pre-defined treatment itinerary; (2) Admin dashboard shows real-time day-based progress across all active treatments; (3) Provider platform includes "Current Treatment Day", "Day Description" (auto-populated from treatment itinerary), and "Activity Status" fields that sync to patient/admin platforms; (4) Added WebSocket/SSE integration for real-time day/activity updates; (5) Enhanced transparency while keeping detailed clinical data provider-only. **Progress tracking aligns with pre-defined day-by-day treatment itinerary from quote (FR-004) rather than arbitrary procedural stages.** Change driven by systematic review questioning whether treatment progress tracked by providers should be visible to patients/admins for transparency, with subsequent correction to use existing itinerary structure. | Claude (AI) |
-| 2026-02-27 | 1.2 | **Major revision based on client feedback review**: (1) **Entry point corrected** — provider entry point is the "Confirmed" list in Patient Management, action renamed from "Mark as Arrived" to "Check In"; (2) **Tabbed display model adopted** — screen specifications restructured to match tabbed case detail model used by previous FRs (tabs: Treatment Plan, Note, Book hotel & Book flight, In Progress); (3) **Treatment plan model enforced** — day-by-day discrete records confirmed; no single record spanning multiple days; (4) **Day status list corrected** — valid statuses: Not started, In progress, Finished, Need caution/attention, Cancelled/Deferred; "Pause" removed; (5) **Clinician assignment model corrected** — clinicians assigned at quote stage, cover full procedure, NOT editable during In Progress; (6) **Mid-progress treatment plan updates disallowed** — A3 reclassified as NOT ALLOWED; deviations documented in day notes only; (7) **Graft number added to screen specs** — estimated graft count (from quote) and actual graft count (at end of treatment) both explicitly specified; (8) **Elapsed time tracking removed** — not an explicit client requirement; removed from all tenant scopes and screen specs; (9) **Withdraw consent flow simplified** — B4 now directs provider to contact admin; no in-app consent withdrawal workflow; (10) **Cancel / Close Case button added** — for no-show / case closure scenarios with reason audit trail; admin handles all closure actions; (11) **"Monitor completion rates by provider" removed from FR-010 scope** — moved to FR-014 (Provider Analytics); (12) Admin elapsed time visibility removed — not in client transcriptions. | Product feedback (2026-02-27) |
-| 2026-02-28 | 1.3 | **Second revision pass — workflow Mermaid conversion, admin scope, screen spec restructure**: (1) **Admin edit capability added** — Multi-Tenant Architecture and Admin Platform breakdown updated to reflect full admin edit access confirmed in client transcriptions (AdminPlatform-Part1); removed "no intervention" read-only language; (2) **Entry point wording clarified** — "In Progress tab becomes the active workspace as the case transitions from Confirmed to In Progress" for clarity; (3) **Donor area removed** — not found in client transcriptions; removed from Provider Platform breakdown; (4) **Clinician reassignment removed from scope** — not in transcriptions or other PRDs; (5) **Elapsed time annotation removed** — clean removal, no annotation left; (6) **End Treatment gate added** — "End Treatment" button enabled only when ALL day records are in terminal status; days in "Not started" or "In progress" block the button; (7) **Graft count confirmed as single end-of-treatment capture** — no per-day graft tracking; (8) **A3 (Treatment Plan Modification) simply removed** — no "NOT ALLOWED" label; entry deleted from Alternative Flows; (9) **A4 integrated into Main Flow** — day-by-day model already captured in Main Flow; A4 removed as redundant; (10) **B4 (consent withdrawal) removed** — no replacement text; entry deleted; (11) **All Business Workflows converted to Mermaid flowchart format** — Main Flow + A1 + B1 + B2 + B3 + B4 (Cancel/Close Case) now use `flowchart TD` with gating and conditional flows per prd-template; (12) **Screen Specifications completely restructured** — "Page Header" section removed; replaced with proper 3-tenant format: Patient Platform (2 screens: In Progress Case View, Day Details Popup), Provider Platform (4 screens: In Progress Listing, In Progress Case Detail with 3 stages, Day Edit Modal, End of Treatment Modal), Admin Platform (2 screens: In Progress Listing, In Progress Case Detail — all editable). | Product feedback (2026-02-28) |
-| 2026-03-02 | 1.4 | **Post-verification fixes — 14 issues resolved**: (1) **Aftercare scope boundary fixed** — FR-010 stops at Complete Treatment; aftercare template selection, status transition, and plan activation moved exclusively to FR-011; Screen 6 aftercare fields removed; Entity 4 redirected to FR-011; Integration 5 updated to signal-only; (2) **Media types clarified** — treatment photos (JPG/PNG) and head scan capture assets clarified throughout screens/workflows; terminology normalized throughout; (3) **Final head scan photo set (V1) made required** — Screen 6 updated from optional to required; REQ-010-004 and Business Rule "Required fields" aligned; (4) **Donor/recipient areas removed** — REQ-010-011 cleaned; not in transcriptions; (5) **User Story 2 rewritten** — "Pause" references removed; interruption workflow uses day status "Need caution/attention" and day notes; (6) **RBAC aligned to FR-031** — Owner + Manager + Clinical Staff can document treatments; updated in REQ-010-002, REQ-010-017, Rule 4, Access Requirements, Main Flow; (7) **Singular clinician model** — aligned to FR-004 (singular clinicianId); "Clinician(s)" → "Clinician" throughout all screens and entities; (8) **Technique derived from treatmentId** — Patient Screen 1 clarified; not a direct quote field; (9) **No-Show/Postponed clarified** — B1 and B2 workflows note these are admin-managed case labels, not system-defined booking pipeline statuses; (10) **Header updated** — v1.3; (11) **Admin module fixed** — A-01 for oversight in Module Scope; A-09 retained for templates in Entity 3; (12) **"Mark as Completed" renamed** — "End Treatment" in User Story 1; (13) **Medication field** — changed to text area (both Prescription and Medication available); (14) **Edge case updated** — media storage failure text reflects required head scan photo set + optional photos; (15) **User Story 5 rewritten** — now covers FR-010 → FR-011 handoff instead of in-FR aftercare template selection; REQ-010-018 updated for scan file types; Assumption 4 updated. | Verification issue resolution (2026-03-02) |
-| 2026-03-03 | 1.5 | Alignment updates: (1) **Payment gating clarified** — FR-010 does not trigger final payment; Check In blocked if outstanding balance (payment handled in FR-007); (2) **No-Show semantics aligned** — no-show treated as admin-managed label/flag (no pipeline status change); (3) **Medication model simplified** — medication instructions treated as free-text; removed structured “add medication” UI expectations; (4) **Dependency + integration notes updated** — removed direct payment service integration, updated FR-011 payload to include medication instructions. | Product alignment (2026-03-03) |
-| 2026-03-03 | 1.6 | Alignment + cleanup updates: (1) **Head scan capture clarified for V1** — head scan documented as a standardized photo set (V1), with true 3D scan deferred to V2; updated all screens/workflows/requirements accordingly; (2) **Deprecated media policy removed** — removed optional media-policy notes from the PRD; (3) **Consistency sweep** — replaced P-XX with P-05, normalized upload limits (10MB), fixed RBAC wording and file-type rules, and refreshed dependency wording. | Product alignment (2026-03-03) |
-| 2026-03-03 | 1.7 | Alignment updates: (1) **In Progress day model clarified** — day-level status + quote-provided day description + provider day notes; removed “activity status” semantics and removed `activity_status_updated` event type; (2) **Admin override policy clarified** — provider locks after Check In remain, but admin can override with mandatory reason + audit history; (3) **Delete/remove semantics clarified** — all “remove” actions are archive/soft-delete only (no hard delete) for treatment documentation and media. | Product alignment (2026-03-03) |
-| 2026-03-03 | 1.8 | Status finalized: set PRD status to **✅ Verified & Approved**, updated approvals to **✅ Approved**, and refreshed footer to match `prd-template.md`. | Documentation governance (2026-03-03) |
-| 2026-09-09 | 1.9 | **Clinician cardinality aligned to FR-004 v2.2**: the quote now carries `clinicianIds[]` (one or more clinicians shared by every Quote Option, REQ-004-027), superseding the singular clinician model adopted in v1.4. Updated Patient Screen 3, Provider Screens 1 and 3, Admin Screen 2, the Check In lock rule, Business Rule 8, dependency notes, and Entity 1 attributes/relationships. Admin reassignment may add or remove clinicians provided at least one remains, with reason + audit. See [FR-004 Change Request](../fr004-quote-submission/change-request-2026-09-09-quote-options-model.md) and [FR-010 Change Request](./change-request-2026-09-09-clinician-cardinality-alignment.md). | Verification alignment (2026-09-09) |
-| 2026-09-10 | 2.0 | **Accepted Quote Option consumer alignment**: replaced singular `packageId` and quote-level `plan` dependencies with the stable accepted Quote Option relationship, its package snapshot, and its relative `QuoteOptionPlanDay` records. Parent Quote data remains the source for the immutable Treatment relationship, graft estimate, and clinician assignments. See [Change Request](./change-request-2026-09-10-quote-option-consumer-alignment.md). | Product Owner / Verification alignment (2026-09-10) |
-| 2026-10-14 | 2.1 | Aligned provider suspension/deactivation cancellation cascade per CR-FR015-20261013-01 and FR-015 v1.9: added Alternative Flow B5, Rule 1 exception, Rule 12, mid-treatment suspension edge case, REQ-010-025, and Cancelled treatment status; B4 provider-requested Cancel/Close Case unchanged. See [CR-FR010-20261014-01](./change-request-2026-10-14-provider-status-cancellation-cascade.md). Status reset pending consolidated verification. | Vân Tay Media |
-| 2026-10-16 | 2.2 | MTG-002 quote model alignment: money fields (price, currency, date range, appointment, promotion) read only from the accepted snapshot through the booking's AcceptanceEvent, with accepted-selection identifiers reconciled across Dependencies and Entity 1 (FR-010-1, FR-010-2; M2, R7-1); new Alternative Flow A2 making FR-010 the only post-acceptance path for plan, clinician, and graft-estimate changes, clinic before Check In or admin, audited, patient notified through `treatment.plan_changed`, snapshot unchanged (FR-010-1, FR-010-5; M2); Screen 2 Scheduled Date replaced with relative Plan Day Position and Rule 15 (FR-010-3; R7-2); admin provider reassignment and procedure-date edit removed, new Alternative Flow B6 and Rule 16 routing provider drop-out or replacement to FR-006 Alternative Flow B5 with its payment placeholder, and B5/Rule 12/REQ-010-025 suspension cascade now rehomes through the same transfer (FR-010-4; D3, D6, D6-M, M18); User Story 7 and edge cases added (FR-010-6); Rules 13 to 16, REQ-010-026 to REQ-010-029, and Entity 5 added. Minors: FR-010-7 (CR-FR010-20260909-01 affected-contract screen numbers), FR-010-8 (vocabulary). Final-audit correction: Procedure Date and Rule 14 use the current FR-006 booking appointment so approved admin date changes are honoured, with the snapshot appointment as baseline. See [CR-FR010-20261016-01](./change-request-2026-10-16-mtg002-quote-model-alignment.md). Consolidated verification pending. | Product Owner / Documentation |
-| 2026-10-16 | 2.3 | Product Owner Q-series follow-up (Q2): treatment details are locked while the booking is `Accepted` (unpaid); audited changes through Alternative Flow A2 are allowed only from `Confirmed`, by the clinic until Check In and by an admin from `Confirmed` onward, each emitting `treatment.plan_changed`. Updated Alternative Flow A2, Provider Screen 4 Change Treatment Details button and plan-lock note, Rules 8 and 13, REQ-010-027, User Story 7 scenarios 2 and 7, and edge cases. See [CR-FR010-20261016-01](./change-request-2026-10-16-mtg002-quote-model-alignment.md). Consolidated verification pending. | Product Owner / Documentation |
-| 2026-10-18 | 2.4 | Consolidated verification corrections ([CR-FR010-20261016-01](./change-request-2026-10-16-mtg002-quote-model-alignment.md)): Alternative Flow B6 step 5 notifies the patient and admin of the provider-fault transfer instead of both providers, and the replacement provider learns through the normal new-booking notice (Q32); Procedure Date on Provider Screen 2 and Admin Screen 1 uses the Rule 14 current FR-006 booking appointment; Entity 1 clinician changes start from `Confirmed` (clinic until Check In, admin onward), seeded from the accepted snapshot (Q2, M2). | Product Owner / Documentation |
-| 2026-10-18 | 2.5 | Final audit corrections (Q37, Q43, Q44): Alternative Flows B1 to B4, Provider Screen 4, Admin Screen 8, Rule 1, Rule 11 and the module scope no longer allow manual status transitions; the admin resolves no-show, postponement, interruption and closure only through the FR-006 Change Appointment and Cancel Booking actions or the provider-fault transfer, and Screen 8 Case Status is read-only. New Admin Screen 9 (Change Treatment Details) specifies the admin treatment-detail change from `Confirmed` onward with fields, validation, mandatory reason, confirmation, audit entry and `treatment.plan_changed`. Alternative Flows B5 and B6 and User Story 7 use the admin-authored replacement quote and acceptance; the replacement provider learns through `quote.accepted` and the patient through `booking.scheduled`. Treatment record states are Awaiting Check In, In Progress, Completed and Cancelled, with the record created at booking confirmation. Day-status and case-status cells no longer use literal pipe characters. REQ-010-030 and REQ-010-031 added. Round-two corrections (Q45, Q46): a provider fault or provider suspension/deactivation while In Progress no longer cancels the case or routes to the B5 transfer; the booking stays In Progress with `supportRequired` and the admin decides through FR-006 Alternative Flow B7 to move it to Aftercare with an FR-011 aftercare reassignment or to cancel it (Alternative Flows B4 to B6, Module Scope, Screen 8, Rules 1, 12 and 16, User Story 7, edge case, REQ-010-029, REQ-010-031, Entity 1); Rule 2 states that the treatment record is created at booking confirmation in Awaiting Check In. See CR-FR010-20261016-01. | Product Owner / Documentation |
-| 2026-11-20 | 2.6 | Requirements graph programme baseline: owner rulings applied. Main changes: (1) one merged Check In Rule (Confirmed, procedure date today or past, fully paid) replacing the FR-006 Check In rule (Rule 3, Payment Rule 2, REQ-010-106); (2) new Report Issue Before Check In control for No-show and Medical postponement before Check In, which only notifies the admin, while Cancel / Close Case stays In Progress only (Alternative Flows B1 and B2, Screen 4, REQ-010-107); (3) reminders: first at the reminder-timing setting (default 12 hours), second at the completion deadline, then the Overdue Documentation flag, reminders and flag only (Rule 6, configuration lines, edge case, REQ-010-010); (4) no-show outcome corrected: booking stays Confirmed and the admin decides (Alternative Flow B1); (5) Privacy Rule 1 unlock point is booking confirmation (first successful payment), with the identity-hiding rule moving to the one system-PRD rule; (6) admin payment status is view only; (7) Screen 6 and the main flow use the final head scan photo set as end-of-treatment evidence, with no treatment photos on the end modal; (8) medication is one text box that must not be empty (REQ-010-004); (9) archive flag (archived, when, by whom) on media and documentation records; (10) medication and post-op instruction templates move to FR-024; (11) provider suspension rule REQ-010-025 retired in favour of Rule 12 (REQ-010-041); (12) REQ-010-022 shortened and pointed to the FR-020 notification-service rule; (13) new list filter and tab rules (REQ-010-108 to REQ-010-113); (14) messaging stays available under FR-012; (15) dependency lines cite the Rules they rest on; cross-document reconciliation (retention, admin End Treatment starts the confirmation window, provider role wording). | Product Owner / Documentation |
-| 2026-11-22 | 2.7 | Owner ruling 2026-11-22 and the earlier provider-fault ruling: before Check In a provider-fault transfer refunds the patient in full and the replacement booking takes a new payment; for an In Progress case the admin sets the refund amount and the provider payout is held (FR-006 Alternative Flows B5 and B7). The credit placeholder wording is removed. | Product Owner / Documentation |
-| 2026-11-22 | 2.8 | Wording clean-up after the cross-FR consistency review: the stale 'payment placeholder' pointer is replaced by a pointer to the refund rules FR-006 already states (the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault). No rule changes. | Product Owner / Documentation |
+| 2026-11-22 | 2.9 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v2.8) and the change requests (CR-FR010-20261016-01, CR-FR010-20261014-01, CR-FR015-20261013-01, CR-FR010-20260909-01, the FR-004 change request `change-request-2026-09-09-quote-options-model.md`, and the FR-010 change request files `change-request-2026-09-09-clinician-cardinality-alignment.md`, `change-request-2026-09-10-quote-option-consumer-alignment.md`, `change-request-2026-10-14-provider-status-cancellation-cascade.md` and `change-request-2026-10-16-mtg002-quote-model-alignment.md`) are in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
 
 ---
 
@@ -1059,4 +884,4 @@ After a patient accepts one subquote, the case must use the accepted snapshot fo
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-010 from system-prd.md (Lines 682-705)
-**Last Updated**: 2026-11-20
+**Last Updated**: 2026-11-22
