@@ -820,7 +820,7 @@ This matrix is the canonical completeness check for Screen 1. Tabs organize edit
 - Hairline-ProviderPlatformPart1.txt lines 50-130: treatment/package selection, quote-local customization, date-price configuration, and discount context
 - HairlineApp-Part1.txt lines 105-159 and 175-186: patient quote review, package comparison, pricing/discount display, expiry, and pre-scheduled appointment intent
 - [SRC-MTG-002, MTG-002-D03 through D06 and O01](../../sources/meetings/meeting-02-launch-quote-options-fund-release-and-payments.md)
-- [CR-FR004-20260909-01](./change-request-2026-09-09-quote-options-model.md)
+- [CR-FR004-20260909-01](../../../../archived/prd-baseline-2026-11-08/fr004-quote-submission/change-request-2026-09-09-quote-options-model.md)
 ## User Scenarios & Testing
 
 ### User Story 1 - Create and Submit Quote (Priority: P1)

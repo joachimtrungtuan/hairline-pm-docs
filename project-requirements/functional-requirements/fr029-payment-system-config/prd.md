@@ -6,10 +6,10 @@
 **Version**: 1.15
 **Status**: 🟡 Revised — Pending Consolidated Verification
 **Source**: FR-029 from system-prd.md (lines 1427-1455) + Hairline-AdminPlatformPart2.txt (lines 128-230)
-**Change Request**: [CR-FR029-20261014-01 — Provider-specific Flat Rate commission alignment with FR-015](change-request-2026-10-14-provider-flat-rate-commission.md)
-**Change Request**: [CR-FR029-20261015-01 — Single-provider scope edits and scheduled commission configuration](change-request-2026-10-15-single-provider-scope-scheduled-commission.md)
-**Change Request**: [CR-FR029-20261015-02 — Suspended providers in provider-specific commission scopes](change-request-2026-10-15-suspended-provider-commission-scopes.md)
-**Change Request**: [CR-FR029-20261016-01 — Quote model alignment: configuration lock points and booking total](change-request-2026-10-16-mtg002-quote-model-alignment.md)
+**Change Request**: [CR-FR029-20261014-01 — Provider-specific Flat Rate commission alignment with FR-015](../../../../archived/prd-baseline-2026-11-08/fr029-payment-system-config/change-request-2026-10-14-provider-flat-rate-commission.md)
+**Change Request**: [CR-FR029-20261015-01 — Single-provider scope edits and scheduled commission configuration](../../../../archived/prd-baseline-2026-11-08/fr029-payment-system-config/change-request-2026-10-15-single-provider-scope-scheduled-commission.md)
+**Change Request**: [CR-FR029-20261015-02 — Suspended providers in provider-specific commission scopes](../../../../archived/prd-baseline-2026-11-08/fr029-payment-system-config/change-request-2026-10-15-suspended-provider-commission-scopes.md)
+**Change Request**: [CR-FR029-20261016-01 — Quote model alignment: configuration lock points and booking total](../../../../archived/prd-baseline-2026-11-08/fr029-payment-system-config/change-request-2026-10-16-mtg002-quote-model-alignment.md)
 
 ---
 

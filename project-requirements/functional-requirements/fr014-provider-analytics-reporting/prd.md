@@ -703,7 +703,7 @@ Gross, commission, and net income are displayed in provider currency. Net income
 
 ##### Report History & Recurring Exports
 
-Added by [CR-FR014-20261013-02](change-request-2026-10-13-export-history-accessibility.md). Shown below the export form on Screen 6, as two tabs.
+Added by [CR-FR014-20261013-02](../../../../archived/prd-baseline-2026-11-08/fr014-provider-analytics-reporting/change-request-2026-10-13-export-history-accessibility.md). Shown below the export form on Screen 6, as two tabs.
 
 **Tab 1 — Generated Reports** (reports generated in the last 7 days, newest first, 20 per page): (REQ-014-240)
 
@@ -1495,7 +1495,7 @@ These definitions apply to all provider/admin widgets, drill-downs, aggregates, 
 
 ### Accessibility Rules
 
-Added by [CR-FR014-20261013-02](change-request-2026-10-13-export-history-accessibility.md) to meet the constitution's WCAG 2.1 Level AA requirement for web platforms.
+Added by [CR-FR014-20261013-02](../../../../archived/prd-baseline-2026-11-08/fr014-provider-analytics-reporting/change-request-2026-10-13-export-history-accessibility.md) to meet the constitution's WCAG 2.1 Level AA requirement for web platforms.
 
 - **Rule 15C**: Colour is never the only signal. Every Green/Amber/Red tier, benchmark variance, health badge, aging bucket, heatmap cell, and gap/outlier flag MUST also carry a text label or icon (for example ✓ On target, ▲ Watch, ✕ Off target, or the tier name), and chart series MUST be distinguishable by label, pattern, or marker shape as well as colour. (REQ-014-162)
 - **Rule 15D**: Text, data labels, and status badges MUST meet WCAG 2.1 AA contrast (4.5:1 for normal text, 3:1 for large text and for chart marks and UI components against their background) in the platform default palette. (REQ-014-163)

@@ -696,7 +696,7 @@ Each option is a quote-local copy of one package version that the patient can co
 
 ### FR-009: Provider Team & Role Management
 
-> The custom-role extension below is proposed in [CR-FR009-20260929-01](functional-requirements/fr009-provider-team-roles/change-request-2026-09-29-custom-provider-role-assignment.md); the four protected-role baseline remains approved.
+> The custom-role extension below is proposed in [CR-FR009-20260929-01](../../archived/prd-baseline-2026-11-08/fr009-provider-team-roles/change-request-2026-09-29-custom-provider-role-assignment.md); the four protected-role baseline remains approved.
 
 **Priority**: P1 (MVP)  
 **Module(s)**: PR-01: Auth & Team Management
@@ -1585,7 +1585,7 @@ Option prices are never added together.
 
 ### FR-031: Admin Access Control & Permissions
 
-> The custom provider role creation and cloning extension below is proposed in [CR-FR031-20260929-01](functional-requirements/fr031-admin-access-control/change-request-2026-09-29-global-custom-provider-roles.md); implementation reconciliation is pending.
+> The custom provider role creation and cloning extension below is proposed in [CR-FR031-20260929-01](../../archived/prd-baseline-2026-11-08/fr031-admin-access-control/change-request-2026-09-29-global-custom-provider-roles.md); implementation reconciliation is pending.
 
 **Priority**: P1 (MVP)
 **Module(s)**: A-09: System Settings & Configuration
