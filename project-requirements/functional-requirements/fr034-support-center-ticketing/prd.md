@@ -868,6 +868,12 @@ Each message in the thread displays:
 - **Notification Rule 4**: All notifications sent via S-03 Notification Service; failed sends are retried following the FR-030 retry rule (REQ-034-047, REQ-034-051)
 - **Notification Rule 5**: Email notifications include case ID, title, status, and direct link to admin case view (for admin recipients) (REQ-034-093)
 
+**Carried from dropped sections (original wording)**:
+
+- **Integration point**: Support Center calls S-03 API to trigger notification events (support.case_created, support.case_assigned, support.case_status_changed, support.case_admin_reply, support.case_user_reply, support.case_resolved, support.case_reopened, support.case_closed, support.case_escalated); S-03 delivers notifications based on rules configured in FR-030
+- **None for MVP**: Support Center operates entirely within Hairline platform with no external API dependencies
+- **Search**: Implement full-text search index on case ID, title, description, patient/provider names, email, and phone for fast keyword searches (internal notes are not indexed for search)
+
 ---
 
 ## Dependencies
@@ -1137,6 +1143,7 @@ Support staff member encounters complex technical issue requiring more senior at
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2026-11-22 | 2.7 | Requirements graph programme baseline: PRD compressed to the checklist structure (rules cited by REQ id, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v2.6) is in `archived/prd-baseline-2026-11-08/fr034-support-center-ticketing/` and in git history. The live PRD names no change requests. | AI Assistant |
+| 2026-11-23 | 2.8 | Independent compression review: 3 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | AI Assistant |
 
 ---
 
