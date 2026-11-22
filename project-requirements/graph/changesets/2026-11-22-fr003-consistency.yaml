@@ -1,0 +1,29 @@
+reason: "Consistency review of FR-003 (boundary and hand-offs): FR-003 references one Rule of each owner FR whose data its Rules and Screens use read-only, and eight open hand-offs are stitched with next links (the two FR-037 mirror attributes cleared as well); STP-003-085 has no receiving step in FR-001 and stays open."
+by: controller
+operations:
+  - {"op": "add_edge", "from": "FR-003", "verb": "references", "to": "REQ-001-015"}
+  - {"op": "add_edge", "from": "FR-003", "verb": "references", "to": "REQ-002-002"}
+  - {"op": "add_edge", "from": "FR-003", "verb": "references", "to": "REQ-004-098"}
+  - {"op": "add_edge", "from": "FR-003", "verb": "references", "to": "REQ-013-008"}
+  - {"op": "add_edge", "from": "FR-003", "verb": "references", "to": "REQ-015-097"}
+  - {"op": "add_edge", "from": "FR-003", "verb": "references", "to": "REQ-026-034"}
+  - {"op": "add_edge", "from": "FR-003", "verb": "references", "to": "REQ-027-005"}
+  - {"op": "add_edge", "from": "STP-003-029", "verb": "next", "to": "STP-004-001"}
+  - {"op": "update_node", "id": "STP-003-029", "attrs": {"handoff_to": null}}
+  - {"op": "add_edge", "from": "STP-003-046", "verb": "next", "to": "STP-004-002"}
+  - {"op": "update_node", "id": "STP-003-046", "attrs": {"handoff_to": null}}
+  - {"op": "add_edge", "from": "STP-037-043", "verb": "next", "to": "STP-003-065"}
+  - {"op": "update_node", "id": "STP-003-065", "attrs": {"handoff_from": null}}
+  - {"op": "update_node", "id": "STP-037-043", "attrs": {"handoff_to": null}}
+  - {"op": "add_edge", "from": "STP-037-044", "verb": "next", "to": "STP-003-078"}
+  - {"op": "update_node", "id": "STP-003-078", "attrs": {"handoff_from": null}}
+  - {"op": "add_edge", "from": "STP-015-152", "verb": "next", "to": "STP-003-067"}
+  - {"op": "update_node", "id": "STP-003-067", "attrs": {"handoff_from": null}}
+  - {"op": "add_edge", "from": "STP-003-072", "verb": "next", "to": "STP-006-501"}
+  - {"op": "update_node", "id": "STP-003-072", "attrs": {"handoff_to": null}}
+  - {"op": "add_edge", "from": "STP-003-073", "verb": "next", "to": "STP-006-801"}
+  - {"op": "update_node", "id": "STP-003-073", "attrs": {"handoff_to": null}}
+  - {"op": "add_edge", "from": "STP-003-074", "verb": "next", "to": "STP-006-701"}
+  - {"op": "update_node", "id": "STP-003-074", "attrs": {"handoff_to": null}}
+  - {"op": "add_edge", "from": "STP-003-084", "verb": "next", "to": "STP-006-301"}
+  - {"op": "update_node", "id": "STP-003-084", "attrs": {"handoff_to": null}}

@@ -1,0 +1,15 @@
+reason: "FR-002 consistency review: four open hand-offs stitched to the matching FR-003 Steps, and the four flow findings on the intake Entities settled from the PRD (FR-003 and providers read the result and the media; FR-003 supplies the request; the audit fields are returned in the result)."
+by: controller
+operations:
+  - {"op": "add_edge", "from": "STP-003-014", "verb": "next", "to": "STP-002-001"}
+  - {"op": "update_node", "id": "STP-002-001", "attrs": {"handoff_from": null}}
+  - {"op": "add_edge", "from": "STP-002-005", "verb": "next", "to": "STP-003-017"}
+  - {"op": "update_node", "id": "STP-002-005", "attrs": {"handoff_to": null}}
+  - {"op": "add_edge", "from": "STP-002-008", "verb": "next", "to": "STP-003-007"}
+  - {"op": "update_node", "id": "STP-002-008", "attrs": {"handoff_to": null}}
+  - {"op": "add_edge", "from": "STP-002-014", "verb": "next", "to": "STP-003-027"}
+  - {"op": "update_node", "id": "STP-002-014", "attrs": {"handoff_to": null}}
+  - {"op": "add_edge", "from": "STG-main-01-inquiry", "verb": "reads", "to": "ENT-intake-processing-result"}
+  - {"op": "add_edge", "from": "STG-main-01-inquiry", "verb": "reads", "to": "ENT-media-artifact"}
+  - {"op": "add_edge", "from": "STG-main-01-inquiry", "verb": "reads", "to": "ENT-intake-audit-entry"}
+  - {"op": "add_edge", "from": "STG-main-01-inquiry", "verb": "writes", "to": "ENT-intake-processing-request"}

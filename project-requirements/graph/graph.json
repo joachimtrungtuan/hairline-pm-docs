@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-22T12:40:09Z",
+  "generated_at": "2026-11-22T12:49:21Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -38198,7 +38198,7 @@
       "owner_fr": null,
       "title": "Inquiry Submission & Distribution",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "module": "fr003-inquiry-submission",
         "prd_path": "project-requirements/functional-requirements/fr003-inquiry-submission/prd.md",
@@ -38211,7 +38211,7 @@
       "owner_fr": null,
       "title": "Quote Submission & Management",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "module": "fr004-quote-submission",
         "prd_path": "project-requirements/functional-requirements/fr004-quote-submission/prd.md",
@@ -38224,7 +38224,7 @@
       "owner_fr": null,
       "title": "Quote Comparison & Acceptance",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "module": "fr005-quote-comparison-acceptance",
         "prd_path": "project-requirements/functional-requirements/fr005-quote-comparison-acceptance/prd.md",
@@ -102451,7 +102451,7 @@
       "owner_fr": null,
       "title": "Inquiry",
       "status": "active",
-      "version": 19,
+      "version": 20,
       "attrs": {
         "timeline": "main",
         "sequence": 1,
@@ -103366,10 +103366,9 @@
       "owner_fr": "FR-002",
       "title": "FR-003 submits questionnaire responses (with templateVersion) and head scan media metadata",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Workflow 1 step 1",
-        "handoff_from": "FR-003: Main Flow, patient submits the inquiry with questionnaire and head scan"
+        "prd_ref": "Workflow 1 step 1"
       }
     },
     {
@@ -103411,10 +103410,9 @@
       "owner_fr": "FR-002",
       "title": "Engine returns the normalized intake payload, alert tags and media URIs to FR-003",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Workflow 1 step 5",
-        "handoff_to": "FR-003: Main Flow, the inquiry continues with the returned payload"
+        "prd_ref": "Workflow 1 step 5"
       }
     },
     {
@@ -103445,10 +103443,9 @@
       "owner_fr": "FR-002",
       "title": "No artifacts are persisted; the caller (FR-003) receives the error and can retry",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A1 step 3",
-        "handoff_to": "FR-003: Main Flow, the patient retakes or re-uploads the media"
+        "prd_ref": "Alternative Flow A1 step 3"
       }
     },
     {
@@ -103512,10 +103509,9 @@
       "owner_fr": "FR-002",
       "title": "Provider consumes the read-only normalized payload and media",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Workflow 2 step 3",
-        "handoff_to": "STP-003-027"
+        "prd_ref": "Workflow 2 step 3"
       }
     },
     {
@@ -103667,7 +103663,7 @@
       "owner_fr": "FR-003",
       "title": "Inquiry is submitted and receives an HPID reference",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 1 (Patient Creates Inquiry)"
       }
@@ -103832,10 +103828,9 @@
       "owner_fr": "FR-003",
       "title": "Provider proceeds to create a quote",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Workflow 3 (Provider Inquiry Management)",
-        "handoff_to": "FR-004: Main Flow step 1"
+        "prd_ref": "Workflow 3 (Provider Inquiry Management)"
       }
     },
     {
@@ -104020,10 +104015,9 @@
       "owner_fr": "FR-003",
       "title": "System rejects concurrent quote submits and cancels draft, sent and expired quotes",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Workflow 5 (Patient Cancels Inquiry)",
-        "handoff_to": "STP-004-002"
+        "prd_ref": "Workflow 5 (Patient Cancels Inquiry)"
       }
     },
     {
@@ -104230,10 +104224,9 @@
       "owner_fr": "FR-003",
       "title": "Admin conversion creates the inquiry with an assigned provider",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "prd_ref": "Alternative Flow B3",
-        "handoff_from": "FR-037: conversion step (REQ-037-029)"
+        "prd_ref": "Alternative Flow B3"
       }
     },
     {
@@ -104253,10 +104246,9 @@
       "owner_fr": "FR-003",
       "title": "Provider is suspended or deactivated while holding inquiries",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Alternative Flow B4",
-        "handoff_from": "FR-015: Alternative Flow A5"
+        "prd_ref": "Alternative Flow B4"
       }
     },
     {
@@ -104309,10 +104301,9 @@
       "owner_fr": "FR-003",
       "title": "Accepted inquiry stays open and the booking is cancelled by FR-006",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow B4",
-        "handoff_to": "FR-006: Alternative Flow B4"
+        "prd_ref": "Alternative Flow B4"
       }
     },
     {
@@ -104321,10 +104312,9 @@
       "owner_fr": "FR-003",
       "title": "Provider fault while In Progress keeps the booking In Progress",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow B4",
-        "handoff_to": "FR-006: Alternative Flow B7"
+        "prd_ref": "Alternative Flow B4"
       }
     },
     {
@@ -104333,10 +104323,9 @@
       "owner_fr": "FR-003",
       "title": "Provider fault in Aftercare keeps the booking in Aftercare",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow B4",
-        "handoff_to": "FR-006: Alternative Flow B6"
+        "prd_ref": "Alternative Flow B4"
       }
     },
     {
@@ -104378,10 +104367,9 @@
       "owner_fr": "FR-003",
       "title": "Exclusive provider confirms decline with a reason",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "prd_ref": "Alternative Flow C2",
-        "handoff_from": "FR-037: conversion step (REQ-037-029)"
+        "prd_ref": "Alternative Flow C2"
       }
     },
     {
@@ -104445,10 +104433,9 @@
       "owner_fr": "FR-003",
       "title": "Admin cancels with a reason and audit",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow E2",
-        "handoff_to": "FR-006: Alternative Flow, admin booking cancellation"
+        "prd_ref": "Alternative Flow E2"
       }
     },
     {
@@ -104722,10 +104709,9 @@
       "owner_fr": "FR-004",
       "title": "System emits quote.submitted on first send, quote.updated on re-send",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Main Flow step 18",
-        "handoff_to": "FR-005: Main Flow step 1"
+        "prd_ref": "Main Flow step 18"
       }
     },
     {
@@ -104844,10 +104830,9 @@
       "owner_fr": "FR-004",
       "title": "Provider's unaccepted quotes are cancelled once each",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flows bullet 10",
-        "handoff_to": "FR-006: Alternative Flow B5"
+        "prd_ref": "Alternative Flows bullet 10"
       }
     },
     {
@@ -105021,10 +105006,9 @@
       "owner_fr": "FR-005",
       "title": "Admin records the replacement acceptance and supersession for a provider-fault transfer",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Alternative Flow A9",
-        "handoff_from": "FR-006: Alternative Flow B4"
+        "prd_ref": "Alternative Flow A9"
       }
     },
     {
@@ -105487,10 +105471,9 @@
       "owner_fr": "FR-006",
       "title": "Admin selects one option and date-price row of the replacement quote and confirms the replacement acceptance",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow B5 step 5",
-        "handoff_to": "FR-005: Alternative Flow A9"
+        "prd_ref": "Alternative Flow B5 step 5"
       }
     },
     {
@@ -110000,7 +109983,7 @@
       "owner_fr": "FR-015",
       "title": "Admin confirms suspension and new activity is blocked",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A5 step 2"
       }
@@ -129194,10 +129177,9 @@
       "owner_fr": "FR-037",
       "title": "System creates the inquiry, links provenance and completes the case",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Unified Flow: creates the inquiry, links provenance and completes the case",
-        "handoff_to": "FR-003: Workflow 1 inquiry (REQ-037-029 routing)"
+        "prd_ref": "Unified Flow: creates the inquiry, links provenance and completes the case"
       }
     },
     {
@@ -129206,7 +129188,7 @@
       "owner_fr": "FR-037",
       "title": "System routes the inquiry exclusively to the assigned provider",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Unified Flow: routes the inquiry exclusively to the assigned provider"
       }
@@ -168831,6 +168813,24 @@
     {
       "from_id": "FR-003",
       "verb": "references",
+      "to_id": "REQ-001-015",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-003",
+      "verb": "references",
+      "to_id": "REQ-002-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-003",
+      "verb": "references",
+      "to_id": "REQ-004-098",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-003",
+      "verb": "references",
       "to_id": "REQ-006-015",
       "attrs": {}
     },
@@ -168855,7 +168855,31 @@
     {
       "from_id": "FR-003",
       "verb": "references",
+      "to_id": "REQ-013-008",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-003",
+      "verb": "references",
+      "to_id": "REQ-015-097",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-003",
+      "verb": "references",
       "to_id": "REQ-025-064",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-003",
+      "verb": "references",
+      "to_id": "REQ-026-034",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-003",
+      "verb": "references",
+      "to_id": "REQ-027-005",
       "attrs": {}
     },
     {
@@ -168936,6 +168960,18 @@
     {
       "from_id": "FR-004",
       "verb": "references",
+      "to_id": "REQ-001-015",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-004",
+      "verb": "references",
+      "to_id": "REQ-002-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-004",
+      "verb": "references",
       "to_id": "REQ-003-012",
       "attrs": {}
     },
@@ -168948,7 +168984,43 @@
     {
       "from_id": "FR-004",
       "verb": "references",
+      "to_id": "REQ-005-052",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-004",
+      "verb": "references",
       "to_id": "REQ-006-005",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-004",
+      "verb": "references",
+      "to_id": "REQ-008-018",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-004",
+      "verb": "references",
+      "to_id": "REQ-015-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-004",
+      "verb": "references",
+      "to_id": "REQ-018-013",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-004",
+      "verb": "references",
+      "to_id": "REQ-019-078",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-004",
+      "verb": "references",
+      "to_id": "REQ-024-018",
       "attrs": {}
     },
     {
@@ -169050,7 +169122,19 @@
     {
       "from_id": "FR-005",
       "verb": "references",
+      "to_id": "REQ-002-020",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-005",
+      "verb": "references",
       "to_id": "REQ-003-012",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-005",
+      "verb": "references",
+      "to_id": "REQ-004-003",
       "attrs": {}
     },
     {
@@ -169063,6 +169147,18 @@
       "from_id": "FR-005",
       "verb": "references",
       "to_id": "REQ-012-006",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-005",
+      "verb": "references",
+      "to_id": "REQ-013-008",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-005",
+      "verb": "references",
+      "to_id": "REQ-015-039",
       "attrs": {}
     },
     {
@@ -337209,7 +337305,19 @@
     {
       "from_id": "STG-main-01-inquiry",
       "verb": "reads",
+      "to_id": "ENT-intake-audit-entry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-01-inquiry",
+      "verb": "reads",
       "to_id": "ENT-intake-processing-request",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-01-inquiry",
+      "verb": "reads",
+      "to_id": "ENT-intake-processing-result",
       "attrs": {}
     },
     {
@@ -337240,6 +337348,12 @@
       "from_id": "STG-main-01-inquiry",
       "verb": "reads",
       "to_id": "ENT-location-starting-price",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-01-inquiry",
+      "verb": "reads",
+      "to_id": "ENT-media-artifact",
       "attrs": {}
     },
     {
@@ -337420,6 +337534,12 @@
       "from_id": "STG-main-01-inquiry",
       "verb": "writes",
       "to_id": "ENT-intake-audit-entry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-01-inquiry",
+      "verb": "writes",
+      "to_id": "ENT-intake-processing-request",
       "attrs": {}
     },
     {
@@ -345331,6 +345451,12 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-002-005",
+      "verb": "next",
+      "to_id": "STP-003-017",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-002-006",
       "verb": "applies",
       "to_id": "REQ-002-033",
@@ -345418,6 +345544,12 @@
       "from_id": "STP-002-008",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-008",
+      "verb": "next",
+      "to_id": "STP-003-007",
       "attrs": {}
     },
     {
@@ -345568,6 +345700,12 @@
       "from_id": "STP-002-014",
       "verb": "done by",
       "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-014",
+      "verb": "next",
+      "to_id": "STP-003-027",
       "attrs": {}
     },
     {
@@ -346141,6 +346279,12 @@
     {
       "from_id": "STP-003-014",
       "verb": "next",
+      "to_id": "STP-002-001",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-003-014",
+      "verb": "next",
       "to_id": "STP-003-015",
       "attrs": {
         "label": "submission fails"
@@ -346694,6 +346838,12 @@
       "from_id": "STP-003-029",
       "verb": "done by",
       "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-003-029",
+      "verb": "next",
+      "to_id": "STP-004-001",
       "attrs": {}
     },
     {
@@ -347316,6 +347466,12 @@
       "from_id": "STP-003-046",
       "verb": "next",
       "to_id": "STP-003-047",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-003-046",
+      "verb": "next",
+      "to_id": "STP-004-002",
       "attrs": {}
     },
     {
@@ -348111,6 +348267,12 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-003-072",
+      "verb": "next",
+      "to_id": "STP-006-501",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-003-073",
       "verb": "applies",
       "to_id": "REQ-003-020",
@@ -348135,6 +348297,12 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-003-073",
+      "verb": "next",
+      "to_id": "STP-006-801",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-003-074",
       "verb": "applies",
       "to_id": "REQ-003-020",
@@ -348156,6 +348324,12 @@
       "from_id": "STP-003-074",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-003-074",
+      "verb": "next",
+      "to_id": "STP-006-701",
       "attrs": {}
     },
     {
@@ -348432,6 +348606,12 @@
       "from_id": "STP-003-084",
       "verb": "done by",
       "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-003-084",
+      "verb": "next",
+      "to_id": "STP-006-301",
       "attrs": {}
     },
     {
@@ -349241,6 +349421,12 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-004-018",
+      "verb": "next",
+      "to_id": "STP-005-001",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-004-101",
       "verb": "applies",
       "to_id": "REQ-004-094",
@@ -349526,6 +349712,12 @@
       "from_id": "STP-004-111",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-111",
+      "verb": "next",
+      "to_id": "STP-006-601",
       "attrs": {}
     },
     {
@@ -351380,6 +351572,12 @@
       "from_id": "STP-006-605",
       "verb": "done by",
       "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-605",
+      "verb": "next",
+      "to_id": "STP-005-016",
       "attrs": {}
     },
     {
@@ -364866,6 +365064,12 @@
       "from_id": "STP-015-152",
       "verb": "done by",
       "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-015-152",
+      "verb": "next",
+      "to_id": "STP-003-067",
       "attrs": {}
     },
     {
@@ -419318,6 +419522,12 @@
     {
       "from_id": "STP-037-043",
       "verb": "next",
+      "to_id": "STP-003-065",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-037-043",
+      "verb": "next",
       "to_id": "STP-037-044",
       "attrs": {
         "label": "exclusive provider"
@@ -419359,6 +419569,12 @@
       "from_id": "STP-037-044",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-037-044",
+      "verb": "next",
+      "to_id": "STP-003-078",
       "attrs": {}
     },
     {
@@ -422209,6 +422425,83 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261122-124921-9eda5e92",
+      "at": "2026-11-22T12:49:21.735836+00:00",
+      "changed_by": "controller",
+      "reason": "Consistency review of FR-003 (boundary and hand-offs): FR-003 references one Rule of each owner FR whose data its Rules and Screens use read-only, and eight open hand-offs are stitched with next links (the two FR-037 mirror attributes cleared as well); STP-003-085 has no receiving step in FR-001 and stays open.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "FR-003",
+        "STP-003-029",
+        "STP-003-046",
+        "STP-003-065",
+        "STP-003-067",
+        "STP-003-072",
+        "STP-003-073",
+        "STP-003-074",
+        "STP-003-078",
+        "STP-003-084",
+        "STP-015-152",
+        "STP-037-043",
+        "STP-037-044"
+      ],
+      "edges_added": 16,
+      "edges_removed": 0,
+      "rows": 26
+    },
+    {
+      "id": "cs-20261122-124835-6f9300e6",
+      "at": "2026-11-22T12:48:35.933116+00:00",
+      "changed_by": "controller",
+      "reason": "FR-004 consistency review (2026-11-22): one references link to an owner Rule for each owner FR whose data FR-004 screens show read-only (FR-001, FR-002, FR-005, FR-008, FR-015, FR-018, FR-019, FR-024); two open hand-offs stitched to the receiving Steps in FR-005 and FR-006.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "FR-004",
+        "STP-004-018",
+        "STP-004-111"
+      ],
+      "edges_added": 10,
+      "edges_removed": 0,
+      "rows": 12
+    },
+    {
+      "id": "cs-20261122-124554-effb0912",
+      "at": "2026-11-22T12:45:54.162199+00:00",
+      "changed_by": "controller",
+      "reason": "FR-002 consistency review: four open hand-offs stitched to the matching FR-003 Steps, and the four flow findings on the intake Entities settled from the PRD (FR-003 and providers read the result and the media; FR-003 supplies the request; the audit fields are returned in the result).",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "STG-main-01-inquiry",
+        "STP-002-001",
+        "STP-002-005",
+        "STP-002-008",
+        "STP-002-014",
+        "STP-003-014"
+      ],
+      "edges_added": 8,
+      "edges_removed": 0,
+      "rows": 12
+    },
+    {
+      "id": "cs-20261122-124307-ce67a41b",
+      "at": "2026-11-22T12:43:07.066829+00:00",
+      "changed_by": "controller",
+      "reason": "Consistency review of FR-005: one references link to each owner FR whose data the Screens display read-only (FR-002, FR-004, FR-013, FR-015), and the provider-fault hand-off from FR-006 stitched to the replacement acceptance Step.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "FR-005",
+        "STP-005-016",
+        "STP-006-605"
+      ],
+      "edges_added": 5,
+      "edges_removed": 0,
+      "rows": 7
+    },
     {
       "id": "cs-20261122-124001-4011ce5b",
       "at": "2026-11-22T12:40:01.926906+00:00",

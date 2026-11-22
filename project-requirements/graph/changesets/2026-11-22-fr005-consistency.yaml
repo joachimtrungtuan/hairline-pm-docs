@@ -1,0 +1,10 @@
+reason: "Consistency review of FR-005: one references link to each owner FR whose data the Screens display read-only (FR-002, FR-004, FR-013, FR-015), and the provider-fault hand-off from FR-006 stitched to the replacement acceptance Step."
+by: controller
+operations:
+  - {"op": "add_edge", "from": "FR-005", "verb": "references", "to": "REQ-004-003"}
+  - {"op": "add_edge", "from": "FR-005", "verb": "references", "to": "REQ-002-020"}
+  - {"op": "add_edge", "from": "FR-005", "verb": "references", "to": "REQ-013-008"}
+  - {"op": "add_edge", "from": "FR-005", "verb": "references", "to": "REQ-015-039"}
+  - {"op": "add_edge", "from": "STP-006-605", "verb": "next", "to": "STP-005-016"}
+  - {"op": "update_node", "id": "STP-005-016", "attrs": {"handoff_from": null}}
+  - {"op": "update_node", "id": "STP-006-605", "attrs": {"handoff_to": null}}

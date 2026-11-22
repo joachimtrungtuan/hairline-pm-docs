@@ -1,0 +1,15 @@
+reason: "FR-004 consistency review (2026-11-22): one references link to an owner Rule for each owner FR whose data FR-004 screens show read-only (FR-001, FR-002, FR-005, FR-008, FR-015, FR-018, FR-019, FR-024); two open hand-offs stitched to the receiving Steps in FR-005 and FR-006."
+by: controller
+operations:
+  - {"op": "add_edge", "from": "FR-004", "verb": "references", "to": "REQ-001-015", "attrs": {}}
+  - {"op": "add_edge", "from": "FR-004", "verb": "references", "to": "REQ-002-002", "attrs": {}}
+  - {"op": "add_edge", "from": "FR-004", "verb": "references", "to": "REQ-005-052", "attrs": {}}
+  - {"op": "add_edge", "from": "FR-004", "verb": "references", "to": "REQ-008-018", "attrs": {}}
+  - {"op": "add_edge", "from": "FR-004", "verb": "references", "to": "REQ-015-007", "attrs": {}}
+  - {"op": "add_edge", "from": "FR-004", "verb": "references", "to": "REQ-018-013", "attrs": {}}
+  - {"op": "add_edge", "from": "FR-004", "verb": "references", "to": "REQ-019-078", "attrs": {}}
+  - {"op": "add_edge", "from": "FR-004", "verb": "references", "to": "REQ-024-018", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-004-018", "verb": "next", "to": "STP-005-001", "attrs": {}}
+  - {"op": "update_node", "id": "STP-004-018", "attrs": {"handoff_to": null}}
+  - {"op": "add_edge", "from": "STP-004-111", "verb": "next", "to": "STP-006-601", "attrs": {}}
+  - {"op": "update_node", "id": "STP-004-111", "attrs": {"handoff_to": null}}

@@ -1,0 +1,20 @@
+reason: "FR-006 consistency review: references links for the owner data its screens show read-only, open hand-offs stitched, and the FR-005 acceptance hand-off to the FR-006 main flow."
+by: controller
+operations:
+  - {"op": "add_edge", "from": "FR-006", "verb": "references", "to": "REQ-001-015"}
+  - {"op": "add_edge", "from": "FR-006", "verb": "references", "to": "REQ-002-002"}
+  - {"op": "add_edge", "from": "FR-006", "verb": "references", "to": "REQ-003-007"}
+  - {"op": "add_edge", "from": "FR-006", "verb": "references", "to": "REQ-004-001"}
+  - {"op": "add_edge", "from": "FR-006", "verb": "references", "to": "REQ-005-023"}
+  - {"op": "add_edge", "from": "FR-006", "verb": "references", "to": "REQ-015-007"}
+  - {"op": "add_edge", "from": "FR-006", "verb": "references", "to": "REQ-024-013"}
+  - {"op": "add_edge", "from": "STP-006-306", "verb": "next", "to": "STP-007-021"}
+  - {"op": "update_node", "id": "STP-006-306", "attrs": {"handoff_to": null}}
+  - {"op": "update_node", "id": "STP-007-021", "attrs": {"handoff_from": null}}
+  - {"op": "add_edge", "from": "STP-006-505", "verb": "next", "to": "STP-015-155"}
+  - {"op": "update_node", "id": "STP-006-505", "attrs": {"handoff_to": null}}
+  - {"op": "update_node", "id": "STP-006-608", "attrs": {"handoff_to": null}}
+  - {"op": "add_edge", "from": "STP-006-703", "verb": "next", "to": "STP-011-054"}
+  - {"op": "update_node", "id": "STP-006-703", "attrs": {"handoff_to": null}}
+  - {"op": "update_node", "id": "STP-011-054", "attrs": {"handoff_from": null}}
+  - {"op": "add_edge", "from": "STP-005-021", "verb": "next", "to": "STP-006-001"}
