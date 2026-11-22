@@ -45,3 +45,5 @@ The owner read and approved the FR-005 compressed PRD on 2026-11-22 and released
 - FR-022: compressed PRD applied (    2228 lines to     2106); each rule stated once, field rows tagged with graph field ids where the PRD has screens, dropped classes removed. No rule changes. Report: `plans/reports/docs-manager-261122-fr022-compression.md`.
 - FR-014: compressed PRD applied (    1908 lines to     1810); each rule stated once, field rows tagged with graph field ids where the PRD has screens, dropped classes removed. No rule changes. Report: `plans/reports/docs-manager-261122-fr014-compression.md`.
 - FR-032: compressed PRD applied (    2104 lines to     1931); each rule stated once, field rows tagged with graph field ids where the PRD has screens, dropped classes removed. No rule changes. Report: `plans/reports/docs-manager-261122-fr032-compression.md`.
+- 2026-11-23, FR-007B: independent review found four clauses from dropped sections missing; restored in original wording under Business Rules (PRD v1.14).
+- 2026-11-23, independent reviews of FR-005, FR-012 and FR-020: no kept-section requirement lost or changed.

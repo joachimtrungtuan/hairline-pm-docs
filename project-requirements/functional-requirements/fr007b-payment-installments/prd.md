@@ -526,6 +526,13 @@ Per Hairline Platform Constitution (Principle VI: Data Integrity & Audit Trail),
 - Role-based access control (RBAC) enforced per FR-031 (Admin Access Control & Permissions) (REQ-007B-091)
 - All installment data access (read and write) is subject to RBAC validation (REQ-007B-091)
 
+**Carried from dropped sections (original wording)**:
+
+- **Failure handling**: Queue failed jobs for retry; alert admin if scheduling system unavailable
+- **Provenance**: resolves the AcceptanceEvent, accepted parent quote and subquote IDs and versions through its booking (FR-007 REQ-007-019)
+- **Entity 3 - Payment Method**: The single record of a patient's saved payment method, used by installment plans here and read by the FR-007 payment screens and the FR-016 patient payments view. The payment methods it records are card and bank transfer. For a card it is a tokenized recurring payment method; for a bank transfer, which has no saved card, there is no card token, last 4 digits or expiration date to show
+- **Ownership**: FR-007B owns installment plans and payment methods; the Stripe account and the split-payment setting belong to FR-029
+
 ---
 
 ## Dependencies
@@ -709,6 +716,7 @@ Patient requests booking cancellation after paying 2 of 4 installments; admin re
 | Date       | Version | Changes                 | Author |
 |------------|---------|-------------------------|--------|
 | 2026-11-22 | 1.13 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.12) and the change request CR-FR007B-20261016-01 (change-request-2026-10-16-mtg002-quote-model-alignment.md) are in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
+| 2026-11-23 | 1.14 | Independent compression review: four clauses from the dropped Dependencies and Key Entities sections restored in original wording under Business Rules (scheduler failure handling, installment plan provenance, payment method record, FR-007B and FR-029 ownership). No rule changes. | Controller |
 
 ---
 
