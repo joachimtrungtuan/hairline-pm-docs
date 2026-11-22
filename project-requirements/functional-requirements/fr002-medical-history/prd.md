@@ -210,6 +210,13 @@ Backend-only: This FR provides integration contracts used by FR-003 (patient cap
 2. Admin cannot alter fixed security constraints (e.g., password policy, OTP length). (REQ-002-021)
 3. Admin edits are versioned; prior versions remain accessible for existing inquiries. (REQ-002-040)
 
+**Carried from dropped sections (original wording)**:
+
+- Email/Notification Service (indirect via consumer modules): surface validation failures to patients/providers
+- FR-003 manages drafts/resubmissions and user communications
+- Deterministic normalization and alert derivation based on versioned rules
+- Horizontal scaling of processing workers; rate limiting to protect services
+
 ## User Scenarios & Testing
 
 ### User Story 1 - Process Intake Payload (Priority: P1)
@@ -282,6 +289,7 @@ Acceptance Scenarios:
 | Date | Version | Changes | Author |
 | --- | --- | --- | --- |
 | 2026-11-22 | 1.4 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.3) and the change requests (the PRD names none) are in `archived/prd-baseline-2026-11-08/` and in git history. | AI |
+| 2026-11-23 | 1.5 | Independent compression review: 4 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | AI |
 
 ## Appendix: Approvals
 
