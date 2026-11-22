@@ -47,3 +47,11 @@ The owner read and approved the FR-005 compressed PRD on 2026-11-22 and released
 - FR-032: compressed PRD applied (    2104 lines to     1931); each rule stated once, field rows tagged with graph field ids where the PRD has screens, dropped classes removed. No rule changes. Report: `plans/reports/docs-manager-261122-fr032-compression.md`.
 - 2026-11-23, FR-007B: independent review found four clauses from dropped sections missing; restored in original wording under Business Rules (PRD v1.14).
 - 2026-11-23, independent reviews of FR-005, FR-012 and FR-020: no kept-section requirement lost or changed.
+
+## Other changes of this pass (2026-11-23)
+
+- Change-request files: all 76 removed from the live FR folders; each exists in `archived/prd-baseline-2026-11-08/`. 23 links in five PRDs (FR-004, FR-014, FR-015, FR-029, FR-030), `system-prd.md`, `system-data-schema.md` and `sources/source-register.md` now point to the archive. Two live files differed from their archive copies (FR-009 and FR-031 custom provider role change requests of 2026-09-29); their last live text is in git, in the parent of commit `9a90a34`.
+- Graph: three change-sets, `2026-11-22-fr028-conversion-rate-wording`, `2026-11-22-fr010-retention-wording`, `2026-11-23-cr-source-ref-archive` (Source `SRC-CR-003-20261027` now refers to the archive). `graph.json` re-exported, 11,397 nodes.
+- Lint: 31 findings. Seven are new duplicate notices (L12): REQ-010-046 now uses the same pointer wording to the system PRD 10-year retention rule as six rules in other FRs. Accepted: each is a per-FR pointer to one system rule.
+- `project-automation/skills-engineering/verify-fr/SKILL.md`: step 5a added (three compression checks), owner-approved edit.
+- `local-docs/INDEX.md` section C.1: PRD scaffold updated to the compressed section list.
