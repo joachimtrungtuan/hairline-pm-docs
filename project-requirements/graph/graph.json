@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-23T01:17:16Z",
+  "generated_at": "2026-11-23T02:32:18Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -38214,7 +38214,7 @@
       "owner_fr": null,
       "title": "Quote Submission & Management",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
         "module": "fr004-quote-submission",
         "prd_path": "project-requirements/functional-requirements/fr004-quote-submission/prd.md",
@@ -38331,7 +38331,7 @@
       "owner_fr": null,
       "title": "Messaging & Communication",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
         "module": "fr012-secure-messaging",
         "prd_path": "project-requirements/functional-requirements/fr012-secure-messaging/prd.md",
@@ -41386,7 +41386,7 @@
       "owner_fr": "FR-003",
       "title": "Patient cancels in Inquiry or Quoted; admin only afterwards",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "System MUST allow patients to cancel their own inquiry in Inquiry or Quoted stages with a required cancellation reason; cancellation is immediate and irreversible. From the Accepted stage onward, System MUST NOT offer patient cancellation; it MUST show \"Contact support\", and cancellation is performed only by an admin through FR-006.",
         "rationale": "Restated by Cancellation Rules 4 (cancellation is immediate and irreversible; no grace period, no admin approval required; reason required with predefined options), Workflow 5 and Alternative Flow E2."
@@ -43609,9 +43609,9 @@
       "owner_fr": "FR-004",
       "title": "Accepted terms never change",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "After acceptance, price, currency, and promotion never change; the booking's appointment changes only through the FR-006 admin appointment change, which emits `booking.rescheduled`, while the acceptance snapshot keeps the accepted appointment as the baseline."
+        "statement": "After acceptance, price, currency, and promotion never change; the booking's appointment changes only through the FR-006 admin appointment change or an admin edit of the accepted quote's date range or appointment (REQ-005-023), each of which emits `booking.rescheduled`, while the acceptance snapshot keeps the accepted appointment as the baseline."
       }
     },
     {
@@ -43946,10 +43946,10 @@
       "owner_fr": "FR-005",
       "title": "Immutable acceptance snapshot with binding fields",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System MUST preserve an immutable acceptance snapshot containing the accepted subquote identifier/version, the underlying Quote Option ID and Option/date-price ID, the source package ID/version, the parent quote identifier/version and expiry, provider and inquiry references, treatment ID/version, package and service snapshot, date range, appointment date/time/timezone, offered price, any patient-applied promotion code and the resulting discounted price, promotion, currency, exchange rate and its timestamp, treatment plan, estimated grafts, graft description, visual plan, clinician IDs, notes, requirements, attachment IDs with versions, actor, and timestamp; `acceptedSubquoteVersion` MUST equal `acceptedParentQuoteVersion` because both identify the same FR-004 aggregate revision; all resulting state changes MUST be audited. Price, currency, date range, appointment, and promotion are the binding fields that downstream modules MUST read from the snapshot; the snapshot appointment is the accepted baseline, and booking notices MUST read the booking's current appointment, which only an FR-006 admin appointment change can alter. The treatment details are the original record at acceptance; later changes to plan, clinicians, or grafts are made only through FR-010 with audit and patient notice, and never edit the snapshot.",
-        "rationale": "Restated by Payment & Billing binding snapshot fields (price, currency, date range, appointment, and promotion are read from the snapshot by every downstream module and the snapshot never changes after acceptance; an admin may later change the booking's appointment through FR-006, which emits booking.rescheduled, and every booking notice reads the booking's current appointment; after acceptance only the clinic or an admin may change the plan, clinicians, or grafts, through FR-010 only, with audit and patient notice, and the snapshot itself is never edited), Payment & Billing pricing (the resulting price and promotion are frozen into the snapshot; only the provider-fault transfer creates a new linked record), and Key Entities (acceptedSubquoteVersion MUST equal acceptedParentQuoteVersion; acceptanceSnapshot preserves the complete subquote plus inherited parent context, including the exchange rate and its timestamp and any patient-applied promotion code)."
+        "statement": "System MUST preserve an immutable acceptance snapshot containing the accepted subquote identifier/version, the underlying Quote Option ID and Option/date-price ID, the source package ID/version, the parent quote identifier/version and expiry, provider and inquiry references, treatment ID/version, package and service snapshot, date range, appointment date/time/timezone, offered price, any patient-applied promotion code and the resulting discounted price, promotion, currency, exchange rate and its timestamp, treatment plan, estimated grafts, graft description, visual plan, clinician IDs, notes, requirements, attachment IDs with versions, actor, and timestamp; `acceptedSubquoteVersion` MUST equal `acceptedParentQuoteVersion` because both identify the same FR-004 aggregate revision; all resulting state changes MUST be audited. Price, currency, date range, appointment, and promotion are the binding fields that downstream modules MUST read from the snapshot; the snapshot appointment is the accepted baseline, and booking notices MUST read the booking's current appointment, which can change only through an FR-006 admin appointment change or an admin edit of the accepted quote's date range or appointment (REQ-005-023). The treatment details are the original record at acceptance; later changes to plan, clinicians, or grafts are made only through FR-010 or an admin edit of the accepted quote (REQ-005-023), with audit and patient notice, and never edit the snapshot.",
+        "rationale": "Restated by Payment & Billing binding snapshot fields (price, currency, date range, appointment, and promotion are read from the snapshot by every downstream module and the snapshot never changes after acceptance; an admin may later change the booking's appointment through FR-006 or through an admin edit of the accepted quote's date range or appointment (REQ-005-023), each of which emits booking.rescheduled, and every booking notice reads the booking's current appointment; after acceptance only the clinic or an admin may change the plan, clinicians, or grafts, through FR-010 or, for an admin, the admin edit of the accepted quote (REQ-005-023), with audit and patient notice, and the snapshot itself is never edited), Payment & Billing pricing (the resulting price and promotion are frozen into the snapshot; only the provider-fault transfer creates a new linked record), and Key Entities (acceptedSubquoteVersion MUST equal acceptedParentQuoteVersion; acceptanceSnapshot preserves the complete subquote plus inherited parent context, including the exchange rate and its timestamp and any patient-applied promotion code)."
       }
     },
     {
@@ -44114,10 +44114,10 @@
       "owner_fr": "FR-005",
       "title": "AcceptanceEvent and snapshot immutable; admin may edit the accepted quote except price, currency and promotion",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST NOT allow an AcceptanceEvent or its acceptance snapshot to be deleted, restored, or edited, and MUST NOT allow an accepted subquote or its parent quote to be deleted or restored. After acceptance an admin MAY edit the accepted quote in any field except its price, currency, and promotion (the date range and the treatment details may be changed), with a mandatory reason and a full before/after history. The edit MUST be stored as a new version beside the acceptance snapshot, and the snapshot keeps the terms as accepted. Admins MAY also add audited notes or corrections as annotations next to an AcceptanceEvent; an annotation MUST NOT change the event, its snapshot, or any quote, subquote, or inquiry state.",
-        "rationale": "Restated by the Admin Platform scope and Admin Editability (after acceptance an admin may edit the accepted quote in any field except price, currency and promotion, with a mandatory reason and full before/after history, stored as a new version beside the unchanged acceptance snapshot; an annotation never alters the AcceptanceEvent, its snapshot, the accepted IDs/versions, or any quote, subquote, or inquiry state), Business Rule 6 (AcceptanceEvents, accepted subquotes, and their parent quotes are never deleted or restored), Screen 5 (annotations are append-only, each showing author, time, and reason; no delete or restore action exists), and Key Entities (AcceptanceAnnotation is an audited, append-only admin note)."
+        "statement": "System MUST NOT allow an AcceptanceEvent or its acceptance snapshot to be deleted, restored, or edited, and MUST NOT allow an accepted subquote or its parent quote to be deleted or restored. After acceptance an admin MAY edit the accepted quote in any field except its price, currency, and promotion (the date range and the treatment details may be changed), with a mandatory reason and a full before/after history. An edit of the date range or appointment MUST run the same slot-availability check as the FR-006 admin appointment change, update the booking's current appointment, and emit `booking.rescheduled`; an edit of the treatment details MUST notify the patient through `treatment.plan_changed`. The edit MUST be stored as a new version beside the acceptance snapshot, and the snapshot keeps the terms as accepted. Admins MAY also add audited notes or corrections as annotations next to an AcceptanceEvent; an annotation MUST NOT change the event, its snapshot, or any quote, subquote, or inquiry state.",
+        "rationale": "Restated by the Admin Platform scope and Admin Editability (after acceptance an admin may edit the accepted quote in any field except price, currency and promotion, with a mandatory reason and full before/after history, stored as a new version beside the unchanged acceptance snapshot, a change of the date range or appointment running the FR-006 slot-availability check and emitting booking.rescheduled, and a change of treatment details emitting treatment.plan_changed; an annotation never alters the AcceptanceEvent, its snapshot, the accepted IDs/versions, or any quote, subquote, or inquiry state), Business Rule 6 (AcceptanceEvents, accepted subquotes, and their parent quotes are never deleted or restored), Screen 5 (annotations are append-only, each showing author, time, and reason; no delete or restore action exists), and Key Entities (AcceptanceAnnotation is an audited, append-only admin note)."
       }
     },
     {
@@ -44138,9 +44138,9 @@
       "owner_fr": "FR-005",
       "title": "Patient promotion code on one named subquote before acceptance",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST let the patient apply a promotion code to one named subquote before acceptance, validated through FR-019, and MUST freeze the discounted price and promotion into the acceptance snapshot. The code MUST NOT be written to the provider's quote or promotion records, and the price and promotion MUST NOT change after acceptance except through an FR-006 provider-fault transfer.",
+        "statement": "System MUST let the patient apply a promotion code to one named subquote before acceptance, validated through FR-019, and MUST freeze the discounted price and promotion into the acceptance snapshot. The code MUST NOT be written to the provider's quote or promotion records, and the price and promotion MUST NOT change after acceptance except through an FR-006 provider-fault transfer. If the code is no longer valid, or its usage limit is exhausted, when the patient confirms, the acceptance MUST NOT happen and nothing is recorded as accepted; the patient MUST return to the subquote detail with the reason shown and the offered price unchanged, and may accept without the code or enter another.",
         "rationale": "Restated by Alternative Flow A8 (the discounted price is shown next to the offered price and carried into the confirmation summary; an invalid code shows the reason and leaves the offered price unchanged; the code does not carry over to another subquote; after acceptance the promotion and price cannot be removed, replaced, re-entered at checkout, or changed by revalidation, including an admin void), the Screen 2 Promotion Code field and business rule (not available after acceptance), and Payment & Billing pricing."
       }
     },
@@ -44246,9 +44246,9 @@
       "owner_fr": "FR-005",
       "title": "Acceptance sets parent quote and inquiry to Accepted and writes the accepted total",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "After the exclusive hold succeeds, System records the selected subquote as Accepted, locks its inherited parent context and commercial details, sets the parent quote and inquiry to Accepted, records the acceptance snapshot (including the exchange rate and its timestamp) and the slot-hold reference, and writes the accepted subquote price as the parent quote's accepted total (FR-004 acceptedTotal), read from the snapshot. No appointment record is created at acceptance; FR-006 creates it only on successful first payment.",
+        "statement": "After the exclusive hold succeeds, System records the selected subquote as Accepted, locks its inherited parent context and commercial details, sets the parent quote and inquiry to Accepted, records the acceptance snapshot (including the exchange rate and its timestamp) and the slot-hold reference, and writes the accepted subquote's price after any promotion as the parent quote's accepted total (FR-004 acceptedTotal), read from the snapshot. No appointment record is created at acceptance; FR-006 creates it only on successful first payment.",
         "rationale": "Main Flow step 7 and the Main Flow outcome (inquiry transitions to Accepted; one subquote and its inherited parent context are locked as the accepted selection)."
       }
     },
@@ -44282,7 +44282,7 @@
       "owner_fr": "FR-005",
       "title": "Parent quote expiry during review",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "When the parent quote countdown reaches zero while the patient is viewing details, System disables the Accept button and shows an \"Expired\" badge with guidance to choose another quote; every subquote under that parent quote becomes ineligible. The expiry timer applies to every child subquote and shows a static \"Expired on [date]\" when expired. If no eligible subquote remains, the patient may cancel the inquiry and submit a new one, or contact support.",
         "rationale": "Alternative Flow A1, the Screen 1 Expiry Timer field, and the Patient Platform scope (the patient sees the parent quote expiry countdown)."
@@ -44306,10 +44306,10 @@
       "owner_fr": "FR-005",
       "title": "Admin booking cancellation keeps the acceptance; no supersession record",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "If an admin cancels the booking after acceptance, the AcceptanceEvent is retained unchanged and no AcceptanceSupersession record is written; the accepted subquote and parent Quote stay accepted.",
-        "rationale": "Key Entities (AcceptanceEvent and AcceptanceSupersession), Alternative Flow A4, Payment & Billing cancellation during hold, and the Screen 5 Supersession Indicator (no supersession record exists for a cancellation). The edge case on a patient who wants to cancel immediately after accepting says the cancellation writes a linked supersession record; that conflict is flagged for the product owner."
+        "rationale": "Alternative Flow A4, Payment & Billing cancellation during hold, and the Screen 5 Supersession Indicator (no supersession record exists for a cancellation). The edge case on a patient who wants to cancel immediately after accepting says the same: an admin cancellation through FR-006 keeps the accepted subquote and parent quote accepted and writes no supersession record."
       }
     },
     {
@@ -44413,9 +44413,9 @@
       "owner_fr": "FR-005",
       "title": "Price per graft",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Price per graft is the subquote price divided by the inherited graft count; it is calculated and non-editable.",
+        "statement": "Price per graft is the subquote's offered price, before any promotion, divided by the inherited graft count; it is calculated and non-editable.",
         "rationale": "prd.md line 214 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -45294,9 +45294,9 @@
       "owner_fr": "FR-006",
       "title": "Rescheduling deferred to V2",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "The provider pre-schedules the appointment in the subquote; acceptance fixes the chosen appointment and reserves its slot, and successful payment confirms the booking. Rescheduling functionality will be evaluated for V2 based on business needs. The patient cannot reschedule. Date changes require the audited admin appointment change (Screen 8), which sends `booking.rescheduled`, or an admin cancellation per cancellation policy.",
+        "statement": "The provider pre-schedules the appointment in the subquote; acceptance fixes the chosen appointment and reserves its slot, and successful payment confirms the booking. Rescheduling functionality will be evaluated for V2 based on business needs. The patient cannot reschedule. Date changes require the audited admin appointment change (Screen 8) or the admin edit of the accepted quote's date range or appointment (REQ-005-023), each of which sends `booking.rescheduled`, or an admin cancellation per cancellation policy.",
         "rationale": "Restated by Alternative Flow A2 and REQ-006-004."
       }
     },
@@ -51211,9 +51211,9 @@
       "owner_fr": "FR-010",
       "title": "FR-010 is the only path for post-acceptance treatment-detail changes",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST make FR-010 the only path for post-acceptance changes to treatment plan days, clinician set, and estimated graft count, blocked while the booking is `Accepted` and limited to the clinic (Owner, Manager, or Clinical Staff, from `Confirmed` until Check In) and admins (from `Confirmed` onward); each change MUST require a reason, be audited with before/after values, notify the patient through the FR-030 `treatment.plan_changed` event, leave the accepted snapshot unchanged, and never change money fields (Rule 13; Alternative Flow A2)",
+        "statement": "System MUST make FR-010 the only path for post-acceptance changes to treatment plan days, clinician set, and estimated graft count (apart from the admin edit of the accepted quote, REQ-005-023), blocked while the booking is `Accepted` and limited to the clinic (Owner, Manager, or Clinical Staff, from `Confirmed` until Check In) and admins (from `Confirmed` onward); each change MUST require a reason, be audited with before/after values, notify the patient through the FR-030 `treatment.plan_changed` event, leave the accepted snapshot unchanged, and never change money fields (Rule 13; Alternative Flow A2)",
         "rationale": "Functional Requirements Summary id kept verbatim. Archived FR-010 PRD baseline, lines 952."
       }
     },
@@ -51392,9 +51392,9 @@
       "owner_fr": "FR-010",
       "title": "Post-acceptance treatment-detail changes only through FR-010, with reason and audit",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "After subquote acceptance, FR-010 is the only path for changing the treatment plan days, the assigned clinician set, and the estimated graft count. No change is allowed while the booking is `Accepted` (unpaid); changes are allowed only from `Confirmed`. Only the clinic (Owner, Manager, or Clinical Staff, from `Confirmed` until Check In) or an admin (from `Confirmed` onward) may make the change. Each change MUST record actor, role, reason, timestamp, and before/after values; MUST notify the patient through the FR-030 `treatment.plan_changed` event; MUST leave the accepted snapshot unchanged as the original record; and MUST NOT change price, currency, date range, appointment, or promotion (Alternative Flow A2). Admin changes use Screen 9.",
+        "statement": "After subquote acceptance, FR-010 is the only path for changing the treatment plan days, the assigned clinician set, and the estimated graft count, apart from the admin edit of the accepted quote (REQ-005-023); the rest of this rule governs the FR-010 path. No change is allowed while the booking is `Accepted` (unpaid); changes are allowed only from `Confirmed`. Only the clinic (Owner, Manager, or Clinical Staff, from `Confirmed` until Check In) or an admin (from `Confirmed` onward) may make the change. Each change MUST record actor, role, reason, timestamp, and before/after values; MUST notify the patient through the FR-030 `treatment.plan_changed` event; MUST leave the accepted snapshot unchanged as the original record; and MUST NOT change price, currency, date range, appointment, or promotion (Alternative Flow A2). Admin changes use Screen 9.",
         "rationale": "Restates REQ-010-027 with more detail (who may change, what is recorded); possible duplicate within this FR. Archived FR-010 PRD baseline, lines 564."
       }
     },
@@ -51404,9 +51404,9 @@
       "owner_fr": "FR-010",
       "title": "Money and appointment baseline read only from the accepted snapshot",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Price, currency, date range, accepted appointment baseline, and promotion are read only from the accepted snapshot, reached through the FR-006 booking's AcceptanceEvent. The operative procedure date (Check In gate and displays) is the current FR-006 booking appointment, which equals the snapshot appointment unless an approved FR-006 admin date change applies. FR-010 never edits the snapshot or reads these values from live FR-004 records. The case's current treatment details are seeded from the same snapshot and then change only under Rule 13.",
+        "statement": "Price, currency, date range, accepted appointment baseline, and promotion are read only from the accepted snapshot, reached through the FR-006 booking's AcceptanceEvent. The operative procedure date (Check In gate and displays) is the current FR-006 booking appointment, which equals the snapshot appointment unless an approved FR-006 admin date change or an admin edit of the accepted quote's date range or appointment (REQ-005-023) applies. FR-010 never edits the snapshot or reads these values from live FR-004 records. The case's current treatment details are seeded from the same snapshot and then change only under Rule 13.",
         "rationale": "Restates REQ-010-026 and adds the operative procedure date; possible duplicate within this FR. Archived FR-010 PRD baseline, lines 565."
       }
     },
@@ -53328,9 +53328,9 @@
       "owner_fr": "FR-012",
       "title": "In-app Patient to Provider messaging only through the Messages screens",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST enable in-app messaging for Patient ↔ Provider with text and media, accessible ONLY through dedicated Messages/Inbox screens (not through quote detail screens).",
+        "statement": "System MUST enable in-app messaging for Patient ↔ Provider with text and media, accessible ONLY through dedicated Messages/Inbox screens (chat is not embedded in quote detail screens; a quote screen may link to the conversation in the inbox, REQ-005-015).",
         "rationale": "Functional Requirements Summary, prd.md line 943."
       }
     },
@@ -53592,9 +53592,9 @@
       "owner_fr": "FR-012",
       "title": "Entry points to messaging",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Patients access their Messages/Inbox screen (Screen 1) from the main navigation in the mobile app; Chat is NOT accessible from quote detail screens—only from the dedicated inbox; Providers access patient conversations through a Messages popup/submenu in the header navigation (Screen 3), showing recent conversations with unread counts; Chat is NOT accessible from quote detail or inquiry screens—only from the dedicated messages list; Admins access the Communication Monitoring Center from the Admin platform navigation (Screen 5), which serves as the comprehensive message list monitoring all patient-provider conversations (and any admin-patient communications); Push/email notifications deep-link users directly into the specific conversation in their inbox.",
+        "statement": "Patients access their Messages/Inbox screen (Screen 1) from the main navigation in the mobile app; Chat is NOT embedded in quote detail screens—a quote screen may link to the conversation in the dedicated inbox (REQ-005-015), where chat takes place; Providers access patient conversations through a Messages popup/submenu in the header navigation (Screen 3), showing recent conversations with unread counts; Chat is NOT accessible from quote detail or inquiry screens—only from the dedicated messages list; Admins access the Communication Monitoring Center from the Admin platform navigation (Screen 5), which serves as the comprehensive message list monitoring all patient-provider conversations (and any admin-patient communications); Push/email notifications deep-link users directly into the specific conversation in their inbox.",
         "rationale": "prd.md lines 96, 98, 100, 102. Entry Points. Screens 1 to 5 (SCR-012-01..05) are the entry screens."
       }
     },
@@ -104801,7 +104801,7 @@
       "owner_fr": "FR-005",
       "title": "Patient sees Accept disabled and an Expired badge when the parent quote countdown reaches zero",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A1"
       }
@@ -104812,7 +104812,7 @@
       "owner_fr": "FR-005",
       "title": "Patient attempts a second acceptance and is told another subquote is already accepted",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A2"
       }
@@ -104845,7 +104845,7 @@
       "owner_fr": "FR-005",
       "title": "Patient sees Contact support instead of a cancel action after acceptance",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flow A4 (after acceptance)"
       }
@@ -104878,7 +104878,7 @@
       "owner_fr": "FR-005",
       "title": "Patient tries to accept a subquote of a Suspended or Deactivated provider and sees the provider-unavailable error",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A6"
       }
@@ -104889,7 +104889,7 @@
       "owner_fr": "FR-005",
       "title": "Patient sees Contact support with admin recovery routes after the payment window expires",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A7"
       }
@@ -104900,7 +104900,7 @@
       "owner_fr": "FR-005",
       "title": "Patient enters a promotion code on the named subquote before acceptance",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A8"
       }
@@ -104922,7 +104922,7 @@
       "owner_fr": "FR-005",
       "title": "System revalidates the selection and acquires the exclusive slot hold",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 6"
       }
@@ -104955,7 +104955,7 @@
       "owner_fr": "FR-005",
       "title": "System sends the acceptance outcome notices to the patient and the providers",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 9"
       }
@@ -104977,9 +104977,64 @@
       "owner_fr": "FR-005",
       "title": "System writes immutable audit entries for the selection and every resulting transition",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 11"
+      }
+    },
+    {
+      "id": "STP-005-023",
+      "type": "Step",
+      "owner_fr": "FR-005",
+      "title": "Patient finds no eligible subquote left and may cancel the inquiry or contact support",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A1 outcome"
+      }
+    },
+    {
+      "id": "STP-005-024",
+      "type": "Step",
+      "owner_fr": "FR-005",
+      "title": "Patient sees the reason and the unchanged offered price on the subquote detail and accepts without the code or enters another code",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A8"
+      }
+    },
+    {
+      "id": "STP-005-025",
+      "type": "Step",
+      "owner_fr": "FR-005",
+      "title": "System sets the Conflicts flag on the acceptance when a second acceptance is rejected",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Screen 5 Conflicts and Communication Structure"
+      }
+    },
+    {
+      "id": "STP-005-026",
+      "type": "Step",
+      "owner_fr": "FR-005",
+      "title": "Provider sees the acceptance outcome of each parent quote and its subquotes, read-only",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Screen 4"
+      }
+    },
+    {
+      "id": "STP-005-027",
+      "type": "Step",
+      "owner_fr": "FR-005",
+      "title": "Admin reviews the acceptance events on the oversight dashboard and records an annotation",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Screen 5"
       }
     },
     {
@@ -105131,7 +105186,7 @@
       "owner_fr": "FR-006",
       "title": "System releases the hold, blocks further payment and moves the booking to Payment Window Expired",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B1 step 4"
       }
@@ -167478,7 +167533,7 @@
       "verb": "active in",
       "to_id": "STG-main-04-booking",
       "attrs": {
-        "rules": 7
+        "rules": 8
       },
       "derived": true
     },
@@ -167678,6 +167733,12 @@
       "from_id": "FR-004",
       "verb": "references",
       "to_id": "REQ-003-013",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-004",
+      "verb": "references",
+      "to_id": "REQ-005-023",
       "attrs": {}
     },
     {
@@ -168917,6 +168978,12 @@
       "from_id": "FR-012",
       "verb": "references",
       "to_id": "REQ-004-107",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-012",
+      "verb": "references",
+      "to_id": "REQ-005-015",
       "attrs": {}
     },
     {
@@ -177552,6 +177619,12 @@
     },
     {
       "from_id": "REQ-003-012",
+      "verb": "applies at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-003-012",
       "verb": "applies to",
       "to_id": "ACT-patient",
       "attrs": {}
@@ -184802,6 +184875,12 @@
       "from_id": "REQ-005-040",
       "verb": "applies to",
       "to_id": "SCR-005-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-005-040",
+      "verb": "applies to",
+      "to_id": "SCR-005-02",
       "attrs": {}
     },
     {
@@ -349129,6 +349208,14 @@
     },
     {
       "from_id": "STP-005-006",
+      "verb": "next",
+      "to_id": "STP-005-023",
+      "attrs": {
+        "label": "no eligible subquote remains"
+      }
+    },
+    {
+      "from_id": "STP-005-006",
       "verb": "on",
       "to_id": "SCR-005-02",
       "attrs": {}
@@ -349150,6 +349237,14 @@
       "verb": "done by",
       "to_id": "ACT-patient",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-005-007",
+      "verb": "next",
+      "to_id": "STP-005-025",
+      "attrs": {
+        "label": "second acceptance rejected"
+      }
     },
     {
       "from_id": "STP-005-007",
@@ -349234,7 +349329,7 @@
     {
       "from_id": "STP-005-010",
       "verb": "at",
-      "to_id": "STG-main-03-acceptance",
+      "to_id": "STG-main-04-booking",
       "attrs": {}
     },
     {
@@ -349242,6 +349337,14 @@
       "verb": "done by",
       "to_id": "ACT-patient",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-005-010",
+      "verb": "next",
+      "to_id": "STP-006-301",
+      "attrs": {
+        "label": "admin cancels the booking"
+      }
     },
     {
       "from_id": "STP-005-010",
@@ -349339,6 +349442,14 @@
     },
     {
       "from_id": "STP-005-013",
+      "verb": "next",
+      "to_id": "STP-005-012",
+      "attrs": {
+        "label": "patient chooses another provider's eligible subquote"
+      }
+    },
+    {
+      "from_id": "STP-005-013",
       "verb": "on",
       "to_id": "SCR-005-03",
       "attrs": {}
@@ -349364,7 +349475,7 @@
     {
       "from_id": "STP-005-014",
       "verb": "at",
-      "to_id": "STG-main-03-acceptance",
+      "to_id": "STG-main-04-booking",
       "attrs": {}
     },
     {
@@ -349372,6 +349483,14 @@
       "verb": "done by",
       "to_id": "ACT-patient",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-005-014",
+      "verb": "next",
+      "to_id": "STP-006-301",
+      "attrs": {
+        "label": "admin cancels the booking"
+      }
     },
     {
       "from_id": "STP-005-015",
@@ -349397,6 +349516,14 @@
       "to_id": "STP-005-005",
       "attrs": {
         "label": "code valid, discounted price carried into the confirmation summary"
+      }
+    },
+    {
+      "from_id": "STP-005-015",
+      "verb": "next",
+      "to_id": "STP-005-024",
+      "attrs": {
+        "label": "code invalid, reason shown and offered price unchanged"
       }
     },
     {
@@ -349480,6 +349607,12 @@
     {
       "from_id": "STP-005-017",
       "verb": "applies",
+      "to_id": "REQ-005-026",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-017",
+      "verb": "applies",
       "to_id": "REQ-005-036",
       "attrs": {}
     },
@@ -349506,6 +349639,14 @@
       "verb": "next",
       "to_id": "STP-005-018",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-005-017",
+      "verb": "next",
+      "to_id": "STP-005-024",
+      "attrs": {
+        "label": "code invalid or exhausted at confirmation, nothing recorded as accepted"
+      }
     },
     {
       "from_id": "STP-005-018",
@@ -349622,6 +349763,14 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-005-020",
+      "verb": "next",
+      "to_id": "STP-005-026",
+      "attrs": {
+        "label": "provider opens the outcome"
+      }
+    },
+    {
       "from_id": "STP-005-021",
       "verb": "applies",
       "to_id": "REQ-005-005",
@@ -349673,6 +349822,184 @@
       "from_id": "STP-005-022",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-022",
+      "verb": "next",
+      "to_id": "STP-005-027",
+      "attrs": {
+        "label": "admin reviews the acceptance"
+      }
+    },
+    {
+      "from_id": "STP-005-023",
+      "verb": "applies",
+      "to_id": "REQ-005-040",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-023",
+      "verb": "at",
+      "to_id": "STG-main-03-acceptance",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-023",
+      "verb": "done by",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-023",
+      "verb": "next",
+      "to_id": "STP-005-009",
+      "attrs": {
+        "label": "patient cancels the inquiry"
+      }
+    },
+    {
+      "from_id": "STP-005-023",
+      "verb": "on",
+      "to_id": "SCR-005-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-024",
+      "verb": "applies",
+      "to_id": "REQ-005-026",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-024",
+      "verb": "at",
+      "to_id": "STG-main-03-acceptance",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-024",
+      "verb": "done by",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-024",
+      "verb": "next",
+      "to_id": "STP-005-004",
+      "attrs": {
+        "label": "patient accepts without the code"
+      }
+    },
+    {
+      "from_id": "STP-005-024",
+      "verb": "next",
+      "to_id": "STP-005-015",
+      "attrs": {
+        "label": "patient enters another code"
+      }
+    },
+    {
+      "from_id": "STP-005-024",
+      "verb": "on",
+      "to_id": "SCR-005-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-025",
+      "verb": "applies",
+      "to_id": "REQ-005-065",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-025",
+      "verb": "at",
+      "to_id": "STG-main-03-acceptance",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-025",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-025",
+      "verb": "next",
+      "to_id": "STP-005-027",
+      "attrs": {
+        "label": "admin investigates the flagged acceptance"
+      }
+    },
+    {
+      "from_id": "STP-005-026",
+      "verb": "applies",
+      "to_id": "REQ-005-032",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-026",
+      "verb": "applies",
+      "to_id": "REQ-005-039",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-026",
+      "verb": "applies",
+      "to_id": "REQ-005-058",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-026",
+      "verb": "at",
+      "to_id": "STG-main-03-acceptance",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-026",
+      "verb": "done by",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-026",
+      "verb": "on",
+      "to_id": "SCR-005-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-027",
+      "verb": "applies",
+      "to_id": "REQ-005-023",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-027",
+      "verb": "applies",
+      "to_id": "REQ-005-033",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-027",
+      "verb": "applies",
+      "to_id": "REQ-005-059",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-027",
+      "verb": "at",
+      "to_id": "STG-main-03-acceptance",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-027",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-027",
+      "verb": "on",
+      "to_id": "SCR-005-05",
       "attrs": {}
     },
     {
@@ -350158,6 +350485,14 @@
       "verb": "done by",
       "to_id": "ACT-system",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-006-204",
+      "verb": "next",
+      "to_id": "STP-005-014",
+      "attrs": {
+        "label": "patient sees Contact support"
+      }
     },
     {
       "from_id": "STP-006-204",
@@ -419180,6 +419515,54 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261123-023120-451b20b5",
+      "at": "2026-11-23T02:31:20.370013+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-005 logic review round 1: step stages, retired-rule edges and the REQ-005-042 rationale (F5, N12); STP-005-013 next (F6); new Steps for the provider and admin screens and the side-note branches (F7); promotion-code failure path (N3); accepted total and price per graft (N4); REQ-005-040 on SCR-005-02 (N13); links to the FR-006 admin cancel and hold expiry (N15); and the two owner rulings of 2026-11-23: admin edit of the accepted quote kept (N8) and the Message Provider button kept (N14). F4 and N6 need no graph change.",
+      "source_id": null,
+      "nodes_added": [
+        "STP-005-023",
+        "STP-005-024",
+        "STP-005-025",
+        "STP-005-026",
+        "STP-005-027"
+      ],
+      "nodes_updated": [
+        "FR-004",
+        "FR-012",
+        "REQ-003-012",
+        "REQ-004-084",
+        "REQ-005-006",
+        "REQ-005-008",
+        "REQ-005-023",
+        "REQ-005-025",
+        "REQ-005-026",
+        "REQ-005-037",
+        "REQ-005-040",
+        "REQ-005-042",
+        "REQ-005-051",
+        "REQ-006-067",
+        "REQ-010-027",
+        "REQ-010-042",
+        "REQ-010-043",
+        "REQ-012-006",
+        "REQ-012-029",
+        "STP-005-006",
+        "STP-005-007",
+        "STP-005-010",
+        "STP-005-013",
+        "STP-005-014",
+        "STP-005-015",
+        "STP-005-017",
+        "STP-005-020",
+        "STP-005-022",
+        "STP-006-204"
+      ],
+      "edges_added": 44,
+      "edges_removed": 9,
+      "rows": 93
+    },
     {
       "id": "cs-20261123-011608-60915893",
       "at": "2026-11-23T01:16:08.671461+00:00",

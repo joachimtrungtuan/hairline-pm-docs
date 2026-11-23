@@ -93,7 +93,7 @@ Enable secure, auditable, real-time messaging and audio/video communication betw
 
 **Automatic Chat Creation**: See REQ-012-001 and REQ-012-025.
 
-**Patient Platform**: Patients access their Messages/Inbox screen (Screen 1) from the main navigation in the mobile app. The inbox displays all conversations with providers who have sent quotes, with filtering and search capabilities. Chat is NOT accessible from quote detail screens—only from the dedicated inbox. (REQ-012-029)
+**Patient Platform**: Patients access their Messages/Inbox screen (Screen 1) from the main navigation in the mobile app. The inbox displays all conversations with providers who have sent quotes, with filtering and search capabilities. Chat is NOT embedded in quote detail screens—a quote screen may link to the conversation in the dedicated inbox (REQ-005-015), where chat takes place. (REQ-012-029)
 
 **Provider Platform**: Providers access patient conversations through a Messages popup/submenu in the header navigation (Screen 3), showing recent conversations with unread counts. The popup provides quick access to recent messages; tapping a conversation opens the full chat view (Screen 4). New conversations appear when providers submit quotes. Chat is NOT accessible from quote detail or inquiry screens—only from the dedicated messages list. (REQ-012-029)
 
@@ -784,7 +784,7 @@ Acceptance Scenarios:
 - **REQ-012-003**: System MUST provide a Messages popup/submenu in header navigation for providers showing recent conversations (max 10) with unread counts and quick access to patient chats.
 - **REQ-012-004**: System MUST provide a Communication Monitoring Center for admins as the message list of all conversations. Its filters, how they combine, and that they are remembered are stated once in REQ-022-122.
 - **REQ-012-005**: System MUST provide a detailed Message Thread View for admins with two states: Screen 6A (default monitoring/flagging state with read-only access) and Screen 6B (activated emergency intervention state with message composition), accessible when conversation is selected from monitoring center.
-- **REQ-012-006**: System MUST enable in-app messaging for Patient ↔ Provider with text and media, accessible ONLY through dedicated Messages/Inbox screens (not through quote detail screens).
+- **REQ-012-006**: System MUST enable in-app messaging for Patient ↔ Provider with text and media, accessible ONLY through dedicated Messages/Inbox screens (chat is not embedded in quote detail screens; a quote screen may link to the conversation in the inbox, REQ-005-015).
 - **REQ-012-007**: System MUST deliver real-time notifications for new messages to intended recipients (patients, providers, and both parties when admin intervenes); update unread badges in inbox views and header popup menus. The notification events are defined in the FR-030 event catalogue.
 - **REQ-012-008**: Users MUST be able to view complete conversation history with timestamps and read receipts.
 - **REQ-012-009**: System MUST enforce attachment type and size limits (Images: JPG/PNG max 5MB; Video: MP4 max 10MB; PDF: max 10MB; max 5 attachments per message) and provide specific user feedback on violations.
@@ -826,6 +826,7 @@ Acceptance Scenarios:
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2026-11-22 | 2.14 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v2.13) is in `archived/prd-baseline-2026-11-08/` and in git history. | AI |
+| 2026-11-23 | 2.15 | FR-005 r1 logic review, finding N14 and the owner ruling of 2026-11-23 (the Message Provider button is kept): REQ-012-006 and REQ-012-029 say chat is not embedded in quote detail screens and that a quote screen may link to the conversation in the inbox (REQ-005-015). | Product Owner / Documentation |
 
 ---
 
@@ -842,4 +843,4 @@ Acceptance Scenarios:
 **Template Version**: 2.0.0 (Constitution-Compliant)  
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Governance → PRD Standards & Requirements (NON-NEGOTIABLE)  
 **Based on**: FR-011 Aftercare & Recovery Management PRD  
-**Last Updated**: 2026-11-22
+**Last Updated**: 2026-11-23

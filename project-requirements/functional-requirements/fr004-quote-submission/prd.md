@@ -126,7 +126,7 @@ The Parent Quote is versioned as one aggregate. Every derived subquote uses that
 - After acceptance an admin may change any quote field except price, currency, and promotion, with a mandatory reason and full history. The change is stored as a new version beside the acceptance snapshot, which stays unchanged, and payment records never change
 - Package-library changes made after an option was created do not alter the quote snapshot
 - All parent and option changes are versioned/audited as one quote aggregate
-- Edits on expired, withdrawn, archived, or cancelled quotes are prohibited for providers and admins. After acceptance providers are blocked from every quote edit, and their treatment-detail changes (plan, clinicians, grafts) go only through FR-010; price, currency, and promotion never change; the booking's appointment changes only through the FR-006 admin appointment change, which emits `booking.rescheduled`, while the acceptance snapshot keeps the accepted appointment as the baseline
+- Edits on expired, withdrawn, archived, or cancelled quotes are prohibited for providers and admins. After acceptance providers are blocked from every quote edit, and their treatment-detail changes (plan, clinicians, grafts) go only through FR-010; price, currency, and promotion never change; the booking's appointment changes only through the FR-006 admin appointment change or an admin edit of the accepted quote's date range or appointment (REQ-005-023), each of which emits `booking.rescheduled`, while the acceptance snapshot keeps the accepted appointment as the baseline
 - When a new version of an already-sent quote is re-sent, System emits `quote.updated` (described as "quote revised (new version)") for FR-020 notification; FR-004 is the only producer of this event. Saving draft edits without re-sending emits nothing
 - A re-send or new version never changes the quote's first-send timestamp or its expiry
 
@@ -957,6 +957,7 @@ Acceptance Scenarios:
 |------|---------|---------|--------|
 | 2026-11-22 | 4.0 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v3.9) and the change requests (CR-FR004-20260820-01, CR-FR004-20260909-01, CR-FR004-20261014-01, CR-FR004-20261016-01, CR-FR004-20261027-01, and CR-FR015-20261013-01 named in v3.0) are in `archived/prd-baseline-2026-11-08/` and in git history. | Claude (AI Assistant) |
 | 2026-11-23 | 4.1 | Table format repair: the Graph field values of 16 field tables moved into their own last column (they sat inside the previous cell). Cell text unchanged. No rule changes. | Claude (AI Assistant) |
+| 2026-11-23 | 4.2 | FR-005 r1 logic review, finding N8 and the owner ruling of 2026-11-23 (the admin edit of the accepted quote is kept): REQ-004-084 names the admin edit of the accepted quote's date range or appointment (REQ-005-023) beside the FR-006 admin appointment change as a path that changes the booking's appointment. | Product Owner / Documentation |
 
 ## Appendix: Approvals
 

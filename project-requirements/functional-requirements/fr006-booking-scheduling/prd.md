@@ -928,7 +928,7 @@ All payment fields and actions are hidden. Patient can only view the blocked sta
 ### Rescheduling Rules
 
 - **Rescheduling is deferred to V2**: The provider pre-schedules the appointment in the subquote; acceptance fixes the chosen appointment and reserves its slot, and successful payment confirms the booking. Rescheduling functionality will be evaluated for V2 based on business needs. (REQ-006-067)
-- **Current Behavior**: The patient cannot reschedule. Date changes require the audited admin appointment change (Screen 8), which sends `booking.rescheduled`, or an admin cancellation per cancellation policy. (REQ-006-067)
+- **Current Behavior**: The patient cannot reschedule. Date changes require the audited admin appointment change (Screen 8) or the admin edit of the accepted quote's date range or appointment (REQ-005-023), each of which sends `booking.rescheduled`, or an admin cancellation per cancellation policy. (REQ-006-067)
 
 **Carried from dropped sections (original wording)**:
 
@@ -1085,6 +1085,7 @@ A late cancellation performed by an admin at the patient's request applies the r
 |------|---------|---------|--------|
 | 2026-11-22 | 2.16 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v2.15) and the change requests CR-FR006-20260915-01, CR-FR006-20261016-01, CR-FR006-20261027-01 and CR-FR006-20261027-02 (also cited: CR-FR015-20261013-01) are in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
 | 2026-11-23 | 2.17 | Independent compression review: 2 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
+| 2026-11-23 | 2.18 | FR-005 r1 logic review, finding N8 and the owner ruling of 2026-11-23 (the admin edit of the accepted quote is kept): REQ-006-067 names the admin edit of the accepted quote's date range or appointment (REQ-005-023) beside the audited admin appointment change as a way to change the date. | Product Owner / Documentation |
 
 ---
 
