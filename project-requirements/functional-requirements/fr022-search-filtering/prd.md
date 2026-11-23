@@ -1578,7 +1578,7 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 | Filter | Type | Options | Default | Logic | Graph field |
 |--------|------|---------|---------|-------|---------------|
-| Role | Dropdown | All Roles, Super Admin, Aftercare Specialist, Billing Staff, Support Staff | All Roles | Exact match | no graph field (control) |
+| Role | Dropdown | All Roles, Super Admin, Aftercare Coordinator, Billing Staff, Support Staff | All Roles | Exact match | no graph field (control) |
 | Status | Multi-select | All, Active, Suspended, Pending Invitation | All | OR (within field) | no graph field (control) |
 
 ---
@@ -2091,6 +2091,7 @@ A patient has received two parent quotes from two providers. Each parent quote o
 |------|---------|---------|--------|
 | 2026-11-22 | 2.22 | Requirements graph programme baseline: PRD compressed to the checklist structure (rules cited by REQ id, search and filter control rows tagged in the Graph field column, dropped classes removed). No rule changes. Earlier history (v1.0 to v2.21) and the change request CR-FR022-20261016-01 (change-request-2026-10-16-mtg002-quote-model-alignment.md) are in `archived/prd-baseline-2026-11-08/fr022-search-filtering/` and in git history. | AI Assistant |
 | 2026-11-23 | 2.23 | Independent compression review: 3 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | AI Assistant |
+| 2026-11-23 | 2.24 | Owner ruling 2026-11-23: the aftercare specialist is clinic staff on the provider side; the Hairline admin role is renamed Aftercare Coordinator with unchanged permissions. Admin Users List role filter option renamed; the clinic team role option Aftercare Specialist is unchanged. | AI Assistant |
 
 ---
 

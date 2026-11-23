@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-22T18:13:12Z",
+  "generated_at": "2026-11-23T01:17:16Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -27,14 +27,26 @@
       }
     },
     {
+      "id": "ACT-aftercare-coordinator",
+      "type": "Actor",
+      "owner_fr": null,
+      "title": "Aftercare Coordinator",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "group": "admin",
+        "description": "Hairline team member with the predefined FR-031 admin role Aftercare Coordinator (formerly named Aftercare Specialist): oversees aftercare cases, reassigns them, handles escalations and admin-side support; a member of the Hairline aftercare team (system PRD persona 3)."
+      }
+    },
+    {
       "id": "ACT-aftercare-specialist",
       "type": "Actor",
       "owner_fr": null,
       "title": "Aftercare specialist",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "description": "Hairline team member who supports recovering patients and escalates complications (system PRD persona 3).",
+        "description": "Clinic staff member of the provider who delivers aftercare to recovering patients and escalates complications (owner ruling 2026-11-23). Not a Hairline team member; the Hairline-side role is the Aftercare Coordinator.",
         "group": "provider"
       }
     },
@@ -52272,9 +52284,9 @@
       "owner_fr": "FR-011",
       "title": "Admin oversees cases, reassigns and overrides plans with audit",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Admin MUST be able to oversee cases, reassign providers, and override plans with full audit. Admin assignment of the aftercare specialist (provider or Hairline aftercare team member) is owned by FR-011",
+        "statement": "Admin MUST be able to oversee cases, reassign providers, and override plans with full audit. Admin assignment of who delivers the aftercare (a provider, whose clinic staff are the aftercare specialists, or a Hairline aftercare team member, an admin with the FR-031 Aftercare Coordinator role) is owned by FR-011",
         "rationale": "prd.md line 1612 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -52824,7 +52836,7 @@
       "owner_fr": "FR-011",
       "title": "Add-on assigned automatically after payment: original provider or Hairline team",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Payment confirmation of a post-treatment add-on triggers automatic assignment: the system assigns the original treatment provider if the provider participates in aftercare, otherwise the Hairline aftercare team; the patient is notified of the provider assignment and the assigned provider receives a notification.",
         "rationale": "Workflow 2b step 3 and alternative B1a."
@@ -52860,7 +52872,7 @@
       "owner_fr": "FR-011",
       "title": "Provider may hand aftercare to the Hairline aftercare team",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "When the provider marks \"Assign to Hairline aftercare team\", the admin receives a notification for aftercare assignment, the Hairline aftercare team takes over patient monitoring and the provider receives compensation for aftercare participation.",
         "rationale": "Workflow 1 alternative A2."
@@ -61419,9 +61431,9 @@
       "owner_fr": "FR-016",
       "title": "Admin Support Required view needs View Patients; Resolve Support needs Respond to Support",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Viewing the Admin Support Required list and the patient's Provider-Caused Impacts requires FR-031 View Patients; Resolve Support requires FR-031 Respond to Support (default roles Super Admin, Aftercare Specialist, and Support Staff)",
+        "statement": "Viewing the Admin Support Required list and the patient's Provider-Caused Impacts requires FR-031 View Patients; Resolve Support requires FR-031 Respond to Support (default roles Super Admin, Aftercare Coordinator, and Support Staff)",
         "rationale": "Stated in prd.md, Alternative Flows (line 270)."
       }
     },
@@ -61563,9 +61575,9 @@
       "owner_fr": "FR-016",
       "title": "Admin visibility and edit rights follow FR-031 role permissions",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Admin visibility and edit rights follow the FR-031 role permissions: View Patients grants patient visibility (all default roles), Edit Patients grants patient edits (Super Admin by default), Manage Aftercare covers aftercare actions and access to medical data and scans (Super Admin and Aftercare Specialist by default), View Support Center and Respond to Support cover support actions (Super Admin, Aftercare Specialist, and Support Staff by default), Issue Refunds covers refunds, and Delete Patients covers account archiving",
+        "statement": "Admin visibility and edit rights follow the FR-031 role permissions: View Patients grants patient visibility (all default roles), Edit Patients grants patient edits (Super Admin by default), Manage Aftercare covers aftercare actions and access to medical data and scans (Super Admin and Aftercare Coordinator by default), View Support Center and Respond to Support cover support actions (Super Admin, Aftercare Coordinator, and Support Staff by default), Issue Refunds covers refunds, and Delete Patients covers account archiving",
         "rationale": "Stated in prd.md, General Module Rules (line 683)."
       }
     },
@@ -61599,9 +61611,9 @@
       "owner_fr": "FR-016",
       "title": "Only Manage Aftercare admins can view and download patient scans, with downloads logged",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Only admins with the FR-031 Manage Aftercare permission (Super Admin and Aftercare Specialist by default) can view and download patient scans; all downloads are logged in audit trail for compliance",
+        "statement": "Only admins with the FR-031 Manage Aftercare permission (Super Admin and Aftercare Coordinator by default) can view and download patient scans; all downloads are logged in audit trail for compliance",
         "rationale": "Stated in prd.md, Data & Privacy Rules (line 694). Restated: prd.md line 467: \"Medical data is available only to admins with the FR-031 Manage Aftercare permission (Super Admin and Aftercare Specialist by default), always with mandatory justification; View Patients alone shows the profile without medical data\" prd.md line 467: \"Medical data is available only to admins with the FR-031 Manage Aftercare permission (Super Admin and Aftercare Specialist by default), always with mandatory justification; View Patients alone shows the profile without medical data\""
       }
     },
@@ -63075,9 +63087,9 @@
       "owner_fr": "FR-016",
       "title": "Admin roles follow the FR-031 role model",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Admin roles and permissions follow FR-031 (Admin Access Control & Permissions): default roles Super Admin, Aftercare Specialist, Billing Staff, and Support Staff, plus custom roles",
+        "statement": "Admin roles and permissions follow FR-031 (Admin Access Control & Permissions): default roles Super Admin, Aftercare Coordinator, Billing Staff, and Support Staff, plus custom roles",
         "rationale": "Stated verbatim in prd.md, Multi-Tenant Architecture (line 38)."
       }
     },
@@ -74332,9 +74344,9 @@
       "owner_fr": "FR-022",
       "title": "Search and filter criteria: Admin Users List (FR-031 / Screen 1 / Tab 2)",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "FR-031 / Screen 1 / Tab 2: Admin Users List [P1 — MVP]. Admin searches for and filters admin user accounts. Search: Name / email (Type: text; Placeholder: \"Search admin users…\"; Debounce: 300ms; Notes: Real-time filter; case-insensitive). Filters: Role (Type: Dropdown; Options: All Roles, Super Admin, Aftercare Specialist, Billing Staff, Support Staff; Default: All Roles; Logic: Exact match) / Status (Type: Multi-select; Options: All, Active, Suspended, Pending Invitation; Default: All; Logic: OR (within field)).",
+        "statement": "FR-031 / Screen 1 / Tab 2: Admin Users List [P1 — MVP]. Admin searches for and filters admin user accounts. Search: Name / email (Type: text; Placeholder: \"Search admin users…\"; Debounce: 300ms; Notes: Real-time filter; case-insensitive). Filters: Role (Type: Dropdown; Options: All Roles, Super Admin, Aftercare Coordinator, Billing Staff, Support Staff; Default: All Roles; Logic: Exact match) / Status (Type: Multi-select; Options: All, Active, Suspended, Pending Invitation; Default: All; Logic: OR (within field)).",
         "rationale": "Screen Specifications (prd.md lines 1574-1594). Screen owned by FR-031 (Admin tenant, Master Reference Table). Search inputs and filter controls are UI controls, not Fields; FR-022 owns the criteria (Maintenance Convention, line 319). No lifecycle stage fits this screen; applied at the FR-022 default stage (Batch A Inquiry) provisionally."
       }
     },
@@ -83352,9 +83364,9 @@
       "owner_fr": "FR-030",
       "title": "Catalog event: Provider-Caused Cancellation — Admin Support Required",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Provider-Caused Cancellation — Admin Support Required (provider.status_cancellation_admin_support) is an admin-configurable notification event. Primary recipients: Admin. Same trigger (FR-020 REQ-020-013), and also when a provider-status event leaves an `In Progress` booking open and flagged `supportRequired` for an admin decision (move the booking to `Aftercare` with aftercare reassignment, or cancel it with a reason), or leaves an `Aftercare` booking or FR-011 standalone aftercare case flagged for admin aftercare reassignment (FR-006 Alternative Flow B6). Mandatory admin-support alert per affected inquiry/case with patient, inquiry/case reference, prior stage, cause, and FR-016 deep link (Admin Support Required filter). Sent to admins with the FR-031 Respond to Support permission (default roles Super Admin, Aftercare Specialist, and Support Staff); opening the FR-016 list also requires View Patients. Mandatory — admin cannot disable this event; sent regardless of \"Notify Provider\"; pinned as critical in the admin dropdown. No FR-034 ticket is auto-created. Retries de-duplicated per provider-status event + affected record + recipient",
+        "statement": "Provider-Caused Cancellation — Admin Support Required (provider.status_cancellation_admin_support) is an admin-configurable notification event. Primary recipients: Admin. Same trigger (FR-020 REQ-020-013), and also when a provider-status event leaves an `In Progress` booking open and flagged `supportRequired` for an admin decision (move the booking to `Aftercare` with aftercare reassignment, or cancel it with a reason), or leaves an `Aftercare` booking or FR-011 standalone aftercare case flagged for admin aftercare reassignment (FR-006 Alternative Flow B6). Mandatory admin-support alert per affected inquiry/case with patient, inquiry/case reference, prior stage, cause, and FR-016 deep link (Admin Support Required filter). Sent to admins with the FR-031 Respond to Support permission (default roles Super Admin, Aftercare Coordinator, and Support Staff); opening the FR-016 list also requires View Patients. Mandatory — admin cannot disable this event; sent regardless of \"Notify Provider\"; pinned as critical in the admin dropdown. No FR-034 ticket is auto-created. Retries de-duplicated per provider-status event + affected record + recipient",
         "rationale": "prd.md line 198. Category: Provider/Compliance. Event nodes: EVT-provider-status-cancellation-admin-support (existing node). Lock rule (prd.md line 551): Provider-Caused Cancellation (`provider.status_cancellation_patient`) and Admin Support Required (`provider.status_cancellation_admin_support`) are mandatory notifications for each inquiry/case affected by an FR-015 provider suspension or deactivation. Affected patients and admins MUST be informed regardless of FR-015's \"Notify Provider\" checkbox; toggles are locked for both events. Failed deliveries retry per FR-020 without duplicates (de-duplicated per provider-status event + affected record + recipient) and never restore cancelled records. Before acceptance, the patient notice uses the FR-003 variants (Workflow 2 Alternative Flow B4, REQ-003-021): \"[Clinic] is no longer available. Your other offers are still open.\" when other offers remain open; \"[Clinic] is no longer available. We are finding new offers for you.\" when the inquiry is redistributed automatically, or a request to confirm redistribution first when the patient had explicitly selected the affected provider. The admin-support alert goes to admins with the FR-031 Respond to Support permission.",
         "aliases": "REQ-020-139"
       }
@@ -84975,9 +84987,9 @@
       "owner_fr": "FR-031",
       "title": "Four predefined admin roles",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System MUST provide predefined admin roles: Super Admin, Aftercare Specialist, Billing Admin, Support Staff",
+        "statement": "System MUST provide predefined admin roles: Super Admin, Aftercare Coordinator, Billing Admin, Support Staff",
         "rationale": "PRD Functional Requirements Summary, REQ-031-004."
       }
     },
@@ -85564,9 +85576,9 @@
       "owner_fr": "FR-031",
       "title": "System role names are immutable",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Role names of system-defined roles (admin and provider) MUST be immutable (not editable or renamable); the system admin roles are Super Admin, Aftercare Specialist, Billing Admin and Support Staff, and the protected provider roles are Owner, Manager, Clinical Staff and Billing Staff. Only custom admin roles can be renamed.",
+        "statement": "Role names of system-defined roles (admin and provider) MUST be immutable (not editable or renamable); the system admin roles are Super Admin, Aftercare Coordinator, Billing Admin and Support Staff, and the protected provider roles are Owner, Manager, Clinical Staff and Billing Staff. Only custom admin roles can be renamed.",
         "rationale": "Business Rule 9; Screen 4 role name field (locked for system-defined roles); Admin Editability (fixed in codebase); Tab 1 and Tab 3 role name rules."
       }
     },
@@ -85576,9 +85588,9 @@
       "owner_fr": "FR-031",
       "title": "System roles cannot be deleted",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System admin roles (Super Admin, Aftercare Specialist, Billing Admin, Support Staff) cannot be deleted; all of them except Super Admin can be edited. The four provider roles cannot be renamed or removed.",
+        "statement": "System admin roles (Super Admin, Aftercare Coordinator, Billing Admin, Support Staff) cannot be deleted; all of them except Super Admin can be edited. The four provider roles cannot be renamed or removed.",
         "rationale": "Tab 1 and Tab 3 business rules."
       }
     },
@@ -107907,7 +107919,7 @@
       "owner_fr": "FR-011",
       "title": "Hairline aftercare team takes over patient monitoring",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 1 Alternative Flow A2"
       }
@@ -157751,6 +157763,12 @@
       "attrs": {}
     },
     {
+      "from_id": "ACT-aftercare-coordinator",
+      "verb": "acts in",
+      "to_id": "STG-aftercare-02-follow-up",
+      "attrs": {}
+    },
+    {
       "from_id": "ACT-aftercare-specialist",
       "verb": "acts in",
       "to_id": "STG-aftercare-01-recovery-plan",
@@ -202399,6 +202417,12 @@
     {
       "from_id": "REQ-011-054",
       "verb": "applies to",
+      "to_id": "ACT-aftercare-coordinator",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-011-054",
+      "verb": "applies to",
       "to_id": "ACT-aftercare-specialist",
       "attrs": {}
     },
@@ -202478,6 +202502,12 @@
       "from_id": "REQ-011-057",
       "verb": "applies at",
       "to_id": "STG-aftercare-01-recovery-plan",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-011-057",
+      "verb": "applies to",
+      "to_id": "ACT-aftercare-coordinator",
       "attrs": {}
     },
     {
@@ -359056,7 +359086,7 @@
     {
       "from_id": "STP-011-008",
       "verb": "done by",
-      "to_id": "ACT-aftercare-specialist",
+      "to_id": "ACT-aftercare-coordinator",
       "attrs": {}
     },
     {
@@ -419150,6 +419180,35 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261123-011608-60915893",
+      "at": "2026-11-23T01:16:08.671461+00:00",
+      "changed_by": "controller",
+      "reason": "Owner ruling 2026-11-23: the aftercare specialist is clinic staff on the provider side; the Hairline admin role is renamed Aftercare Coordinator with unchanged permissions. Rule statements, the actor description and the Hairline hand-over step follow the ruling.",
+      "source_id": null,
+      "nodes_added": [
+        "ACT-aftercare-coordinator"
+      ],
+      "nodes_updated": [
+        "ACT-aftercare-specialist",
+        "REQ-011-004",
+        "REQ-011-054",
+        "REQ-011-057",
+        "REQ-016-058",
+        "REQ-016-070",
+        "REQ-016-073",
+        "REQ-016-198",
+        "REQ-022-115",
+        "REQ-030-095",
+        "REQ-031-004",
+        "REQ-031-055",
+        "REQ-031-056",
+        "STP-011-008"
+      ],
+      "edges_added": 4,
+      "edges_removed": 1,
+      "rows": 21
+    },
     {
       "id": "cs-20261122-181305-e59fc112",
       "at": "2026-11-22T18:13:05.798221+00:00",

@@ -40,7 +40,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 - Global oversight; case reassignment; plan overrides; escalations
 - Template management (milestones, questionnaires, resources)
 - Standalone aftercare request intake and assignment
-- Aftercare specialist assignment (who delivers a case: an aftercare provider or a Hairline aftercare team member). FR-011 owns it; other modules only cite it (REQ-011-004)
+- Aftercare specialist assignment (who delivers a case: an aftercare provider, whose clinic staff are the aftercare specialists, or a Hairline aftercare team member, an admin with the FR-031 Aftercare Coordinator role). FR-011 owns it; other modules only cite it (REQ-011-004)
 
 **Shared Services (S-03, S-05, S-02)**:
 
@@ -1487,7 +1487,7 @@ Related FRs:
 - **REQ-011-001**: System MUST support treatment-linked and standalone aftercare activation paths
 - **REQ-011-002**: Patients MUST be able to complete milestone tasks (scan uploads, questionnaires) with reminders and quality validation
 - **REQ-011-003**: Providers MUST be able to configure and activate aftercare plans with template customization
-- **REQ-011-004**: Admin MUST be able to oversee cases, reassign providers, and override plans with full audit. Admin assignment of the aftercare specialist (provider or Hairline aftercare team member) is owned by FR-011
+- **REQ-011-004**: Admin MUST be able to oversee cases, reassign providers, and override plans with full audit. Admin assignment of who delivers the aftercare (a provider, whose clinic staff are the aftercare specialists, or a Hairline aftercare team member, an admin with the FR-031 Aftercare Coordinator role) is owned by FR-011
 - **REQ-011-014**: When a provider's suspension or deactivation becomes effective, System MUST NOT cancel that provider's non-terminal standalone aftercare cases; it MUST record cause `ProviderSuspended` or `ProviderDeactivated` and an independent `supportRequired` marker and route them to Screen 19 reassignment (treatment-linked cases follow REQ-011-015), retain the completion milestone and aftercare records, and route recovery continuity to admins for resolution through the existing reassignment/recovery workflow, without automatic reassignment or restoration on reactivation (Workflow 4 D4; FR-015 A5/Screen 4)
 - **REQ-011-015**: System MUST let an admin reassign the aftercare provider or team on Screen 19 with a mandatory reason, confirmation, audit entry, and the `aftercare.provider_reassigned` notice (recipients, content, and the mandatory status of the notice are defined by the FR-030 notification Rules REQ-030-026 and REQ-030-077); for a treatment-linked case the booking MUST stay `Aftercare` and the treatment record MUST stay unchanged, with no new quote, acceptance, or payment
 - **REQ-011-088**: By default System MUST send each patient a progress reminder once a month for 12 months after treatment; the patient MAY change or switch off the reminder, and the default is admin-editable
@@ -1568,6 +1568,7 @@ Acceptance Scenarios:
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2026-11-22 | 1.11 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.10) and the change requests (CR-FR011-20261014-01 in change-request-2026-10-14-provider-status-cancellation-cascade.md, CR-FR011-20261016-01 in change-request-2026-10-16-mtg002-quote-model-alignment.md, CR-FR011-20261026-01 in change-request-2026-10-26-standalone-aftercare-reassignment.md, and CR-FR015-20261013-01) are in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
+| 2026-11-23 | 1.12 | Owner ruling 2026-11-23: the aftercare specialist is clinic staff on the provider side; the Hairline admin role is renamed Aftercare Coordinator with unchanged permissions. Assignment wording in Module Scope and REQ-011-004 now names both sides: clinic aftercare specialists and Hairline aftercare team members (Aftercare Coordinator role). Who may deliver a case is unchanged. | Product Owner / Documentation |
 
 ## Appendix: Approvals
 
@@ -1577,4 +1578,4 @@ Acceptance Scenarios:
 
 ---
 
-**Last Updated**: 2026-11-22
+**Last Updated**: 2026-11-23

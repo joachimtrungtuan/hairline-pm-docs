@@ -12,7 +12,7 @@
 
 The Admin Access Control & Permissions module is a **Super Admin-only configuration tool** that serves as the **single source of truth** for all role definitions and permission matrices across the entire Hairline platform. This module enables Super Admins to: (REQ-031-028)
 
-1. **Define Admin Platform Role Permissions**: Configure what permissions each admin role has (Super Admin, Aftercare Specialist, Billing Admin, Support Staff) (REQ-031-004)
+1. **Define Admin Platform Role Permissions**: Configure what permissions each admin role has (Super Admin, Aftercare Coordinator, Billing Admin, Support Staff) (REQ-031-004)
 2. **Define Provider Platform Roles and Permissions**: Configure the permissions of the four provider roles (Owner, Manager, Clinical Staff, Billing Staff) (REQ-031-005)
 3. **Manage Admin Team Members**: Invite admin users and assign them roles (team member invitation/management for providers is handled separately in FR-009)
 
@@ -48,7 +48,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 
 **Admin Platform (A-09)** (Super Admin Only):
 
-- **Admin role permission configuration**: Super Admins define what permissions each admin role has (Super Admin, Aftercare Specialist, Billing Admin, Support Staff)
+- **Admin role permission configuration**: Super Admins define what permissions each admin role has (Super Admin, Aftercare Coordinator, Billing Admin, Support Staff)
 - **Provider role configuration**: Super Admins define permissions for the four provider roles (Owner, Manager, Clinical Staff, Billing Staff)
 - **Admin team member management**: Super Admins invite admin users and assign them predefined roles
 - **Finance admin (actor)**: the admin team member who works the financial screens of the Admin Platform (payouts, billing, provider financial reports). The predefined admin role for this work is Billing Admin; Super Admin also has full access. Which financial screens an admin can reach follows the Billing & Financial permissions in Screen 4
@@ -107,7 +107,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 4. System displays current admin team members with their roles and status
 5. Super Admin clicks "Invite Team Member" button
 6. System presents invitation form with fields: email address, first name, last name, role selection
-7. Super Admin enters admin user details and selects role (Super Admin, Aftercare Specialist, Billing Admin, Support Staff)
+7. Super Admin enters admin user details and selects role (Super Admin, Aftercare Coordinator, Billing Admin, Support Staff)
 8. System validates email format and checks for duplicate email within admin team
 9. Super Admin reviews invitation details and clicks "Send Invitation"
 10. System generates secure invitation token (expires in 7 days)
@@ -291,7 +291,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 
 #### Tab 1: Admin Roles
 
-**Purpose**: Define and configure permission matrices for admin platform roles (Super Admin, Aftercare Specialist, Billing Admin, Support Staff)
+**Purpose**: Define and configure permission matrices for admin platform roles (Super Admin, Aftercare Coordinator, Billing Admin, Support Staff)
 
 **Data Fields**:
 
@@ -312,7 +312,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 **Business Rules**:
 
 - Super Admin role permissions cannot be edited (locked, full access) (REQ-031-051)
-- System roles (Super Admin, Aftercare Specialist, Billing Admin, Support Staff) cannot be deleted; all of them except Super Admin can be edited (REQ-031-056)
+- System roles (Super Admin, Aftercare Coordinator, Billing Admin, Support Staff) cannot be deleted; all of them except Super Admin can be edited (REQ-031-056)
 - Custom roles can be created, edited, and deleted (if no users assigned) (REQ-031-057)
 - Permission changes take effect on the next API call after propagation (≤ 5 seconds) for all users with that role
 
@@ -327,7 +327,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 | Field Name | Type | Required | Description | Validation Rules | Graph field |
 |------------|------|----------|-------------|------------------|---------------|
 | Search Bar | text input | No | Search users by name or email | Real-time filtering | no graph field (control) |
-| Filter: Role | dropdown | No | Filter users by assigned role | All Roles, then every active admin role including custom roles (predefined: Super Admin, Aftercare Specialist, Billing Admin, Support Staff) | ENT-admin-user-account.assigned_role_id |
+| Filter: Role | dropdown | No | Filter users by assigned role | All Roles, then every active admin role including custom roles (predefined: Super Admin, Aftercare Coordinator, Billing Admin, Support Staff) | ENT-admin-user-account.assigned_role_id |
 | Filter: Status | dropdown | No | Filter by user status | All, Active, Suspended, Pending Invitation | ENT-admin-user-account.status, ENT-admin-user-account.invitation_status |
 | User Name | Display (text) | N/A | Full name of admin user | Display only | ENT-admin-user-account.name |
 | Email | Display (email) | N/A | Admin user's email address | Display only | ENT-admin-user-account.email |
@@ -409,7 +409,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 | Last Name | text | Yes | Admin user's last name | Max 50 characters; letters, spaces, hyphens only | ENT-admin-user-account.last_name |
 | Email Address | email input | Yes | New admin user's email | Valid email format; unique (not already in use); lowercase conversion | ENT-admin-user-account.email |
 | Phone Number | tel input | No | Admin user's phone number | E.164 format validation; optional for now (MFA implementation planned for future) | ENT-admin-user-account.phone_number |
-| Assigned Role | select (dropdown) | Yes | Role to assign to new user | Must select from the active admin roles, including custom roles (predefined: Super Admin, Aftercare Specialist, Billing Admin, Support Staff) | ENT-admin-user-account.assigned_role_id |
+| Assigned Role | select (dropdown) | Yes | Role to assign to new user | Must select from the active admin roles, including custom roles (predefined: Super Admin, Aftercare Coordinator, Billing Admin, Support Staff) | ENT-admin-user-account.assigned_role_id |
 | Personal Message | textarea | No | Optional welcome message from Super Admin | Max 500 characters; included in invitation email | ENT-admin-user-account.personal_message |
 
 **Actions**:
@@ -538,7 +538,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 
 | Field Name | Type | Required | Description | Validation Rules | Graph field |
 |------------|------|----------|-------------|------------------|---------------|
-| Role Name | text | Yes | Name of role (e.g., "Aftercare Specialist") | **Locked for system-defined roles**. Editable for custom admin roles only. When editable: max 50 chars; unique within the role's guard. | ENT-role-permission-definition.role_name |
+| Role Name | text | Yes | Name of role (e.g., "Aftercare Coordinator") | **Locked for system-defined roles**. Editable for custom admin roles only. When editable: max 50 chars; unique within the role's guard. | ENT-role-permission-definition.role_name |
 | Role Description | textarea | Yes | Purpose and responsibilities of role | Max 500 chars | ENT-role-permission-definition.description |
 | Permission Categories | accordion | Yes | Grouped permissions by feature area | At least one permission required | ENT-role-permission-definition.permissions, ENT-permission.feature_area, ENT-permission.permission_name, ENT-permission.description, ENT-permission.permission_category |
 
@@ -781,7 +781,7 @@ FR-026 refers to these permission names for its screens: View Settings, Edit Set
 
 **Example for Admin Roles** (default permissions of the predefined roles):
 
-| Permission | Category | Super Admin | Aftercare Specialist | Billing Admin | Support Staff | Graph field |
+| Permission | Category | Super Admin | Aftercare Coordinator | Billing Admin | Support Staff | Graph field |
 |------------|----------|-------------|---------------------|---------------|---------------|---------------|
 | View Dashboard | A-01 | ☑ | ☑ | ☑ | ☑ | ENT-permission, ENT-role-permission-definition |
 | View Patient Overview | A-01 | ☑ | ☑ | ☑ | ☑ | ENT-permission, ENT-role-permission-definition |
@@ -937,7 +937,7 @@ FR-026 refers to these permission names for its screens: View Settings, Edit Set
 |--------|------|-------------|--------|---------------|
 | Timestamp | datetime | When action occurred | "2025-11-14 14:32:15 UTC" | ENT-admin-audit-trail-entry.timestamp |
 | Action Type | text | Type of action (Login, Role Change, Permission Grant, Access Denied) | Badge with color | ENT-admin-audit-trail-entry.action_type |
-| Details | text | Description of action | "Role changed from 'Support Staff' to 'Aftercare Specialist' by <admin@hairline.com>" | ENT-admin-audit-trail-entry.action_details |
+| Details | text | Description of action | "Role changed from 'Support Staff' to 'Aftercare Coordinator' by <admin@hairline.com>" | ENT-admin-audit-trail-entry.action_details |
 | IP Address | text | IP address of action (security audit) | "192.168.1.1" | ENT-admin-audit-trail-entry.ip_address |
 | Outcome | badge | Success/Failed/Denied | Color-coded | ENT-admin-audit-trail-entry.outcome |
 
@@ -982,7 +982,7 @@ FR-026 refers to these permission names for its screens: View Settings, Edit Set
 - Super Admins will review and update team member roles periodically (quarterly or when responsibilities change)
 - Email delivery service (SendGrid/SES) has 99%+ uptime for invitation emails
 - Super Admin role assigned to senior operations staff (CEO, CTO, Operations Manager)
-- Aftercare specialists check aftercare cases at least twice daily during business hours
+- Aftercare coordinators check aftercare cases at least twice daily during business hours
 - Billing Admins process payouts on scheduled basis (weekly, bi-weekly, or monthly)
 - Support staff respond to patient and provider inquiries within 24 hours
 
@@ -1009,7 +1009,7 @@ FR-026 refers to these permission names for its screens: View Settings, Edit Set
 - **Authentication**: MFA support planned (MFA will be a mandatory control for all admin platform users Post-MVP, once the shared stack is available per Constitution Principle II) (REQ-031-016)
 - **Authorization**: Role-based access control with granular permissions per feature/module
 - **Threat mitigation**: Rate limiting on admin login endpoint to prevent brute-force attacks (max 5 attempts per 15 minutes) (REQ-031-100)
-- Both modules share the underlying authorization infrastructure while keeping **admin roles** (Super Admin, Aftercare Specialist, Billing Admin, Support Staff) separate from **provider roles** in terms of management, but unified in terms of permission configuration
+- Both modules share the underlying authorization infrastructure while keeping **admin roles** (Super Admin, Aftercare Coordinator, Billing Admin, Support Staff) separate from **provider roles** in terms of management, but unified in terms of permission configuration
 - **Data format**: Structured log entries (timestamp, user_id, action_type, details, IP address, outcome)
 
 ### Provider Role Permission Rules
@@ -1030,7 +1030,7 @@ FR-026 refers to these permission names for its screens: View Settings, Edit Set
 **Fixed in Codebase (Not Editable)**:
 
 - Super Admin role permissions (always full access) (REQ-031-051)
-- System role names (Super Admin, Aftercare Specialist, Billing Admin, Support Staff) and the four protected provider role names (Owner, Manager, Clinical Staff, Billing Staff) (REQ-031-055)
+- System role names (Super Admin, Aftercare Coordinator, Billing Admin, Support Staff) and the four protected provider role names (Owner, Manager, Clinical Staff, Billing Staff) (REQ-031-055)
 - Owner-only provider capabilities (REQ-031-068)
 - Core permission categories (cannot rename or remove: Patient Management, Provider Management, Billing, etc.) (REQ-031-065)
 - Audit trail retention period (retention follows the system PRD, Platform-Wide Rules: One 10-year retention period) (REQ-031-015; REQ-SYS-002)
@@ -1060,17 +1060,17 @@ FR-026 refers to these permission names for its screens: View Settings, Edit Set
 
 ## User Scenarios & Testing
 
-### User Story 1 - Invite Aftercare Specialist (Priority: P1)
+### User Story 1 - Invite Aftercare Coordinator (Priority: P1)
 
 As a Super Admin, I need to invite a new aftercare nurse to the admin platform so they can start managing aftercare cases without accessing sensitive billing or provider data.
 
 **Why this priority**: Core onboarding workflow required for day-one operations; enables team growth and role separation
 
-**Independent Test**: Can be fully tested by creating new admin account, assigning "Aftercare Specialist" role, and verifying access to aftercare features only
+**Independent Test**: Can be fully tested by creating new admin account, assigning "Aftercare Coordinator" role, and verifying access to aftercare features only
 
 **Acceptance Scenarios**:
 
-1. **Given** Super Admin is logged into admin platform, **When** Super Admin invites new user with email "<nurse@hairline.com>" and role "Aftercare Specialist", **Then** invitation email sent within 1 minute and new account created with status "Pending"
+1. **Given** Super Admin is logged into admin platform, **When** Super Admin invites new user with email "<nurse@hairline.com>" and role "Aftercare Coordinator", **Then** invitation email sent within 1 minute and new account created with status "Pending"
 
 2. **Given** new aftercare nurse receives invitation email, **When** nurse clicks activation link and sets password, **Then** account activated and nurse can log in with aftercare dashboard access
 
@@ -1144,7 +1144,7 @@ As an admin user, I need to be notified immediately when my role or permissions 
 
 **Acceptance Scenarios**:
 
-1. **Given** admin user "<support@hairline.com>" has role "Support Staff", **When** Super Admin changes role to "Aftercare Specialist", **Then** user receives email notification within 5 minutes with: old role, new role, permission changes summary (REQ-031-084)
+1. **Given** admin user "<support@hairline.com>" has role "Support Staff", **When** Super Admin changes role to "Aftercare Coordinator", **Then** user receives email notification within 5 minutes with: old role, new role, permission changes summary (REQ-031-084)
 
 2. **Given** role change notification received, **When** user logs in after role change, **Then** dashboard reflects new role permissions (aftercare features visible, support features hidden)
 
@@ -1196,7 +1196,7 @@ As a platform administrator, I need the system to prevent any Super Admin accoun
 - **REQ-031-001**: System MUST allow Super Admins to invite new admin team members via email with role assignment; the invitation email is sent within 1 minute
 - **REQ-031-002**: System MUST support creation of custom roles with granular permission assignment per admin module (A-01 through A-10)
 - **REQ-031-003**: System MUST enforce role-based access control on all admin API endpoints and UI components
-- **REQ-031-004**: System MUST provide predefined admin roles: Super Admin, Aftercare Specialist, Billing Admin, Support Staff
+- **REQ-031-004**: System MUST provide predefined admin roles: Super Admin, Aftercare Coordinator, Billing Admin, Support Staff
 - **REQ-031-005**: System MUST provide centralized configuration for the permissions of the four provider roles (Owner, Manager, Clinical Staff, Billing Staff); no other provider roles exist
 - **REQ-031-006**: System MUST automatically sync provider role permission changes to Provider Platform (FR-009) within 5 seconds
 - **REQ-031-007**: System MUST prevent modification of Owner role permissions that would remove full access to provider features, with the message: "Owner role must maintain full access to all provider features"
@@ -1237,6 +1237,7 @@ As a platform administrator, I need the system to prevent any Super Admin accoun
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2026-11-22 | 1.3 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.2) and the change request CR-FR031-20260929-01 (file change-request-2026-09-29-global-custom-provider-roles.md) are in `archived/prd-baseline-2026-11-08/fr031-admin-access-control/` and in git history. | Documentation |
+| 2026-11-23 | 1.4 | Owner ruling 2026-11-23: the aftercare specialist is clinic staff on the provider side; the Hairline admin role is renamed Aftercare Coordinator with unchanged permissions. Role name replaced in 18 place(s). No permission change. | Documentation |
 
 ---
 
@@ -1253,4 +1254,4 @@ As a platform administrator, I need the system to prevent any Super Admin accoun
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-011 Aftercare & Recovery Management PRD
-**Last Updated**: 2026-11-20 (requirements graph programme baseline; prior approval dated 2026-01-04)
+**Last Updated**: 2026-11-23 (requirements graph programme baseline; prior approval dated 2026-01-04)

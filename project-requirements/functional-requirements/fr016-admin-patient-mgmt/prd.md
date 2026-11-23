@@ -33,7 +33,7 @@ This is a critical operational module that ensures the platform can provide effe
 - **Patient Platform (P-##)**: No direct patient-facing functionality - patients are unaware of admin oversight (REQ-016-033)
 - **Provider Platform (PR-##)**: No provider-facing functionality - providers don't see admin interventions (REQ-016-033)
 - **Admin Platform (A-01)**: Full patient management interface with search, view, edit, and oversight capabilities
-- **Admin Platform Role Model**: Admin roles and permissions follow FR-031 (Admin Access Control & Permissions): default roles Super Admin, Aftercare Specialist, Billing Staff, and Support Staff, plus custom roles (REQ-016-198)
+- **Admin Platform Role Model**: Admin roles and permissions follow FR-031 (Admin Access Control & Permissions): default roles Super Admin, Aftercare Coordinator, Billing Staff, and Support Staff, plus custom roles (REQ-016-198)
 - **Shared Services (S-##)**: Uses S-03 (Notification Service) for alerts and S-05 (Media Storage Service) for accessing patient scans
 
 ### Multi-Tenant Breakdown
@@ -265,7 +265,7 @@ This is a critical operational module that ensures the platform can provide effe
 **A7: Admin resolves provider-caused cancellation support**:
 
 - **Trigger**: FR-015 provider suspension or deactivation (FR-015 Alternative Flow A5 and Screen 4) cancels a patient's case/inquiry or provider participation, or closes an accepted booking for the FR-006 provider-fault transfer while the inquiry stays open, with cause `ProviderSuspended` or `ProviderDeactivated` and sets `supportRequired` ("Admin Support Required"); admin receives the mandatory FR-020 admin-support alert (sent to admins with the FR-031 Respond to Support permission) (REQ-016-057)
-- **Access**: Viewing the Admin Support Required list and the patient's Provider-Caused Impacts requires FR-031 View Patients; Resolve Support requires FR-031 Respond to Support (default roles Super Admin, Aftercare Specialist, and Support Staff) (REQ-016-058)
+- **Access**: Viewing the Admin Support Required list and the patient's Provider-Caused Impacts requires FR-031 View Patients; Resolve Support requires FR-031 Respond to Support (default roles Super Admin, Aftercare Coordinator, and Support Staff) (REQ-016-058)
 - **Steps**:
   1. Admin filters Screen 1 by "Admin Support Required: Unresolved" or opens the alert's deep link
   2. Admin reviews the patient's Provider-Caused Impacts (Screen 2): affected inquiry/case references, prior stage, cancellation cause, and any linked FR-034 support case
@@ -465,7 +465,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 
 - **CRITICAL**: Admin must enter justification before viewing medical data (audit compliance) (REQ-016-014)
 - Justification dialog appears immediately upon clicking "Medical Data" tab (REQ-016-122)
-- Medical data is available only to admins with the FR-031 Manage Aftercare permission (Super Admin and Aftercare Specialist by default), always with mandatory justification; View Patients alone shows the profile without medical data (REQ-016-070)
+- Medical data is available only to admins with the FR-031 Manage Aftercare permission (Super Admin and Aftercare Coordinator by default), always with mandatory justification; View Patients alone shows the profile without medical data (REQ-016-070)
 - Every access logged with: admin ID, timestamp, justification, data viewed (REQ-016-015)
 - Medical questionnaire responses color-coded by severity: (REQ-016-123)
   - Red (Critical): HIV, blood disorders, heart conditions
@@ -687,7 +687,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 
 - **Rule 1**: All admin actions on patient accounts MUST be logged in audit trail with timestamp, admin ID, and justification (REQ-016-007)
 - **Rule 2**: Admins MAY edit a patient's medical questionnaire responses and alerts (FR-003 admin edit capability), but only with a typed reason that is logged in the audit trail with the edit. Patient scans MUST NOT be modified by admins; scan media is immutable except by patients (REQ-016-069)
-- **Rule 3**: Admin visibility and edit rights follow the FR-031 role permissions: View Patients grants patient visibility (all default roles), Edit Patients grants patient edits (Super Admin by default), Manage Aftercare covers aftercare actions and access to medical data and scans (Super Admin and Aftercare Specialist by default), View Support Center and Respond to Support cover support actions (Super Admin, Aftercare Specialist, and Support Staff by default), Issue Refunds covers refunds, and Delete Patients covers account archiving (REQ-016-070)
+- **Rule 3**: Admin visibility and edit rights follow the FR-031 role permissions: View Patients grants patient visibility (all default roles), Edit Patients grants patient edits (Super Admin by default), Manage Aftercare covers aftercare actions and access to medical data and scans (Super Admin and Aftercare Coordinator by default), View Support Center and Respond to Support cover support actions (Super Admin, Aftercare Coordinator, and Support Staff by default), Issue Refunds covers refunds, and Delete Patients covers account archiving (REQ-016-070)
 - **Rule 4**: High-impact actions (account suspension of any duration, refunds exceeding $1,000, manual booking modifications during active treatment, bulk patient notifications, patient data deletion for GDPR requests) MUST require enhanced confirmation + justification, in addition to the FR-031 permission the action needs (Edit Patients for account suspension, Issue Refunds for refunds, Delete Patients for data deletion) (REQ-016-020)
 - **Rule 5**: Admin access to patient medical data MUST trigger access justification prompt (HIPAA/GDPR compliance) (REQ-016-004, REQ-016-014)
 - **Rule 6**: Patient account deactivation MUST be soft-delete (archive) not hard-delete; data retained per the system PRD, Platform-Wide Rules: One 10-year retention period (REQ-016-017)
@@ -699,7 +699,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 
 - **Privacy Rule 1**: Admin access to patient medical data MUST be logged with justification (Protected Health Information) (REQ-016-015)
 - **Privacy Rule 2**: Patient scans displayed in admin interface MUST be read-only and access-controlled (prevent unauthorized distribution) (REQ-016-072)
-- **Privacy Rule 3**: Only admins with the FR-031 Manage Aftercare permission (Super Admin and Aftercare Specialist by default) can view and download patient scans; all downloads are logged in audit trail for compliance (REQ-016-073)
+- **Privacy Rule 3**: Only admins with the FR-031 Manage Aftercare permission (Super Admin and Aftercare Coordinator by default) can view and download patient scans; all downloads are logged in audit trail for compliance (REQ-016-073)
 - **Privacy Rule 4**: Patient payment card details NEVER stored or displayed in admin interface (PCI-DSS compliance) (REQ-016-023)
 - **Privacy Rule 5**: Patient data deletion requests (GDPR right to be forgotten) MUST result in anonymization + archival, not permanent deletion (REQ-016-016)
 - **Privacy Rule 6**: Archived patient data accessible only through dedicated archive interface (requires explicit justification and logged access) (REQ-016-074)
@@ -1004,6 +1004,7 @@ A provider is suspended or deactivated (FR-015 A5) and the patient's case is can
 |------|---------|---------|--------|
 | 2026-11-22 | 1.15 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.14) and the change requests CR-FR016-20261014-01, CR-FR016-20261016-01, CR-FR020-20261027-01, CR-FR015-20261013-01 and CR-FR006-20261016-01 are in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
 | 2026-11-23 | 1.16 | Independent compression review: 2 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
+| 2026-11-23 | 1.17 | Owner ruling 2026-11-23: the aftercare specialist is clinic staff on the provider side; the Hairline admin role is renamed Aftercare Coordinator with unchanged permissions. Role name replaced in 6 place(s). No permission change. | Product Owner / Documentation |
 
 ---
 

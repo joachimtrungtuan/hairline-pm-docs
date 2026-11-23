@@ -1,10 +1,10 @@
 # Hairline Platform - Product Requirements Document (PRD)
 
-**Version**: 1.3.0  
+**Version**: 1.4.0  
 **Document Type**: System-Level PRD  
 **Created**: 2025-10-23  
 **Status**: Revised, pending verification  
-**Last Updated**: 2026-11-20
+**Last Updated**: 2026-11-23
 
 ---
 
@@ -137,7 +137,7 @@ The Hairline Platform consists of four distinct applications serving different u
 
 ---
 
-### 3. Aftercare Specialist - Sarah (Hairline Team)
+### 3. Aftercare Coordinator - Sarah (Hairline Team)
 
 **Demographics**: 28-year-old nurse with telemedicine experience  
 **Role**: Hairline aftercare coordinator  
@@ -190,7 +190,7 @@ The Hairline Platform consists of four distinct applications serving different u
 
 ### Workflow 1: Patient Journey - From Inquiry to Recovery
 
-**Actors**: Patient, Provider(s), Hairline Admin Team, Aftercare Specialist
+**Actors**: Patient, Provider(s), Hairline Admin Team, Aftercare Specialist (clinic staff), Aftercare Coordinator (Hairline team)
 
 **Stages**:
 
@@ -909,8 +909,9 @@ Each option is a quote-local copy of one package version that the patient can co
 
 **Aftercare Team Access**:
 
-- Patients MUST be able to chat with aftercare team (Hairline staff) 24/7
-- Aftercare specialists can view:
+- The aftercare specialist is clinic staff working for the provider. The Hairline-side role is the Aftercare Coordinator (admin platform, FR-031), who oversees cases, reassigns them and handles escalations.
+- Patients MUST be able to chat with the aftercare team 24/7: the clinic's aftercare specialist, with Hairline aftercare coordinators as escalation
+- Aftercare specialists and Hairline aftercare coordinators can view:
   - Patient's complete aftercare plan
   - Milestone progress (current phase, completion percentage)
   - Scan history (head scan photo sets in V1) with timestamps
@@ -918,7 +919,7 @@ Each option is a quote-local copy of one package version that the patient can co
   - Medication schedule and adherence
   - Activity restrictions for current milestone
   - Provider's custom instructions
-- Aftercare specialists can request additional information:
+- Aftercare specialists and Hairline aftercare coordinators can request additional information:
   - Request scan/photo set (if patient missed scheduled scan)
   - Request live video consultation (if visual assessment needed)
   - Request updated photos
@@ -2242,6 +2243,7 @@ These rules bind every module, screen, and Functional Requirement. The system PR
 | 1.1.0 | 2026-10-18 | Vân Tay Media | Consolidated verification corrections (Q2, Q5, Q17, Q18, Q20, Q34; D2, D11, D12, M18; no Change Request, system document): Workflow 1 treatment-detail changes bounded to `Confirmed` until Check In with admin-only appointment changes; FR-006 admin revive takes an automatic promotion use again or reserves a provider-selected or patient-code use again, rejected when the limit has no room; FR-008 travel records stored against the booking's travel context; FR-015 provider status change cancels bookings and the inquiry stays open for transfer; FR-019 reservation released when the quote is cancelled before acceptance, and a provider discount reduces the commission base like every discount type; FR-024 treatment pricing is a non-binding reference; glossary Commission and Booking entries updated; version bumped and change log added |
 | 1.2.0 | 2026-10-18 | Vân Tay Media | Final audit corrections (Q31, Q35 to Q44; f1 F5, F8, F10; f2 F2, F4, F5, F8, F10; f3 F5; no Change Request, system document): commission described as the FR-029 Percentage (0 to 100%) or Flat Rate models with a 15 to 25% global percentage default; patients cancel only in Inquiry or Quoted and contact support after acceptance, including after Payment Window Expired; after acceptance only an admin cancels a booking, from any state, the inquiry becomes Cancelled and the quote stays accepted; provider-fault transfer limited to Accepted and Confirmed, with aftercare provider reassignment in Aftercare; replacement quote authored by an admin with one supersession record inserted at the replacement acceptance; treatment-detail changes by the clinic until Check In and by an admin at any time from Confirmed; promotion priority adds Hairline-funded promotions, one automatic promotion per quote, `not_applied` release, limit-full sends proceed without the promotion, Both Fees uses the Hairline share percentage; `booking.scheduled` is patient-only and also fires at the replacement acceptance, new `booking.rescheduled`, and `quote.withdrawn` after acceptance added to admin exception alerts; round-2 additions (Q45 to Q49, Q42 check): a provider fault, suspension, or deactivation on an In Progress booking keeps it In Progress with `supportRequired` for an admin decision (Aftercare with aftercare-provider reassignment, or cancellation with reason) instead of cancelling it; FR-010 treatment record created at confirmation in Awaiting Check In; new mandatory `aftercare.provider_reassigned` for patient and new aftercare provider; no automatic promotion or reservation on an admin-authored replacement quote; an unaccepted replacement quote expires normally with the inquiry staying support-required; booking notices and FR-010 read the booking's current appointment while the acceptance snapshot keeps the accepted baseline |
 | 1.3.0 | 2026-11-20 | Vân Tay Media | Requirements graph programme baseline: owner rulings applied (no Change Request, system document): new **Platform-Wide Rules** section owned by the system PRD with fourteen rules, each cited by title from the Functional Requirements (patient identity hidden until booking confirmation; one 10-year retention period for everything; soft deletes only; encryption in transit and at rest; no card numbers stored; core security controls fixed in code; password and one-time-code policy; admin API rate limit; role-based, audited access; times in the user's local time zone; GDPR and HIPAA-equivalent compliance; concurrent admin edits warn then last save wins; setting and policy changes apply to new cases only; download links expire and check permission); NFR-003 points to the rules instead of restating them; FR-023 and FR-002 and FR-003 summaries follow the 10-year period and the identity rule, leftover 7-year wording removed; payment flow lines follow the fund-release rulings (release per booking after completion and the confirmation window, then payout by Stripe Connect or settlement statement); booking status written as `In progress` (stored value unchanged); status line set to pending verification; cross-document reconciliation (admin quote edits after acceptance) |
+| 1.4.0 | 2026-11-23 | Vân Tay Media | Owner ruling 2026-11-23 (no Change Request, new baseline): the aftercare specialist is clinic staff on the provider side; the Hairline role is the Aftercare Coordinator. Persona 3 heading, Workflow 1 actors and the Aftercare Team Access lines reworded. |
 
 ---
 
