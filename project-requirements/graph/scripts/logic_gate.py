@@ -11,7 +11,8 @@ when any of these holds:
   - an OK or finding row cites fewer than two references (bare verdict), or a cannot-verify row gives
     no reason;
   - an id cited in the Verdicts Evidence column or in the Scenarios section is not in the review DB,
-    or a cited PRD line (prd:N or prd:N-M) is outside the review PRD;
+    or a cited PRD line (prd:N or prd:N-M) is outside the review PRD (a line of another FR's PRD,
+    written "frNNN prd:N" or "system-prd:N", is not range-checked);
   - a Flow in the manifest has no "### Scenario <FLW-id>" walkthrough;
   - the "Not checked or could not verify" section is missing, empty, or a bare "none";
   - a planted defect has no finding row on any of the manifest items it lists.
@@ -59,6 +60,7 @@ HIGH_RISK_NODE_TYPES = ("Step", "Stage", "Actor", "Setting", "Rule")
 MIN_CITATIONS = 2
 
 _PRD_REF = re.compile(r"\bprd:(\d+)(?:-(\d+))?\b", re.IGNORECASE)
+_NEIGHBOUR_PREFIX = re.compile(r"(?:\bfr\d{3}[a-z]?\s+|[a-z0-9]-)$", re.IGNORECASE)
 _FENCE = re.compile(r"^\s*(```|~~~)")
 _H2 = re.compile(r"^##\s+(.+?)\s*#*\s*$")
 _SCENARIO = re.compile(r"^###\s+Scenario\s+(FLW-[A-Za-z0-9-]*[A-Za-z0-9])\b")
@@ -248,6 +250,8 @@ class CitationChecker:
             if self.conn.execute("SELECT 1 FROM nodes WHERE id = ?", (token,)).fetchone() is None:
                 out.append(f"cited id {token} is not in the review graph")
         for m in _PRD_REF.finditer(text):
+            if _NEIGHBOUR_PREFIX.search(text[:m.start()]):
+                continue  # another document's line ("fr006 prd:173", "system-prd:1933"): not in the review PRD
             first = int(m.group(1))
             last = int(m.group(2) or first)
             if not 1 <= first <= last <= self.prd_lines:

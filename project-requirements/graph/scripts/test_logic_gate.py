@@ -177,6 +177,13 @@ class GateTest(unittest.TestCase):
                 rows = {"N:SET-slot-hold": f"| N:SET-slot-hold | OK | SET-slot-hold vs {ref} | |"}
                 self.assertVoid(self.gate(report(self.manifest, rows)), f"cited PRD line {ref} is outside 1-14")
 
+    def test_neighbour_prd_line_is_not_range_checked(self) -> None:
+        for ref in ("fr006 prd:173", "fr007b prd:2044-2045", "see fr003 prd:1232", "system-prd:1933"):
+            with self.subTest(ref=ref):
+                rows = {"N:SET-slot-hold": f"| N:SET-slot-hold | OK | SET-slot-hold vs {ref} | |"}
+                result = self.gate(report(self.manifest, rows))
+                self.assertFalse([f for f in result.failures if "is outside" in f])
+
     def test_bad_citation_in_scenario_voids(self) -> None:
         text = report(self.manifest, scenarios=SCENARIO.replace("EVT-quote-accepted", "EVT-quote-acepted"))
         self.assertVoid(self.gate(text), "Scenarios section: cited id EVT-quote-acepted")
