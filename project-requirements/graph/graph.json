@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-23T12:25:33Z",
+  "generated_at": "2026-11-23T13:00:34Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -7764,9 +7764,9 @@
       "owner_fr": "FR-029",
       "title": "Rate Protection Threshold",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Alert if a pair's rate differs from its rate 24 hours earlier by more than this percentage. Range 1-50%, decimal precision 0.1%. The pair's warning clears only when an admin acknowledges it."
+        "description": "Alert if a pair's rate differs from its rate 24 hours earlier by more than this percentage. Range 1-50%, decimal precision 0.1%. The pair's warning clears only when an admin acknowledges it; afterwards the pair is compared with the rate at the acknowledgement until the 24-hour change is again within the threshold, and no comparison runs for 24 hours after a pair is created or switched between modes."
       }
     },
     {
@@ -8130,9 +8130,9 @@
       "owner_fr": "FR-029",
       "title": "Enabled",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Whether the currency is available for selection across the system. At least 1 must stay enabled; cannot be turned off while quotes, bookings, or instalment plans still use it."
+        "description": "Whether the currency is available for selection across the system. At least 1 must stay enabled; cannot be turned off while quotes, bookings, or instalment plans still use it, or while it is the Fee Currency of fixed fee amounts on Screen 7."
       }
     },
     {
@@ -25010,9 +25010,9 @@
       "owner_fr": "FR-029",
       "title": "Refund ladder and fee settings",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "One global record (Screen 7): refund ladder bands, late payment fee, rescheduling fee, deposit plan balance due days, unpaid balance cancellation point, Hairline share of a patient cancellation fee, patient confirmation window, and the settlement period with its cutoff day and payout day for manually paid clinics. Read by FR-006, FR-007, FR-007B, FR-015 and FR-017."
+        "description": "One global record (Screen 7): refund ladder bands, late payment fee, rescheduling fee, balance due days, unpaid balance cancellation point, Hairline share of a patient cancellation fee, patient confirmation window, and the settlement period with its cutoff day and payout day for manually paid clinics. Read by FR-006, FR-007, FR-007B, FR-015 and FR-017."
       }
     },
     {
@@ -25021,20 +25021,20 @@
       "owner_fr": "FR-029",
       "title": "Clinic cancellation deduction",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Fixed amount deducted from a clinic's next payout when the clinic cancels, stated in the Fee Currency. No starting value; may be Not set, in which case no deduction is made. FR-017 reads it. Applies on the day of the cancellation."
+        "description": "Fixed amount above 0 deducted from a clinic's next payout when the clinic cancels, stated in the Fee Currency and stored together with its currency code. No starting value; may be Not set, in which case no deduction is made. Re-entered in the new currency after a Default Currency change. FR-017 reads it. Applies on the day of the cancellation."
       }
     },
     {
       "id": "ENT-refund-fee-settings.deposit_plan_balance_due_days",
       "type": "Field",
       "owner_fr": "FR-029",
-      "title": "Deposit plan balance due days",
+      "title": "Balance due days",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Days before the treatment date that the balance of the deposit-now, balance-later option is due. Default 7. Whole number, 1 to 30."
+        "description": "Days before the procedure date that the balance of the deposit-now, balance-later option is due. Default 7. Whole number, 1 to 30. Locked at booking confirmation as a balance due date stored on the booking."
       }
     },
     {
@@ -25043,9 +25043,9 @@
       "owner_fr": "FR-029",
       "title": "Fee currency",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Currency in which the fixed late payment fee, the fixed rescheduling fee and the clinic cancellation deduction are stated. It is the system default currency at the time an admin last saved Screen 7; it changes only when an admin saves Screen 7 after a Default Currency change, and never reinterprets stored amounts."
+        "description": "Currency in which the fixed late payment fee, the fixed rescheduling fee and the clinic cancellation deduction are stated. It is set to the system default currency when the first fixed amount is saved, and every stored fixed amount keeps its own currency code from then on. After a Default Currency change it moves to the new default only in a save in which every fixed amount that is set has been re-entered in the new currency; until then Screen 7 cannot be saved. A currency in use as the Fee Currency cannot be disabled."
       }
     },
     {
@@ -25054,9 +25054,9 @@
       "owner_fr": "FR-029",
       "title": "Hairline share of patient cancellation fee",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Percentage 0-100 of a patient cancellation fee kept by Hairline; the rest goes to the clinic. No starting value; may be Not set, in which case Hairline keeps the whole fee and billing admins are flagged. Applies on the day of the cancellation."
+        "description": "Percentage 0-100 of a patient cancellation fee kept by Hairline; the rest goes to the clinic. No starting value; may be Not set, in which case Hairline keeps the whole fee and holders of the Screen 7 permission see a banner on the admin dashboard asking them to set it, which clears when the share is saved. Applies on the day of the cancellation."
       }
     },
     {
@@ -25065,9 +25065,9 @@
       "owner_fr": "FR-029",
       "title": "Late payment fee type",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "How the late payment fee is calculated: fixed amount or percentage."
+        "description": "How the late payment fee is calculated: fixed amount or percentage. Not set until a value is set; required once a value is set."
       }
     },
     {
@@ -25076,9 +25076,9 @@
       "owner_fr": "FR-029",
       "title": "Late payment fee value",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Value of the late payment fee. Fixed amount in the Fee Currency, precision per its minor units, converted at the rate accepted on the booking; percentage 0-100 of the late installment. Locked at booking confirmation."
+        "description": "Value of the late payment fee. Starts as Not set; no fee is charged while it is not set. Fixed amount above 0 in the Fee Currency, stored and locked together with its currency code, precision per its minor units, converted via USD with the rate set locked at quote acceptance; or a percentage above 0 and up to 100 of the late installment. Locked at booking confirmation."
       }
     },
     {
@@ -25109,9 +25109,9 @@
       "owner_fr": "FR-029",
       "title": "Rescheduling fee type",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "How the rescheduling fee is calculated: fixed amount or percentage."
+        "description": "How the rescheduling fee is calculated: fixed amount or percentage. Not set until a value is set; required once a value is set."
       }
     },
     {
@@ -25120,9 +25120,9 @@
       "owner_fr": "FR-029",
       "title": "Rescheduling fee value",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Value of the rescheduling fee. Fixed amount in the Fee Currency, precision per its minor units, converted at the rate accepted on the booking; percentage 0-100. Locked at booking confirmation. Never applies to a change an admin makes in V1."
+        "description": "Value of the rescheduling fee. Starts as Not set; no fee is charged while it is not set. Fixed amount above 0 in the Fee Currency, stored and locked together with its currency code, precision per its minor units, converted via USD with the rate set locked at quote acceptance; or a percentage above 0 and up to 100. Locked at booking confirmation. Never applies to a change an admin makes in V1."
       }
     },
     {
@@ -25164,9 +25164,9 @@
       "owner_fr": "FR-029",
       "title": "Unpaid balance cancellation point",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Days after the first missed due date at which a booking that still has an unpaid balance is cancelled. Whole number from 1 to 30, smaller than the balance due days and the installment cutoff. No default; may be Not set, in which case nothing is cancelled for non-payment. Locked at booking confirmation."
+        "description": "Days after the oldest unpaid due date (the oldest installment or balance that is unpaid right now) at which a booking that still has an unpaid balance is cancelled. Whole number from 1 to 30, smaller than the balance due days and the installment cutoff. No default; may be Not set, in which case nothing is cancelled for non-payment. Locked at booking confirmation."
       }
     },
     {
@@ -26946,9 +26946,9 @@
       "owner_fr": "FR-029",
       "title": "Late Payment Grace Period",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "description": "Days after a missed installment due date, counted from the due date, during which reminders and automatic retries run; the late payment fee is charged once after it has passed and the retries have ended. Range 0-14 days, integer only; 0 = no grace period. A missed installment never cancels the booking by itself."
+        "description": "Days after a missed installment due date, counted from the due date, during which reminders and automatic retries run; the late payment fee is charged once after it has passed and the retries have ended. Range 0-14 days, integer only; starts at 0 = no grace period. A missed installment is cancelled only by the unpaid balance cancellation point, never by this setting."
       }
     },
     {
@@ -26968,9 +26968,9 @@
       "owner_fr": "FR-029",
       "title": "Stripe account configuration",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "A Stripe account the platform uses to collect patient payments, assigned to countries or regional groupings. One account per country or regional grouping; at most one account is the Global Fallback used when no mapping exists (PRD Key Entities, Entity 1)."
+        "description": "A Stripe account the platform uses to collect patient payments, assigned to countries or regional groupings. One account per country or regional grouping; at most one account is the Global Fallback used when no mapping exists or when the mapped account fails authentication (PRD Key Entities, Entity 1)."
       }
     },
     {
@@ -26999,9 +26999,9 @@
       "owner_fr": "FR-029",
       "title": "Assigned Countries",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Countries or regional groupings served by this account (mutually exclusive per record: choose groups or countries, not both). Required unless Global Fallback is enabled. Each country or grouping maps to only one Stripe account (overrides required to reassign). A country mapping overrides any group-level account for that country."
+        "description": "Countries or regional groupings served by this account (mutually exclusive per record: choose groups or countries, not both). Required unless Global Fallback is enabled or the account is Inactive or Archived (such an account may hold no countries, and any it holds are ignored for routing). Each country or grouping maps to only one Stripe account (overrides required to reassign). A country mapping overrides any group-level account for that country."
       }
     },
     {
@@ -27030,9 +27030,9 @@
       "owner_fr": "FR-029",
       "title": "Global Fallback",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "If enabled, this Stripe account is used when no country or regional grouping mapping exists for the patient. At most one account can be the Global Fallback. If enabled: Assigned Countries must be empty, Account Status must be Active and Account Mode must be Live. The flag must be moved to another account before this account can be set Inactive or Archived."
+        "description": "If enabled, this Stripe account is used when no country or regional grouping mapping exists for the patient, or when the mapped account fails authentication. At most one account can be the Global Fallback. If enabled: Assigned Countries must be empty, Account Status must be Active and Account Mode must be Live on a production deployment and Test elsewhere. The flag must be moved to another account before this account can be set Inactive or Archived."
       }
     },
     {
@@ -27085,9 +27085,9 @@
       "owner_fr": "FR-029",
       "title": "Account Status",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Active, Inactive or Archived (active = enabled for processing). An account that an open booking or active installment plan still uses cannot be deleted; it is set to Archived, which takes it out of use for new bookings. The Global Fallback account cannot be set Inactive or Archived."
+        "description": "Active, Inactive or Archived (active = enabled for processing). An account that an open booking or active installment plan still uses cannot be deleted; it is set to Archived, which takes it out of use for new bookings. The countries of an Inactive or Archived account are treated as unassigned for routing: those patients pay through the Global Fallback or, with none, are blocked with the missing-account alert. The Global Fallback account cannot be set Inactive or Archived."
       }
     },
     {
@@ -32601,9 +32601,9 @@
       "owner_fr": "FR-029",
       "title": "Payment attempted from unsupported country",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Alert to admins that a payment was attempted or blocked for a country with no Stripe account and no Global Fallback."
+        "description": "Alert to admins that a payment was attempted or blocked for a country with no Stripe account and no Global Fallback (a country held only by an Inactive or Archived account counts as having no account)."
       }
     },
     {
@@ -37183,6 +37183,19 @@
         "kind": "alternative",
         "description": "Alternative Flow A2: configure a provider-specific deposit rate",
         "prd_ref": "Alternative Flow A2"
+      }
+    },
+    {
+      "id": "FLW-029-alt-provider-deposit-reset",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Alternative Flow A2b: reset a provider-specific deposit rate to the global default",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Alternative Flow A2b: reset a provider-specific deposit rate to the global default",
+        "prd_ref": "Alternative Flow A2b"
       }
     },
     {
@@ -81283,9 +81296,9 @@
       "owner_fr": "FR-029",
       "title": "Allow admins to configure a global rate protection threshold",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System MUST allow admins to configure a global rate protection threshold (1-50% range). System monitors each auto-fetch pair independently and marks the pair's status as yellow/warning and sends an alert notification when the pair's rate differs from its rate 24 hours earlier by more than the threshold. The warning clears only when an admin acknowledges it",
+        "statement": "System MUST allow admins to configure a global rate protection threshold (1-50% range). System monitors each auto-fetch pair independently and marks the pair's status as yellow/warning and sends an alert notification when the pair's rate differs from its rate 24 hours earlier by more than the threshold. The warning clears only when an admin acknowledges it. After an acknowledgement the pair is compared with the rate at that moment until the change against the rate 24 hours earlier is again within the threshold, and no comparison runs for 24 hours after a pair is created or switched between modes",
         "rationale": "prd.md line 1202 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -81435,9 +81448,9 @@
       "owner_fr": "FR-029",
       "title": "Allow admins to configure late payment grace period",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST allow admins to configure the late payment grace period (0-14 days), counted from the installment due date. The late fee is charged once, after the grace period and the automatic retries have ended"
+        "statement": "System MUST allow admins to configure the late payment grace period (0-14 days, starting at 0), counted from the installment due date. The late fee is charged once, after the grace period and the automatic retries have ended"
       }
     },
     {
@@ -81631,10 +81644,10 @@
       "owner_fr": "FR-029",
       "title": "Prevent modification of deposit rates or split payment rules for bookings with active...",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "System MUST prevent modification of deposit rates or split payment rules for bookings with active references (changes apply to new bookings only)",
-        "rationale": "Restates Screen 3 and Screen 4 rules on bookings with active references, Rule 5 and the Screen 3 rule on deleting a provider-specific rate with active bookings (archive instead)."
+        "rationale": "Restates Screen 3 and Screen 4 rules on bookings with active references, Rule 5 and the Screen 3 rule on resetting a provider-specific rate to the global default."
       }
     },
     {
@@ -81667,9 +81680,9 @@
       "owner_fr": "FR-029",
       "title": "Lock currency conversion rates",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST lock currency conversion rates (including markup) at FR-005 subquote acceptance, store them with their timestamp in the acceptance snapshot, and copy them to the booking and its transactions (no rate fluctuation after subquote acceptance). If the cached rate is older than 24 hours, acceptance still proceeds and the snapshot records the rate and its timestamp",
+        "statement": "System MUST lock the currency conversion rate set at FR-005 subquote acceptance (the base rate and the markup, each with its timestamp, for the quote currency, the currency shown to the patient and the Fee Currency), store it in the acceptance snapshot, and copy it to the booking and its transactions (no rate fluctuation after subquote acceptance). If a cached rate is older than 24 hours, acceptance still proceeds and the snapshot records the rate and its timestamp",
         "rationale": "Restates Rule 1(a) and Currency Rule 2. Likely duplicate of REQ-005-017 (FR-005)."
       }
     },
@@ -81715,9 +81728,9 @@
       "owner_fr": "FR-029",
       "title": "Lock payment configuration only at its named lock points",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST lock payment configuration only at its named lock points: the currency conversion rate at FR-005 subquote acceptance; the commission configuration, deposit rate, split payment settings, refund ladder, rescheduling fee, late payment fee, grace period, unpaid balance cancellation point and installment cutoff at FR-006 booking confirmation; nothing at quote creation or sending. Hairline's share of a cancellation fee, the clinic cancellation deduction and the patient confirmation window apply on the day of the event",
+        "statement": "System MUST lock payment configuration only at its named lock points: the currency conversion rate set at FR-005 subquote acceptance; the commission configuration, deposit rate, split payment settings, refund ladder, rescheduling fee, late payment fee (a fixed amount with its currency code), grace period, balance due days (as a balance due date stored on the booking), unpaid balance cancellation point and installment cutoff at FR-006 booking confirmation; nothing at quote creation or sending. Hairline's share of a cancellation fee, the clinic cancellation deduction and the patient confirmation window apply on the day of the event",
         "rationale": "Near duplicate of the lock-points rule (Rule 1) and REQ-029-044."
       }
     },
@@ -81750,9 +81763,9 @@
       "owner_fr": "FR-029",
       "title": "Block disabling a currency while any non-terminal sent quote, unpaid accepted booking,...",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST block disabling a currency while any non-terminal sent quote, unpaid accepted booking, or open booking or instalment plan uses it, or while it is the Default Currency of an active Stripe account, and MUST show the admin the count of records still using that currency (or the account name).",
+        "statement": "System MUST block disabling a currency while any non-terminal sent quote, unpaid accepted booking, or open booking or instalment plan uses it, while it is the Default Currency of an active Stripe account, or while it is the Fee Currency of fixed fee amounts stored on Screen 7, and MUST show the admin the count of records still using that currency (or the account name).",
         "rationale": "Overlaps the warn-and-resolution-path rule of Screen 6."
       }
     },
@@ -81782,11 +81795,11 @@
       "id": "REQ-029-055",
       "type": "Rule",
       "owner_fr": "FR-029",
-      "title": "Support an optional Stripe account marked as Global Fallback used only when no...",
+      "title": "Global Fallback account covers unmapped countries and a failing mapped account",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System MUST support an optional Stripe account marked as Global Fallback used only when no country/regional grouping mapping exists (at most 1 Global Fallback account)",
+        "statement": "System MUST support an optional Stripe account marked as Global Fallback used when no country/regional grouping mapping exists, or when the mapped account fails authentication (at most 1 Global Fallback account) (REQ-029-055)",
         "rationale": "Restated by Payment Rule 2 and Screen 1 Global Fallback validation."
       }
     },
@@ -81818,11 +81831,11 @@
       "id": "REQ-029-058",
       "type": "Rule",
       "owner_fr": "FR-029",
-      "title": "For any currency not configured as a pair, the system MUST fall back to collecting...",
+      "title": "A currency with no pair is collected in USD from the locked rate set",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "For any currency not configured as a pair, the system MUST fall back to collecting payment in USD (no conversion attempted). The admin dashboard MUST display a note informing admins of this fallback behavior.",
+        "statement": "For any currency not configured as a pair, the system MUST fall back to collecting payment in USD, converted at the quote-to-USD rate in the rate set locked at quote acceptance, with the markup per Payment Rule 3. The admin dashboard MUST display a note informing admins of this fallback behavior. (REQ-029-058)",
         "rationale": "Restated by Screen 2A rules and Payment Rule 3 context."
       }
     },
@@ -81974,9 +81987,9 @@
       "owner_fr": "FR-029",
       "title": "Assigned countries are groups or countries, not both",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "| Assigned Countries | multi-select | Conditional | Countries or regional groupings served by this account (mutually exclusive per record: choose groups or countries, not both) | Required unless Global Fallback is enabled. Each country/grouping can map to only one Stripe account (overrides required to reassign). If a country mapping exists, it overrides any group-level account for that country. |",
+        "statement": "| Assigned Countries | multi-select | Conditional | Countries or regional groupings served by this account (mutually exclusive per record: choose groups or countries, not both) | Required unless Global Fallback is enabled or the account is Inactive or Archived (such an account may hold no countries, and any it holds are ignored for routing). Each country/grouping can map to only one Stripe account (overrides required to reassign). If a country mapping exists, it overrides any group-level account for that country. |",
         "rationale": "Taken from the Assigned Countries field description (Screen 1)."
       }
     },
@@ -82022,9 +82035,9 @@
       "owner_fr": "FR-029",
       "title": "Stripe authentication failure after configuration",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "How to manage admin accidentally entering incorrect Stripe secret key that initially validates but later fails during actual payment processing? During configuration, system validates Stripe credentials by making test API call to Stripe. If credentials are syntactically correct but have insufficient permissions or are later revoked by Stripe, first payment attempt will fail. Payment Processing Service logs error: \"Stripe authentication failed for account [name].\" System sends urgent alert to admin: \"Stripe account [name] failed authentication. Verify API keys are active and have required permissions.\" System temporarily routes new bookings to Global Fallback (if configured) and displays error banner to admin; a booking already taken on the failing account keeps that account and its charges are retried once the keys are fixed.",
+        "statement": "How to manage admin accidentally entering incorrect Stripe secret key that initially validates but later fails during actual payment processing? During configuration, system validates Stripe credentials by making test API call to Stripe. If credentials are syntactically correct but have insufficient permissions or are later revoked by Stripe, first payment attempt will fail. Payment Processing Service logs error: \"Stripe authentication failed for account [name].\" System sends urgent alert to admin: \"Stripe account [name] failed authentication. Verify API keys are active and have required permissions.\" System temporarily routes new bookings to Global Fallback (if configured) and displays error banner to admin; a booking already taken on the failing account keeps that account and its charges are retried once the keys are fixed. Routing returns to the account when its next Test Connection passes; if the failing account is the Global Fallback itself, or no fallback exists, payment is blocked with the Boundary Flow B6 error and alert.",
         "rationale": "PRD line 1182: payments are temporarily routed to the Global Fallback when configured."
       }
     },
@@ -82166,9 +82179,9 @@
       "owner_fr": "FR-029",
       "title": "Pair status badge definitions",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Status badges update automatically: green when last fetch succeeded and rate change is within threshold; yellow when the last sync breached the rate protection threshold or the source is degraded; red when last fetch failed or source is down. A yellow rate-protection badge clears only when an admin clicks \"Acknowledge\" on the pair; a later normal sync does not clear it. A yellow badge caused by a degraded source clears when the source is healthy again.",
+        "statement": "Status badges update automatically: green when last fetch succeeded and rate change is within threshold; yellow when the last sync breached the rate protection threshold or the source is degraded; red when last fetch failed or source is down. A yellow rate-protection badge clears only when an admin clicks \"Acknowledge\" on the pair; a later normal sync does not clear it, and after the acknowledgement the badge returns only if the rate moves above the threshold from the acknowledged rate. A yellow badge caused by a degraded source clears when the source is healthy again.",
         "rationale": "Status of a pair is calculated by this rule. A yellow badge returns to green on the next normal sync; there is no acknowledge action."
       }
     },
@@ -82274,9 +82287,9 @@
       "owner_fr": "FR-029",
       "title": "One rate alert per pair per six hours",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "How does system handle rapid currency fluctuation exceeding rate protection threshold multiple times in single day for one pair (e.g., USD/EUR changes 3% at 8am, another 3% at 2pm, another 3% at 8pm)? System compares each sync with the pair's rate 24 hours earlier. It sends the first alert at 8am when the 3% threshold is crossed and marks the pair's status as yellow/warning on the pair list. System applies rate-limiting to alerts (maximum one alert per currency pair per 6 hours) to prevent alert fatigue, and sends the second alert at 2pm showing the change against the rate 24 hours earlier: \"USD/EUR changed 6% in 24 hours.\" The yellow badge stays until an admin clicks Acknowledge; a later normal sync does not clear it. Admin receives summary of all rate changes across all pairs in daily digest email.",
+        "statement": "How does system handle rapid currency fluctuation exceeding rate protection threshold multiple times in single day for one pair (e.g., USD/EUR changes 3% at 8am, another 3% at 2pm, another 3% at 8pm)? System compares each sync with the pair's rate 24 hours earlier. It sends the first alert at 8am when the 3% threshold is crossed and marks the pair's status as yellow/warning on the pair list. System applies rate-limiting to alerts (maximum one alert per currency pair per 6 hours) to prevent alert fatigue, and sends the second alert at 2pm showing the change against the rate 24 hours earlier: \"USD/EUR changed 6% in 24 hours.\" The yellow badge stays until an admin clicks Acknowledge; a later normal sync does not clear it. After the acknowledgement the pair is compared with the rate at that moment until the change against the rate 24 hours earlier is again within the threshold. Admin receives summary of all rate changes across all pairs in daily digest email.",
         "rationale": "prd.md line 1178 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -82310,9 +82323,9 @@
       "owner_fr": "FR-029",
       "title": "Booking total definition",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Booking Total Rule: Throughout this FR, \"booking total\" means the accepted subquote price after any promotion, in the quote currency, read from the FR-005 acceptance snapshot. The same rule applies to every discount type, including discounts funded only by Hairline: commission is always calculated on the price after promotion. It is never recomputed from the live quote, option, or date-range price. This single figure is the base for the Percentage commission, the deposit amount, and the installment split; any display or charge in another currency uses the rate locked under Currency Rule 2.",
+        "statement": "Booking Total Rule: Throughout this FR, \"booking total\" means the accepted subquote price after any promotion, in the quote currency, read from the FR-005 acceptance snapshot. The same rule applies to every discount type, including discounts funded only by Hairline: commission is always calculated on the price after promotion. It is never recomputed from the live quote, option, or date-range price. This single figure is the base for the Percentage commission, the deposit amount, and the installment split; any display or charge in another currency uses the rate set locked under Currency Rule 2. (REQ-029-100)",
         "rationale": "Same rule applies to every discount type, including discounts funded only by Hairline (see REQ-029-054)."
       }
     },
@@ -82322,9 +82335,9 @@
       "owner_fr": "FR-029",
       "title": "Configuration locks only at named lock points",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Rule 1: Payment configuration changes never alter a value that has already been locked. Each configuration is locked at a named point: (a) the currency conversion rate (including markup) is locked when the patient accepts a subquote in FR-005 and is stored in the acceptance snapshot; (b) the effective commission configuration, the deposit rate, and the split payment (installment) settings are locked at FR-006 booking confirmation and stored with the booking; (c) no payment configuration is frozen when a parent quote or subquote is created or sent in FR-004; (d) the refund ladder, the rescheduling fee, the late payment fee, the late payment grace period, the unpaid balance cancellation point and the installment cutoff are locked at FR-006 booking confirmation, while Hairline's share of a patient cancellation fee, the clinic cancellation deduction and the patient confirmation window are read on the day the event happens and are not locked; (e) the Stripe account that takes a booking's first payment is stored with the booking and used for every later charge and refund of that booking; (f) a locked currency rate survives the deletion of its currency pair. Before its lock point, a quote or accepted-but-unconfirmed subquote follows the configuration that is effective at that moment, and an active installment plan keeps the settings locked at its booking confirmation. When FR-019 expresses a fixed-amount promotion in the quote currency at quote send, it uses the currency conversion rate (including markup) in effect at send; this sets the promotion amount on the quote only and does not lock the conversion rate for payment, which stays locked at acceptance under (a).",
+        "statement": "Rule 1: Payment configuration changes never alter a value that has already been locked. Each configuration is locked at a named point: (a) the currency conversion rate set (base rates and markups, each with its timestamp) is locked when the patient accepts a subquote in FR-005 and is stored in the acceptance snapshot (Currency Rule 2); (b) the effective commission configuration, the deposit rate, and the split payment (installment) settings are locked at FR-006 booking confirmation and stored with the booking; (c) no payment configuration is frozen when a parent quote or subquote is created or sent in FR-004; (d) the refund ladder, the rescheduling fee, the late payment fee (a fixed amount together with its currency code; Not set stays Not set), the late payment grace period, the balance due days (kept as a balance due date stored on the booking), the unpaid balance cancellation point and the installment cutoff are locked at FR-006 booking confirmation, while Hairline's share of a patient cancellation fee, the clinic cancellation deduction and the patient confirmation window are read on the day the event happens and are not locked; (e) the Stripe account that takes a booking's first payment is stored with the booking and used for every later charge and refund of that booking; (f) a locked rate set survives the deletion of any of its currency pairs. Before its lock point, a quote or accepted-but-unconfirmed subquote follows the configuration that is effective at that moment, and an active installment plan keeps the settings locked at its booking confirmation. When FR-019 expresses a fixed-amount promotion in the quote currency at quote send, it uses the currency conversion rate (including markup) in effect at send; this sets the promotion amount on the quote only and does not lock the conversion rate for payment, which stays locked at acceptance under (a). (REQ-029-101)",
         "rationale": "Restated by REQ-029-049 (near duplicate). The lock point for the commission is booking confirmation in FR-006."
       }
     },
@@ -82346,9 +82359,9 @@
       "owner_fr": "FR-029",
       "title": "Markup applies to all conversions",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Payment Rule 3: Currency conversion markup applies to all transactions involving currency conversion (protects against bank rate differences). A price shown in a currency that is neither the quote currency nor USD is derived via USD with the markup applied once, on the pair for the shown currency",
+        "statement": "Payment Rule 3: Currency conversion markup applies to all transactions involving currency conversion, including the USD fallback charge (protects against bank rate differences). A price shown in a currency that is neither the quote currency nor USD is derived via USD with the markup applied once, on the pair for the shown currency (REQ-029-103)",
         "scope": "global",
         "rationale": "prd.md line 820 (found by matching the rule statement to the PRD text)."
       }
@@ -82371,9 +82384,9 @@
       "owner_fr": "FR-029",
       "title": "A missed installment brings reminders, retries and an admin flag; the cancellation point cancels an unpaid booking",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Payment Rule 6: A missed installment is followed by reminders and automatic payment retries (timing owned by FR-007B); when the retries have failed, an admin is flagged to follow up. The late payment fee is charged once, after the grace period and the retries have ended (Late Fee Rule). A booking whose balance is still unpaid at the unpaid balance cancellation point (Screen 7, counted in days after the first missed due date) is cancelled: this wins over pending retries and the Defaulted state, covers any unpaid balance (deposit and balance, or installments), applies only to bookings confirmed after the point was set, and does nothing while the point is not set",
+        "statement": "Payment Rule 6: A missed installment is followed by reminders and automatic payment retries (timing owned by FR-007B); when the retries have failed, an admin is flagged to follow up. The late payment fee is charged once, after the grace period and the retries have ended (Late Fee Rule). A booking whose balance is still unpaid at the unpaid balance cancellation point (Screen 7, counted in days after the oldest unpaid due date) is cancelled: this wins over pending retries and the Defaulted state, covers any unpaid balance (deposit and balance, or installments), applies only to bookings confirmed after the point was set, and does nothing while the point is not set (REQ-029-105)",
         "rationale": "FR-029 PRD, Payment Rule 6."
       }
     },
@@ -82744,9 +82757,9 @@
       "owner_fr": "FR-029",
       "title": "Global Fallback account conditions",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "If enabled: Assigned Countries must be empty, Account Status must be Active and Account Mode must be Live. The flag must be moved to another account before this account can be set Inactive or Archived.",
+        "statement": "If enabled: Assigned Countries must be empty, Account Status must be Active and Account Mode must be Live on a production deployment and Test elsewhere. The flag must be moved to another account before this account can be set Inactive or Archived.",
         "rationale": "Screen 1, Global Fallback, Validation Rules column (PRD line 388)"
       }
     },
@@ -82756,9 +82769,9 @@
       "owner_fr": "FR-029",
       "title": "Booking total compared with the installment minimum in USD",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST compare the booking total with the Minimum Booking Amount for installments in USD: a booking total in another currency is converted to USD at the conversion rate locked at FR-005 subquote acceptance, using the base rate without markup, before the comparison.",
+        "statement": "System MUST compare the booking total with the Minimum Booking Amount for installments in USD: a booking total in another currency is converted to USD with the quote-to-USD base rate in the rate set locked at FR-005 subquote acceptance, without markup, before the comparison.",
         "rationale": "FR-029 PRD, Minimum Booking Conversion Rule; Screen 4."
       }
     },
@@ -82768,9 +82781,9 @@
       "owner_fr": "FR-029",
       "title": "Admins enable or disable payment methods per region and currency",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System MUST allow admins to enable or disable the payment methods offered to patients, per region and currency (Screen 1); FR-007 reads this setting, and FR-007B owns the payment-method records.",
+        "statement": "System MUST allow admins to enable or disable the payment methods offered to patients, per region and currency (Screen 1), and FR-007 offers a patient only the methods enabled for the patient's region and the charge currency (USD when the USD fallback applies, checked after the fallback); FR-007 reads this setting, and FR-007B owns the payment-method records.",
         "rationale": "FR-029 PRD, Screen 1 Enabled Payment Methods."
       }
     },
@@ -82792,9 +82805,9 @@
       "owner_fr": "FR-029",
       "title": "Admins set the late payment fee and the rescheduling fee, locked at confirmation",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST allow admins to set a late payment fee and a rescheduling fee on Screen 7. For each fee the admin chooses the type (fixed amount or percentage) and enters the value. A fixed amount is stated in the Fee Currency and converted at the rate accepted on the booking; the late fee percentage is of the late installment. Both fees are locked at booking confirmation. Hairline keeps both fees; they change no provider payout. The rescheduling fee never applies to a change an admin makes in V1.",
+        "statement": "System MUST allow admins to set a late payment fee and a rescheduling fee on Screen 7. For each fee the admin chooses the type (fixed amount or percentage) and enters the value; both fees start as Not set, and no such fee is charged while it is not set. A fixed amount must be above 0, is stated in the Fee Currency and is converted via USD with the rate set locked at quote acceptance; the late fee percentage is of the late installment. Both fees are locked at booking confirmation (a fixed amount with its currency code; a booking confirmed while a fee is Not set keeps no such fee). Hairline keeps both fees; they change no provider payout. The rescheduling fee never applies to a change an admin makes in V1.",
         "rationale": "FR-029 PRD, Screen 7; Late Fee Rule."
       }
     },
@@ -82804,9 +82817,9 @@
       "owner_fr": "FR-029",
       "title": "Late payment fee is charged once, after the grace period and the retries",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST charge the late payment fee once, when the late payment grace period (counted from the due date) has passed with the installment unpaid and the automatic retries have ended; it is collected with the next successful charge and stays outside the clinic share and the refund base.",
+        "statement": "System MUST charge the late payment fee once, when the late payment grace period (counted from the due date) has passed with the installment unpaid and the automatic retries have ended; it is collected with the next successful charge and stays outside the clinic share and the refund base. No fee is charged while the late payment fee is Not set.",
         "rationale": "FR-029 PRD, Late Fee Rule; Screen 4 grace period."
       }
     },
@@ -82826,12 +82839,12 @@
       "id": "REQ-029-146",
       "type": "Rule",
       "owner_fr": "FR-029",
-      "title": "Balance due days default to 7 and range from 1 to 30",
+      "title": "Balance due days default to 7, range from 1 to 30 and lock at booking confirmation",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST treat the balance of the deposit-now, balance-later option as due 7 days before treatment by default, and MUST allow admins to edit it on Screen 7 within 1 to 30 days. A booking confirmed with fewer days left than the balance due days gets full payment only.",
-        "rationale": "FR-029 PRD, Screen 7 Deposit Plan Balance Due Days."
+        "statement": "System MUST treat the balance of the deposit-now, balance-later option as due 7 days before the procedure date by default, MUST allow admins to edit it on Screen 7 within 1 to 30 days, and MUST lock it at booking confirmation as a balance due date stored on the booking (FR-007), so a later change never moves it. A booking confirmed with this many days left, or fewer, gets full payment only.",
+        "rationale": "FR-029 PRD, Screen 7 Balance Due Days."
       }
     },
     {
@@ -82840,9 +82853,9 @@
       "owner_fr": "FR-029",
       "title": "Unpaid balance cancellation point is 1 to 30 days and may be Not set",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST allow admins to set, on Screen 7, the unpaid balance cancellation point: 1 to 30 days after the first missed due date, at which a booking with any unpaid balance (deposit and balance, or installments) is cancelled. It applies only to bookings confirmed after it is set, wins over pending retries and the Defaulted state, and does nothing while it is not set. It must be smaller than the balance due days and smaller than the installment cutoff.",
+        "statement": "System MUST allow admins to set, on Screen 7, the unpaid balance cancellation point: 1 to 30 days after the oldest unpaid due date (the due date of the oldest installment or balance that is unpaid right now; paying it late restarts the count from the next unpaid one), at which a booking with any unpaid balance (deposit and balance, or installments) is cancelled. It applies only to bookings confirmed after it is set, wins over pending retries and the Defaulted state, and does nothing while it is not set. It must be smaller than the balance due days and smaller than the installment cutoff.",
         "rationale": "FR-029 PRD, Screen 7 Unpaid Balance Cancellation Point."
       }
     },
@@ -82852,9 +82865,9 @@
       "owner_fr": "FR-029",
       "title": "Hairline's share of a patient cancellation fee may be Not set",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST allow admins to set Hairline's share of a patient cancellation fee on Screen 7. It has no starting value and may be Not set; while it is not set Hairline keeps the whole fee and billing admins are flagged.",
+        "statement": "System MUST allow admins to set Hairline's share of a patient cancellation fee on Screen 7. It has no starting value and may be Not set; while it is not set Hairline keeps the whole fee and holders of the Screen 7 permission see a banner on the admin dashboard asking them to set it, which clears when the share is saved.",
         "rationale": "FR-029 PRD, Screen 7 Hairline Share of Patient Cancellation Fee."
       }
     },
@@ -82876,9 +82889,9 @@
       "owner_fr": "FR-029",
       "title": "Admins set the clinic cancellation deduction as a fixed amount with no starting value",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "System MUST allow admins to set the clinic cancellation deduction on Screen 7: a fixed amount in the Fee Currency with no starting value, which FR-017 reads; no deduction is made while it is not set.",
+        "statement": "System MUST allow admins to set the clinic cancellation deduction on Screen 7: a fixed amount above 0 in the Fee Currency with no starting value, which FR-017 reads; no deduction is made while it is not set.",
         "rationale": "FR-029 PRD, Screen 7 Clinic Cancellation Deduction."
       }
     },
@@ -82898,23 +82911,23 @@
       "id": "REQ-029-152",
       "type": "Rule",
       "owner_fr": "FR-029",
-      "title": "Only live Active accounts are routed on production, and the Global Fallback is Active and Live",
+      "title": "Only accounts of the deployment mode are routed, and the Global Fallback is Active",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "System MUST consider Live-mode Stripe accounts only for routing on a production deployment, and the Global Fallback account MUST be Active and Live; an account that is the Global Fallback cannot be set Inactive or Archived, and an override that would leave a non-fallback account with no countries is blocked.",
-        "rationale": "FR-029 PRD, Screen 1 and Boundary Flow B6."
+        "statement": "System MUST consider only Live-mode Stripe accounts for routing on a production deployment and only Test-mode accounts elsewhere. The Global Fallback account MUST be Active and Live on production (Test elsewhere) and cannot be set Inactive or Archived. A country held by an Inactive or Archived account MUST be treated as unassigned for routing, and such an account may hold no countries. An override that would leave a non-fallback account with no countries MUST be refused at the confirmation step of Alternative Flow A1.",
+        "rationale": "FR-029 PRD, Screen 1, Business Rules and Boundary Flow B6."
       }
     },
     {
       "id": "REQ-029-153",
       "type": "Rule",
       "owner_fr": "FR-029",
-      "title": "A routed account that does not support the booking currency is charged in USD at the locked rate",
+      "title": "A routed account that does not support the booking currency is charged in USD from the locked rate set",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "System MUST charge a booking in USD at its locked rate when the routed Stripe account does not support the booking currency.",
+        "statement": "System MUST charge a booking in USD when the routed Stripe account does not support the booking currency, converting at the quote-to-USD rate in the booking's locked rate set with the markup per Payment Rule 3, and MUST check the payment methods against the charge currency after that fallback.",
         "rationale": "FR-029 PRD, Payment & Billing Rules."
       }
     },
@@ -82922,11 +82935,11 @@
       "id": "REQ-029-154",
       "type": "Rule",
       "owner_fr": "FR-029",
-      "title": "A third-currency price goes via USD with the markup applied once, and a locked rate survives pair deletion",
+      "title": "A third-currency price goes via USD with the markup applied once, and a locked rate set survives pair deletion",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "System MUST derive a price shown in a currency that is neither the quote currency nor USD via USD, applying the markup once on the pair for the shown currency, and MUST keep a booking's locked rate valid after its currency pair is deleted.",
+        "statement": "System MUST derive a price shown in a currency that is neither the quote currency nor USD via USD, applying the markup once on the pair for the shown currency, and MUST keep a booking's locked rate set valid after any of its currency pairs is deleted.",
         "rationale": "FR-029 PRD, Payment Rule 3 and General Module Rule 1."
       }
     },
@@ -82936,9 +82949,9 @@
       "owner_fr": "FR-029",
       "title": "An admin acknowledges a rate-protection warning to clear it",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "System MUST let an admin acknowledge a pair's rate-protection warning on Screen 2B, log the acknowledgement, and clear the warning only by that action.",
+        "statement": "System MUST let an admin acknowledge a pair's rate-protection warning on Screen 2B, log the acknowledgement, and clear the warning only by that action; afterwards the pair is compared with the rate at that moment until the change against the rate 24 hours earlier is again within the threshold.",
         "rationale": "FR-029 PRD, Boundary Flow B5 and Screen 2B."
       }
     },
@@ -82946,12 +82959,36 @@
       "id": "REQ-029-156",
       "type": "Rule",
       "owner_fr": "FR-029",
-      "title": "Fixed fee amounts stay in their Fee Currency until Screen 7 is re-confirmed",
+      "title": "Fixed fee amounts are stored with their currency and re-entered when the Default Currency changes",
+      "status": "active",
+      "version": 2,
+      "attrs": {
+        "statement": "System MUST state each fixed fee amount on Screen 7 (late payment fee, rescheduling fee, clinic cancellation deduction) in the Fee Currency, store and lock it together with its currency code, and MUST NOT reinterpret it when the Default Currency changes: after a Default Currency change Screen 7 cannot be saved until each fixed amount that is set has been re-entered in the new currency, and a currency in use as the Fee Currency cannot be disabled.",
+        "rationale": "FR-029 PRD, Admin Editability Rules and Screen 7 Fee Currency."
+      }
+    },
+    {
+      "id": "REQ-029-157",
+      "type": "Rule",
+      "owner_fr": "FR-029",
+      "title": "A cancellation point that falls before the late fee day is warned about, not blocked",
       "status": "active",
       "version": 1,
       "attrs": {
-        "statement": "System MUST state the fixed fee amounts on Screen 7 in their own Fee Currency and MUST NOT reinterpret them when the Default Currency changes; the admin is asked to re-confirm Screen 7 after a Default Currency change.",
-        "rationale": "FR-029 PRD, Admin Editability Rules and Screen 7 Fee Currency."
+        "statement": "System MUST warn, without blocking the save, on Screen 4 and on Screen 7 when a set unpaid balance cancellation point is smaller than the day the late payment fee would be charged (the later of the end of the grace period and the day the last automatic retry runs, as set by FR-007B), because a booking cancelled at the point never pays the fee.",
+        "rationale": "FR-029 PRD, Screen 4 late payment fee note and Main Flow: Configure Refund, Fees and Settlement."
+      }
+    },
+    {
+      "id": "REQ-029-158",
+      "type": "Rule",
+      "owner_fr": "FR-029",
+      "title": "A provider-specific deposit rate is reset to the global default, never deleted",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "System MUST let an admin remove a provider-specific deposit rate with the action \"Reset to global default\" on Screen 3, with a confirmation and an audit entry; the provider then follows the global rate for new bookings and existing bookings keep their own rate.",
+        "rationale": "FR-029 PRD, Screen 3 and Alternative Flow A2b."
       }
     },
     {
@@ -98208,10 +98245,10 @@
       "owner_fr": "FR-029",
       "title": "Stripe Accounts Management",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "platform": "admin",
-        "description": "Admin Platform. Add, edit and manage multiple Stripe accounts and assign them to countries or regional groupings (PRD Screen 1). UI controls, not fields: Test Connection button and its modal (shows account name, mode and endpoint, calls Stripe with the keys and webhook secret, shows success or failure with error details, logs the attempt and updates Last Tested), Show toggle on the secret fields, Retry Connection, Save & Activate. Also shown: inline help on Test versus Live Mode, a warning icon when the account was not tested for over 30 days, and transaction count and total volume per account for the last 30 days (reference only; read from payment transactions owned by FR-007). Account Status is Active, Inactive or Archived: an account an open booking or active installment plan still uses cannot be deleted, only archived. On a production deployment only Live accounts are routed, and the Global Fallback account must be Active and Live."
+        "description": "Admin Platform. Add, edit and manage multiple Stripe accounts and assign them to countries or regional groupings (PRD Screen 1). UI controls, not fields: Test Connection button and its modal (shows account name, mode and endpoint, calls Stripe with the keys and webhook secret, shows success or failure with error details, logs the attempt and updates Last Tested), Show toggle on the secret fields, Retry Connection, Save & Activate. Also shown: inline help on Test versus Live Mode, a warning icon when the account was not tested for over 30 days, and transaction count and total volume per account for the last 30 days (reference only; read from payment transactions owned by FR-007). Account Status is Active, Inactive or Archived: an account an open booking or active installment plan still uses cannot be deleted, only archived. The countries of an Inactive or Archived account are treated as unassigned for routing, and such an account may hold no countries. On a production deployment only Live accounts are routed and elsewhere only Test accounts, and the Global Fallback account must be Active and in the mode of the deployment. Payment methods are checked against the charge currency."
       }
     },
     {
@@ -98220,10 +98257,10 @@
       "owner_fr": "FR-029",
       "title": "Currency Conversion: Pair List and Global Settings",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "platform": "admin",
-        "description": "Admin Platform. Screen 2A: Section 1 Global Settings, Section 2 Rate Sources (Add, Edit, Delete, Test Connection), Section 3 Currency Pair List (PRD Screen 2A). The pair list supports sorting and filtering by pair name, mode, status and last updated, shows total pair count and counts by mode, an alert badge count in the header when any pair is yellow or red, a banner that currencies not configured default to USD, and actions Add Pair, Edit Pair, Delete Pair and Sync Now per auto-fetch pair. Source Status and Last Tested are display-only. A yellow rate-protection badge compares the pair with its rate 24 hours earlier and stays until an admin acknowledges it on Screen 2B; a later normal sync does not clear it."
+        "description": "Admin Platform. Screen 2A: Section 1 Global Settings, Section 2 Rate Sources (Add, Edit, Delete, Test Connection), Section 3 Currency Pair List (PRD Screen 2A). The pair list supports sorting and filtering by pair name, mode, status and last updated, shows total pair count and counts by mode, an alert badge count in the header when any pair is yellow or red, a banner that currencies not configured default to USD, and actions Add Pair, Edit Pair, Delete Pair and Sync Now per auto-fetch pair. Source Status and Last Tested are display-only. A yellow rate-protection badge compares the pair with its rate 24 hours earlier and stays until an admin acknowledges it on Screen 2B; a later normal sync does not clear it. After the acknowledgement the pair is compared with the rate at that moment, and no comparison runs for 24 hours after a pair is created or switched between modes."
       }
     },
     {
@@ -98232,10 +98269,10 @@
       "owner_fr": "FR-029",
       "title": "Add / Edit Currency Pair",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "platform": "admin",
-        "description": "Admin Platform. Screen 2B: form to create or edit a pair (PRD Screen 2B). UI controls, not fields: Test Connection & Fetch Rate (mandatory before saving a new auto-fetch pair), Save, Cancel, the Rate History link (chart and table of rate changes over the last 30 days when editing), inline help text on Base Rate, the source status indicator beside the Source dropdown, the estimated conversion impact example, and last and next sync timestamps below the form. The Acknowledge button clears a pair's rate-protection warning and logs the acknowledgement with admin and time."
+        "description": "Admin Platform. Screen 2B: form to create or edit a pair (PRD Screen 2B). UI controls, not fields: Test Connection & Fetch Rate (mandatory before saving a new auto-fetch pair), Save, Cancel, the Rate History link (chart and table of rate changes over the last 30 days when editing), inline help text on Base Rate, the source status indicator beside the Source dropdown, the estimated conversion impact example, and last and next sync timestamps below the form. The Acknowledge button clears a pair's rate-protection warning and logs the acknowledgement with admin and time; afterwards the pair is compared with the rate at that moment until the 24-hour change is again within the threshold."
       }
     },
     {
@@ -98244,10 +98281,10 @@
       "owner_fr": "FR-029",
       "title": "Deposit Rate Configuration",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
-        "description": "Admin Platform. Configure the deposit percentage globally or per provider (PRD Screen 3). UI controls, not fields: Provider Search by name or ID, bulk edit of several providers, Apply Deposit Rate. Also shown: a preview calculation, a sortable list of providers with custom rates, a badge next to providers with custom rates on provider list screens, and the historical deposit rate changes from the audit log."
+        "description": "Admin Platform. Configure the deposit percentage globally or per provider (PRD Screen 3). UI controls, not fields: Provider Search by name or ID, bulk edit of several providers, Apply Deposit Rate. Also shown: a preview calculation, a sortable list of providers with custom rates, a badge next to providers with custom rates on provider list screens, and the historical deposit rate changes from the audit log. A provider-specific rate is removed with the Reset to global default action (confirmation and audit entry), never deleted."
       }
     },
     {
@@ -98256,10 +98293,10 @@
       "owner_fr": "FR-029",
       "title": "Split Payment (Installment) Configuration",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "platform": "admin",
-        "description": "Admin Platform. Configure available installment options and cutoff rules (PRD Screen 4). UI controls, not fields: Preview Installment Schedule button, Save Split Payment Configuration. Also shown: a preview calculator and example scenarios, a warning when cutoff days are very aggressive (over 60), and installment usage statistics for the last 30 days (reference only). The minimum lead time (cutoff + 30 days) and the minimum for each enabled installment count are always shown; the warning appears when the cutoff is above 60 days."
+        "description": "Admin Platform. Configure available installment options and cutoff rules (PRD Screen 4). UI controls, not fields: Preview Installment Schedule button, Save Split Payment Configuration. Also shown: a preview calculator and example scenarios, a warning when cutoff days are very aggressive (over 60), and installment usage statistics for the last 30 days (reference only). The minimum lead time (cutoff + 30 days) and the minimum for each enabled installment count are always shown; the warning appears when the cutoff is above 60 days. A second warning, which does not block the save, appears when a set cancellation point falls before the day the late payment fee would be charged."
       }
     },
     {
@@ -98280,10 +98317,10 @@
       "owner_fr": "FR-029",
       "title": "Currency Management",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "platform": "admin",
-        "description": "Admin Platform. Manage the enabled subset of the master currency catalog and the system default currency (PRD Screen 6). UI controls, not fields: Search filter by code or name, Enable common set (e.g., USD/EUR/GBP) and Set Default quick actions. It is the source of truth for currency dropdowns across Admin, Provider and Patient experiences. A currency that is the Default Currency of an active Stripe account cannot be disabled; after the default currency changes a banner on Screen 7 asks the admin to re-confirm the fixed fee amounts."
+        "description": "Admin Platform. Manage the enabled subset of the master currency catalog and the system default currency (PRD Screen 6). UI controls, not fields: Search filter by code or name, Enable common set (e.g., USD/EUR/GBP) and Set Default quick actions. It is the source of truth for currency dropdowns across Admin, Provider and Patient experiences. A currency that is the Default Currency of an active Stripe account, or the Fee Currency of stored fixed fee amounts, cannot be disabled; after the default currency changes a banner on Screen 7 asks the admin to re-enter the fixed fee amounts, and Screen 7 cannot be saved until they are."
       }
     },
     {
@@ -98292,10 +98329,10 @@
       "owner_fr": "FR-029",
       "title": "Refund, Fees and Settlement Settings",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
-        "description": "Admin Platform. One global record of the refund ladder, the late payment fee, the rescheduling fee, the deposit plan balance due days, the unpaid balance cancellation point, Hairline's share of a patient cancellation fee, the patient confirmation window and the settlement period, cutoff day and payout day for manually paid clinics (PRD Screen 7). Not set per provider, region or currency. Also the clinic cancellation deduction and the read-only Fee Currency. The cancellation point, Hairline's share and the deduction show Not set until an admin sets them. A save that breaks a range or ordering check is refused with the failing field named."
+        "description": "Admin Platform. One global record of the refund ladder, the late payment fee, the rescheduling fee, the balance due days, the unpaid balance cancellation point, Hairline's share of a patient cancellation fee, the patient confirmation window and the settlement period, cutoff day and payout day for manually paid clinics (PRD Screen 7). Not set per provider, region or currency. Also the clinic cancellation deduction and the read-only Fee Currency. The late payment fee, the rescheduling fee, the cancellation point, Hairline's share and the deduction show Not set until an admin sets them. A fixed amount must be above 0 and, after a Default Currency change, re-entered in the new currency before a save is accepted. A warning, not a refusal, shows when the cancellation point falls before the day the late payment fee would be charged. A save that breaks a range or ordering check is refused with the failing field named."
       }
     },
     {
@@ -99609,9 +99646,9 @@
       "owner_fr": "FR-029",
       "title": "Fixed amount deducted when a clinic cancels",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Fixed amount deducted from the clinic's next payout when the clinic cancels (FR-017 Release Rule 7). Set by admins on Screen 7 (FR-029), stated in the Fee Currency, with no starting value; while it is not set no deduction is made. FR-017 reads it. Applies on the day of the cancellation."
+        "description": "Fixed amount deducted from the clinic's next payout when the clinic cancels (FR-017 Release Rule 7). Set by admins on Screen 7 (FR-029) as a fixed amount above 0, stated in the Fee Currency and stored together with its currency code, with no starting value; while it is not set no deduction is made. After a Default Currency change it is re-entered in the new currency before Screen 7 can be saved. FR-017 reads it. Applies on the day of the cancellation."
       }
     },
     {
@@ -99701,9 +99738,9 @@
       "owner_fr": "FR-029",
       "title": "Deposit percentage",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Deposit percentage of the booking total, configured globally or per provider (Screen 3). Allowed range 20-30%, precision 0.1%, fixed in code. The PRD names no default (25% appears only as an example). New bookings only: existing bookings keep their rate.",
+        "description": "Deposit percentage of the booking total, configured globally or per provider (Screen 3); a provider-specific rate is reset to the global default, never deleted. Allowed range 20-30%, precision 0.1%, fixed in code. The PRD names no default (25% appears only as an example). New bookings only: existing bookings keep their rate.",
         "unit": "percent of booking total"
       }
     },
@@ -99713,9 +99750,9 @@
       "owner_fr": "FR-029",
       "title": "Balance due days",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "How many days before the treatment date the balance of the deposit-now, balance-later option is due; whole number of days from 1 to 30, admin-editable on Screen 7 (PRD Screen 7, Balance Due Days). A booking confirmed with fewer days left than this gets full payment only. Read by FR-006 and FR-007.",
+        "description": "How many days before the procedure date the balance of the deposit-now, balance-later option is due; whole number of days from 1 to 30, admin-editable on Screen 7 (PRD Screen 7, Balance Due Days). A booking confirmed with this many days left, or fewer, gets full payment only. Locked at booking confirmation: FR-007 stores the balance due date on the booking then, so a later change never moves it. Read by FR-006 and FR-007.",
         "default": "7",
         "unit": "days"
       }
@@ -99973,9 +100010,9 @@
       "owner_fr": "FR-029",
       "title": "Installment late payment grace period",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "description": "Late payment grace period (0-14 days, FR-029 Screen 4), counted from the installment due date: reminders and automatic retries run during it, and the late payment fee is charged once after it has passed and the retries have ended. A missed installment never cancels the booking by itself; the unpaid balance cancellation point does. Locked at booking confirmation."
+        "description": "Late payment grace period (0-14 days, starting at 0, FR-029 Screen 4), counted from the installment due date: reminders and automatic retries run during it, and the late payment fee is charged once after it has passed and the retries have ended. A missed installment is cancelled only by the unpaid balance cancellation point, never by this setting. Locked at booking confirmation."
       }
     },
     {
@@ -100019,9 +100056,9 @@
       "owner_fr": "FR-029",
       "title": "Late payment fee",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Fee charged once when the grace period (counted from the due date) has passed with the installment unpaid and the automatic retries have ended; collected with the next successful charge and kept outside the clinic share and the refund base. A type (fixed amount in the Fee Currency, converted at the rate accepted on the booking, or a percentage 0-100 of the late installment) plus a value, admin-editable on Screen 7 and locked at booking confirmation. Hairline keeps it; it changes no provider payout. The PRD gives no default."
+        "description": "Fee charged once when the grace period (counted from the due date) has passed with the installment unpaid and the automatic retries have ended; collected with the next successful charge and kept outside the clinic share and the refund base. A type (fixed amount above 0 in the Fee Currency, converted via USD with the rate set locked at quote acceptance, or a percentage above 0 and up to 100 of the late installment) plus a value, admin-editable on Screen 7. It starts as Not set and no fee is charged while it is not set. Locked at booking confirmation, a fixed amount together with its currency code; a booking confirmed while it is not set keeps no late fee. Hairline keeps it; it changes no provider payout."
       }
     },
     {
@@ -100257,9 +100294,9 @@
       "owner_fr": "FR-029",
       "title": "Patient cancellation fee split percentage",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "description": "Percentage 0-100 of a patient cancellation fee kept by Hairline; the rest goes to the clinic (FR-017 Release Rule 7, FR-007 REQ-007-092). Set on Screen 7 with no starting value; it may be Not set, and while it is not set Hairline keeps the whole fee and billing admins are flagged. Applies on the day of the cancellation.",
+        "description": "Percentage 0-100 of a patient cancellation fee kept by Hairline; the rest goes to the clinic (FR-017 Release Rule 7, FR-007 REQ-007-092). Set on Screen 7 with no starting value; it may be Not set, and while it is not set Hairline keeps the whole fee and holders of the Screen 7 permission see a banner on the admin dashboard asking them to set it, which clears when the share is saved. Applies on the day of the cancellation.",
         "unit": "percent"
       }
     },
@@ -100572,9 +100609,9 @@
       "owner_fr": "FR-029",
       "title": "Rate protection threshold",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Percentage by which an auto-fetch pair's rate may differ from its rate 24 hours earlier before the pair is flagged yellow and admins are alerted; the flag clears only when an admin acknowledges it. Range 1-50%, precision 0.1%. The PRD names no default (3% appears only as an example).",
+        "description": "Percentage by which an auto-fetch pair's rate may differ from its rate 24 hours earlier before the pair is flagged yellow and admins are alerted; the flag clears only when an admin acknowledges it, after which the pair is compared with the rate at the acknowledgement until the 24-hour change is again within the threshold. No comparison runs for 24 hours after a pair is created or switched between modes. Range 1-50%, precision 0.1%. The PRD names no default (3% appears only as an example).",
         "unit": "%"
       }
     },
@@ -100597,9 +100634,9 @@
       "owner_fr": "FR-029",
       "title": "Rescheduling fee",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Fee for rescheduling a booking: a type (fixed amount in the Fee Currency, converted at the rate accepted on the booking, or percentage 0-100) plus a value, admin-editable on Screen 7 and locked at booking confirmation. Hairline keeps it; it changes no provider payout. It never applies to a change an admin makes in V1; what a percentage is taken of is decided together with patient-side rescheduling. The PRD gives no default."
+        "description": "Fee for rescheduling a booking: a type (fixed amount above 0 in the Fee Currency, converted via USD with the rate set locked at quote acceptance, or a percentage above 0 and up to 100) plus a value, admin-editable on Screen 7. It starts as Not set and no fee is charged while it is not set. Locked at booking confirmation, a fixed amount together with its currency code; a booking confirmed while it is not set keeps no rescheduling fee. Hairline keeps it; it changes no provider payout. It never applies to a change an admin makes in V1; what a percentage is taken of is decided together with patient-side rescheduling."
       }
     },
     {
@@ -100773,9 +100810,9 @@
       "owner_fr": "FR-029",
       "title": "Split payment configuration",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "description": "Split payment (installment) configuration of Screen 4: feature enabled switch, offered installment counts (2 to 9), cutoff days (30-90, default 30), minimum booking amount ($100-$10,000, stated in USD) and late payment grace period (0-14 days, 0 = none, counted from the due date). Installment frequency is fixed at monthly (30-day intervals): the first installment is due on the booking day and the next ones every 30 days, so the minimum lead time for installments is cutoff + 30 days. The PRD names no defaults other than 30 cutoff days."
+        "description": "Split payment (installment) configuration of Screen 4: feature enabled switch, offered installment counts (2 to 9), cutoff days (30-90, default 30), minimum booking amount ($100-$10,000, stated in USD) and late payment grace period (0-14 days, starting at 0 = none, counted from the due date). Installment frequency is fixed at monthly (30-day intervals): the first installment is due on the booking day and the next ones every 30 days, so the minimum lead time for installments is cutoff + 30 days. The PRD names no defaults other than 30 cutoff days."
       }
     },
     {
@@ -100871,9 +100908,9 @@
       "owner_fr": "FR-029",
       "title": "Supported payment methods and currencies",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Payment methods enabled or disabled by admin per region and currency (FR-029 Screen 1, Enabled Payment Methods). FR-007 reads it; FR-007B owns the payment-method records."
+        "description": "Payment methods enabled or disabled by admin per region and currency (FR-029 Screen 1, Enabled Payment Methods). A method is offered only in a currency the account supports, checked against the charge currency (USD when the USD fallback applies). FR-007 reads it; FR-007B owns the payment-method records."
       }
     },
     {
@@ -100999,9 +101036,9 @@
       "owner_fr": "FR-029",
       "title": "Unpaid balance cancellation point",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "description": "The number of days after the first missed due date at which a booking that still has any unpaid balance (the deposit and balance option, or installments) is cancelled (FR-006 Alternative Flow B8). Whole number from 1 to 30, smaller than both the balance due days and the installment cutoff; Screen 7 refuses a save that breaks this. It has no starting value and may be Not set; while it is not set nothing is cancelled for non-payment. It applies only to bookings confirmed after it is set and is locked at booking confirmation.",
+        "description": "The number of days after the oldest unpaid due date (the due date of the oldest installment or balance that is unpaid right now; paying it late restarts the count from the next unpaid one) at which a booking that still has any unpaid balance (the deposit and balance option, or installments) is cancelled (FR-006 Alternative Flow B8). Whole number from 1 to 30, smaller than both the balance due days and the installment cutoff; Screen 7 refuses a save that breaks this and warns, without refusing, when the point falls before the day the late payment fee would be charged. It has no starting value and may be Not set; while it is not set nothing is cancelled for non-payment. It applies only to bookings confirmed after it is set and is locked at booking confirmation.",
         "unit": "days"
       }
     },
@@ -119453,9 +119490,9 @@
       "id": "STP-029-062",
       "type": "Step",
       "owner_fr": "FR-029",
-      "title": "Admin configures the late payment grace period (0-14 days, counted from the due date)",
+      "title": "Admin configures the late payment grace period (0-14 days, starting at 0, counted from the due date)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Main Flow: Configure Split Payment (Installment) Plans step 6"
       }
@@ -119587,7 +119624,7 @@
       "owner_fr": "FR-029",
       "title": "Admin confirms the override",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A1 step 4"
       }
@@ -119598,9 +119635,9 @@
       "owner_fr": "FR-029",
       "title": "System updates the country-to-account mappings, replacing the prior assignment",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A1 step 5"
+        "prd_ref": "Alternative Flow A1 step 6"
       }
     },
     {
@@ -119609,9 +119646,9 @@
       "owner_fr": "FR-029",
       "title": "System propagates the updated mappings to Payment Processing Service",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A1 step 6"
+        "prd_ref": "Alternative Flow A1 step 7"
       }
     },
     {
@@ -119620,9 +119657,9 @@
       "owner_fr": "FR-029",
       "title": "System logs the conflict resolution to the audit trail",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A1 step 7"
+        "prd_ref": "Alternative Flow A1 step 8"
       }
     },
     {
@@ -119816,9 +119853,9 @@
       "id": "STP-029-096",
       "type": "Step",
       "owner_fr": "FR-029",
-      "title": "System stores the pair, schedules the recurring sync from the save time and logs the change",
+      "title": "System stores the pair, schedules the recurring sync from the save time, logs the change and skips the rate protection comparison for 24 hours",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A3 step 10"
       }
@@ -120223,9 +120260,9 @@
       "id": "STP-029-143",
       "type": "Step",
       "owner_fr": "FR-029",
-      "title": "System compares the new rate to the pair's rate 24 hours earlier",
+      "title": "System compares the new rate to the pair's rate 24 hours earlier (after an Acknowledge, to the rate at the acknowledgement)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Boundary Flow B5 step 2"
       }
@@ -120344,9 +120381,9 @@
       "id": "STP-029-154",
       "type": "Step",
       "owner_fr": "FR-029",
-      "title": "System finds no Stripe account assigned to the country",
+      "title": "System finds no Stripe account assigned to the country (a country held only by an Inactive or Archived account counts as unassigned)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Boundary Flow B6 step 3"
       }
@@ -120355,9 +120392,9 @@
       "id": "STP-029-155",
       "type": "Step",
       "owner_fr": "FR-029",
-      "title": "System checks for a live, Active Stripe account marked as Global Fallback",
+      "title": "System checks for an Active Stripe account marked as Global Fallback in the mode of the deployment (Live on production, Test elsewhere)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Boundary Flow B6 step 4"
       }
@@ -120399,9 +120436,9 @@
       "id": "STP-029-159",
       "type": "Step",
       "owner_fr": "FR-029",
-      "title": "System logs the acknowledgement with admin ID and timestamp",
+      "title": "System logs the acknowledgement with admin ID and timestamp and compares the pair with the rate at that moment from then on",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Boundary Flow B5 step 10"
       }
@@ -120443,9 +120480,9 @@
       "id": "STP-029-163",
       "type": "Step",
       "owner_fr": "FR-029",
-      "title": "System displays the current record with Not set shown for unset fields",
+      "title": "System displays the current record with Not set shown for the unset fees, cancellation point, share and deduction",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Configure Refund, Fees and Settlement step 2"
       }
@@ -120476,9 +120513,9 @@
       "id": "STP-029-166",
       "type": "Step",
       "owner_fr": "FR-029",
-      "title": "System validates the changed fields against the Screen 7 ranges and orderings",
+      "title": "System validates the changed fields against the Screen 7 ranges and orderings, each fixed amount above 0 and re-entered in the new currency after a default currency change",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Configure Refund, Fees and Settlement step 6"
       }
@@ -120498,9 +120535,9 @@
       "id": "STP-029-168",
       "type": "Step",
       "owner_fr": "FR-029",
-      "title": "System stores the record without requiring the Not set fields",
+      "title": "System stores the record without requiring the Not set fields, and warns when the cancellation point falls before the late fee day",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Configure Refund, Fees and Settlement step 8"
       }
@@ -120533,7 +120570,7 @@
       "owner_fr": "FR-029",
       "title": "System propagates the record to Payment Processing Service within 5 minutes",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Configure Refund, Fees and Settlement step 12"
       }
@@ -120564,9 +120601,9 @@
       "id": "STP-029-174",
       "type": "Step",
       "owner_fr": "FR-029",
-      "title": "System checks a currency being disabled against the block rules and the warning cases",
+      "title": "System checks a currency being disabled against the block rules (including the Fee Currency) and the warning cases",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Manage Supported Currencies step 3"
       }
@@ -120597,9 +120634,9 @@
       "id": "STP-029-177",
       "type": "Step",
       "owner_fr": "FR-029",
-      "title": "System creates a new quote configuration version and asks the admin to re-confirm Screen 7 when the default changed",
+      "title": "System creates a new quote configuration version and asks the admin to re-enter the fixed fee amounts in the new currency when the default changed",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Manage Supported Currencies step 6"
       }
@@ -120613,6 +120650,72 @@
       "version": 1,
       "attrs": {
         "prd_ref": "Main Flow: Manage Supported Currencies steps 7 and 8"
+      }
+    },
+    {
+      "id": "STP-029-179",
+      "type": "Step",
+      "owner_fr": "FR-029",
+      "title": "System checks that the override leaves no other account, apart from the Global Fallback, without assigned countries, and refuses if it would",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A1 step 5"
+      }
+    },
+    {
+      "id": "STP-029-180",
+      "type": "Step",
+      "owner_fr": "FR-029",
+      "title": "Admin selects a provider from the list of providers with custom rates",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A2b step 1"
+      }
+    },
+    {
+      "id": "STP-029-181",
+      "type": "Step",
+      "owner_fr": "FR-029",
+      "title": "Admin chooses Reset to global default",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A2b step 2"
+      }
+    },
+    {
+      "id": "STP-029-182",
+      "type": "Step",
+      "owner_fr": "FR-029",
+      "title": "System asks the admin to confirm, showing the provider and the global rate that will apply",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A2b step 3"
+      }
+    },
+    {
+      "id": "STP-029-183",
+      "type": "Step",
+      "owner_fr": "FR-029",
+      "title": "System removes the provider-specific rate, logs the change to the audit trail and shows a confirmation; existing bookings keep their own rate",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A2b step 4"
+      }
+    },
+    {
+      "id": "STP-029-184",
+      "type": "Step",
+      "owner_fr": "FR-029",
+      "title": "System shows the dashboard banner while Hairline's share is Not set, and applies the Not set behaviours of the fees, cancellation point and deduction",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow: Configure Refund, Fees and Settlement step 13"
       }
     },
     {
@@ -148041,7 +148144,7 @@
       "entity_id": "ENT-refund-fee-settings",
       "name": "late_payment_fee_type",
       "data_type": "enum",
-      "required": true,
+      "required": false,
       "calculated_by": null
     },
     {
@@ -148049,7 +148152,7 @@
       "entity_id": "ENT-refund-fee-settings",
       "name": "late_payment_fee_value",
       "data_type": "decimal",
-      "required": true,
+      "required": false,
       "calculated_by": null
     },
     {
@@ -148073,7 +148176,7 @@
       "entity_id": "ENT-refund-fee-settings",
       "name": "rescheduling_fee_type",
       "data_type": "enum",
-      "required": true,
+      "required": false,
       "calculated_by": null
     },
     {
@@ -148081,7 +148184,7 @@
       "entity_id": "ENT-refund-fee-settings",
       "name": "rescheduling_fee_value",
       "data_type": "decimal",
-      "required": true,
+      "required": false,
       "calculated_by": null
     },
     {
@@ -168449,6 +168552,12 @@
       "attrs": {}
     },
     {
+      "from_id": "FLW-029-alt-provider-deposit-reset",
+      "verb": "starts at",
+      "to_id": "STP-029-180",
+      "attrs": {}
+    },
+    {
       "from_id": "FLW-029-alt-rate-fluctuation",
       "verb": "starts at",
       "to_id": "STP-029-142",
@@ -173109,7 +173218,7 @@
       "verb": "active in",
       "to_id": "STG-admin-01-configuration",
       "attrs": {
-        "rules": 74
+        "rules": 76
       },
       "derived": true
     },
@@ -173145,7 +173254,7 @@
       "verb": "active in",
       "to_id": "STG-main-05-payment",
       "attrs": {
-        "rules": 96
+        "rules": 97
       },
       "derived": true
     },
@@ -272005,6 +272114,12 @@
     {
       "from_id": "REQ-029-152",
       "verb": "applies to",
+      "to_id": "ENT-stripe-account.assigned_countries",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-029-152",
+      "verb": "applies to",
       "to_id": "ENT-stripe-account.is_global_fallback",
       "attrs": {}
     },
@@ -272120,6 +272235,96 @@
       "from_id": "REQ-029-156",
       "verb": "governed by",
       "to_id": "SET-default-currency",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-029-157",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-029-157",
+      "verb": "applies to",
+      "to_id": "ENT-refund-fee-settings.unpaid_balance_cancellation_point",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-029-157",
+      "verb": "applies to",
+      "to_id": "ENT-split-payment-config.late_payment_grace_period_days",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-029-157",
+      "verb": "applies to",
+      "to_id": "SCR-029-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-029-157",
+      "verb": "applies to",
+      "to_id": "SCR-029-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-029-157",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-029",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-029-157",
+      "verb": "governed by",
+      "to_id": "SET-installment-late-payment-grace-period",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-029-157",
+      "verb": "governed by",
+      "to_id": "SET-unpaid-balance-cancellation-point",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-029-158",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-029-158",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-029-158",
+      "verb": "applies to",
+      "to_id": "ENT-deposit-rate-config",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-029-158",
+      "verb": "applies to",
+      "to_id": "ENT-deposit-rate-config.provider_id",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-029-158",
+      "verb": "applies to",
+      "to_id": "SCR-029-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-029-158",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-029",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-029-158",
+      "verb": "governed by",
+      "to_id": "SET-deposit-percentage",
       "attrs": {}
     },
     {
@@ -394676,7 +394881,7 @@
     {
       "from_id": "STP-029-075",
       "verb": "next",
-      "to_id": "STP-029-076",
+      "to_id": "STP-029-179",
       "attrs": {}
     },
     {
@@ -397039,6 +397244,12 @@
     },
     {
       "from_id": "STP-029-168",
+      "verb": "applies",
+      "to_id": "REQ-029-157",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-168",
       "verb": "at",
       "to_id": "STG-admin-01-configuration",
       "attrs": {}
@@ -397107,6 +397318,12 @@
       "from_id": "STP-029-171",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-171",
+      "verb": "next",
+      "to_id": "STP-029-184",
       "attrs": {}
     },
     {
@@ -397269,6 +397486,198 @@
       "from_id": "STP-029-178",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-179",
+      "verb": "applies",
+      "to_id": "REQ-029-152",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-179",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-179",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-179",
+      "verb": "next",
+      "to_id": "STP-029-076",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-179",
+      "verb": "on",
+      "to_id": "SCR-029-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-180",
+      "verb": "applies",
+      "to_id": "REQ-029-158",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-180",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-180",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-180",
+      "verb": "next",
+      "to_id": "STP-029-181",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-180",
+      "verb": "on",
+      "to_id": "SCR-029-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-181",
+      "verb": "applies",
+      "to_id": "REQ-029-158",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-181",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-181",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-181",
+      "verb": "next",
+      "to_id": "STP-029-182",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-181",
+      "verb": "on",
+      "to_id": "SCR-029-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-182",
+      "verb": "applies",
+      "to_id": "REQ-029-158",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-182",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-182",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-182",
+      "verb": "next",
+      "to_id": "STP-029-183",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-182",
+      "verb": "on",
+      "to_id": "SCR-029-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-183",
+      "verb": "applies",
+      "to_id": "REQ-029-041",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-183",
+      "verb": "applies",
+      "to_id": "REQ-029-158",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-183",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-183",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-183",
+      "verb": "on",
+      "to_id": "SCR-029-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-184",
+      "verb": "applies",
+      "to_id": "REQ-029-143",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-184",
+      "verb": "applies",
+      "to_id": "REQ-029-147",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-184",
+      "verb": "applies",
+      "to_id": "REQ-029-148",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-184",
+      "verb": "applies",
+      "to_id": "REQ-029-150",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-184",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-184",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-184",
+      "verb": "on",
+      "to_id": "SCR-029-08",
       "attrs": {}
     },
     {
@@ -424908,6 +425317,112 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261123-125935-99436f70",
+      "at": "2026-11-23T12:59:35.478714+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-029 logic review pass 2: align the graph with PRD v1.18 (rate set locked at quote acceptance and the USD fallback from it, fee amounts stored with their currency code and re-entered after a Default Currency change, Not set starting values for the fees and a 0-day grace period, balance due days locked at confirmation, cancellation point counted from the oldest unpaid due date with a warning before the late fee day, countries of Inactive or Archived accounts treated as unassigned, Live on production and Test elsewhere, payment methods checked against the charge currency, Acknowledge baseline for rate protection, Reset to global default for provider deposit rates, dashboard banner for an unset share, procedure date wording)",
+      "source_id": null,
+      "nodes_added": [
+        "FLW-029-alt-provider-deposit-reset",
+        "REQ-029-157",
+        "REQ-029-158",
+        "STP-029-179",
+        "STP-029-180",
+        "STP-029-181",
+        "STP-029-182",
+        "STP-029-183",
+        "STP-029-184"
+      ],
+      "nodes_updated": [
+        "ENT-currency-conversion-settings.rate_protection_threshold",
+        "ENT-currency.enabled",
+        "ENT-refund-fee-settings",
+        "ENT-refund-fee-settings.clinic_cancellation_deduction",
+        "ENT-refund-fee-settings.deposit_plan_balance_due_days",
+        "ENT-refund-fee-settings.fee_currency",
+        "ENT-refund-fee-settings.hairline_cancellation_fee_share",
+        "ENT-refund-fee-settings.late_payment_fee_type",
+        "ENT-refund-fee-settings.late_payment_fee_value",
+        "ENT-refund-fee-settings.rescheduling_fee_type",
+        "ENT-refund-fee-settings.rescheduling_fee_value",
+        "ENT-refund-fee-settings.unpaid_balance_cancellation_point",
+        "ENT-split-payment-config.late_payment_grace_period_days",
+        "ENT-stripe-account",
+        "ENT-stripe-account.assigned_countries",
+        "ENT-stripe-account.is_global_fallback",
+        "ENT-stripe-account.status",
+        "EVT-payment-unsupported-country",
+        "REQ-029-010",
+        "REQ-029-023",
+        "REQ-029-041",
+        "REQ-029-044",
+        "REQ-029-049",
+        "REQ-029-052",
+        "REQ-029-055",
+        "REQ-029-058",
+        "REQ-029-071",
+        "REQ-029-075",
+        "REQ-029-087",
+        "REQ-029-097",
+        "REQ-029-100",
+        "REQ-029-101",
+        "REQ-029-103",
+        "REQ-029-105",
+        "REQ-029-139",
+        "REQ-029-140",
+        "REQ-029-141",
+        "REQ-029-143",
+        "REQ-029-144",
+        "REQ-029-146",
+        "REQ-029-147",
+        "REQ-029-148",
+        "REQ-029-150",
+        "REQ-029-152",
+        "REQ-029-153",
+        "REQ-029-154",
+        "REQ-029-155",
+        "REQ-029-156",
+        "SCR-029-01",
+        "SCR-029-02",
+        "SCR-029-03",
+        "SCR-029-04",
+        "SCR-029-05",
+        "SCR-029-07",
+        "SCR-029-08",
+        "SET-clinic-cancellation-deduction",
+        "SET-deposit-percentage",
+        "SET-deposit-plan-balance-due-days",
+        "SET-installment-late-payment-grace-period",
+        "SET-late-payment-fee",
+        "SET-patient-cancellation-fee-split",
+        "SET-rate-protection-threshold",
+        "SET-rescheduling-fee",
+        "SET-split-payment-config",
+        "SET-supported-payment-methods",
+        "SET-unpaid-balance-cancellation-point",
+        "STP-029-062",
+        "STP-029-065",
+        "STP-029-075",
+        "STP-029-076",
+        "STP-029-077",
+        "STP-029-078",
+        "STP-029-096",
+        "STP-029-143",
+        "STP-029-154",
+        "STP-029-155",
+        "STP-029-159",
+        "STP-029-163",
+        "STP-029-166",
+        "STP-029-168",
+        "STP-029-171",
+        "STP-029-174",
+        "STP-029-177"
+      ],
+      "edges_added": 53,
+      "edges_removed": 1,
+      "rows": 197
+    },
     {
       "id": "cs-20261123-122436-1ce4cb8a",
       "at": "2026-11-23T12:24:36.562005+00:00",
