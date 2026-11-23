@@ -1,8 +1,29 @@
 # Checklist: FR logic review
 
-Version: 0.2 (2026-11-23), approved by the owner 2026-11-23 for the FR-005 pilot; goes to 1.0 after the owner's review of the pilot
+Version: 1.0 (2026-11-23), set by the owner's gate 2 ruling after the FR-005 pilot
 
-Drafted under D43 item 6 from the procedure the owner approved as D39 (`plans/261108-1040-requirements-graph-programme/phase-10-final-logic-review.md`). The drafting choices the phase file left open are recorded under "Settled 2026-11-23" at the end.
+The pilot (two rounds on FR-005, report `plans/reports/pm-261123-1120-fr005-logic-review-pilot.md` at the project root) showed the v0.2 procedure finds real defects but does not converge and costs too much to repeat on 37 FRs. The owner ruled on 2026-11-23: two passes per FR, no third pass, and the aim is not an error-free result. The section "Procedure v1.0" below is the procedure in force. The sections after it that describe Reviewer A's verdict table, Reviewer B, the sealed planted-defect file, the gate and the v0.2 exit rule are kept as the record of the pilot and are not run. "Logic classes and their questions" and "Checks reused from other checklists" still apply.
+
+## Procedure v1.0 (in force)
+
+Two passes per FR, then the FR is closed. One agent at a time; every agent is a fresh Sonnet agent with no history.
+
+**Inputs for a reviewer**: this section and "Logic classes and their questions"; the FR's live PRD; the FR's manifest in Markdown with the flow paths of other FRs removed (`scripts/logic_manifest.py FR-NNN --format md`, then keep only `### Path of FLW-NNN-…` sections of the FR under review); the graph, read-only (`scripts/query.py`, `sqlite3 -readonly`); `graph/schema.yaml`; neighbour PRDs by section, only at a hand-off point. A reviewer writes nothing but its report.
+
+1. **Pass 1, review.** One adversarial reviewer looks for logic defects in what the FR owns: its rules, steps, flows, screens, fields, states and its hand-offs to and from neighbours. It reports findings only, each with the item id, the evidence (PRD line or graph row) and a proposed fix. No verdict row per item. It ends with a short list of what it did not check.
+2. **Triage (controller).** Each finding becomes: fix; owner decision (a real business choice only); rejected (with the evidence); or neighbour (the defect sits in another FR's item). Neighbour findings go to the shared ledger and are not fixed here.
+3. **Pass 1, fix.** One fixer writes the change-set and the PRD edit. The controller checks the change-set, backs up `graph.db`, applies it with `write.py`, reruns lint, exports, commits.
+4. **Pass 2, review.** A different fresh reviewer gets the list of pass 1 fixes, confirms each one holds, and looks once more for defects, with attention to what the fixes added or changed. Same report form.
+5. **Pass 2, fix.** As step 3. Findings that are not worth a graph change go to the implementation backlog with a reason.
+6. **Close.** The FR's ledger rows are final. There is no third pass. A pass 2 finding that needs the owner is asked once; the FR closes without waiting if the answer is not needed for other FRs.
+
+**After all FRs**: one cross-FR pass settles the neighbour rows of the shared ledger (`plans/reports/logic-review-ledger.md`), grouped by the FR that owns the item.
+
+**Planted defects**: not used per round. The controller may plant defects in a copy as a spot check of reviewer attention on a sample of FRs.
+
+**Pass condition per FR**: both passes ran, every finding has a ledger outcome, every accepted fix is applied and lint is not worse than before the FR started.
+
+**Stop and ask the owner** only for a real business decision, or when a fix would change an owner ruling.
 
 ## Purpose
 Review one FR as a whole for anything illogical (contradictions, dead ends, unreachable states, gaps at FR boundaries), with a written verdict and evidence for every item of the FR. A review counts only if a script finds every manifest item answered with evidence and every planted test defect reported. Nobody who reviews, fixes or coordinates can declare an FR clean; clean is the exit rule below plus the user's reading.
@@ -259,3 +280,4 @@ The owner approved the procedure and this checklist for the FR-005 pilot on 2026
 ## Change log
 - 0.1 (2026-11-10): first draft from the phase 10 procedure (D39) under D43 item 6; not approved.
 - 0.2 (2026-11-23): approved by the owner for the FR-005 pilot. Nine drafting choices and three questions settled (section "Settled 2026-11-23", replacing "Open for approval"); the review reads the live compressed PRD instead of the frozen baseline; added the reviewer B coverage count to the gate checks; banner removed.
+- 1.0 (2026-11-23): owner gate 2 after the FR-005 pilot. Two passes per FR with one adversarial reviewer per pass, findings-only reports, neighbour findings to a shared ledger, no per-round planted defects or gate, no third pass. The v0.2 sections stay as the pilot record.

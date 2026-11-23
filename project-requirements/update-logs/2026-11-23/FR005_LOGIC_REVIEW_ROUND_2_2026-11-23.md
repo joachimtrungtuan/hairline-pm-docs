@@ -18,3 +18,7 @@ Round 2 of the FR-005 logic review (requirements graph programme, Phase 10 pilot
 ## Not changed
 
 - Findings owned by FR-003, FR-007, FR-014, FR-019, FR-022 and the shared stage list are queued in `plans/reports/logic-review-ledger.md` (project root) for those FRs' reviews.
+
+## Later the same day
+
+- `graph/checklists/logic-review.md` is now v1.0: after the FR-005 pilot the owner ruled two passes per FR, no third pass. New section "Procedure v1.0 (in force)"; the v0.2 sections stay as the pilot record. Round 3 of the FR-005 pilot was not run.
