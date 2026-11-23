@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-23T05:16:21Z",
+  "generated_at": "2026-11-23T06:28:16Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -33987,7 +33987,7 @@
       "owner_fr": null,
       "title": "Provider fault after acceptance with admin direct transfer",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "kind": "alternative",
         "description": "Provider fault after acceptance with admin direct transfer",
@@ -34044,6 +34044,19 @@
         "kind": "alternative",
         "description": "Admin changes the appointment of an Accepted or Confirmed booking on Screen 8 (the accepted-quote edit runs the same checks)",
         "prd_ref": "Screen 8"
+      }
+    },
+    {
+      "id": "FLW-006-close-inquiry",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Admin closes the inquiry after a provider fault",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Admin closes the inquiry of a Cancelled booking that still carries supportRequired when no replacement acceptance follows",
+        "prd_ref": "Alternative Flow B5 (Replacement quote not accepted)"
       }
     },
     {
@@ -44641,9 +44654,9 @@
       "owner_fr": "FR-006",
       "title": "Admin-only cancellation with scheduled refunds",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System MUST enforce the cancellation policy, with refunds following the refund ladder set in FR-029 (rescheduling deferred to V2). Apart from the unpaid-balance case in REQ-006-016, only an admin MAY cancel a booking, from `Accepted`, `Payment Window Expired`, `Confirmed`, `In Progress`, or `Aftercare`, with a mandatory reason, confirmation, and audit entry; the booking and inquiry MUST become `Cancelled`, the accepted quote MUST stay `accepted`, and `booking.cancelled` MUST be sent. The refund MUST follow REQ-006-053. The patient MUST NOT have an in-app cancel action from acceptance onward and MUST be offered \"Contact support\" instead.",
+        "statement": "System MUST enforce the cancellation policy, with refunds following the refund ladder set in FR-029 (rescheduling deferred to V2). Apart from the unpaid-balance case in REQ-006-016, only an admin MAY cancel a booking, from `Accepted`, `Payment Window Expired`, or `Confirmed` (and from `In Progress` only through the Cancel route of Screen 11), never from `Aftercare`, with a mandatory reason, confirmation, and audit entry; the booking and inquiry MUST become `Cancelled`, the accepted quote MUST stay `accepted`, and `booking.cancelled` MUST be sent. The refund MUST follow REQ-006-053. The patient MUST NOT have an in-app cancel action from acceptance onward and MUST be offered \"Contact support\" instead.",
         "rationale": "Restated by Alternative Flows B2 and B3, Admin Status and Date Intervention Rules (Cancel booking) and Screen 9 business rules."
       }
     },
@@ -44712,9 +44725,9 @@
       "owner_fr": "FR-006",
       "title": "Booking notification events",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "System MUST integrate with Notification Service for confirmations, reminders, and policy notices, and MUST trigger these FR-030 events: `booking.scheduled` (sent on patient acceptance and on an admin-authored replacement acceptance), `booking.rescheduled` (sent on an admin appointment change), `booking.cancelled` (sent on any booking cancellation with the reason or cause: an admin cancellation, a provider drop-out at the Screen 10 submit, and a system cancellation for an unpaid balance; not for a provider withdrawal, which FR-004 announces through `quote.withdrawn`), `booking.hold_expiring_soon`, `booking.payment_window_expired`, `booking.revived`, `booking.provider_fault_replacement`, `booking.confirmed` (sent when the first payment confirms the booking), and `booking.appointment_reminder` (sent ahead of a confirmed appointment). Recipients, message content, and whether each notice is mandatory are owned by the notification Rules in FR-020 (for example REQ-020-021) and FR-030 and are not restated here. FR-004 is the only producer of `quote.withdrawn`; FR-006 does not emit it and reacts to it by starting the provider-fault transfer in Alternative Flow B5.",
+        "statement": "System MUST integrate with Notification Service for confirmations, reminders, and policy notices, and MUST trigger these FR-030 events: `booking.scheduled` (sent on patient acceptance and on an admin-authored replacement acceptance), `booking.rescheduled` (sent on an admin appointment change and on an emergency edit of the appointment time), `booking.cancelled` (sent on any booking cancellation with the reason or cause, and with the cancellation fee and the refund amount filled in by the system: an admin cancellation, a provider drop-out at the Screen 10 submit, and a system cancellation for an unpaid balance; not for a provider withdrawal, which FR-004 announces through `quote.withdrawn`), `booking.hold_expiring_soon`, `booking.payment_window_expired`, `booking.revived`, `booking.provider_fault_replacement`, `booking.confirmed` (sent when the first payment confirms the booking), and `booking.appointment_reminder` (sent ahead of a confirmed appointment). The patient notice sent at Close inquiry has its event and template owned by FR-020 and FR-030. Recipients, message content, and whether each notice is mandatory are owned by the notification Rules in FR-020 (for example REQ-020-021) and FR-030 and are not restated here. FR-004 is the only producer of `quote.withdrawn`; FR-006 does not emit it and reacts to it by starting the provider-fault transfer in Alternative Flow B5.",
         "rationale": "prd.md line 1144 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -44760,9 +44773,9 @@
       "owner_fr": "FR-006",
       "title": "Payment Window Expired applies only to the first payment step",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "`Payment Window Expired` MUST apply only to the first payment step (acceptance to deposit or first installment). A missed later installment or final payment MUST NOT cause `Payment Window Expired`, booking cancellation, or inquiry cancellation. The one exception is the unpaid balance of a booking paid with the Installments option on Screen 1 (the \"deposit plan\" of FR-029): when that balance is still unpaid at the cancellation point set in FR-029, System MUST cancel the `Confirmed` booking with closure cause `UnpaidBalance`, cancel the inquiry as in Alternative Flow B2, release the calendar block, send `booking.cancelled`, and apply the refund ladder. The rule is inactive until an admin sets that point, which has no default.",
+        "statement": "`Payment Window Expired` MUST apply only to the first payment step (acceptance to deposit or first installment). A missed later installment or final payment MUST NOT cause `Payment Window Expired`, booking cancellation, or inquiry cancellation. The one exception is the unpaid balance of a booking paid with the Installments option on Screen 1 (the \"deposit plan\" of FR-029): when that balance is still unpaid at the cancellation point set in FR-029, counted in days after the due date of the first missed installment, System MUST cancel the `Confirmed` booking with closure cause `UnpaidBalance`, cancel the inquiry as in Alternative Flow B2, release the calendar block, void the remaining installments, send `booking.cancelled`, and apply the refund ladder. The rule is inactive until an admin sets that point, which has no default, and it applies only to bookings confirmed after the value is set.",
         "rationale": "Restated by Payment & Billing Rules (First-Payment Boundary) and the Alternative Flow B1 boundary."
       }
     },
@@ -44772,9 +44785,9 @@
       "owner_fr": "FR-006",
       "title": "Admin revive and appointment change; no other manual status change",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Admin MAY revive a `Payment Window Expired` booking to `Accepted` only through Screen 7 with a mandatory reason, a slot availability re-check, a check that the appointment is later than the new payment deadline, a new hold of the FR-026 duration, one promotion use taken again where the accepted promotion has a usage limit (re-reserved for a provider-selected promotion or patient code, taken again for an automatic promotion; the revive is rejected if the limit has no room), an audit entry, an unchanged AcceptanceEvent, and a mandatory \"booking revived\" notice to patient and provider. A revive MUST NOT extend the expired hold; it starts a new one, and the initial payment then MUST pass the Initial Payment Guard (REQ-007-017) against that new hold. Appointment date changes MUST be made through Screen 8 or the admin edit of the accepted quote's date range or appointment (REQ-005-023), both running the same checks (provider `Active`, slot availability, a feasible FR-007B plan recalculation), MUST NOT apply the FR-029 rescheduling fee, MUST update the booking's current appointment while the acceptance snapshot keeps the accepted baseline, MUST send `booking.rescheduled`, and MUST trigger an FR-008 travel review for any travel records already linked to the booking. No other manual status change is allowed.",
+        "statement": "Admin MAY revive a `Payment Window Expired` booking to `Accepted` only through Screen 7 with a mandatory reason, a slot availability re-check, a check that the appointment is later than the new payment deadline, a new hold of the FR-026 duration, one promotion use taken again where the accepted promotion has a usage limit (re-reserved for a provider-selected promotion or patient code, taken again for an automatic promotion; the revive is rejected if the limit has no room), an audit entry, an unchanged AcceptanceEvent, and a mandatory \"booking revived\" notice to patient and provider. A revive MUST be blocked while the booking carries the marker of a pending provider fault. A revive MUST NOT extend the expired hold; it starts a new one, and the initial payment then MUST pass the Initial Payment Guard (REQ-007-017) against that new hold. Appointment date changes MUST be made through Screen 8 or the admin edit of the accepted quote's date range or appointment (REQ-005-023), both running the same checks (provider `Active`, slot availability, a feasible FR-007B plan recalculation, and for an `Accepted` booking an appointment later than the payment deadline), MUST NOT apply the FR-029 rescheduling fee, MUST update the booking's current appointment while the acceptance snapshot keeps the accepted baseline, MUST send `booking.rescheduled`, and MUST trigger an FR-008 travel review for any travel records already linked to the booking. No other manual status change is allowed.",
         "rationale": "Restated by Admin Status and Date Intervention Rules (Revive, Change appointment date/time, No other status jumps) and Screens 7 and 8 business rules."
       }
     },
@@ -44784,9 +44797,9 @@
       "owner_fr": "FR-006",
       "title": "Provider withdrawal after acceptance cancels with ProviderFault; admin transfer",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "When the provider withdraws or drops out after acceptance and before treatment starts, System MUST, at the admin submit on Screen 10, cancel the booking with cause `ProviderFault`, release the hold or calendar block, keep the AcceptanceEvent unchanged, and let an admin transfer the patient to a replacement provider in the same inquiry through an admin-authored replacement quote and a new admin-authored acceptance that points to that quote, option, and date-price row (Alternative Flow B5, Screen 10; FR-004 Workflow 7 and Screen 8). A replacement quote that is not accepted MUST expire under the normal quote expiry, the inquiry MUST stay `supportRequired` without automatic cancellation, and the admin MAY author another replacement quote or cancel the inquiry and booking. System MUST write the single supersession record linking the original AcceptanceEvent to the new one at the replacement acceptance, as one append-only insert; the B4 or B5 closure is recorded on the booking as its cause. A provider fault during `Aftercare` MUST NOT create a new quote, acceptance, or payment; the booking stays `Aftercare` and an admin reassigns the aftercare provider or team through FR-011 (Alternative Flow B6); the replacement booking MUST receive the carried-over passport and copied flight and hotel records flagged \"travel-date review required\" per FR-008, with the originals kept read-only on the closed booking.",
+        "statement": "When the provider withdraws or drops out after acceptance and before treatment starts, System MUST set the `supportRequired` marker with the cause `ProviderFault` at the trigger, MUST, at the admin submit on Screen 10, re-check the booking status and cancel the booking with cause `ProviderFault`, release the hold or calendar block, keep the AcceptanceEvent unchanged, and let an admin transfer the patient to a replacement provider in the same inquiry through an admin-authored replacement quote and a new admin-authored acceptance that points to that quote, option, and date-price row (Alternative Flow B5, Screen 10; FR-004 Workflow 7 and Screen 8). A replacement quote that is not accepted MUST expire under the normal quote expiry, the inquiry MUST stay `supportRequired` without automatic cancellation, and the admin MAY author another replacement quote or, for a `Cancelled` booking that still carries the marker, close the inquiry (REQ-006-082). System MUST write the single supersession record linking the original AcceptanceEvent to the new one at the replacement acceptance, as one append-only insert; the B4 or B5 closure is recorded on the booking as its cause. A provider fault during `Aftercare` MUST NOT create a new quote, acceptance, or payment; the booking stays `Aftercare` and an admin reassigns the aftercare provider or team through FR-011 (Alternative Flow B6); the replacement booking MUST receive the carried-over passport and copied flight and hotel records flagged \"travel-date review required\" per FR-008, with the originals kept read-only on the closed booking.",
         "rationale": "Restated by Alternative Flow B5, Admin Status and Date Intervention Rules (Provider-fault transfer) and Screen 10 business rules."
       }
     },
@@ -44796,9 +44809,9 @@
       "owner_fr": "FR-006",
       "title": "Provider fault while In Progress keeps the booking In Progress",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "When a provider fault occurs while the booking is `In Progress`, System MUST keep the booking `In Progress`, MUST NOT cancel it automatically or create a replacement quote or acceptance, and MUST flag it `supportRequired` with the cause. Only an admin MAY resolve it on Screen 11 (Alternative Flow B7), with a mandatory reason, confirmation, and audit entry, by either moving the booking to `Aftercare` and reassigning the aftercare provider or team through FR-011 Screen 19, or cancelling the booking through Screen 9. The admin MUST also set the patient refund amount, from zero up to the full amount paid, under the same mandatory reason and audit entry, and System MUST hold the provider's payout for that booking from the fault until the chosen route completes. The decision records the choice only: System MUST resolve the `supportRequired` marker and end the payout hold once the chosen route completes, by the Screen 9 submit or the FR-011 Screen 19 submit.",
+        "statement": "When a provider fault occurs while the booking is `In Progress`, System MUST keep the booking `In Progress`, MUST NOT cancel it automatically or create a replacement quote or acceptance, and MUST flag it `supportRequired` with the cause. Only an admin MAY resolve it on Screen 11 (Alternative Flow B7), with a mandatory reason, confirmation, and audit entry, by either moving the booking to `Aftercare` and reassigning the aftercare provider or team through FR-011 Screen 19, or cancelling the booking through Screen 9. The admin MUST also set the patient refund amount, from zero up to the full amount paid, under the same mandatory reason and audit entry, and System MUST hold the provider's payout for that booking from the fault until the chosen route completes, MUST take the refund from that held payout, and MUST deduct any shortfall from the provider's next payout when the payout was already released. The decision records the choice only: System MUST resolve the `supportRequired` marker and end the payout hold once the chosen route completes, by the Screen 9 submit or the FR-011 Screen 19 submit.",
         "rationale": "Restated by Alternative Flow B7, Admin Status and Date Intervention Rules (In-Progress provider fault) and Screen 11 business rules."
       }
     },
@@ -44986,9 +44999,9 @@
       "owner_fr": "FR-006",
       "title": "Hold-expiring-soon reminder to the patient",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Before the hold expires, the patient receives the `booking.hold_expiring_soon` reminder; the lead time is set by admin in FR-026, and the notice details are in the notification Rule (REQ-020-086).",
+        "statement": "Before the hold expires, the patient receives the `booking.hold_expiring_soon` reminder; the lead time is set by admin in FR-026, and the notice details are in the notification Rule (REQ-020-086). No reminder is sent while a provider fault is pending on the booking.",
         "rationale": "prd.md line 894 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -44998,9 +45011,9 @@
       "owner_fr": "FR-006",
       "title": "Blocked layout for Payment Window Expired and other closures",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "If the booking is `Payment Window Expired` or `Cancelled` for any other cause (provider withdrawal or fault, provider suspension or deactivation), the screen shows the same read-only blocked layout with the banner text of that cause and the Contact Support button; all payment fields and payment actions are hidden.",
+        "statement": "If the booking is `Payment Window Expired`, carries a pending provider fault, or is `Cancelled` for any other cause (provider withdrawal or fault, provider suspension or deactivation), the screen shows the same read-only blocked layout with the banner text of that cause and the Contact Support button; all payment fields and payment actions are hidden.",
         "rationale": "prd.md line 267 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -45154,9 +45167,9 @@
       "owner_fr": "FR-006",
       "title": "Cancelled and Completed bookings are terminal",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "`Cancelled` and `Completed` are terminal and cannot be cancelled again.",
+        "statement": "`Accepted`, `Payment Window Expired`, and `Confirmed` from the Cancel Booking action on Screen 6, and `In Progress` only through the Cancel route of Alternative Flow B7 (Screen 11 opens Screen 9). The action is not offered in `In Progress` or `Aftercare`; those stages use Screen 11 and Alternative Flow B6. `Cancelled` and `Completed` are terminal and cannot be cancelled again.",
         "rationale": "prd.md line 142 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -45166,9 +45179,9 @@
       "owner_fr": "FR-006",
       "title": "A full refund for provider withdrawal, drop-out, suspension or deactivation before treatment starts; an in-treatment fault takes an admin-set refund; other cancellations follow the FR-029 refund ladder",
       "status": "active",
-      "version": 7,
+      "version": 8,
       "attrs": {
-        "statement": "A full refund applies when the provider withdraws, drops out, or is suspended or deactivated before treatment starts; an in-treatment provider fault takes an admin-set refund; every other cancellation follows the refund ladder set in FR-029. When the provider withdraws or drops out after acceptance and before treatment starts (Alternative Flow B5), or the booking is cancelled by a provider suspension or deactivation (Alternative Flow B4), the patient is refunded everything paid, pays no cancellation fee, and a replacement booking takes a new payment. While `In Progress` the case follows Alternative Flow B7: the admin sets the patient refund amount from zero up to the full amount paid, with a mandatory reason and an audit entry, and the provider's payout for the booking is held from the fault until the chosen route completes.",
+        "statement": "A full refund applies when the provider withdraws, drops out, or is suspended or deactivated before treatment starts; an in-treatment provider fault takes an admin-set refund; every other cancellation follows the refund ladder set in FR-029. When the provider withdraws or drops out after acceptance and before treatment starts (Alternative Flow B5), or the booking is cancelled by a provider suspension or deactivation (Alternative Flow B4), the patient is refunded everything paid, pays no cancellation fee, and a replacement booking takes a new payment; the same terms apply to an admin cancellation of a booking with a pending provider fault. While `In Progress` the case follows Alternative Flow B7: the admin sets the patient refund amount from zero up to the full amount paid, with a mandatory reason and an audit entry, and the provider's payout for the booking is held from the fault until the chosen route completes; the refund comes out of the held payout, and if the payout was already released, the shortfall is deducted from the provider's next payout.",
         "rationale": "Restated by Alternative Flow B2 step 6, Screen 9 business rules and Screen 6 business rules."
       }
     },
@@ -45226,9 +45239,9 @@
       "owner_fr": "FR-006",
       "title": "Transfer cancels the original booking with ProviderFault first",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "If the original booking is not already `Cancelled`, the submit first cancels it with cause `ProviderFault` and releases its hold or calendar block; the original booking stays as it is until this submit (Alternative Flow B5 steps 1 and 2)."
+        "statement": "If the original booking is not already `Cancelled`, the submit first cancels it with cause `ProviderFault` and releases its hold or calendar block; until this submit the original booking keeps its status and its hold, with payment, payment reminders and revive blocked (Alternative Flow B5 steps 1 and 2)."
       }
     },
     {
@@ -45261,9 +45274,9 @@
       "owner_fr": "FR-006",
       "title": "Cancelled booking entries",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "**Cancelled entries** (source state, actor, cause): (1) `Accepted`, `Payment Window Expired`, `Confirmed`, `In Progress`, or `Aftercare` → `Cancelled` by admin cancellation (Screen 9), including support-routed patient requests, with the admin's reason; the inquiry also becomes `Cancelled` and the accepted quote stays `accepted` (Alternative Flows B2 and B3). (2) `Accepted` or `Confirmed` → `Cancelled` at the admin submit of the provider-fault transfer, cause `ProviderFault` (Alternative Flow B5). (3) `Accepted` or `Confirmed` → `Cancelled` by the system on an effective provider suspension or deactivation, cause `ProviderSuspended` or `ProviderDeactivated` with `supportRequired = true` (Alternative Flow B4), followed by the B5 transfer. (4) `Confirmed` → `Cancelled` by the system, cause `UnpaidBalance`, when the unpaid balance of a booking paid with the Installments option is still unpaid at the cancellation point set in FR-029; the inquiry also becomes `Cancelled`, the refund ladder applies, and the rule is inactive until that point is set (Alternative Flow B8). A provider fault or provider-status event while `In Progress` does not cancel the booking; it stays `In Progress` with `supportRequired` until the admin moves it to `Aftercare` with an aftercare reassignment or cancels it through entry (1) (Alternative Flow B7). A provider fault or provider-status event during `Aftercare` does not cancel the booking; it stays `Aftercare` and follows the aftercare reassignment (Alternative Flow B6). `Completed` and `Cancelled` are terminal.",
+        "statement": "**Cancelled entries** (source state, actor, cause): (1) `Accepted`, `Payment Window Expired`, or `Confirmed` → `Cancelled` by admin cancellation (Screen 9), including support-routed patient requests, with the admin's reason, and `In Progress` → `Cancelled` through the Cancel route of Screen 11; the inquiry also becomes `Cancelled` and the accepted quote stays `accepted` (Alternative Flows B2, B3, and B7). Cancel Booking is not offered in `In Progress` or `Aftercare` on Screen 6. A cancellation of a booking with a pending provider fault takes the cause `ProviderFault` (REQ-006-081). (2) `Accepted` or `Confirmed` → `Cancelled` at the admin submit of the provider-fault transfer, cause `ProviderFault` (Alternative Flow B5). (3) `Accepted` or `Confirmed` → `Cancelled` by the system on an effective provider suspension or deactivation, cause `ProviderSuspended` or `ProviderDeactivated` with `supportRequired = true` (Alternative Flow B4), followed by the B5 transfer. The inquiry of a booking closed through (2) or (3) stays open until the replacement acceptance, or until an admin closes it with Close inquiry (REQ-006-082). (4) `Confirmed` → `Cancelled` by the system, cause `UnpaidBalance`, when the unpaid balance of a booking paid with the Installments option is still unpaid at the cancellation point set in FR-029, counted in days after the due date of the first missed installment; the inquiry also becomes `Cancelled`, the remaining installments are voided, the refund ladder applies, and the rule is inactive until that point is set and applies only to bookings confirmed after it is set (Alternative Flow B8). A provider fault or provider-status event while `In Progress` does not cancel the booking; it stays `In Progress` with `supportRequired` until the admin moves it to `Aftercare` with an aftercare reassignment or cancels it through entry (1) (Alternative Flow B7). A provider fault or provider-status event during `Aftercare` does not cancel the booking; it stays `Aftercare` and follows the aftercare reassignment (Alternative Flow B6). `Completed` and `Cancelled` are terminal.",
         "rationale": "prd.md line 1164 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -45273,9 +45286,9 @@
       "owner_fr": "FR-006",
       "title": "Slot release triggers",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "(1) Post-acceptance hold expiry without successful first payment (FR-026 duration, 48h default), (2) Admin cancellation during the hold period, including a support-routed patient request (immediate release per B3 flow), (3) Admin booking cancellation per B2 flow, (4) Provider suspension/deactivation cascade per B4 flow (immediate release, including holds with time remaining), (5) Provider fault before treatment starts per B5 flow, released at the admin submit on Screen 10, (6) Admin appointment change per Screen 8 or an admin edit of the accepted quote date (the hold or block moves to the new appointment), (7) System cancellation for an unpaid balance per B8 flow (the calendar block is released).",
+        "statement": "(1) Post-acceptance hold expiry without successful first payment (FR-026 duration, 48h default), (2) Admin cancellation during the hold period, including a support-routed patient request (immediate release per B3 flow), (3) Admin booking cancellation per B2 flow, (4) Provider suspension/deactivation cascade per B4 flow (immediate release, including holds with time remaining), (5) Provider fault before treatment starts per B5 flow, released at the admin submit on Screen 10 or at an admin cancellation of the pending fault, never earlier (the hold does not expire while the fault is pending), (6) Admin appointment change per Screen 8 or an admin edit of the accepted quote date (the hold or block moves to the new appointment), (7) System cancellation for an unpaid balance per B8 flow (the calendar block is released).",
         "rationale": "prd.md line 1170 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -45417,9 +45430,9 @@
       "owner_fr": "FR-006",
       "title": "Audited emergency edit of non-money booking details",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "An admin MAY make an audited emergency edit of non-money booking details, with a mandatory reason; System MUST keep the full before and after history of every emergency edit. An emergency edit MUST NOT set the booking status and MUST NOT change payment records or money terms, which stay immutable; revive, appointment change, cancellation, and the provider-fault transfer keep their own guarded steps and checks, and the acceptance snapshot stays unchanged.",
+        "statement": "An admin MAY make an audited emergency edit that changes only the appointment time on the same date and the booking notes, with a mandatory reason; System MUST keep the full before and after history of every emergency edit. An emergency edit MUST NOT change the appointment date, the price, the package, the provider, or the clinic, MUST NOT set the booking status, and MUST NOT change payment records or money terms, which stay immutable; revive, appointment change, cancellation, and the provider-fault transfer keep their own guarded steps and checks, and the acceptance snapshot stays unchanged.",
         "rationale": "prd.md line 1129 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -45493,6 +45506,42 @@
       "attrs": {
         "statement": "When an installment plan defaults before its deadline, System MUST flag the booking and notify the admin, the patient and the provider, and apply the policy set in FR-007B (REQ-007B-019 and REQ-007B-020).",
         "rationale": "prd.md lines 1101 (Edge Cases, installment plan default before deadline)"
+      }
+    },
+    {
+      "id": "REQ-006-081",
+      "type": "Rule",
+      "owner_fr": "FR-006",
+      "title": "A pending provider fault blocks payment, reminders and revive, keeps the hold, and Screen 10 re-checks the status at submit",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "From the trigger of a provider withdrawal or drop-out until the admin submit on Screen 10, System MUST keep the booking in its status with the `supportRequired` marker and the cause `ProviderFault`, MUST block payment, payment reminders, and revive against it, and MUST NOT let its hold expire. At the Screen 10 submit System MUST re-check the booking status: only `Accepted`, `Confirmed`, or a `Cancelled` booking that still carries the marker from the provider-status cascade proceed, and a booking that has reached `In Progress` MUST go to Alternative Flow B7. An admin cancellation of a booking with a pending provider fault MUST take the cause `ProviderFault`, the full refund, and no cancellation fee, and MUST resolve the marker.",
+        "rationale": "prd.md Alternative Flow B5 steps 1, 2 and 5; Screens 1, 6, 7, 9 and 10"
+      }
+    },
+    {
+      "id": "REQ-006-082",
+      "type": "Rule",
+      "owner_fr": "FR-006",
+      "title": "Close inquiry ends the inquiry of a Cancelled booking that still carries supportRequired",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "An admin MAY close the inquiry of a `Cancelled` booking that still carries the `supportRequired` marker, through the Close inquiry action on Screen 6 with a mandatory reason; System MUST set the inquiry to `Cancelled`, clear the marker with an audited resolution, and send the patient a notice that no replacement will follow.",
+        "rationale": "prd.md Alternative Flow B5 (Replacement quote not accepted); Screen 6 Close inquiry"
+      }
+    },
+    {
+      "id": "REQ-006-083",
+      "type": "Rule",
+      "owner_fr": "FR-006",
+      "title": "A closure starts one refund only",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "System MUST start one refund per closure: Process Refund MUST be unavailable once the automatic refund of the closure has started, and the automatic refund MUST NOT start once Process Refund has been used for it.",
+        "rationale": "prd.md Alternative Flow B2 step 6; Screens 6 and 9"
       }
     },
     {
@@ -94973,7 +95022,7 @@
       "owner_fr": "FR-006",
       "title": "Booking Detail & Intervention (Admin)",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "platform": "admin",
         "description": "Complete booking details from all stages, with the governed intervention actions: revive, change appointment, cancel, provider-fault transfer, resolve in-progress provider fault, reassign aftercare, refund, internal note."
@@ -100285,9 +100334,10 @@
       "owner_fr": "FR-029",
       "title": "Unpaid balance cancellation point",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "The point at which the unpaid balance of a booking paid with the Installments option on Screen 1 (the deposit plan of FR-029) cancels the booking (FR-006 Alternative Flow B8). A separate setting from the balance due days; it has no starting value and an admin must set it before use; until then the cancellation rule is inactive."
+        "description": "The number of days after the due date of the first missed installment at which the unpaid balance of a booking paid with the Installments option on Screen 1 (the deposit plan of FR-029) cancels the booking (FR-006 Alternative Flow B8). A separate setting from the balance due days; it has no starting value and an admin must set it before use. It applies only to bookings confirmed after the value is set; until it is set there is no automatic cancellation.",
+        "unit": "days"
       }
     },
     {
@@ -104774,7 +104824,7 @@
       "owner_fr": "FR-004",
       "title": "Provider's unaccepted quotes are cancelled once each",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flows bullet 10"
       }
@@ -105267,9 +105317,9 @@
       "id": "STP-006-206",
       "type": "Step",
       "owner_fr": "FR-006",
-      "title": "System sends the hold-expiring reminder to the patient at the FR-026 lead time, whether or not a payment has failed",
+      "title": "System sends the hold-expiring reminder to the patient at the FR-026 lead time, whether or not a payment has failed, unless a provider fault is pending on the booking",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B1 step 3"
       }
@@ -105300,20 +105350,42 @@
       "id": "STP-006-209",
       "type": "Step",
       "owner_fr": "FR-006",
-      "title": "Admin makes an audited emergency edit of non-money booking details on Screen 6 with a mandatory reason and full before and after history",
+      "title": "Admin makes an audited emergency edit on Screen 6 that changes only the appointment time on the same date and the booking notes, with a mandatory reason and full before and after history",
+      "status": "active",
+      "version": 2,
+      "attrs": {
+        "prd_ref": "Admin Status and Date Intervention Rules"
+      }
+    },
+    {
+      "id": "STP-006-210",
+      "type": "Step",
+      "owner_fr": "FR-006",
+      "title": "Admin closes the inquiry of a Cancelled booking that still carries the support-required marker with Close inquiry on Screen 6: the inquiry becomes Cancelled, the marker is cleared with an audited resolution and the patient is notified",
       "status": "active",
       "version": 1,
       "attrs": {
-        "prd_ref": "Admin Status and Date Intervention Rules"
+        "prd_ref": "Alternative Flow B5 (Replacement quote not accepted)"
+      }
+    },
+    {
+      "id": "STP-006-211",
+      "type": "Step",
+      "owner_fr": "FR-006",
+      "title": "System sends booking.rescheduled to the patient and the provider with the old and new appointment time when the emergency edit changes the time",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Screen 6 Emergency Edit Fields"
       }
     },
     {
       "id": "STP-006-301",
       "type": "Step",
       "owner_fr": "FR-006",
-      "title": "Admin opens Cancel Booking on Screen 9, selects the request source and enters a mandatory reason",
+      "title": "Admin opens Screen 9 from Cancel Booking on Screen 6 (Accepted, Payment Window Expired or Confirmed) or from the Cancel route of Screen 11 (In Progress), selects the request source and enters a mandatory reason",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B2 step 1"
       }
@@ -105333,9 +105405,9 @@
       "id": "STP-006-303",
       "type": "Step",
       "owner_fr": "FR-006",
-      "title": "System sets the booking and the inquiry to Cancelled and keeps the accepted quote accepted; when Screen 9 was opened from Screen 11 the submit also resolves the supportRequired marker and ends the payout hold",
+      "title": "System sets the booking and the inquiry to Cancelled and keeps the accepted quote accepted; for a pending provider fault the cause is ProviderFault and the submit resolves the marker; when Screen 9 was opened from Screen 11 the submit also resolves the supportRequired marker and ends the payout hold",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B2 step 3"
       }
@@ -105355,9 +105427,9 @@
       "id": "STP-006-305",
       "type": "Step",
       "owner_fr": "FR-006",
-      "title": "System writes the audit entry and sends booking.cancelled with the reason to patient and provider",
+      "title": "System writes the audit entry and sends booking.cancelled with the reason to patient and provider, with the cancellation fee and the refund amount filled in by the system",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B2 step 5"
       }
@@ -105366,9 +105438,9 @@
       "id": "STP-006-306",
       "type": "Step",
       "owner_fr": "FR-006",
-      "title": "Refund follows REQ-006-053: full refund and no fee for a provider withdrawal, drop-out, suspension or deactivation; the amount set on Screen 11 when opened from the in-progress fault flow; otherwise the refund ladder set in FR-029; the refund step and the other money mechanics are owned by FR-007, FR-007B and FR-017",
+      "title": "Refund follows REQ-006-053: full refund and no fee for a provider withdrawal, drop-out, suspension or deactivation, including a cancellation during a pending provider fault; the amount set on Screen 11 when opened from the in-progress fault flow; otherwise the refund ladder set in FR-029; one refund per closure; the refund step and the other money mechanics are owned by FR-007, FR-007B and FR-017",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "prd_ref": "Alternative Flow B2 step 6"
       }
@@ -105445,7 +105517,7 @@
       "owner_fr": "FR-006",
       "title": "System releases holds, reservations and calendar slots and blocks further payment; for a Confirmed booking it starts the full refund and the cancellation of the remaining installments",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B4 step 2"
       }
@@ -105487,9 +105559,9 @@
       "id": "STP-006-601",
       "type": "Step",
       "owner_fr": "FR-006",
-      "title": "At the Screen 10 submit System cancels the original booking with the provider-fault cause and the support-required marker (already cancelled when entered from B4); a drop-out sends booking.cancelled",
+      "title": "At the Screen 10 submit System cancels the original booking with the provider-fault cause (already cancelled when entered from B4); the support-required marker stays set; a drop-out sends booking.cancelled",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flow B5 step 1"
       }
@@ -105498,9 +105570,9 @@
       "id": "STP-006-602",
       "type": "Step",
       "owner_fr": "FR-006",
-      "title": "System releases the original hold or calendar block at the Screen 10 submit and blocks further payment; a payment made since the trigger is refunded in full",
+      "title": "System releases the original hold or calendar block at the Screen 10 submit and blocks further payment; everything paid on the original booking is refunded in full",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flow B5 step 2"
       }
@@ -105522,7 +105594,7 @@
       "owner_fr": "FR-006",
       "title": "Admin opens Start Provider-Fault Transfer on Screen 10, selects a replacement provider and authors the replacement quote",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B5 step 4",
         "handoff_to": "FR-004: Workflow 7 admin replacement quote"
@@ -105532,9 +105604,9 @@
       "id": "STP-006-605",
       "type": "Step",
       "owner_fr": "FR-006",
-      "title": "Admin selects one option and date-price row of the replacement quote and confirms the replacement acceptance",
+      "title": "Admin selects one option and date-price row of the replacement quote and confirms; System first re-checks the booking status and a booking that reached In Progress goes to Alternative Flow B7",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "prd_ref": "Alternative Flow B5 step 5"
       }
@@ -105570,6 +105642,17 @@
       "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B5 step 8"
+      }
+    },
+    {
+      "id": "STP-006-609",
+      "type": "Step",
+      "owner_fr": "FR-006",
+      "title": "At the trigger of a withdrawal or drop-out System sets the support-required marker with cause ProviderFault, blocks payment, payment reminders and revive, and keeps the hold until the Screen 10 submit",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B5 steps 1 and 2"
       }
     },
     {
@@ -105644,7 +105727,7 @@
       "owner_fr": "FR-006",
       "title": "System writes the audit entry; the admin decision records the chosen route only",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B7 step 3"
       }
@@ -105653,9 +105736,9 @@
       "id": "STP-006-804",
       "type": "Step",
       "owner_fr": "FR-006",
-      "title": "System holds the provider payout for the booking from the fault until the chosen route completes",
+      "title": "System holds the provider payout for the booking from the fault until the chosen route completes; the refund comes out of the held payout and a shortfall after release is deducted from the provider's next payout",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B7 step 1"
       }
@@ -105664,9 +105747,9 @@
       "id": "STP-006-805",
       "type": "Step",
       "owner_fr": "FR-006",
-      "title": "System applies the admin-set patient refund through FR-007: at the Screen 11 submit for Move to Aftercare; the Cancel route refunds at the Screen 9 submit",
+      "title": "System applies the admin-set patient refund through FR-007 at the Screen 11 submit for the Move to Aftercare route; the Cancel route refunds through the Screen 9 refund step",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B7 step 4"
       }
@@ -105675,9 +105758,9 @@
       "id": "STP-006-901",
       "type": "Step",
       "owner_fr": "FR-006",
-      "title": "System cancels the Confirmed booking and the inquiry with closure cause UnpaidBalance and releases the calendar block",
+      "title": "At the cancellation point set in FR-029 (days after the due date of the first missed installment) System cancels the Confirmed booking and the inquiry with closure cause UnpaidBalance, releases the calendar block and voids the remaining installments",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B8 steps 1 and 2"
       }
@@ -105686,9 +105769,9 @@
       "id": "STP-006-902",
       "type": "Step",
       "owner_fr": "FR-006",
-      "title": "System sends booking.cancelled with the cause to patient and provider and applies the refund ladder",
+      "title": "System sends booking.cancelled with the cause and the system-filled fee and refund amounts to patient and provider and applies the refund ladder",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B8 steps 3 and 4"
       }
@@ -107823,7 +107906,7 @@
       "owner_fr": "FR-010",
       "title": "Admin opens the provider-fault action",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "prd_ref": "Alternative Flow B6 step 2"
       }
@@ -165513,7 +165596,7 @@
     {
       "from_id": "FLW-006-b5",
       "verb": "starts at",
-      "to_id": "STP-006-601",
+      "to_id": "STP-006-609",
       "attrs": {}
     },
     {
@@ -165538,6 +165621,12 @@
       "from_id": "FLW-006-change-appointment",
       "verb": "starts at",
       "to_id": "STP-006-208",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-006-close-inquiry",
+      "verb": "starts at",
+      "to_id": "STP-006-210",
       "attrs": {}
     },
     {
@@ -168176,7 +168265,7 @@
       "verb": "active in",
       "to_id": "STG-main-04-booking",
       "attrs": {
-        "rules": 75
+        "rules": 78
       },
       "derived": true
     },
@@ -187544,6 +187633,102 @@
     },
     {
       "from_id": "REQ-006-080",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-006",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-081",
+      "verb": "applies at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-081",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-081",
+      "verb": "applies to",
+      "to_id": "ENT-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-081",
+      "verb": "applies to",
+      "to_id": "SCR-006-10",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-081",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-006",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-082",
+      "verb": "applies at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-082",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-082",
+      "verb": "applies to",
+      "to_id": "ENT-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-082",
+      "verb": "applies to",
+      "to_id": "SCR-006-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-082",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-006",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-083",
+      "verb": "applies at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-083",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-083",
+      "verb": "applies to",
+      "to_id": "ENT-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-083",
+      "verb": "applies to",
+      "to_id": "SCR-006-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-083",
+      "verb": "applies to",
+      "to_id": "SCR-006-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-083",
       "verb": "decided by",
       "to_id": "SRC-PRD-006",
       "attrs": {}
@@ -299079,6 +299264,15 @@
     {
       "from_id": "SCR-006-06",
       "verb": "shows",
+      "to_id": "ENT-booking.closure_cause",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Closure Cause"
+      }
+    },
+    {
+      "from_id": "SCR-006-06",
+      "verb": "shows",
       "to_id": "ENT-booking.created_at",
       "attrs": {
         "provenance": "retrieved",
@@ -299215,6 +299409,15 @@
     {
       "from_id": "SCR-006-06",
       "verb": "shows",
+      "to_id": "ENT-booking.support_required",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Support Required"
+      }
+    },
+    {
+      "from_id": "SCR-006-06",
+      "verb": "shows",
       "to_id": "ENT-inquiry-date-range.end_date",
       "attrs": {
         "provenance": "inherited from another FR",
@@ -299300,6 +299503,15 @@
       "attrs": {
         "provenance": "inherited from another FR",
         "label": "3D Scan"
+      }
+    },
+    {
+      "from_id": "SCR-006-06",
+      "verb": "shows",
+      "to_id": "ENT-inquiry.support_required",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Close inquiry (inquiry marker)"
       }
     },
     {
@@ -349178,7 +349390,7 @@
     {
       "from_id": "STP-004-111",
       "verb": "next",
-      "to_id": "STP-006-604",
+      "to_id": "STP-006-609",
       "attrs": {}
     },
     {
@@ -350876,6 +351088,12 @@
     },
     {
       "from_id": "STP-006-206",
+      "verb": "applies",
+      "to_id": "REQ-006-081",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-206",
       "verb": "at",
       "to_id": "STG-main-04-booking",
       "attrs": {}
@@ -351038,8 +351256,70 @@
     },
     {
       "from_id": "STP-006-209",
+      "verb": "next",
+      "to_id": "STP-006-211",
+      "attrs": {
+        "label": "the appointment time changed"
+      }
+    },
+    {
+      "from_id": "STP-006-209",
       "verb": "on",
       "to_id": "SCR-006-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-210",
+      "verb": "applies",
+      "to_id": "REQ-006-011",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-210",
+      "verb": "applies",
+      "to_id": "REQ-006-082",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-210",
+      "verb": "at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-210",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-210",
+      "verb": "on",
+      "to_id": "SCR-006-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-211",
+      "verb": "applies",
+      "to_id": "REQ-006-011",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-211",
+      "verb": "applies",
+      "to_id": "REQ-006-074",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-211",
+      "verb": "at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-211",
+      "verb": "done by",
+      "to_id": "ACT-system",
       "attrs": {}
     },
     {
@@ -351208,6 +351488,12 @@
       "from_id": "STP-006-306",
       "verb": "applies",
       "to_id": "REQ-006-053",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-306",
+      "verb": "applies",
+      "to_id": "REQ-006-083",
       "attrs": {}
     },
     {
@@ -351412,6 +351698,12 @@
       "from_id": "STP-006-502",
       "verb": "applies",
       "to_id": "REQ-006-053",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-502",
+      "verb": "applies",
+      "to_id": "REQ-006-083",
       "attrs": {}
     },
     {
@@ -351671,6 +351963,14 @@
     {
       "from_id": "STP-006-604",
       "verb": "next",
+      "to_id": "STP-006-210",
+      "attrs": {
+        "label": "no replacement quote is accepted"
+      }
+    },
+    {
+      "from_id": "STP-006-604",
+      "verb": "next",
       "to_id": "STP-006-605",
       "attrs": {}
     },
@@ -351700,6 +352000,12 @@
     },
     {
       "from_id": "STP-006-605",
+      "verb": "applies",
+      "to_id": "REQ-006-081",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-605",
       "verb": "at",
       "to_id": "STG-main-04-booking",
       "attrs": {}
@@ -351715,6 +352021,14 @@
       "verb": "next",
       "to_id": "STP-006-601",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-006-605",
+      "verb": "next",
+      "to_id": "STP-006-802",
+      "attrs": {
+        "label": "the booking reached In Progress"
+      }
     },
     {
       "from_id": "STP-006-605",
@@ -351809,6 +352123,42 @@
       "attrs": {
         "label": "Original TravelContext closes"
       }
+    },
+    {
+      "from_id": "STP-006-609",
+      "verb": "applies",
+      "to_id": "REQ-006-018",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-609",
+      "verb": "applies",
+      "to_id": "REQ-006-036",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-609",
+      "verb": "applies",
+      "to_id": "REQ-006-081",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-609",
+      "verb": "at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-609",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-609",
+      "verb": "next",
+      "to_id": "STP-006-604",
+      "attrs": {}
     },
     {
       "from_id": "STP-006-701",
@@ -352029,7 +352379,9 @@
       "from_id": "STP-006-803",
       "verb": "next",
       "to_id": "STP-006-805",
-      "attrs": {}
+      "attrs": {
+        "label": "Move to Aftercare"
+      }
     },
     {
       "from_id": "STP-006-804",
@@ -352071,6 +352423,12 @@
       "from_id": "STP-006-805",
       "verb": "applies",
       "to_id": "REQ-006-053",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-805",
+      "verb": "applies",
+      "to_id": "REQ-006-083",
       "attrs": {}
     },
     {
@@ -352131,6 +352489,12 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-006-901",
+      "verb": "next",
+      "to_id": "STP-007B-701",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-006-902",
       "verb": "applies",
       "to_id": "REQ-006-011",
@@ -352140,6 +352504,12 @@
       "from_id": "STP-006-902",
       "verb": "applies",
       "to_id": "REQ-006-053",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-902",
+      "verb": "applies",
+      "to_id": "REQ-006-083",
       "attrs": {}
     },
     {
@@ -352157,7 +352527,7 @@
     {
       "from_id": "STP-006-902",
       "verb": "next",
-      "to_id": "STP-007-021",
+      "to_id": "STP-007-022",
       "attrs": {
         "label": "refund ladder applies"
       }
@@ -359158,7 +359528,7 @@
     {
       "from_id": "STP-010-019",
       "verb": "next",
-      "to_id": "STP-006-604",
+      "to_id": "STP-006-609",
       "attrs": {
         "back": true
       }
@@ -420228,6 +420598,62 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261123-062720-833889ac",
+      "at": "2026-11-23T06:27:20.396185+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-006 logic review, pass 2: pending provider fault now blocks payment, payment reminders and revive, keeps the hold and re-checks the status at the Screen 10 submit (REQ-006-081, new STP-006-609, STP-006-605); Close inquiry for a Cancelled booking that still carries supportRequired (REQ-006-082, new STP-006-210 and FLW-006-close-inquiry); one refund per closure (REQ-006-083); Cancel Booking not offered in In Progress or Aftercare (REQ-006-004, REQ-006-052, REQ-006-061, STP-006-301); B7 refund from the held payout; STP-006-805 for Move to Aftercare only; B8 voids the remaining installments and reaches the refund calculation once; unpaid balance cancellation point counted in days after the first missed installment; emergency edit limited to the appointment time on the same date and the booking notes (REQ-006-074, STP-006-209, new STP-006-211); system-filled fee and refund amounts on booking.cancelled (REQ-006-011, STP-006-305); Screen 1 blocked state while a fault is pending (REQ-006-037).",
+      "source_id": null,
+      "nodes_added": [
+        "FLW-006-close-inquiry",
+        "REQ-006-081",
+        "REQ-006-082",
+        "REQ-006-083",
+        "STP-006-210",
+        "STP-006-211",
+        "STP-006-609"
+      ],
+      "nodes_updated": [
+        "FLW-006-b5",
+        "REQ-006-004",
+        "REQ-006-011",
+        "REQ-006-016",
+        "REQ-006-017",
+        "REQ-006-018",
+        "REQ-006-019",
+        "REQ-006-036",
+        "REQ-006-037",
+        "REQ-006-052",
+        "REQ-006-053",
+        "REQ-006-058",
+        "REQ-006-061",
+        "REQ-006-062",
+        "REQ-006-074",
+        "SCR-006-06",
+        "SET-unpaid-balance-cancellation-point",
+        "STP-004-111",
+        "STP-006-206",
+        "STP-006-209",
+        "STP-006-301",
+        "STP-006-303",
+        "STP-006-305",
+        "STP-006-306",
+        "STP-006-502",
+        "STP-006-601",
+        "STP-006-602",
+        "STP-006-604",
+        "STP-006-605",
+        "STP-006-803",
+        "STP-006-804",
+        "STP-006-805",
+        "STP-006-901",
+        "STP-006-902",
+        "STP-010-019"
+      ],
+      "edges_added": 50,
+      "edges_removed": 5,
+      "rows": 123
+    },
     {
       "id": "cs-20261123-051524-43af50dd",
       "at": "2026-11-23T05:15:24.053373+00:00",
