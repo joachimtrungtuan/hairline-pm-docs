@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-23T07:59:55Z",
+  "generated_at": "2026-11-23T08:32:49Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -11324,9 +11324,9 @@
       "owner_fr": "FR-007B",
       "title": "Late fee amount",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Late fee added once to the installment when the grace period passes unpaid; collected with the next successful charge and excluded from the refund base."
+        "description": "Late fee added once to the installment when the grace period passes unpaid and no automatic retry is pending; collected with the next successful charge and excluded from the refund base. A fixed fee is converted at the plan's accepted rate and a percentage applies to the late installment amount; it lapses if never collected before the plan ends (REQ-007B-110)."
       }
     },
     {
@@ -11379,9 +11379,9 @@
       "owner_fr": "FR-007B",
       "title": "Payment source",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "How a Paid installment was settled: an automatic charge, or manual when an admin marked an external payment resolved."
+        "description": "How a Paid installment was settled: an automatic charge, or manual when an admin marked a recorded bank transfer resolved after a second billing admin approved it (REQ-007B-109)."
       }
     },
     {
@@ -11550,6 +11550,17 @@
       }
     },
     {
+      "id": "ENT-installment-plan.cancellation_point_days",
+      "type": "Field",
+      "owner_fr": "FR-007B",
+      "title": "Cancellation point days",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "The FR-029 Unpaid Balance Cancellation Point in force at confirmation (days after the first missed due date); empty when it was unset, in which case nothing cancels automatically. Saved on the plan and shown on Screen 1 when set."
+      }
+    },
+    {
       "id": "ENT-installment-plan.completion_percentage",
       "type": "Field",
       "owner_fr": "FR-007B",
@@ -11619,9 +11630,20 @@
       "owner_fr": "FR-007B",
       "title": "Final payment deadline",
       "status": "active",
+      "version": 2,
+      "attrs": {
+        "description": "Date by which all installments must be completed; must meet the configured cutoff rule. An admin date change keeps the due dates and recalculates only this date."
+      }
+    },
+    {
+      "id": "ENT-installment-plan.grace_period_days",
+      "type": "Field",
+      "owner_fr": "FR-007B",
+      "title": "Grace period days",
+      "status": "active",
       "version": 1,
       "attrs": {
-        "description": "Date by which all installments must be completed; must meet the configured cutoff rule."
+        "description": "The FR-029 late payment grace period in force at confirmation, counted from the due date, saved on the plan and shown on Screen 1."
       }
     },
     {
@@ -11677,6 +11699,17 @@
       "version": 2,
       "attrs": {
         "description": "Calculated, not stored: true when an installment due date has passed and the installment is unpaid. Shown beside the plan status."
+      }
+    },
+    {
+      "id": "ENT-installment-plan.late_fee_setting",
+      "type": "Field",
+      "owner_fr": "FR-007B",
+      "title": "Late fee setting",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "The FR-029 late fee in force at confirmation (a fixed amount in the accepted currency, or a percentage of the late installment amount), saved on the plan and shown on Screen 1."
       }
     },
     {
@@ -11740,9 +11773,9 @@
       "owner_fr": "FR-007B",
       "title": "Plan status",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "description": "Active, Cancelled, Completed (shown as Fully Paid) or Defaulted. Overdue is not a status: it is the calculated is_overdue flag, not stored."
+        "description": "Active, Cancelled, Completed (shown as Fully Paid) or Defaulted. Overdue is not a status: it is the calculated is_overdue flag, not stored. A Defaulted plan returns to Active when no installment is Failed or Overdue (REQ-007B-108); the void on cancellation sets Cancelled (REQ-007B-023)."
       }
     },
     {
@@ -32235,9 +32268,9 @@
       "owner_fr": "FR-007B",
       "title": "Installment overdue notice",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "One notice to the patient and one to the billing admins on the day after an installment due date passes with the installment unpaid (REQ-007B-101)."
+        "description": "One notice to the patient and one to the billing admins on the day after an installment due date passes with the installment unpaid, after that day's retry; the patient notice replaces that day's failure notice and states the date on which the booking will be cancelled when the cancellation point is set (REQ-007B-101, REQ-007B-111)."
       }
     },
     {
@@ -47183,11 +47216,11 @@
       "id": "REQ-007B-018",
       "type": "Rule",
       "owner_fr": "FR-007B",
-      "title": "Technical failures retried after waits of 1, 3 and 7 days; no automatic retry after a hard decline",
+      "title": "Retryable failures retried after waits of 1, 3 and 7 days; no automatic retry after a hard decline",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "System MUST execute 3 automatic retry attempts for an installment whose charge failed for a technical reason, with waits of 1 day, 3 days and 7 days (retries fall on day 1, day 4 and day 11 after the failure). After a hard decline System MUST NOT retry automatically; it MUST notify the patient, who must use Pay now or update the card, and the installment becomes Defaulted on day 11 after the due date if still unpaid. Admin retries do not count toward the 3 automatic retries",
+        "statement": "System MUST execute 3 automatic retry attempts for an installment whose charge failed for a retryable reason (any failure except a hard decline, so a technical fault or insufficient funds), with waits of 1 day, 3 days and 7 days (retries fall on day 1, day 4 and day 11 after the failure). A hard decline is a refusal because the card is expired, lost, stolen, invalid or flagged for fraud. After a hard decline, or when a retry returns one, System MUST NOT retry automatically and MUST cancel the retries still pending; it MUST notify the patient, who must use Pay now or update the card, and the installment becomes Defaulted on day 11 after the due date if still unpaid. Admin retries do not count toward the 3 automatic retries",
         "rationale": "PRD id REQ-007b-018 (prd.md line 845). Restated by Alternative Flow B1 steps 3 to 5, Payment & Billing Rules, Fixed in Codebase (3 attempts; schedule 1, 3 and 7 days) and the S-02 scope."
       }
     },
@@ -47233,21 +47266,21 @@
       "owner_fr": "FR-007B",
       "title": "Refund base is the paid amount excluding late fees; FR-006 and FR-007 compute the refund",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
         "statement": "System MUST show the admin the amount paid so far excluding late fees as the refund base. FR-006 and FR-007 compute the refund as a percentage of that amount per the cancellation refund ladder owned by FR-029 (or the provider-fault terms), and FR-007B only voids the unpaid installments and records the outcome",
-        "rationale": "PRD id REQ-007b-022 (prd.md line 852). Restated by Alternative Flow B2 step 2, the Admin scope (process refunds for canceled bookings with partial installments) and Screen 6 (Cancel Plan calculates refunds per cancellation policy)."
+        "rationale": "PRD id REQ-007b-022 (prd.md line 852). Restated by Alternative Flow B2 step 2, the Admin scope (process refunds for cancelled bookings with partial installments) and Screen 6 (Cancel Plan calculates refunds per cancellation policy)."
       }
     },
     {
       "id": "REQ-007B-023",
       "type": "Rule",
       "owner_fr": "FR-007B",
-      "title": "Remaining installments cancelled with the booking",
+      "title": "Remaining installments voided with the booking, before the refund is computed",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System MUST cancel remaining installments when booking is canceled; stopping the installments and the refund happen inside the FR-006 Cancel Booking action, and installment plans have no separate cancel action",
+        "statement": "System MUST cancel remaining installments when booking is cancelled. The void is one step shared by the admin cancellation, the provider-fault cancellation and the unpaid-balance cancellation: it runs before the refund is computed, waits for any charge in flight, sets the plan Cancelled, and adds a charge that still succeeds to the refund base. Stopping the installments and the refund happen inside the FR-006 Cancel Booking action, and installment plans have no separate cancel action",
         "rationale": "PRD id REQ-007b-023 (prd.md line 853). Restated by Alternative Flow B2 step 5, Screen 6 (Cancel Plan stops future installments) and User Stories 5 and 6."
       }
     },
@@ -47255,11 +47288,11 @@
       "id": "REQ-007B-024",
       "type": "Rule",
       "owner_fr": "FR-007B",
-      "title": "Date change recalculates the schedule or is blocked when no plan fits",
+      "title": "Date change keeps the due dates and recalculates the final payment deadline, or is blocked when no plan fits",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System MUST handle an admin date change by recalculating the installment schedule from the new date; when the remaining installments cannot all be scheduled at least the cutoff days before it, System MUST return no feasible plan and FR-006 blocks the change",
+        "statement": "System MUST handle an admin date change by keeping the due dates, count and amounts and recalculating the Final Payment Deadline from the new date; when the remaining installments cannot all stay at least the cutoff days before it, System MUST return no feasible plan and FR-006 blocks the change",
         "rationale": "PRD id REQ-007b-024 (prd.md line 851). Restated by Alternative Flow B3, Payment & Billing Rules (rescheduling may require plan adjustment or immediate payment of the remaining balance) and Edge Cases."
       }
     },
@@ -47293,9 +47326,9 @@
       "owner_fr": "FR-007B",
       "title": "Provider fault after acceptance cancels remaining installments and refunds paid ones in full",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "When the provider fails after acceptance (FR-006 Alternative Flows B4 and B5 only), System MUST cancel remaining installments with no patient cancellation fee. On a provider withdrawal, drop-out, suspension or deactivation, System MUST refund in full every installment already paid, and the replacement booking takes a new payment. The FR-006 unpaid-balance cancellation does not take this path: it takes the refund ladder",
+        "statement": "When the provider fails after acceptance (FR-006 Alternative Flows B4 and B5 only), System MUST cancel remaining installments with no patient cancellation fee. On a provider withdrawal, drop-out, suspension or deactivation, System MUST refund in full every installment already paid and any late fee already collected, and the replacement booking takes a new payment per FR-006 Alternative Flows B4 and B5. The FR-006 unpaid-balance cancellation does not take this path: it takes the refund ladder",
         "rationale": "PRD id REQ-007b-027 (prd.md line 860). Restated by Alternative Flow B4 steps 1 and 2 and its outcome (the patient is refunded in full and continues with the replacement provider in the same inquiry), and the FR-006 dependency note. Owner ruling 2026-11-22: a suspension or deactivation follows the same terms as a withdrawal or drop-out."
       }
     },
@@ -47327,11 +47360,11 @@
       "id": "REQ-007B-030",
       "type": "Rule",
       "owner_fr": "FR-007B",
-      "title": "Provider list covers the provider's own bookings with an active or completed plan",
+      "title": "Provider list covers the provider's own bookings with an installment plan of any status",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "The provider installment plans list includes only bookings for the current provider that have an active or completed installment plan (no one-time payments); clicking a row opens the shared Booking Installment Plan Detail screen for that booking.",
+        "statement": "The provider installment plans list includes every installment plan, whatever its status, on the current provider's bookings (no one-time payments); clicking a row opens the shared Booking Installment Plan Detail screen for that booking.",
         "rationale": "PRD prose rule, no id. prd.md line 293 (Screen 3: Provider Installment Plans Overview)."
       }
     },
@@ -47399,11 +47432,11 @@
       "id": "REQ-007B-036",
       "type": "Rule",
       "owner_fr": "FR-007B",
-      "title": "Patient may choose any count from 2 up to the maximum",
+      "title": "Patient may choose any enabled count from 2 up to the maximum",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Patient can choose fewer installments than the maximum available (pay faster) and may select any number from 2 to the maximum available; the same cutoff window is maintained and the payment schedule adjusts.",
+        "statement": "Patient can choose fewer installments than the maximum available (pay faster) and may select any enabled count (FR-029) from 2 to the maximum available; when no enabled count fits the installment option is not shown; the same cutoff window is maintained and the payment schedule adjusts.",
         "rationale": "PRD prose rule, no id. prd.md line 447 (General Module Rules); line 217 (Screen 1: Patient Checkout - Installment Plan Selection)."
       }
     },
@@ -47689,9 +47722,9 @@
       "owner_fr": "FR-007B",
       "title": "Admin date change triggers recalculation without changing the total",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "The admin date change, made through the FR-006 Change Appointment action and notified to the patient and provider through booking.rescheduled, triggers installment plan recalculation from the updated booking date; the plan total, currency and the accepted snapshot do not change. Patient self-service rescheduling remains deferred to V2.",
+        "statement": "The admin date change, made through the FR-006 Change Appointment action and notified to the patient and provider through booking.rescheduled, triggers an installment plan check against the updated booking date; the plan total, currency and the accepted snapshot do not change. Patient self-service rescheduling remains deferred to V2.",
         "rationale": "PRD prose rule, no id. prd.md line 176 (Alternative Flows)."
       }
     },
@@ -47699,11 +47732,11 @@
       "id": "REQ-007B-061",
       "type": "Rule",
       "owner_fr": "FR-007B",
-      "title": "Sufficient time: schedule dates adjusted to the new date",
+      "title": "Sufficient time: due dates stay and the final payment deadline is recalculated",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "After a date change the system checks whether every remaining installment still fits at least the cutoff days (FR-029 snapshot) before the new procedure date; if so, the system adjusts the installment schedule dates to the new date and returns the schedule to FR-006 Screen 8 read-only.",
+        "statement": "After a date change the system checks whether every remaining installment, on its existing due date, still falls at least the cutoff days (the cutoff saved on the plan) before the new procedure date; if so, the due dates, count and amounts stay as they were, the system recalculates only the Final Payment Deadline from the new date and returns the schedule to FR-006 Screen 8 read-only.",
         "rationale": "PRD prose rule, no id. prd.md line 175 (Alternative Flows)."
       }
     },
@@ -47761,9 +47794,9 @@
       "owner_fr": "FR-007B",
       "title": "Fewer installments mid-plan not supported",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Reducing the number of installments mid-plan is not supported; the patient can pay the remaining balance early to complete the plan.",
+        "statement": "Reducing the number of installments mid-plan is not supported; on an Active plan the patient can pay the next scheduled installment or all remaining installments early with Pay now, in due-date order, and the due dates of unpaid ones do not change.",
         "rationale": "PRD prose rule, no id. prd.md line 805 (Edge Cases)."
       }
     },
@@ -47929,9 +47962,9 @@
       "owner_fr": "FR-007B",
       "title": "Admin Retry Charge on a Failed or Overdue installment",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "The admin can perform Retry Charge on a Failed installment or one flagged Overdue (invokes the payment processor via S-02). Admin retries do not count toward the 3 automatic retries; on success the installment is Paid, on failure it returns to Failed and the plan is unchanged.",
+        "statement": "The admin can perform Retry Charge on a Failed installment or one flagged Overdue (invokes the payment processor via S-02). Admin retries do not count toward the 3 automatic retries; on success the installment is Paid and the plan follows REQ-007B-108, on failure it returns to Failed and the plan is unchanged.",
         "rationale": "PRD prose rule, no id. prd.md line 413 (Screen 6: Admin Booking Installment Plan Detail)."
       }
     },
@@ -47939,11 +47972,11 @@
       "id": "REQ-007B-081",
       "type": "Rule",
       "owner_fr": "FR-007B",
-      "title": "Admin Mark as Resolved settles the installment and can reopen the plan",
+      "title": "Admin Mark as Resolved settles an installment only as a recorded bank transfer a second billing admin approves",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "The admin can Mark as Resolved an unpaid installment when an external or manual payment has been handled: the system records the external payment, sets the installment Paid with source manual, and when no installment is unpaid sets the plan back to Active, or Completed when every installment is Paid.",
+        "statement": "The admin can Mark as Resolved an unpaid installment only for a bank transfer into Hairline's account: the admin enters the amount, date, receiving account and reference, and a second billing admin approves it (REQ-007B-109). On approval the system sets the installment Paid with payment source manual and passes the payment to FR-007; the plan then follows REQ-007B-108.",
         "rationale": "PRD prose rule, no id. prd.md line 505 (Screen 6: Admin Booking Installment Plan Detail)."
       }
     },
@@ -47965,9 +47998,9 @@
       "owner_fr": "FR-007B",
       "title": "Action-specific audit data",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Retry Charge is logged with installment ID and retry attempt number; Mark as Resolved with installment ID and resolution method.",
+        "statement": "Retry Charge is logged with installment ID and retry attempt number; Mark as Resolved with installment ID, amount, date, receiving account, reference and the approving admin.",
         "rationale": "PRD prose rule, no id. prd.md line 502 (Admin Action & Audit Rules)."
       }
     },
@@ -48146,9 +48179,9 @@
       "owner_fr": "FR-007B",
       "title": "Late fee charged when the late payment grace period passes without payment",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "A late fee is added once to an installment when the late payment grace period (FR-029), counted from the due date, passes with the installment unpaid. It is collected with the next successful charge, never as a separate charge, and the refund base excludes it. The fee amount is set by the admin in FR-029.",
+        "statement": "A late fee is added once to an installment when the late payment grace period saved on the plan, counted from the due date, passes with the installment unpaid and no automatic retry is pending (the fee waits until the retries end). It is collected with the next successful charge, never as a separate charge, and the refund base excludes it. The fee amount is set by the admin in FR-029 and saved on the plan at confirmation; its currency, base and treatment are in REQ-007B-110.",
         "rationale": "PRD prose rule, no id. Payment & Billing Rules and Alternative Flow B1 Outcome."
       }
     },
@@ -48158,9 +48191,9 @@
       "owner_fr": "FR-007B",
       "title": "Overdue is a calculated flag, not a stored plan status",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Overdue is not a status: it is a calculated flag on the installment, true from the day after its due date while it is unpaid and not Cancelled, and it is not stored. The plan flag is true while any installment is Overdue.",
+        "statement": "Overdue is not a status: it is a calculated flag on the installment, true from the day after its due date while it is unpaid, not Cancelled and not paused on a Defaulted plan, and it is not stored. The plan flag is true while any installment is Overdue.",
         "rationale": "prd.md line 867 (Key Entities, Entity 1 Installment Plan: Overdue is a calculated flag, not stored)."
       }
     },
@@ -48170,9 +48203,9 @@
       "owner_fr": "FR-007B",
       "title": "Overdue starts the day after the due date with one patient notice and one billing-admin notice",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "An installment is Overdue from the day after its due date while it is unpaid and not Cancelled. On that day System sends the patient one overdue notice and notifies the billing admins once. The provider sees the Overdue banner on the plan detail screen and is notified only when the plan is Defaulted."
+        "statement": "An installment is Overdue from the day after its due date while it is unpaid, not Cancelled and not paused on a Defaulted plan. On that day the day's retry runs first; if the installment is still unpaid System sends the patient one overdue notice, which replaces that day's failure notice and states the date on which the booking will be cancelled when the cancellation point is set, and notifies the billing admins once. The provider sees the Overdue banner on the plan detail screen and is notified only when the plan is Defaulted."
       }
     },
     {
@@ -48181,20 +48214,20 @@
       "owner_fr": "FR-007B",
       "title": "The cancellation point cancels the booking for an unpaid balance whatever the retry state",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "When the FR-029 Unpaid Balance Cancellation Point is set and the booking was confirmed after it was set, System hands the Confirmed booking to FR-006 Alternative Flow B8 (cause UnpaidBalance) that many days after the due date of the first missed installment, whatever the retry, grace period or Defaulted state; pending retries and the grace period end with the plan. While the point is unset nothing cancels automatically. It covers any unpaid balance."
+        "statement": "When the Unpaid Balance Cancellation Point saved on the plan is set (the booking was confirmed after FR-029 set it), System hands the Confirmed booking to FR-006 Alternative Flow B8 (cause UnpaidBalance) that many days after the due date of the first missed installment, whatever the retry, grace period or Defaulted state; pending retries and the grace period end with the plan. While the support-required marker is on the count pauses, is not reset, and nothing is handed over (REQ-007B-103). While the point is unset nothing cancels automatically. It covers any unpaid balance."
       }
     },
     {
       "id": "REQ-007B-103",
       "type": "Rule",
       "owner_fr": "FR-007B",
-      "title": "A pending provider fault pauses every charge, retry, reminder, Overdue flag, Defaulted flag and late fee",
+      "title": "A pending provider fault pauses every charge, retry, reminder, flag, late fee and cancellation-point hand-off",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "While the booking carries the support-required marker (FR-006 REQ-006-081), System MUST NOT charge, retry, remind, flag Overdue or Defaulted, or add a late fee for an installment, and the retry and grace clocks are paused, not reset. A card update is still accepted but re-offers no charge. If a replacement is accepted, the replacement plan recalculates all dates (B4); otherwise charges resume at the Screen 10 submit."
+        "statement": "While the booking carries the support-required marker (FR-006 REQ-006-081), System MUST NOT charge, retry, remind, flag Overdue or Defaulted, add a late fee for an installment, or hand the booking to FR-006 Alternative Flow B8, and the retry, grace and cancellation-point clocks are paused, not reset. A card update is still accepted but re-offers no charge. If a replacement is accepted, the replacement plan recalculates all dates (B4); otherwise charges resume at the Screen 10 submit."
       }
     },
     {
@@ -48212,11 +48245,11 @@
       "id": "REQ-007B-105",
       "type": "Rule",
       "owner_fr": "FR-007B",
-      "title": "Later installments on a Defaulted plan are paused until an admin resolves it",
+      "title": "Later installments on a Defaulted plan are paused, with no flag or fee, until the plan returns to Active",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "While a plan is Defaulted, System MUST NOT charge its later installments on their due dates; they stay paused until an admin resolves the plan with Mark as Resolved or a successful Retry Charge."
+        "statement": "While a plan is Defaulted, System MUST NOT charge its later installments on their due dates. They keep their dates and amounts, are not Overdue, and get no overdue notice, reminder or late fee. When the plan returns to Active (REQ-007B-108), each paused installment whose due date has passed is charged once at the next daily run, before any Overdue flag or notice that day, with the normal failure handling."
       }
     },
     {
@@ -48225,20 +48258,75 @@
       "owner_fr": "FR-007B",
       "title": "The installment option is offered only when installments are enabled, the amount qualifies and enough days remain",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "System MUST offer the installment option only when installments are enabled in FR-029, the booking total is at or above the FR-029 minimum booking amount (converted at the locked rate) and the days until the procedure are at least the cutoff days plus 30. When fewer days remain than the FR-029 balance due days only pay in full is offered."
+        "statement": "System MUST offer the installment option only when installments are enabled in FR-029, the booking total is at or above the FR-029 minimum booking amount (converted at the locked rate) and the days until the procedure are at least the cutoff days plus 30. The options offered are the enabled counts up to the maximum; when none fits the installment option is not shown and only pay in full is offered. When fewer days remain than the FR-029 balance due days only pay in full is offered."
       }
     },
     {
       "id": "REQ-007B-107",
       "type": "Rule",
       "owner_fr": "FR-007B",
-      "title": "Retries and the grace period continue past the cutoff; the share moves when the plan is fully paid",
+      "title": "Retries and the grace period continue past the cutoff; the share moves after the plan is Completed, as FR-007 sets",
+      "status": "active",
+      "version": 2,
+      "attrs": {
+        "statement": "Retries and the grace period continue past the cutoff date. The plan is Completed whenever the final installment is paid, after which the clinic's share moves as FR-007 REQ-007-090 sets, whatever the date."
+      }
+    },
+    {
+      "id": "REQ-007B-108",
+      "type": "Rule",
+      "owner_fr": "FR-007B",
+      "title": "A Defaulted plan returns to Active when nothing is Failed or Overdue, whoever paid",
       "status": "active",
       "version": 1,
       "attrs": {
-        "statement": "Retries and the grace period continue past the cutoff date. The plan is Completed whenever the final installment is paid, and the clinic's share moves then, whatever the date. A Defaulted plan blocks the share movement."
+        "statement": "A Defaulted plan returns to Active when no installment is Failed or Overdue, whoever paid (the patient with Pay now or a new card, an admin Retry Charge, or Mark as Resolved), and becomes Completed when every installment is Paid."
+      }
+    },
+    {
+      "id": "REQ-007B-109",
+      "type": "Rule",
+      "owner_fr": "FR-007B",
+      "title": "An installment is settled outside the card only as a recorded bank transfer that a second billing admin approves",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Mark as Resolved is used only for a bank transfer into Hairline's account. The admin enters the amount, date, receiving account and reference, and a second billing admin approves it as FR-007 REQ-007-015 sets for refunds, never the same admin; only then is the installment Paid with payment source manual. FR-007 owns the manual payment record, the refund of a manual payment and the clinic-share movement for it."
+      }
+    },
+    {
+      "id": "REQ-007B-110",
+      "type": "Rule",
+      "owner_fr": "FR-007B",
+      "title": "A fixed late fee converts at the accepted rate, a percentage applies to the late installment, and the fee stays outside the clinic share",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "A fixed late fee is converted at the plan's accepted exchange rate and a percentage fee applies to the late installment amount. The fee stays outside the clinic's share and commission (owned by FR-029 and FR-007). A fee still uncollected when the plan ends lapses. A provider-fault full refund (REQ-007B-027) returns a collected fee."
+      }
+    },
+    {
+      "id": "REQ-007B-111",
+      "type": "Rule",
+      "owner_fr": "FR-007B",
+      "title": "The patient sees the late fee, grace period and cancellation point at checkout, and the plan keeps them as confirmed",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Screen 1 shows the late fee, the grace period and, when set, the cancellation point before the patient confirms. The plan keeps the values in force at confirmation, as it keeps the cutoff days; a later FR-029 change applies only to plans confirmed afterwards. The overdue notice states the date on which the booking will be cancelled when the point is set."
+      }
+    },
+    {
+      "id": "REQ-007B-112",
+      "type": "Rule",
+      "owner_fr": "FR-007B",
+      "title": "On an Active plan Pay now can also pay the next scheduled installment or all remaining ones early",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "On an Active plan, Pay now also lets the patient pay the next scheduled installment, or all remaining installments at once, in due-date order; the due dates of unpaid installments do not change, and the plan is Completed when every installment is Paid."
       }
     },
     {
@@ -95622,10 +95710,10 @@
       "owner_fr": "FR-007B",
       "title": "Patient Checkout - Installment Plan Selection",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "patient",
-        "description": "Allow the patient to select an installment plan at booking checkout. Reached from the Payment Options step (FR-006/FR-007) after the patient selects Pay in Installments; shows the full schedule and an interest-free highlight, a Pay in Full alternative, a plan versus full payment comparison and a calculator. UI controls: installment selector, calculator, Pay in Full option, confirm."
+        "description": "Allow the patient to select an installment plan at booking checkout. Reached from the Payment Options step (FR-006/FR-007) after the patient selects Pay in Installments; shows the full schedule, the late fee, grace period and cancellation point, an interest-free highlight, a Pay in Full alternative, a plan versus full payment comparison and a calculator. UI controls: installment selector, calculator, Pay in Full option, confirm."
       }
     },
     {
@@ -95634,10 +95722,10 @@
       "owner_fr": "FR-007B",
       "title": "Patient Booking Details - Installment Schedule View",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "patient",
-        "description": "Allow the patient to view the installment payment schedule and history from the booking details screen. UI controls: progress bar, countdown, Update Payment Method button (opens payment method management from the FR-001 menu, REQ-001-151), Pay now button on a Failed or Overdue installment, receipt download."
+        "description": "Allow the patient to view the installment payment schedule and history from the booking details screen. UI controls: progress bar, countdown, Update Payment Method button (opens payment method management from the FR-001 menu, REQ-001-151), Pay now button on a Failed or Overdue installment or, on an Active plan, on the next scheduled installment, receipt download."
       }
     },
     {
@@ -95682,10 +95770,10 @@
       "owner_fr": "FR-007B",
       "title": "Admin Booking Installment Plan Detail",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "platform": "admin",
-        "description": "Actionable view of one booking's installment plan with the Admin Action Panel (Retry Charge, Mark as Resolved), each with a justification of at least 20 characters. The panel is a UI control group; its justification is written to the audit log (S-06), not to a graph entity. Cancelling a booking is not a plan action: it uses the FR-006 Cancel Booking action."
+        "description": "Actionable view of one booking's installment plan with the Admin Action Panel (Retry Charge, Mark as Resolved), each with a justification of at least 20 characters. Mark as Resolved is only for a recorded bank transfer (amount, date, receiving account, reference) that a second billing admin approves. The panel is a UI control group; its justification is written to the audit log (S-06), not to a graph entity. Cancelling a booking is not a plan action: it uses the FR-006 Cancel Booking action."
       }
     },
     {
@@ -106710,9 +106798,9 @@
       "id": "STP-007B-003",
       "type": "Step",
       "owner_fr": "FR-007B",
-      "title": "System displays installment options",
+      "title": "System displays the enabled installment options up to the maximum",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 3"
       }
@@ -106822,7 +106910,7 @@
       "owner_fr": "FR-007B",
       "title": "System repeats reminder, charge and confirmation for each remaining installment",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 13"
       }
@@ -106836,6 +106924,17 @@
       "version": 3,
       "attrs": {
         "prd_ref": "Main Flow step 14"
+      }
+    },
+    {
+      "id": "STP-007B-015",
+      "type": "Step",
+      "owner_fr": "FR-007B",
+      "title": "Patient pays the next scheduled installment, or all remaining installments, early with Pay now; the due dates of unpaid ones do not change",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Screen 2 Pay Now button and Edge Cases"
       }
     },
     {
@@ -106952,9 +107051,9 @@
       "id": "STP-007B-403",
       "type": "Step",
       "owner_fr": "FR-007B",
-      "title": "If the failure was technical, system schedules the first retry after a wait of 1 day",
+      "title": "If the failure is retryable (any failure except a hard decline), system schedules the first retry after a wait of 1 day",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B1 step 4"
       }
@@ -106965,7 +107064,7 @@
       "owner_fr": "FR-007B",
       "title": "System waits 3 days and attempts the second retry if the first retry fails",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B1 step 5"
       }
@@ -106976,7 +107075,7 @@
       "owner_fr": "FR-007B",
       "title": "System waits 7 days and attempts the third retry if the second retry fails",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B1 step 6"
       }
@@ -106998,7 +107097,7 @@
       "owner_fr": "FR-007B",
       "title": "System notifies the admin, the patient and the provider of the defaulted plan and overdue booking",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B1 step 8"
       }
@@ -107009,7 +107108,7 @@
       "owner_fr": "FR-007B",
       "title": "Admin reviews and contacts the patient to resolve the payment issue; cancellation through Cancel Booking is open only while the booking is Accepted, Payment Window Expired or Confirmed",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "prd_ref": "Alternative Flow B1 step 9"
       }
@@ -107020,7 +107119,7 @@
       "owner_fr": "FR-007B",
       "title": "After a hard decline, the patient charges the installment at once with Pay now or updates the card, which re-offers the charge",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B1 hard decline"
       }
@@ -107029,9 +107128,9 @@
       "id": "STP-007B-410",
       "type": "Step",
       "owner_fr": "FR-007B",
-      "title": "On the day after the due date, with the installment unpaid, System shows it Overdue, sends the patient one overdue notice and notifies the billing admins once",
+      "title": "On the day after the due date, after that day's retry, with the installment still unpaid, System shows it Overdue, sends the patient one overdue notice that replaces the day's failure notice, and notifies the billing admins once",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B1 step 3"
       }
@@ -107051,9 +107150,9 @@
       "id": "STP-007B-412",
       "type": "Step",
       "owner_fr": "FR-007B",
-      "title": "At the FR-029 cancellation point after the first missed due date, System hands the Confirmed booking to FR-006 Alternative Flow B8 whatever the retry or Defaulted state",
+      "title": "At the FR-029 cancellation point after the first missed due date, System hands the Confirmed booking to FR-006 Alternative Flow B8 whatever the retry or Defaulted state; the count pauses while the support-required marker is on",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B1 step 10"
       }
@@ -107062,9 +107161,9 @@
       "id": "STP-007B-413",
       "type": "Step",
       "owner_fr": "FR-007B",
-      "title": "After treatment has started, the admin resolves a Defaulted plan by payment only, with Retry Charge or Mark as Resolved and no cancel route",
+      "title": "After treatment has started, the admin resolves a Defaulted plan by payment only, with Retry Charge or Mark as Resolved (a recorded bank transfer a second billing admin approves) and no cancel route",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B1 step 9"
       }
@@ -107073,11 +107172,55 @@
       "id": "STP-007B-414",
       "type": "Step",
       "owner_fr": "FR-007B",
-      "title": "When the grace period counted from the due date passes with the installment unpaid, System adds the late fee once; the next successful charge collects it",
+      "title": "When the grace period saved on the plan, counted from the due date, has passed with the installment unpaid and no automatic retry pending, System adds the late fee once; the next successful charge collects it",
+      "status": "active",
+      "version": 2,
+      "attrs": {
+        "prd_ref": "Alternative Flow B1 late fee"
+      }
+    },
+    {
+      "id": "STP-007B-415",
+      "type": "Step",
+      "owner_fr": "FR-007B",
+      "title": "A hard decline on a retry cancels the retries still pending; the plan is flagged Defaulted on day 11 after the due date if the installment is still unpaid",
       "status": "active",
       "version": 1,
       "attrs": {
-        "prd_ref": "Alternative Flow B1 late fee"
+        "prd_ref": "Alternative Flow B1 hard decline"
+      }
+    },
+    {
+      "id": "STP-007B-416",
+      "type": "Step",
+      "owner_fr": "FR-007B",
+      "title": "While the plan is Defaulted its later installments stay paused: they keep their dates and amounts and carry no Overdue flag, overdue notice, reminder or late fee",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B1 Defaulted plan"
+      }
+    },
+    {
+      "id": "STP-007B-417",
+      "type": "Step",
+      "owner_fr": "FR-007B",
+      "title": "When no installment is Failed or Overdue the plan returns to Active whoever paid (Completed when every installment is Paid); each past-due paused installment is then charged once at the next daily run",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B1 Defaulted plan"
+      }
+    },
+    {
+      "id": "STP-007B-418",
+      "type": "Step",
+      "owner_fr": "FR-007B",
+      "title": "To settle an installment outside the card the admin enters the amount, date, receiving account and reference of a bank transfer with Mark as Resolved; a second billing admin approves it before the installment is Paid with source manual",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Screen 6 Mark as Resolved"
       }
     },
     {
@@ -107108,20 +107251,9 @@
       "owner_fr": "FR-007B",
       "title": "Admin reviews the request and cancels the booking with a mandatory reason, only while the booking is Accepted, Payment Window Expired or Confirmed (In Progress only through the FR-006 provider-fault route)",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "prd_ref": "Alternative Flow B2 step 3"
-      }
-    },
-    {
-      "id": "STP-007B-504",
-      "type": "Step",
-      "owner_fr": "FR-007B",
-      "title": "System voids the remaining unpaid installments while FR-006 and FR-007 compute and start the refund",
-      "status": "active",
-      "version": 3,
-      "attrs": {
-        "prd_ref": "Alternative Flow B2 step 4"
       }
     },
     {
@@ -107150,9 +107282,9 @@
       "id": "STP-007B-601",
       "type": "Step",
       "owner_fr": "FR-007B",
-      "title": "System recalculates the plan from the new date and checks that every remaining installment fits at least the cutoff days before it",
+      "title": "System checks that every remaining installment, on its existing due date, still falls at least the cutoff days before the new date",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "prd_ref": "Alternative Flow B3 steps 1 and 2"
       }
@@ -107161,9 +107293,9 @@
       "id": "STP-007B-603",
       "type": "Step",
       "owner_fr": "FR-007B",
-      "title": "System adjusts installment schedule dates to the new procedure date and returns the schedule to Screen 8 read-only",
+      "title": "The due dates, count and amounts stay; System recalculates the Final Payment Deadline from the new date and returns the schedule to Screen 8 read-only",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B3 step 3"
       }
@@ -107172,20 +107304,20 @@
       "id": "STP-007B-701",
       "type": "Step",
       "owner_fr": "FR-007B",
-      "title": "System cancels the remaining unpaid installments of the booking (common to the provider-fault, admin and unpaid-balance cancellations)",
+      "title": "System voids the remaining unpaid installments of the booking before the refund is computed: it waits for any charge in flight and sets the plan Cancelled (common to the provider-fault, admin and unpaid-balance cancellations)",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "prd_ref": "Alternative Flow B4 step 1"
+        "prd_ref": "Alternative Flow B2 step 4 and B4 step 1"
       }
     },
     {
       "id": "STP-007B-702",
       "type": "Step",
       "owner_fr": "FR-007B",
-      "title": "Only on a provider withdrawal, drop-out, suspension or deactivation (B4 and B5), paid installments are refunded in full with no cancellation fee",
+      "title": "Only on a provider withdrawal, drop-out, suspension or deactivation (B4 and B5), paid installments and any collected late fee are refunded in full with no cancellation fee",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "prd_ref": "Alternative Flow B4 step 2"
       }
@@ -137833,6 +137965,14 @@
       "calculated_by": null
     },
     {
+      "id": "ENT-installment-plan.cancellation_point_days",
+      "entity_id": "ENT-installment-plan",
+      "name": "cancellation_point_days",
+      "data_type": "int",
+      "required": false,
+      "calculated_by": null
+    },
+    {
       "id": "ENT-installment-plan.completion_percentage",
       "entity_id": "ENT-installment-plan",
       "name": "completion_percentage",
@@ -137889,6 +138029,14 @@
       "calculated_by": "REQ-007B-003"
     },
     {
+      "id": "ENT-installment-plan.grace_period_days",
+      "entity_id": "ENT-installment-plan",
+      "name": "grace_period_days",
+      "data_type": "int",
+      "required": false,
+      "calculated_by": null
+    },
+    {
       "id": "ENT-installment-plan.installment_amount",
       "entity_id": "ENT-installment-plan",
       "name": "installment_amount",
@@ -137927,6 +138075,14 @@
       "data_type": "bool",
       "required": false,
       "calculated_by": "REQ-007B-100"
+    },
+    {
+      "id": "ENT-installment-plan.late_fee_setting",
+      "entity_id": "ENT-installment-plan",
+      "name": "late_fee_setting",
+      "data_type": "text",
+      "required": false,
+      "calculated_by": null
     },
     {
       "id": "ENT-installment-plan.max_installments",
@@ -169594,7 +169750,7 @@
       "verb": "active in",
       "to_id": "STG-main-05-payment",
       "attrs": {
-        "rules": 106
+        "rules": 111
       },
       "derived": true
     },
@@ -194194,6 +194350,126 @@
     },
     {
       "from_id": "REQ-007B-107",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-007B",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007B-108",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007B-108",
+      "verb": "applies to",
+      "to_id": "ENT-installment-plan",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007B-108",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-007B",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007B-109",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007B-109",
+      "verb": "applies to",
+      "to_id": "ENT-installment-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007B-109",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-007B",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007B-110",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007B-110",
+      "verb": "applies to",
+      "to_id": "ENT-installment-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007B-110",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-007B",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007B-110",
+      "verb": "governed by",
+      "to_id": "SET-late-payment-fee",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007B-111",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007B-111",
+      "verb": "applies to",
+      "to_id": "ENT-installment-plan",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007B-111",
+      "verb": "applies to",
+      "to_id": "EVT-installment-overdue-notice",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007B-111",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-007B",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007B-111",
+      "verb": "governed by",
+      "to_id": "SET-installment-late-payment-grace-period",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007B-111",
+      "verb": "governed by",
+      "to_id": "SET-late-payment-fee",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007B-111",
+      "verb": "governed by",
+      "to_id": "SET-unpaid-balance-cancellation-point",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007B-112",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007B-112",
+      "verb": "applies to",
+      "to_id": "ENT-installment-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007B-112",
       "verb": "decided by",
       "to_id": "SRC-PRD-007B",
       "attrs": {}
@@ -303906,6 +304182,15 @@
     {
       "from_id": "SCR-007B-01",
       "verb": "shows",
+      "to_id": "ENT-installment-plan.cancellation_point_days",
+      "attrs": {
+        "provenance": "inherited from another FR",
+        "label": "Cancellation Point"
+      }
+    },
+    {
+      "from_id": "SCR-007B-01",
+      "verb": "shows",
       "to_id": "ENT-installment-plan.currency",
       "attrs": {
         "provenance": "inherited from another FR",
@@ -303919,6 +304204,15 @@
       "attrs": {
         "provenance": "system calculated",
         "label": "Time Until Procedure"
+      }
+    },
+    {
+      "from_id": "SCR-007B-01",
+      "verb": "shows",
+      "to_id": "ENT-installment-plan.grace_period_days",
+      "attrs": {
+        "provenance": "inherited from another FR",
+        "label": "Grace Period"
       }
     },
     {
@@ -303938,6 +304232,15 @@
         "provenance": "user input",
         "label": "Selected Installments",
         "editable": true
+      }
+    },
+    {
+      "from_id": "SCR-007B-01",
+      "verb": "shows",
+      "to_id": "ENT-installment-plan.late_fee_setting",
+      "attrs": {
+        "provenance": "inherited from another FR",
+        "label": "Late Fee"
       }
     },
     {
@@ -355833,6 +356136,12 @@
     },
     {
       "from_id": "STP-007B-003",
+      "verb": "applies",
+      "to_id": "REQ-007B-106",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-003",
       "verb": "at",
       "to_id": "STG-main-05-payment",
       "attrs": {}
@@ -356171,6 +356480,14 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-007B-013",
+      "verb": "next",
+      "to_id": "STP-007B-015",
+      "attrs": {
+        "label": "patient pays early"
+      }
+    },
+    {
       "from_id": "STP-007B-014",
       "verb": "applies",
       "to_id": "REQ-007B-049",
@@ -356207,6 +356524,44 @@
       "attrs": {
         "label": "plan fully paid; the share moves 30 days before the treatment date"
       }
+    },
+    {
+      "from_id": "STP-007B-015",
+      "verb": "applies",
+      "to_id": "REQ-007B-103",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-015",
+      "verb": "applies",
+      "to_id": "REQ-007B-112",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-015",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-015",
+      "verb": "done by",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-015",
+      "verb": "next",
+      "to_id": "STP-007B-014",
+      "attrs": {
+        "label": "every installment paid"
+      }
+    },
+    {
+      "from_id": "STP-007B-015",
+      "verb": "on",
+      "to_id": "SCR-007B-02",
+      "attrs": {}
     },
     {
       "from_id": "STP-007B-101",
@@ -356517,6 +356872,15 @@
       }
     },
     {
+      "from_id": "STP-007B-403",
+      "verb": "next",
+      "to_id": "STP-007B-415",
+      "attrs": {
+        "label": "retry returns a hard decline",
+        "condition": "REQ-007B-018"
+      }
+    },
+    {
       "from_id": "STP-007B-404",
       "verb": "applies",
       "to_id": "REQ-007B-018",
@@ -356543,6 +356907,15 @@
       }
     },
     {
+      "from_id": "STP-007B-404",
+      "verb": "next",
+      "to_id": "STP-007B-415",
+      "attrs": {
+        "label": "retry returns a hard decline",
+        "condition": "REQ-007B-018"
+      }
+    },
+    {
       "from_id": "STP-007B-405",
       "verb": "applies",
       "to_id": "REQ-007B-018",
@@ -356566,6 +356939,15 @@
       "to_id": "STP-007B-406",
       "attrs": {
         "label": "all 3 retries fail"
+      }
+    },
+    {
+      "from_id": "STP-007B-405",
+      "verb": "next",
+      "to_id": "STP-007B-415",
+      "attrs": {
+        "label": "retry returns a hard decline",
+        "condition": "REQ-007B-018"
       }
     },
     {
@@ -356617,9 +356999,23 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-007B-407",
+      "verb": "next",
+      "to_id": "STP-007B-416",
+      "attrs": {
+        "label": "later installments paused"
+      }
+    },
+    {
       "from_id": "STP-007B-408",
       "verb": "applies",
       "to_id": "REQ-007B-051",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-408",
+      "verb": "applies",
+      "to_id": "REQ-007B-109",
       "attrs": {}
     },
     {
@@ -356639,8 +357035,9 @@
       "verb": "next",
       "to_id": "STP-006-301",
       "attrs": {
+        "label": "booking Accepted, Payment Window Expired or Confirmed",
         "back": true,
-        "label": "booking Accepted, Payment Window Expired or Confirmed"
+        "condition": "REQ-007B-104"
       }
     },
     {
@@ -356649,6 +357046,23 @@
       "to_id": "STP-007B-413",
       "attrs": {
         "label": "booking In Progress or later"
+      }
+    },
+    {
+      "from_id": "STP-007B-408",
+      "verb": "next",
+      "to_id": "STP-007B-417",
+      "attrs": {
+        "label": "Retry Charge succeeds",
+        "back": true
+      }
+    },
+    {
+      "from_id": "STP-007B-408",
+      "verb": "next",
+      "to_id": "STP-007B-418",
+      "attrs": {
+        "label": "Mark as Resolved"
       }
     },
     {
@@ -356678,6 +357092,15 @@
       }
     },
     {
+      "from_id": "STP-007B-409",
+      "verb": "next",
+      "to_id": "STP-007B-417",
+      "attrs": {
+        "label": "patient pays with Pay now or a new card",
+        "back": true
+      }
+    },
+    {
       "from_id": "STP-007B-410",
       "verb": "applies",
       "to_id": "REQ-007B-100",
@@ -356697,6 +357120,12 @@
     },
     {
       "from_id": "STP-007B-410",
+      "verb": "applies",
+      "to_id": "REQ-007B-111",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-410",
       "verb": "at",
       "to_id": "STG-main-05-payment",
       "attrs": {}
@@ -356712,7 +357141,7 @@
       "verb": "next",
       "to_id": "STP-007B-403",
       "attrs": {
-        "label": "technical failure"
+        "label": "retryable failure"
       }
     },
     {
@@ -356785,6 +357214,12 @@
     },
     {
       "from_id": "STP-007B-412",
+      "verb": "applies",
+      "to_id": "REQ-007B-103",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-412",
       "verb": "at",
       "to_id": "STG-main-05-payment",
       "attrs": {}
@@ -356824,6 +357259,12 @@
     },
     {
       "from_id": "STP-007B-413",
+      "verb": "applies",
+      "to_id": "REQ-007B-109",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-413",
       "verb": "at",
       "to_id": "STG-main-05-payment",
       "attrs": {}
@@ -356833,6 +357274,23 @@
       "verb": "done by",
       "to_id": "ACT-platform-admin",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-413",
+      "verb": "next",
+      "to_id": "STP-007B-417",
+      "attrs": {
+        "label": "Retry Charge succeeds",
+        "back": true
+      }
+    },
+    {
+      "from_id": "STP-007B-413",
+      "verb": "next",
+      "to_id": "STP-007B-418",
+      "attrs": {
+        "label": "Mark as Resolved"
+      }
     },
     {
       "from_id": "STP-007B-413",
@@ -356854,6 +357312,18 @@
     },
     {
       "from_id": "STP-007B-414",
+      "verb": "applies",
+      "to_id": "REQ-007B-105",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-414",
+      "verb": "applies",
+      "to_id": "REQ-007B-110",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-414",
       "verb": "at",
       "to_id": "STG-main-05-payment",
       "attrs": {}
@@ -356862,6 +357332,147 @@
       "from_id": "STP-007B-414",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-415",
+      "verb": "applies",
+      "to_id": "REQ-007B-018",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-415",
+      "verb": "applies",
+      "to_id": "REQ-007B-019",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-415",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-415",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-415",
+      "verb": "next",
+      "to_id": "STP-007B-411",
+      "attrs": {
+        "label": "day 11 after the due date, still unpaid"
+      }
+    },
+    {
+      "from_id": "STP-007B-416",
+      "verb": "applies",
+      "to_id": "REQ-007B-100",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-416",
+      "verb": "applies",
+      "to_id": "REQ-007B-105",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-416",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-416",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-416",
+      "verb": "next",
+      "to_id": "STP-007B-417",
+      "attrs": {
+        "label": "the Failed installment is paid"
+      }
+    },
+    {
+      "from_id": "STP-007B-417",
+      "verb": "applies",
+      "to_id": "REQ-007B-105",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-417",
+      "verb": "applies",
+      "to_id": "REQ-007B-108",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-417",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-417",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-417",
+      "verb": "next",
+      "to_id": "STP-007B-011",
+      "attrs": {
+        "label": "next daily run charges each past-due paused installment",
+        "back": true
+      }
+    },
+    {
+      "from_id": "STP-007B-418",
+      "verb": "applies",
+      "to_id": "REQ-007B-081",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-418",
+      "verb": "applies",
+      "to_id": "REQ-007B-083",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-418",
+      "verb": "applies",
+      "to_id": "REQ-007B-109",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-418",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-418",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-418",
+      "verb": "next",
+      "to_id": "STP-007B-417",
+      "attrs": {
+        "label": "installment Paid with source manual"
+      }
+    },
+    {
+      "from_id": "STP-007B-418",
+      "verb": "on",
+      "to_id": "SCR-007B-06",
       "attrs": {}
     },
     {
@@ -356956,39 +357567,18 @@
       "verb": "next",
       "to_id": "STP-006-301",
       "attrs": {
+        "label": "FR-006 and FR-007 compute and start the refund",
         "back": true,
-        "label": "FR-006 and FR-007 compute and start the refund"
+        "condition": "REQ-007B-104"
       }
     },
     {
       "from_id": "STP-007B-503",
       "verb": "next",
-      "to_id": "STP-007B-504",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-007B-504",
-      "verb": "applies",
-      "to_id": "REQ-007B-023",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-007B-504",
-      "verb": "at",
-      "to_id": "STG-main-05-payment",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-007B-504",
-      "verb": "done by",
-      "to_id": "ACT-system",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-007B-504",
-      "verb": "next",
-      "to_id": "STP-007B-505",
-      "attrs": {}
+      "to_id": "STP-007B-701",
+      "attrs": {
+        "label": "remaining unpaid installments voided before the refund is computed"
+      }
     },
     {
       "from_id": "STP-007B-505",
@@ -357030,6 +357620,12 @@
       "from_id": "STP-007B-506",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-601",
+      "verb": "applies",
+      "to_id": "REQ-007B-024",
       "attrs": {}
     },
     {
@@ -357100,6 +357696,12 @@
     },
     {
       "from_id": "STP-007B-701",
+      "verb": "applies",
+      "to_id": "REQ-007B-110",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-701",
       "verb": "at",
       "to_id": "STG-main-05-payment",
       "attrs": {}
@@ -357109,6 +357711,14 @@
       "verb": "done by",
       "to_id": "ACT-system",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-701",
+      "verb": "next",
+      "to_id": "STP-007B-505",
+      "attrs": {
+        "label": "FR-007 has started the refund"
+      }
     },
     {
       "from_id": "STP-007B-701",
@@ -357141,7 +357751,10 @@
       "from_id": "STP-007B-702",
       "verb": "next",
       "to_id": "STP-007B-703",
-      "attrs": {}
+      "attrs": {
+        "label": "replacement booking after the provider fault",
+        "condition": "REQ-007B-027"
+      }
     },
     {
       "from_id": "STP-007B-703",
@@ -423152,6 +423765,84 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261123-083150-d16d8335",
+      "at": "2026-11-23T08:31:50.406282+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-007B logic review pass 2: the support-required marker also pauses the cancellation-point count and the FR-006 B8 hand-off; paused installments on a Defaulted plan carry no flag, notice, reminder or fee and are charged once at the next daily run when the plan returns to Active, whoever paid; Mark as Resolved is limited to a recorded bank transfer approved by a second billing admin; the late fee has a currency, a base, stays outside the clinic share, waits for retries, lapses with the plan and is returned on a provider-fault refund; the plan keeps the late fee, grace period and cancellation point as confirmed and Screen 1 shows them; a date change keeps the due dates; only enabled counts are offered; early payment with Pay now; the provider list covers every plan status; insufficient funds is retried and hard declines are defined; one void step runs before the refund and sets the plan Cancelled; guards go on the edges and the edges of retired steps are removed. Written, not applied.",
+      "source_id": null,
+      "nodes_added": [
+        "ENT-installment-plan.cancellation_point_days",
+        "ENT-installment-plan.grace_period_days",
+        "ENT-installment-plan.late_fee_setting",
+        "REQ-007B-108",
+        "REQ-007B-109",
+        "REQ-007B-110",
+        "REQ-007B-111",
+        "REQ-007B-112",
+        "STP-007B-015",
+        "STP-007B-415",
+        "STP-007B-416",
+        "STP-007B-417",
+        "STP-007B-418"
+      ],
+      "nodes_updated": [
+        "ENT-installment-payment.late_fee_amount",
+        "ENT-installment-payment.payment_source",
+        "ENT-installment-plan.final_payment_deadline",
+        "ENT-installment-plan.status",
+        "EVT-installment-overdue-notice",
+        "REQ-007B-018",
+        "REQ-007B-022",
+        "REQ-007B-023",
+        "REQ-007B-024",
+        "REQ-007B-027",
+        "REQ-007B-030",
+        "REQ-007B-036",
+        "REQ-007B-060",
+        "REQ-007B-061",
+        "REQ-007B-066",
+        "REQ-007B-080",
+        "REQ-007B-081",
+        "REQ-007B-084",
+        "REQ-007B-099",
+        "REQ-007B-100",
+        "REQ-007B-101",
+        "REQ-007B-102",
+        "REQ-007B-103",
+        "REQ-007B-105",
+        "REQ-007B-106",
+        "REQ-007B-107",
+        "SCR-007B-01",
+        "SCR-007B-02",
+        "SCR-007B-06",
+        "STP-007B-003",
+        "STP-007B-013",
+        "STP-007B-403",
+        "STP-007B-404",
+        "STP-007B-405",
+        "STP-007B-407",
+        "STP-007B-408",
+        "STP-007B-409",
+        "STP-007B-410",
+        "STP-007B-412",
+        "STP-007B-413",
+        "STP-007B-414",
+        "STP-007B-503",
+        "STP-007B-504",
+        "STP-007B-601",
+        "STP-007B-602",
+        "STP-007B-603",
+        "STP-007B-604",
+        "STP-007B-605",
+        "STP-007B-606",
+        "STP-007B-701",
+        "STP-007B-702"
+      ],
+      "edges_added": 76,
+      "edges_removed": 29,
+      "rows": 233
+    },
     {
       "id": "cs-20261123-075857-989ba692",
       "at": "2026-11-23T07:58:57.049531+00:00",
