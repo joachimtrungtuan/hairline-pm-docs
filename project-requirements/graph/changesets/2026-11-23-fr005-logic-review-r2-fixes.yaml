@@ -1,0 +1,48 @@
+reason: "FR-005 logic review round 2: terms acknowledgment empty on an admin-authored replacement acceptance (REQ-005-024, ENT-acceptance-event.terms_acknowledged_at); Superseded subquote state (REQ-005-052, REQ-005-024 step STP-005-016); STP-005-014 screen; Cancelled (Provider Status) reason text (REQ-005-039); owning Step for the 5-minute question notice (REQ-005-016, new STP-005-028); stale-version rejection step (new STP-005-029); retired-rule edges removed from REQ-005-009, -017, -027, -030, -053 and -060; replacement step order and stage (STP-006-605, STP-005-016, STP-006-606); owning Steps for REQ-005-048 and REQ-005-044. The inquiry cancellation cascade wording and the FR-010 FAQ line change in the PRDs only."
+by: docs-manager
+operations:
+  - {"op": "update_node", "id": "ENT-acceptance-event.terms_acknowledged_at", "attrs": {"description": "Patient terms acknowledgment captured before acceptance (Screens 2 and 3). Required on a patient acceptance; empty on an admin-authored replacement acceptance (REQ-005-024), which records the admin as actor and carries the actor and reason on its supersession record instead. FR-004 holds a copy on the Quote. Added for the Terms Acknowledgment fields."}}
+  - {"op": "update_field", "id": "ENT-acceptance-event.terms_acknowledged_at", "required": false}
+  - {"op": "update_node", "id": "REQ-005-024", "attrs": {"statement": "System MUST allow exactly one patient acceptance per inquiry. The only additional acceptance record is the admin-authored record created by an FR-006 provider-fault transfer before treatment starts; it MUST point to an admin-authored FR-004 replacement quote, Quote Option, and option/date-price row, and the original MUST be marked superseded by one supersession record inserted at the replacement acceptance rather than by editing it. The admin-authored record carries no patient terms acknowledgment, so its terms acknowledgment time stays empty; it records the admin as actor, and the supersession record written in the same operation carries the actor and the reason."}}
+  - {"op": "add_edge", "from": "STP-005-014", "verb": "on", "to": "SCR-005-01"}
+  - {"op": "add_enum_value", "field_id": "ENT-subquote.acceptance_state", "value": "superseded", "label": "Superseded", "sort_order": 6}
+  - {"op": "update_node", "id": "ENT-subquote.acceptance_state", "attrs": {"description": "Subquote state (Key Entities `state`; the field name acceptance_state was set during FR-004 migration and is immutable). FR-005 owns it; derived from the parent and subquote lifecycle; exactly one Accepted, and not superseded, across the inquiry. Superseded is the original accepted subquote after an admin-authored replacement acceptance."}}
+  - {"op": "update_node", "id": "REQ-005-052", "attrs": {"statement": "Subquote state is Available, Accepted, Not Selected, Expired, Withdrawn, Cancelled, or Superseded, derived from the parent and subquote lifecycle; exactly one subquote across the inquiry is Accepted and not superseded. After an admin-authored replacement acceptance (REQ-005-024) the original accepted subquote is Superseded: read-only, never acceptable again, with its AcceptanceEvent and acceptance snapshot unchanged and closed by the supersession record."}}
+  - {"op": "add_edge", "from": "STP-005-016", "verb": "applies", "to": "REQ-005-052"}
+  - {"op": "update_node", "id": "REQ-005-039", "attrs": {"statement": "Notifications sent to non-selected providers (due to auto-cancellation) MUST NOT reveal the identity of the selected provider or the accepted price. The non-selected reason reads \"Other subquote accepted\" or \"Inquiry cancelled by patient\", and a provider whose parent quote is cancelled because the provider's account was suspended or deactivated sees \"Provider account suspended or deactivated\"."}}
+  - {"op": "update_node", "id": "REQ-005-016", "attrs": {"statement": "System MUST deliver a patient's quote question to the provider as an FR-012 message, and the provider's notification of it MUST arrive within 5 minutes at the latest."}}
+  - {"op": "add_node", "id": "STP-005-028", "type": "Step", "title": "Patient taps Message Provider on a parent quote and opens the provider conversation in the FR-012 inbox", "owner_fr": "FR-005", "attrs": {"prd_ref": "Screen 1 Message Provider"}}
+  - {"op": "add_edge", "from": "STP-005-028", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-005-028", "verb": "at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "STP-005-028", "verb": "on", "to": "SCR-005-01"}
+  - {"op": "add_edge", "from": "STP-005-028", "verb": "applies", "to": "REQ-005-015"}
+  - {"op": "add_edge", "from": "STP-005-028", "verb": "applies", "to": "REQ-005-016"}
+  - {"op": "add_edge", "from": "STP-005-002", "verb": "next", "to": "STP-005-028", "attrs": {"label": "patient asks the provider about the quote"}}
+  - {"op": "add_edge", "from": "STP-005-028", "verb": "next", "to": "STP-012-003", "attrs": {"label": "conversation opens in the FR-012 inbox", "back": true}}
+  - {"op": "remove_edge", "from": "REQ-005-009", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "remove_edge", "from": "REQ-005-017", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "remove_edge", "from": "REQ-005-017", "verb": "applies to", "to": "ENT-acceptance-event.snapshot"}
+  - {"op": "remove_edge", "from": "REQ-005-027", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "remove_edge", "from": "REQ-005-027", "verb": "applies to", "to": "SCR-005-01"}
+  - {"op": "remove_edge", "from": "REQ-005-030", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "remove_edge", "from": "REQ-005-030", "verb": "applies at", "to": "STG-main-04-booking"}
+  - {"op": "remove_edge", "from": "REQ-005-030", "verb": "applies to", "to": "SCR-005-01"}
+  - {"op": "remove_edge", "from": "REQ-005-053", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "remove_edge", "from": "REQ-005-053", "verb": "applies to", "to": "SCR-005-01"}
+  - {"op": "remove_edge", "from": "REQ-005-060", "verb": "applies at", "to": "STG-main-03-acceptance"}
+  - {"op": "remove_edge", "from": "STP-006-605", "verb": "next", "to": "STP-006-606"}
+  - {"op": "remove_edge", "from": "STP-006-605", "verb": "next", "to": "STP-005-016"}
+  - {"op": "remove_edge", "from": "STP-005-016", "verb": "at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "STP-005-016", "verb": "at", "to": "STG-main-04-booking"}
+  - {"op": "add_edge", "from": "STP-005-016", "verb": "on", "to": "SCR-006-10"}
+  - {"op": "add_edge", "from": "STP-006-605", "verb": "next", "to": "STP-005-016"}
+  - {"op": "add_edge", "from": "STP-005-016", "verb": "next", "to": "STP-006-606"}
+  - {"op": "add_edge", "from": "STP-005-003", "verb": "applies", "to": "REQ-005-048"}
+  - {"op": "add_edge", "from": "STP-005-018", "verb": "applies", "to": "REQ-005-044"}
+  - {"op": "add_node", "id": "STP-005-029", "type": "Step", "title": "Patient is told the selection is no longer current, nothing is recorded as accepted, and reviews the current version on the subquote detail", "owner_fr": "FR-005", "attrs": {"prd_ref": "User Story 5 acceptance scenario 2 and Edge Cases (stale confirmation)"}}
+  - {"op": "add_edge", "from": "STP-005-029", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-005-029", "verb": "at", "to": "STG-main-03-acceptance"}
+  - {"op": "add_edge", "from": "STP-005-029", "verb": "on", "to": "SCR-005-02"}
+  - {"op": "add_edge", "from": "STP-005-029", "verb": "applies", "to": "REQ-005-019"}
+  - {"op": "add_edge", "from": "STP-005-017", "verb": "next", "to": "STP-005-029", "attrs": {"label": "parent or subquote version is no longer current, nothing recorded as accepted"}}
+  - {"op": "add_edge", "from": "STP-005-029", "verb": "next", "to": "STP-005-004", "attrs": {"label": "patient reviews the current version and taps Accept again"}}

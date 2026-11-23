@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-23T02:32:18Z",
+  "generated_at": "2026-11-23T04:10:20Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -479,9 +479,9 @@
       "owner_fr": "FR-005",
       "title": "Terms acknowledged at",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Patient terms acknowledgment captured before acceptance (Screens 2 and 3). FR-004 holds a copy on the Quote. Added for the Terms Acknowledgment fields."
+        "description": "Patient terms acknowledgment captured before acceptance (Screens 2 and 3). Required on a patient acceptance; empty on an admin-authored replacement acceptance (REQ-005-024), which records the admin as actor and carries the actor and reason on its supersession record instead. FR-004 holds a copy on the Quote. Added for the Terms Acknowledgment fields."
       }
     },
     {
@@ -26808,9 +26808,9 @@
       "owner_fr": "FR-005",
       "title": "State",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Subquote state (Key Entities `state`; the field name acceptance_state was set during FR-004 migration and is immutable). FR-005 owns it; derived from the parent and subquote lifecycle; exactly one Accepted across the inquiry."
+        "description": "Subquote state (Key Entities `state`; the field name acceptance_state was set during FR-004 migration and is immutable). FR-005 owns it; derived from the parent and subquote lifecycle; exactly one Accepted, and not superseded, across the inquiry. Superseded is the original accepted subquote after an admin-authored replacement acceptance."
       }
     },
     {
@@ -44042,9 +44042,9 @@
       "owner_fr": "FR-005",
       "title": "Provider notified of quote questions within 5 minutes",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System MUST notify the provider of patient quote questions within 5 minutes.",
+        "statement": "System MUST deliver a patient's quote question to the provider as an FR-012 message, and the provider's notification of it MUST arrive within 5 minutes at the latest.",
         "rationale": "Restated by the Communication Structure (System to Provider: notify the provider of patient quote questions within 5 minutes)."
       }
     },
@@ -44126,9 +44126,9 @@
       "owner_fr": "FR-005",
       "title": "Only additional acceptance is the provider-fault replacement",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST allow exactly one patient acceptance per inquiry. The only additional acceptance record is the admin-authored record created by an FR-006 provider-fault transfer before treatment starts; it MUST point to an admin-authored FR-004 replacement quote, Quote Option, and option/date-price row, and the original MUST be marked superseded by one supersession record inserted at the replacement acceptance rather than by editing it.",
+        "statement": "System MUST allow exactly one patient acceptance per inquiry. The only additional acceptance record is the admin-authored record created by an FR-006 provider-fault transfer before treatment starts; it MUST point to an admin-authored FR-004 replacement quote, Quote Option, and option/date-price row, and the original MUST be marked superseded by one supersession record inserted at the replacement acceptance rather than by editing it. The admin-authored record carries no patient terms acknowledgment, so its terms acknowledgment time stays empty; it records the admin as actor, and the supersession record written in the same operation carries the actor and the reason.",
         "rationale": "Restated by Business Rule 1 (applies only before treatment starts; the closure is recorded on the booking as its cause; one supersession record with cause ProviderFault, ProviderSuspended, or ProviderDeactivated links the closed acceptance to the new one; the patient keeps the same inquiry and re-enters nothing; money already paid is refunded to the patient in full, with no cancellation fee, and the replacement booking takes a new payment, the mechanics being defined by FR-007, FR-007b, and FR-017), Alternative Flows A3, A6, and A9 (FR-006 owns the provider-fault case; the admin authors the replacement quote on FR-004 Screen 8 and records a new AcceptanceEvent with actorType = admin; the AcceptanceSupersession record is inserted once and never updated; the original AcceptanceEvent and snapshot stay unchanged as history), Admin Editability, and Key Entities (AcceptanceSupersession)."
       }
     },
@@ -44270,9 +44270,9 @@
       "owner_fr": "FR-005",
       "title": "Non-selected notices reveal no winner or price",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Notifications sent to non-selected providers (due to auto-cancellation) MUST NOT reveal the identity of the selected provider or the accepted price. The non-selected reason reads \"Other subquote accepted\" or \"Inquiry cancelled by patient\".",
+        "statement": "Notifications sent to non-selected providers (due to auto-cancellation) MUST NOT reveal the identity of the selected provider or the accepted price. The non-selected reason reads \"Other subquote accepted\" or \"Inquiry cancelled by patient\", and a provider whose parent quote is cancelled because the provider's account was suspended or deactivated sees \"Provider account suspended or deactivated\".",
         "rationale": "Business Rule 7, Main Flow step 9, and the Screen 4 Reason field (must not identify another provider or disclose the accepted price)."
       }
     },
@@ -44425,9 +44425,9 @@
       "owner_fr": "FR-005",
       "title": "Subquote state derived from lifecycle",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Subquote state is Available, Accepted, Not Selected, Expired, Withdrawn, or Cancelled, derived from the parent and subquote lifecycle; exactly one subquote across the inquiry is Accepted.",
+        "statement": "Subquote state is Available, Accepted, Not Selected, Expired, Withdrawn, Cancelled, or Superseded, derived from the parent and subquote lifecycle; exactly one subquote across the inquiry is Accepted and not superseded. After an admin-authored replacement acceptance (REQ-005-024) the original accepted subquote is Superseded: read-only, never acceptable again, with its AcceptanceEvent and acceptance snapshot unchanged and closed by the supersession record.",
         "rationale": "Screen 1 per-subquote State field and Screen 4 Subquote Outcome field."
       }
     },
@@ -104757,7 +104757,7 @@
       "owner_fr": "FR-005",
       "title": "Patient expands a parent quote and reviews its subquotes",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 2"
       }
@@ -104768,7 +104768,7 @@
       "owner_fr": "FR-005",
       "title": "Patient compares eligible subquotes across and within parent quotes",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 3"
       }
@@ -104889,7 +104889,7 @@
       "owner_fr": "FR-005",
       "title": "Patient sees Contact support with admin recovery routes after the payment window expires",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A7"
       }
@@ -104911,7 +104911,7 @@
       "owner_fr": "FR-005",
       "title": "Admin records the replacement acceptance and supersession for a provider-fault transfer",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flow A9"
       }
@@ -104922,7 +104922,7 @@
       "owner_fr": "FR-005",
       "title": "System revalidates the selection and acquires the exclusive slot hold",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow step 6"
       }
@@ -104933,7 +104933,7 @@
       "owner_fr": "FR-005",
       "title": "System records the acceptance, locks the selection and writes the accepted total",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 7"
       }
@@ -105035,6 +105035,28 @@
       "version": 1,
       "attrs": {
         "prd_ref": "Screen 5"
+      }
+    },
+    {
+      "id": "STP-005-028",
+      "type": "Step",
+      "owner_fr": "FR-005",
+      "title": "Patient taps Message Provider on a parent quote and opens the provider conversation in the FR-012 inbox",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Screen 1 Message Provider"
+      }
+    },
+    {
+      "id": "STP-005-029",
+      "type": "Step",
+      "owner_fr": "FR-005",
+      "title": "Patient is told the selection is no longer current, nothing is recorded as accepted, and reviews the current version on the subquote detail",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "User Story 5 acceptance scenario 2 and Edge Cases (stale confirmation)"
       }
     },
     {
@@ -105429,7 +105451,7 @@
       "owner_fr": "FR-006",
       "title": "Admin selects one option and date-price row of the replacement quote and confirms the replacement acceptance",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flow B5 step 5"
       }
@@ -128520,7 +128542,7 @@
       "entity_id": "ENT-acceptance-event",
       "name": "terms_acknowledged_at",
       "data_type": "datetime",
-      "required": true,
+      "required": false,
       "calculated_by": null
     },
     {
@@ -156290,6 +156312,12 @@
       "value": "cancelled",
       "label": "Cancelled",
       "sort_order": 5
+    },
+    {
+      "field_id": "ENT-subquote.acceptance_state",
+      "value": "superseded",
+      "label": "Superseded",
+      "sort_order": 6
     },
     {
       "field_id": "ENT-support-case-attachment.uploader_type",
@@ -349044,6 +349072,14 @@
     },
     {
       "from_id": "STP-005-002",
+      "verb": "next",
+      "to_id": "STP-005-028",
+      "attrs": {
+        "label": "patient asks the provider about the quote"
+      }
+    },
+    {
+      "from_id": "STP-005-002",
       "verb": "on",
       "to_id": "SCR-005-01",
       "attrs": {}
@@ -349070,6 +349106,12 @@
       "from_id": "STP-005-003",
       "verb": "applies",
       "to_id": "REQ-005-047",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-003",
+      "verb": "applies",
+      "to_id": "REQ-005-048",
       "attrs": {}
     },
     {
@@ -349493,6 +349535,12 @@
       }
     },
     {
+      "from_id": "STP-005-014",
+      "verb": "on",
+      "to_id": "SCR-005-01",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-005-015",
       "verb": "applies",
       "to_id": "REQ-005-026",
@@ -349564,14 +349612,32 @@
     },
     {
       "from_id": "STP-005-016",
+      "verb": "applies",
+      "to_id": "REQ-005-052",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-016",
       "verb": "at",
-      "to_id": "STG-main-03-acceptance",
+      "to_id": "STG-main-04-booking",
       "attrs": {}
     },
     {
       "from_id": "STP-005-016",
       "verb": "done by",
       "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-016",
+      "verb": "next",
+      "to_id": "STP-006-606",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-016",
+      "verb": "on",
+      "to_id": "SCR-006-10",
       "attrs": {}
     },
     {
@@ -349649,6 +349715,14 @@
       }
     },
     {
+      "from_id": "STP-005-017",
+      "verb": "next",
+      "to_id": "STP-005-029",
+      "attrs": {
+        "label": "parent or subquote version is no longer current, nothing recorded as accepted"
+      }
+    },
+    {
       "from_id": "STP-005-018",
       "verb": "applies",
       "to_id": "REQ-005-006",
@@ -349658,6 +349732,12 @@
       "from_id": "STP-005-018",
       "verb": "applies",
       "to_id": "REQ-005-037",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-018",
+      "verb": "applies",
+      "to_id": "REQ-005-044",
       "attrs": {}
     },
     {
@@ -350000,6 +350080,77 @@
       "from_id": "STP-005-027",
       "verb": "on",
       "to_id": "SCR-005-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-028",
+      "verb": "applies",
+      "to_id": "REQ-005-015",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-028",
+      "verb": "applies",
+      "to_id": "REQ-005-016",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-028",
+      "verb": "at",
+      "to_id": "STG-main-03-acceptance",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-028",
+      "verb": "done by",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-028",
+      "verb": "next",
+      "to_id": "STP-012-003",
+      "attrs": {
+        "label": "conversation opens in the FR-012 inbox",
+        "back": true
+      }
+    },
+    {
+      "from_id": "STP-005-028",
+      "verb": "on",
+      "to_id": "SCR-005-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-029",
+      "verb": "applies",
+      "to_id": "REQ-005-019",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-029",
+      "verb": "at",
+      "to_id": "STG-main-03-acceptance",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-029",
+      "verb": "done by",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-029",
+      "verb": "next",
+      "to_id": "STP-005-004",
+      "attrs": {
+        "label": "patient reviews the current version and taps Accept again"
+      }
+    },
+    {
+      "from_id": "STP-005-029",
+      "verb": "on",
+      "to_id": "SCR-005-02",
       "attrs": {}
     },
     {
@@ -351160,14 +351311,6 @@
       "from_id": "STP-006-605",
       "verb": "next",
       "to_id": "STP-005-016",
-      "attrs": {
-        "back": true
-      }
-    },
-    {
-      "from_id": "STP-006-605",
-      "verb": "next",
-      "to_id": "STP-006-606",
       "attrs": {}
     },
     {
@@ -419515,6 +419658,41 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261123-040908-13de0c76",
+      "at": "2026-11-23T04:09:08.793799+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-005 logic review round 2: terms acknowledgment empty on an admin-authored replacement acceptance (REQ-005-024, ENT-acceptance-event.terms_acknowledged_at); Superseded subquote state (REQ-005-052, REQ-005-024 step STP-005-016); STP-005-014 screen; Cancelled (Provider Status) reason text (REQ-005-039); owning Step for the 5-minute question notice (REQ-005-016, new STP-005-028); stale-version rejection step (new STP-005-029); retired-rule edges removed from REQ-005-009, -017, -027, -030, -053 and -060; replacement step order and stage (STP-006-605, STP-005-016, STP-006-606); owning Steps for REQ-005-048 and REQ-005-044. The inquiry cancellation cascade wording and the FR-010 FAQ line change in the PRDs only.",
+      "source_id": null,
+      "nodes_added": [
+        "STP-005-028",
+        "STP-005-029"
+      ],
+      "nodes_updated": [
+        "ENT-acceptance-event.terms_acknowledged_at",
+        "ENT-subquote.acceptance_state",
+        "REQ-005-009",
+        "REQ-005-016",
+        "REQ-005-017",
+        "REQ-005-024",
+        "REQ-005-027",
+        "REQ-005-030",
+        "REQ-005-039",
+        "REQ-005-052",
+        "REQ-005-053",
+        "REQ-005-060",
+        "STP-005-002",
+        "STP-005-003",
+        "STP-005-014",
+        "STP-005-016",
+        "STP-005-017",
+        "STP-005-018",
+        "STP-006-605"
+      ],
+      "edges_added": 21,
+      "edges_removed": 14,
+      "rows": 53
+    },
     {
       "id": "cs-20261123-023120-451b20b5",
       "at": "2026-11-23T02:31:20.370013+00:00",
