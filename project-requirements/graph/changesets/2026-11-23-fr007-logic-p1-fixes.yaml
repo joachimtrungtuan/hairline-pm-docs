@@ -1,0 +1,219 @@
+reason: "FR-007 logic review: one final-payment due date from the FR-029 balance due days and an Overdue definition with a scheduled trigger; unpaid-balance cancellation only through the FR-006 cancellation point; refund approval limited to exception and manual refunds with a second admin, deny action, escalation and one reason rule; Screen 6 as the single refund control with a case selector; refund base and cancellation fee; share movement for the deposit-and-balance option; payout eligibility after the confirmation window; retry and replacement steps wired; late capture refunded automatically; three payment options; payment status values defined; reminder setting range; standalone aftercare payment flow; in-treatment fault payout hold, refund and release steps; duplicate revive step retired in favour of FR-006"
+by: docs-manager
+operations:
+  - {"op": "update_node", "id": "REQ-007-036", "title": "The final payment is due the FR-029 balance-due days before the procedure; an unpaid balance is Overdue from the next day and is flagged and notified", "attrs": {"statement": "The final payment is due the number of days before the procedure date that FR-029 sets as the deposit plan balance due days (launch default 7; an admin edits it in FR-029). A balance still unpaid is Overdue from the day after the due date. A scheduled job, not the display flag, raises the overdue event once, flags the booking and notifies billing admins. An overdue balance never causes Payment Window Expired and cancels the booking only through the FR-006 unpaid balance cancellation (REQ-007-021)."}}
+  - {"op": "add_edge", "from": "REQ-007-036", "verb": "governed by", "to": "SET-deposit-plan-balance-due-days"}
+  - {"op": "update_node", "id": "REQ-007-038", "title": "Final payment reminders follow the admin timing setting: up to three, 0 to 14 days before the due date, default three days before and on the due date", "attrs": {"statement": "Reminders for the final payment go out at the days set in the payment reminder timing setting: whole days from 0 to 14 before the due date, up to 3 reminders; the default is 3 days before the due date and on the due date. No reminder is sent while an FR-006 provider fault is pending on the booking (REQ-006-081)."}}
+  - {"op": "update_node", "id": "REQ-007-076", "attrs": {"statement": "Configurable with Restrictions: Payment reminder timing: the single payment-reminder setting, owned by this module and read by FR-030; whole days 0 to 14 before the due date, up to 3 reminders, default 3 days before the due date and on the due date. The payout execution timing window is owned by FR-017 (not in this module)."}}
+  - {"op": "update_node", "id": "SET-payment-reminder-timing", "attrs": {"description": "When the final payment reminders go out: whole days from 0 to 14 before the due date, up to 3 reminders. Owned by FR-007 and read by FR-030 and FR-017.", "default": "3 days before the due date and on the due date", "unit": "days"}}
+  - {"op": "update_node", "id": "EVT-payment-overdue", "attrs": {"description": "A scheduled job raises this once when a balance is still unpaid the day after its due date; the booking is flagged Overdue and billing admins are notified."}}
+  - {"op": "update_node", "id": "REQ-007-021", "attrs": {"statement": "`Payment Window Expired` MUST apply only to the first payment step, as stated in FR-006 (REQ-006-016). A missed later installment or final payment MUST NOT cause `Payment Window Expired`, booking cancellation, or inquiry cancellation, except the FR-006 unpaid balance cancellation (Alternative Flow B8) at the FR-029 Unpaid Balance Cancellation Point, which applies only when an admin has set that point and only to bookings confirmed after it is set."}}
+  - {"op": "add_edge", "from": "REQ-007-021", "verb": "governed by", "to": "SET-unpaid-balance-cancellation-point"}
+  - {"op": "add_edge", "from": "SCR-007-02", "verb": "shows", "to": "ENT-booking.final_payment_due_at", "attrs": {"provenance": "inherited from another FR", "label": "Final Payment Due Date"}}
+  - {"op": "add_node", "id": "STP-007-014", "type": "Step", "title": "System sends the payment reminders set in the admin timing setting; from the day after the due date with a balance unpaid it flags the booking Overdue and notifies billing admins", "owner_fr": "FR-007", "attrs": {"prd_ref": "Main Flow, reminders and overdue"}}
+  - {"op": "add_edge", "from": "STP-007-014", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-007-014", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-007-014", "verb": "applies", "to": "REQ-007-036"}
+  - {"op": "add_edge", "from": "STP-007-014", "verb": "applies", "to": "REQ-007-038"}
+  - {"op": "add_edge", "from": "STP-007-014", "verb": "applies", "to": "REQ-007-076"}
+  - {"op": "add_edge", "from": "STP-007-014", "verb": "applies", "to": "REQ-007-021"}
+  - {"op": "add_edge", "from": "STP-007-014", "verb": "applies", "to": "REQ-006-081"}
+  - {"op": "add_edge", "from": "STP-007-005", "verb": "next", "to": "STP-007-014", "attrs": {"label": "balance remains"}}
+  - {"op": "add_edge", "from": "STP-007-014", "verb": "next", "to": "STP-007-006", "attrs": {"label": "patient pays from a reminder or from booking details"}}
+  - {"op": "add_edge", "from": "STP-007-014", "verb": "next", "to": "STP-006-901", "attrs": {"label": "balance still unpaid at the FR-029 cancellation point, when one is set", "back": true}}
+  - {"op": "add_node", "id": "REQ-007-098", "type": "Rule", "title": "The patient has three payment options: pay in full now, deposit now and balance later, or installments", "owner_fr": "FR-007", "attrs": {"statement": "The patient chooses one of three payment options on FR-006 Screen 1: pay in full now, a deposit now with the balance later, or installments (2 to 9, FR-007B). FR-007 Screen 1 shows the chosen option read-only. The first successful charge of the chosen option confirms the booking."}}
+  - {"op": "add_edge", "from": "REQ-007-098", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-007-098", "verb": "applies to", "to": "ENT-booking.payment_option"}
+  - {"op": "add_edge", "from": "REQ-007-098", "verb": "applies to", "to": "SCR-007-01"}
+  - {"op": "add_edge", "from": "REQ-007-098", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "add_enum_value", "field_id": "ENT-booking.payment_option", "value": "deposit_and_final", "label": "Deposit now, balance later", "sort_order": 1}
+  - {"op": "add_edge", "from": "SCR-007-01", "verb": "shows", "to": "ENT-booking.payment_option", "attrs": {"provenance": "inherited from another FR", "label": "Payment Option"}}
+  - {"op": "update_node", "id": "REQ-007-001", "title": "Patients pay the accepted subquote's booking by one of three options: in full, deposit then balance, or installments", "attrs": {"statement": "System MUST allow patients to pay the accepted subquote's booking by one of three options (REQ-007-098): in full now, a deposit now with the balance by its due date, or installments per FR-007B; the first successful charge confirms the same booking."}}
+  - {"op": "add_edge", "from": "STP-007-001", "verb": "applies", "to": "REQ-007-098"}
+  - {"op": "retire_enum_value", "field_id": "ENT-booking.payment_status", "value": "at_risk"}
+  - {"op": "update_node", "id": "ENT-booking.payment_status", "attrs": {"description": "The single payment status of a booking, owned by FR-007 and read by FR-006: Unpaid, Deposit only, Installments active, Full paid, Refunded. Overdue is a calculated flag, not a list value (REQ-007-099)."}}
+  - {"op": "add_node", "id": "REQ-007-099", "type": "Rule", "title": "Payment status values are defined: Refunded means all paid money returned, Partial deposit means part of the deposit received", "owner_fr": "FR-007", "attrs": {"statement": "Unpaid: nothing is paid. Deposit only: the deposit is paid and the balance is not. Installments active: an installment plan has started and is not fully paid. Full paid: the whole payable total is paid. Refunded: all money paid has been returned; a part refund leaves the previous status and shows in the refund history. Deposit status Partial: only part of the deposit amount has been received and the rest is still due; the booking is not confirmed until the full deposit is paid. At Risk is not a status."}}
+  - {"op": "add_edge", "from": "REQ-007-099", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-007-099", "verb": "applies to", "to": "ENT-booking.payment_status"}
+  - {"op": "add_edge", "from": "REQ-007-099", "verb": "applies to", "to": "ENT-booking.deposit_status"}
+  - {"op": "add_edge", "from": "REQ-007-099", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "add_field", "id": "ENT-payment.refund_case", "entity_id": "ENT-payment", "name": "refund_case", "data_type": "enum", "title": "Refund case", "owner_fr": "FR-007", "attrs": {"description": "Closure case from FR-006, exception, or manual; chosen on Screen 6."}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-payment.refund_case", "attrs": {"provenance": "user input", "label": "Refund case"}}
+  - {"op": "add_field", "id": "ENT-payment.admin_set_amount", "entity_id": "ENT-payment", "name": "admin_set_amount", "data_type": "money", "title": "Admin-set refund amount", "owner_fr": "FR-007", "attrs": {"description": "Amount an admin sets for the admin-set cases (in-treatment provider fault, manual refund); from zero up to the amount paid."}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-payment.admin_set_amount", "attrs": {"provenance": "user input", "label": "Admin-set refund amount"}}
+  - {"op": "add_field", "id": "ENT-payment.approval_status", "entity_id": "ENT-payment", "name": "approval_status", "data_type": "enum", "title": "Refund approval status", "owner_fr": "FR-007", "attrs": {"description": "Not required, awaiting approval, approved or denied."}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-payment.approval_status", "attrs": {"provenance": "system calculated", "label": "Refund approval status"}}
+  - {"op": "add_field", "id": "ENT-payment.requested_by", "entity_id": "ENT-payment", "name": "requested_by", "data_type": "id", "title": "Refund requested by", "owner_fr": "FR-007", "attrs": {"description": "The admin who submitted the exception or manual refund."}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-payment.requested_by", "attrs": {"provenance": "system calculated", "label": "Refund requested by"}}
+  - {"op": "add_field", "id": "ENT-payment.approved_by", "entity_id": "ENT-payment", "name": "approved_by", "data_type": "id", "title": "Refund decided by", "owner_fr": "FR-007", "attrs": {"description": "The other admin with billing permission who approved or denied; never the requester."}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-payment.approved_by", "attrs": {"provenance": "system calculated", "label": "Refund decided by"}}
+  - {"op": "add_field", "id": "ENT-payment.decision_reason", "entity_id": "ENT-payment", "name": "decision_reason", "data_type": "text", "title": "Approval decision reason", "owner_fr": "FR-007", "attrs": {"description": "Reason for the approval or denial; 10 to 500 characters."}}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-payment.decision_reason", "attrs": {"provenance": "user input", "label": "Approval decision reason"}}
+  - {"op": "add_enum_value", "field_id": "ENT-payment.refund_case", "value": "closure_case", "label": "Closure case (FR-006)", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-payment.refund_case", "value": "exception", "label": "Exception to the policy", "sort_order": 1}
+  - {"op": "add_enum_value", "field_id": "ENT-payment.refund_case", "value": "manual", "label": "Manual refund", "sort_order": 2}
+  - {"op": "add_enum_value", "field_id": "ENT-payment.approval_status", "value": "not_required", "label": "Not required", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-payment.approval_status", "value": "awaiting_approval", "label": "Awaiting approval", "sort_order": 1}
+  - {"op": "add_enum_value", "field_id": "ENT-payment.approval_status", "value": "approved", "label": "Approved", "sort_order": 2}
+  - {"op": "add_enum_value", "field_id": "ENT-payment.approval_status", "value": "denied", "label": "Denied", "sort_order": 3}
+  - {"op": "add_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-booking.closure_cause", "attrs": {"provenance": "inherited from another FR", "label": "Closure Cause"}}
+  - {"op": "retire_node", "id": "ENT-payment.secondary_approval"}
+  - {"op": "remove_edge", "from": "SCR-007-07", "verb": "shows", "to": "ENT-payment.secondary_approval"}
+  - {"op": "remove_edge", "from": "REQ-007-064", "verb": "applies to", "to": "ENT-payment.secondary_approval"}
+  - {"op": "update_node", "id": "ENT-payment.refund_reason", "attrs": {"description": "Mandatory audit field on every refund and denial; 10 to 500 characters."}}
+  - {"op": "update_node", "id": "REQ-007-015", "title": "Exception and manual refunds need a second admin's approval within two business days; closure-case refunds need none", "attrs": {"statement": "Admin approval applies only to an exception refund and a manually entered refund. The approver is any other admin with billing permission, never the requester, and approves or denies within 2 business days; until then the refund is awaiting approval. When 2 business days pass with no decision, System sends an escalation notice to billing admins and never approves or denies on its own. A closure-case refund (REQ-006-053) runs with no second approval. The requester, approver, decision and reason are logged and notifications sent."}}
+  - {"op": "add_edge", "from": "REQ-007-015", "verb": "applies to", "to": "ENT-payment.approval_status"}
+  - {"op": "add_edge", "from": "REQ-007-015", "verb": "applies to", "to": "ENT-payment.approved_by"}
+  - {"op": "add_edge", "from": "REQ-007-015", "verb": "applies to", "to": "ENT-payment.requested_by"}
+  - {"op": "add_node", "id": "EVT-refund-approval-escalated", "type": "Event", "title": "Refund approval overdue", "owner_fr": "FR-007", "attrs": {"description": "Escalation notice to billing admins when an exception or manual refund has had no decision for 2 business days; the refund stays awaiting approval."}}
+  - {"op": "add_edge", "from": "STG-main-05-payment", "verb": "emits", "to": "EVT-refund-approval-escalated"}
+  - {"op": "add_edge", "from": "REQ-007-015", "verb": "applies to", "to": "EVT-refund-approval-escalated"}
+  - {"op": "update_node", "id": "REQ-007-064", "attrs": {"statement": "An exception to the policy (for example a medical emergency) needs documentation upload and the approval of a different admin with billing permission (REQ-007-015); the requester cannot approve it. The refund stays awaiting approval until the decision."}}
+  - {"op": "add_edge", "from": "REQ-007-064", "verb": "applies to", "to": "ENT-payment.approval_status"}
+  - {"op": "add_edge", "from": "REQ-007-064", "verb": "applies to", "to": "ENT-payment.refund_case"}
+  - {"op": "update_node", "id": "REQ-007-086", "attrs": {"statement": "When an admin denies an exception or manual refund on Screen 6, the system records the denial with its reason, keeps the booking and payment status unchanged and notifies the patient."}}
+  - {"op": "add_edge", "from": "REQ-007-086", "verb": "applies to", "to": "ENT-payment.decision_reason"}
+  - {"op": "add_edge", "from": "REQ-007-086", "verb": "applies to", "to": "ENT-payment.approval_status"}
+  - {"op": "update_node", "id": "REQ-007-067", "title": "Refund actions audited with timestamp, requester, approver, decision and reason", "attrs": {"statement": "All refund actions are auditable with timestamp, requester, approver, decision, reason and the refund case."}}
+  - {"op": "update_node", "id": "REQ-007-068", "title": "Refund reason is mandatory, 10 to 500 characters", "attrs": {"statement": "Mandatory audit field on every refund and every denial; 10 to 500 characters, the same admin reason rule as FR-006 (REQ-006-050)."}}
+  - {"op": "update_node", "id": "REQ-007-074", "attrs": {"statement": "Refund approvals and reasons, within the closure case or the FR-006 cancellation policy"}}
+  - {"op": "update_node", "id": "REQ-007-095", "attrs": {"statement": "On Screen 6, Process Refund is enabled only when all required fields are complete: the refund case, the reason and, for an admin-set case, the amount. An exception or manual refund is submitted for approval and processed once a different admin approves it."}}
+  - {"op": "add_node", "id": "REQ-007-097", "type": "Rule", "title": "Screen 6 is the single refund execution control; the admin picks the refund case", "owner_fr": "FR-007", "attrs": {"statement": "Every refund is executed on Screen 6. The admin picks the case: a closure case (the amount follows the FR-006 closure cause, REQ-006-053), an exception to the policy, or a manual refund. The amount field is open only for an admin-set case (in-treatment provider fault, manual), from zero up to the amount paid. FR-006 Process Refund and the FR-017 refund action open this screen instead of running their own refund."}}
+  - {"op": "add_edge", "from": "REQ-007-097", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-007-097", "verb": "applies to", "to": "SCR-007-07"}
+  - {"op": "add_edge", "from": "REQ-007-097", "verb": "applies to", "to": "ENT-payment.refund_case"}
+  - {"op": "add_edge", "from": "REQ-007-097", "verb": "applies to", "to": "ENT-payment.admin_set_amount"}
+  - {"op": "add_edge", "from": "REQ-007-097", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-007-097", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "add_edge", "from": "REQ-007-095", "verb": "applies to", "to": "ENT-payment.refund_case"}
+  - {"op": "update_node", "id": "REQ-007-063", "attrs": {"statement": "Refunds follow the FR-006 cancellation policy and the refund ladder set in FR-029 (launch default: >30 days before = 90% refund; 15-30 days before = 50% refund; <15 days before = no refund), unless an approved exception, for example a medical emergency. The ladder percentage applies to the amount paid toward the booking total; late payment fees are not part of that base. Provider-fault and in-treatment cases take the amount that REQ-006-053 sets"}}
+  - {"op": "update_node", "id": "REQ-007-092", "attrs": {"statement": "When a clinic withdraws or drops out after acceptance (FR-006 Alternative Flow B5), a fixed charge set in admin settings MUST be deducted from the clinic's next payout. The patient cancellation fee is the amount paid toward the booking total less the amount refunded. It MUST be split between Hairline and the clinic by a percentage set in admin settings. Neither setting has a starting value; an admin sets it."}}
+  - {"op": "update_node", "id": "REQ-007-091", "attrs": {"statement": "When a cancellation or a reschedule happens after the clinic's share has moved, the share MUST be pulled back (see Fund Release & Money Routing Rules): on cancellation the patient is refunded the amount the closure case sets (REQ-006-053) and any shortfall is deducted from the clinic's next payout; on reschedule the share moves again 60 or 30 days before the new date."}}
+  - {"op": "update_node", "id": "REQ-007-090", "attrs": {"statement": "Hairline MUST be the seller on the card payment and hold the payment; the clinic's share moves to the clinic's locked Stripe balance 60 days before the scheduled treatment date (30 days for an installment plan once fully paid), or right away when less time remains at payment, and is paid out at release. For the deposit-and-balance option, the part of the amount paid that is above Hairline's commission moves at the 60-day mark and each later payment tops it up. Hairline's balance pays refunds, chargebacks, and Stripe fees first and recovers the clinic's part afterwards."}}
+  - {"op": "update_node", "id": "REQ-007-022", "attrs": {"statement": "When a provider fault after acceptance closes a booking (FR-006 Alternative Flow B5), System MUST block further payment against it. When the provider withdraws, drops out, or is suspended or deactivated (FR-006 Alternative Flow B4), the patient is refunded in full everything paid, with no patient fee and no second approval, and the replacement booking takes a new payment. For a treatment already started and interrupted by the provider's fault, an admin MUST review the case and set the patient refund amount, from zero up to the full amount paid, with a mandatory reason and an audit entry, and the provider's payout for that booking MUST be held until the admin decides (see Fund Release & Money Routing Rules). Detailed refund and fund-release mechanics are defined in FR-007B and FR-017. A provider fault during Aftercare reassigns only the aftercare provider or team (FR-011) and has no payment effect here."}}
+  - {"op": "update_node", "id": "STP-007-021", "title": "Admin opens Refund Processing on Screen 6 and reviews the closure case, the cancellation timing and the refund the case sets (the ladder percentage of the amount paid, late fees excluded)"}
+  - {"op": "update_node", "id": "STP-007-022", "title": "System sets the refund for the case (full refund with no fee, the FR-029 ladder on the amount paid, or the admin-set amount) and starts it; a closure case needs no second approval"}
+  - {"op": "add_edge", "from": "STP-007-022", "verb": "applies", "to": "REQ-007-097"}
+  - {"op": "add_edge", "from": "STP-007-021", "verb": "applies", "to": "REQ-007-097"}
+  - {"op": "add_node", "id": "STP-007-024", "type": "Step", "title": "Admin selects the exception or manual case on Screen 6, enters the reason and the documentation and submits; the refund is awaiting approval", "owner_fr": "FR-007", "attrs": {"prd_ref": "Alternative Flow A2 step 4"}}
+  - {"op": "add_edge", "from": "STP-007-024", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-007-024", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-007-024", "verb": "applies", "to": "REQ-007-064"}
+  - {"op": "add_edge", "from": "STP-007-024", "verb": "applies", "to": "REQ-007-068"}
+  - {"op": "add_edge", "from": "STP-007-024", "verb": "applies", "to": "REQ-007-095"}
+  - {"op": "add_edge", "from": "STP-007-024", "verb": "applies", "to": "REQ-007-097"}
+  - {"op": "add_edge", "from": "STP-007-024", "verb": "on", "to": "SCR-007-07"}
+  - {"op": "add_node", "id": "STP-007-025", "type": "Step", "title": "A different admin with billing permission approves or denies within 2 business days; requester, approver and decision are recorded in the audit entry", "owner_fr": "FR-007", "attrs": {"prd_ref": "Alternative Flow A2 step 5"}}
+  - {"op": "add_edge", "from": "STP-007-025", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-007-025", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-007-025", "verb": "applies", "to": "REQ-007-015"}
+  - {"op": "add_edge", "from": "STP-007-025", "verb": "applies", "to": "REQ-007-064"}
+  - {"op": "add_edge", "from": "STP-007-025", "verb": "applies", "to": "REQ-007-067"}
+  - {"op": "add_edge", "from": "STP-007-025", "verb": "on", "to": "SCR-007-07"}
+  - {"op": "add_node", "id": "STP-007-026", "type": "Step", "title": "System records the denial with its reason, keeps the booking and payment status and notifies the patient", "owner_fr": "FR-007", "attrs": {"prd_ref": "Alternative Flow A2 step 6"}}
+  - {"op": "add_edge", "from": "STP-007-026", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-007-026", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-007-026", "verb": "applies", "to": "REQ-007-086"}
+  - {"op": "add_edge", "from": "STP-007-026", "verb": "applies", "to": "REQ-007-068"}
+  - {"op": "add_node", "id": "STP-007-027", "type": "Step", "title": "When 2 business days pass with no decision, System sends an escalation notice to billing admins; the refund stays awaiting approval and is never approved automatically", "owner_fr": "FR-007", "attrs": {"prd_ref": "Alternative Flow A2 step 7"}}
+  - {"op": "add_edge", "from": "STP-007-027", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-007-027", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-007-027", "verb": "applies", "to": "REQ-007-015"}
+  - {"op": "add_node", "id": "STP-007-028", "type": "Step", "title": "System pulls the clinic's share back where it has already moved, deducts any shortfall from the clinic's next payout and splits any cancellation fee by the admin-set percentage", "owner_fr": "FR-007", "attrs": {"prd_ref": "Alternative Flow A2 step 8"}}
+  - {"op": "add_edge", "from": "STP-007-028", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-007-028", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-007-028", "verb": "applies", "to": "REQ-007-091"}
+  - {"op": "add_edge", "from": "STP-007-028", "verb": "applies", "to": "REQ-007-092"}
+  - {"op": "add_edge", "from": "STP-007-021", "verb": "next", "to": "STP-007-024", "attrs": {"label": "exception to the policy or manual refund"}}
+  - {"op": "add_edge", "from": "STP-007-024", "verb": "next", "to": "STP-007-025", "attrs": {"label": "submitted for approval"}}
+  - {"op": "add_edge", "from": "STP-007-024", "verb": "next", "to": "STP-007-027", "attrs": {"label": "no decision within 2 business days"}}
+  - {"op": "add_edge", "from": "STP-007-025", "verb": "next", "to": "STP-007-022", "attrs": {"label": "approved"}}
+  - {"op": "add_edge", "from": "STP-007-025", "verb": "next", "to": "STP-007-026", "attrs": {"label": "denied"}}
+  - {"op": "add_edge", "from": "STP-007-022", "verb": "next", "to": "STP-007-028", "attrs": {"label": "clinic share already moved"}}
+  - {"op": "update_node", "id": "STP-007-008", "title": "After completion is marked and the patient confirmation window ends with no problem raised, or an admin resolves the case, the provider payout becomes eligible"}
+  - {"op": "add_edge", "from": "STP-007-008", "verb": "applies", "to": "REQ-007-089"}
+  - {"op": "add_edge", "from": "STP-007-013", "verb": "next", "to": "STP-007-008", "attrs": {"label": "booking fully paid"}}
+  - {"op": "add_node", "id": "STP-007-009", "type": "Step", "title": "System moves the clinic's share to the clinic's locked balance at the 60-day mark: the part paid above Hairline's commission, topped up by each later payment, or right away when less time remains", "owner_fr": "FR-007", "attrs": {"prd_ref": "Main Flow, clinic share"}}
+  - {"op": "add_edge", "from": "STP-007-009", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-007-009", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-007-009", "verb": "applies", "to": "REQ-007-090"}
+  - {"op": "add_edge", "from": "STP-007-009", "verb": "applies", "to": "REQ-007-014"}
+  - {"op": "add_edge", "from": "STP-007-009", "verb": "applies", "to": "REQ-007-055"}
+  - {"op": "add_edge", "from": "STP-007-005", "verb": "next", "to": "STP-007-009", "attrs": {"label": "deposit paid"}}
+  - {"op": "add_edge", "from": "STP-007-007", "verb": "next", "to": "STP-007-009", "attrs": {"label": "final payment tops up the share"}}
+  - {"op": "add_edge", "from": "STP-007-009", "verb": "next", "to": "STP-007-008", "attrs": {"label": "share moved; release waits for completion and the confirmation window"}}
+  - {"op": "add_edge", "from": "STP-007-032", "verb": "next", "to": "STP-007-004", "attrs": {"label": "patient retries or picks another method while the hold is valid", "back": true}}
+  - {"op": "add_edge", "from": "STP-007-044", "verb": "next", "to": "STP-007-004", "attrs": {"label": "patient retries or picks another method while the hold is valid", "back": true}}
+  - {"op": "add_edge", "from": "STP-007-032", "verb": "next", "to": "STP-007-052", "attrs": {"label": "hold expired"}}
+  - {"op": "add_edge", "from": "STP-007-044", "verb": "next", "to": "STP-007-052", "attrs": {"label": "hold expired"}}
+  - {"op": "add_edge", "from": "STP-007-063", "verb": "next", "to": "STP-007-001", "attrs": {"label": "replacement booking follows the main flow", "back": true}}
+  - {"op": "add_node", "id": "REQ-007-096", "type": "Rule", "title": "A payment captured when the booking is not payable is refunded in full automatically", "owner_fr": "FR-007", "attrs": {"statement": "A payment captured after the hold expired, or after the booking was cancelled for a cause other than a provider fault, is recorded and does not confirm or revive the booking. System MUST refund it in full automatically, write an audit entry and notify the patient, with no admin approval."}}
+  - {"op": "add_edge", "from": "REQ-007-096", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-007-096", "verb": "applies to", "to": "ENT-payment"}
+  - {"op": "add_edge", "from": "REQ-007-096", "verb": "applies to", "to": "ENT-booking.status"}
+  - {"op": "add_edge", "from": "REQ-007-096", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-007-096", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "add_node", "id": "STP-007-055", "type": "Step", "title": "System records a payment captured after the hold expired or after a non-provider cancellation, leaves the booking unchanged, refunds it in full automatically, writes an audit entry and notifies the patient", "owner_fr": "FR-007", "attrs": {"prd_ref": "Alternative Flow B3 step 5"}}
+  - {"op": "add_edge", "from": "STP-007-055", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-007-055", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-007-055", "verb": "applies", "to": "REQ-007-096"}
+  - {"op": "add_edge", "from": "STP-007-055", "verb": "applies", "to": "REQ-007-077"}
+  - {"op": "add_edge", "from": "STP-007-004", "verb": "next", "to": "STP-007-055", "attrs": {"label": "payment captured after the hold expired or the booking was cancelled"}}
+  - {"op": "update_node", "id": "REQ-007-044", "attrs": {"statement": "On hold expiry, FR-006 releases the hold, creates no appointment record, and records `Payment Window Expired`; payment against that accepted selection remains blocked. Retain the AcceptanceEvent and snapshot unchanged. Do not reopen the parent quote or make the accepted subquote selectable again; recovery is by the patient cancelling the inquiry and starting a new inquiry, or by the FR-006 audited admin revive."}}
+  - {"op": "retire_node", "id": "STP-007-054"}
+  - {"op": "remove_edge", "from": "STP-007-053", "verb": "next", "to": "STP-007-054"}
+  - {"op": "add_edge", "from": "STP-007-053", "verb": "next", "to": "STP-006-207", "attrs": {"label": "audited revive", "back": true}}
+  - {"op": "add_edge", "from": "STP-006-207", "verb": "applies", "to": "REQ-007-044"}
+  - {"op": "add_node", "id": "STP-007-071", "type": "Step", "title": "System holds the provider payout for the booking from the in-treatment provider fault until the FR-006 route completes", "owner_fr": "FR-007", "attrs": {"prd_ref": "Fund Release rules, treatment interrupted by the provider's fault"}}
+  - {"op": "add_edge", "from": "STP-007-071", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-007-071", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-007-071", "verb": "applies", "to": "REQ-007-022"}
+  - {"op": "add_edge", "from": "STP-007-071", "verb": "applies", "to": "REQ-007-058"}
+  - {"op": "add_node", "id": "STP-007-073", "type": "Step", "title": "System refunds the admin-set amount to the patient from the held payout", "owner_fr": "FR-007", "attrs": {"prd_ref": "Fund Release rules, treatment interrupted by the provider's fault"}}
+  - {"op": "add_edge", "from": "STP-007-073", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-007-073", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-007-073", "verb": "applies", "to": "REQ-007-022"}
+  - {"op": "add_edge", "from": "STP-007-073", "verb": "applies", "to": "REQ-007-066"}
+  - {"op": "add_edge", "from": "STP-007-073", "verb": "applies", "to": "REQ-007-097"}
+  - {"op": "add_node", "id": "STP-007-072", "type": "Step", "title": "System releases the held payout when the FR-006 route completes; a shortfall after release is deducted from the provider's next payout (FR-017)", "owner_fr": "FR-007", "attrs": {"prd_ref": "Fund Release rules, treatment interrupted by the provider's fault"}}
+  - {"op": "add_edge", "from": "STP-007-072", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-007-072", "verb": "at", "to": "STG-main-06-treatment"}
+  - {"op": "add_edge", "from": "STP-007-072", "verb": "applies", "to": "REQ-007-058"}
+  - {"op": "add_edge", "from": "STP-007-072", "verb": "applies", "to": "REQ-007-091"}
+  - {"op": "add_edge", "from": "STP-006-804", "verb": "next", "to": "STP-007-071", "attrs": {"label": "payout hold set for the booking"}}
+  - {"op": "add_edge", "from": "STP-007-071", "verb": "next", "to": "STP-007-073", "attrs": {"label": "the refund comes out of the held payout"}}
+  - {"op": "add_edge", "from": "STP-007-073", "verb": "next", "to": "STP-007-072", "attrs": {"label": "route completes"}}
+  - {"op": "remove_edge", "from": "STP-006-805", "verb": "next", "to": "STP-007-022"}
+  - {"op": "add_edge", "from": "STP-006-805", "verb": "next", "to": "STP-007-073", "attrs": {"label": "the admin-set amount is refunded from the held payout"}}
+  - {"op": "add_node", "id": "REQ-007-100", "type": "Rule", "title": "A standalone aftercare payment is refunded by an admin decision and released after the confirmation window counted from the payment", "owner_fr": "FR-007", "attrs": {"statement": "For a standalone aftercare payment (REQ-007-088) no refund ladder applies: an admin decides any refund with a reason on Screen 6 as a manual refund (REQ-007-015). The provider's money is released after the same patient confirmation window as a booking, counted from the date of the payment instead of procedure completion."}}
+  - {"op": "add_edge", "from": "REQ-007-100", "verb": "applies at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "REQ-007-100", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-007-100", "verb": "applies to", "to": "ENT-payment"}
+  - {"op": "add_edge", "from": "REQ-007-100", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-007-100", "verb": "governed by", "to": "SET-patient-confirmation-window"}
+  - {"op": "add_edge", "from": "REQ-007-100", "verb": "decided by", "to": "SRC-PRD-007"}
+  - {"op": "add_node", "id": "FLW-007-aftercare-payment", "type": "Flow", "title": "Alternative Flow A3: Standalone Aftercare Payment", "attrs": {"kind": "alternative", "description": "Alternative Flow A3: Standalone Aftercare Payment", "prd_ref": "Alternative Flow A3"}}
+  - {"op": "add_node", "id": "STP-007-081", "type": "Step", "title": "Patient pays for the standalone aftercare plan once an admin has assigned a provider and the provider has configured the plan", "owner_fr": "FR-007", "attrs": {"prd_ref": "Alternative Flow A3 step 1"}}
+  - {"op": "add_edge", "from": "STP-007-081", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-007-081", "verb": "at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "STP-007-081", "verb": "applies", "to": "REQ-007-088"}
+  - {"op": "add_node", "id": "STP-007-082", "type": "Step", "title": "System processes the payment, activates the aftercare plan and issues the receipt and invoice", "owner_fr": "FR-007", "attrs": {"prd_ref": "Alternative Flow A3 step 2"}}
+  - {"op": "add_edge", "from": "STP-007-082", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-007-082", "verb": "at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "STP-007-082", "verb": "applies", "to": "REQ-007-088"}
+  - {"op": "add_edge", "from": "STP-007-082", "verb": "applies", "to": "REQ-007-004"}
+  - {"op": "add_node", "id": "STP-007-083", "type": "Step", "title": "System releases the provider's money after the patient confirmation window counted from the payment with no problem raised, or after an admin resolves a problem case", "owner_fr": "FR-007", "attrs": {"prd_ref": "Alternative Flow A3 step 3"}}
+  - {"op": "add_edge", "from": "STP-007-083", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-007-083", "verb": "at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "STP-007-083", "verb": "applies", "to": "REQ-007-100"}
+  - {"op": "add_edge", "from": "STP-007-083", "verb": "applies", "to": "REQ-007-089"}
+  - {"op": "add_node", "id": "STP-007-084", "type": "Step", "title": "An admin decides any refund of the aftercare payment with a reason; no refund ladder applies", "owner_fr": "FR-007", "attrs": {"prd_ref": "Alternative Flow A3 step 4"}}
+  - {"op": "add_edge", "from": "STP-007-084", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-007-084", "verb": "at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "STP-007-084", "verb": "applies", "to": "REQ-007-100"}
+  - {"op": "add_edge", "from": "STP-007-084", "verb": "applies", "to": "REQ-007-068"}
+  - {"op": "add_edge", "from": "FLW-007-aftercare-payment", "verb": "starts at", "to": "STP-007-081"}
+  - {"op": "add_edge", "from": "STP-007-081", "verb": "next", "to": "STP-007-082", "attrs": {"label": "payment submitted"}}
+  - {"op": "add_edge", "from": "STP-007-082", "verb": "next", "to": "STP-007-083", "attrs": {"label": "aftercare activated"}}
+  - {"op": "add_edge", "from": "STP-007-082", "verb": "next", "to": "STP-007-084", "attrs": {"label": "refund requested"}}
+  - {"op": "add_edge", "from": "STP-007-003", "verb": "applies", "to": "REQ-006-081"}
