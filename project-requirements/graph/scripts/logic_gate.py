@@ -18,6 +18,13 @@ when any of these holds:
 
 Output names every failure and the planted-defect recall. This output is for the controller only.
 Exit codes: 0 pass, 1 void, 2 bad input (unreadable or malformed file, review copy changed).
+
+Reviewer B coverage count (a count for the controller, not a gate on B):
+    logic_gate.py --manifest MANIFEST.json --report A_REPORT.md --b-report B_REPORT.md [--json]
+Counts the OK rows reviewer A gave on high-risk items (boundary edges, neighbour FRs, Flows, and Steps,
+Stages, Actors, Settings and Rules), and how many of them the Item column of B's "## Attacks" table
+names. Lists those B did not name. Never voids anything: exit 0 whenever both reports and the manifest
+parse, 2 otherwise. No DB, PRD or defect file is read in this mode.
 """
 
 from __future__ import annotations
@@ -45,7 +52,10 @@ DEFECT_KINDS = (
 SECTION_VERDICTS = "verdicts"
 SECTION_SCENARIOS = "scenarios"
 SECTION_NOT_CHECKED = "not checked or could not verify"
+SECTION_ATTACKS = "attacks"
 TABLE_COLUMNS = ("item", "verdict", "evidence", "note")
+HIGH_RISK_KINDS = ("boundary edge", "neighbour FR", KIND_FLOW)
+HIGH_RISK_NODE_TYPES = ("Step", "Stage", "Actor", "Setting", "Rule")
 MIN_CITATIONS = 2
 
 _PRD_REF = re.compile(r"\bprd:(\d+)(?:-(\d+))?\b", re.IGNORECASE)
@@ -86,6 +96,16 @@ class GateResult:
             "failures": self.failures,
             "planted_defects": {"total": self.defects_total, "found": self.defects_found, "missed": self.defects_missed},
         }
+
+
+@dataclass
+class CoverageResult:
+    ok_total: int = 0
+    named: list[str] = field(default_factory=list)
+    not_named: list[str] = field(default_factory=list)
+
+    def as_dict(self) -> dict[str, Any]:
+        return {"high_risk_ok_rows_by_a": self.ok_total, "named_by_b": len(self.named), "not_named_by_b": self.not_named}
 
 
 def id_token_regex(schema: Schema) -> re.Pattern[str]:
@@ -312,6 +332,71 @@ def check_report(report_text: str, manifest: dict[str, Any], defects: list[dict[
     return result
 
 
+def is_high_risk(item: dict[str, Any]) -> bool:
+    """Reviewer B's attack classes (checklist, "High-risk items for reviewer B")."""
+    return item["kind"] in HIGH_RISK_KINDS or item.get("type") in HIGH_RISK_NODE_TYPES
+
+
+def attacked_items(start: int, body: list[str]) -> set[str]:
+    """Item ids in the Item column of the first table of B's Attacks section."""
+    column: int | None = None
+    named: set[str] = set()
+    for line in body:
+        if not line.strip().startswith("|"):
+            if column is not None and named and not line.strip():
+                break
+            continue
+        cells = _cells(line)
+        if column is None:
+            names = [c.lower() for c in cells]
+            if "item" not in names:
+                raise GateInputError(f"B's Attacks table header (report line {start}) has no Item column")
+            column = names.index("item")
+            continue
+        if _SEPARATOR.match(line.strip()):
+            continue
+        if column < len(cells) and cells[column].strip("`* "):
+            named.add(cells[column].strip("`* "))
+    if column is None:
+        raise GateInputError("B's Attacks section has no table")
+    return named
+
+
+def run_b_coverage(manifest_path: Path, a_report_path: Path, b_report_path: Path) -> CoverageResult:
+    manifest = load_manifest(manifest_path)
+    texts = {}
+    for what, path in (("A report", a_report_path), ("B report", b_report_path)):
+        try:
+            texts[what] = path.read_text(encoding="utf-8").splitlines()
+        except OSError as exc:
+            raise GateInputError(f"cannot read {what} {path}: {exc}") from None
+    a_sections = split_sections(texts["A report"])
+    if SECTION_VERDICTS not in a_sections:
+        raise GateInputError(f"A report {a_report_path} has no '## Verdicts' section")
+    problems: list[str] = []
+    rows = parse_verdict_rows(*a_sections[SECTION_VERDICTS], problems)
+    if problems:
+        raise GateInputError(f"A report {a_report_path}: {problems[0]}")
+    b_sections = split_sections(texts["B report"])
+    if SECTION_ATTACKS not in b_sections:
+        raise GateInputError(f"B report {b_report_path} has no '## Attacks' section")
+    named = attacked_items(*b_sections[SECTION_ATTACKS])
+
+    high_risk = {item["id"] for item in manifest["items"] if is_high_risk(item)}
+    ok_rows: list[str] = []  # first row per item only, as in the gate
+    seen: set[str] = set()
+    for row in rows:
+        if row.item in seen:
+            continue
+        seen.add(row.item)
+        if row.item in high_risk and row.verdict == "ok":
+            ok_rows.append(row.item)
+    result = CoverageResult(ok_total=len(ok_rows))
+    for item_id in ok_rows:
+        (result.named if item_id in named else result.not_named).append(item_id)
+    return result
+
+
 def run_gate(manifest_path: Path, report_path: Path, defects_path: Path, db: str | None = None,
              prd: str | None = None) -> GateResult:
     manifest = load_manifest(manifest_path)
@@ -343,15 +428,34 @@ def format_text(result: GateResult) -> str:
     return "\n".join(out)
 
 
+def format_coverage(result: CoverageResult) -> str:
+    out = [f"Reviewer B coverage: {len(result.named)} of {result.ok_total} high-risk OK rows by A named in B's Attacks"]
+    if result.not_named:
+        out.append("Not named by B:")
+        out += [f"  - {item}" for item in result.not_named]
+    return "\n".join(out)
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Mechanical gate for one logic-review report.")
     parser.add_argument("--manifest", required=True, help="manifest JSON from logic_manifest.py")
-    parser.add_argument("--report", required=True, help="reviewer report (Markdown)")
-    parser.add_argument("--defects", required=True, help="sealed planted-defect JSON")
+    parser.add_argument("--report", required=True, help="reviewer A report (Markdown)")
+    parser.add_argument("--defects", help="sealed planted-defect JSON (required unless --b-report is given)")
+    parser.add_argument("--b-report", help="reviewer B report: print the B coverage count instead of running the gate")
     parser.add_argument("--db", help="review DB (default: the path recorded in the manifest)")
     parser.add_argument("--prd", help="review PRD (default: the path recorded in the manifest)")
     parser.add_argument("--json", action="store_true", help="print the result as JSON")
     args = parser.parse_args(argv)
+    if args.b_report:
+        try:
+            coverage = run_b_coverage(Path(args.manifest), Path(args.report), Path(args.b_report))
+        except (GateInputError, OSError) as exc:
+            print(f"logic_gate: {exc}", file=sys.stderr)
+            return 2
+        print(json.dumps(coverage.as_dict(), indent=2, ensure_ascii=False) if args.json else format_coverage(coverage))
+        return 0
+    if not args.defects:
+        parser.error("--defects is required unless --b-report is given")
     try:
         result = run_gate(Path(args.manifest), Path(args.report), Path(args.defects), args.db, args.prd)
     except (GateInputError, SchemaError, FileNotFoundError, sqlite3.Error) as exc:

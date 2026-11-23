@@ -1,8 +1,8 @@
 # Checklist: FR logic review
 
-Version: 0.1 draft (2026-11-10), not approved
+Version: 0.2 (2026-11-23), approved by the owner 2026-11-23 for the FR-005 pilot; goes to 1.0 after the owner's review of the pilot
 
-> **Draft for user approval.** Nothing runs under this checklist until the user approves it. Drafted under D43 item 6 from the procedure the user approved as D39 (`plans/261108-1040-requirements-graph-programme/phase-10-final-logic-review.md`). Items marked **Open for approval** are drafting choices the phase file leaves open; they are listed together under "Open for approval" at the end.
+Drafted under D43 item 6 from the procedure the owner approved as D39 (`plans/261108-1040-requirements-graph-programme/phase-10-final-logic-review.md`). The drafting choices the phase file left open are recorded under "Settled 2026-11-23" at the end.
 
 ## Purpose
 Review one FR as a whole for anything illogical (contradictions, dead ends, unreachable states, gaps at FR boundaries), with a written verdict and evidence for every item of the FR. A review counts only if a script finds every manifest item answered with evidence and every planted test defect reported. Nobody who reviews, fixes or coordinates can declare an FR clean; clean is the exit rule below plus the user's reading.
@@ -69,26 +69,26 @@ Which questions each manifest item gets at least:
 - `prd-structure.md` (v1.0), "Flow alignment check": run on every Flow walkthrough; a step that skips, reorders or contradicts the Stage order, or a hand-off to an FR the graph does not link, is a finding (Q2 or Q11).
 
 ## Procedure, per FR, per round
-1. **Review copy and planted defects (controller).** Make a fresh round folder in the session scratchpad: `logic-review/FR-NNN/rN/copy/` holding a copy of `graph.db` and of the PRD under review (**Open for approval:** the PRD is the frozen baseline, which the manifest script defaults to, or the live compressed PRD after Phase 9). Plant 3 to 5 defects, drawn in rotation from the kinds below, at least one a one-word change, all different from earlier rounds:
+1. **Review copy and planted defects (controller).** Make a fresh round folder in the session scratchpad: `logic-review/FR-NNN/rN/copy/` holding a copy of `graph.db` and of the live compressed PRD (`functional-requirements/<module>/prd.md`, which the manifest script defaults to), never the frozen baseline under `archived/`, so a fix made in one round is in front of the next round's reviewer. Plant 3 to 5 defects, drawn in rotation from the kinds below, at least one a one-word change, all different from earlier rounds:
    - contradicting threshold across FRs;
    - reversed word (before/after, minimum/maximum, may/must);
    - removed link;
    - unreachable stage;
    - actor permission swap.
-   Graph defects are made with direct SQL on the copy, not with `write.py`, so the copy's change history does not show them (**Open for approval**). Prefer defects that `lint.py --db <copy>` does not report (**Open for approval**). Record each defect in the sealed file (format below) in `logic-review-sealed/FR-NNN-rN.json`, a scratchpad folder outside the round folder. The real graph and PRDs are never touched.
-2. **Manifest (script).** Build it on the copy, after planting (**Open for approval:** the phase file lists the manifest first; built from the unplanted graph, a removed link would still be a manifest row and give the defect away):
+   Graph defects are made with direct SQL on the copy, not with `write.py`, so the copy's change history does not show them. Prefer defects that `lint.py --db <copy>` does not report. Record each defect in the sealed file (format below) in `logic-review-sealed/FR-NNN-rN.json`, a scratchpad folder outside the round folder. The real graph and PRDs are never touched.
+2. **Manifest (script).** Build it on the copy, after planting (built from the unplanted graph, a removed link would still be a manifest row and give the defect away):
    ```
    /usr/bin/python3 scripts/logic_manifest.py FR-NNN --db <round>/copy/graph.db --prd <round>/copy/prd.md --out <round>/manifest.json
    /usr/bin/python3 scripts/logic_manifest.py FR-NNN --db <round>/copy/graph.db --prd <round>/copy/prd.md --format md --out <round>/manifest.md
    ```
-   The manifest lists every item; the reviewer does not choose what to look at. Its item ids are stable across rounds, so the ledger can count findings per item (repeat rule).
+   Without `--prd` the script reads the live compressed PRD of the FR's `module`; the commands pass the copy explicitly. The manifest lists every item; the reviewer does not choose what to look at. Its item ids are stable across rounds, so the ledger can count findings per item (repeat rule).
 3. **Review A.** Brief per `agent-brief-template.md`, pointing at this checklist and the inputs above. The reviewer writes the report in the format below: a verdict row for every manifest item, the scenario walkthroughs, the findings list, and the "Not checked or could not verify" section.
 4. **Gate (script).**
    ```
    /usr/bin/python3 scripts/logic_gate.py --manifest <round>/manifest.json --report <report> --defects <sealed file>
    ```
    Exit 0 pass, 1 void, 2 bad input. A void report is never patched: a new reviewer A reruns the round on the same copy and manifest. Record the planted-defect recall the gate prints. The gate output is never shown to a reviewer.
-5. **Review B (adversarial).** A different fresh agent receives A's report and the same copy. It attacks every OK verdict in A's report on the high-risk items (below) and runs at least two scenarios A did not. Anything B finds is recorded as a miss by A.
+5. **Review B (adversarial).** A different fresh agent receives A's report and the same copy. It attacks every OK verdict in A's report on the high-risk items (below) and runs at least two scenarios A did not. Anything B finds is recorded as a miss by A. The controller then runs the B coverage count (see "Gate checks"): how many of A's high-risk OK rows B's Attacks table names.
 6. **Triage (controller with reviewer B and the user).** Each finding gets one outcome:
    - **fix**: goes to the fixer;
    - **user decision**: written in `source-priority.md` unclear-item format and sent to the user;
@@ -98,7 +98,7 @@ Which questions each manifest item gets at least:
 8. **Next round.** Repeat from step 1 on the whole FR, not only the changed lines, with fresh reviewers and new planted defects.
 
 ## High-risk items for reviewer B
-B attacks every row A marked OK whose item is: a boundary edge, a neighbour FR, a Flow, a Step, a Stage, an Actor, a Setting, or a Rule. These carry the money, time, permission, status-change and boundary logic the phase file names; Rules cannot be sorted into those classes mechanically, so all are attacked (**Open for approval:** the alternative is that B selects the rows itself, which lets the reviewer choose what to look at).
+B attacks every row A marked OK whose item is: a boundary edge, a neighbour FR, a Flow, a Step, a Stage, an Actor, a Setting, or a Rule. These carry the money, time, permission, status-change and boundary logic the phase file names; Rules cannot be sorted into those classes mechanically, so all are attacked; B does not select the rows itself, since that would let the reviewer choose what to look at.
 
 ## Report format (reviewer A)
 Path: `plans/reports/tester-YYMMDD-frNNN-logic-review-rN.md`. The gate parses the parts marked (gate).
@@ -106,7 +106,7 @@ Path: `plans/reports/tester-YYMMDD-frNNN-logic-review-rN.md`. The gate parses th
 ```
 # FR-NNN logic review, round N, reviewer A
 
-Checklist: project-requirements/graph/checklists/logic-review.md v0.1
+Checklist: project-requirements/graph/checklists/logic-review.md v0.2
 Manifest: <round>/manifest.md (generated <timestamp>)
 Review copy: <round>/copy/graph.db, <round>/copy/prd.md (N lines)
 
@@ -142,7 +142,7 @@ Summary: ...
 
 Rules for the report:
 - **Verdicts table (gate).** Section heading exactly `## Verdicts`; one table with the columns Item, Verdict, Evidence, Note; one row per manifest item, item id copied exactly from the manifest; no other rows. Verdict is `OK`, `finding` or `cannot verify`.
-- **Evidence (gate).** States what was compared with what. Graph ids are written bare (`REQ-005-021`, `ENT-quote.total`), with nothing attached to them. PRD lines are written `prd:N` or `prd:N-M` and refer to the review copy. An `OK` or `finding` row cites at least two different references (ids or PRD lines); fewer counts as a missing row (**Open for approval:** the threshold of two). A `cannot verify` row gives its reason in Note and is listed again under "Not checked or could not verify".
+- **Evidence (gate).** States what was compared with what. Graph ids are written bare (`REQ-005-021`, `ENT-quote.total`), with nothing attached to them. PRD lines are written `prd:N` or `prd:N-M` and refer to the review copy. An `OK` or `finding` row cites at least two different references (ids or PRD lines); fewer counts as a missing row. A `cannot verify` row gives its reason in Note and is listed again under "Not checked or could not verify".
 - **Findings found during a scenario** are recorded on the verdict row of the manifest item they concern, and referenced from the scenario's Note column. A step the graph cannot support is a finding.
 - **Scenarios (gate for the FLW headings).** One `### Scenario <FLW-id>` per Flow in the manifest, walking its `next` links from the start step, every branch once, plus the main path. Then one `### Scenario <short name>` for: every cancel or exit path from each stage; each timeout or expiry; each money movement; each actor attempting something outside its role; each PRD edge case. Every step records actor, screen, fields read and written, rules applied, events emitted, next stage.
 - **Citations (gate).** Every id in the Evidence column and in the Scenarios section exists in the review copy; every PRD line is inside the copy. Notes and the Findings list are not checked.
@@ -154,13 +154,13 @@ Path: `plans/reports/tester-YYMMDD-frNNN-logic-review-adversarial-rN.md`.
 ```
 # FR-NNN logic review, round N, reviewer B (adversarial)
 
-Checklist: project-requirements/graph/checklists/logic-review.md v0.1
+Checklist: project-requirements/graph/checklists/logic-review.md v0.2
 Reviewed: <A's report path>
 
 ## Attacks
 | Item | A's verdict | B's verdict | Evidence | Note |
 |---|---|---|---|---|
-(one row per high-risk OK row of A; B's verdict is upheld or finding)
+(one row per high-risk OK row of A, with the manifest item id copied exactly into the Item column; B's verdict is upheld or finding)
 
 ## New scenarios
 ### Scenario <short name>
@@ -174,10 +174,10 @@ Reviewed: <A's report path>
 
 ## Not checked or could not verify
 ```
-B's report has no gate in this draft (**Open for approval**).
+B's report has no gate and is never voided. The controller counts coverage with `logic_gate.py --b-report` (see "Gate checks").
 
 ## Sealed planted-defect file (controller only)
-JSON, one per round (**Open for approval:** format and matching rule):
+JSON, one per round:
 
 ```
 {"fr": "FR-005", "round": 1, "defects": [
@@ -194,11 +194,17 @@ The report is void when any holds:
 2. A verdict is not `OK`, `finding` or `cannot verify`.
 3. An `OK` or `finding` row cites fewer than two references; a `cannot verify` row gives no reason.
 4. An id cited in Evidence or Scenarios is not in the review copy, or a cited PRD line is outside it.
-5. A manifest Flow has no `### Scenario <FLW-id>` walkthrough (**Open for approval:** not in the phase file's step 4 list; added so a report cannot skip the walkthroughs).
+5. A manifest Flow has no `### Scenario <FLW-id>` walkthrough (not in the phase file's step 4 list; added so a report cannot skip the walkthroughs).
 6. The "Not checked or could not verify" section is missing, empty, or a bare "none".
 7. A planted defect has no `finding` row on any of its items.
 
 Before checking, the gate confirms the review copy still matches the manifest (sha256 of DB and PRD); a mismatch is bad input (exit 2), not a verdict.
+
+**Reviewer B coverage count** (controller only; not a gate on B and never a reason to void anything):
+```
+/usr/bin/python3 scripts/logic_gate.py --manifest <round>/manifest.json --report <A report> --b-report <B report>
+```
+It reports how many OK rows reviewer A gave on the high-risk items (previous section), how many of those the Item column of B's `## Attacks` table names by item id, and the list of those B did not name. It exits 0 whenever both reports and the manifest parse, and 2 when one does not (for example B's report has no `## Attacks` table). The controller sends the unnamed list back to B to attack; B stays free to argue any verdict.
 
 ## Exit rule per FR
 All of the following in one round:
@@ -229,16 +235,27 @@ For a round: the gate exits 0 on A's report, B's report is complete, and every f
 - The gate exits 2 twice for the same round (the copy or manifest is broken).
 - A fix would change a node another FR owns or cites: the neighbour's boundary items reopen; tell the user before applying.
 
-## Open for approval
-1. Order of steps 1 and 2: the manifest is built on the planted copy (the phase file lists it first).
-2. PRD under review: frozen baseline (the script default, as briefed) or the live compressed PRD after Phase 9.
-3. Graph defects planted by direct SQL so the copy's change history does not reveal them; prefer defects `lint.py` does not report.
-4. Evidence threshold: at least two distinct references for `OK` and `finding`.
-5. Sealed file format and matching rule: a `finding` row on any listed item.
-6. Gate check 5 (a walkthrough heading per manifest Flow) added beyond the phase file's step 4 list.
-7. Reviewer B attacks every OK row on boundary edges, neighbour FRs, Flows, Steps, Stages, Actors, Settings and all Rules; B's report has no gate.
-8. Unknown and repeated verdict rows void the report.
-9. Reviewers may see the five defect kinds by reading this checklist.
+## Settled 2026-11-23
+The owner approved the procedure and this checklist for the FR-005 pilot on 2026-11-23 with the nine drafting choices and three questions below settled as shown (source: `plans/261108-1040-requirements-graph-programme/phase-10-completion-plan.md`). The owner can overrule any of them in the review after the pilot.
+
+| # | Choice | Settled as | Reason |
+|---|---|---|---|
+| 1 | Manifest built on the planted copy | Yes | The reviewer and the gate must count the same items |
+| 2 | Which PRD is copied for review | The live compressed PRD, never the frozen baseline | A fix made in round 1 must be in front of the round 2 reviewer; the baseline never receives fixes |
+| 3 | Defects planted by direct SQL on the copy | Yes | The copy is throwaway; the real graph is still written only through `write.py` |
+| 4 | Evidence threshold of two distinct references per OK verdict | Yes | One reference proves nothing was compared |
+| 5 | Sealed defect file as JSON in the session scratchpad | Yes, and copied into `plans/reports/` after the round closes | The scratchpad can be cleared; the record of what was planted must outlive the round |
+| 6 | One `### Scenario <FLW-id>` section per manifest Flow | Yes | Lets the gate count walkthroughs |
+| 7 | Reviewer B attacks every OK row in the high-risk classes; no gate on B | Yes, plus one controller count: B's report must name each OK row it attacked | Keeps B free to argue, but proves B covered the rows |
+| 8 | Unknown or repeated verdict rows void the report | Yes | A patched report is the failure this phase is built against |
+| 9 | Reviewers may see the five defect kinds | Yes for the pilot; recall is measured, and kinds are added if every round scores full recall with no effort | The procedure already tells reviewers defects exist |
+
+| Question | Answer |
+|---|---|
+| Which PRD the review reads | The live compressed PRD (same as choice 2) |
+| What counts as an event consumer | A Rule that `applies to` the Event, or a PRD trigger line that names it |
+| Nothing mechanical stops a reviewer reading the real files | Accepted. The brief gives only the review folder, and a reviewer who reads the real files misses the planted defects, which voids the report |
 
 ## Change log
 - 0.1 (2026-11-10): first draft from the phase 10 procedure (D39) under D43 item 6; not approved.
+- 0.2 (2026-11-23): approved by the owner for the FR-005 pilot. Nine drafting choices and three questions settled (section "Settled 2026-11-23", replacing "Open for approval"); the review reads the live compressed PRD instead of the frozen baseline; added the reviewer B coverage count to the gate checks; banner removed.

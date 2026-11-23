@@ -13,8 +13,9 @@ Items (one stable id each, see checklists/logic-review.md "Manifest items"):
   N:<FLW-id>              every Flow whose 'next' path from its 'starts at' Step passes through an
                           owned Step, with that path
 
-The DB is opened read-only. The PRD defaults to the frozen baseline folder named by the FR node's
-'module' attribute. Exit codes: 0 ok, 1 bad argument or missing file, 2 database error.
+The DB is opened read-only. The PRD defaults to the live compressed PRD,
+functional-requirements/<module>/prd.md, where <module> is the FR node's 'module' attribute; the frozen
+baseline under archived/ is never the default, because it never receives fixes. Exit codes: 0 ok, 1 bad argument or missing file, 2 database error.
 """
 
 from __future__ import annotations
@@ -32,8 +33,7 @@ from typing import Any
 from common import DEFAULT_DB_PATH, GRAPH_DIR, Graph, Node, Schema, SchemaError, load_graph, load_schema, open_db, validate_fr
 from lint import edge_key
 
-PROJECT_ROOT = GRAPH_DIR.parents[2]
-BASELINE_DIR = PROJECT_ROOT / "archived" / "prd-baseline-2026-11-08"
+LIVE_PRD_DIR = GRAPH_DIR.parent / "functional-requirements"
 MANIFEST_VERSION = 1
 
 KIND_SECTION = "section"
@@ -104,8 +104,8 @@ def prd_sections(lines: list[str]) -> list[dict[str, Any]]:
 def default_prd_path(g: Graph, fr: str) -> Path:
     module = g.nodes[fr].attrs.get("module")
     if not module:
-        raise ManifestError(f"{fr} has no 'module' attribute naming its baseline folder; pass --prd")
-    return BASELINE_DIR / str(module) / "prd.md"
+        raise ManifestError(f"{fr} has no 'module' attribute naming its live PRD folder; pass --prd")
+    return LIVE_PRD_DIR / str(module) / "prd.md"
 
 
 def _home(n: Node) -> str | None:
@@ -266,7 +266,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Build the logic-review manifest for one FR.")
     parser.add_argument("fr", help="FR id, for example FR-005")
     parser.add_argument("--db", default=str(DEFAULT_DB_PATH), help="graph DB, opened read-only (default: graph.db)")
-    parser.add_argument("--prd", help="PRD file (default: the FR's frozen baseline PRD)")
+    parser.add_argument("--prd", help="PRD file (default: the FR's live compressed PRD, functional-requirements/<module>/prd.md)")
     parser.add_argument("--format", choices=("json", "md"), default="json", help="output format (default json)")
     parser.add_argument("--out", help="write here instead of stdout")
     return parser

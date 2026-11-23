@@ -213,14 +213,16 @@ class ManifestTest(unittest.TestCase):
         finally:
             conn.close()
 
-    def test_default_prd_path_uses_module(self) -> None:
+    def test_default_prd_path_is_the_live_prd_of_the_module(self) -> None:
         conn = open_db(self.db_path, SCHEMA, read_only=True)
         try:
             g = logic_manifest.load_graph(conn)
         finally:
             conn.close()
-        self.assertEqual(logic_manifest.default_prd_path(g, "FR-005"),
-                         logic_manifest.BASELINE_DIR / "fr005-quote-comparison-acceptance" / "prd.md")
+        path = logic_manifest.default_prd_path(g, "FR-005")
+        self.assertEqual(path, logic_manifest.LIVE_PRD_DIR / "fr005-quote-comparison-acceptance" / "prd.md")
+        self.assertEqual(path.parts[-3:-1], ("functional-requirements", "fr005-quote-comparison-acceptance"))
+        self.assertNotIn("archived", path.parts)
         with self.assertRaises(logic_manifest.ManifestError):
             logic_manifest.default_prd_path(g, "FR-006")
 

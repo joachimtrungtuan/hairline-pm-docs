@@ -55,6 +55,28 @@ def report(manifest: dict, rows: dict[str, str] | None = None, scenarios: str | 
     return "\n".join(parts)
 
 
+def b_report(items: list[str], attacks: str | None = None) -> str:
+    """Reviewer B's report with one Attacks row per item id (or the given Attacks section body)."""
+    if attacks is None:
+        rows = [f"| {item} | OK | upheld | {EVIDENCE} | Q11 |" for item in items]
+        attacks = "\n".join(["| Item | A's verdict | B's verdict | Evidence | Note |", "|---|---|---|---|---|", *rows])
+    parts = ["# FR-005 logic review, round 1, reviewer B (adversarial)", ""]
+    if attacks != "<none>":
+        parts += ["## Attacks", attacks, ""]
+    parts += ["## New scenarios", "", "### Scenario cancel at acceptance", "", "## Not checked or could not verify", "Nothing."]
+    return "\n".join(parts)
+
+
+# High-risk items of the fixture manifest: boundary edges, neighbour FRs, the Flow, and Rules, Settings,
+# Steps, Stages and Actors (owned or referenced). Entities, Fields, Events, Screens, Sources and PRD sections are not.
+HIGH_RISK = [
+    "E:FR-004>references>REQ-005-001", "E:REQ-005-001>applies-to>ENT-quote", "E:SCR-004-01>shows>ENT-acceptance.state",
+    "E:STP-004-001>next>STP-005-001", "F:FR-004", "F:FR-006", "N:FLW-quote-journey", "N:REQ-005-001", "N:SET-slot-hold",
+    "N:STP-005-001", "N:STP-005-002", "N:STG-main-03-accept", "N:ACT-patient", "N:STP-004-001",
+]
+HIGH_RISK_OK = [i for i in HIGH_RISK if i not in FINDING_ITEMS]
+
+
 class GateTest(unittest.TestCase):
     def setUp(self) -> None:
         self._tmp = tempfile.TemporaryDirectory()
@@ -183,6 +205,86 @@ class GateTest(unittest.TestCase):
     def test_missing_verdicts_section_voids(self) -> None:
         text = report(self.manifest).replace("## Verdicts", "## Results")
         self.assertVoid(self.gate(text), "no '## Verdicts' section")
+
+    # Reviewer B coverage count: informative only, never void
+
+    def coverage(self, a_text: str, b_text: str) -> logic_gate.CoverageResult:
+        self.report_path.write_text(a_text, encoding="utf-8")
+        b_path = self.dir / "b-report.md"
+        b_path.write_text(b_text, encoding="utf-8")
+        return logic_gate.run_b_coverage(self.manifest_path, self.report_path, b_path)
+
+    def coverage_main(self, a_text: str, b_text: str, *extra: str) -> tuple[int, str, str]:
+        self.report_path.write_text(a_text, encoding="utf-8")
+        b_path = self.dir / "b-report.md"
+        b_path.write_text(b_text, encoding="utf-8")
+        return self.run_main(["--manifest", str(self.manifest_path), "--report", str(self.report_path),
+                              "--b-report", str(b_path), *extra])
+
+    def test_high_risk_fixture_list_matches_the_manifest(self) -> None:
+        manifest_high_risk = [i["id"] for i in self.manifest["items"] if logic_gate.is_high_risk(i)]
+        self.assertEqual(sorted(manifest_high_risk), sorted(HIGH_RISK))
+
+    def test_b_coverage_full(self) -> None:
+        result = self.coverage(report(self.manifest), b_report(HIGH_RISK_OK))
+        self.assertEqual((result.ok_total, len(result.named), result.not_named), (len(HIGH_RISK_OK), len(HIGH_RISK_OK), []))
+
+    def test_b_coverage_lists_the_rows_b_did_not_name(self) -> None:
+        named = [i for i in HIGH_RISK_OK if i not in ("F:FR-006", "N:ACT-patient")]
+        result = self.coverage(report(self.manifest), b_report(named))
+        self.assertEqual(result.ok_total, len(HIGH_RISK_OK))
+        self.assertEqual(len(result.named), len(HIGH_RISK_OK) - 2)
+        self.assertEqual(sorted(result.not_named), ["F:FR-006", "N:ACT-patient"])
+
+    def test_b_coverage_counts_only_high_risk_ok_rows_of_a(self) -> None:
+        # A's finding rows (REQ-005-001, STP-005-002) and OK rows on Entities or sections are outside the count;
+        # B naming them, or naming ids A never gave, changes nothing.
+        extra = ["N:ENT-quote", "N:REQ-005-001", "N:STP-005-002", "S:business-rules", "N:REQ-999-999"]
+        result = self.coverage(report(self.manifest), b_report(HIGH_RISK_OK[:3] + extra))
+        self.assertEqual((result.ok_total, len(result.named)), (len(HIGH_RISK_OK), 3))
+        rows = {"N:SET-slot-hold": f"| N:SET-slot-hold | cannot verify | | not in the PRD |"}
+        result = self.coverage(report(self.manifest, rows), b_report([]))
+        self.assertEqual(result.ok_total, len(HIGH_RISK_OK) - 1)
+        self.assertNotIn("N:SET-slot-hold", result.not_named)
+
+    def test_b_coverage_counts_a_repeated_row_once_and_ignores_unknown_rows(self) -> None:
+        rows = {"N:SET-slot-hold": f"| N:SET-slot-hold | OK | {EVIDENCE} | |\n| N:SET-slot-hold | OK | {EVIDENCE} | |\n"
+                                   f"| N:REQ-005-777 | OK | {EVIDENCE} | |"}
+        result = self.coverage(report(self.manifest, rows), b_report([]))
+        self.assertEqual(result.ok_total, len(HIGH_RISK_OK))
+
+    def test_b_coverage_exits_zero_even_when_nothing_is_named_or_a_report_is_void(self) -> None:
+        code, out, _ = self.coverage_main(report(self.manifest, drop=("N:SET-slot-hold",)), b_report([]))
+        self.assertEqual(code, 0)
+        self.assertIn(f"0 of {len(HIGH_RISK_OK) - 1} high-risk OK rows", out)
+        self.assertIn("  - N:ACT-patient", out)
+        code, out, _ = self.coverage_main(report(self.manifest), b_report(HIGH_RISK_OK))
+        self.assertEqual(code, 0)
+        self.assertNotIn("Not named", out)
+
+    def test_b_coverage_json_and_item_cells_with_backticks(self) -> None:
+        code, out, _ = self.coverage_main(report(self.manifest), b_report([f"`{i}`" for i in HIGH_RISK_OK[1:]]), "--json")
+        self.assertEqual(code, 0)
+        data = json.loads(out)
+        self.assertEqual(data["high_risk_ok_rows_by_a"], len(HIGH_RISK_OK))
+        self.assertEqual((data["named_by_b"], data["not_named_by_b"]), (len(HIGH_RISK_OK) - 1, [HIGH_RISK_OK[0]]))
+
+    def test_b_coverage_bad_input_exits_two(self) -> None:
+        for b_text, a_text, message in (
+            (b_report([], attacks="<none>"), report(self.manifest), "no '## Attacks' section"),
+            (b_report([], attacks="No table here."), report(self.manifest), "no table"),
+            (b_report([], attacks="| Note |\n|---|\n| x |"), report(self.manifest), "no Item column"),
+            (b_report([]), report(self.manifest).replace("## Verdicts", "## Results"), "no '## Verdicts' section"),
+        ):
+            with self.subTest(message=message):
+                code, _, err = self.coverage_main(a_text, b_text)
+                self.assertEqual(code, 2)
+                self.assertIn(message, err)
+
+    def test_defects_still_required_without_b_report(self) -> None:
+        with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit) as raised:
+            logic_gate.main(["--manifest", str(self.manifest_path), "--report", str(self.report_path)])
+        self.assertEqual(raised.exception.code, 2)
 
     # Bad input: exit 2, not a verdict on the report
 
