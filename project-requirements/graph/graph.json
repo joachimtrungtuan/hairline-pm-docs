@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-23T07:02:05Z",
+  "generated_at": "2026-11-23T07:29:37Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -176,7 +176,7 @@
       "owner_fr": null,
       "title": "Super Admin",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "group": "admin",
         "description": "Admin user with the Super Admin role: full system access, invites admin team members, assigns roles and configures role permissions (FR-031)."
@@ -3536,6 +3536,127 @@
       "attrs": {}
     },
     {
+      "id": "ENT-aftercare-payment",
+      "type": "Entity",
+      "owner_fr": "FR-007",
+      "title": "Aftercare payment",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "The payment record for a standalone aftercare plan, which has no booking. Screens 5B and 6 open from it; retry and the 48-hour expiry follow FR-011 Alternative Flow B1."
+      }
+    },
+    {
+      "id": "ENT-aftercare-payment.aftercare_plan_id",
+      "type": "Field",
+      "owner_fr": "FR-007",
+      "title": "Aftercare plan ID",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "The standalone aftercare plan the payment activates."
+      }
+    },
+    {
+      "id": "ENT-aftercare-payment.amount",
+      "type": "Field",
+      "owner_fr": "FR-007",
+      "title": "Amount",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "The amount the patient pays."
+      }
+    },
+    {
+      "id": "ENT-aftercare-payment.commission_snapshot",
+      "type": "Field",
+      "owner_fr": "FR-007",
+      "title": "Commission snapshot",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "The commission terms recorded at payment, used for the provider's money."
+      }
+    },
+    {
+      "id": "ENT-aftercare-payment.currency",
+      "type": "Field",
+      "owner_fr": "FR-007",
+      "title": "Currency",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "The payment currency."
+      }
+    },
+    {
+      "id": "ENT-aftercare-payment.expires_at",
+      "type": "Field",
+      "owner_fr": "FR-007",
+      "title": "Expires at",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "48 hours after the request without a successful payment (FR-011 Alternative Flow B1)."
+      }
+    },
+    {
+      "id": "ENT-aftercare-payment.id",
+      "type": "Field",
+      "owner_fr": "FR-007",
+      "title": "Aftercare payment ID",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Own identifier of the aftercare payment."
+      }
+    },
+    {
+      "id": "ENT-aftercare-payment.paid_at",
+      "type": "Field",
+      "owner_fr": "FR-007",
+      "title": "Paid at",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "When the payment succeeded; the confirmation window counts from it."
+      }
+    },
+    {
+      "id": "ENT-aftercare-payment.patient_id",
+      "type": "Field",
+      "owner_fr": "FR-007",
+      "title": "Patient ID",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "The patient who pays."
+      }
+    },
+    {
+      "id": "ENT-aftercare-payment.provider_id",
+      "type": "Field",
+      "owner_fr": "FR-007",
+      "title": "Aftercare provider ID",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "The provider assigned to the aftercare plan."
+      }
+    },
+    {
+      "id": "ENT-aftercare-payment.status",
+      "type": "Field",
+      "owner_fr": "FR-007",
+      "title": "Payment status",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Pending, paid, expired or refunded."
+      }
+    },
+    {
       "id": "ENT-aftercare-plan",
       "type": "Entity",
       "owner_fr": "FR-011",
@@ -6077,6 +6198,17 @@
       }
     },
     {
+      "id": "ENT-booking.amount_due_now",
+      "type": "Field",
+      "owner_fr": "FR-007",
+      "title": "Amount due now",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "The amount the patient pays now under the chosen option: the full payable total for full payment (the only option on short notice), the deposit amount for deposit and balance, the first installment for installments."
+      }
+    },
+    {
       "id": "ENT-booking.appointment_at",
       "type": "Field",
       "owner_fr": "FR-006",
@@ -6285,8 +6417,10 @@
       "owner_fr": "FR-007",
       "title": "Final payment status",
       "status": "active",
-      "version": 1,
-      "attrs": {}
+      "version": 2,
+      "attrs": {
+        "description": "The one stored value (Not Due, Due, Paid, Overdue). A scheduled job moves it by calendar day in the clinic's timezone: Due on the due date, Overdue the day after the due date with a balance unpaid."
+      }
     },
     {
       "id": "ENT-booking.hold_appointment_at",
@@ -6347,9 +6481,9 @@
       "owner_fr": "FR-007",
       "title": "Overdue flag",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Calculated, not stored: true when the due date has passed and the amount is unpaid. Shown and filterable beside the payment status, which is a separate list that does not include Overdue."
+        "description": "Read from the stored Final Payment Status: true while it is Overdue, cleared when the booking is Cancelled or Completed. Shown and filterable beside the payment status, which is a separate list that does not include Overdue."
       }
     },
     {
@@ -6418,7 +6552,7 @@
       "owner_fr": "FR-006",
       "title": "Payment option",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {}
     },
     {
@@ -32275,6 +32409,17 @@
       }
     },
     {
+      "id": "EVT-patient-payment-overdue-notice",
+      "type": "Event",
+      "owner_fr": "FR-007",
+      "title": "Patient payment overdue notice",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "One notice to the patient on the day after the final payment due date when the balance is still unpaid."
+      }
+    },
+    {
       "id": "EVT-patient-profile-changed-by-admin",
       "type": "Event",
       "owner_fr": "FR-001",
@@ -32313,9 +32458,9 @@
       "owner_fr": "FR-007",
       "title": "Payment overdue",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "A scheduled job raises this once when a balance is still unpaid the day after its due date; the booking is flagged Overdue and billing admins are notified."
+        "description": "A scheduled job raises this once when a balance is still unpaid the day after its due date: Final Payment Status becomes Overdue, the booking is flagged, billing admins are notified and the patient gets one overdue notice. It stops when the booking is Cancelled or Completed."
       }
     },
     {
@@ -32699,9 +32844,9 @@
       "owner_fr": "FR-007",
       "title": "Refund approval overdue",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Escalation notice to billing admins when an exception or manual refund has had no decision for 2 business days; the refund stays awaiting approval."
+        "description": "Escalation notice to a super-admin when an exception or manual refund has had no decision for 2 business days; the refund stays awaiting approval."
       }
     },
     {
@@ -34248,7 +34393,7 @@
       "owner_fr": null,
       "title": "Alternative Flow A2: Refund Due to Cancellation",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "kind": "alternative",
         "description": "Alternative Flow A2: Refund Due to Cancellation",
@@ -45783,11 +45928,11 @@
       "id": "REQ-007-015",
       "type": "Rule",
       "owner_fr": "FR-007",
-      "title": "Exception and manual refunds need a second admin's approval within two business days; closure-case refunds need none",
+      "title": "Exception and manual refunds need another billing admin's approval within two business days, escalate to a super-admin and are never self-approved; closure-case refunds need none",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Admin approval applies only to an exception refund and a manually entered refund. The approver is any other admin with billing permission, never the requester, and approves or denies within 2 business days; until then the refund is awaiting approval. When 2 business days pass with no decision, System sends an escalation notice to billing admins and never approves or denies on its own. A closure-case refund (REQ-006-053) runs with no second approval. The requester, approver, decision and reason are logged and notifications sent.",
+        "statement": "Admin approval applies only to an exception refund and a manually entered refund. The approver is any other admin with billing permission, never the requester, who finds the request in the Awaiting approval view and approves or denies within 2 business days; until then the refund is awaiting approval. When 2 business days pass with no decision, System sends an escalation notice to a super-admin, who decides in the same view, never as the requester; System never approves or denies on its own. A closure-case refund (REQ-006-053) runs with no second approval. The sum of all refunds on a booking never exceeds the amount paid (REQ-007-066). The requester, approver, decision and reason are logged and notifications sent.",
         "rationale": "Admin approval required for all refunds"
       }
     },
@@ -46022,11 +46167,11 @@
       "id": "REQ-007-036",
       "type": "Rule",
       "owner_fr": "FR-007",
-      "title": "The final payment is due the FR-029 balance-due days before the procedure; an unpaid balance is Overdue from the next day and is flagged and notified",
+      "title": "The final payment is due the FR-029 balance-due days before the procedure; one stored status moves Not Due, Due, Overdue and the Overdue flag reads from it",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "The final payment is due the number of days before the procedure date that FR-029 sets as the deposit plan balance due days (launch default 7; an admin edits it in FR-029). A balance still unpaid is Overdue from the day after the due date. A scheduled job, not the display flag, raises the overdue event once, flags the booking and notifies billing admins. An overdue balance never causes Payment Window Expired and cancels the booking only through the FR-006 unpaid balance cancellation (REQ-007-021).",
+        "statement": "The final payment is due the number of days before the procedure date that FR-029 sets as the deposit plan balance due days (launch default 7; an admin edits it in FR-029). The booking's Final Payment Status is stored and moved by a scheduled job, by calendar day in the clinic's timezone: Not Due, then Due on the due date, then Overdue the day after the due date with a balance unpaid. On entering Overdue the job flags the booking once, notifies billing admins and sends the patient one overdue notice. The Overdue flag is read from that status; it is cleared and reminders stop when the booking is Cancelled or Completed. An overdue balance never causes Payment Window Expired and cancels the booking only through the FR-006 unpaid balance cancellation (REQ-007-021).",
         "rationale": "If payment overdue, flag booking and notify admin; an overdue final payment never causes `Payment Window Expired` or booking cancellation (FR-006)"
       }
     },
@@ -46368,11 +46513,11 @@
       "id": "REQ-007-066",
       "type": "Rule",
       "owner_fr": "FR-007",
-      "title": "Refund cannot exceed the total paid amount",
+      "title": "The sum of refunds on one booking cannot exceed the amount paid",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Refund amount cannot exceed total paid amount",
+        "statement": "The sum of all refunds on a booking cannot exceed the amount paid.",
         "rationale": "prd.md line 729 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -46691,33 +46836,33 @@
       "id": "REQ-007-096",
       "type": "Rule",
       "owner_fr": "FR-007",
-      "title": "A payment captured when the booking is not payable is refunded in full automatically",
+      "title": "A payment captured when the booking is not payable, or a partial deposit left when the hold expires, is refunded in full automatically",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "A payment captured after the hold expired, or after the booking was cancelled for a cause other than a provider fault, is recorded and does not confirm or revive the booking. System MUST refund it in full automatically, write an audit entry and notify the patient, with no admin approval."
+        "statement": "A payment captured after the hold expired, or after the booking was cancelled for a cause other than a provider fault, is recorded and does not confirm or revive the booking. A partial deposit still held when the hold expires is treated the same way. System MUST refund it in full automatically, write an audit entry and notify the patient, with no admin approval."
       }
     },
     {
       "id": "REQ-007-097",
       "type": "Rule",
       "owner_fr": "FR-007",
-      "title": "Screen 6 is the single refund execution control; the admin picks the refund case",
+      "title": "Screen 6 is the single refund control: the system starts closure-case refunds, an admin submits only exception or manual refunds, admin-set up to the amount still refundable",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "Every refund is executed on Screen 6. The admin picks the case: a closure case (the amount follows the FR-006 closure cause, REQ-006-053), an exception to the policy, or a manual refund. The amount field is open only for an admin-set case (in-treatment provider fault, manual), from zero up to the amount paid. FR-006 Process Refund and the FR-017 refund action open this screen instead of running their own refund."
+        "statement": "Every refund is executed on Screen 6. A closure-case refund follows the booking's recorded closure cause (REQ-006-053) and is started by the system, never by an admin. An admin submits only an exception to the policy or a manual refund, the only cases offered when no closure cause is recorded or the cause is not listed. An exception or manual refund is admin-set: any amount from zero up to the amount still refundable, with a mandatory reason, and the ladder amount is shown beside it. FR-006 Process Refund and the FR-017 refund action open this screen instead of running their own refund."
       }
     },
     {
       "id": "REQ-007-098",
       "type": "Rule",
       "owner_fr": "FR-007",
-      "title": "The patient has three payment options: pay in full now, deposit now and balance later, or installments",
+      "title": "The patient has three payment options chosen on FR-006 and changeable only before the first successful payment; FR-007 shows the amount due now",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "The patient chooses one of three payment options on FR-006 Screen 1: pay in full now, a deposit now with the balance later, or installments (2 to 9, FR-007B). FR-007 Screen 1 shows the chosen option read-only. The first successful charge of the chosen option confirms the booking."
+        "statement": "The patient chooses one of three payment options on FR-006 Screen 1: pay in full now, a deposit now with the balance later, or installments (2 to 9, FR-007B). FR-007 Screen 1 shows the chosen option read-only, with the amount due now. The option can change only before the first successful payment, by returning to FR-006. The first successful charge of the chosen option confirms the booking."
       }
     },
     {
@@ -46726,9 +46871,9 @@
       "owner_fr": "FR-007",
       "title": "Payment status values are defined: Refunded means all paid money returned, Partial deposit means part of the deposit received",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "Unpaid: nothing is paid. Deposit only: the deposit is paid and the balance is not. Installments active: an installment plan has started and is not fully paid. Full paid: the whole payable total is paid. Refunded: all money paid has been returned; a part refund leaves the previous status and shows in the refund history. Deposit status Partial: only part of the deposit amount has been received and the rest is still due; the booking is not confirmed until the full deposit is paid. At Risk is not a status."
+        "statement": "Unpaid: nothing is paid. Deposit only: the deposit is paid and the balance is not. Installments active: an installment plan has started and is not fully paid. Full paid: the whole payable total is paid. Refunded: all money paid has been returned; a part refund leaves the previous status and shows in the refund history. Deposit status Partial: only part of the deposit amount has been received and the rest is still due; the booking is not confirmed until the full deposit is paid, Payment Status stays Unpaid (there is no Pending value), and the partial deposit is refunded in full automatically when the hold expires (REQ-007-096). At Risk is not a status."
       }
     },
     {
@@ -46737,9 +46882,31 @@
       "owner_fr": "FR-007",
       "title": "A standalone aftercare payment is refunded by an admin decision and released after the confirmation window counted from the payment",
       "status": "active",
+      "version": 2,
+      "attrs": {
+        "statement": "For a standalone aftercare payment (REQ-007-088) no refund ladder applies: an admin decides any refund beyond FR-011's automatic cases with a reason on Screen 6, opened from the aftercare payment record, as a manual refund (REQ-007-015). The provider's money is released after the same patient confirmation window as a booking, counted from the date of the payment instead of procedure completion."
+      }
+    },
+    {
+      "id": "REQ-007-101",
+      "type": "Rule",
+      "owner_fr": "FR-007",
+      "title": "A booking confirmed on short notice pays in full at confirmation",
+      "status": "active",
       "version": 1,
       "attrs": {
-        "statement": "For a standalone aftercare payment (REQ-007-088) no refund ladder applies: an admin decides any refund with a reason on Screen 6 as a manual refund (REQ-007-015). The provider's money is released after the same patient confirmation window as a booking, counted from the date of the payment instead of procedure completion."
+        "statement": "A booking confirmed with fewer days left before the procedure than the FR-029 balance due days MUST take the full amount at confirmation. The deposit-and-balance and installment options are not offered, so no balance can fall due in the past."
+      }
+    },
+    {
+      "id": "REQ-007-102",
+      "type": "Rule",
+      "owner_fr": "FR-007",
+      "title": "A standalone aftercare payment is recorded on an aftercare payment record with retry and a 48-hour expiry",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "A standalone aftercare payment (REQ-007-088) has no booking, so System MUST record it on an aftercare payment record with its own id, the patient, the provider, the amount, the currency and the payout snapshot; Screens 5B and 6 open from that record. A failed payment can be retried with another method and the request expires after 48 hours without a successful payment (FR-011 Alternative Flow B1). FR-011's automatic refund (REQ-011-037) stays for its own failure cases; any other refund is an admin refund (REQ-007-100)."
       }
     },
     {
@@ -95228,7 +95395,7 @@
       "owner_fr": "FR-007",
       "title": "Patient Checkout (Deposit)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "patient",
         "description": "Screen 1. Allow patient to pay deposit to confirm booking."
@@ -95288,7 +95455,7 @@
       "owner_fr": "FR-007",
       "title": "Payment Detail View (Admin)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "platform": "admin",
         "description": "Screen 5B. View complete payment information with full context from all stages for a specific booking."
@@ -95300,7 +95467,7 @@
       "owner_fr": "FR-007",
       "title": "Refund Processing (Admin)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
         "description": "Screen 6. Process refunds per cancellation policy with full context from booking and payment stages."
@@ -102742,7 +102909,7 @@
       "owner_fr": null,
       "title": "Payment",
       "status": "active",
-      "version": 18,
+      "version": 19,
       "attrs": {
         "timeline": "main",
         "sequence": 5,
@@ -105300,7 +105467,7 @@
       "owner_fr": "FR-006",
       "title": "Patient proceeds directly to the payment screen",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Main Flow step 2"
       }
@@ -105939,7 +106106,7 @@
       "owner_fr": "FR-007",
       "title": "Patient selects the payment method and confirms the deposit payment",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "prd_ref": "Main Flow step 3"
       }
@@ -106003,9 +106170,9 @@
       "id": "STP-007-009",
       "type": "Step",
       "owner_fr": "FR-007",
-      "title": "System moves the clinic's share to the clinic's locked balance at the 60-day mark: the part paid above Hairline's commission, topped up by each later payment, or right away when less time remains",
+      "title": "System moves the clinic's share to the clinic's locked balance at the 60-day mark (30 days for an installment plan once fully paid): the part paid above Hairline's commission, topped up by each later payment, or right away when less time remains",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow, clinic share"
       }
@@ -106014,9 +106181,9 @@
       "id": "STP-007-011",
       "type": "Step",
       "owner_fr": "FR-007",
-      "title": "Patient selects full payment for the same accepted subquote's booking",
+      "title": "Patient pays the full amount for the same accepted subquote's booking; the option was chosen on FR-006",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A1 step 1"
       }
@@ -106027,7 +106194,7 @@
       "owner_fr": "FR-007",
       "title": "System processes the full payable amount and marks the booking Confirmed and fully paid",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A1 step 2"
       }
@@ -106047,9 +106214,9 @@
       "id": "STP-007-014",
       "type": "Step",
       "owner_fr": "FR-007",
-      "title": "System sends the payment reminders set in the admin timing setting; from the day after the due date with a balance unpaid it flags the booking Overdue and notifies billing admins",
+      "title": "System sends the payment reminders set in the admin timing setting; on the due date it sets Final Payment Status Due and the day after, with a balance unpaid, Overdue, flags the booking once, notifies billing admins and sends the patient one overdue notice; reminders stop when the booking is Cancelled or Completed",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow, reminders and overdue"
       }
@@ -106058,9 +106225,9 @@
       "id": "STP-007-021",
       "type": "Step",
       "owner_fr": "FR-007",
-      "title": "Admin opens Refund Processing on Screen 6 and reviews the closure case, the cancellation timing and the refund the case sets (the ladder percentage of the amount paid, late fees excluded)",
+      "title": "System reads the booking's recorded closure cause and the cancellation timing and works out the refund the case sets (a full refund with no fee, the FR-029 ladder percentage of the amount paid with late fees excluded, or the admin-set amount set in FR-006)",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "prd_ref": "Alternative Flow A2 step 1"
       }
@@ -106069,9 +106236,9 @@
       "id": "STP-007-022",
       "type": "Step",
       "owner_fr": "FR-007",
-      "title": "System sets the refund for the case (full refund with no fee, the FR-029 ladder on the amount paid, or the admin-set amount) and starts it; a closure case needs no second approval",
+      "title": "System starts the refund for the case; a closure-case refund is always started by the system, needs no second approval and is never started by an admin as well",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A2 step 2"
       }
@@ -106091,9 +106258,9 @@
       "id": "STP-007-024",
       "type": "Step",
       "owner_fr": "FR-007",
-      "title": "Admin selects the exception or manual case on Screen 6, enters the reason and the documentation and submits; the refund is awaiting approval",
+      "title": "Admin opens Screen 6, picks the exception or manual case, sets the amount from zero up to the amount still refundable with the ladder amount shown beside it, enters the reason and the documentation and submits; the refund is awaiting approval",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A2 step 4"
       }
@@ -106102,9 +106269,9 @@
       "id": "STP-007-025",
       "type": "Step",
       "owner_fr": "FR-007",
-      "title": "A different admin with billing permission approves or denies within 2 business days; requester, approver and decision are recorded in the audit entry",
+      "title": "Another admin with billing permission finds the request in the Awaiting approval view and approves or denies within 2 business days; the requester can never decide their own request; requester, approver and decision are recorded in the audit entry",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A2 step 5"
       }
@@ -106124,9 +106291,9 @@
       "id": "STP-007-027",
       "type": "Step",
       "owner_fr": "FR-007",
-      "title": "When 2 business days pass with no decision, System sends an escalation notice to billing admins; the refund stays awaiting approval and is never approved automatically",
+      "title": "When 2 business days pass with no decision, System sends an escalation notice to a super-admin; the refund stays awaiting approval and is never approved or denied automatically",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A2 step 7"
       }
@@ -106137,9 +106304,9 @@
       "owner_fr": "FR-007",
       "title": "System pulls the clinic's share back where it has already moved, deducts any shortfall from the clinic's next payout and splits any cancellation fee by the admin-set percentage",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A2 step 8"
+        "prd_ref": "Alternative Flow A2 step 9"
       }
     },
     {
@@ -106214,7 +106381,7 @@
       "owner_fr": "FR-007",
       "title": "On hold expiry the hold is released, no appointment record is created and Payment Window Expired is recorded",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B3 step 2"
       }
@@ -106234,11 +106401,33 @@
       "id": "STP-007-055",
       "type": "Step",
       "owner_fr": "FR-007",
-      "title": "System records a payment captured after the hold expired or after a non-provider cancellation, leaves the booking unchanged, refunds it in full automatically, writes an audit entry and notifies the patient",
+      "title": "System records a payment captured after the hold expired or after a non-provider cancellation and leaves the booking unchanged",
+      "status": "active",
+      "version": 2,
+      "attrs": {
+        "prd_ref": "Alternative Flow B3 step 5"
+      }
+    },
+    {
+      "id": "STP-007-056",
+      "type": "Step",
+      "owner_fr": "FR-007",
+      "title": "System refunds the payment in full automatically, writes an audit entry and notifies the patient, with no admin approval",
       "status": "active",
       "version": 1,
       "attrs": {
-        "prd_ref": "Alternative Flow B3 step 5"
+        "prd_ref": "Alternative Flow B3 steps 5 and 6"
+      }
+    },
+    {
+      "id": "STP-007-057",
+      "type": "Step",
+      "owner_fr": "FR-007",
+      "title": "The super-admin approves or denies the escalated request in the Awaiting approval view, never as the requester",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A2 step 8"
       }
     },
     {
@@ -106300,9 +106489,9 @@
       "id": "STP-007-081",
       "type": "Step",
       "owner_fr": "FR-007",
-      "title": "Patient pays for the standalone aftercare plan once an admin has assigned a provider and the provider has configured the plan",
+      "title": "Patient pays for the standalone aftercare plan, recorded on an aftercare payment record because there is no booking",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A3 step 1"
       }
@@ -106324,20 +106513,31 @@
       "owner_fr": "FR-007",
       "title": "System releases the provider's money after the patient confirmation window counted from the payment with no problem raised, or after an admin resolves a problem case",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A3 step 3"
+        "prd_ref": "Alternative Flow A3 step 4"
       }
     },
     {
       "id": "STP-007-084",
       "type": "Step",
       "owner_fr": "FR-007",
-      "title": "An admin decides any refund of the aftercare payment with a reason; no refund ladder applies",
+      "title": "An admin decides any other refund of the aftercare payment with a reason on Screen 6, opened from the aftercare payment record; no refund ladder applies",
+      "status": "active",
+      "version": 2,
+      "attrs": {
+        "prd_ref": "Alternative Flow A3 step 5"
+      }
+    },
+    {
+      "id": "STP-007-085",
+      "type": "Step",
+      "owner_fr": "FR-007",
+      "title": "When the aftercare payment fails the patient retries with another method; with no successful payment after 48 hours the request expires, as in FR-011 Alternative Flow B1",
       "status": "active",
       "version": 1,
       "attrs": {
-        "prd_ref": "Alternative Flow A3 step 4"
+        "prd_ref": "Alternative Flow A3 step 3"
       }
     },
     {
@@ -106490,7 +106690,7 @@
       "owner_fr": "FR-007B",
       "title": "System marks the plan completed (Fully Paid) when the final installment completes",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 14"
       }
@@ -131433,6 +131633,86 @@
       "calculated_by": null
     },
     {
+      "id": "ENT-aftercare-payment.aftercare_plan_id",
+      "entity_id": "ENT-aftercare-payment",
+      "name": "aftercare_plan_id",
+      "data_type": "id",
+      "required": false,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-aftercare-payment.amount",
+      "entity_id": "ENT-aftercare-payment",
+      "name": "amount",
+      "data_type": "money",
+      "required": false,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-aftercare-payment.commission_snapshot",
+      "entity_id": "ENT-aftercare-payment",
+      "name": "commission_snapshot",
+      "data_type": "commission",
+      "required": false,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-aftercare-payment.currency",
+      "entity_id": "ENT-aftercare-payment",
+      "name": "currency",
+      "data_type": "currency",
+      "required": false,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-aftercare-payment.expires_at",
+      "entity_id": "ENT-aftercare-payment",
+      "name": "expires_at",
+      "data_type": "datetime",
+      "required": false,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-aftercare-payment.id",
+      "entity_id": "ENT-aftercare-payment",
+      "name": "id",
+      "data_type": "id",
+      "required": false,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-aftercare-payment.paid_at",
+      "entity_id": "ENT-aftercare-payment",
+      "name": "paid_at",
+      "data_type": "datetime",
+      "required": false,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-aftercare-payment.patient_id",
+      "entity_id": "ENT-aftercare-payment",
+      "name": "patient_id",
+      "data_type": "id",
+      "required": false,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-aftercare-payment.provider_id",
+      "entity_id": "ENT-aftercare-payment",
+      "name": "provider_id",
+      "data_type": "id",
+      "required": false,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-aftercare-payment.status",
+      "entity_id": "ENT-aftercare-payment",
+      "name": "status",
+      "data_type": "enum",
+      "required": false,
+      "calculated_by": null
+    },
+    {
       "id": "ENT-aftercare-plan.accepted_quote_id",
       "entity_id": "ENT-aftercare-plan",
       "name": "accepted_quote_id",
@@ -133462,6 +133742,14 @@
       "name": "accepted_subquote_version",
       "data_type": "int",
       "required": true,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-booking.amount_due_now",
+      "entity_id": "ENT-booking",
+      "name": "amount_due_now",
+      "data_type": "money",
+      "required": false,
       "calculated_by": null
     },
     {
@@ -152457,6 +152745,30 @@
       "sort_order": 2
     },
     {
+      "field_id": "ENT-aftercare-payment.status",
+      "value": "pending",
+      "label": "Pending",
+      "sort_order": 0
+    },
+    {
+      "field_id": "ENT-aftercare-payment.status",
+      "value": "paid",
+      "label": "Paid",
+      "sort_order": 1
+    },
+    {
+      "field_id": "ENT-aftercare-payment.status",
+      "value": "expired",
+      "label": "Expired",
+      "sort_order": 2
+    },
+    {
+      "field_id": "ENT-aftercare-payment.status",
+      "value": "refunded",
+      "label": "Refunded",
+      "sort_order": 3
+    },
+    {
       "field_id": "ENT-aftercare-plan.aftercare_type",
       "value": "treatment_linked",
       "label": "Treatment-linked",
@@ -152940,7 +153252,7 @@
       "field_id": "ENT-booking.payment_option",
       "value": "installments",
       "label": "Installments",
-      "sort_order": 1
+      "sort_order": 2
     },
     {
       "field_id": "ENT-booking.payment_status",
@@ -161208,6 +161520,12 @@
     },
     {
       "from_id": "ACT-super-admin",
+      "verb": "acts in",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "ACT-super-admin",
       "verb": "uses",
       "to_id": "SCR-021-03",
       "attrs": {}
@@ -161936,6 +162254,12 @@
       "from_id": "ENT-aftercare-milestone",
       "verb": "decided by",
       "to_id": "SRC-PRD-011",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-aftercare-payment",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-007",
       "attrs": {}
     },
     {
@@ -166061,6 +166385,12 @@
       "attrs": {}
     },
     {
+      "from_id": "FLW-007-refund-cancellation",
+      "verb": "starts at",
+      "to_id": "STP-007-024",
+      "attrs": {}
+    },
+    {
       "from_id": "FLW-007b-date-change",
       "verb": "starts at",
       "to_id": "STP-007B-601",
@@ -168816,7 +169146,7 @@
       "verb": "active in",
       "to_id": "STG-aftercare-01-recovery-plan",
       "attrs": {
-        "rules": 2
+        "rules": 3
       },
       "derived": true
     },
@@ -168834,7 +169164,7 @@
       "verb": "active in",
       "to_id": "STG-main-05-payment",
       "attrs": {
-        "rules": 92
+        "rules": 93
       },
       "derived": true
     },
@@ -188509,6 +188839,12 @@
     {
       "from_id": "REQ-007-015",
       "verb": "applies to",
+      "to_id": "ACT-super-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007-015",
+      "verb": "applies to",
       "to_id": "ENT-payment",
       "attrs": {}
     },
@@ -189380,6 +189716,12 @@
       "from_id": "REQ-007-036",
       "verb": "applies to",
       "to_id": "ENT-booking.is_overdue",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007-036",
+      "verb": "applies to",
+      "to_id": "EVT-patient-payment-overdue-notice",
       "attrs": {}
     },
     {
@@ -190933,6 +191275,12 @@
     {
       "from_id": "REQ-007-096",
       "verb": "applies to",
+      "to_id": "ENT-booking.deposit_status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007-096",
+      "verb": "applies to",
       "to_id": "ENT-booking.status",
       "attrs": {}
     },
@@ -190988,6 +191336,12 @@
       "from_id": "REQ-007-098",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007-098",
+      "verb": "applies to",
+      "to_id": "ENT-booking.amount_due_now",
       "attrs": {}
     },
     {
@@ -191066,6 +191420,60 @@
       "from_id": "REQ-007-100",
       "verb": "governed by",
       "to_id": "SET-patient-confirmation-window",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007-101",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007-101",
+      "verb": "applies to",
+      "to_id": "ENT-booking.final_payment_due_at",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007-101",
+      "verb": "applies to",
+      "to_id": "ENT-booking.payment_option",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007-101",
+      "verb": "applies to",
+      "to_id": "SCR-007-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007-101",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007-101",
+      "verb": "governed by",
+      "to_id": "SET-deposit-plan-balance-due-days",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007-102",
+      "verb": "applies at",
+      "to_id": "STG-aftercare-01-recovery-plan",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007-102",
+      "verb": "applies to",
+      "to_id": "ENT-aftercare-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007-102",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-007",
       "attrs": {}
     },
     {
@@ -300765,6 +301173,15 @@
     {
       "from_id": "SCR-007-01",
       "verb": "shows",
+      "to_id": "ENT-booking.amount_due_now",
+      "attrs": {
+        "provenance": "system calculated",
+        "label": "Amount Due Now"
+      }
+    },
+    {
+      "from_id": "SCR-007-01",
+      "verb": "shows",
       "to_id": "ENT-booking.deposit_amount",
       "attrs": {
         "provenance": "system calculated",
@@ -302077,6 +302494,15 @@
     {
       "from_id": "SCR-007-06",
       "verb": "shows",
+      "to_id": "ENT-aftercare-payment.id",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Aftercare Payment Reference"
+      }
+    },
+    {
+      "from_id": "SCR-007-06",
+      "verb": "shows",
       "to_id": "ENT-booking.accepted_parent_quote_id",
       "attrs": {
         "provenance": "inherited from another FR",
@@ -302619,6 +303045,15 @@
       "verb": "belongs to",
       "to_id": "STG-main-05-payment",
       "attrs": {}
+    },
+    {
+      "from_id": "SCR-007-07",
+      "verb": "shows",
+      "to_id": "ENT-aftercare-payment.id",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Aftercare Payment Reference"
+      }
     },
     {
       "from_id": "SCR-007-07",
@@ -339522,6 +339957,12 @@
     {
       "from_id": "STG-main-05-payment",
       "verb": "emits",
+      "to_id": "EVT-patient-payment-overdue-notice",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-05-payment",
+      "verb": "emits",
       "to_id": "EVT-payment-config-changed",
       "attrs": {}
     },
@@ -351288,6 +351729,14 @@
     },
     {
       "from_id": "STP-006-002",
+      "verb": "next",
+      "to_id": "STP-007-011",
+      "attrs": {
+        "label": "patient chose full payment on FR-006, or only full payment is offered on short notice"
+      }
+    },
+    {
+      "from_id": "STP-006-002",
       "verb": "on",
       "to_id": "SCR-006-01",
       "attrs": {}
@@ -353342,17 +353791,18 @@
     {
       "from_id": "STP-007-003",
       "verb": "next",
-      "to_id": "STP-007-004",
+      "to_id": "STP-006-002",
       "attrs": {
-        "label": "deposit confirmed by patient"
+        "label": "patient changes the option before the first successful payment",
+        "back": true
       }
     },
     {
       "from_id": "STP-007-003",
       "verb": "next",
-      "to_id": "STP-007-011",
+      "to_id": "STP-007-004",
       "attrs": {
-        "label": "patient prefers to pay the full amount at booking"
+        "label": "deposit confirmed by patient"
       }
     },
     {
@@ -353693,6 +354143,12 @@
     },
     {
       "from_id": "STP-007-011",
+      "verb": "applies",
+      "to_id": "REQ-007-101",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007-011",
       "verb": "at",
       "to_id": "STG-main-05-payment",
       "attrs": {}
@@ -353734,6 +354190,14 @@
       "verb": "done by",
       "to_id": "ACT-system",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-007-012",
+      "verb": "next",
+      "to_id": "STP-007-009",
+      "attrs": {
+        "label": "full payment received; the share moves at the 60-day mark or right away"
+      }
     },
     {
       "from_id": "STP-007-012",
@@ -353867,7 +354331,7 @@
     {
       "from_id": "STP-007-021",
       "verb": "done by",
-      "to_id": "ACT-platform-admin",
+      "to_id": "ACT-system",
       "attrs": {}
     },
     {
@@ -353875,15 +354339,7 @@
       "verb": "next",
       "to_id": "STP-007-022",
       "attrs": {
-        "label": "schedule reviewed"
-      }
-    },
-    {
-      "from_id": "STP-007-021",
-      "verb": "next",
-      "to_id": "STP-007-024",
-      "attrs": {
-        "label": "exception to the policy or manual refund"
+        "label": "refund worked out for the recorded closure cause"
       }
     },
     {
@@ -353966,6 +354422,12 @@
       "from_id": "STP-007-024",
       "verb": "applies",
       "to_id": "REQ-007-064",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007-024",
+      "verb": "applies",
+      "to_id": "REQ-007-066",
       "attrs": {}
     },
     {
@@ -354113,6 +354575,14 @@
       "verb": "done by",
       "to_id": "ACT-system",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-007-027",
+      "verb": "next",
+      "to_id": "STP-007-057",
+      "attrs": {
+        "label": "escalation notice sent"
+      }
     },
     {
       "from_id": "STP-007-028",
@@ -354357,6 +354827,14 @@
       }
     },
     {
+      "from_id": "STP-007-052",
+      "verb": "next",
+      "to_id": "STP-007-056",
+      "attrs": {
+        "label": "only part of the deposit was received"
+      }
+    },
+    {
       "from_id": "STP-007-053",
       "verb": "applies",
       "to_id": "REQ-007-044",
@@ -354406,6 +354884,66 @@
       "verb": "done by",
       "to_id": "ACT-system",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-007-055",
+      "verb": "next",
+      "to_id": "STP-007-056",
+      "attrs": {
+        "label": "captured payment is refunded in full"
+      }
+    },
+    {
+      "from_id": "STP-007-056",
+      "verb": "applies",
+      "to_id": "REQ-007-096",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007-056",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007-056",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007-057",
+      "verb": "applies",
+      "to_id": "REQ-007-015",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007-057",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007-057",
+      "verb": "done by",
+      "to_id": "ACT-super-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007-057",
+      "verb": "next",
+      "to_id": "STP-007-022",
+      "attrs": {
+        "label": "approved"
+      }
+    },
+    {
+      "from_id": "STP-007-057",
+      "verb": "next",
+      "to_id": "STP-007-026",
+      "attrs": {
+        "label": "denied"
+      }
     },
     {
       "from_id": "STP-007-062",
@@ -354562,6 +355100,12 @@
     },
     {
       "from_id": "STP-007-081",
+      "verb": "applies",
+      "to_id": "REQ-007-102",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007-081",
       "verb": "at",
       "to_id": "STG-aftercare-01-recovery-plan",
       "attrs": {}
@@ -354578,6 +355122,14 @@
       "to_id": "STP-007-082",
       "attrs": {
         "label": "payment submitted"
+      }
+    },
+    {
+      "from_id": "STP-007-081",
+      "verb": "next",
+      "to_id": "STP-007-085",
+      "attrs": {
+        "label": "payment fails"
       }
     },
     {
@@ -354667,6 +355219,40 @@
       "verb": "done by",
       "to_id": "ACT-platform-admin",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-007-084",
+      "verb": "next",
+      "to_id": "STP-007-024",
+      "attrs": {
+        "label": "the refund goes through the manual refund route"
+      }
+    },
+    {
+      "from_id": "STP-007-085",
+      "verb": "applies",
+      "to_id": "REQ-007-102",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007-085",
+      "verb": "at",
+      "to_id": "STG-aftercare-01-recovery-plan",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007-085",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007-085",
+      "verb": "next",
+      "to_id": "STP-011-016",
+      "attrs": {
+        "label": "retry and the 48-hour expiry follow FR-011 Alternative Flow B1"
+      }
     },
     {
       "from_id": "STP-007B-001",
@@ -355084,6 +355670,14 @@
       "verb": "done by",
       "to_id": "ACT-system",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-007B-014",
+      "verb": "next",
+      "to_id": "STP-007-009",
+      "attrs": {
+        "label": "plan fully paid; the share moves 30 days before the treatment date"
+      }
     },
     {
       "from_id": "STP-007B-101",
@@ -421886,6 +422480,75 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261123-072839-a20c146d",
+      "at": "2026-11-23T07:28:39.156536+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-007 logic review pass 2: the cancellation rule reworded to the FR-029 point only; short-notice bookings pay in full; one stored Final Payment Status with a patient overdue notice; admin-set exception and manual refund amounts, system-started closure refunds, an awaiting-approval view with super-admin escalation and a cap on the sum of refunds; partial deposit and late capture refunded automatically; share movement reached from full payment and installments; payment option chosen on FR-006 with an amount due now; aftercare payment record with retry and expiry; payment option enum order.",
+      "source_id": null,
+      "nodes_added": [
+        "ENT-aftercare-payment",
+        "ENT-aftercare-payment.aftercare_plan_id",
+        "ENT-aftercare-payment.amount",
+        "ENT-aftercare-payment.commission_snapshot",
+        "ENT-aftercare-payment.currency",
+        "ENT-aftercare-payment.expires_at",
+        "ENT-aftercare-payment.id",
+        "ENT-aftercare-payment.paid_at",
+        "ENT-aftercare-payment.patient_id",
+        "ENT-aftercare-payment.provider_id",
+        "ENT-aftercare-payment.status",
+        "ENT-booking.amount_due_now",
+        "EVT-patient-payment-overdue-notice",
+        "REQ-007-101",
+        "REQ-007-102",
+        "STP-007-056",
+        "STP-007-057",
+        "STP-007-085"
+      ],
+      "nodes_updated": [
+        "ACT-super-admin",
+        "ENT-booking.final_payment_status",
+        "ENT-booking.is_overdue",
+        "ENT-booking.payment_option",
+        "EVT-payment-overdue",
+        "EVT-refund-approval-escalated",
+        "FLW-007-refund-cancellation",
+        "REQ-007-015",
+        "REQ-007-036",
+        "REQ-007-066",
+        "REQ-007-096",
+        "REQ-007-097",
+        "REQ-007-098",
+        "REQ-007-099",
+        "REQ-007-100",
+        "SCR-007-01",
+        "SCR-007-06",
+        "SCR-007-07",
+        "STG-main-05-payment",
+        "STP-006-002",
+        "STP-007-003",
+        "STP-007-009",
+        "STP-007-011",
+        "STP-007-012",
+        "STP-007-014",
+        "STP-007-021",
+        "STP-007-022",
+        "STP-007-024",
+        "STP-007-025",
+        "STP-007-027",
+        "STP-007-028",
+        "STP-007-052",
+        "STP-007-055",
+        "STP-007-081",
+        "STP-007-083",
+        "STP-007-084",
+        "STP-007B-014"
+      ],
+      "edges_added": 46,
+      "edges_removed": 4,
+      "rows": 222
+    },
     {
       "id": "cs-20261123-070104-ecec360c",
       "at": "2026-11-23T07:01:04.881796+00:00",

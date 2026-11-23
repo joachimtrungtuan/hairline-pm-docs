@@ -96,7 +96,7 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 **Trigger**: Patient opens payment for one accepted subquote's pending FR-006 booking; later completes final payment
 **Outcome**: Booking confirmed upon deposit; booking fully paid after final payment; receipts/invoices issued; payout becomes eligible after completion is marked and the patient confirmation window ends with no problem raised, or an admin resolves the case
 
-**Payment options**: The patient chooses one of three options on FR-006 Screen 1: pay in full now (Alternative Flow A1), deposit now and the balance later (this flow), or installments, 2 to 9 (FR-007B). FR-007 Screen 1 shows the chosen option read-only (REQ-007-098).
+**Payment options**: The patient chooses one of three options on FR-006 Screen 1: pay in full now (Alternative Flow A1), deposit now and the balance later (this flow), or installments, 2 to 9 (FR-007B). FR-007 Screen 1 shows the chosen option read-only, with the amount due now. The option can change only before the first successful payment, by returning to FR-006 (REQ-007-098). A booking confirmed with fewer days left than the FR-029 balance due days is offered full payment only, so no balance can fall due in the past (REQ-007-101).
 
 **Initial Payment Guard**: Before calling the payment processor, validate the FR-006 handoff (FR-006 owns these checks): the booking is `Accepted`; the parent inquiry is not `Cancelled`; the parent quote and accepted subquote are still `Accepted`; the provider is still Active (FR-015); parent/subquote versions match the AcceptanceEvent (`acceptedSubquoteVersion = acceptedParentQuoteVersion`); and that event owns the unexpired exclusive appointment hold. Payment cannot select a different package, option/date-price record, appointment, or quote price. This hold guard applies to the first confirming charge, not to later installments/final payments on an already confirmed booking.
 
@@ -113,42 +113,45 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 
 **Clinic share (Main Flow, clinic share)**: At the 60-day mark before the treatment date, or right away when less time remains, the part of the amount paid that is above Hairline's commission moves to the clinic's locked balance; each later payment tops it up (REQ-007-090).
 
-**Reminders and overdue (Main Flow, reminders and overdue)**: Reminders for the final payment follow the admin timing setting (REQ-007-038). From the day after the due date with a balance unpaid, a scheduled job flags the booking Overdue once and notifies billing admins (REQ-007-036). Where an admin has set the FR-029 Unpaid Balance Cancellation Point, FR-006 Alternative Flow B8 cancels the booking at that point (REQ-007-021).
+**Reminders and overdue (Main Flow, reminders and overdue)**: Reminders for the final payment follow the admin timing setting (REQ-007-038). One stored Final Payment Status moves by a scheduled job, by calendar day in the clinic's timezone: Not Due, then Due on the due date, then Overdue the day after the due date with a balance unpaid. On entering Overdue the job flags the booking once, notifies billing admins and sends the patient one overdue notice. The Overdue flag reads from that status; it is cleared and reminders stop when the booking is Cancelled or Completed (REQ-007-036). Where an admin has set the FR-029 Unpaid Balance Cancellation Point, FR-006 Alternative Flow B8 cancels the booking at that point (REQ-007-021).
 
 ### Alternative Flows
 
 **A1: Full Payment at Booking**:
 
-- **Trigger**: Patient prefers to pay the full amount at booking instead of split payments
+- **Trigger**: The patient chose full payment on FR-006 Screen 1, or only full payment is offered because the booking is confirmed on short notice (REQ-007-101)
 - **Steps**:
-  1. Patient selects full payment for the same accepted subquote's booking; the Initial Payment Guard still applies. (REQ-007-084)
+  1. Patient pays the full amount for the same accepted subquote's booking; the Initial Payment Guard still applies. The option was chosen on FR-006 and can change only before the first successful payment, by returning to FR-006 (REQ-007-084, REQ-007-098)
   2. System processes that booking's payable full amount and marks the same booking Confirmed and fully paid.
   3. System issues receipt/invoice and sends confirmations
+  4. System moves the clinic's share to the clinic's locked balance at the 60-day mark before the treatment date, or right away when less time remains (REQ-007-090)
 - **Outcome**: Booking is confirmed and fully paid; payout stays pending until completion is marked and the confirmation window ends with no problem raised, or an admin resolves the case (REQ-007-089)
 
 **A2: Refund Due to Cancellation**:
 
-- **Trigger**: A booking closes with a cancellation cause (FR-006), or an admin enters an exception or manual refund
+- **Trigger**: A booking closes with a cause FR-006 records (the system starts that refund), or an admin enters an exception or manual refund
 - **Steps**:
-  1. Admin opens Refund Processing (Screen 6) and reviews the closure case, the cancellation timing and the refund the case sets: a full refund with no fee for a provider withdrawal, drop-out, suspension or deactivation; the FR-029 refund ladder (launch default: >30 days = 90%, 15-30 days = 50%, <15 days = no refund) on the amount paid toward the booking total, late payment fees excluded, for a patient-request cancellation; the admin-set amount for an in-treatment provider fault (REQ-006-053, REQ-007-063, REQ-007-097)
-  2. System sets the refund for the case and starts it. A closure-case refund needs no second approval.
+  1. System reads the booking's recorded closure cause and the cancellation timing and works out the refund the case sets: a full refund with no fee for a provider withdrawal, drop-out, suspension or deactivation; the FR-029 refund ladder (launch default: >30 days = 90%, 15-30 days = 50%, <15 days = no refund) on the amount paid toward the booking total, late payment fees excluded, for a patient-request cancellation; the admin-set amount for an in-treatment provider fault, set in FR-006 (REQ-006-053, REQ-007-063, REQ-007-097)
+  2. System starts the refund for that case. A closure-case refund is always started by the system, needs no second approval, and no admin starts a duplicate.
   3. System updates booking/payment status and sends confirmation notices
-  4. Exception or manual refund: the admin selects that case on Screen 6, enters the reason (10 to 500 characters) and, for an exception, the documentation, and submits; the refund is awaiting approval (REQ-007-064)
-  5. A different admin with billing permission approves or denies within 2 business days; the requester, approver and decision go in the audit entry (REQ-007-015, REQ-007-067)
+  4. Exception or manual refund: the admin opens Screen 6 and picks exception or manual; these are the only cases offered when no closure cause is recorded or the recorded cause is not one the cases list. The admin sets the amount, from 0 up to the amount still refundable (the amount paid less refunds already made), with the ladder amount shown beside it, enters the reason (10 to 500 characters) and, for an exception, the documentation, and submits; the refund is awaiting approval (REQ-007-064, REQ-007-066, REQ-007-097)
+  5. Another admin with billing permission finds the request in the Awaiting approval view on Screen 6 and approves or denies within 2 business days; the requester can never approve or deny their own request; the requester, approver and decision go in the audit entry (REQ-007-015, REQ-007-067). Approval starts the refund as in step 2.
   6. On denial, System records the denial with its reason, keeps the booking and payment status and notifies the patient (REQ-007-086)
-  7. When 2 business days pass with no decision, System sends an escalation notice to billing admins; the refund stays awaiting approval and is never approved or denied automatically (REQ-007-015)
-  8. Where the clinic's share has already moved, System pulls it back, deducts any shortfall from the clinic's next payout and splits any cancellation fee, the amount paid less the amount refunded, by the admin-set percentage (REQ-007-091, REQ-007-092)
-- **Outcome**: Refund processed for the closure case, or approved or denied for an exception or manual refund; provider payout eligibility updated
+  7. When 2 business days pass with no decision, System sends an escalation notice to a super-admin; the refund stays awaiting approval and is never approved or denied automatically (REQ-007-015)
+  8. The super-admin approves or denies in the same Awaiting approval view, never as the requester; approval starts the refund as in step 2 and denial ends as in step 6 (REQ-007-015)
+  9. Where the clinic's share has already moved, System pulls it back, deducts any shortfall from the clinic's next payout and splits any cancellation fee, the amount paid less the amount refunded, by the admin-set percentage (REQ-007-091, REQ-007-092)
+- **Outcome**: Refund processed for the closure case, or approved or denied for an exception or manual refund; the sum of refunds on a booking never exceeds the amount paid; provider payout eligibility updated
 
 **A3: Standalone Aftercare Payment**:
 
 - **Trigger**: An admin has assigned a provider to a standalone aftercare plan and the provider has configured it (FR-011)
 - **Steps**:
-  1. Patient pays for the standalone aftercare plan (REQ-007-088)
+  1. Patient pays for the standalone aftercare plan. There is no booking, so the payment is held on a lightweight aftercare payment record (REQ-007-088, REQ-007-102)
   2. System processes the payment, activates the aftercare plan and issues the receipt and invoice
-  3. System releases the provider's money after the patient confirmation window counted from the payment, with no problem raised, or after an admin resolves a problem case (REQ-007-100)
-  4. An admin decides any refund of the aftercare payment with a reason on Screen 6; no refund ladder applies (REQ-007-100)
-- **Outcome**: Aftercare is active once the payment succeeds; refunds are an admin decision
+  3. When the payment fails, the patient retries with another method; with no successful payment after 48 hours the request expires, as in FR-011 Alternative Flow B1. FR-011's automatic refund (REQ-011-037) stays for its own failure cases (REQ-007-102)
+  4. System releases the provider's money after the patient confirmation window counted from the payment, with no problem raised, or after an admin resolves a problem case (REQ-007-100)
+  5. An admin decides any other refund of the aftercare payment with a reason on Screen 6, opened from the aftercare payment record; no refund ladder applies (REQ-007-100)
+- **Outcome**: Aftercare is active once the payment succeeds; any refund beyond FR-011's automatic cases is an admin decision
 
 **B1: Payment Authentication Required / Challenge Failed**:
 
@@ -177,6 +180,7 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
   3. Retain the AcceptanceEvent and snapshot unchanged. Do not reopen the parent quote or make the accepted subquote selectable again; recovery is by the patient cancelling the inquiry and starting a new inquiry, or by the FR-006 audited admin revive.
   4. An admin revive is owned by FR-006 (REQ-006-017). It does not extend the expired hold; it starts a new hold, and initial payment then runs the Initial Payment Guard against that new hold.
   5. A payment captured after the hold expired, or after the booking was cancelled for a cause other than a provider fault, is recorded, does not confirm or revive the booking, and is refunded in full automatically with an audit entry and a patient notice, with no admin approval (REQ-007-096).
+  6. When the hold expires with only part of the deposit received, the partial deposit is refunded in full automatically by the same route, with an audit entry and a patient notice. Payment Status stays Unpaid, the closest existing value, because nothing is confirmed (REQ-007-096, REQ-007-099)
 - **Outcome**: No new charge or booking confirmation against an invalid handoff; no package/date/price reselection inside checkout.
 
 **B4: Provider Fault After Acceptance**:
@@ -210,14 +214,16 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 | Total Amount | number | Yes | Payable booking total under the recorded commercial terms | Positive amount; accepted discounted price from the acceptance snapshot, never recomputed, without double-counting components | ENT-booking.payable_total |
 | Deposit Amount | number | Yes | Deposit to confirm booking | Admin-configurable percentage (default 20-30% range, configured via FR-029) of the booking total (accepted price after promotion, from the acceptance snapshot); within allowed range | ENT-booking.deposit_amount |
 | Currency | text | Yes | Accepted patient payment currency | Read-only; accepted currency/exchange-rate snapshot; no checkout reselection | ENT-quote.currency_snapshot |
-| Payment Option | select | Yes | Pay in full now, deposit now and balance later, or installments (2 to 9) | Read-only; chosen on FR-006 Screen 1; one of three options (REQ-007-098) | ENT-booking.payment_option |
+| Payment Option | select | Yes | Pay in full now, deposit now and balance later, or installments (2 to 9) | Read-only; chosen on FR-006 Screen 1; it can change only before the first successful payment, by returning to FR-006; one of three options (REQ-007-098) | ENT-booking.payment_option |
+| Amount Due Now | number | Yes | Amount the patient pays now under the chosen option | Read-only; the full payable total for full payment (the only option on short notice), the deposit amount for deposit and balance, the first installment for installments (FR-007B) (REQ-007-098, REQ-007-101) | ENT-booking.amount_due_now |
 | Payment Hold Expires At | datetime | Yes | Deadline for the initial confirming payment | Read-only; the single FR-006 hold that started at subquote acceptance, or the new hold after an admin revive; display countdown and disable payment after expiry (REQ-007-049) | ENT-slot-hold.hold_expires_at |
 | Payment Method | select | Yes | Card or bank transfer | Must be in supported methods | ENT-payment.payment_method |
 | Billing Details | text | Yes | Name, address, contact | Required for invoicing | ENT-payment.billing_details |
 
 **Business Rules**:
 
-- Show clear breakdown: total, deposit, remaining balance, currency (REQ-007-033)
+- Show clear breakdown: total, amount due now, deposit, remaining balance, currency (REQ-007-033)
+- A booking confirmed with fewer days left than the FR-029 balance due days shows full payment only (REQ-007-101)
 - Disable payment button until all required fields are valid (REQ-007-048)
 - Display clear error messaging and retry options on failure (REQ-007-042)
 - Do not reveal provider direct contact details until booking confirmed (REQ-007-047)
@@ -250,7 +256,7 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 
 - Display due date and countdown to procedure date (REQ-007-037)
 - Send reminders at the days set in the payment reminder timing setting: whole days 0 to 14 before the due date, up to 3 reminders, default 3 days before the due date and on the due date (REQ-007-038)
-- The balance is overdue from the day after the due date: the booking is flagged Overdue once and billing admins are notified (REQ-007-036). An overdue final payment never causes `Payment Window Expired`; it cancels the booking only through the FR-006 unpaid balance cancellation at the FR-029 Unpaid Balance Cancellation Point, when an admin has set one (REQ-007-021).
+- The balance is overdue from the day after the due date, by calendar day in the clinic's timezone: Final Payment Status becomes Overdue, the booking is flagged once, billing admins are notified and the patient gets one overdue notice (REQ-007-036). Reminders and the flag stop when the booking is Cancelled or Completed. An overdue final payment never causes `Payment Window Expired`; it cancels the booking only through the FR-006 unpaid balance cancellation at the FR-029 Unpaid Balance Cancellation Point, when an admin has set one (REQ-007-021).
 
 **Notes**:
 
@@ -321,9 +327,9 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 | Deposit Paid Date | datetime | Conditional | Date deposit was paid | Read-only; if paid | ENT-booking.deposit_paid_at |
 | Payment Method (Deposit) | text | Conditional | Payment method used for deposit | Read-only; if paid | ENT-booking.deposit_payment_method |
 | Payment Status | badge | Yes | Unpaid / Deposit only / Installments active / Full paid / Refunded | Read-only; the single list owned by FR-007 (Payment & Billing Rules) | ENT-booking.payment_status |
-| Overdue Flag | badge | Conditional | Shown when the due date has passed and the amount is unpaid | Read-only; calculated, not stored; separate from Payment Status | ENT-booking.is_overdue |
+| Overdue Flag | badge | Conditional | Shown while Final Payment Status is Overdue | Read-only; read from the stored Final Payment Status, not a second value; cleared when the booking is Cancelled or Completed; separate from Payment Status (REQ-007-036) | ENT-booking.is_overdue |
 | Installment Progress | group | Conditional | Current installment number, total installments, next due date, completion percentage | Only shown if installments active; read from the installment plan (FR-007B): completion percentage and installments paid | ENT-installment-plan.completion_percentage, ENT-installment-plan.installments_paid |
-| Final Payment Status | badge | Yes | Not Due / Due / Paid / Overdue | Read-only | ENT-booking.final_payment_status |
+| Final Payment Status | badge | Yes | Not Due / Due / Paid / Overdue | Read-only; the one stored value; the scheduled job sets Due on the due date and Overdue the day after, by calendar day in the clinic's timezone (REQ-007-036) | ENT-booking.final_payment_status |
 | Final Payment Due Date | datetime | Conditional | The FR-029 balance due days before the procedure | Read-only | ENT-booking.final_payment_due_at |
 | Final Payment Amount | number | Conditional | Final payment amount due | Calculated | ENT-booking.final_payment_amount |
 | Final Payment Method | text | Conditional | Payment method used for final payment | Read-only; if paid | ENT-booking.final_payment_method |
@@ -434,7 +440,7 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 | Field Name | Type | Required | Description | Validation Rules | Graph field |
 |------------|------|----------|-------------|------------------|-------------|
 | Payout Status | badge | Yes | Value from the single payout status list owned by FR-017 | Read-only; valid transitions owned by FR-017 | ENT-payout.status |
-| Payout Eligibility Date | datetime | Conditional | Date payout became eligible | Read-only; after treatment completion | ENT-payout.eligibility_at |
+| Payout Eligibility Date | datetime | Conditional | Date payout became eligible | Read-only; set when completion is marked and the patient confirmation window ends with no problem raised, or an admin resolves the case (REQ-007-089) | ENT-payout.eligibility_at |
 | Payout Execution Date | datetime | Conditional | Date payout was executed | Read-only; if executed | ENT-payout.executed_at |
 | Payout Method | text | Conditional | Payout method (bank transfer, etc.) | Read-only; if executed | ENT-payout.payout_method |
 | Payout Transaction ID | text | Conditional | Payout transaction reference | Read-only; if executed | ENT-payout.transaction_id |
@@ -499,10 +505,10 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 | Deposit Status | badge | Yes | Pending / Paid / Partial (part of the deposit received) | Filterable | ENT-booking.deposit_status |
 | Deposit Paid Date | datetime | Conditional | Date deposit was paid | Read-only; if paid | ENT-booking.deposit_paid_at |
 | Payment Status | badge | Yes | Unpaid / Deposit only / Installments active / Full paid / Refunded | Filterable; the single list owned by FR-007 (Payment & Billing Rules) | ENT-booking.payment_status |
-| Overdue Flag | badge | Conditional | Shown when the due date has passed and the amount is unpaid | Filterable; calculated, not stored; separate from Payment Status | ENT-booking.is_overdue |
+| Overdue Flag | badge | Conditional | Shown while Final Payment Status is Overdue | Filterable; read from the stored Final Payment Status; cleared when the booking is Cancelled or Completed; separate from Payment Status (REQ-007-036) | ENT-booking.is_overdue |
 | Installment Progress | text | Conditional | "X of Y installments paid" | Only shown if installments active; read from the installment plan (FR-007B): installments paid and completion percentage | ENT-installment-plan.installments_paid, ENT-installment-plan.completion_percentage |
 | Next Payment Due Date | datetime | Conditional | Next installment or final payment due date | Read-only | ENT-booking.next_payment_due_at |
-| Final Payment Status | badge | Yes | Not Due / Due / Paid / Overdue | Filterable | ENT-booking.final_payment_status |
+| Final Payment Status | badge | Yes | Not Due / Due / Paid / Overdue | Filterable; the same stored value as on Screen 3 (REQ-007-036) | ENT-booking.final_payment_status |
 | Remaining Balance | number | Yes | Amount remaining to pay | Calculated, sortable | ENT-booking.remaining_balance |
 | Actions | buttons | Yes | View Payment Details, Process Refund, Send Reminder | RBAC enforced | no graph field (control) |
 
@@ -536,6 +542,7 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 | Field Name | Type | Required | Description | Validation Rules | Graph field |
 |------------|------|----------|-------------|------------------|-------------|
 | Booking Reference | text | Yes | Unique booking reference | Read-only; link to FR-006 booking detail | ENT-booking.id |
+| Aftercare Payment Reference | text | Conditional | Standalone aftercare payment this view belongs to | Read-only; shown instead of the booking reference when there is no booking; the screen opens from the aftercare payment record (REQ-007-102) | ENT-aftercare-payment.id |
 | Booking Status | badge | Yes | Current FR-006 status, including Accepted and Payment Window Expired | Read-only; full lifecycle owned by FR-006 | ENT-booking.status |
 | Appointment Date | datetime | Yes | Accepted appointment; held before initial payment, appointment record created at successful initial payment | Read-only; acceptance snapshot | ENT-booking.appointment_at |
 | Inquiry Reference | text | Yes | Original inquiry HPID | Read-only; link to inquiry | ENT-inquiry.reference |
@@ -589,9 +596,9 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 | Deposit Paid Date | datetime | Conditional | Date deposit was paid | Read-only; if paid | ENT-booking.deposit_paid_at |
 | Payment Method (Deposit) | text | Conditional | Payment method used for deposit | Read-only; if paid | ENT-booking.deposit_payment_method |
 | Payment Status | badge | Yes | Unpaid / Deposit only / Installments active / Full paid / Refunded | Read-only; the single list owned by FR-007 (Payment & Billing Rules) | ENT-booking.payment_status |
-| Overdue Flag | badge | Conditional | Shown when the due date has passed and the amount is unpaid | Read-only; calculated, not stored; separate from Payment Status | ENT-booking.is_overdue |
+| Overdue Flag | badge | Conditional | Shown while Final Payment Status is Overdue | Read-only; read from the stored Final Payment Status, not a second value; cleared when the booking is Cancelled or Completed; separate from Payment Status (REQ-007-036) | ENT-booking.is_overdue |
 | Installment Progress | group | Conditional | Current installment number, total installments, next due date, completion percentage | Only shown if installments active; read from the installment plan (FR-007B): completion percentage and installments paid | ENT-installment-plan.completion_percentage, ENT-installment-plan.installments_paid |
-| Final Payment Status | badge | Yes | Not Due / Due / Paid / Overdue | Read-only | ENT-booking.final_payment_status |
+| Final Payment Status | badge | Yes | Not Due / Due / Paid / Overdue | Read-only; the one stored value; the scheduled job sets Due on the due date and Overdue the day after, by calendar day in the clinic's timezone (REQ-007-036) | ENT-booking.final_payment_status |
 | Final Payment Due Date | datetime | Conditional | The FR-029 balance due days before the procedure | Read-only | ENT-booking.final_payment_due_at |
 | Final Payment Amount | number | Conditional | Final payment amount due | Calculated | ENT-booking.final_payment_amount |
 | Final Payment Method | text | Conditional | Payment method used for final payment | Read-only; if paid | ENT-booking.final_payment_method |
@@ -670,6 +677,7 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 | Field Name | Type | Required | Description | Validation Rules | Graph field |
 |------------|------|----------|-------------|------------------|-------------|
 | Booking Reference | text | Yes | Unique booking reference | Read-only; link to FR-006 booking detail | ENT-booking.id |
+| Aftercare Payment Reference | text | Conditional | Standalone aftercare payment this view belongs to | Read-only; shown instead of the booking reference when there is no booking; the screen opens from the aftercare payment record (REQ-007-102) | ENT-aftercare-payment.id |
 | Booking Status | badge | Yes | Current status | Read-only | ENT-booking.status |
 | Closure Cause | badge | Conditional | Why the booking closed (FR-006) | Read-only; drives the closure case (REQ-006-053) | ENT-booking.closure_cause |
 | Appointment Date | datetime | Yes | Original accepted appointment slot/timezone | Read-only; acceptance snapshot; later intervention retained separately | ENT-booking.appointment_at |
@@ -720,8 +728,8 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 
 | Field Name | Type | Required | Description | Validation Rules | Graph field |
 |------------|------|----------|-------------|------------------|-------------|
-| Refund Case | select | Yes | Closure case (from FR-006), exception to the policy, or manual | Defaults to the closure case when the booking closed with a cause; one control for every refund (REQ-007-097) | ENT-payment.refund_case |
-| Admin-Set Amount | number | Conditional | Refund amount an admin sets | Open only for an admin-set case (in-treatment provider fault, manual); from zero up to the amount paid | ENT-payment.admin_set_amount |
+| Refund Case | select | Yes | Closure case (from FR-006), exception to the policy, or manual | The closure case is bound to the booking's recorded closure cause and shows read-only, because the system starts that refund and no admin starts a duplicate; exception and manual are chosen by the admin and are the only cases offered when no cause is recorded or the cause is not one FR-006 lists (REQ-007-097) | ENT-payment.refund_case |
+| Admin-Set Amount | number | Conditional | Refund amount an admin sets | Open for an exception or manual refund; read-only for an in-treatment provider fault, where FR-006 sets it. From zero up to the amount still refundable (the amount paid less refunds already made); the ladder amount (Calculated Refund Amount) shows beside it; the reason is required (REQ-007-097) | ENT-payment.admin_set_amount |
 | Refund Reason | textarea | Yes | Reason for refund | Mandatory audit field; 10 to 500 characters (REQ-007-068) | ENT-payment.refund_reason |
 | Refund Destination | select | Yes | Where refund will be sent | Defaults to original payment method; can select alternative | ENT-payment.refund_destination |
 | Refund Method | text | Yes | Refund method (original payment method or alternative) | Read-only; based on selection | ENT-payment.refund_method |
@@ -747,18 +755,20 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 | View Accepted Selection | link | Always | Open the accepted subquote snapshot and inherited parent context via FR-006 | no graph field (control) |
 | Cancel Refund | button | Always | Cancel refund processing and return to dashboard | no graph field (control) |
 | Process Refund | button | All fields complete | Confirm and process refund (REQ-007-095) | no graph field (control) |
-| Approve Refund | button | Refund awaiting approval; signed-in admin is not the requester | Approve the exception or manual refund | no graph field (control) |
-| Deny Refund | button | Refund awaiting approval; signed-in admin is not the requester | Deny it; a reason is required, the booking and payment status stay, and the patient is notified (REQ-007-086) | no graph field (control) |
+| Approve Refund | button | Refund awaiting approval; signed-in admin has billing permission (a super-admin after escalation) and is not the requester | Approve the exception or manual refund; approval starts the refund | no graph field (control) |
+| Deny Refund | button | Refund awaiting approval; signed-in admin has billing permission (a super-admin after escalation) and is not the requester | Deny it; a reason is required, the booking and payment status stay, and the patient is notified (REQ-007-086) | no graph field (control) |
+| Awaiting Approval | link | Admin has billing permission | Open the view of exception and manual refunds submitted by other admins and still awaiting a decision; a super-admin sees the escalated ones (REQ-007-015) | no graph field (control) |
 
 **Business Rules**:
 
 - Screen 6 is the single refund execution control. FR-006 Process Refund and the FR-017 refund action open it (REQ-007-097).
-- Closure-case refunds run with no second approval: a full refund with no fee for a provider withdrawal, drop-out, suspension or deactivation; the refund ladder for a patient-request cancellation; the admin-set amount for an in-treatment provider fault (REQ-006-053)
+- Closure-case refunds are started by the system from the booking's recorded closure cause, run with no second approval, and are never started by an admin: a full refund with no fee for a provider withdrawal, drop-out, suspension or deactivation; the refund ladder for a patient-request cancellation; the admin-set amount, set in FR-006, for an in-treatment provider fault (REQ-006-053)
 - Refund ladder set in FR-029 (launch default): more than 30 days before procedure 90% refund; 15 to 30 days 50% refund; fewer than 15 days no refund (unless an approved exception, for example a medical emergency). The percentage applies to the amount paid toward the booking total, late payment fees excluded; the cancellation fee is the amount paid less the amount refunded (REQ-007-063, REQ-007-092).
-- Approval applies only to an exception refund and a manually entered refund: a different admin with billing permission approves or denies within 2 business days, the refund is awaiting approval until then, and an escalation notice goes to billing admins when the 2 business days pass; nothing is approved or denied automatically (REQ-007-015)
+- Approval applies only to an exception refund and a manually entered refund: another admin with billing permission finds it in the Awaiting approval view and approves or denies within 2 business days; the requester can never approve or deny their own request; the refund is awaiting approval until then. When the 2 business days pass, an escalation notice goes to a super-admin, who decides in the same view; nothing is approved or denied automatically (REQ-007-015)
 - Exceptions to policy (e.g., medical emergency) require documentation upload and a second admin's approval (REQ-007-064)
+- An exception refund and a manual refund are admin-set: any amount from zero up to the amount still refundable, with a reason; the ladder amount shows beside it so the approver sees the difference (REQ-007-097)
 - Refund processed to original payment method by default; admin can select alternative method (REQ-007-065)
-- Refund amount cannot exceed total paid amount (REQ-007-066)
+- The sum of all refunds on a booking cannot exceed the amount paid (REQ-007-066)
 - All refund actions are auditable with timestamp, actor, reason, and approval chain (REQ-007-067)
 - Refund processing updates booking status and notifies patient and provider (REQ-007-069)
 
@@ -781,9 +791,9 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 ### General Module Rules
 
 - Initial payment is required to confirm the accepted subquote's booking: deposit (default 20-30% range, configured via FR-029), eligible first installment per FR-007B, or the full-payment alternative, as chosen among the three payment options (REQ-007-098). Scheduling installments alone is not confirmation.
-- Final payment is due the FR-029 balance due days before the procedure (launch default 7). A balance unpaid the day after that date is Overdue, flagged once and notified to billing admins (REQ-007-036)
+- Final payment is due the FR-029 balance due days before the procedure (launch default 7). The stored Final Payment Status moves Not Due, Due on the due date, then Overdue the day after, by calendar day in the clinic's timezone; the Overdue flag reads from it, and billing admins and the patient are notified once (REQ-007-036). A booking confirmed with fewer days left than the balance due days pays in full at confirmation (REQ-007-101)
 - While an FR-006 provider fault is pending on a booking, from the fault until the admin's submit on Screen 10, payment and payment reminders against it are blocked (REQ-006-081)
-- A payment captured after the hold expired or after a non-provider cancellation is refunded in full automatically (REQ-007-096)
+- A payment captured after the hold expired or after a non-provider cancellation, and a partial deposit still held when the hold expires, are refunded in full automatically (REQ-007-096)
 - Full payment option is always available as an alternative to split payments (REQ-007-035)
 - Receipts and invoice/payment documents are generated for every successful transaction; FR-017 retains one invoice record per booking, updated for later payments rather than duplicating it per option/charge. (REQ-007-039)
 - Provider payout occurs only at release after treatment completion (see Fund Release & Money Routing Rules; payout execution is managed in FR-017) (REQ-007-040)
@@ -840,7 +850,7 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 - See REQ-007-010.
 - See REQ-007-013.
 - See REQ-007-014.
-- **Payment status list**: One payment status list, owned by FR-007, is used on every screen that shows a booking's payment status, including the booking, patient-management, and billing screens of FR-003, FR-006, and FR-017: Unpaid, Deposit only, Installments active, Full paid, Refunded. Refunded means all money paid has been returned; a part refund leaves the previous status and shows in the refund history. Overdue is not a status value. It is a separate flag, calculated and not stored: true when the due date has passed and the amount is unpaid, on the booking and on the installment plan. An installment payment's own status keeps its overdue value (FR-007B). Deposit status Partial means only part of the deposit amount has been received and the rest is still due; the booking is not confirmed until the full deposit is paid. (REQ-007-099)
+- **Payment status list**: One payment status list, owned by FR-007, is used on every screen that shows a booking's payment status, including the booking, patient-management, and billing screens of FR-003, FR-006, and FR-017: Unpaid, Deposit only, Installments active, Full paid, Refunded. Refunded means all money paid has been returned; a part refund leaves the previous status and shows in the refund history. Overdue is not a Payment Status value. The booking's Final Payment Status (Not Due, Due, Paid, Overdue) is the one stored value, moved by the scheduled job, and the Overdue flag is read from it; the flag clears when the booking is Cancelled or Completed. An installment payment's own status keeps its overdue value (FR-007B). Deposit status Partial means only part of the deposit amount has been received and the rest is still due; the booking is not confirmed until the full deposit is paid, Payment Status stays Unpaid (there is no Pending value), and the partial deposit is refunded in full automatically when the hold expires. (REQ-007-099)
 - **Booking payment fields**: FR-007 owns every payment field recorded on the booking; FR-006 keeps the booking status and its cause and reads payment state from FR-007.
 - **Processor fees**: See REQ-007-087.
 
@@ -856,7 +866,7 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 - **Reschedule after the share has moved**: See REQ-007-091.
 - **Clinic withdrawal and patient cancellation fee**: See REQ-007-092.
 - **Treatment interrupted by the provider's fault**: For a treatment already started and interrupted by the provider's fault (FR-006 Alternative Flow B7), an admin reviews each case and sets the patient refund amount, from zero up to the full amount paid, with a mandatory reason and an audit entry. The provider's payout for that booking is held from the fault until the FR-006 route completes; the refund comes out of the held payout, and a shortfall after release is deducted from the provider's next payout (FR-017). (REQ-007-022)
-- **Standalone aftercare payment**: No refund ladder applies; an admin decides any refund with a reason as a manual refund, and the provider's money is released after the confirmation window counted from the payment. (REQ-007-100)
+- **Standalone aftercare payment**: There is no booking, so the payment sits on an aftercare payment record from which Screens 5B and 6 open (REQ-007-102). No refund ladder applies; an admin decides any refund beyond FR-011's automatic cases with a reason as a manual refund, and the provider's money is released after the confirmation window counted from the payment. (REQ-007-100)
 - **Refund ladder**: The cancellation refund percentages are an admin setting owned by FR-029 and apply globally (the data model allows a per-clinic ladder later); FR-006 owns the cancellation policy itself.
 - Payouts are available to providers within 2 business days after admin execution
 - The provider cannot self-execute payouts (payout execution in FR-017)
@@ -877,7 +887,7 @@ Related FRs and modules:
 - FR-019 Promotions & Discount Management: the accepted promotion is frozen into the acceptance snapshot
 - FR-017 Admin Billing & Financial Management: provider payout execution and invoice generation
 - FR-029 Payment System Configuration: commission rates, deposit defaults, and the refund ladder are configured at system level
-- FR-011 Aftercare & Recovery Management: a standalone aftercare plan is paid for through this module
+- FR-011 Aftercare & Recovery Management: a standalone aftercare plan is paid for through this module on its own aftercare payment record; retry and the 48-hour expiry follow FR-011 Alternative Flow B1
 - P-01 Auth & Profile Management: only authenticated patients can pay and view receipts
 - PR-05 Financial Management & Reporting: payout visibility and statements
 - S-03 Notification Service: confirmations, reminders, and alerts
@@ -919,9 +929,10 @@ Patient completes the final payment by its due date and receives confirmation.
 **Acceptance Scenarios**:
 
 1. **Given** a confirmed booking with a remaining balance, **When** the patient pays the final amount, **Then** the booking is marked fully paid and a final receipt/invoice is delivered.
-2. **Given** a final payment due date, **When** it is approaching within 3 days, **Then** the patient receives a reminder notification.
+2. **Given** a final payment due date, **When** it is approaching at the days set in the payment reminder timing setting, **Then** the patient receives a reminder notification.
 3. **Given** a confirmed booking paid through deposit/installments, **When** final payment is calculated, **Then** the balance uses its recorded payable terms and actual successful payments/adjustments, retaining the original accepted selection and currency; no new acceptance hold is required.
-4. **Given** a confirmed booking whose final payment is overdue, **When** the due date passes, **Then** the booking is flagged and the admin notified; the booking does not become `Payment Window Expired` and is not cancelled.
+4. **Given** a confirmed booking whose final payment is overdue, **When** the day after the due date arrives, **Then** Final Payment Status becomes Overdue, the booking is flagged, billing admins are notified and the patient receives one overdue notice; the booking does not become `Payment Window Expired` and is not cancelled by being overdue. It cancels only at the FR-029 Unpaid Balance Cancellation Point (FR-006 Alternative Flow B8), for bookings confirmed after that point is set.
+5. **Given** a booking confirmed with fewer days left than the FR-029 balance due days, **When** the patient pays, **Then** the full amount is due at confirmation and no balance or installments are offered.
 
 ---
 
@@ -937,6 +948,7 @@ Admin processes a refund request according to cancellation policy; patient and p
 
 1. **Given** a cancellation 20 days before procedure, **When** admin approves refund, **Then** the system refunds 50% (the launch default of the refund ladder, FR-029) and updates booking/payment status with audit log.
 2. **Given** an exception refund request for a cancellation 5 days before procedure, **When** a different admin denies it, **Then** the system records the decision with reason and notifies the patient. (REQ-007-086)
+3. **Given** an exception refund awaiting approval, **When** another admin with billing permission opens the Awaiting approval view, **Then** they can approve or deny it, the requester cannot, and after 2 business days it escalates to a super-admin.
 
 ---
 
@@ -950,8 +962,10 @@ Admin processes a refund request according to cancellation policy; patient and p
 - Duplicate or late processor callbacks must not create another booking, replace the accepted choice, or bypass FR-006's confirmation rules; reconcile financial events under the existing payment/booking owners
 - Accepted pricing lacks optional component itemization; show the complete offered price without inventing treatment/package components (REQ-007-079)
 - Refund requested outside policy window; admin records exception with documentation (REQ-007-064)
-- A payment succeeds after the hold expired or after a non-provider cancellation; it does not confirm the booking and is refunded in full automatically (REQ-007-096)
-- No admin decides an exception or manual refund within 2 business days; billing admins get an escalation notice and the refund stays awaiting approval (REQ-007-015)
+- A payment succeeds after the hold expired or after a non-provider cancellation, or only part of the deposit is received when the hold expires; the booking is not confirmed and the money is refunded in full automatically (REQ-007-096)
+- No admin decides an exception or manual refund within 2 business days; a super-admin gets an escalation notice and the refund stays awaiting approval (REQ-007-015)
+- A booking is confirmed with fewer days left than the FR-029 balance due days; the patient pays in full at confirmation, so no due date falls in the past (REQ-007-101)
+- A standalone aftercare payment fails; the patient retries with another method and the request expires after 48 hours without a successful payment (REQ-007-102)
 - Payout blocked while the provider has not marked the procedure complete or a problem case is open; release waits until completion is marked or an admin resolves the case (REQ-007-058)
 
 ---
@@ -987,7 +1001,7 @@ Admin processes a refund request according to cancellation policy; patient and p
 - **REQ-007-017**: Before initial processor submission, system MUST validate FR-006 selection eligibility, accepted versions, and exclusive unexpired hold ownership; invalid handoffs are blocked and hold expiry follows `Payment Window Expired`, without hold extension or quote reopening. Payment failure MUST NOT extend or restart the hold; only the FR-006 audited admin revive creates a new hold. Later confirmed-booking payments do not acquire a new acceptance hold.
 - **REQ-007-018**: System MUST read the payment amount and the accepted patient currency/exchange-rate from the FR-005 accepted snapshot for initial and subsequent payments, never recomputed; checkout cannot change these values or reselect package/date/appointment/quote price.
 - **REQ-007-020**: On the first successful initial payment, System MUST confirm the booking, create its appointment record from the hold (FR-006), and, for a provider-selected promotion or patient-entered code, consume the promotion use reserved at acceptance (FR-019 REQ-019-014). An automatic promotion's use is consumed at acceptance and follows FR-019 REQ-019-015.
-- **REQ-007-021**: `Payment Window Expired` MUST apply only to the first payment step, as stated in FR-006 (REQ-006-016). A missed later installment or final payment MUST NOT cause `Payment Window Expired`, booking cancellation, or inquiry cancellation.
+- **REQ-007-021**: `Payment Window Expired` MUST apply only to the first payment step, as stated in FR-006 (REQ-006-016). A missed later installment or final payment MUST NOT cause `Payment Window Expired`, booking cancellation, or inquiry cancellation, except the FR-006 unpaid balance cancellation (Alternative Flow B8) at the FR-029 Unpaid Balance Cancellation Point, which applies only when an admin has set that point and only to bookings confirmed after it is set.
 - **REQ-007-022**: When a provider fault after acceptance closes a booking (FR-006 Alternative Flow B5), System MUST block further payment against it. When the provider withdraws, drops out, or is suspended or deactivated (FR-006 Alternative Flow B4), the patient is refunded in full everything paid, with no patient fee, and the replacement booking takes a new payment. For a treatment already started and interrupted by the provider's fault, an admin MUST review the case and set the patient refund amount, from zero up to the full amount paid, with a mandatory reason and an audit entry, and the provider's payout for that booking MUST be held until the admin decides (see Fund Release & Money Routing Rules). Detailed refund and fund-release mechanics are defined in FR-007B and FR-017.
 - **REQ-007-088**: System MUST process the payment for a standalone aftercare plan (FR-011). The patient pays only after an admin has assigned a provider and that provider has configured the plan; the successful payment activates the aftercare.
 - **REQ-007-089**: Provider money MUST be released in two parts (see Fund Release & Money Routing Rules): release per booking at Treatment, after the patient's confirmation window with no problem raised (default 7 days, admin-editable) or after an admin resolves a problem case, then payout per provider (FR-017).
@@ -997,17 +1011,19 @@ Admin processes a refund request according to cancellation policy; patient and p
 
 ### Refunds, Options and Status Requirements
 
-- **REQ-007-096**: A payment captured after the hold expired, or after the booking was cancelled for a cause other than a provider fault, is recorded and does not confirm or revive the booking. System MUST refund it in full automatically, write an audit entry and notify the patient, with no admin approval.
-- **REQ-007-097**: Every refund is executed on Screen 6. The admin picks the case: a closure case (the amount follows the FR-006 closure cause, REQ-006-053), an exception to the policy, or a manual refund. The amount field is open only for an admin-set case (in-treatment provider fault, manual), from zero up to the amount paid. FR-006 Process Refund and the FR-017 refund action open this screen instead of running their own refund.
-- **REQ-007-098**: The patient chooses one of three payment options on FR-006 Screen 1: pay in full now, a deposit now with the balance later, or installments (2 to 9, FR-007B). FR-007 Screen 1 shows the chosen option read-only. The first successful charge of the chosen option confirms the booking.
-- **REQ-007-099**: Payment status values: Unpaid (nothing paid), Deposit only (deposit paid, balance not), Installments active (plan started, not fully paid), Full paid (whole payable total paid), Refunded (all money paid has been returned; a part refund leaves the previous status and shows in the refund history). Deposit status Partial means only part of the deposit amount has been received and the rest is still due; the booking is not confirmed until the full deposit is paid. At Risk is not a status.
-- **REQ-007-100**: For a standalone aftercare payment (REQ-007-088) no refund ladder applies: an admin decides any refund with a reason on Screen 6 as a manual refund (REQ-007-015). The provider's money is released after the same patient confirmation window as a booking, counted from the date of the payment instead of procedure completion.
+- **REQ-007-096**: A payment captured after the hold expired, or after the booking was cancelled for a cause other than a provider fault, is recorded and does not confirm or revive the booking. A partial deposit still held when the hold expires is treated the same way. System MUST refund it in full automatically, write an audit entry and notify the patient, with no admin approval.
+- **REQ-007-097**: Every refund is executed on Screen 6. A closure-case refund follows the booking's recorded closure cause (REQ-006-053) and is started by the system, never by an admin. An admin submits only an exception to the policy or a manual refund, the only cases offered when no closure cause is recorded or the cause is not listed. An exception or manual refund is admin-set: any amount from zero up to the amount still refundable, with a mandatory reason, and the ladder amount is shown beside it. FR-006 Process Refund and the FR-017 refund action open this screen instead of running their own refund.
+- **REQ-007-098**: The patient chooses one of three payment options on FR-006 Screen 1: pay in full now, a deposit now with the balance later, or installments (2 to 9, FR-007B). FR-007 Screen 1 shows the chosen option read-only, with the amount due now. The option can change only before the first successful payment, by returning to FR-006. The first successful charge of the chosen option confirms the booking.
+- **REQ-007-099**: Payment status values: Unpaid (nothing paid), Deposit only (deposit paid, balance not), Installments active (plan started, not fully paid), Full paid (whole payable total paid), Refunded (all money paid has been returned; a part refund leaves the previous status and shows in the refund history). Deposit status Partial means only part of the deposit amount has been received and the rest is still due; the booking is not confirmed until the full deposit is paid, Payment Status stays Unpaid (there is no Pending value), and the partial deposit is refunded in full automatically when the hold expires (REQ-007-096). At Risk is not a status.
+- **REQ-007-100**: For a standalone aftercare payment (REQ-007-088) no refund ladder applies: an admin decides any refund beyond FR-011's automatic cases with a reason on Screen 6, opened from the aftercare payment record, as a manual refund (REQ-007-015). The provider's money is released after the same patient confirmation window as a booking, counted from the date of the payment instead of procedure completion.
+- **REQ-007-101**: A booking confirmed with fewer days left before the procedure than the FR-029 balance due days MUST take the full amount at confirmation. The deposit-and-balance and installment options are not offered, so no balance can fall due in the past.
+- **REQ-007-102**: A standalone aftercare payment (REQ-007-088) has no booking, so System MUST record it on an aftercare payment record with its own id, the patient, the provider, the amount, the currency and the payout snapshot; Screens 5B and 6 open from that record. A failed payment can be retried with another method and the request expires after 48 hours without a successful payment (FR-011 Alternative Flow B1). FR-011's automatic refund (REQ-011-037) stays for its own failure cases; any other refund is an admin refund (REQ-007-100).
 
 ### Marking Unclear Requirements
 
 - **REQ-007-013**: Platform is Merchant of Record; platform issues patient invoices, manages refunds and tax implications, and pays out net to providers
 - **REQ-007-014**: Commission is calculated on the accepted price after promotion (the FR-029 booking total) using the commission type (Percentage or Flat Rate) and value from the snapshot taken at booking confirmation. Hairline keeps the commission first, before the clinic's share moves; only the net share moves to the clinic and is paid out at release after treatment completion; not pro‑rata across deposit/final
-- **REQ-007-015**: Admin approval applies only to an exception refund and a manually entered refund. The approver is any other admin with billing permission, never the requester, and approves or denies within 2 business days; until then the refund is awaiting approval. When 2 business days pass with no decision, System sends an escalation notice to billing admins and never approves or denies on its own. A closure-case refund (REQ-006-053) runs with no second approval. The requester, approver, decision and reason are logged and notifications sent
+- **REQ-007-015**: Admin approval applies only to an exception refund and a manually entered refund. The approver is any other admin with billing permission, never the requester, who finds the request in the Awaiting approval view and approves or denies within 2 business days; until then the refund is awaiting approval. When 2 business days pass with no decision, System sends an escalation notice to a super-admin, who decides in the same view, never as the requester; System never approves or denies on its own. A closure-case refund (REQ-006-053) runs with no second approval. The sum of all refunds on a booking never exceeds the amount paid (REQ-007-066). The requester, approver, decision and reason are logged and notifications sent
 
 ---
 
@@ -1018,6 +1034,7 @@ Admin processes a refund request according to cancellation policy; patient and p
 | 2026-11-22 | 1.13 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.12) and the change requests CR-FR007-20261013-01 and CR-FR007-20261016-01 are in `archived/prd-baseline-2026-11-08/fr007-payment-processing/` and in git history. | Product Owner / Documentation |
 | 2026-11-23 | 1.14 | Independent compression review: 1 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
 | 2026-11-23 | 1.15 | Logic review of the payment rules. One due date for the final payment (the FR-029 balance due days before the procedure), Overdue from the next day with a scheduled trigger and billing-admin notice, and reminder timing as an admin setting of 0 to 14 days, up to 3. An unpaid balance cancels a booking only at the FR-029 Unpaid Balance Cancellation Point, shown on Screen 2 when set. Refund approval now applies only to exception and manual refunds, needs a different admin with billing permission, has a Deny action, an awaiting-approval state and an escalation notice after 2 business days; closure-case refunds need no second approval. Screen 6 is the single refund control with a refund case selector and an admin-set amount; one reason rule of 10 to 500 characters. The ladder applies to the amount paid, late fees excluded, and the cancellation fee is the amount paid less the amount refunded. The clinic share for the deposit-and-balance option moves above Hairline's commission and is topped up by later payments. Payout eligibility waits for the confirmation window. Three payment options shown on Screen 1. A payment captured when the booking is not payable is refunded in full automatically. Payment status list drops At Risk and defines Refunded and the deposit Partial state. A standalone aftercare payment flow, an in-treatment fault payout hold and refund steps, retry and replacement steps wired, and the duplicate revive step retired in favour of FR-006. | Product Owner / Documentation |
+| 2026-11-23 | 1.16 | Second logic review of the payment rules. A missed balance never cancels a booking on its own: REQ-007-021 and User Story 2 now state the FR-029 cancellation point only. A booking confirmed with fewer days left than the balance due days pays in full at confirmation. One stored Final Payment Status (Not Due, Due, Overdue) is moved by the scheduled job on calendar days in the clinic's timezone and the Overdue flag reads from it; the hard-coded 3 days is gone and the patient gets one overdue notice. Exception and manual refunds are admin-set from zero to the amount still refundable, with the ladder amount shown beside it. Closure-case refunds are started by the system and bound to the recorded closure cause. Other billing admins get an Awaiting approval view, a stalled request escalates to a super-admin, self-approval is never allowed, and all refunds on a booking together cannot exceed the amount paid. A partial deposit is refunded in full automatically when the hold expires. Full payment and installment completion now lead to the clinic share movement, and a late capture leads to the automatic refund. The payment option is chosen on FR-006 and changes only before the first payment; Screen 1 shows the amount due now. Standalone aftercare payments get an aftercare payment record, retry and 48-hour expiry as in FR-011, and a refund route; two rules cover them. | Product Owner / Documentation |
 
 ---
 
