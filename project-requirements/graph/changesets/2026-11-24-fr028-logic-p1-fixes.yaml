@@ -1,0 +1,614 @@
+# Operations ordered so new nodes and fields come first, then edge removals, then updates, retirements and the merge, then new edges. Neighbour needs (FR-001, FR-003, FR-026, FR-029, FR-031, FR-038) are queued in the ledger, not in this file.
+reason: 'FR-028 logic review pass 1: one price lookup chain always in the patient currency, converted prices marked approx., ends in Price available on request (owner default 120); the destination cap is a display cap with Show all destinations (owner default 121); number of destinations shown first is a grouping field and the setting is retired; Manage App Data permission (owner default 122); inactive and archived are one state that releases countries and switching back to Active re-runs the country check (owner default 123); warning at the 51st grouping (owner default 124); destination is an FR-026 active country, the same key as treatment countries (owner default 125); matching on the profile country, no IP geolocation (owner default 126); proximity uses a fixed distance table in code (owner default 127); preview entry point and flow; flows for effective and expiry dates, location default currency and the system-wide default price; location default currency same on every row of a location and the last currency fallback is the FR-029 system default currency; dated rows in UTC with history from the audit log; audit and cache clear attached to every save step; amount, decimals and currency checks on fallback and bulk steps; stale next edges to retired steps removed; save confirmation is on-screen only, warnings are banners on Screen 2 (owner default 128); admin screens and the save event belong to the configuration stage; a Stripe-assigned grouping cannot be archived or lose a country (owner default 129); a deactivated country keeps applying until edited (owner default 130); stale-edit warning covers prices and bulk apply; decimals from the FR-029 currency catalogue; audit rules merged.'
+by: docs-manager
+operations:
+# ---- New field -------------------------------------------------------------
+- {op: add_field, id: ENT-regional-grouping.locations_displayed, entity_id: ENT-regional-grouping, name: locations_displayed, data_type: int, title: Destinations shown first, owner_fr: FR-028, required: false, attrs: {description: 'How many destinations patients from this grouping see first; the rest sit behind Show all destinations. Whole number 5 to 20; empty means the default 10.'}}
+
+# ---- New rules -------------------------------------------------------------
+- op: add_node
+  id: REQ-028-090
+  type: Rule
+  owner_fr: FR-028
+  title: A future-dated price change is a new dated row; the lookup uses the row whose window contains today
+  attrs:
+    statement: |-
+      A future-dated price change MUST be saved as a new row for the same destination and currency; the lookup picks the row whose window contains the current day, dates are UTC and the expiry day is included, and price history is read from the configuration change audit log
+    rationale: 'Main Flow: Starting Prices step 7 and Screen 2 Effective Dating. Effective and expiry date rules are REQ-028-060 to REQ-028-062.'
+- op: add_node
+  id: REQ-028-091
+  type: Rule
+  owner_fr: FR-028
+  title: A grouping with an assigned Stripe account cannot be archived or lose a country
+  attrs:
+    statement: |-
+      Archiving a regional grouping, or removing a country from it, MUST be blocked while a Stripe account is assigned to the grouping (FR-029), and the screen names the account
+    rationale: General Module Rule 8 and Dependencies FR-029. The account assignment itself is owned by FR-029.
+- op: add_node
+  id: REQ-028-092
+  type: Rule
+  owner_fr: FR-028
+  title: A deactivated country keeps applying in groupings and fallback prices until an admin edits them
+  attrs:
+    statement: |-
+      A country deactivated in FR-026 MUST keep applying in regional groupings and fallback prices until an admin edits them
+    rationale: General Module Rule 9 and Dependencies FR-026.
+
+# ---- New flows -------------------------------------------------------------
+- op: add_node
+  id: FLW-028-grouping-status-change
+  type: Flow
+  title: 'Alternative Flow A7: Admin sets a regional grouping inactive or back to active'
+  attrs: {kind: alternative, description: 'Alternative Flow A7: Admin sets a regional grouping inactive or back to active', prd_ref: 'Alternative Flow A7: Admin Sets a Regional Grouping Inactive or Back to Active'}
+- op: add_node
+  id: FLW-028-location-default-currency
+  type: Flow
+  title: 'Alternative Flow A8: Admin sets the default currency of a destination location'
+  attrs: {kind: alternative, description: 'Alternative Flow A8: Admin sets the default currency of a destination location', prd_ref: 'Alternative Flow A8: Admin Sets the Default Currency of a Destination Location'}
+- op: add_node
+  id: FLW-028-system-wide-default-price
+  type: Flow
+  title: 'Alternative Flow A9: Admin sets the system-wide default starting price'
+  attrs: {kind: alternative, description: 'Alternative Flow A9: Admin sets the system-wide default starting price', prd_ref: 'Alternative Flow A9: Admin Sets the System-Wide Default Starting Price'}
+- op: add_node
+  id: FLW-028-main-preview
+  type: Flow
+  title: 'Main Flow: Admin previews the patient location display'
+  attrs: {kind: main, description: 'Main Flow: Admin previews the patient location display', prd_ref: 'Main Flow: Admin Previews Patient Location Display'}
+
+# ---- New steps -------------------------------------------------------------
+- op: add_node
+  id: STP-028-213
+  type: Step
+  owner_fr: FR-028
+  title: Admin sets the price effective date and expiry date
+  attrs: {prd_ref: 'Main Flow: Admin Configures Starting Prices Per Location step 7'}
+- op: add_node
+  id: STP-028-428
+  type: Step
+  owner_fr: FR-028
+  title: System shows Price available on request and logs an error for admin review when no price can be shown
+  attrs: {prd_ref: "Alternative Flow A6: Patient's Currency Not Configured for Selected Location step 7"}
+- op: add_node
+  id: STP-028-429
+  type: Step
+  owner_fr: FR-028
+  title: System shows the first destinations and puts the rest behind Show all destinations
+  attrs: {prd_ref: 'Main Flow: Patient Views Personalized Location Recommendations step 7'}
+- op: add_node
+  id: STP-028-151
+  type: Step
+  owner_fr: FR-028
+  title: Admin switches the grouping status to Inactive or back to Active
+  attrs: {prd_ref: 'Alternative Flow A7: Admin Sets a Regional Grouping Inactive or Back to Active step 1'}
+- op: add_node
+  id: STP-028-152
+  type: Step
+  owner_fr: FR-028
+  title: System re-checks the country conflicts when the status is set to Active
+  attrs: {prd_ref: 'Alternative Flow A7: Admin Sets a Regional Grouping Inactive or Back to Active step 2'}
+- op: add_node
+  id: STP-028-153
+  type: Step
+  owner_fr: FR-028
+  title: Admin enters the change reason
+  attrs: {prd_ref: 'Alternative Flow A7: Admin Sets a Regional Grouping Inactive or Back to Active step 3'}
+- op: add_node
+  id: STP-028-154
+  type: Step
+  owner_fr: FR-028
+  title: System saves the status, clears the cache and logs the change in the audit trail
+  attrs: {prd_ref: 'Alternative Flow A7: Admin Sets a Regional Grouping Inactive or Back to Active step 4'}
+- op: add_node
+  id: STP-028-501
+  type: Step
+  owner_fr: FR-028
+  title: Admin selects the destination and opens its default currency setting
+  attrs: {prd_ref: 'Alternative Flow A8: Admin Sets the Default Currency of a Destination Location step 1'}
+- op: add_node
+  id: STP-028-502
+  type: Step
+  owner_fr: FR-028
+  title: Admin selects the location default currency
+  attrs: {prd_ref: 'Alternative Flow A8: Admin Sets the Default Currency of a Destination Location step 2'}
+- op: add_node
+  id: STP-028-503
+  type: Step
+  owner_fr: FR-028
+  title: Admin enters the change reason
+  attrs: {prd_ref: 'Alternative Flow A8: Admin Sets the Default Currency of a Destination Location step 3'}
+- op: add_node
+  id: STP-028-504
+  type: Step
+  owner_fr: FR-028
+  title: System saves the default currency, clears the cache, logs the change and shows the success message
+  attrs: {prd_ref: 'Alternative Flow A8: Admin Sets the Default Currency of a Destination Location step 4'}
+- op: add_node
+  id: STP-028-511
+  type: Step
+  owner_fr: FR-028
+  title: Admin opens the system-wide default starting price
+  attrs: {prd_ref: 'Alternative Flow A9: Admin Sets the System-Wide Default Starting Price step 1'}
+- op: add_node
+  id: STP-028-512
+  type: Step
+  owner_fr: FR-028
+  title: Admin enters the amount and selects the currency
+  attrs: {prd_ref: 'Alternative Flow A9: Admin Sets the System-Wide Default Starting Price step 2'}
+- op: add_node
+  id: STP-028-513
+  type: Step
+  owner_fr: FR-028
+  title: Admin enters the change reason
+  attrs: {prd_ref: 'Alternative Flow A9: Admin Sets the System-Wide Default Starting Price step 3'}
+- op: add_node
+  id: STP-028-514
+  type: Step
+  owner_fr: FR-028
+  title: System checks the price, saves it, clears the cache, logs the change and shows the success message
+  attrs: {prd_ref: 'Alternative Flow A9: Admin Sets the System-Wide Default Starting Price step 4'}
+- op: add_node
+  id: STP-028-521
+  type: Step
+  owner_fr: FR-028
+  title: Admin opens the Location Display Preview tab
+  attrs: {prd_ref: 'Main Flow: Admin Previews Patient Location Display step 1'}
+- op: add_node
+  id: STP-028-522
+  type: Step
+  owner_fr: FR-028
+  title: Admin selects the simulated patient country and currency
+  attrs: {prd_ref: 'Main Flow: Admin Previews Patient Location Display step 2'}
+- op: add_node
+  id: STP-028-523
+  type: Step
+  owner_fr: FR-028
+  title: System shows the matched grouping, destination order, prices, fallback indicators and provider counts
+  attrs: {prd_ref: 'Main Flow: Admin Previews Patient Location Display step 3'}
+- op: add_node
+  id: STP-028-524
+  type: Step
+  owner_fr: FR-028
+  title: Admin changes the country or currency, or refreshes, and the preview updates
+  attrs: {prd_ref: 'Main Flow: Admin Previews Patient Location Display step 4'}
+
+# ---- Edge removals ---------------------------------------------------------
+- {op: remove_edge, from: REQ-028-033, verb: governed by, to: SET-locations-displayed-per-grouping}
+- {op: remove_edge, from: STP-028-007, verb: next, to: STP-028-008}
+- {op: remove_edge, from: STP-028-008, verb: next, to: STP-028-009}
+- {op: remove_edge, from: STP-028-208, verb: next, to: STP-028-209}
+- {op: remove_edge, from: STP-028-209, verb: next, to: STP-028-210}
+- {op: remove_edge, from: STP-028-206, verb: next, to: STP-028-207}
+- {op: remove_edge, from: STP-028-406, verb: next, to: STP-028-407}
+- {op: remove_edge, from: STP-028-424, verb: next, to: STP-028-425}
+- {op: remove_edge, from: SCR-028-01, verb: belongs to, to: STG-main-01-inquiry}
+- {op: remove_edge, from: SCR-028-02, verb: belongs to, to: STG-main-01-inquiry}
+- {op: remove_edge, from: SCR-028-03, verb: belongs to, to: STG-main-01-inquiry}
+- {op: remove_edge, from: STG-main-01-inquiry, verb: emits, to: EVT-regional-configuration-saved}
+
+# ---- Retire the setting and merge the audit rule ---------------------------
+- {op: retire_node, id: SET-locations-displayed-per-grouping}
+- {op: merge_node, survivor: REQ-028-014, loser: REQ-028-011}
+
+# ---- Field updates ---------------------------------------------------------
+- {op: update_field, id: ENT-regional-grouping.location_order, data_type: 'text[]'}
+- {op: update_field, id: ENT-location-starting-price.location_id, data_type: text}
+- op: update_node
+  id: ENT-regional-grouping.location_order
+  attrs: {description: 'Ordered destination countries from the FR-026 active country list (the same key as the inquiry treatment countries), at least one; first position is shown first.'}
+- op: update_node
+  id: ENT-location-starting-price.location_id
+  attrs: {description: 'Treatment destination: a country from the FR-026 active country list, the same key as the inquiry treatment countries.'}
+- op: update_node
+  id: ENT-regional-grouping.status
+  attrs: {description: 'Active applies to patients; Inactive and archived are one state, not applied to patients, and it releases the countries of the grouping. Switching back to Active re-runs the country check.'}
+- op: update_node
+  id: ENT-regional-grouping.country_list
+  attrs: {description: 'Countries in the grouping, at least one; each country belongs to at most one active grouping.'}
+
+# ---- Event -----------------------------------------------------------------
+- op: update_node
+  id: EVT-regional-configuration-saved
+  attrs: {description: 'A regional grouping or starting price change was saved; the save confirmation is the on-screen message only and no separate notification is sent.'}
+
+# ---- Rule updates ----------------------------------------------------------
+- op: update_node
+  id: REQ-028-003
+  title: Regional grouping applied to the patient destination list by the profile country
+  attrs:
+    statement: |-
+      System MUST apply regional grouping to the patient destination list by matching the patient's country in the profile (ENT-patient.country) to an active regional grouping; there is no IP geolocation
+    rationale: 'Patient Entry Point and Main Flow: Patient Views Personalized Location Recommendations steps 2 to 4. The patient screen is FR-003 Screen 2 (SCR-003-02). Overlaps REQ-003-032.'
+- op: update_node
+  id: REQ-028-004
+  title: Starting price in the patient's currency; the lookup chain applies when it has none
+  attrs:
+    statement: |-
+      System MUST display starting prices in the patient's currency; where that currency has no price for the location, the lookup chain of REQ-028-040 applies
+    rationale: 'Main Flow: Patient Views Personalized Location Recommendations step 8 and A6. The chain is REQ-028-040. Overlaps REQ-003-033.'
+- op: update_node
+  id: REQ-028-006
+  title: A country belongs to at most one active regional grouping, enforced at configuration time
+  attrs:
+    statement: |-
+      System MUST prevent overlapping active regional groupings by enforcing one-to-one mapping between country and active regional grouping at configuration time
+    rationale: General Module Rule 1, Main Flow step 4 and Screen 1 Unique Membership. Inactive groupings release their countries (REQ-028-029). The error text is REQ-028-021.
+- op: update_node
+  id: REQ-028-009
+  title: Regional grouping stored with name, country list, location order, destinations shown first and status
+  attrs:
+    statement: |-
+      System MUST store regional grouping configuration with grouping name, country list, location ordering, number of destinations shown first, and status (active/inactive)
+- op: update_node
+  id: REQ-028-013
+  title: Regional configuration restricted to admins with the Manage App Data permission
+  attrs:
+    statement: |-
+      System MUST restrict regional configuration and pricing management to admin users with the FR-031 permission "Manage App Data", which guards both regional groupings and starting prices
+    rationale: Entry Points, Dependencies FR-031 and Security Considerations Authentication and Authorization (read-only roles cannot modify regional groupings or pricing).
+- op: update_node
+  id: REQ-028-014
+  title: Every configuration change logged with user id, timestamp, IP address, reason and details
+  attrs:
+    rationale: Security Considerations Audit Trail (old value to new value). Includes the earlier audit trail rule REQ-028-011, merged here; it covers groupings, location ordering, starting prices, default currencies and the system-wide default price.
+- op: update_node
+  id: REQ-028-021
+  attrs:
+    statement: |-
+      System MUST block selection or save of a country that already belongs to another active regional grouping and MUST show the error "Each country can only belong to one regional grouping. Remove it from the other grouping first." together with the list of conflicting groupings.
+- op: update_node
+  id: REQ-028-028
+  attrs:
+    statement: |-
+      Deleting a regional grouping MUST archive it (soft delete), never remove it permanently, so the audit trail stays complete; an archived grouping is an inactive grouping; System clears the cache and confirms "Regional grouping archived. Patients from affected countries will now see proximity-based destination ordering."
+- op: update_node
+  id: REQ-028-029
+  title: Inactive and archived groupings are one state, not applied, and release their countries
+  attrs:
+    statement: |-
+      Inactive and archived regional groupings are one state: retained in the system but not applied to patient location presentation, and their countries are released to other groupings. Switching a grouping back to Active re-runs the country check and is blocked with the error of REQ-028-021 while a country of the grouping sits in another active grouping.
+    rationale: General Module Rule 6, Screen 1 Status field and Alternative Flow A7.
+- op: update_node
+  id: REQ-028-030
+  title: At the 51st regional grouping the admin is warned and may continue
+  attrs:
+    statement: |-
+      At the 51st regional grouping System warns the admin, who may continue; the number 50 is fixed in the code.
+    rationale: General Module Rule 5, Admin Editability Fixed in Codebase and the Add step of the main grouping flow.
+- op: update_node
+  id: REQ-028-031
+  title: Cache timing, the proximity distance table and the grouping warning number are fixed in the codebase
+  attrs:
+    statement: |-
+      Cache propagation timing (1-minute TTL), the country-to-country distance table used for proximity ordering and the number of regional groupings that triggers the warning (50) are fixed in the codebase and not editable by admin.
+    rationale: Admin Editability, Fixed in Codebase. Decimal places are not fixed here; they come from the FR-029 currency catalogue (REQ-028-055).
+- op: update_node
+  id: REQ-028-032
+  attrs:
+    statement: |-
+      Admins can edit regional grouping names, countries and location ordering; starting price amounts for any location-currency combination; fallback pricing configuration per location; regional grouping active or inactive status; price effective and expiry dates; the number of destinations shown first per regional grouping; the default currency per destination location; and the system-wide default starting price.
+- op: update_node
+  id: REQ-028-033
+  title: 'Number of destinations shown first per grouping: default 10, range 5-20, the rest behind Show all destinations'
+  attrs:
+    statement: |-
+      The number of destinations shown first is set per regional grouping by the admin (default 10, allowed range 5-20). It only decides how many destinations show first; the rest sit behind "Show all destinations". A patient with no matching grouping gets the default 10.
+    rationale: Admin Editability, Screen 1 field Locations Displayed and the display cap step of the patient flow. Stored on ENT-regional-grouping.locations_displayed.
+- op: update_node
+  id: REQ-028-035
+  title: 'No matching grouping: destinations ordered by proximity from a fixed distance table'
+  attrs:
+    statement: |-
+      If no active regional grouping matches the patient's country (or the grouping was deleted or is inactive), System orders destinations by proximity of countries using a fixed country-to-country distance table kept in the product code and not editable by admin; the first 10 show first and the rest sit behind "Show all destinations".
+    rationale: Screen 1 Default Fallback, A5 steps 1 to 3, A2 outcome and the third edge case.
+- op: update_node
+  id: REQ-028-036
+  title: Configured order first; other locations after, by proximity to the patient's country
+  attrs:
+    statement: |-
+      System shows destinations in the matched grouping's configured order (first position first, second position second, and so on); locations not in the configured order appear at the end, ordered by proximity to the patient's country (REQ-028-035).
+- op: update_node
+  id: REQ-028-038
+  title: Patient currency from the profile, else the location default, else the FR-029 system default currency
+  attrs:
+    statement: |-
+      System identifies the patient's currency from the patient profile preference, else from the location default currency, else from the FR-029 system default currency.
+    rationale: 'Main Flow: Patient Views Personalized Location Recommendations step 8.'
+- op: update_node
+  id: REQ-028-039
+  title: Starting price lookup follows the chain of REQ-028-040
+  attrs:
+    statement: |-
+      For each displayed location System looks up the starting price by the chain of REQ-028-040.
+    rationale: 'Main Flow: Patient Views Personalized Location Recommendations step 8. The chain is stated once in REQ-028-040.'
+- op: update_node
+  id: REQ-028-040
+  title: Starting price lookup chain, always shown in the patient's currency
+  attrs:
+    statement: |-
+      System follows one lookup chain for the starting price of a displayed location, always shown in the patient's currency: (1) the price for the location in the patient's currency; (2) else the fallback price for the patient's country, where a fallback row already in the patient's currency is preferred; (3) else the system-wide default starting price; (4) else the price in the location's default currency; (5) else "Price available on request" with an error logged for admin review (REQ-028-041). A price found in another currency at steps 2 to 4 is converted with the FR-029 conversion rate with markup and marked "approx." ("Starting from approx. £2,500").
+    rationale: A6 and the second edge case. This is the only statement of the chain; REQ-028-004, REQ-028-039, REQ-028-085 and REQ-028-087 point to it.
+- op: update_node
+  id: REQ-028-041
+  title: 'No price can be shown: Price available on request, error logged, banner on Screen 2'
+  attrs:
+    statement: |-
+      When no price can be shown by the chain of REQ-028-040 (no fallback or system-wide default, and currency conversion unavailable), System displays the location without a starting price, shows the text "Price available on request" to the patient and logs an error for admin review; Screen 2 shows the banner "[Location] missing fallback pricing - patients seeing no price estimate."
+- op: update_node
+  id: REQ-028-046
+  title: The save confirmation is the on-screen message only
+  attrs:
+    statement: |-
+      The save confirmation of a regional grouping change or a starting price change is the on-screen message only; System sends no separate notification.
+    rationale: Communication Structure, In Scope.
+- op: update_node
+  id: REQ-028-049
+  title: Entry points to regional configuration, pricing and preview
+  attrs:
+    statement: |-
+      Admin reaches the configuration at Settings > General Settings, on the Location Presentation by Country tab, the Location Pricing tab or the Location Display Preview tab, with the FR-031 permission "Manage App Data", and changes take effect on save within the 1-minute cache propagation. Patient reaches it through the "Choose Your Destination" screen of the quote request flow, where System reads the patient's country from the profile, applies the regional configuration to order the destinations, and shows starting prices in the patient's currency.
+    rationale: Entry Points; the PRD names the three tabs.
+- op: update_node
+  id: REQ-028-050
+  attrs:
+    statement: |-
+      After a successful save System confirms: "Regional grouping saved. Changes will be live for patients within 1 minute." for a grouping; "Starting price for [Location] in [Currency] set to [Amount]." for a price; "Fallback pricing enabled for [Location]. Patients from [Country] without specific pricing will see these prices." for fallback pricing; "[X] currency prices updated for [Location]." for a bulk update; an on-screen success message for a location default currency and for the system-wide default starting price.
+- op: update_node
+  id: REQ-028-055
+  title: Decimal places follow the currency's minor units in the FR-029 catalogue
+  attrs:
+    statement: |-
+      System enforces the decimal places of the currency's minor units in the FR-029 currency catalogue (ENT-currency.minor_units) for every starting price, including fallback prices and bulk-updated prices.
+    rationale: 'Main Flow: Starting Prices step 10 and Screen 2 Decimal Precision.'
+- op: update_node
+  id: REQ-028-057
+  attrs:
+    statement: |-
+      Admins can update all currency prices of one destination at once by a percentage increase or decrease or a fixed amount adjustment; System shows a preview of the new prices for all currencies, the admin enters a change reason and confirms, and System saves all currency price updates simultaneously. A bulk apply whose result would break the amount, decimals or currency checks (REQ-028-053 to REQ-028-055) is blocked.
+- op: update_node
+  id: REQ-028-060
+  title: A future effective date keeps the current price in use until then, as a new row
+  attrs:
+    statement: |-
+      If a price's effective date is in the future, the change is a new row (REQ-028-090) and the current pricing remains in use until the effective date; without an effective date pricing is effective immediately.
+- op: update_node
+  id: REQ-028-061
+  title: Expiry date after effective date; banner on Screen 2 7 days before expiry
+  attrs:
+    statement: |-
+      A price expiry date, when set, MUST be after the effective date, and a banner on Screen 2 warns the admin 7 days before the price expiry date.
+- op: update_node
+  id: REQ-028-063
+  title: Price history is read from the configuration change audit log
+  attrs:
+    statement: |-
+      System keeps no separate price history; the history of all price changes for audit and trend analysis is read from the configuration change audit log (REQ-028-014).
+- op: update_node
+  id: REQ-028-075
+  title: 'Preview inputs: a valid country and a currency defaulting to the FR-029 system default currency'
+  attrs:
+    statement: |-
+      The preview requires a patient country that is valid in the system and a patient currency preference, which defaults to the FR-029 system default currency.
+- op: update_node
+  id: REQ-028-082
+  title: 'Concurrent edits: a stale-edit warning before overwriting'
+  attrs:
+    statement: |-
+      When another admin saved the same regional grouping, price row or bulk-updated price since this admin opened it (or since the bulk update preview), System warns "This [grouping or price] was modified by [Admin Name] at [Time]. Your changes will overwrite theirs. Continue?" and saves only when the admin confirms.
+    rationale: 'Fourth edge case, A1 step 5, Main Flow: Starting Prices step 9 and A4 step 7.'
+- op: update_node
+  id: REQ-028-085
+  title: 'Configuration unavailable: default ordering and Price available on request'
+  attrs:
+    statement: |-
+      If the regional configuration is unavailable, System falls back to default location ordering and shows "Price available on request" (REQ-028-041).
+- op: update_node
+  id: REQ-028-086
+  title: A destination is a country from the FR-026 active country list
+  attrs:
+    statement: |-
+      The destination chosen for a starting price, and each destination in a grouping's location order, MUST be a country from the FR-026 active country list, the same key as the inquiry treatment countries (ENT-inquiry.treatment_countries).
+    rationale: Screen 2 field Destination Location and Main Flow step 5 of the grouping flow.
+- op: update_node
+  id: REQ-028-087
+  title: Price stops showing after its expiry date; the next step of the lookup chain shows
+  attrs:
+    statement: |-
+      After a starting price's expiry date has passed, patients MUST no longer see that price; the next step of the lookup chain (REQ-028-040) applies. Prices with no expiry date stay active until an admin changes them
+- op: update_node
+  id: REQ-028-089
+  attrs:
+    statement: |-
+      System MUST let admins set a default currency for each destination location; it is the same on every price row of that location
+
+# ---- Step titles -----------------------------------------------------------
+- {op: update_node, id: STP-028-402, title: 'System reads the patient''s country from the profile'}
+- {op: update_node, id: STP-028-403, title: 'System takes the profile country as the matching key'}
+- {op: update_node, id: STP-028-414, title: 'System shows starting prices by the price lookup chain'}
+- {op: update_node, id: STP-028-423, title: 'System displays the fallback price, converted and marked approx. when it is in another currency'}
+- {op: update_node, id: STP-028-424, title: 'System displays the price in the location''s default currency converted to the patient''s currency and marked approx. when there is no fallback and no system-wide default'}
+- {op: update_node, id: STP-028-427, title: 'System displays the system-wide default starting price when an admin has set one, converted and marked approx. when it is in another currency'}
+
+# ---- New edges: rules to fields and settings --------------------------------
+- {op: add_edge, from: REQ-028-033, verb: applies to, to: ENT-regional-grouping.locations_displayed}
+- {op: add_edge, from: REQ-028-003, verb: applies to, to: ENT-patient.country}
+- {op: add_edge, from: REQ-028-086, verb: applies to, to: ENT-inquiry.treatment_countries}
+- {op: add_edge, from: REQ-028-055, verb: applies to, to: ENT-currency.minor_units}
+- {op: add_edge, from: REQ-028-038, verb: governed by, to: SET-default-currency}
+- {op: add_edge, from: REQ-028-082, verb: applies to, to: ENT-location-starting-price}
+
+# ---- New rules: standard edges ----------------------------------------------
+- {op: add_edge, from: REQ-028-090, verb: applies at, to: STG-main-01-inquiry}
+- {op: add_edge, from: REQ-028-090, verb: decided by, to: SRC-PRD-028}
+- {op: add_edge, from: REQ-028-090, verb: applies to, to: ENT-location-starting-price}
+- {op: add_edge, from: REQ-028-091, verb: applies at, to: STG-main-01-inquiry}
+- {op: add_edge, from: REQ-028-091, verb: decided by, to: SRC-PRD-028}
+- {op: add_edge, from: REQ-028-091, verb: applies to, to: ENT-regional-grouping}
+- {op: add_edge, from: REQ-028-091, verb: applies to, to: SCR-028-01}
+- {op: add_edge, from: REQ-028-092, verb: applies at, to: STG-main-01-inquiry}
+- {op: add_edge, from: REQ-028-092, verb: decided by, to: SRC-PRD-028}
+- {op: add_edge, from: REQ-028-092, verb: applies to, to: ENT-regional-grouping}
+
+# ---- Stage moves for the admin screens and the save event -------------------
+- {op: add_edge, from: SCR-028-01, verb: belongs to, to: STG-admin-01-configuration}
+- {op: add_edge, from: SCR-028-02, verb: belongs to, to: STG-admin-01-configuration}
+- {op: add_edge, from: SCR-028-03, verb: belongs to, to: STG-admin-01-configuration}
+- {op: add_edge, from: STG-admin-01-configuration, verb: emits, to: EVT-regional-configuration-saved}
+- {op: add_edge, from: SCR-028-01, verb: shows, to: ENT-regional-grouping.locations_displayed, attrs: {"provenance": "user input", "label": "Locations Displayed", "editable": true}}
+
+# ---- Rules attached to existing steps ---------------------------------------
+- {op: add_edge, from: STP-028-002, verb: applies, to: REQ-028-030}
+- {op: add_edge, from: STP-028-005, verb: applies, to: REQ-028-033}
+- {op: add_edge, from: STP-028-103, verb: applies, to: REQ-028-091}
+- {op: add_edge, from: STP-028-105, verb: applies, to: REQ-028-082}
+- {op: add_edge, from: STP-028-112, verb: applies, to: REQ-028-091}
+- {op: add_edge, from: STP-028-114, verb: applies, to: REQ-028-014}
+- {op: add_edge, from: STP-028-208, verb: applies, to: REQ-028-082}
+- {op: add_edge, from: STP-028-210, verb: applies, to: REQ-028-005}
+- {op: add_edge, from: STP-028-304, verb: applies, to: REQ-028-053}
+- {op: add_edge, from: STP-028-304, verb: applies, to: REQ-028-054}
+- {op: add_edge, from: STP-028-304, verb: applies, to: REQ-028-055}
+- {op: add_edge, from: STP-028-306, verb: applies, to: REQ-028-005}
+- {op: add_edge, from: STP-028-306, verb: applies, to: REQ-028-014}
+- {op: add_edge, from: STP-028-306, verb: applies, to: REQ-028-053}
+- {op: add_edge, from: STP-028-306, verb: applies, to: REQ-028-054}
+- {op: add_edge, from: STP-028-306, verb: applies, to: REQ-028-055}
+- {op: add_edge, from: STP-028-315, verb: applies, to: REQ-028-053}
+- {op: add_edge, from: STP-028-315, verb: applies, to: REQ-028-054}
+- {op: add_edge, from: STP-028-315, verb: applies, to: REQ-028-055}
+- {op: add_edge, from: STP-028-317, verb: applies, to: REQ-028-005}
+- {op: add_edge, from: STP-028-317, verb: applies, to: REQ-028-014}
+- {op: add_edge, from: STP-028-317, verb: applies, to: REQ-028-053}
+- {op: add_edge, from: STP-028-317, verb: applies, to: REQ-028-054}
+- {op: add_edge, from: STP-028-317, verb: applies, to: REQ-028-055}
+- {op: add_edge, from: STP-028-317, verb: applies, to: REQ-028-082}
+- {op: add_edge, from: STP-028-407, verb: applies, to: REQ-028-040}
+
+# ---- Price flow: effective and expiry dates step -----------------------------
+- {op: add_edge, from: STP-028-206, verb: next, to: STP-028-213}
+- {op: add_edge, from: STP-028-213, verb: next, to: STP-028-207}
+- {op: add_edge, from: STP-028-213, verb: at, to: STG-admin-01-configuration}
+- {op: add_edge, from: STP-028-213, verb: 'on', to: SCR-028-02}
+- {op: add_edge, from: STP-028-213, verb: done by, to: ACT-platform-admin}
+- {op: add_edge, from: STP-028-213, verb: applies, to: REQ-028-060}
+- {op: add_edge, from: STP-028-213, verb: applies, to: REQ-028-061}
+- {op: add_edge, from: STP-028-213, verb: applies, to: REQ-028-090}
+
+# ---- Patient flow: display cap step ------------------------------------------
+- {op: add_edge, from: STP-028-406, verb: next, to: STP-028-429}
+- {op: add_edge, from: STP-028-429, verb: next, to: STP-028-407}
+- {op: add_edge, from: STP-028-429, verb: at, to: STG-main-01-inquiry}
+- {op: add_edge, from: STP-028-429, verb: 'on', to: SCR-003-02}
+- {op: add_edge, from: STP-028-429, verb: done by, to: ACT-system}
+- {op: add_edge, from: STP-028-429, verb: applies, to: REQ-028-033}
+
+# ---- A6: conversion branch and the on-request end ----------------------------
+- {op: add_edge, from: STP-028-424, verb: next, to: STP-028-425, attrs: {"label": "Conversion available"}}
+- {op: add_edge, from: STP-028-424, verb: next, to: STP-028-428, attrs: {"label": "Conversion unavailable", "condition": "REQ-028-041"}}
+- {op: add_edge, from: STP-028-428, verb: at, to: STG-main-01-inquiry}
+- {op: add_edge, from: STP-028-428, verb: 'on', to: SCR-003-02}
+- {op: add_edge, from: STP-028-428, verb: done by, to: ACT-system}
+- {op: add_edge, from: STP-028-428, verb: applies, to: REQ-028-041}
+
+# ---- A7: grouping status change ----------------------------------------------
+- {op: add_edge, from: FLW-028-grouping-status-change, verb: starts at, to: STP-028-151}
+- {op: add_edge, from: STP-028-151, verb: next, to: STP-028-152}
+- {op: add_edge, from: STP-028-152, verb: next, to: STP-028-153}
+- {op: add_edge, from: STP-028-153, verb: next, to: STP-028-154}
+- {op: add_edge, from: STP-028-151, verb: at, to: STG-admin-01-configuration}
+- {op: add_edge, from: STP-028-152, verb: at, to: STG-admin-01-configuration}
+- {op: add_edge, from: STP-028-153, verb: at, to: STG-admin-01-configuration}
+- {op: add_edge, from: STP-028-154, verb: at, to: STG-admin-01-configuration}
+- {op: add_edge, from: STP-028-151, verb: 'on', to: SCR-028-01}
+- {op: add_edge, from: STP-028-152, verb: 'on', to: SCR-028-01}
+- {op: add_edge, from: STP-028-153, verb: 'on', to: SCR-028-01}
+- {op: add_edge, from: STP-028-154, verb: 'on', to: SCR-028-01}
+- {op: add_edge, from: STP-028-151, verb: done by, to: ACT-platform-admin}
+- {op: add_edge, from: STP-028-152, verb: done by, to: ACT-system}
+- {op: add_edge, from: STP-028-153, verb: done by, to: ACT-platform-admin}
+- {op: add_edge, from: STP-028-154, verb: done by, to: ACT-system}
+- {op: add_edge, from: STP-028-151, verb: applies, to: REQ-028-029}
+- {op: add_edge, from: STP-028-152, verb: applies, to: REQ-028-006}
+- {op: add_edge, from: STP-028-152, verb: applies, to: REQ-028-021}
+- {op: add_edge, from: STP-028-153, verb: applies, to: REQ-028-024}
+- {op: add_edge, from: STP-028-154, verb: applies, to: REQ-028-005}
+- {op: add_edge, from: STP-028-154, verb: applies, to: REQ-028-014}
+- {op: add_edge, from: STP-028-154, verb: applies, to: REQ-028-029}
+
+# ---- A8: location default currency -------------------------------------------
+- {op: add_edge, from: FLW-028-location-default-currency, verb: starts at, to: STP-028-501}
+- {op: add_edge, from: STP-028-501, verb: next, to: STP-028-502}
+- {op: add_edge, from: STP-028-502, verb: next, to: STP-028-503}
+- {op: add_edge, from: STP-028-503, verb: next, to: STP-028-504}
+- {op: add_edge, from: STP-028-501, verb: at, to: STG-admin-01-configuration}
+- {op: add_edge, from: STP-028-502, verb: at, to: STG-admin-01-configuration}
+- {op: add_edge, from: STP-028-503, verb: at, to: STG-admin-01-configuration}
+- {op: add_edge, from: STP-028-504, verb: at, to: STG-admin-01-configuration}
+- {op: add_edge, from: STP-028-501, verb: 'on', to: SCR-028-02}
+- {op: add_edge, from: STP-028-502, verb: 'on', to: SCR-028-02}
+- {op: add_edge, from: STP-028-503, verb: 'on', to: SCR-028-02}
+- {op: add_edge, from: STP-028-504, verb: 'on', to: SCR-028-02}
+- {op: add_edge, from: STP-028-501, verb: done by, to: ACT-platform-admin}
+- {op: add_edge, from: STP-028-502, verb: done by, to: ACT-platform-admin}
+- {op: add_edge, from: STP-028-503, verb: done by, to: ACT-platform-admin}
+- {op: add_edge, from: STP-028-504, verb: done by, to: ACT-system}
+- {op: add_edge, from: STP-028-501, verb: applies, to: REQ-028-089}
+- {op: add_edge, from: STP-028-502, verb: applies, to: REQ-028-089}
+- {op: add_edge, from: STP-028-502, verb: applies, to: REQ-028-052}
+- {op: add_edge, from: STP-028-503, verb: applies, to: REQ-028-024}
+- {op: add_edge, from: STP-028-504, verb: applies, to: REQ-028-005}
+- {op: add_edge, from: STP-028-504, verb: applies, to: REQ-028-014}
+- {op: add_edge, from: STP-028-504, verb: applies, to: REQ-028-089}
+
+# ---- A9: system-wide default starting price ----------------------------------
+- {op: add_edge, from: FLW-028-system-wide-default-price, verb: starts at, to: STP-028-511}
+- {op: add_edge, from: STP-028-511, verb: next, to: STP-028-512}
+- {op: add_edge, from: STP-028-512, verb: next, to: STP-028-513}
+- {op: add_edge, from: STP-028-513, verb: next, to: STP-028-514}
+- {op: add_edge, from: STP-028-511, verb: at, to: STG-admin-01-configuration}
+- {op: add_edge, from: STP-028-512, verb: at, to: STG-admin-01-configuration}
+- {op: add_edge, from: STP-028-513, verb: at, to: STG-admin-01-configuration}
+- {op: add_edge, from: STP-028-514, verb: at, to: STG-admin-01-configuration}
+- {op: add_edge, from: STP-028-511, verb: 'on', to: SCR-028-02}
+- {op: add_edge, from: STP-028-512, verb: 'on', to: SCR-028-02}
+- {op: add_edge, from: STP-028-513, verb: 'on', to: SCR-028-02}
+- {op: add_edge, from: STP-028-514, verb: 'on', to: SCR-028-02}
+- {op: add_edge, from: STP-028-511, verb: done by, to: ACT-platform-admin}
+- {op: add_edge, from: STP-028-512, verb: done by, to: ACT-platform-admin}
+- {op: add_edge, from: STP-028-513, verb: done by, to: ACT-platform-admin}
+- {op: add_edge, from: STP-028-514, verb: done by, to: ACT-system}
+- {op: add_edge, from: STP-028-511, verb: applies, to: REQ-028-088}
+- {op: add_edge, from: STP-028-512, verb: applies, to: REQ-028-088}
+- {op: add_edge, from: STP-028-512, verb: applies, to: REQ-028-053}
+- {op: add_edge, from: STP-028-512, verb: applies, to: REQ-028-054}
+- {op: add_edge, from: STP-028-512, verb: applies, to: REQ-028-055}
+- {op: add_edge, from: STP-028-513, verb: applies, to: REQ-028-024}
+- {op: add_edge, from: STP-028-514, verb: applies, to: REQ-028-005}
+- {op: add_edge, from: STP-028-514, verb: applies, to: REQ-028-014}
+- {op: add_edge, from: STP-028-514, verb: applies, to: REQ-028-088}
+
+# ---- Preview flow --------------------------------------------------------------
+- {op: add_edge, from: FLW-028-main-preview, verb: starts at, to: STP-028-521}
+- {op: add_edge, from: STP-028-521, verb: next, to: STP-028-522}
+- {op: add_edge, from: STP-028-522, verb: next, to: STP-028-523}
+- {op: add_edge, from: STP-028-523, verb: next, to: STP-028-524}
+- {op: add_edge, from: STP-028-521, verb: at, to: STG-admin-01-configuration}
+- {op: add_edge, from: STP-028-522, verb: at, to: STG-admin-01-configuration}
+- {op: add_edge, from: STP-028-523, verb: at, to: STG-admin-01-configuration}
+- {op: add_edge, from: STP-028-524, verb: at, to: STG-admin-01-configuration}
+- {op: add_edge, from: STP-028-521, verb: 'on', to: SCR-028-03}
+- {op: add_edge, from: STP-028-522, verb: 'on', to: SCR-028-03}
+- {op: add_edge, from: STP-028-523, verb: 'on', to: SCR-028-03}
+- {op: add_edge, from: STP-028-524, verb: 'on', to: SCR-028-03}
+- {op: add_edge, from: STP-028-521, verb: done by, to: ACT-platform-admin}
+- {op: add_edge, from: STP-028-522, verb: done by, to: ACT-platform-admin}
+- {op: add_edge, from: STP-028-523, verb: done by, to: ACT-system}
+- {op: add_edge, from: STP-028-524, verb: done by, to: ACT-platform-admin}
+- {op: add_edge, from: STP-028-521, verb: applies, to: REQ-028-049}
+- {op: add_edge, from: STP-028-522, verb: applies, to: REQ-028-075}
+- {op: add_edge, from: STP-028-523, verb: applies, to: REQ-028-070}
+- {op: add_edge, from: STP-028-523, verb: applies, to: REQ-028-071}
+- {op: add_edge, from: STP-028-523, verb: applies, to: REQ-028-072}
+- {op: add_edge, from: STP-028-523, verb: applies, to: REQ-028-073}
+- {op: add_edge, from: STP-028-524, verb: applies, to: REQ-028-069}
+- {op: add_edge, from: STP-028-524, verb: applies, to: REQ-028-074}
