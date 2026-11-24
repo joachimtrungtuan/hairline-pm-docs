@@ -1,0 +1,8 @@
+# FR-022 logic review pass 1, follow-up: the two new shared system steps (hourly limit, timeout) keep one stage each, the stage where the shared search run starts.
+reason: "FR-022 logic review pass 1 follow-up: the hourly-limit and timeout steps are pinned to one stage each"
+by: controller
+operations:
+  - {"op": "remove_edge", "from": "STP-022-052", "verb": "at", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "STP-022-052", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "remove_edge", "from": "STP-022-053", "verb": "at", "to": "STG-admin-02-operations"}
+  - {"op": "remove_edge", "from": "STP-022-053", "verb": "at", "to": "STG-provider-03-active"}
