@@ -1,0 +1,7 @@
+reason: 'FR-038 logic review pass 2 follow-up: mark two intended backward stage moves (Retry PDF on the shared retry step; patient returns to monitoring from the conversion review) with back: true.'
+by: controller
+operations:
+- {op: remove_edge, from: STP-038-022, verb: next, to: STP-038-057}
+- {op: remove_edge, from: STP-038-053, verb: next, to: STP-038-006}
+- {op: add_edge, from: STP-038-022, verb: next, to: STP-038-057, attrs: {"label": "PDF generation failed and the patient selects Retry PDF", "condition": "REQ-038-064", "back": true}}
+- {op: add_edge, from: STP-038-053, verb: next, to: STP-038-006, attrs: {"label": "patient returns to monitoring; draft cleared", "back": true}}

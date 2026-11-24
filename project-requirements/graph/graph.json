@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T08:15:45Z",
+  "generated_at": "2026-11-24T08:23:18Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -39437,7 +39437,7 @@
       "owner_fr": null,
       "title": "Monitor Your Transplant Progress",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "module": "fr038-monitor-transplant-progress",
         "prd_path": "project-requirements/functional-requirements/fr038-monitor-transplant-progress/prd.md",
@@ -94931,10 +94931,10 @@
       "owner_fr": "FR-038",
       "title": "One active monitoring case per patient",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "System MUST enforce one active transplant-progress monitoring case per patient.",
-        "rationale": "Restated by General Rule 1 (one active case per monitoring type), Screen 1 (a patient may have only one active transplant-progress case), Main Flow step 2 (System checks that no active transplant-progress case exists), Alternative Flow B1 and Admin Editability (one-active-case-per-type enforcement is fixed in codebase).",
+        "rationale": "Restated by General Rule 1 (one active case per monitoring type), Screen 1 (a patient may have only one active transplant-progress case), Main Flow step 1 (the patient selects Monitor Transplant Progress; the system checks that no active case exists, otherwise flow B1), Alternative Flow B1 and Admin Editability (one-active-case-per-type enforcement is fixed in codebase).",
         "distinct_from": "REQ-037-001"
       }
     },
@@ -94956,10 +94956,10 @@
       "owner_fr": "FR-038",
       "title": "No required cadence, milestones, overdue status or compliance",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "System MUST NOT impose required cadence, milestones, overdue status, or compliance obligations.",
-        "rationale": "Restated by General Rule 3 (logging frequency is entirely optional; no overdue, missed-task, compliance or milestone state), Screen 2 (the system must not display overdue, missed milestone, compliance or required-frequency states), Executive Summary and Main Flow step 8 (timeline, scan history and severity trend update without overdue states)."
+        "rationale": "Restated by General Rule 3 (logging frequency is entirely optional; no overdue, missed-task, compliance or milestone state), Screen 2 (the system must not display overdue, missed milestone, compliance or required-frequency states), Executive Summary and Main Flow step 7 (timeline, scan history and severity trend update without overdue states)."
       }
     },
     {
@@ -94980,10 +94980,10 @@
       "owner_fr": "FR-038",
       "title": "Intake captures FR-011-compatible external treatment details",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "Initial intake MUST capture FR-011-compatible external treatment details.",
-        "rationale": "Restated by Main Flow step 3, Module Scope and Screen 1 purpose (information compatible with FR-011 standalone aftercare)."
+        "rationale": "Restated by Main Flow step 2, Module Scope and Screen 1 purpose (information compatible with FR-011 standalone aftercare)."
       }
     },
     {
@@ -95043,9 +95043,9 @@
       "owner_fr": "FR-038",
       "title": "Conversion is idempotent; no duplicate standalone requests",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Conversion MUST be idempotent and MUST NOT create duplicate standalone-aftercare requests. A standalone request may be created from an FR-038 conversion with pre-filled fields, the attached monitoring PDF, an optional selected scan, and an idempotency key; a repeated key returns the existing request.",
+        "statement": "Conversion MUST be idempotent and MUST NOT create duplicate standalone-aftercare requests. A standalone request may be created from an FR-038 conversion with pre-filled fields, the attached monitoring PDF, an optional selected scan, and an idempotency key; a repeated key returns the existing request. The idempotency key is created once per case at the first Switch to Aftercare Package and is kept when the draft is cleared.",
         "rationale": "Restated by Module Scope (idempotent transfer), Admin Editability (conversion idempotency is fixed in codebase), Edge Cases (conversion retried after network timeout) and Implementation Notes (idempotency key on the conversion record)."
       }
     },
@@ -95104,10 +95104,10 @@
       "owner_fr": "FR-038",
       "title": "Consent review and self-tracking confirmation",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "Patient reviews consent and confirms this is self-tracking, not managed aftercare.",
-        "rationale": "Main Flow step 4. Screen 1 Self-Service Acknowledgment (confirms no provider monitoring or required cadence) is required and must be selected before the case is created. Patient profile and consent state are listed under Data Dependencies."
+        "rationale": "Main Flow step 3. Screen 1 Self-Service Acknowledgment (confirms no provider monitoring or required cadence) is required and must be selected before the case is created. Patient profile and consent state are listed under Data Dependencies."
       }
     },
     {
@@ -95140,10 +95140,10 @@
       "owner_fr": "FR-038",
       "title": "Valid intake creates an active self-service case",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "System creates active self-service case.",
-        "rationale": "Main Flow step 5. User Story 1 scenario 1 adds that the case opens without provider assignment."
+        "rationale": "Main Flow step 4. User Story 1 scenario 1 adds that the case opens without provider assignment."
       }
     },
     {
@@ -95200,9 +95200,9 @@
       "owner_fr": "FR-038",
       "title": "Reminders are on by default, patient-changeable, and stop at completion or conversion",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Reminders are on by default with the Admin schedule (once a month for 12 months after treatment); the patient can change the schedule or switch them off with Reminder Preference on Screen 2, without affecting case status. Reminders are sent through a progress-reminder event of the FR-030 catalogue, stop when the case is completed or converted, and cannot become mandatory milestones or compliance checks.",
+        "statement": "Reminders are on by default with the Admin schedule (once a month for 12 months from the case creation date); the patient can change the schedule or switch them off with Reminder Preference on Screen 2, without affecting case status. Reminders are sent through a progress-reminder event of the FR-030 catalogue, stop when the case is completed or converted, and cannot become mandatory milestones or compliance checks.",
         "rationale": "Communication Structure, Screen 2 (Reminder Preference) and Admin Editability (patient reminder defaults)."
       }
     },
@@ -95238,21 +95238,21 @@
       "owner_fr": "FR-038",
       "title": "Severity summary derived from the severity ratings, starting at the Initial Severity",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Severity Summary shows first, latest, minimum, maximum, average, and trend of the severity ratings; the Initial Severity given at intake is the first data point of the trend, dated the case creation date. A case with no log shows no entries for the summary values, its latest severity equals the Initial Severity, and completion and conversion stay allowed.",
-        "rationale": "Screen 2 Severity Trend is the rating over time (derived); Main Flow step 8 updates the severity trend as entries change; Scalability says trend summaries may be cached while source entries stay authoritative."
+        "statement": "Severity Summary shows first, latest, minimum, maximum, average, and trend of the severity ratings; the Initial Severity given at intake is a data point of the trend plotted on the case creation date, the trend is in date order with the logs, and first means the earliest-dated point. A case with no log shows the Initial Severity as first, latest, minimum, maximum, and average, with a one-point trend, and completion and conversion stay allowed.",
+        "rationale": "Screen 2 Severity Trend is the rating over time (derived); Main Flow step 7 updates the severity trend as entries change; Scalability says trend summaries may be cached while source entries stay authoritative."
       }
     },
     {
       "id": "REQ-038-035",
       "type": "Rule",
       "owner_fr": "FR-038",
-      "title": "Monitoring Period runs from the case creation date to the completion or conversion date",
+      "title": "Monitoring Period runs from the earlier of the case creation date and the earliest log date to the completion or conversion date",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Monitoring Period is the date range from the case creation date to the date the case was completed or converted (to today for an active case preview).",
+        "statement": "Monitoring Period is the date range from the earlier of the case creation date and the earliest log date to the date the case was completed or converted (to today for an active case preview).",
         "rationale": "prd.md line 301 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -95272,11 +95272,11 @@
       "id": "REQ-038-037",
       "type": "Rule",
       "owner_fr": "FR-038",
-      "title": "Conversion State is None, draft or converted; the draft is set at Switch and cleared at commit or return",
+      "title": "Conversion State is None, draft or converted; the draft is set at Switch and cleared at commit, return or completion",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Conversion State is None, draft, or converted to FR-011. The conversion draft is set when the patient selects Switch to Aftercare Package and cleared when the conversion is committed or the patient returns to monitoring.",
+        "statement": "Conversion State is None, draft, or converted to FR-011. The conversion draft is set when the patient selects Switch to Aftercare Package and cleared when the conversion is committed, the patient returns to monitoring, or the patient completes the case; the idempotency key is kept when the draft is cleared (REQ-038-016).",
         "rationale": "prd.md line 333 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -95323,9 +95323,9 @@
       "owner_fr": "FR-038",
       "title": "Failed PDF generation can be retried without reopening the case",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Failed generation can be retried without reopening the case: the patient sees the failed status on Screen 7 and selects Retry PDF.",
+        "statement": "Failed generation can be retried without reopening the case: the patient sees the failed status on Screen 7, or on Screen 6 during conversion, and selects Retry PDF.",
         "rationale": "User Story 2 scenario 3 adds that the retry does not duplicate the case.",
         "distinct_from": "REQ-037-055"
       }
@@ -95348,9 +95348,9 @@
       "owner_fr": "FR-038",
       "title": "Completion and conversion are terminal; source and destination stay distinct",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Completion and successful conversion are terminal outcomes, and source/destination cases remain distinct.",
+        "statement": "Completion and successful conversion are terminal outcomes, and source/destination cases remain distinct. The patient may end monitoring while a conversion draft is open; completion discards the draft, and a request creation arriving after completion is refused.",
         "rationale": "Screen 6 (the monitoring record and the FR-011 request remain distinct records linked by conversion provenance), Executive Summary and User Story 3 scenario 3."
       }
     },
@@ -95397,9 +95397,9 @@
       "owner_fr": "FR-038",
       "title": "Scan history grouped by date, current case only",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Scan history lists prior scans grouped by date, for the current case only. Screen 4 opens from Scan History on Screen 2 and from the head-scan capture on Screens 1 and 3.",
+        "statement": "Scan history lists prior scans grouped by date, for the current case only. Screen 4 opens from Scan History on Screen 2, from the head-scan capture on Screens 1 and 3, and from the retake on Screen 6. A scan captured from Screen 1 is held with the intake draft and saved when the case is created.",
         "rationale": "prd.md line 251 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -95421,9 +95421,9 @@
       "owner_fr": "FR-038",
       "title": "Admin may edit all case information for operational correction",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Admin may edit all monitoring intake information, entries, severity ratings, scan metadata, status, report regeneration, and conversion metadata when operational correction is required. No edit may erase historical values or provenance.",
+        "statement": "Admin may edit all monitoring intake information, entries, severity ratings, scan metadata, report regeneration, and conversion metadata when operational correction is required. Case status is not editable: completed and converted are final. No edit may erase historical values or provenance.",
         "rationale": "Module Scope (Admin Platform: full case visibility and audited editing) and Screen 9 Case Data (permission controlled).",
         "distinct_from": "REQ-037-072"
       }
@@ -95506,9 +95506,9 @@
       "owner_fr": "FR-038",
       "title": "Entry points to transplant-progress monitoring",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Patient selects Aftercare: Monitor Transplant Progress from FR-003 Screen 1: Service Selection. Patient opens the active case from the patient home/dashboard monitoring card. Patient opens a completed or converted case from the patient home/dashboard monitoring card, which opens Screen 7 read-only. Admin opens Transplant-Progress Cases (Screen 8). Patient selects Switch to Aftercare Package from active-case actions or Screen 5."
+        "statement": "Patient selects Aftercare: Monitor Transplant Progress from FR-003 Screen 1: Service Selection. Patient opens the active case from the patient home/dashboard monitoring card. Patient opens a completed or converted case from the same card, which also lists previous completed and converted cases, each opening its Screen 7 read-only. Admin opens Transplant-Progress Cases (Screen 8). Patient selects Switch to Aftercare Package from active-case actions or Screen 5."
       }
     },
     {
@@ -95529,9 +95529,9 @@
       "owner_fr": "FR-038",
       "title": "Current summary PDF generated at Switch, with status, retry, regeneration and repeat rules",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System generates the current monitoring-summary PDF when the patient selects Switch to Aftercare Package. Screen 6 shows the PDF status; on failed the patient can retry; the PDF is regenerated when logs or the selected scan change after it was made; a repeated Switch reuses the existing draft PDF unless data changed; the export-ready notice for the conversion PDF opens Screen 6.",
+        "statement": "System generates the current monitoring-summary PDF when the patient selects Switch to Aftercare Package. Screen 6 shows the PDF status; on failed the patient can retry; the PDF is regenerated when logs or the selected scan change after it was made; a repeated Switch reuses the existing draft PDF unless data changed; the export-ready notice for the conversion PDF opens Screen 6 only while the conversion draft is open, otherwise Screen 7.",
         "rationale": "Screen 6 Monitoring Summary PDF (current date-to-date report, system-generated)."
       }
     },
@@ -95565,9 +95565,9 @@
       "owner_fr": "FR-038",
       "title": "Failed or abandoned conversion preserves the case and the conversion draft",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "When FR-011 request validation or creation does not complete, System preserves the active monitoring case and the conversion draft, and the patient can correct information, retry, or return to monitoring.",
+        "statement": "When FR-011 request validation or creation does not complete, or the patient abandons it, System preserves the active monitoring case and the conversion draft; the patient returns to FR-038 Screen 6 with the draft intact, corrects copied fields there, and retries or returns to monitoring.",
         "rationale": "REQ-038-015 states the active-case half of this rule."
       }
     },
@@ -95661,9 +95661,9 @@
       "owner_fr": "FR-038",
       "title": "Malware scan of uploaded documentation and generated PDFs",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System MUST scan uploaded treatment documentation and generated PDFs for malware.",
+        "statement": "System MUST scan uploaded treatment documentation and generated PDFs for malware; an uploaded file that fails the scan is rejected with an error and not stored, and a generated PDF that fails ends with generation status failed.",
         "rationale": "Functional Requirements, Display and Processing Requirements."
       }
     },
@@ -100347,7 +100347,7 @@
       "owner_fr": "FR-038",
       "title": "Admin Monitoring Case Detail and Audit (Screen 9)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "platform": "admin",
         "description": "Supports audited correction and conversion support."
@@ -101897,10 +101897,10 @@
       "owner_fr": "FR-038",
       "title": "Transplant-progress reminder defaults",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "description": "Patient reminder defaults for transplant-progress monitoring. Reminders are on by default with this schedule and cannot become mandatory milestones or compliance checks. The default schedule is set by admins in the FR-030 notification settings (REQ-030-225); FR-038 only refers to it. The patient may change or switch off their own reminders, and reminders stop when the case is completed or converted.",
-        "default": "once a month for 12 months after treatment"
+        "default": "once a month for 12 months from the case creation date"
       }
     },
     {
@@ -110552,7 +110552,7 @@
       "owner_fr": "FR-011",
       "title": "Patient requests the standalone service, picks a template and pricing option and submits the request without payment",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Workflow 2 Main Flow step 1"
       }
@@ -131063,7 +131063,7 @@
       "owner_fr": "FR-038",
       "title": "Patient selects Monitor Transplant Progress",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "prd_ref": "Main Flow step 1"
       }
@@ -131074,9 +131074,9 @@
       "owner_fr": "FR-038",
       "title": "Patient enters treatment date, type, treating clinic, current concerns and optional documentation",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Main Flow step 3"
+        "prd_ref": "Main Flow step 2"
       }
     },
     {
@@ -131085,9 +131085,9 @@
       "owner_fr": "FR-038",
       "title": "Patient reviews consent and confirms this is self-tracking, not managed aftercare",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Main Flow step 4"
+        "prd_ref": "Main Flow step 3"
       }
     },
     {
@@ -131096,9 +131096,9 @@
       "owner_fr": "FR-038",
       "title": "System creates the active self-service case",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Main Flow step 5"
+        "prd_ref": "Main Flow step 4"
       }
     },
     {
@@ -131107,9 +131107,9 @@
       "owner_fr": "FR-038",
       "title": "Patient opens the calendar and adds optional dated logs",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Main Flow step 6"
+        "prd_ref": "Main Flow step 5"
       }
     },
     {
@@ -131118,9 +131118,9 @@
       "owner_fr": "FR-038",
       "title": "Patient records a log with severity 1 to 10, notes, photos and a V1 head scan photo set",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "prd_ref": "Main Flow step 7"
+        "prd_ref": "Main Flow step 6"
       }
     },
     {
@@ -131129,9 +131129,9 @@
       "owner_fr": "FR-038",
       "title": "System updates timeline, scan history and severity trend without overdue states",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Main Flow step 8"
+        "prd_ref": "Main Flow step 7"
       }
     },
     {
@@ -131184,7 +131184,7 @@
       "owner_fr": "FR-038",
       "title": "System generates the date-to-date PDF with logs, severity summary and scan photos",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "A1 step 5"
       }
@@ -131206,7 +131206,7 @@
       "owner_fr": "FR-038",
       "title": "Patient selects Switch to Aftercare Package",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "A2 step 1"
       }
@@ -131217,7 +131217,7 @@
       "owner_fr": "FR-038",
       "title": "System generates the current monitoring-summary PDF",
       "status": "active",
-      "version": 1,
+      "version": 3,
       "attrs": {
         "prd_ref": "A2 step 2"
       }
@@ -131283,7 +131283,7 @@
       "owner_fr": "FR-038",
       "title": "System saves a new version and an immutable before-and-after audit event",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "A3 step 4"
       }
@@ -131305,7 +131305,7 @@
       "owner_fr": "FR-038",
       "title": "Patient can Resume Monitoring or End Existing Case",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "B1 step 3"
       }
@@ -131338,7 +131338,7 @@
       "owner_fr": "FR-038",
       "title": "Patient corrects information, retries or returns to monitoring",
       "status": "active",
-      "version": 2,
+      "version": 4,
       "attrs": {
         "prd_ref": "B2 step 3"
       }
@@ -131360,7 +131360,7 @@
       "owner_fr": "FR-038",
       "title": "Patient continues to FR-011 to pick a package and submit the standalone request",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "prd_ref": "A2 step 6"
       }
@@ -131371,7 +131371,7 @@
       "owner_fr": "FR-038",
       "title": "System links the records and completes the monitoring case on successful standalone-request creation",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A2 step 7"
       }
@@ -131382,9 +131382,9 @@
       "owner_fr": "FR-038",
       "title": "System regenerates the PDF when the patient selects Retry PDF",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "A1 step 5a"
+        "prd_ref": "A1 step 5a; A2 step 2a"
       }
     },
     {
@@ -176668,12 +176668,6 @@
         "rules": 30
       },
       "derived": true
-    },
-    {
-      "from_id": "FR-038",
-      "verb": "references",
-      "to_id": "REQ-011-046",
-      "attrs": {}
     },
     {
       "from_id": "FR-038",
@@ -341888,7 +341882,7 @@
       "attrs": {
         "provenance": "retrieved",
         "label": "Case Data (status)",
-        "editable": true
+        "editable": false
       }
     },
     {
@@ -370271,6 +370265,15 @@
       "verb": "next",
       "to_id": "STP-011-012",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-011-009",
+      "verb": "next",
+      "to_id": "STP-038-051",
+      "attrs": {
+        "label": "Request validation or creation does not complete",
+        "condition": "REQ-038-068"
+      }
     },
     {
       "from_id": "STP-011-009",
@@ -429548,7 +429551,10 @@
       "from_id": "STP-038-001",
       "verb": "next",
       "to_id": "STP-038-003",
-      "attrs": {}
+      "attrs": {
+        "label": "No active case exists",
+        "condition": "REQ-038-001"
+      }
     },
     {
       "from_id": "STP-038-001",
@@ -429911,7 +429917,10 @@
       "from_id": "STP-038-015",
       "verb": "next",
       "to_id": "STP-038-016",
-      "attrs": {}
+      "attrs": {
+        "label": "PDF generated",
+        "condition": "REQ-038-076"
+      }
     },
     {
       "from_id": "STP-038-015",
@@ -429956,6 +429965,12 @@
       "from_id": "STP-038-021",
       "verb": "applies",
       "to_id": "REQ-038-033",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-038-021",
+      "verb": "applies",
+      "to_id": "REQ-038-037",
       "attrs": {}
     },
     {
@@ -430017,6 +430032,16 @@
       "verb": "next",
       "to_id": "STP-038-023",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-038-022",
+      "verb": "next",
+      "to_id": "STP-038-057",
+      "attrs": {
+        "label": "PDF generation failed and the patient selects Retry PDF",
+        "condition": "REQ-038-064",
+        "back": true
+      }
     },
     {
       "from_id": "STP-038-023",
@@ -430220,7 +430245,10 @@
       "from_id": "STP-038-034",
       "verb": "next",
       "to_id": "STP-038-058",
-      "attrs": {}
+      "attrs": {
+        "label": "The case has a PDF",
+        "condition": "REQ-038-045"
+      }
     },
     {
       "from_id": "STP-038-042",
@@ -430263,6 +430291,24 @@
       "verb": "done by",
       "to_id": "ACT-patient",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-038-043",
+      "verb": "next",
+      "to_id": "STP-038-006",
+      "attrs": {
+        "label": "Resume Monitoring",
+        "condition": "REQ-038-019"
+      }
+    },
+    {
+      "from_id": "STP-038-043",
+      "verb": "next",
+      "to_id": "STP-038-011",
+      "attrs": {
+        "label": "End Existing Case",
+        "condition": "REQ-038-019"
+      }
     },
     {
       "from_id": "STP-038-051",
@@ -430321,6 +430367,12 @@
     {
       "from_id": "STP-038-053",
       "verb": "applies",
+      "to_id": "REQ-038-037",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-038-053",
+      "verb": "applies",
       "to_id": "REQ-038-068",
       "attrs": {}
     },
@@ -430335,6 +430387,15 @@
       "verb": "done by",
       "to_id": "ACT-patient",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-038-053",
+      "verb": "next",
+      "to_id": "STP-038-006",
+      "attrs": {
+        "label": "patient returns to monitoring; draft cleared",
+        "back": true
+      }
     },
     {
       "from_id": "STP-038-053",
@@ -430420,15 +430481,6 @@
     },
     {
       "from_id": "STP-038-055",
-      "verb": "next",
-      "to_id": "STP-038-051",
-      "attrs": {
-        "label": "Request validation or creation does not complete",
-        "condition": "REQ-038-068"
-      }
-    },
-    {
-      "from_id": "STP-038-055",
       "verb": "on",
       "to_id": "SCR-038-06",
       "attrs": {}
@@ -430443,6 +430495,12 @@
       "from_id": "STP-038-056",
       "verb": "applies",
       "to_id": "REQ-038-016",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-038-056",
+      "verb": "applies",
+      "to_id": "REQ-038-037",
       "attrs": {}
     },
     {
@@ -430472,6 +430530,12 @@
     {
       "from_id": "STP-038-057",
       "verb": "applies",
+      "to_id": "REQ-038-064",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-038-057",
+      "verb": "applies",
       "to_id": "REQ-038-079",
       "attrs": {}
     },
@@ -430494,6 +430558,20 @@
       "attrs": {
         "label": "report regenerated"
       }
+    },
+    {
+      "from_id": "STP-038-057",
+      "verb": "next",
+      "to_id": "STP-038-054",
+      "attrs": {
+        "label": "report regenerated"
+      }
+    },
+    {
+      "from_id": "STP-038-057",
+      "verb": "on",
+      "to_id": "SCR-038-06",
+      "attrs": {}
     },
     {
       "from_id": "STP-038-057",
@@ -432413,6 +432491,75 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-082209-b96997cf",
+      "at": "2026-11-24T08:22:09.138055+00:00",
+      "changed_by": "controller",
+      "reason": "FR-038 logic review pass 2 follow-up: mark two intended backward stage moves (Retry PDF on the shared retry step; patient returns to monitoring from the conversion review) with back: true.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "STP-038-022",
+        "STP-038-053"
+      ],
+      "edges_added": 2,
+      "edges_removed": 2,
+      "rows": 4
+    },
+    {
+      "id": "cs-20261124-082038-9c9de113",
+      "at": "2026-11-24T08:20:38.066336+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-038 logic review pass 2: monitoring period and first severity point in date order with logs dated before the case (REQ-038-034, -035); zero-log summary shows the Initial Severity; stale FR-011 package edge and retired-rule edges removed; failure edge moved to the FR-011 submit step; failed or abandoned request returns to FR-038 Screen 6 with the draft intact; draft rule wired to its steps and the return-to-monitoring exit; End Monitoring with an open draft discards it (owner default 101); idempotency key created once per case and kept; Retry PDF on Screen 6 with its step; export-ready notice opens Screen 6 only while the draft is open; previous completed and converted cases listed on the home card (owner default 102); Screen 6 retake and Screen 1 capture entry for Screen 4; Admin cannot edit case status (owner default 103); conditions on sibling next edges and the check step folded into the entry branch; malware-scan outcome; default reminders run 12 months from case creation (owner default 104); duplicate-case choices wired onward.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "FR-038",
+        "REQ-038-001",
+        "REQ-038-003",
+        "REQ-038-004",
+        "REQ-038-007",
+        "REQ-038-016",
+        "REQ-038-021",
+        "REQ-038-024",
+        "REQ-038-031",
+        "REQ-038-034",
+        "REQ-038-035",
+        "REQ-038-037",
+        "REQ-038-041",
+        "REQ-038-044",
+        "REQ-038-049",
+        "REQ-038-055",
+        "REQ-038-062",
+        "REQ-038-064",
+        "REQ-038-065",
+        "REQ-038-068",
+        "REQ-038-074",
+        "REQ-038-077",
+        "SCR-038-09",
+        "SET-transplant-progress-reminder-defaults",
+        "STP-011-009",
+        "STP-038-001",
+        "STP-038-003",
+        "STP-038-004",
+        "STP-038-005",
+        "STP-038-006",
+        "STP-038-007",
+        "STP-038-008",
+        "STP-038-015",
+        "STP-038-021",
+        "STP-038-022",
+        "STP-038-034",
+        "STP-038-043",
+        "STP-038-053",
+        "STP-038-055",
+        "STP-038-056",
+        "STP-038-057"
+      ],
+      "edges_added": 15,
+      "edges_removed": 11,
+      "rows": 56
+    },
     {
       "id": "cs-20261124-081433-b01924ac",
       "at": "2026-11-24T08:14:33.263285+00:00",
