@@ -63,12 +63,13 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 
 ### Entry Points
 
-Aftercare has exactly two entry routes:
+Aftercare has exactly three entry sources:
 
 1. **Treatment-Linked Aftercare**: Starts from the patient's accepted Hairline quote whose treatment was performed (the FR-006 booking reached Aftercare). It covers Workflow 1 (set up at treatment completion) and the Workflow 2b post-treatment add-on (bought later within 90 days). The aftercare record is linked to that accepted quote.
 2. **Standalone Aftercare**: Bought directly by patients treated at an outside clinic (Workflow 2). It has no inquiry or quote.
+3. **Standalone Aftercare from an FR-038 conversion**: A standalone request created when a patient converts a transplant-progress monitoring case to an aftercare package (Workflow 2, step 1; REQ-011-093 and REQ-011-094).
 
-Admin assignment is not a separate entry route. It is a step inside these two routes that decides who delivers the aftercare, for example the Workflow 2 provider assignment, the Workflow 1 A2 Hairline aftercare team takeover, and Workflow 4 reassignment. (REQ-011-016)
+Admin assignment is not a separate entry route. It is a step inside these routes that decides who delivers the aftercare, for example the Workflow 2 provider assignment, the Workflow 1 A2 Hairline aftercare team takeover, and Workflow 4 reassignment. (REQ-011-016)
 
 ## Business Workflows
 
@@ -76,16 +77,15 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 **Actors**: Provider, System, Patient, Aftercare Team
 
-**Trigger**: Provider marks treatment as completed and initiates aftercare setup (REQ-011-055)
+**Trigger**: FR-010 signals that the treatment is complete (REQ-011-055, REQ-011-091). FR-006 owns the move of the booking to Aftercare, and FR-010 owns marking the treatment complete and retrying a failed signal (REQ-010-086)
 
 **Outcome**: Aftercare plan is configured, activated, and patient/aftercare team are notified
 
 **Main Flow**:
 
-1. **Treatment Completion Trigger**
-   - Provider marks treatment as "completed" in system
-   - System automatically moves patient status to "Aftercare"
-   - System prompts provider to configure aftercare plan
+1. **Treatment Completion Signal**
+   - System receives the treatment-completion signal from FR-010 (the booking is already in Aftercare under FR-006)
+   - Aftercare setup starts automatically and the provider is prompted to configure the aftercare plan (REQ-011-017)
 
 2. **Aftercare Template Selection**
    - Provider views available milestone templates (admin-created)
@@ -100,6 +100,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
    - Provider confirms aftercare plan
 
 4. **Plan Generation & Activation**
+   - The plan activates when the provider confirms it (REQ-011-055) or an admin activates it manually (REQ-011-019, A3)
    - System generates complete aftercare plan with milestones
    - System creates patient aftercare dashboard
    - System sends activation notification to patient
@@ -116,14 +117,25 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 - **A2**: Provider requests Hairline aftercare service (REQ-011-057)
   - Provider marks "Assign to Hairline aftercare team"
   - Admin receives notification for aftercare assignment
-  - Hairline aftercare team takes over patient monitoring
-  - Provider receives compensation for aftercare participation
+  - Hairline aftercare team takes over patient monitoring; the Aftercare Coordinator works on the admin Screens 13 to 19 (REQ-011-004)
+  - Provider receives the fixed handover fee set by the admin (default 0, so nothing is paid until the admin sets an amount); Hairline keeps the rest of the price (REQ-011-057)
+
+- **A3**: Plan setup is not confirmed in time (REQ-011-090, REQ-011-019)
+  - If no plan is confirmed, the provider gets a reminder after 2 days and the case is escalated to the admin after 4 days; both day counts are admin settings
+  - Admin opens the case on Screen 14 and either reassigns on Screen 19 (Workflow 4, D5) or activates the plan manually with a mandatory reason; the activation is written to the audit trail
+
+- **A4**: Treatment closed early by an admin decision (REQ-011-091)
+  - FR-010 sends the completion signal after the early close
+  - Admin assigns the aftercare team or the reassigned provider on Screen 19, and setup opens for them
+
+- **A5**: Completion signal arrives again (REQ-011-091)
+  - A repeated signal for the same booking returns the existing plan and creates no second plan
 
 ### Workflow 2: Standalone Aftercare Service (Secondary Flow)
 
 **Actors**: Patient, Admin, Assigned Provider, Aftercare Team
 
-**Trigger**: Patient requests standalone aftercare service
+**Trigger**: Patient requests standalone aftercare service, directly or by converting an FR-038 monitoring case (REQ-011-093)
 
 **Outcome**: Aftercare plan is assigned, configured, paid for, and activated for the patient
 
@@ -140,22 +152,23 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
    - Patient chooses pricing option (fixed price or monthly subscription, if both available)
    - Patient submits the request; no payment is taken at this point
    - Request appears as "Pending Assignment"
+   - Coming from an FR-038 conversion, Screen 6 opens with the copied fields, the monitoring report and the selected scan already filled in; the patient still picks the template and pricing option, and a repeated submit with the same key returns the existing request (REQ-011-093, REQ-011-094)
 
 2. **Admin Review & Assignment** (REQ-011-048)
    - Request appears in admin dashboard as "Pending Assignment" (Screen 15)
    - Admin reviews patient information and treatment details
    - Admin assigns suitable provider to oversee case
-   - System notifies assigned provider
+   - System notifies assigned provider; the provider sees the patient's details from this moment (REQ-011-010)
 
 3. **Provider Plan Configuration** (REQ-011-049)
    - Assigned provider reviews patient case
-   - Provider selects appropriate aftercare template (same as requested template or alternative if needed)
+   - Provider selects appropriate aftercare template (same as requested template, or an alternative that offers the pricing option the patient chose; REQ-011-100)
    - Provider customizes plan based on patient's specific situation
    - Provider completes the plan; the plan is not active until payment succeeds
-   - System notifies the patient that payment is now due
+   - System sets the request to "Payment due" and notifies the patient that payment is now due; the patient's 48 hours start at this notice (REQ-011-050)
 
 4. **Payment & Activation**
-   - Patient reviews order summary with template details, pricing option, and total (Screen 7)
+   - Patient reviews order summary of the final template, with template details, pricing option, and total (Screen 7); if the price differs from the requested one the patient accepts the new price or cancels at no charge (B4)
    - Patient selects payment method (credit card, PayPal, etc.)
    - Patient enters payment and billing information
    - Patient accepts terms and conditions
@@ -174,7 +187,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 - **B1**: Payment fails (REQ-011-050)
   - Patient receives payment failure notification
   - Patient can retry payment with different method
-  - Request expires after 48 hours without successful payment
+  - Request becomes "Expired" when 48 hours after the payment-due notice pass without successful payment; nothing was charged, so there is nothing to refund
 
 - **B2**: Admin rejects request (REQ-011-051)
   - Admin marks request as "Not suitable for aftercare"
@@ -185,6 +198,12 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
   - Admin marks as "Awaiting provider availability"
   - Patient notified of delay
   - Admin manually assigns when provider becomes available
+  - The 7-day unassigned timer counts from submission, pauses while the request is "Awaiting provider availability" and resumes when that mark is cleared (REQ-011-053)
+
+- **B4**: Final template price differs from the requested price (REQ-011-100)
+  - Screen 7 shows the order summary of the final template and the new price
+  - Patient accepts the new price and pays, or cancels at no charge
+  - A cancelled request becomes "Rejected" with the system reason "cancelled by patient"
 
 ### Workflow 2b: Post-Treatment Aftercare Add-On (Secondary Flow)
 
@@ -205,6 +224,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
    - System auto-populates treatment information from patient's treatment history
    - Patient browses available aftercare templates (filtered by treatment type compatibility)
    - Patient selects desired template and pricing option (fixed price or monthly subscription)
+   - System refuses the add-on while a plan for the same booking is Active or Completed; it is allowed after a paperwork-only plan (REQ-011-092)
    - Patient proceeds to payment
 
 2. **Payment & Checkout**
@@ -218,11 +238,12 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
    - Payment confirmation triggers automatic assignment
    - System assigns to original treatment provider (if provider participates in aftercare)
    - If provider doesn't participate, system assigns to Hairline aftercare team
-   - Assigned provider receives notification
+   - Assigned provider receives notification and sees the patient's details from the payment (REQ-011-010)
+   - The 7 days to assignment count from payment; an add-on still unassigned after 7 days expires and is refunded in full (REQ-011-037, REQ-011-053)
 
 4. **Provider Activation** (REQ-011-049)
    - Provider reviews patient's treatment history (pre-populated from treatment records)
-   - Provider selects appropriate aftercare template (same as purchased or alternative)
+   - Provider selects appropriate aftercare template (same as purchased, or an alternative that offers the pricing option the patient chose; REQ-011-100)
    - Provider customizes plan based on patient's treatment and package selection
    - Provider activates aftercare plan
 
@@ -241,7 +262,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 - **B1b**: Payment fails (REQ-011-050)
   - Patient receives payment failure notification
   - Patient can retry payment with different method
-  - Request expires after 48 hours without successful payment
+  - Request becomes "Expired" when 48 hours pass without successful payment, counted from the failed payment (nothing was charged)
 
 ### Workflow 3: Patient Aftercare Activities (Ongoing Flow)
 
@@ -271,7 +292,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
    - Aftercare team reviews responses
 
 4. **Progress Tracking** (REQ-011-027)
-   - System automatically calculates overall recovery progress percentage as completed tasks over total tasks
+   - System automatically calculates overall recovery progress percentage as completed tasks over total tasks; the tasks counted are scan, questionnaire and education tasks, and medication tick-offs are adherence tracking only and stay out of the percentage and out of milestone closing (REQ-011-023, REQ-011-024)
    - Patient views progress dashboard with real-time updates
    - System shows next upcoming tasks with countdown timers
 
@@ -280,13 +301,23 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 - **C1**: Patient misses scheduled task
   - System sends reminder notification
   - After 24 hours, system sets the Overdue flag on the task (Overdue is a flag, not a status) (REQ-011-026)
-  - If still overdue after 48 hours, the task escalates (REQ-011-025)
+  - If still overdue after 48 hours counted from the task due date (the 24 hours above are part of those 48), the task escalates (REQ-011-025)
   - Aftercare team contacts patient
 
 - **C2**: Concerning symptoms reported
-  - System flags case as "Urgent" (REQ-011-028)
+  - System flags case as "Urgent" (REQ-011-028): the plan carries an urgent flag and the time it was raised, set by an urgent questionnaire answer or by a manual flag (REQ-011-099)
   - Aftercare team immediately contacts patient
-  - Escalation workflow triggered
+  - The assigned provider, or the coordinator when the Hairline team delivers, clears the flag with a note; with no response within 2 hours of the raised time, the system escalates the case to the admin (REQ-011-099)
+  - Dashboards count the plans that have the flag set (REQ-011-099)
+
+- **C3**: Plan completes (REQ-011-096)
+  - At the end of the last milestone, or the end of the subscription term for a subscription (whichever is later), the system completes the plan
+  - The system stops all reminders for the plan, including the scheduled progress reminders (REQ-011-088), and emits a completion event that FR-006 reads
+
+- **C4**: Patient cancels the subscription (REQ-011-097)
+  - Patient cancels from the plan payment screen (Screen 7)
+  - Monthly subscription: care runs to the end of the paid month, later months are not charged, and the plan then becomes Cancelled with no refund
+  - Paid in full upfront: care stops at the end of the current month and the unused full months are refunded pro rata; commission and provider payout follow the refund in the same proportion (REQ-011-083)
 
 ### Workflow 4: Admin Aftercare Management (Management Flow)
 
@@ -364,6 +395,12 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
   - The reassignment needs a mandatory reason and confirmation, is recorded in the audit trail, resolves the `supportRequired` marker when one is set, and sends the `aftercare.provider_reassigned` notice (recipients, content, and the mandatory status of the notice are defined by the FR-030 notification Rule, not here) (REQ-011-015, REQ-011-076)
   - Boundary: money effects, if any, follow the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault); this flow never reassigns the treating provider of an earlier treatment stage (REQ-011-075)
 
+- **D6**: Provider or coordinator proposes an extension or major change (REQ-011-098)
+  - The assigned provider, or the coordinator when the Hairline team delivers, proposes an extension or major change to the plan with a reason
+  - The admin approves or rejects it on the admin case screen (Screen 14); the patient is notified of the decision
+  - If the change costs more, it takes effect only after the patient accepts and pays
+  - A rejection leaves the plan unchanged, and the proposer is told why
+
 ## Screen Specifications
 
 ### Patient Platform Screens
@@ -392,7 +429,8 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 **Business Rules**:
 
 - Progress percentage = (completed tasks / total tasks) * 100 (REQ-011-027)
-- Tasks include: scan uploads, questionnaires, medication adherence
+- Tasks counted in the percentage: scan uploads, questionnaires and education tasks; a milestone closes when all of its required scan, questionnaire and education tasks are done (REQ-011-023, REQ-011-024)
+- Medication adherence is shown beside the progress as a separate figure; it is adherence tracking only and is left out of the percentage and out of milestone closing (REQ-011-027)
 - Overdue tasks highlighted in red (REQ-011-086)
 - Completed tasks shown in green (REQ-011-087)
 
@@ -430,6 +468,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 - Maximum file size: 50MB (REQ-011-059)
 - Multiple scans within a milestone are supported per the configured scan schedule (e.g., every X days for Y repetitions); one upload is allowed per scheduled instance (REQ-011-059)
 - Previous scans remain accessible for comparison (REQ-011-059)
+- The upload uses the FR-002 media-only call with at least one photo, and the scan id is the idempotency key so a retried upload never creates a second scan; staged photos that are never attached to a scan are removed after 7 days (REQ-011-095, REQ-002-047, REQ-002-051)
 
 **Notes**:
 
@@ -449,6 +488,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 |------------|------|----------|-------------|------------------|-------------|
 | Milestone Name | text | Yes | Current milestone and phase | Display only | ENT-aftercare-milestone.name |
 | Questionnaire Set | text | Yes | Questionnaire set assigned to this milestone | Must exist in FR-025 catalog | ENT-aftercare-milestone.questionnaire_set_id |
+| Questionnaire Set Version | text | Yes | Version of the set the response was started on (system-kept, not shown to the patient) | A response keeps the version it started on, also if the set is replaced later (REQ-011-071) | ENT-aftercare-questionnaire-response.questionnaire_set_version |
 | Due Date | datetime | Yes | Questionnaire due date | ISO 8601 format | ENT-aftercare-task.due_at |
 | Completion Status | status | Yes | Completed/Pending, plus an Overdue flag when past due | Valid status enum | ENT-aftercare-task.status, ENT-aftercare-task.overdue_flag |
 | Questions | dynamic form | Yes | Full question list rendered from the assigned Questionnaire Set | Validation per question type (required fields, min/max ranges, option sets) | ENT-aftercare-questionnaire-response.answers |
@@ -497,12 +537,13 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 - Medications prescribed by provider during aftercare setup (REQ-011-061)
 - Adherence calculated as (taken doses / total doses) * 100 (REQ-011-061)
+- Adherence is tracking only: it does not block a milestone from closing and is not part of the overall progress percentage (REQ-011-023, REQ-011-027)
 - Missed doses trigger reminder notifications (REQ-011-058)
 - History available for entire aftercare period (REQ-011-061)
 
 **Notes**:
 
-- Medications defined during aftercare plan setup (Screen 8)
+- Medications defined during aftercare plan setup (Screen 10)
 - Push notifications for upcoming doses follow the patient notification preferences owned by FR-030; FR-011 has no aftercare-specific setting for them
 - History view shows complete timeline of all medications and adherence
 - Visual indicators (colors/icons) for easy recognition of adherence status
@@ -576,6 +617,13 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 | Selected Pricing Option | radio | Cond. | If template offers both pricing models | Required if Both available | ENT-aftercare-request.pricing_option |
 | Current Concerns | textarea | No | Patient's current concerns or symptoms | Max 2000 chars | ENT-aftercare-request.current_concerns |
 | Upload Photos | file[] | No | Optional photos of current condition | Max 5 files; 10MB each; JPG/PNG | ENT-aftercare-request.photos |
+| Booking | id | Cond. | Booking the add-on belongs to (post-treatment add-on only; empty for standalone) | System-filled; add-on refused while a plan for the same booking is Active or Completed (REQ-011-092) | ENT-aftercare-request.booking_id |
+| Accepted Quote | id | Cond. | Quote of that booking (post-treatment add-on only; empty for standalone) | System-filled | ENT-aftercare-request.quote_id |
+| Request Source | text | Yes | How the request started: add-on, standalone, or conversion from FR-038 monitoring | System-set; see the conversion rules below (REQ-011-093) | ENT-aftercare-request.source |
+| Monitoring Case | id | Cond. | FR-038 monitoring case the request was converted from | Conversion only; pre-filled | ENT-aftercare-request.monitoring_case_id |
+| Monitoring Scan or Photo Set | id | Cond. | Scan or photo set carried over from the monitoring case | Conversion only; pre-filled | ENT-aftercare-request.scan_set_id |
+| Monitoring Report File | file | Cond. | Report file carried over from the monitoring case | Conversion only; pre-filled | ENT-aftercare-request.report_file_id |
+| Request Key | text | Cond. | Idempotency key of the conversion | System-set; a repeated key returns the existing request (REQ-011-093) | ENT-aftercare-request.idempotency_key |
 | Proceed to Payment | action | Yes | Post-treatment add-on: button to proceed to checkout. Standalone: submits the request; the patient pays later, after the admin has assigned a provider and the provider has configured the plan (Workflow 2) | Enabled when service selected | no graph field (control) |
 
 **Business Rules**:
@@ -586,6 +634,9 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 - If template offers both Fixed and Subscription, patient chooses preferred pricing option (REQ-011-042)
 - Service name uses template name for consistency across provider and patient views (REQ-011-046)
 - Post-treatment add-on only available within 90 days of Hairline treatment completion (REQ-011-044)
+- No add-on while a plan for the same booking is Active or Completed; an add-on is allowed after a paperwork-only completion (REQ-011-092)
+- A request converted from FR-038 monitoring is a standalone request with the source, monitoring case, scan or photo set and report file pre-filled; the patient confirms the treatment details and chooses a template as in any standalone request (REQ-011-093, REQ-011-094)
+- A repeated conversion with the same idempotency key returns the existing request; a conversion is refused once the monitoring case is completed; when the request fails or is abandoned, the patient returns to FR-038 Screen 6 with the draft intact (REQ-011-093, REQ-011-094, REQ-038-068)
 - Treatment documentation optional but helps provider customize plan
 
 **Notes**:
@@ -605,6 +656,8 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 | Field Name | Type | Required | Description | Validation Rules | Graph field |
 |------------|------|----------|-------------|------------------|-------------|
 | Order Summary | component | Yes | Selected aftercare service details | Display only | ENT-aftercare-template.name, ENT-aftercare-template.duration, ENT-aftercare-request.pricing_option, ENT-aftercare-request.subtotal, ENT-aftercare-request.tax, ENT-aftercare-request.total |
+| Final Template | text | Cond. | Template the provider finally chose when it differs from the requested one (standalone) | Display only; offers the pricing option the patient chose (REQ-011-100) | ENT-aftercare-request.final_template_id |
+| Payment Due By | datetime | Cond. | Time by which the patient must pay (standalone): 48 hours from the payment-due notice | Display only; after this time the request becomes Expired (REQ-011-050) | ENT-aftercare-request.payment_due_at |
 | Service Name | text | Yes | Selected template name | Display only | ENT-aftercare-template.name |
 | Duration | text | Yes | Service duration | Display only | ENT-aftercare-template.duration |
 | Pricing Option Selected | text | Yes | Fixed or Monthly Subscription | Display only | ENT-aftercare-request.pricing_option |
@@ -629,7 +682,10 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 | Terms & Conditions | checkbox | Yes | Agreement to terms | Boolean; must be checked | ENT-aftercare-request.terms_accepted |
 | Privacy Policy | checkbox | Yes | Agreement to privacy policy | Boolean; must be checked | ENT-aftercare-request.privacy_accepted |
 | Payment Processing | status | No | Payment processing status | Display during payment | ENT-aftercare-request.payment_status |
-| Complete Payment | action | Yes | Button to submit payment | Enabled when all fields valid | no graph field (control) |
+| Complete Payment | action | Yes | Button to submit payment | Enabled when all fields valid; when the final price differs from the requested price the patient must first accept the new price (REQ-011-100) | no graph field (control) |
+| Accept New Price | action | Cond. | Accept the final template's price and continue to payment | Shown only when the final price differs from the requested price (REQ-011-100) | no graph field (control) |
+| Cancel Request | action | Cond. | Cancel the request at no charge when the new price is not acceptable | Shown only when the final price differs; the request becomes Rejected with the system reason cancelled by patient (REQ-011-100) | ENT-aftercare-request.rejection_reason |
+| Cancel Subscription | action | Cond. | Cancel an active subscription or a plan paid in full | Shown on the plan payment screen of an Active plan; outcome per REQ-011-097 | no graph field (control) |
 
 **Business Rules**:
 
@@ -639,6 +695,9 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 - Payment confirmation activates the aftercare plan for a standalone request (Workflow 2, after the provider has configured the plan) and triggers automatic assignment for a post-treatment add-on (Workflow 2b) (REQ-011-018, REQ-011-063)
 - The platform fee is one amount taken from the aftercare price; it is never added on top of the patient's total (REQ-011-040)
 - Failed payments allow retry with different payment method (REQ-011-050)
+- Standalone: the request is "Payment due" from the payment-due notice; the patient has 48 hours from that notice, and with no successful payment by then the request becomes Expired, with nothing charged and nothing to refund (REQ-011-050)
+- If the final template's price differs from the requested price, the order summary shows the final template and the patient accepts the new price before paying or cancels at no charge (REQ-011-100)
+- Cancelling a subscription: a monthly subscription runs to the end of the paid month with no refund; a plan paid in full stops at the end of the current month with a pro-rata refund of the unused full months; commission and provider payout follow in the same proportion (REQ-011-097, REQ-011-083)
 - Any payment already taken is refunded automatically if the request is rejected by admin (REQ-011-037)
 - Subscription payments charged automatically on monthly basis (REQ-011-043)
 - First subscription payment charged immediately; subsequent payments on monthly anniversary (REQ-011-043)
@@ -652,7 +711,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 - Payment confirmation email sent immediately after successful payment
 - Payment status tracked and visible in patient dashboard
 - For subscriptions, clear communication of recurring payment schedule
-- Subscription management interface for patients to view/cancel subscriptions
+- Subscription management interface for patients to view/cancel subscriptions (cancellation outcome per REQ-011-097)
 
 ### Provider Platform Screens
 
@@ -684,7 +743,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 - Only shows patients assigned to this provider (REQ-011-064)
 - Overdue cases shown with amber indicators (REQ-011-064)
-- Patient names are fully visible as aftercare occurs post-payment confirmation (REQ-011-010)
+- Patient names are fully visible to the assigned provider from assignment in the standalone flow, and from payment in the post-treatment add-on flow where assignment follows payment (REQ-011-010)
 - Progress calculated automatically by system (REQ-011-064)
 - All data editable by admin (admin override capability) (REQ-011-034)
 
@@ -730,6 +789,9 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 | Request Additional Scan | action | No | Button to request extra scan | Always available | no graph field (control) |
 | Contact Aftercare Team | action | No | Button to send message | Always available | no graph field (control) |
 | Escalate Case | action | No | Button to escalate urgent case | Always available | no graph field (control) |
+| Urgent Flag | indicator | No | Shows when the plan is flagged urgent and since when | Display only; clearing needs a note (REQ-011-099) | ENT-aftercare-plan.urgent_flag, ENT-aftercare-plan.urgent_raised_at |
+| Clear Urgent Flag | action | Cond. | Clear the urgent flag with a note (assigned provider) | Shown only while the flag is set; note required (REQ-011-099) | no graph field (control) |
+| Withdraw from Aftercare | action | No | Provider tells the admin they cannot continue aftercare for this patient | Reason required; admin reviews the case (REQ-011-072) | no graph field (control) |
 
 **Business Rules**:
 
@@ -737,10 +799,11 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 - **Dual Case Handling**:
   - **Hairline-treated patients**: Shows complete lifecycle data including pre-treatment inquiry, quote, treatment details, and aftercare (REQ-011-065)
   - **Standalone aftercare patients**: Shows only aftercare-specific data with initial intake information provided during standalone request (REQ-011-065)
-- Full patient details visible as aftercare occurs post-payment confirmation (REQ-011-010)
+- Full patient details are visible to the assigned provider from assignment (standalone) or from payment (post-treatment add-on, where assignment follows payment) (REQ-011-010)
 - All activities logged with timestamps (REQ-011-065)
 - Provider can modify plan only for their assigned patients (REQ-011-065)
 - Escalation creates audit trail (REQ-011-065)
+- Withdraw from Aftercare notifies the admin, who reviews the case and reassigns it, assigns the Hairline team or cancels it with a reason (Alternative Flow D1) (REQ-011-072)
 
 **Notes**:
 
@@ -808,6 +871,8 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 - System validates all required fields (REQ-011-066)
 - Admin can edit any step after activation (REQ-011-066)
 - Patient receives notification upon activation (REQ-011-066)
+- Setup starts automatically; Activate Plan (the provider's confirmation) activates the plan, and an admin can activate it instead when setup stalls (REQ-011-055, REQ-011-019)
+- In the standalone flow, completing the plan sets the request to Payment due; the patient then pays and the plan activates on payment as set out in Workflow 2 (REQ-011-050)
 
 **Notes**:
 
@@ -835,6 +900,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 | Update Custom Instructions | action | Cond. | Button to update instructions (Provider) | Enabled for providers | no graph field (control) |
 | Add Milestone Notes | action | Cond. | Button to add milestone-specific notes (Provider) | Enabled for providers | no graph field (control) |
 | Request Duration Change | action | Cond. | Button to request milestone duration change (Provider) | Enabled for providers | no graph field (control) |
+| Propose Extension or Major Change | action | Cond. | Propose an extension or major change with a reason (assigned provider, or the coordinator when the Hairline team delivers) | Reason required; goes to the admin for approval (REQ-011-098) | no graph field (control) |
 | Change Milestone Structure | action | Cond. | Button to modify milestones (Admin only) | Enabled for admins | no graph field (control) |
 | Modify Template Assignment | action | Cond. | Button to change template (Admin only) | Enabled for admins | no graph field (control) |
 | Override Settings | action | Cond. | Button to override any settings (Admin only) | Enabled for admins | no graph field (control) |
@@ -842,14 +908,14 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 | Change Reason | textarea | Yes | Required reason for changes | Max 500 chars; required | ENT-aftercare-audit-entry.reason |
 | Change Timestamp | datetime | Yes | When change was made | Auto-generated | ENT-aftercare-audit-entry.changed_at |
 | Changed By | text | Yes | User who made the change | Auto-populated | ENT-aftercare-audit-entry.changed_by |
-| Approval Status | status | Yes | Status (Pending/Approved/Rejected) | Valid status enum | ENT-aftercare-audit-entry.approval_status |
+| Approval Status | status | Yes | Status (Proposed/Approved/Rejected) | Valid status enum | ENT-aftercare-audit-entry.approval_status |
 | Change History | list | Yes | Historical list of all changes | Chronological order | ENT-aftercare-audit-entry.plan_id |
 
 **Business Rules**:
 
 - Provider changes logged and tracked (REQ-011-067)
 - Admin changes override provider settings (REQ-011-067)
-- Major changes require admin approval (REQ-011-067)
+- Major changes and extensions require admin approval: the admin approves or rejects on the admin case screen, the patient is notified, extra cost needs the patient's acceptance and payment, and a rejection leaves the plan unchanged and tells the proposer why (REQ-011-067, REQ-011-098)
 - All changes logged with reason and timestamp (REQ-011-067)
 - Patient notified of approved changes (REQ-011-067)
 - Change history maintained for audit trail (REQ-011-067)
@@ -896,6 +962,8 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 | Send Message to Patient | action | No | Button to send message | Always available | no graph field (control) |
 | Schedule Consultation | action | No | Button to schedule consultation | Always available | no graph field (control) |
 | Escalate Case | action | No | Button to escalate urgent case | Always available | no graph field (control) |
+| Urgent Flag | indicator | No | Shows when the plan is flagged urgent and since when | Display only (REQ-011-099) | ENT-aftercare-plan.urgent_flag, ENT-aftercare-plan.urgent_raised_at |
+| Clear Urgent Flag | action | Cond. | Clear the urgent flag with a note (assigned provider) | Shown only while the flag is set; note required; with no response within 2 hours of the raised time the system escalates to the admin (REQ-011-099) | no graph field (control) |
 
 **Business Rules**:
 
@@ -937,6 +1005,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 | Progress | column | Yes | Visual progress bar | Derived; non-negative | ENT-aftercare-plan.overall_progress |
 | Med Alerts | column | Yes | Critical/Standard/None | Enum with color coding | ENT-aftercare-plan.medication_alert_level |
 | Status | column | Yes | Active/Completed/Cancelled, with a separate Overdue flag shown on cases that have overdue tasks | Enum plus flag | ENT-aftercare-plan.status, ENT-aftercare-plan.overdue_flag |
+| Urgent Flag | column | No | Shows the plans with the urgent flag set; the list can be filtered on it and the dashboard counts them | Display only (REQ-011-099) | ENT-aftercare-plan.urgent_flag |
 | Action | column | Yes | View/Edit/Reassign/Escalate | RBAC enforced | no graph field (control) |
 | Search/Filters | control | No | Provider/Milestone/Status/Date range/Risk Level/Specialist/Completion Rate | Valid enums/ranges | no graph field (control) |
 | Pagination | control | No | Page and size controls | Standard UX pattern | no graph field (control) |
@@ -944,6 +1013,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 **Business Rules**:
 
 - Shows all aftercare cases across all providers (REQ-011-068)
+- The Aftercare Coordinator is an admin role (REQ-011-004) and works on the admin aftercare Screens 13 to 19 for plan configuration, scan review and escalations when the Hairline team delivers; no separate coordinator screens exist (REQ-011-004)
 - Admin can edit any case data (full editability) (REQ-011-068)
 - Overdue cases shown with amber indicators (REQ-011-068)
 - Progress calculated automatically by system (REQ-011-068)
@@ -1005,6 +1075,10 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 | Reassign Provider | action | No | Opens Screen 19 to reassign the aftercare provider or team | Available while the case is not completed or cancelled; standalone cases use the same screen | no graph field (control) |
 | Escalate Case | action | No | Button to escalate to supervisor | Always available | no graph field (control) |
 | Add Notes | action | No | Button to add internal admin notes | Always available | ENT-aftercare-plan.admin_notes |
+| Activate Plan Manually | action | Cond. | Activate a plan whose setup the provider has not confirmed | Shown while the plan is not active; mandatory reason; recorded in the audit trail (REQ-011-019) | ENT-aftercare-audit-entry.reason |
+| Approve Proposed Change | action | Cond. | Approve a proposed extension or major change | Shown while a proposal is waiting; the patient is notified (REQ-011-098) | ENT-aftercare-audit-entry.approval_status |
+| Reject Proposed Change | action | Cond. | Reject a proposed extension or major change | Reason required; the plan stays unchanged and the proposer is told why (REQ-011-098) | ENT-aftercare-audit-entry.approval_status |
+| Urgent Flag | indicator | No | Shows when the plan is flagged urgent and since when; the case escalates here when nobody responds within 2 hours | Display only (REQ-011-099) | ENT-aftercare-plan.urgent_flag, ENT-aftercare-plan.urgent_raised_at |
 | Change History | list | Yes | Audit trail of all changes | Chronological order | no graph field (list of the rows below) |
 | Change Date | datetime | Yes | Date of change | ISO 8601 format | ENT-aftercare-audit-entry.changed_at |
 | Changed By | text | Yes | User who made change | Display only | ENT-aftercare-audit-entry.changed_by |
@@ -1017,6 +1091,8 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 - Patient anonymization rules don't apply to admin (REQ-011-010)
 - All communications monitored and logged
 - Admin can override any provider settings (REQ-011-067)
+- Manual activation needs a mandatory reason and creates an audit entry; it is the route for a plan whose setup stays unconfirmed after the escalation (REQ-011-019, REQ-011-090)
+- The admin decides each proposed extension or major change here (REQ-011-098)
 
 **Notes**:
 
@@ -1048,7 +1124,11 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 | Pricing Option | text | Yes | Pricing option selected (Fixed price or Monthly subscription) | Valid pricing option enum | ENT-aftercare-request.pricing_option |
 | Payment Method | text | Yes | Payment method selected (Card, PayPal, etc.) | Valid payment method enum | ENT-aftercare-request.payment_method |
 | Payment Status | status | Yes | Payment status (Paid/Pending/Failed) | Valid status enum | ENT-aftercare-request.payment_status |
-| Request Status | status | Yes | Status (Pending/Awaiting provider availability/Assigned/Active/Rejected) | Valid status enum | ENT-aftercare-request.request_status |
+| Request Status | status | Yes | Status (Pending/Awaiting provider availability/Assigned/Payment due/Active/Rejected/Expired) | Valid status enum | ENT-aftercare-request.request_status |
+| Payment Due By | datetime | Cond. | Time the patient must pay by (48 hours from the payment-due notice) | Display only; after it the request becomes Expired (REQ-011-050) | ENT-aftercare-request.payment_due_at |
+| Request Source | text | Yes | Add-on, standalone, or conversion from FR-038 monitoring | Display only (REQ-011-093) | ENT-aftercare-request.source |
+| Final Template | text | Cond. | Template the provider finally chose, when it differs from the requested one | Display only (REQ-011-100) | ENT-aftercare-request.final_template_id |
+| Monitoring Case | id | Cond. | FR-038 monitoring case a converted request came from | Display only | ENT-aftercare-request.monitoring_case_id |
 | Full Patient Information | component | Yes | Complete patient details | Display only | ENT-patient.name, ENT-patient.email, ENT-patient.phone |
 | Treatment Documentation | component | Yes | Treatment documentation files | Display/download | ENT-aftercare-request.documentation |
 | Current Concerns | textarea | No | Patient's current concerns or issues | Max 2000 chars | ENT-aftercare-request.current_concerns |
@@ -1064,14 +1144,15 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 
 **Business Rules**:
 
-- Requests expire after 7 days if not assigned; an expired request becomes Rejected with a system reason, and the refund below applies (REQ-011-053)
+- Requests expire after 7 days if not assigned; an unassigned request becomes Rejected with a system reason, and the refund below applies. The 7 days count from submission, pause while the request is "Awaiting provider availability" and resume when that mark is cleared; in the post-treatment add-on flow they count from payment (REQ-011-053, REQ-011-037)
+- "Expired" is a different outcome: a standalone request not paid within 48 hours of the payment-due notice becomes Expired, with nothing charged and nothing to refund (REQ-011-050)
 - Provider assignment based on specialization and availability (REQ-011-069)
 - Rejection requires reason and triggers a full refund of any payment already taken (REQ-011-037, REQ-011-051)
 - All actions logged for audit trail
 
 **Notes**:
 
-- Admin has full visibility into patient information (unlike providers who see anonymized data until payment)
+- Admin has full visibility into patient information (unlike providers, who see patient details from assignment in the standalone flow and from payment in the add-on flow) (REQ-011-010)
 - Request list provides quick overview of all pending standalone requests
 - Detailed request view shows all patient-submitted information for informed assignment decisions
 - Provider assignment interface helps match requests to appropriate providers based on specialization
@@ -1139,7 +1220,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 - Multi-currency pricing uses real-time exchange rates as baseline but allows admin override for final pricing (REQ-011-084)
 - Template Name is used as service name for patient-facing display (no separate service name needed) (REQ-011-046)
 - Questionnaire sets and questions are not authored here; they are centrally managed in FR-025 (Medical Questionnaire Management). Screen 16 selects among existing Questionnaire Sets and configures schedule/frequency per milestone. (REQ-011-071)
-- Screen 16 must surface only Questionnaire Sets with context type "Aftercare" from FR-025 (see FR-025), while still allowing explicit inclusion of multi-context Questionnaire Sets if flagged as compatible. (REQ-011-071)
+- Screen 16 surfaces Questionnaire Sets with context type "Aftercare" plus every Multi-Context Questionnaire Set from FR-025 (see FR-025, REQ-025-071); no compatibility flag is needed. A response keeps the set version it started on, and each assignment or replacement of a set on a milestone is recorded in the audit trail. (REQ-011-071)
 - Each milestone independently selects a Questionnaire Set (single-select per milestone). Different milestones within the same template may reference different sets (e.g., Week 1: Pain Assessment; Week 4: Sleep Quality). (REQ-011-071)
 
 **Cross-Module Reference**:
@@ -1300,20 +1381,24 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 - The change is saved only after confirmation, is recorded in the audit trail with admin identity, timestamp, reason, previous assignee, and new assignee, and, when selected, records the audited resolution of the `supportRequired` marker. (REQ-011-076)
 - On save, System sends the `aftercare.provider_reassigned` notice. FR-011 is the producer of this FR-030 event; recipients, content, and the mandatory status of the notice are defined by the FR-030 notification Rule. (REQ-011-015)
 - Money effects, if any, follow the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault). (REQ-011-075)
+- The same screen opens setup for the aftercare team or the reassigned provider when FR-010 closes treatment early; the new assignee then sets up the plan as in Workflow 1 (REQ-011-091)
+- Who is paid after a reassignment: when the Hairline team takes the case, Hairline keeps the full price with no commission line and no provider payment; after a provider handover the previous provider is paid the fixed handover fee set in the admin handover-fee setting (default 0, so nothing is paid until the admin sets an amount) and Hairline keeps the rest (REQ-011-057)
 
 ## Business Rules
 
 ### General Module Rules
 
 1. **Activation Rules**
-   - Treatment-linked aftercare activates automatically upon treatment completion (REQ-011-017)
+   - Treatment-linked setup starts automatically on the FR-010 completion signal; the plan activates when the provider confirms it (REQ-011-055) or an admin activates it (REQ-011-019); FR-006 owns the booking move to Aftercare (REQ-011-017, REQ-011-091)
+   - If no plan is confirmed, the provider gets a reminder after 2 days and the case escalates to the admin after 4 days; both day counts are admin settings (REQ-011-090)
+   - No post-treatment add-on while a plan for the same booking is Active or Completed (REQ-011-092)
    - Standalone aftercare requires payment before activation (REQ-011-018)
    - Admin can manually activate aftercare for special cases (REQ-011-019)
 
 2. **Duration Rules**
    - Standard aftercare duration: 6-12 months (REQ-011-020)
    - Duration determined by treatment type and complexity (REQ-011-020)
-   - Extensions require provider and admin approval (REQ-011-020)
+   - Extensions are proposed by the provider (or the coordinator) with a reason and need admin approval; extra cost needs the patient's acceptance and payment (REQ-011-020, REQ-011-098)
 
 3. **Access Rules**
    - Patients can only access their own aftercare data (REQ-011-021)
@@ -1332,24 +1417,24 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 1. **Milestone Progression**
    - Milestones progress automatically based on time elapsed (REQ-011-023)
    - Patients cannot skip milestones (REQ-011-023)
-   - Milestone completion requires all tasks completed (REQ-011-023)
+   - Milestone completion requires all required scan, questionnaire and education tasks to be completed (REQ-011-023)
 
 2. **Task Completion**
    - Scan uploads must meet quality threshold (REQ-011-024)
    - Questionnaires must be completed in full (REQ-011-024)
-   - Medication adherence tracked but not mandatory for milestone completion (REQ-011-024)
-   - Overdue tasks trigger escalation after 48 hours (REQ-011-025)
+   - Medication adherence is tracked only: not mandatory for milestone completion and not part of the progress percentage (REQ-011-024, REQ-011-027)
+   - Overdue tasks trigger escalation after 48 hours counted from the task due date (REQ-011-025)
 
 3. **Progress Calculation**
    - Progress = (completed tasks / total tasks) * 100 (REQ-011-027)
-   - Tasks weighted equally (REQ-011-027)
+   - Tasks weighted equally; only scan, questionnaire and education tasks count (REQ-011-027)
    - Progress updates in real-time (REQ-011-027)
 
 ### Communication Rules
 
 1. **Patient Communication**
    - Patients can contact aftercare team 24/7 (REQ-011-029)
-   - Urgent cases receive priority response (within 2 hours) (REQ-011-029)
+   - Urgent cases receive priority response (within 2 hours of the time the urgent flag was raised); with no response the case escalates to the admin (REQ-011-029, REQ-011-099)
    - Standard cases receive response within 24 hours (REQ-011-029)
 
 2. **Provider Communication**
@@ -1373,7 +1458,7 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
    - Retention of aftercare data, scan media and communication logs follows the system PRD, Platform-Wide Rules: One 10-year retention period (REQ-011-032)
 
 2. **Data Access**
-   - Patient identity visibility before and after payment follows the system PRD, Platform-Wide Rules: Patient identity hidden until booking confirmation (REQ-011-022 is retired in favour of it)
+   - Patient details are visible to the assigned provider from assignment in the standalone flow, and from payment in the post-treatment add-on flow where assignment follows payment; the admin always sees them (REQ-011-010; REQ-011-022 is retired in favour of the system PRD, Platform-Wide Rules: Patient identity hidden until booking confirmation)
    - Provider access limited to assigned patients (REQ-011-021)
    - Admin access logged for audit trail (REQ-011-033)
 
@@ -1409,16 +1494,18 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
 1. **Standalone Aftercare Payment**
    - Payment activates the service: for a standalone request it is taken last, after the admin has assigned a provider and the provider has configured the plan (Workflow 2) (REQ-011-018)
    - Any payment already taken is refunded automatically for rejected requests (REQ-011-037)
+   - A request not paid within 48 hours of the payment-due notice becomes Expired; nothing was charged, so nothing is refunded (REQ-011-050)
    - Payment disputes handled by admin team (REQ-011-038)
 
 2. **Provider Compensation**
+   - Who is paid depends on who delivers (REQ-011-057): the provider who delivers is paid the price less commission; when the Hairline team delivers by default (add-on flow) or after an admin reassignment, Hairline keeps the full price with no commission line and no provider payment; when the team takes over after a provider handover, the provider is paid the fixed handover fee set in the admin handover-fee setting (default 0) and Hairline keeps the rest
    - Providers compensated for aftercare participation (REQ-011-039)
    - Compensation based on case complexity and duration (REQ-011-039)
    - Payment processed monthly (REQ-011-039)
 
 3. **Platform Commission**
-   - Platform commission deducted from standalone and post-treatment add-on aftercare payments (REQ-011-040)
-   - Commission rate: 15-25% (configurable); it is one amount under one setting, taken from the aftercare price and never added to the patient's total (REQ-011-040)
+   - Platform commission deducted from standalone and post-treatment add-on aftercare payments when a provider delivers; no commission line applies when the Hairline team keeps the full price (REQ-011-040, REQ-011-057)
+   - Commission rate: 15-25% (configurable); it is a percentage of the aftercare price for aftercare payments, one amount under one setting, taken from the aftercare price and never added to the patient's total (REQ-011-040)
    - Commission calculated at time of payment (REQ-011-040)
 
 4. **Aftercare Service Payment Rules**
@@ -1431,16 +1518,16 @@ Admin assignment is not a separate entry route. It is a step inside these two ro
    - **Template filtering**: Only templates marked "Available for Purchase" are shown; filtered by treatment type compatibility (REQ-011-046)
    - **Pricing immutability**: Patients locked into price at time of purchase (future template price changes don't affect existing patients) (REQ-011-047)
    - **Payment timing**: Payment activates the service for both standalone and post-treatment add-on; for a standalone request payment comes last, after provider assignment and plan configuration (Workflow 2), and for a post-treatment add-on it comes before automatic assignment (Workflow 2b) (REQ-011-018)
-   - **Refund policy**: Full refund of any payment already taken if request rejected by admin or expired unassigned after 7 days; prorated refund for subscription cancellations based on unused months (REQ-011-083, REQ-011-037)
+   - **Refund policy**: Full refund of any payment already taken if request rejected by admin or expired unassigned after 7 days; pro-rata refund of the unused full months when a plan paid in full is cancelled, and no refund for a monthly subscription cancelled mid-month (REQ-011-097, REQ-011-083, REQ-011-037); in the add-on flow the 7 days count from payment and expiry refunds in full (REQ-011-037)
 
 ### Integration and Security Rules
 
-- **FR-010 integration point**: Treatment completion event triggers aftercare setup workflow; uses treatment details to pre-populate aftercare plan
-- **FR-002 integration point**: Reuses scan quality validation and scan storage infrastructure
+- **FR-010 integration point**: The FR-010 treatment completion signal starts aftercare setup and a repeated signal for the same booking returns the existing plan; uses treatment details to pre-populate aftercare plan; the retry of a failed signal stays in FR-010 (REQ-010-086) (REQ-011-091)
+- **FR-002 integration point**: Reuses scan quality validation and scan storage infrastructure; the scan task uses the FR-002 media-only call and its staged-photo clean-up (REQ-011-095, REQ-002-047, REQ-002-051)
 - **FR-007 integration point**: Payment completion activates the aftercare plan for a standalone request (payment comes last, after provider assignment and plan configuration, Workflow 2) and triggers automatic assignment for a post-treatment add-on (Workflow 2b); payment status determines service activation eligibility
 - **FR-020 why needed**: Sends task reminders, progress updates, and urgent alerts to patients, providers, and aftercare team
 - **FR-020 integration point**: Aftercare events (task due, milestone completion, escalations) trigger notification delivery; notification preferences managed per user
-- **Payment Data why needed**: Payment confirmation required for standalone aftercare activation and provider access to patient information
+- **Payment Data why needed**: Payment confirmation required for standalone aftercare activation; it also unlocks provider access to patient information in the add-on flow (REQ-011-010)
 - **Head Scan Capture (V1) integration**: Native camera capture + guided instructions + upload (JPG/PNG)
 - **Head Scan Capture (V1) failure handling**: Retry capture; allow partial save as draft where supported; show clear remediation guidance
 - **3D Scanning SDK - ARKit/ARCore (V2) integration**: Native SDK integration in mobile apps (iOS ARKit, Android ARCore) for real-time 3D capture
@@ -1474,7 +1561,9 @@ Related FRs:
 
 - **FR-001**: Patient registration module (Patient Data)
 - **FR-010**: Treatment Execution & Documentation (cites REQ-010-006, REQ-010-009, REQ-010-023, REQ-010-086)
-- **FR-002**: Medical History & 3D Scanning (cites REQ-002-034, REQ-002-024, REQ-002-023, REQ-002-036)
+- **FR-002**: Medical History & 3D Scanning (cites REQ-002-034, REQ-002-024, REQ-002-023, REQ-002-036, REQ-002-047, REQ-002-051)
+- **FR-006**: Booking & Scheduling (owns the move to Aftercare and reads the plan completion event; see REQ-006-060)
+- **FR-038**: Monitor Your Transplant Progress (a monitoring case can be converted into a standalone request; see REQ-038-068)
 - **FR-007**: Payment Processing (cites REQ-007-088, the FR-007 Rule that processes the standalone aftercare payment)
 - **FR-020**: Notifications & Alerts (cites the four aftercare events REQ-020-117, REQ-020-118, REQ-020-119, REQ-020-120, each reaching its FR-030 Rule: REQ-030-072, REQ-030-073, REQ-030-074, REQ-030-075)
 
@@ -1484,25 +1573,36 @@ Related FRs:
 
 ### Core Requirements
 
-- **REQ-011-001**: System MUST support treatment-linked and standalone aftercare activation paths
+- **REQ-011-001**: System MUST support treatment-linked and standalone aftercare activation paths; a standalone request may also start as a conversion from FR-038 monitoring (REQ-011-093)
 - **REQ-011-002**: Patients MUST be able to complete milestone tasks (scan uploads, questionnaires) with reminders and quality validation
 - **REQ-011-003**: Providers MUST be able to configure and activate aftercare plans with template customization
-- **REQ-011-004**: Admin MUST be able to oversee cases, reassign providers, and override plans with full audit. Admin assignment of who delivers the aftercare (a provider, whose clinic staff are the aftercare specialists, or a Hairline aftercare team member, an admin with the FR-031 Aftercare Coordinator role) is owned by FR-011
+- **REQ-011-004**: Admin MUST be able to oversee cases, reassign providers, and override plans with full audit. Admin assignment of who delivers the aftercare (a provider, whose clinic staff are the aftercare specialists, or a Hairline aftercare team member, an admin with the FR-031 Aftercare Coordinator role) is owned by FR-011. The Aftercare Coordinator works on the admin aftercare Screens 13 to 19 (plan configuration, scan review, escalations) when the Hairline team delivers
 - **REQ-011-014**: When a provider's suspension or deactivation becomes effective, System MUST NOT cancel that provider's non-terminal standalone aftercare cases; it MUST record cause `ProviderSuspended` or `ProviderDeactivated` and an independent `supportRequired` marker and route them to Screen 19 reassignment (treatment-linked cases follow REQ-011-015), retain the completion milestone and aftercare records, and route recovery continuity to admins for resolution through the existing reassignment/recovery workflow, without automatic reassignment or restoration on reactivation (Workflow 4 D4; FR-015 A5/Screen 4)
 - **REQ-011-015**: System MUST let an admin reassign the aftercare provider or team on Screen 19 with a mandatory reason, confirmation, audit entry, and the `aftercare.provider_reassigned` notice (recipients, content, and the mandatory status of the notice are defined by the FR-030 notification Rules REQ-030-026 and REQ-030-077); for a treatment-linked case the booking MUST stay `Aftercare` and the treatment record MUST stay unchanged, with no new quote, acceptance, or payment
 - **REQ-011-088**: By default System MUST send each patient a progress reminder once a month for 12 months after treatment; the patient MAY change or switch off the reminder, and the default is admin-editable
+- **REQ-011-090**: When no plan is confirmed, System MUST remind the provider after 2 days and escalate the case to the admin after 4 days; both day counts are admin settings
+- **REQ-011-091**: System MUST open Workflow 1 on the FR-010 completion signal (early close opens setup for the team or the reassigned provider on Screen 19), and a repeated signal for the same booking MUST return the existing plan; the retry of a failed signal stays in FR-010 (REQ-010-086)
+- **REQ-011-092**: System MUST refuse a post-treatment add-on while a plan for the same booking is Active or Completed, and allow it after a paperwork-only completion
+- **REQ-011-093**: System MUST accept a standalone request converted from FR-038 monitoring carrying source, monitoring case, scan or photo set, report file and an idempotency key; a repeated key returns the existing request
+- **REQ-011-094**: System MUST refuse a conversion once the monitoring case is completed, and after a failed or abandoned request MUST return the patient to FR-038 Screen 6 with the draft intact
+- **REQ-011-095**: The scan task MUST use the FR-002 media-only call with at least one photo and the scan id as idempotency key; staged photos never attached to a scan are removed after 7 days
+- **REQ-011-096**: System MUST complete the plan at the end of the last milestone or the subscription term (whichever is later), stop its reminders including REQ-011-088, and emit a completion event that FR-006 reads
+- **REQ-011-097**: The patient MUST be able to cancel from the plan payment screen: a monthly subscription runs to the end of the paid month with no refund; a plan paid in full stops at the end of the current month with a pro-rata refund of the unused full months; commission and provider payout follow in proportion
+- **REQ-011-098**: The provider (or the coordinator) MUST be able to propose an extension or major change with a reason; the admin approves or rejects it; the patient is notified and extra cost needs the patient's acceptance and payment; a rejection leaves the plan unchanged
+- **REQ-011-099**: The plan MUST carry an urgent flag and its raised-at time; the assigned provider or coordinator clears it with a note; with no response within 2 hours the case escalates to the admin; dashboards count flagged plans
+- **REQ-011-100**: The provider MAY pick an alternative template only among templates offering the pricing option the patient chose; when the final price differs the patient accepts the new price or cancels at no charge
 
 ### Data Requirements
 
 - **REQ-011-005**: System MUST track milestones, tasks, progress, and adherence as structured entities
 - **REQ-011-006**: System MUST retain all aftercare artifacts (scans, questionnaires, communications) per retention policy
-- **REQ-011-007**: Progress MUST be derived deterministically from plan and task completion (completed tasks over total tasks)
+- **REQ-011-007**: Progress MUST be derived deterministically from plan and task completion (completed scan, questionnaire and education tasks over total such tasks; medication adherence is tracked separately)
 
 ### Security & Privacy Requirements
 
 - **REQ-011-008**: Aftercare data encryption in transit and at rest MUST follow the system PRD, Platform-Wide Rules: Encryption in transit and at rest
 - **REQ-011-009**: *Retired.* Role-based (patient, provider, admin) and audited access is one platform rule in the system PRD, Platform-Wide Rules: Role-based, audited access
-- **REQ-011-010**: PII visibility MUST follow payment-confirmation policy and admin exemptions. *(REQ-011-022, "identity hidden until payment", is retired in favour of the system PRD, Platform-Wide Rules: Patient identity hidden until booking confirmation.)*
+- **REQ-011-010**: The assigned provider sees patient details from assignment in the standalone flow and from payment in the post-treatment add-on flow where assignment follows payment; the admin is exempt and always sees them. *(REQ-011-022, "identity hidden until payment", is retired in favour of the system PRD, Platform-Wide Rules: Patient identity hidden until booking confirmation.)*
 
 ### Integration Requirements
 
@@ -1552,7 +1652,8 @@ Acceptance Scenarios:
 
 - Provider withdrawal: admin reassigns or cancels with reason; patient notified (REQ-011-072)
 - Provider suspended or deactivated mid-aftercare: a standalone case and a treatment-linked case both stay active with the cause and `supportRequired` until an admin reassigns it on Screen 19; records and completion milestone retained; admin decides reassignment or recovery support (Workflow 4 D4). Suspension followed by deactivation keeps the `ProviderSuspended` cause (REQ-011-014, REQ-011-073)
-- Network loss during scan upload: resumable upload; no duplicate entries (REQ-011-081)
+- Network loss during scan upload: resumable upload; no duplicate entries (REQ-011-081, REQ-011-095)
+- Repeated completion signal for the same booking: the existing plan is returned (REQ-011-091); repeated conversion key: the existing request is returned (REQ-011-093)
 - Conflicting schedule changes: latest confirmed change supersedes prior; audit preserved (REQ-011-082)
 
 **Document Status**: ✅ Verified & Approved  
@@ -1569,6 +1670,7 @@ Acceptance Scenarios:
 |------|---------|---------|--------|
 | 2026-11-22 | 1.11 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.10) and the change requests (CR-FR011-20261014-01 in change-request-2026-10-14-provider-status-cancellation-cascade.md, CR-FR011-20261016-01 in change-request-2026-10-16-mtg002-quote-model-alignment.md, CR-FR011-20261026-01 in change-request-2026-10-26-standalone-aftercare-reassignment.md, and CR-FR015-20261013-01) are in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
 | 2026-11-23 | 1.12 | Owner ruling 2026-11-23: the aftercare specialist is clinic staff on the provider side; the Hairline admin role is renamed Aftercare Coordinator with unchanged permissions. Assignment wording in Module Scope and REQ-011-004 now names both sides: clinic aftercare specialists and Hairline aftercare team members (Aftercare Coordinator role). Who may deliver a case is unchanged. | Product Owner / Documentation |
+| 2026-11-24 | 1.13 | Logic review: plan activation by provider confirmation or admin activation with a stalled-setup reminder and escalation; three entry sources including the FR-038 conversion; milestone closing on scan, questionnaire and education with medication outside the percentage; payment-due and expiry handling with the paused 7-day timer; final-template price acceptance; who is paid by who delivers; subscription cancellation, plan completion, extension approval and the urgent flag clock; Coordinator on admin Screens 13 to 19; wording alignment with FR-002, FR-006, FR-025 and FR-038. | Product Owner / Documentation |
 
 ## Appendix: Approvals
 
@@ -1578,4 +1680,4 @@ Acceptance Scenarios:
 
 ---
 
-**Last Updated**: 2026-11-23
+**Last Updated**: 2026-11-24

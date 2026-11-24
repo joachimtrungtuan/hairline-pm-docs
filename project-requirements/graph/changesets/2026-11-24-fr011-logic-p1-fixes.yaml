@@ -1,0 +1,325 @@
+# FR-011 logic review pass 1: graph change-set mirroring the revised PRD (Aftercare and Recovery Management). Order: new settings, rules, events, steps, flows, fields and enum values first; then removals; then updates; then new edges.
+# Cross-FR edges: adds FR-011 references to REQ-002-047 and REQ-002-051 (FR-002 rules); adds next edges from STP-011-010 and STP-011-023 to STP-007-081 (FR-007 step, edges only); removes three FR-011 edges from retired REQ-011-011 to FR-030 events (REQ-011-028 and REQ-011-058 already govern them); adds FR-011 rules applying to new FR-011 events only. The incoming edges from STP-010-026 and STP-010-046 to STP-011-001 and STP-038 edges on STP-011-009 are kept. No node owned by another FR is changed; no handoff attrs are set.
+# emits runs from a Stage to an Event only, so each new notice event is emitted by the Stage where the notice happens, not by the notice Step.
+# Queued for other FRs, not done here: FR-006 (read the completion event, REQ-006-060), FR-030 (register the 8 new events and the reminder and escalation notices), FR-029 (SET-commission-rate unit wording), FR-007 and FR-017 (cancellation proration, commission and payout), FR-010 (retry pointer only), FR-038 (receiving side), FR-002, FR-031, FR-025, FR-012, FR-019, FR-037.
+reason: "FR-011 logic review pass 1: provider sees patient details from assignment or payment; milestones close on scan, questionnaire and education with medication out of the percentage; setup starts on the FR-010 signal with reminder, escalation and manual activation; early close and repeated signal; coordinator on admin screens; who is paid by who delivers and a handover fee; Payment due and Expired statuses with timers; final template and price acceptance; add-on refusal; FR-038 conversion entry; scan task rule; plan completion; subscription cancellation; extension approval; urgent flag; new FR-011 events; wiring of conditional next edges, screens and retired-rule edges."
+by: docs-manager
+operations:
+  - {"op": "add_node", "id": "SET-aftercare-plan-reminder-days", "type": "Setting", "owner_fr": "FR-011", "title": "Days before the provider is reminded that no plan is confirmed", "attrs": {"description": "Number of days after the FR-010 completion signal before the provider gets a reminder that the aftercare plan is not confirmed. Admin-editable.", "default": "2", "unit": "days"}}
+  - {"op": "add_node", "id": "SET-aftercare-plan-escalation-days", "type": "Setting", "owner_fr": "FR-011", "title": "Days before an unconfirmed plan escalates to the admin", "attrs": {"description": "Number of days after the FR-010 completion signal before an unconfirmed aftercare plan is escalated to the admin. Admin-editable.", "default": "4", "unit": "days"}}
+  - {"op": "add_node", "id": "SET-aftercare-handover-fee", "type": "Setting", "owner_fr": "FR-011", "title": "Fixed fee paid to a provider who hands aftercare to the Hairline team", "attrs": {"description": "Fixed amount paid to the provider when the provider hands the aftercare to the Hairline aftercare team; Hairline keeps the rest of the price. Admin-editable; a default of 0 means nothing is paid until the admin sets an amount.", "default": "0", "unit": "currency amount"}}
+  - {"op": "add_node", "id": "REQ-011-090", "type": "Rule", "owner_fr": "FR-011", "title": "Unconfirmed plan: provider reminder after 2 days, admin escalation after 4 days", "attrs": {"statement": "When no aftercare plan is confirmed after the FR-010 completion signal, System MUST remind the provider after 2 days and escalate the case to the admin after 4 days; both day counts are admin settings. The admin can reassign on Screen 19 or activate the plan manually (REQ-011-019).", "rationale": "Workflow 1 Alternative Flow A3; General Module Rule 1."}}
+  - {"op": "add_node", "id": "REQ-011-091", "type": "Rule", "owner_fr": "FR-011", "title": "FR-010 completion signal opens setup; early close opens it for the assigned team; a repeated signal returns the existing plan", "attrs": {"statement": "Aftercare setup (Workflow 1) opens on the FR-010 treatment completion signal; FR-006 owns the move of the booking to Aftercare. When FR-010 closes treatment early, setup opens for the aftercare team or the reassigned provider after the admin assigns them on Screen 19. A repeated completion signal for the same booking MUST return the existing plan and create no second plan. The retry of a failed signal stays in FR-010 (REQ-010-086).", "rationale": "Workflow 1 Trigger, A4 and A5; FR-010 and FR-006 integration points."}}
+  - {"op": "add_node", "id": "REQ-011-092", "type": "Rule", "owner_fr": "FR-011", "title": "No add-on while a plan for the same booking is Active or Completed", "attrs": {"statement": "System MUST refuse a post-treatment add-on while a plan for the same booking is Active or Completed, and allow it after a paperwork-only completion.", "rationale": "Workflow 2b step 1; Screen 6 business rules."}}
+  - {"op": "add_node", "id": "REQ-011-093", "type": "Rule", "owner_fr": "FR-011", "title": "A standalone request may be converted from FR-038 monitoring, with an idempotency key", "attrs": {"statement": "System MUST accept a standalone request converted from an FR-038 transplant-progress monitoring case, carrying the source, the monitoring case, the scan or photo set, the report file and an idempotency key; a repeated key returns the existing request. The patient still picks the template and pricing option.", "rationale": "Entry Points; Workflow 2 step 1; Screen 6 business rules. Agreed with the FR-038 hand-off."}}
+  - {"op": "add_node", "id": "REQ-011-094", "type": "Rule", "owner_fr": "FR-011", "title": "A conversion is refused after the monitoring case is completed; a failed or abandoned request returns the patient to FR-038 Screen 6", "attrs": {"statement": "System MUST refuse a conversion once the monitoring case is completed, and after a failed or abandoned request MUST return the patient to FR-038 Screen 6 with the draft intact (REQ-038-068).", "rationale": "Workflow 2 step 1; Screen 6 business rules."}}
+  - {"op": "add_node", "id": "REQ-011-095", "type": "Rule", "owner_fr": "FR-011", "title": "Scan task uses the FR-002 media-only call with the scan id as idempotency key", "attrs": {"statement": "The scan task MUST use the FR-002 media-only call (REQ-002-047) with at least one photo and the scan id as idempotency key, so a retried upload never creates a second scan; staged photos that are never attached to a scan are removed after 7 days (REQ-002-051).", "rationale": "Screen 2 business rules; FR-002 integration point."}}
+  - {"op": "add_node", "id": "REQ-011-096", "type": "Rule", "owner_fr": "FR-011", "title": "Plan completes at the end of the last milestone or the subscription term", "attrs": {"statement": "System MUST complete the plan at the end of the last milestone or the end of the subscription term, whichever is later, stop all reminders for the plan (including the progress reminder of REQ-011-088) and emit a completion event that FR-006 reads (REQ-006-060).", "rationale": "Workflow 3 Alternative Flow C3."}}
+  - {"op": "add_node", "id": "REQ-011-097", "type": "Rule", "owner_fr": "FR-011", "title": "Patient can cancel an aftercare subscription or a plan paid in full", "attrs": {"statement": "The patient MUST be able to cancel from the plan payment screen (Screen 7). A monthly subscription runs to the end of the paid month, later months are not charged, the plan then becomes Cancelled, and nothing is refunded. A plan paid in full stops at the end of the current month and the unused full months are refunded pro rata (REQ-011-083). Commission and provider payout follow the refund in the same proportion.", "rationale": "Workflow 3 Alternative Flow C4; Payment Rule 4 (refund policy). Money movement is executed through FR-007 and FR-017."}}
+  - {"op": "add_node", "id": "REQ-011-098", "type": "Rule", "owner_fr": "FR-011", "title": "Extensions and major changes are proposed by the provider or coordinator and decided by the admin", "attrs": {"statement": "The assigned provider (or the Aftercare Coordinator when the Hairline team delivers) MUST be able to propose an extension or major change with a reason. The admin approves or rejects it on the admin case screen (approval status Proposed, Approved or Rejected) and the patient is notified. Where the change costs more, the patient MUST accept and pay before it takes effect. A rejection leaves the plan unchanged and the proposer is told why.", "rationale": "Workflow 4 Alternative Flow D6; Screens 11 and 14 business rules."}}
+  - {"op": "add_node", "id": "REQ-011-099", "type": "Rule", "owner_fr": "FR-011", "title": "Urgent flag with raised-at time, cleared with a note, escalated to the admin after 2 hours", "attrs": {"statement": "The plan MUST carry an urgent flag and the time it was raised, set by an urgent questionnaire answer or a manual flag. The assigned provider (or the coordinator when the Hairline team delivers) clears it with a note. With no response within 2 hours of the raised time, System MUST escalate the case to the admin. Dashboards count the plans that have the flag set.", "rationale": "Workflow 3 Alternative Flow C2; Communication Rule 1; Screens 9, 12, 13 and 14."}}
+  - {"op": "add_node", "id": "REQ-011-100", "type": "Rule", "owner_fr": "FR-011", "title": "Alternative template only among those offering the chosen pricing option; the patient accepts a changed price or cancels at no charge", "attrs": {"statement": "The provider MAY pick an alternative template only among templates that offer the pricing option the patient chose. Screen 7 shows the order summary of the final template; when the final price differs from the requested price the patient MUST accept the new price before paying, or may cancel at no charge, in which case the request becomes Rejected with the system reason cancelled by patient.", "rationale": "Workflow 2 step 3 and Alternative Flow B4; Workflow 2b step 4; Screen 7 business rules."}}
+  - {"op": "add_node", "id": "EVT-aftercare-request-assigned", "type": "Event", "owner_fr": "FR-011", "title": "Aftercare request assigned to a provider", "attrs": {"description": "aftercare.request_assigned: the admin assigns a provider to a standalone request on Screen 15 and the provider is notified (Workflow 2 step 2). FR-011 is the producer; FR-030 owns notification delivery and catalogue registration."}}
+  - {"op": "add_node", "id": "EVT-aftercare-payment-due", "type": "Event", "owner_fr": "FR-011", "title": "Aftercare payment due", "attrs": {"description": "aftercare.payment_due: the provider completes the standalone plan, the request becomes Payment due and the patient is told payment is due; the 48 hours start at this notice (Workflow 2 step 3). FR-011 is the producer; FR-030 owns delivery and catalogue registration."}}
+  - {"op": "add_node", "id": "EVT-aftercare-request-rejected", "type": "Event", "owner_fr": "FR-011", "title": "Aftercare request rejected", "attrs": {"description": "aftercare.request_rejected: the request becomes Rejected, by the admin with a reason, by the 7-day unassigned expiry, or by the patient cancelling a changed price (Workflow 2 B2 and B4). FR-011 is the producer; FR-030 owns delivery and catalogue registration."}}
+  - {"op": "add_node", "id": "EVT-aftercare-request-expired", "type": "Event", "owner_fr": "FR-011", "title": "Aftercare request expired", "attrs": {"description": "aftercare.request_expired: the request becomes Expired after 48 hours without successful payment (Workflow 2 B1, Workflow 2b B1b). FR-011 is the producer; FR-030 owns delivery and catalogue registration."}}
+  - {"op": "add_node", "id": "EVT-aftercare-awaiting-availability", "type": "Event", "owner_fr": "FR-011", "title": "Aftercare request awaiting provider availability", "attrs": {"description": "aftercare.awaiting_availability: the admin marks the request Awaiting provider availability and the patient is told of the delay (Workflow 2 B3). FR-011 is the producer; FR-030 owns delivery and catalogue registration."}}
+  - {"op": "add_node", "id": "EVT-aftercare-provider-withdrawn", "type": "Event", "owner_fr": "FR-011", "title": "Aftercare provider withdrawn", "attrs": {"description": "aftercare.provider_withdrawn: the provider tells the admin that they cannot continue the aftercare (Workflow 4 D1) and the admin is notified. FR-011 is the producer; FR-030 owns delivery and catalogue registration."}}
+  - {"op": "add_node", "id": "EVT-aftercare-team-assigned", "type": "Event", "owner_fr": "FR-011", "title": "Aftercare assigned to the Hairline team", "attrs": {"description": "aftercare.team_assigned: the aftercare is assigned to the Hairline aftercare team, by the provider handover or by the admin, and the admin and team are notified (Workflow 1 A2, Workflow 2b B1a). FR-011 is the producer; FR-030 owns delivery and catalogue registration."}}
+  - {"op": "add_node", "id": "EVT-aftercare-completed", "type": "Event", "owner_fr": "FR-011", "title": "Aftercare plan completed", "attrs": {"description": "aftercare.completed: the plan completes at the end of the last milestone or the subscription term (REQ-011-096). FR-006 reads this event to move the booking on (REQ-006-060). FR-011 is the producer; FR-030 owns registration."}}
+  - {"op": "add_node", "id": "STP-011-058", "type": "Step", "owner_fr": "FR-011", "title": "System reminds the provider after 2 days that no plan is confirmed", "attrs": {"prd_ref": "Workflow 1 Alternative Flow A3"}}
+  - {"op": "add_node", "id": "STP-011-059", "type": "Step", "owner_fr": "FR-011", "title": "System escalates the case to the admin after 4 days without a confirmed plan", "attrs": {"prd_ref": "Workflow 1 Alternative Flow A3"}}
+  - {"op": "add_node", "id": "STP-011-060", "type": "Step", "owner_fr": "FR-011", "title": "Admin activates the plan manually with a mandatory reason, recorded in the audit trail", "attrs": {"prd_ref": "Workflow 1 Alternative Flow A3"}}
+  - {"op": "add_node", "id": "STP-011-061", "type": "Step", "owner_fr": "FR-011", "title": "Admin assigns the aftercare team or the reassigned provider after an early close, and setup opens for them", "attrs": {"prd_ref": "Workflow 1 Alternative Flow A4"}}
+  - {"op": "add_node", "id": "STP-011-062", "type": "Step", "owner_fr": "FR-011", "title": "System returns the existing plan when the completion signal arrives again", "attrs": {"prd_ref": "Workflow 1 Alternative Flow A5"}}
+  - {"op": "add_node", "id": "STP-011-063", "type": "Step", "owner_fr": "FR-011", "title": "Patient accepts the final template's new price, or cancels the request at no charge", "attrs": {"prd_ref": "Workflow 2 Alternative Flow B4"}}
+  - {"op": "add_node", "id": "STP-011-064", "type": "Step", "owner_fr": "FR-011", "title": "System sets the request to Rejected with the reason cancelled by patient", "attrs": {"prd_ref": "Workflow 2 Alternative Flow B4"}}
+  - {"op": "add_node", "id": "STP-011-065", "type": "Step", "owner_fr": "FR-011", "title": "System completes the plan at the end of the last milestone or the subscription term and stops its reminders", "attrs": {"prd_ref": "Workflow 3 Alternative Flow C3"}}
+  - {"op": "add_node", "id": "STP-011-066", "type": "Step", "owner_fr": "FR-011", "title": "Patient cancels the subscription or the plan paid in full from the plan payment screen", "attrs": {"prd_ref": "Workflow 3 Alternative Flow C4"}}
+  - {"op": "add_node", "id": "STP-011-067", "type": "Step", "owner_fr": "FR-011", "title": "System applies the cancellation: care ends per the payment plan, with the pro-rata refund where one is due", "attrs": {"prd_ref": "Workflow 3 Alternative Flow C4"}}
+  - {"op": "add_node", "id": "STP-011-068", "type": "Step", "owner_fr": "FR-011", "title": "Provider or coordinator proposes an extension or major change with a reason", "attrs": {"prd_ref": "Workflow 4 Alternative Flow D6"}}
+  - {"op": "add_node", "id": "STP-011-069", "type": "Step", "owner_fr": "FR-011", "title": "Admin approves or rejects the proposed change on the case screen", "attrs": {"prd_ref": "Workflow 4 Alternative Flow D6"}}
+  - {"op": "add_node", "id": "STP-011-070", "type": "Step", "owner_fr": "FR-011", "title": "System notifies the patient and, where the change costs more, requires acceptance and payment before it takes effect", "attrs": {"prd_ref": "Workflow 4 Alternative Flow D6"}}
+  - {"op": "add_node", "id": "STP-011-071", "type": "Step", "owner_fr": "FR-011", "title": "Assigned provider or coordinator clears the urgent flag with a note", "attrs": {"prd_ref": "Workflow 3 Alternative Flow C2"}}
+  - {"op": "add_node", "id": "STP-011-072", "type": "Step", "owner_fr": "FR-011", "title": "System escalates the urgent case to the admin when nobody responds within 2 hours of the raised time", "attrs": {"prd_ref": "Workflow 3 Alternative Flow C2"}}
+  - {"op": "add_node", "id": "FLW-011-w1-setup-stalled", "type": "Flow", "title": "Workflow 1 Alternative Flow A3: plan setup is not confirmed in time", "attrs": {"kind": "alternative", "description": "Workflow 1 Alternative Flow A3: plan setup is not confirmed in time", "prd_ref": "A3"}}
+  - {"op": "add_node", "id": "FLW-011-w1-early-close", "type": "Flow", "title": "Workflow 1 Alternative Flow A4: treatment closed early by an admin decision", "attrs": {"kind": "alternative", "description": "Workflow 1 Alternative Flow A4: treatment closed early by an admin decision", "prd_ref": "A4"}}
+  - {"op": "add_node", "id": "FLW-011-w1-repeated-signal", "type": "Flow", "title": "Workflow 1 Alternative Flow A5: completion signal arrives again", "attrs": {"kind": "alternative", "description": "Workflow 1 Alternative Flow A5: completion signal arrives again", "prd_ref": "A5"}}
+  - {"op": "add_node", "id": "FLW-011-w2-price-changed", "type": "Flow", "title": "Workflow 2 Alternative Flow B4: final template price differs from the requested price", "attrs": {"kind": "alternative", "description": "Workflow 2 Alternative Flow B4: final template price differs from the requested price", "prd_ref": "B4"}}
+  - {"op": "add_node", "id": "FLW-011-w3-plan-completes", "type": "Flow", "title": "Workflow 3 Alternative Flow C3: plan completes", "attrs": {"kind": "alternative", "description": "Workflow 3 Alternative Flow C3: plan completes", "prd_ref": "C3"}}
+  - {"op": "add_node", "id": "FLW-011-w3-subscription-cancelled", "type": "Flow", "title": "Workflow 3 Alternative Flow C4: patient cancels the subscription", "attrs": {"kind": "alternative", "description": "Workflow 3 Alternative Flow C4: patient cancels the subscription", "prd_ref": "C4"}}
+  - {"op": "add_node", "id": "FLW-011-w4-extension-approval", "type": "Flow", "title": "Workflow 4 Alternative Flow D6: extension or major change", "attrs": {"kind": "alternative", "description": "Workflow 4 Alternative Flow D6: extension or major change", "prd_ref": "D6"}}
+  - {"op": "add_field", "id": "ENT-aftercare-request.payment_due_at", "entity_id": "ENT-aftercare-request", "name": "payment_due_at", "data_type": "datetime", "title": "Payment due by", "owner_fr": "FR-011", "attrs": {"description": "Time by which the patient must pay: 48 hours from the payment-due notice (standalone). The request becomes Expired when it passes without successful payment."}}
+  - {"op": "add_field", "id": "ENT-aftercare-request.final_template_id", "entity_id": "ENT-aftercare-request", "name": "final_template_id", "data_type": "id", "title": "Final template", "owner_fr": "FR-011", "attrs": {"description": "Template the provider finally chose, set when it differs from the requested one; it offers the pricing option the patient chose."}}
+  - {"op": "add_field", "id": "ENT-aftercare-request.booking_id", "entity_id": "ENT-aftercare-request", "name": "booking_id", "data_type": "id", "title": "Booking", "owner_fr": "FR-011", "attrs": {"description": "Booking a post-treatment add-on belongs to; empty for a standalone request. An add-on is refused while a plan for the same booking is Active or Completed."}}
+  - {"op": "add_field", "id": "ENT-aftercare-request.quote_id", "entity_id": "ENT-aftercare-request", "name": "quote_id", "data_type": "id", "title": "Accepted quote", "owner_fr": "FR-011", "attrs": {"description": "Accepted quote a post-treatment add-on belongs to; empty for a standalone request."}}
+  - {"op": "add_field", "id": "ENT-aftercare-request.plan_id", "entity_id": "ENT-aftercare-request", "name": "plan_id", "data_type": "id", "title": "Resulting plan", "owner_fr": "FR-011", "attrs": {"description": "Plan created from this request; empty until the plan exists."}}
+  - {"op": "add_field", "id": "ENT-aftercare-request.source", "entity_id": "ENT-aftercare-request", "name": "source", "data_type": "enum", "title": "Request source", "owner_fr": "FR-011", "attrs": {"description": "How the request started: add-on, standalone, or conversion from FR-038 monitoring."}}
+  - {"op": "add_field", "id": "ENT-aftercare-request.monitoring_case_id", "entity_id": "ENT-aftercare-request", "name": "monitoring_case_id", "data_type": "id", "title": "Monitoring case", "owner_fr": "FR-011", "attrs": {"description": "FR-038 monitoring case a converted request came from; empty otherwise."}}
+  - {"op": "add_field", "id": "ENT-aftercare-request.scan_set_id", "entity_id": "ENT-aftercare-request", "name": "scan_set_id", "data_type": "id", "title": "Scan or photo set", "owner_fr": "FR-011", "attrs": {"description": "Scan or photo set copied from the FR-038 monitoring case into a converted request; empty otherwise."}}
+  - {"op": "add_field", "id": "ENT-aftercare-request.report_file_id", "entity_id": "ENT-aftercare-request", "name": "report_file_id", "data_type": "id", "title": "Monitoring report file", "owner_fr": "FR-011", "attrs": {"description": "Monitoring report file copied from the FR-038 case into a converted request; empty otherwise."}}
+  - {"op": "add_field", "id": "ENT-aftercare-request.idempotency_key", "entity_id": "ENT-aftercare-request", "name": "idempotency_key", "data_type": "text", "title": "Conversion idempotency key", "owner_fr": "FR-011", "attrs": {"description": "Key of a conversion from FR-038; a repeated key returns the existing request."}}
+  - {"op": "add_field", "id": "ENT-aftercare-plan.urgent_flag", "entity_id": "ENT-aftercare-plan", "name": "urgent_flag", "data_type": "bool", "title": "Urgent flag", "owner_fr": "FR-011", "attrs": {"description": "Set by an urgent questionnaire answer or a manual flag; cleared by the assigned provider or coordinator with a note. Dashboards count plans with the flag set."}}
+  - {"op": "add_field", "id": "ENT-aftercare-plan.urgent_raised_at", "entity_id": "ENT-aftercare-plan", "name": "urgent_raised_at", "data_type": "datetime", "title": "Urgent flag raised at", "owner_fr": "FR-011", "attrs": {"description": "Time the urgent flag was set; the 2-hour response window counts from here."}}
+  - {"op": "add_field", "id": "ENT-aftercare-questionnaire-response.questionnaire_set_version", "entity_id": "ENT-aftercare-questionnaire-response", "name": "questionnaire_set_version", "data_type": "text", "title": "Questionnaire set version", "owner_fr": "FR-011", "attrs": {"description": "Version of the FR-025 questionnaire set in force when the response was given."}}
+  - {"op": "add_enum_value", "field_id": "ENT-aftercare-request.request_status", "value": "payment_due", "label": "Payment due", "sort_order": 5}
+  - {"op": "add_enum_value", "field_id": "ENT-aftercare-request.request_status", "value": "expired", "label": "Expired", "sort_order": 6}
+  - {"op": "add_enum_value", "field_id": "ENT-aftercare-request.source", "value": "add_on", "label": "Post-treatment add-on", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-aftercare-request.source", "value": "standalone", "label": "Standalone", "sort_order": 1}
+  - {"op": "add_enum_value", "field_id": "ENT-aftercare-request.source", "value": "fr038_conversion", "label": "Conversion from FR-038 monitoring", "sort_order": 2}
+  - {"op": "remove_edge", "from": "FR-011", "verb": "references", "to": "REQ-005-006"}
+  - {"op": "remove_edge", "from": "REQ-011-011", "verb": "applies to", "to": "EVT-aftercare-escalation-triggered"}
+  - {"op": "remove_edge", "from": "REQ-011-011", "verb": "applies to", "to": "EVT-aftercare-questionnaire-due"}
+  - {"op": "remove_edge", "from": "REQ-011-011", "verb": "applies to", "to": "EVT-aftercare-scan-due"}
+  - {"op": "remove_edge", "from": "STP-011-001", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "remove_edge", "from": "STP-011-016", "verb": "next", "to": "STP-011-017"}
+  - {"op": "update_field", "id": "ENT-aftercare-audit-entry.approval_status", "data_type": "enum"}
+  - {"op": "add_enum_value", "field_id": "ENT-aftercare-audit-entry.approval_status", "value": "proposed", "label": "Proposed", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-aftercare-audit-entry.approval_status", "value": "approved", "label": "Approved", "sort_order": 1}
+  - {"op": "add_enum_value", "field_id": "ENT-aftercare-audit-entry.approval_status", "value": "rejected", "label": "Rejected", "sort_order": 2}
+  - {"op": "update_node", "id": "ENT-aftercare-audit-entry.action", "attrs": {"description": "What was done. Includes the assignment of a questionnaire set to a milestone and the replacement of a set (with the set version), the manual activation of a plan, and the proposal, approval or rejection of an extension or major change."}}
+  - {"op": "update_node", "id": "ENT-aftercare-audit-entry.approval_status", "attrs": {"description": "Decision state of a proposed extension or major change: proposed, approved or rejected."}}
+  - {"op": "update_node", "id": "ENT-aftercare-request.request_status", "attrs": {"description": "Pending, Assigned, Payment due (the provider completed a standalone plan), Active, Rejected, Awaiting provider availability, or Expired (no successful payment within 48 hours of the payment-due notice)."}}
+  - {"op": "update_node", "id": "ENT-aftercare-request.rejection_reason", "attrs": {"description": "Reason for a rejection, entered by the admin, or a system reason (expired unassigned after 7 days, or cancelled by patient when the patient cancels a changed price)."}}
+  - {"op": "update_node", "id": "STP-011-001", "title": "System receives the treatment completion signal from FR-010", "attrs": {"prd_ref": "Workflow 1 Main Flow step 1"}}
+  - {"op": "update_node", "id": "STP-011-008", "title": "Hairline aftercare team takes over patient monitoring; the Aftercare Coordinator works on the admin aftercare screens"}
+  - {"op": "update_node", "id": "STP-011-009", "title": "Patient requests the standalone service (from the form, or from an FR-038 conversion with the form pre-filled), picks a template and pricing option and submits the request without payment"}
+  - {"op": "update_node", "id": "STP-011-017", "title": "System sets the request to Expired after 48 hours without successful payment"}
+  - {"op": "update_node", "id": "STP-011-038", "title": "System flags the case Urgent for concerning symptoms and records when the flag was raised"}
+  - {"op": "update_node", "id": "STP-011-045", "title": "Admin (including the Aftercare Coordinator) reviews the case and reassigns it, assigns the Hairline team or cancels with a reason"}
+  - {"op": "update_node", "id": "STP-011-053", "title": "Admin (including the Aftercare Coordinator) reassigns the case on Screen 19, assigns the Hairline team or keeps it cancelled, and resolves the marker"}
+  - {"op": "update_node", "id": "STP-011-056", "title": "System sets the request to Payment due and notifies the patient that payment is now due; the 48 hours start at this notice"}
+  - {"op": "update_node", "id": "REQ-011-001", "attrs": {"statement": "System MUST support treatment-linked and standalone aftercare activation paths; a standalone request may also start as a conversion from FR-038 monitoring (REQ-011-093)"}}
+  - {"op": "update_node", "id": "REQ-011-004", "attrs": {"statement": "Admin MUST be able to oversee cases, reassign providers, and override plans with full audit. Admin assignment of who delivers the aftercare (a provider, whose clinic staff are the aftercare specialists, or a Hairline aftercare team member, an admin with the FR-031 Aftercare Coordinator role) is owned by FR-011. The Aftercare Coordinator works on the admin aftercare Screens 13 to 19 (plan configuration, scan review, escalations) when the Hairline team delivers."}}
+  - {"op": "update_node", "id": "REQ-011-007", "attrs": {"statement": "Progress MUST be derived deterministically from plan and task completion (completed scan, questionnaire and education tasks over total such tasks; medication adherence is tracked separately)"}}
+  - {"op": "update_node", "id": "REQ-011-010", "title": "Provider sees patient details from assignment (standalone) or payment (add-on)", "attrs": {"statement": "The assigned provider MUST see patient details from assignment in the standalone flow, and from payment in the post-treatment add-on flow, where assignment follows payment; the admin is exempt and always sees them.", "rationale": "General Module Rule 3 and Data and Privacy Rule 2; access from assignment follows REQ-038-050."}}
+  - {"op": "update_node", "id": "REQ-011-016", "title": "Aftercare has exactly three entry sources", "attrs": {"statement": "Aftercare has exactly three entry sources: treatment-linked aftercare (starts from the patient's accepted Hairline quote whose treatment was performed, covering the Workflow 1 setup and the Workflow 2b post-treatment add-on bought within 90 days), standalone aftercare (bought directly by patients treated at an outside clinic, with no inquiry or quote), and standalone aftercare converted from an FR-038 monitoring case (a standalone request with the monitoring data pre-filled, REQ-011-093). Admin assignment is a step inside these routes, not a separate route."}}
+  - {"op": "update_node", "id": "REQ-011-017", "title": "Treatment-linked setup starts automatically at treatment completion", "attrs": {"statement": "Treatment-linked aftercare setup starts automatically at treatment completion, on the FR-010 completion signal. The plan activates when the provider confirms it (REQ-011-055) or an admin activates it (REQ-011-019). FR-006 owns the move of the booking to Aftercare."}}
+  - {"op": "update_node", "id": "REQ-011-019", "attrs": {"statement": "Admin can manually activate aftercare for special cases, including a plan whose setup stays unconfirmed after the escalation of REQ-011-090. Manual activation needs a mandatory reason and creates an audit entry."}}
+  - {"op": "update_node", "id": "REQ-011-020", "title": "Standard duration 6-12 months, extensions proposed by the provider or coordinator and approved by the admin", "attrs": {"statement": "Standard aftercare duration is 6-12 months, determined by treatment type and complexity. Extensions are proposed by the provider (or the coordinator) with a reason and approved or rejected by the admin (REQ-011-098)."}}
+  - {"op": "update_node", "id": "REQ-011-023", "title": "Milestones progress by time, cannot be skipped, close on scan, questionnaire and education tasks", "attrs": {"statement": "Milestones progress automatically based on time elapsed. Patients cannot skip milestones. A milestone closes when all required tasks are completed: scan, questionnaire and education. Medication tick-offs are adherence tracking only and do not block a milestone."}}
+  - {"op": "update_node", "id": "REQ-011-024", "attrs": {"statement": "Scan uploads must meet the quality threshold. Questionnaires must be completed in full. Medication adherence is tracked but does not block a milestone and is not part of the progress percentage."}}
+  - {"op": "update_node", "id": "REQ-011-025", "attrs": {"statement": "Overdue tasks trigger escalation after 48 hours counted from the task due date (the 24 hours before the Overdue flag are part of those 48)."}}
+  - {"op": "update_node", "id": "REQ-011-027", "title": "Progress is completed scan, questionnaire and education tasks over total such tasks, equally weighted, real time", "attrs": {"statement": "Progress = (completed scan, questionnaire and education tasks / total such tasks) * 100. Tasks are weighted equally; medication adherence is not part of the percentage. Progress updates in real time."}}
+  - {"op": "update_node", "id": "REQ-011-037", "attrs": {"statement": "Any payment already taken is refunded in full and automatically when a request is rejected by the admin or expires unassigned after 7 days (in the post-treatment add-on flow the 7 days count from payment). A request that expires unpaid after 48 hours, or that the patient cancels at a changed price, had no payment taken, so nothing is refunded. Rejection requires a reason."}}
+  - {"op": "update_node", "id": "REQ-011-040", "title": "Platform commission 15-25% of the aftercare price when a provider delivers", "attrs": {"statement": "Platform commission is deducted from standalone and post-treatment add-on aftercare payments when a provider delivers; no commission line applies when the Hairline team keeps the full price (REQ-011-057). The commission rate is 15-25% (configurable); it is a percentage of the aftercare price, one amount under one setting, taken from the aftercare price and never added to the patient's total. Commission is calculated at time of payment."}}
+  - {"op": "update_node", "id": "REQ-011-049", "attrs": {"statement": "The assigned provider reviews the patient case, selects the aftercare template (the purchased one, or an alternative that offers the chosen pricing option, REQ-011-100) and customizes the plan. For a standalone request the provider completes the plan, the request becomes Payment due, the plan is not active until payment succeeds and the system notifies the patient that payment is now due; for a post-treatment add-on the provider activates the plan. On activation the patient receives an activation notification and gains access to the aftercare dashboard (Screen 1) and the aftercare team begins monitoring."}}
+  - {"op": "update_node", "id": "REQ-011-050", "attrs": {"statement": "When payment fails the patient receives a failure notification and can retry with a different payment method; the request becomes Expired after 48 hours without successful payment (standalone: counted from the payment-due notice; add-on: counted from the failed payment). Nothing was charged, so nothing is refunded."}}
+  - {"op": "update_node", "id": "REQ-011-052", "attrs": {"statement": "When no suitable provider is available, the admin marks the request \"Awaiting provider availability\", the patient is notified of the delay and the admin manually assigns when a provider becomes available. The 7-day unassigned timer of REQ-011-053 pauses while the request carries this mark and resumes when it is cleared."}}
+  - {"op": "update_node", "id": "REQ-011-053", "attrs": {"statement": "Requests expire after 7 days if not assigned, counted from submission (from payment in the post-treatment add-on flow) and paused while the request is Awaiting provider availability; an expired request becomes Rejected with a system reason, and the refund rule applies."}}
+  - {"op": "update_node", "id": "REQ-011-055", "attrs": {"statement": "Treatment-linked setup starts on the FR-010 completion signal. The provider selects an admin-created milestone template, adds patient-specific instructions and post-operative medications (name, dosage, frequency, special instructions), may modify milestone durations and confirms the plan; the system then generates the plan with milestones, creates the patient aftercare dashboard, sends an activation notification to the patient and sends the aftercare team a case assignment notification."}}
+  - {"op": "update_node", "id": "REQ-011-057", "title": "Who is paid depends on who delivers; a provider who hands aftercare to the Hairline team gets a fixed handover fee", "attrs": {"statement": "When the provider marks \"Assign to Hairline aftercare team\", the admin receives a notification for aftercare assignment, the Hairline aftercare team takes over patient monitoring, and the provider is paid a fixed handover fee set by the admin (default 0, so nothing is paid until the admin sets an amount); Hairline keeps the rest of the price. When the Hairline team delivers by default in the add-on flow, or after an admin reassignment, Hairline keeps the full price with no commission line and no provider payment. When a provider delivers, the provider is paid the price less commission (REQ-011-040)."}}
+  - {"op": "update_node", "id": "REQ-011-067", "attrs": {"statement": "Provider changes are logged and tracked, admin changes override provider settings, major changes require admin approval (proposed with a reason and approved or rejected per REQ-011-098), all changes are logged with reason and timestamp, the patient is notified of approved changes and change history is maintained for the audit trail."}}
+  - {"op": "update_node", "id": "REQ-011-071", "title": "Questionnaire sets selected per milestone from FR-025 Aftercare and Multi-Context sets", "attrs": {"statement": "Screen 16 selects among existing Questionnaire Sets and configures schedule and frequency per milestone; each milestone independently selects one Questionnaire Set; the sets surfaced are Aftercare sets plus every Multi-Context set. Assigning a set to a milestone and replacing it are written to the audit trail with the set version, and each response stores the set version. Sets and questions are not authored in FR-011."}}
+  - {"op": "update_node", "id": "REQ-011-088", "attrs": {"statement": "By default System MUST send each patient a progress reminder once a month for 12 months after treatment; the patient MAY change or switch off the reminder, and the default is admin-editable. The reminders stop when the plan completes (REQ-011-096)."}}
+  - {"op": "update_node", "id": "REQ-011-083", "attrs": {"statement": "Full refund if request rejected by admin; prorated refund for subscription cancellations based on unused months (REQ-011-097 states the outcome per payment plan)"}}
+  - {"op": "add_edge", "from": "REQ-011-090", "verb": "applies at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "REQ-011-090", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-011-090", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-011-090", "verb": "applies to", "to": "ENT-aftercare-plan"}
+  - {"op": "add_edge", "from": "REQ-011-090", "verb": "governed by", "to": "SET-aftercare-plan-reminder-days"}
+  - {"op": "add_edge", "from": "REQ-011-090", "verb": "governed by", "to": "SET-aftercare-plan-escalation-days"}
+  - {"op": "add_edge", "from": "REQ-011-090", "verb": "decided by", "to": "SRC-PRD-011"}
+  - {"op": "add_edge", "from": "REQ-011-091", "verb": "applies at", "to": "STG-main-07-aftercare"}
+  - {"op": "add_edge", "from": "REQ-011-091", "verb": "applies at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "REQ-011-091", "verb": "applies to", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "REQ-011-091", "verb": "applies to", "to": "ENT-aftercare-plan"}
+  - {"op": "add_edge", "from": "REQ-011-091", "verb": "applies to", "to": "SCR-011-19"}
+  - {"op": "add_edge", "from": "REQ-011-091", "verb": "decided by", "to": "SRC-PRD-011"}
+  - {"op": "add_edge", "from": "REQ-011-092", "verb": "applies at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "REQ-011-092", "verb": "applies to", "to": "ENT-aftercare-request"}
+  - {"op": "add_edge", "from": "REQ-011-092", "verb": "applies to", "to": "ENT-aftercare-plan"}
+  - {"op": "add_edge", "from": "REQ-011-092", "verb": "applies to", "to": "SCR-011-06"}
+  - {"op": "add_edge", "from": "REQ-011-092", "verb": "decided by", "to": "SRC-PRD-011"}
+  - {"op": "add_edge", "from": "REQ-011-093", "verb": "applies at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "REQ-011-093", "verb": "applies to", "to": "ENT-aftercare-request"}
+  - {"op": "add_edge", "from": "REQ-011-093", "verb": "applies to", "to": "SCR-011-06"}
+  - {"op": "add_edge", "from": "REQ-011-093", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-011-093", "verb": "decided by", "to": "SRC-PRD-011"}
+  - {"op": "add_edge", "from": "REQ-011-094", "verb": "applies at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "REQ-011-094", "verb": "applies to", "to": "ENT-aftercare-request"}
+  - {"op": "add_edge", "from": "REQ-011-094", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-011-094", "verb": "decided by", "to": "SRC-PRD-011"}
+  - {"op": "add_edge", "from": "REQ-011-095", "verb": "applies at", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "REQ-011-095", "verb": "applies to", "to": "SCR-011-02"}
+  - {"op": "add_edge", "from": "REQ-011-095", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-011-095", "verb": "decided by", "to": "SRC-PRD-011"}
+  - {"op": "add_edge", "from": "REQ-011-096", "verb": "applies at", "to": "STG-aftercare-03-discharge"}
+  - {"op": "add_edge", "from": "REQ-011-096", "verb": "applies to", "to": "ENT-aftercare-plan"}
+  - {"op": "add_edge", "from": "REQ-011-096", "verb": "applies to", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "REQ-011-096", "verb": "applies to", "to": "EVT-aftercare-completed"}
+  - {"op": "add_edge", "from": "REQ-011-096", "verb": "decided by", "to": "SRC-PRD-011"}
+  - {"op": "add_edge", "from": "REQ-011-097", "verb": "applies at", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "REQ-011-097", "verb": "applies to", "to": "ENT-aftercare-plan"}
+  - {"op": "add_edge", "from": "REQ-011-097", "verb": "applies to", "to": "SCR-011-07"}
+  - {"op": "add_edge", "from": "REQ-011-097", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-011-097", "verb": "decided by", "to": "SRC-PRD-011"}
+  - {"op": "add_edge", "from": "REQ-011-098", "verb": "applies at", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "REQ-011-098", "verb": "applies to", "to": "ENT-aftercare-audit-entry"}
+  - {"op": "add_edge", "from": "REQ-011-098", "verb": "applies to", "to": "SCR-011-11"}
+  - {"op": "add_edge", "from": "REQ-011-098", "verb": "applies to", "to": "SCR-011-14"}
+  - {"op": "add_edge", "from": "REQ-011-098", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-011-098", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-011-098", "verb": "decided by", "to": "SRC-PRD-011"}
+  - {"op": "add_edge", "from": "REQ-011-099", "verb": "applies at", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "REQ-011-099", "verb": "applies to", "to": "ENT-aftercare-plan"}
+  - {"op": "add_edge", "from": "REQ-011-099", "verb": "applies to", "to": "SCR-011-12"}
+  - {"op": "add_edge", "from": "REQ-011-099", "verb": "applies to", "to": "SCR-011-13"}
+  - {"op": "add_edge", "from": "REQ-011-099", "verb": "applies to", "to": "SCR-011-14"}
+  - {"op": "add_edge", "from": "REQ-011-099", "verb": "applies to", "to": "EVT-aftercare-escalation-triggered"}
+  - {"op": "add_edge", "from": "REQ-011-099", "verb": "decided by", "to": "SRC-PRD-011"}
+  - {"op": "add_edge", "from": "REQ-011-100", "verb": "applies at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "REQ-011-100", "verb": "applies to", "to": "ENT-aftercare-request"}
+  - {"op": "add_edge", "from": "REQ-011-100", "verb": "applies to", "to": "SCR-011-07"}
+  - {"op": "add_edge", "from": "REQ-011-100", "verb": "applies to", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "REQ-011-100", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-011-100", "verb": "decided by", "to": "SRC-PRD-011"}
+  - {"op": "add_edge", "from": "REQ-011-057", "verb": "governed by", "to": "SET-aftercare-handover-fee"}
+  - {"op": "add_edge", "from": "REQ-011-048", "verb": "applies to", "to": "EVT-aftercare-request-assigned"}
+  - {"op": "add_edge", "from": "REQ-011-018", "verb": "applies to", "to": "EVT-aftercare-payment-due"}
+  - {"op": "add_edge", "from": "REQ-011-049", "verb": "applies to", "to": "EVT-aftercare-payment-due"}
+  - {"op": "add_edge", "from": "REQ-011-051", "verb": "applies to", "to": "EVT-aftercare-request-rejected"}
+  - {"op": "add_edge", "from": "REQ-011-053", "verb": "applies to", "to": "EVT-aftercare-request-rejected"}
+  - {"op": "add_edge", "from": "REQ-011-100", "verb": "applies to", "to": "EVT-aftercare-request-rejected"}
+  - {"op": "add_edge", "from": "REQ-011-050", "verb": "applies to", "to": "EVT-aftercare-request-expired"}
+  - {"op": "add_edge", "from": "REQ-011-052", "verb": "applies to", "to": "EVT-aftercare-awaiting-availability"}
+  - {"op": "add_edge", "from": "REQ-011-072", "verb": "applies to", "to": "EVT-aftercare-provider-withdrawn"}
+  - {"op": "add_edge", "from": "REQ-011-057", "verb": "applies to", "to": "EVT-aftercare-team-assigned"}
+  - {"op": "add_edge", "from": "REQ-011-054", "verb": "applies to", "to": "EVT-aftercare-team-assigned"}
+  - {"op": "add_edge", "from": "FLW-011-w1-setup-stalled", "verb": "starts at", "to": "STP-011-058"}
+  - {"op": "add_edge", "from": "FLW-011-w1-early-close", "verb": "starts at", "to": "STP-011-061"}
+  - {"op": "add_edge", "from": "FLW-011-w1-repeated-signal", "verb": "starts at", "to": "STP-011-062"}
+  - {"op": "add_edge", "from": "FLW-011-w2-price-changed", "verb": "starts at", "to": "STP-011-063"}
+  - {"op": "add_edge", "from": "FLW-011-w3-plan-completes", "verb": "starts at", "to": "STP-011-065"}
+  - {"op": "add_edge", "from": "FLW-011-w3-subscription-cancelled", "verb": "starts at", "to": "STP-011-066"}
+  - {"op": "add_edge", "from": "FLW-011-w4-extension-approval", "verb": "starts at", "to": "STP-011-068"}
+  - {"op": "add_edge", "from": "STP-011-058", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-011-058", "verb": "at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "STP-011-058", "verb": "applies", "to": "REQ-011-090"}
+  - {"op": "add_edge", "from": "STP-011-058", "verb": "next", "to": "STP-011-059"}
+  - {"op": "add_edge", "from": "STP-011-059", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-011-059", "verb": "at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "STP-011-059", "verb": "applies", "to": "REQ-011-090"}
+  - {"op": "add_edge", "from": "STP-011-059", "verb": "next", "to": "STP-011-060"}
+  - {"op": "add_edge", "from": "STP-011-060", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-011-060", "verb": "at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "STP-011-060", "verb": "on", "to": "SCR-011-14"}
+  - {"op": "add_edge", "from": "STP-011-060", "verb": "applies", "to": "REQ-011-019"}
+  - {"op": "add_edge", "from": "STP-011-060", "verb": "applies", "to": "REQ-011-090"}
+  - {"op": "add_edge", "from": "STP-011-060", "verb": "next", "to": "STP-011-004", "attrs": {"label": "Plan activated manually"}}
+  - {"op": "add_edge", "from": "STP-011-061", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-011-061", "verb": "at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "STP-011-061", "verb": "on", "to": "SCR-011-19"}
+  - {"op": "add_edge", "from": "STP-011-061", "verb": "applies", "to": "REQ-011-091"}
+  - {"op": "add_edge", "from": "STP-011-061", "verb": "applies", "to": "REQ-011-004"}
+  - {"op": "add_edge", "from": "STP-011-061", "verb": "next", "to": "STP-011-002"}
+  - {"op": "add_edge", "from": "STP-011-062", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-011-062", "verb": "at", "to": "STG-main-07-aftercare"}
+  - {"op": "add_edge", "from": "STP-011-062", "verb": "applies", "to": "REQ-011-091"}
+  - {"op": "add_edge", "from": "STP-011-063", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-011-063", "verb": "at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "STP-011-063", "verb": "on", "to": "SCR-011-07"}
+  - {"op": "add_edge", "from": "STP-011-063", "verb": "applies", "to": "REQ-011-100"}
+  - {"op": "add_edge", "from": "STP-011-063", "verb": "next", "to": "STP-011-010", "attrs": {"label": "Patient accepts the new price"}}
+  - {"op": "add_edge", "from": "STP-011-063", "verb": "next", "to": "STP-011-064", "attrs": {"label": "Patient cancels"}}
+  - {"op": "add_edge", "from": "STP-011-064", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-011-064", "verb": "at", "to": "STG-aftercare-01-recovery-plan"}
+  - {"op": "add_edge", "from": "STP-011-064", "verb": "applies", "to": "REQ-011-100"}
+  - {"op": "add_edge", "from": "STP-011-065", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-011-065", "verb": "at", "to": "STG-aftercare-03-discharge"}
+  - {"op": "add_edge", "from": "STP-011-065", "verb": "applies", "to": "REQ-011-096"}
+  - {"op": "add_edge", "from": "STP-011-065", "verb": "applies", "to": "REQ-011-088"}
+  - {"op": "add_edge", "from": "STP-011-066", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-011-066", "verb": "at", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "STP-011-066", "verb": "on", "to": "SCR-011-07"}
+  - {"op": "add_edge", "from": "STP-011-066", "verb": "applies", "to": "REQ-011-097"}
+  - {"op": "add_edge", "from": "STP-011-066", "verb": "next", "to": "STP-011-067"}
+  - {"op": "add_edge", "from": "STP-011-067", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-011-067", "verb": "at", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "STP-011-067", "verb": "applies", "to": "REQ-011-097"}
+  - {"op": "add_edge", "from": "STP-011-067", "verb": "applies", "to": "REQ-011-083"}
+  - {"op": "add_edge", "from": "STP-011-068", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-011-068", "verb": "at", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "STP-011-068", "verb": "on", "to": "SCR-011-11"}
+  - {"op": "add_edge", "from": "STP-011-068", "verb": "applies", "to": "REQ-011-098"}
+  - {"op": "add_edge", "from": "STP-011-068", "verb": "applies", "to": "REQ-011-067"}
+  - {"op": "add_edge", "from": "STP-011-068", "verb": "next", "to": "STP-011-069"}
+  - {"op": "add_edge", "from": "STP-011-069", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-011-069", "verb": "at", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "STP-011-069", "verb": "on", "to": "SCR-011-14"}
+  - {"op": "add_edge", "from": "STP-011-069", "verb": "applies", "to": "REQ-011-098"}
+  - {"op": "add_edge", "from": "STP-011-069", "verb": "applies", "to": "REQ-011-067"}
+  - {"op": "add_edge", "from": "STP-011-069", "verb": "next", "to": "STP-011-070"}
+  - {"op": "add_edge", "from": "STP-011-070", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-011-070", "verb": "at", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "STP-011-070", "verb": "applies", "to": "REQ-011-098"}
+  - {"op": "add_edge", "from": "STP-011-071", "verb": "done by", "to": "ACT-aftercare-specialist"}
+  - {"op": "add_edge", "from": "STP-011-071", "verb": "at", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "STP-011-071", "verb": "on", "to": "SCR-011-12"}
+  - {"op": "add_edge", "from": "STP-011-071", "verb": "applies", "to": "REQ-011-099"}
+  - {"op": "add_edge", "from": "STP-011-072", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-011-072", "verb": "at", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "STP-011-072", "verb": "applies", "to": "REQ-011-099"}
+  - {"op": "add_edge", "from": "STP-011-072", "verb": "next", "to": "STP-011-040"}
+  - {"op": "add_edge", "from": "STG-aftercare-01-recovery-plan", "verb": "emits", "to": "EVT-aftercare-request-assigned"}
+  - {"op": "add_edge", "from": "STG-aftercare-01-recovery-plan", "verb": "emits", "to": "EVT-aftercare-payment-due"}
+  - {"op": "add_edge", "from": "STG-aftercare-01-recovery-plan", "verb": "emits", "to": "EVT-aftercare-request-rejected"}
+  - {"op": "add_edge", "from": "STG-aftercare-01-recovery-plan", "verb": "emits", "to": "EVT-aftercare-request-expired"}
+  - {"op": "add_edge", "from": "STG-aftercare-01-recovery-plan", "verb": "emits", "to": "EVT-aftercare-awaiting-availability"}
+  - {"op": "add_edge", "from": "STG-aftercare-02-follow-up", "verb": "emits", "to": "EVT-aftercare-provider-withdrawn"}
+  - {"op": "add_edge", "from": "STG-aftercare-02-follow-up", "verb": "emits", "to": "EVT-aftercare-team-assigned"}
+  - {"op": "add_edge", "from": "STG-aftercare-03-discharge", "verb": "emits", "to": "EVT-aftercare-completed"}
+  - {"op": "add_edge", "from": "ACT-system", "verb": "acts in", "to": "STG-aftercare-03-discharge"}
+  - {"op": "add_edge", "from": "STP-011-001", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-011-001", "verb": "applies", "to": "REQ-011-091"}
+  - {"op": "add_edge", "from": "STP-011-008", "verb": "on", "to": "SCR-011-14"}
+  - {"op": "add_edge", "from": "STP-011-044", "verb": "on", "to": "SCR-011-09"}
+  - {"op": "add_edge", "from": "STP-011-016", "verb": "next", "to": "STP-011-017", "attrs": {"label": "No successful payment within 48 hours", "condition": "REQ-011-050"}}
+  - {"op": "add_edge", "from": "STP-011-016", "verb": "next", "to": "STP-011-011", "attrs": {"label": "Retry succeeds (standalone)", "condition": "REQ-011-018"}}
+  - {"op": "add_edge", "from": "STP-011-016", "verb": "next", "to": "STP-011-024", "attrs": {"label": "Retry succeeds (add-on)", "condition": "REQ-011-054"}}
+  - {"op": "add_edge", "from": "STP-011-010", "verb": "next", "to": "STP-007-081", "attrs": {"label": "Payment is processed by FR-007"}}
+  - {"op": "add_edge", "from": "STP-011-023", "verb": "next", "to": "STP-007-081", "attrs": {"label": "Payment is processed by FR-007"}}
+  - {"op": "add_edge", "from": "STP-011-039", "verb": "next", "to": "STP-011-071"}
+  - {"op": "add_edge", "from": "STP-011-038", "verb": "next", "to": "STP-011-072", "attrs": {"label": "No response within 2 hours"}}
+  - {"op": "add_edge", "from": "STP-011-056", "verb": "applies", "to": "REQ-011-049"}
+  - {"op": "add_edge", "from": "STP-011-009", "verb": "applies", "to": "REQ-011-093"}
+  - {"op": "add_edge", "from": "STP-011-009", "verb": "applies", "to": "REQ-011-094"}
+  - {"op": "add_edge", "from": "STP-011-029", "verb": "applies", "to": "REQ-011-095"}
+  - {"op": "add_edge", "from": "STP-011-022", "verb": "applies", "to": "REQ-011-092"}
+  - {"op": "add_edge", "from": "STP-011-055", "verb": "applies", "to": "REQ-011-100"}
+  - {"op": "add_edge", "from": "STP-011-013", "verb": "applies", "to": "REQ-011-100"}
+  - {"op": "add_edge", "from": "ACT-aftercare-specialist", "verb": "uses", "to": "SCR-011-08"}
+  - {"op": "add_edge", "from": "ACT-aftercare-specialist", "verb": "uses", "to": "SCR-011-09"}
+  - {"op": "add_edge", "from": "ACT-aftercare-specialist", "verb": "uses", "to": "SCR-011-10"}
+  - {"op": "add_edge", "from": "ACT-aftercare-specialist", "verb": "uses", "to": "SCR-011-11"}
+  - {"op": "add_edge", "from": "ACT-aftercare-specialist", "verb": "uses", "to": "SCR-011-12"}
+  - {"op": "add_edge", "from": "ACT-aftercare-coordinator", "verb": "uses", "to": "SCR-011-13"}
+  - {"op": "add_edge", "from": "ACT-aftercare-coordinator", "verb": "uses", "to": "SCR-011-14"}
+  - {"op": "add_edge", "from": "ACT-aftercare-coordinator", "verb": "uses", "to": "SCR-011-15"}
+  - {"op": "add_edge", "from": "ACT-aftercare-coordinator", "verb": "uses", "to": "SCR-011-16"}
+  - {"op": "add_edge", "from": "ACT-aftercare-coordinator", "verb": "uses", "to": "SCR-011-17"}
+  - {"op": "add_edge", "from": "ACT-aftercare-coordinator", "verb": "uses", "to": "SCR-011-18"}
+  - {"op": "add_edge", "from": "ACT-aftercare-coordinator", "verb": "uses", "to": "SCR-011-19"}
+  - {"op": "add_edge", "from": "FR-011", "verb": "references", "to": "REQ-002-047"}
+  - {"op": "add_edge", "from": "FR-011", "verb": "references", "to": "REQ-002-051"}
+  - {"op": "add_edge", "from": "SCR-011-03", "verb": "shows", "to": "ENT-aftercare-questionnaire-response.questionnaire_set_version", "attrs": {"provenance": "system calculated", "label": "Questionnaire Set Version"}}
+  - {"op": "add_edge", "from": "SCR-011-06", "verb": "shows", "to": "ENT-aftercare-request.booking_id", "attrs": {"provenance": "system calculated", "label": "Booking"}}
+  - {"op": "add_edge", "from": "SCR-011-06", "verb": "shows", "to": "ENT-aftercare-request.quote_id", "attrs": {"provenance": "system calculated", "label": "Accepted Quote"}}
+  - {"op": "add_edge", "from": "SCR-011-06", "verb": "shows", "to": "ENT-aftercare-request.source", "attrs": {"provenance": "system calculated", "label": "Request Source"}}
+  - {"op": "add_edge", "from": "SCR-011-06", "verb": "shows", "to": "ENT-aftercare-request.monitoring_case_id", "attrs": {"provenance": "system calculated", "label": "Monitoring Case"}}
+  - {"op": "add_edge", "from": "SCR-011-06", "verb": "shows", "to": "ENT-aftercare-request.scan_set_id", "attrs": {"provenance": "system calculated", "label": "Scan or Photo Set"}}
+  - {"op": "add_edge", "from": "SCR-011-06", "verb": "shows", "to": "ENT-aftercare-request.report_file_id", "attrs": {"provenance": "system calculated", "label": "Monitoring Report"}}
+  - {"op": "add_edge", "from": "SCR-011-06", "verb": "shows", "to": "ENT-aftercare-request.idempotency_key", "attrs": {"provenance": "system calculated", "label": "Request Key"}}
+  - {"op": "add_edge", "from": "SCR-011-07", "verb": "shows", "to": "ENT-aftercare-request.final_template_id", "attrs": {"provenance": "system calculated", "label": "Final Template"}}
+  - {"op": "add_edge", "from": "SCR-011-07", "verb": "shows", "to": "ENT-aftercare-request.payment_due_at", "attrs": {"provenance": "system calculated", "label": "Payment Due By"}}
+  - {"op": "add_edge", "from": "SCR-011-15", "verb": "shows", "to": "ENT-aftercare-request.payment_due_at", "attrs": {"provenance": "system calculated", "label": "Payment Due By"}}
+  - {"op": "add_edge", "from": "SCR-011-15", "verb": "shows", "to": "ENT-aftercare-request.source", "attrs": {"provenance": "system calculated", "label": "Request Source"}}
+  - {"op": "add_edge", "from": "SCR-011-15", "verb": "shows", "to": "ENT-aftercare-request.final_template_id", "attrs": {"provenance": "system calculated", "label": "Final Template"}}
+  - {"op": "add_edge", "from": "SCR-011-15", "verb": "shows", "to": "ENT-aftercare-request.monitoring_case_id", "attrs": {"provenance": "system calculated", "label": "Monitoring Case"}}
+  - {"op": "add_edge", "from": "SCR-011-09", "verb": "shows", "to": "ENT-aftercare-plan.urgent_flag", "attrs": {"provenance": "system calculated", "label": "Urgent Flag"}}
+  - {"op": "add_edge", "from": "SCR-011-09", "verb": "shows", "to": "ENT-aftercare-plan.urgent_raised_at", "attrs": {"provenance": "system calculated", "label": "Urgent Flag Raised At"}}
+  - {"op": "add_edge", "from": "SCR-011-12", "verb": "shows", "to": "ENT-aftercare-plan.urgent_flag", "attrs": {"provenance": "system calculated", "label": "Urgent Flag"}}
+  - {"op": "add_edge", "from": "SCR-011-12", "verb": "shows", "to": "ENT-aftercare-plan.urgent_raised_at", "attrs": {"provenance": "system calculated", "label": "Urgent Flag Raised At"}}
+  - {"op": "add_edge", "from": "SCR-011-14", "verb": "shows", "to": "ENT-aftercare-plan.urgent_flag", "attrs": {"provenance": "system calculated", "label": "Urgent Flag"}}
+  - {"op": "add_edge", "from": "SCR-011-14", "verb": "shows", "to": "ENT-aftercare-plan.urgent_raised_at", "attrs": {"provenance": "system calculated", "label": "Urgent Flag Raised At"}}
+  - {"op": "add_edge", "from": "SCR-011-13", "verb": "shows", "to": "ENT-aftercare-plan.urgent_flag", "attrs": {"provenance": "system calculated", "label": "Urgent Flag"}}
