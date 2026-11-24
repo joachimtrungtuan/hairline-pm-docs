@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T09:39:53Z",
+  "generated_at": "2026-11-24T09:57:56Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -15421,7 +15421,7 @@
       "owner_fr": "FR-030",
       "title": "Recipient type",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Key Entities: recipient_type."
       }
@@ -15586,7 +15586,7 @@
       "owner_fr": "FR-030",
       "title": "Recipient type",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Key Entities: recipient_type."
       }
@@ -15895,14 +15895,14 @@
       }
     },
     {
-      "id": "ENT-notification-rule.critical_cannot_opt_out",
+      "id": "ENT-notification-rule.delay_direction",
       "type": "Field",
       "owner_fr": "FR-030",
-      "title": "Critical, cannot opt out",
+      "title": "Delay direction",
       "status": "active",
       "version": 1,
       "attrs": {
-        "description": "Edge case (prd.md line 887): admin designation of a notification type as Critical - Cannot Opt Out."
+        "description": "Screen 2 Delay Direction: whether Delay Duration counts Before or After the anchor date (the date the event is about, for example the installment due date). Required when Delayed."
       }
     },
     {
@@ -15911,9 +15911,9 @@
       "owner_fr": "FR-030",
       "title": "Delay duration",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Screen field with no Key Entities attribute (Delay Duration, number plus unit). Required when Delayed; minimum 1 hour, maximum 90 days."
+        "description": "Screen field Delay Duration (number plus unit: days or hours), counted before or after the anchor date per Delay Direction. Required when Delayed; minimum 1 hour, maximum 90 days."
       }
     },
     {
@@ -15966,9 +15966,9 @@
       "owner_fr": "FR-030",
       "title": "Escalation conditions",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Key Entities: escalation_conditions, free text, max 500 characters. Screen 2 shows it as a textarea of at most 500 characters."
+        "description": "Key Entities: escalation_conditions. Screen 2 Escalation Condition select with a fixed list: Not delivered, Not opened. Required if escalation is enabled."
       }
     },
     {
@@ -15977,9 +15977,9 @@
       "owner_fr": "FR-030",
       "title": "Escalation enabled",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Key Entities: escalation_enabled. Default off for non-critical events."
+        "description": "Key Entities: escalation_enabled. Default off; offered only for locked notices."
       }
     },
     {
@@ -15991,6 +15991,17 @@
       "version": 1,
       "attrs": {
         "description": "Key Entities: escalation_recipients (admin role IDs). Required if escalation is enabled."
+      }
+    },
+    {
+      "id": "ENT-notification-rule.escalation_wait_time",
+      "type": "Field",
+      "owner_fr": "FR-030",
+      "title": "Escalation wait time",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Screen 2 Escalation Wait Time (number plus unit, hours or days): how long after the notice is sent to wait before checking the escalation condition. Required if escalation is enabled; positive whole number."
       }
     },
     {
@@ -16093,17 +16104,6 @@
       }
     },
     {
-      "id": "ENT-notification-rule.retry_with_secondary_contact",
-      "type": "Field",
-      "owner_fr": "FR-030",
-      "title": "Retry with secondary contact",
-      "status": "active",
-      "version": 1,
-      "attrs": {
-        "description": "Edge case (prd.md line 871): per-rule toggle to retry with the secondary contact if delivery to the primary fails."
-      }
-    },
-    {
       "id": "ENT-notification-rule.rule_id",
       "type": "Field",
       "owner_fr": "FR-030",
@@ -16148,25 +16148,14 @@
       }
     },
     {
-      "id": "ENT-notification-rule.send_to_both_contacts",
-      "type": "Field",
-      "owner_fr": "FR-030",
-      "title": "Send to both contacts",
-      "status": "active",
-      "version": 1,
-      "attrs": {
-        "description": "Edge case (prd.md line 872): per-rule option to send to primary and secondary contacts simultaneously for critical events."
-      }
-    },
-    {
       "id": "ENT-notification-rule.skip_if_timing_passed",
       "type": "Field",
       "owner_fr": "FR-030",
       "title": "Skip if timing already passed",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Edge case (prd.md line 862): per-rule option to skip the notification when the delivery timing is not feasible."
+        "description": "Screen 2 Skip If Too Late checkbox, default unchecked: when checked, a notice whose send time has already passed as the event occurs is not sent; when unchecked it is sent at once."
       }
     },
     {
@@ -32268,9 +32257,9 @@
       "owner_fr": "FR-030",
       "title": "Booking cancelled",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "booking.cancelled: patient and provider, sent on admin cancellation with the reason."
+        "description": "booking.cancelled: patient and provider, sent for an admin cancellation (with the reason), a provider drop-out at the FR-006 Screen 10 submit, and a system cancellation for an unpaid balance (including an installment plan default); the wording follows FR-006 REQ-006-011."
       }
     },
     {
@@ -32478,9 +32467,9 @@
       "owner_fr": "FR-030",
       "title": "Inquiry cancelled",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "inquiry.cancelled: sent to distributed providers when an inquiry is cancelled (patient cancellation, account deletion, or admin booking cancellation). The cancellation reason is never included."
+        "description": "inquiry.cancelled: sent to the patient when the patient cancels the inquiry (Inquiry or Quoted stage) and when an admin closes the inquiry; a cancellation caused by an approved account deletion sends the patient no notice. Providers are not recipients: a provider holding a draft, sent or expired quote receives quote.cancelled_inquiry. The patient's cancellation reason is never shown to a provider."
       }
     },
     {
@@ -32713,9 +32702,20 @@
       "owner_fr": "FR-030",
       "title": "monitoring.export_ready",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "monitoring.export_ready: The summary PDF has finished generating; the patient is notified when it is ready (REQ-037-055)."
+        "description": "monitoring.export_ready: a PDF has finished generating (the summary PDF, the conversion PDF or a regenerated report); the patient is notified when it is ready. For a converted case the notice opens FR-038 Screen 6 while the draft is open, otherwise Screen 7."
+      }
+    },
+    {
+      "id": "EVT-monitoring-progress-reminder",
+      "type": "Event",
+      "owner_fr": "FR-030",
+      "title": "monitoring.progress_reminder",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "monitoring.progress_reminder: default patient reminder on a transplant-progress case (FR-038) only; hair-loss monitoring cases (FR-037) have no reminders. Schedule set on Screen 1; stopped when the case is completed or converted."
       }
     },
     {
@@ -33072,6 +33072,17 @@
       }
     },
     {
+      "id": "EVT-provider-status-redistribution-reminder",
+      "type": "Event",
+      "owner_fr": "FR-030",
+      "title": "Provider status redistribution reminder",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "provider.status_redistribution_reminder: sent once to the patient 48 hours after the confirm variant of provider.status_cancellation_patient is left unanswered (FR-020 REQ-020-159); dropped when the patient has answered, the inquiry was cancelled, an admin reassigned or reran distribution, or the support marker was cleared. Mandatory."
+      }
+    },
+    {
       "id": "EVT-provider-suspended",
       "type": "Event",
       "owner_fr": "FR-030",
@@ -33290,10 +33301,21 @@
       "owner_fr": "FR-030",
       "title": "Review requested",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "review.requested: time-gated review invitation (and reminders) sent to the patient once the 3-month threshold after procedure completion is reached. FR-030 owns the event and its timing and cadence (Screen 10 link-outs).",
+        "description": "review.requested: review invitation anchored on the review eligibility date (FR-013); the invitation is sent on that date and any reminder is counted from it. FR-030 owns the event and its timing and cadence (Screen 10 link-outs).",
         "payload": "patient, provider, treatment case"
+      }
+    },
+    {
+      "id": "EVT-review-response-removed",
+      "type": "Event",
+      "owner_fr": "FR-030",
+      "title": "Review response removed by admin",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "review.response_removed: fired by FR-013 when an admin removes the provider's public response to a review; sent to the provider with the removal reason. Informational."
       }
     },
     {
@@ -33368,9 +33390,9 @@
       "owner_fr": "FR-030",
       "title": "Support case reopened",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "`support.case_reopened`: FR-034 notifies the assigned admin (or all support staff if unassigned) when a provider reopens a Closed case (FR-032 Screen 5.9). Stub created during FR-032 migration."
+        "description": "`support.case_reopened`: sent to the patient, the provider and the admin when a Closed case is reopened, with the reopening reason (FR-032 Screen 5.9 for a provider reopen)."
       }
     },
     {
@@ -33401,9 +33423,9 @@
       "owner_fr": "FR-030",
       "title": "Support case user reply",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "`support.case_user_reply`: email to the assigned admin (or all support staff if unassigned) when the provider replies (FR-032 Screen 5.8). Stub created during FR-032 migration."
+        "description": "`support.case_user_reply`: email to the assigned admin (or all support staff if unassigned) when the patient or the provider replies to a case (FR-032 Screen 5.8 for a provider reply)."
       }
     },
     {
@@ -33645,9 +33667,9 @@
       "owner_fr": "FR-030",
       "title": "Treatment completed",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "treatment_completed: sent to the patient when treatment completes, with post-op and medication instructions; the admin is also notified of completion for billing (Integration 3, REQ-010-007, REQ-010-008)."
+        "description": "treatment.completed: sent to the patient when treatment completes, with post-op and medication instructions; the admin is also notified of completion for billing (Integration 3, REQ-010-007, REQ-010-008)."
       }
     },
     {
@@ -33711,9 +33733,9 @@
       "owner_fr": "FR-030",
       "title": "Treatment started",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "treatment_started: sent to the patient when Check In moves the booking to In Progress (Integration 3, REQ-010-007)."
+        "description": "treatment.started: sent to the patient when Check In moves the booking to In Progress (Integration 3, REQ-010-007)."
       }
     },
     {
@@ -84240,9 +84262,9 @@
       "owner_fr": "FR-030",
       "title": "Log every notification delivery",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST log all notification deliveries (successful and failed) with recipient (masked), event, channel, timestamp, delivery status, and failure reason (if applicable)",
+        "statement": "System MUST log all notification deliveries (successful and failed), as a view of the FR-020 notification record and attempt rows, with recipient (masked), event, channel, timestamp, delivery status, and failure reason (if applicable)",
         "rationale": "prd.md line 938 (REQ-030-009, verbatim). Restating bullets merged here: Alternative Flow B1 step 3 logs failed deliveries with error code and timestamp (326)."
       }
     },
@@ -84336,9 +84358,9 @@
       "owner_fr": "FR-030",
       "title": "Rate limit notifications per recipient, limit set by admins",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST enforce rate limiting to prevent notification spam: a maximum number of notifications per hour per recipient, set by admins with a default of 10 (critical notifications exempt from rate limiting)",
+        "statement": "System MUST enforce rate limiting to prevent notification spam: a maximum number of notifications per hour per recipient, set by admins with a default of 10 (notices over the limit are held and sent in order in the next hour; locked (critical) notices are never held)",
         "rationale": "Functional Requirements Summary and General Module Rule 6. The limit is admin-editable (Screen 1 field Notification Rate Limit); it is no longer on the Fixed list."
       }
     },
@@ -84360,9 +84382,9 @@
       "owner_fr": "FR-030",
       "title": "Respect opt-out for non-critical notifications",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST respect recipient opt-out preferences for non-critical notifications (marketing, general updates); critical notifications (payment, appointment) override opt-out with in-app explanation",
+        "statement": "System MUST respect recipient opt-out preferences for non-critical notifications (marketing, general updates); critical notifications (the locked notices) override opt-out with in-app explanation",
         "rationale": "prd.md line 954 (REQ-030-019, verbatim). Restating bullets merged here: Privacy Rule 4 (511)."
       }
     },
@@ -84506,9 +84528,9 @@
       "owner_fr": "FR-030",
       "title": "Catalog event: Inquiry Cancelled",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Inquiry Cancelled (inquiry.cancelled) is an admin-configurable notification event. Primary recipients: Patient, Provider, Admin (optional). Patient-initiated inquiry cancellation (FR-003 Workflow 5). Fires when patient cancels inquiry in Inquiry, Quoted, or Accepted stages. Patient receives mandatory cancellation confirmation (aligns with FR-003 Workflow 5 step 4 and Screen 8b). Cancellation reason is patient-private — provider notification says only \"Inquiry cancelled by patient\". MVP default channels: Email + Push. Available template variables differ by recipient: Patient receives `inquiry.id`, `inquiry.cancellation_reason`, `inquiry.cancelled_at`; Provider receives `inquiry.id`, `inquiry.cancelled_at` only (reason excluded per privacy rule). Provider exclusion: a provider that has a live quote on the inquiry does not receive inquiry.cancelled; that provider receives only quote.cancelled_inquiry. A provider without a quote on the inquiry still receives inquiry.cancelled.",
+        "statement": "Inquiry Cancelled (inquiry.cancelled) is an admin-configurable notification event. Primary recipients: Patient, Admin (optional). Fires when the patient cancels the inquiry in the Inquiry or Quoted stage (FR-003 Workflow 5) and when an admin closes the inquiry (FR-006 Close inquiry). The patient receives a mandatory cancellation confirmation (aligns with FR-003 Workflow 5 step 4 and Screen 8b); a cancellation caused by an approved account deletion sends the patient no notice. The patient's cancellation reason is private to the patient. The admin-close notice says the inquiry was closed by Hairline, gives the reason entered in FR-006, says no replacement follows, and carries the Contact Admin/Support action. MVP default channels: Email + Push. Template variables: `inquiry.id`, `inquiry.cancellation_reason`, `inquiry.cancelled_at`. Providers are not recipients: a provider that holds a draft, sent or expired quote on the inquiry receives only `quote.cancelled_inquiry`, and a provider that never quoted is told nothing.",
         "rationale": "prd.md line 128. Category: Inquiry. Event nodes: EVT-inquiry-cancelled (existing node)."
       }
     },
@@ -84557,9 +84579,9 @@
       "owner_fr": "FR-030",
       "title": "Catalog event: Quote Expiring Soon",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Quote Expiring Soon (quote.expiring_soon) is an admin-configurable notification event. Primary recipients: Patient, Provider. Fired by FR-004 once per sent parent quote when the time left before expiry reaches the quote-expiring-soon lead time set by admin in FR-026. Never fired for drafts or for accepted, withdrawn or cancelled quotes. Admin-configurable",
+        "statement": "Quote Expiring Soon (quote.expiring_soon) is an admin-configurable notification event. Primary recipients: Patient, Provider. Fired by FR-004 once per expiry window of a sent parent quote when the time left before expiry reaches the quote-expiring-soon lead time set by admin in FR-026 (a restored quote has a new window and can fire it again). Never fired for drafts or for accepted, withdrawn or cancelled quotes. Admin-configurable",
         "rationale": "prd.md line 131. Category: Quote. Event nodes: EVT-quote-expiring-soon (existing node).",
         "aliases": "REQ-020-080"
       }
@@ -84570,9 +84592,9 @@
       "owner_fr": "FR-030",
       "title": "Catalog event: Quote Expired",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Quote Expired (quote.expired) is an admin-configurable notification event. Primary recipients: Patient, Provider. Sent on expiry processing completion",
+        "statement": "Quote Expired (quote.expired) is an admin-configurable notification event. Primary recipients: Patient, Provider. Fired by FR-004 once per expiry window when a sent parent quote expires, on expiry processing completion (a restored quote that expires again fires it again)",
         "rationale": "prd.md line 132. Category: Quote. Event nodes: EVT-quote-expired (existing node)."
       }
     },
@@ -84608,9 +84630,9 @@
       "owner_fr": "FR-030",
       "title": "Catalog event: Quote Cancelled (Inquiry Cancelled)",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Quote Cancelled (Inquiry Cancelled) (quote.cancelled_inquiry) is an admin-configurable notification event. Primary recipients: Provider. Auto-cancelled quote due to patient inquiry cancellation (FR-003 Workflow 5). Provider receipt is mandatory — admin cannot disable this event (see Non-Disableable by Default section). Cancellation reason is patient-private; provider notification says only \"Inquiry cancelled by patient\". MVP default channels: Email + Push. Not subject to FR-032 provider notification preferences; FR-032 offers no toggle for this event. Available template variables: `quote.id`, `quote.provider_id`, `inquiry.id`, `inquiry.cancelled_at`; `inquiry.cancellation_reason` is excluded per privacy rule. A provider with a live quote receives this notice only, never also inquiry.cancelled; a provider without a quote still receives inquiry.cancelled.",
+        "statement": "Quote Cancelled (Inquiry Cancelled) (quote.cancelled_inquiry) is an admin-configurable notification event. Primary recipients: Provider. Sent to each provider that holds a draft, sent or expired quote when the patient cancels the inquiry (FR-003 Workflow 5) and when an approved account deletion cancels it; never to the provider of a replacement draft quote, and no provider notice is sent for an admin Close inquiry. A provider that never quoted is told nothing, and a provider that receives this notice never also receives `inquiry.cancelled`. Provider receipt is mandatory — admin cannot disable this event (see Non-Disableable by Default section); it is sent at once as a locked notice (FR-020 sets the 5-minute first-send target). The reason shows only as \"Inquiry cancelled by patient\"; the deletion cancellation shows none. MVP default channels: Email + Push. Not subject to FR-032 provider notification preferences; FR-032 offers no toggle for this event. Available template variables: `quote.id`, `quote.provider_id`, `inquiry.id`, `inquiry.cancelled_at`; `inquiry.cancellation_reason` is excluded per privacy rule.",
         "rationale": "prd.md line 135. Category: Quote. Event nodes: EVT-quote-cancelled-inquiry (existing node). Lock rule (prd.md line 542): Quote Cancelled — Inquiry Cancelled (`quote.cancelled_inquiry`) is a mandatory provider notification. Provider MUST be notified when their quote is auto-cancelled due to inquiry cancellation. Admin cannot disable this event because the provider needs to know the slot is released and the quote is no longer active. Toggle is locked for this event, and FR-032 provider notification preferences cannot suppress it. Lock rule (prd.md line 543): Preference exemption for mandatory provider events: every event that is mandatory for providers (`quote.cancelled_inquiry`, the selected-provider and not-selected-provider outcomes of `quote.accepted`, `booking.payment_window_expired`, `booking.revived` and `booking.rescheduled`) is delivered regardless of FR-032 provider notification preferences. A provider's category toggles in FR-032 never suppress these events.",
         "aliases": "REQ-020-084"
       }
@@ -84673,9 +84695,9 @@
       "owner_fr": "FR-030",
       "title": "Catalog event: Provider Unable to Proceed — Replacement Being Arranged",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Provider Unable to Proceed — Replacement Being Arranged (booking.provider_fault_replacement) is an admin-configurable notification event. Primary recipients: Patient, Admin. Fired by FR-006 when an accepted booking is closed for provider fault: the provider withdraws after acceptance, drops out before treatment starts, or is suspended or deactivated after acceptance and before treatment starts (FR-015). An `In Progress` booking is not closed for provider fault and never fires this event; it stays `In Progress` with `supportRequired` for an admin decision. Tells the patient that an admin will arrange a replacement provider within the same inquiry and that the patient pays no cancellation fee; MUST NOT expose confidential suspension or deactivation reasons. Admins receive it as an exception alert so they can arrange the replacement. Providers are not recipients: the replacement provider learns through the normal new-booking and acceptance notice, and the faulted provider is not notified by this event. Mandatory — admin cannot disable this event",
+        "statement": "Provider Unable to Proceed — Replacement Being Arranged (booking.provider_fault_replacement) is an admin-configurable notification event. Primary recipients: Patient, Admin. Fired by FR-006 when an accepted booking is closed for provider fault and a replacement is arranged. Each cause sends these notices: a withdrawal after acceptance sends `quote.withdrawn` and then this event; a drop-out before treatment starts sends `booking.cancelled` (provider-fault cause) to the patient and provider at the FR-006 Screen 10 submit, and this event then announces the transfer; a suspension or deactivation after acceptance and before treatment starts (FR-015) sends only this event. An `In Progress` booking is not closed for provider fault and never fires this event; it stays `In Progress` with `supportRequired` for an admin decision. Tells the patient that an admin will arrange a replacement provider within the same inquiry and that the patient pays no cancellation fee; MUST NOT expose confidential suspension or deactivation reasons. Admins receive it as an exception alert so they can arrange the replacement. Providers are not recipients: the replacement provider learns through the normal new-booking and acceptance notice, and the faulted provider is not notified by this event. Mandatory — admin cannot disable this event",
         "rationale": "prd.md line 142. Category: Booking/Schedule. Event nodes: EVT-booking-provider-fault-replacement (existing node). Lock rule (prd.md line 549): Provider Unable to Proceed — Replacement Being Arranged (`booking.provider_fault_replacement`) is mandatory: the patient MUST learn that an admin will arrange a replacement provider. Toggle is locked.",
         "aliases": "REQ-020-089"
       }
@@ -84686,9 +84708,9 @@
       "owner_fr": "FR-030",
       "title": "Catalog event: Booking Confirmed",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Booking Confirmed (booking.confirmed) is an admin-configurable notification event. Primary recipients: Patient, Provider. Critical",
+        "statement": "Booking Confirmed (booking.confirmed) is an admin-configurable notification event. Primary recipients: Patient, Provider. Sent when the first payment confirms the booking (FR-006)",
         "rationale": "prd.md line 141. Category: Booking/Schedule. Event nodes: EVT-booking-confirmed (new stub owned by FR-006)."
       }
     },
@@ -84711,9 +84733,9 @@
       "owner_fr": "FR-030",
       "title": "Catalog event: Booking Cancelled",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Booking Cancelled (booking.cancelled) is an admin-configurable notification event. Primary recipients: Patient, Provider, Admin (optional). Include cancellation reason where appropriate",
+        "statement": "Booking Cancelled (booking.cancelled) is an admin-configurable notification event. Primary recipients: Patient, Provider, Admin (optional). Fires for an Admin cancellation, a provider drop-out at the FR-006 Screen 10 submit, and a system cancellation for an unpaid balance (including an installment plan default). A provider suspension or deactivation closure sends `booking.provider_fault_replacement` instead. The notice states the cancellation reason in the wording FR-006 defines (REQ-006-011); the system fills in any fee and refund amounts",
         "rationale": "prd.md line 143. Category: Booking/Schedule. Event nodes: EVT-booking-cancelled (existing node)."
       }
     },
@@ -84723,9 +84745,9 @@
       "owner_fr": "FR-030",
       "title": "Catalog event: Appointment Reminder",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Appointment Reminder (booking.appointment_reminder) is an admin-configurable notification event. Primary recipients: Patient, Provider. Scheduled reminders; policy-driven",
+        "statement": "Appointment Reminder (booking.appointment_reminder) is an admin-configurable notification event. Primary recipients: Patient, Provider. Scheduled reminders before the appointment; policy-driven. Admin-switchable: it is not a locked notice",
         "rationale": "prd.md line 144. Category: Booking/Schedule. Event nodes: EVT-booking-appointment-reminder (new stub owned by FR-006)."
       }
     },
@@ -84810,9 +84832,9 @@
       "owner_fr": "FR-030",
       "title": "Catalog event: Payment Received / Receipt",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Payment Received / Receipt (payment.received) is an admin-configurable notification event. Primary recipients: Patient, Provider, Admin (optional). Critical",
+        "statement": "Payment Received / Receipt (payment.received) is an admin-configurable notification event. Primary recipients: Patient, Provider, Admin (optional). Receipt for a payment received. Mandatory — admin cannot disable this event (see Non-Disableable by Default section)",
         "rationale": "prd.md line 151. Category: Payment. Event nodes: EVT-initial-payment-confirmed (existing node); EVT-final-payment-confirmed (existing node); EVT-billing-payment-received (created by another FR migration not yet applied; not linked from here).",
         "distinct_from": "REQ-030-056"
       }
@@ -84823,9 +84845,9 @@
       "owner_fr": "FR-030",
       "title": "Catalog event: Payment Failed",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Payment Failed (payment.failed) is an admin-configurable notification event. Primary recipients: Patient, Admin (optional). Critical",
+        "statement": "Payment Failed (payment.failed) is an admin-configurable notification event. Primary recipients: Patient, Admin (optional). Sent when a payment fails. Mandatory — admin cannot disable this event (see Non-Disableable by Default section)",
         "rationale": "prd.md line 152. Category: Payment. Event nodes: EVT-billing-payment-failed (created by another FR migration not yet applied; not linked from here)."
       }
     },
@@ -85055,9 +85077,9 @@
       "owner_fr": "FR-030",
       "title": "Catalog event: Aftercare Escalation / Red Flag Triggered",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Aftercare Escalation / Red Flag Triggered (aftercare.escalation_triggered) is an admin-configurable notification event. Primary recipients: Provider, Admin, Patient (optional). Critical; escalation recipients configurable",
+        "statement": "Aftercare Escalation / Red Flag Triggered (aftercare.escalation_triggered) is an admin-configurable notification event. Primary recipients: Provider, Admin, Patient (optional). Red-flag alert; escalation recipients configurable",
         "rationale": "prd.md line 176. Category: Aftercare. Event nodes: EVT-aftercare-escalation-triggered (new stub owned by FR-011).",
         "aliases": "REQ-020-120"
       }
@@ -85093,9 +85115,9 @@
       "owner_fr": "FR-030",
       "title": "Catalog event: Monitoring Case Pending Assignment",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Monitoring Case Pending Assignment (monitoring.assignment_pending) is an admin-configurable notification event. Primary recipients: Admin. Advice-mode hair-loss/transplant-progress monitoring case activated and awaiting provider assignment (FR-037/FR-038)",
+        "statement": "Monitoring Case Pending Assignment (monitoring.assignment_pending) is an admin-configurable notification event. Primary recipients: Admin. Advice-mode hair-loss monitoring case activated and awaiting provider assignment (FR-037 only)",
         "rationale": "prd.md line 179. Category: Monitoring. Event nodes: EVT-monitoring-assignment-pending (existing node)."
       }
     },
@@ -85105,9 +85127,9 @@
       "owner_fr": "FR-030",
       "title": "Catalog event: Monitoring Provider Assigned",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Monitoring Provider Assigned (monitoring.provider_assigned) is an admin-configurable notification event. Primary recipients: Patient, Provider. Initial assignment or reassignment; assignment type distinguished in payload (FR-037/FR-038)",
+        "statement": "Monitoring Provider Assigned (monitoring.provider_assigned) is an admin-configurable notification event. Primary recipients: Patient, Provider. Initial assignment or reassignment; assignment type distinguished in payload (FR-037 only)",
         "rationale": "prd.md line 175. Category: Monitoring. Event nodes: EVT-monitoring-provider-assigned (existing node)."
       }
     },
@@ -85117,9 +85139,9 @@
       "owner_fr": "FR-030",
       "title": "Catalog event: Monitoring Provider Withdrawn",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Monitoring Provider Withdrawn (monitoring.provider_withdrawn) is an admin-configurable notification event. Primary recipients: Admin, Patient. Provider withdraws with reason; case returns to Admin as Pending Reassignment (FR-037/FR-038)",
+        "statement": "Monitoring Provider Withdrawn (monitoring.provider_withdrawn) is an admin-configurable notification event. Primary recipients: Admin, Patient. Provider withdraws with reason; case returns to Admin as Pending Reassignment (FR-037 only)",
         "rationale": "prd.md line 181. Category: Monitoring. Event nodes: EVT-monitoring-provider-withdrawn (existing node)."
       }
     },
@@ -85129,9 +85151,9 @@
       "owner_fr": "FR-030",
       "title": "Catalog event: Monitoring Provider Reassigned",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Monitoring Provider Reassigned (monitoring.provider_reassigned) is an admin-configurable notification event. Primary recipients: Patient, Provider. Replacement provider assigned after withdrawal; replacement receives history and next eligible advice date (FR-037/FR-038)",
+        "statement": "Monitoring Provider Reassigned (monitoring.provider_reassigned) is an admin-configurable notification event. Primary recipients: Patient, Provider. Replacement provider assigned after withdrawal; replacement receives history and next eligible advice date (FR-037 only)",
         "rationale": "prd.md line 182. Category: Monitoring. Event nodes: EVT-monitoring-provider-reassigned (existing node).",
         "aliases": "REQ-020-126"
       }
@@ -85142,9 +85164,9 @@
       "owner_fr": "FR-030",
       "title": "Catalog event: Monitoring Advice Posted",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Monitoring Advice Posted (monitoring.advice_posted) is an admin-configurable notification event. Primary recipients: Patient. Provider submits or edits the one advice-window paragraph for the current window (FR-037/FR-038)",
+        "statement": "Monitoring Advice Posted (monitoring.advice_posted) is an admin-configurable notification event. Primary recipients: Patient. Provider submits or edits the one advice-window paragraph for the current window; an edit sends the same notice marked \"updated\" (FR-037 only)",
         "rationale": "prd.md line 178. Category: Monitoring. Event nodes: EVT-monitoring-advice-posted (existing node)."
       }
     },
@@ -85166,9 +85188,9 @@
       "owner_fr": "FR-030",
       "title": "Catalog event: Monitoring PDF Export Ready",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Monitoring PDF Export Ready (monitoring.export_ready) is an admin-configurable notification event. Primary recipients: Patient. Date-to-date summary PDF has finished generating and is downloadable (FR-037/FR-038)",
+        "statement": "Monitoring PDF Export Ready (monitoring.export_ready) is an admin-configurable notification event. Primary recipients: Patient. A PDF has finished generating and is downloadable: the date-to-date summary PDF (FR-037/FR-038), the conversion PDF, or a regenerated report. For a converted case the notice opens FR-038 Screen 6 while the draft is open, otherwise Screen 7",
         "rationale": "prd.md line 180. Category: Monitoring. Event nodes: EVT-monitoring-export-ready (existing node)."
       }
     },
@@ -85176,11 +85198,11 @@
       "id": "REQ-030-085",
       "type": "Rule",
       "owner_fr": "FR-030",
-      "title": "Catalog event: Monitoring Converted to Inquiry (monitoring.converted_to_inquiry)",
+      "title": "Catalog event: Monitoring Converted to Inquiry",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Monitoring Converted to Inquiry (monitoring.converted_to_inquiry) is an admin-configurable notification event. Primary recipients: Patient. Monitoring case successfully converts into a distinct FR-003 inquiry (FR-037/FR-038)",
+        "statement": "Monitoring Converted to Inquiry (monitoring.converted_to_inquiry) is an admin-configurable notification event. Primary recipients: Patient. Monitoring case successfully converts into a distinct FR-003 inquiry (FR-037 only; FR-038 converts to a standalone aftercare request instead)",
         "rationale": "prd.md line 181. Category: Monitoring. Event nodes: EVT-monitoring-converted (existing node)."
       }
     },
@@ -85190,9 +85212,9 @@
       "owner_fr": "FR-030",
       "title": "Catalog event: Review Request",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Review Request (review.requested) is an admin-configurable notification event. Primary recipients: Patient. “Review notifications” (typically post-treatment). The admin sets when the review invitation and any reminder are sent through this event's delivery timing; FR-013 does not set its own invitation timing",
+        "statement": "Review Request (review.requested) is an admin-configurable notification event. Primary recipients: Patient. Review invitation anchored on the review eligibility date (FR-013): the invitation is sent on that date and any reminder is counted from it, using this event's delivery timing; FR-013 does not set its own invitation timing",
         "rationale": "prd.md line 189. Category: Reviews. Event nodes: EVT-review-requested (existing node)."
       }
     },
@@ -85286,9 +85308,9 @@
       "owner_fr": "FR-030",
       "title": "Catalog event: Provider-Caused Cancellation / Offer Unavailable",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Provider-Caused Cancellation / Offer Unavailable (provider.status_cancellation_patient) is an admin-configurable notification event. Primary recipients: Patient. FR-015 Alternative Flow A5 / Screen 4 (FR-020 REQ-020-013). One per affected inquiry/case when provider suspension (`ProviderSuspended`) or deactivation (`ProviderDeactivated`) cancels the patient's case or the provider's offer before acceptance. For a case already accepted, the patient instead receives `booking.provider_fault_replacement`. Before acceptance, three variants apply (FR-003 Workflow 2 Alternative Flow B4, REQ-003-021): when other offers remain open, the notice says \"[Clinic] is no longer available. Your other offers are still open.\"; when no other live offer remains and the inquiry is redistributed automatically, the notice says \"[Clinic] is no longer available. We are finding new offers for you.\"; when the patient had explicitly selected the affected provider, the notice asks the patient to confirm the redistribution first. Includes inquiry/case reference and a Contact Admin/Support action. MUST NOT say the patient cancelled, instruct payment against the cancelled selection, or expose confidential suspension/deactivation reasons. Mandatory — admin cannot disable this event (see Non-Disableable by Default section); sent regardless of FR-015's \"Notify Provider\" checkbox. MVP default channels: Email + Push + in-app (global patient toggles still apply to Email/Push; in-app record always created). Retries de-duplicated per provider-status event + affected record + recipient",
+        "statement": "Provider-Caused Cancellation / Offer Unavailable (provider.status_cancellation_patient) is an admin-configurable notification event. Primary recipients: Patient. FR-015 Alternative Flow A5 / Screen 4 (FR-020 REQ-020-013). One per affected inquiry/case when provider suspension (`ProviderSuspended`) or deactivation (`ProviderDeactivated`) cancels the patient's case or the provider's offer before acceptance. For a case already accepted, the patient instead receives `booking.provider_fault_replacement`. Before acceptance, three variants apply, checked in this order (FR-003 Workflow 2 Alternative Flow B4, REQ-003-021): (1) when other live offers remain open, the notice says \"[Clinic] is no longer available. Your other offers are still open.\"; (2) when no live offer remains and the patient had explicitly selected the affected provider, the notice asks the patient to confirm the redistribution first, with Confirm and Decline deep links to FR-003 Screen 8 (REQ-003-128); (3) when no live offer remains and the patient had not selected the provider, the inquiry is redistributed automatically and the notice says \"[Clinic] is no longer available. We are finding new offers for you.\" An unanswered confirm variant is followed by `provider.status_redistribution_reminder`. Includes inquiry/case reference and a Contact Admin/Support action. MUST NOT say the patient cancelled, instruct payment against the cancelled selection, or expose confidential suspension/deactivation reasons. Mandatory — admin cannot disable this event (see Non-Disableable by Default section); sent regardless of FR-015's \"Notify Provider\" checkbox. MVP default channels: Email + Push + in-app (global patient toggles still apply to Email/Push; in-app record always created). Retries de-duplicated per provider-status event + affected record + recipient",
         "rationale": "prd.md line 197. Category: Provider/Compliance. Event nodes: EVT-provider-status-cancellation-patient (existing node). Lock rule (prd.md line 551): Provider-Caused Cancellation (`provider.status_cancellation_patient`) and Admin Support Required (`provider.status_cancellation_admin_support`) are mandatory notifications for each inquiry/case affected by an FR-015 provider suspension or deactivation. Affected patients and admins MUST be informed regardless of FR-015's \"Notify Provider\" checkbox; toggles are locked for both events. Failed deliveries retry per FR-020 without duplicates (de-duplicated per provider-status event + affected record + recipient) and never restore cancelled records. Before acceptance, the patient notice uses the FR-003 variants (Workflow 2 Alternative Flow B4, REQ-003-021): \"[Clinic] is no longer available. Your other offers are still open.\" when other offers remain open; \"[Clinic] is no longer available. We are finding new offers for you.\" when the inquiry is redistributed automatically, or a request to confirm redistribution first when the patient had explicitly selected the affected provider. The admin-support alert goes to admins with the FR-031 Respond to Support permission.",
         "aliases": "REQ-020-138"
       }
@@ -85397,9 +85419,9 @@
       "owner_fr": "FR-030",
       "title": "Catalog event: System Escalation",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System Escalation (system.escalation) is an admin-configurable notification event. Primary recipients: Admin. Operational escalation events requiring admin action",
+        "statement": "System Escalation (system.escalation) is an admin-configurable notification event. Primary recipients: Admin. Operational escalation events requiring admin action; also the escalation notice S-03 sends to the escalation recipients when a locked notice meets its escalation condition (Not delivered or Not opened after the wait time)",
         "rationale": "Event Catalog table. Event node: EVT-system-escalation, emitted at the platform-wide Stage because no producer stage can be named."
       }
     },
@@ -85409,9 +85431,9 @@
       "owner_fr": "FR-030",
       "title": "Catalog event: System Alert",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System Alert (system.alert) is an admin-configurable notification event. Primary recipients: Admin. System health/monitoring alerts surfaced via notifications",
+        "statement": "System Alert (system.alert) is an admin-configurable notification event. Primary recipients: Admin. System health/monitoring alerts surfaced via notifications; also raised when a locked notice fails permanently, in-app and by a channel other than the failing one",
         "rationale": "Event Catalog table. Event node: EVT-system-alert, emitted at the platform-wide Stage because no producer stage can be named."
       }
     },
@@ -85480,11 +85502,11 @@
       "id": "REQ-030-111",
       "type": "Rule",
       "owner_fr": "FR-030",
-      "title": "Provider notifications go by email and web push",
+      "title": "Provider notifications go by email and in-app",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Notifications delivered via email and web push notifications",
+        "statement": "Notifications delivered via email and in-app notifications",
         "rationale": "prd.md line 46"
       }
     },
@@ -85818,9 +85840,9 @@
       "owner_fr": "FR-030",
       "title": "Rules dashboard lists catalog events grouped by category with status, channels and last modified",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System displays the backend event catalog (grouped by category) with each row showing current status (Enabled/Disabled), channels, and last modified",
+        "statement": "System displays the backend event catalog (grouped by category) with each row showing the status of its rule (Active, Paused or Draft), channels, and last modified",
         "rationale": "prd.md line 245. Restating prd.md line 383 (rules grouped by event category)."
       }
     },
@@ -85828,11 +85850,11 @@
       "id": "REQ-030-141",
       "type": "Rule",
       "owner_fr": "FR-030",
-      "title": "Toggling an event off stops notifications except critical events; toggling on activates saved configuration",
+      "title": "Toggling an event off pauses its rules except locked notices; toggling on uses the Active rule or the catalogue defaults",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "If toggled Off, S-03 will not send notifications for this event (except where policy marks it critical/non-disableable). Security-critical events (OTP verification, password reset) are non-disableable by default and must show a locked toggle. If toggled On, the event becomes active using its saved configuration",
+        "statement": "If toggled Off (its rules paused), S-03 sends no notification for events that occur meanwhile; a locked notice cannot be paused and its toggle is locked. Security-critical events (OTP verification, password reset) are non-disableable by default and show a locked toggle. If toggled On, S-03 uses the event's Active rule; an On event with no Active rule is sent with the catalogue defaults (default channels and the standard template). Every event ships with one seeded Active rule.",
         "rationale": "prd.md lines 248, 249."
       }
     },
@@ -85854,9 +85876,9 @@
       "owner_fr": "FR-030",
       "title": "Channel preferences per event",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Email: Enabled (required for payment reminders) Push notification: Enabled SMS: Optional (admin can enable for critical payment reminders in future phases; SMS is not available in MVP)",
+        "statement": "Email: Enabled (required for payment reminders) Push notification: Enabled SMS: Optional (admin can enable for payment reminders in future phases; SMS is not available in MVP)",
         "rationale": "prd.md lines 248, 249, 250, 251. Example: email required for payment reminders."
       }
     },
@@ -85878,9 +85900,9 @@
       "owner_fr": "FR-030",
       "title": "Delivery timing, local-time delivery and retry logic are configured per event",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Trigger: 3 days (72 hours) before installment due date (example only; the payment reminder schedule itself is the single payment reminder timing setting owned by FR-007) Delivery time: 9:00 AM in recipient's local timezone Retry logic: the platform default retry rule (retry on, up to 3 retries, 1 hour apart), or different values set for this notification",
+        "statement": "Trigger: 3 days (72 hours) before installment due date (example only; the payment reminder schedule itself is the single payment reminder timing setting owned by FR-007) Delivery time: 9:00 AM in recipient's local timezone Skip If Too Late (optional): when the send time has already passed as the event occurs, the notice is not sent Retry logic: the platform default retry rule (retry on, up to 3 retries, 1 hour apart), or different values set for this notification",
         "rationale": "Workflow step 10 (admin configures delivery timing). Example values only."
       }
     },
@@ -85888,11 +85910,11 @@
       "id": "REQ-030-146",
       "type": "Rule",
       "owner_fr": "FR-030",
-      "title": "Escalation rules are optional per event",
+      "title": "Escalation rules are optional per event and only for locked notices",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "If payment still not received 24 hours after reminder, escalate to admin billing team",
+        "statement": "Escalation is offered only for locked notices. The admin picks a condition from a fixed list (Not delivered, Not opened) and a wait time, for example Payment Failed, Not opened, wait 24 hours, escalate to the admin billing team",
         "rationale": "prd.md lines 268, 269."
       }
     },
@@ -85926,9 +85948,9 @@
       "owner_fr": "FR-030",
       "title": "Activation asks for confirmation then notifies S-03",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System prompts: \"This rule will activate immediately and apply to all matching events. Continue?\"",
+        "statement": "System prompts: \"This rule will activate immediately and apply to all matching events. Continue?\" The system refuses to activate a rule that overlaps an Active rule of the same event (same recipient type and same channel) and names that Active rule",
         "rationale": "prd.md lines 277, 278, 279, 280, 281, 282. Confirmation text: \"Notification rule activated successfully\" (line 273)."
       }
     },
@@ -85948,11 +85970,11 @@
       "id": "REQ-030-151",
       "type": "Rule",
       "owner_fr": "FR-030",
-      "title": "Pausing a rule stops triggers and queues events for evaluation on reactivation",
+      "title": "Pausing a rule skips events that occur during the pause; queued notices are still delivered",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System pauses rule and stops triggering notifications for this event Outcome: Notifications paused temporarily; no notifications lost (system queues events and evaluates when rule reactivated if within retry window)",
+        "statement": "System pauses the rule: events that occur while it is paused are skipped for good and send nothing from this rule; notices already queued before the pause are still delivered. Reactivating applies the rule only to events that occur from then on",
         "rationale": "prd.md lines 308, 309, 310, 311, 312, 313. Prompt: \"Paused rules will not trigger notifications. Reactivate when ready.\""
       }
     },
@@ -85998,9 +86020,9 @@
       "owner_fr": "FR-030",
       "title": "Email bounce is logged and retried; permanent failure after retries are exhausted",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System logs failed delivery with error code and timestamp If retry enabled, system queues a retry after the retry interval (platform default 1 hour; see General Module Rule 7) After retries are exhausted (platform default 3; an admin may set 1 to 5), system marks notification as \"Failed - Permanent\"",
+        "statement": "System logs failed delivery with error code and timestamp. If retry is enabled and the bounce is soft (for example mailbox full), system queues a retry after the retry interval (platform default 1 hour; see General Module Rule 7); a hard bounce (for example an invalid address) is not retried and is marked \"Failed - Permanent\" at once. After ordinary retries are exhausted (platform default 3; an admin may set 1 to 5), system marks the notification \"Failed - Permanent\"; while an email provider outage lasts, the notice is held for up to 24 hours and then marked \"Failed - Service Outage\" without using up its retries",
         "rationale": "Workflow B1, Notification Delivery Fails (Email Bounce), steps 3 to 6."
       }
     },
@@ -86008,11 +86030,11 @@
       "id": "REQ-030-156",
       "type": "Rule",
       "owner_fr": "FR-030",
-      "title": "A bounced email flags the patient account with an Email delivery issue indicator",
+      "title": "A bounced email flags the recipient's account with an Email delivery issue indicator",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System flags patient account with \"Email delivery issue\" indicator",
+        "statement": "System flags the recipient's account with an \"Email delivery issue\" indicator, whatever the account type",
         "rationale": "prd.md line 338. The flag lives on the patient account (FR-001 or FR-016 territory): open ownership question."
       }
     },
@@ -86020,11 +86042,11 @@
       "id": "REQ-030-157",
       "type": "Rule",
       "owner_fr": "FR-030",
-      "title": "Admin is alerted when a critical notification fails permanently",
+      "title": "Admin is alerted when a locked notice fails permanently",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Admin receives alert if event is critical (e.g., payment confirmation) Admin contacts patient via alternative channel (phone, in-app message) to update email address",
+        "statement": "Admin receives a system.alert (in-app and by a channel other than the failing one) when a locked (critical) notice fails permanently; admin contacts the recipient via alternative channel (phone, in-app message) to update email address",
         "rationale": "prd.md lines 331, 332."
       }
     },
@@ -86046,9 +86068,9 @@
       "owner_fr": "FR-030",
       "title": "An event can have several rules; Rule Name is unique per event",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Rule 3: An event type can have several notification rules. Rule Name must be unique among the rules of one event; an admin adds another rule for an event with Add Rule",
+        "statement": "Rule 3: An event type can have several notification rules. Rule Name must be unique among the rules of one event; an admin adds another rule for an event with Add Rule. Every event ships with one seeded Active rule, and any rule can be saved as Draft. The system refuses to activate a rule that overlaps an Active rule of the same event (same recipient type and same channel) and names the Active rule",
         "rationale": "General Module Rule 3 and Workflow B3, Admin Adds Another Rule for the Same Event."
       }
     },
@@ -86176,11 +86198,11 @@
       "id": "REQ-030-173",
       "type": "Rule",
       "owner_fr": "FR-030",
-      "title": "Escalation rules are only available for critical event types",
+      "title": "Escalation rules are only available for locked notices",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Escalation rules only available for critical event types (payment, booking, medical concerns)",
+        "statement": "Escalation is available only for locked notices. The condition is picked from a fixed list (Not delivered, Not opened) with a wait time; when it holds after the wait time, S-03 sends the escalation notice to the escalation recipients",
         "rationale": "prd.md line 456."
       }
     },
@@ -86310,9 +86332,9 @@
       "owner_fr": "FR-030",
       "title": "Archived templates cannot be selected in rules",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Archived templates cannot be selected in notification rules but remain for historical records",
+        "statement": "Archived templates cannot be selected in notification rules but remain for historical records; a template that an Active rule uses cannot be archived or set to Draft, and the system refuses with a message naming the rule",
         "rationale": "prd.md line 499"
       }
     },
@@ -86322,9 +86344,9 @@
       "owner_fr": "FR-030",
       "title": "Templates must be active before they can be selected in rules",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Rule 4: Notification templates must be activated before they can be selected in notification rules",
+        "statement": "Rule 4: Notification templates must be activated before they can be selected in notification rules, and cannot be archived or set to Draft while an Active rule uses them",
         "rationale": "prd.md line 519 (General Rule 4)."
       }
     },
@@ -86490,9 +86512,9 @@
       "owner_fr": "FR-030",
       "title": "Critical notifications have higher priority and stricter SLAs",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Assumption 1: Critical notifications (payment confirmations, appointment reminders, medical escalations) must be delivered with higher priority and stricter SLAs than non-critical notifications (marketing, general updates)",
+        "statement": "Assumption 1: Critical notifications (the locked notices, for example payment confirmations and booking cancellations) must be delivered with higher priority and stricter SLAs than non-critical notifications (marketing, general updates)",
         "rationale": "prd.md line 759 (Business Process Assumption 1)."
       }
     },
@@ -86500,11 +86522,11 @@
       "id": "REQ-030-201",
       "type": "Rule",
       "owner_fr": "FR-030",
-      "title": "Outage handling: alert admin after 15 minutes, push notifications expire after 24 hours",
+      "title": "Outage handling: hold up to 24 hours, alert admin after 15 minutes, then Failed - Service Outage",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "If the SMTP service is unavailable, queue emails for retry and alert admin if the outage exceeds 15 minutes; fallback to a secondary SMTP provider if configured. If the push service is unavailable, queue notifications for retry, alert admin if the outage exceeds 15 minutes, and expire notifications after 24 hours (the recipient sees notification history in-app instead).",
+        "statement": "If the SMTP service is unavailable, hold emails for up to 24 hours (General Module Rule 7), alert admin if the outage exceeds 15 minutes, and fall back to a secondary SMTP provider if configured. If the push service is unavailable, hold notifications for up to 24 hours, alert admin if the outage exceeds 15 minutes, and after 24 hours mark them \"Failed - Service Outage\" (the recipient sees notification history in-app instead).",
         "rationale": "prd.md lines 706, 711 (external dependency failure handling)."
       }
     },
@@ -86524,11 +86546,11 @@
       "id": "REQ-030-203",
       "type": "Rule",
       "owner_fr": "FR-030",
-      "title": "Late trigger: send immediately or skip when the delivery timing has already passed",
+      "title": "Late trigger: send at once, or skip when Skip If Too Late is checked",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System evaluates notification rule when event created; if delivery timing already passed, system triggers notification immediately with note \"Delivery timing adjusted due to short notice\" in admin logs Alternatively, admin can configure rule to skip notification if timing not feasible (e.g., don't send \"3 days before\" reminder if event is tomorrow)",
+        "statement": "System evaluates notification rule when event created; if the send time has already passed, system sends the notification at once with note \"Delivery timing adjusted due to short notice\" in admin logs. If the rule has Skip If Too Late checked, the notification is not sent when the send time has passed (e.g., a \"3 days before\" reminder is not sent if the event is tomorrow)",
         "rationale": "prd.md lines 860, 861, 862. Field skip_if_timing_passed records the skip option."
       }
     },
@@ -86536,11 +86558,11 @@
       "id": "REQ-030-204",
       "type": "Rule",
       "owner_fr": "FR-030",
-      "title": "Missing template variable renders a placeholder, logs a warning and alerts admin for critical notifications",
+      "title": "Missing template variable renders a placeholder, logs a warning and alerts admin for locked notices",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System renders template with placeholder text for missing variable (e.g., \"[Phone number not provided]\") or omits section containing missing variable if template designed with conditional logic System logs warning in admin notification logs: \"Variable `patient.phone` not available for notification [notification_id]; rendered with placeholder\" Admin receives alert if missing variable affects critical notification (e.g., appointment reminder missing appointment time)",
+        "statement": "System renders template with placeholder text for missing variable (e.g., \"[Phone number not provided]\") or omits section containing missing variable if template designed with conditional logic System logs warning in admin notification logs: \"Variable `patient.phone` not available for notification [notification_id]; rendered with placeholder\" Admin receives alert if missing variable affects a locked (critical) notice (e.g., payment confirmation missing the amount)",
         "rationale": "prd.md lines 864, 865, 866, 867."
       }
     },
@@ -86548,11 +86570,11 @@
       "id": "REQ-030-205",
       "type": "Rule",
       "owner_fr": "FR-030",
-      "title": "Notifications go to the primary contact; optional retry with secondary and send-to-both",
+      "title": "Notifications go to the profile's one email and one phone; no secondary contact",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System prioritizes primary contact info (primary email, primary phone); delivers to primary only If delivery to primary fails, system can optionally retry with secondary contact info (configurable per notification rule via \"Retry with secondary contact\" toggle) Admin can configure notification rule to send to both primary and secondary simultaneously for critical events (e.g., payment confirmation sent to both primary and secondary email)",
+        "statement": "Profiles hold one email address and one phone number each (FR-001, FR-032); delivery goes to them, and there is no secondary-contact retry and no double send",
         "rationale": "prd.md lines 869, 870, 871, 872. Fields retry_with_secondary_contact and send_to_both_contacts record the per-rule options."
       }
     },
@@ -86572,11 +86594,11 @@
       "id": "REQ-030-207",
       "type": "Rule",
       "owner_fr": "FR-030",
-      "title": "Deactivating a rule keeps queued notifications unless the admin purges the queue",
+      "title": "Pausing a rule keeps queued notices; the Purge Queue button cancels them",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System immediately stops adding new notifications to queue for deactivated rule Notifications already queued (not yet delivered) remain in queue and delivered as scheduled If admin wants to cancel queued notifications, admin must explicitly \"Purge Queue\" (with confirmation prompt: \"This will cancel X pending notifications. Continue?\")",
+        "statement": "System immediately stops adding new notifications for the paused rule: events that occur during the pause are skipped for good. Notifications already queued (not yet delivered) remain in queue and are delivered as scheduled. To cancel queued notifications, the admin uses the Purge Queue button on the rule screen (Screen 2), with confirmation prompt: \"This will cancel X pending notifications. Continue?\"",
         "rationale": "prd.md lines 879, 880, 881, 882."
       }
     },
@@ -86584,11 +86606,11 @@
       "id": "REQ-030-208",
       "type": "Rule",
       "owner_fr": "FR-030",
-      "title": "Critical notifications override recipient opt-out and show an in-app banner",
+      "title": "Locked (critical) notices override recipient opt-out and show an in-app banner",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System respects recipient opt-out for non-critical notifications (marketing, general updates) and does not deliver For critical notifications (payment confirmations, appointment reminders), system overrides opt-out and delivers via at least one channel (displays banner in-app explaining why critical notification delivered despite opt-out) Admin can designate notification types as \"Critical - Cannot Opt Out\" in rule configuration",
+        "statement": "System respects recipient opt-out for non-critical notifications (marketing, general updates) and does not deliver. A locked notice is critical: it is sent at once, is exempt from quiet hours, the hourly rate limit and coalescing, and overrides the recipient's opt-out, delivering via at least one channel (the app displays a banner explaining why a critical notice was delivered despite opt-out). The one exception is legal.acceptance_reminder, which is locked but not critical. The locked list is fixed in the codebase: an admin cannot mark any other notice as critical",
         "rationale": "prd.md lines 884, 885, 886, 887. Field critical_cannot_opt_out records the per-rule designation."
       }
     },
@@ -86596,11 +86618,11 @@
       "id": "REQ-030-209",
       "type": "Rule",
       "owner_fr": "FR-030",
-      "title": "Prolonged outage: retry for 24 hours then mark Failed - Service Outage and alert admin",
+      "title": "Prolonged outage: hold for 24 hours then mark Failed - Service Outage and alert admin",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System queues notifications for retry at the retry interval (up to 24-hour window) If service restored within 24 hours, queued notifications delivered (may result in burst of deliveries) If outage exceeds 24 hours, system marks notifications as \"Failed - Service Outage\" and alerts admin Admin can manually re-trigger notifications after service restored or switch to backup notification provider if configured",
+        "statement": "System holds notifications for up to 24 hours and retries them at the retry interval If service restored within 24 hours, queued notifications delivered (may result in burst of deliveries) If outage exceeds 24 hours, system marks notifications as \"Failed - Service Outage\" without using up their retries, and alerts admin Admin can manually re-trigger notifications after service restored or switch to backup notification provider if configured",
         "rationale": "Edge case, prolonged external service outage. No exponential backoff; retries use the one retry interval."
       }
     },
@@ -86692,11 +86714,11 @@
       "id": "REQ-030-219",
       "type": "Rule",
       "owner_fr": "FR-030",
-      "title": "A provider with a live quote gets only the quote-cancelled notice when an inquiry is cancelled",
+      "title": "A provider with a quote on a cancelled inquiry gets only the quote-cancelled notice",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "A provider that has a live quote on a cancelled inquiry does not receive inquiry.cancelled; that provider receives only quote.cancelled_inquiry. A provider without a quote on the inquiry still receives inquiry.cancelled.",
+        "statement": "Providers are not recipients of inquiry.cancelled. A provider that holds a draft, sent or expired quote on a cancelled inquiry receives only quote.cancelled_inquiry, and a provider that never quoted is told nothing",
         "rationale": "Event Catalog table, rows inquiry.cancelled and quote.cancelled_inquiry."
       }
     },
@@ -86754,9 +86776,9 @@
       "owner_fr": "FR-030",
       "title": "One platform-wide quiet-hours period, set only by admins",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Admins set one platform-wide quiet-hours period during which non-urgent notifications are held and sent after it ends. It is set only on the Rules Dashboard by an admin; recipients and providers cannot set their own. Default: 10 PM to 7 AM in the recipient's local time; start and end must differ; critical notifications are not held",
+        "statement": "Admins set one platform-wide quiet-hours period during which non-critical notifications are held and sent in order when it ends. It is set only on the Rules Dashboard by an admin; recipients and providers cannot set their own. Default: 10 PM to 7 AM in the recipient's local time; start and end must differ; locked (critical) notices are never held; the hourly rate limit still applies to the release",
         "rationale": "Scope and Screen 1 field Quiet Hours. Replaces the retired provider business hours Rule REQ-030-110."
       }
     },
@@ -86766,9 +86788,9 @@
       "owner_fr": "FR-030",
       "title": "Transplant progress reminder schedule is set in the admin notification settings",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Admins set how often the default patient progress reminder is sent after treatment, and for how long. Default: once a month for 12 months after treatment. The patient may change or switch off their own reminders; FR-038 refers to this schedule",
+        "statement": "Admins set how often the default patient progress reminder is sent on a transplant-progress case, and for how long, counted from the case creation date. Default: once a month for 12 months from the case creation date. The patient may change or switch off their own reminders; FR-038 refers to this schedule",
         "rationale": "Screen 1 field Transplant Progress Reminder Schedule and the Editable by Admin list."
       }
     },
@@ -86788,11 +86810,11 @@
       "id": "REQ-030-227",
       "type": "Rule",
       "owner_fr": "FR-030",
-      "title": "Rule Editor field Critical - Cannot Opt Out",
+      "title": "Rule Editor shows Critical - Cannot Opt Out as a read-only indicator",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Critical - Cannot Opt Out is a toggle (default off; admin only) that marks a notification type as critical: it is delivered through at least one channel even when the recipient has opted out.",
+        "statement": "Critical - Cannot Opt Out is a read-only indicator that shows whether the event is a locked (critical) notice: a locked notice is delivered through at least one channel even when the recipient has opted out. An admin cannot mark an event critical; the indicator follows the locked list.",
         "rationale": "Screen 2 field table."
       }
     },
@@ -86850,9 +86872,9 @@
       "owner_fr": "FR-030",
       "title": "Pausing a rule on the dashboard needs a confirmation prompt",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "Pausing a rule requires a confirmation prompt: \"This will stop notifications for this event. Continue?\"",
+        "statement": "Pausing a rule requires a confirmation prompt: \"Events that occur while this rule is paused will not send notifications. Notices already queued are still delivered. Continue?\"",
         "rationale": "prd.md line 401 (Screen 1 Business Rules). Workflow A2 step 3 (prd.md line 304) words its pause prompt differently: \"Paused rules will not trigger notifications. Reactivate when ready.\" (REQ-030-151)."
       }
     },
@@ -86874,10 +86896,226 @@
       "owner_fr": "FR-030",
       "title": "With Email and Push both off, only the in-app entry is created",
       "status": "active",
+      "version": 2,
+      "attrs": {
+        "statement": "When a recipient has both Email and Push switched off, nothing is sent by email or push, and the in-app entry is still always created; it is built from the push title and body of the event's push template, and there is no separate in-app template",
+        "rationale": "prd.md lines 915, 916 (Edge Cases). The owning FR was unconfirmed in the 2026-11-20 apply result; the line is in this PRD."
+      }
+    },
+    {
+      "id": "REQ-030-235",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Account Deletion Requested",
+      "status": "active",
       "version": 1,
       "attrs": {
-        "statement": "When a recipient has both Email and Push switched off, nothing is sent by email or push, and the in-app entry is still always created",
-        "rationale": "prd.md lines 915, 916 (Edge Cases). The owning FR was unconfirmed in the 2026-11-20 apply result; the line is in this PRD."
+        "statement": "Account Deletion Requested (account.deletion_requested) is an admin-configurable notification event. Primary recipients: Patient, Admin. Fired when a patient's account deletion request is submitted through FR-001 (FR-023 REQ-023-029). One event with two recipients: the patient receives the submission confirmation, which is the mandatory notice, and the admins are told of the new request. The toggle is locked",
+        "rationale": "Event Catalog table, row account.deletion_requested. Category: Account/Auth. Event nodes: EVT-account-deletion-requested."
+      }
+    },
+    {
+      "id": "REQ-030-236",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Data Request Status Notices",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Data Request Status Notices (dsr.verification_required, dsr.in_progress, dsr.fulfilled, dsr.denied, dsr.blocked_by_obligation) is an admin-configurable notification event. Primary recipients: Patient. Status notices on a deletion request (FR-023 REQ-023-008): identity proof insufficient, approved and processing, completed (with the actions taken and the legal basis of any retained records), denied (with the reason), approval blocked by an active obligation (with the expected timeline). `dsr.fulfilled` and `dsr.denied` are mandatory — admin cannot disable them; the other three are admin-switchable. `dsr.fulfilled` is sent by email only, to the contact address FR-023 captured, is critical and creates no in-app record",
+        "rationale": "Event Catalog table, row dsr.verification_required, dsr.in_progress, dsr.fulfilled, dsr.denied, dsr.blocked_by_obligation. Category: Account/Auth. Event nodes: EVT-dsr-verification-required, EVT-dsr-in-progress, EVT-dsr-fulfilled, EVT-dsr-denied, EVT-dsr-blocked-by-obligation."
+      }
+    },
+    {
+      "id": "REQ-030-237",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Data Request Deadline Approaching",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Data Request Deadline Approaching (dsr.deadline_approaching) is an admin-configurable notification event. Primary recipients: Admin. Sent 7 calendar days before the deadline of a deletion request that is still open (FR-023 REQ-023-029)",
+        "rationale": "Event Catalog table, row dsr.deadline_approaching. Category: Account/Auth. Event nodes: EVT-dsr-deadline-approaching."
+      }
+    },
+    {
+      "id": "REQ-030-238",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Data Request Obligation Block Ended",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Data Request Obligation Block Ended (dsr.obligation_block_ended) is an admin-configurable notification event. Primary recipients: Admin. Sent when the obligation that blocked approval of a deletion request ends, saying the request can be approved (FR-023 REQ-023-029 and Main Flow step 3). FR-023 owns the emitting step",
+        "rationale": "Event Catalog table, row dsr.obligation_block_ended. Category: Account/Auth. Event nodes: none (FR-023 owns the emitting step)."
+      }
+    },
+    {
+      "id": "REQ-030-239",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Legal Version Published",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Legal Version Published (legal.version_published) is an admin-configurable notification event. Primary recipients: Admin (the publishing Admin). Sent to the Admin who published the version once publication succeeds (FR-027 REQ-027-022)",
+        "rationale": "Event Catalog table, row legal.version_published. Category: System/Operations. Event nodes: EVT-legal-version-published."
+      }
+    },
+    {
+      "id": "REQ-030-240",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Legal Acceptance Coverage Below Threshold",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Legal Acceptance Coverage Below Threshold (legal.coverage_below_threshold) is an admin-configurable notification event. Primary recipients: Admin (holders of the A-09 Edit Settings permission). Sent once per version when the acceptance rate of a Current version is below the Admin-set threshold; evaluated daily from 14 days after the version became Current (FR-027 REQ-027-023)",
+        "rationale": "Event Catalog table, row legal.coverage_below_threshold. Category: System/Operations. Event nodes: EVT-legal-coverage-below-threshold."
+      }
+    },
+    {
+      "id": "REQ-030-241",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Legal Acceptance Reminder",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Legal Acceptance Reminder (legal.acceptance_reminder) is an admin-configurable notification event. Primary recipients: Patient, Provider (team members in the Pending set). One reminder to each user in the Pending set; FR-027 owns the cadence (REQ-027-063). Locked: the toggle cannot be switched off. It is the one locked notice that is not critical: it respects quiet hours and the rate limit",
+        "rationale": "Event Catalog table, row legal.acceptance_reminder. Category: System/Operations. Event nodes: EVT-legal-acceptance-reminder."
+      }
+    },
+    {
+      "id": "REQ-030-242",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Installment Charge Failed",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Installment Charge Failed (installment.failed) is an admin-configurable notification event. Primary recipients: Patient. Immediate notice that an installment charge failed, with a clear error message (FR-007B REQ-007B-017). On the day after the due date the overdue notice replaces that day's failure notice",
+        "rationale": "Event Catalog table, row installment.failed. Category: Payment. Event nodes: EVT-installment-failed."
+      }
+    },
+    {
+      "id": "REQ-030-243",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Installment Overdue",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Installment Overdue (installment.overdue_notice) is an admin-configurable notification event. Primary recipients: Patient, Admin (billing admins). One notice to the patient and one to the billing admins on the day after a due date passes unpaid, after that day's retry; the patient notice states the booking cancellation date when the cancellation point is set. The provider sees the Overdue banner only and gets no notice (FR-007B REQ-007B-101)",
+        "rationale": "Event Catalog table, row installment.overdue_notice. Category: Payment. Event nodes: EVT-installment-overdue-notice."
+      }
+    },
+    {
+      "id": "REQ-030-244",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Installment Plan Defaulted",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Installment Plan Defaulted (installment.plan_defaulted) is an admin-configurable notification event. Primary recipients: Admin, Patient, Provider. Sent when a plan becomes Defaulted; the admin notice is for intervention (FR-007B REQ-007B-020)",
+        "rationale": "Event Catalog table, row installment.plan_defaulted. Category: Payment. Event nodes: EVT-installment-plan-defaulted."
+      }
+    },
+    {
+      "id": "REQ-030-245",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Installment Charged",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Installment Charged (installment.charged) is an admin-configurable notification event. Primary recipients: Patient. Confirmation after a successful installment charge, by email and push (FR-007B REQ-007B-016)",
+        "rationale": "Event Catalog table, row installment.charged. Category: Payment. Event nodes: EVT-installment-charged."
+      }
+    },
+    {
+      "id": "REQ-030-246",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Installment Plan Completed",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Installment Plan Completed (installment.plan_completed) is an admin-configurable notification event. Primary recipients: Patient. Sent when the final installment completes and the booking status changes (FR-007B REQ-007B-093)",
+        "rationale": "Event Catalog table, row installment.plan_completed. Category: Payment. Event nodes: EVT-installment-plan-completed."
+      }
+    },
+    {
+      "id": "REQ-030-247",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Payment Overdue Notice",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Payment Overdue Notice (payment.overdue_notice) is an admin-configurable notification event. Primary recipients: Patient, Admin (billing admins). Sent when a booking balance enters Overdue (FR-007 REQ-007-036): the billing admins are notified and the patient receives one overdue notice",
+        "rationale": "Event Catalog table, row payment.overdue_notice. Category: Payment. Event nodes: EVT-patient-payment-overdue-notice."
+      }
+    },
+    {
+      "id": "REQ-030-248",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Refund Approval Overdue",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Refund Approval Overdue (refund.approval_escalated) is an admin-configurable notification event. Primary recipients: Admin (super-admin). Sent to a super-admin when a refund approval is still open after 2 business days (FR-007 REQ-007-015)",
+        "rationale": "Event Catalog table, row refund.approval_escalated. Category: Payment. Event nodes: EVT-refund-approval-escalated."
+      }
+    },
+    {
+      "id": "REQ-030-249",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Redistribution Confirmation Reminder",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Redistribution Confirmation Reminder (provider.status_redistribution_reminder) is an admin-configurable notification event. Primary recipients: Patient. Sent once, 48 hours after the confirm variant of `provider.status_cancellation_patient` is left unanswered (FR-020 REQ-020-159). It carries the same Confirm and Decline links and the Contact Admin/Support action. It is dropped when the patient has answered, the inquiry was cancelled, an admin reassigned or reran distribution, or the support marker was cleared. Mandatory — admin cannot disable this event (see Non-Disableable by Default section)",
+        "rationale": "Event Catalog table, row provider.status_redistribution_reminder. Category: Provider/Compliance. Event nodes: EVT-provider-status-redistribution-reminder."
+      }
+    },
+    {
+      "id": "REQ-030-250",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Provider Response Removed",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Provider Response Removed (review.response_removed) is an admin-configurable notification event. Primary recipients: Provider. Fired by FR-013 when an admin removes the provider's public response to a review; tells the provider the response was removed and gives the removal reason. Informational; admin-switchable",
+        "rationale": "Event Catalog table, row review.response_removed. Category: Reviews. Event nodes: EVT-review-response-removed."
+      }
+    },
+    {
+      "id": "REQ-030-251",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Monitoring Progress Reminder",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Monitoring Progress Reminder (monitoring.progress_reminder) is an admin-configurable notification event. Primary recipients: Patient. Default patient reminder on a transplant-progress case (FR-038) only; hair-loss monitoring cases (FR-037) have no reminders. By default sent once a month for 12 months from the case creation date (schedule set on Screen 1) and stopped when the case is completed or converted. The patient can change the schedule or switch it off; admin-switchable",
+        "rationale": "Event Catalog table, row monitoring.progress_reminder. Category: Monitoring. Event nodes: EVT-monitoring-progress-reminder."
+      }
+    },
+    {
+      "id": "REQ-030-252",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Aftercare progress reminder schedule is set in the admin notification settings",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Admins set how often the default patient progress reminder is sent during aftercare, and for how long, counted from the treatment completion date. Default: once a month for 12 months after treatment. The patient may change or switch off their own reminders; the default is the FR-011 setting (REQ-011-088)",
+        "rationale": "Screen 1 field Aftercare Progress Reminder Schedule and the Editable by Admin list. The transplant-progress schedule (REQ-030-225) counts from the case creation date instead."
       }
     },
     {
@@ -99487,7 +99725,7 @@
       "owner_fr": "FR-030",
       "title": "Alerts and Notifications: Rule Editor",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
         "description": "Admin Platform (A-09). Create or edit a rule for a catalog event (an event can have several rules): recipients, channels, templates, timing, retry, escalation, status (PRD Screen 2). UI controls, not fields: preview pane, Test Rule, Save Draft, Save & Activate, change log panel, breadcrumb and Back to list."
@@ -104361,7 +104599,7 @@
       "owner_fr": null,
       "title": "Inquiry",
       "status": "active",
-      "version": 27,
+      "version": 28,
       "attrs": {
         "timeline": "main",
         "sequence": 1,
@@ -104400,7 +104638,7 @@
       "owner_fr": null,
       "title": "Confirmed",
       "status": "active",
-      "version": 20,
+      "version": 21,
       "attrs": {
         "timeline": "main",
         "sequence": 4,
@@ -104413,7 +104651,7 @@
       "owner_fr": null,
       "title": "Payment",
       "status": "active",
-      "version": 20,
+      "version": 21,
       "attrs": {
         "timeline": "main",
         "sequence": 5,
@@ -104465,7 +104703,7 @@
       "owner_fr": null,
       "title": "Review and close",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "timeline": "main",
         "sequence": 9,
@@ -104492,7 +104730,7 @@
       "owner_fr": null,
       "title": "Tracking",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "timeline": "monitoring",
         "sequence": 2,
@@ -122840,9 +123078,9 @@
       "id": "STP-030-002",
       "type": "Step",
       "owner_fr": "FR-030",
-      "title": "System displays the backend event catalog grouped by category with status, channels and last modified",
+      "title": "System displays the backend event catalog grouped by category with the status of each rule (Active, Paused or Draft), channels and last modified",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 2"
       }
@@ -122862,9 +123100,9 @@
       "id": "STP-030-004",
       "type": "Step",
       "owner_fr": "FR-030",
-      "title": "Admin toggles the event On or Off (security-critical events show a locked toggle)",
+      "title": "Admin switches the event On or Off by activating or pausing its rules (locked notices show a locked toggle)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 4"
       }
@@ -122928,9 +123166,9 @@
       "id": "STP-030-010",
       "type": "Step",
       "owner_fr": "FR-030",
-      "title": "Admin configures delivery timing",
+      "title": "Admin configures delivery timing (before or after an anchor date, Skip If Too Late, retry logic)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 10"
       }
@@ -122939,9 +123177,9 @@
       "id": "STP-030-011",
       "type": "Step",
       "owner_fr": "FR-030",
-      "title": "Admin configures escalation rules (optional)",
+      "title": "Admin configures escalation rules (optional, locked notices only): a condition from a fixed list plus a wait time",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 11"
       }
@@ -123073,7 +123311,7 @@
       "owner_fr": "FR-030",
       "title": "S-03 Notification Service begins monitoring for event triggers matching the rule",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 24"
       }
@@ -123181,9 +123419,9 @@
       "id": "STP-030-034",
       "type": "Step",
       "owner_fr": "FR-030",
-      "title": "System prompts that paused rules will not trigger notifications",
+      "title": "System prompts that events during the pause will not send notifications and that queued notices are still delivered",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "A2: Admin Deactivates Notification Rule Temporarily step 3"
       }
@@ -123203,9 +123441,9 @@
       "id": "STP-030-036",
       "type": "Step",
       "owner_fr": "FR-030",
-      "title": "System pauses the rule and stops triggering notifications for the event",
+      "title": "System pauses the rule: events that occur during the pause are skipped and notices already queued are still delivered",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "A2: Admin Deactivates Notification Rule Temporarily step 5"
       }
@@ -123326,7 +123564,7 @@
       "owner_fr": "FR-030",
       "title": "S-03 Notification Service selects the template language from the recipient language preference and fallback rules",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A3: Admin Creates Multi-Language Notification Template step 11"
       }
@@ -123337,7 +123575,7 @@
       "owner_fr": "FR-030",
       "title": "S-03 Notification Service attempts email delivery via SMTP",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "B1: Notification Delivery Fails (Email Bounce) step 1"
       }
@@ -123348,7 +123586,7 @@
       "owner_fr": "FR-030",
       "title": "Email server returns a bounce error (invalid address or mailbox full)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "B1: Notification Delivery Fails (Email Bounce) step 2"
       }
@@ -123359,7 +123597,7 @@
       "owner_fr": "FR-030",
       "title": "System logs the failed delivery with error code and timestamp",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "B1: Notification Delivery Fails (Email Bounce) step 3"
       }
@@ -123370,7 +123608,7 @@
       "owner_fr": "FR-030",
       "title": "System evaluates the retry configuration for the notification type",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "B1: Notification Delivery Fails (Email Bounce) step 4"
       }
@@ -123379,9 +123617,9 @@
       "id": "STP-030-053",
       "type": "Step",
       "owner_fr": "FR-030",
-      "title": "If retry is enabled, system queues a retry after the retry interval (platform default 1 hour)",
+      "title": "If retry is enabled and the bounce is soft, system queues a retry after the retry interval (platform default 1 hour); a hard bounce is not retried and is marked Failed - Permanent at once",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "B1: Notification Delivery Fails (Email Bounce) step 5"
       }
@@ -123390,9 +123628,9 @@
       "id": "STP-030-054",
       "type": "Step",
       "owner_fr": "FR-030",
-      "title": "After retries are exhausted (platform default 3; an admin may set 1 to 5), system marks the notification Failed - Permanent",
+      "title": "After ordinary retries are exhausted (platform default 3; an admin may set 1 to 5), system marks the notification Failed - Permanent; during an email provider outage the notice is held up to 24 hours and then marked Failed - Service Outage",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "B1: Notification Delivery Fails (Email Bounce) step 6"
       }
@@ -123401,9 +123639,9 @@
       "id": "STP-030-055",
       "type": "Step",
       "owner_fr": "FR-030",
-      "title": "System flags the patient account with an Email delivery issue indicator",
+      "title": "System flags the recipient's account with an Email delivery issue indicator, whatever the account type",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "B1: Notification Delivery Fails (Email Bounce) step 7"
       }
@@ -123412,9 +123650,9 @@
       "id": "STP-030-056",
       "type": "Step",
       "owner_fr": "FR-030",
-      "title": "Admin receives an alert if the event is critical (for example payment confirmation)",
+      "title": "Admin receives a system.alert, in-app and by a channel other than the failing one, when a locked notice fails permanently",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "B1: Notification Delivery Fails (Email Bounce) step 8"
       }
@@ -123423,9 +123661,9 @@
       "id": "STP-030-057",
       "type": "Step",
       "owner_fr": "FR-030",
-      "title": "Admin contacts the patient by phone or in-app message to update the email address",
+      "title": "Admin contacts the recipient by phone or in-app message to update the email address",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "B1: Notification Delivery Fails (Email Bounce) step 9"
       }
@@ -123533,11 +123771,22 @@
       "id": "STP-030-070",
       "type": "Step",
       "owner_fr": "FR-030",
-      "title": "Admin saves the rule and, when ready, activates it",
+      "title": "Admin saves the rule and, when ready, activates it; the system refuses the activation if it overlaps an Active rule of the same event",
+      "status": "active",
+      "version": 2,
+      "attrs": {
+        "prd_ref": "B3: Admin Adds Another Rule for the Same Event step 5"
+      }
+    },
+    {
+      "id": "STP-030-071",
+      "type": "Step",
+      "owner_fr": "FR-030",
+      "title": "S-03 checks the escalation condition once the wait time has passed and, when it holds, sends the escalation notice to the escalation recipients",
       "status": "active",
       "version": 1,
       "attrs": {
-        "prd_ref": "B3: Admin Adds Another Rule for the Same Event step 5"
+        "prd_ref": "Main Flow: Admin Reviews Event Catalog and Toggles / Configures Notification Rules step 25"
       }
     },
     {
@@ -143915,10 +144164,10 @@
       "calculated_by": null
     },
     {
-      "id": "ENT-notification-rule.critical_cannot_opt_out",
+      "id": "ENT-notification-rule.delay_direction",
       "entity_id": "ENT-notification-rule",
-      "name": "critical_cannot_opt_out",
-      "data_type": "bool",
+      "name": "delay_direction",
+      "data_type": "enum",
       "required": false,
       "calculated_by": null
     },
@@ -143966,7 +144215,7 @@
       "id": "ENT-notification-rule.escalation_conditions",
       "entity_id": "ENT-notification-rule",
       "name": "escalation_conditions",
-      "data_type": "text",
+      "data_type": "enum",
       "required": false,
       "calculated_by": null
     },
@@ -143983,6 +144232,14 @@
       "entity_id": "ENT-notification-rule",
       "name": "escalation_recipients",
       "data_type": "id[]",
+      "required": false,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-notification-rule.escalation_wait_time",
+      "entity_id": "ENT-notification-rule",
+      "name": "escalation_wait_time",
+      "data_type": "int",
       "required": false,
       "calculated_by": null
     },
@@ -144059,14 +144316,6 @@
       "calculated_by": null
     },
     {
-      "id": "ENT-notification-rule.retry_with_secondary_contact",
-      "entity_id": "ENT-notification-rule",
-      "name": "retry_with_secondary_contact",
-      "data_type": "bool",
-      "required": false,
-      "calculated_by": null
-    },
-    {
       "id": "ENT-notification-rule.rule_id",
       "entity_id": "ENT-notification-rule",
       "name": "rule_id",
@@ -144095,14 +144344,6 @@
       "entity_id": "ENT-notification-rule",
       "name": "schedule_time",
       "data_type": "datetime",
-      "required": false,
-      "calculated_by": null
-    },
-    {
-      "id": "ENT-notification-rule.send_to_both_contacts",
-      "entity_id": "ENT-notification-rule",
-      "name": "send_to_both_contacts",
-      "data_type": "bool",
       "required": false,
       "calculated_by": null
     },
@@ -158669,6 +158910,12 @@
       "sort_order": 2
     },
     {
+      "field_id": "ENT-notification-delivery-log.recipient_type",
+      "value": "affiliate",
+      "label": "Affiliate",
+      "sort_order": 3
+    },
+    {
       "field_id": "ENT-notification-engagement-metrics.channel_type",
       "value": "email",
       "label": "Email",
@@ -158721,6 +158968,12 @@
       "value": "admin",
       "label": "Admin",
       "sort_order": 2
+    },
+    {
+      "field_id": "ENT-notification-engagement-metrics.recipient_type",
+      "value": "affiliate",
+      "label": "Affiliate",
+      "sort_order": 3
     },
     {
       "field_id": "ENT-notification-event.outcome",
@@ -158795,6 +159048,18 @@
       "sort_order": 2
     },
     {
+      "field_id": "ENT-notification-rule.delay_direction",
+      "value": "before",
+      "label": "Before",
+      "sort_order": 0
+    },
+    {
+      "field_id": "ENT-notification-rule.delay_direction",
+      "value": "after",
+      "label": "After",
+      "sort_order": 1
+    },
+    {
       "field_id": "ENT-notification-rule.delivery_timezone",
       "value": "recipient_local_time",
       "label": "Recipient Local Time",
@@ -158829,6 +159094,18 @@
       "value": "delayed",
       "label": "Delayed",
       "sort_order": 2
+    },
+    {
+      "field_id": "ENT-notification-rule.escalation_conditions",
+      "value": "not_delivered",
+      "label": "Not delivered",
+      "sort_order": 0
+    },
+    {
+      "field_id": "ENT-notification-rule.escalation_conditions",
+      "value": "not_opened",
+      "label": "Not opened",
+      "sort_order": 1
     },
     {
       "field_id": "ENT-notification-rule.event_category",
@@ -176679,6 +176956,15 @@
     {
       "from_id": "FR-030",
       "verb": "active in",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {
+        "rules": 3
+      },
+      "derived": true
+    },
+    {
+      "from_id": "FR-030",
+      "verb": "active in",
       "to_id": "STG-aftercare-01-recovery-plan",
       "attrs": {
         "rules": 2
@@ -176690,7 +176976,7 @@
       "verb": "active in",
       "to_id": "STG-aftercare-02-follow-up",
       "attrs": {
-        "rules": 6
+        "rules": 7
       },
       "derived": true
     },
@@ -176699,7 +176985,7 @@
       "verb": "active in",
       "to_id": "STG-main-01-inquiry",
       "attrs": {
-        "rules": 148
+        "rules": 147
       },
       "derived": true
     },
@@ -176726,7 +177012,7 @@
       "verb": "active in",
       "to_id": "STG-main-04-booking",
       "attrs": {
-        "rules": 8
+        "rules": 9
       },
       "derived": true
     },
@@ -176735,7 +177021,7 @@
       "verb": "active in",
       "to_id": "STG-main-05-payment",
       "attrs": {
-        "rules": 3
+        "rules": 11
       },
       "derived": true
     },
@@ -176753,7 +177039,7 @@
       "verb": "active in",
       "to_id": "STG-main-09-review-close",
       "attrs": {
-        "rules": 5
+        "rules": 6
       },
       "derived": true
     },
@@ -176771,7 +177057,7 @@
       "verb": "active in",
       "to_id": "STG-monitoring-02-tracking",
       "attrs": {
-        "rules": 6
+        "rules": 7
       },
       "derived": true
     },
@@ -176798,7 +177084,34 @@
       "verb": "active in",
       "to_id": "STG-patient-03-active",
       "attrs": {
-        "rules": 5
+        "rules": 6
+      },
+      "derived": true
+    },
+    {
+      "from_id": "FR-030",
+      "verb": "active in",
+      "to_id": "STG-patient-05-deleted",
+      "attrs": {
+        "rules": 1
+      },
+      "derived": true
+    },
+    {
+      "from_id": "FR-030",
+      "verb": "active in",
+      "to_id": "STG-patient-06-deletion-requested",
+      "attrs": {
+        "rules": 3
+      },
+      "derived": true
+    },
+    {
+      "from_id": "FR-030",
+      "verb": "active in",
+      "to_id": "STG-platform-01-all-stages",
+      "attrs": {
+        "rules": 2
       },
       "derived": true
     },
@@ -277465,6 +277778,12 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-030-017",
+      "verb": "governed by",
+      "to_id": "SET-notification-throttling-thresholds",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-030-018",
       "verb": "applies at",
       "to_id": "STG-main-01-inquiry",
@@ -277708,6 +278027,12 @@
       "from_id": "REQ-030-031",
       "verb": "applies at",
       "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-031",
+      "verb": "applies at",
+      "to_id": "STG-main-04-booking",
       "attrs": {}
     },
     {
@@ -278176,6 +278501,12 @@
       "from_id": "REQ-030-047",
       "verb": "applies at",
       "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-047",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
       "attrs": {}
     },
     {
@@ -279387,7 +279718,7 @@
     {
       "from_id": "REQ-030-103",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-platform-01-all-stages",
       "attrs": {}
     },
     {
@@ -279405,7 +279736,7 @@
     {
       "from_id": "REQ-030-104",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-platform-01-all-stages",
       "attrs": {}
     },
     {
@@ -281650,6 +281981,504 @@
       "from_id": "REQ-030-234",
       "verb": "decided by",
       "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-235",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-235",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-235",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-235",
+      "verb": "applies to",
+      "to_id": "EVT-account-deletion-requested",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-235",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-236",
+      "verb": "applies at",
+      "to_id": "STG-patient-05-deleted",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-236",
+      "verb": "applies at",
+      "to_id": "STG-patient-06-deletion-requested",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-236",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-236",
+      "verb": "applies to",
+      "to_id": "EVT-dsr-blocked-by-obligation",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-236",
+      "verb": "applies to",
+      "to_id": "EVT-dsr-denied",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-236",
+      "verb": "applies to",
+      "to_id": "EVT-dsr-fulfilled",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-236",
+      "verb": "applies to",
+      "to_id": "EVT-dsr-in-progress",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-236",
+      "verb": "applies to",
+      "to_id": "EVT-dsr-verification-required",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-236",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-237",
+      "verb": "applies at",
+      "to_id": "STG-patient-06-deletion-requested",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-237",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-237",
+      "verb": "applies to",
+      "to_id": "EVT-dsr-deadline-approaching",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-237",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-238",
+      "verb": "applies at",
+      "to_id": "STG-patient-06-deletion-requested",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-238",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-238",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-239",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-239",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-239",
+      "verb": "applies to",
+      "to_id": "EVT-legal-version-published",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-239",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-240",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-240",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-240",
+      "verb": "applies to",
+      "to_id": "EVT-legal-coverage-below-threshold",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-240",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-241",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-241",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-241",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-241",
+      "verb": "applies to",
+      "to_id": "EVT-legal-acceptance-reminder",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-241",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-242",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-242",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-242",
+      "verb": "applies to",
+      "to_id": "EVT-installment-failed",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-242",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-243",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-243",
+      "verb": "applies to",
+      "to_id": "ACT-finance-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-243",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-243",
+      "verb": "applies to",
+      "to_id": "EVT-installment-overdue-notice",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-243",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-244",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-244",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-244",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-244",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-244",
+      "verb": "applies to",
+      "to_id": "EVT-installment-plan-defaulted",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-244",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-245",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-245",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-245",
+      "verb": "applies to",
+      "to_id": "EVT-installment-charged",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-245",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-246",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-246",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-246",
+      "verb": "applies to",
+      "to_id": "EVT-installment-plan-completed",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-246",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-247",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-247",
+      "verb": "applies to",
+      "to_id": "ACT-finance-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-247",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-247",
+      "verb": "applies to",
+      "to_id": "EVT-patient-payment-overdue-notice",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-247",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-248",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-248",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-248",
+      "verb": "applies to",
+      "to_id": "EVT-refund-approval-escalated",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-248",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-249",
+      "verb": "applies at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-249",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-249",
+      "verb": "applies to",
+      "to_id": "EVT-provider-status-redistribution-reminder",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-249",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-250",
+      "verb": "applies at",
+      "to_id": "STG-main-09-review-close",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-250",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-250",
+      "verb": "applies to",
+      "to_id": "EVT-review-response-removed",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-250",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-251",
+      "verb": "applies at",
+      "to_id": "STG-monitoring-02-tracking",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-251",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-251",
+      "verb": "applies to",
+      "to_id": "EVT-monitoring-progress-reminder",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-251",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-252",
+      "verb": "applies at",
+      "to_id": "STG-aftercare-02-follow-up",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-252",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-252",
+      "verb": "applies to",
+      "to_id": "SCR-030-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-252",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-252",
+      "verb": "governed by",
+      "to_id": "SET-aftercare-progress-reminder-default",
       "attrs": {}
     },
     {
@@ -334428,6 +335257,16 @@
     {
       "from_id": "SCR-030-02",
       "verb": "shows",
+      "to_id": "ENT-notification-rule.delay_direction",
+      "attrs": {
+        "provenance": "user input",
+        "label": "Delay Direction",
+        "editable": true
+      }
+    },
+    {
+      "from_id": "SCR-030-02",
+      "verb": "shows",
       "to_id": "ENT-notification-rule.delay_duration",
       "attrs": {
         "provenance": "user input",
@@ -334502,6 +335341,16 @@
       "attrs": {
         "provenance": "user input",
         "label": "Escalation Recipients",
+        "editable": true
+      }
+    },
+    {
+      "from_id": "SCR-030-02",
+      "verb": "shows",
+      "to_id": "ENT-notification-rule.escalation_wait_time",
+      "attrs": {
+        "provenance": "user input",
+        "label": "Escalation Wait Time",
         "editable": true
       }
     },
@@ -334622,6 +335471,16 @@
       "attrs": {
         "provenance": "user input",
         "label": "Schedule Time",
+        "editable": true
+      }
+    },
+    {
+      "from_id": "SCR-030-02",
+      "verb": "shows",
+      "to_id": "ENT-notification-rule.skip_if_timing_passed",
+      "attrs": {
+        "provenance": "user input",
+        "label": "Skip If Too Late",
         "editable": true
       }
     },
@@ -344818,6 +345677,12 @@
     },
     {
       "from_id": "STG-main-01-inquiry",
+      "verb": "emits",
+      "to_id": "EVT-provider-status-redistribution-reminder",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-01-inquiry",
       "verb": "reads",
       "to_id": "ENT-booking",
       "attrs": {}
@@ -346091,6 +346956,12 @@
     {
       "from_id": "STG-main-04-booking",
       "verb": "emits",
+      "to_id": "EVT-inquiry-cancelled",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-04-booking",
+      "verb": "emits",
       "to_id": "EVT-provider-response-escalated",
       "attrs": {}
     },
@@ -346554,6 +347425,12 @@
       "from_id": "STG-main-05-payment",
       "verb": "emits",
       "to_id": "EVT-billing-payment-received",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-05-payment",
+      "verb": "emits",
+      "to_id": "EVT-booking-cancelled",
       "attrs": {}
     },
     {
@@ -347705,6 +348582,12 @@
     {
       "from_id": "STG-main-09-review-close",
       "verb": "emits",
+      "to_id": "EVT-review-response-removed",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-09-review-close",
+      "verb": "emits",
       "to_id": "EVT-takedown-decided",
       "attrs": {}
     },
@@ -347922,6 +348805,12 @@
       "from_id": "STG-monitoring-02-tracking",
       "verb": "emits",
       "to_id": "EVT-monitoring-export-ready",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-monitoring-02-tracking",
+      "verb": "emits",
+      "to_id": "EVT-monitoring-progress-reminder",
       "attrs": {}
     },
     {
@@ -408092,13 +408981,19 @@
     {
       "from_id": "STP-030-024",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
       "from_id": "STP-030-024",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-024",
+      "verb": "next",
+      "to_id": "STP-030-071",
       "attrs": {}
     },
     {
@@ -408782,7 +409677,7 @@
     {
       "from_id": "STP-030-048",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -408806,7 +409701,7 @@
     {
       "from_id": "STP-030-049",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -408830,7 +409725,7 @@
     {
       "from_id": "STP-030-050",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -408860,7 +409755,7 @@
     {
       "from_id": "STP-030-051",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -408890,7 +409785,7 @@
     {
       "from_id": "STP-030-052",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -408914,7 +409809,7 @@
     {
       "from_id": "STP-030-053",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -408938,7 +409833,7 @@
     {
       "from_id": "STP-030-054",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -408962,7 +409857,7 @@
     {
       "from_id": "STP-030-055",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -408986,7 +409881,7 @@
     {
       "from_id": "STP-030-056",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -409002,6 +409897,12 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-030-056",
+      "verb": "on",
+      "to_id": "SCR-030-01",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-030-057",
       "verb": "applies",
       "to_id": "REQ-030-157",
@@ -409010,7 +409911,7 @@
     {
       "from_id": "STP-030-057",
       "verb": "at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -409323,6 +410224,30 @@
       "from_id": "STP-030-070",
       "verb": "on",
       "to_id": "SCR-030-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-071",
+      "verb": "applies",
+      "to_id": "REQ-030-146",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-071",
+      "verb": "applies",
+      "to_id": "REQ-030-173",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-071",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-030-071",
+      "verb": "done by",
+      "to_id": "ACT-system",
       "attrs": {}
     },
     {
@@ -436421,6 +437346,139 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-095650-1be370ec",
+      "at": "2026-11-24T09:56:50.436755+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-030 logic review fixes: catalogue rows for account deletion, data request, installment, payment overdue, refund escalation, legal, redistribution reminder, review response removal and progress reminder notices; one meaning of critical (the locked notices); cancellation notices aligned with FR-006 and FR-020; pause skips events and Purge Queue; seeded Active rule and overlap refusal; escalation condition list and wait time; delay before or after with Skip If Too Late; held notices sent in order; bounce, outage and permanent-failure outcomes; in-app entry from the push template; archived-template block; secondary-contact options removed; aftercare reminder schedule; delivery steps moved to the configuration stage",
+      "source_id": null,
+      "nodes_added": [
+        "ENT-notification-rule.delay_direction",
+        "ENT-notification-rule.escalation_wait_time",
+        "EVT-monitoring-progress-reminder",
+        "EVT-provider-status-redistribution-reminder",
+        "EVT-review-response-removed",
+        "REQ-030-235",
+        "REQ-030-236",
+        "REQ-030-237",
+        "REQ-030-238",
+        "REQ-030-239",
+        "REQ-030-240",
+        "REQ-030-241",
+        "REQ-030-242",
+        "REQ-030-243",
+        "REQ-030-244",
+        "REQ-030-245",
+        "REQ-030-246",
+        "REQ-030-247",
+        "REQ-030-248",
+        "REQ-030-249",
+        "REQ-030-250",
+        "REQ-030-251",
+        "REQ-030-252",
+        "STP-030-071"
+      ],
+      "nodes_updated": [
+        "ENT-notification-delivery-log.recipient_type",
+        "ENT-notification-engagement-metrics.recipient_type",
+        "ENT-notification-rule.critical_cannot_opt_out",
+        "ENT-notification-rule.delay_duration",
+        "ENT-notification-rule.escalation_conditions",
+        "ENT-notification-rule.escalation_enabled",
+        "ENT-notification-rule.retry_with_secondary_contact",
+        "ENT-notification-rule.send_to_both_contacts",
+        "ENT-notification-rule.skip_if_timing_passed",
+        "EVT-booking-cancelled",
+        "EVT-inquiry-cancelled",
+        "EVT-monitoring-export-ready",
+        "EVT-review-requested",
+        "EVT-support-case-reopened",
+        "EVT-support-case-user-reply",
+        "EVT-treatment-completed",
+        "EVT-treatment-started",
+        "REQ-030-009",
+        "REQ-030-017",
+        "REQ-030-019",
+        "REQ-030-031",
+        "REQ-030-035",
+        "REQ-030-036",
+        "REQ-030-039",
+        "REQ-030-044",
+        "REQ-030-045",
+        "REQ-030-047",
+        "REQ-030-048",
+        "REQ-030-055",
+        "REQ-030-056",
+        "REQ-030-075",
+        "REQ-030-078",
+        "REQ-030-079",
+        "REQ-030-080",
+        "REQ-030-081",
+        "REQ-030-082",
+        "REQ-030-084",
+        "REQ-030-085",
+        "REQ-030-086",
+        "REQ-030-094",
+        "REQ-030-103",
+        "REQ-030-104",
+        "REQ-030-111",
+        "REQ-030-140",
+        "REQ-030-141",
+        "REQ-030-143",
+        "REQ-030-145",
+        "REQ-030-146",
+        "REQ-030-149",
+        "REQ-030-151",
+        "REQ-030-155",
+        "REQ-030-156",
+        "REQ-030-157",
+        "REQ-030-159",
+        "REQ-030-173",
+        "REQ-030-184",
+        "REQ-030-185",
+        "REQ-030-200",
+        "REQ-030-201",
+        "REQ-030-203",
+        "REQ-030-204",
+        "REQ-030-205",
+        "REQ-030-207",
+        "REQ-030-208",
+        "REQ-030-209",
+        "REQ-030-219",
+        "REQ-030-224",
+        "REQ-030-225",
+        "REQ-030-227",
+        "REQ-030-232",
+        "REQ-030-234",
+        "SCR-030-02",
+        "STG-main-01-inquiry",
+        "STG-main-04-booking",
+        "STG-main-05-payment",
+        "STG-main-09-review-close",
+        "STG-monitoring-02-tracking",
+        "STP-030-002",
+        "STP-030-004",
+        "STP-030-010",
+        "STP-030-011",
+        "STP-030-024",
+        "STP-030-034",
+        "STP-030-036",
+        "STP-030-048",
+        "STP-030-049",
+        "STP-030-050",
+        "STP-030-051",
+        "STP-030-052",
+        "STP-030-053",
+        "STP-030-054",
+        "STP-030-055",
+        "STP-030-056",
+        "STP-030-057",
+        "STP-030-070"
+      ],
+      "edges_added": 113,
+      "edges_removed": 13,
+      "rows": 377
+    },
     {
       "id": "cs-20261124-093853-2177fa33",
       "at": "2026-11-24T09:38:53.506682+00:00",
