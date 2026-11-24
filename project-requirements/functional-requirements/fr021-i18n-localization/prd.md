@@ -55,7 +55,7 @@ Initial supported languages are English (`en`) and Turkish (`tr`). Additional la
 **Admin Platform (A-09)**:
 
 - Admin users can select Admin Platform UI language from the top bar.
-- Admin can manage supported locales, default locale, locale activation state, native names, text direction metadata, and fallback order.
+- Admin can manage supported locales, locale deactivation, native names, text direction metadata, and fallback locale; the Super Admin changes the default locale and moves a locale to Active.
 - Admin can view and edit translation keys/values through registry and key-detail screens.
 - Admin can import/export translation JSON files by locale, tenant/surface, group, and version.
 - Admin can manage machine-translation provider API credentials and run controlled machine-translation jobs for a selected non-English language.
@@ -97,7 +97,7 @@ Initial supported languages are English (`en`) and Turkish (`tr`). Additional la
 - Admin opens Admin Platform > Settings > Localization.
 - Admin exports English/source JSON for translator handoff.
 - Admin imports translated JSON for a target locale.
-- Admin configures a machine-translation provider API key from Admin Platform > Settings > Localization > Machine Translation.
+- Super Admin configures a machine-translation provider API key from Admin Platform > Settings > Localization > Machine Translation.
 - Admin generates machine-translated draft values for a selected non-English language.
 - Admin publishes pending localization changes from Language Version History & Rollback.
 - Admin rolls back a published translation bundle from Language Version History & Rollback.
@@ -109,7 +109,7 @@ Initial supported languages are English (`en`) and Turkish (`tr`). Additional la
 
 ### Main Flow: Admin Updates and Publishes Translation Version
 
-**Actors**: Admin (an admin holding the Manage Localization permission, REQ-021-122), Super Admin (English source edits, default locale change, publish, and rollback), System
+**Actors**: Admin (an admin holding the Manage Localization permission, REQ-021-122), Super Admin (English source edits, default locale change, any move of a locale to Active, publish, and rollback), System
 **Trigger**: Admin needs to update translations through either individual text patching or JSON package import, then make those changes live
 **Outcome**: System validates the selected update mode, saves individual patches as draft, either imports JSON packages as draft or publishes them as a version, and makes published bundles available to runtime clients
 
@@ -119,13 +119,14 @@ Initial supported languages are English (`en`) and Turkish (`tr`). Additional la
 flowchart TD
   S1["1. Admin opens Localization Management"] --> S2{"2. What action is needed?"}
   S2 -->|Update translations| S3{"3. Which update mode is needed?"}
+  S2 -->|Manage languages| L1["3L. Admin changes a locale's status, the default locale, or a fallback locale on Screen 4; the Super Admin makes any move to Active and any default locale change (REQ-021-125, REQ-021-049)"]
   S2 -->|Rollback published version| R1["3R. Admin selects prior published version from Version History"]
   R1 --> R2["4R. System displays impacted locale, tenant/surface, groups, keys, and rollback warning"]
   R2 --> R3["5R. Admin enters rollback reason and confirms"]
-  R3 --> R4["6R. System creates new rollback version using prior bundle contents and marks it active"]
+  R3 --> R4["6R. System creates new rollback version using prior bundle contents, marks it active, and sets the registry's published values for the scope to that version (REQ-021-128)"]
   R4 --> S15
   S3 -->|Individual text patching| P1["4P. Admin selects a key from Translation Key Inventory and edits values in Translation Key Detail Editor"]
-  S3 -->|JSON package import| J1["4J. Admin uploads JSON package for selected locale, tenant/surface, and group (an import into the English source locale is an English source edit, REQ-021-123)"]
+  S3 -->|JSON package import| J1["4J. Admin uploads JSON package for selected locale, tenant/surface, and group (an import into the English source locale is an English source edit: Super Admin only, with a change reason, Import as Draft only, REQ-021-123)"]
   S3 -->|Machine translation| M1["4M. Admin follows Alternative Flow C1 (Machine Translation Draft Generation)"]
   P1 --> P2{"5P. English source value changed?"}
   P2 -->|Yes| P3["6P. System requires Super Admin authorization, change reason, and the optional non-semantic confirmation"]
@@ -140,13 +141,13 @@ flowchart TD
   J2 --> J3{"6J. Structural error found?"}
   J3 -->|Yes| E1
   J3 -->|No| J4["7J. System shows validation preview with created, updated, unchanged, skipped, row-warning, and error counts"]
-  J4 --> J5{"8J. Row-level errors or warnings?"}
+  J4 --> J5{"8J. Any row skipped for an error?"}
   J5 -->|Yes| J6["9J. Admin chooses whether to import valid rows only as a draft (publish is a separate later action) or cancel for correction"]
   J6 -->|Cancel| E1
   J6 -->|Import valid rows only, as a draft| D1
   J5 -->|No| J7{"10J. Import decision after validation preview?"}
   J7 -->|Import as Draft| D1
-  J7 -->|Import and Publish Version| IP1["11J. Admin enters publish summary and confirms import + publish"]
+  J7 -->|Import and Publish Version, other than the English source locale| IP1["11J. Admin enters publish summary and confirms import + publish"]
   D1 --> V1["10. Admin opens Language Version History & Rollback and reviews pending changes, coverage, warnings, and previous active version"]
   V1 --> V2["11. Admin enters publish summary and confirms publish"]
   IP1 --> V3
@@ -184,7 +185,7 @@ flowchart TD
 flowchart TD
   B1S1["1. Client requests translated value for selected locale"] --> B1S2{"2. Locale value exists in active published bundle?"}
   B1S2 -->|Yes| B1S3["3. System displays selected-locale value"]
-  B1S2 -->|No| B1S4["4. System checks configured fallback order"]
+  B1S2 -->|No| B1S4["4. System checks the language's fallback locale, then the English source locale"]
   B1S4 --> B1S5["5. System displays fallback value"]
   B1S5 --> B1S6["6. System logs missing key with locale, tenant/surface, and fallback used"]
 ```
@@ -199,7 +200,7 @@ flowchart TD
 flowchart TD
   C1S1["1. Admin opens Machine Translation Provider & Draft Generation"]
   C1S1 --> C1S2{"2. Enabled provider with a Connected status?"}
-  C1S2 -->|No| C1S3["3. Admin adds provider, API key, supported languages, and usage notes, or enables an existing provider"]
+  C1S2 -->|No| C1S3["3. Super Admin adds provider, API key, supported languages, and usage notes, or enables an existing provider"]
   C1S3 --> C1S4["4. System stores encrypted credential and verifies connection"]
   C1S4 --> C1S4A{"4A. Connection verified?"}
   C1S4A -->|No| C1S4B["4B. System sets the provider status to Error and stops; no job starts"]
@@ -208,11 +209,13 @@ flowchart TD
   C1S5 --> C1S6{"5. Generation mode?"}
   C1S6 -->|Prefill missing keys| C1S7["6A. System previews the keys it would translate"]
   C1S6 -->|Replace entire language| C1S8["6B. System previews the keys it would replace"]
-  C1S7 --> C1S7A["6C. Admin reviews the preview counts, enters a reason, and confirms"]
+  C1S7 --> C1S7A["6C. Admin reviews the preview counts, enters a reason, and confirms; the system creates the job as Queued"]
   C1S8 --> C1S7A
-  C1S7A --> C1S7B["6D. System runs the job and validates placeholders, ICU syntax, protected terms, unsupported keys, and provider response errors"]
+  C1S7A --> C1S7B["6D. System runs the job (status Running) and validates placeholders, ICU syntax, protected terms, unsupported keys, and provider response errors"]
   C1S7B --> C1S9["7. System saves the values that pass validation as drafts marked Review Needed, records failed rows in job history, and sets the job status"]
-  C1S9 --> C1S10["8. Admin reviews draft values in registry/key detail and publishes through Screen 9 when ready"]
+  C1S9 --> C1S9A{"7A. Job status?"}
+  C1S9A -->|Completed or Partially failed| C1S10["8. Admin reviews draft values in registry/key detail and publishes through Screen 9 when ready"]
+  C1S9A -->|Failed| C1S11["7B. System shows the job's error summary and ends"]
 ```
 
 ---
@@ -232,7 +235,7 @@ flowchart TD
 | Language | select | Yes | Patient's preferred app language | Must be an active supported locale | ENT-patient.preferred_language, ENT-locale.english_name, ENT-locale.native_name |
 | Region/Locale | select | No | Regional formatting context for dates, numbers, and currency display | Must be a supported locale/region option when exposed (REQ-021-063) | ENT-patient.preferred_region |
 | Timezone | select | No | Patient's preferred timezone for appointment and treatment schedule display | Must be a value from the FR-026 GMT list; fixed offsets do not follow daylight saving (REQ-021-062) | ENT-patient.preferred_timezone |
-| Fallback notice | read-only text | No | Explains that some text may appear in the default language when translation is missing | Display only when fallback has occurred (REQ-021-118) | no graph field (display notice) |
+| Fallback notice | read-only text | No | Explains that some text may appear in the fallback language when translation is missing | Display only when fallback has occurred (REQ-021-118) | no graph field (display notice) |
 
 **Business Rules**:
 
@@ -324,7 +327,7 @@ flowchart TD
 | English name | text | Yes | Locale name in English | Required | ENT-locale.english_name |
 | Native name | text | Yes | Locale name in native script/language | Required | ENT-locale.native_name |
 | Direction | badge/select | Yes | Text direction metadata | Allowed values: `ltr`, `rtl` | ENT-locale.direction |
-| Status | badge/toggle | Yes | Active, Inactive, or Preparation | The default locale must be Active (REQ-021-078); moving a locale from Preparation to Active is Super Admin only and needs a published bundle for every surface (REQ-021-125) | ENT-locale.status |
+| Status | badge/toggle | Yes | Active, Inactive, or Preparation | The default locale must be Active (REQ-021-078); any move of a locale to Active (from Preparation or Inactive) is Super Admin only and needs a published bundle for every surface; Active to Preparation is not offered (REQ-021-125) | ENT-locale.status |
 | Default locale | badge/radio | Yes | Identifies the default locale | Exactly one default locale, which must be Active; changing it is Super Admin only (REQ-021-078, REQ-021-049) | ENT-locale.is_default |
 | Tenant coverage | metric group | No | Patient, Provider, and Admin coverage percentages | System-generated | ENT-locale.coverage_by_surface |
 | Last published version | read-only text | No | Current active version by language/surface | System-generated | ENT-locale.last_published_version |
@@ -335,11 +338,12 @@ flowchart TD
 
 - This is the admin landing screen for localization.
 - Admin can add new languages/locales from this screen.
-- Admin can deactivate languages; deactivation hides the language from user-facing selectors but preserves translations, versions, and audit history. (REQ-021-072)
+- Admin can deactivate languages; deactivation hides the language from the interface-language selectors but preserves translations, versions, and audit history. (REQ-021-072)
 - Hard deletion of a language is not allowed once translation history or published versions exist; use Inactive state instead. (REQ-021-073)
 - English (`en`) is always the source locale and is the initial default locale; only the default locale can be changed, and only by a Super Admin. (REQ-021-074)
 - New languages start in Preparation state and become Active only under REQ-021-125: Super Admin only, with a published bundle for every surface (Patient App, Provider Dashboard, Admin Platform). (REQ-021-075)
-- Only Active locales appear in the Patient, Provider, and Admin interface-language selectors; Inactive and Preparation locales are hidden from them. The spoken-language and notification-template language lists used by FR-032 and FR-030 show Active and Preparation locales. (REQ-021-076, REQ-021-025)
+- Only Active locales appear in the Patient, Provider, and Admin interface-language selectors; Inactive and Preparation locales are hidden from them. The spoken-language and notification-template language lists used by FR-032 and FR-030 show all catalog locales (Active, Preparation and Inactive); a spoken-language entry or template already in a locale that becomes Inactive is kept. (REQ-021-076, REQ-021-025)
+- Admin changes a locale's status, the default locale and the fallback locale here; the Super Admin makes any move to Active and any default locale change. (REQ-021-125, REQ-021-049, REQ-021-078)
 - Selecting a language row opens Screen 5: Admin - Language Detail.
 
 **Notes**:
@@ -504,6 +508,7 @@ flowchart TD
 | Description/context | textarea | No | Translator guidance and usage context | Recommended | ENT-translation-key.description |
 | English source value | textarea | Yes | Canonical source value | Source edit is Super Admin only and requires a reason and placeholder validation (REQ-021-020) | ENT-translation-key.source_value |
 | Locale values | textarea per active language | Conditional | Translation value for each active language | Must preserve placeholders and ICU syntax | ENT-translation-value.draft_value |
+| Review Needed flag | read-only badge | No | Per locale value: shows whether the value is marked Review Needed after an English source change | System-set; cleared by Accept as reviewed (REQ-021-105) | ENT-translation-value.review_needed |
 | Selected language highlight | read-only state | No | Highlights the language filter used when opened from Language Detail | Must not hide other active language values | no graph field (display state) |
 | Character guidance | read-only text | No | Optional display length guidance for constrained UI | Non-blocking unless a screen-specific limit exists (REQ-021-088) | ENT-translation-key.length_guidance |
 | Non-semantic change confirmation | checkbox | No | Shown in the English source edit dialog only; Super Admin confirms the edit does not change the meaning | When checked and the edit passes validation, dependent locale values are not marked Review Needed (REQ-021-020) | no graph field (control) |
@@ -541,12 +546,13 @@ flowchart TD
 | --- | --- | --- | --- | --- | --- |
 | Target language | select/read-only | Yes | Language receiving imported values | Must be supported; inactive/preparation languages allowed for preparation workflows; importing into the English source locale is an English source edit (REQ-021-123) | ENT-translation-import.locale |
 | Tenant/surface | select | Yes | Target translation surface | Patient App, Provider Dashboard, Admin Platform | ENT-translation-import.surface |
-| Group/namespace | select | Yes | Target key group | Must exist or be authorized for creation (REQ-021-094) | ENT-translation-import.group_namespace |
+| Group/namespace | select | Yes | Target key group | Must exist, or be created by an import into the English source locale (REQ-021-094) | ENT-translation-import.group_namespace |
 | File | upload | Yes | JSON translation file/package | Valid JSON; size limit configured by platform | ENT-translation-import.file_name |
 | Import mode | radio/select | Yes | Overwrite draft values or only add missing | Must be selected before confirmation | ENT-translation-import.mode |
 | Validation preview | read-only panel | Yes | Shows created, updated, unchanged, skipped, row warnings, and errors | Required before import confirmation (REQ-021-090, REQ-021-095) | ENT-translation-import.summary_counts, ENT-translation-import.validation_result |
-| Import decision | radio/select | Yes | Import as Draft or Import and Publish Version | Import and Publish disabled if validation errors exist, if any row is skipped for an error, or if approval is required (REQ-021-095) | ENT-translation-import.decision |
+| Import decision | radio/select | Yes | Import as Draft or Import and Publish Version | Import and Publish disabled if validation errors exist, if any row is skipped for an error, or if approval is required (REQ-021-095); for the English source locale only Import as Draft is offered (REQ-021-123) | ENT-translation-import.decision |
 | Publish summary | textarea | Conditional | Required when choosing Import and Publish Version | Required before publish confirmation | ENT-translation-import.publish_summary |
+| Change reason | textarea | Conditional | Required when the target language is the English source locale | Required for an English source import (REQ-021-087, REQ-021-123) | ENT-translation-audit-log.reason |
 | Error report | download link | Conditional | Downloadable validation errors/warnings | Shown when validation issues exist | ENT-translation-import.error_report |
 
 **Business Rules**:
@@ -557,8 +563,8 @@ flowchart TD
 - System must validate JSON syntax, known keys, duplicate keys, placeholder consistency, ICU syntax, target-locale compatibility, and unsupported/orphaned keys. (REQ-021-091)
 - Every confirmed import creates an import record with file name, actor, timestamp, language, surface, group, decision, summary counts, and validation results. (REQ-021-092)
 - If Admin chooses Import and Publish Version, system creates both an import record and an immutable published version record. (REQ-021-093)
-- Unknown keys are blocked unless Admin has explicit permission to create new registry keys through import. A new key created through import must carry an English value in the same file; a row without one is an error. (REQ-021-094)
-- An import into the English source locale is an English source edit: it is Super Admin only and follows the REQ-021-020 controls (reason, audit, Review Needed marking after validation). (REQ-021-123)
+- Unknown keys are blocked. A new key can be created only by an import into the English source locale, with its English value in that file (library text from the FR-024 treatment form is the one other route, REQ-021-127); an unknown key in any other locale's file is an error. (REQ-021-094)
+- An import into the English source locale is an English source edit: it is Super Admin only and follows the REQ-021-020 controls (reason, audit, Review Needed marking after validation). Only Import as Draft is offered for it; it is published later from Screen 9. (REQ-021-123)
 - When any row is skipped for an error, only Import as Draft is offered; publishing is a separate later action from Screen 9. (REQ-021-095)
 
 **Notes**:
@@ -617,8 +623,8 @@ flowchart TD
 | --- | --- | --- | --- | --- | --- |
 | Provider | select | Yes | Machine-translation service used for draft generation | Options may include Google Cloud Translation, DeepL, Microsoft Azure Translator, and Amazon Translate; custom provider allowed only if integration exists (REQ-021-108) | ENT-mt-provider-credential.provider, ENT-mt-job.provider |
 | Provider status | badge/read-only | Yes | Connected, Not Configured, Error, or Disabled | System-generated from the credential, the connection check, and the Enable/Disable control (REQ-021-109) | ENT-mt-provider-credential.status |
-| Enable/Disable provider | toggle | Yes | Turns the selected provider on or off for draft generation | A Disabled provider cannot start a job; Enable verifies the connection again (REQ-021-109) | no graph field (control) |
-| API key / credential | secret input | Conditional | Credential used to call the selected provider | Required to enable provider; encrypted at rest; masked after save (REQ-021-031) | ENT-mt-provider-credential.credential_ref |
+| Enable/Disable provider | toggle | Yes | Turns the selected provider on or off for draft generation | A Disabled provider cannot start a job; Enable verifies the connection again; Super Admin only (REQ-021-109, REQ-021-122) | no graph field (control) |
+| API key / credential | secret input | Conditional | Credential used to call the selected provider | Required to enable provider; encrypted at rest; masked after save; set by the Super Admin only (REQ-021-031, REQ-021-122) | ENT-mt-provider-credential.credential_ref |
 | Supported languages | read-only/list | No | Provider-supported target languages available to Admin | Retrieved from provider metadata or configured integration | ENT-mt-provider-credential.supported_languages |
 | Target language | select | Yes | Non-English language receiving machine-generated draft values | Must be supported by FR-021 locale catalog and selected provider; English/source locale blocked (REQ-021-104) | ENT-mt-job.target_locale |
 | Tenant/surface scope | multi-select | Yes | Patient App, Provider Dashboard, Admin Platform | Default all selected surfaces for the target language | ENT-mt-job.surface_scope |
@@ -627,8 +633,8 @@ flowchart TD
 | Preview counts | read-only panel | Yes | Shows eligible, skipped, missing, replacement, error, and estimated usage counts | Required before generation confirmation | ENT-mt-job.preview_counts |
 | Confirmation reason | textarea | Yes | Business reason for running machine translation | Required for audit | ENT-mt-job.reason |
 | Generate draft action | button | Yes | Starts machine-translation job and saves accepted results as draft | Requires a Connected and enabled provider, preview, confirmation, and the Manage Localization permission (REQ-021-110) | no graph field (control) |
-| Free-text translation switch | toggle | Yes | Platform-wide switch for translating free text written by one user for another | Off by default; one platform-wide setting; uses the active machine-translation provider (REQ-021-119) | no graph field (setting SET-free-text-translation-enabled) |
-| Free-text translation monthly budget | number | Yes | Monthly spending cap for free-text translation | No default figure; when the monthly limit is reached free text is shown untranslated (REQ-021-120) | no graph field (setting SET-free-text-translation-monthly-budget) |
+| Free-text translation switch | toggle | Yes | Platform-wide switch for translating free text written by one user for another | Off by default; one platform-wide setting; Super Admin only; uses the provider marked for free text, or the single Connected provider (REQ-021-119, REQ-021-122) | no graph field (setting SET-free-text-translation-enabled) |
+| Free-text translation monthly budget | number | Yes | Monthly spending cap for free-text translation, in the platform currency | No default figure; Super Admin only; counted per calendar month in UTC; blank means free text is shown untranslated and zero stops translation; at the limit the Super Admin is notified once and free text is shown untranslated until the next month (REQ-021-120, REQ-021-122) | no graph field (setting SET-free-text-translation-monthly-budget) |
 | Job history | table | No | Prior machine-translation jobs, actor, language, mode, counts, provider, status (Queued, Running, Completed, Partially failed, or Failed), and errors | System-generated (REQ-021-111) | ENT-mt-job.job_id, ENT-mt-job.actor_id, ENT-mt-job.target_locale, ENT-mt-job.generation_mode, ENT-mt-job.counts, ENT-mt-job.provider, ENT-mt-job.status, ENT-mt-job.error_summary |
 
 **Business Rules**:
@@ -636,8 +642,8 @@ flowchart TD
 - Machine translation of system-controlled text is a draft-generation tool, not a runtime translation path. Free-text translation for the reader is the separate case in General Module Rule 15. (REQ-021-103)
 - Only an admin holding the Manage Localization permission can use the machine-translation route. (REQ-021-121)
 - A provider that fails the connection check is set to Error and no job starts; a Disabled provider cannot start a job. (REQ-021-109)
-- Job status is one of Queued, Running, Completed, Partially failed, or Failed. (REQ-021-111)
-- The Free-text translation panel on this screen holds the platform switch and the monthly budget for translating free text written by one user for another. It uses the active machine-translation provider configured on this screen. No other behaviour is added here. (REQ-021-119, REQ-021-120)
+- Job status is one of Queued, Running, Completed, Partially failed, or Failed. Only one job per language runs at a time; a new job is refused while one is Queued or Running. (REQ-021-111)
+- The Free-text translation panel on this screen holds the platform switch and the monthly budget for translating free text written by one user for another. It uses the provider marked for free text on this screen, or the single Connected provider; if none is Connected, free text is shown untranslated. Only the Super Admin can change the panel, provider credentials and provider activation. No other behaviour is added here. (REQ-021-119, REQ-021-120, REQ-021-122)
 - Machine translation can only target non-English locales; English/source values remain human-authored and governed by source-edit protections. (REQ-021-104)
 - See REQ-021-028.
 - Replace Entire Language generates replacement draft values for all selected target-language keys in the selected scope, except protected source values. (REQ-021-029)
@@ -663,7 +669,7 @@ flowchart TD
 - **Rule 2**: Translation keys must be stable identifiers and should not be based on mutable display copy. (REQ-021-033)
 - **Rule 3**: Active keys require an English source value. (REQ-021-034)
 - **Rule 4**: Keys must include tenant/surface and group/namespace metadata. (REQ-021-035)
-- **Rule 5**: Inline text edits save draft changes only; JSON imports default to Import as Draft, with Import and Publish Version allowed only when no row was skipped for an error, after full validation preview, publish-summary entry, and Super Admin authorization. When any row is skipped for an error, only Import as Draft is offered. (REQ-021-036, REQ-021-095)
+- **Rule 5**: Inline text edits save draft changes only; JSON imports default to Import as Draft, with Import and Publish Version allowed only when no row was skipped for an error and the target is not the English source locale, after full validation preview, publish-summary entry, and Super Admin authorization. When any row is skipped for an error, only Import as Draft is offered. (REQ-021-036, REQ-021-095)
 - **Rule 6**: See REQ-021-013.
 - **Rule 7**: See REQ-021-011 and REQ-021-096.
 - **Rule 8**: See REQ-021-012 and REQ-021-045.
@@ -675,7 +681,8 @@ flowchart TD
 - **Rule 14**: Each runtime surface loads the latest published bundle for the user's selected locale and for its own surface: the Patient App loads the patient-app bundle, the Provider Dashboard the provider-dashboard bundle, and the Admin Platform the admin-platform bundle. (REQ-021-059)
 - **Rule 15**: See REQ-021-119.
 - **Rule 16**: See REQ-021-120.
-- **Rule 17**: Provider and admin screens format dates and numbers by the selected locale. Provider screens use the provider timezone set in FR-032 (a value from the FR-026 GMT list); admin screens use the platform default timezone. Patient screens follow Screen 1. (REQ-021-126)
+- **Rule 17**: Provider and admin screens format dates and numbers by the selected locale. Provider screens use the provider timezone set in FR-032 (a value from the FR-026 GMT list); admin screens use the admin's local timezone (REQ-026-050). Patient screens follow Screen 1. (REQ-021-126)
+- **Rule 18**: After a rollback, the registry's published values for that scope are set to the rolled-back version's values and pending drafts stay as drafts; each publish builds its bundle from the active bundle plus the drafts in scope. (REQ-021-128)
 
 ### Data & Privacy Rules
 
@@ -690,13 +697,13 @@ flowchart TD
 
 **Editable by Admin**: (REQ-021-046)
 
-- Supported locales, native names, activation state, fallback order, and locale direction metadata.
+- Supported locales, native names, deactivation, fallback locale, and locale direction metadata.
 - Translation values for non-source locales.
 - Translation key metadata such as description/context and group where allowed.
 - Draft translation changes and import confirmations. Publish and rollback are Super Admin only.
-- Machine-translation provider credentials, provider activation state, and machine-translation draft generation jobs.
-- The free-text translation switch (one platform-wide setting, off by default) and its monthly translation budget (no default figure). (REQ-021-119, REQ-021-120)
+- Machine-translation draft generation jobs.
 - Currency display configuration where already owned by A-09/S-02.
+- Not in this list, Super Admin only: machine-translation provider credentials and activation, the free-text translation switch (one platform-wide setting, off by default) and its monthly budget (no default figure), and moving a locale to Active. (REQ-021-119, REQ-021-120, REQ-021-122, REQ-021-125)
 
 **Fixed in Codebase (Not Editable)**: (REQ-021-047)
 
@@ -710,13 +717,13 @@ flowchart TD
 
 - See REQ-021-020.
 - Translation key identifiers after first publish require controlled migration rather than casual editing. (REQ-021-048)
-- Default locale changes require approval by the Super Admin alone (no second approver); the new default locale must be Active, and English always remains the last-resort fallback. (REQ-021-049)
+- Default locale changes require approval by the Super Admin alone (no second approver); the new default locale must be Active, and English always remains the last-resort fallback. The default locale is the language shown to a user who has no stored language preference and whose device language is not a supported locale. (REQ-021-049)
 - Machine translation full-language replacement requires explicit confirmation because it can overwrite many target-language draft values. (REQ-021-029)
 - Historical versions and audit records cannot be deleted through normal admin controls. (REQ-021-050)
 
-**Elevated Authorization Definition**: For the purposes of FR-021, "elevated authorization" means the **Super Admin** role as defined in FR-031 (Admin Access Control & Permissions). Only Super Admin role holders may edit English source values (including by import into the English locale), change the default locale, publish translation versions, and perform rollback operations. These four protected operations cannot be delegated. Moving a locale from Preparation to Active is also Super Admin only (REQ-021-125). The exact per-operation permission scope must be aligned with FR-031 configuration at implementation time. (REQ-021-051)
+**Elevated Authorization Definition**: For the purposes of FR-021, "elevated authorization" means the **Super Admin** role as defined in FR-031 (Admin Access Control & Permissions). Only Super Admin role holders may edit English source values (including by import into the English locale), change the default locale, publish translation versions, and perform rollback operations. These four protected operations cannot be delegated. Moving any locale to Active (REQ-021-125), the free-text translation switch and its budget, and machine-translation provider credentials and activation (REQ-021-122) are also Super Admin only. The exact per-operation permission scope must be aligned with FR-031 configuration at implementation time. (REQ-021-051)
 
-**Manage Localization Permission**: In this PRD, "Admin" means an admin user holding the Manage Localization permission. The permission covers everyday localization work: editing non-English translation values, importing JSON as a draft, and generating machine-translation drafts. The Super Admin holds it and may grant it to another admin role in the FR-031 permission matrix. No role is added by this PRD. (REQ-021-122)
+**Manage Localization Permission**: In this PRD, "Admin" means an admin user holding the Manage Localization permission. The permission covers every item under Editable by Admin except those named Super Admin only: editing non-English translation values, importing JSON as a draft, generating machine-translation drafts, and managing locales other than a move to Active or a default locale change. The Super Admin holds it and may grant it to another admin role in the FR-031 permission matrix. No role is added by this PRD. (REQ-021-122)
 
 ### Payment & Billing Rules
 
@@ -727,18 +734,18 @@ flowchart TD
 ### Integration & Ownership Rules
 
 - **FR-026 / A-09 App Settings**: FR-021 owns language/locale catalog semantics; FR-026 may surface the catalog through the broader App Settings shell but must not become the language-list source of truth.
-- **FR-030 / S-03 Notification Rules & Configuration**: FR-030 owns template authoring, variables, preview, channel content, and all notification wording; notification wording is not held in a translation bundle. FR-021 supplies the locale catalog and fallback order to FR-030. (REQ-021-115)
+- **FR-030 / S-03 Notification Rules & Configuration**: FR-030 owns template authoring, variables, preview, channel content, and all notification wording; notification wording is not held in a translation bundle. FR-021 supplies the locale catalog and fallback locale to FR-030. (REQ-021-115)
 - **FR-027 / Legal Content Management**: FR-027 owns legal content versioning and acceptance (see FR-027 REQ-027-036 for the missing-localized-version fallback, and REQ-027-002 and REQ-027-029 for versioning); FR-021 supplies locale/fallback principles.
-- **FR-024 / Treatment Package Management**: Admin-authored library text (treatment type descriptions and technique specifications) registers with FR-021 as key groups on Screens 6A and 6B. Provider-authored package names and descriptions are free text translated under General Module Rule 15, not registry keys. (REQ-021-127, REQ-021-119)
+- **FR-024 / Treatment Package Management**: Admin-authored library text (treatment type descriptions and technique specifications) registers with FR-021 as key groups on Screens 6A and 6B. The FR-024 treatment form is the authoring screen for the English text: saving it writes the key's English source value (creating the key if new) and marks dependent translations Review Needed, and it is exempt from the Super Admin-only source-edit rule because it is not a registry edit; translation and publish stay in FR-021. Provider-authored package names and descriptions are free text translated under General Module Rule 15, not registry keys. (REQ-021-127, REQ-021-119)
 - **S-02 / Payment Processing Service**: Currency source, refresh cadence, rounding policy, and display formatting are configured/audited outside translation JSON.
-- **FR-031 / Admin Access Control & Permissions**: FR-031 owns role definitions and the permission matrix; FR-021's four protected operations and the Preparation-to-Active locale change must be registered as Super Admin-only permissions, and the Manage Localization permission must be registered, in the FR-031 permission matrix at implementation time. The exact per-operation permission scope must be aligned with FR-031 configuration before release. (REQ-021-051)
+- **FR-031 / Admin Access Control & Permissions**: FR-031 owns role definitions and the permission matrix; FR-021's four protected operations, any move of a locale to Active, the free-text translation switch and budget, and provider credentials and activation must be registered as Super Admin-only permissions, and the Manage Localization permission must be registered, in the FR-031 permission matrix at implementation time. The exact per-operation permission scope must be aligned with FR-031 configuration before release. (REQ-021-051)
 - **Currency Rate Source**: Failure handling: Use last valid configured rate within allowed freshness window or show configured fallback per S-02/finance rules.
 - **Translation Vendor / Translator Workflow**: Failure handling: Invalid or incomplete files remain draft and cannot publish when blocking validation errors exist.
 - **Machine Translation Service**: Data format: Source text, target locale, placeholder/ICU metadata, and key context for system-controlled strings only. Error handling: Save job errors and partial counts; do not create publishable values for failed rows. Failure handling: Provider errors, quota limits, unsupported languages, placeholder mismatches, or malformed outputs are recorded in job history; accepted results remain draft and cannot publish until validation passes. (REQ-021-111)
-- **Patient App bundle fetch**: Authentication: Uses existing app authentication/session rules where required. Error handling: Fall back to cached bundle or default locale where allowed. (REQ-021-114)
+- **Patient App bundle fetch**: Authentication: Uses existing app authentication/session rules where required. Error handling: Fall back to the cached bundle, else the English source bundle. (REQ-021-114)
 - **Provider Dashboard bundle fetch**: Authentication: Uses provider dashboard authentication. Error handling: See REQ-021-114.
 - **Admin Platform localization management**: Error handling: Block publish on validation failures; preserve draft state for correction. (REQ-021-089, REQ-021-099) Protected endpoints (publish, rollback, English source edit, default locale change) must return HTTP 403 with the platform-standard error format when called by a non-Super-Admin role. (REQ-021-112)
-- **Notification Service**: Authentication: Internal service integration. Error handling: Use the fallback locale template/content when recipient locale is missing; the locale catalog and fallback order come from FR-021 and the wording from FR-030 templates. (REQ-021-115)
+- **Notification Service**: Authentication: Internal service integration. Error handling: When the recipient's locale template is missing, follow the Rule 9 order (that locale's fallback locale, then English); the locale catalog and fallback locale come from FR-021 and the wording from FR-030 templates. (REQ-021-115)
 - **Authentication**: Only authenticated admins holding the Manage Localization permission can access localization-management Screens 4 to 10; the Screen 3 language selector is open to every authenticated admin. (REQ-021-055)
 - **Encryption**: Import/export files and bundle APIs must follow platform transport security requirements.
 - **Threat mitigation**: Import validation must prevent malformed payloads, invalid placeholders, and oversized files from disrupting published bundles. (REQ-021-091)
@@ -753,7 +760,7 @@ flowchart TD
 - FR-030 / S-03 Notification Rules & Configuration: notification template language variants consume supported locales and fallback rules
 - FR-027 / Legal Content Management: legal documents may have localized versions
 - FR-024 / Treatment Package Management: admin-authored library text registers as key groups; provider-authored package names and descriptions are free text under General Module Rule 15
-- FR-032 / Provider Dashboard Settings: provider profiles include spoken-language selections (Active and Preparation locales) and the provider timezone used by General Module Rule 17
+- FR-032 / Provider Dashboard Settings: provider profiles include spoken-language selections (all catalog locales) and the provider timezone used by General Module Rule 17
 - S-02 / Payment Processing Service: currency conversion and formatting are part of localization display
 - FR-029 / S-02 Payment System Configuration: owns enabled currencies, currency pairs, conversion sources, markup, rate locking, and fallback-to-USD behavior
 - FR-031 / Admin Access Control & Permissions: defines "elevated authorization" as the Super Admin role and holds the Manage Localization permission
@@ -899,7 +906,7 @@ Admin configures a machine-translation provider and uses it to prepare a non-Eng
 - **REQ-021-003**: Provider users MUST be able to select Provider Dashboard language from the dashboard top bar without overwriting provider profile spoken-language data.
 - **REQ-021-004**: Admin users MUST be able to select Admin Platform language from the dashboard top bar.
 - **REQ-021-005**: System MUST translate UI strings, validation messages, empty states, system labels, emails, and push notifications for supported locales where the owning module supplies translatable content.
-- **REQ-021-006**: Admin MUST be able to manage supported locales, activation state, fallback order, native names, and locale direction metadata; only a Super Admin can change the default locale.
+- **REQ-021-006**: Admin MUST be able to manage supported locales, deactivation, fallback locale, native names, and locale direction metadata; only a Super Admin can change the default locale or move a locale to Active.
 - **REQ-021-007**: Admin MUST be able to edit translation values in a table/grid registry and key-detail editor.
 - **REQ-021-008**: Admin translation edits MUST save as draft and MUST NOT affect live clients until published.
 - **REQ-021-009**: Admin MUST be able to import locale JSON files with validation preview and import history, choosing either Import as Draft or controlled Import and Publish Version.
@@ -907,17 +914,17 @@ Admin configures a machine-translation provider and uses it to prepare a non-Eng
 - **REQ-021-011**: System MUST package published translation changes into immutable versioned bundles.
 - **REQ-021-012**: System MUST allow Admin to roll back to a prior published translation bundle by creating a new rollback version.
 - **REQ-021-013**: Published bundles MUST be the only translation source served to Patient, Provider, and Admin runtime clients.
-- **REQ-021-013a**: Admin MUST be able to configure machine-translation provider credentials for draft generation, with notable provider options including Google Cloud Translation, DeepL, Microsoft Azure Translator, and Amazon Translate. (REQ-021-027)
+- **REQ-021-013a**: The Super Admin MUST be able to configure machine-translation provider credentials for draft generation, with notable provider options including Google Cloud Translation, DeepL, Microsoft Azure Translator, and Amazon Translate. (REQ-021-027)
 - **REQ-021-013b**: Admin MUST be able to prefill all missing keys for a selected non-English language using machine translation, saving generated values as Review Needed drafts. (REQ-021-028)
 - **REQ-021-013c**: Admin MUST be able to replace an entire selected non-English language with machine-generated draft values, excluding English/source values and requiring explicit confirmation. (REQ-021-029)
 - **REQ-021-118**: The fallback notice on Patient App Language & Region Settings MUST be shown only when a fallback has occurred.
-- **REQ-021-119**: When free-text translation is switched on, free text written by one user for another (messages, free-text fields in an inquiry, provider-authored package names and descriptions, support messages and notes, and reviews) MUST be machine-translated into the reader's own language using the active machine-translation provider. Uploaded documents MUST NOT be translated. The switch is one platform-wide setting controlled by Admin from the Free-text translation panel on Screen 10 and MUST be off by default.
-- **REQ-021-120**: Admin MUST be able to configure a monthly budget for free-text translation in the Free-text translation panel on Screen 10 (no default figure); when the monthly limit is reached, free text MUST be shown untranslated.
+- **REQ-021-119**: When free-text translation is switched on, free text written by one user for another (messages, free-text fields in an inquiry, provider-authored package names and descriptions, support messages and notes, and reviews) MUST be machine-translated into the reader's own language using the provider the Super Admin chooses for free text, or the single Connected provider when none is chosen; when no provider is Connected, free text MUST be shown untranslated. Uploaded documents MUST NOT be translated. The switch is one platform-wide setting controlled by the Super Admin from the Free-text translation panel on Screen 10 and MUST be off by default.
+- **REQ-021-120**: The Super Admin MUST be able to configure a monthly budget for free-text translation in the Free-text translation panel on Screen 10 (no default figure), in the platform currency and counted per calendar month in UTC; a blank budget means free text is shown untranslated, a budget of zero stops translation, and when the monthly limit is reached the Super Admin MUST be notified once and free text MUST be shown untranslated until the next month.
 - **REQ-021-121**: Only an admin holding the Manage Localization permission MUST be able to use the machine-translation route for translation drafts.
-- **REQ-021-122**: The Manage Localization permission MUST cover editing non-English translation values, importing JSON as a draft, and generating machine-translation drafts. The Super Admin holds it and MAY grant it to another admin role in the FR-031 permission matrix. Editing the English source, changing the default locale, publishing, and rollback MUST stay Super Admin only.
-- **REQ-021-123**: An import into the English source locale MUST be treated as an English source edit with the REQ-021-020 controls, and a new key created through import MUST carry an English value in the same file or the row is an error.
+- **REQ-021-122**: The Manage Localization permission MUST cover every item editable by Admin in REQ-021-046: editing non-English translation values, importing JSON as a draft, generating machine-translation drafts, and managing locales other than the Super Admin-only changes. The Super Admin holds it and MAY grant it to another admin role in the FR-031 permission matrix. Editing the English source, changing the default locale, moving a locale to Active, publishing, rollback, the free-text translation switch and its budget, and provider credentials and activation MUST stay Super Admin only.
+- **REQ-021-123**: An import into the English source locale MUST be treated as an English source edit with the REQ-021-020 controls: Super Admin only, with a change reason, and only Import as Draft is offered (publish later from Screen 9). A new key can be created only by such an import, and its row MUST carry the English value or the row is an error.
 - **REQ-021-124**: Review Needed values MUST NOT block publish; the Screen 9 publish confirmation MUST show how many values remain flagged.
-- **REQ-021-125**: Moving a locale from Preparation to Active MUST be Super Admin only and MUST require a published bundle for every surface (Patient App, Provider Dashboard, Admin Platform). The default locale MUST be Active.
+- **REQ-021-125**: Moving a locale to Active, from Preparation or from Inactive, MUST be Super Admin only and MUST require a published bundle for every surface (Patient App, Provider Dashboard, Admin Platform); Active to Preparation is not offered. The default locale MUST be Active.
 
 ### Data Requirements
 
@@ -926,8 +933,9 @@ Admin configures a machine-translation provider and uses it to prepare a non-Eng
 - **REQ-021-016**: System MUST log missing translations and expose locale coverage metrics by tenant/surface, group, and locale.
 - **REQ-021-017**: System MUST apply fallback per key when a selected locale value is missing.
 - **REQ-021-018**: System MUST display dates/times in user timezone while storing canonical timestamps in UTC.
-- **REQ-021-126**: Provider and admin screens MUST format dates and numbers by the selected locale. Provider screens MUST use the provider timezone set in FR-032 (a value from the FR-026 GMT list); admin screens MUST use the platform default timezone.
-- **REQ-021-127**: Admin-authored library text (treatment type descriptions and technique specifications) MUST be registered as translation key groups on the Patient App and Provider Dashboard inventories. Provider-authored package names and descriptions are free text under REQ-021-119 and are not keys.
+- **REQ-021-126**: Provider and admin screens MUST format dates and numbers by the selected locale. Provider screens MUST use the provider timezone set in FR-032 (a value from the FR-026 GMT list); admin screens MUST use the admin's local timezone (REQ-026-050).
+- **REQ-021-127**: Admin-authored library text (treatment type descriptions and technique specifications) MUST be registered as translation key groups on the Patient App and Provider Dashboard inventories. The FR-024 treatment form is the authoring screen for this English text: saving it MUST write the key's English source value (creating the key if new) and mark dependent translations Review Needed; it is exempt from the Super Admin-only source-edit rule because it is not a registry edit, and translation and publish stay in FR-021. Provider-authored package names and descriptions are free text under REQ-021-119 and are not keys.
+- **REQ-021-128**: After a rollback, the registry's published values for that scope MUST be set to the rolled-back version's values and pending drafts MUST stay as drafts; each publish MUST build its bundle from the active bundle plus the drafts in scope.
 - **REQ-021-019**: System MUST display local currency with configured conversion, rounding, and locale-aware formatting.
 
 ### Security & Privacy Requirements
@@ -942,7 +950,7 @@ Admin configures a machine-translation provider and uses it to prepare a non-Eng
 
 - **REQ-021-023**: System MUST provide published translation bundles consumable by Patient App, Provider Dashboard, and Admin Platform by locale and tenant/surface.
 - **REQ-021-024**: System MUST provide locale/fallback behavior consumable by FR-030 notification template delivery.
-- **REQ-021-025**: System MUST provide language/locale catalog data consumable by FR-032 provider spoken-language profile selection and FR-030 template-language selection, without conflating it with provider UI language preference. Interface-language selectors show Active locales only; the spoken-language and template-language lists show Active and Preparation locales.
+- **REQ-021-025**: System MUST provide language/locale catalog data consumable by FR-032 provider spoken-language profile selection and FR-030 template-language selection, without conflating it with provider UI language preference. Interface-language selectors show Active locales only; the spoken-language and template-language lists show all catalog locales (Active, Preparation and Inactive), and an existing entry or template in a locale that becomes Inactive is kept.
 - **REQ-021-026**: System MUST consume FR-029/S-02 currency conversion configuration for localized currency display and MUST NOT duplicate ownership of conversion rates, markup, rate locking, or payment fallback rules.
 
 ---
@@ -951,6 +959,7 @@ Admin configures a machine-translation provider and uses it to prepare a non-Eng
 
 | Date | Version | Changes | Author |
 | --- | --- | --- | --- |
+| 2026-11-24 | 1.9 | Logic review pass 2: import decision follows rows skipped for an error (warnings alone still allow Import and Publish), English import has a change reason and Import as Draft only, new keys only through an English source import, any move to Active is Super Admin only and Active to Preparation is not offered, default locale shown when the user has no stored preference and the device language is unsupported, bundle fetch failure and notification templates end at English, rollback sets the registry's published values and publishes build from the active bundle plus drafts, admin screens use the admin's local timezone, free-text translation operating conditions and budget in the platform currency per UTC month, Manage Localization scope with Super Admin-only credentials and free-text switch, spoken-language and template lists show all catalog locales, FR-024 treatment form is the English authoring screen for library text, machine-translation job creation, Failed branch and one job per language, locale management step on Screen 4. | Product Owner / Documentation |
 | 2026-11-24 | 1.8 | Logic review pass 1: one Manage Localization permission defined for everyday localization work with the four protected operations kept Super Admin only; import into the source locale treated as an English source edit; import with skipped error rows offers Import as Draft only; fallback chain and Screen 5 fallback control; Review Needed handling (accept as reviewed, marking after validation, publish not blocked); one machine-translation flow with connection check, preview and confirm, job statuses and provider enable/disable; Free-text translation panel on Screen 10; locale-aware date and number formatting rule; interface-language versus spoken-language lists; library text as key groups; notification wording removed from the registry surfaces; Preparation-to-Active rule. | Product Owner / Documentation |
 | 2026-11-22 | 1.7 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.6) is in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
 

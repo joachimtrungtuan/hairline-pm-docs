@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T11:16:19Z",
+  "generated_at": "2026-11-24T11:35:04Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -12810,9 +12810,9 @@
       "owner_fr": "FR-021",
       "title": "Fallback order",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "This language's fallback locale, used when the language has no value for a key; English is always the last resort after it."
+        "description": "Holds the fallback locale code: the locale shown when this language has no value for a key; English is always the last resort after it."
       }
     },
     {
@@ -30105,8 +30105,10 @@
       "owner_fr": "FR-021",
       "title": "Published value reference",
       "status": "active",
-      "version": 1,
-      "attrs": {}
+      "version": 2,
+      "attrs": {
+        "description": "Points to the value in the active published bundle; after a rollback it points to the rolled-back version's value."
+      }
     },
     {
       "id": "ENT-translation-value.review_needed",
@@ -39617,7 +39619,7 @@
       "owner_fr": null,
       "title": "Multi-Language & Localization",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
         "module": "fr021-i18n-localization",
         "prd_path": "project-requirements/functional-requirements/fr021-i18n-localization/prd.md",
@@ -73631,11 +73633,11 @@
       "id": "REQ-021-006",
       "type": "Rule",
       "owner_fr": "FR-021",
-      "title": "Admin manages locales, activation, default, fallback order, names, direction",
+      "title": "Admin manages locales, deactivation, fallback locale, names and direction; Super Admin changes the default and moves a locale to Active",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "Admin MUST be able to manage supported locales, activation state, fallback order, native names, and locale direction metadata; only a Super Admin can change the default locale.",
+        "statement": "Admin MUST be able to manage supported locales, deactivation, fallback locale, native names, and locale direction metadata; only a Super Admin can change the default locale or move a locale to Active.",
         "rationale": "PRD Functional Requirements Summary (prd.md line 1056). PRD id REQ-021-006.  Restated at: Module Scope A-09 (line 58)."
       }
     },
@@ -73862,9 +73864,9 @@
       "owner_fr": "FR-021",
       "title": "Language catalog consumable by FR-032 provider spoken-language selection",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "System MUST provide language/locale catalog data consumable by FR-032 provider spoken-language profile selection and FR-030 template-language selection, without conflating it with provider UI language preference. Interface-language selectors show Active locales only; the spoken-language and template-language lists show Active and Preparation locales.",
+        "statement": "System MUST provide language/locale catalog data consumable by FR-032 provider spoken-language profile selection and FR-030 template-language selection, without conflating it with provider UI language preference. Interface-language selectors show Active locales only; the spoken-language and template-language lists show all catalog locales (Active, Preparation and Inactive), and an existing entry or template in a locale that becomes Inactive is kept.",
         "rationale": "PRD Functional Requirements Summary (prd.md line 1093). PRD id REQ-021-025.  Restated at: Module Scope PR-06 (line 53)."
       }
     },
@@ -73886,9 +73888,9 @@
       "owner_fr": "FR-021",
       "title": "Admin configures machine-translation provider credentials",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Admin MUST be able to configure machine-translation provider credentials for draft generation, with notable provider options including Google Cloud Translation, DeepL, Microsoft Azure Translator, and Amazon Translate.",
+        "statement": "The Super Admin MUST be able to configure machine-translation provider credentials for draft generation, with notable provider options including Google Cloud Translation, DeepL, Microsoft Azure Translator, and Amazon Translate. (REQ-021-027)",
         "rationale": "PRD Functional Requirements Summary (prd.md line 1064). PRD id REQ-021-013a. Renumbered from REQ-021-013a (id must be digits only). Restated at: Module Scope A-09 (line 61)."
       }
     },
@@ -73994,9 +73996,9 @@
       "owner_fr": "FR-021",
       "title": "Edits save as draft; imports default to draft; import and publish is gated",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "Inline text edits save draft changes only; JSON imports default to Import as Draft, with Import and Publish Version allowed only when no row was skipped for an error, after full validation preview, publish-summary entry, and Super Admin authorization. When any row is skipped for an error, only Import as Draft is offered.",
+        "statement": "Inline text edits save draft changes only; JSON imports default to Import as Draft, with Import and Publish Version allowed only when no row was skipped for an error and the target is not the English source locale, after full validation preview, publish-summary entry, and Super Admin authorization. When any row is skipped for an error, or the target is the English source locale, only Import as Draft is offered.",
         "rationale": "PRD Business Rules (prd.md line 654)."
       }
     },
@@ -74114,9 +74116,9 @@
       "owner_fr": "FR-021",
       "title": "Items editable by Admin",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Editable by Admin: Supported locales, native names, activation state, fallback order, and locale direction metadata; Translation values for non-source locales; Translation key metadata such as description/context and group where allowed; Draft translation changes and import confirmations (publish and rollback are Super Admin only); Machine-translation provider credentials, provider activation state, and machine-translation draft generation jobs; The free-text translation switch and its monthly budget; Currency display configuration where already owned by A-09/S-02.",
+        "statement": "Editable by Admin: Supported locales, native names, deactivation, fallback locale, and locale direction metadata; Translation values for non-source locales; Translation key metadata such as description/context and group where allowed; Draft translation changes and import confirmations (publish and rollback are Super Admin only); Machine-translation draft generation jobs; Currency display configuration where already owned by A-09/S-02. Not in this list, Super Admin only: machine-translation provider credentials and activation, the free-text translation switch and its monthly budget, and moving a locale to Active.",
         "rationale": "PRD Business Rules (prd.md line 673). Restated at: Editable list: translation values (line 674); Editable list: key metadata (line 675); Editable list: publish and rollback (line 676); Editable list: MT credentials and jobs (line 677); Editable list: currency display (line 678)."
       }
     },
@@ -74150,9 +74152,9 @@
       "owner_fr": "FR-021",
       "title": "Default locale change needs Super Admin approval alone and cannot deactivate the source locale",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Default locale changes require approval by the Super Admin alone (no second approver); the new default locale must be Active, and English always remains the last-resort fallback.",
+        "statement": "Default locale changes require approval by the Super Admin alone (no second approver); the new default locale must be Active, and English always remains the last-resort fallback. The default locale is the language shown to a user who has no stored language preference and whose device language is not a supported locale.",
         "rationale": "PRD Business Rules, Admin Editability (prd.md line 700)."
       }
     },
@@ -74174,9 +74176,9 @@
       "owner_fr": "FR-021",
       "title": "Elevated authorization means Super Admin for four protected operations",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "Elevated authorization means the Super Admin role as defined in FR-031. Only Super Admin role holders may edit English source values (including by import into the English locale), change the default locale, publish translation versions, and perform rollback operations. These four protected operations cannot be delegated. Moving a locale from Preparation to Active is also Super Admin only (REQ-021-125). The exact per-operation permission scope must be aligned with FR-031 configuration at implementation time.",
+        "statement": "Elevated authorization means the Super Admin role as defined in FR-031. Only Super Admin role holders may edit English source values (including by import into the English locale), change the default locale, publish translation versions, and perform rollback operations. These four protected operations cannot be delegated. Moving any locale to Active (REQ-021-125), the free-text translation switch and its budget, and machine-translation provider credentials and activation (REQ-021-122) are also Super Admin only. The exact per-operation permission scope must be aligned with FR-031 configuration at implementation time.",
         "rationale": "PRD Business Rules (prd.md line 704). Restated at: Dependency FR-031 (line 777); Integration note: HTTP 403 (line 879); Security: authorization (line 902)."
       }
     },
@@ -74403,9 +74405,9 @@
       "owner_fr": "FR-021",
       "title": "Deactivating a language hides it but keeps translations, versions and audit history",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Admin can deactivate languages; deactivation hides the language from user-facing selectors but preserves translations, versions, and audit history.",
+        "statement": "Admin can deactivate languages; deactivation hides the language from the interface-language selectors but preserves translations, versions, and audit history.",
         "rationale": "PRD Screen Specifications, Screen 4 (prd.md line 342). Restated at: Screen 4 row: remove/deactivate action (line 333)."
       }
     },
@@ -74451,9 +74453,9 @@
       "owner_fr": "FR-021",
       "title": "Only Active locales appear in language selectors",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "Only Active locales appear in the Patient, Provider, and Admin interface-language selectors; Inactive and Preparation locales are hidden from them. The spoken-language and notification-template language lists used by FR-032 and FR-030 show Active and Preparation locales.",
+        "statement": "Only Active locales appear in the Patient, Provider, and Admin interface-language selectors; Inactive and Preparation locales are hidden from them. The spoken-language and notification-template language lists used by FR-032 and FR-030 show all catalog locales (Active, Preparation and Inactive); an existing entry or template in a locale that becomes Inactive is kept.",
         "rationale": "PRD Screen Specifications, Screen 4 (prd.md line 346). Restated at: Screen 1 rule (line 246); Screen 2 row: available languages (line 268); Screen 3 row: available languages (line 298); Alternative flow A1 step 2 (line 176)."
       }
     },
@@ -74653,11 +74655,11 @@
       "id": "REQ-021-094",
       "type": "Rule",
       "owner_fr": "FR-021",
-      "title": "Unknown keys are blocked unless Admin may create registry keys",
+      "title": "Unknown keys are blocked; a new key comes only from an English source import",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "Unknown keys are blocked unless Admin has explicit permission to create new registry keys through import. A new key created through import must carry an English value in the same file; a row without one is an error.",
+        "statement": "Unknown keys are blocked. A new key can be created only by an import into the English source locale, with its English value in that file (library text from the FR-024 treatment form is the one other route, REQ-021-127); an unknown key in any other locale's file is an error.",
         "rationale": "PRD Screen Specifications, Screen 8 (prd.md line 558). Restated at: Screen 8 row: group (line 538)."
       }
     },
@@ -74835,9 +74837,9 @@
       "owner_fr": "FR-021",
       "title": "Adding a provider stores the credential encrypted and verifies the connection",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "When Admin adds a provider, the system stores the encrypted credential and verifies the connection. A failed connection sets the provider status to Error and stops; no job starts unless the provider is Connected. Admin can enable or disable a provider; a Disabled provider cannot start a job, and enabling it verifies the connection again.",
+        "statement": "When the Super Admin adds a provider, the system stores the encrypted credential and verifies the connection. A failed connection sets the provider status to Error and stops; no job starts unless the provider is Connected. The Super Admin can enable or disable a provider; a Disabled provider cannot start a job, and enabling it verifies the connection again.",
         "rationale": "PRD Alternative Flows (prd.md line 209)."
       }
     },
@@ -74859,9 +74861,9 @@
       "owner_fr": "FR-021",
       "title": "Translation job failures are recorded and create no publishable values",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "Provider errors, quota limits, unsupported languages, placeholder mismatches, or malformed outputs are recorded in job history; accepted results remain draft and cannot publish until validation passes. Job status is one of Queued, Running, Completed, Partially failed, or Failed.",
+        "statement": "Provider errors, quota limits, unsupported languages, placeholder mismatches, or malformed outputs are recorded in job history; accepted results remain draft and cannot publish until validation passes. Job status is one of Queued, Running, Completed, Partially failed, or Failed. Only one job per language runs at a time; a new job is refused while one is Queued or Running.",
         "rationale": "PRD Dependencies (prd.md line 803). Restated at: Integration note: machine translation errors (line 889)."
       }
     },
@@ -74893,11 +74895,11 @@
       "id": "REQ-021-114",
       "type": "Rule",
       "owner_fr": "FR-021",
-      "title": "Bundle fetch falls back to cached bundle or default locale",
+      "title": "Bundle fetch falls back to the cached bundle, else the English source bundle",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Fall back to cached bundle or default locale where allowed.",
+        "statement": "When a bundle fetch fails, use the cached bundle, else the English source bundle.",
         "rationale": "PRD Integration Points, Patient App and Provider Dashboard bundle fetch (prd.md lines 869 and 874)."
       }
     },
@@ -74907,9 +74909,9 @@
       "owner_fr": "FR-021",
       "title": "Notification delivery uses fallback locale template",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Use the fallback locale template/content when the recipient locale is missing. FR-021 supplies the locale catalog and fallback order to FR-030; notification wording lives only in FR-030 templates, not in a translation bundle.",
+        "statement": "When the recipient's locale template is missing, follow the Rule 9 order: that locale's fallback locale, then English. FR-021 supplies the locale catalog and fallback locale to FR-030; notification wording lives only in FR-030 templates, not in a translation bundle.",
         "rationale": "PRD Integration Points, Notification Service (prd.md line 892)."
       }
     },
@@ -74955,9 +74957,9 @@
       "owner_fr": "FR-021",
       "title": "Free text between users is machine-translated for the reader when the Admin switch is on",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "When free-text translation is switched on, free text written by one user for another (messages, free-text fields in an inquiry, provider-authored package names and descriptions, support messages and notes, and reviews) MUST be machine-translated into the reader's own language using the active machine-translation provider. Uploaded documents MUST NOT be translated. The switch is one platform-wide setting controlled by Admin from the Free-text translation panel on Screen 10 and MUST be off by default.",
+        "statement": "When free-text translation is switched on, free text written by one user for another (messages, free-text fields in an inquiry, provider-authored package names and descriptions, support messages and notes, and reviews) MUST be machine-translated into the reader's own language using the provider the Super Admin chooses for free text, or the single Connected provider when none is chosen; when no provider is Connected, free text MUST be shown untranslated. Uploaded documents MUST NOT be translated. The switch is one platform-wide setting controlled by the Super Admin from the Free-text translation panel on Screen 10 and MUST be off by default.",
         "rationale": "PRD Functional Requirements Summary (prd.md line 1068). PRD id REQ-021-119. Restated at: General Module Rule 15 (line 664); Module Scope (lines 46, 62, 82, 86)."
       }
     },
@@ -74967,9 +74969,9 @@
       "owner_fr": "FR-021",
       "title": "Free-text translation has a monthly budget; at the limit text is shown untranslated",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Admin MUST be able to configure a monthly budget for free-text translation in the Free-text translation panel on Screen 10 (no default figure); when the monthly limit is reached, free text MUST be shown untranslated.",
+        "statement": "The Super Admin MUST be able to configure a monthly budget for free-text translation in the Free-text translation panel on Screen 10 (no default figure), in the platform currency and counted per calendar month in UTC; a blank budget means free text is shown untranslated, a budget of zero stops translation, and when the monthly limit is reached the Super Admin MUST be notified once and free text MUST be shown untranslated until the next month.",
         "rationale": "PRD Functional Requirements Summary (prd.md line 1069). PRD id REQ-021-120. Restated at: General Module Rule 16 (line 665)."
       }
     },
@@ -74977,9 +74979,9 @@
       "id": "REQ-021-121",
       "type": "Rule",
       "owner_fr": "FR-021",
-      "title": "Only Platform Admin and Super Admin may use the machine-translation route",
+      "title": "Only an admin holding the Manage Localization permission may use the machine-translation route",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Only an admin holding the Manage Localization permission MUST be able to use the machine-translation route for translation drafts.",
         "rationale": "PRD Functional Requirements Summary (prd.md line 1070). PRD id REQ-021-121. Restated at: Screen 10 business rules (line 628)."
@@ -74989,11 +74991,11 @@
       "id": "REQ-021-122",
       "type": "Rule",
       "owner_fr": "FR-021",
-      "title": "Manage Localization permission covers everyday localization work; four operations stay Super Admin only",
+      "title": "Manage Localization permission covers every Admin-editable item; Super Admin only items stay with the Super Admin",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "The Manage Localization permission MUST cover editing non-English translation values, importing JSON as a draft, and generating machine-translation drafts. The Super Admin holds it and MAY grant it to another admin role in the FR-031 permission matrix. Editing the English source, changing the default locale, publishing, and rollback MUST stay Super Admin only.",
+        "statement": "The Manage Localization permission MUST cover every item editable by Admin in REQ-021-046: editing non-English translation values, importing JSON as a draft, generating machine-translation drafts, and managing locales other than the Super Admin-only changes. The Super Admin holds it and MAY grant it to another admin role in the FR-031 permission matrix. Editing the English source, changing the default locale, moving a locale to Active, publishing, rollback, the free-text translation switch and its budget, and provider credentials and activation MUST stay Super Admin only.",
         "rationale": "Pass 1 logic review. Stated in the PRD Functional Requirements Summary and restated at the screen or rule that applies it."
       }
     },
@@ -75003,9 +75005,9 @@
       "owner_fr": "FR-021",
       "title": "Import into the English source locale is an English source edit",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "An import into the English source locale MUST be treated as an English source edit with the REQ-021-020 controls, and a new key created through import MUST carry an English value in the same file or the row is an error.",
+        "statement": "An import into the English source locale MUST be treated as an English source edit with the REQ-021-020 controls: Super Admin only, with a change reason, and only Import as Draft is offered (publish later from Screen 9). A new key can be created only by such an import, and its row MUST carry the English value or the row is an error.",
         "rationale": "Pass 1 logic review. Stated in the PRD Functional Requirements Summary and restated at the screen or rule that applies it."
       }
     },
@@ -75025,11 +75027,11 @@
       "id": "REQ-021-125",
       "type": "Rule",
       "owner_fr": "FR-021",
-      "title": "Preparation to Active is Super Admin only and needs a published bundle for every surface",
+      "title": "Moving a locale to Active is Super Admin only and needs a published bundle for every surface",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "Moving a locale from Preparation to Active MUST be Super Admin only and MUST require a published bundle for every surface (Patient App, Provider Dashboard, Admin Platform). The default locale MUST be Active.",
+        "statement": "Moving a locale to Active, from Preparation or from Inactive, MUST be Super Admin only and MUST require a published bundle for every surface (Patient App, Provider Dashboard, Admin Platform); Active to Preparation is not offered. The default locale MUST be Active.",
         "rationale": "Pass 1 logic review. Stated in the PRD Functional Requirements Summary and restated at the screen or rule that applies it."
       }
     },
@@ -75039,9 +75041,9 @@
       "owner_fr": "FR-021",
       "title": "Provider and admin screens format dates and numbers by the selected locale",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "Provider and admin screens MUST format dates and numbers by the selected locale. Provider screens MUST use the provider timezone set in FR-032 (a value from the FR-026 GMT list); admin screens MUST use the platform default timezone.",
+        "statement": "Provider and admin screens MUST format dates and numbers by the selected locale. Provider screens MUST use the provider timezone set in FR-032 (a value from the FR-026 GMT list); admin screens MUST use the admin's local timezone (REQ-026-050).",
         "rationale": "Pass 1 logic review. Stated in the PRD Functional Requirements Summary and restated at the screen or rule that applies it."
       }
     },
@@ -75051,10 +75053,22 @@
       "owner_fr": "FR-021",
       "title": "Admin-authored library text is registered as translation key groups",
       "status": "active",
+      "version": 2,
+      "attrs": {
+        "statement": "Admin-authored library text (treatment type descriptions and technique specifications) MUST be registered as translation key groups on the Patient App and Provider Dashboard inventories. The FR-024 treatment form is the authoring screen for this English text: saving it MUST write the key's English source value (creating the key if new) and mark dependent translations Review Needed; it is exempt from the Super Admin-only source-edit rule because it is not a registry edit, and translation and publish stay in FR-021. Provider-authored package names and descriptions are free text under REQ-021-119 and are not keys.",
+        "rationale": "Pass 1 logic review. Stated in the PRD Functional Requirements Summary and restated at the screen or rule that applies it."
+      }
+    },
+    {
+      "id": "REQ-021-128",
+      "type": "Rule",
+      "owner_fr": "FR-021",
+      "title": "After a rollback the registry's published values follow the rolled-back version; each publish builds from the active bundle plus drafts",
+      "status": "active",
       "version": 1,
       "attrs": {
-        "statement": "Admin-authored library text (treatment type descriptions and technique specifications) MUST be registered as translation key groups on the Patient App and Provider Dashboard inventories. Provider-authored package names and descriptions are free text under REQ-021-119 and are not keys.",
-        "rationale": "Pass 1 logic review. Stated in the PRD Functional Requirements Summary and restated at the screen or rule that applies it."
+        "statement": "After a rollback, the registry's published values for that scope MUST be set to the rolled-back version's values and pending drafts MUST stay as drafts; each publish MUST build its bundle from the active bundle plus the drafts in scope.",
+        "rationale": "Pass 2 logic review. Stated in the PRD Functional Requirements Summary and General Module Rule 18."
       }
     },
     {
@@ -99426,7 +99440,7 @@
       "owner_fr": "FR-021",
       "title": "Admin - Translation Key Detail Editor",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "platform": "admin",
         "description": "PRD Screen 7 (prd.md line 488). Purpose: Open one key from the inventory, review all language values and edit per-language values through the draft workflow. Shows English source first, then active languages, then inactive or preparation ones if chosen; shows missing and review-needed indicators and a Pending Publish state after saving. Admin can save one or several language values. Save draft is a UI control; Selected language highlight is a UI state."
@@ -99438,7 +99452,7 @@
       "owner_fr": "FR-021",
       "title": "Admin - JSON Import Modal/Screen",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
         "description": "PRD Screen 8 (prd.md line 528). Purpose: Separate modal or screen from the key editor: upload a JSON package for one language, surface and group, validate it, then choose Import as Draft or controlled Import and Publish Version. Shows whether the file is only imported as draft or published live, and separates structural errors, row warnings, publish-blocking errors and non-blocking warnings. Validation preview is shown through the summary counts and validation result."
@@ -101535,9 +101549,9 @@
       "owner_fr": "FR-021",
       "title": "Free-text translation switch",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "One platform-wide switch, controlled by Admin, that turns machine translation of free text between users on or off for the reader (PRD General Module Rule 15, REQ-021-119).",
+        "description": "One platform-wide switch, controlled by the Super Admin only, that turns machine translation of free text between users on or off for the reader (PRD General Module Rule 15, REQ-021-119). It uses the provider the Super Admin chooses for free text, or the single Connected provider; with no Connected provider, free text is shown untranslated.",
         "default": "Off"
       }
     },
@@ -101547,9 +101561,10 @@
       "owner_fr": "FR-021",
       "title": "Free-text translation monthly budget",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Monthly budget Admin configures for free-text translation; the PRD gives no default figure. When the monthly limit is reached, free text is shown untranslated (PRD General Module Rule 16, REQ-021-120)."
+        "description": "Monthly budget the Super Admin configures for free-text translation, in the platform currency and counted per calendar month in UTC; the PRD gives no default figure. A blank budget means free text is shown untranslated and zero stops translation. At the limit the Super Admin is notified once and free text is shown untranslated until the next month (PRD General Module Rule 16, REQ-021-120).",
+        "unit": "platform currency per calendar month (UTC)"
       }
     },
     {
@@ -116339,7 +116354,7 @@
       "owner_fr": "FR-021",
       "title": "Admin opens Localization Management",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Main Flow step 1"
       }
@@ -116372,7 +116387,7 @@
       "owner_fr": "FR-021",
       "title": "Admin uploads JSON package for selected locale, tenant/surface, and group",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "prd_ref": "Main Flow step 4J"
       }
@@ -116392,9 +116407,9 @@
       "id": "STP-021-008",
       "type": "Step",
       "owner_fr": "FR-021",
-      "title": "Admin adds provider, API key, supported languages, and usage notes",
+      "title": "Super Admin adds provider, API key, supported languages, and usage notes",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "prd_ref": "C1 step 3 (no active provider)"
       }
@@ -116436,9 +116451,9 @@
       "id": "STP-021-013",
       "type": "Step",
       "owner_fr": "FR-021",
-      "title": "System creates new rollback version from prior bundle contents and marks it active",
+      "title": "System creates new rollback version from prior bundle contents, marks it active, and sets the registry's published values to that version",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Main Flow step 6R"
       }
@@ -116482,7 +116497,7 @@
       "owner_fr": "FR-021",
       "title": "System shows validation preview with created, updated, unchanged, skipped, row-warning, and error counts",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Main Flow step 7J"
       }
@@ -116581,7 +116596,7 @@
       "owner_fr": "FR-021",
       "title": "System saves the values that pass validation as Review Needed drafts, records failed rows in job history, and sets the job status",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "C1 step 7"
       }
@@ -116603,7 +116618,7 @@
       "owner_fr": "FR-021",
       "title": "User opens tenant-specific language selector",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A1 step 1"
       }
@@ -116647,7 +116662,7 @@
       "owner_fr": "FR-021",
       "title": "User selects locale",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A1 step 3"
       }
@@ -116755,9 +116770,9 @@
       "id": "STP-021-050",
       "type": "Step",
       "owner_fr": "FR-021",
-      "title": "System displays fallback value from the configured fallback order",
+      "title": "System displays fallback value from the fallback locale, then English",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B1 steps 4-5"
       }
@@ -116777,9 +116792,9 @@
       "id": "STP-021-052",
       "type": "Step",
       "owner_fr": "FR-021",
-      "title": "System displays fallback value from the configured fallback order",
+      "title": "System displays fallback value from the fallback locale, then English",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B1 steps 4-5"
       }
@@ -116799,9 +116814,9 @@
       "id": "STP-021-054",
       "type": "Step",
       "owner_fr": "FR-021",
-      "title": "System displays fallback value from the configured fallback order",
+      "title": "System displays fallback value from the fallback locale, then English",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B1 steps 4-5"
       }
@@ -116823,7 +116838,7 @@
       "owner_fr": "FR-021",
       "title": "System treats an import into the English source locale as an English source edit",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Business Workflows: Main Flow and Alternative Flow C1; Screens 7, 8 and 10"
       }
@@ -116865,9 +116880,9 @@
       "id": "STP-021-060",
       "type": "Step",
       "owner_fr": "FR-021",
-      "title": "Admin reviews the preview counts, enters a reason, and confirms",
+      "title": "Admin reviews the preview counts, enters a reason, and confirms; the system creates the job as Queued and the run sets it Running",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Business Workflows: Main Flow and Alternative Flow C1; Screens 7, 8 and 10"
       }
@@ -116876,11 +116891,33 @@
       "id": "STP-021-061",
       "type": "Step",
       "owner_fr": "FR-021",
-      "title": "Admin enables or disables a machine-translation provider",
+      "title": "Super Admin enables or disables a machine-translation provider",
+      "status": "active",
+      "version": 2,
+      "attrs": {
+        "prd_ref": "Business Workflows: Main Flow and Alternative Flow C1; Screens 7, 8 and 10"
+      }
+    },
+    {
+      "id": "STP-021-062",
+      "type": "Step",
+      "owner_fr": "FR-021",
+      "title": "System shows the job's error summary and ends",
       "status": "active",
       "version": 1,
       "attrs": {
-        "prd_ref": "Business Workflows: Main Flow and Alternative Flow C1; Screens 7, 8 and 10"
+        "prd_ref": "Alternative Flow C1 step 7B"
+      }
+    },
+    {
+      "id": "STP-021-063",
+      "type": "Step",
+      "owner_fr": "FR-021",
+      "title": "Admin changes a locale's status, the default locale, or a fallback locale on Language Management",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 3L; Screen 4"
       }
     },
     {
@@ -176828,7 +176865,7 @@
       "verb": "active in",
       "to_id": "STG-admin-01-configuration",
       "attrs": {
-        "rules": 116
+        "rules": 117
       },
       "derived": true
     },
@@ -176866,6 +176903,12 @@
       "from_id": "FR-021",
       "verb": "references",
       "to_id": "REQ-024-081",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-021",
+      "verb": "references",
+      "to_id": "REQ-026-050",
       "attrs": {}
     },
     {
@@ -257659,6 +257702,30 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-021-128",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-128",
+      "verb": "applies to",
+      "to_id": "ENT-translation-value",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-128",
+      "verb": "applies to",
+      "to_id": "ENT-translation-version",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-128",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-021",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-022-001",
       "verb": "applies at",
       "to_id": "STG-patient-03-active",
@@ -332695,10 +332762,30 @@
       }
     },
     {
+      "from_id": "SCR-021-07",
+      "verb": "shows",
+      "to_id": "ENT-translation-value.review_needed",
+      "attrs": {
+        "provenance": "system calculated",
+        "label": "Review Needed flag",
+        "editable": false
+      }
+    },
+    {
       "from_id": "SCR-021-08",
       "verb": "belongs to",
       "to_id": "STG-admin-01-configuration",
       "attrs": {}
+    },
+    {
+      "from_id": "SCR-021-08",
+      "verb": "shows",
+      "to_id": "ENT-translation-audit-log.reason",
+      "attrs": {
+        "provenance": "user input",
+        "label": "Change reason",
+        "editable": true
+      }
     },
     {
       "from_id": "SCR-021-08",
@@ -388717,6 +388804,14 @@
     },
     {
       "from_id": "STP-021-001",
+      "verb": "next",
+      "to_id": "STP-021-063",
+      "attrs": {
+        "label": "Manage languages"
+      }
+    },
+    {
+      "from_id": "STP-021-001",
       "verb": "on",
       "to_id": "SCR-021-04",
       "attrs": {}
@@ -388861,6 +388956,12 @@
     },
     {
       "from_id": "STP-021-004",
+      "verb": "done by",
+      "to_id": "ACT-super-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-004",
       "verb": "next",
       "to_id": "STP-021-017",
       "attrs": {
@@ -388956,7 +389057,7 @@
     {
       "from_id": "STP-021-008",
       "verb": "done by",
-      "to_id": "ACT-platform-admin",
+      "to_id": "ACT-super-admin",
       "attrs": {}
     },
     {
@@ -389089,6 +389190,12 @@
       "from_id": "STP-021-013",
       "verb": "applies",
       "to_id": "REQ-021-098",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-013",
+      "verb": "applies",
+      "to_id": "REQ-021-128",
       "attrs": {}
     },
     {
@@ -389266,7 +389373,7 @@
       "verb": "next",
       "to_id": "STP-021-018",
       "attrs": {
-        "label": "No row errors, Import as Draft"
+        "label": "No row skipped for an error, Import as Draft"
       }
     },
     {
@@ -389274,7 +389381,7 @@
       "verb": "next",
       "to_id": "STP-021-021",
       "attrs": {
-        "label": "Row-level errors or warnings"
+        "label": "Any row skipped for an error?"
       }
     },
     {
@@ -389282,7 +389389,8 @@
       "verb": "next",
       "to_id": "STP-021-022",
       "attrs": {
-        "label": "No row errors, Import and Publish Version"
+        "label": "No row skipped for an error, Import and Publish Version, not the English source locale",
+        "condition": "REQ-021-123"
       }
     },
     {
@@ -389664,7 +389772,19 @@
       "from_id": "STP-021-034",
       "verb": "next",
       "to_id": "STP-021-035",
-      "attrs": {}
+      "attrs": {
+        "label": "Job Completed or Partially failed",
+        "condition": "REQ-021-111"
+      }
+    },
+    {
+      "from_id": "STP-021-034",
+      "verb": "next",
+      "to_id": "STP-021-062",
+      "attrs": {
+        "label": "Job Failed: show the error summary and end",
+        "condition": "REQ-021-111"
+      }
     },
     {
       "from_id": "STP-021-034",
@@ -389762,6 +389882,12 @@
       "from_id": "STP-021-036",
       "verb": "done by",
       "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-036",
+      "verb": "done by",
+      "to_id": "ACT-super-admin",
       "attrs": {}
     },
     {
@@ -389930,6 +390056,12 @@
       "from_id": "STP-021-040",
       "verb": "done by",
       "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-040",
+      "verb": "done by",
+      "to_id": "ACT-super-admin",
       "attrs": {}
     },
     {
@@ -390391,6 +390523,12 @@
     {
       "from_id": "STP-021-056",
       "verb": "done by",
+      "to_id": "ACT-super-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-056",
+      "verb": "done by",
       "to_id": "ACT-system",
       "attrs": {}
     },
@@ -390575,7 +390713,7 @@
     {
       "from_id": "STP-021-061",
       "verb": "done by",
-      "to_id": "ACT-platform-admin",
+      "to_id": "ACT-super-admin",
       "attrs": {}
     },
     {
@@ -390590,6 +390728,72 @@
       "from_id": "STP-021-061",
       "verb": "on",
       "to_id": "SCR-021-10",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-062",
+      "verb": "applies",
+      "to_id": "REQ-021-111",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-062",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-062",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-062",
+      "verb": "on",
+      "to_id": "SCR-021-10",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-063",
+      "verb": "applies",
+      "to_id": "REQ-021-049",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-063",
+      "verb": "applies",
+      "to_id": "REQ-021-078",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-063",
+      "verb": "applies",
+      "to_id": "REQ-021-125",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-063",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-063",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-063",
+      "verb": "done by",
+      "to_id": "ACT-super-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-063",
+      "verb": "on",
+      "to_id": "SCR-021-04",
       "attrs": {}
     },
     {
@@ -440507,6 +440711,66 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-113401-53433de3",
+      "at": "2026-11-24T11:34:01.168206+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-021 logic review pass 2 (final pass): import decision follows rows skipped for an error, English import gets a change reason and Import as Draft only, new keys only through an English source import, any move to Active is Super Admin only, default locale and fallback behaviour, rollback registry rule, admin local timezone, free-text translation operating conditions and permissions, spoken-language and template lists show all catalog locales, FR-024 treatment form as English authoring screen, job Failed branch and one job per language, locale management step on Screen 4.",
+      "source_id": null,
+      "nodes_added": [
+        "REQ-021-128",
+        "STP-021-062",
+        "STP-021-063"
+      ],
+      "nodes_updated": [
+        "ENT-locale.fallback_order",
+        "ENT-translation-value.published_value_ref",
+        "FR-021",
+        "REQ-021-006",
+        "REQ-021-025",
+        "REQ-021-027",
+        "REQ-021-036",
+        "REQ-021-046",
+        "REQ-021-049",
+        "REQ-021-051",
+        "REQ-021-072",
+        "REQ-021-076",
+        "REQ-021-094",
+        "REQ-021-109",
+        "REQ-021-111",
+        "REQ-021-114",
+        "REQ-021-115",
+        "REQ-021-119",
+        "REQ-021-120",
+        "REQ-021-121",
+        "REQ-021-122",
+        "REQ-021-123",
+        "REQ-021-125",
+        "REQ-021-126",
+        "REQ-021-127",
+        "SCR-021-07",
+        "SCR-021-08",
+        "SET-free-text-translation-enabled",
+        "SET-free-text-translation-monthly-budget",
+        "STP-021-001",
+        "STP-021-004",
+        "STP-021-008",
+        "STP-021-013",
+        "STP-021-020",
+        "STP-021-034",
+        "STP-021-036",
+        "STP-021-040",
+        "STP-021-050",
+        "STP-021-052",
+        "STP-021-054",
+        "STP-021-056",
+        "STP-021-060",
+        "STP-021-061"
+      ],
+      "edges_added": 31,
+      "edges_removed": 6,
+      "rows": 92
+    },
     {
       "id": "cs-20261124-111516-5a77a700",
       "at": "2026-11-24T11:15:16.176541+00:00",
