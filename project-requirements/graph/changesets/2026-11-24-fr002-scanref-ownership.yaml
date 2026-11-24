@@ -1,0 +1,13 @@
+reason: 'FR-002 logic review pass 2 follow-up: a scanRef photo item must belong to the same patient as the request (ownership check with its own error code and audit entry)'
+by: controller
+operations:
+- op: update_node
+  id: REQ-002-038
+  attrs:
+    statement: The V1 request carries headScanPhotoSet (required, a list of up to 5 photo items, each a stagedRef or an existing scanRef with photoIndex) as its only media. A scanRef item names a stored scan, which is copied into this inquiry's set and never moved or replaced; the same validation runs again. A scanRef item is accepted only when the referenced scan is stored under the same anonymizedPatientId as the request; otherwise the attempt is rejected with MEDIA_REF_NOT_OWNED and an audit entry records it. Visual evidence is validated and stored by FR-003 and does not pass through FR-002. headVideo is future and is not part of the V1 contract (REQ-002-035). The response returns one item per photo (storedUri, providerCopyUri, validationStatus, qualityScore) and the scanRef FR-003 reads.
+    rationale: Integration contract. The earlier list of four media forms did not match what FR-003 sends or what FR-002 stores.
+- op: update_node
+  id: REQ-002-036
+  attrs:
+    statement: 'On validation failure, engine returns the error items (REQ-002-052) with per-photo detail and guidance to the caller (FR-003); no artifacts are persisted, and an audit entry records the rejection reason. Error codes cover every enforced rule: MEDIA_FORMAT_NOT_ALLOWED, MEDIA_COUNT_EXCEEDED, MEDIA_SIZE_EXCEEDED, MEDIA_QUALITY_INSUFFICIENT, MEDIA_NO_PHOTO, MEDIA_REF_NOT_OWNED, TEMPLATE_VERSION_UNKNOWN, NO_ACTIVE_TEMPLATE_SET, ANSWER_REQUIRED_MISSING.'
+    rationale: Media Rules 6 and Alternative Flows A1 and A3. MEDIA_NO_PHOTO replaces the earlier view-set code, which named a rule that does not exist. The audit reason field holds the rejection reason.

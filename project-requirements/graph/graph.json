@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T06:29:06Z",
+  "generated_at": "2026-11-24T06:31:23Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -41942,9 +41942,9 @@
       "owner_fr": "FR-002",
       "title": "Failed validation returns error codes with per-photo detail, stores nothing and writes an audit entry",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "On validation failure, engine returns the error items (REQ-002-052) with per-photo detail and guidance to the caller (FR-003); no artifacts are persisted, and an audit entry records the rejection reason. Error codes cover every enforced rule: MEDIA_FORMAT_NOT_ALLOWED, MEDIA_COUNT_EXCEEDED, MEDIA_SIZE_EXCEEDED, MEDIA_QUALITY_INSUFFICIENT, MEDIA_NO_PHOTO, TEMPLATE_VERSION_UNKNOWN, NO_ACTIVE_TEMPLATE_SET, ANSWER_REQUIRED_MISSING.",
+        "statement": "On validation failure, engine returns the error items (REQ-002-052) with per-photo detail and guidance to the caller (FR-003); no artifacts are persisted, and an audit entry records the rejection reason. Error codes cover every enforced rule: MEDIA_FORMAT_NOT_ALLOWED, MEDIA_COUNT_EXCEEDED, MEDIA_SIZE_EXCEEDED, MEDIA_QUALITY_INSUFFICIENT, MEDIA_NO_PHOTO, MEDIA_REF_NOT_OWNED, TEMPLATE_VERSION_UNKNOWN, NO_ACTIVE_TEMPLATE_SET, ANSWER_REQUIRED_MISSING.",
         "rationale": "Media Rules 6 and Alternative Flows A1 and A3. MEDIA_NO_PHOTO replaces the earlier view-set code, which named a rule that does not exist. The audit reason field holds the rejection reason."
       }
     },
@@ -41966,9 +41966,9 @@
       "owner_fr": "FR-002",
       "title": "Request carries the head scan photo set only",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "The V1 request carries headScanPhotoSet (required, a list of up to 5 photo items, each a stagedRef or an existing scanRef with photoIndex) as its only media. A scanRef item names a stored scan, which is copied into this inquiry's set and never moved or replaced; the same validation runs again. Visual evidence is validated and stored by FR-003 and does not pass through FR-002. headVideo is future and is not part of the V1 contract (REQ-002-035). The response returns one item per photo (storedUri, providerCopyUri, validationStatus, qualityScore) and the scanRef FR-003 reads.",
+        "statement": "The V1 request carries headScanPhotoSet (required, a list of up to 5 photo items, each a stagedRef or an existing scanRef with photoIndex) as its only media. A scanRef item names a stored scan, which is copied into this inquiry's set and never moved or replaced; the same validation runs again. A scanRef item is accepted only when the referenced scan is stored under the same anonymizedPatientId as the request; otherwise the attempt is rejected with MEDIA_REF_NOT_OWNED and an audit entry records it. Visual evidence is validated and stored by FR-003 and does not pass through FR-002. headVideo is future and is not part of the V1 contract (REQ-002-035). The response returns one item per photo (storedUri, providerCopyUri, validationStatus, qualityScore) and the scanRef FR-003 reads.",
         "rationale": "Integration contract. The earlier list of four media forms did not match what FR-003 sends or what FR-002 stores."
       }
     },
@@ -430396,6 +430396,21 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-063024-73f1d593",
+      "at": "2026-11-24T06:30:24.816799+00:00",
+      "changed_by": "controller",
+      "reason": "FR-002 logic review pass 2 follow-up: a scanRef photo item must belong to the same patient as the request (ownership check with its own error code and audit entry)",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-002-036",
+        "REQ-002-038"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 2
+    },
     {
       "id": "cs-20261124-062749-ec4af672",
       "at": "2026-11-24T06:27:49.107630+00:00",

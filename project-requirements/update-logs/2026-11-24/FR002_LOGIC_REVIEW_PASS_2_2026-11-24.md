@@ -29,3 +29,7 @@
 ## Cross-FR rows queued
 
 FR-003, FR-011, FR-037, FR-025, FR-026 and FR-005: see the pass 2 section of `plans/reports/logic-review-ledger.md`.
+
+## Follow-up (same day)
+
+- REQ-002-038 and REQ-002-036: a scanRef photo item is accepted only for a scan stored under the same anonymizedPatientId as the request; otherwise the attempt is rejected with MEDIA_REF_NOT_OWNED and audited. Graph change-set `2026-11-24-fr002-scanref-ownership.yaml`.
