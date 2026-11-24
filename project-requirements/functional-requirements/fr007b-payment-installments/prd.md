@@ -62,11 +62,11 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 **In Scope**:
 
 - Email/push notifications for installment payment reminders at the times set in the FR-007 payment reminder setting (REQ-007B-014, REQ-007B-092)
-- Payment confirmation notifications for successful installment charges
+- Payment confirmation notifications to the patient for successful installment charges (REQ-007B-016)
 - Payment failure notifications for declined/failed installments
 - Overdue notice: one notice to the patient and one to the billing admins on the day after a due date passes unpaid (REQ-007B-101)
 - Notification of the admin, the patient and the provider when a plan is Defaulted (REQ-007B-020); while an installment is only Overdue the provider sees the banner on the plan detail screen (REQ-007B-032)
-- Booking status change notifications when final installment completes (REQ-007B-093)
+- Booking status change notification to the patient when the final installment completes (REQ-007B-093)
 
 **Out of Scope**:
 
@@ -107,7 +107,7 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 11. On the due date, System automatically charges the card, unless the support-required marker is on (REQ-007B-103)
 12. On successful charge, System updates installment status and sends confirmation
 13. System repeats steps 10-12 for each remaining installment
-14. When the final installment is paid (normally by the cutoff date), System marks the installment plan as completed (shown as "Fully Paid"); the booking status continues to follow FR-006
+14. When the final installment is paid (normally by the cutoff date), System marks the installment plan as completed (shown as "Fully Paid"); the booking status continues to follow FR-006. The booking's Payment Status becomes Full paid at that moment (FR-007 REQ-007-099), the fully-paid event FR-018 reads (REQ-018-309).
 
 ### Alternative Flows
 
@@ -169,7 +169,7 @@ Enable patients to pay for hair transplant procedures through interest-free inst
   2. System shows the admin the amount paid so far, excluding late fees, and the unpaid installments (REQ-007B-022)
   3. Admin reviews the request and cancels the booking through the FR-006 Cancel Booking action with a mandatory reason and audit entry, only while the booking is `Accepted`, `Payment Window Expired` or `Confirmed` (`In Progress` only through the FR-006 provider-fault route)
   4. System voids the remaining unpaid installments before the refund is computed: it waits for any charge already in flight, cancels the unpaid installments and sets the plan `Cancelled`; a charge that still succeeds is added to the refund base (REQ-007B-023)
-  5. FR-006 and FR-007 compute the refund as a percentage of the paid amount per the refund ladder in FR-029 (or the provider-fault terms) and start it; a refund that needs approval follows FR-007 REQ-007-015: another billing admin, escalating to a super-admin, never self-approved. System records the refund outcome on the installment plan once FR-007 has started the refund; booking status moves to `Cancelled` per FR-006 (REQ-007B-057)
+  5. FR-006 and FR-007 compute the refund as a percentage of the paid amount per the refund ladder in FR-029 (or the provider-fault terms) and start it; a refund that needs approval follows FR-007 REQ-007-015: another admin who holds the Issue Refunds permission (FR-031), escalating to a super-admin, never self-approved. System records the refund outcome on the installment plan once FR-007 has started the refund; booking status moves to `Cancelled` per FR-006 (REQ-007B-057)
   6. System notifies the provider that the booking with an active plan was cancelled (REQ-007B-058)
 - **Outcome**: Patient refunded per policy; no further installments charged; provider notified
 
@@ -427,7 +427,7 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 
 - Admin can perform the following actions (subject to internal policy and audit logging):
   - **Retry Charge** on a Failed or Overdue installment (invokes payment processor via S-02). It does not count toward the 3 automatic retries; on success the installment is Paid and the plan follows REQ-007B-108, on failure it returns to Failed and the plan is unchanged. (REQ-007B-080, REQ-007B-108)
-  - **Mark as Resolved** only for a bank transfer into Hairline's account: the admin enters the amount, date, receiving account and reference, and a second billing admin approves it as FR-007 REQ-007-015 sets for refunds, never the same admin. On approval the system sets the installment Paid with payment source manual and passes the payment to FR-007, which owns the manual payment record, the refund of a manual payment and the clinic-share movement for it. The plan then follows REQ-007B-108. (REQ-007B-081, REQ-007B-109)
+  - **Mark as Resolved** only for a bank transfer into Hairline's account: the admin enters the amount, date, receiving account and reference, and a second admin who holds the Resolve Installments permission (FR-031) approves it, never the same admin. On approval the system sets the installment Paid with payment source manual and passes the payment to FR-007, which owns the manual payment record, the refund of a manual payment and the clinic-share movement for it. The plan then follows REQ-007B-108. (REQ-007B-081, REQ-007B-109)
 - All admin actions MUST:
   - Require a justification text input (minimum 20 characters). (REQ-007B-083)
   - Be logged with timestamp, admin ID, action type, and justification. (REQ-007B-083)
@@ -466,7 +466,7 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 - Later installments on a Defaulted plan are paused, not Overdue and fee-free until the plan returns to Active; each past-due one is then charged once at the next daily run (REQ-007B-105, REQ-007B-108)
 - Retries and the grace period continue past the cutoff; the plan is Completed when the final installment is paid, after which the clinic's share moves as FR-007 REQ-007-090 sets (REQ-007B-107)
 - A Defaulted plan returns to Active when no installment is Failed or Overdue, whoever paid (the patient with Pay now or a new card, an admin Retry Charge, or Mark as Resolved), and is Completed when every installment is Paid (REQ-007B-108)
-- An installment is settled outside the card only as a recorded bank transfer into Hairline's account, approved by a second billing admin (REQ-007B-109)
+- An installment is settled outside the card only as a recorded bank transfer into Hairline's account, approved by a second admin who holds the Resolve Installments permission (REQ-007B-109)
 - A fixed late fee is converted at the plan's accepted exchange rate, a percentage fee applies to the late installment amount, the fee is outside the clinic's share and commission, an uncollected fee lapses when the plan ends, and a provider-fault full refund returns a collected fee (REQ-007B-110)
 - The plan keeps the late fee, grace period and cancellation point in force at confirmation (REQ-007B-111)
 - On an Active plan Pay now can also pay the next scheduled installment, or all remaining installments, in due-date order (REQ-007B-112)
@@ -523,7 +523,7 @@ Enable patients to pay for hair transplant procedures through interest-free inst
 - Cancellation refund policy applies same percentages to installment plans as to single payments (REQ-007B-055)
 - For a provider-selected promotion or patient-entered code, the first successful installment consumes the promotion use reserved at acceptance (an automatic promotion's use is consumed at acceptance per FR-019); installments never apply or remove a promotion (REQ-007B-048)
 - Installment revenue tracked separately from one-time payments
-- Installment due dates are timestamps stored in UTC; the charge, the Overdue flag and the late fee all use the calendar day in the clinic's timezone, as FR-007 does for the final payment, and dates are displayed in the patient's timezone; the schedule of the daily job that acts on them is owned by FR-017 (REQ-017-183)
+- Installment due dates are timestamps stored in UTC; the charge, the Overdue flag and the late fee all use the calendar day in the clinic's timezone, as FR-007 does for the final payment, and dates are displayed in the patient's timezone; the schedule of the scheduled job that acts on them (hourly, with reminders at 9 AM clinic time, 3 days before the due date) is owned by FR-017 (REQ-017-183)
 - Defaulted plans are flagged on the admin dashboard and notified to the admins (REQ-007B-020); no resolution deadline is set
 
 ### Admin Action & Audit Rules
@@ -533,7 +533,7 @@ Per Hairline Platform Constitution (Principle VI: Data Integrity & Audit Trail),
 **Admin Actions Requiring Justification & Audit Logging**:
 
 - **Retry Charge**: Manually triggering a payment retry on a failed installment (requires justification minimum 20 characters; logged with timestamp, admin ID, action type, installment ID, retry attempt number) (REQ-007B-080, REQ-007B-084)
-- **Mark as Resolved**: Marking an unpaid installment as resolved by a recorded bank transfer (requires justification minimum 20 characters and a second billing admin's approval; logged with timestamp, admin ID, action type, installment ID, amount, date, receiving account, reference and approving admin) (REQ-007B-081, REQ-007B-084, REQ-007B-109)
+- **Mark as Resolved**: Marking an unpaid installment as resolved by a recorded bank transfer (requires justification minimum 20 characters and the approval of a second admin who holds the Resolve Installments permission; logged with timestamp, admin ID, action type, installment ID, amount, date, receiving account, reference and approving admin) (REQ-007B-081, REQ-007B-084, REQ-007B-109)
 - **Cancelling a booking with an installment plan** is not a plan action: the admin uses the FR-006 Cancel Booking action, which stops the remaining installments and applies the refund (REQ-007B-023, REQ-007B-053, REQ-007B-057, REQ-007B-058)
 
 **Audit Trail Requirements**:
@@ -547,7 +547,7 @@ Per Hairline Platform Constitution (Principle VI: Data Integrity & Audit Trail),
 
 **Access Control**:
 
-- Only authorized admin roles (Billing Admin, Financial Manager, Super Admin) can execute installment management actions (REQ-007B-090)
+- Only an admin who holds the matching permission can run an installment action: Retry Charge for Retry Charge, and Resolve Installments for Mark as Resolved and for approving it (FR-031) (REQ-007B-090)
 - Role-based access control (RBAC) enforced per FR-031 (Admin Access Control & Permissions) (REQ-007B-091)
 - All installment data access (read and write) is subject to RBAC validation (REQ-007B-091)
 
@@ -562,7 +562,7 @@ Per Hairline Platform Constitution (Principle VI: Data Integrity & Audit Trail),
 
 ## Dependencies
 
-Related FRs: FR-006 (installment plan tied to booking confirmation and procedure date), FR-007 (core payment infrastructure for processing installment charges; uses same payment gateway, security controls, receipt generation; installments extend deposit/final payment logic), FR-019 (the accepted promotion and any patient promotion code are already in the plan total), FR-017 (payout and fund release timing), FR-029 (installment, late fee and cancellation point settings). Related modules: P-01 (only authenticated patients can enroll in installment plans), A-05 (admin oversight of installment plans and revenue reconciliation), S-03 (send installment reminders, confirmations, and failure notifications).
+Related FRs: FR-006 (installment plan tied to booking confirmation and procedure date), FR-007 (core payment infrastructure for processing installment charges; uses same payment gateway, security controls, receipt generation; installments extend deposit/final payment logic), FR-019 (the accepted promotion and any patient promotion code are already in the plan total), FR-017 (payout and fund release timing), FR-029 (installment, late fee and cancellation point settings), FR-031 (the Retry Charge, Resolve Installments and Issue Refunds permissions). Related modules: P-01 (only authenticated patients can enroll in installment plans), A-05 (admin oversight of installment plans and revenue reconciliation), S-03 (send installment reminders, confirmations, and failure notifications).
 
 ---
 
@@ -661,7 +661,7 @@ Admin views dashboard showing defaulted installment plans (failed after 3 retrie
 1. **Given** an installment plan flagged as "Defaulted," **When** admin views installment management dashboard, **Then** defaulted plan appears with patient, booking, and overdue details
 2. **Given** admin reviews defaulted plan, **When** admin contacts patient and resolves payment issue, **Then** admin can Retry Charge or Mark as Resolved
 3. **Given** payment issue unresolved and the booking is `Accepted`, `Payment Window Expired` or `Confirmed`, **When** admin decides to cancel booking, **Then** system cancels booking, refunds per policy, and cancels remaining installments; once treatment has started the cancel route is closed and the plan is resolved by payment only
-4. **Given** a Defaulted plan whose installment was settled by a bank transfer, **When** the admin enters the amount, date, receiving account and reference and a second billing admin approves, **Then** the installment is Paid with payment source manual and the plan follows REQ-007B-108; without the second approval nothing changes
+4. **Given** a Defaulted plan whose installment was settled by a bank transfer, **When** the admin enters the amount, date, receiving account and reference and a second admin who holds the Resolve Installments permission approves, **Then** the installment is Paid with payment source manual and the plan follows REQ-007B-108; without the second approval nothing changes
 5. **Given** a Defaulted plan, **When** the patient pays the Failed installment with Pay now or a new card, **Then** the plan returns to Active (Completed when every installment is Paid) without an admin action
 6. **Given** a plan returned to Active with later installments whose due dates passed while it was Defaulted, **When** the next daily run executes, **Then** each is charged once at its original amount with the normal failure handling, and none carried an Overdue flag, notice, reminder or late fee while paused
 
@@ -730,7 +730,7 @@ Patient requests booking cancellation after paying 2 of 4 installments; admin re
 - **REQ-007B-013**: System MUST integrate with payment processor for scheduled/recurring charges
 - **REQ-007B-014**: System MUST send installment payment reminders at the times set in the FR-007 payment reminder setting (whole days 0 to 14 before the due date, up to 3 reminders, default 3 days before and on the due date)
 - **REQ-007B-015**: System MUST automatically charge payment method on installment due date
-- **REQ-007B-016**: System MUST send confirmation notification after successful installment charge
+- **REQ-007B-016**: System MUST send the patient a confirmation notification after a successful installment charge
 
 ### Error Handling Requirements
 
@@ -762,7 +762,7 @@ Patient requests booking cancellation after paying 2 of 4 installments; admin re
 - **REQ-007B-106**: System MUST offer the installment option only when installments are enabled, the booking total is at or above the FR-029 minimum (converted at the locked rate) and the days until the procedure are at least the cutoff days plus 30; the options offered are the enabled counts up to the maximum, and when none fits the installment option MUST NOT be shown
 - **REQ-007B-107**: Retries and the grace period continue past the cutoff; the plan is Completed when the final installment is paid, after which the clinic's share moves as FR-007 REQ-007-090 sets
 - **REQ-007B-108**: A Defaulted plan MUST return to Active when no installment is Failed or Overdue, whoever paid (the patient with Pay now or a new card, an admin Retry Charge, or Mark as Resolved), and MUST become Completed when every installment is Paid
-- **REQ-007B-109**: Mark as Resolved MUST be used only for a bank transfer into Hairline's account. The admin MUST enter the amount, date, receiving account and reference, and a second billing admin MUST approve it as FR-007 REQ-007-015 sets for refunds, never the same admin; only then is the installment Paid with payment source manual. FR-007 owns the manual payment record, the refund of a manual payment and the clinic-share movement for it
+- **REQ-007B-109**: Mark as Resolved MUST be used only for a bank transfer into Hairline's account. The admin MUST enter the amount, date, receiving account and reference, and a second admin who holds the Resolve Installments permission (FR-031) MUST approve it, never the same admin; only then is the installment Paid with payment source manual. FR-007 owns the manual payment record, the refund of a manual payment and the clinic-share movement for it
 - **REQ-007B-110**: A fixed late fee MUST be converted at the plan's accepted exchange rate and a percentage fee MUST apply to the late installment amount. The fee MUST stay outside the clinic's share and commission (owned by FR-029 and FR-007). A fee still uncollected when the plan ends lapses. A provider-fault full refund (REQ-007B-027) returns a collected fee
 - **REQ-007B-111**: Screen 1 MUST show the late fee, the grace period and, when set, the cancellation point before the patient confirms. The plan MUST keep the values in force at confirmation, as it keeps the cutoff days; a later FR-029 change applies only to plans confirmed afterwards
 - **REQ-007B-112**: On an Active plan, Pay now MUST also let the patient pay the next scheduled installment, or all remaining installments at once, in due-date order; the due dates of unpaid installments do not change, and the plan is Completed when every installment is Paid
@@ -778,6 +778,7 @@ Patient requests booking cancellation after paying 2 of 4 installments; admin re
 | 2026-11-23 | 1.15 | Logic review of the installment flows. Overdue is now a calculated flag from the day after the due date with one patient notice and one billing-admin notice, and the provider sees a banner until the plan is Defaulted. An unpaid balance reaches the FR-029 cancellation point whatever the retry state, and a pending provider fault pauses charges, retries, reminders and fees. The cancel route and the Defaulted plan are guarded by booking state, and FR-006 and FR-007 compute the refund from the paid amount excluding late fees. A date change that leaves no feasible plan is blocked by FR-006 and the insufficient-time notice is removed. The provider-fault refund no longer applies to the unpaid-balance cancellation. Reminder timing follows the FR-007 setting, the installment threshold reads the cutoff days, a late fee is added once and collected with the next charge, a hard decline reaches Defaulted on day 11 and can be paid with Pay now, Mark as Resolved and Retry Charge have defined results, and installments need a card. Payout and commission timing point to FR-007 and FR-017, the rescheduling fee does not apply in V1, and the stray cross-reference lines carry their rule text. | Controller / Documentation |
 | 2026-11-23 | 1.16 | Second logic review of the installment flows. A pending provider fault now also pauses the count toward the cancellation point and the hand-off to FR-006. Paused installments on a Defaulted plan carry no Overdue flag, notice, reminder or fee and are charged once at the next daily run when the plan returns to Active, which happens whoever pays. Mark as Resolved is limited to a recorded bank transfer that a second billing admin approves. The late fee has a currency and a base, sits outside the clinic's share and commission, waits until the retries end, lapses with the plan and is returned on a provider-fault refund. Screen 1 shows the late fee, grace period and cancellation point, the plan keeps them as confirmed, and the overdue notice states the cancellation date. A date change keeps the due dates and recalculates only the final payment deadline. Only enabled installment counts are offered. Pay now can pay early. The provider list covers plans of every status. The clinic's share follows the FR-007 timing. Insufficient funds is retried and hard declines are defined. One void step runs before the refund and sets the plan Cancelled. The schedule of the daily job is left to FR-017. The word cancelled is spelled one way. | Controller / Documentation |
 | 2026-11-25 | 1.16 | Reference only, no version change: the Source line now names the canonical constitution file `local-docs/project-requirements/constitution.md`. | Product Owner |
+| 2026-11-25 | 1.17 | Cross-FR alignment. Installment actions are gated by the FR-031 permissions (Retry Charge, Resolve Installments) instead of role names, and the second approver of Mark as Resolved holds Resolve Installments; refund approval names the Issue Refunds permission. The installment-charged and plan-completed notifications are stated as going to the patient. Completing the last installment is named as the moment the booking becomes Full paid, which FR-018 reads. The installment job schedule is pointed to FR-017. | Product Owner / Documentation |
 
 ---
 
@@ -792,4 +793,4 @@ Patient requests booking cancellation after paying 2 of 4 installments; admin re
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0
 **Based on**: FR-007B from system-prd.md (Split Payment / Installment Plans)
-**Last Updated**: 2026-11-23
+**Last Updated**: 2026-11-25

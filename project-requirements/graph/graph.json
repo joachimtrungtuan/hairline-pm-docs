@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T21:14:56Z",
+  "generated_at": "2026-11-24T21:19:38Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -3464,8 +3464,10 @@
       "owner_fr": "FR-011",
       "title": "Medication name",
       "status": "active",
-      "version": 1,
-      "attrs": {}
+      "version": 2,
+      "attrs": {
+        "description": "Picked only from the Active medication templates (FR-024); the plan keeps its own copy of the text."
+      }
     },
     {
       "id": "ENT-aftercare-medication.plan_id",
@@ -11804,9 +11806,9 @@
       "owner_fr": "FR-007B",
       "title": "Payment source",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "How a Paid installment was settled: an automatic charge, or manual when an admin marked a recorded bank transfer resolved after a second billing admin approved it (REQ-007B-109)."
+        "description": "How a Paid installment was settled: an automatic charge, or manual when an admin marked a recorded bank transfer resolved after a second admin who holds the Resolve Installments permission approved it (REQ-007B-109)."
       }
     },
     {
@@ -18620,9 +18622,9 @@
       "owner_fr": "FR-007",
       "title": "Refund decided by",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "The other admin with billing permission who approved or denied; never the requester."
+        "description": "The other admin holding the Issue Refunds permission who approved or denied; never the requester."
       }
     },
     {
@@ -29982,9 +29984,9 @@
       "owner_fr": "FR-009",
       "title": "Password",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Credential set at account setup under the FR-026 password policy; held by the provider authentication service and never displayed."
+        "description": "Credential set at account setup under the platform password policy (REQ-SYS-007); held by the provider authentication service and never displayed."
       }
     },
     {
@@ -30004,9 +30006,9 @@
       "owner_fr": "FR-009",
       "title": "Phone number",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "E.164 format; required at account setup (Screen 8), optional on Screen 6; masked on display. The graph follows Screen 8 provisionally."
+        "description": "E.164 format; required at account setup (Screen 8); shown masked on Screens 6 and 11."
       }
     },
     {
@@ -30079,9 +30081,9 @@
       "owner_fr": "FR-009",
       "title": "Terms accepted at",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Records the Accept Terms checkbox at account setup."
+        "description": "Records the Accept Terms checkbox at account setup; the accepted versions are held in the FR-027 legal acceptance ledger."
       }
     },
     {
@@ -32104,9 +32106,9 @@
       "owner_fr": "FR-010",
       "title": "Advice",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Required to complete treatment."
+        "description": "Can be picked from the Active post-op instruction templates and customised (the record keeps its own copy); required to complete treatment."
       }
     },
     {
@@ -32148,9 +32150,9 @@
       "owner_fr": "FR-010",
       "title": "Assigned clinician IDs",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "One or more clinicians, seeded from the accepted snapshot's clinicianIds; changed only through a treatment-detail change; at least one must remain. Actual FR-010 execution record."
+        "description": "One or more clinicians, seeded from the accepted snapshot's clinicianIds; changed only through a treatment-detail change; at least one must remain. Also rewritten to the replacement clinician when a team member leaves the case (REQ-010-123). Actual FR-010 execution record."
       }
     },
     {
@@ -32236,9 +32238,9 @@
       "owner_fr": "FR-010",
       "title": "Medication instructions",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Free text; required to complete treatment. Also listed as Entity 3 in Key Entities; the duplication is a modelling question."
+        "description": "Free text, which can be picked from the Active medication templates and customised (the record keeps its own copy); required to complete treatment. Also listed as Entity 3 in Key Entities; the duplication is a modelling question."
       }
     },
     {
@@ -33343,9 +33345,9 @@
       "owner_fr": "FR-007B",
       "title": "Installment plan completed",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Booking status change notification sent when the final installment completes (communication scope, final installment)."
+        "description": "Booking status change notification sent to the patient when the final installment completes (communication scope, final installment)."
       }
     },
     {
@@ -33643,9 +33645,9 @@
       "owner_fr": "FR-007",
       "title": "Payment overdue",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "description": "A scheduled job raises this once when a balance is still unpaid the day after its due date: Final Payment Status becomes Overdue, the booking is flagged, billing admins are notified and the patient gets one overdue notice. It stops when the booking is Cancelled or Completed."
+        "description": "payment.overdue_notice: a scheduled job raises this once when a balance is still unpaid the day after its due date: Final Payment Status becomes Overdue, the booking is flagged, billing admins are notified and the patient gets one overdue notice. It stops when the booking is Cancelled or Completed."
       }
     },
     {
@@ -34040,9 +34042,9 @@
       "owner_fr": "FR-007",
       "title": "Refund approval overdue",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Escalation notice to a super-admin when an exception or manual refund has had no decision for 2 business days; the refund stays awaiting approval."
+        "description": "refund.approval_escalated: escalation notice to a super-admin when an exception or manual refund has had no decision for 2 business days; the refund stays awaiting approval."
       }
     },
     {
@@ -40503,7 +40505,7 @@
       "owner_fr": null,
       "title": "Payment Processing",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
         "module": "fr007-payment-processing",
         "prd_path": "project-requirements/functional-requirements/fr007-payment-processing/prd.md",
@@ -48253,9 +48255,9 @@
       "owner_fr": "FR-007",
       "title": "Payout execution with commission deduction and statement generation",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST support release of the clinic's share and its payout with commission deduction and statement generation, per Fund Release & Money Routing Rules (payout execution is owned by FR-017)",
+        "statement": "System MUST support release of the clinic's share and its payout with commission deduction and statement generation, per Fund Release & Money Routing Rules (payout execution is owned by FR-017). A handover fee for aftercare handed to the Hairline team (REQ-011-057) is paid to the provider from Hairline's own revenue and is never taken from a price",
         "rationale": "prd.md line 1057 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -48289,9 +48291,9 @@
       "owner_fr": "FR-007",
       "title": "Exception and manual refunds need another billing admin's approval within two business days, escalate to a super-admin and are never self-approved; closure-case refunds need none",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Admin approval applies only to an exception refund and a manually entered refund. The approver is any other admin with billing permission, never the requester, who finds the request in the Awaiting approval view and approves or denies within 2 business days; until then the refund is awaiting approval. When 2 business days pass with no decision, System sends an escalation notice to a super-admin, who decides in the same view, never as the requester; System never approves or denies on its own. A closure-case refund (REQ-006-053) runs with no second approval. The sum of all refunds on a booking never exceeds the amount paid (REQ-007-066). The requester, approver, decision and reason are logged and notifications sent.",
+        "statement": "Admin approval applies only to an exception refund and a manually entered refund. The approver is any other admin who holds the Issue Refunds permission (FR-031), never the requester, who finds the request in the Awaiting approval view and approves or denies within 2 business days; until then the refund is awaiting approval. While only one admin holds the Issue Refunds permission, a refund that needs approval stays awaiting approval until a second holder exists (REQ-031-069). When 2 business days pass with no decision, System sends an escalation notice to a super-admin (notification catalogue event `refund.approval_escalated`, FR-030), who decides in the same view, never as the requester; System never approves or denies on its own. A closure-case refund (REQ-006-053) runs with no second approval. The sum of all refunds on a booking never exceeds the amount paid (REQ-007-066). The requester, approver, decision and reason are logged and notifications sent.",
         "rationale": "Admin approval required for all refunds"
       }
     },
@@ -48313,9 +48315,9 @@
       "owner_fr": "FR-007",
       "title": "Initial payment guard before processor submission",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Before initial processor submission, system MUST validate FR-006 selection eligibility, accepted versions, and exclusive unexpired hold ownership; invalid handoffs are blocked and hold expiry follows `Payment Window Expired`, without hold extension or quote reopening. Payment failure MUST NOT extend or restart the hold; only the FR-006 audited admin revive creates a new hold. Later confirmed-booking payments do not acquire a new acceptance hold.",
+        "statement": "Before initial processor submission, system MUST validate FR-006 selection eligibility, accepted versions, and exclusive unexpired hold ownership; invalid handoffs are blocked and hold expiry follows `Payment Window Expired`, without hold extension or quote reopening. Payment failure MUST NOT extend or restart the hold; only the FR-006 audited admin revive creates a new hold. Later confirmed-booking payments do not acquire a new acceptance hold. A patient who has not accepted the Current Terms and Privacy Policy cannot start a payment (REQ-027-033); a scheduled installment charge is not blocked by it.",
         "rationale": "**Initial Payment Guard**: Before calling the payment processor, validate the FR-006 handoff (FR-006 owns these checks): the booking is `Accepted`; the parent inquiry is not `Cancelled`; the parent quote and accepted subquote are still `Accepted`; the provider is still Active (FR-015); parent/subquote versions match the AcceptanceEvent (`acceptedSubquoteVersion = acceptedParentQuoteVersion`); and that event owns the unexpired exclusive appointment hold. Payment cannot select a different package, option/date-price record, appointment, or quote price. This hold guard applies to the first confirming charge, not to later installments/final payments on an already confirmed booking."
       }
     },
@@ -48528,9 +48530,9 @@
       "owner_fr": "FR-007",
       "title": "The final payment is due the FR-029 balance-due days before the procedure; one stored status moves Not Due, Due, Overdue and the Overdue flag reads from it",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "The final payment is due the number of days before the procedure date that FR-029 sets as the deposit plan balance due days (launch default 7; an admin edits it in FR-029). The booking's Final Payment Status is stored and moved by a scheduled job, by calendar day in the clinic's timezone: Not Due, then Due on the due date, then Overdue the day after the due date with a balance unpaid. On entering Overdue the job flags the booking once, notifies billing admins and sends the patient one overdue notice. The Overdue flag is read from that status; it is cleared and reminders stop when the booking is Cancelled or Completed. An overdue balance never causes Payment Window Expired and cancels the booking only through the FR-006 unpaid balance cancellation (REQ-007-021).",
+        "statement": "The final payment is due the number of days before the procedure date that FR-029 sets as the deposit plan balance due days (launch default 7; an admin edits it in FR-029). The booking's Final Payment Status is stored and moved by a scheduled job, by calendar day in the clinic's timezone: Not Due, then Due on the due date, then Overdue the day after the due date with a balance unpaid. On entering Overdue the job flags the booking once, notifies billing admins and sends the patient one overdue notice (notification catalogue event `payment.overdue_notice`, FR-030). The Overdue flag is read from that status; it is cleared and reminders stop when the booking is Cancelled or Completed. An overdue balance never causes Payment Window Expired and cancels the booking only through the FR-006 unpaid balance cancellation (REQ-007-021).",
         "rationale": "If payment overdue, flag booking and notify admin; an overdue final payment never causes `Payment Window Expired` or booking cancellation (FR-006)"
       }
     },
@@ -48850,9 +48852,9 @@
       "owner_fr": "FR-007",
       "title": "Refund exceptions need secondary admin approval and documentation",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "An exception to the policy (for example a medical emergency) needs documentation upload and the approval of a different admin with billing permission (REQ-007-015); the requester cannot approve it. The refund stays awaiting approval until the decision.",
+        "statement": "An exception to the policy (for example a medical emergency) needs documentation upload and the approval of a different admin who holds the Issue Refunds permission (REQ-007-015); the requester cannot approve it. The refund stays awaiting approval until the decision.",
         "rationale": "Refund exceptions (e.g., medical emergency) require documentation and admin approval; refund amounts per FR-006 cancellation policy"
       }
     },
@@ -49208,9 +49210,9 @@
       "owner_fr": "FR-007",
       "title": "Screen 6 is the single refund control: the system starts closure-case refunds, an admin submits only exception or manual refunds, admin-set up to the amount still refundable",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Every refund is executed on Screen 6. A closure-case refund follows the booking's recorded closure cause (REQ-006-053) and is started by the system, never by an admin. An admin submits only an exception to the policy or a manual refund, the only cases offered when no closure cause is recorded or the cause is not listed. An exception or manual refund is admin-set: any amount from zero up to the amount still refundable, with a mandatory reason, and the ladder amount is shown beside it. FR-006 Process Refund and the FR-017 refund action open this screen instead of running their own refund."
+        "statement": "Every refund is executed on Screen 6. A closure-case refund follows the booking's recorded closure cause (REQ-006-053) and is started by the system, never by an admin. An admin submits only an exception to the policy or a manual refund, the only cases offered when no closure cause is recorded or the cause is not listed. An exception or manual refund is admin-set: any amount from zero up to the amount still refundable, with a mandatory reason, and the ladder amount is shown beside it. FR-006 Process Refund and the FR-017 refund action open this screen instead of running their own refund. FR-017 opens it from its refund launcher (Screen 4b) and from its completion problem outcomes (Screen 7) with the invoice and booking prefilled and, where an admin has already set the amount there, that amount shown; the amount stays within the amount still refundable."
       }
     },
     {
@@ -49230,9 +49232,9 @@
       "owner_fr": "FR-007",
       "title": "Payment status values are defined: Refunded means all paid money returned, Partial deposit means part of the deposit received",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Unpaid: nothing is paid. Deposit only: the deposit is paid and the balance is not. Installments active: an installment plan has started and is not fully paid. Full paid: the whole payable total is paid. Refunded: all money paid has been returned; a part refund leaves the previous status and shows in the refund history. Deposit status Partial: only part of the deposit amount has been received and the rest is still due; the booking is not confirmed until the full deposit is paid, Payment Status stays Unpaid (there is no Pending value), and the partial deposit is refunded in full automatically when the hold expires (REQ-007-096). At Risk is not a status."
+        "statement": "Unpaid: nothing is paid. Deposit only: the deposit is paid and the balance is not. Installments active: an installment plan has started and is not fully paid. Full paid: the whole payable total is paid. Refunded: all money paid has been returned; a part refund leaves the previous status and shows in the refund history. Deposit status Partial: only part of the deposit amount has been received and the rest is still due; the booking is not confirmed until the full deposit is paid, Payment Status stays Unpaid (there is no Pending value), and the partial deposit is refunded in full automatically when the hold expires (REQ-007-096). At Risk is not a status. The moment the booking becomes Full paid, whichever option settled it (pay in full, the final balance or the last installment), is the fully-paid event other modules read; FR-018 reads it for affiliate accrual (REQ-018-309)."
       }
     },
     {
@@ -49241,9 +49243,9 @@
       "owner_fr": "FR-007",
       "title": "A standalone aftercare payment is refunded by an admin decision and released after the confirmation window counted from the payment",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "For a standalone aftercare payment (REQ-007-088) no refund ladder applies: an admin decides any refund beyond FR-011's automatic cases with a reason on Screen 6, opened from the aftercare payment record, as a manual refund (REQ-007-015). The provider's money is released after the same patient confirmation window as a booking, counted from the date of the payment instead of procedure completion."
+        "statement": "For a standalone aftercare payment (REQ-007-088) no refund ladder applies: an admin decides any refund beyond FR-011's own refund cases with a reason on Screen 6, opened from the aftercare payment record, as a manual refund (REQ-007-015). FR-011's own cases are the automatic refund in REQ-011-037 and the pro-rata refund of the unused full months when a plan paid in full is cancelled (REQ-011-097); the system starts them, and the commission and the provider's payout (FR-017) fall in the same proportion. The provider's money is released after the same patient confirmation window as a booking, counted from the date of the payment instead of procedure completion."
       }
     },
     {
@@ -49454,9 +49456,9 @@
       "owner_fr": "FR-007B",
       "title": "Confirmation notification after a successful charge",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST send confirmation notification after successful installment charge",
+        "statement": "System MUST send the patient a confirmation notification after a successful installment charge",
         "rationale": "PRD id REQ-007b-016 (prd.md line 840). Restated by Main Flow step 12, Communication Structure and the Shared Services scope (S-03)."
       }
     },
@@ -49850,9 +49852,9 @@
       "owner_fr": "FR-007B",
       "title": "Completed plan shown as Fully Paid; booking status follows FR-006",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "When the final installment is paid, normally by the cutoff date, the system marks the installment plan as completed (shown as \"Fully Paid\"); the booking status continues to follow FR-006.",
+        "statement": "When the final installment is paid, normally by the cutoff date, the system marks the installment plan as completed (shown as \"Fully Paid\"); the booking status continues to follow FR-006. The booking's Payment Status becomes Full paid at that moment (FR-007 REQ-007-099), the fully-paid event FR-018 reads (REQ-018-309).",
         "rationale": "PRD prose rule, no id. prd.md line 112 (Main Flow: Patient Selects Installment Plan and Completes Payments)."
       }
     },
@@ -49970,9 +49972,9 @@
       "owner_fr": "FR-007B",
       "title": "Refund dispute on partial installments",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "When a patient disputes a charge for a partial-installment refund, the admin reviews the dispute and the refund is processed per the resolution through the FR-007 approval (another billing admin, escalating to a super-admin, never self-approved); the admin may cancel the booking where its state allows it, or allow continuation.",
+        "statement": "When a patient disputes a charge for a partial-installment refund, the admin reviews the dispute and the refund is processed per the resolution through the FR-007 approval (another admin who holds the Issue Refunds permission, escalating to a super-admin, never self-approved); the admin may cancel the booking where its state allows it, or allow continuation.",
         "rationale": "PRD prose rule, no id. prd.md line 807 (Edge Cases)."
       }
     },
@@ -50234,9 +50236,9 @@
       "owner_fr": "FR-007B",
       "title": "Admin Mark as Resolved settles an installment only as a recorded bank transfer a second billing admin approves",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "The admin can Mark as Resolved an unpaid installment only for a bank transfer into Hairline's account: the admin enters the amount, date, receiving account and reference, and a second billing admin approves it (REQ-007B-109). On approval the system sets the installment Paid with payment source manual and passes the payment to FR-007; the plan then follows REQ-007B-108.",
+        "statement": "The admin can Mark as Resolved an unpaid installment only for a bank transfer into Hairline's account: the admin enters the amount, date, receiving account and reference, and a second admin who holds the Resolve Installments permission approves it (REQ-007B-109). On approval the system sets the installment Paid with payment source manual and passes the payment to FR-007; the plan then follows REQ-007B-108.",
         "rationale": "PRD prose rule, no id. prd.md line 505 (Screen 6: Admin Booking Installment Plan Detail)."
       }
     },
@@ -50331,9 +50333,9 @@
       "owner_fr": "FR-007B",
       "title": "Only billing and finance admin roles run installment actions",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Only authorized admin roles (Billing Admin, Financial Manager, Super Admin) can execute installment management actions.",
+        "statement": "Only an admin who holds the matching permission can run an installment action: Retry Charge for Retry Charge, and Resolve Installments for Mark as Resolved and for approving it (FR-031).",
         "rationale": "PRD prose rule, no id. prd.md line 518 (Admin Action & Audit Rules)."
       }
     },
@@ -50367,9 +50369,9 @@
       "owner_fr": "FR-007B",
       "title": "Booking status change notification when the final installment completes",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "A booking status change notification is sent when the final installment completes.",
+        "statement": "A booking status change notification is sent to the patient when the final installment completes.",
         "rationale": "PRD prose rule, no id. prd.md line 71 (Communication Structure)."
       }
     },
@@ -50551,9 +50553,9 @@
       "owner_fr": "FR-007B",
       "title": "An installment is settled outside the card only as a recorded bank transfer that a second billing admin approves",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "Mark as Resolved is used only for a bank transfer into Hairline's account. The admin enters the amount, date, receiving account and reference, and a second billing admin approves it as FR-007 REQ-007-015 sets for refunds, never the same admin; only then is the installment Paid with payment source manual. FR-007 owns the manual payment record, the refund of a manual payment and the clinic-share movement for it."
+        "statement": "Mark as Resolved is used only for a bank transfer into Hairline's account. The admin enters the amount, date, receiving account and reference, and a second admin who holds the Resolve Installments permission (FR-031) approves it, never the same admin; only then is the installment Paid with payment source manual. FR-007 owns the manual payment record, the refund of a manual payment and the clinic-share movement for it."
       }
     },
     {
@@ -51667,9 +51669,9 @@
       "owner_fr": "FR-009",
       "title": "System MUST enforce the global provider email identity rule (Rule 3): an email can belong to...",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST enforce the global provider email identity rule (Rule 3): an email can belong to only one provider organization at a time as Owner, team member, or pending invitation; invitations, FR-015 provider creation, and FR-015 owner login-email edits that use an email tied to another non-Deactivated provider must be blocked; emails of Deactivated providers are freed for reuse while their records stay archived; a Removed member's email is free for any provider",
+        "statement": "System MUST enforce the global provider email identity rule (Rule 3): an email can belong to only one provider organization at a time as Owner, team member, or pending invitation; invitations, FR-015 provider creation, and FR-015 owner login-email edits that use an email tied to another non-Deactivated provider must be blocked; emails of Deactivated providers are freed for reuse while their records stay archived; a Removed member's email is free for any provider; a team member's email is not editable on the provider platform; support changes it on request (FR-032 REQ-032-144)",
         "rationale": "Rule 3 (Global Provider Email Identity): An email belongs to at most one provider organization at a time, across all forms of membership: Owner (created via FR-015), team member, or pending invitation. When a provider is Deactivated (FR-015), its Owner, team member, and pending-invitation emails are freed for reuse; the old records stay archived and are not reactivated by reuse. FR-015 provider creation and owner login-email edits apply this same rule."
       }
     },
@@ -52111,9 +52113,9 @@
       "owner_fr": "FR-009",
       "title": "Acceptance creates the team member and marks invitation Accepted",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "New Team Member sets password and accepts terms of service System creates a new team member record (status Active) and links it to the provider organization with the assigned role. This is the first point at which the invitee becomes a team member; an archived record of a Removed member stays archived System marks invitation as \"Accepted\"",
+        "statement": "New Team Member enters a phone number, sets a password under the platform password policy (REQ-SYS-007) and accepts the Current Terms & Conditions and the Current Privacy Policy; this writes the member's first legal acceptance ledger rows (FR-027 REQ-027-062, REQ-027-019) System creates a new team member record (status Active) and links it to the provider organization with the assigned role and an Account Name of First Name + Last Name (FR-032 REQ-032-062). This is the first point at which the invitee becomes a team member; an archived record of a Removed member stays archived System marks invitation as \"Accepted\"",
         "rationale": "prd.md lines 118-120 (checked against the PRD text)."
       }
     },
@@ -52471,9 +52473,9 @@
       "owner_fr": "FR-009",
       "title": "B6: active patient conversations rerouted with patient message",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System leaves the clinic's patient conversations unchanged by a removal: each conversation belongs to the clinic (one conversation per patient and provider, FR-012), so no routing changes and no patient message is sent.",
+        "statement": "System leaves the clinic's patient conversations unchanged by a removal: each conversation belongs to the clinic (one conversation per patient and provider, FR-012), so no routing changes and no patient message is sent. Colleagues keep reading and replying in the same conversation: a colleague's messages show the colleague's name, and one unread count is kept per clinic (FR-012 REQ-012-001, REQ-012-060).",
         "rationale": "prd.md lines 285-290 (checked against the PRD text)."
       }
     },
@@ -52903,9 +52905,9 @@
       "owner_fr": "FR-009",
       "title": "Account setup field validation",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Screen 8 Account Setup: Email pre-filled from invitation, locked, must match invitation token. First Name and Last Name required, 2-50 characters, letters/spaces/hyphen. Phone Number required, E.164 format, uniqueness per user within provider, must be verified via one-time code where possible. Password required, must satisfy FR-026 policy (length + complexity). Confirm Password must match Password. Accept Terms required, must be checked before submission.",
+        "statement": "Screen 8 Account Setup: Email pre-filled from invitation, locked, must match invitation token. First Name and Last Name required, 2-50 characters, letters/spaces/hyphen. Phone Number required, E.164 format, uniqueness per user within provider, must be verified via one-time code where possible. Password required, must satisfy the platform password policy (REQ-SYS-007). Confirm Password must match Password. Accept Terms required, must be checked before submission; it confirms the Current Terms & Conditions and the Current Privacy Policy and writes the member's first legal acceptance ledger rows (FR-027 REQ-027-062, REQ-027-019).",
         "rationale": "prd.md lines 534-540 (checked against the PRD text)."
       }
     },
@@ -53611,9 +53613,9 @@
       "owner_fr": "FR-009",
       "title": "Only a Hairline admin can hand the Owner role to another person",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System MUST let only a Hairline admin hand the Owner role of a provider organization to another person (Rule 11). The provider organization keeps exactly one Owner before, during, and after the handover, and no provider-side user can start a handover. The new Owner MUST already be an active team member of that organization; the previous Owner becomes a Manager; the action requires a reason; and the new and the previous Owner are both notified by email. The admin starts it from Screen 12. The handover is allowed while the provider is Suspended and unavailable while it is Deactivated.",
+        "statement": "System MUST let only a Hairline admin hand the Owner role of a provider organization to another person (Rule 11). The provider organization keeps exactly one Owner before, during, and after the handover, and no provider-side user can start a handover. The new Owner MUST already be an active team member of that organization; the previous Owner becomes a Manager; the action requires a reason; and the new and the previous Owner are both notified by email. The admin starts it from Screen 12. The handover is allowed while the provider is Suspended and unavailable while it is Deactivated. The new Owner's login email follows the FR-015 login email steps (REQ-015-114): notices to the old and the new address, the previous Owner signed out, and an automatic activation email when the new Owner's password is not set.",
         "rationale": "Rule 11 (Owner Handover): Only a Hairline admin can hand the Owner role of a provider organization to another person; no provider-side user can do it (Rule 2). The handover is one admin action, so the provider organization has exactly one Owner before and after it (Rule 1). The action requires a reason, is recorded in the FR-009 audit trail (Rule 4) and FR-015 Tab 8: Activity Log with the admin as actor, and the new and the previous Owner are notified by email."
       }
     },
@@ -53935,9 +53937,9 @@
       "owner_fr": "FR-010",
       "title": "Minimum documentation required before treatment completion",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST require minimum documentation before allowing treatment completion: conclusion notes, prescription, advice, medication (one text box, must not be empty), actual graft count, final head scan photo set (V1)",
+        "statement": "System MUST require minimum documentation before allowing treatment completion: conclusion notes, prescription, advice, medication (one text box, must not be empty), actual graft count, final head scan photo set (V1). Medication and advice text can be picked from the Active medication and post-op instruction templates and customised; the record keeps its own copy, so a later template edit or deactivation does not change it (FR-024 REQ-024-085).",
         "rationale": "Functional Requirements Summary id kept verbatim. Archived FR-010 PRD baseline, lines 943."
       }
     },
@@ -54187,9 +54189,9 @@
       "owner_fr": "FR-010",
       "title": "FR-010 is the only path for post-acceptance treatment-detail changes",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System MUST make FR-010 the only path for post-acceptance changes to treatment plan days, clinician set, and estimated graft count (apart from the admin edit of the accepted quote, REQ-005-023), blocked while the booking is `Accepted` and limited to the clinic (Owner, Manager, or Clinical Staff, from `Confirmed` until Check In) and admins (from `Confirmed` until the treatment ends); each change MUST require a reason, be audited with before/after values, notify the patient through the FR-030 `treatment.plan_changed` event, leave the accepted snapshot unchanged, and never change money fields (Rule 13; Alternative Flow A2)",
+        "statement": "System MUST make FR-010 the only path for post-acceptance changes to treatment plan days, clinician set, and estimated graft count (apart from the admin edit of the accepted quote, REQ-005-023, and the replacement-clinician rewrite when a team member leaves the case, REQ-010-123), blocked while the booking is `Accepted` and limited to the clinic (Owner, Manager, or Clinical Staff, from `Confirmed` until Check In) and admins (from `Confirmed` until the treatment ends); each change MUST require a reason, be audited with before/after values, notify the patient through the FR-030 `treatment.plan_changed` event, leave the accepted snapshot unchanged, and never change money fields (Rule 13; Alternative Flow A2)",
         "rationale": "Functional Requirements Summary id kept verbatim. Archived FR-010 PRD baseline, lines 952."
       }
     },
@@ -54368,9 +54370,9 @@
       "owner_fr": "FR-010",
       "title": "Post-acceptance treatment-detail changes only through FR-010, with reason and audit",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "After subquote acceptance, FR-010 is the only path for changing the treatment plan days, the assigned clinician set, and the estimated graft count, apart from the admin edit of the accepted quote (REQ-005-023); the rest of this rule governs the FR-010 path. No change is allowed while the booking is `Accepted` (unpaid); changes are allowed only from `Confirmed`. Only the clinic (Owner, Manager, or Clinical Staff, from `Confirmed` until Check In) or an admin (from `Confirmed` until the treatment ends) may make the change. Each change MUST record actor, role, reason, timestamp, and before/after values; MUST notify the patient through the FR-030 `treatment.plan_changed` event; MUST leave the accepted snapshot unchanged as the original record; and MUST NOT change price, currency, date range, appointment, or promotion (Alternative Flow A2). Admin changes use FR-010 Screen 9.",
+        "statement": "After subquote acceptance, FR-010 is the only path for changing the treatment plan days, the assigned clinician set, and the estimated graft count, apart from the admin edit of the accepted quote (REQ-005-023) and the replacement-clinician rewrite when a team member leaves the case (REQ-010-123); the rest of this rule governs the FR-010 path. No change is allowed while the booking is `Accepted` (unpaid); changes are allowed only from `Confirmed`. Only the clinic (Owner, Manager, or Clinical Staff, from `Confirmed` until Check In) or an admin (from `Confirmed` until the treatment ends) may make the change. Each change MUST record actor, role, reason, timestamp, and before/after values; MUST notify the patient through the FR-030 `treatment.plan_changed` event; MUST leave the accepted snapshot unchanged as the original record; and MUST NOT change price, currency, date range, appointment, or promotion (Alternative Flow A2). Admin changes use FR-010 Screen 9.",
         "rationale": "Restates REQ-010-027 with more detail (who may change, what is recorded); possible duplicate within this FR. Archived FR-010 PRD baseline, lines 564."
       }
     },
@@ -55316,6 +55318,17 @@
       }
     },
     {
+      "id": "REQ-010-123",
+      "type": "Rule",
+      "owner_fr": "FR-010",
+      "title": "A team member who leaves the case is replaced in the clinician set of open treatment records",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "System MUST, when a team member is removed or suspended, has a role change that takes away the rights needed to work their open items, or is force-suspended or force-removed by an admin, rewrite the clinician set (clinician_ids) of every open treatment record (Awaiting Check In or In Progress) that names the member to the replacement clinician chosen at that moment, as a system change recorded in the treatment record's audit history and not as a treatment-detail change (Alternative Flow A2); the other clinicians on the record stay and at least one remains; Completed, Closed Early and Cancelled records keep their clinician set; reactivating the member does not give the records back (FR-009 REQ-009-191)"
+      }
+    },
+    {
       "id": "REQ-011-001",
       "type": "Rule",
       "owner_fr": "FR-011",
@@ -56220,9 +56233,9 @@
       "owner_fr": "FR-011",
       "title": "Out of scope: patient and provider chat, payment flows beyond activation",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Direct patient to provider chat is out of scope (FR-012 backlog) and payment flows beyond standalone activation are out of scope (Payment FR).",
+        "statement": "Direct patient to provider chat is out of scope (handled by FR-012; that conversation stays open while the pair has live aftercare and becomes read-only once nothing live is left between them (FR-012 REQ-012-018)) and payment flows beyond standalone activation are out of scope (Payment FR).",
         "rationale": "Communication Structure, Out of Scope."
       }
     },
@@ -56328,9 +56341,9 @@
       "owner_fr": "FR-011",
       "title": "Medication picked only from the admin-managed medication list",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "The provider MUST pick each aftercare medication only from the admin-managed medication list (the FR-024 medication templates); free-text medication names are not allowed.",
+        "statement": "The provider MUST pick each aftercare medication only from the Active templates of the admin-managed medication list (the FR-024 medication templates); free-text medication names are not allowed. The plan keeps its own copy of the text, so a later template edit or deactivation does not change it.",
         "rationale": "prd.md lines 483, 785 (Medication Name: must be a medication template owned by FR-024; no free-text medication names)."
       }
     },
@@ -100674,10 +100687,10 @@
       "owner_fr": "FR-007B",
       "title": "Admin Booking Installment Plan Detail",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "platform": "admin",
-        "description": "Actionable view of one booking's installment plan with the Admin Action Panel (Retry Charge, Mark as Resolved), each with a justification of at least 20 characters. Mark as Resolved is only for a recorded bank transfer (amount, date, receiving account, reference) that a second billing admin approves. The panel is a UI control group; its justification is written to the audit log (S-06), not to a graph entity. Cancelling a booking is not a plan action: it uses the FR-006 Cancel Booking action."
+        "description": "Actionable view of one booking's installment plan with the Admin Action Panel (Retry Charge, Mark as Resolved), each with a justification of at least 20 characters. Mark as Resolved is only for a recorded bank transfer (amount, date, receiving account, reference) that a second admin who holds the Resolve Installments permission approves. The panel is a UI control group; its justification is written to the audit log (S-06), not to a graph entity. Cancelling a booking is not a plan action: it uses the FR-006 Cancel Booking action."
       }
     },
     {
@@ -111857,7 +111870,7 @@
       "owner_fr": "FR-007",
       "title": "Patient selects the payment method and confirms the deposit payment",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "prd_ref": "Main Flow step 3"
       }
@@ -112020,9 +112033,9 @@
       "id": "STP-007-025",
       "type": "Step",
       "owner_fr": "FR-007",
-      "title": "Another admin with billing permission finds the request in the Awaiting approval view and approves or denies within 2 business days; the requester can never decide their own request; requester, approver and decision are recorded in the audit entry",
+      "title": "Another admin who holds the Issue Refunds permission finds the request in the Awaiting approval view and approves or denies within 2 business days; the requester can never decide their own request; requester, approver and decision are recorded in the audit entry",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A2 step 5"
       }
@@ -112681,9 +112694,9 @@
       "id": "STP-007B-413",
       "type": "Step",
       "owner_fr": "FR-007B",
-      "title": "After treatment has started, the admin resolves a Defaulted plan by payment only, with Retry Charge or Mark as Resolved (a recorded bank transfer a second billing admin approves) and no cancel route",
+      "title": "After treatment has started, the admin resolves a Defaulted plan by payment only, with Retry Charge or Mark as Resolved (a recorded bank transfer a second admin who holds the Resolve Installments permission approves) and no cancel route",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B1 step 9"
       }
@@ -112736,9 +112749,9 @@
       "id": "STP-007B-418",
       "type": "Step",
       "owner_fr": "FR-007B",
-      "title": "To settle an installment outside the card the admin enters the amount, date, receiving account and reference of a bank transfer with Mark as Resolved; a second billing admin approves it before the installment is Paid with source manual",
+      "title": "To settle an installment outside the card the admin enters the amount, date, receiving account and reference of a bank transfer with Mark as Resolved; a second admin who holds the Resolve Installments permission approves it before the installment is Paid with source manual",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Screen 6 Mark as Resolved"
       }
@@ -113311,9 +113324,9 @@
       "id": "STP-009-006",
       "type": "Step",
       "owner_fr": "FR-009",
-      "title": "New team member enters a phone number, sets a password and accepts the terms of service",
+      "title": "New team member enters a phone number, sets a password and accepts the Current Terms and Privacy Policy",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "prd_ref": "Main Flow Invite step 15"
       }
@@ -180689,6 +180702,12 @@
     {
       "from_id": "FR-007",
       "verb": "references",
+      "to_id": "REQ-027-033",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-007",
+      "verb": "references",
       "to_id": "REQ-029-100",
       "attrs": {}
     },
@@ -180913,7 +180932,7 @@
       "verb": "active in",
       "to_id": "STG-main-06-treatment",
       "attrs": {
-        "rules": 118
+        "rules": 119
       },
       "derived": true
     },
@@ -216574,6 +216593,30 @@
     },
     {
       "from_id": "REQ-010-122",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-010",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-010-123",
+      "verb": "applies at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-010-123",
+      "verb": "applies to",
+      "to_id": "ENT-treatment-record",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-010-123",
+      "verb": "applies to",
+      "to_id": "ENT-treatment-record.clinician_ids",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-010-123",
       "verb": "decided by",
       "to_id": "SRC-PRD-010",
       "attrs": {}
@@ -378169,6 +378212,12 @@
     },
     {
       "from_id": "STP-007-003",
+      "verb": "applies",
+      "to_id": "REQ-027-033",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007-003",
       "verb": "at",
       "to_id": "STG-main-05-payment",
       "attrs": {}
@@ -383587,6 +383636,18 @@
       "from_id": "STP-009-006",
       "verb": "applies",
       "to_id": "REQ-009-114",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-006",
+      "verb": "applies",
+      "to_id": "REQ-027-019",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-006",
+      "verb": "applies",
+      "to_id": "REQ-027-062",
       "attrs": {}
     },
     {
@@ -460742,6 +460803,66 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-211827-4d0f6064",
+      "at": "2026-11-24T21:18:27.441506+00:00",
+      "changed_by": "docs-manager",
+      "reason": "Align payment and installment notice recipients and admin permissions, provider invitation acceptance and Owner handover, treatment record clinician replacement and template copies, and the aftercare medication pick with the neighbouring requirements.",
+      "source_id": null,
+      "nodes_added": [
+        "REQ-010-123"
+      ],
+      "nodes_updated": [
+        "ENT-aftercare-medication.name",
+        "ENT-installment-payment.payment_source",
+        "ENT-payment.approved_by",
+        "ENT-team-member.password",
+        "ENT-team-member.phone_number",
+        "ENT-team-member.terms_accepted_at",
+        "ENT-team-member.unread_messages_count",
+        "ENT-treatment-record.advice",
+        "ENT-treatment-record.clinician_ids",
+        "ENT-treatment-record.medication_instructions",
+        "EVT-installment-plan-completed",
+        "EVT-payment-overdue",
+        "EVT-refund-approval-escalated",
+        "FR-007",
+        "REQ-007-012",
+        "REQ-007-015",
+        "REQ-007-017",
+        "REQ-007-036",
+        "REQ-007-064",
+        "REQ-007-097",
+        "REQ-007-099",
+        "REQ-007-100",
+        "REQ-007B-016",
+        "REQ-007B-049",
+        "REQ-007B-059",
+        "REQ-007B-081",
+        "REQ-007B-090",
+        "REQ-007B-093",
+        "REQ-007B-109",
+        "REQ-009-008",
+        "REQ-009-045",
+        "REQ-009-077",
+        "REQ-009-113",
+        "REQ-009-174",
+        "REQ-010-004",
+        "REQ-010-027",
+        "REQ-010-042",
+        "REQ-011-080",
+        "REQ-011-089",
+        "SCR-007B-06",
+        "STP-007-003",
+        "STP-007-025",
+        "STP-007B-413",
+        "STP-007B-418",
+        "STP-009-006"
+      ],
+      "edges_added": 8,
+      "edges_removed": 0,
+      "rows": 56
+    },
     {
       "id": "cs-20261124-211345-2ac7b594",
       "at": "2026-11-24T21:13:45.645989+00:00",

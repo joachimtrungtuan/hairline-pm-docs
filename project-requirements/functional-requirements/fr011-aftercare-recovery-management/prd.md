@@ -58,7 +58,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 
 **Out of Scope**:
 
-- Direct patient ↔ provider chat (handled by FR-012) (REQ-011-080)
+- Direct patient ↔ provider chat (handled by FR-012; that conversation stays open while the pair has live aftercare and becomes read-only once nothing live is left between them (FR-012 REQ-012-018)) (REQ-011-080)
 - Payment flows beyond standalone activation (handled in Payment FR) (REQ-011-080)
 
 ### Entry Points
@@ -539,7 +539,7 @@ Admin assignment is not a separate entry route. It is a step inside these routes
 
 | Field Name | Type | Required | Description | Validation Rules | Graph field |
 |------------|------|----------|-------------|------------------|-------------|
-| Medication Name | text | Yes | Name of medication | Must be a medication template from the admin-managed list owned by FR-024 (see FR-024) (REQ-011-089) | ENT-aftercare-medication.name |
+| Medication Name | text | Yes | Name of medication | Must be an Active medication template from the admin-managed list owned by FR-024 (see FR-024); the plan keeps its own copy of the text, so a later template edit or deactivation does not change it (REQ-011-089) | ENT-aftercare-medication.name |
 | Dosage | text | Yes | Dosage amount and unit | Valid dosage format | ENT-aftercare-medication.dosage |
 | Frequency | text | Yes | Frequency (e.g., "2x daily", "Every 8 hours") | Valid frequency format | ENT-aftercare-medication.frequency |
 | Special Instructions | text | No | Additional instructions from provider | Max 500 chars | ENT-aftercare-medication.special_instructions |
@@ -864,7 +864,7 @@ Admin assignment is not a separate entry route. It is a step inside these routes
 | Custom Instructions | text | No | Instructions specific to this milestone | Max 1000 chars | ENT-aftercare-milestone.instructions |
 | Override Restrictions | action | No | Button to override activity restrictions | Always available | no graph field (control) |
 | **Step 3: Medication Setup** | | | | |  |
-| Medication Name | select | Yes | Medication picked only from the admin-managed medication list (the FR-024 medication templates); no free-text medication names | Must be a medication template owned by FR-024 (see FR-024) (REQ-011-089) | ENT-aftercare-medication.name |
+| Medication Name | select | Yes | Medication picked only from the admin-managed medication list (the FR-024 medication templates); no free-text medication names | Must be an Active medication template owned by FR-024 (see FR-024); the plan keeps its own copy of the text, so a later template edit or deactivation does not change it (REQ-011-089) | ENT-aftercare-medication.name |
 | Dosage | text | Yes | Dosage amount and unit | Valid dosage format | ENT-aftercare-medication.dosage |
 | Frequency | text | Yes | Frequency (e.g., "2x daily") | Valid frequency format | ENT-aftercare-medication.frequency |
 | Start Date | date | Yes | Medication start date | ISO 8601 format; must be today or future | ENT-aftercare-medication.start_date |
@@ -1708,6 +1708,7 @@ Acceptance Scenarios:
 | 2026-11-22 | 1.11 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.10) and the change requests (CR-FR011-20261014-01 in change-request-2026-10-14-provider-status-cancellation-cascade.md, CR-FR011-20261016-01 in change-request-2026-10-16-mtg002-quote-model-alignment.md, CR-FR011-20261026-01 in change-request-2026-10-26-standalone-aftercare-reassignment.md, and CR-FR015-20261013-01) are in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
 | 2026-11-23 | 1.12 | Owner ruling 2026-11-23: the aftercare specialist is clinic staff on the provider side; the Hairline admin role is renamed Aftercare Coordinator with unchanged permissions. Assignment wording in Module Scope and REQ-011-004 now names both sides: clinic aftercare specialists and Hairline aftercare team members (Aftercare Coordinator role). Who may deliver a case is unchanged. | Product Owner / Documentation |
 | 2026-11-24 | 1.13 | Logic review: plan activation by provider confirmation or admin activation with a stalled-setup reminder and escalation; three entry sources including the FR-038 conversion; milestone closing on scan, questionnaire and education with medication outside the percentage; payment-due and expiry handling with the paused 7-day timer; final-template price acceptance; who is paid by who delivers; subscription cancellation, plan completion, extension approval and the urgent flag clock; Coordinator on admin Screens 13 to 19; wording alignment with FR-002, FR-006, FR-025 and FR-038. | Product Owner / Documentation |
+| 2026-11-25 | 1.15 | Cross-FR alignment: the medication pick offers only Active templates and the plan keeps its own copy of the text (FR-024); the out-of-scope patient and provider chat states its lifecycle (FR-012). The conversion hand-off rows were already stated and are unchanged. | Documentation |
 | 2026-11-24 | 1.14 | Logic review pass 2: one closing rule for every ending of aftercare with an admin Cancel Aftercare control; time ends a milestone and a task not done becomes Missed; reminder and escalation clock for a paid add-on and an assigned standalone request in place of the add-on unassigned expiry; Pending activation plan status; Hairline-team actions on Screen 14 and a confirm-and-activate step after a handover; reassignment has no automatic refund and the handover fee in the treatment-linked flow is paid from Hairline revenue; add-on alternative template only at the price already paid; aftercare participation as a provider profile setting owned by FR-015; a new standalone request after a rejected or expired FR-038 conversion; discount codes removed from templates; Screen 15 availability marks. | Product Owner / Documentation |
 
 ## Appendix: Approvals
@@ -1718,4 +1719,4 @@ Acceptance Scenarios:
 
 ---
 
-**Last Updated**: 2026-11-24
+**Last Updated**: 2026-11-25
