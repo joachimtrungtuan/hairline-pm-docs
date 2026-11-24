@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T10:30:00Z",
+  "generated_at": "2026-11-24T10:32:32Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -13422,6 +13422,50 @@
       }
     },
     {
+      "id": "ENT-message.call_duration_seconds",
+      "type": "Field",
+      "owner_fr": "FR-012",
+      "title": "Call duration in seconds",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "For a system call entry: how long the call lasted, in seconds."
+      }
+    },
+    {
+      "id": "ENT-message.call_outcome",
+      "type": "Field",
+      "owner_fr": "FR-012",
+      "title": "Call outcome",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "For a system call entry: answered, missed, declined or failed (the call could not be established)."
+      }
+    },
+    {
+      "id": "ENT-message.call_started_at",
+      "type": "Field",
+      "owner_fr": "FR-012",
+      "title": "Call started at",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "For a system call entry: when the call started."
+      }
+    },
+    {
+      "id": "ENT-message.call_type",
+      "type": "Field",
+      "owner_fr": "FR-012",
+      "title": "Call type",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "For a system call entry: whether the call was audio or video."
+      }
+    },
+    {
       "id": "ENT-message.conversation_id",
       "type": "Field",
       "owner_fr": "FR-012",
@@ -13570,7 +13614,7 @@
       "owner_fr": "FR-012",
       "title": "Event type",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "description": "What was logged."
       }
@@ -54857,9 +54901,9 @@
       "owner_fr": "FR-012",
       "title": "One conversation per patient-provider pair, created at the first quote",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System MUST automatically create a new conversation between patient and provider when provider submits their first quote for patient inquiry; subsequent quotes from same provider to same patient MUST add inquiry/quote IDs to existing conversation (one conversation per patient-provider pair). The provider side of the pair is the clinic: every clinic team member with messaging permission reads and replies in the same conversation.",
+        "statement": "System MUST automatically create a new conversation between patient and provider when provider submits their first quote for patient inquiry; subsequent quotes from same provider to same patient MUST add inquiry/quote IDs to existing conversation (one conversation per patient-provider pair). The provider side of the pair is the clinic: every clinic team member with messaging permission reads and replies in the same conversation. The unread count is kept once per clinic: when one team member opens the conversation it counts as read for the whole clinic.",
         "rationale": "Functional Requirements Summary, prd.md line 938."
       }
     },
@@ -54963,11 +55007,11 @@
       "id": "REQ-012-010",
       "type": "Rule",
       "owner_fr": "FR-012",
-      "title": "Message lifecycle events, flags, emergency interventions and calls logged for audit",
+      "title": "Message lifecycle events, flags, emergency interventions, calls and moderation setting changes logged for audit",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST log message lifecycle events (sent, delivered, read) and these audit events: attachment sent, keyword flag raised, manual flag raised, system flag raised, flag resolved, emergency intervention enabled, the emergency intervention message, and call entry.",
+        "statement": "System MUST log message lifecycle events (sent, delivered, read) and these audit events: attachment sent, keyword flag raised, manual flag raised, system flag raised, flag resolved, emergency intervention enabled, the emergency intervention message, call entry, and moderation setting changed.",
         "rationale": "Functional Requirements Summary, prd.md line 942."
       }
     },
@@ -54989,9 +55033,9 @@
       "owner_fr": "FR-012",
       "title": "Automatic keyword flags red, manual flags orange; flagging notifies nobody",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST distinguish between automatic keyword flags (red) and manual observation flags (orange) in admin monitoring center and thread detail view; flagging must NOT notify patient or provider. Exception for the provider's view: the provider's conversation screen still shows both admin flags and keyword flags (the patient is still not notified).",
+        "statement": "System MUST distinguish between automatic keyword flags (red) and manual observation flags (orange) in admin monitoring center and thread detail view; flagging must NOT notify patient or provider. Exception for the provider's view: the provider's conversation screen still shows the flag indicator for an open flag of any type (the patient is still not notified).",
         "rationale": "Functional Requirements Summary. The provider sees the flag indicator on Screen 4."
       }
     },
@@ -55061,9 +55105,9 @@
       "owner_fr": "FR-012",
       "title": "Messaging enabled only after the provider sent a quote; conversation read-only when nothing live is left",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System MUST enable patient-provider messaging only when provider has sent a quote to patient. The conversation is open while the pair has a live quote, booking or aftercare; it becomes read-only (history kept for both parties, nobody can send, admins can still view it) when the provider is suspended or deactivated, the patient's account is deleted, or nothing live is left between the pair, and it opens again when the same provider sends a new quote. Read-only is derived from those conditions and is not a stored conversation status.",
+        "statement": "System MUST enable patient-provider messaging only when provider has sent a quote to patient. The conversation is open while the pair has a live quote, booking or aftercare; it becomes read-only (history kept for both parties, nobody can send, admins can still view it) when the provider is suspended or deactivated, the patient's account is deleted, or nothing live is left between the pair, and it opens again when the same provider sends a new quote. Read-only is derived from those conditions and is not a stored conversation status. On a read-only conversation the composer, attach control and call buttons are disabled with a banner giving the reason, and Enable Emergency Intervention is not available.",
         "rationale": "Functional Requirements Summary, prd.md line 963."
       }
     },
@@ -55083,11 +55127,11 @@
       "id": "REQ-012-020",
       "type": "Rule",
       "owner_fr": "FR-012",
-      "title": "Messages and attachments retained for the system retention period with audit export",
+      "title": "Messages and attachments retained for the system retention period",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System MUST retain messages and attachments as set by the system PRD, Platform-Wide Rules: One 10-year retention period, and support audit export for compliance.",
+        "statement": "System MUST retain messages and attachments as set by the system PRD, Platform-Wide Rules: One 10-year retention period.",
         "rationale": "Functional Requirements Summary. The retention period is stated once in REQ-SYS-002. Admin conversation export is deferred; see REQ-012-076."
       }
     },
@@ -55109,9 +55153,9 @@
       "owner_fr": "FR-012",
       "title": "All admin actions logged for compliance audit",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System MUST log all admin actions (manual flags, flag status changes, enabling emergency intervention, emergency interventions) with timestamp, admin user, reason/notes, and action type for compliance audit.",
+        "statement": "System MUST log all admin actions (manual flags, flag status changes, enabling emergency intervention, emergency interventions, moderation setting changes) with timestamp, admin user, reason/notes, and action type for compliance audit.",
         "rationale": "Functional Requirements Summary, prd.md line 968."
       }
     },
@@ -55121,9 +55165,9 @@
       "owner_fr": "FR-012",
       "title": "Intervention restricted to authorized admin roles; intervention rate shown against a 5 percent monitoring target",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System MUST restrict admin intervention to authorized admin roles only; Screen 5 shows the intervention rate (interventions in the calendar month divided by conversations with at least one message in that month) against a monitoring target of under 5%, which blocks nothing; manual observation flags can be used more liberally for proactive monitoring.",
+        "statement": "System MUST restrict admin intervention to authorized admin roles only; Screen 5 shows the intervention rate (interventions in the calendar month divided by conversations with at least one message in that month; call entries are not messages) against a monitoring target of under 5%, which blocks nothing; manual observation flags can be used more liberally for proactive monitoring.",
         "rationale": "Functional Requirements Summary, prd.md line 969."
       }
     },
@@ -55145,9 +55189,9 @@
       "owner_fr": "FR-012",
       "title": "Manual flags never notify; message alerts follow the Notification Service",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Manual observation flags MUST NOT trigger notifications. Delivery of message-event alerts (including admin emergency interventions to both parties) and unread-badge updates follows the notification-service Rule in FR-020 (REQ-020-028).",
+        "statement": "Manual observation flags MUST NOT trigger notifications. Delivery of message-event alerts and unread-badge updates follows the notification-service Rule in FR-020 (REQ-020-028), except that the intervention notice to both parties and the admin keyword alert are always delivered (REQ-012-007).",
         "rationale": "Functional Requirements Summary. Delivery moved to REQ-020-028."
       }
     },
@@ -55169,7 +55213,7 @@
       "owner_fr": "FR-012",
       "title": "Payment confirmation lifts patient anonymization",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "statement": "System MUST integrate with Payment Processing (FR-007) to lift patient anonymization upon payment confirmation. Until then, on the provider screens the sender label, avatar and search use the masked identifier and View patient profile is hidden.",
         "rationale": "Functional Requirements Summary, prd.md line 976."
@@ -55217,9 +55261,9 @@
       "owner_fr": "FR-012",
       "title": "Audio and video calls through Twilio",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Audio and video call functionality using Twilio for real-time consultation and communication between patients and providers; Initiate or receive audio/video calls with providers for live consultations and discussions via Twilio; Initiate or receive audio/video calls with patients for consultations and detailed explanations via Twilio; Icon button in header; disabled if provider offline (optional); Calls are started from the chat header; each call leaves a system entry in the conversation (audio or video, start time, duration, outcome answered, missed or declined), and call content is not recorded or monitored.",
+        "statement": "Audio and video call functionality using Twilio for real-time consultation and communication between patients and providers; Initiate or receive audio/video calls with providers for live consultations and discussions via Twilio; Initiate or receive audio/video calls with patients for consultations and detailed explanations via Twilio; Icon button in header; disabled if provider offline (optional); Calls are started from the chat header; each call leaves a system entry in the conversation (audio or video, start time, duration, outcome answered, missed, declined or failed), shown in the thread but not counted as an unread message, as the last-message preview or toward the monthly count of conversations with at least one message, and call content is not recorded or monitored.",
         "rationale": "prd.md lines 34, 46, 83, 250. Scope, Screen 2 Audio/Video Call buttons, Screen 4 Audio/Video Call buttons. The call buttons are UI controls, not Fields."
       }
     },
@@ -55229,9 +55273,9 @@
       "owner_fr": "FR-012",
       "title": "Call failure shows an error, allows retry, falls back to text",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Display connection error message; allow retry; fallback to text messaging if call cannot be established.",
+        "statement": "Display connection error message; allow retry; fallback to text messaging if call cannot be established; the call entry records outcome failed.",
         "rationale": "prd.md lines 732. External Dependencies, Twilio failure handling (promoted because the user sees it)."
       }
     },
@@ -55481,9 +55525,9 @@
       "owner_fr": "FR-012",
       "title": "Provider list preview format and result-count message",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Max 50 chars; shows \"You: \" prefix if provider sent; Displayed if available; helps identify case; If more than 20 results, show \"Showing 20 of X conversations - refine filters\" message.",
+        "statement": "Max 50 chars; shows \"You: \" prefix if the viewer sent it; Displayed if available; helps identify case; If more than 20 results, show \"Showing 20 of X conversations - refine filters\" message.",
         "rationale": "prd.md lines 294, 296, 320. Screen 3 Last message preview, Inquiry/Quote ID, notes."
       }
     },
@@ -55541,9 +55585,9 @@
       "owner_fr": "FR-012",
       "title": "Message sender label: You, masked patient identifier or name, Hairline Admin, System",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "\"You\" for provider, the patient's masked identifier until payment is confirmed and then the patient name, \"Hairline Admin\", \"System\" for call entries",
+        "statement": "\"You\" on the viewer's own messages and the colleague's name on other clinic team members' messages, the patient's masked identifier until payment is confirmed and then the patient name, \"Hairline Admin\", \"System\" for call entries",
         "rationale": "prd.md lines 347. Screen 4 Message sender."
       }
     },
@@ -55697,9 +55741,9 @@
       "owner_fr": "FR-012",
       "title": "Resolve flag requires confirmation",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Button next to each flag; confirmation required",
+        "statement": "Button next to each flag; confirmation required; disabled for a flag in escalated_to_intervention",
         "rationale": "prd.md lines 493. Screen 6A Resolve Flag."
       }
     },
@@ -55709,9 +55753,9 @@
       "owner_fr": "FR-012",
       "title": "Emergency Intervention button visible only to admins with permission",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "\"Enable Emergency Intervention\" button only visible to admins with intervention permissions; Prominent button with warning styling; opens confirmation dialog",
+        "statement": "\"Enable Emergency Intervention\" button only visible to admins with intervention permissions; Prominent button with warning styling; opens confirmation dialog; not available on a read-only conversation or while another emergency intervention session is open on the conversation",
         "rationale": "prd.md lines 494, 506. Screen 6A business rules and Enable Emergency Intervention."
       }
     },
@@ -55841,9 +55885,9 @@
       "owner_fr": "FR-012",
       "title": "Intervention updates the flag status of a flagged conversation",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Enabling emergency intervention sets the conversation's active flags to escalated_to_intervention and sending the message updates them to \"Intervention Completed\"; cancelling without sending restores the flags and changes nothing. A conversation manually flagged for observation escalates to emergency intervention when the situation worsens.",
+        "statement": "Enabling emergency intervention sets the conversation's active flags to escalated_to_intervention and sending the message updates them to \"Intervention Completed\"; cancelling without sending restores the flags and changes nothing. Only one emergency intervention session can be open per conversation at a time, and Resolve Flag is disabled for a flag in escalated_to_intervention. A conversation manually flagged for observation escalates to emergency intervention when the situation worsens.",
         "rationale": "prd.md lines 167, 573, 922. Screen 6B business rules; Alternative Flow A3 step 10; Edge Cases, Manual flag escalation. The label Intervention Completed has no matching Key Entities status; see the open question."
       }
     },
@@ -55889,9 +55933,9 @@
       "owner_fr": "FR-012",
       "title": "Intervention success is 30 days without a new flag; post-intervention system flag is configurable",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System tracks intervention success: an intervention counts as successful when no new flag is raised on that conversation in the 30 days after it (the post-intervention flag does not count). After sending, the system raises a system flag with category Follow-Up Needed for follow-up review unless the post-intervention flag switch on Screen 5 is off (default on).",
+        "statement": "System tracks intervention success: an intervention counts as successful when no new flag is raised on that conversation in the 30 days after it (the post-intervention flag does not count); Screen 5 shows the intervention success rate, successful interventions divided by interventions older than 30 days, worked out when the screen is read. After sending, the system raises a system flag with category Follow-Up Needed for follow-up review unless the post-intervention flag switch on Screen 5 is off (default on).",
         "rationale": "prd.md lines 595. Screen 6B notes."
       }
     },
@@ -55997,9 +56041,9 @@
       "owner_fr": "FR-012",
       "title": "Provider reminder after 48 hours and admin follow-up queue after 72 hours without response",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "No provider response within 48 hours: The clock starts at the patient's oldest unanswered message and stops at any provider reply, counted in calendar hours. At 48 hours the system reminds the provider; if there is still no reply at 72 hours, the system itself creates a flag of type system with category Follow-Up Needed on the conversation (no admin is named on it) and sends additional provider reminders via notifications. The follow-up queue is Screen 5 filtered by the Follow-Up Needed category. Admin messaging remains emergency-only.",
+        "statement": "No provider response within 48 hours: The clock starts at the patient's oldest unanswered message and stops at any provider reply, counted in calendar hours; it also stops while the conversation is read-only and starts again from the next unanswered patient message when the conversation reopens. At 48 hours the system reminds the provider (once per unanswered stretch); if there is still no reply at 72 hours, the system itself creates a flag of type system with category Follow-Up Needed on the conversation (no admin is named on it) and sends additional provider reminders via notifications. The follow-up queue is Screen 5 filtered by the Follow-Up Needed category. A provider reply closes the system flag automatically (closed by the system, no admin action), after which the conversation can be Resolved. Admin messaging remains emergency-only.",
         "rationale": "prd.md Edge Cases. Business Process Assumptions: respond within 24-48 hours."
       }
     },
@@ -56019,11 +56063,11 @@
       "id": "REQ-012-101",
       "type": "Rule",
       "owner_fr": "FR-012",
-      "title": "Reason is recorded when an admin enables emergency intervention",
+      "title": "Reason is recorded with the emergency intervention message",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "The reason is recorded when an admin enables emergency intervention; who accessed a conversation and when is stated once in the system PRD rule on role-based, audited access.",
+        "statement": "The reason is recorded with the emergency intervention message; the \"intervention enabled\" audit entry carries no reason and is written even when the session is cancelled; who accessed a conversation and when is stated once in the system PRD rule on role-based, audited access.",
         "rationale": "prd.md Data & Privacy Rules. The access and audit halves are retired into REQ-SYS-009; FR-012 keeps the reason when required."
       }
     },
@@ -56057,9 +56101,9 @@
       "owner_fr": "FR-012",
       "title": "Admin can edit keyword flags and the post-intervention flag switch",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Configure moderation rules and automatic keyword flags; maintain compliance audit trail; Keyword/phrase flags that trigger moderation or escalation cues, and the post-intervention flag switch (default on), in the Moderation settings group on Screen 5.",
+        "statement": "Configure moderation rules and automatic keyword flags; maintain compliance audit trail; Keyword/phrase flags that trigger moderation or escalation cues, and the post-intervention flag switch (default on), in the Moderation settings group on Screen 5; the keyword list starts empty and the admin team fills it before go-live.",
         "rationale": "prd.md Admin scope; Admin Editability, Editable by Admin. Notification preferences and quiet hours moved to FR-030. The emergency reason options are a fixed list of three (REQ-012-106)."
       }
     },
@@ -56105,9 +56149,9 @@
       "owner_fr": "FR-012",
       "title": "Conversation status is calculated from its flags",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Conversation status MUST be calculated from the conversation's flags, with no manual control: Escalated while a flag is escalated_to_intervention (the admin has enabled emergency intervention on Screen 6B and has not yet sent or cancelled); Resolved only when the conversation has at least one flag and all its flags are closed (resolved or intervention_completed); otherwise Active, which covers a conversation with no flag and one with any open flag that is not under intervention. Enabling emergency intervention is the step that sets the flags to escalated_to_intervention; cancelling Screen 6B puts the flags back as they were.",
+        "statement": "Conversation status MUST be calculated from the conversation's flags, with no manual control: Escalated while a flag is escalated_to_intervention (the admin has enabled emergency intervention on Screen 6B and has not yet sent or cancelled); Resolved only when the conversation has at least one flag and all its flags are closed (resolved or intervention_completed); otherwise Active, which covers a conversation with no flag and one with any open flag that is not under intervention. Enabling emergency intervention is the step that sets the flags to escalated_to_intervention; cancelling Screen 6B puts the flags back as they were. While an emergency intervention session is open the conversation shows Escalated whether or not it has a flag; with no flag, the audit entries are the record of the session.",
         "rationale": "prd.md Functional Requirements Summary and Key Entities, Conversation. Added 2026-11-20."
       }
     },
@@ -98028,7 +98072,7 @@
       "owner_fr": "FR-012",
       "title": "Patient to Provider Chat (Patient)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "patient",
         "description": "Patient messages one provider with text and attachments, sees timestamps and read receipts, and can start an audio or video call. Reached only from the inbox."
@@ -98052,7 +98096,7 @@
       "owner_fr": "FR-012",
       "title": "Provider to Patient Chat (Provider)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "provider",
         "description": "Three-panel chat: conversation list on the left, message thread and compose area in the centre, conversation info, quote references, call buttons and actions on the right."
@@ -98076,7 +98120,7 @@
       "owner_fr": "FR-012",
       "title": "Message Thread Detail, Monitoring and Flagging (Admin)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
         "description": "Three-panel read-only thread view: conversation list, full history, metadata, keyword and manual flag panels, flag history, manual flagging and the button that enables emergency intervention."
@@ -98088,7 +98132,7 @@
       "owner_fr": "FR-012",
       "title": "Message Thread Detail, Emergency Intervention (Admin)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "platform": "admin",
         "description": "Same layout as Screen 6A with a warning banner, admin compose area, mandatory emergency reason, internal justification and pre-send checklist; message goes to both parties."
@@ -101573,9 +101617,10 @@
       "owner_fr": "FR-012",
       "title": "Moderation keyword and phrase flags",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Admin-editable list of keywords and phrases that trigger automatic keyword flags and moderation or escalation cues in conversations, edited in the Moderation settings group on Screen 5 (REQ-012-105). Provisional owner FR-012; the PRD does not name another owner."
+        "description": "Admin-editable list of keywords and phrases that trigger automatic keyword flags and moderation or escalation cues in conversations, edited in the Moderation settings group on Screen 5 (REQ-012-105). The list starts empty and the admin team fills it before go-live. Provisional owner FR-012; the PRD does not name another owner.",
+        "default": "empty"
       }
     },
     {
@@ -101807,9 +101852,10 @@
       "owner_fr": "FR-012",
       "title": "Post-intervention auto-flag for follow-up",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Whether the system raises a system flag with category Follow-Up Needed after an emergency intervention; default on, edited in the Moderation settings group on Screen 5 (REQ-012-089, REQ-012-105)."
+        "description": "Whether the system raises a system flag with category Follow-Up Needed after an emergency intervention; default on, edited in the Moderation settings group on Screen 5 (REQ-012-089, REQ-012-105).",
+        "default": "on"
       }
     },
     {
@@ -111968,9 +112014,9 @@
       "id": "STP-012-039",
       "type": "Step",
       "owner_fr": "FR-012",
-      "title": "System connects the call through Twilio and notifies the other party, who answers, declines or does not answer",
+      "title": "System connects the call through Twilio and notifies the other party, who answers, declines or does not answer; a call that cannot be established is recorded as failed",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A4 step 2"
       }
@@ -111979,9 +112025,9 @@
       "id": "STP-012-040",
       "type": "Step",
       "owner_fr": "FR-012",
-      "title": "System writes the call entry in the conversation with type, start time, duration and outcome",
+      "title": "System writes the call entry in the conversation with type, start time, duration and outcome; it is not counted as an unread message, preview or monthly message",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A4 step 3"
       }
@@ -142487,6 +142533,38 @@
       "calculated_by": null
     },
     {
+      "id": "ENT-message.call_duration_seconds",
+      "entity_id": "ENT-message",
+      "name": "call_duration_seconds",
+      "data_type": "int",
+      "required": false,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-message.call_outcome",
+      "entity_id": "ENT-message",
+      "name": "call_outcome",
+      "data_type": "enum",
+      "required": false,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-message.call_started_at",
+      "entity_id": "ENT-message",
+      "name": "call_started_at",
+      "data_type": "datetime",
+      "required": false,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-message.call_type",
+      "entity_id": "ENT-message",
+      "name": "call_type",
+      "data_type": "enum",
+      "required": false,
+      "calculated_by": null
+    },
+    {
       "id": "ENT-message.conversation_id",
       "entity_id": "ENT-message",
       "name": "conversation_id",
@@ -158533,6 +158611,42 @@
       "sort_order": 2
     },
     {
+      "field_id": "ENT-message.call_outcome",
+      "value": "answered",
+      "label": "Answered",
+      "sort_order": 0
+    },
+    {
+      "field_id": "ENT-message.call_outcome",
+      "value": "missed",
+      "label": "Missed",
+      "sort_order": 1
+    },
+    {
+      "field_id": "ENT-message.call_outcome",
+      "value": "declined",
+      "label": "Declined",
+      "sort_order": 2
+    },
+    {
+      "field_id": "ENT-message.call_outcome",
+      "value": "failed",
+      "label": "Failed",
+      "sort_order": 3
+    },
+    {
+      "field_id": "ENT-message.call_type",
+      "value": "audio",
+      "label": "Audio",
+      "sort_order": 0
+    },
+    {
+      "field_id": "ENT-message.call_type",
+      "value": "video",
+      "label": "Video",
+      "sort_order": 1
+    },
+    {
       "field_id": "ENT-message.delivery_status",
       "value": "sent",
       "label": "Sent",
@@ -158663,6 +158777,12 @@
       "value": "call_entry",
       "label": "Call entry",
       "sort_order": 11
+    },
+    {
+      "field_id": "ENT-messaging-audit-entry.event_type",
+      "value": "moderation_setting_change",
+      "label": "Moderation setting change",
+      "sort_order": 12
     },
     {
       "field_id": "ENT-monitoring-advice-window.availability",
@@ -211132,6 +211252,24 @@
     },
     {
       "from_id": "REQ-012-018",
+      "verb": "applies to",
+      "to_id": "SCR-012-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-012-018",
+      "verb": "applies to",
+      "to_id": "SCR-012-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-012-018",
+      "verb": "applies to",
+      "to_id": "SCR-012-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-012-018",
       "verb": "decided by",
       "to_id": "SRC-PRD-012",
       "attrs": {}
@@ -211338,6 +211476,12 @@
       "from_id": "REQ-012-028",
       "verb": "applies to",
       "to_id": "ENT-patient.anonymized_id",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-012-028",
+      "verb": "applies to",
+      "to_id": "SCR-012-03",
       "attrs": {}
     },
     {
@@ -212484,6 +212628,12 @@
       "from_id": "REQ-012-085",
       "verb": "applies to",
       "to_id": "ENT-flag.status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-012-085",
+      "verb": "applies to",
+      "to_id": "SCR-012-06",
       "attrs": {}
     },
     {
@@ -318723,6 +318873,42 @@
     {
       "from_id": "SCR-012-02",
       "verb": "shows",
+      "to_id": "ENT-message.call_duration_seconds",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Call entry: duration seconds"
+      }
+    },
+    {
+      "from_id": "SCR-012-02",
+      "verb": "shows",
+      "to_id": "ENT-message.call_outcome",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Call entry: outcome"
+      }
+    },
+    {
+      "from_id": "SCR-012-02",
+      "verb": "shows",
+      "to_id": "ENT-message.call_started_at",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Call entry: started at"
+      }
+    },
+    {
+      "from_id": "SCR-012-02",
+      "verb": "shows",
+      "to_id": "ENT-message.call_type",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Call entry: type"
+      }
+    },
+    {
+      "from_id": "SCR-012-02",
+      "verb": "shows",
       "to_id": "ENT-message.read_at",
       "attrs": {
         "provenance": "retrieved",
@@ -318934,6 +319120,15 @@
     {
       "from_id": "SCR-012-04",
       "verb": "shows",
+      "to_id": "ENT-flag.status",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Flag indicator (open flag of any type)"
+      }
+    },
+    {
+      "from_id": "SCR-012-04",
+      "verb": "shows",
       "to_id": "ENT-message.admin_badge",
       "attrs": {
         "provenance": "retrieved",
@@ -318948,6 +319143,42 @@
         "provenance": "user input",
         "label": "Message attachments and attachment upload",
         "editable": true
+      }
+    },
+    {
+      "from_id": "SCR-012-04",
+      "verb": "shows",
+      "to_id": "ENT-message.call_duration_seconds",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Call entry: duration seconds"
+      }
+    },
+    {
+      "from_id": "SCR-012-04",
+      "verb": "shows",
+      "to_id": "ENT-message.call_outcome",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Call entry: outcome"
+      }
+    },
+    {
+      "from_id": "SCR-012-04",
+      "verb": "shows",
+      "to_id": "ENT-message.call_started_at",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Call entry: started at"
+      }
+    },
+    {
+      "from_id": "SCR-012-04",
+      "verb": "shows",
+      "to_id": "ENT-message.call_type",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Call entry: type"
       }
     },
     {
@@ -319274,6 +319505,42 @@
     {
       "from_id": "SCR-012-06",
       "verb": "shows",
+      "to_id": "ENT-message.call_duration_seconds",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Call entry: duration seconds"
+      }
+    },
+    {
+      "from_id": "SCR-012-06",
+      "verb": "shows",
+      "to_id": "ENT-message.call_outcome",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Call entry: outcome"
+      }
+    },
+    {
+      "from_id": "SCR-012-06",
+      "verb": "shows",
+      "to_id": "ENT-message.call_started_at",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Call entry: started at"
+      }
+    },
+    {
+      "from_id": "SCR-012-06",
+      "verb": "shows",
+      "to_id": "ENT-message.call_type",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Call entry: type"
+      }
+    },
+    {
+      "from_id": "SCR-012-06",
+      "verb": "shows",
       "to_id": "ENT-message.read_at",
       "attrs": {
         "provenance": "retrieved",
@@ -319465,6 +319732,42 @@
         "provenance": "user input",
         "label": "Attachment (admin)",
         "editable": true
+      }
+    },
+    {
+      "from_id": "SCR-012-07",
+      "verb": "shows",
+      "to_id": "ENT-message.call_duration_seconds",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Call entry: duration seconds"
+      }
+    },
+    {
+      "from_id": "SCR-012-07",
+      "verb": "shows",
+      "to_id": "ENT-message.call_outcome",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Call entry: outcome"
+      }
+    },
+    {
+      "from_id": "SCR-012-07",
+      "verb": "shows",
+      "to_id": "ENT-message.call_started_at",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Call entry: started at"
+      }
+    },
+    {
+      "from_id": "SCR-012-07",
+      "verb": "shows",
+      "to_id": "ENT-message.call_type",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Call entry: type"
       }
     },
     {
@@ -438164,6 +438467,54 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-103128-cbc7640f",
+      "at": "2026-11-24T10:31:28.892985+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-012 logic review, second pass: held-notice carve-out in the service rule, intervention reason recorded with the message, Escalated with or without a flag, system flag closed by a provider reply, the response clock paused while read-only, the flag indicator for any open flag, intervention success rate on Screen 5, read-only controls, call entry fields and counting rules, moderation settings Save control, default and audit event, clinic team labels and one unread count, Resolve Flag under intervention, and the audit export leftover.",
+      "source_id": null,
+      "nodes_added": [
+        "ENT-message.call_duration_seconds",
+        "ENT-message.call_outcome",
+        "ENT-message.call_started_at",
+        "ENT-message.call_type"
+      ],
+      "nodes_updated": [
+        "ENT-messaging-audit-entry.event_type",
+        "REQ-012-001",
+        "REQ-012-010",
+        "REQ-012-012",
+        "REQ-012-018",
+        "REQ-012-020",
+        "REQ-012-023",
+        "REQ-012-024",
+        "REQ-012-026",
+        "REQ-012-028",
+        "REQ-012-032",
+        "REQ-012-033",
+        "REQ-012-055",
+        "REQ-012-060",
+        "REQ-012-073",
+        "REQ-012-074",
+        "REQ-012-085",
+        "REQ-012-089",
+        "REQ-012-098",
+        "REQ-012-101",
+        "REQ-012-105",
+        "REQ-012-109",
+        "SCR-012-02",
+        "SCR-012-04",
+        "SCR-012-06",
+        "SCR-012-07",
+        "SET-moderation-keyword-flags",
+        "SET-post-intervention-auto-flag",
+        "STP-012-039",
+        "STP-012-040"
+      ],
+      "edges_added": 22,
+      "edges_removed": 0,
+      "rows": 93
+    },
     {
       "id": "cs-20261124-102857-43fecb52",
       "at": "2026-11-24T10:28:57.020148+00:00",
