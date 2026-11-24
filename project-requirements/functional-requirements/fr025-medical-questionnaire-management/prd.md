@@ -21,7 +21,7 @@ The Medical Questionnaire Management module enables administrators to manage a c
 
 - **Admin → System**: Questionnaire set and question management via admin platform
 - **System → Patient Platform**: Dynamic questionnaire delivery per context (inquiry / aftercare milestone)
-- **System → Provider Platform**: Medical alert generation (Inquiry context) and aftercare response summaries (Aftercare context)
+- **System → Provider Platform**: Medical alert display (Inquiry context; the alert tier comes from the FR-002 engine, REQ-025-063) and aftercare response summaries (Aftercare context)
 - **System → All Platforms**: Version-controlled questionnaire set updates
 
 ### Entry Points
@@ -61,8 +61,8 @@ flowchart TD
     ENTRY{"How is admin entering\nthis workflow?"}
 
     ENTRY -->|"Create new set"| CN["Admin enters Set Name, Context Type, Category, Description, and optional Tags"]
-    ENTRY -->|"Duplicate existing set (A3)"| DUP["System creates a Draft copy with all questions from source set\nContext Type is editable on the new set before first publish"]
-    ENTRY -->|"Edit a published set (A1)"| EDT["System creates a new Draft version\nThe published Active version stays unchanged until new Draft is published"]
+    ENTRY -->|"Duplicate existing set (A3)"| DUP["System creates a Draft copy with all questions from source set\nThe copy is named source name + (copy); Admin must make the name unique before the first save\nContext Type is editable on the new set before first publish"]
+    ENTRY -->|"Edit a published set (A1)"| EDT["System opens the set's single open Draft (created if none exists)\nThe published Active version stays unchanged until the Draft is published"]
 
     CN --> DRAFT["System saves set as Draft with auto-generated Set ID"]
     DRAFT --> LOOP
@@ -73,10 +73,10 @@ flowchart TD
     LOOP --> ACT{"Next action?"}
 
     ACT -->|"Add question"| QT["Screen 3: Admin selects a system-defined question type\nAdmin cannot create new question types"]
-    ACT -->|"Delete question (A2)"| DEL["System soft-deletes question\nHistorical patient responses are preserved"]
+    ACT -->|"Delete question (A2)"| DEL["System soft-deletes question in the open Draft\nHistorical patient responses are preserved"]
     ACT -->|"Reorder questions"| ORG["Admin reorders via drag-and-drop\nSystem saves display order as a Draft change"]
     ACT -->|"Preview set"| PRV["Screen 6: Admin previews Patient App view and Provider App view"]
-    ACT -->|"Publish"| PUB["Admin clicks Publish / Activate on Screen 2"]
+    ACT -->|"Publish"| PUB["Admin clicks Publish on Screen 2"]
 
     DEL --> LOOP
     ORG --> LOOP
@@ -93,18 +93,27 @@ flowchart TD
     APP --> QSAVE["System validates and saves question\nSet remains in Draft state"]
     QSAVE --> LOOP
 
-    PUB --> VAL{"All questions complete?\n(text, severity flag for Inquiry/Multi-Context sets)"}
-    VAL -->|"Incomplete questions found (A4)"| VFAIL["System blocks publish and lists incomplete questions"]
+    PUB --> VAL{"All Active questions complete and Context Type fits current uses?\n(text, severity flag for Inquiry/Multi-Context sets)"}
+    VAL -->|"Incomplete questions or unfit Context Type found (A4)"| VFAIL["System blocks publish and lists the incomplete questions\nor the current uses the Context Type no longer fits"]
     VFAIL --> LOOP
-    VAL -->|"All valid"| VPASS["System increments version, marks set as Active\nArchives previous Active version"]
+    VAL -->|"All valid"| CONF["System shows the new version number and changes summary\nAdmin confirms Publish"]
+    CONF -->|"Admin cancels"| LOOP
+    CONF -->|"Admin confirms"| VPASS["System increments version, marks set as Active\nArchives previous Active version (a version-level event; an Inquiry designation stays on the set)"]
     VPASS --> AVAIL["Set published and visible in catalog\nNot yet active for Inquiry — admin must use 'Set as Active for Inquiry' toggle separately (Workflow 4)\nAftercare sets are available for milestone assignment in FR-011"]
 ```
 
-Rule carried by this flow: REQ-025-004.
+Rule carried by this flow: REQ-025-004. Publishing does not designate the set for Inquiry (REQ-025-049).
+
+Other Admin actions reached from this flow, one step each:
+
+- Category management: from the catalog the Admin manages the global categories on Screen 4 (REQ-025-027 to REQ-025-030).
+- Version history: from Set Details the Admin opens Screen 7 and may use Restore as New Draft on any version, also for an Archived set (REQ-025-038, REQ-025-039).
+- Archive a set: from the catalog; blocked while an aftercare milestone uses the set (REQ-025-045, REQ-025-047, REQ-025-048).
+- Delete a set: from the catalog; only for a set that was never published and has no usages (REQ-025-046).
 
 ### Workflow 2: Severity Management (Inquiry Context Only)
 
-**Actors**: Admin, System, Alert Engine
+**Actors**: Admin, System, FR-002 alert engine
 **Scope**: Severity flags and the provider alert system apply exclusively to Inquiry-context and Multi-Context questionnaire sets. Aftercare-only sets do not use severity flags.
 **Trigger**: Admin configures a question inside an Inquiry or Multi-Context questionnaire set, or a patient submits the Inquiry questionnaire
 **Outcome**: Provider receives a colour-coded alert (Red / Amber / Green) reflecting the medical risk level of the patient's responses
@@ -117,7 +126,7 @@ flowchart TD
 
     START --> PUBCHK{"Is the parent set\ncurrently Active (published)?"}
 
-    PUBCHK -->|"Yes — published set (B1)"| NEWDRAFT["System creates a new Draft version of the set\nActive version continues serving inquiries until new Draft is published"]
+    PUBCHK -->|"Yes — published set (B1)"| NEWDRAFT["System opens the set's single open Draft (created if none exists)\nActive version continues serving inquiries until the Draft is published"]
     PUBCHK -->|"No — set is already in Draft"| SETFLAG
 
     NEWDRAFT --> SETFLAG["Admin assigns Severity Flag to the question\nOptions: Critical / Standard / No Alert"]
@@ -130,13 +139,13 @@ flowchart TD
 
     PUBLISH --> PATIENT["Patient completes and submits the Inquiry questionnaire"]
 
-    PATIENT --> CRIT{"Any Critical question\nanswered Yes?"}
+    PATIENT --> CRIT{"Any Critical question\nanswered Yes?\n(derived by the FR-002 engine, REQ-002-002)"}
 
-    CRIT -->|"Yes"| RED["System generates Red alert\nHighest risk — critical conditions flagged"]
+    CRIT -->|"Yes"| RED["Engine returns Red\nHighest risk — critical conditions flagged"]
     CRIT -->|"No"| STD{"Any Standard question\nanswered Yes?"}
 
-    STD -->|"Yes"| AMBER["System generates Yellow / Amber alert\nModerate concern flagged"]
-    STD -->|"No — all answered No"| GREEN["System generates Green indicator\nNo medical concerns flagged"]
+    STD -->|"Yes"| AMBER["Engine returns Yellow / Amber\nModerate concern flagged"]
+    STD -->|"No — no Yes answer on a Critical or Standard question"| GREEN["Engine returns Green\nNo medical concerns flagged"]
 
     RED --> DELIVER["System delivers alert to Provider Platform\nAlert level shown on inquiry view"]
     AMBER --> DELIVER
@@ -146,46 +155,55 @@ flowchart TD
 ### Workflow 3: Questionnaire Deployment (System Flow)
 
 **Actors**: System, Patient Platform, Provider Platform
-**Trigger**: Patient starts the inquiry submission flow in the Patient App (FR-003)
-**Outcome**: Patient's questionnaire responses are processed, tiered alerts are generated, and both the provider platform and audit trail are updated
+**Trigger**: Patient reaches the medical questionnaire step of the inquiry submission flow in the Patient App (FR-003), after picking the treatment date ranges
+**Outcome**: Patient's questionnaire responses are processed by the FR-002 engine, which returns the alert tier; the provider platform shows the tier, and the answers, the tier and the questionnaire version used are recorded
 
 **Flow Diagram** (includes alternative flow C1):
 
 ```mermaid
 flowchart TD
-    TRIGGER["Patient starts inquiry submission in Patient App (FR-003)"]
+    TRIGGER["Patient reaches the medical questionnaire step of the inquiry submission (FR-003)"]
 
-    TRIGGER --> FETCH["System fetches the admin-designated active Inquiry questionnaire set\nand its current published version"]
+    TRIGGER --> DESIG{"Is an Inquiry set designated?\n(REQ-025-052)"}
+    DESIG -->|"No"| UNAVAIL["Submission blocked, new or resumed\nThe draft is kept; the patient sees the submission-unavailable message (FR-002 REQ-002-053)"]
+    DESIG -->|"Yes"| KIND{"New start or\nresumed saved draft?"}
+
+    KIND -->|"New start"| FETCH["System fetches the admin-designated active Inquiry questionnaire set\nand its current published version"]
+    KIND -->|"Resumed saved draft"| KEEP["Patient keeps the questionnaire version of that draft\nNo reload to a newer version"]
+    KEEP --> SUBMIT
 
     FETCH --> VCHK{"Questionnaire version\nconsistent with patient platform cache?"}
 
     VCHK -->|"Version mismatch detected (C1)"| UPDATE["System pushes current Active version to patient platform"]
-    UPDATE --> RELOAD["Patient app loads the updated questionnaire for new use\nA patient already in progress is not made to start over:\nthe submission is accepted on the older version and the version used is recorded"]
+    UPDATE --> RELOAD["Patient app loads the current questionnaire version for this new start"]
     RELOAD --> DISPLAY
 
     VCHK -->|"Version consistent"| DISPLAY["System delivers questionnaire to Patient App\nQuestions rendered in configured display order"]
 
-    DISPLAY --> TRACK["System records the questionnaire set version number on the inquiry record itself,\nin addition to the template version stamp kept by FR-002"]
-    TRACK --> SUBMIT["Patient answers all questions and submits"]
+    DISPLAY --> SUBMIT["Patient answers all delivered questions and submits"]
 
-    SUBMIT --> PROCESS["System processes each Yes/No response against configured Severity Flags"]
+    SUBMIT --> TRACK["System records the questionnaire set version used on the inquiry record itself,\nin addition to the template version stamp kept by FR-002"]
+
+    TRACK --> PROCESS["FR-002 engine processes each Yes/No response against the configured Severity Flags"]
 
     PROCESS --> CRIT{"Any Critical question\nanswered Yes?"}
 
-    CRIT -->|"Yes"| RED["Generate Red alert"]
+    CRIT -->|"Yes"| RED["Engine returns Red"]
     CRIT -->|"No"| STD{"Any Standard question\nanswered Yes?"}
 
-    STD -->|"Yes"| AMBER["Generate Yellow / Amber alert"]
-    STD -->|"No — all answered No"| GREEN["Generate Green indicator"]
+    STD -->|"Yes"| AMBER["Engine returns Yellow / Amber"]
+    STD -->|"No — no Yes answer on a Critical or Standard question"| GREEN["Engine returns Green"]
 
     RED --> DELIVER["System delivers alert to Provider Platform\nAlert displayed on inquiry record for provider review"]
     AMBER --> DELIVER
     GREEN --> DELIVER
 
-    DELIVER --> LOG["System logs all responses, alert outcome, and the questionnaire version recorded on the inquiry to audit trail"]
+    RED --> LOG["System records the answers and the alert tier on the inquiry record (FR-003)\nand the version used in the FR-002 intake audit entry"]
+    AMBER --> LOG
+    GREEN --> LOG
 ```
 
-Rules carried by this flow: REQ-025-058, REQ-025-059.
+Rules carried by this flow: REQ-025-057, REQ-025-058, REQ-025-059, REQ-025-052.
 
 ### Workflow 4: Inquiry Activation & Downstream Assignment
 
@@ -199,17 +217,17 @@ Rules carried by this flow: REQ-025-058, REQ-025-059.
 flowchart TD
     START{"What is the admin doing?"}
 
-    START -->|"Activating a set for Inquiry"| TOGGLE["Admin clicks 'Set as Active for Inquiry'\non a published Inquiry or Multi-Context set (Screen 1)"]
-    START -->|"Assigning a set to an Aftercare milestone"| A_MIL["Admin opens an aftercare template in FR-011\nand selects a set for a specific milestone"]
+    START -->|"Activating a set for Inquiry"| TOGGLE["Admin clicks 'Set as Active for Inquiry'\non a published Inquiry or Multi-Context set (Screen 1)\nThe control is shown only for such sets"]
+    START -->|"Assigning a set to an Aftercare milestone"| A_MIL["Admin opens an aftercare template in FR-011\nand selects a set for a specific milestone\nThe list offers only published Aftercare and Multi-Context sets"]
 
     TOGGLE --> STATUS{"Is the selected set\ncurrently published (Active status)?"}
-    STATUS -->|"No — set is Draft or Archived"| BLOCK["System blocks activation\n'Only published sets can be designated\nas the active Inquiry questionnaire'"]
-    BLOCK --> END_BLOCK["Admin must publish the set first (Workflow 1)\nthen return to toggle activation"]
+    STATUS -->|"No — the set changed after the screen loaded and is now Draft or Archived"| BLOCK["System blocks activation\n'Only published sets can be designated\nas the active Inquiry questionnaire'"]
+    BLOCK --> END_BLOCK["Draft: Admin publishes the set first (Workflow 1)\nArchived: Admin restores it as a new Draft (Screen 7) and publishes it\nthen returns to toggle activation"]
 
     STATUS -->|"Yes — published"| EXISTING{"Is another set currently\ndesignated for Inquiry?"}
 
     EXISTING -->|"Yes"| CONFIRM["System shows confirmation:\n'This will replace [Current Set Name] as the active\nInquiry questionnaire. Continue?'"]
-    CONFIRM -->|"Admin confirms"| SWAP["System removes designation from the previous set\nDesignates the new set as active for Inquiry\nAll new patient inquiry submissions (FR-003) use the new set immediately"]
+    CONFIRM -->|"Admin confirms"| SWAP["System removes designation from the previous set (audited)\nDesignates the new set as active for Inquiry\nAll new patient inquiry submissions (FR-003) use the new set immediately"]
     CONFIRM -->|"Admin cancels (A1)"| CANCEL["No change — previous set remains active"]
 
     EXISTING -->|"No — inquiry flow unconfigured"| FIRST["System designates this set as the active Inquiry questionnaire\nInquiry flow is now configured"]
@@ -218,24 +236,24 @@ flowchart TD
     FIRST --> SERVING
 
     SERVING --> DEACT{"Admin later archives the set?"}
-    DEACT -->|"Yes (A2)"| FLAG["System flags Inquiry flow as unconfigured\nNotifies admin that no active Inquiry questionnaire is set\nPatient inquiry submissions are blocked until a new set is designated"]
+    DEACT -->|"Yes (A2); blocked while a milestone uses the set"| FLAG["System flags Inquiry flow as unconfigured\nNotifies admin that no active Inquiry questionnaire is set\nPatient inquiry submissions are blocked until a new set is designated"]
     DEACT -->|"No — still designated"| CONTINUE["System continues serving set to all new patient inquiries"]
 
     %% Aftercare path
-    A_MIL --> A_CTXCHK{"Context Type compatible\nwith aftercare milestone?"}
-    A_CTXCHK -->|"Incompatible — Inquiry-only set (A3)"| A_BLOCK["System blocks assignment\n'Inquiry-only sets cannot be assigned\nto aftercare milestones'"]
+    A_MIL --> A_CTXCHK{"Is the set still Aftercare or Multi-Context\nwhen the assignment is saved?"}
+    A_CTXCHK -->|"No — the set became Inquiry-only after the list loaded (A3)"| A_BLOCK["System blocks assignment\n'Inquiry-only sets cannot be assigned\nto aftercare milestones'"]
     A_BLOCK --> A_MIL
 
-    A_CTXCHK -->|"Compatible"| A_STATCHK{"Is the selected set\npublished (Active status)?"}
-    A_STATCHK -->|"No — set is Draft (A5)"| A_DRAFTBLOCK["System blocks assignment\n'Only published sets can be assigned\nto aftercare milestones'"]
+    A_CTXCHK -->|"Yes"| A_STATCHK{"Is the selected set\npublished (Active status)?"}
+    A_STATCHK -->|"No — the set became a Draft after the list loaded (A5)"| A_DRAFTBLOCK["System blocks assignment\n'Only published sets can be assigned\nto aftercare milestones'"]
     A_DRAFTBLOCK --> A_MIL
 
-    A_STATCHK -->|"Yes — published"| A_ASSIGN["Milestone assigned this questionnaire set\nDelivery frequency configured at milestone level in FR-011"]
+    A_STATCHK -->|"Yes — published"| A_ASSIGN["Milestone assigned this questionnaire set (audited by FR-011)\nDelivery frequency configured at milestone level in FR-011"]
 
     A_ASSIGN --> A_MULTI["Note: different milestones in the same template\nmay use different questionnaire sets\ne.g., Week 1: Pain Assessment — Week 4: Sleep Quality"]
 
     A_ASSIGN --> A_REPLACE{"Admin later replaces\nthis set on the milestone?"}
-    A_REPLACE -->|"Yes (A4)"| A_NEWSET["Admin assigns a different set\nFuture deliveries use new set\nExisting patient responses remain linked to the prior version"]
+    A_REPLACE -->|"Yes (A4)"| A_NEWSET["Admin assigns a different set (audited by FR-011)\nFuture deliveries use new set\nExisting patient responses remain linked to the prior version"]
     A_REPLACE -->|"No"| A_SERVE["System continues delivering set\nat scheduled milestone intervals"]
 ```
 
@@ -261,7 +279,7 @@ flowchart TD
 | Created By | text | No | Admin who created the set | From admin session | ENT-questionnaire-set.created_by |
 | Inquiry Active | indicator | No | Shows "Active for Inquiry" badge on the set currently designated as the active Inquiry questionnaire. Only one set can have this designation at a time. Visible only on Inquiry and Multi-Context sets | System-managed; updated via "Set as Active for Inquiry" action | ENT-questionnaire-set.inquiry_active |
 | Search/Filters | control | No | Keyword search by Set Name. Filters: Context Type (Inquiry / Aftercare / Multi-Context / All), Status (Draft / Active / Archived / All), Category (from global category list / All) | Valid enums; filters applied with AND logic | no graph field (control) |
-| Actions | action | — | View/Edit, Duplicate, Archive, Delete, **Set as Active for Inquiry** (shown only for published Inquiry / Multi-Context sets) | Delete blocked if set is in use; "Set as Active for Inquiry" blocked if set is Draft or Archived | no graph field (control) |
+| Actions | action | — | View/Edit, Duplicate, Archive, Delete, **Set as Active for Inquiry** (shown only for published Inquiry / Multi-Context sets) | Delete is offered only for a set never published and without usages; Archive is blocked for a set assigned to a milestone, with the milestones listed; "Set as Active for Inquiry" is refused with a message only if the set changed after the screen loaded | no graph field (control) |
 
 **Notes**:
 
@@ -270,15 +288,15 @@ flowchart TD
 **Business Rules**:
 
 - Sets currently assigned to the inquiry flow or at least one milestone template display their usage locations in the "Used In" column (REQ-025-047)
-- A set in use (designated for Inquiry or assigned to a milestone) cannot be deleted; it can only be Archived (REQ-025-045)
-- Archiving a set that is currently designated as the active Inquiry questionnaire removes the designation and flags the inquiry flow as unconfigured; system notifies admin (REQ-025-048)
+- A set designated for Inquiry cannot be deleted, only archived; a set assigned to a milestone can be neither deleted nor archived until the Admin points those milestones to another set, and the Admin sees the milestones using it. Archived is terminal for the set; the way back is Restore as New Draft from Screen 7, then publish (REQ-025-045)
+- Archiving a set that is currently designated as the active Inquiry questionnaire removes the designation and flags the inquiry flow as unconfigured; system notifies admin. This applies only to the Archive action on the set, not to the archiving of the previous Active version when a new version is published (REQ-025-048)
 - **Publishing does not activate a set for the inquiry flow.** The admin must explicitly click "Set as Active for Inquiry" on a published Inquiry or Multi-Context set to designate it. This is a separate, deliberate action (REQ-025-049)
 - At most one set may be designated as the active Inquiry questionnaire at a time. Clicking "Set as Active for Inquiry" on a second set shows a confirmation dialog and, upon confirmation, transfers the designation from the previous set to the new one (REQ-025-050)
-- The "Set as Active for Inquiry" action is only available on sets with Status = Active (published) and Context Type = Inquiry or Multi-Context. It is hidden for Draft, Archived, and Aftercare-only sets (REQ-025-051)
+- The "Set as Active for Inquiry" action is only available on sets with Status = Active (published) and Context Type = Inquiry or Multi-Context. It is hidden for Draft, Archived, and Aftercare-only sets; the block message appears only when the set changed after the screen loaded (REQ-025-051)
 - If no set is currently designated for the inquiry flow, the catalog displays a warning banner: "No active Inquiry questionnaire set — patient inquiry submissions will be blocked until one is designated" (REQ-025-052)
-- Deleting a Draft set with no usages permanently removes it (REQ-025-046)
-- Duplicating a set creates a Draft copy with all questions; the copy's Context Type is editable before first publish; the copy does not inherit the Inquiry designation (REQ-025-008)
-- The Inquiry designation can only be replaced (by designating another set) or ended by archiving the set; there is no control to remove the designation on its own (REQ-025-048)
+- Delete is available only for a set that was never published and has no usages; it permanently removes the set. A set that has ever been published can only be archived (REQ-025-046)
+- Duplicating a set creates a Draft copy with all questions, named `<source name> (copy)`; the Admin must make the name unique before the first save; the copy's Context Type is editable before first publish; the copy does not inherit the Inquiry designation (REQ-025-008)
+- The Inquiry designation can only be replaced (by designating another set) or ended by archiving the set; there is no control to remove the designation on its own. The designation belongs to the set and carries over to a newly published version (REQ-025-048, REQ-025-031)
 - Field limits on this screen: Set Name is at most 100 characters and unique (REQ-025-078)
 
 ---
@@ -292,7 +310,7 @@ flowchart TD
 | Field Name | Type | Required | Description | Validation Rules | Graph field |
 | --- | --- | --- | --- | --- | --- |
 | Set Name | text | Yes | Name of the questionnaire set | Max 100 chars; unique | ENT-questionnaire-set.name |
-| Context Type | select | Yes | Inquiry / Aftercare / Multi-Context | Locked when Status = Active; changing creates a new Draft version | ENT-questionnaire-set.context_type |
+| Context Type | select | Yes | Inquiry / Aftercare / Multi-Context | Read-only on the Active version; editable only in an open Draft | ENT-questionnaire-set.context_type |
 | Description | text | No | Optional free-text description | Max 500 chars | ENT-questionnaire-set.description |
 | Category | select | Yes | Category assignment from global category list (Screen 4) | Must exist and be Active | ENT-questionnaire-set.category_id |
 | Tags | chips | No | Free-form labels for search and filtering (e.g., "pain", "sleep", "compliance") | Optional | ENT-questionnaire-set.tags |
@@ -308,25 +326,27 @@ flowchart TD
 | Question Text | text | Yes | Truncated question preview; click to open Screen 3 | — | ENT-questionnaire-question.question_text |
 | Question Type | label | Yes | System-defined type (e.g., Yes/No, Visual Scale 1–10) | Read-only after first save | ENT-questionnaire-question.question_type |
 | Severity | badge | Conditional | Critical / Standard / No Alert | Required for Inquiry/Multi-Context sets; hidden for Aftercare-only sets | ENT-questionnaire-question.severity_flag |
-| Status | badge | Yes | Active / Inactive | Default Active | ENT-questionnaire-question.status |
+| Status | badge | Yes | Active / Inactive; a soft-deleted question carries status Deleted and is not listed | Default Active | ENT-questionnaire-question.status |
 | Actions | action | — | Edit (opens Screen 3), Delete | Delete is soft; historical responses preserved | no graph field (control) |
 
 **Notes**:
 
 - "Add Question" button opens Screen 3 (Question Editor) for a new question
 - "Preview" button opens Screen 6 (Questionnaire Preview) scoped to this set
-- "Publish / Activate" button validates completeness and publishes the current draft as a new version
+- "Publish" button validates completeness; when validation passes, the system shows the new version number and changes summary and the Admin confirms (REQ-025-034); it then publishes the current Draft as a new version. Publishing does not designate the set for Inquiry (REQ-025-049)
 - "View Version History" link opens Screen 7 scoped to this set
 - Breadcrumb navigation: Questionnaire Catalog → [Set Name]
 
 **Business Rules**:
 
 - Drag-and-drop reordering updates display order immediately and is saved as a Draft change (REQ-025-009)
-- Context Type cannot be changed while Status = Active; editing it creates a new Draft version automatically (REQ-025-033)
+- Context Type is read-only on the Active version and editable only in an open Draft; publishing a Draft whose Context Type no longer fits a current use (Inquiry designation or milestone assignment) is blocked with the list of those uses (REQ-025-033)
+- Every change to an Active set (add, edit, delete or reorder a question, metadata, Context Type) goes to the set's single open Draft and the Active version serves until publish; a set has at most one open Draft (REQ-025-032)
+- A save made from a screen whose Draft was changed by another Admin since it was loaded is refused with a message to reload (REQ-025-073)
 - See REQ-025-025.
-- All questions in Inquiry/Multi-Context sets must have a Severity flag before publishing (REQ-025-013)
+- All Active questions in Inquiry/Multi-Context sets must have a Severity flag before publishing (REQ-025-013)
 - See REQ-025-014.
-- Publishing increments the version number and archives the previous Active version (REQ-025-031)
+- Publishing increments the version number and archives the previous Active version; a designation of the set for Inquiry stays on the set and carries over to the new version (REQ-025-031)
 - See REQ-025-019.
 - Field limits on this screen: Set Name is at most 100 characters and unique; Description is at most 500 characters; a question's display number is a whole number of at least 1 and unique within the set (REQ-025-079)
 
@@ -350,17 +370,17 @@ flowchart TD
 | Placeholder Text | text | Conditional | Input placeholder shown inside the text field | Optional for Free Text type | ENT-questionnaire-question.placeholder_text |
 | Max Characters | number | Conditional | Character limit for the text answer | Optional for Free Text type; integer > 0 | ENT-questionnaire-question.max_characters |
 | Severity Flag | select | Conditional | Critical / Standard / No Alert | Required for questions in Inquiry or Multi-Context sets; hidden for Aftercare-only sets | ENT-questionnaire-question.severity_flag |
-| Alert Description | text | Conditional | Auto-populated description based on severity; editable | Auto-filled; required if Severity Flag is set | ENT-questionnaire-question.alert_description |
+| Alert Description | text | No | Admin-only note about why the question carries its severity; shown in this editor and in Preview, never to providers (providers see the question text) | Optional; may be pre-filled from the severity and edited | ENT-questionnaire-question.alert_description |
 | Patient App — Display Label | text | No | Overrides Question Text as the label shown in patient app | Max 200 chars; defaults to Question Text if empty | ENT-questionnaire-question.patient_display_label |
 | Patient App — Show Question Number | checkbox | No | Whether to prefix the question with its display number | Default: Yes | ENT-questionnaire-question.patient_show_number |
-| Patient App — Visible to Patient | checkbox | No | Whether the question is shown to the patient | Default: Yes | ENT-questionnaire-question.patient_visible |
+| Patient App — Visible to Patient | checkbox | No | Whether the question is shown to the patient | Default: Yes; not offered for questions in Inquiry or Multi-Context sets, where every question is shown | ENT-questionnaire-question.patient_visible |
 | Provider App — Display Label | text | No | Label shown in provider summary view | Max 200 chars; defaults to Question Text if empty | ENT-questionnaire-question.provider_display_label |
 | Provider App — Highlight Response | checkbox | No | Whether to visually highlight this question's answer in the provider view | Default: No | ENT-questionnaire-question.provider_highlight_response |
 | Question ID | text | read-only | Auto-generated unique identifier | System-assigned | ENT-questionnaire-question.id |
 | Created Date | datetime | read-only | Timestamp of question creation | ISO 8601 | ENT-questionnaire-question.created_date |
 | Last Modified | datetime | read-only | Timestamp of last edit | ISO 8601 | ENT-questionnaire-question.last_modified |
 | Modified By | text | read-only | Admin who last edited this question | From admin session | ENT-questionnaire-question.modified_by |
-| Status | toggle | Yes | Active / Inactive | Default Active | ENT-questionnaire-question.status |
+| Status | toggle | Yes | Active / Inactive; a soft-deleted question carries status Deleted and is not listed | Default Active | ENT-questionnaire-question.status |
 
 **Notes**:
 
@@ -376,7 +396,9 @@ flowchart TD
 - An incomplete question (required fields missing) blocks publishing of the parent set; the system lists the incomplete questions and the set cannot be published until they are complete (REQ-025-024)
 - Field limits on this screen: Help Text is at most 300 characters; Patient App Display Label and Provider App Display Label are each at most 200 characters; Max Characters is a whole number greater than 0 (REQ-025-080)
 - Changes to a question in an Active (published) set are saved as a Draft change on the parent set; the Active version continues to serve downstream consumers until the set is re-published (REQ-025-032)
-- Deleting a question performs a soft delete; historical patient responses referencing this question are preserved and remain accessible (REQ-025-044)
+- Deleting a question performs a soft delete (status Deleted); historical patient responses referencing this question are preserved and remain accessible (REQ-025-044)
+- An Inactive or deleted question is not delivered to patients, is excluded from the severity checks and from the overall tier; the Visible to Patient control is not offered in Inquiry or Multi-Context sets (REQ-025-084)
+- A save made from a screen whose Draft was changed by another Admin since it was loaded is refused with a message to reload (REQ-025-073)
 
 ---
 
@@ -392,7 +414,7 @@ flowchart TD
 | Description | text | No | Purpose or scope of this category | Max 300 chars | ENT-questionnaire-category.description |
 | Total Sets | derived | No | Count of questionnaire sets assigned to this category | Auto-calculated | ENT-questionnaire-category.total_sets |
 | Status | enum | Yes | Active / Inactive | Default Active | ENT-questionnaire-category.status |
-| Actions | action | — | Edit, Deactivate, Delete | Delete blocked if sets are assigned to this category | no graph field (control) |
+| Actions | action | — | Edit, Deactivate, Delete | Delete is blocked while sets are assigned to this category; reassign them first | no graph field (control) |
 
 **Notes**:
 
@@ -403,9 +425,10 @@ flowchart TD
 
 - Category names must be unique (REQ-025-027)
 - See REQ-025-026.
-- Deleting a category with assigned sets is blocked; admin must first reassign those sets or deactivate the category (REQ-025-028)
+- Deleting a category with assigned sets is blocked; admin must first reassign those sets. Deactivating a category retires it from use but does not make it deletable until its sets are reassigned (REQ-025-028)
 - Deactivating a category hides it from the category picker in Screen 2 but does not remove existing assignments; affected sets are flagged as "Uncategorised" until reassigned (REQ-025-029)
 - Field limits on this screen: Category Name is at most 100 characters and unique; Description is at most 300 characters (REQ-025-081)
+- Category changes (create, edit, deactivate, delete) are recorded in the platform Admin audit log (FR-031, REQ-031-008), not in a set's audit trail
 
 ---
 
@@ -447,13 +470,14 @@ flowchart TD
 | Test Mode | toggle | No | Enable sample response filling to simulate a completed submission | Off by default | no graph field (control) |
 | Questionnaire Render | display | read-only | Full rendered questionnaire with question types, help text, and display label overrides applied in configured display order | Reflects current Draft state, not last published version | ENT-questionnaire-question.question_text, ENT-questionnaire-question.question_type, ENT-questionnaire-question.help_text, ENT-questionnaire-question.patient_display_label |
 | Sample Response Inputs | dynamic | Conditional | Input controls matching each question type; only active when Test Mode is on | Enabled only in Test Mode | no graph field (control) |
-| Provider Summary Render | display | Conditional | Response summary as it would appear in the provider platform, including alert color-coding and highlighted responses | Only visible in Provider Summary tab with Test Mode on | ENT-questionnaire-question.provider_display_label, ENT-questionnaire-question.provider_highlight_response, ENT-questionnaire-question.severity_flag |
+| Provider Summary Render | display | Conditional | Response summary as it would appear in the provider platform, with each answer coloured by its own question's severity flag, highlighted responses, and no overall tier | Only visible in Provider Summary tab with Test Mode on | ENT-questionnaire-question.provider_display_label, ENT-questionnaire-question.provider_highlight_response, ENT-questionnaire-question.severity_flag |
 | Print Preview | action | No | Generate a printable version of the questionnaire | — | no graph field (control) |
 
 **Notes**:
 
 - Patient App (Mobile) tab renders questions in mobile-optimised layout with type-appropriate controls (scale sliders, checkbox groups, text inputs, etc.)
-- Provider Summary tab shows the response format providers see, including any conditional color-coding derived from severity flags (Inquiry sets) or highlighted responses
+- Provider Summary tab shows the response format providers see: each answer is coloured by its own question's severity flag (Inquiry sets) and highlighted where configured; the preview shows no overall tier, which the engine computes only on a real inquiry (REQ-025-017)
+- Preview shows each question's Alert Description as an Admin-only note
 
 **Business Rules**:
 
@@ -477,7 +501,8 @@ flowchart TD
 | Question Count | number | read-only | Number of questions at the time of this version | Auto-captured on publish | ENT-questionnaire-version.question_count |
 | Changes Summary | text | read-only | System-generated description of what changed from the prior version | Auto-generated | ENT-questionnaire-version.changes_summary |
 | Status | enum | read-only | Active / Archived | System-managed | ENT-questionnaire-version.status |
-| Actions | action | — | View Snapshot (read-only view of that version), Restore as New Draft | — | no graph field (control) |
+| Was Designated for Inquiry | boolean | read-only | Whether this version is or was the designated Inquiry version; set at designation and at publish of a designated set (REQ-025-057) | System-managed | ENT-questionnaire-version.was_inquiry_designated |
+| Actions | action | — | View Snapshot (read-only view of that version), Restore as New Draft | Restore is refused while the set has an open Draft | no graph field (control) |
 
 **Audit Trail Fields** (one row per admin action on this set):
 
@@ -485,19 +510,22 @@ flowchart TD
 | --- | --- | --- | --- | --- | --- |
 | Change Date | datetime | read-only | When the action was performed | ISO 8601 | ENT-questionnaire-audit-entry.change_date |
 | Admin Name | text | read-only | Who performed the action | From admin session | ENT-questionnaire-audit-entry.admin_name |
-| Action Type | enum | read-only | Create Set / Edit Metadata / Add Question / Edit Question / Delete Question / Publish / Archive / Restore / **Set as Active for Inquiry** | System-defined | ENT-questionnaire-audit-entry.action_type |
+| Action Type | enum | read-only | Create Set / Edit Metadata / Add Question / Edit Question / Delete Question / Publish / Archive / Restore / **Set as Active for Inquiry** / Duplicate Set / Delete Set / Reorder Questions / Remove Inquiry Designation / Inquiry Flow Unconfigured | System-defined | ENT-questionnaire-audit-entry.action_type |
 | Question ID | text | read-only | Affected question identifier (if action is question-level) | Populated only for question-level actions | ENT-questionnaire-audit-entry.question_id |
 | Change Details | text | read-only | Before and after values for all modified fields | System-generated | ENT-questionnaire-audit-entry.change_details |
 | IP Address | text | read-only | IP address of the admin session for security tracking | System-captured | ENT-questionnaire-audit-entry.ip_address |
+| Session ID | text | read-only | Identifier of the admin session that performed the action | System-captured | ENT-questionnaire-audit-entry.session_id |
 
 **Notes**:
 
-- "Restore as New Draft" creates a new Draft version of the set with the questions from the selected historical version (REQ-025-038)
+- "Restore as New Draft" creates the set's single open Draft with the questions from the selected historical version, and is refused while an open Draft exists (REQ-025-038)
+- This screen holds Admin actions only; the patient's answers, the severity tier and the version used belong to the inquiry record (FR-003) and the intake audit entry (FR-002), not to this trail (REQ-025-059)
+- Milestone assignment and replacement are audited by FR-011, not here
 
 **Business Rules**:
 
 - Version history and audit trail are maintained indefinitely and are tamper-proof (REQ-025-040)
-- All admin actions on the set — including metadata edits, question changes, and publish/archive events — are captured in the audit trail (REQ-025-041)
+- All admin actions on the set — including metadata edits, question changes, duplicate, delete, reorder, designation changes, and publish/archive events — are captured in the audit trail, each with a timestamp and the identity of the admin (REQ-025-041)
 - "View Snapshot" opens a read-only view of the questionnaire set at that version; no editing is possible from the snapshot view (REQ-025-039)
 
 ## Business Rules
@@ -508,7 +536,13 @@ flowchart TD
    - Each questionnaire set is a named, versioned package of questions with a single Context Type (REQ-025-005)
    - A questionnaire set must contain at least one Active question before it can be published (REQ-025-006)
    - Questions within a set are ordered; order determines display sequence to patients (REQ-025-007)
-   - A set may be duplicated to create a new Draft copy; the copy is independent of the source (REQ-025-008)
+   - A set may be duplicated to create a new Draft copy named `<source name> (copy)`; the Admin makes the name unique before the first save; the copy is independent of the source (REQ-025-008)
+   - Delete is allowed only for a set that was never published and has no usages; a set that has been published can only be archived (REQ-025-046)
+   - A set designated for Inquiry can only be archived; a set assigned to a milestone can be neither deleted nor archived until those milestones are reassigned; Archived is terminal, and the way back is Restore as New Draft then publish (REQ-025-045)
+   - Archiving a designated set removes the designation and flags the Inquiry flow unconfigured; the archiving of the previous Active version on publish is a version-level event and keeps the designation on the set (REQ-025-048)
+   - Context Type is read-only on the Active version and editable only in an open Draft; publish is blocked with the list of uses if the type no longer fits (REQ-025-033)
+   - Every change to an Active set goes to the set's single open Draft; a set has at most one open Draft (REQ-025-032)
+   - Inactive and soft-deleted questions are not delivered to patients and are excluded from completeness checks, severity checks and the tier; Visible to Patient is not offered in Inquiry or Multi-Context sets (REQ-025-084)
 
 2. **Question Type Rules**
    - Question types are system-defined (fixed in source code); admin selects from the available type list but cannot create, rename, or remove types (REQ-025-010)
@@ -528,8 +562,8 @@ flowchart TD
    - Standard questions: Moderate concerns (allergies, medications, chronic conditions) (REQ-025-018)
    - No Alert questions: General health status, lifestyle factors (REQ-025-018)
    - Severity flags drive the automatic provider alert system for the inquiry flow only (REQ-025-017)
-   - Alert tier for each submitted Inquiry questionnaire: Red if any Critical question is answered Yes; otherwise Amber if any Standard question is answered Yes; otherwise Green (all answered No). The provider sees the tier on the inquiry record (REQ-025-064)
-   - Severity Flag and Alert Description are shown only on questions in Inquiry or Multi-Context sets; response colour-coding in the provider view follows the flag automatically with no extra configuration (REQ-025-017)
+   - Alert tier for each submitted Inquiry questionnaire: Red if any Critical question is answered Yes; otherwise Amber if any Standard question is answered Yes; otherwise Green (no Yes answer on a Critical or Standard question). The tier is computed by the FR-002 engine (REQ-002-002); FR-025 owns only the mapping from Severity Flag to tier (REQ-025-064)
+   - Severity Flag and Alert Description are shown only on questions in Inquiry or Multi-Context sets; Alert Description is optional and an Admin-only note shown in the editor and Preview, and providers see the question text; response colour-coding in the provider view follows each answer's own flag automatically with no extra configuration (REQ-025-017)
    - Aftercare-only questionnaire sets do not have severity flags and do not generate inquiry-style alerts (REQ-025-016)
 
 5. **Category Rules**
@@ -545,13 +579,14 @@ flowchart TD
    - Changes require admin authentication and authorization (REQ-025-035)
    - Strict admin-only access to questionnaire management
    - Previous versions must be archived, not deleted (REQ-025-037)
-   - Version activation requires explicit admin confirmation (REQ-025-034)
-   - Any earlier version must be restorable as a new Draft, which is then published; there is no one-step rollback, and the Active version is unaffected until the restored Draft is published (REQ-025-038)
+   - Version activation requires explicit admin confirmation, shown after validation with the new version number and changes summary (REQ-025-034)
+   - Any earlier version must be restorable as a new Draft, which is then published; there is no one-step rollback, and the Active version is unaffected until the restored Draft is published; Restore is refused while the set has an open Draft (REQ-025-038)
 
 2. **Audit Requirements**
    - All changes must be logged with timestamp and admin identification (REQ-025-041)
-   - Audit trail must include before/after values for all modifications (REQ-025-042)
-   - Security information (IP address, session) must be tracked (REQ-025-043)
+   - Audit trail must include before/after values for all modifications (REQ-025-042); the action types are listed on Screen 7
+   - Security information (IP address, session ID) must be tracked (REQ-025-043)
+   - Category changes are recorded in the platform Admin audit log (FR-031, REQ-031-008); milestone assignment and replacement are audited by FR-011
    - Audit logs must be retained for compliance requirements (REQ-025-040)
    - Audit trail must be tamper-proof and immutable (REQ-025-040)
    - Comprehensive change tracking and compliance reporting
@@ -559,21 +594,21 @@ flowchart TD
 ### Integration Rules
 
 1. **Patient Platform Integration**
-   - The admin-designated active Inquiry questionnaire set must be delivered dynamically to the patient inquiry process (REQ-025-053); publishing does not activate a set (REQ-025-049)
+   - A patient starting the inquiry questionnaire gets the current designated version; a resumed draft keeps its version; the version used is recorded at submit (REQ-025-053); publishing does not activate a set (REQ-025-049)
    - When the admin replaces the active Inquiry set, all new patient inquiry submissions use the new set immediately (REQ-025-050)
-   - If no set is designated as the active Inquiry questionnaire, the system must block patient inquiry submissions and display a system-level warning to admins (REQ-025-052). With no active Inquiry questionnaire, provider-advice mode in FR-037 cannot be chosen either, and the same admin warning applies; self-monitoring still works (REQ-037-086)
+   - If no set is designated as the active Inquiry questionnaire, the system must block all patient inquiry submissions, including resumed drafts; the draft is kept and the patient sees the submission-unavailable message (REQ-002-053); admins see a system-level warning (REQ-025-052). With no active Inquiry questionnaire, provider-advice mode in FR-037 cannot be chosen either, and the same admin warning applies; self-monitoring still works (REQ-037-086)
    - Version consistency must be maintained across all platforms (REQ-025-056)
    - Questionnaire changes must propagate immediately to patient platform (REQ-025-056)
    - Questionnaire updates must deploy across all platform instances (REQ-025-056)
-   - When the patient platform holds an older questionnaire version than the current Active version, the system pushes the current Active version; a patient already in progress is not made to start over, the submission is accepted on the older version, and the version used is recorded against the inquiry (REQ-025-057)
+   - When the patient platform holds an older questionnaire version than the current Active version, the system pushes the current Active version for a new start; a patient with a resumed draft is not made to start over, and the submission is accepted on an older version that is or was designated for Inquiry; the version used is recorded against the inquiry (REQ-025-057)
    - Question formatting must be optimized for mobile devices (REQ-025-060)
    - Questionnaire loading must be optimized for mobile devices
    - Validation rules must be consistent between admin and patient platforms (REQ-025-061)
    - Error handling must provide clear user guidance (REQ-025-062)
 
 2. **Provider Platform Integration**
-   - Medical alerts must be generated automatically from questionnaire responses (REQ-025-063)
-   - Alert severity must match question severity flags (REQ-025-065)
+   - Medical alerts are generated automatically from questionnaire responses by the FR-002 engine (REQ-002-002); FR-025 supplies the Severity Flags (REQ-025-063)
+   - Alert severity must match question severity flags, as applied by the FR-002 engine (REQ-025-065)
    - Alert display must be consistent with color-coding standards (REQ-025-066)
    - Providers must be able to quickly scan alerts (red/amber/green) in-portal (REQ-025-066)
    - Alert history must be maintained for provider reference (REQ-025-067)
@@ -583,9 +618,9 @@ flowchart TD
 
 - Each aftercare milestone independently selects one questionnaire set from the catalog, filtered to Context Type = Aftercare or Multi-Context (REQ-025-069)
 - Different milestones within the same aftercare template may be assigned different questionnaire sets (e.g., Week 1 milestone → "Pain Assessment", Week 4 milestone → "Sleep Quality Check") (REQ-025-070)
-- Questionnaire sets with Context Type = Inquiry are not selectable in aftercare milestone assignments (REQ-025-071)
+- Questionnaire sets with Context Type = Inquiry are not selectable in aftercare milestone assignments; every Multi-Context set may be assigned, with no extra flag (REQ-025-071)
 - See REQ-025-019.
-- Changing a milestone's assigned questionnaire set does not affect previously submitted patient responses; those remain linked to the version used at time of submission (REQ-025-072)
+- Changing a milestone's assigned questionnaire set does not affect previously submitted patient responses; those remain linked to the version used at time of submission, and a draft response keeps the version it started on (REQ-025-072)
 - Only a published set (Status = Active) can be assigned to an aftercare milestone; a Draft set cannot be assigned. The system blocks the assignment and tells the admin that only published sets can be assigned (REQ-025-077)
 
 ### Data Integrity Rules
@@ -603,7 +638,7 @@ flowchart TD
    - See REQ-025-065.
    - Category assignment must be consistent across catalog views (REQ-025-030)
    - Question order must be maintained during updates (REQ-025-073)
-   - System must handle concurrent admin modifications gracefully (REQ-025-073)
+   - System must handle concurrent admin modifications gracefully: a save made from a stale screen is refused with a message to reload (REQ-025-073)
    - System must handle concurrent questionnaire versions gracefully
    - All changes must be atomic and consistent across platforms (REQ-025-083)
    - System must handle large numbers of questions efficiently
@@ -613,7 +648,8 @@ flowchart TD
 
 - **FR-003**: Inquiry Submission & Distribution (consumes active Inquiry-context questionnaire set)
 - **FR-011**: Aftercare & Recovery Management (milestones assign individual Aftercare-context questionnaire sets per milestone)
-- **FR-031**: Admin Access Control & Permissions (admin access control)
+- **FR-002**: Medical History & 3D Scanning (its alert engine computes the alert tier from the Severity Flags; owns the submission-unavailable message)
+- **FR-031**: Admin Access Control & Permissions (admin access control; platform Admin audit log)
 - **FR-037**: Monitor Your Hair Loss (owns the provider-advice gate on the active Inquiry-context questionnaire set, see REQ-037-005)
 
 ---
@@ -622,6 +658,7 @@ flowchart TD
 
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
+| 2026-11-24 | 2.6 | Logic review pass 1: Alert Engine ownership moved to FR-002 (FR-025 owns the Severity Flag to tier mapping); Context Type, archive, delete, restore and open Draft rules made consistent; resume and version recording rules for the inquiry questionnaire; audit action types and session id extended; admin screens placed in the configuration stage with workflow lines for category, history, archive and delete; publish confirmation, copy naming and Alert Description clarified. | Product Team |
 | 2026-11-22 | 2.5 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v2.4) and the change request `change-request-2026-08-20-fr037-monitoring-advice-questionnaire.md` are in `archived/prd-baseline-2026-11-08/` and in git history. | Product Team |
 
 ---

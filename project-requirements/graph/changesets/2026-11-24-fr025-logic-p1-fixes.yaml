@@ -1,0 +1,480 @@
+# Add ops come first (fields, enum values, nodes), then edges of new nodes, then removals paired with their replacements, then updates.
+reason: "FR-025 logic review pass 1: the alert tier belongs to the FR-002 engine and FR-025 owns only the Severity Flag mapping; preview colours each answer by its own flag; Green means no Yes on a Critical or Standard question; archiving the previous version on publish is version-level and the Inquiry designation carries over (new was_inquiry_designated field, owner default 94); a resumed draft keeps its version, all submissions are blocked when no set is designated, and the version is recorded at submit; Context Type read-only on the Active version; archived is terminal and a milestone-assigned set cannot be archived (owner default 95); delete only for a never-published set without usages; one open Draft per set and a stale save is refused; control hidden rather than blocked; every Multi-Context set may be assigned; audit actions and session id extended; inactive, deleted and hidden questions rule; publish confirmation, copy naming and Alert Description clarified; admin screens, rules and the unconfigured event moved to the Configuration stage with steps for categories, version history, archive and delete; flow wiring for edit question, restore and hand-offs."
+by: docs-manager
+operations:
+# ---- New fields and enum values --------------------------------------------
+- op: "add_field"
+  id: "ENT-questionnaire-version.was_inquiry_designated"
+  entity_id: "ENT-questionnaire-version"
+  name: "was_inquiry_designated"
+  data_type: "bool"
+  title: "Was designated for Inquiry"
+  owner_fr: "FR-025"
+  attrs:
+    description: "Whether this version is or was the designated Inquiry version; set at designation and at publish of a designated set. FR-002 accepts only such versions (REQ-002-037)."
+- op: "add_field"
+  id: "ENT-questionnaire-audit-entry.session_id"
+  entity_id: "ENT-questionnaire-audit-entry"
+  name: "session_id"
+  data_type: "text"
+  title: "Session ID"
+  owner_fr: "FR-025"
+  attrs:
+    description: "Identifier of the admin session that performed the action; system-captured."
+- {op: "add_enum_value", field_id: "ENT-questionnaire-question.status", value: "Deleted", label: "Deleted"}
+- {op: "add_enum_value", field_id: "ENT-questionnaire-audit-entry.action_type", value: "Duplicate Set", label: "Duplicate Set"}
+- {op: "add_enum_value", field_id: "ENT-questionnaire-audit-entry.action_type", value: "Delete Set", label: "Delete Set"}
+- {op: "add_enum_value", field_id: "ENT-questionnaire-audit-entry.action_type", value: "Reorder Questions", label: "Reorder Questions"}
+- {op: "add_enum_value", field_id: "ENT-questionnaire-audit-entry.action_type", value: "Remove Inquiry Designation", label: "Remove Inquiry Designation"}
+- {op: "add_enum_value", field_id: "ENT-questionnaire-audit-entry.action_type", value: "Inquiry Flow Unconfigured", label: "Inquiry Flow Unconfigured"}
+# ---- New rule and steps ----------------------------------------------------
+- op: "add_node"
+  id: "REQ-025-084"
+  type: "Rule"
+  owner_fr: "FR-025"
+  title: "Inactive, deleted and hidden questions"
+  attrs:
+    statement: "Inactive and soft-deleted questions are not delivered to patients and are excluded from completeness checks, severity checks and the tier; Visible to Patient is not offered in Inquiry or Multi-Context sets"
+    rationale: "Logic review: the question status, the Visible to Patient control and the severity and completeness rules were not reconciled."
+- op: "add_node"
+  id: "STP-025-056"
+  type: "Step"
+  owner_fr: "FR-025"
+  title: "Patient with a saved draft resumes and keeps the questionnaire version of that draft"
+  attrs:
+    prd_ref: "Workflow 3: Questionnaire Deployment"
+    description: "A resumed draft is not reloaded to a newer version; the version used is recorded at submit (REQ-025-057, REQ-025-058)."
+- op: "add_node"
+  id: "STP-025-057"
+  type: "Step"
+  owner_fr: "FR-025"
+  title: "Admin manages the questionnaire categories"
+  attrs:
+    prd_ref: "Screen 4: Category Management"
+    description: "Admin creates, edits, deactivates or deletes a category; deletion is blocked while sets are assigned (REQ-025-028); category changes go to the platform Admin audit log (FR-031)."
+- op: "add_node"
+  id: "STP-025-058"
+  type: "Step"
+  owner_fr: "FR-025"
+  title: "Admin views the version history of a set and restores an earlier version as a new Draft"
+  attrs:
+    prd_ref: "Screen 7: Version History & Audit Trail"
+    description: "Admin opens the version history, views a snapshot, or uses Restore as New Draft; Restore is refused while the set has an open Draft (REQ-025-038, REQ-025-039)."
+- op: "add_node"
+  id: "STP-025-059"
+  type: "Step"
+  owner_fr: "FR-025"
+  title: "Admin archives a set"
+  attrs:
+    prd_ref: "Screen 1: Questionnaire Catalog"
+    description: "Archive is blocked while a milestone uses the set; archiving the designated Inquiry set removes the designation (REQ-025-045, REQ-025-047, REQ-025-048)."
+- op: "add_node"
+  id: "STP-025-060"
+  type: "Step"
+  owner_fr: "FR-025"
+  title: "Admin deletes a set that was never published and has no usages"
+  attrs:
+    prd_ref: "Screen 1: Questionnaire Catalog"
+    description: "Delete is offered only for a never-published set without usages (REQ-025-046)."
+# ---- Edges of the new rule and steps ---------------------------------------
+- {op: "add_edge", from: "REQ-025-084", verb: "decided by", to: "SRC-PRD-025"}
+- {op: "add_edge", from: "REQ-025-084", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "add_edge", from: "REQ-025-084", verb: "applies to", to: "ENT-questionnaire-question.status"}
+- {op: "add_edge", from: "REQ-025-084", verb: "applies to", to: "ENT-questionnaire-question.patient_visible"}
+- {op: "add_edge", from: "STP-025-056", verb: "done by", to: "ACT-patient"}
+- {op: "add_edge", from: "STP-025-056", verb: "at", to: "STG-main-01-inquiry"}
+- {op: "add_edge", from: "STP-025-057", verb: "done by", to: "ACT-platform-admin"}
+- {op: "add_edge", from: "STP-025-057", verb: "at", to: "STG-admin-01-configuration"}
+- {op: "add_edge", from: "STP-025-057", verb: "on", to: "SCR-025-04"}
+- {op: "add_edge", from: "STP-025-058", verb: "done by", to: "ACT-platform-admin"}
+- {op: "add_edge", from: "STP-025-058", verb: "at", to: "STG-admin-01-configuration"}
+- {op: "add_edge", from: "STP-025-058", verb: "on", to: "SCR-025-07"}
+- {op: "add_edge", from: "STP-025-059", verb: "done by", to: "ACT-platform-admin"}
+- {op: "add_edge", from: "STP-025-059", verb: "at", to: "STG-admin-01-configuration"}
+- {op: "add_edge", from: "STP-025-059", verb: "on", to: "SCR-025-01"}
+- {op: "add_edge", from: "STP-025-060", verb: "done by", to: "ACT-platform-admin"}
+- {op: "add_edge", from: "STP-025-060", verb: "at", to: "STG-admin-01-configuration"}
+- {op: "add_edge", from: "STP-025-060", verb: "on", to: "SCR-025-01"}
+- {op: "add_edge", from: "STP-025-056", verb: "applies", to: "REQ-025-053"}
+- {op: "add_edge", from: "STP-025-056", verb: "applies", to: "REQ-025-057"}
+- {op: "add_edge", from: "STP-025-057", verb: "applies", to: "REQ-025-027"}
+- {op: "add_edge", from: "STP-025-057", verb: "applies", to: "REQ-025-028"}
+- {op: "add_edge", from: "STP-025-057", verb: "applies", to: "REQ-025-029"}
+- {op: "add_edge", from: "STP-025-057", verb: "applies", to: "REQ-025-030"}
+- {op: "add_edge", from: "STP-025-058", verb: "applies", to: "REQ-025-038"}
+- {op: "add_edge", from: "STP-025-058", verb: "applies", to: "REQ-025-039"}
+- {op: "add_edge", from: "STP-025-059", verb: "applies", to: "REQ-025-045"}
+- {op: "add_edge", from: "STP-025-059", verb: "applies", to: "REQ-025-047"}
+- {op: "add_edge", from: "STP-025-059", verb: "applies", to: "REQ-025-048"}
+- {op: "add_edge", from: "STP-025-060", verb: "applies", to: "REQ-025-046"}
+- {op: "add_edge", from: "STP-025-010", verb: "applies", to: "REQ-025-084"}
+- {op: "add_edge", from: "STP-025-013", verb: "applies", to: "REQ-025-084"}
+- {op: "add_edge", from: "STP-025-003", verb: "applies", to: "REQ-025-073"}
+- {op: "add_edge", from: "STP-025-030", verb: "applies", to: "REQ-025-052"}
+- {op: "add_edge", from: "REQ-025-057", verb: "applies to", to: "ENT-questionnaire-version.was_inquiry_designated"}
+- {op: "add_edge", from: "REQ-025-043", verb: "applies to", to: "ENT-questionnaire-audit-entry.session_id"}
+- {op: "add_edge", from: "SCR-025-07", verb: "shows", to: "ENT-questionnaire-audit-entry.session_id", attrs: {"provenance": "session"}}
+- {op: "add_edge", from: "SCR-025-07", verb: "shows", to: "ENT-questionnaire-version.was_inquiry_designated", attrs: {"provenance": "retrieved"}}
+- {op: "add_edge", from: "SCR-025-06", verb: "shows", to: "ENT-questionnaire-question.alert_description", attrs: {"provenance": "retrieved", "label": "Admin-only note"}}
+# ---- Flow wiring: admin ----------------------------------------------------
+- {op: "add_edge", from: "STP-025-001", verb: "next", to: "STP-025-057", attrs: {"label": "Manage categories"}}
+- {op: "add_edge", from: "STP-025-001", verb: "next", to: "STP-025-059", attrs: {"label": "Archive a set"}}
+- {op: "add_edge", from: "STP-025-001", verb: "next", to: "STP-025-060", attrs: {"label": "Delete a set"}}
+- {op: "add_edge", from: "STP-025-003", verb: "next", to: "STP-025-058", attrs: {"label": "View version history"}}
+- {op: "add_edge", from: "STP-025-003", verb: "next", to: "STP-025-020", attrs: {"label": "Edit a question"}}
+- {op: "add_edge", from: "STP-025-012", verb: "next", to: "STP-025-021", attrs: {"label": "Admin edits a question", "condition": "REQ-025-032"}}
+- {op: "add_edge", from: "STP-025-057", verb: "next", to: "STP-025-001", attrs: {"label": "Back to the catalog"}}
+- {op: "add_edge", from: "STP-025-058", verb: "next", to: "STP-025-003", attrs: {"label": "Restore as New Draft opens the Draft", "condition": "REQ-025-038"}}
+- {op: "add_edge", from: "STP-025-059", verb: "next", to: "STP-025-045", attrs: {"label": "Set is the designated Inquiry set", "condition": "REQ-025-048"}}
+- {op: "add_edge", from: "STP-025-059", verb: "next", to: "STP-025-001", attrs: {"label": "Set archived, or blocked while a milestone uses it", "condition": "REQ-025-045"}}
+- {op: "add_edge", from: "STP-025-060", verb: "next", to: "STP-025-001", attrs: {"label": "Back to the catalog"}}
+- {op: "add_edge", from: "STP-025-045", verb: "next", to: "STP-025-040", attrs: {"label": "Admin designates another set", "condition": "REQ-025-052"}}
+- {op: "remove_edge", from: "STP-025-043", verb: "next", to: "STP-025-045"}
+- {op: "add_edge", from: "STP-025-043", verb: "next", to: "STP-025-045", attrs: {"label": "Admin later archives the designated set", "condition": "REQ-025-048"}}
+- {op: "add_edge", from: "STP-025-049", verb: "next", to: "STP-011-043", attrs: {"label": "Admin edits the milestone template in FR-011"}}
+# ---- Flow wiring: patient delivery, submit and alert -----------------------
+- {op: "remove_edge", from: "STP-025-030", verb: "next", to: "STP-025-053"}
+- {op: "remove_edge", from: "STP-025-034", verb: "next", to: "STP-025-053"}
+- {op: "remove_edge", from: "STP-025-053", verb: "next", to: "STP-025-031"}
+- {op: "remove_edge", from: "STP-025-031", verb: "next", to: "STP-025-054"}
+- {op: "remove_edge", from: "STP-025-032", verb: "next", to: "STP-025-055"}
+- {op: "add_edge", from: "STP-025-030", verb: "next", to: "STP-025-031", attrs: {"label": "Version consistent"}}
+- {op: "add_edge", from: "STP-025-030", verb: "next", to: "STP-025-056", attrs: {"label": "Resumed saved draft", "condition": "REQ-025-057"}}
+- {op: "add_edge", from: "STP-025-056", verb: "next", to: "STP-025-031"}
+- {op: "add_edge", from: "STP-025-034", verb: "next", to: "STP-025-031"}
+- {op: "add_edge", from: "STP-025-031", verb: "next", to: "STP-025-053"}
+- {op: "add_edge", from: "STP-025-053", verb: "next", to: "STP-025-054"}
+- {op: "add_edge", from: "STP-025-054", verb: "next", to: "STP-025-055"}
+- {op: "remove_edge", from: "STP-025-032", verb: "applies", to: "REQ-025-063"}
+- {op: "remove_edge", from: "STP-025-032", verb: "applies", to: "REQ-025-065"}
+# ---- Stage wiring: admin screens, admin rules and the unconfigured event ---
+- {op: "remove_edge", from: "SCR-025-01", verb: "belongs to", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "SCR-025-01", verb: "belongs to", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "SCR-025-01", verb: "belongs to", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "SCR-025-02", verb: "belongs to", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "SCR-025-02", verb: "belongs to", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "SCR-025-02", verb: "belongs to", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "SCR-025-03", verb: "belongs to", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "SCR-025-03", verb: "belongs to", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "SCR-025-03", verb: "belongs to", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "SCR-025-04", verb: "belongs to", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "SCR-025-04", verb: "belongs to", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "SCR-025-04", verb: "belongs to", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "SCR-025-05", verb: "belongs to", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "SCR-025-05", verb: "belongs to", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "SCR-025-05", verb: "belongs to", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "SCR-025-06", verb: "belongs to", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "SCR-025-06", verb: "belongs to", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "SCR-025-06", verb: "belongs to", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "SCR-025-07", verb: "belongs to", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "SCR-025-07", verb: "belongs to", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "SCR-025-07", verb: "belongs to", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-001", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-001", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-001", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-002", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-002", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-002", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-003", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-003", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-003", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-004", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-004", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-004", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-005", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-005", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-005", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-006", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-006", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-006", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-007", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-007", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-007", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-008", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-008", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-008", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-009", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-009", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-009", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-010", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-010", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-010", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-011", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-011", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-011", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-012", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "add_edge", from: "REQ-025-012", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-013", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "add_edge", from: "REQ-025-013", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-014", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "add_edge", from: "REQ-025-014", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-015", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "add_edge", from: "REQ-025-015", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-016", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-016", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-017", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "add_edge", from: "REQ-025-017", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-018", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "add_edge", from: "REQ-025-018", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-019", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-019", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-020", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-020", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-020", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-021", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-021", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-021", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-022", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-022", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-022", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-024", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-024", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-024", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-025", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-025", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-025", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-026", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-026", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-026", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-027", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-027", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-027", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-028", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-028", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-028", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-029", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-029", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-029", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-030", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-030", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-030", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-031", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-031", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-031", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-032", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-032", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-032", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-033", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-033", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-033", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-034", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-034", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-034", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-035", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-035", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-035", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-036", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-036", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-036", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-037", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-037", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-037", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-038", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-038", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-038", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-039", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-039", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-039", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-040", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-040", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-040", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-041", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-041", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-041", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-042", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-042", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-042", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-043", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-043", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-043", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-044", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-044", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-044", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-045", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-045", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-045", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-046", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-046", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-046", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-047", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-047", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-047", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-048", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "add_edge", from: "REQ-025-048", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-049", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "add_edge", from: "REQ-025-049", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-050", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "add_edge", from: "REQ-025-050", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-051", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "add_edge", from: "REQ-025-051", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-073", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-073", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-073", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-074", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-074", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-074", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-075", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-075", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-075", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-076", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-076", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-076", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-078", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-078", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-078", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-079", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-079", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-079", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-080", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-080", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-080", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-081", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-081", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-081", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "REQ-025-082", verb: "applies at", to: "STG-main-01-inquiry"}
+- {op: "remove_edge", from: "REQ-025-082", verb: "applies at", to: "STG-aftercare-01-recovery-plan"}
+- {op: "add_edge", from: "REQ-025-082", verb: "applies at", to: "STG-admin-01-configuration"}
+- {op: "remove_edge", from: "STG-main-01-inquiry", verb: "emits", to: "EVT-inquiry-questionnaire-unconfigured"}
+- {op: "add_edge", from: "STG-admin-01-configuration", verb: "emits", to: "EVT-inquiry-questionnaire-unconfigured"}
+- {op: "remove_edge", from: "REQ-025-023", verb: "applies to", to: "ENT-questionnaire-question.status"}
+# ---- Field edge change: Alert Description is an optional Admin-only note ---
+- {op: "remove_edge", from: "SCR-025-03", verb: "shows", to: "ENT-questionnaire-question.alert_description"}
+- {op: "add_edge", from: "SCR-025-03", verb: "shows", to: "ENT-questionnaire-question.alert_description", attrs: {"provenance": "user input", "label": "Optional Admin-only note", "editable": true}}
+# ---- Rule statements -------------------------------------------------------
+- op: update_node
+  id: "REQ-025-008"
+  attrs:
+    statement: "Duplicating a set creates a Draft copy with all questions, named `<source name> (copy)`; the Admin makes the name unique before the first save; the copy's Context Type is editable before first publish; the copy does not inherit the Inquiry designation"
+- op: update_node
+  id: "REQ-025-013"
+  attrs:
+    statement: "All Active questions in Inquiry/Multi-Context sets must have a Severity flag before publishing"
+- op: update_node
+  id: "REQ-025-017"
+  attrs:
+    statement: "Severity flags drive the automatic provider alert system for the inquiry flow only. Severity Flag and Alert Description are shown only on questions in Inquiry or Multi-Context sets; Alert Description is optional and an Admin-only note shown in the editor and Preview, and providers see the question text; response colour-coding in the provider view follows each answer's own flag automatically with no extra configuration; Preview shows no overall tier"
+- op: update_node
+  id: "REQ-025-024"
+  attrs:
+    statement: "All Active questions must pass completeness validation before the parent set can be published"
+- op: update_node
+  id: "REQ-025-028"
+  attrs:
+    statement: "Deleting a category with assigned sets is blocked; admin must first reassign those sets. Deactivating a category retires it from use but does not make it deletable until its sets are reassigned"
+- op: update_node
+  id: "REQ-025-031"
+  attrs:
+    statement: "Publishing increments the version number and archives the previous Active version; a designation of the set for Inquiry stays on the set and carries over to the new version"
+- op: update_node
+  id: "REQ-025-032"
+  attrs:
+    statement: "Every change to an Active (published) set (add, edit, delete or reorder a question, metadata, Context Type) is saved to the set's single open Draft; the Active version continues to serve downstream consumers until the Draft is published; a set has at most one open Draft"
+- op: update_node
+  id: "REQ-025-033"
+  attrs:
+    statement: "Context Type is read-only on the Active version and editable only in an open Draft; publishing a Draft whose Context Type no longer fits a current use (Inquiry designation or milestone assignment) is blocked with the list of those uses"
+- op: update_node
+  id: "REQ-025-034"
+  attrs:
+    statement: "Version activation requires explicit admin confirmation, shown after validation with the new version number and changes summary"
+- op: update_node
+  id: "REQ-025-038"
+  attrs:
+    statement: "Any earlier version must be restorable as a new Draft, which is then published; there is no one-step rollback, and the Active version is unaffected until the restored Draft is published; Restore is refused while the set has an open Draft"
+- op: update_node
+  id: "REQ-025-041"
+  attrs:
+    statement: "All admin actions on the set — including metadata edits, question changes, duplicate, delete, reorder, designation changes, and publish/archive events — are captured in the audit trail, each with a timestamp and the identity of the admin"
+- op: update_node
+  id: "REQ-025-043"
+  attrs:
+    statement: "Security information (IP address, session ID) must be tracked"
+- op: update_node
+  id: "REQ-025-044"
+  attrs:
+    statement: "Deleting a question performs a soft delete (status Deleted); historical patient responses referencing this question are preserved and remain accessible"
+- op: update_node
+  id: "REQ-025-045"
+  attrs:
+    statement: "A set designated for Inquiry cannot be deleted, only archived; a set assigned to a milestone can be neither deleted nor archived until those milestones are reassigned; Archived is terminal, and the way back is Restore as New Draft then publish"
+- op: update_node
+  id: "REQ-025-046"
+  attrs:
+    statement: "Delete is allowed only for a set that was never published and has no usages; a set that has been published can only be archived"
+- op: update_node
+  id: "REQ-025-048"
+  attrs:
+    statement: "Archiving a set that is currently designated as the active Inquiry questionnaire removes the designation and flags the inquiry flow as unconfigured; system notifies admin. This applies only to the Archive action on the set, not to the archiving of the previous Active version when a new version is published. The Inquiry designation can only be replaced (by designating another set) or ended by archiving the set; there is no control to remove the designation on its own. The designation belongs to the set and carries over to a newly published version"
+- op: update_node
+  id: "REQ-025-051"
+  attrs:
+    statement: "The \"Set as Active for Inquiry\" action is only available on sets with Status = Active (published) and Context Type = Inquiry or Multi-Context. It is hidden for Draft, Archived, and Aftercare-only sets; the block message appears only when the set changed after the screen loaded"
+- op: update_node
+  id: "REQ-025-052"
+  attrs:
+    statement: "If no set is designated as the active Inquiry questionnaire, the system must block all patient inquiry submissions, including resumed drafts; the draft is kept and the patient sees the submission-unavailable message (REQ-002-053); admins see a system-level warning"
+- op: update_node
+  id: "REQ-025-053"
+  attrs:
+    statement: "A patient starting the inquiry questionnaire gets the current designated version; a resumed draft keeps its version; the version used is recorded at submit; publishing a set does not make it the active Inquiry set — the admin must explicitly toggle \"Set as Active for Inquiry\""
+- op: update_node
+  id: "REQ-025-057"
+  attrs:
+    statement: "When the patient platform holds an older questionnaire version than the current Active version, the system pushes the current Active version for a new start; a patient with a resumed draft is not made to start over, and the submission is accepted on an older version that is or was designated for Inquiry; the version used is recorded against the inquiry"
+- op: update_node
+  id: "REQ-025-058"
+  attrs:
+    statement: "System records the questionnaire set version number on the inquiry record itself at submit, in addition to the template version stamp kept by FR-002."
+- op: update_node
+  id: "REQ-025-059"
+  attrs:
+    statement: "The patient's answers and the alert tier are recorded on the inquiry record (FR-003) and the questionnaire version in the FR-002 intake audit entry (template_version_used); this set's audit trail holds Admin actions only."
+- op: update_node
+  id: "REQ-025-063"
+  attrs:
+    statement: "Medical alerts are generated automatically from questionnaire responses by the FR-002 engine (REQ-002-002); FR-025 supplies the Severity Flags"
+- op: update_node
+  id: "REQ-025-064"
+  attrs:
+    statement: "Alert tier for each submitted Inquiry questionnaire: Red if any Critical question is answered Yes; otherwise Amber if any Standard question is answered Yes; otherwise Green (no Yes answer on a Critical or Standard question). The tier is computed by the FR-002 engine (REQ-002-002); FR-025 owns only the mapping from Severity Flag to tier"
+- op: update_node
+  id: "REQ-025-065"
+  attrs:
+    statement: "Alert severity must match question severity flags, as applied by the FR-002 engine"
+- op: update_node
+  id: "REQ-025-071"
+  attrs:
+    statement: "Questionnaire sets with Context Type = Inquiry are not selectable in aftercare milestone assignments; every Multi-Context set may be assigned, with no extra flag"
+- op: update_node
+  id: "REQ-025-072"
+  attrs:
+    statement: "Changing a milestone's assigned questionnaire set does not affect previously submitted patient responses; those remain linked to the version used at time of submission, and a draft response keeps the version it started on"
+- op: update_node
+  id: "REQ-025-073"
+  attrs:
+    statement: "System must handle concurrent admin modifications gracefully: a save made from a stale screen is refused with a message to reload; question order must be maintained during updates"
+# ---- Step wording ----------------------------------------------------------
+- op: update_node
+  id: "STP-025-010"
+  title: "Admin clicks Publish on the set; after validation the new version number and changes summary are confirmed"
+- op: update_node
+  id: "STP-025-012"
+  title: "Admin opens a published set; the system opens its single open Draft and the Active version stays unchanged"
+- op: update_node
+  id: "STP-025-021"
+  title: "Admin edits a question in the open Draft; the Active version keeps serving inquiries"
+- op: update_node
+  id: "STP-025-030"
+  title: "Patient reaches the medical questionnaire step and the designated Inquiry questionnaire is delivered, or submission is blocked when none is designated"
+- op: update_node
+  id: "STP-025-034"
+  title: "Patient app loads the current questionnaire version for a new start; a resumed draft is not made to start over"
+- op: update_node
+  id: "STP-025-053"
+  title: "System records the questionnaire set version number on the inquiry record at submit"
+- op: update_node
+  id: "STP-025-054"
+  title: "The FR-002 alert engine returns the Red, Amber or Green tier from the answers and the severity flags (REQ-002-002); FR-025 owns only the mapping"
+- op: update_node
+  id: "STP-025-055"
+  title: "System records the answers and the tier on the inquiry record (FR-003) and the version in the FR-002 intake audit entry"

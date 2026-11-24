@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T08:05:03Z",
+  "generated_at": "2026-11-24T08:10:58Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -23257,7 +23257,7 @@
       "owner_fr": "FR-025",
       "title": "Action Type",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "description": "System-defined action type."
       }
@@ -23315,6 +23315,17 @@
       "version": 1,
       "attrs": {
         "description": "Affected question identifier; populated only for question-level actions."
+      }
+    },
+    {
+      "id": "ENT-questionnaire-audit-entry.session_id",
+      "type": "Field",
+      "owner_fr": "FR-025",
+      "title": "Session ID",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Identifier of the admin session that performed the action; system-captured."
       }
     },
     {
@@ -23686,7 +23697,7 @@
       "owner_fr": "FR-025",
       "title": "Status",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Active / Inactive. Default Active."
       }
@@ -23920,6 +23931,17 @@
       "version": 1,
       "attrs": {
         "description": "Auto-incremented version identifier; integer, assigned on each publish."
+      }
+    },
+    {
+      "id": "ENT-questionnaire-version.was_inquiry_designated",
+      "type": "Field",
+      "owner_fr": "FR-025",
+      "title": "Was designated for Inquiry",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Whether this version is or was the designated Inquiry version; set at designation and at publish of a designated set. FR-002 accepts only such versions (REQ-002-037)."
       }
     },
     {
@@ -77737,7 +77759,7 @@
       "owner_fr": "FR-025",
       "title": "Context types are fixed in code",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "Context types are system-defined (fixed in source code). Admins cannot create, rename or delete context types; they assign one to each questionnaire set they create. Changes to context type definitions require a code deployment.",
         "rationale": "Screen 5 rule (line 419): Admins cannot create, rename, or delete context types; changes to context type definitions require a code deployment"
@@ -77749,7 +77771,7 @@
       "owner_fr": "FR-025",
       "title": "Context Type Reference screen is read-only",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "This screen is entirely read-only; no fields are editable",
         "rationale": "prd.md line 427 (found by matching the rule statement to the PRD text)."
@@ -77761,7 +77783,7 @@
       "owner_fr": "FR-025",
       "title": "Set carries a required Context Type and optional tags",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Each questionnaire set carries a required Context Type and optional tags (e.g., \"pain\", \"sleep\", \"compliance\"). Downstream modules filter the catalog by compatible Context Type when presenting assignment options.",
         "rationale": "prd.md line 45 (found by matching the rule statement to the PRD text)."
@@ -77773,7 +77795,7 @@
       "owner_fr": "FR-025",
       "title": "Question context is inherited from its set",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "System checks the parent set's Context Type (inherited — not chosen per question).",
         "rationale": "Workflow 1 flow diagram, question configuration step."
@@ -77785,7 +77807,7 @@
       "owner_fr": "FR-025",
       "title": "Set is a named, versioned package with one Context Type",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Each questionnaire set is a named, versioned package of questions with a single Context Type",
         "rationale": "prd.md line 502 (found by matching the rule statement to the PRD text)."
@@ -77797,7 +77819,7 @@
       "owner_fr": "FR-025",
       "title": "Publish needs at least one Active question",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "A questionnaire set must contain at least one Active question before it can be published",
         "rationale": "prd.md line 503 (found by matching the rule statement to the PRD text)."
@@ -77809,7 +77831,7 @@
       "owner_fr": "FR-025",
       "title": "Questions are ordered; order sets display sequence",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Questions within a set are ordered; order determines display sequence to patients",
         "rationale": "Also: Question order must be maintained during updates"
@@ -77821,9 +77843,9 @@
       "owner_fr": "FR-025",
       "title": "Duplicate set creates an independent Draft copy",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Duplicating a set creates a Draft copy with all questions; the copy's Context Type is editable before first publish; the copy does not inherit the Inquiry designation",
+        "statement": "Duplicating a set creates a Draft copy with all questions, named `<source name> (copy)`; the Admin makes the name unique before the first save; the copy's Context Type is editable before first publish; the copy does not inherit the Inquiry designation",
         "rationale": "Business Rules 1 (line 496): A set may be duplicated to create a new Draft copy; the copy is independent of the source"
       }
     },
@@ -77833,7 +77855,7 @@
       "owner_fr": "FR-025",
       "title": "Drag-and-drop reorder saves as Draft change",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Drag-and-drop reordering updates display order immediately and is saved as a Draft change",
         "rationale": "prd.md line 318 (found by matching the rule statement to the PRD text)."
@@ -77845,7 +77867,7 @@
       "owner_fr": "FR-025",
       "title": "Question types are system-defined",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Question types are system-defined (fixed in source code); admin selects from the available type list but cannot create, rename, or remove types",
         "rationale": "Available system-defined types: Yes/No, Visual Scale 1–10, Numeric Scale 1–10, Multi-select, Free Text"
@@ -77857,7 +77879,7 @@
       "owner_fr": "FR-025",
       "title": "Question Type locked after first save",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Question Type is locked after first save; changing type requires deleting and recreating the question",
         "rationale": "Screen 3 rule (line 362): Question Type is locked after first save; a confirmation dialog warns the admin before saving for the first time"
@@ -77869,7 +77891,7 @@
       "owner_fr": "FR-025",
       "title": "Inquiry and Multi-Context questions need severity flag and Yes detail prompt",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Questions in Inquiry or Multi-Context sets: Severity Flag is required; Yes-answer detail prompt is required for Yes/No questions",
         "rationale": "Screen 3: Severity Flag and Alert Description are shown only if the parent set's Context Type is Inquiry or Multi-Context (line 355); Detail Prompt is required for Yes/No questions in those sets."
@@ -77881,9 +77903,9 @@
       "owner_fr": "FR-025",
       "title": "Publish blocked without a severity flag on every question",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "All questions in Inquiry/Multi-Context sets must have a Severity flag before publishing",
+        "statement": "All Active questions in Inquiry/Multi-Context sets must have a Severity flag before publishing",
         "rationale": "Severity flags must be assigned to all questions in Inquiry and Multi-Context sets Workflow 2: System enforces all questions in the set have a Severity Flag; blocks publish if any question is missing a flag."
       }
     },
@@ -77893,7 +77915,7 @@
       "owner_fr": "FR-025",
       "title": "MVP: Inquiry and Multi-Context sets are Yes/No only",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "MVP: Inquiry and Multi-Context sets MUST contain only Yes/No questions; the system blocks publishing if any non-Yes/No questions exist",
         "rationale": "Screen 2 (line 316): MVP: Inquiry/Multi-Context sets can contain only Yes/No question types (enforced at publish-time) Screen 3 type validation: if parent set Context Type is Inquiry or Multi-Context, only Yes/No is selectable. Context-type table: MVP Yes/No only (hard constraint)."
@@ -77905,7 +77927,7 @@
       "owner_fr": "FR-025",
       "title": "Future: typed answers in Inquiry sets once FR-003 supports them",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Future (V2+): Once FR-003 supports typed answers, Inquiry/Multi-Context sets may allow additional question types (with a publish-time warning)",
         "rationale": "Context-type table: additional question types allowed only after FR-003 supports typed answers."
@@ -77917,7 +77939,7 @@
       "owner_fr": "FR-025",
       "title": "Aftercare-only sets have no severity flags or alerts",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "Aftercare-only questionnaire sets do not have severity flags and do not generate inquiry-style alerts; they support all system-defined question types",
         "rationale": "Context-type table: Aftercare supports all system-defined types; no severity flags."
@@ -77929,9 +77951,9 @@
       "owner_fr": "FR-025",
       "title": "Severity flags drive provider alerts for inquiry only",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Severity flags drive the automatic provider alert system for the inquiry flow only. Severity Flag and Alert Description are shown only on questions in Inquiry or Multi-Context sets; response colour-coding in the provider view follows the flag automatically with no extra configuration",
+        "statement": "Severity flags drive the automatic provider alert system for the inquiry flow only. Severity Flag and Alert Description are shown only on questions in Inquiry or Multi-Context sets; Alert Description is optional and an Admin-only note shown in the editor and Preview, and providers see the question text; response colour-coding in the provider view follows each answer's own flag automatically with no extra configuration; Preview shows no overall tier",
         "rationale": "Workflow 2 scope: severity flags and the provider alert system apply exclusively to Inquiry-context and Multi-Context sets."
       }
     },
@@ -77941,7 +77963,7 @@
       "owner_fr": "FR-025",
       "title": "Severity flag definitions",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Critical questions: High-risk conditions (HIV, hepatitis, blood disorders, heart conditions) Standard questions: Moderate concerns (allergies, medications, chronic conditions) No Alert questions: General health status, lifestyle factors",
         "rationale": "prd.md lines 521."
@@ -77953,7 +77975,7 @@
       "owner_fr": "FR-025",
       "title": "No delivery frequency at question level",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Questions in Aftercare or Multi-Context sets: no frequency setting at question level — delivery frequency is configured in FR-011 at the milestone assignment step",
         "rationale": "Repeated at lines 318, 358, 561 and 572: Delivery frequency (how often the patient is prompted to complete the questionnaire at a given milestone) is configured in FR-011 at the milestone assignment level — not in FR-025 at the question level Frequency is not a question-level field; it is not validated here"
@@ -77965,7 +77987,7 @@
       "owner_fr": "FR-025",
       "title": "Conditional question fields follow the question type",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "Conditional fields (Detail Prompt, Scale Labels, Options, Placeholder, Max Characters) are shown or hidden dynamically based on the selected Question Type. Type-specific fields follow the selected type: Visual Scale 1-10 requires a label for each scale point; Numeric Scale 1-10 requires minimum and maximum end labels; Multi-select requires at least 2 options; Free Text may have a placeholder text and an optional maximum character limit",
         "rationale": "Per-type requirements from the Screen 3 table: Scale Point Labels required for Visual Scale 1-10; Scale Min/Max Labels required for Numeric Scale 1-10; Options required for Multi-select (min 2 options); Placeholder Text and Max Characters optional for Free Text (Max Characters integer > 0)."
@@ -77977,7 +77999,7 @@
       "owner_fr": "FR-025",
       "title": "Question text meets minimum length",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "Question text must be at least 10 characters",
         "rationale": "Screen 3: Question Text min 10 chars."
@@ -77989,7 +78011,7 @@
       "owner_fr": "FR-025",
       "title": "Duplicate question text in a set is prevented",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Duplicate question text within the same set must be prevented",
         "rationale": "prd.md line 587 (found by matching the rule statement to the PRD text)."
@@ -78001,9 +78023,9 @@
       "owner_fr": "FR-025",
       "title": "All questions pass completeness before publish",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "All questions must pass completeness validation before the parent set can be published",
+        "statement": "All Active questions must pass completeness validation before the parent set can be published",
         "rationale": "Workflow 1 alternative flow A4: Incomplete questions found: System blocks publish and lists incomplete questions."
       }
     },
@@ -78013,7 +78035,7 @@
       "owner_fr": "FR-025",
       "title": "Category required before publish",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "Every questionnaire set must be assigned a category before it can be published; the category must exist and be Active",
         "rationale": "The set must have a Category assigned before publishing A category must be assigned to the questionnaire set"
@@ -78025,7 +78047,7 @@
       "owner_fr": "FR-025",
       "title": "Categories are global; one category per set",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Categories are global across all questionnaire sets",
         "rationale": "Each questionnaire set belongs to exactly one category Categories are used for organising and filtering the Questionnaire Catalog (Screen 1) Screen 4 (line 391): Each questionnaire set belongs to exactly one category"
@@ -78037,7 +78059,7 @@
       "owner_fr": "FR-025",
       "title": "Category names are unique",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Category names must be unique",
         "rationale": "prd.md line 398 (found by matching the rule statement to the PRD text)."
@@ -78049,9 +78071,9 @@
       "owner_fr": "FR-025",
       "title": "Category delete blocked while sets are assigned",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Deleting a category with assigned sets is blocked; admin must first reassign those sets or deactivate the category",
+        "statement": "Deleting a category with assigned sets is blocked; admin must first reassign those sets. Deactivating a category retires it from use but does not make it deletable until its sets are reassigned",
         "rationale": "prd.md line 400 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -78061,7 +78083,7 @@
       "owner_fr": "FR-025",
       "title": "Category deactivation keeps assignments and flags sets Uncategorised",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Deactivating a category hides it from the category picker in Screen 2 but does not remove existing assignments; affected sets are flagged as \"Uncategorised\" until reassigned",
         "rationale": "Screen 2: Category must exist and be Active."
@@ -78073,7 +78095,7 @@
       "owner_fr": "FR-025",
       "title": "Category assignment consistent across catalog views",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Category assignment must be consistent across catalog views",
         "rationale": "prd.md line 593 (found by matching the rule statement to the PRD text)."
@@ -78085,9 +78107,9 @@
       "owner_fr": "FR-025",
       "title": "Publish increments version and archives previous Active",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Publishing increments the version number and archives the previous Active version",
+        "statement": "Publishing increments the version number and archives the previous Active version; a designation of the set for Inquiry stays on the set and carries over to the new version",
         "rationale": "Workflow 1 publish step: System increments version, marks set as Active; archives previous Active version."
       }
     },
@@ -78097,9 +78119,9 @@
       "owner_fr": "FR-025",
       "title": "Editing a published set creates a Draft; Active keeps serving",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Changes to a question in an Active (published) set are saved as a Draft change on the parent set; the Active version continues to serve downstream consumers until the set is re-published",
+        "statement": "Every change to an Active (published) set (add, edit, delete or reorder a question, metadata, Context Type) is saved to the set's single open Draft; the Active version continues to serve downstream consumers until the Draft is published; a set has at most one open Draft",
         "rationale": "Workflow 1 alternative flow A1 and Workflow 2 flow B1: the published Active version stays unchanged until the new Draft is published."
       }
     },
@@ -78109,9 +78131,9 @@
       "owner_fr": "FR-025",
       "title": "Context Type locked while set is Active",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Context Type cannot be changed while Status = Active; editing it creates a new Draft version automatically",
+        "statement": "Context Type is read-only on the Active version and editable only in an open Draft; publishing a Draft whose Context Type no longer fits a current use (Inquiry designation or milestone assignment) is blocked with the list of those uses",
         "rationale": "prd.md line 319 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -78121,9 +78143,9 @@
       "owner_fr": "FR-025",
       "title": "Version activation needs explicit admin confirmation",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Version activation requires explicit admin confirmation",
+        "statement": "Version activation requires explicit admin confirmation, shown after validation with the new version number and changes summary",
         "rationale": "prd.md line 541 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -78133,7 +78155,7 @@
       "owner_fr": "FR-025",
       "title": "Changes require admin authentication and authorization",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Changes require admin authentication and authorization",
         "rationale": "Security Considerations (line 665): Strict admin-only access to questionnaire management."
@@ -78145,7 +78167,7 @@
       "owner_fr": "FR-025",
       "title": "All question changes are version controlled",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "All question changes must be version controlled",
         "rationale": "prd.md line 538 (found by matching the rule statement to the PRD text)."
@@ -78157,7 +78179,7 @@
       "owner_fr": "FR-025",
       "title": "Previous versions are archived, not deleted",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Previous versions must be archived, not deleted",
         "rationale": "prd.md line 540 (found by matching the rule statement to the PRD text)."
@@ -78169,9 +78191,9 @@
       "owner_fr": "FR-025",
       "title": "Earlier versions restorable as a new Draft, then published",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Any earlier version must be restorable as a new Draft, which is then published; there is no one-step rollback, and the Active version is unaffected until the restored Draft is published",
+        "statement": "Any earlier version must be restorable as a new Draft, which is then published; there is no one-step rollback, and the Active version is unaffected until the restored Draft is published; Restore is refused while the set has an open Draft",
         "rationale": "Screen 7: \"Restore as New Draft\" creates a new Draft version of the set with the questions from the selected historical version; the currently Active version is not affected until the restored Draft is published"
       }
     },
@@ -78181,7 +78203,7 @@
       "owner_fr": "FR-025",
       "title": "View Snapshot is read-only",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "\"View Snapshot\" opens a read-only view of the questionnaire set at that version; no editing is possible from the snapshot view",
         "rationale": "prd.md line 495 (found by matching the rule statement to the PRD text)."
@@ -78193,7 +78215,7 @@
       "owner_fr": "FR-025",
       "title": "Version history and audit trail kept indefinitely and tamper-proof",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Version history and audit trail are maintained indefinitely and are tamper-proof",
         "rationale": "Audit logs must be retained for compliance requirements Audit trail must be tamper-proof and immutable"
@@ -78205,9 +78227,9 @@
       "owner_fr": "FR-025",
       "title": "All admin actions on a set are audited",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "All admin actions on the set — including metadata edits, question changes, and publish/archive events — are captured in the audit trail, each with a timestamp and the identity of the admin",
+        "statement": "All admin actions on the set — including metadata edits, question changes, duplicate, delete, reorder, designation changes, and publish/archive events — are captured in the audit trail, each with a timestamp and the identity of the admin",
         "rationale": "All changes must be logged with timestamp and admin identification"
       }
     },
@@ -78217,7 +78239,7 @@
       "owner_fr": "FR-025",
       "title": "Audit entries hold before and after values",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Audit trail must include before/after values for all modifications",
         "rationale": "prd.md line 546 (found by matching the rule statement to the PRD text)."
@@ -78229,9 +78251,9 @@
       "owner_fr": "FR-025",
       "title": "Audit entries track IP address and session",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Security information (IP address, session) must be tracked",
+        "statement": "Security information (IP address, session ID) must be tracked",
         "rationale": "prd.md line 547 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -78241,9 +78263,9 @@
       "owner_fr": "FR-025",
       "title": "Question delete is soft; responses preserved",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Deleting a question performs a soft delete; historical patient responses referencing this question are preserved and remain accessible",
+        "statement": "Deleting a question performs a soft delete (status Deleted); historical patient responses referencing this question are preserved and remain accessible",
         "rationale": "Workflow 1 alternative flow A2: System soft-deletes question; historical patient responses are preserved."
       }
     },
@@ -78253,9 +78275,9 @@
       "owner_fr": "FR-025",
       "title": "Set in use cannot be deleted, only archived",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "A set in use (designated for Inquiry or assigned to a milestone) cannot be deleted; it can only be Archived",
+        "statement": "A set designated for Inquiry cannot be deleted, only archived; a set assigned to a milestone can be neither deleted nor archived until those milestones are reassigned; Archived is terminal, and the way back is Restore as New Draft then publish",
         "rationale": "prd.md line 267 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -78265,9 +78287,9 @@
       "owner_fr": "FR-025",
       "title": "Deleting a Draft set with no usages removes it",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Deleting a Draft set with no usages permanently removes it",
+        "statement": "Delete is allowed only for a set that was never published and has no usages; a set that has been published can only be archived",
         "rationale": "prd.md line 273 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -78277,7 +78299,7 @@
       "owner_fr": "FR-025",
       "title": "Used In column shows usage locations",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Sets currently assigned to the inquiry flow or at least one milestone template display their usage locations in the \"Used In\" column",
         "rationale": "prd.md line 266 (found by matching the rule statement to the PRD text)."
@@ -78289,9 +78311,9 @@
       "owner_fr": "FR-025",
       "title": "Archiving the active Inquiry set unconfigures the Inquiry flow",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Archiving a set that is currently designated as the active Inquiry questionnaire removes the designation and flags the inquiry flow as unconfigured; system notifies admin. The Inquiry designation can only be replaced (by designating another set) or ended by archiving the set; there is no control to remove the designation on its own",
+        "statement": "Archiving a set that is currently designated as the active Inquiry questionnaire removes the designation and flags the inquiry flow as unconfigured; system notifies admin. This applies only to the Archive action on the set, not to the archiving of the previous Active version when a new version is published. The Inquiry designation can only be replaced (by designating another set) or ended by archiving the set; there is no control to remove the designation on its own. The designation belongs to the set and carries over to a newly published version",
         "rationale": "prd.md lines 268, 275 (archiving removes the designation and flags the flow unconfigured; the designation is only replaced or ended by archiving, with no standalone remove control)."
       }
     },
@@ -78301,7 +78323,7 @@
       "owner_fr": "FR-025",
       "title": "Publishing does not activate a set for Inquiry",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Publishing does not activate a set for the inquiry flow. The admin must explicitly click \"Set as Active for Inquiry\" on a published Inquiry or Multi-Context set to designate it. This is a separate, deliberate action",
         "rationale": "Repeated in the Executive Summary, Entry Points, Workflow 1 outcome and Integration Rules."
@@ -78313,7 +78335,7 @@
       "owner_fr": "FR-025",
       "title": "At most one active Inquiry set; replacing needs confirmation",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "At most one set may be designated as the active Inquiry questionnaire at a time. Clicking \"Set as Active for Inquiry\" on a second set shows a confirmation dialog and, upon confirmation, transfers the designation from the previous set to the new one; all new patient inquiry submissions use the new set immediately",
         "rationale": "Workflow 4: System shows confirmation 'This will replace [Current Set Name] as the active Inquiry questionnaire. Continue?'; cancel leaves the previous set active; on confirm all new patient inquiry submissions (FR-003) use the new set immediately."
@@ -78325,9 +78347,9 @@
       "owner_fr": "FR-025",
       "title": "Set as Active for Inquiry only on published Inquiry or Multi-Context sets",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "The \"Set as Active for Inquiry\" action is only available on sets with Status = Active (published) and Context Type = Inquiry or Multi-Context. It is hidden for Draft, Archived, and Aftercare-only sets",
+        "statement": "The \"Set as Active for Inquiry\" action is only available on sets with Status = Active (published) and Context Type = Inquiry or Multi-Context. It is hidden for Draft, Archived, and Aftercare-only sets; the block message appears only when the set changed after the screen loaded",
         "rationale": "Workflow 4: for a Draft or Archived set the System blocks activation: 'Only published sets can be designated as the active Inquiry questionnaire'."
       }
     },
@@ -78337,9 +78359,9 @@
       "owner_fr": "FR-025",
       "title": "No active Inquiry set blocks submissions and warns admin",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "If no set is designated as the active Inquiry questionnaire, the system must block patient inquiry submissions and display a system-level warning to admins",
+        "statement": "If no set is designated as the active Inquiry questionnaire, the system must block all patient inquiry submissions, including resumed drafts; the draft is kept and the patient sees the submission-unavailable message (REQ-002-053); admins see a system-level warning",
         "rationale": "If no set is currently designated for the inquiry flow, the catalog displays a warning banner: \"No active Inquiry questionnaire set — patient inquiry submissions will be blocked until one is designated\" Workflow 4 (A2): System flags Inquiry flow as unconfigured; Notifies admin that no active Inquiry questionnaire is set; Patient inquiry submissions are blocked until a new set is designated."
       }
     },
@@ -78349,9 +78371,9 @@
       "owner_fr": "FR-025",
       "title": "Active Inquiry set delivered dynamically to inquiry submission",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "The admin-designated active Inquiry questionnaire set must be delivered dynamically to the patient inquiry process; publishing a set does not make it the active Inquiry set — the admin must explicitly toggle \"Set as Active for Inquiry\"",
+        "statement": "A patient starting the inquiry questionnaire gets the current designated version; a resumed draft keeps its version; the version used is recorded at submit; publishing a set does not make it the active Inquiry set — the admin must explicitly toggle \"Set as Active for Inquiry\"",
         "rationale": "System-Triggered (Inquiry): The admin-designated active Inquiry-context questionnaire set is delivered automatically during patient inquiry submission (FR-003). The active set is selected explicitly by the admin via the \"Set as Active for Inquiry\" toggle on the Questionnaire Catalog — publishing alone does not activate a set for the inquiry flow"
       }
     },
@@ -78385,9 +78407,9 @@
       "owner_fr": "FR-025",
       "title": "Version mismatch pushes the current Active version; older version accepted and recorded",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "When the patient platform holds an older questionnaire version than the current Active version, the system pushes the current Active version; a patient already in progress is not made to start over, the submission is accepted on the older version, and the version used is recorded against the inquiry",
+        "statement": "When the patient platform holds an older questionnaire version than the current Active version, the system pushes the current Active version for a new start; a patient with a resumed draft is not made to start over, and the submission is accepted on an older version that is or was designated for Inquiry; the version used is recorded against the inquiry",
         "rationale": "prd.md line 558 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -78397,9 +78419,9 @@
       "owner_fr": "FR-025",
       "title": "Questionnaire version recorded against each inquiry",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System records the questionnaire set version number on the inquiry record itself, in addition to the template version stamp kept by FR-002.",
+        "statement": "System records the questionnaire set version number on the inquiry record itself at submit, in addition to the template version stamp kept by FR-002.",
         "rationale": "prd.md line 164 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -78409,9 +78431,9 @@
       "owner_fr": "FR-025",
       "title": "Responses, alert outcome and version are logged to the audit trail",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System logs all responses, alert outcome, and the questionnaire version recorded on the inquiry to audit trail.",
+        "statement": "The patient's answers and the alert tier are recorded on the inquiry record (FR-003) and the questionnaire version in the FR-002 intake audit entry (template_version_used); this set's audit trail holds Admin actions only.",
         "rationale": "prd.md line 181 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -78457,9 +78479,9 @@
       "owner_fr": "FR-025",
       "title": "Medical alerts generated automatically from responses",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Medical alerts must be generated automatically from questionnaire responses",
+        "statement": "Medical alerts are generated automatically from questionnaire responses by the FR-002 engine (REQ-002-002); FR-025 supplies the Severity Flags",
         "rationale": "Workflow 2: Alert rules derived automatically from Severity Flags — no extra configuration needed."
       }
     },
@@ -78469,9 +78491,9 @@
       "owner_fr": "FR-025",
       "title": "Alert tier from Critical, Standard and No answers",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Alert tier for each submitted Inquiry questionnaire: Red if any Critical question is answered Yes; otherwise Amber if any Standard question is answered Yes; otherwise Green (all answered No). The provider sees the tier on the inquiry record",
+        "statement": "Alert tier for each submitted Inquiry questionnaire: Red if any Critical question is answered Yes; otherwise Amber if any Standard question is answered Yes; otherwise Green (no Yes answer on a Critical or Standard question). The tier is computed by the FR-002 engine (REQ-002-002); FR-025 owns only the mapping from Severity Flag to tier",
         "rationale": "Workflow 2 and Workflow 3 flow diagrams (lines 129-139 and 169-179)."
       }
     },
@@ -78481,9 +78503,9 @@
       "owner_fr": "FR-025",
       "title": "Alert severity matches question severity flag",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Alert severity must match question severity flags",
+        "statement": "Alert severity must match question severity flags, as applied by the FR-002 engine",
         "rationale": "Alert generation rules must match severity flag assignments Screen 3: for Yes/No questions with a Severity Flag, response color-coding in the provider view is automatic based on the flag value; no additional configuration is needed."
       }
     },
@@ -78553,9 +78575,9 @@
       "owner_fr": "FR-025",
       "title": "Inquiry sets cannot be assigned to aftercare milestones",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Questionnaire sets with Context Type = Inquiry are not selectable in aftercare milestone assignments",
+        "statement": "Questionnaire sets with Context Type = Inquiry are not selectable in aftercare milestone assignments; every Multi-Context set may be assigned, with no extra flag",
         "rationale": "Workflow 4 (A3): System blocks assignment: 'Inquiry-only sets cannot be assigned to aftercare milestones'."
       }
     },
@@ -78565,9 +78587,9 @@
       "owner_fr": "FR-025",
       "title": "Changing a milestone set keeps earlier responses on their version",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Changing a milestone's assigned questionnaire set does not affect previously submitted patient responses; those remain linked to the version used at time of submission",
+        "statement": "Changing a milestone's assigned questionnaire set does not affect previously submitted patient responses; those remain linked to the version used at time of submission, and a draft response keeps the version it started on",
         "rationale": "Workflow 4 (A4): future deliveries use the new set; existing patient responses remain linked to the prior version."
       }
     },
@@ -78577,9 +78599,9 @@
       "owner_fr": "FR-025",
       "title": "Concurrent admin modifications handled gracefully",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System must handle concurrent admin modifications gracefully; question order must be maintained during updates",
+        "statement": "System must handle concurrent admin modifications gracefully: a save made from a stale screen is refused with a message to reload; question order must be maintained during updates",
         "rationale": "prd.md lines 595."
       }
     },
@@ -78589,7 +78611,7 @@
       "owner_fr": "FR-025",
       "title": "Preview reflects current Draft state",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Preview reflects the current saved Draft state of the set (all pending changes included); it does not show the last published version",
         "rationale": "prd.md line 454 (found by matching the rule statement to the PRD text)."
@@ -78601,7 +78623,7 @@
       "owner_fr": "FR-025",
       "title": "Test Mode creates no records",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "Test Mode is off by default. Sample Response Inputs are enabled only while Test Mode is on, and the Provider Summary Render is shown only in the Provider Summary tab with Test Mode on. Test Mode submissions do not create any records; all inputs are discarded on exit",
         "rationale": "prd.md lines 441, 443, 444, 455 (Test Mode default and conditions; no records created, inputs discarded on exit)."
@@ -78613,7 +78635,7 @@
       "owner_fr": "FR-025",
       "title": "Preview scoped to one set, opened from Set Details",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Preview is scoped to one questionnaire set at a time; opened from Screen 2",
         "rationale": "prd.md line 456 (found by matching the rule statement to the PRD text)."
@@ -78637,7 +78659,7 @@
       "owner_fr": "FR-025",
       "title": "Questionnaire Catalog field limits (set name 100 characters, unique)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "Questionnaire Catalog (Screen 1) field limits: Set Name is at most 100 characters and unique",
         "distinct_from": "REQ-025-079",
@@ -78650,7 +78672,7 @@
       "owner_fr": "FR-025",
       "title": "Set Details field limits (set name, description 500, display number)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "Set Details (Screen 2) field limits: Set Name is at most 100 characters and unique; Description is at most 500 characters; a question's display number is a whole number of at least 1 and unique within the set",
         "distinct_from": "REQ-025-078",
@@ -78663,7 +78685,7 @@
       "owner_fr": "FR-025",
       "title": "Question Editor field limits (help text 300, display labels 200, max characters)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "Question Editor (Screen 3) field limits: Help Text is at most 300 characters; Patient App Display Label and Provider App Display Label are each at most 200 characters; Max Characters is a whole number greater than 0",
         "rationale": "prd.md line 371 (found by matching the rule statement to the PRD text)."
@@ -78675,7 +78697,7 @@
       "owner_fr": "FR-025",
       "title": "Category Management field limits (name 100 unique, description 300)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "Category Management (Screen 4) field limits: Category Name is at most 100 characters and unique; Description is at most 300 characters",
         "rationale": "prd.md line 402 (found by matching the rule statement to the PRD text)."
@@ -78687,7 +78709,7 @@
       "owner_fr": "FR-025",
       "title": "Question type list shown with a short description of each type",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "statement": "Question Type selection is presented as a list with a short description of each type to help admin choose correctly before locking in",
         "rationale": "prd.md line 364 (found by matching the rule statement to the PRD text)."
@@ -78703,6 +78725,18 @@
       "attrs": {
         "statement": "All changes must be atomic and consistent across platforms",
         "rationale": "prd.md line 669 (found by matching the rule statement to the PRD text)."
+      }
+    },
+    {
+      "id": "REQ-025-084",
+      "type": "Rule",
+      "owner_fr": "FR-025",
+      "title": "Inactive, deleted and hidden questions",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Inactive and soft-deleted questions are not delivered to patients and are excluded from completeness checks, severity checks and the tier; Visible to Patient is not offered in Inquiry or Multi-Context sets",
+        "rationale": "Logic review: the question status, the Visible to Patient control and the severity and completeness rules were not reconciled."
       }
     },
     {
@@ -98775,7 +98809,7 @@
       "owner_fr": "FR-025",
       "title": "Questionnaire Catalog",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "admin",
         "description": "Main entry point. Admin views all questionnaire sets with Context Type, status, version, usage and the Active for Inquiry badge; searches by Set Name and filters by Context Type, Status and Category (AND logic); creates, edits, duplicates, archives and deletes sets; and uses the Set as Active for Inquiry action, shown only for published Inquiry and Multi-Context sets. A warning banner shows when no Inquiry set is designated."
@@ -98787,7 +98821,7 @@
       "owner_fr": "FR-025",
       "title": "Questionnaire Set Details",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "admin",
         "description": "Admin edits one set: metadata, ordered question list with drag-and-drop reordering, and the Publish / Activate, Preview and View Version History controls. Breadcrumb: Questionnaire Catalog, then the set name."
@@ -98799,7 +98833,7 @@
       "owner_fr": "FR-025",
       "title": "Question Editor",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "admin",
         "description": "Admin creates or edits one question: selects a system-defined type, sets text, type-specific content, severity (Inquiry and Multi-Context sets only), and patient-app and provider-app appearance. A confirmation dialog warns before the first save locks the Question Type."
@@ -98811,7 +98845,7 @@
       "owner_fr": "FR-025",
       "title": "Category Management",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "admin",
         "description": "Admin manages the global list of questionnaire set categories: add, edit, deactivate and delete (delete blocked while sets are assigned)."
@@ -98823,7 +98857,7 @@
       "owner_fr": "FR-025",
       "title": "Context Type Reference",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "admin",
         "description": "Read-only reference of the system-defined context types, their sets, active-set counts and consuming modules, in fixed order Inquiry, Aftercare, Multi-Context."
@@ -98835,7 +98869,7 @@
       "owner_fr": "FR-025",
       "title": "Questionnaire Preview",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "admin",
         "description": "Admin previews one set as the patient app (mobile) and as the provider summary, reflecting the current Draft; Test Mode fills sample responses that are discarded on exit; Print Preview generates a printable version."
@@ -98847,7 +98881,7 @@
       "owner_fr": "FR-025",
       "title": "Version History and Audit Trail",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "admin",
         "description": "Admin views one set's published versions (with View Snapshot and Restore as New Draft) and its audit trail of every admin action."
@@ -104026,7 +104060,7 @@
       "owner_fr": null,
       "title": "Configuration",
       "status": "active",
-      "version": 12,
+      "version": 13,
       "attrs": {
         "timeline": "platform-admin",
         "sequence": 1,
@@ -104144,7 +104178,7 @@
       "owner_fr": null,
       "title": "Inquiry",
       "status": "active",
-      "version": 24,
+      "version": 25,
       "attrs": {
         "timeline": "main",
         "sequence": 1,
@@ -117709,7 +117743,7 @@
       "owner_fr": "FR-025",
       "title": "Admin opens the Questionnaire Catalog",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 1 (Primary Flow) entry"
       }
@@ -117731,7 +117765,7 @@
       "owner_fr": "FR-025",
       "title": "Admin works on the set in Set Details",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 1 flow diagram: Admin works on set in Screen 2"
       }
@@ -117806,9 +117840,9 @@
       "id": "STP-025-010",
       "type": "Step",
       "owner_fr": "FR-025",
-      "title": "Admin clicks Publish / Activate on the set",
+      "title": "Admin clicks Publish on the set; after validation the new version number and changes summary are confirmed",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Workflow 1 flow diagram: Publish"
       }
@@ -117828,9 +117862,9 @@
       "id": "STP-025-012",
       "type": "Step",
       "owner_fr": "FR-025",
-      "title": "Admin edits a published set; a new Draft version is created and the Active version stays unchanged",
+      "title": "Admin opens a published set; the system opens its single open Draft and the Active version stays unchanged",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 1 alternative flow A1"
       }
@@ -117841,7 +117875,7 @@
       "owner_fr": "FR-025",
       "title": "Admin deletes a question; it is soft-deleted and historical responses are preserved",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 1 alternative flow A2"
       }
@@ -117883,9 +117917,9 @@
       "id": "STP-025-021",
       "type": "Step",
       "owner_fr": "FR-025",
-      "title": "Admin edits a question of a published set; a new Draft version is created and the Active version keeps serving inquiries",
+      "title": "Admin edits a question in the open Draft; the Active version keeps serving inquiries",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 2 alternative flow B1"
       }
@@ -117894,9 +117928,9 @@
       "id": "STP-025-030",
       "type": "Step",
       "owner_fr": "FR-025",
-      "title": "Patient starts the inquiry submission and the active Inquiry questionnaire is delivered",
+      "title": "Patient reaches the medical questionnaire step and the designated Inquiry questionnaire is delivered, or submission is blocked when none is designated",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Workflow 3 flow diagram: trigger"
       }
@@ -117907,7 +117941,7 @@
       "owner_fr": "FR-025",
       "title": "Patient answers all questions and submits the questionnaire",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Workflow 3 flow diagram: Patient answers all questions and submits (also Workflow 2 patient submit)"
       }
@@ -117918,7 +117952,7 @@
       "owner_fr": "FR-025",
       "title": "Provider sees the alert level on the inquiry record",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Workflow 3 flow diagram: alert displayed on inquiry record for provider review"
       }
@@ -117927,9 +117961,9 @@
       "id": "STP-025-034",
       "type": "Step",
       "owner_fr": "FR-025",
-      "title": "Patient app loads the updated questionnaire for new use; a patient already in progress is not made to start over",
+      "title": "Patient app loads the current questionnaire version for a new start; a resumed draft is not made to start over",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Workflow 3 alternative flow C1"
       }
@@ -117973,7 +118007,7 @@
       "owner_fr": "FR-025",
       "title": "Admin sees the set designated as the active Inquiry questionnaire and serving new inquiries",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Workflow 4 flow diagram: Set is actively serving all new patient inquiries"
       }
@@ -117995,7 +118029,7 @@
       "owner_fr": "FR-025",
       "title": "Admin archives the active Inquiry set; the Inquiry flow is flagged unconfigured and the admin is notified",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Workflow 4 alternative flow A2"
       }
@@ -118039,7 +118073,7 @@
       "owner_fr": "FR-025",
       "title": "Admin replaces the set on a milestone; earlier responses stay linked to the prior version",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 4 alternative flow A4"
       }
@@ -118081,9 +118115,9 @@
       "id": "STP-025-053",
       "type": "Step",
       "owner_fr": "FR-025",
-      "title": "System records the questionnaire set version number on the inquiry record",
+      "title": "System records the questionnaire set version number on the inquiry record at submit",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 3 flow diagram: System records the questionnaire set version number on the inquiry record itself"
       }
@@ -118092,9 +118126,9 @@
       "id": "STP-025-054",
       "type": "Step",
       "owner_fr": "FR-025",
-      "title": "System generates the Red, Amber or Green alert from the answers and the severity flags",
+      "title": "The FR-002 alert engine returns the Red, Amber or Green tier from the answers and the severity flags (REQ-002-002); FR-025 owns only the mapping",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 3 flow diagram: System processes each Yes/No response against configured Severity Flags; Generate Red, Amber or Green alert"
       }
@@ -118103,11 +118137,71 @@
       "id": "STP-025-055",
       "type": "Step",
       "owner_fr": "FR-025",
-      "title": "System logs the responses, the alert outcome and the questionnaire version to the audit trail",
+      "title": "System records the answers and the tier on the inquiry record (FR-003) and the version in the FR-002 intake audit entry",
+      "status": "active",
+      "version": 2,
+      "attrs": {
+        "prd_ref": "Workflow 3 flow diagram: System logs all responses, alert outcome, and the questionnaire version recorded on the inquiry to audit trail"
+      }
+    },
+    {
+      "id": "STP-025-056",
+      "type": "Step",
+      "owner_fr": "FR-025",
+      "title": "Patient with a saved draft resumes and keeps the questionnaire version of that draft",
       "status": "active",
       "version": 1,
       "attrs": {
-        "prd_ref": "Workflow 3 flow diagram: System logs all responses, alert outcome, and the questionnaire version recorded on the inquiry to audit trail"
+        "prd_ref": "Workflow 3: Questionnaire Deployment",
+        "description": "A resumed draft is not reloaded to a newer version; the version used is recorded at submit (REQ-025-057, REQ-025-058)."
+      }
+    },
+    {
+      "id": "STP-025-057",
+      "type": "Step",
+      "owner_fr": "FR-025",
+      "title": "Admin manages the questionnaire categories",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Screen 4: Category Management",
+        "description": "Admin creates, edits, deactivates or deletes a category; deletion is blocked while sets are assigned (REQ-025-028); category changes go to the platform Admin audit log (FR-031)."
+      }
+    },
+    {
+      "id": "STP-025-058",
+      "type": "Step",
+      "owner_fr": "FR-025",
+      "title": "Admin views the version history of a set and restores an earlier version as a new Draft",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Screen 7: Version History & Audit Trail",
+        "description": "Admin opens the version history, views a snapshot, or uses Restore as New Draft; Restore is refused while the set has an open Draft (REQ-025-038, REQ-025-039)."
+      }
+    },
+    {
+      "id": "STP-025-059",
+      "type": "Step",
+      "owner_fr": "FR-025",
+      "title": "Admin archives a set",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Screen 1: Questionnaire Catalog",
+        "description": "Archive is blocked while a milestone uses the set; archiving the designated Inquiry set removes the designation (REQ-025-045, REQ-025-047, REQ-025-048)."
+      }
+    },
+    {
+      "id": "STP-025-060",
+      "type": "Step",
+      "owner_fr": "FR-025",
+      "title": "Admin deletes a set that was never published and has no usages",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Screen 1: Questionnaire Catalog",
+        "description": "Delete is offered only for a never-published set without usages (REQ-025-046)."
       }
     },
     {
@@ -148494,6 +148588,14 @@
       "calculated_by": null
     },
     {
+      "id": "ENT-questionnaire-audit-entry.session_id",
+      "entity_id": "ENT-questionnaire-audit-entry",
+      "name": "session_id",
+      "data_type": "text",
+      "required": false,
+      "calculated_by": null
+    },
+    {
       "id": "ENT-questionnaire-category.description",
       "entity_id": "ENT-questionnaire-category",
       "name": "description",
@@ -148890,6 +148992,14 @@
       "entity_id": "ENT-questionnaire-version",
       "name": "version_number",
       "data_type": "int",
+      "required": false,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-questionnaire-version.was_inquiry_designated",
+      "entity_id": "ENT-questionnaire-version",
+      "name": "was_inquiry_designated",
+      "data_type": "bool",
       "required": false,
       "calculated_by": null
     },
@@ -159194,6 +159304,36 @@
       "sort_order": 8
     },
     {
+      "field_id": "ENT-questionnaire-audit-entry.action_type",
+      "value": "Duplicate Set",
+      "label": "Duplicate Set",
+      "sort_order": 9
+    },
+    {
+      "field_id": "ENT-questionnaire-audit-entry.action_type",
+      "value": "Delete Set",
+      "label": "Delete Set",
+      "sort_order": 10
+    },
+    {
+      "field_id": "ENT-questionnaire-audit-entry.action_type",
+      "value": "Reorder Questions",
+      "label": "Reorder Questions",
+      "sort_order": 11
+    },
+    {
+      "field_id": "ENT-questionnaire-audit-entry.action_type",
+      "value": "Remove Inquiry Designation",
+      "label": "Remove Inquiry Designation",
+      "sort_order": 12
+    },
+    {
+      "field_id": "ENT-questionnaire-audit-entry.action_type",
+      "value": "Inquiry Flow Unconfigured",
+      "label": "Inquiry Flow Unconfigured",
+      "sort_order": 13
+    },
+    {
       "field_id": "ENT-questionnaire-category.status",
       "value": "Active",
       "label": "Active",
@@ -159264,6 +159404,12 @@
       "value": "Inactive",
       "label": "Inactive",
       "sort_order": 1
+    },
+    {
+      "field_id": "ENT-questionnaire-question.status",
+      "value": "Deleted",
+      "label": "Deleted",
+      "sort_order": 2
     },
     {
       "field_id": "ENT-questionnaire-set.context_type",
@@ -175059,9 +175205,18 @@
     {
       "from_id": "FR-025",
       "verb": "active in",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {
+        "rules": 60
+      },
+      "derived": true
+    },
+    {
+      "from_id": "FR-025",
+      "verb": "active in",
       "to_id": "STG-aftercare-01-recovery-plan",
       "attrs": {
-        "rules": 57
+        "rules": 8
       },
       "derived": true
     },
@@ -175070,7 +175225,7 @@
       "verb": "active in",
       "to_id": "STG-main-01-inquiry",
       "attrs": {
-        "rules": 74
+        "rules": 17
       },
       "derived": true
     },
@@ -261798,13 +261953,7 @@
     {
       "from_id": "REQ-025-001",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-001",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -261828,13 +261977,7 @@
     {
       "from_id": "REQ-025-002",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-002",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -261852,13 +261995,7 @@
     {
       "from_id": "REQ-025-003",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-003",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -261882,13 +262019,7 @@
     {
       "from_id": "REQ-025-004",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-004",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -261912,13 +262043,7 @@
     {
       "from_id": "REQ-025-005",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-005",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -261936,13 +262061,7 @@
     {
       "from_id": "REQ-025-006",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-006",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -261966,13 +262085,7 @@
     {
       "from_id": "REQ-025-007",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-007",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -261990,13 +262103,7 @@
     {
       "from_id": "REQ-025-008",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-008",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262020,13 +262127,7 @@
     {
       "from_id": "REQ-025-009",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-009",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262050,13 +262151,7 @@
     {
       "from_id": "REQ-025-010",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-010",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262074,13 +262169,7 @@
     {
       "from_id": "REQ-025-011",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-011",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262104,7 +262193,7 @@
     {
       "from_id": "REQ-025-012",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262128,7 +262217,7 @@
     {
       "from_id": "REQ-025-013",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262152,7 +262241,7 @@
     {
       "from_id": "REQ-025-014",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262176,7 +262265,7 @@
     {
       "from_id": "REQ-025-015",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262194,7 +262283,7 @@
     {
       "from_id": "REQ-025-016",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262218,7 +262307,7 @@
     {
       "from_id": "REQ-025-017",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262242,7 +262331,7 @@
     {
       "from_id": "REQ-025-018",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262260,7 +262349,7 @@
     {
       "from_id": "REQ-025-019",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262278,13 +262367,7 @@
     {
       "from_id": "REQ-025-020",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-020",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262308,13 +262391,7 @@
     {
       "from_id": "REQ-025-021",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-021",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262332,13 +262409,7 @@
     {
       "from_id": "REQ-025-022",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-022",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262362,13 +262433,7 @@
     {
       "from_id": "REQ-025-024",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-024",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262392,13 +262457,7 @@
     {
       "from_id": "REQ-025-025",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-025",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262416,13 +262475,7 @@
     {
       "from_id": "REQ-025-026",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-026",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262446,13 +262499,7 @@
     {
       "from_id": "REQ-025-027",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-027",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262470,13 +262517,7 @@
     {
       "from_id": "REQ-025-028",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-028",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262500,13 +262541,7 @@
     {
       "from_id": "REQ-025-029",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-029",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262530,13 +262565,7 @@
     {
       "from_id": "REQ-025-030",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-030",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262560,13 +262589,7 @@
     {
       "from_id": "REQ-025-031",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-031",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262596,13 +262619,7 @@
     {
       "from_id": "REQ-025-032",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-032",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262626,13 +262643,7 @@
     {
       "from_id": "REQ-025-033",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-033",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262650,13 +262661,7 @@
     {
       "from_id": "REQ-025-034",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-034",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262680,13 +262685,7 @@
     {
       "from_id": "REQ-025-035",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-035",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262704,13 +262703,7 @@
     {
       "from_id": "REQ-025-036",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-036",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262734,13 +262727,7 @@
     {
       "from_id": "REQ-025-037",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-037",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262764,13 +262751,7 @@
     {
       "from_id": "REQ-025-038",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-038",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262794,13 +262775,7 @@
     {
       "from_id": "REQ-025-039",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-039",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262818,13 +262793,7 @@
     {
       "from_id": "REQ-025-040",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-040",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262848,13 +262817,7 @@
     {
       "from_id": "REQ-025-041",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-041",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262878,13 +262841,7 @@
     {
       "from_id": "REQ-025-042",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-042",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262902,19 +262859,19 @@
     {
       "from_id": "REQ-025-043",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-043",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
       "from_id": "REQ-025-043",
       "verb": "applies to",
       "to_id": "ENT-questionnaire-audit-entry.ip_address",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-025-043",
+      "verb": "applies to",
+      "to_id": "ENT-questionnaire-audit-entry.session_id",
       "attrs": {}
     },
     {
@@ -262926,13 +262883,7 @@
     {
       "from_id": "REQ-025-044",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-044",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262950,13 +262901,7 @@
     {
       "from_id": "REQ-025-045",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-045",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -262986,13 +262931,7 @@
     {
       "from_id": "REQ-025-046",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-046",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -263010,13 +262949,7 @@
     {
       "from_id": "REQ-025-047",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-047",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -263040,7 +262973,7 @@
     {
       "from_id": "REQ-025-048",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -263070,7 +263003,7 @@
     {
       "from_id": "REQ-025-049",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -263094,7 +263027,7 @@
     {
       "from_id": "REQ-025-050",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -263118,7 +263051,7 @@
     {
       "from_id": "REQ-025-051",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -263263,6 +263196,12 @@
       "from_id": "REQ-025-057",
       "verb": "applies to",
       "to_id": "ENT-questionnaire-set.version",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-025-057",
+      "verb": "applies to",
+      "to_id": "ENT-questionnaire-version.was_inquiry_designated",
       "attrs": {}
     },
     {
@@ -263586,13 +263525,7 @@
     {
       "from_id": "REQ-025-073",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-073",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -263610,13 +263543,7 @@
     {
       "from_id": "REQ-025-074",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-074",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -263640,13 +263567,7 @@
     {
       "from_id": "REQ-025-075",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-075",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -263664,13 +263585,7 @@
     {
       "from_id": "REQ-025-076",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-076",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -263712,13 +263627,7 @@
     {
       "from_id": "REQ-025-078",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-078",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -263742,13 +263651,7 @@
     {
       "from_id": "REQ-025-079",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-079",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -263784,13 +263687,7 @@
     {
       "from_id": "REQ-025-080",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-080",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -263832,13 +263729,7 @@
     {
       "from_id": "REQ-025-081",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-081",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -263868,13 +263759,7 @@
     {
       "from_id": "REQ-025-082",
       "verb": "applies at",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-082",
-      "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -263915,6 +263800,30 @@
     },
     {
       "from_id": "REQ-025-083",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-025",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-025-084",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-025-084",
+      "verb": "applies to",
+      "to_id": "ENT-questionnaire-question.patient_visible",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-025-084",
+      "verb": "applies to",
+      "to_id": "ENT-questionnaire-question.status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-025-084",
       "verb": "decided by",
       "to_id": "SRC-PRD-025",
       "attrs": {}
@@ -330208,13 +330117,7 @@
     {
       "from_id": "SCR-025-01",
       "verb": "belongs to",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "SCR-025-01",
-      "verb": "belongs to",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -330294,13 +330197,7 @@
     {
       "from_id": "SCR-025-02",
       "verb": "belongs to",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "SCR-025-02",
-      "verb": "belongs to",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -330420,13 +330317,7 @@
     {
       "from_id": "SCR-025-03",
       "verb": "belongs to",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "SCR-025-03",
-      "verb": "belongs to",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -330434,8 +330325,8 @@
       "verb": "shows",
       "to_id": "ENT-questionnaire-question.alert_description",
       "attrs": {
-        "provenance": "system calculated",
-        "label": "Auto-filled from severity; editable",
+        "provenance": "user input",
+        "label": "Optional Admin-only note",
         "editable": true
       }
     },
@@ -330619,13 +330510,7 @@
     {
       "from_id": "SCR-025-04",
       "verb": "belongs to",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "SCR-025-04",
-      "verb": "belongs to",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -330666,13 +330551,7 @@
     {
       "from_id": "SCR-025-05",
       "verb": "belongs to",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "SCR-025-05",
-      "verb": "belongs to",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -330718,14 +330597,17 @@
     {
       "from_id": "SCR-025-06",
       "verb": "belongs to",
-      "to_id": "STG-aftercare-01-recovery-plan",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
       "from_id": "SCR-025-06",
-      "verb": "belongs to",
-      "to_id": "STG-main-01-inquiry",
-      "attrs": {}
+      "verb": "shows",
+      "to_id": "ENT-questionnaire-question.alert_description",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Admin-only note"
+      }
     },
     {
       "from_id": "SCR-025-06",
@@ -330793,13 +330675,7 @@
     {
       "from_id": "SCR-025-07",
       "verb": "belongs to",
-      "to_id": "STG-aftercare-01-recovery-plan",
-      "attrs": {}
-    },
-    {
-      "from_id": "SCR-025-07",
-      "verb": "belongs to",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -330853,6 +330729,14 @@
     {
       "from_id": "SCR-025-07",
       "verb": "shows",
+      "to_id": "ENT-questionnaire-audit-entry.session_id",
+      "attrs": {
+        "provenance": "session"
+      }
+    },
+    {
+      "from_id": "SCR-025-07",
+      "verb": "shows",
       "to_id": "ENT-questionnaire-version.changes_summary",
       "attrs": {
         "provenance": "retrieved"
@@ -330894,6 +330778,14 @@
       "from_id": "SCR-025-07",
       "verb": "shows",
       "to_id": "ENT-questionnaire-version.version_number",
+      "attrs": {
+        "provenance": "retrieved"
+      }
+    },
+    {
+      "from_id": "SCR-025-07",
+      "verb": "shows",
+      "to_id": "ENT-questionnaire-version.was_inquiry_designated",
       "attrs": {
         "provenance": "retrieved"
       }
@@ -342208,6 +342100,12 @@
     {
       "from_id": "STG-admin-01-configuration",
       "verb": "emits",
+      "to_id": "EVT-inquiry-questionnaire-unconfigured",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "emits",
       "to_id": "EVT-legal-acceptance-reminder",
       "attrs": {}
     },
@@ -343619,12 +343517,6 @@
       "from_id": "STG-main-01-inquiry",
       "verb": "emits",
       "to_id": "EVT-inquiry-cancelled",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-main-01-inquiry",
-      "verb": "emits",
-      "to_id": "EVT-inquiry-questionnaire-unconfigured",
       "attrs": {}
     },
     {
@@ -391754,6 +391646,30 @@
     },
     {
       "from_id": "STP-025-001",
+      "verb": "next",
+      "to_id": "STP-025-057",
+      "attrs": {
+        "label": "Manage categories"
+      }
+    },
+    {
+      "from_id": "STP-025-001",
+      "verb": "next",
+      "to_id": "STP-025-059",
+      "attrs": {
+        "label": "Archive a set"
+      }
+    },
+    {
+      "from_id": "STP-025-001",
+      "verb": "next",
+      "to_id": "STP-025-060",
+      "attrs": {
+        "label": "Delete a set"
+      }
+    },
+    {
+      "from_id": "STP-025-001",
       "verb": "on",
       "to_id": "SCR-025-01",
       "attrs": {}
@@ -391826,6 +391742,12 @@
     },
     {
       "from_id": "STP-025-003",
+      "verb": "applies",
+      "to_id": "REQ-025-073",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-003",
       "verb": "at",
       "to_id": "STG-admin-01-configuration",
       "attrs": {}
@@ -391874,6 +391796,22 @@
       "to_id": "STP-025-013",
       "attrs": {
         "label": "Delete question"
+      }
+    },
+    {
+      "from_id": "STP-025-003",
+      "verb": "next",
+      "to_id": "STP-025-020",
+      "attrs": {
+        "label": "Edit a question"
+      }
+    },
+    {
+      "from_id": "STP-025-003",
+      "verb": "next",
+      "to_id": "STP-025-058",
+      "attrs": {
+        "label": "View version history"
       }
     },
     {
@@ -392166,6 +392104,12 @@
     },
     {
       "from_id": "STP-025-010",
+      "verb": "applies",
+      "to_id": "REQ-025-084",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-010",
       "verb": "at",
       "to_id": "STG-admin-01-configuration",
       "attrs": {}
@@ -392270,6 +392214,15 @@
     },
     {
       "from_id": "STP-025-012",
+      "verb": "next",
+      "to_id": "STP-025-021",
+      "attrs": {
+        "label": "Admin edits a question",
+        "condition": "REQ-025-032"
+      }
+    },
+    {
+      "from_id": "STP-025-012",
       "verb": "on",
       "to_id": "SCR-025-02",
       "attrs": {}
@@ -392278,6 +392231,12 @@
       "from_id": "STP-025-013",
       "verb": "applies",
       "to_id": "REQ-025-044",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-013",
+      "verb": "applies",
+      "to_id": "REQ-025-084",
       "attrs": {}
     },
     {
@@ -392464,6 +392423,12 @@
     {
       "from_id": "STP-025-030",
       "verb": "applies",
+      "to_id": "REQ-025-052",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-030",
+      "verb": "applies",
       "to_id": "REQ-025-053",
       "attrs": {}
     },
@@ -392488,6 +392453,14 @@
     {
       "from_id": "STP-025-030",
       "verb": "next",
+      "to_id": "STP-025-031",
+      "attrs": {
+        "label": "Version consistent"
+      }
+    },
+    {
+      "from_id": "STP-025-030",
+      "verb": "next",
       "to_id": "STP-025-034",
       "attrs": {
         "label": "Version mismatch",
@@ -392497,9 +392470,10 @@
     {
       "from_id": "STP-025-030",
       "verb": "next",
-      "to_id": "STP-025-053",
+      "to_id": "STP-025-056",
       "attrs": {
-        "label": "Version consistent"
+        "label": "Resumed saved draft",
+        "condition": "REQ-025-057"
       }
     },
     {
@@ -392529,25 +392503,13 @@
     {
       "from_id": "STP-025-031",
       "verb": "next",
-      "to_id": "STP-025-054",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-025-032",
-      "verb": "applies",
-      "to_id": "REQ-025-063",
+      "to_id": "STP-025-053",
       "attrs": {}
     },
     {
       "from_id": "STP-025-032",
       "verb": "applies",
       "to_id": "REQ-025-064",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-025-032",
-      "verb": "applies",
-      "to_id": "REQ-025-065",
       "attrs": {}
     },
     {
@@ -392578,12 +392540,6 @@
       "from_id": "STP-025-032",
       "verb": "next",
       "to_id": "STP-003-028",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-025-032",
-      "verb": "next",
-      "to_id": "STP-025-055",
       "attrs": {}
     },
     {
@@ -392619,7 +392575,7 @@
     {
       "from_id": "STP-025-034",
       "verb": "next",
-      "to_id": "STP-025-053",
+      "to_id": "STP-025-031",
       "attrs": {}
     },
     {
@@ -392799,7 +392755,7 @@
       "verb": "next",
       "to_id": "STP-025-045",
       "attrs": {
-        "label": "Admin later removes designation or archives the set",
+        "label": "Admin later archives the designated set",
         "condition": "REQ-025-048"
       }
     },
@@ -392856,6 +392812,15 @@
       "verb": "done by",
       "to_id": "ACT-platform-admin",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-025-045",
+      "verb": "next",
+      "to_id": "STP-025-040",
+      "attrs": {
+        "label": "Admin designates another set",
+        "condition": "REQ-025-052"
+      }
     },
     {
       "from_id": "STP-025-045",
@@ -393013,6 +392978,14 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-025-049",
+      "verb": "next",
+      "to_id": "STP-011-043",
+      "attrs": {
+        "label": "Admin edits the milestone template in FR-011"
+      }
+    },
+    {
       "from_id": "STP-025-050",
       "verb": "applies",
       "to_id": "REQ-025-077",
@@ -393123,7 +393096,7 @@
     {
       "from_id": "STP-025-053",
       "verb": "next",
-      "to_id": "STP-025-031",
+      "to_id": "STP-025-054",
       "attrs": {}
     },
     {
@@ -393163,6 +393136,12 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-025-054",
+      "verb": "next",
+      "to_id": "STP-025-055",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-025-055",
       "verb": "applies",
       "to_id": "REQ-025-059",
@@ -393178,6 +393157,211 @@
       "from_id": "STP-025-055",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-056",
+      "verb": "applies",
+      "to_id": "REQ-025-053",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-056",
+      "verb": "applies",
+      "to_id": "REQ-025-057",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-056",
+      "verb": "at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-056",
+      "verb": "done by",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-056",
+      "verb": "next",
+      "to_id": "STP-025-031",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-057",
+      "verb": "applies",
+      "to_id": "REQ-025-027",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-057",
+      "verb": "applies",
+      "to_id": "REQ-025-028",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-057",
+      "verb": "applies",
+      "to_id": "REQ-025-029",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-057",
+      "verb": "applies",
+      "to_id": "REQ-025-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-057",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-057",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-057",
+      "verb": "next",
+      "to_id": "STP-025-001",
+      "attrs": {
+        "label": "Back to the catalog"
+      }
+    },
+    {
+      "from_id": "STP-025-057",
+      "verb": "on",
+      "to_id": "SCR-025-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-058",
+      "verb": "applies",
+      "to_id": "REQ-025-038",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-058",
+      "verb": "applies",
+      "to_id": "REQ-025-039",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-058",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-058",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-058",
+      "verb": "next",
+      "to_id": "STP-025-003",
+      "attrs": {
+        "label": "Restore as New Draft opens the Draft",
+        "condition": "REQ-025-038"
+      }
+    },
+    {
+      "from_id": "STP-025-058",
+      "verb": "on",
+      "to_id": "SCR-025-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-059",
+      "verb": "applies",
+      "to_id": "REQ-025-045",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-059",
+      "verb": "applies",
+      "to_id": "REQ-025-047",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-059",
+      "verb": "applies",
+      "to_id": "REQ-025-048",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-059",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-059",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-059",
+      "verb": "next",
+      "to_id": "STP-025-001",
+      "attrs": {
+        "label": "Set archived, or blocked while a milestone uses it",
+        "condition": "REQ-025-045"
+      }
+    },
+    {
+      "from_id": "STP-025-059",
+      "verb": "next",
+      "to_id": "STP-025-045",
+      "attrs": {
+        "label": "Set is the designated Inquiry set",
+        "condition": "REQ-025-048"
+      }
+    },
+    {
+      "from_id": "STP-025-059",
+      "verb": "on",
+      "to_id": "SCR-025-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-060",
+      "verb": "applies",
+      "to_id": "REQ-025-046",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-060",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-060",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-060",
+      "verb": "next",
+      "to_id": "STP-025-001",
+      "attrs": {
+        "label": "Back to the catalog"
+      }
+    },
+    {
+      "from_id": "STP-025-060",
+      "verb": "on",
+      "to_id": "SCR-025-01",
       "attrs": {}
     },
     {
@@ -432191,6 +432375,125 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-080925-506a07ec",
+      "at": "2026-11-24T08:09:25.763163+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-025 logic review pass 1: the alert tier belongs to the FR-002 engine and FR-025 owns only the Severity Flag mapping; preview colours each answer by its own flag; Green means no Yes on a Critical or Standard question; archiving the previous version on publish is version-level and the Inquiry designation carries over (new was_inquiry_designated field, owner default 94); a resumed draft keeps its version, all submissions are blocked when no set is designated, and the version is recorded at submit; Context Type read-only on the Active version; archived is terminal and a milestone-assigned set cannot be archived (owner default 95); delete only for a never-published set without usages; one open Draft per set and a stale save is refused; control hidden rather than blocked; every Multi-Context set may be assigned; audit actions and session id extended; inactive, deleted and hidden questions rule; publish confirmation, copy naming and Alert Description clarified; admin screens, rules and the unconfigured event moved to the Configuration stage with steps for categories, version history, archive and delete; flow wiring for edit question, restore and hand-offs.",
+      "source_id": null,
+      "nodes_added": [
+        "ENT-questionnaire-audit-entry.session_id",
+        "ENT-questionnaire-version.was_inquiry_designated",
+        "REQ-025-084",
+        "STP-025-056",
+        "STP-025-057",
+        "STP-025-058",
+        "STP-025-059",
+        "STP-025-060"
+      ],
+      "nodes_updated": [
+        "ENT-questionnaire-audit-entry.action_type",
+        "ENT-questionnaire-question.status",
+        "REQ-025-001",
+        "REQ-025-002",
+        "REQ-025-003",
+        "REQ-025-004",
+        "REQ-025-005",
+        "REQ-025-006",
+        "REQ-025-007",
+        "REQ-025-008",
+        "REQ-025-009",
+        "REQ-025-010",
+        "REQ-025-011",
+        "REQ-025-012",
+        "REQ-025-013",
+        "REQ-025-014",
+        "REQ-025-015",
+        "REQ-025-016",
+        "REQ-025-017",
+        "REQ-025-018",
+        "REQ-025-019",
+        "REQ-025-020",
+        "REQ-025-021",
+        "REQ-025-022",
+        "REQ-025-023",
+        "REQ-025-024",
+        "REQ-025-025",
+        "REQ-025-026",
+        "REQ-025-027",
+        "REQ-025-028",
+        "REQ-025-029",
+        "REQ-025-030",
+        "REQ-025-031",
+        "REQ-025-032",
+        "REQ-025-033",
+        "REQ-025-034",
+        "REQ-025-035",
+        "REQ-025-036",
+        "REQ-025-037",
+        "REQ-025-038",
+        "REQ-025-039",
+        "REQ-025-040",
+        "REQ-025-041",
+        "REQ-025-042",
+        "REQ-025-043",
+        "REQ-025-044",
+        "REQ-025-045",
+        "REQ-025-046",
+        "REQ-025-047",
+        "REQ-025-048",
+        "REQ-025-049",
+        "REQ-025-050",
+        "REQ-025-051",
+        "REQ-025-052",
+        "REQ-025-053",
+        "REQ-025-057",
+        "REQ-025-058",
+        "REQ-025-059",
+        "REQ-025-063",
+        "REQ-025-064",
+        "REQ-025-065",
+        "REQ-025-071",
+        "REQ-025-072",
+        "REQ-025-073",
+        "REQ-025-074",
+        "REQ-025-075",
+        "REQ-025-076",
+        "REQ-025-078",
+        "REQ-025-079",
+        "REQ-025-080",
+        "REQ-025-081",
+        "REQ-025-082",
+        "SCR-025-01",
+        "SCR-025-02",
+        "SCR-025-03",
+        "SCR-025-04",
+        "SCR-025-05",
+        "SCR-025-06",
+        "SCR-025-07",
+        "STG-admin-01-configuration",
+        "STG-main-01-inquiry",
+        "STP-025-001",
+        "STP-025-003",
+        "STP-025-010",
+        "STP-025-012",
+        "STP-025-013",
+        "STP-025-021",
+        "STP-025-030",
+        "STP-025-031",
+        "STP-025-032",
+        "STP-025-034",
+        "STP-025-043",
+        "STP-025-045",
+        "STP-025-049",
+        "STP-025-053",
+        "STP-025-054",
+        "STP-025-055"
+      ],
+      "edges_added": 128,
+      "edges_removed": 131,
+      "rows": 355
+    },
     {
       "id": "cs-20261124-080356-7a9e6489",
       "at": "2026-11-24T08:03:56.654681+00:00",
