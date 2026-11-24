@@ -1,0 +1,114 @@
+# FR-001 logic review pass 2: ruled fixes applied to the PRD (Patient Authentication and Profile Management). New rule, two fields and five steps come first, then edges, then updates, then the edge removals and the three relabelled edges (there is no update_edge op, so each relabel is a remove_edge followed by an add_edge at the end).
+# Cross-FR edges (edges only; no other FR's node is updated): STP-001-152 next STP-023-001 (FR-023 step); FR-001 references REQ-026-056 (FR-026 rule); REQ-001-182 applies to ENT-deletion-request (FR-023 entity); REQ-001-183 and REQ-001-184 governed by SET-otp-max-resend-attempts (FR-026 setting).
+# Queued for other FRs, not done here: FR-023 (fulfilment step states sessions end, old credentials fail with the standard message, email free for a new account; registration after deletion), FR-016 (patient Overview shows email verified and email change pending; auto-unlock may read the new lock fields), FR-026 (duplicate OTP setting stubs SET-otp-validity-window and SET-otp-resend-rate-limit). FR-027 needs nothing.
+# Left alone on purpose: password reset marking a never-verified email as verified, admin email change as a session-ending event, hand-off STP-001-003 to STP-027-011, 15 minutes hardcoded in REQ-001-098 and Screen 18 while Screen 5 says configurable, SET-reverification-threshold description, order between Locked and unverified email in B3, steps pinned on an early stage, Screen 5 Help entry after the wrong-code limit, the four events with no reader.
+reason: "FR-001 logic review pass 2: replace-on-register limited to a registration that never had a verified email, routing after a correct code by registration state, Screen 14 code block, email uniqueness on change and admin save, wrong password on a Locked account, fulfilled deletion ends sessions and frees the email, Delete Account path wiring, Terms version named at the tick, status-change wording, Screen 19 email state, login and deletion step wiring."
+by: docs-manager
+operations:
+  - {"op": "add_node", "id": "REQ-001-189", "type": "Rule", "owner_fr": "FR-001", "title": "After a correct code or login, the next screen depends on the registration state", "attrs": {"statement": "After a correct verification code on Screen 5, and after a login with correct credentials, the next screen depends on the registration state: a patient whose profile or discovery step is unfinished goes to Screen 6 (then Screen 8); a patient whose registration is finished goes to the login success step and the session starts. A patient who verified the email but never finished the profile is sent back to finish it at the next login, on any device, before entering the app.", "rationale": "FR-001 PRD Screen 5, Screen 9 and Alternative Flow B3; owner default 270 (other option: let the patient in and rely on the block at inquiry submission)."}}
+  - {"op": "add_field", "id": "ENT-patient.failed_login_count", "entity_id": "ENT-patient", "name": "failed_login_count", "data_type": "int", "title": "Failed login attempt count", "owner_fr": "FR-001", "required": false, "attrs": {"description": "Failed sign-in and code attempts counted toward the lock (REQ-001-007). Resets after a successful login and when the lock ends; attempts during the lock do not extend it."}}
+  - {"op": "add_field", "id": "ENT-patient.locked_at", "entity_id": "ENT-patient", "name": "locked_at", "data_type": "datetime", "title": "Lock start time", "owner_fr": "FR-001", "required": false, "attrs": {"description": "When the account was locked after the failed-attempt limit (REQ-001-007). The lock ends after the lockout duration (REQ-001-066); empty when the account is not locked."}}
+  - {"op": "add_node", "id": "STP-001-149", "type": "Step", "owner_fr": "FR-001", "title": "Patient resends the code or cancels the email change on Edit Profile; cancelling clears the pending address", "attrs": {"prd_ref": "Screen 14 Business Rules"}}
+  - {"op": "add_node", "id": "STP-001-150", "type": "Step", "owner_fr": "FR-001", "title": "Patient taps Delete Account on the profile overview", "attrs": {"prd_ref": "Screen 13 Data Fields"}}
+  - {"op": "add_node", "id": "STP-001-151", "type": "Step", "owner_fr": "FR-001", "title": "System shows the Delete Account screen and checks the blocks for an active case or a payment in progress", "attrs": {"prd_ref": "Screen 16 Business Rules"}}
+  - {"op": "add_node", "id": "STP-001-152", "type": "Step", "owner_fr": "FR-001", "title": "Patient taps Request deletion; identity is re-verified when the last authentication is older than 5 minutes, then the request is sent", "attrs": {"prd_ref": "Screen 16 Data Fields"}}
+  - {"op": "add_node", "id": "STP-001-153", "type": "Step", "owner_fr": "FR-001", "title": "System sends a patient with a verified email and an unfinished registration to Screen 6 to finish the profile before entering the app", "attrs": {"prd_ref": "Alternative Flow B3"}}
+  - {"op": "add_edge", "from": "STP-001-149", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-001-149", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-001-149", "verb": "on", "to": "SCR-001-12"}
+  - {"op": "add_edge", "from": "STP-001-149", "verb": "applies", "to": "REQ-001-183"}
+  - {"op": "add_edge", "from": "STP-001-149", "verb": "applies", "to": "REQ-001-180"}
+  - {"op": "add_edge", "from": "STP-001-149", "verb": "applies", "to": "REQ-001-098"}
+  - {"op": "add_edge", "from": "STP-001-149", "verb": "applies", "to": "REQ-001-049"}
+  - {"op": "add_edge", "from": "STP-001-150", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-001-150", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-001-150", "verb": "on", "to": "SCR-001-11"}
+  - {"op": "add_edge", "from": "STP-001-150", "verb": "applies", "to": "REQ-001-090"}
+  - {"op": "add_edge", "from": "STP-001-151", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-001-151", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-001-151", "verb": "on", "to": "SCR-001-16"}
+  - {"op": "add_edge", "from": "STP-001-151", "verb": "applies", "to": "REQ-001-091"}
+  - {"op": "add_edge", "from": "STP-001-151", "verb": "applies", "to": "REQ-001-092"}
+  - {"op": "add_edge", "from": "STP-001-152", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-001-152", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-001-152", "verb": "on", "to": "SCR-001-16"}
+  - {"op": "add_edge", "from": "STP-001-152", "verb": "applies", "to": "REQ-001-089"}
+  - {"op": "add_edge", "from": "STP-001-152", "verb": "applies", "to": "REQ-001-090"}
+  - {"op": "add_edge", "from": "STP-001-152", "verb": "applies", "to": "REQ-001-156"}
+  - {"op": "add_edge", "from": "STP-001-152", "verb": "applies", "to": "REQ-001-186"}
+  - {"op": "add_edge", "from": "STP-001-153", "verb": "at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "STP-001-153", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-001-153", "verb": "on", "to": "SCR-001-07"}
+  - {"op": "add_edge", "from": "STP-001-153", "verb": "applies", "to": "REQ-001-189"}
+  - {"op": "add_edge", "from": "REQ-001-189", "verb": "applies at", "to": "STG-patient-01-registered"}
+  - {"op": "add_edge", "from": "REQ-001-189", "verb": "applies to", "to": "SCR-001-03"}
+  - {"op": "add_edge", "from": "REQ-001-189", "verb": "applies to", "to": "SCR-001-07"}
+  - {"op": "add_edge", "from": "REQ-001-189", "verb": "applies to", "to": "ENT-patient.email_verified"}
+  - {"op": "add_edge", "from": "REQ-001-189", "verb": "decided by", "to": "SRC-PRD-001"}
+  - {"op": "add_edge", "from": "STP-001-004", "verb": "applies", "to": "REQ-001-189"}
+  - {"op": "add_edge", "from": "STP-001-004", "verb": "next", "to": "STP-001-013", "attrs": {"label": "Registration finished", "condition": "REQ-001-189"}}
+  - {"op": "add_edge", "from": "STP-001-132", "verb": "next", "to": "STP-001-153", "attrs": {"label": "Email verified, registration not finished", "condition": "REQ-001-189", "back": true}}
+  - {"op": "add_edge", "from": "STP-001-153", "verb": "next", "to": "STP-001-005"}
+  - {"op": "add_edge", "from": "STP-001-141", "verb": "next", "to": "STP-001-149", "attrs": {"label": "Code not entered: resend or cancel"}}
+  - {"op": "add_edge", "from": "STP-001-149", "verb": "next", "to": "STP-001-141", "attrs": {"label": "Resend"}}
+  - {"op": "add_edge", "from": "REQ-001-180", "verb": "applies to", "to": "SCR-001-12"}
+  - {"op": "add_edge", "from": "STP-001-141", "verb": "applies", "to": "REQ-001-098"}
+  - {"op": "add_edge", "from": "STP-001-141", "verb": "applies", "to": "REQ-001-180"}
+  - {"op": "add_edge", "from": "STP-001-141", "verb": "applies", "to": "REQ-001-049"}
+  - {"op": "add_edge", "from": "STP-001-142", "verb": "applies", "to": "REQ-001-180"}
+  - {"op": "add_edge", "from": "STP-001-142", "verb": "applies", "to": "REQ-001-098"}
+  - {"op": "add_edge", "from": "REQ-001-183", "verb": "governed by", "to": "SET-otp-max-resend-attempts"}
+  - {"op": "add_edge", "from": "REQ-001-184", "verb": "governed by", "to": "SET-otp-max-resend-attempts"}
+  - {"op": "add_edge", "from": "SCR-001-12", "verb": "shows", "to": "ENT-patient.pending_email", "attrs": {"provenance": "retrieved", "label": "Pending Email Address", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-001-12", "verb": "shows", "to": "ENT-otp-code.code", "attrs": {"provenance": "user input", "label": "Email Code Input"}}
+  - {"op": "add_edge", "from": "REQ-001-052", "verb": "applies to", "to": "SCR-001-12"}
+  - {"op": "add_edge", "from": "REQ-001-009", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-001-009", "verb": "applies to", "to": "ENT-patient.pending_email"}
+  - {"op": "add_edge", "from": "REQ-001-009", "verb": "applies to", "to": "SCR-001-12"}
+  - {"op": "add_edge", "from": "REQ-001-009", "verb": "applies to", "to": "SCR-001-19"}
+  - {"op": "add_edge", "from": "STP-001-141", "verb": "applies", "to": "REQ-001-009"}
+  - {"op": "add_edge", "from": "STP-001-142", "verb": "applies", "to": "REQ-001-009"}
+  - {"op": "add_edge", "from": "STP-001-148", "verb": "applies", "to": "REQ-001-009"}
+  - {"op": "add_edge", "from": "REQ-001-181", "verb": "applies to", "to": "ENT-patient.email_verified"}
+  - {"op": "add_edge", "from": "REQ-001-007", "verb": "applies to", "to": "ENT-patient.failed_login_count"}
+  - {"op": "add_edge", "from": "REQ-001-007", "verb": "applies to", "to": "ENT-patient.locked_at"}
+  - {"op": "add_edge", "from": "REQ-001-066", "verb": "applies to", "to": "ENT-patient.locked_at"}
+  - {"op": "add_edge", "from": "FR-001", "verb": "references", "to": "REQ-026-056"}
+  - {"op": "add_edge", "from": "STP-001-071", "verb": "next", "to": "STP-001-081", "attrs": {"label": "Attempt limit reached"}}
+  - {"op": "add_edge", "from": "STP-001-135", "verb": "next", "to": "STP-001-012", "attrs": {"label": "Login again"}}
+  - {"op": "add_edge", "from": "STP-001-137", "verb": "next", "to": "STP-001-013", "attrs": {"label": "Session starts"}}
+  - {"op": "add_edge", "from": "STP-001-024", "verb": "next", "to": "STP-001-013", "attrs": {"label": "Active", "condition": "REQ-001-076"}}
+  - {"op": "add_edge", "from": "REQ-001-182", "verb": "applies to", "to": "ENT-deletion-request"}
+  - {"op": "add_edge", "from": "STP-001-031", "verb": "next", "to": "STP-001-150", "attrs": {"label": "Delete Account"}}
+  - {"op": "add_edge", "from": "STP-001-150", "verb": "next", "to": "STP-001-151"}
+  - {"op": "add_edge", "from": "STP-001-151", "verb": "next", "to": "STP-001-152", "attrs": {"label": "No block"}}
+  - {"op": "add_edge", "from": "STP-001-152", "verb": "next", "to": "STP-001-146", "attrs": {"label": "Last authentication older than 5 minutes", "condition": "REQ-001-156"}}
+  - {"op": "add_edge", "from": "STP-001-152", "verb": "next", "to": "STP-023-001", "attrs": {"label": "Deletion request submitted", "condition": "REQ-001-090"}}
+  - {"op": "add_edge", "from": "STP-001-146", "verb": "next", "to": "STP-001-152", "attrs": {"label": "Back to Delete Account"}}
+  - {"op": "add_edge", "from": "SCR-001-19", "verb": "shows", "to": "ENT-patient.email_verified", "attrs": {"provenance": "retrieved", "label": "Email Verified", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-001-19", "verb": "shows", "to": "ENT-patient.pending_email", "attrs": {"provenance": "retrieved", "label": "Email Change Pending", "editable": false}}
+  - {"op": "add_edge", "from": "REQ-001-026", "verb": "applies to", "to": "ENT-patient.email_verified"}
+  - {"op": "add_edge", "from": "REQ-001-026", "verb": "applies to", "to": "ENT-patient.pending_email"}
+  - {"op": "update_node", "id": "REQ-001-007", "attrs": {"statement": "System MUST track and lock accounts after configurable max failed login attempts (default: 5; per Admin Settings A-09 / FR-026). The account stores the failed-attempt count and the time the lock started; the count resets after a successful login and when the lock ends, and attempts made during the lock do not extend it."}}
+  - {"op": "update_node", "id": "REQ-001-009", "attrs": {"statement": "System MUST maintain unique email addresses across all patient accounts. The check also runs when a patient saves a pending email, when an admin saves an email, and again at code confirmation. A patient gets the same neutral message as on Screen 4 and the existing owner is emailed; an admin gets a plain \"address already in use\" error. If the address was taken between save and confirmation, the confirmation fails with the neutral message and the pending address is cleared."}}
+  - {"op": "update_node", "id": "REQ-001-026", "attrs": {"statement": "Admin can view patient account status and verification state (email verified, email change pending); an admin changes status only through the FR-016 flows (suspend A6, lift a suspension, unlock)."}}
+  - {"op": "update_node", "id": "REQ-001-043", "attrs": {"statement": "Continue button disabled until both name fields are valid and the Terms and Privacy Policy acceptance is checked; the checkbox is shown again if a newer version becomes Current before the account is created (REQ-001-044)"}}
+  - {"op": "update_node", "id": "REQ-001-044", "attrs": {"statement": "One checkbox covers the Terms & Conditions and the Privacy Policy. When the account is created (Screen 4), not before, the app MUST record both acceptances via FR-027 acceptance tracking (document type, version, locale, acceptedAt, channel), each naming the version that was displayed when the box was ticked. If a newer version is Current when the account is created, the checkbox is shown again with a link to the new text before Screen 4 completes.", "rationale": "prd.md Screen 3 and Screen 4; the acceptance record needs the patient identity, which exists only once the account is created. Owner default 274 (other option: always record the newest version at creation time)."}}
+  - {"op": "update_node", "id": "REQ-001-065", "attrs": {"statement": "System displays \"Invalid email or password\" error. The same message is shown for a wrong password on a Locked account, for a login from an IP address blocked under FR-026 (REQ-026-056), and for the old credentials of an account whose deletion was fulfilled (REQ-001-182)."}}
+  - {"op": "update_node", "id": "REQ-001-066", "attrs": {"statement": "Patient must wait for configurable lockout duration (default: 15 minutes; per Admin Settings A-09 / FR-026) or contact support. A wrong password on a Locked account shows the normal \"Invalid email or password\" message; the lockout message appears only with correct credentials. Attempts during the lock do not extend it.", "rationale": "prd.md line 205. Also stated in the PRD at line 200: \"System displays account lockout message\"; line 201: \"System logs security event\". Owner default 272 (other option: show the lock message for any password)."}}
+  - {"op": "update_node", "id": "REQ-001-180", "attrs": {"statement": "A wrong 6-digit code (registration, password reset, re-verification, email change) counts toward the same limit as failed logins (the FR-026 max login attempts setting, default 5). After the limit the code stops working and the patient must request a new one; the resend cooldown applies. There is no separate setting."}}
+  - {"op": "update_node", "id": "REQ-001-181", "title": "Duplicate email at registration gets the neutral result; only a registration that never had a verified email may register again", "attrs": {"statement": "A registration with an email that belongs to an existing account gets the same neutral \"check your email\" result as a new email and reveals nothing on screen; the system emails the existing owner that an account already exists. An existing account is every record except a registration that never had a verified email, including an account whose email is unverified after an admin change. A registration that never had a verified email (never finished) may register again with the same email: only that unfinished record is replaced and a new code is sent."}}
+  - {"op": "update_node", "id": "REQ-001-182", "title": "Password reset, admin reset, suspension and a fulfilled deletion end every existing session", "attrs": {"statement": "A password reset by the patient, a password reset by an admin and a suspension each end all existing sessions of the patient on every device, as Change Password does (REQ-001-119). After a patient reset a new session starts only where the account status allows it (REQ-001-076). When FR-023 sets a deletion request to Fulfilled, every session of the patient ends too, login with the old credentials gets the standard \"Invalid email or password\" result, and the email address is free for a new registration, which creates a new account with no link to the old data.", "rationale": "FR-001 PRD Screen 12 and Login Rules; owner default 256 (other option: sessions end only on Change Password) and default 273 for a fulfilled deletion (other option: the address stays blocked). FR-016 has no session-ending rule for suspension or admin reset."}}
+  - {"op": "update_node", "id": "REQ-001-183", "attrs": {"statement": "When the patient changes the email on the profile, the 6-digit code is sent to the NEW address. The login email stays the old address, and the new one is held as pending (ENT-patient.pending_email), until the code is confirmed. Screen 14 shows the pending address (read only), the code input, Resend and Cancel change (clears the pending address). The code lives 15 minutes (REQ-001-098) and follows the same resend limit and wrong-code limit as the other codes; when it expires the pending address stays until the patient resends or cancels. After confirmation the new address becomes the login email, the pending value is cleared and a notice goes to the old address."}}
+  - {"op": "update_node", "id": "REQ-001-184", "attrs": {"statement": "An admin may change a patient's email. The new address is saved as unverified, a notice goes to the old address, and at the patient's next login a code is sent to the new address and the patient confirms it before the session starts, on Screen 5 with the same expiry, resend and wrong-code rules. An address already in use gets a plain \"address already in use\" error (REQ-001-009)."}}
+  - {"op": "update_node", "id": "REQ-001-188", "attrs": {"statement": "The account status list keeps the value Deactivated as a reserved value: nothing sets it, nothing shows it and it has no behaviour. An admin changes account status only through the FR-016 flows. The system also locks an account after failed logins (REQ-001-007), unlocks it when the lock period ends, and returns a Locked account to Active after a password reset (REQ-001-076)."}}
+  - {"op": "update_node", "id": "STP-001-081", "title": "System locks the account at the attempt limit and shows the lockout message only when the credentials are correct"}
+  - {"op": "update_node", "id": "STP-001-135", "title": "When the lock period ends, the failed-attempt count resets and login works again"}
+  - {"op": "update_node", "id": "STP-001-139", "title": "System replaces the unfinished registration, which never had a verified email, with the new registration and sends a new code"}
+  - {"op": "remove_edge", "from": "REQ-001-090", "verb": "applies at", "to": "STG-patient-05-deleted"}
+  - {"op": "remove_edge", "from": "STP-001-003", "verb": "next", "to": "STP-001-138"}
+  - {"op": "remove_edge", "from": "STP-001-003", "verb": "next", "to": "STP-001-139"}
+  - {"op": "remove_edge", "from": "STP-001-004", "verb": "next", "to": "STP-001-005"}
+  - {"op": "add_edge", "from": "STP-001-003", "verb": "next", "to": "STP-001-138", "attrs": {"label": "Email belongs to an existing account", "condition": "REQ-001-181"}}
+  - {"op": "add_edge", "from": "STP-001-003", "verb": "next", "to": "STP-001-139", "attrs": {"label": "Registration never had a verified email", "condition": "REQ-001-181"}}
+  - {"op": "add_edge", "from": "STP-001-004", "verb": "next", "to": "STP-001-005", "attrs": {"label": "Profile or discovery step unfinished", "condition": "REQ-001-189"}}
