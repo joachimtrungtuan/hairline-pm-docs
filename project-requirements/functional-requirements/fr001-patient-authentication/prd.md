@@ -70,7 +70,7 @@ The Patient Authentication & Profile Management module enables patients to secur
 
 **Out of Scope**:
 
-- Direct patient-provider communication (handled by FR-012, future) (REQ-001-036)
+- Direct patient-provider communication (handled by FR-012) (REQ-001-036)
 - Provider-initiated patient account creation
 - Admin-initiated patient account creation (patients must register via mobile app) (REQ-001-032)
 - Social authentication (Google, Apple, Facebook OAuth - future enhancement) (REQ-001-036)
@@ -353,7 +353,7 @@ flowchart TD
 - Loading animation provides visual feedback (REQ-001-134)
 - See REQ-001-135.
 - The splash screen uses a new visual (REQ-001-168)
-- On first start the app language is the phone's language; if the app does not offer that language, it falls back to English. The patient can change the language later. (REQ-001-165)
+- On first start the app language is the phone's language; if the app does not offer that language, it shows the default locale set in FR-021 (English until a Super Admin changes it), and a text missing in the shown language falls back until it ends at the English source. The patient can change the language later. (REQ-001-165, REQ-021-074, REQ-021-078)
 
 #### Screen 1a: Explanation Screens
 
@@ -725,7 +725,7 @@ flowchart TD
 
 - Validation applied per field; back navigation available (REQ-001-085)
 - Email change triggers re-verification via 6-digit OTP (REQ-001-081). Save on a changed email first runs identity re-verification (Screen 18) when the last sign-in check is older than 5 minutes (REQ-001-016, REQ-001-131), then sends the code to the NEW address. The login email stays the old address until the code is confirmed; after confirmation a notice goes to the old address (REQ-001-183)
-- While a pending email exists the screen shows the pending address, the code input, Resend code and Cancel change. The email-change code lives 15 minutes (REQ-001-098) and follows the same resend limit and wrong-code limit as the other codes (REQ-001-049, REQ-001-180). When the code expires the pending address stays until the patient resends or cancels (REQ-001-183). The code sent at the next login after an admin email change (REQ-001-184) uses Screen 5 with the same rules
+- While a pending email exists the screen shows the pending address, the code input, Resend code and Cancel change. The email-change code is sent with the email verification template and lives a fixed 15 minutes, outside the FR-026 OTP Expiry Time (REQ-001-098); it follows the same resend limit and wrong-code limit as the other codes (REQ-001-049, REQ-001-180). When the code expires the pending address stays until the patient resends or cancels (REQ-001-183). The code sent at the next login after an admin email change (REQ-001-184) uses Screen 5 with the same rules
 - The uniqueness check (REQ-001-009) runs when the pending email is saved and again at code confirmation. An address that belongs to another account gets the same neutral result as on Screen 4 and the existing owner is emailed (REQ-001-181); if the address was taken between save and confirmation, the confirmation fails with the same neutral message and the pending address is cleared (REQ-001-009)
 - Profile completion is the share of required profile fields that are filled, shown as a percentage from 0 to 100, with equal weight per field. The required fields are: First Name, Last Name, Email Address, Phone Number, Date of Birth, Gender and Country. The Avatar is optional and does not count. (REQ-001-166)
 
@@ -984,7 +984,7 @@ flowchart TD
 | Instruction Text | text | Yes | "For your security, please verify your identity before proceeding." | Clear, concise explanation | no graph field (static content) |
 | Verification Method Selector | chips | Yes | Options: "Password" or "Email OTP" | Patient can switch methods; methods per FR-001 auth policy (REQ-001-177) | no graph field (control) |
 | Password Field (Conditional) | text | Conditional | Masked password input; shown if "Password" method selected | Must match current account password; show/hide toggle icon | ENT-patient.password_hash |
-| Email OTP Field (Conditional) | text | Conditional | 6-digit OTP input; shown if "Email OTP" method selected | System sends OTP to registered email; code expires in 15 minutes (REQ-001-098) | ENT-otp-code.code |
+| Email OTP Field (Conditional) | text | Conditional | 6-digit OTP input; shown if "Email OTP" method selected | System sends OTP to registered email; code expires after a fixed 15 minutes (REQ-001-098) | ENT-otp-code.code |
 | Resend OTP Link (Conditional) | link | Conditional | Shown only if "Email OTP" method selected | Rate-limited; cooldown applies per OTP rules (REQ-001-098) | no graph field (control) |
 | Error Message (Conditional) | text | Conditional | Displayed on verification failure | Actionable: "Invalid password/code. Please try again." (REQ-001-178) | no graph field (static content) |
 | Verify Button | button | Yes | Primary CTA: "Verify" | Disabled until password entered OR 6-digit OTP entered; on success, returns to calling screen's next step | no graph field (control) |
@@ -992,8 +992,8 @@ flowchart TD
 
 **Business Rules**:
 
-- Re-verification is required when last successful auth > 5 minutes (threshold is a platform setting managed in FR-026) (REQ-001-142)
-- Selecting "Email OTP" sends a 6-digit code to the registered email; code expires in 15 minutes; resend is rate-limited (REQ-001-098)
+- Re-verification is required when last successful auth is older than the re-verification threshold, a platform setting managed in FR-026 (whole minutes from 1 to 60, default 5; the 5 minutes named on Screens 16 and 18 is that default) (REQ-001-142)
+- Selecting "Email OTP" sends a 6-digit code to the registered email with the email verification template; the code expires after a fixed 15 minutes (it does not follow the FR-026 OTP Expiry Time, as the email-change code does not); resend is rate-limited (REQ-001-098)
 - Verification failures, throttling, and any lockout behavior follow the configured authentication security policy (do not hardcode attempt counts in UI copy) (REQ-001-097)
 - A wrong email code counts toward the same limit as failed logins (FR-026 max login attempts, default 5); after the limit the code stops working and a new one must be requested, with the resend cooldown applying (REQ-001-180)
 - Successful verification returns the patient to the calling screen's next step (e.g., final confirmation modal for Delete Account) (REQ-001-099)
@@ -1014,7 +1014,7 @@ flowchart TD
 | Status Indicator | display | Yes | Patient account status badge: Active, Suspended, Locked | Colour-coded for quick visual scan | ENT-patient.account_status |
 | Email Verified | display | Yes | Whether the patient's email is verified, with an "email change pending" mark while a pending email exists | Read-only; after an admin email change it shows not verified until the patient confirms the code at the next login (REQ-001-026, REQ-001-184) | ENT-patient.email_verified, ENT-patient.pending_email |
 | Profile Completion | display | Yes | Profile completion per patient, shown as a percentage from 0 to 100 | Read-only; share of required profile fields filled, equal weight per field (fields listed on Screen 14) (REQ-001-124) | ENT-patient.profile_completion_status |
-| Last Login | display | Yes | Timestamp of the patient's most recent login | Read-only; displayed in admin-configured timezone (REQ-001-125) | ENT-patient.last_login_at |
+| Last Login | display | Yes | Timestamp of the patient's most recent login | Read-only; shown in the admin's browser timezone with the zone named beside the time (REQ-026-050, REQ-001-125) | ENT-patient.last_login_at |
 | Action Buttons | button | Yes | Per-row action set: Edit, View, Suspend | Edit: modifies patient data with audit trail; View: read-only; Suspend: starts the FR-016 suspension flow (A6, REQ-016-012); an admin changes account status only through FR-016 flows (REQ-001-028) | no graph field (control) |
 
 **Business Rules**:
@@ -1043,7 +1043,7 @@ flowchart TD
    - Session timeout after 24 hours of inactivity (REQ-001-067)
    - Successful logins logged for security monitoring (REQ-001-008)
    - Login outcome by account state (Suspended, email not verified, Locked, deletion request open): see Workflow 2, B3 (REQ-001-068, REQ-001-069)
-   - Wrong codes (registration, password reset, re-verification) share the failed-login limit: after it the code stops working and a new one is requested (REQ-001-180)
+   - Wrong codes (registration, password reset, re-verification, email change) share the failed-login limit: after it the code stops working and a new one is requested. One failed-attempt counter per account serves both sign-in and code entry; it resets after a successful sign-in or code entry and when a lockout ends, and a lowered limit applies from the next failed attempt (REQ-001-180, REQ-026-145)
    - A password reset by the patient, a password reset by an admin and a suspension each end every existing session of the patient on every device, as Change Password does (REQ-001-119); a reset then starts one new session where the account status allows it (REQ-001-182)
    - When FR-023 sets a deletion request to Fulfilled, every session of the patient ends, login with the old credentials gets the standard "Invalid email or password" result, and the email address is free for a new registration, which creates a new account with no link to the old data (REQ-001-182)
 
@@ -1297,6 +1297,7 @@ A patient successfully updates their profile information and manages account set
 | 2026-11-23 | 1.8 | Independent compression review: 6 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | AI |
 | 2026-11-24 | 1.9 | Logic review pass 1: deletion request rules aligned with FR-003 and FR-023 (inquiries cancelled at approval, 30 days from submission, Screen 16 status and verification blocks); account status changes only through FR-016 (Deactivated kept as reserved); login outcomes by account state and password reset outcomes by status; sessions end on reset and suspension; wrong-code limit shares the failed-login setting; duplicate-email registration neutral; Current version wording for legal texts and Terms plus Privacy acceptance recorded at account creation; first-sign-in consent gate; Settings Consent and Language rows; mandatory notices follow FR-020; email change and admin email change confirmed by code to the new address. New rules REQ-001-180 to REQ-001-188. | AI |
 | 2026-11-24 | 2.0 | Logic review pass 2: replace-on-register limited to a registration that never had a verified email; routing after a correct code by registration state (new rule REQ-001-189); Screen 14 code block with resend and cancel; email uniqueness also on email change and admin save; wrong password on a Locked account shows the normal message, failed-attempt count and lock start stored, IP block message; a fulfilled deletion ends sessions and frees the email; Delete Account path and re-authentication check at Screen 16; Terms version named at the tick; status-change wording corrected; Screen 19 shows email verification state; Screen 14 date of birth maximum age 100. | AI |
+| 2026-11-25 | 2.1 | Cross-FR alignment: FR-012 no longer called future; default locale shown when the device language is not offered; re-verification threshold range 1 to 60 minutes (default 5); email-change and re-verification codes use the email verification template with a fixed 15 minutes; one failed-attempt counter per account shared by sign-in and code entry with its reset rule; admin last-login time in the admin's browser timezone. | AI |
 
 ## Appendix: Approvals
 

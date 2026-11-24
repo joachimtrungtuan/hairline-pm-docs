@@ -211,7 +211,7 @@ flowchart TD
     Manual --> Delay["Optionally notify patient of delay"]
 
     Found -->|Yes| Distribute["Distribute inquiry to providers + record timestamps"]
-    Distribute --> Notify["Send provider notifications (within 5 minutes)"]
+    Distribute --> Notify["Send provider notifications (target: first send attempt within 5 minutes)"]
     Notify --> NotifyOk{"Notification dispatch OK?"}
     NotifyOk -->|No| Retry["Queue/retry + alert on SLA risk; log attempts"] --> Access
     NotifyOk -->|Yes| Access["Provider views enforce anonymization until payment<br/>+ medical alerts shown prominently"]
@@ -260,7 +260,7 @@ flowchart TD
     Check -->|No| Normal["Proceed with normal distribution (Workflow 2 main flow)"]
     Check -->|Yes| Exclusive["Distribute exclusively to the assigned provider;<br/>skip matching + 10-provider cap"]
     Exclusive --> Views["Create provider-specific inquiry view (anonymized)"]
-    Views --> Notify["Send provider notification (within 5 minutes)"]
+    Views --> Notify["Send provider notification (target: first send attempt within 5 minutes)"]
 ```
 
 **B4: Provider becomes Suspended or Deactivated**:
@@ -274,7 +274,7 @@ flowchart TD
      - If the cascade cancels the last live offer on the inquiry and the patient had explicitly selected the affected provider (Screen 7a), the system asks the patient to confirm before it redistributes, sets `redistribution_state` to `awaiting_patient_confirmation`, and redistributes only after the patient confirms with the Confirm action on Screen 8. The patient keeps the Contact Admin/Support action while waiting. (REQ-003-128)
        - On confirm, `redistribution_state` becomes `confirmed` and the inquiry goes back to normal Workflow 2 matching; Alternative Flow B1 applies when no eligible provider is found.
        - On decline, `redistribution_state` becomes `declined`; the inquiry stays as it is, flagged `supportRequired = true`, and is not redistributed.
-       - With no answer after a fixed 48 hours, the system sends one reminder, sets `redistribution_state` to `admin_follow_up`, and the inquiry appears in the admin inquiry queue (Screen 11) for follow-up. No second reminder is sent, and the patient can still confirm or decline.
+       - With no answer after a fixed 48 hours, the system sends one reminder (`provider.status_redistribution_reminder`, FR-020 REQ-020-159), sets `redistribution_state` to `admin_follow_up`, and the inquiry appears in the admin inquiry queue (Screen 11) for follow-up. No second reminder is sent, and the patient can still confirm or decline.
        - `redistribution_state` returns to `none`, and any pending reminder is dropped, when the inquiry is cancelled, when an admin reassigns providers or reruns distribution on Screen 12, or when an admin clears `supportRequired`. The reminder is sent only while the state is `awaiting_patient_confirmation`.
      - If the patient still has another live offer on the inquiry, the inquiry is not redistributed.
      - If the inquiry is still at stage Inquiry with no quote, only the affected provider's participation is cancelled and no redistribution runs; the `supportRequired` marker stays, and an admin reassigns through Screen 12 if no other provider holds the inquiry.
@@ -409,7 +409,7 @@ flowchart TD
     Confirm --> Commit["Atomic commit:<br/>set inquiry = Cancelled + timestamp + reason<br/>cancel draft, sent, and expired quotes (if any)<br/>write immutable audit event"]
     Commit -.-> Race["If quote submitted concurrently:<br/>quote flow must re-check inquiry status<br/>and reject if not active (FR-004)"]
 
-    Commit --> Notify["Send/enqueue notifications to the providers whose quotes were cancelled (target &lt;= 5 minutes)<br/>reason NOT shared"]
+    Commit --> Notify["Send/enqueue notifications to the providers whose quotes were cancelled (target: first send attempt within 5 minutes)<br/>reason NOT shared"]
     Notify --> NotifyOk{"Notification enqueue/send OK?"}
     NotifyOk -->|Yes| Success["Show success screen (Screen 8b)"]
     NotifyOk -->|No| NotifyFallback["Queue/retry notifications + log attempts<br/>(do not roll back cancellation)"] --> Success
@@ -436,7 +436,7 @@ flowchart TD
 **E2: Patient wants to cancel after acceptance (Accepted stage onward)**:
 
 - **Trigger**: Patient wants to cancel an inquiry that has an accepted quote (stage Accepted, Confirmed, In progress or Aftercare)
-- **Outcome**: The patient cannot cancel in the app. The inquiry dashboard shows "Contact support" instead of "Cancel Inquiry". An admin cancels the booking through FR-006 with a mandatory reason and an audit entry. The booking and the inquiry become `Cancelled`, the inquiry records `cancelled_by = admin` and no patient cancellation reason (the admin's reason is the booking's cancellation reason in FR-006), any active appointment hold is released, and the accepted quote keeps the status `accepted`. Any draft replacement quote of the inquiry is also cancelled, with no notice to the replacement provider (REQ-003-127; the quote side is FR-004 REQ-004-111). The same applies when the admin closes the inquiry through Close inquiry on FR-006 Screen 6. Any refund or fee follows the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault), not this FR. (REQ-003-110)
+- **Outcome**: The patient cannot cancel in the app. The inquiry dashboard shows "Contact support" instead of "Cancel Inquiry". An admin cancels the booking through FR-006 with a mandatory reason and an audit entry. The booking and the inquiry become `Cancelled`, the inquiry records `cancelled_by = admin` and no patient cancellation reason (the admin's reason is the booking's cancellation reason in FR-006), any active appointment hold is released, and the accepted quote keeps the status `accepted`. Any draft replacement quote of the inquiry is also cancelled, and an admin cancellation or close sends `quote.cancelled_inquiry` to no provider (REQ-003-127, REQ-020-020; the quote side is FR-004 REQ-004-111). The same applies when the admin closes the inquiry through Close inquiry on FR-006 Screen 6. Any refund or fee follows the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault), not this FR. (REQ-003-110)
 - **Flow Diagram**:
 
 ```mermaid
@@ -468,7 +468,7 @@ flowchart TD
 | Field Name | Type | Required | Description | Validation Rules | Graph field |
 | --- | --- | --- | --- | --- | --- |
 | Service Option | select (single) | Yes | Primary service selection | Must select one | ENT-inquiry.service_option |
-| Treatment Area | select | Yes | One active, Admin-managed treatment-area option | Must select one active option returned by the Inquiry Configuration API | ENT-inquiry.treatment_area_id, ENT-treatment-area.label |
+| Treatment Area | select | Conditional | One active, Admin-managed treatment-area option | Asked and required only when Service Option is Get a Hair Transplant; must select one active option returned by the Inquiry Configuration API; the other service options leave Screen 1 for their own workflows without a treatment area (REQ-003-027) | ENT-inquiry.treatment_area_id, ENT-treatment-area.label |
 
 **Notes**:
 
@@ -484,7 +484,7 @@ flowchart TD
 
 **Business Rules**:
 
-- Patient must select one active treatment-area option (REQ-003-027)
+- When the service is Get a Hair Transplant, patient must select one active treatment-area option; the other services do not ask for one (REQ-003-027)
 - The selected option must be active when the inquiry is created; inactive options remain readable on historical inquiries through their saved snapshot. (REQ-003-027)
 - Primary focus on "Get a Hair Transplant" option (REQ-003-025)
 - Other services are secondary features (REQ-003-025)
@@ -551,7 +551,7 @@ flowchart TD
 
 - All required fields must be completed (REQ-003-034)
 - Visual evidence limited to 5 files total (photos and videos together; the head scan photo set is counted separately) (REQ-003-035)
-- Duration is chosen from the Admin-managed problem-duration list, not a fixed enum (REQ-003-122)
+- Duration is chosen from the Admin-managed problem-duration list, not a fixed enum; the inquiry stores the chosen option's label as text, so a later edit or deactivation of the option changes no saved inquiry, and an inquiry created by an FR-037 conversion takes the label the monitoring case saved (REQ-003-122)
 - Photos: JPG/PNG ≤ 2MB each (REQ-003-035)
 - Videos: MP4 ≤ 30s, ≤ 20MB each (REQ-003-035)
 - Text fields have character limits (REQ-003-034)
@@ -675,7 +675,7 @@ flowchart TD
 | Field Name | Type | Required | Description | Validation Rules | Graph field |
 | --- | --- | --- | --- | --- | --- |
 | Section Summary | group | Yes | Read-only summary of prior steps | Must reflect latest data | ENT-inquiry.service_option, ENT-inquiry.treatment_area_id, ENT-inquiry.treatment_countries, ENT-inquiry.problem_concern, ENT-inquiry.problem_duration, ENT-inquiry.previous_treatments, ENT-inquiry.symptom_severity, ENT-inquiry.media, ENT-inquiry.scan_ref, ENT-inquiry.questionnaire_summary, ENT-inquiry.selected_provider_ids, ENT-location-starting-price.starting_price_amount, ENT-location-starting-price.currency_code, ENT-inquiry-date-range.start_date, ENT-inquiry-date-range.end_date |
-| Terms Acceptance | checkbox | Yes | Accept T&C before submission | Required to submit | no graph field (control) |
+| Terms Acceptance | checkbox | Conditional | Accept the Current Terms & Conditions before submission | Shown only when the patient has not accepted the Current Terms & Conditions (acceptance is once per version, FR-027 REQ-027-035); Submit stays disabled until accepted; the acceptance is recorded through FR-027 (REQ-003-054) | no graph field (control) |
 
 **Notes**:
 
@@ -686,7 +686,7 @@ flowchart TD
 
 - Patient must review all sections (REQ-003-054)
 - Patient can edit any section before submission (REQ-003-054)
-- Terms and conditions must be accepted (REQ-003-054)
+- The Current Terms & Conditions must be accepted before submission: the checkbox appears only when the patient has not yet accepted them, and submission stays blocked until they are accepted (REQ-003-054, FR-027 REQ-027-033)
 - Submission generates unique inquiry ID (REQ-003-055)
 
 #### Screen 7a: Provider Selection
@@ -742,7 +742,7 @@ flowchart TD
 | Next Actions | actions | Yes | Available user actions | Based on stage/permissions | no graph field (control) |
 | Cancel Inquiry | action | Conditional | "Cancel Inquiry" button; visible only in Inquiry or Quoted stages | Hidden when stage is Accepted, Confirmed, In progress, Aftercare, Completed, or Cancelled; triggers Workflow 5 cancellation flow (REQ-003-106) | no graph field (control) |
 | Contact Support | action | Conditional | "Contact support" action shown in place of "Cancel Inquiry" from the Accepted stage onward | Visible when stage is Accepted, Confirmed, In progress or Aftercare; opens Help & Support so an admin can act on the request (REQ-003-106) | no graph field (control) |
-| Redistribution Confirmation | actions | Conditional | Confirm and Decline buttons with the text "Do you want us to find other clinics for you?" | Shown only while `redistribution_state` is `awaiting_patient_confirmation` or `admin_follow_up`; Confirm and Decline act per REQ-003-128 | ENT-inquiry.redistribution_state |
+| Redistribution Confirmation | actions | Conditional | Confirm and Decline buttons with the text "Do you want us to find other clinics for you?" | Shown only while `redistribution_state` is `awaiting_patient_confirmation` or `admin_follow_up`; Confirm and Decline act per REQ-003-128; the Confirm and Decline links in the confirmation request and in the 48-hour reminder open Screen 8 at this block (FR-020 REQ-020-013, REQ-020-159) | ENT-inquiry.redistribution_state |
 
 **Notes**:
 
@@ -778,7 +778,7 @@ flowchart TD
 | Cancellation Reason Selector | select | Yes | Dropdown or radio list of predefined reasons | Must select one option; default options: "Changed my mind", "Found a better option elsewhere", "Medical concerns", "Financial reasons", "Travel restrictions", "Timeline doesn't work", "Other" (admin-configurable via FR-026 Screen 5a) | ENT-inquiry.cancellation_reason |
 | Additional Notes | text | Conditional | Free text field; shown when "Other" selected | Required if "Other" selected; max 500 characters | ENT-inquiry.cancellation_reason_notes |
 | Optional Feedback | text | No | General feedback text area | Max 1000 characters; placeholder: "Any additional feedback? (Optional)" | ENT-inquiry.cancellation_feedback |
-| Provider Notification Note | text | Conditional | Informational message: "Providers of the quotes being cancelled will be notified of this cancellation within 5 minutes" | Read-only; shown only when there are quotes to cancel (REQ-003-125) | no graph field (control) |
+| Provider Notification Note | text | Conditional | Informational message: "Providers of the quotes being cancelled will be notified of this cancellation, normally within 5 minutes" | Read-only; shown only when there are quotes to cancel (REQ-003-125) | no graph field (control) |
 | Confirm Cancellation Button | button | Yes | Destructive primary CTA | Red/destructive style; label: "Confirm Cancellation"; disabled until reason selected | no graph field (control) |
 | Go Back Button | button | Yes | Secondary CTA to dismiss modal | Default/neutral style; label: "Go Back"; closes modal without action | no graph field (control) |
 
@@ -850,7 +850,7 @@ flowchart TD
 | Inquiry Date | column | Yes | Created timestamp | Relative formatting rules | ENT-inquiry.created_at |
 | Action | column | Yes | View/Create Quote buttons | State-aware actions | no graph field (control) |
 | Search | control | No | Search by patient ID | Debounced; case-insensitive (REQ-003-124) | no graph field (control) |
-| Filters | control | No | Age range, Concern, Date range, Alerts, Location | Valid ranges/enums (REQ-003-124) | no graph field (control) |
+| Filters | control | No | Age range, Concern, Date range (requested treatment dates), Alerts, Location (patient country), Stage, Inquiry date | Valid ranges/enums; Stage is the inquiry stage; Inquiry date is the period of the Inquiry Date column (REQ-003-124) | no graph field (control) |
 
 **Notes**:
 
@@ -864,6 +864,7 @@ flowchart TD
 - A provider sees an inquiry only through a ProviderInquiry row that is not cancelled; a provider in a matching country that was not matched into the capped list and was not selected by the patient does not see it (REQ-003-074)
 - Patient names partially masked until payment confirmation (REQ-003-075)
 - Medical alerts prominently displayed with color coding (REQ-003-049)
+- The list can open with Stage, Location (country) and an Inquiry date period already applied, as when a provider follows an FR-014 analytics drill-down; the provider can change or clear them (REQ-003-124)
 - Inquiries do not expire automatically at launch (REQ-003-067)
 - Date ranges display primary range with tooltip for additional ranges (REQ-003-077)
 - Time display: relative for recent ("X minutes ago"), specific for older ("Sep 22, 2025") (REQ-003-078)
@@ -1040,6 +1041,7 @@ flowchart TD
    - Patient can only have one active inquiry at a time (REQ-003-056)
    - No inquiry expires automatically at launch; an inquiry stays open until the patient or an admin cancels it, or the patient decides on a quote (REQ-003-067)
    - Patient can modify inquiry if still in "Inquiry" stage (REQ-003-057)
+   - An inquiry created by an FR-037 conversion arrives with the compatible fields pre-filled, completes on the FR-003 screens for the inquiry-only information, records its source monitoring case, and carries the monitoring-summary PDF, showing "summary pending" until the PDF is attached (REQ-003-130)
    - **Offline Capability**: Core inquiry features should work with limited connectivity
 
 2. **Distribution Rules**
@@ -1242,6 +1244,7 @@ flowchart TD
 - **REQ-003-011**: System MUST expose internal APIs required by FR-004 (quote) to consume inquiry data without mutation.
 - **REQ-003-017**: System MUST expose an active, ordered treatment-area catalog for inquiry creation, including a stable option identifier, label, and image/icon URL; Admin manages the catalog under FR-026.
 - **REQ-003-018**: System MUST enforce the Admin-configured minimum inquiry lead time consistently in the patient date picker and at submission. The default blocked window is 3 days and does not change the existing two-year, non-overlap, or availability rules.
+- **REQ-003-130**: An inquiry created by an FR-037 conversion MUST arrive with the compatible fields pre-filled, which the patient has reviewed and edited in FR-037; the patient completes the inquiry-only information (destinations, dates, provider selection and the terms check) on the FR-003 screens. The source monitoring case is recorded by the conversion record (REQ-037-062) and the monitoring-summary PDF is attached to the inquiry. Until the PDF is attached, the inquiry shows "summary pending" to the patient on Screen 8 and to providers on Screen 10; a later attachment appears with no change of inquiry stage (REQ-037-059).
 - **REQ-003-016** (retired; owned by FR-037 REQ-037-029): exclusive routing of a monitoring-conversion inquiry to its assigned provider, and the fallback to normal distribution exactly once after an explicit decline, are defined in REQ-037-029; Workflow 2 Alternative Flow B3 and Workflow 3 Alternative Flow C2 describe how this module distributes after it.
 
 ### Cancellation Requirements
@@ -1252,7 +1255,7 @@ flowchart TD
 - **REQ-003-019**: System MUST revalidate provider status at allocation, exclusive routing, and reassignment, and MUST NOT allocate inquiries to a `Suspended` or `Deactivated` provider from the effective time, including through in-flight jobs or retries, or to an `Active` provider whose FR-015 `password_set` is false. On inquiry submission, an explicitly selected provider that has become ineligible MUST be rejected with a validation error that names the provider, so the patient can choose another; it MUST NOT be removed from the selection silently (Screen 7a).
 - **REQ-003-020**: When a provider becomes `Suspended` or `Deactivated`, System MUST NOT cancel an inquiry whose accepted treatment belongs to that provider; it MUST keep the inquiry open with `supportRequired = true` while FR-006 Alternative Flow B4 records cause `ProviderSuspended` or `ProviderDeactivated` on the booking; before treatment starts, B4 closes the booking and an admin rehomes the patient through FR-006 Alternative Flow B5, an `In progress` booking stays `In progress` for the admin decision in FR-006 Alternative Flow B7, and an `Aftercare` booking follows FR-006 Alternative Flow B6; for inquiries still comparing providers, System MUST cancel only that provider's ProviderInquiry participation and quotes, keep the inquiry stage, flag it `supportRequired = true`, and preserve other providers' offers. Before acceptance, patients MUST receive the offer-unavailability message with Contact Admin/Support; after acceptance and before treatment starts, they MUST receive the `booking.provider_fault_replacement` notice that an admin will arrange a replacement provider within the same inquiry. Patients MUST NOT receive the patient-cancellation message in either case (FR-015 A5/Screen 4).
 - **REQ-003-021**: Before acceptance, when the provider-status cascade cancels the last live offer on the inquiry (a sent quote that has not expired, with no other live offer remaining), System MUST redistribute the inquiry, at most once per provider-status event, to eligible providers that have not yet received it under the normal Workflow 2 distribution rules, keep `supportRequired = true`, and tell the patient "[Clinic] is no longer available. We are finding new offers for you." If the patient had not explicitly selected the affected provider, the redistribution is automatic. Only if the patient had explicitly selected the affected provider, System MUST first ask the patient to confirm and MUST redistribute only after confirmation; confirm, decline and no-answer follow REQ-003-128. System MUST NOT redistribute while another live offer remains (Workflow 2 Alternative Flow B4).
-- **REQ-003-127**: When an admin cancels the booking through FR-006 Screen 9 or closes the inquiry through Close inquiry on FR-006 Screen 6, System MUST move any draft replacement quote of that inquiry to `Cancelled (Inquiry Cancelled)`, MUST NOT send `quote.cancelled_inquiry` to the replacement provider, and no `quote.expired` follows. The quote-side behaviour is owned by FR-004 (REQ-004-111). The patient cancellation path has no replacement draft, because a replacement exists only after acceptance.
+- **REQ-003-127**: When an admin cancels the booking through FR-006 Screen 9 or closes the inquiry through Close inquiry on FR-006 Screen 6, System MUST move any draft replacement quote of that inquiry to `Cancelled (Inquiry Cancelled)`, MUST NOT send `quote.cancelled_inquiry` to any provider (an admin cancellation or close sends no provider notice, REQ-020-020; the replacement provider is not told), and no `quote.expired` follows. The quote-side behaviour is owned by FR-004 (REQ-004-111). The patient cancellation path has no replacement draft, because a replacement exists only after acceptance.
 - **REQ-003-128**: When System asks the patient to confirm a redistribution (REQ-003-021), it MUST set `redistribution_state` to `awaiting_patient_confirmation`. On confirm, it MUST set `confirmed` and run normal Workflow 2 matching (Alternative Flow B1 applies when no eligible provider is found). On decline, it MUST set `declined`, leave the inquiry as it is with `supportRequired = true` and the Contact Admin/Support action, and not redistribute. If the patient has not answered after a fixed 48 hours, System MUST send one reminder, set `admin_follow_up`, and show the inquiry in the admin inquiry queue (Screen 11); it MUST NOT send a second reminder. The patient can still confirm or decline after the reminder. The state returns to `none`, and any pending reminder is dropped, when the inquiry is cancelled, when an admin reassigns providers or reruns distribution on Screen 12, or when an admin clears `supportRequired` (REQ-003-111). The reminder is sent only while the state is `awaiting_patient_confirmation`.
 - **REQ-003-129**: `quotes_count` is the number of the inquiry's quotes in sent, accepted or expired status (FR-004) and is shown on the admin overview. `responses_count` is the number of the inquiry's ProviderInquiry rows with status `quoted` or `declined` and is shown on the patient dashboard. Both are recomputed from current data each time they are shown. A ProviderInquiry row becomes `viewed` when the provider first opens the inquiry detail (Screen 10). It becomes `quoted` when the provider first sends a quote for the inquiry (FR-004) and stays `quoted` afterwards, even if that quote later expires or is withdrawn; a quote that is only a draft does not count.
 
@@ -1357,6 +1360,7 @@ Acceptance Scenarios:
 | 2026-11-23 | 2.17 | Independent compression review: 1 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Claude (AI Assistant) |
 | 2026-11-24 | 2.18 | Logic review pass 1. Owner defaults: archive refused while a live quote or an accepted quote or booking exists; no automatic inquiry expiry at launch; account-deletion cancellation at admin approval and deletion blocked from Accepted stage; redistribution asks the patient, one reminder after 48 hours, then the admin queue; critical alert is a badge in the admin queue. Also: quote-review cancel uses the same modal, admin cancel and Close inquiry cover a replacement draft (REQ-003-127), `cancelled_by` added, quote counts defined (REQ-003-129), cancel preview count separated from the committed count, provider access wording, fixed 7-day draft rule, vocabulary note. New rules REQ-003-127, 128 and 129. | Claude (AI Assistant) |
 | 2026-11-24 | 2.19 | Logic review pass 2. Owner default: an admin may archive only an inquiry in stage Completed or Cancelled; archive hides it in admin list views and changes no status or notice (replaces the pass 1 live-quote guard); "reversible" removed. Redistribution confirmation is scoped to the last live offer with a patient-selected provider, the pending state is reset on cancel, admin reassign or rerun, or clearing `supportRequired`, and Screen 8 gets the Confirm and Decline actions (REQ-003-021, REQ-003-128). Admin cancel and Close inquiry set `cancelled_by = admin` and leave `cancellation_reason` empty (REQ-003-014); `cancelled_by` shown on Screen 12. ProviderInquiry `viewed` and `quoted` triggers stated (REQ-003-129). | Claude (AI Assistant) |
+| 2026-11-25 | 2.20 | Cross-FR alignment: Terms checkbox shown only when the Current Terms are not accepted, with submission blocked until then (REQ-003-054); Treatment Area asked only for Get a Hair Transplant (REQ-003-027); 5-minute provider notice stated as a target for the first send attempt (REQ-003-100, REQ-003-125); admin cancel or close sends no provider notice (REQ-003-127); redistribution Confirm and Decline links and the 48-hour reminder notice named (REQ-003-128); intake side of an FR-037 conversion inquiry (REQ-003-130); duration stored as the option label (REQ-003-122); provider inquiry list gains Stage and Inquiry date filters and opens pre-filtered from FR-014 (REQ-003-124). | Claude (AI Assistant) |
 
 ## Appendix: Approvals
 
@@ -1369,4 +1373,4 @@ Acceptance Scenarios:
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-003 from system-prd.md
-**Last Updated**: 2026-11-24
+**Last Updated**: 2026-11-25

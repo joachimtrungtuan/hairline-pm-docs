@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T20:53:00Z",
+  "generated_at": "2026-11-24T20:58:18Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -13509,9 +13509,9 @@
       "owner_fr": "FR-002",
       "title": "Quality score",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "qualityScore, 0 to 100: the value the FR-026 quality threshold check used for this photo (REQ-002-034). Returned per photo."
+        "description": "qualityScore, 0 to 100: the lower of the photo's brightness score and blur score (REQ-002-034). Returned per photo."
       }
     },
     {
@@ -41318,9 +41318,9 @@
       "owner_fr": "FR-001",
       "title": "Out of scope: social login, extra MFA, direct patient-provider messaging",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Out of scope: direct patient-provider communication (handled by FR-012, future); social authentication (Google, Apple, Facebook OAuth - future enhancement); multi-factor authentication beyond email OTP (future enhancement)",
+        "statement": "Out of scope: direct patient-provider communication (handled by FR-012); social authentication (Google, Apple, Facebook OAuth - future enhancement); multi-factor authentication beyond email OTP (future enhancement)",
         "rationale": "prd.md lines 74, 77, 78. "
       }
     },
@@ -42063,9 +42063,9 @@
       "owner_fr": "FR-001",
       "title": "Email OTP re-verification code expires and resend is limited",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "Selecting \"Email OTP\" sends a 6-digit code to the registered email; code expires in 15 minutes; resend is rate-limited",
+        "statement": "Selecting \"Email OTP\" sends a 6-digit code to the registered email with the email verification template; the code expires after a fixed 15 minutes, which is also the life of the email-change code and does not follow the FR-026 OTP Expiry Time; resend is rate-limited",
         "rationale": "prd.md line 935. "
       }
     },
@@ -42387,9 +42387,9 @@
       "owner_fr": "FR-001",
       "title": "Last login shown read-only in admin timezone",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Read-only; displayed in admin-configured timezone",
+        "statement": "Read-only; shown in the admin's browser timezone with the zone named beside the time (REQ-026-050)",
         "rationale": "Screen field row, prd.md line 954. "
       }
     },
@@ -42579,9 +42579,9 @@
       "owner_fr": "FR-001",
       "title": "Re-verification threshold is configurable",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Re-verification is required when last successful auth > 5 minutes (threshold is a platform setting managed in FR-026)",
+        "statement": "Re-verification is required when the last successful auth is older than the re-verification threshold, a platform setting managed in FR-026 (whole minutes from 1 to 60, default 5)",
         "rationale": "prd.md line 934."
       }
     },
@@ -42845,9 +42845,9 @@
       "owner_fr": "FR-001",
       "title": "First app language is the phone's language",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "On first start the app language is the phone's language; if the app does not offer that language, it falls back to English. The patient can change the language later.",
+        "statement": "On first start the app language is the phone's language; if the app does not offer that language, it shows the default locale set in FR-021 (English until a Super Admin changes it), and a text missing in the shown language falls back until it ends at the English source. The patient can change the language later.",
         "rationale": "FR-001 PRD, Screen 1 rules."
       }
     },
@@ -43025,9 +43025,9 @@
       "owner_fr": "FR-001",
       "title": "Wrong codes share the failed-login limit; the code then stops working",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "A wrong 6-digit code (registration, password reset, re-verification, email change) counts toward the same limit as failed logins (the FR-026 max login attempts setting, default 5). After the limit the code stops working and the patient must request a new one; the resend cooldown applies. There is no separate setting.",
+        "statement": "A wrong 6-digit code (registration, password reset, re-verification, email change) counts toward the same limit as failed logins (the FR-026 max login attempts setting, default 5). After the limit the code stops working and the patient must request a new one; the resend cooldown applies. There is no separate setting. One failed-attempt counter per account serves both sign-in and code entry; it resets after a successful sign-in or code entry and when a lockout ends, and a lowered limit applies from the next failed attempt (REQ-026-145).",
         "rationale": "FR-001 PRD Screens 5, 11 and 18; owner default 255 (other option: a separate new setting)."
       }
     },
@@ -43529,9 +43529,9 @@
       "owner_fr": "FR-002",
       "title": "Basic quality checks with actionable guidance",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Basic quality checks (e.g., brightness/blur) MUST be enforced against the FR-026 quality thresholds and actionable guidance returned on failure. The quality score is 0 to 100 and is returned per photo.",
+        "statement": "Basic quality checks MUST be enforced against the two FR-026 minimums, a brightness minimum and a blur minimum (each 0 to 100, default 40), and actionable guidance returned on failure. The engine scores each photo 0 to 100 for brightness and for blur; a photo passes only when each score reaches its own minimum. The qualityScore returned per photo is the lower of the two scores, for display; validationStatus carries the result.",
         "rationale": "Media Rules 4. Error code MEDIA_QUALITY_INSUFFICIENT with retake instructions. The device check uses the same thresholds (REQ-002-050)."
       }
     },
@@ -43721,9 +43721,9 @@
       "owner_fr": "FR-002",
       "title": "Engine media check is authoritative; device check is advisory",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "The engine check MUST be authoritative. The device check at capture is advisory and uses the same FR-026 quality thresholds; when the engine rejects the media, FR-003 returns the patient to the capture screen.",
+        "statement": "The engine check MUST be authoritative. The device check at capture is advisory and uses the same two FR-026 minimums (brightness and blur); when the engine rejects the media, FR-003 returns the patient to the capture screen.",
         "rationale": "A modified or older app cannot be trusted to enforce the limits."
       }
     },
@@ -44044,9 +44044,9 @@
       "owner_fr": "FR-003",
       "title": "One active treatment-area option chosen; inactive options stay readable",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Patient must select one active treatment-area option. The selected option must be active when the inquiry is created; inactive options remain readable on historical inquiries through their saved snapshot.",
+        "statement": "When the service is Get a Hair Transplant, patient must select one active treatment-area option; the other services do not ask for one. The selected option must be active when the inquiry is created; inactive options remain readable on historical inquiries through their saved snapshot.",
         "rationale": "PRD Screen 1 business rules (478-481); Inquiry Configuration Rules 5."
       }
     },
@@ -44332,9 +44332,9 @@
       "owner_fr": "FR-003",
       "title": "Patient reviews all sections and accepts terms before submit",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Patient must review all sections. Patient can edit any section before submission. Terms and conditions must be accepted.",
+        "statement": "Patient must review all sections. Patient can edit any section before submission. The Current Terms & Conditions must be accepted before submission: the checkbox appears only when the patient has not yet accepted them, and submission stays blocked until they are accepted (FR-027 REQ-027-033, REQ-027-035).",
         "rationale": "PRD Screen 7 rules (672-675); Workflow 1 review step."
       }
     },
@@ -44438,11 +44438,11 @@
       "id": "REQ-003-063",
       "type": "Rule",
       "owner_fr": "FR-003",
-      "title": "Provider notifications within 5 minutes with retry and SLA alert",
+      "title": "Provider notifications: first send attempt within 5 minutes, with retry and SLA alert",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Send provider notifications (within 5 minutes). If notification dispatch fails: queue/retry, alert on SLA risk and log attempts.",
+        "statement": "Send provider notifications (target: first send attempt within 5 minutes). If notification dispatch fails: queue/retry, alert on SLA risk and log attempts.",
         "rationale": "PRD Workflow 2 flow diagram (213-217); Alternative Flow B3 outcome."
       }
     },
@@ -44858,11 +44858,11 @@
       "id": "REQ-003-100",
       "type": "Rule",
       "owner_fr": "FR-003",
-      "title": "Providers whose quotes were cancelled are notified within 5 minutes, without the reason",
+      "title": "Providers whose quotes were cancelled are notified without the reason, first send attempt within 5 minutes",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Only providers whose quotes were cancelled receive notification of the cancellation; cancellation reason is NOT shared with providers (patient-private analytics data). Send/enqueue notifications (target <= 5 minutes, owned by this FR; FR-020 delivers the notice, REQ-020-020); if enqueue/send fails, queue/retry notifications and log attempts (do not roll back cancellation). When no quote was cancelled, no provider is notified.",
+        "statement": "Only providers whose quotes were cancelled receive notification of the cancellation; cancellation reason is NOT shared with providers (patient-private analytics data). Send/enqueue notifications (target: first send attempt within 5 minutes, not a guarantee; a failed first attempt is retried under the FR-030 retry rule; owned by this FR; FR-020 delivers the notice, REQ-020-020); if enqueue/send fails, queue/retry notifications and log attempts (do not roll back cancellation). When no quote was cancelled, no provider is notified.",
         "rationale": "PRD Workflow 5 flow diagram (401-405), Alternative Flow E1, Alternative Flow E3 notes, Cancellation Rules 4, Screen 8a rules."
       }
     },
@@ -45124,9 +45124,9 @@
       "owner_fr": "FR-003",
       "title": "Problem-duration choices come from an Admin-managed list owned by FR-026",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Problem-duration choices come from an Admin-managed problem-duration list retrieved from the backend, not a fixed client-side enum; the list is managed with the other inquiry configuration owned by FR-026. Starting values, editable by Admin: Less than 6 months; 6 to 12 months; 1 to 2 years; 2 to 5 years; More than 5 years. The patient must select one active option.",
+        "statement": "Problem-duration choices come from an Admin-managed problem-duration list retrieved from the backend, not a fixed client-side enum; the list is managed with the other inquiry configuration owned by FR-026. Starting values, editable by Admin: Less than 6 months; 6 to 12 months; 1 to 2 years; 2 to 5 years; More than 5 years. The patient must select one active option. The inquiry stores the chosen option's label as text, so a later edit or deactivation of the option changes no saved inquiry; an inquiry created by an FR-037 conversion takes the label the monitoring case saved.",
         "rationale": "PRD Screen 3 Duration row and Duration Options notes."
       }
     },
@@ -45148,9 +45148,9 @@
       "owner_fr": "FR-003",
       "title": "Provider inquiry list search by patient ID and filters",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "The provider inquiry list (Screen 9) can be searched by patient ID, the search is debounced and case-insensitive, and the list can be filtered by age range, concern, date range, medical alerts and location using valid ranges and enum values.",
+        "statement": "The provider inquiry list (Screen 9) can be searched by patient ID, the search is debounced and case-insensitive, and the list can be filtered by age range, concern, date range (requested treatment dates), medical alerts, location (patient country), stage and inquiry date using valid ranges and enum values. The list can open with stage, location (country) and an inquiry date period already applied, as when a provider follows an FR-014 analytics drill-down; the provider can change or clear them.",
         "rationale": "prd.md lines 836, 845-846 (Screen 9 Patient ID searchable; Search and Filters rows)."
       }
     },
@@ -45160,9 +45160,9 @@
       "owner_fr": "FR-003",
       "title": "Cancel modal shows the quote impact and the provider note only when quotes exist",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "On the cancel confirmation modal (Screen 8a) the Impact Summary reads \"X quotes will be cancelled\" when the inquiry has quotes to cancel (draft, sent or expired) and \"No quotes to cancel\" when it has none, taken from `preview_quote_count`, counted when the modal opens. The note \"Providers of the quotes being cancelled will be notified of this cancellation within 5 minutes\" is shown only when there are quotes to cancel. Go Back closes the modal with no change of state.",
+        "statement": "On the cancel confirmation modal (Screen 8a) the Impact Summary reads \"X quotes will be cancelled\" when the inquiry has quotes to cancel (draft, sent or expired) and \"No quotes to cancel\" when it has none, taken from `preview_quote_count`, counted when the modal opens. The note \"Providers of the quotes being cancelled will be notified of this cancellation, normally within 5 minutes\" is shown only when there are quotes to cancel. Go Back closes the modal with no change of state.",
         "rationale": "prd.md lines 770, 774, 785 (Screen 8a Impact Summary, Provider Notification Note, Go Back rules)."
       }
     },
@@ -45184,9 +45184,9 @@
       "owner_fr": "FR-003",
       "title": "Admin cancellation or Close inquiry also cancels a replacement draft, with no provider notice",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "When an admin cancels the booking through FR-006 Screen 9 or closes the inquiry through Close inquiry on FR-006 Screen 6, System MUST move any draft replacement quote of that inquiry to `Cancelled (Inquiry Cancelled)`, MUST NOT send `quote.cancelled_inquiry` to the replacement provider, and no `quote.expired` follows. The quote-side behaviour is owned by FR-004 (REQ-004-111). The patient cancellation path has no replacement draft, because a replacement exists only after acceptance.",
+        "statement": "When an admin cancels the booking through FR-006 Screen 9 or closes the inquiry through Close inquiry on FR-006 Screen 6, System MUST move any draft replacement quote of that inquiry to `Cancelled (Inquiry Cancelled)`, MUST NOT send `quote.cancelled_inquiry` to any provider (an admin cancellation or close sends no provider notice, REQ-020-020; the replacement provider is not told), and no `quote.expired` follows. The quote-side behaviour is owned by FR-004 (REQ-004-111). The patient cancellation path has no replacement draft, because a replacement exists only after acceptance.",
         "rationale": "The rule that owns the cascade trigger (REQ-003-013) covers the patient and account-deletion paths only, so the admin paths needed their own trigger in this FR.",
         "distinct_from": "REQ-004-111"
       }
@@ -45197,9 +45197,9 @@
       "owner_fr": "FR-003",
       "title": "Patient confirmation of a redistribution: confirm, decline, or no answer after 48 hours",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "When System asks the patient to confirm a redistribution (REQ-003-021), it MUST set `redistribution_state` to `awaiting_patient_confirmation`. On confirm, it MUST set `confirmed` and run normal Workflow 2 matching (Alternative Flow B1 applies when no eligible provider is found). On decline, it MUST set `declined`, leave the inquiry as it is with `supportRequired = true` and the Contact Admin/Support action, and not redistribute. If the patient has not answered after a fixed 48 hours, System MUST send one reminder, set `admin_follow_up`, and show the inquiry in the admin inquiry queue (Screen 11); it MUST NOT send a second reminder. The patient can still confirm or decline after the reminder. The state returns to `none`, and any pending reminder is dropped, when the inquiry is cancelled, when an admin reassigns providers or reruns distribution on Screen 12, or when an admin clears `supportRequired` (REQ-003-111). The reminder is sent only while the state is `awaiting_patient_confirmation`.",
+        "statement": "When System asks the patient to confirm a redistribution (REQ-003-021), it MUST set `redistribution_state` to `awaiting_patient_confirmation`. On confirm, it MUST set `confirmed` and run normal Workflow 2 matching (Alternative Flow B1 applies when no eligible provider is found). On decline, it MUST set `declined`, leave the inquiry as it is with `supportRequired = true` and the Contact Admin/Support action, and not redistribute. If the patient has not answered after a fixed 48 hours, System MUST send one reminder (`provider.status_redistribution_reminder`, FR-020 REQ-020-159), set `admin_follow_up`, and show the inquiry in the admin inquiry queue (Screen 11); it MUST NOT send a second reminder. The patient can still confirm or decline after the reminder. The state returns to `none`, and any pending reminder is dropped, when the inquiry is cancelled, when an admin reassigns providers or reruns distribution on Screen 12, or when an admin clears `supportRequired` (REQ-003-111). The reminder is sent only while the state is `awaiting_patient_confirmation`.",
         "rationale": "Owner default: ask first, remind once, then hand the case to an admin, so an inquiry never waits with no live offer and no owner."
       }
     },
@@ -45213,6 +45213,18 @@
       "attrs": {
         "statement": "`quotes_count` is the number of the inquiry's quotes in sent, accepted or expired status (FR-004) and is shown on the admin overview. `responses_count` is the number of the inquiry's ProviderInquiry rows with status `quoted` or `declined` and is shown on the patient dashboard. Both are recomputed from current data each time they are shown. A ProviderInquiry row becomes `viewed` when the provider first opens the inquiry detail (Screen 10). It becomes `quoted` when the provider first sends a quote for the inquiry (FR-004) and stays `quoted` afterwards, even if that quote later expires or is withdrawn; a quote that is only a draft does not count.",
         "rationale": "Two counters on two screens had no source and could be mistaken for one number."
+      }
+    },
+    {
+      "id": "REQ-003-130",
+      "type": "Rule",
+      "owner_fr": "FR-003",
+      "title": "Conversion inquiry arrives pre-filled, records its source case and shows summary pending until the PDF is attached",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "An inquiry created by an FR-037 conversion MUST arrive with the compatible fields pre-filled, which the patient has reviewed and edited in FR-037; the patient completes the inquiry-only information (destinations, dates, provider selection and the terms check) on the FR-003 screens. The source monitoring case is recorded by the conversion record (REQ-037-062) and the monitoring-summary PDF is attached to the inquiry. Until the PDF is attached, the inquiry shows \"summary pending\" to the patient on Screen 8 and to providers on Screen 10; a later attachment appears with no change of inquiry stage (REQ-037-059).",
+        "rationale": "FR-037 conversion hands the inquiry to FR-003; this is the intake side (REQ-037-059, REQ-037-062)."
       }
     },
     {
@@ -109023,9 +109035,9 @@
       "id": "STP-003-024",
       "type": "Step",
       "owner_fr": "FR-003",
-      "title": "System distributes and notifies providers within 5 minutes",
+      "title": "System distributes and sends the provider notices, first attempt within 5 minutes",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Workflow 2 (Inquiry Distribution)"
       }
@@ -109265,9 +109277,9 @@
       "id": "STP-003-047",
       "type": "Step",
       "owner_fr": "FR-003",
-      "title": "Providers are notified within 5 minutes without the reason",
+      "title": "Providers are notified without the reason, first send attempt within 5 minutes",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 5 (Patient Cancels Inquiry)"
       }
@@ -109452,9 +109464,9 @@
       "id": "STP-003-065",
       "type": "Step",
       "owner_fr": "FR-003",
-      "title": "Admin conversion creates the inquiry with an assigned provider",
+      "title": "A monitoring conversion creates the inquiry while the source case has an assigned provider",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "prd_ref": "Alternative Flow B3"
       }
@@ -109465,7 +109477,7 @@
       "owner_fr": "FR-003",
       "title": "System routes only to the assigned provider",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flow B3"
       }
@@ -109785,7 +109797,7 @@
       "owner_fr": "FR-003",
       "title": "No answer after 48 hours: one reminder is sent and the inquiry appears in the admin queue (stage Inquiry or Quoted)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Workflow 2 Alternative Flow B4 step 3"
       }
@@ -179290,7 +179302,7 @@
       "verb": "active in",
       "to_id": "STG-main-01-inquiry",
       "attrs": {
-        "rules": 117
+        "rules": 118
       },
       "derived": true
     },
@@ -187718,12 +187730,6 @@
     {
       "from_id": "REQ-001-098",
       "verb": "governed by",
-      "to_id": "SET-otp-expiry-time",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-001-098",
-      "verb": "governed by",
       "to_id": "SET-otp-max-resend-attempts",
       "attrs": {}
     },
@@ -188295,12 +188301,6 @@
       "from_id": "REQ-001-125",
       "verb": "decided by",
       "to_id": "SRC-PRD-001",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-001-125",
-      "verb": "governed by",
-      "to_id": "SET-timezone-options",
       "attrs": {}
     },
     {
@@ -190665,6 +190665,18 @@
       "from_id": "REQ-002-050",
       "verb": "decided by",
       "to_id": "SRC-PRD-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-050",
+      "verb": "governed by",
+      "to_id": "SET-head-scan-min-blur-score",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-050",
+      "verb": "governed by",
+      "to_id": "SET-head-scan-min-brightness-score",
       "attrs": {}
     },
     {
@@ -193879,6 +193891,36 @@
     },
     {
       "from_id": "REQ-003-129",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-003-130",
+      "verb": "applies at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-003-130",
+      "verb": "applies to",
+      "to_id": "ENT-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-003-130",
+      "verb": "applies to",
+      "to_id": "SCR-003-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-003-130",
+      "verb": "applies to",
+      "to_id": "SCR-003-13",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-003-130",
       "verb": "decided by",
       "to_id": "SRC-PRD-003",
       "attrs": {}
@@ -370530,7 +370572,7 @@
     {
       "from_id": "STP-003-065",
       "verb": "done by",
-      "to_id": "ACT-platform-admin",
+      "to_id": "ACT-system",
       "attrs": {}
     },
     {
@@ -370563,6 +370605,15 @@
       "to_id": "STP-003-021",
       "attrs": {
         "label": "exclusive route"
+      }
+    },
+    {
+      "from_id": "STP-003-066",
+      "verb": "next",
+      "to_id": "STP-003-078",
+      "attrs": {
+        "label": "Assigned provider declines before quoting",
+        "condition": "REQ-003-069"
       }
     },
     {
@@ -371440,6 +371491,12 @@
       "from_id": "STP-003-095",
       "verb": "applies",
       "to_id": "REQ-003-128",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-003-095",
+      "verb": "applies",
+      "to_id": "REQ-020-159",
       "attrs": {}
     },
     {
@@ -459002,6 +459059,44 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-205708-9af7cf85",
+      "at": "2026-11-24T20:57:08.438690+00:00",
+      "changed_by": "docs-manager",
+      "reason": "Cross-FR pass: FR-001 (FR-012 no longer future, default locale fallback, re-verification threshold 1 to 60 minutes, email-change and re-verification codes fixed at 15 minutes outside the OTP Expiry Time, one shared failed-attempt counter with its reset rule, admin timezone is the admin browser timezone), FR-002 (two quality minimums, qualityScore is the lower of the two scores), FR-003 (Terms checkbox only when the Current Terms are not accepted, Treatment Area only for Get a Hair Transplant, 5-minute provider notice is a first-attempt target, admin cancel or close sends no provider notice, redistribution reminder notice, conversion inquiry intake, duration stored as the option label, provider inquiry list Stage and Inquiry date filters with pre-applied drill-down filters, conversion step actor and decline link).",
+      "source_id": null,
+      "nodes_added": [
+        "REQ-003-130"
+      ],
+      "nodes_updated": [
+        "ENT-media-artifact.quality_score",
+        "REQ-001-036",
+        "REQ-001-098",
+        "REQ-001-125",
+        "REQ-001-142",
+        "REQ-001-165",
+        "REQ-001-180",
+        "REQ-002-034",
+        "REQ-002-050",
+        "REQ-003-027",
+        "REQ-003-054",
+        "REQ-003-063",
+        "REQ-003-100",
+        "REQ-003-122",
+        "REQ-003-124",
+        "REQ-003-125",
+        "REQ-003-127",
+        "REQ-003-128",
+        "STP-003-024",
+        "STP-003-047",
+        "STP-003-065",
+        "STP-003-066",
+        "STP-003-095"
+      ],
+      "edges_added": 10,
+      "edges_removed": 3,
+      "rows": 42
+    },
     {
       "id": "cs-20261124-205151-20aa623b",
       "at": "2026-11-24T20:51:51.043166+00:00",
