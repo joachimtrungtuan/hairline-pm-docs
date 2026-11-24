@@ -3,7 +3,7 @@
 **Module**: A-09: System Settings & Configuration
 **Feature Branch**: `fr031-admin-access-control`
 **Created**: 2025-11-14
-**Status**: Revision v1.6 (requirements graph programme baseline with logic review pass 2 applied); v1.0.2 baseline verified and approved
+**Status**: Revision v1.7 (requirements graph programme baseline with logic review pass 2 and cross-FR alignment applied); v1.0.2 baseline verified and approved
 **Source**: FR-031 from system-prd.md
 
 ---
@@ -622,7 +622,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 | Permission | Description | Access Level | Graph field |
 |------------|-------------|--------------|---------------|
 | View Patients | View patient list and profiles | ☐ Read | ENT-permission |
-| Edit Patients | Modify patient information | ☐ Write | ENT-permission |
+| Edit Patients | Modify patient information and run patient account actions: reset password, unlock account, lift suspension and take action on a flagged conversation (FR-016) | ☐ Write | ENT-permission |
 | Delete Patients | Approve patient account deletion requests (FR-016) | ☐ Delete | ENT-permission |
 
 **Category: Provider Management (A-02)**: (REQ-031-103)
@@ -642,6 +642,8 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 | Manage Aftercare | Assign specialists, edit plans | ☐ Write | ENT-permission |
 | Chat with Patients | Access aftercare chat | ☐ Write | ENT-permission |
 | Schedule Consultations | Book video consultations | ☐ Write | ENT-permission |
+
+When the Hairline team delivers a case, the Aftercare Coordinator uses these permissions on the FR-011 admin aftercare Screens 13 to 19, including Screen 14 Tab 4 (plan configuration, extension or change proposals and the urgent flag); no separate coordinator screens exist (REQ-011-004).
 
 **Category: Quotes & Inquiries Oversight (A-01)**: (REQ-031-105)
 
@@ -668,11 +670,11 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 | Permission | Description | Access Level | Graph field |
 |------------|-------------|--------------|---------------|
 | View Transactions | View patient and provider transactions | ☐ Read | ENT-permission |
-| Process Payouts | Initiate provider payouts | ☐ Write | ENT-permission |
+| Process Payouts | Run provider payout actions in FR-017: approve, unapprove, void, mark as paid, retry, release earnings, clear Manual Review Required, write off a clinic balance and override a payout status; each money-moving action asks for financial re-authentication (REQ-017-047) | ☐ Write | ENT-permission |
 | Issue Refunds | Process patient refunds | ☐ Write (requires approval by another admin holding this permission, never the requester; the approval step and its 2-business-day escalation are defined in FR-007; while only one admin holds this permission, a refund that needs approval stays "awaiting approval" until a second holder exists) (REQ-031-069; REQ-007-015) | ENT-permission |
 | View Financial Reports | Access revenue analytics | ☐ Read | ENT-permission |
 | View Patient Billing | View patient invoices and payment status | ☐ Read | ENT-permission |
-| Send Payment Reminders | Send payment reminders to patients | ☐ Write | ENT-permission |
+| Send Payment Reminders | Send payment reminders to patients (FR-007, FR-016); held by default by the same roles as Retry Charge | ☐ Write | ENT-permission |
 | Retry Charge | Retry a failed patient payment charge (FR-007B) | ☐ Write | ENT-permission |
 | Resolve Installments | Record a manual bank transfer for an unpaid installment and approve one entered by a colleague; the approver is never the requester (REQ-031-135) | ☐ Write | ENT-permission |
 | Download Invoices | Download patient/provider invoices | ☐ Read | ENT-permission |
@@ -703,7 +705,7 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 | View Analytics Dashboard | Access platform-wide analytics overview | ☐ Read | ENT-permission |
 | View Provider Analytics | View provider performance metrics | ☐ Read | ENT-permission |
 | View Financial Analytics | View revenue and conversion analytics | ☐ Read | ENT-permission |
-| Export Reports | Export analytics reports (PDF/CSV) | ☐ Read | ENT-permission |
+| Export Reports | Export analytics reports (PDF/CSV); gates nothing yet, because FR-014 offers admins no analytics export (REQ-014-315) | ☐ Read | ENT-permission |
 | View Treatment Outcomes | Access treatment outcomes analytics | ☐ Read | ENT-permission |
 
 **Category: Communication & Support (A-10)**: (REQ-031-111)
@@ -733,14 +735,14 @@ This module directly supports Principle II (Medical Data Privacy & Security) and
 | Edit Settings | Modify system settings | ☐ Write (Super Admin only) (REQ-031-067) | ENT-permission |
 | Manage Users | Create/edit admin accounts | ☐ Write (Super Admin only) (REQ-031-067) | ENT-permission |
 | Manage Roles | Create/edit roles and permissions | ☐ Write (Super Admin only) (REQ-031-067) | ENT-permission |
-| Manage App Data | Edit countries, discovery questions, location presentation and starting prices | ☐ Write | ENT-permission |
-| Manage Treatment Catalog | Create, edit and deactivate treatments and manage the treatment types list; provider packages are view-only for admins | ☐ Write | ENT-permission |
+| Manage App Data | Edit the FR-026 App Data lists (countries and calling codes, discovery questions, inquiry cancellation reasons, account deletion reasons, inquiry configuration and provider specialties), location presentation and starting prices | ☐ Write | ENT-permission |
+| Manage Treatment Catalog | Create, edit and deactivate treatments, manage the treatment types list and the medication and post-op instruction templates; provider packages are view-only for admins | ☐ Write | ENT-permission |
 | Manage Aftercare Templates | Create/edit aftercare milestone templates | ☐ Write | ENT-permission |
 | Manage Notification Templates | Edit email templates (OTP, confirmations) | ☐ Write | ENT-permission |
 | Configure Payment Settings | Manage Stripe accounts, commission rates, split pay (the permission FR-029 calls PaymentConfigAdmin) | ☐ Write | ENT-permission |
 | Manage Help Centre | Create/edit Help Centre content for providers and patients | ☐ Write | ENT-permission |
 | View Sensitive Settings | View the full value of sensitive settings (for example API keys) | ☐ Read | ENT-permission |
-| Manage Authentication Policies | Edit authentication policy settings (for example lockout, session timeout and the one-time-code (OTP) settings) | ☐ Write | ENT-permission |
+| Manage Authentication Policies | Edit authentication policy settings (for example lockout, the admin session limit and inactivity timeout, and the one-time-code (OTP) settings) | ☐ Write | ENT-permission |
 | Manage Localization | Manage languages, translations and machine translation (FR-021) | ☐ Write (editing English source values, changing the default language, publishing, rollback, moving a language to Active, the free-text translation switch and budget, and machine translation credentials stay Super Admin only) (REQ-031-067) | ENT-permission |
 
 **Super Admin-only actions** (REQ-031-067): the write permissions Edit Settings, Manage Users and Manage Roles; the Manage Localization actions listed in its row above; the Affiliate Program Settings panel and the commission ceiling override under Manage Affiliates; Login as Provider (REQ-015-069); and the Support Center settings (Screen 7 of FR-034) and the support audit export (REQ-034-094). Their cells stay disabled for every other role.
@@ -880,6 +882,7 @@ FR-026 refers to these permission names for its screens: View Settings, Edit Set
 | Process Payouts | A-05 | ☑ | ☐ | ☑ | ☐ | ENT-permission, ENT-role-permission-definition |
 | Issue Refunds | A-05 | ☑ | ☐ | ☐ | ☐ | ENT-permission, ENT-role-permission-definition |
 | Retry Charge | A-05 | ☑ | ☐ | ☑ | ☐ | ENT-permission, ENT-role-permission-definition |
+| Send Payment Reminders | A-05 | ☑ | ☐ | ☑ | ☐ | ENT-permission, ENT-role-permission-definition |
 | Resolve Installments | A-05 | ☑ | ☐ | ☑ | ☐ | ENT-permission, ENT-role-permission-definition |
 | View Patient Billing | A-05 | ☑ | ☐ | ☑ | ☐ | ENT-permission, ENT-role-permission-definition |
 | View Discounts | A-06 | ☑ | ☐ | ☑ | ☐ | ENT-permission, ENT-role-permission-definition |
@@ -1127,7 +1130,7 @@ FR-026 refers to these permission names for its screens: View Settings, Edit Set
 - Invitation token expiry (configurable within 1-30 day range) (REQ-031-037)
 - Maximum failed login attempts before lockout (configurable in A-09: Authentication Settings; default 5 failed attempts with a 15-minute lockout, the same setting as FR-001; the admin login rate limit (REQ-031-100) is a separate control and stays, and whichever trips first applies, REQ-026-116) (REQ-031-099)
 - Session timeout duration: the admin inactivity timeout set in A-09 (FR-026; whole minutes from 5 to 240, default 30) (REQ-031-099)
-- Number of concurrent sessions per admin user (default: 3, range: 1-5); at the limit, a new sign-in ends the oldest session (REQ-031-099)
+- Number of concurrent sessions per admin user (default: 3, range: 1-5); at the limit, a new sign-in ends the oldest session; a change to the limit or to the inactivity timeout applies from each open session's next request, and sessions above a lowered limit end oldest first (REQ-031-099, REQ-026-116)
 - Repeated access denial alert: the count (default 5 refusals for one admin) and the time window (default 10 minutes) are each configurable in A-09 (REQ-031-090)
 
 ---
@@ -1339,6 +1342,7 @@ As a platform administrator, I need the system to prevent any Super Admin accoun
 | 2026-11-23 | 1.4 | Owner ruling 2026-11-23: the aftercare specialist is clinic staff on the provider side; the Hairline admin role is renamed Aftercare Coordinator with unchanged permissions. Role name replaced in 18 place(s). No permission change. | Documentation |
 | 2026-11-24 | 1.5 | Logic review pass 1 applied. Invitation creates the account as Invited (steps and labels aligned); pending role with Effective From; Super Admin accounts cannot be demoted, suspended or deleted in the product; suspend, reactivate and delete flows; sensitive permission list widened; provider team-removal and refund-approval rules corrected; audit trail limited to access-control events with a 30-day default; new flows for editing admin role permissions, cancelling invitations, requesting a new invitation, deleting and cloning roles and sync failure; permission rows added or reworded for messaging, localization, reviews, treatments and packages, patients, retry charge and affiliates; default tables made full and renamed; settings ownership pointers to FR-021, FR-027 and FR-034. See the update log of the same date. | Documentation |
 | 2026-11-24 | 1.6 | Logic review pass 2 applied. Sensitive-permission warning added to the invitation and role-change flows; the role-change acknowledgement is shown to the affected admin on the admin dashboard; new Deleted account status and the status each account action is offered on; Super Admin invitations can be cancelled or resent until accepted and only Active Super Admins count for the single-Super-Admin banner; Pending Send starts at the first failed delivery; provider role sync can be retried by a Super Admin; new permissions Resolve Installments (admin), Edit Notification Settings (provider) and View and Edit Billing Settings (renamed from Manage Bank Details); provider default table gains View Profile and Edit Profile for Manager; refunds raised by the only holder of Issue Refunds wait for a second holder; small wording fixes. See the update log of the same date. | Documentation |
+| 2026-11-25 | 1.7 | Cross-FR alignment. Permission descriptions now name what neighbouring modules gate on them: Edit Patients covers password reset, unlock, lifting a suspension and action on a flagged conversation (FR-016); Process Payouts covers the FR-017 payout actions under financial re-authentication; Manage App Data names the FR-026 App Data lists; Manage Treatment Catalog adds the medication and post-op instruction templates; Manage Authentication Policies names the admin session settings; Export Reports noted as gating nothing in FR-014. Send Payment Reminders added to the Billing Admin defaults, mirroring Retry Charge. Aftercare Coordinator screens named. Session limit and timeout changes apply from each open session's next request. | Documentation |
 
 ---
 
@@ -1355,4 +1359,4 @@ As a platform administrator, I need the system to prevent any Super Admin accoun
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-011 Aftercare & Recovery Management PRD
-**Last Updated**: 2026-11-24 (logic review pass 2; prior approval dated 2026-01-04)
+**Last Updated**: 2026-11-25 (cross-FR alignment; prior approval dated 2026-01-04)

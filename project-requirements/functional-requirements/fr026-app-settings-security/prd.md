@@ -806,6 +806,8 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 | Package Creation Rate Limit | number | Yes | Maximum new packages per provider per hour (owner: FR-024) | Range and default follow FR-024; a new record counts once, when first saved as Active or Inactive, and a clone counts (REQ-026-140) | no graph field (Setting) |
 | Admin Invitation Token Expiry | number (days) | Yes | Lifetime of an admin team invitation token (owner: FR-031) | Range and default follow FR-031 (REQ-026-140) | no graph field (Setting) |
 | Admin Repeated Denial Threshold | number pair | Yes | Count of refusals of one admin and the time window that trigger the Super Admin alert (owner: FR-031) | Range and default follow FR-031 (REQ-026-140) | no graph field (Setting) |
+| Search Results Page Size | number | Yes | Results per page in admin and provider lists (owner: FR-022) | Range and default follow FR-022 (REQ-026-140) | SET-search-results-page-size |
+| Provider Search Default Sort | select | Yes | Default sort order for provider search, a Post-MVP feature (owner: FR-022) | Options and default follow FR-022 (REQ-026-140) | SET-provider-search-default-sort |
 
 **Business Rules**:
 
@@ -815,7 +817,7 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 - The discovery source options of the registration question are the Discovery Questions answer options managed on Screen 5; Screen 8 holds no second list. (REQ-026-119)
 - Where the table says no value is fixed, an admin sets the value here and can change it without a code release. (REQ-026-117)
 - A save that changes Support Emergency Contact Phone or Email and leaves both blank is refused with the message "Set at least one emergency contact (phone or email)."; other Screen 8 rows can be saved while both are still blank, as at launch. While both are blank the patient Help & Support Hub hides the emergency contact section (REQ-026-143, REQ-035-040)
-- The group "Limits owned by other features" (the last four rows) only lists Settings whose owning FR makes them admin-editable; range, default and counting rule stay with the owning FR (REQ-026-140)
+- The group "Limits owned by other features" (the last six rows) only lists Settings whose owning FR makes them admin-editable; range, default and counting rule stay with the owning FR (REQ-026-140)
 - The edit permission for these Settings is in the permission table under Security Controls (REQ-026-001).
 
 ---
@@ -894,7 +896,7 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
   | Screen 8 Platform Settings, admin session rows | View Settings | Manage Authentication Policies |
   | Screen 8 Platform Settings, all other rows | View Settings | Edit Settings |
 
-  FR-031 names countries and discovery questions under Manage App Data and lockout and session timeout under Manage Authentication Policies; assigning the other App Data lists and the OTP settings to those permissions is queued for FR-031 to confirm.
+  FR-031 confirms the split: Manage App Data covers all the App Data lists above, and Manage Authentication Policies covers lockout, the OTP settings and the admin session settings (REQ-031-113).
 - **Encryption**: Sensitive setting values (API keys, secrets) encrypted at rest using AES-256 (REQ-026-016)
 - **Audit trail**: All admin actions logged with IP address, user agent, timestamp, and change details (REQ-026-053)
 - **Rate limiting**: Settings API rate limiting is defined once in the system PRD (moved from this document)
@@ -1345,7 +1347,7 @@ Admin needs one versioned source for the thresholds and targets used by FR-014 a
 - **REQ-026-119**: System MUST offer the registration question "How did you find out about us?" from the Discovery Questions options managed on Screen 5. Consumer: FR-001.
 - **REQ-026-120**: System MUST store the provider notification types offered in provider notification preferences, seeded with the five core types. Admins can add or remove types, but the core types (quote, schedule, treatment, aftercare, review) cannot be removed. Consumers: FR-032, FR-020.
 - **REQ-026-121**: System MUST store the timezone options (every whole-hour offset from GMT-12 to GMT+14 at launch, each with its offset and a city example). Consumers: FR-032, FR-021.
-- **REQ-026-140**: System MUST list on Screen 8, under the group "Limits owned by other features", the Settings whose owning FR makes them admin-editable: the treatment creation rate limit and the package creation rate limit (FR-024; a new record counts once, when first saved as Active or Inactive), the admin invitation token expiry and the admin repeated denial threshold (FR-031). Range, default and counting rule stay with the owning FR.
+- **REQ-026-140**: System MUST list on Screen 8, under the group "Limits owned by other features", the Settings whose owning FR makes them admin-editable: the treatment creation rate limit and the package creation rate limit (FR-024; a new record counts once, when first saved as Active or Inactive), the admin invitation token expiry and the admin repeated denial threshold (FR-031), the search results page size and the provider search default sort (FR-022). Range, default and counting rule stay with the owning FR.
 - **REQ-026-141**: System MUST prevent deactivation of the final active country; a deactivation that would leave no active country is rejected with a message.
 - **REQ-026-142**: A Quote Configuration version created by a Default Currency change in FR-029 (REQ-029-053) MUST have Change Type "System", the fixed reason text "Default currency changed in Payment Configuration", and Changed By set to the admin who confirmed the change in FR-029; the change reason rule (REQ-026-002) covers changes made on FR-026 screens.
 - **REQ-026-143**: System MUST refuse a save that changes the Support Emergency Contact Phone or Email when it leaves both blank, with the message "Set at least one emergency contact (phone or email)."; a save that changes neither value is not checked, so other Screen 8 rows can be saved while both are blank, as at launch. While both are blank the patient Help & Support Hub hides the emergency contact section (REQ-035-040).
@@ -1377,6 +1379,7 @@ Admin needs one versioned source for the thresholds and targets used by FR-014 a
 | 2026-11-23 | 1.18 | Independent compression review: 2 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
 | 2026-11-24 | 1.19 | Logic review pass 1: permissions replace the working role names, with a screen-to-permission table (REQ-026-001, REQ-026-054); treatment areas seeded Hair, Beard and Both (REQ-026-034); head scan Settings reduced to two quality minimums (default 40 each) and video limits marked unused (REQ-026-117); admin sign-in uses the shared lockout and the fixed FR-031 throttle together (REQ-026-116); Change Type System for FR-029 currency versions (REQ-026-142); creation limits owned by other features listed on Screen 8 (REQ-026-140); reminder skip rule when a lead time is raised (REQ-026-031); country CSV columns, final active country guard and deactivation warning for FR-028 (REQ-026-128, REQ-026-141, REQ-026-129); emergency contact at-least-one rule (REQ-026-143); bounds for the re-verification threshold and admin inactivity timeout; seeding and empty rules for timezones, notification types, landing images, acceptance terms; Settings API outage at hold placement (REQ-026-144). | Product Owner / Documentation |
 | 2026-11-24 | 1.20 | Logic review pass 2: one shared failed-attempt counter with reset and lowered-limit rule (REQ-026-145); admin session limit and timeout enforcement (REQ-026-116); flag upload added to the country scenario (REQ-026-122); expiry value in the email variable and resend under the version and expiry in force (REQ-026-072, REQ-026-073, REQ-026-106); admin times in the browser timezone (REQ-026-050); emergency contact check only on a save that changes those rows (REQ-026-143); flag missing means an empty flag (REQ-026-011, REQ-026-128); stale head scan wording fixed. | Product Owner / Documentation |
+| 2026-11-25 | 1.21 | Cross-FR alignment: Screen 8 lists the search results page size and the provider search default sort owned by FR-022 (REQ-026-140); FR-031 confirmed the permission split for the App Data lists and the OTP settings. | Documentation |
 
 ---
 
@@ -1394,4 +1397,4 @@ Admin needs one versioned source for the thresholds and targets used by FR-014 a
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (PRD Standards & Requirements)
 **Based on**: FR-011 Aftercare & Recovery Management PRD, FR-026 from system-prd.md
-**Last Updated**: 2026-11-24
+**Last Updated**: 2026-11-25

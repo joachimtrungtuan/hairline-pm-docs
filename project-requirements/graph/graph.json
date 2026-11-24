@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T20:40:15Z",
+  "generated_at": "2026-11-24T20:53:00Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -82920,9 +82920,9 @@
       "owner_fr": "FR-026",
       "title": "Screen 8 lists limits owned by other features",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "System MUST list on Screen 8, under the group \"Limits owned by other features\", the Settings whose owning FR makes them admin-editable: the treatment creation rate limit and the package creation rate limit (FR-024; a new record counts once, when first saved as Active or Inactive), the admin invitation token expiry and the admin repeated denial threshold (FR-031). Range, default and counting rule stay with the owning FR.",
+        "statement": "System MUST list on Screen 8, under the group \"Limits owned by other features\", the Settings whose owning FR makes them admin-editable: the treatment creation rate limit and the package creation rate limit (FR-024; a new record counts once, when first saved as Active or Inactive), the admin invitation token expiry and the admin repeated denial threshold (FR-031), the search results page size and the provider search default sort (FR-022). Range, default and counting rule stay with the owning FR.",
         "rationale": "Logic review of the FR-026 PRD; mirrors the PRD text. The provider creation rate limit (FR-015) is not stated as admin-editable by its owner, so it is not listed."
       }
     },
@@ -90633,9 +90633,9 @@
       "owner_fr": "FR-031",
       "title": "Authentication limits configurable in A-09",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "The maximum failed login attempts before lockout (default 5 failed attempts with a 15-minute lockout, the same setting as FR-001; the admin login rate limit of REQ-031-100 is a separate control and whichever trips first applies, REQ-026-116), the session timeout duration (the admin inactivity timeout of A-09, whole minutes from 5 to 240, default 30) and the number of concurrent sessions per admin user (default 3, range 1-5; at the limit a new sign-in ends the oldest session) are configurable in A-09 Authentication Settings.",
+        "statement": "The maximum failed login attempts before lockout (default 5 failed attempts with a 15-minute lockout, the same setting as FR-001; the admin login rate limit of REQ-031-100 is a separate control and whichever trips first applies, REQ-026-116), the session timeout duration (the admin inactivity timeout of A-09, whole minutes from 5 to 240, default 30) and the number of concurrent sessions per admin user (default 3, range 1-5; at the limit a new sign-in ends the oldest session; a change to the limit or to the inactivity timeout applies from each open session's next request, and sessions above a lowered limit end oldest first; REQ-026-116) are configurable in A-09 Authentication Settings.",
         "rationale": "Admin Editability (Configurable with Restrictions). The session timeout is the admin inactivity timeout SET-admin-inactivity-timeout (FR-026); the lockout default is the FR-001 / FR-026 lockout setting. The admin login rate limit (REQ-031-100) is a separate control."
       }
     },
@@ -90669,9 +90669,9 @@
       "owner_fr": "FR-031",
       "title": "Admin permissions: Patient Management (A-01)",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "Permission category \"Patient Management\" (A-01) in the admin permission matrix offers: View Patients (View patient list and profiles; Read); Edit Patients (Modify patient information; Write); Delete Patients (Approve patient account deletion requests (FR-016); Delete).",
+        "statement": "Permission category \"Patient Management\" (A-01) in the admin permission matrix offers: View Patients (View patient list and profiles; Read); Edit Patients (Modify patient information and run patient account actions: reset password, unlock account, lift suspension and take action on a flagged conversation (FR-016); Write); Delete Patients (Approve patient account deletion requests (FR-016); Delete).",
         "rationale": "Screen 4 permission matrix structure, admin platform categories. Rows copied from the PRD table (Permission, Description, Access Level)."
       }
     },
@@ -90693,9 +90693,9 @@
       "owner_fr": "FR-031",
       "title": "Admin permissions: Aftercare Management (A-03)",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "Permission category \"Aftercare Management\" (A-03) in the admin permission matrix offers: View Aftercare Cases (View aftercare patient list; Read); Manage Aftercare (Assign specialists, edit plans; Write); Chat with Patients (Access aftercare chat; Write); Schedule Consultations (Book video consultations; Write).",
+        "statement": "Permission category \"Aftercare Management\" (A-03) in the admin permission matrix offers: View Aftercare Cases (View aftercare patient list; Read); Manage Aftercare (Assign specialists, edit plans; Write); Chat with Patients (Access aftercare chat; Write); Schedule Consultations (Book video consultations; Write). When the Hairline team delivers a case, the Aftercare Coordinator uses these permissions on the FR-011 admin aftercare Screens 13 to 19, including Screen 14 Tab 4 (plan configuration, extension or change proposals and the urgent flag); no separate coordinator screens exist (REQ-011-004).",
         "rationale": "Screen 4 permission matrix structure, admin platform categories. Rows copied from the PRD table (Permission, Description, Access Level).",
         "distinct_from": "REQ-031-117"
       }
@@ -90730,9 +90730,9 @@
       "owner_fr": "FR-031",
       "title": "Admin permissions: Billing & Financial (A-05)",
       "status": "active",
-      "version": 7,
+      "version": 8,
       "attrs": {
-        "statement": "Permission category \"Billing & Financial\" (A-05) in the admin permission matrix offers: View Transactions (View patient and provider transactions; Read); Process Payouts (Initiate provider payouts; Write); Issue Refunds (Process patient refunds; Write (requires approval by another admin holding this permission, never the requester; the approval step and its 2-business-day escalation are defined in FR-007; while only one admin holds this permission, a refund that needs approval stays awaiting approval until a second holder exists)); View Financial Reports (Access revenue analytics; Read); View Patient Billing (View patient invoices and payment status; Read); Send Payment Reminders (Send payment reminders to patients; Write); Retry Charge (Retry a failed patient payment charge (FR-007B); Write); Resolve Installments (Record a manual bank transfer for an unpaid installment and approve one entered by a colleague; the approver is never the requester; Write); Download Invoices (Download patient/provider invoices; Read).",
+        "statement": "Permission category \"Billing & Financial\" (A-05) in the admin permission matrix offers: View Transactions (View patient and provider transactions; Read); Process Payouts (Run provider payout actions in FR-017: approve, unapprove, void, mark as paid, retry, release earnings, clear Manual Review Required, write off a clinic balance and override a payout status; each money-moving action asks for financial re-authentication (REQ-017-047); Write); Issue Refunds (Process patient refunds; Write (requires approval by another admin holding this permission, never the requester; the approval step and its 2-business-day escalation are defined in FR-007; while only one admin holds this permission, a refund that needs approval stays awaiting approval until a second holder exists)); View Financial Reports (Access revenue analytics; Read); View Patient Billing (View patient invoices and payment status; Read); Send Payment Reminders (Send payment reminders to patients (FR-007, FR-016); held by default by the same roles as Retry Charge; Write); Retry Charge (Retry a failed patient payment charge (FR-007B); Write); Resolve Installments (Record a manual bank transfer for an unpaid installment and approve one entered by a colleague; the approver is never the requester; Write); Download Invoices (Download patient/provider invoices; Read).",
         "rationale": "Screen 4 permission matrix structure, admin platform categories. Rows copied from the PRD table (Permission, Description, Access Level)."
       }
     },
@@ -90766,9 +90766,9 @@
       "owner_fr": "FR-031",
       "title": "Admin permissions: Analytics & Reporting (A-08)",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Permission category \"Analytics & Reporting\" (A-08) in the admin permission matrix offers: View Analytics Dashboard (Access platform-wide analytics overview; Read); View Provider Analytics (View provider performance metrics; Read); View Financial Analytics (View revenue and conversion analytics; Read); Export Reports (Export analytics reports (PDF/CSV); Read); View Treatment Outcomes (Access treatment outcomes analytics; Read).",
+        "statement": "Permission category \"Analytics & Reporting\" (A-08) in the admin permission matrix offers: View Analytics Dashboard (Access platform-wide analytics overview; Read); View Provider Analytics (View provider performance metrics; Read); View Financial Analytics (View revenue and conversion analytics; Read); Export Reports (Export analytics reports (PDF/CSV); gates nothing yet, because FR-014 offers admins no analytics export (REQ-014-315); Read); View Treatment Outcomes (Access treatment outcomes analytics; Read).",
         "rationale": "Screen 4 permission matrix structure, admin platform categories. Rows copied from the PRD table (Permission, Description, Access Level)."
       }
     },
@@ -90802,9 +90802,9 @@
       "owner_fr": "FR-031",
       "title": "Admin permissions: System Settings (A-09)",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "Permission category \"System Settings\" (A-09) in the admin permission matrix offers: View Settings (View system configuration; Read); Edit Settings (Modify system settings; Write (Super Admin only)); Manage Users (Create/edit admin accounts; Write (Super Admin only)); Manage Roles (Create/edit roles and permissions; Write (Super Admin only)); Manage App Data (Edit countries, discovery questions, location presentation and starting prices; Write); Manage Treatment Catalog (Create, edit and deactivate treatments and manage the treatment types list; provider packages are view-only for admins; Write); Manage Aftercare Templates (Create/edit aftercare milestone templates; Write); Manage Notification Templates (Edit email templates (OTP, confirmations); Write); Configure Payment Settings (Manage Stripe accounts, commission rates, split pay (the permission FR-029 calls PaymentConfigAdmin); Write); Manage Help Centre (Create/edit Help Centre content for providers and patients; Write); View Sensitive Settings (View the full value of sensitive settings (for example API keys); Read); Manage Authentication Policies (Edit authentication policy settings (for example lockout, session timeout and the one-time-code (OTP) settings); Write); Manage Localization (Manage languages, translations and machine translation (FR-021); Write (editing English source values, changing the default language, publishing, rollback, moving a language to Active, the free-text translation switch and budget, and machine translation credentials stay Super Admin only)).",
+        "statement": "Permission category \"System Settings\" (A-09) in the admin permission matrix offers: View Settings (View system configuration; Read); Edit Settings (Modify system settings; Write (Super Admin only)); Manage Users (Create/edit admin accounts; Write (Super Admin only)); Manage Roles (Create/edit roles and permissions; Write (Super Admin only)); Manage App Data (Edit the FR-026 App Data lists (countries and calling codes, discovery questions, inquiry cancellation reasons, account deletion reasons, inquiry configuration and provider specialties), location presentation and starting prices; Write); Manage Treatment Catalog (Create, edit and deactivate treatments, manage the treatment types list and the medication and post-op instruction templates; provider packages are view-only for admins; Write); Manage Aftercare Templates (Create/edit aftercare milestone templates; Write); Manage Notification Templates (Edit email templates (OTP, confirmations); Write); Configure Payment Settings (Manage Stripe accounts, commission rates, split pay (the permission FR-029 calls PaymentConfigAdmin); Write); Manage Help Centre (Create/edit Help Centre content for providers and patients; Write); View Sensitive Settings (View the full value of sensitive settings (for example API keys); Read); Manage Authentication Policies (Edit authentication policy settings (for example lockout, the admin session limit and inactivity timeout, and the one-time-code (OTP) settings); Write); Manage Localization (Manage languages, translations and machine translation (FR-021); Write (editing English source values, changing the default language, publishing, rollback, moving a language to Active, the free-text translation switch and budget, and machine translation credentials stay Super Admin only)).",
         "rationale": "Screen 4 permission matrix structure, admin platform categories. Rows copied from the PRD table (Permission, Description, Access Level)."
       }
     },
@@ -279662,6 +279662,18 @@
     {
       "from_id": "REQ-026-140",
       "verb": "governed by",
+      "to_id": "SET-provider-search-default-sort",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-140",
+      "verb": "governed by",
+      "to_id": "SET-search-results-page-size",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-140",
+      "verb": "governed by",
       "to_id": "SET-treatment-creation-rate-limit",
       "attrs": {}
     },
@@ -458990,6 +459002,26 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-205151-20aa623b",
+      "at": "2026-11-24T20:51:51.043166+00:00",
+      "changed_by": "docs-manager",
+      "reason": "Cross-FR pass: permission descriptions in FR-031 name what neighbouring modules gate on them, the admin session change rule is stated, and FR-026 Screen 8 lists the two search settings owned by FR-022.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-026-140",
+        "REQ-031-099",
+        "REQ-031-102",
+        "REQ-031-104",
+        "REQ-031-107",
+        "REQ-031-110",
+        "REQ-031-113"
+      ],
+      "edges_added": 2,
+      "edges_removed": 0,
+      "rows": 9
+    },
     {
       "id": "cs-20261124-203858-fe7a902d",
       "at": "2026-11-24T20:38:58.403723+00:00",
