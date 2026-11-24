@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T04:08:37Z",
+  "generated_at": "2026-11-24T04:27:18Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -10856,9 +10856,9 @@
       "owner_fr": "FR-003",
       "title": "Cancellation reason",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Patient-private; the label of one of the Admin-configured reasons the patient picked (checked against the options active at the time), or the system reason \"Account Deleted (System)\". The cause of the cancellation is kept in cancelled_by."
+        "description": "Patient-private; the label of one of the Admin-configured reasons the patient picked (checked against the options active at the time), or the system reason \"Account Deleted (System)\". Empty when cancelled_by is admin: the admin's reason is the booking's cancellation reason in FR-006. The cause of the cancellation is kept in cancelled_by."
       }
     },
     {
@@ -10889,9 +10889,9 @@
       "owner_fr": "FR-003",
       "title": "Cancelled by",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Who cancelled the inquiry: the patient, the system (account deletion) or an admin (FR-006 booking cancellation). Provider-status causes stay on ENT-provider-inquiry.cancellation_cause."
+        "description": "Who cancelled the inquiry: the patient, the system (account deletion) or an admin (FR-006 booking cancellation or Close inquiry). Provider-status causes stay on ENT-provider-inquiry.cancellation_cause."
       }
     },
     {
@@ -10920,9 +10920,9 @@
       "owner_fr": "FR-003",
       "title": "Archived",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Admin soft delete flag; shown as an Archived badge."
+        "description": "Admin soft delete flag; shown as an Archived badge. It is set only when the stage is Completed or Cancelled; it hides the inquiry in admin list views and changes no status."
       }
     },
     {
@@ -21638,9 +21638,9 @@
       "owner_fr": "FR-003",
       "title": "Status",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "description": "Distributed (received, not yet opened), Viewed (opened by the provider), Quoted (the provider has created a quote in FR-004), Declined (the exclusive monitoring-conversion provider declined), Cancelled (the cause is kept on cancellation_cause). No inquiry expiry exists at launch, so there is no Expired value."
+        "description": "Distributed (received, not yet opened), Viewed (the provider first opened the inquiry detail), Quoted (the provider has sent a quote for this inquiry in FR-004; it stays Quoted if that quote later expires or is withdrawn), Declined (the exclusive monitoring-conversion provider declined), Cancelled (the cause is kept on cancellation_cause). No inquiry expiry exists at launch, so there is no Expired value."
       }
     },
     {
@@ -41948,9 +41948,9 @@
       "owner_fr": "FR-003",
       "title": "Patient cancels in Inquiry or Quoted; admin only afterwards",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST allow patients to cancel their own inquiry in Inquiry or Quoted stages with a required cancellation reason; cancellation is immediate and irreversible. From the Accepted stage onward, System MUST NOT offer patient cancellation; it MUST show \"Contact support\", and cancellation is performed only by an admin through FR-006.",
+        "statement": "System MUST allow patients to cancel their own inquiry in Inquiry or Quoted stages with a required cancellation reason; cancellation is immediate and irreversible. From the Accepted stage onward, System MUST NOT offer patient cancellation; it MUST show \"Contact support\", and cancellation is performed only by an admin through FR-006. System MUST record who cancelled in `cancelled_by` (patient, system or admin).",
         "rationale": "Restated by Cancellation Rules 4 (cancellation is immediate and irreversible; no grace period, no admin approval required; reason required with predefined options), Workflow 5 and Alternative Flow E2."
       }
     },
@@ -41971,11 +41971,11 @@
       "id": "REQ-003-014",
       "type": "Rule",
       "owner_fr": "FR-003",
-      "title": "Admin booking cancellation cancels inquiry and releases hold",
+      "title": "Admin booking cancellation or Close inquiry cancels the inquiry as admin and releases hold",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "When an admin cancels a booking through FR-006, System MUST set the inquiry to `Cancelled`, release any active appointment slot hold (FR-006 hold of the FR-026 configured duration) immediately, and leave the accepted quote with the status `accepted`. Any draft replacement quote follows REQ-003-127."
+        "statement": "When an admin cancels a booking through FR-006, or closes the inquiry through Close inquiry on FR-006 Screen 6, System MUST set the inquiry to `Cancelled` with `cancelled_by = admin`, leave `cancellation_reason` empty (the admin's reason is the booking's cancellation reason in FR-006, shown to the patient and the provider as FR-006 defines), release any active appointment slot hold (FR-006 hold of the FR-026 configured duration) immediately, and leave the accepted quote with the status `accepted`. Any draft replacement quote follows REQ-003-127."
       }
     },
     {
@@ -42043,9 +42043,9 @@
       "owner_fr": "FR-003",
       "title": "Automatic redistribution after cascade removes the last live offer",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Before acceptance, when the provider-status cascade cancels a live offer (a sent quote that has not expired) and the patient has no other live offer on the inquiry, System MUST redistribute the inquiry, at most once per provider-status event, to eligible providers that have not yet received it under the normal Workflow 2 distribution rules, keep `supportRequired = true`, and tell the patient \"[Clinic] is no longer available. We are finding new offers for you.\" If the patient had not explicitly selected the affected provider, the redistribution is automatic. If the patient had explicitly selected the affected provider, System MUST ask the patient to confirm and MUST redistribute only after confirmation; confirm, decline and no-answer follow REQ-003-128. System MUST NOT redistribute while another live offer remains (Workflow 2 Alternative Flow B4).",
+        "statement": "Before acceptance, when the provider-status cascade cancels the last live offer on the inquiry (a sent quote that has not expired, with no other live offer remaining), System MUST redistribute the inquiry, at most once per provider-status event, to eligible providers that have not yet received it under the normal Workflow 2 distribution rules, keep `supportRequired = true`, and tell the patient \"[Clinic] is no longer available. We are finding new offers for you.\" If the patient had not explicitly selected the affected provider, the redistribution is automatic. Only if the patient had explicitly selected the affected provider, System MUST first ask the patient to confirm and MUST redistribute only after confirmation; confirm, decline and no-answer follow REQ-003-128. System MUST NOT redistribute while another live offer remains (Workflow 2 Alternative Flow B4).",
         "rationale": "Restated by Workflow 2 Alternative Flow B4 step 3 (redistribution removes the exclusive restriction for an FR-037 exclusive inquiry; while the patient has not confirmed the inquiry is not redistributed and the patient keeps the Contact Admin/Support action; runs at most once per provider-status event and inquiry) and the matching edge case."
       }
     },
@@ -42559,9 +42559,9 @@
       "owner_fr": "FR-003",
       "title": "No inquiry expires automatically at launch",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST NOT expire an unquoted inquiry automatically at launch. An inquiry stays open until the patient cancels it, an admin cancels or archives it, or it is quoted and the patient decides. Draft expiry (REQ-003-004) and quote expiry (FR-004, FR-026) are separate and unchanged.",
+        "statement": "System MUST NOT expire an unquoted inquiry automatically at launch. An inquiry stays open until the patient or an admin cancels it, or it is quoted and the patient decides. Draft expiry (REQ-003-004) and quote expiry (FR-004, FR-026) are separate and unchanged.",
         "rationale": "PRD Submission Rules 1 (1024), Screen 9 rules (848)."
       }
     },
@@ -42797,11 +42797,11 @@
       "id": "REQ-003-088",
       "type": "Rule",
       "owner_fr": "FR-003",
-      "title": "Admin soft delete only, with reason, Archived badge and a live-quote guard",
+      "title": "Admin soft delete only, with reason, Archived badge and a Completed or Cancelled guard",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Soft delete only (no hard deletes). Archive requires reason and confirmation; retains data for audit; prevents further edits; read-only view after deletion; display badge \"Archived\" across all admin views. Archive is refused with a message when the inquiry has a live quote (a sent quote that has not expired) or an accepted quote or booking; otherwise it proceeds. Archiving sends no patient or provider notice.",
+        "statement": "Soft delete only (no hard deletes). Archive requires reason and confirmation; retains data for audit; prevents further edits; read-only view after deletion; display badge \"Archived\" wherever an archived inquiry is shown in admin views. An admin may archive an inquiry only when its stage is Completed or Cancelled; any other stage is refused with a message and nothing changes. Archive hides the inquiry in admin list views, sends no patient or provider notice and changes no status.",
         "rationale": "PRD Workflow 4 flow diagram (360-363), Screen 12 notes (1007-1009) and rules (1013), Data Security 3 (soft deletes only, no hard deletes allowed)."
       }
     },
@@ -43135,9 +43135,9 @@
       "owner_fr": "FR-003",
       "title": "Dashboard shows provider-unavailable banner and keeps other offers actionable",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "A provider-caused status change (ProviderSuspended or ProviderDeactivated) never shows patient-cancellation copy. For a still-comparing inquiry (Inquiry or Quoted stage), the dashboard shows a provider-unavailable banner with a Contact Admin/Support action, the affected provider's offers show as unavailable while other offers remain actionable, and when the patient had explicitly selected the affected provider the dashboard first asks the patient to confirm the redistribution. After acceptance, the dashboard keeps the current stage and tells the patient that an admin will arrange a replacement provider within the same inquiry.",
+        "statement": "A provider-caused status change (ProviderSuspended or ProviderDeactivated) never shows patient-cancellation copy. For a still-comparing inquiry (Inquiry or Quoted stage), the dashboard shows a provider-unavailable banner with a Contact Admin/Support action, the affected provider's offers show as unavailable while other offers remain actionable, and when no live offer remains and the patient had explicitly selected the affected provider the dashboard first asks the patient to confirm the redistribution with Confirm and Decline actions (REQ-003-128). After acceptance, the dashboard keeps the current stage and tells the patient that an admin will arrange a replacement provider within the same inquiry.",
         "rationale": "PRD Screen 8 notes (743)."
       }
     },
@@ -43268,9 +43268,9 @@
       "owner_fr": "FR-003",
       "title": "Patient confirmation of a redistribution: confirm, decline, or no answer after 48 hours",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "When System asks the patient to confirm a redistribution (REQ-003-021), it MUST set `redistribution_state` to `awaiting_patient_confirmation`. On confirm, it MUST set `confirmed` and run normal Workflow 2 matching (Alternative Flow B1 applies when no eligible provider is found). On decline, it MUST set `declined`, leave the inquiry as it is with `supportRequired = true` and the Contact Admin/Support action, and not redistribute. If the patient has not answered after a fixed 48 hours, System MUST send one reminder, set `admin_follow_up`, and show the inquiry in the admin inquiry queue (Screen 11); it MUST NOT send a second reminder. The patient can still confirm or decline after the reminder.",
+        "statement": "When System asks the patient to confirm a redistribution (REQ-003-021), it MUST set `redistribution_state` to `awaiting_patient_confirmation`. On confirm, it MUST set `confirmed` and run normal Workflow 2 matching (Alternative Flow B1 applies when no eligible provider is found). On decline, it MUST set `declined`, leave the inquiry as it is with `supportRequired = true` and the Contact Admin/Support action, and not redistribute. If the patient has not answered after a fixed 48 hours, System MUST send one reminder, set `admin_follow_up`, and show the inquiry in the admin inquiry queue (Screen 11); it MUST NOT send a second reminder. The patient can still confirm or decline after the reminder. The state returns to `none`, and any pending reminder is dropped, when the inquiry is cancelled, when an admin reassigns providers or reruns distribution on Screen 12, or when an admin clears `supportRequired` (REQ-003-111). The reminder is sent only while the state is `awaiting_patient_confirmation`.",
         "rationale": "Owner default: ask first, remind once, then hand the case to an admin, so an inquiry never waits with no live offer and no owner."
       }
     },
@@ -43278,11 +43278,11 @@
       "id": "REQ-003-129",
       "type": "Rule",
       "owner_fr": "FR-003",
-      "title": "Quotes count and responses count come from current quote and ProviderInquiry data",
+      "title": "Quotes count, responses count and the ProviderInquiry viewed and quoted status come from current data",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "`quotes_count` is the number of the inquiry's quotes in sent, accepted or expired status (FR-004) and is shown on the admin overview. `responses_count` is the number of the inquiry's ProviderInquiry rows with status `quoted` or `declined` and is shown on the patient dashboard. Both are recomputed from current data each time they are shown.",
+        "statement": "`quotes_count` is the number of the inquiry's quotes in sent, accepted or expired status (FR-004) and is shown on the admin overview. `responses_count` is the number of the inquiry's ProviderInquiry rows with status `quoted` or `declined` and is shown on the patient dashboard. Both are recomputed from current data each time they are shown. A ProviderInquiry row becomes `viewed` when the provider first opens the inquiry detail (Screen 10). It becomes `quoted` when the provider first sends a quote for the inquiry (FR-004) and stays `quoted` afterwards, even if that quote later expires or is withdrawn; a quote that is only a draft does not count.",
         "rationale": "Two counters on two screens had no source and could be mistaken for one number."
       }
     },
@@ -95718,7 +95718,7 @@
       "owner_fr": "FR-003",
       "title": "Inquiry Dashboard, Post-Submission (Screen 8)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "platform": "patient",
         "description": "Patient sees stage, timeline, responses, summary, deadlines and stage-dependent actions (cancel or contact support)."
@@ -95790,7 +95790,7 @@
       "owner_fr": "FR-003",
       "title": "Inquiry Detailed Management (Screen 12)",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "platform": "admin",
         "description": "Admin edit, reassign, override, soft delete and audit trail for one inquiry."
@@ -104852,7 +104852,7 @@
       "owner_fr": "FR-003",
       "title": "Provider opens the inquiry detail",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 3 (Provider Inquiry Management)"
       }
@@ -104962,7 +104962,7 @@
       "owner_fr": "FR-003",
       "title": "Admin reassigns to an eligible provider and may send a note",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 4 (Admin Inquiry Management)"
       }
@@ -104973,7 +104973,7 @@
       "owner_fr": "FR-003",
       "title": "Admin overrides distribution with confirmation and reason",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Workflow 4 (Admin Inquiry Management)"
       }
@@ -104984,7 +104984,7 @@
       "owner_fr": "FR-003",
       "title": "Admin soft-deletes the inquiry with a reason",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Workflow 4 (Admin Inquiry Management)"
       }
@@ -105039,7 +105039,7 @@
       "owner_fr": "FR-003",
       "title": "System commits the cancellation atomically with an audit event",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 5 (Patient Cancels Inquiry)"
       }
@@ -105281,7 +105281,7 @@
       "owner_fr": "FR-003",
       "title": "Cascade is deduplicated per provider-status event and inquiry",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B4"
       }
@@ -105290,9 +105290,9 @@
       "id": "STP-003-069",
       "type": "Step",
       "owner_fr": "FR-003",
-      "title": "Patient is told other offers stay open, or asked to confirm redistribution",
+      "title": "Patient is told other offers stay open",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B4"
       }
@@ -105312,9 +105312,9 @@
       "id": "STP-003-071",
       "type": "Step",
       "owner_fr": "FR-003",
-      "title": "Quoted inquiry loses its last live offer and is redistributed",
+      "title": "Quoted inquiry loses its last live offer and is redistributed automatically (patient had not selected the provider)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B4"
       }
@@ -105457,7 +105457,7 @@
       "owner_fr": "FR-003",
       "title": "Admin cancels with a reason and audit",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flow E2"
       }
@@ -105468,7 +105468,7 @@
       "owner_fr": "FR-003",
       "title": "Admin approval of the account-deletion request cancels the open inquiry with a system reason",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flow E3",
         "handoff_from": "FR-001: Delete Account flow"
@@ -105544,9 +105544,9 @@
       "id": "STP-003-092",
       "type": "Step",
       "owner_fr": "FR-003",
-      "title": "Archive is refused with a message because a live quote or an accepted quote or booking exists",
+      "title": "Archive is refused with a message because the inquiry stage is not Completed or Cancelled",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 4 Soft delete; Screen 12"
       }
@@ -105555,9 +105555,9 @@
       "id": "STP-003-093",
       "type": "Step",
       "owner_fr": "FR-003",
-      "title": "Patient confirms the redistribution and matching runs again",
+      "title": "Patient confirms the redistribution and matching runs again (stage Inquiry or Quoted)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 2 Alternative Flow B4 step 3"
       }
@@ -105566,9 +105566,9 @@
       "id": "STP-003-094",
       "type": "Step",
       "owner_fr": "FR-003",
-      "title": "Patient declines the redistribution and the inquiry stays as it is",
+      "title": "Patient declines the redistribution and the inquiry stays as it is (stage Inquiry or Quoted)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 2 Alternative Flow B4 step 3"
       }
@@ -105577,9 +105577,9 @@
       "id": "STP-003-095",
       "type": "Step",
       "owner_fr": "FR-003",
-      "title": "No answer after 48 hours: one reminder is sent and the inquiry appears in the admin queue",
+      "title": "No answer after 48 hours: one reminder is sent and the inquiry appears in the admin queue (stage Inquiry or Quoted)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 2 Alternative Flow B4 step 3"
       }
@@ -105626,6 +105626,17 @@
       "version": 1,
       "attrs": {
         "prd_ref": "Alternative Flow A3; Screen 11"
+      }
+    },
+    {
+      "id": "STP-003-100",
+      "type": "Step",
+      "owner_fr": "FR-003",
+      "title": "System asks the patient to confirm the redistribution and sets the state to awaiting patient confirmation",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 2 Alternative Flow B4 step 3; Screen 8"
       }
     },
     {
@@ -183258,6 +183269,12 @@
       "from_id": "REQ-003-129",
       "verb": "applies to",
       "to_id": "ENT-inquiry.responses_count",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-003-129",
+      "verb": "applies to",
+      "to_id": "ENT-provider-inquiry.status",
       "attrs": {}
     },
     {
@@ -297278,6 +297295,15 @@
     {
       "from_id": "SCR-003-09",
       "verb": "shows",
+      "to_id": "ENT-inquiry.redistribution_state",
+      "attrs": {
+        "provenance": "system calculated",
+        "label": "Redistribution Confirmation"
+      }
+    },
+    {
+      "from_id": "SCR-003-09",
+      "verb": "shows",
       "to_id": "ENT-inquiry.response_deadline",
       "attrs": {
         "provenance": "retrieved",
@@ -298040,6 +298066,15 @@
       "to_id": "ENT-inquiry.additional_notes",
       "attrs": {
         "provenance": "retrieved"
+      }
+    },
+    {
+      "from_id": "SCR-003-15",
+      "verb": "shows",
+      "to_id": "ENT-inquiry.cancelled_by",
+      "attrs": {
+        "provenance": "system calculated",
+        "label": "Full Inquiry"
       }
     },
     {
@@ -350554,6 +350589,12 @@
     },
     {
       "from_id": "STP-003-027",
+      "verb": "applies",
+      "to_id": "REQ-003-129",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-003-027",
       "verb": "at",
       "to_id": "STG-main-01-inquiry",
       "attrs": {}
@@ -350988,6 +351029,12 @@
     },
     {
       "from_id": "STP-003-037",
+      "verb": "applies",
+      "to_id": "REQ-003-128",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-003-037",
       "verb": "at",
       "to_id": "STG-main-01-inquiry",
       "attrs": {}
@@ -351014,6 +351061,12 @@
       "from_id": "STP-003-038",
       "verb": "applies",
       "to_id": "REQ-003-087",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-003-038",
+      "verb": "applies",
+      "to_id": "REQ-003-128",
       "attrs": {}
     },
     {
@@ -351069,7 +351122,7 @@
       "verb": "next",
       "to_id": "STP-003-092",
       "attrs": {
-        "label": "live quote, or accepted quote or booking, exists"
+        "label": "stage is not Completed or Cancelled"
       }
     },
     {
@@ -351230,6 +351283,12 @@
       "from_id": "STP-003-045",
       "verb": "applies",
       "to_id": "REQ-003-099",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-003-045",
+      "verb": "applies",
+      "to_id": "REQ-003-128",
       "attrs": {}
     },
     {
@@ -351963,7 +352022,7 @@
       "verb": "next",
       "to_id": "STP-003-069",
       "attrs": {
-        "label": "inquiry at Inquiry or Quoted, before acceptance"
+        "label": "other offers remain open"
       }
     },
     {
@@ -351971,7 +352030,7 @@
       "verb": "next",
       "to_id": "STP-003-071",
       "attrs": {
-        "label": "inquiry at Quoted and the last live offer was cancelled"
+        "label": "last live offer cancelled and the patient had not selected the affected provider (automatic)"
       }
     },
     {
@@ -352007,6 +352066,14 @@
       }
     },
     {
+      "from_id": "STP-003-068",
+      "verb": "next",
+      "to_id": "STP-003-100",
+      "attrs": {
+        "label": "last live offer cancelled and the patient had selected the affected provider"
+      }
+    },
+    {
       "from_id": "STP-003-069",
       "verb": "applies",
       "to_id": "REQ-003-116",
@@ -352029,30 +352096,6 @@
       "verb": "next",
       "to_id": "STP-003-070",
       "attrs": {}
-    },
-    {
-      "from_id": "STP-003-069",
-      "verb": "next",
-      "to_id": "STP-003-093",
-      "attrs": {
-        "label": "patient had selected the affected provider and confirms"
-      }
-    },
-    {
-      "from_id": "STP-003-069",
-      "verb": "next",
-      "to_id": "STP-003-094",
-      "attrs": {
-        "label": "patient declines"
-      }
-    },
-    {
-      "from_id": "STP-003-069",
-      "verb": "next",
-      "to_id": "STP-003-095",
-      "attrs": {
-        "label": "no answer within 48 hours"
-      }
     },
     {
       "from_id": "STP-003-069",
@@ -352493,6 +352536,12 @@
     },
     {
       "from_id": "STP-003-084",
+      "verb": "applies",
+      "to_id": "REQ-003-128",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-003-084",
       "verb": "at",
       "to_id": "STG-main-03-acceptance",
       "attrs": {}
@@ -352527,6 +352576,12 @@
       "from_id": "STP-003-085",
       "verb": "applies",
       "to_id": "REQ-003-103",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-003-085",
+      "verb": "applies",
+      "to_id": "REQ-003-128",
       "attrs": {}
     },
     {
@@ -352805,6 +352860,14 @@
     },
     {
       "from_id": "STP-003-095",
+      "verb": "next",
+      "to_id": "STP-003-093",
+      "attrs": {
+        "label": "patient still confirms after the reminder"
+      }
+    },
+    {
+      "from_id": "STP-003-095",
       "verb": "on",
       "to_id": "SCR-003-14",
       "attrs": {}
@@ -352917,6 +352980,63 @@
       "from_id": "STP-003-099",
       "verb": "on",
       "to_id": "SCR-003-14",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-003-100",
+      "verb": "applies",
+      "to_id": "REQ-003-021",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-003-100",
+      "verb": "applies",
+      "to_id": "REQ-003-128",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-003-100",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-003-100",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-003-100",
+      "verb": "next",
+      "to_id": "STP-003-093",
+      "attrs": {
+        "label": "patient confirms",
+        "back": true
+      }
+    },
+    {
+      "from_id": "STP-003-100",
+      "verb": "next",
+      "to_id": "STP-003-094",
+      "attrs": {
+        "label": "patient declines",
+        "back": true
+      }
+    },
+    {
+      "from_id": "STP-003-100",
+      "verb": "next",
+      "to_id": "STP-003-095",
+      "attrs": {
+        "label": "no answer within 48 hours",
+        "back": true
+      }
+    },
+    {
+      "from_id": "STP-003-100",
+      "verb": "on",
+      "to_id": "SCR-003-09",
       "attrs": {}
     },
     {
@@ -428002,6 +428122,49 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-042616-87412062",
+      "at": "2026-11-24T04:26:16.389045+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-003 logic review pass 2: archive only a Completed or Cancelled inquiry (owner default 66), scope and complete the redistribution confirmation chain, show the confirm and decline actions on Screen 8, set cancelled_by for admin cancellation and Close inquiry, and give the ProviderInquiry viewed and quoted statuses a trigger",
+      "source_id": null,
+      "nodes_added": [
+        "STP-003-100"
+      ],
+      "nodes_updated": [
+        "ENT-inquiry.cancellation_reason",
+        "ENT-inquiry.cancelled_by",
+        "ENT-inquiry.is_archived",
+        "ENT-provider-inquiry.status",
+        "REQ-003-012",
+        "REQ-003-014",
+        "REQ-003-021",
+        "REQ-003-067",
+        "REQ-003-088",
+        "REQ-003-117",
+        "REQ-003-128",
+        "REQ-003-129",
+        "SCR-003-09",
+        "SCR-003-15",
+        "STP-003-027",
+        "STP-003-037",
+        "STP-003-038",
+        "STP-003-039",
+        "STP-003-045",
+        "STP-003-068",
+        "STP-003-069",
+        "STP-003-071",
+        "STP-003-084",
+        "STP-003-085",
+        "STP-003-092",
+        "STP-003-093",
+        "STP-003-094",
+        "STP-003-095"
+      ],
+      "edges_added": 22,
+      "edges_removed": 6,
+      "rows": 54
+    },
     {
       "id": "cs-20261124-040731-1dd7ea20",
       "at": "2026-11-24T04:07:31.910080+00:00",
