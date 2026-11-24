@@ -1,0 +1,179 @@
+# FR-035 logic review pass 1: PRD fixes mirrored in the graph. Not applied by the author; the controller applies it.
+# Order: new nodes first, then edge removals and node updates, then new edges (edge attrs cannot be updated, so labelled edges are removed and re-added).
+# Kept on purpose: STP-035-035 still hands off to STP-034-063 (the FR-034 creation step); the FR-034 chain after it duplicates FR-035 steps 5 to 8 and is queued as a neighbour row in the ledger.
+# No Rule, Field or enum nodes are added or retired; STP-035-034 stays retired and its edges are removed here.
+reason: "FR-035 logic review pass 1: not-logged-in view, optional emergency rows, Immediately closure, notification-setting wording, reopen notice, original request on Ticket Detail, flows A6 and B3, labelled branches, A3 chain tidy, related content up to 4"
+by: docs-manager
+operations:
+  # ---- New steps and flows (nodes first so every later edge can use them)
+  - {"op": "add_node", "id": "STP-035-058", "type": "Step", "owner_fr": "FR-035", "title": "System sends the admin a support.case_reopened notice when a Resolved case reopens", "attrs": {"prd_ref": "A5 step 5a"}}
+  - {"op": "add_node", "id": "STP-035-081", "type": "Step", "owner_fr": "FR-035", "title": "System sends the resolution summary email when the case becomes Resolved", "attrs": {"prd_ref": "A6 step 1"}}
+  - {"op": "add_node", "id": "STP-035-082", "type": "Step", "owner_fr": "FR-035", "title": "System closes the Resolved case when the closure period ends with no reply", "attrs": {"prd_ref": "A6 step 3"}}
+  - {"op": "add_node", "id": "STP-035-083", "type": "Step", "owner_fr": "FR-035", "title": "System sends the support.case_closed notice to the patient", "attrs": {"prd_ref": "A6 step 4"}}
+  - {"op": "add_node", "id": "STP-035-084", "type": "Step", "owner_fr": "FR-035", "title": "System shows Ticket Detail of a Closed case with the Closed Case Banner", "attrs": {"prd_ref": "A6 step 5"}}
+  - {"op": "add_node", "id": "STP-035-085", "type": "Step", "owner_fr": "FR-035", "title": "Patient taps Create New Ticket in the Closed Case Banner", "attrs": {"prd_ref": "A6 step 6a"}}
+  - {"op": "add_node", "id": "STP-035-086", "type": "Step", "owner_fr": "FR-035", "title": "Patient taps Contact Support in the banner and an email to the support address opens with the case ID in the subject", "attrs": {"prd_ref": "A6 step 6b"}}
+  - {"op": "add_node", "id": "STP-035-087", "type": "Step", "owner_fr": "FR-035", "title": "System refuses a reply sent after closure, keeps the typed text and shows the banner", "attrs": {"prd_ref": "A6 step 7"}}
+  - {"op": "add_node", "id": "STP-035-091", "type": "Step", "owner_fr": "FR-035", "title": "Patient taps Submit or attaches a file and the step cannot complete right now", "attrs": {"prd_ref": "B3 step 1"}}
+  - {"op": "add_node", "id": "STP-035-092", "type": "Step", "owner_fr": "FR-035", "title": "System queues the submission and shows queued, will be sent when online", "attrs": {"prd_ref": "B3 step 2a"}}
+  - {"op": "add_node", "id": "STP-035-093", "type": "Step", "owner_fr": "FR-035", "title": "System sends the queued submission when connectivity returns", "attrs": {"prd_ref": "B3 step 3a"}}
+  - {"op": "add_node", "id": "STP-035-094", "type": "Step", "owner_fr": "FR-035", "title": "System refuses the submission with a wait message at the 10 tickets per hour limit", "attrs": {"prd_ref": "B3 step 2b"}}
+  - {"op": "add_node", "id": "STP-035-095", "type": "Step", "owner_fr": "FR-035", "title": "System refuses the file with a try again later message when the virus scanner is unavailable", "attrs": {"prd_ref": "B3 steps 2c and 3c"}}
+  - {"op": "add_node", "id": "STP-035-096", "type": "Step", "owner_fr": "FR-035", "title": "System creates the case without the files, queues the files and tells the patient of the delay", "attrs": {"prd_ref": "B3 step 2d"}}
+  - {"op": "add_node", "id": "FLW-035-resolved-case-closes", "type": "Flow", "title": "A Resolved case closes", "attrs": {"kind": "alternative", "description": "A Resolved case closes after the closure period and the patient sees the Closed Case Banner", "prd_ref": "Alternative Flow A6"}}
+  - {"op": "add_node", "id": "FLW-035-submission-cannot-complete", "type": "Flow", "title": "Submission cannot complete now", "attrs": {"kind": "alternative", "description": "A support submission cannot complete now: offline or server error, rate limit, scanner unavailable, storage unavailable", "prd_ref": "Alternative Flow B3"}}
+  # ---- Edge removals (re-added below with labels, or retired from the A3 chain)
+  - {"op": "remove_edge", "from": "STP-035-031", "verb": "next", "to": "STP-034-060"}
+  - {"op": "remove_edge", "from": "STP-035-033", "verb": "next", "to": "STP-035-034"}
+  - {"op": "remove_edge", "from": "STP-035-034", "verb": "next", "to": "STP-035-035"}
+  - {"op": "remove_edge", "from": "STP-035-037", "verb": "next", "to": "STP-035-038"}
+  - {"op": "remove_edge", "from": "STP-035-008", "verb": "next", "to": "STP-035-009"}
+  - {"op": "remove_edge", "from": "STP-035-013", "verb": "next", "to": "STP-035-014"}
+  - {"op": "remove_edge", "from": "STP-035-043", "verb": "next", "to": "STP-035-044"}
+  - {"op": "remove_edge", "from": "STP-035-052", "verb": "next", "to": "STP-035-053"}
+  - {"op": "remove_edge", "from": "STP-035-045", "verb": "next", "to": "STP-035-046"}
+  - {"op": "remove_edge", "from": "STP-035-053", "verb": "next", "to": "STP-035-054"}
+  # ---- Step wording and PRD references
+  - {"op": "update_node", "id": "STP-035-035", "attrs": {"prd_ref": "A3 step 4"}}
+  - {"op": "update_node", "id": "STP-035-036", "attrs": {"prd_ref": "A3 step 5"}}
+  - {"op": "update_node", "id": "STP-035-037", "title": "System sends the confirmation email with the case reference number unless an admin has switched it off", "attrs": {"prd_ref": "A3 step 6"}}
+  - {"op": "update_node", "id": "STP-035-038", "title": "System shows the confirmation screen with Case ID and the 24-hours-on-business-days message", "attrs": {"prd_ref": "A3 step 7"}}
+  - {"op": "update_node", "id": "STP-035-039", "attrs": {"prd_ref": "A3 step 8"}}
+  # ---- Rule updates: statements mirror the PRD
+  - {"op": "update_node", "id": "REQ-035-008", "attrs": {"statement": "System MUST display up to 4 related content suggestions when FR-033 configures them (no minimum; none when none are configured); suggestions may cross content types"}}
+  - {"op": "update_node", "id": "REQ-035-012", "attrs": {"statement": "System MUST display 8 patient-visible categories under their current labels: Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry, Feature Request, Bug Report, Feedback (FR-034 REQ-034-030; labels edited in FR-034 REQ-034-087; \"Provider Support\" and \"Patient Support\" excluded as admin-internal whatever their label)"}}
+  - {"op": "update_node", "id": "REQ-035-014", "attrs": {"statement": "System MUST virus-scan all patient-uploaded files before acceptance; when the scanner is unavailable the file is refused with a \"try again later\" message and the case can be sent without it"}}
+  - {"op": "update_node", "id": "REQ-035-017", "attrs": {"statement": "System MUST display the patient's original request (description and initial attachments) and the full communication thread for each ticket showing all messages from patient and admin with sender labels and timestamps"}, "title": "Original request and full communication thread with sender labels"}
+  - {"op": "update_node", "id": "REQ-035-019", "attrs": {"statement": "System MUST automatically reopen Resolved cases to Open status when patient sends a reply, and send the admin a support.case_reopened notice (FR-034 REQ-034-092)"}}
+  - {"op": "update_node", "id": "REQ-035-020", "attrs": {"statement": "System MUST display auto-closure countdown on Resolved tickets showing remaining days before automatic closure (FR-034 REQ-034-061); \"closes today\" on the last day; none when the closure period is Immediately"}}
+  - {"op": "update_node", "id": "REQ-035-024", "attrs": {"statement": "System MUST require patient authentication to access Help Center content, submit support requests, and view tickets; a person who is not logged in sees only the support contact details (phone and email), with no case and no help content"}, "title": "Patient authentication required; not-logged-in view shows only support contact details"}
+  - {"op": "update_node", "id": "REQ-035-031", "attrs": {"statement": "System MUST trigger patient notifications via FR-020/S-03 for case status changes, admin replies (support.case_admin_reply), and case closure"}}
+  - {"op": "update_node", "id": "REQ-035-033", "attrs": {"statement": "Patient navigates to \"Help & Support\" from Settings screen (FR-026 / P01.2-S1); in-app deep link from other screens (e.g., contextual help links from booking, payment, or aftercare screens); push notification tap (e.g., tapping a case status change notification navigates to Ticket Detail); the Report a Problem row on the Hub opens Contact Support with the device, operating system, app version, and report time attached per FR-034 REQ-034-164; a person who is not logged in reaches only the support contact details (REQ-035-024)."}, "title": "Entry points to the patient Help Center"}
+  - {"op": "update_node", "id": "REQ-035-036", "attrs": {"statement": "Search covers all published patient-audience Help Center content (FAQs, Articles, Resources, Videos); results are ranked by relevance and appear on the Help Center Browser (Screen 2), whichever search bar the patient types in; if no results match, show a \"Contact Support\" prompt. Full-text search is required for P1 and must not be downgraded to browse-only behavior."}}
+  - {"op": "update_node", "id": "REQ-035-038", "attrs": {"statement": "Patient taps No on Was this helpful? (on any content type: FAQ, article, resource, or video) or sees no search results; System displays Still need help? Contact Support CTA, and the no-results message \"No results for '[query]'. Try different keywords or Contact Support.\"; Patient taps Contact Support; System displays Contact Support form (Screen 5)."}}
+  - {"op": "update_node", "id": "REQ-035-039", "attrs": {"statement": "Emergency contact section is a healthcare UX best practice for post-procedure patient safety; it must always be visible - it cannot be hidden or require scrolling past it. The section must remain visible regardless of scroll position (sticky or always rendered); emergency phone is read-only with tap-to-call on mobile and emergency email is read-only with tap-to-compose on mobile. Each row is shown only when its App Setting has a value: a row with no value is left out, and the Contact Support row stays."}}
+  - {"op": "update_node", "id": "REQ-035-042", "attrs": {"statement": "4 content types for patient platform: FAQs, Articles, Resources, Videos (FR-033 REQ-033-003), all four cards always shown; admin cannot add new content types for patients; no Service Status for patients."}, "title": "Four fixed content types, always shown; no Service Status for patients"}
+  - {"op": "update_node", "id": "REQ-035-048", "attrs": {"statement": "Resolved cases display a subtle \"Auto-closes in X days\" indicator to set expectations about the closure window (FR-034 REQ-034-061); on the last day it reads \"Auto-closes today\", and it is not shown when the closure period is Immediately because there is no Resolved window"}}
+  - {"op": "update_node", "id": "REQ-035-054", "attrs": {"statement": "Upon successful submission, the system displays a confirmation screen showing the assigned Case ID (CASE-YYYY-#####) and the message \"We will respond within 24 hours on business days\" (FR-034 SC-003), then navigates to My Support Tickets (Screen 3); the confirmation always shows in the app, whether or not the confirmation email is sent"}, "title": "Submission confirmation shows the case ID and the 24-hours-on-business-days message"}
+  - {"op": "update_node", "id": "REQ-035-055", "attrs": {"statement": "Patient receives a confirmation email with the case reference number upon submission unless an admin has switched the notice off in the Admin notification settings (FR-030, FR-034 REQ-034-090); the in-app confirmation always shows (FR-020, FR-034 A5 step 11)"}}
+  - {"op": "update_node", "id": "REQ-035-059", "attrs": {"statement": "A file that fails virus scanning is refused with the FR-034 message (REQ-034-106), and the patient can send the case without it."}, "title": "Failed virus scan refuses the file with the FR-034 message"}
+  - {"op": "update_node", "id": "REQ-035-061", "attrs": {"statement": "Media Storage Service failure handling: for file uploads, the case is created without the files, the files are queued for retry, and the patient is told of the delay."}}
+  - {"op": "update_node", "id": "REQ-035-062", "attrs": {"statement": "A support request submitted while offline, or one that fails with a server error (5xx), is queued on the device and shows \"queued, will be sent when online\"; it is sent when connectivity returns or retried with exponential backoff, and the patient gets the Case ID after it is sent."}}
+  - {"op": "update_node", "id": "REQ-035-063", "attrs": {"statement": "Rate limiting on new ticket submissions (max 10 new tickets per hour per patient); the patient sees a message to wait before trying again; replies are not counted by this limit."}}
+  - {"op": "update_node", "id": "REQ-035-067", "attrs": {"statement": "Cases auto-close after 7 days in Resolved status if no patient reply (configurable: Immediately, 3, 7, or 14 days per FR-034 REQ-034-061/062); the patient receives a support.case_closed notification. With Immediately there is no Resolved window: the case goes straight to Closed, no countdown or Auto-closes indicator is shown, and the patient uses the Closed Case Banner (reopen request or new ticket)."}}
+  - {"op": "update_node", "id": "REQ-035-068", "attrs": {"statement": "The screen learns that a case closed on its next refresh or when the patient sends a reply. A reply sent after closure is refused with a message, the typed text stays visible for copying, and the Closed Case Banner replaces the reply input."}, "title": "Closure while the patient is viewing: a late reply is refused and the text is kept"}
+  - {"op": "update_node", "id": "REQ-035-069", "attrs": {"statement": "Closed Case Banner: \"This case is closed. If you still need help, you can create a new ticket or contact support to request this case be reopened.\" with \"Create New Ticket\" link to Screen 5 and \"Contact Support\" link that opens an email to the support address (the emergency email App Setting) with the case ID in the subject; the Contact Support link is shown only when that setting has a value. Both paths: new ticket creation (in-app) and case reopening via admin (FR-034 Workflow B3, REQ-034-017)."}}
+  - {"op": "update_node", "id": "REQ-035-070", "attrs": {"statement": "The resolution summary is also sent to the patient via email notification on status change to Resolved, unless an admin has switched the notice off in the Admin notification settings (FR-030, FR-034 REQ-034-060); the summary always shows on Ticket Detail."}}
+  - {"op": "update_node", "id": "REQ-035-075", "attrs": {"statement": "Open, In Progress, and Resolved cases of a deleted patient stay with the Admin, marked \"Patient Account Deleted\" (FR-034 REQ-034-109), and notices to the deleted patient stop; patient identity is anonymized per data retention policy (FR-023)."}, "title": "Account deletion with support cases: cases stay with the Admin and notices stop"}
+  - {"op": "update_node", "id": "REQ-035-076", "attrs": {"statement": "Patient-visible support categories (admin cannot add or remove categories from the fixed list; the labels are editable in FR-034 REQ-034-087, the picker shows the current label, and the two internal categories stay hidden whatever their label)"}}
+  - {"op": "update_node", "id": "REQ-035-087", "attrs": {"statement": "When no messages exist yet on a case (the case was just created), Ticket Detail shows \"Your case has been submitted. Our team will respond within 24 hours on business days.\""}}
+  # ---- Step wiring: every new step gets stage, actor, screen (when it has one), rules and flow
+  - {"op": "add_edge", "from": "STP-035-058", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-035-058", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-035-058", "verb": "on", "to": "SCR-035-04"}
+  - {"op": "add_edge", "from": "STP-035-058", "verb": "applies", "to": "REQ-035-019"}
+  - {"op": "add_edge", "from": "STP-035-081", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-035-081", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-035-081", "verb": "applies", "to": "REQ-035-070"}
+  - {"op": "add_edge", "from": "STP-035-081", "verb": "applies", "to": "REQ-035-031"}
+  - {"op": "add_edge", "from": "STP-035-082", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-035-082", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-035-082", "verb": "applies", "to": "REQ-035-067"}
+  - {"op": "add_edge", "from": "STP-035-083", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-035-083", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-035-083", "verb": "applies", "to": "REQ-035-031"}
+  - {"op": "add_edge", "from": "STP-035-083", "verb": "applies", "to": "REQ-035-067"}
+  - {"op": "add_edge", "from": "STP-035-084", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-035-084", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-035-084", "verb": "on", "to": "SCR-035-04"}
+  - {"op": "add_edge", "from": "STP-035-084", "verb": "applies", "to": "REQ-035-069"}
+  - {"op": "add_edge", "from": "STP-035-084", "verb": "applies", "to": "REQ-035-018"}
+  - {"op": "add_edge", "from": "STP-035-085", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-035-085", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-035-085", "verb": "on", "to": "SCR-035-04"}
+  - {"op": "add_edge", "from": "STP-035-085", "verb": "applies", "to": "REQ-035-069"}
+  - {"op": "add_edge", "from": "STP-035-086", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-035-086", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-035-086", "verb": "on", "to": "SCR-035-04"}
+  - {"op": "add_edge", "from": "STP-035-086", "verb": "applies", "to": "REQ-035-069"}
+  - {"op": "add_edge", "from": "STP-035-087", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-035-087", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-035-087", "verb": "on", "to": "SCR-035-04"}
+  - {"op": "add_edge", "from": "STP-035-087", "verb": "applies", "to": "REQ-035-068"}
+  - {"op": "add_edge", "from": "STP-035-091", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-035-091", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-035-091", "verb": "on", "to": "SCR-035-05"}
+  - {"op": "add_edge", "from": "STP-035-091", "verb": "applies", "to": "REQ-035-062"}
+  - {"op": "add_edge", "from": "STP-035-092", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-035-092", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-035-092", "verb": "on", "to": "SCR-035-05"}
+  - {"op": "add_edge", "from": "STP-035-092", "verb": "applies", "to": "REQ-035-062"}
+  - {"op": "add_edge", "from": "STP-035-093", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-035-093", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-035-093", "verb": "applies", "to": "REQ-035-062"}
+  - {"op": "add_edge", "from": "STP-035-094", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-035-094", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-035-094", "verb": "on", "to": "SCR-035-05"}
+  - {"op": "add_edge", "from": "STP-035-094", "verb": "applies", "to": "REQ-035-063"}
+  - {"op": "add_edge", "from": "STP-035-095", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-035-095", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-035-095", "verb": "on", "to": "SCR-035-05"}
+  - {"op": "add_edge", "from": "STP-035-095", "verb": "applies", "to": "REQ-035-014"}
+  - {"op": "add_edge", "from": "STP-035-096", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-035-096", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-035-096", "verb": "on", "to": "SCR-035-05"}
+  - {"op": "add_edge", "from": "STP-035-096", "verb": "applies", "to": "REQ-035-061"}
+  - {"op": "add_edge", "from": "FLW-035-resolved-case-closes", "verb": "starts at", "to": "STP-035-081"}
+  - {"op": "add_edge", "from": "FLW-035-submission-cannot-complete", "verb": "starts at", "to": "STP-035-091"}
+  # ---- Existing steps that lacked a screen (A1 and A2 happen on the Help Center Browser)
+  - {"op": "add_edge", "from": "STP-035-012", "verb": "on", "to": "SCR-035-02"}
+  - {"op": "add_edge", "from": "STP-035-013", "verb": "on", "to": "SCR-035-02"}
+  - {"op": "add_edge", "from": "STP-035-014", "verb": "on", "to": "SCR-035-02"}
+  - {"op": "add_edge", "from": "STP-035-021", "verb": "on", "to": "SCR-035-02"}
+  - {"op": "add_edge", "from": "STP-035-022", "verb": "on", "to": "SCR-035-02"}
+  - {"op": "add_edge", "from": "STP-035-023", "verb": "on", "to": "SCR-035-02"}
+  # ---- Next edges: branches carry label and condition so they are exclusive
+  - {"op": "add_edge", "from": "STP-035-008", "verb": "next", "to": "STP-035-009", "attrs": {"label": "patient taps Yes"}}
+  - {"op": "add_edge", "from": "STP-035-008", "verb": "next", "to": "STP-035-021", "attrs": {"label": "patient taps No", "condition": "REQ-035-038"}}
+  - {"op": "add_edge", "from": "STP-035-013", "verb": "next", "to": "STP-035-014", "attrs": {"label": "results found"}}
+  - {"op": "add_edge", "from": "STP-035-013", "verb": "next", "to": "STP-035-021", "attrs": {"label": "no results match", "condition": "REQ-035-038"}}
+  - {"op": "add_edge", "from": "STP-035-014", "verb": "next", "to": "STP-035-008"}
+  - {"op": "add_edge", "from": "STP-035-024", "verb": "next", "to": "STP-035-031"}
+  - {"op": "add_edge", "from": "STP-035-036", "verb": "next", "to": "STP-035-038", "attrs": {"label": "confirmation screen shows without waiting for the email"}}
+  - {"op": "add_edge", "from": "STP-035-064", "verb": "next", "to": "STP-035-033"}
+  - {"op": "add_edge", "from": "STP-035-074", "verb": "next", "to": "STP-035-071", "attrs": {"label": "patient taps Retry"}}
+  - {"op": "add_edge", "from": "STP-035-074", "verb": "next", "to": "STP-035-031", "attrs": {"label": "patient goes to Contact Support", "condition": "REQ-035-045"}}
+  - {"op": "add_edge", "from": "STP-035-043", "verb": "next", "to": "STP-035-044", "attrs": {"label": "case is Open, In Progress or Resolved", "condition": "REQ-035-018"}}
+  - {"op": "add_edge", "from": "STP-035-043", "verb": "next", "to": "STP-035-084", "attrs": {"label": "case is Closed", "condition": "REQ-035-069"}}
+  - {"op": "add_edge", "from": "STP-035-045", "verb": "next", "to": "STP-035-046", "attrs": {"label": "case still accepts replies", "condition": "REQ-035-068"}}
+  - {"op": "add_edge", "from": "STP-035-053", "verb": "next", "to": "STP-035-054", "attrs": {"label": "case still accepts replies", "condition": "REQ-035-068"}}
+  - {"op": "add_edge", "from": "STP-035-052", "verb": "next", "to": "STP-035-053", "attrs": {"label": "patient replies", "condition": "REQ-035-019"}}
+  - {"op": "add_edge", "from": "STP-035-045", "verb": "next", "to": "STP-035-087", "attrs": {"label": "case closed before the reply arrives", "condition": "REQ-035-068"}}
+  - {"op": "add_edge", "from": "STP-035-053", "verb": "next", "to": "STP-035-087", "attrs": {"label": "case closed before the reply arrives", "condition": "REQ-035-068"}}
+  - {"op": "add_edge", "from": "STP-035-055", "verb": "next", "to": "STP-035-058"}
+  - {"op": "add_edge", "from": "STP-035-058", "verb": "next", "to": "STP-020-001"}
+  - {"op": "add_edge", "from": "STP-035-081", "verb": "next", "to": "STP-035-051", "attrs": {"label": "closure period is 3, 7 or 14 days", "condition": "REQ-035-067"}}
+  - {"op": "add_edge", "from": "STP-035-081", "verb": "next", "to": "STP-035-082", "attrs": {"label": "closure period is Immediately", "condition": "REQ-035-067"}}
+  - {"op": "add_edge", "from": "STP-035-081", "verb": "next", "to": "STP-020-001", "attrs": {"label": "email sent unless switched off", "condition": "REQ-035-070"}}
+  - {"op": "add_edge", "from": "STP-035-052", "verb": "next", "to": "STP-035-082", "attrs": {"label": "no reply before the period ends", "condition": "REQ-035-067"}}
+  - {"op": "add_edge", "from": "STP-035-082", "verb": "next", "to": "STP-035-083"}
+  - {"op": "add_edge", "from": "STP-035-083", "verb": "next", "to": "STP-035-084"}
+  - {"op": "add_edge", "from": "STP-035-083", "verb": "next", "to": "STP-020-001"}
+  - {"op": "add_edge", "from": "STP-035-084", "verb": "next", "to": "STP-035-085", "attrs": {"label": "patient taps Create New Ticket", "condition": "REQ-035-069"}}
+  - {"op": "add_edge", "from": "STP-035-084", "verb": "next", "to": "STP-035-086", "attrs": {"label": "patient taps Contact Support", "condition": "REQ-035-069"}}
+  - {"op": "add_edge", "from": "STP-035-085", "verb": "next", "to": "STP-035-031"}
+  - {"op": "add_edge", "from": "STP-035-086", "verb": "next", "to": "STP-034-091"}
+  - {"op": "add_edge", "from": "STP-035-087", "verb": "next", "to": "STP-035-084", "attrs": {"label": "banner replaces the reply input"}}
+  - {"op": "add_edge", "from": "STP-035-091", "verb": "next", "to": "STP-035-092", "attrs": {"label": "device offline or FR-034 server error", "condition": "REQ-035-062"}}
+  - {"op": "add_edge", "from": "STP-035-091", "verb": "next", "to": "STP-035-094", "attrs": {"label": "10 new tickets already in the last hour", "condition": "REQ-035-063"}}
+  - {"op": "add_edge", "from": "STP-035-091", "verb": "next", "to": "STP-035-095", "attrs": {"label": "virus scanner unavailable", "condition": "REQ-035-014"}}
+  - {"op": "add_edge", "from": "STP-035-091", "verb": "next", "to": "STP-035-096", "attrs": {"label": "media storage unavailable", "condition": "REQ-035-061"}}
+  - {"op": "add_edge", "from": "STP-035-092", "verb": "next", "to": "STP-035-093"}
+  - {"op": "add_edge", "from": "STP-035-093", "verb": "next", "to": "STP-035-035", "attrs": {"label": "queued submission sent"}}
+  - {"op": "add_edge", "from": "STP-035-095", "verb": "next", "to": "STP-035-033", "attrs": {"label": "patient sends the case without the file"}}
+  - {"op": "add_edge", "from": "STP-035-096", "verb": "next", "to": "STP-035-036", "attrs": {"label": "case created without the files; flow A3 continues"}}
+  # ---- Rule-to-event and screen-to-field links
+  - {"op": "add_edge", "from": "REQ-035-031", "verb": "applies to", "to": "EVT-support-case-admin-reply"}
+  - {"op": "add_edge", "from": "REQ-035-019", "verb": "applies to", "to": "EVT-support-case-reopened"}
+  - {"op": "add_edge", "from": "SCR-035-04", "verb": "shows", "to": "ENT-support-case.description", "attrs": {"provenance": "retrieved", "label": "Your Request: description", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-035-04", "verb": "shows", "to": "ENT-support-case.attachments", "attrs": {"provenance": "retrieved", "label": "Your Request: initial attachments", "editable": false}}

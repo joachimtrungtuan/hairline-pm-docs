@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T08:45:55Z",
+  "generated_at": "2026-11-24T08:54:16Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -38819,6 +38819,19 @@
       }
     },
     {
+      "id": "FLW-035-resolved-case-closes",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "A Resolved case closes",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "A Resolved case closes after the closure period and the patient sees the Closed Case Banner",
+        "prd_ref": "Alternative Flow A6"
+      }
+    },
+    {
       "id": "FLW-035-search",
       "type": "Flow",
       "owner_fr": null,
@@ -38829,6 +38842,19 @@
         "kind": "alternative",
         "description": "Patient searches for help content",
         "prd_ref": "Alternative Flow A1"
+      }
+    },
+    {
+      "id": "FLW-035-submission-cannot-complete",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Submission cannot complete now",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "A support submission cannot complete now: offline or server error, rate limit, scanner unavailable, storage unavailable",
+        "prd_ref": "Alternative Flow B3"
       }
     },
     {
@@ -92960,9 +92986,9 @@
       "owner_fr": "FR-035",
       "title": "Related content suggestions across content types",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST display 2 to 4 related content suggestions (admin-configured via FR-033) that may cross content types",
+        "statement": "System MUST display up to 4 related content suggestions when FR-033 configures them (no minimum; none when none are configured); suggestions may cross content types",
         "rationale": "Screen 2 Article Detail: 2-4 related items suggested by the system, admin-configured via FR-033, tappable (296); relationship may cross content types, for example an article linking to a video tutorial (342)."
       }
     },
@@ -93008,9 +93034,9 @@
       "owner_fr": "FR-035",
       "title": "Eight patient-visible support categories",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST display 8 patient-visible categories: Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry, Feature Request, Bug Report, Feedback (FR-034 REQ-034-030; \"Provider Support\" and \"Patient Support\" excluded as admin-internal)",
+        "statement": "System MUST display 8 patient-visible categories under their current labels: Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry, Feature Request, Bug Report, Feedback (FR-034 REQ-034-030; labels edited in FR-034 REQ-034-087; \"Provider Support\" and \"Patient Support\" excluded as admin-internal whatever their label)",
         "rationale": "Provider Support and Patient Support are admin-internal categories and are not shown to patients (372, 431). Business assumption: eight categories are sufficient for launch (600). Category visibility and fixed-list wording are in dispute, see REQ-035-076."
       }
     },
@@ -93032,9 +93058,9 @@
       "owner_fr": "FR-035",
       "title": "Patient uploads virus-scanned before acceptance",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST virus-scan all patient-uploaded files before acceptance",
+        "statement": "System MUST virus-scan all patient-uploaded files before acceptance; when the scanner is unavailable the file is refused with a \"try again later\" message and the case can be sent without it",
         "rationale": "Restated by Privacy Rule 4 (line 464), Screen 5 Attachments (434) and the Virus Scanning dependency (558-561). Mechanics: REQ-035-058 to REQ-035-060."
       }
     },
@@ -93054,11 +93080,11 @@
       "id": "REQ-035-017",
       "type": "Rule",
       "owner_fr": "FR-035",
-      "title": "Full communication thread with sender labels",
+      "title": "Original request and full communication thread with sender labels",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST display full communication thread for each ticket showing all messages from patient and admin with sender labels and timestamps",
+        "statement": "System MUST display the patient's original request (description and initial attachments) and the full communication thread for each ticket showing all messages from patient and admin with sender labels and timestamps",
         "rationale": "Screen 4 Communication Thread (397-400): chronological, scrollable, newest message at the bottom, sender label You for patient messages and Support Team for admin replies, plain-text body, relative or absolute timestamp; attachments are viewable full-size or downloadable (401). Empty thread shows Your case has been submitted. Our team will respond within 24 hours. (406)."
       }
     },
@@ -93080,9 +93106,9 @@
       "owner_fr": "FR-035",
       "title": "Reply to a Resolved case reopens it",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST automatically reopen Resolved cases to Open status when patient sends a reply",
+        "statement": "System MUST automatically reopen Resolved cases to Open status when patient sends a reply, and send the admin a support.case_reopened notice (FR-034 REQ-034-092)",
         "rationale": "Restated by Screen 4 Reply Input Field (402), rules (411) and A5 steps 4-6 (192-194): the patient sees the status badge update immediately and the admin receives support.case_user_reply."
       }
     },
@@ -93092,9 +93118,9 @@
       "owner_fr": "FR-035",
       "title": "Auto-closure countdown on Resolved tickets",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST display auto-closure countdown on Resolved tickets showing remaining days before automatic closure (FR-034 REQ-034-061)",
+        "statement": "System MUST display auto-closure countdown on Resolved tickets showing remaining days before automatic closure (FR-034 REQ-034-061); \"closes today\" on the last day; none when the closure period is Immediately",
         "rationale": "Screen 4 Auto-Closure Countdown (394): text This case will close in X days if no further reply, shown only when status is Resolved, hidden for Open, In Progress and Closed; period is configurable 3, 7 or 14 days, default 7 (FR-034 REQ-034-061). A5 step 2 (190). Governed by SET-support-case-auto-closure-period."
       }
     },
@@ -93138,11 +93164,11 @@
       "id": "REQ-035-024",
       "type": "Rule",
       "owner_fr": "FR-035",
-      "title": "Patient authentication required",
+      "title": "Patient authentication required; not-logged-in view shows only support contact details",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST require patient authentication to access Help Center content, submit support requests, and view tickets",
+        "statement": "System MUST require patient authentication to access Help Center content, submit support requests, and view tickets; a person who is not logged in sees only the support contact details (phone and email), with no case and no help content",
         "rationale": "Security Considerations Authentication (639) and Dependencies FR-001 (544)."
       }
     },
@@ -93212,9 +93238,9 @@
       "owner_fr": "FR-035",
       "title": "Patient notifications through FR-020",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST trigger patient notifications via FR-020/S-03 for case status changes, admin replies, and case closure",
+        "statement": "System MUST trigger patient notifications via FR-020/S-03 for case status changes, admin replies (support.case_admin_reply), and case closure",
         "rationale": "Shared Services (66-70): email on status changes Open to In Progress, In Progress to Resolved and Resolved to Closed, on admin replies and on closure when the auto-closure period expires; push and email per Screen 4 rules (416); events support.case_status_changed, support.case_resolved, support.case_closed and support.case_user_reply routed through FR-020/S-03 (541). Patient reply notifies the admin (REQ-035-065)."
       }
     },
@@ -93224,9 +93250,9 @@
       "owner_fr": "FR-035",
       "title": "Entry points to the patient Help Center",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Patient navigates to \"Help & Support\" from Settings screen (FR-026 / P01.2-S1); in-app deep link from other screens (e.g., contextual help links from booking, payment, or aftercare screens); push notification tap (e.g., tapping a case status change notification navigates to Ticket Detail).",
+        "statement": "Patient navigates to \"Help & Support\" from Settings screen (FR-026 / P01.2-S1); in-app deep link from other screens (e.g., contextual help links from booking, payment, or aftercare screens); push notification tap (e.g., tapping a case status change notification navigates to Ticket Detail); the Report a Problem row on the Hub opens Contact Support with the device, operating system, app version, and report time attached per FR-034 REQ-034-164; a person who is not logged in reaches only the support contact details (REQ-035-024).",
         "rationale": "Entry Points (lines 96-98). Also Multi-Tenant Breakdown (48) and Dependencies FR-026 (547-549: the Settings screen has a Help & Support menu item linking to Screen 1)."
       }
     },
@@ -93260,9 +93286,9 @@
       "owner_fr": "FR-035",
       "title": "Help search covers published patient-audience content, ranked by relevance",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Search covers all published patient-audience Help Center content (FAQs, Articles, Resources, Videos); results are ranked by relevance; if no results match, show a \"Contact Support\" prompt. Full-text search is required for P1 and must not be downgraded to browse-only behavior.",
+        "statement": "Search covers all published patient-audience Help Center content (FAQs, Articles, Resources, Videos); results are ranked by relevance and appear on the Help Center Browser (Screen 2), whichever search bar the patient types in; if no results match, show a \"Contact Support\" prompt. Full-text search is required for P1 and must not be downgraded to browse-only behavior.",
         "rationale": "Screen 1 rules (247), Screen 1 Search Bar (236), Screen 2 rules (338), Alternative Flow A1 (134-136). Search covers all four patient content types on Screen 1 and Screen 2."
       }
     },
@@ -93284,9 +93310,9 @@
       "owner_fr": "FR-035",
       "title": "Contact Support offered when help does not answer",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Patient taps No on Was this helpful? or sees no search results; System displays Still need help? Contact Support CTA, and the no-results message \"No results for '[query]'. Try different keywords or Contact Support.\"; Patient taps Contact Support; System displays Contact Support form (Screen 5).",
+        "statement": "Patient taps No on Was this helpful? (on any content type: FAQ, article, resource, or video) or sees no search results; System displays Still need help? Contact Support CTA, and the no-results message \"No results for '[query]'. Try different keywords or Contact Support.\"; Patient taps Contact Support; System displays Contact Support form (Screen 5).",
         "rationale": "Alternative Flow A2 (141-148), Screen 2 Article Detail Contact Support CTA (295: conditional on tapping No), General Content List No Results State (331: No results for '[query]'. Try different keywords or Contact Support.) and Screen 2 rules (338: empty search results must always surface a Contact Support path)."
       }
     },
@@ -93296,9 +93322,9 @@
       "owner_fr": "FR-035",
       "title": "Emergency Contact Section always visible on the Hub",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Emergency contact section is a healthcare UX best practice for post-procedure patient safety; it must always be visible — it cannot be hidden or require scrolling past it. The section must remain visible regardless of scroll position (sticky or always rendered); emergency phone is read-only with tap-to-call on mobile and emergency email is read-only with tap-to-compose on mobile.",
+        "statement": "Emergency contact section is a healthcare UX best practice for post-procedure patient safety; it must always be visible - it cannot be hidden or require scrolling past it. The section must remain visible regardless of scroll position (sticky or always rendered); emergency phone is read-only with tap-to-call on mobile and emergency email is read-only with tap-to-compose on mobile. Each row is shown only when its App Setting has a value: a row with no value is left out, and the Contact Support row stays.",
         "rationale": "Screen 1 rules (248, marked [Design Addition: not in FR-033/FR-034]) and Screen 1 fields Emergency Contact Section, Emergency Phone, Emergency Email (240-242). Main Flow step 2 (114) lists the section on the Hub."
       }
     },
@@ -93330,11 +93356,11 @@
       "id": "REQ-035-042",
       "type": "Rule",
       "owner_fr": "FR-035",
-      "title": "Four fixed content types; visibility toggle only; no Service Status for patients",
+      "title": "Four fixed content types, always shown; no Service Status for patients",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "4 content types for patient platform: FAQs, Articles, Resources, Videos (FR-033 REQ-033-003); admin can toggle content type visibility in FR-033 but cannot add new content types for patients; no Service Status for patients.",
+        "statement": "4 content types for patient platform: FAQs, Articles, Resources, Videos (FR-033 REQ-033-003), all four cards always shown; admin cannot add new content types for patients; no Service Status for patients.",
         "rationale": "Fixed in Codebase (479), Configurable with Restrictions (488), Screen 2 Content Type Cards (265) and Out of Scope (88: Service Status page is a provider-only feature per FR-033)."
       }
     },
@@ -93404,9 +93430,9 @@
       "owner_fr": "FR-035",
       "title": "Resolved ticket cards show an auto-closes indicator",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Resolved cases display a subtle \"Auto-closes in X days\" indicator to set expectations about the closure window (FR-034 REQ-034-061)",
+        "statement": "Resolved cases display a subtle \"Auto-closes in X days\" indicator to set expectations about the closure window (FR-034 REQ-034-061); on the last day it reads \"Auto-closes today\", and it is not shown when the closure period is Immediately because there is no Resolved window",
         "rationale": "Screen 3 rules (375)."
       }
     },
@@ -93474,11 +93500,11 @@
       "id": "REQ-035-054",
       "type": "Rule",
       "owner_fr": "FR-035",
-      "title": "Submission confirmation shows the case ID and 24-hour message",
+      "title": "Submission confirmation shows the case ID and the 24-hours-on-business-days message",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Upon successful submission, the system displays a confirmation screen showing the assigned Case ID (CASE-YYYY-#####) and the message \"We will respond within 24 hours\" (FR-034 SC-003), then navigates to My Support Tickets (Screen 3)",
+        "statement": "Upon successful submission, the system displays a confirmation screen showing the assigned Case ID (CASE-YYYY-#####) and the message \"We will respond within 24 hours on business days\" (FR-034 SC-003), then navigates to My Support Tickets (Screen 3); the confirmation always shows in the app, whether or not the confirmation email is sent",
         "rationale": "Screen 5 rules (441), Alternative Flow A3 steps 8-9 (164-165) and Screen 3 Create New Ticket Button (357: confirmation then return to the ticket list)."
       }
     },
@@ -93488,9 +93514,9 @@
       "owner_fr": "FR-035",
       "title": "Confirmation email with the case reference number",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Patient receives a confirmation email with the case reference number upon submission (FR-020, FR-034 A5 step 11)",
+        "statement": "Patient receives a confirmation email with the case reference number upon submission unless an admin has switched the notice off in the Admin notification settings (FR-030, FR-034 REQ-034-090); the in-app confirmation always shows (FR-020, FR-034 A5 step 11)",
         "rationale": "Screen 3 rules (373), Alternative Flow A3 step 7 (163) and Screen 5 Submit Button (435). The PRD names no event for this email."
       }
     },
@@ -93534,11 +93560,11 @@
       "id": "REQ-035-059",
       "type": "Rule",
       "owner_fr": "FR-035",
-      "title": "Failed virus scan rejects the file with a generic message",
+      "title": "Failed virus scan refuses the file with the FR-034 message",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "A file that fails virus scanning is rejected with the message: \"This file could not be attached. Please try a different file.\" No details about the scan failure are exposed to the patient.",
+        "statement": "A file that fails virus scanning is refused with the FR-034 message (REQ-034-106), and the patient can send the case without it.",
         "rationale": "Edge Cases (735)."
       }
     },
@@ -93548,9 +93574,9 @@
       "owner_fr": "FR-035",
       "title": "Media storage failure: uploads queued and patient told of delay",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Media Storage Service failure handling: for file uploads, queue for retry and notify patient of delay.",
+        "statement": "Media Storage Service failure handling: for file uploads, the case is created without the files, the files are queued for retry, and the patient is told of the delay.",
         "rationale": "External Dependencies (553-556)."
       }
     },
@@ -93560,9 +93586,9 @@
       "owner_fr": "FR-035",
       "title": "Support request submitted offline is queued",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "A support request submitted while offline is queued locally and submitted when connectivity is restored, with clear indication to the patient; a submission to FR-034 that fails with a server error (5xx) is retried with exponential backoff.",
+        "statement": "A support request submitted while offline, or one that fails with a server error (5xx), is queued on the device and shows \"queued, will be sent when online\"; it is sent when connectivity returns or retried with exponential backoff, and the patient gets the Case ID after it is sent.",
         "rationale": "Edge Cases (734) and Integration 2 error handling (623: queue submission locally if offline; retry with exponential backoff on 5xx errors)."
       }
     },
@@ -93572,9 +93598,9 @@
       "owner_fr": "FR-035",
       "title": "Rate limit on new ticket submissions",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Rate limiting on new ticket submissions (max 10 new tickets per hour per patient); replies are not counted by this limit.",
+        "statement": "Rate limiting on new ticket submissions (max 10 new tickets per hour per patient); the patient sees a message to wait before trying again; replies are not counted by this limit.",
         "rationale": "Security Considerations Threat mitigation (643), promoted."
       }
     },
@@ -93620,9 +93646,9 @@
       "owner_fr": "FR-035",
       "title": "Resolved cases auto-close after the closure period",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Cases auto-close after 7 days in Resolved status if no patient reply (configurable: Immediately, 3, 7, or 14 days per FR-034 REQ-034-061/062); the patient receives a support.case_closed notification.",
+        "statement": "Cases auto-close after 7 days in Resolved status if no patient reply (configurable: Immediately, 3, 7, or 14 days per FR-034 REQ-034-061/062); the patient receives a support.case_closed notification. With Immediately there is no Resolved window: the case goes straight to Closed, no countdown or Auto-closes indicator is shown, and the patient uses the Closed Case Banner (reopen request or new ticket).",
         "rationale": "Screen 4 rules (412), Admin Editability (473: configured via FR-034), User Story 4 scenario 2 (711) and Shared Services (70). The countdown is visible in Ticket Detail to set expectations. Governed by SET-support-case-auto-closure-period."
       }
     },
@@ -93630,11 +93656,11 @@
       "id": "REQ-035-068",
       "type": "Rule",
       "owner_fr": "FR-035",
-      "title": "Closure while the patient is viewing updates in real time",
+      "title": "Closure while the patient is viewing: a late reply is refused and the text is kept",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "When the auto-closure countdown reaches 0 while the patient is actively viewing the ticket, the status should update to Closed in real-time and the reply input should be replaced with the Closed Case Banner.",
+        "statement": "The screen learns that a case closed on its next refresh or when the patient sends a reply. A reply sent after closure is refused with a message, the typed text stays visible for copying, and the Closed Case Banner replaces the reply input.",
         "rationale": "Edge Cases (738)."
       }
     },
@@ -93644,9 +93670,9 @@
       "owner_fr": "FR-035",
       "title": "Closed Case Banner offers new ticket or reopen request",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Closed Case Banner: \"This case is closed. If you still need help, you can create a new ticket or contact support to request this case be reopened.\" with \"Create New Ticket\" link to Screen 5 and \"Contact Support\" link (email/phone from Emergency Contact Section in Screen 1). Both paths: new ticket creation (in-app) and case reopening via admin (FR-034 Workflow B3, REQ-034-063, REQ-034-017).",
+        "statement": "Closed Case Banner: \"This case is closed. If you still need help, you can create a new ticket or contact support to request this case be reopened.\" with \"Create New Ticket\" link to Screen 5 and \"Contact Support\" link that opens an email to the support address (the emergency email App Setting) with the case ID in the subject; the Contact Support link is shown only when that setting has a value. Both paths: new ticket creation (in-app) and case reopening via admin (FR-034 Workflow B3, REQ-034-017).",
         "rationale": "Screen 4 Closed Case Banner (405) and User Story 4 scenario 3 (712). The reply input is hidden for Closed cases (REQ-035-018)."
       }
     },
@@ -93656,9 +93682,9 @@
       "owner_fr": "FR-035",
       "title": "Resolution summary emailed when the case becomes Resolved",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "The resolution summary is also sent to the patient via email notification on status change to Resolved.",
+        "statement": "The resolution summary is also sent to the patient via email notification on status change to Resolved, unless an admin has switched the notice off in the Admin notification settings (FR-030, FR-034 REQ-034-060); the summary always shows on Ticket Detail.",
         "rationale": "Screen 4 Resolution Summary (395)."
       }
     },
@@ -93714,11 +93740,11 @@
       "id": "REQ-035-075",
       "type": "Rule",
       "owner_fr": "FR-035",
-      "title": "Account deletion with active support cases",
+      "title": "Account deletion with support cases: cases stay with the Admin and notices stop",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Open/In Progress cases should be flagged for admin review; patient identity is anonymized per data retention policy (FR-023).",
+        "statement": "Open, In Progress, and Resolved cases of a deleted patient stay with the Admin, marked \"Patient Account Deleted\" (FR-034 REQ-034-109), and notices to the deleted patient stop; patient identity is anonymized per data retention policy (FR-023).",
         "rationale": "Edge Cases (737): a patient deleting their account while support cases are active. Applies at the patient Deleted stage."
       }
     },
@@ -93728,9 +93754,9 @@
       "owner_fr": "FR-035",
       "title": "Patient-visible support categories are a fixed list",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Patient-visible support categories (admin cannot add or remove categories from the fixed list but may update labels in future)",
+        "statement": "Patient-visible support categories (admin cannot add or remove categories from the fixed list; the labels are editable in FR-034 REQ-034-087, the picker shows the current label, and the two internal categories stay hidden whatever their label)",
         "rationale": "Configurable with Restrictions (487). Editable by Admin (475) says patient-facing category descriptions and category visibility are managed via FR-033, which sits uneasily with a fixed list and with FR-033 being the help content module: see product owner decision list. Business assumption 4 (600)."
       }
     },
@@ -93860,9 +93886,9 @@
       "owner_fr": "FR-035",
       "title": "Empty thread message on a new case",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "When no messages exist yet on a case (the case was just created), Ticket Detail shows \"Your case has been submitted. Our team will respond within 24 hours.\"",
+        "statement": "When no messages exist yet on a case (the case was just created), Ticket Detail shows \"Your case has been submitted. Our team will respond within 24 hours on business days.\"",
         "rationale": "prd.md lines 406 (Screen 4 Empty Thread State)."
       }
     },
@@ -100060,7 +100086,7 @@
       "owner_fr": "FR-035",
       "title": "Ticket Detail",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "patient",
         "description": "Support case detail, thread and patient reply (PRD Screen 4). UI controls and states, not fields: Back Navigation, Communication Thread container, Reply Input Field, Attachment Button, Send Reply Button, Closed Case Banner, Empty Thread State."
@@ -130307,7 +130333,7 @@
       "owner_fr": "FR-035",
       "title": "System shows the content detail with Was this helpful and related content",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 8"
       }
@@ -130351,7 +130377,7 @@
       "owner_fr": "FR-035",
       "title": "System searches all published patient-audience content",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A1 step 2"
       }
@@ -130362,7 +130388,7 @@
       "owner_fr": "FR-035",
       "title": "System shows matching results ranked by relevance",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A1 step 3"
       }
@@ -130373,7 +130399,7 @@
       "owner_fr": "FR-035",
       "title": "Patient taps a result to view content detail",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A1 step 4"
       }
@@ -130384,7 +130410,7 @@
       "owner_fr": "FR-035",
       "title": "Patient taps No on Was this helpful or sees no search results",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A2 step 1"
       }
@@ -130395,7 +130421,7 @@
       "owner_fr": "FR-035",
       "title": "System shows the Still need help Contact Support prompt",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A2 step 2"
       }
@@ -130406,7 +130432,7 @@
       "owner_fr": "FR-035",
       "title": "Patient taps Contact Support",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A2 step 3"
       }
@@ -130417,7 +130443,7 @@
       "owner_fr": "FR-035",
       "title": "System shows the Contact Support form",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A2 step 4"
       }
@@ -130428,7 +130454,7 @@
       "owner_fr": "FR-035",
       "title": "Patient opens the Contact Support form",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A3 step 1"
       }
@@ -130450,7 +130476,7 @@
       "owner_fr": "FR-035",
       "title": "Patient taps Submit",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flow A3 step 3"
       }
@@ -130461,9 +130487,9 @@
       "owner_fr": "FR-035",
       "title": "System creates the support case in FR-034",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Alternative Flow A3 step 5"
+        "prd_ref": "A3 step 4"
       }
     },
     {
@@ -130472,31 +130498,31 @@
       "owner_fr": "FR-035",
       "title": "System links the case to the patient record through the session",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A3 step 6"
+        "prd_ref": "A3 step 5"
       }
     },
     {
       "id": "STP-035-037",
       "type": "Step",
       "owner_fr": "FR-035",
-      "title": "System sends the confirmation email with the case reference number",
+      "title": "System sends the confirmation email with the case reference number unless an admin has switched it off",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Alternative Flow A3 step 7"
+        "prd_ref": "A3 step 6"
       }
     },
     {
       "id": "STP-035-038",
       "type": "Step",
       "owner_fr": "FR-035",
-      "title": "System shows the confirmation screen with Case ID and 24-hour message",
+      "title": "System shows the confirmation screen with Case ID and the 24-hours-on-business-days message",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A3 step 8"
+        "prd_ref": "A3 step 7"
       }
     },
     {
@@ -130505,9 +130531,9 @@
       "owner_fr": "FR-035",
       "title": "System navigates to My Support Tickets",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A3 step 9"
+        "prd_ref": "A3 step 8"
       }
     },
     {
@@ -130538,7 +130564,7 @@
       "owner_fr": "FR-035",
       "title": "Patient taps a ticket card",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A4 step 3"
       }
@@ -130560,7 +130586,7 @@
       "owner_fr": "FR-035",
       "title": "Patient types a reply and taps Send",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A4 step 5"
       }
@@ -130604,7 +130630,7 @@
       "owner_fr": "FR-035",
       "title": "Patient sees the auto-closure countdown",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A5 step 2"
       }
@@ -130615,7 +130641,7 @@
       "owner_fr": "FR-035",
       "title": "Patient types a reply describing the unresolved issue",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A5 step 3"
       }
@@ -130637,7 +130663,7 @@
       "owner_fr": "FR-035",
       "title": "System reopens the case to Open status",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A5 step 5"
       }
@@ -130662,6 +130688,17 @@
       "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A5 step 7"
+      }
+    },
+    {
+      "id": "STP-035-058",
+      "type": "Step",
+      "owner_fr": "FR-035",
+      "title": "System sends the admin a support.case_reopened notice when a Resolved case reopens",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A5 step 5a"
       }
     },
     {
@@ -130703,7 +130740,7 @@
       "owner_fr": "FR-035",
       "title": "Patient corrects the reported errors and resubmits",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B1 step 4"
       }
@@ -130747,9 +130784,152 @@
       "owner_fr": "FR-035",
       "title": "Patient taps Retry or goes to Contact Support",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B2 step 4"
+      }
+    },
+    {
+      "id": "STP-035-081",
+      "type": "Step",
+      "owner_fr": "FR-035",
+      "title": "System sends the resolution summary email when the case becomes Resolved",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A6 step 1"
+      }
+    },
+    {
+      "id": "STP-035-082",
+      "type": "Step",
+      "owner_fr": "FR-035",
+      "title": "System closes the Resolved case when the closure period ends with no reply",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A6 step 3"
+      }
+    },
+    {
+      "id": "STP-035-083",
+      "type": "Step",
+      "owner_fr": "FR-035",
+      "title": "System sends the support.case_closed notice to the patient",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A6 step 4"
+      }
+    },
+    {
+      "id": "STP-035-084",
+      "type": "Step",
+      "owner_fr": "FR-035",
+      "title": "System shows Ticket Detail of a Closed case with the Closed Case Banner",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A6 step 5"
+      }
+    },
+    {
+      "id": "STP-035-085",
+      "type": "Step",
+      "owner_fr": "FR-035",
+      "title": "Patient taps Create New Ticket in the Closed Case Banner",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A6 step 6a"
+      }
+    },
+    {
+      "id": "STP-035-086",
+      "type": "Step",
+      "owner_fr": "FR-035",
+      "title": "Patient taps Contact Support in the banner and an email to the support address opens with the case ID in the subject",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A6 step 6b"
+      }
+    },
+    {
+      "id": "STP-035-087",
+      "type": "Step",
+      "owner_fr": "FR-035",
+      "title": "System refuses a reply sent after closure, keeps the typed text and shows the banner",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A6 step 7"
+      }
+    },
+    {
+      "id": "STP-035-091",
+      "type": "Step",
+      "owner_fr": "FR-035",
+      "title": "Patient taps Submit or attaches a file and the step cannot complete right now",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B3 step 1"
+      }
+    },
+    {
+      "id": "STP-035-092",
+      "type": "Step",
+      "owner_fr": "FR-035",
+      "title": "System queues the submission and shows queued, will be sent when online",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B3 step 2a"
+      }
+    },
+    {
+      "id": "STP-035-093",
+      "type": "Step",
+      "owner_fr": "FR-035",
+      "title": "System sends the queued submission when connectivity returns",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B3 step 3a"
+      }
+    },
+    {
+      "id": "STP-035-094",
+      "type": "Step",
+      "owner_fr": "FR-035",
+      "title": "System refuses the submission with a wait message at the 10 tickets per hour limit",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B3 step 2b"
+      }
+    },
+    {
+      "id": "STP-035-095",
+      "type": "Step",
+      "owner_fr": "FR-035",
+      "title": "System refuses the file with a try again later message when the virus scanner is unavailable",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B3 steps 2c and 3c"
+      }
+    },
+    {
+      "id": "STP-035-096",
+      "type": "Step",
+      "owner_fr": "FR-035",
+      "title": "System creates the case without the files, queues the files and tells the patient of the delay",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B3 step 2d"
       }
     },
     {
@@ -171426,9 +171606,21 @@
       "attrs": {}
     },
     {
+      "from_id": "FLW-035-resolved-case-closes",
+      "verb": "starts at",
+      "to_id": "STP-035-081",
+      "attrs": {}
+    },
+    {
       "from_id": "FLW-035-search",
       "verb": "starts at",
       "to_id": "STP-035-011",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-035-submission-cannot-complete",
+      "verb": "starts at",
+      "to_id": "STP-035-091",
       "attrs": {}
     },
     {
@@ -292511,6 +292703,12 @@
     {
       "from_id": "REQ-035-019",
       "verb": "applies to",
+      "to_id": "EVT-support-case-reopened",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-035-019",
+      "verb": "applies to",
       "to_id": "SCR-035-04",
       "attrs": {}
     },
@@ -292740,6 +292938,12 @@
       "from_id": "REQ-035-031",
       "verb": "applies at",
       "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-035-031",
+      "verb": "applies to",
+      "to_id": "EVT-support-case-admin-reply",
       "attrs": {}
     },
     {
@@ -339340,6 +339544,16 @@
     {
       "from_id": "SCR-035-04",
       "verb": "shows",
+      "to_id": "ENT-support-case.attachments",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Your Request: initial attachments",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-035-04",
+      "verb": "shows",
       "to_id": "ENT-support-case.case_id",
       "attrs": {
         "provenance": "retrieved",
@@ -339354,6 +339568,16 @@
       "attrs": {
         "provenance": "retrieved",
         "label": "Case Category",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-035-04",
+      "verb": "shows",
+      "to_id": "ENT-support-case.description",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Your Request: description",
         "editable": false
       }
     },
@@ -427231,7 +427455,18 @@
       "from_id": "STP-035-008",
       "verb": "next",
       "to_id": "STP-035-009",
-      "attrs": {}
+      "attrs": {
+        "label": "patient taps Yes"
+      }
+    },
+    {
+      "from_id": "STP-035-008",
+      "verb": "next",
+      "to_id": "STP-035-021",
+      "attrs": {
+        "label": "patient taps No",
+        "condition": "REQ-035-038"
+      }
     },
     {
       "from_id": "STP-035-008",
@@ -427366,6 +427601,12 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-035-012",
+      "verb": "on",
+      "to_id": "SCR-035-02",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-035-013",
       "verb": "applies",
       "to_id": "REQ-035-036",
@@ -427387,6 +427628,23 @@
       "from_id": "STP-035-013",
       "verb": "next",
       "to_id": "STP-035-014",
+      "attrs": {
+        "label": "results found"
+      }
+    },
+    {
+      "from_id": "STP-035-013",
+      "verb": "next",
+      "to_id": "STP-035-021",
+      "attrs": {
+        "label": "no results match",
+        "condition": "REQ-035-038"
+      }
+    },
+    {
+      "from_id": "STP-035-013",
+      "verb": "on",
+      "to_id": "SCR-035-02",
       "attrs": {}
     },
     {
@@ -427399,6 +427657,18 @@
       "from_id": "STP-035-014",
       "verb": "done by",
       "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-014",
+      "verb": "next",
+      "to_id": "STP-035-008",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-014",
+      "verb": "on",
+      "to_id": "SCR-035-02",
       "attrs": {}
     },
     {
@@ -427426,6 +427696,12 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-035-021",
+      "verb": "on",
+      "to_id": "SCR-035-02",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-035-022",
       "verb": "applies",
       "to_id": "REQ-035-038",
@@ -427450,6 +427726,12 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-035-022",
+      "verb": "on",
+      "to_id": "SCR-035-02",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-035-023",
       "verb": "at",
       "to_id": "STG-patient-03-active",
@@ -427465,6 +427747,12 @@
       "from_id": "STP-035-023",
       "verb": "next",
       "to_id": "STP-035-024",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-023",
+      "verb": "on",
+      "to_id": "SCR-035-02",
       "attrs": {}
     },
     {
@@ -427487,6 +427775,12 @@
     },
     {
       "from_id": "STP-035-024",
+      "verb": "next",
+      "to_id": "STP-035-031",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-024",
       "verb": "on",
       "to_id": "SCR-035-05",
       "attrs": {}
@@ -427501,12 +427795,6 @@
       "from_id": "STP-035-031",
       "verb": "done by",
       "to_id": "ACT-patient",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-035-031",
-      "verb": "next",
-      "to_id": "STP-034-060",
       "attrs": {}
     },
     {
@@ -427672,6 +427960,14 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-035-036",
+      "verb": "next",
+      "to_id": "STP-035-038",
+      "attrs": {
+        "label": "confirmation screen shows without waiting for the email"
+      }
+    },
+    {
       "from_id": "STP-035-037",
       "verb": "applies",
       "to_id": "REQ-035-055",
@@ -427693,12 +427989,6 @@
       "from_id": "STP-035-037",
       "verb": "next",
       "to_id": "STP-020-001",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-035-037",
-      "verb": "next",
-      "to_id": "STP-035-038",
       "attrs": {}
     },
     {
@@ -427849,7 +428139,19 @@
       "from_id": "STP-035-043",
       "verb": "next",
       "to_id": "STP-035-044",
-      "attrs": {}
+      "attrs": {
+        "label": "case is Open, In Progress or Resolved",
+        "condition": "REQ-035-018"
+      }
+    },
+    {
+      "from_id": "STP-035-043",
+      "verb": "next",
+      "to_id": "STP-035-084",
+      "attrs": {
+        "label": "case is Closed",
+        "condition": "REQ-035-069"
+      }
     },
     {
       "from_id": "STP-035-043",
@@ -427945,7 +428247,19 @@
       "from_id": "STP-035-045",
       "verb": "next",
       "to_id": "STP-035-046",
-      "attrs": {}
+      "attrs": {
+        "label": "case still accepts replies",
+        "condition": "REQ-035-068"
+      }
+    },
+    {
+      "from_id": "STP-035-045",
+      "verb": "next",
+      "to_id": "STP-035-087",
+      "attrs": {
+        "label": "case closed before the reply arrives",
+        "condition": "REQ-035-068"
+      }
     },
     {
       "from_id": "STP-035-045",
@@ -428053,7 +428367,19 @@
       "from_id": "STP-035-052",
       "verb": "next",
       "to_id": "STP-035-053",
-      "attrs": {}
+      "attrs": {
+        "label": "patient replies",
+        "condition": "REQ-035-019"
+      }
+    },
+    {
+      "from_id": "STP-035-052",
+      "verb": "next",
+      "to_id": "STP-035-082",
+      "attrs": {
+        "label": "no reply before the period ends",
+        "condition": "REQ-035-067"
+      }
     },
     {
       "from_id": "STP-035-052",
@@ -428083,7 +428409,19 @@
       "from_id": "STP-035-053",
       "verb": "next",
       "to_id": "STP-035-054",
-      "attrs": {}
+      "attrs": {
+        "label": "case still accepts replies",
+        "condition": "REQ-035-068"
+      }
+    },
+    {
+      "from_id": "STP-035-053",
+      "verb": "next",
+      "to_id": "STP-035-087",
+      "attrs": {
+        "label": "case closed before the reply arrives",
+        "condition": "REQ-035-068"
+      }
     },
     {
       "from_id": "STP-035-053",
@@ -428143,6 +428481,12 @@
       "from_id": "STP-035-055",
       "verb": "next",
       "to_id": "STP-035-056",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-055",
+      "verb": "next",
+      "to_id": "STP-035-058",
       "attrs": {}
     },
     {
@@ -428209,6 +428553,36 @@
       "from_id": "STP-035-057",
       "verb": "next",
       "to_id": "STP-020-001",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-058",
+      "verb": "applies",
+      "to_id": "REQ-035-019",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-058",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-058",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-058",
+      "verb": "next",
+      "to_id": "STP-020-001",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-058",
+      "verb": "on",
+      "to_id": "SCR-035-04",
       "attrs": {}
     },
     {
@@ -428321,6 +428695,12 @@
     },
     {
       "from_id": "STP-035-064",
+      "verb": "next",
+      "to_id": "STP-035-033",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-064",
       "verb": "on",
       "to_id": "SCR-035-05",
       "attrs": {}
@@ -428429,8 +428809,480 @@
     },
     {
       "from_id": "STP-035-074",
+      "verb": "next",
+      "to_id": "STP-035-031",
+      "attrs": {
+        "label": "patient goes to Contact Support",
+        "condition": "REQ-035-045"
+      }
+    },
+    {
+      "from_id": "STP-035-074",
+      "verb": "next",
+      "to_id": "STP-035-071",
+      "attrs": {
+        "label": "patient taps Retry"
+      }
+    },
+    {
+      "from_id": "STP-035-074",
       "verb": "on",
       "to_id": "SCR-035-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-081",
+      "verb": "applies",
+      "to_id": "REQ-035-031",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-081",
+      "verb": "applies",
+      "to_id": "REQ-035-070",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-081",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-081",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-081",
+      "verb": "next",
+      "to_id": "STP-020-001",
+      "attrs": {
+        "label": "email sent unless switched off",
+        "condition": "REQ-035-070"
+      }
+    },
+    {
+      "from_id": "STP-035-081",
+      "verb": "next",
+      "to_id": "STP-035-051",
+      "attrs": {
+        "label": "closure period is 3, 7 or 14 days",
+        "condition": "REQ-035-067"
+      }
+    },
+    {
+      "from_id": "STP-035-081",
+      "verb": "next",
+      "to_id": "STP-035-082",
+      "attrs": {
+        "label": "closure period is Immediately",
+        "condition": "REQ-035-067"
+      }
+    },
+    {
+      "from_id": "STP-035-082",
+      "verb": "applies",
+      "to_id": "REQ-035-067",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-082",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-082",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-082",
+      "verb": "next",
+      "to_id": "STP-035-083",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-083",
+      "verb": "applies",
+      "to_id": "REQ-035-031",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-083",
+      "verb": "applies",
+      "to_id": "REQ-035-067",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-083",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-083",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-083",
+      "verb": "next",
+      "to_id": "STP-020-001",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-083",
+      "verb": "next",
+      "to_id": "STP-035-084",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-084",
+      "verb": "applies",
+      "to_id": "REQ-035-018",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-084",
+      "verb": "applies",
+      "to_id": "REQ-035-069",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-084",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-084",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-084",
+      "verb": "next",
+      "to_id": "STP-035-085",
+      "attrs": {
+        "label": "patient taps Create New Ticket",
+        "condition": "REQ-035-069"
+      }
+    },
+    {
+      "from_id": "STP-035-084",
+      "verb": "next",
+      "to_id": "STP-035-086",
+      "attrs": {
+        "label": "patient taps Contact Support",
+        "condition": "REQ-035-069"
+      }
+    },
+    {
+      "from_id": "STP-035-084",
+      "verb": "on",
+      "to_id": "SCR-035-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-085",
+      "verb": "applies",
+      "to_id": "REQ-035-069",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-085",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-085",
+      "verb": "done by",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-085",
+      "verb": "next",
+      "to_id": "STP-035-031",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-085",
+      "verb": "on",
+      "to_id": "SCR-035-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-086",
+      "verb": "applies",
+      "to_id": "REQ-035-069",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-086",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-086",
+      "verb": "done by",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-086",
+      "verb": "next",
+      "to_id": "STP-034-091",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-086",
+      "verb": "on",
+      "to_id": "SCR-035-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-087",
+      "verb": "applies",
+      "to_id": "REQ-035-068",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-087",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-087",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-087",
+      "verb": "next",
+      "to_id": "STP-035-084",
+      "attrs": {
+        "label": "banner replaces the reply input"
+      }
+    },
+    {
+      "from_id": "STP-035-087",
+      "verb": "on",
+      "to_id": "SCR-035-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-091",
+      "verb": "applies",
+      "to_id": "REQ-035-062",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-091",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-091",
+      "verb": "done by",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-091",
+      "verb": "next",
+      "to_id": "STP-035-092",
+      "attrs": {
+        "label": "device offline or FR-034 server error",
+        "condition": "REQ-035-062"
+      }
+    },
+    {
+      "from_id": "STP-035-091",
+      "verb": "next",
+      "to_id": "STP-035-094",
+      "attrs": {
+        "label": "10 new tickets already in the last hour",
+        "condition": "REQ-035-063"
+      }
+    },
+    {
+      "from_id": "STP-035-091",
+      "verb": "next",
+      "to_id": "STP-035-095",
+      "attrs": {
+        "label": "virus scanner unavailable",
+        "condition": "REQ-035-014"
+      }
+    },
+    {
+      "from_id": "STP-035-091",
+      "verb": "next",
+      "to_id": "STP-035-096",
+      "attrs": {
+        "label": "media storage unavailable",
+        "condition": "REQ-035-061"
+      }
+    },
+    {
+      "from_id": "STP-035-091",
+      "verb": "on",
+      "to_id": "SCR-035-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-092",
+      "verb": "applies",
+      "to_id": "REQ-035-062",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-092",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-092",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-092",
+      "verb": "next",
+      "to_id": "STP-035-093",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-092",
+      "verb": "on",
+      "to_id": "SCR-035-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-093",
+      "verb": "applies",
+      "to_id": "REQ-035-062",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-093",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-093",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-093",
+      "verb": "next",
+      "to_id": "STP-035-035",
+      "attrs": {
+        "label": "queued submission sent"
+      }
+    },
+    {
+      "from_id": "STP-035-094",
+      "verb": "applies",
+      "to_id": "REQ-035-063",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-094",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-094",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-094",
+      "verb": "on",
+      "to_id": "SCR-035-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-095",
+      "verb": "applies",
+      "to_id": "REQ-035-014",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-095",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-095",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-095",
+      "verb": "next",
+      "to_id": "STP-035-033",
+      "attrs": {
+        "label": "patient sends the case without the file"
+      }
+    },
+    {
+      "from_id": "STP-035-095",
+      "verb": "on",
+      "to_id": "SCR-035-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-096",
+      "verb": "applies",
+      "to_id": "REQ-035-061",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-096",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-096",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-096",
+      "verb": "next",
+      "to_id": "STP-035-036",
+      "attrs": {
+        "label": "case created without the files; flow A3 continues"
+      }
+    },
+    {
+      "from_id": "STP-035-096",
+      "verb": "on",
+      "to_id": "SCR-035-05",
       "attrs": {}
     },
     {
@@ -433166,6 +434018,87 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-085306-65ece30d",
+      "at": "2026-11-24T08:53:06.233973+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-035 logic review pass 1: not-logged-in view, optional emergency rows, Immediately closure, notification-setting wording, reopen notice, original request on Ticket Detail, flows A6 and B3, labelled branches, A3 chain tidy, related content up to 4",
+      "source_id": null,
+      "nodes_added": [
+        "FLW-035-resolved-case-closes",
+        "FLW-035-submission-cannot-complete",
+        "STP-035-058",
+        "STP-035-081",
+        "STP-035-082",
+        "STP-035-083",
+        "STP-035-084",
+        "STP-035-085",
+        "STP-035-086",
+        "STP-035-087",
+        "STP-035-091",
+        "STP-035-092",
+        "STP-035-093",
+        "STP-035-094",
+        "STP-035-095",
+        "STP-035-096"
+      ],
+      "nodes_updated": [
+        "REQ-035-008",
+        "REQ-035-012",
+        "REQ-035-014",
+        "REQ-035-017",
+        "REQ-035-019",
+        "REQ-035-020",
+        "REQ-035-024",
+        "REQ-035-031",
+        "REQ-035-033",
+        "REQ-035-036",
+        "REQ-035-038",
+        "REQ-035-039",
+        "REQ-035-042",
+        "REQ-035-048",
+        "REQ-035-054",
+        "REQ-035-055",
+        "REQ-035-059",
+        "REQ-035-061",
+        "REQ-035-062",
+        "REQ-035-063",
+        "REQ-035-067",
+        "REQ-035-068",
+        "REQ-035-069",
+        "REQ-035-070",
+        "REQ-035-075",
+        "REQ-035-076",
+        "REQ-035-087",
+        "SCR-035-04",
+        "STP-035-008",
+        "STP-035-012",
+        "STP-035-013",
+        "STP-035-014",
+        "STP-035-021",
+        "STP-035-022",
+        "STP-035-023",
+        "STP-035-024",
+        "STP-035-031",
+        "STP-035-033",
+        "STP-035-034",
+        "STP-035-035",
+        "STP-035-036",
+        "STP-035-037",
+        "STP-035-038",
+        "STP-035-039",
+        "STP-035-043",
+        "STP-035-045",
+        "STP-035-052",
+        "STP-035-053",
+        "STP-035-055",
+        "STP-035-064",
+        "STP-035-074"
+      ],
+      "edges_added": 106,
+      "edges_removed": 10,
+      "rows": 239
+    },
     {
       "id": "cs-20261124-084447-c441deca",
       "at": "2026-11-24T08:44:47.643772+00:00",
