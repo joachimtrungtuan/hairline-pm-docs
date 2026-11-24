@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T06:31:23Z",
+  "generated_at": "2026-11-24T07:02:55Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -80,7 +80,7 @@
       "owner_fr": null,
       "title": "Patient",
       "status": "active",
-      "version": 26,
+      "version": 27,
       "attrs": {
         "description": "Person seeking a hair transplant abroad and support through recovery (system PRD persona 1).",
         "group": "patient"
@@ -104,7 +104,7 @@
       "owner_fr": null,
       "title": "Provider (clinic manager)",
       "status": "active",
-      "version": 27,
+      "version": 28,
       "attrs": {
         "description": "Clinic that receives inquiries, quotes, books, treats and supports patients; persona is the clinic manager (system PRD persona 2).",
         "group": "provider"
@@ -12424,7 +12424,7 @@
       "owner_fr": "FR-027",
       "title": "Action",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "description": "create, edit or publish."
       }
@@ -12622,7 +12622,7 @@
       "owner_fr": "FR-027",
       "title": "Reminders sent",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "description": "Count of reminder notifications issued for the version, from ENT-legal-reminder."
       }
@@ -12644,7 +12644,7 @@
       "owner_fr": "FR-027",
       "title": "Status",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "description": "Draft, Scheduled, Current or Archived; only one Current per type. A published version with a future effective date is Scheduled until then."
       }
@@ -32488,9 +32488,9 @@
       "owner_fr": "FR-027",
       "title": "Legal acceptance reminder sent",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Rate-limited reminder to a patient or provider user with pending required acceptance (prd.md lines 60, 349). Fired at both the patient and the provider stage; recorded at the patient stage (open question).",
+        "description": "Reminder sent by the daily job (REQ-027-063) to a patient or provider team member with pending required acceptance, at most every 7 days and up to the reminder limit. Recorded at the Admin configuration stage, where the job runs.",
         "payload": "user, document type, version"
       }
     },
@@ -32500,9 +32500,9 @@
       "owner_fr": "FR-027",
       "title": "Legal acceptance coverage below threshold",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Acceptance coverage thresholds are unmet: the Admin is notified (prd.md line 59).",
+        "description": "The Acceptance Rate of a Current version is below the Admin-set threshold: the Admin is notified once per version, evaluated daily from 14 days after the version became Current (REQ-027-063).",
         "payload": "document type, version, acceptance rate, threshold"
       }
     },
@@ -37217,10 +37217,10 @@
       "owner_fr": null,
       "title": "User accepts a new legal version",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "kind": "main",
-        "description": "Patient or provider user signs in after a required version is published, reviews and accepts it, and carries on.",
+        "description": "Patient or provider team member signs in after a required version is Current, or registers or accepts an invitation for the first time, reviews and accepts it, and carries on.",
         "prd_ref": "Main Flow: User Accepts New Version"
       }
     },
@@ -80230,7 +80230,7 @@
       "owner_fr": "FR-027",
       "title": "Acceptance required for material changes as configured",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "System MUST require acceptance for material changes as configured, prompting users appropriately",
         "rationale": "Restated by Main Flow step 6 (line 90: acceptance prompts triggered from the configured scope), Screen 2 business rule (line 177: Material Change=true triggers the acceptance requirement after publish) and Screen 3 business rule (line 205: publishing triggers acceptance prompts if Material Change=true). What is configurable is not specified (open question)."
@@ -80278,10 +80278,10 @@
       "owner_fr": "FR-027",
       "title": "Legal document entity content",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Legal document entities MUST include: type, locale (for translation only, no regional content variants), version, status (draft/current/archived), effective date, change summary",
-        "rationale": "Fields of the Legal Document entity are in Key Entities (line 358) and Screens 1 to 3."
+        "statement": "Legal document entities MUST include: type, locale (for translation only, no regional content variants), version, status (draft/scheduled/current/archived), effective date, change summary",
+        "rationale": "Data Requirements. Scheduled is a stored status because the publish flow depends on it (REQ-027-030, REQ-027-060)."
       }
     },
     {
@@ -80314,10 +80314,10 @@
       "owner_fr": "FR-027",
       "title": "Authorized Admin roles only for the Legal Documents list and for create/edit/publish; publication needs explicit confirmation",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Only authorized Admin roles can access the Legal Documents list and create/edit/publish legal documents; publication actions require explicit confirmation",
-        "rationale": "Restated by Screen 1 business rule (line 146: only authorized Admin roles can access this list)."
+        "statement": "Only authorized Admin roles can use the FR-027 Admin screens and exports: A-09 Edit Settings to create, edit, publish, withdraw and change the legal settings and to export CSV; A-09 View Settings to view the lists, acceptance status and audit trail. Publication actions require explicit confirmation.",
+        "rationale": "Security and Privacy Requirements. Screens 4 and 4A list user names and emails and export them, so they need a stated permission. The FR-031 permission matrix row is a neighbour change."
       }
     },
     {
@@ -80326,10 +80326,10 @@
       "owner_fr": "FR-027",
       "title": "Full content readable before acceptance; consent records retained",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Users MUST have clear access to read the full content prior to acceptance; records are retained to demonstrate consent",
-        "rationale": "Main Flow step 2 of User Accepts New Version (line 101: user reviews content and accepts). No retention period is stated."
+        "statement": "Users MUST have clear access to read the full content prior to acceptance; acceptance records, legal audit entries and reminders are retained to demonstrate consent under the FR-023 retention rules (10-year floor, anonymised in place at approved deletion; anonymised rows are not counted in coverage).",
+        "rationale": "Security and Privacy Requirements. The retention period and the treatment at account deletion follow FR-023, whose record-type mapping row is a neighbour change."
       }
     },
     {
@@ -80338,10 +80338,10 @@
       "owner_fr": "FR-027",
       "title": "Audit trail immutable and reviewable by authorized Admins",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Audit trail MUST be immutable and reviewable by authorized Admins",
-        "rationale": "Audit Entry in Key Entities (line 365)."
+        "statement": "Audit trail MUST be immutable and reviewable by authorized Admins as a read-only Audit trail list on Screen 1, filtered to one document; the Screen 4 audit link opens that list.",
+        "rationale": "Security and Privacy Requirements. The trail had no view. The audit actions are create, edit, publish, schedule, activate, archive, withdraw and settings_change."
       }
     },
     {
@@ -80386,10 +80386,10 @@
       "owner_fr": "FR-027",
       "title": "Patient views latest T&C, Privacy Policy, Cancellation Policy and relevant Consent forms",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Patient can view the latest Terms & Conditions, Privacy Policy, Cancellation Policy, and relevant Consent forms.",
-        "rationale": "Patient Platform breakdown (line 32)."
+        "statement": "Patient can view the latest Terms & Conditions, Privacy Policy, Cancellation Policy and the general Consent text.",
+        "rationale": "Patient Platform breakdown. The Consent type is one general platform consent (owner default 79); the photo storage, third-party sharing and other consents stay in FR-010, FR-016 and FR-038."
       }
     },
     {
@@ -80398,10 +80398,10 @@
       "owner_fr": "FR-027",
       "title": "Provider users view and accept latest legal content",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Provider users can view and accept the latest legal content.",
-        "rationale": "Provider Platform breakdown (line 38) and Executive Summary (line 13: patients and providers accept the latest terms where applicable)."
+        "statement": "Every provider team member views and accepts the latest legal content personally; the ledger is per user, and invitation acceptance writes the member's first ledger rows (REQ-027-062).",
+        "rationale": "Owner default 83. The PRD said provider users, the step said the account holder accepts for the clinic, and FR-009 has each invited member accept; one model avoids a clinic where only one person is blocked."
       }
     },
     {
@@ -80410,10 +80410,10 @@
       "owner_fr": "FR-027",
       "title": "Admin configures acceptance rules: who must accept and when enforcement applies",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Admin configures acceptance rules: who must accept, and when enforcement applies.",
-        "rationale": "Admin Platform breakdown (line 45), Main Flow step 3 (line 87: acceptance requirement scope), Edge Cases (line 311: rules configurable) and Success Criteria (line 388: when enforcement enabled). The PRD gives no screen or setting key for it (open question)."
+        "statement": "Admin configures acceptance rules (who must accept and when enforcement applies) in the Legal settings panel on Screen 1 (REQ-027-059).",
+        "rationale": "Admin Platform breakdown. The screen and the unset behaviour are in REQ-027-059."
       }
     },
     {
@@ -80432,36 +80432,36 @@
       "id": "REQ-027-023",
       "type": "Rule",
       "owner_fr": "FR-027",
-      "title": "Admin notified when acceptance thresholds are unmet",
+      "title": "Admin notified when the Acceptance Rate is below the threshold",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System notifies the Admin when acceptance coverage thresholds are unmet.",
-        "rationale": "Communication Structure (line 59). The threshold value is not stated."
+        "statement": "System notifies the Admin when the Acceptance Rate of a Current version is below the Admin-set threshold.",
+        "rationale": "Communication scope. Coverage is the accepted share, so the alert fires when it is low. The evaluation time is in REQ-027-063."
       }
     },
     {
       "id": "REQ-027-024",
       "type": "Rule",
       "owner_fr": "FR-027",
-      "title": "Warning banner on the document list when pending acceptance is below the Admin-set threshold",
+      "title": "Warning banner on the document list when the Acceptance Rate is below the Admin-set threshold",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Screen 1 (Admin Legal Documents List, SCR-027-01) shows warning banners for pending acceptance coverage below the Admin-set threshold.",
-        "rationale": "Screen 1 notes. The threshold is set by Admin and has no default (CL-5)."
+        "statement": "Screen 1 (Admin Legal Documents List, SCR-027-01) shows a warning banner when the Acceptance Rate of the Current version is below the Admin-set threshold.",
+        "rationale": "Screen 1 notes. The threshold is set in the Legal settings panel; unset means no banner (REQ-027-059)."
       }
     },
     {
       "id": "REQ-027-025",
       "type": "Rule",
       "owner_fr": "FR-027",
-      "title": "Out of scope: real-time chat, legal counsel workflows, external e-signature",
+      "title": "Out of scope: real-time chat, legal counsel workflows, external e-signature, Admin Terms of Service",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Out of scope: real-time chat or legal counsel workflows; external e-signature platforms (future consideration).",
-        "rationale": "Communication Structure, Out of Scope (lines 64-65). Boundary recorded as the PRD states it."
+        "statement": "Out of scope: real-time chat or legal counsel workflows; external e-signature platforms (future consideration); Admin Terms of Service acceptance (FR-031).",
+        "rationale": "Admin Terms of Service acceptance at account creation is owned by FR-031 and is not tracked in the FR-027 ledger."
       }
     },
     {
@@ -80470,10 +80470,10 @@
       "owner_fr": "FR-027",
       "title": "Cancellation Policy is read-only information and never needs acceptance",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Cancellation Policy is a read-only informational document that does NOT require user acceptance or consent confirmation. It is managed through the same versioning and publishing pipeline as other legal documents but the `Requires Acceptance` flag is always `No`. It is surfaced to patients in the quote acceptance context (FR-005) for transparency.",
-        "rationale": "Executive Summary note (line 15) and Key Entities note (line 360). FR-005 owns the quote acceptance screens that surface it."
+        "statement": "Cancellation Policy is a read-only informational document that does NOT require user acceptance. It uses the same versioning and publishing pipeline, but Material Change is fixed to No and not editable and Requires Acceptance is always No. It is shown through the full policy link on the FR-006 booking and payment screens; the refund ladder numbers come from FR-029 and the legal text MUST NOT restate them.",
+        "rationale": "Owner default 86. FR-005 does not carry cancellation terms, FR-006 shows the policy before payment, and the percentages must have one source."
       }
     },
     {
@@ -80482,9 +80482,9 @@
       "owner_fr": "FR-027",
       "title": "Requires Acceptance is tied to the Material Change flag",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Requires Acceptance indicates whether material change gating applies and is tied to the Material flag from the draft.",
+        "statement": "Requires Acceptance indicates whether material change gating applies and is tied to the Material flag from the draft; for the Cancellation Policy it is always No.",
         "rationale": "Screen 1 Requires Acceptance field (line 140). Computes ENT-legal-document.requires_acceptance."
       }
     },
@@ -80518,10 +80518,10 @@
       "owner_fr": "FR-027",
       "title": "A future effective date keeps the previous version Current until then, then activates the new version and starts prompts",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "When Admin sets a future effective date, System marks the new version Scheduled and the previous version stays Current; on the effective date the new version becomes Current, the previous version is archived, and prompts begin.",
-        "rationale": "Alternative Flow A1 and Screen 3 business rule. Until the effective date the new version is Scheduled."
+        "statement": "When Admin publishes with a future effective date, System marks the new version Scheduled and the previous version stays Current; on the effective date the new version becomes Current, the previous version is archived, and prompts begin when Material Change = Yes and Requires Acceptance = Yes. Prompts start only when the version is Current.",
+        "rationale": "Alternative Flow A1. Publish and the audit entry run at the Publish click on both branches; the main flow no longer prompts for a version that is not yet Current."
       }
     },
     {
@@ -80530,10 +80530,10 @@
       "owner_fr": "FR-027",
       "title": "Restoring an earlier text is a new draft published as a new version; no revert button; prompts updated and audit entry recorded",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "There is no revert button. To go back to the text of an earlier version, Admin creates a new draft from the old version and publishes the restored text as a new version through the normal publishing flow; prompts update accordingly and an audit entry is recorded.",
-        "rationale": "Alternative Flow B1 (Restoring an Earlier Version)."
+        "statement": "There is no revert button. To go back to an earlier text, Admin creates a new draft from the old version (Create draft from this version on a Current or Archived row of Screen 1) and publishes it as a new version through the normal publishing flow with Material Change fixed to Yes (No for the Cancellation Policy); one publish audit entry is recorded.",
+        "rationale": "Alternative Flow B1. The restore reuses the main edit, preview and publish steps; the audit and prompt steps are those of the normal flow."
       }
     },
     {
@@ -80542,10 +80542,10 @@
       "owner_fr": "FR-027",
       "title": "Restoring an earlier text keeps existing acceptance records; users who accepted only the replaced version accept the restored one",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "When an earlier text is restored it is published as a new version; existing acceptance records are preserved, and users who accepted only the version that was replaced are asked to accept the restored version.",
-        "rationale": "Edge Cases (restoring an earlier text after partial acceptance) and Alternative Flow B1 outcome."
+        "statement": "When an earlier text is restored it is published as a new version; existing acceptance records are preserved, and every user whose latest accepted version of that type is not the version the text was restored from is asked to accept it.",
+        "rationale": "Edge Cases. A restored version is always material, so one rule decides who is prompted; a user who already holds the original version is not asked again."
       }
     },
     {
@@ -80554,10 +80554,10 @@
       "owner_fr": "FR-027",
       "title": "Core actions blocked until acceptance; read-only where safe",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Block core actions until acceptance; allow read-only access where safe. Show rate-limited reminders. Gating occurs at sign-in and before core transactional flows.",
-        "rationale": "CL-1 (line 349). Restated by Main Flow trigger and outcome (lines 95-96), User Story 2 scenario 1 (prompt before accessing core features), Success Criteria (line 388) and Assumptions (line 397)."
+        "statement": "Until acceptance, a patient cannot submit an inquiry, accept a quote or start a payment, and a provider cannot accept an inquiry or submit a quote; everything else stays available, including aftercare, messaging, scheduled installments and viewing. A user who does not accept stays in this limited state and may sign out or use the FR-001 account-deletion route. Gating occurs at sign-in and at those actions.",
+        "rationale": "Owner default 84. CL-1 named no enforcer and no list of core actions; the neighbour checks in FR-003, FR-004, FR-005 and FR-007 are neighbour changes."
       }
     },
     {
@@ -80566,9 +80566,9 @@
       "owner_fr": "FR-027",
       "title": "Users with pending procedures keep read-only access until acceptance",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Existing users with pending procedures: allow read-only access until acceptance; surface prompts at safe checkpoints.",
+        "statement": "Users with pending procedures keep access to aftercare, messaging, scheduled installments and viewing until acceptance; prompts are shown at sign-in and at the blocked actions in REQ-027-033.",
         "rationale": "Edge Cases (line 312)."
       }
     },
@@ -80578,10 +80578,10 @@
       "owner_fr": "FR-027",
       "title": "No further prompts after acceptance until the next required version",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "After the user accepts, System resumes normal access without further prompts until the next required version.",
-        "rationale": "Main Flow step 4 of User Accepts New Version (line 103) and User Story 2 scenario 2."
+        "statement": "After the user accepts, System resumes normal access without further prompts until the next required version; acceptance is once per version, so FR-003 asks again at an inquiry only when the Current Terms & Conditions are not accepted.",
+        "rationale": "Owner default 82. Main Flow step 4 of User Accepts New Version and User Story 2 scenario 2. The FR-003 checkbox change is a neighbour change."
       }
     },
     {
@@ -80590,9 +80590,9 @@
       "owner_fr": "FR-027",
       "title": "Missing translation falls back to the platform default language (English) with a notice; publishing needs complete English (en-US) content",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "If a localized version is unavailable, fall back to the platform default language (English) and display a discreet notice. When a version is published globally, the system validates that at least the English (en-US) locale content is complete; if other locales are configured, the Admin UI summarises their completeness and publishing proceeds with the platform default language (English, en-US) version as the single fallback where a locale is missing or incomplete (as per CL-3).",
+        "statement": "If a localized version is unavailable, fall back to the platform default language (English) and display a discreet notice. When a version is published globally, the system validates that at least the English (en-US) locale content is complete; if other locales are configured, the Admin UI summarises their completeness and publishing proceeds with the platform default language (English, en-US) version as the single fallback where a locale is missing or incomplete (as per CL-3). Legal-content fallback is fixed to English (en-US) and does not follow the FR-021 fallback order, because publication needs a complete English text.",
         "rationale": "CL-3, Edge Cases (locale mismatch), Assumptions and Screen 3 business rule. The platform default language (English) is the single fallback. Merged from REQ-027-039.",
         "aliases": "REQ-027-039"
       }
@@ -80603,10 +80603,10 @@
       "owner_fr": "FR-027",
       "title": "Missing locale logs a task for the Admin",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Log a task to add the missing locale; log gaps for Admin.",
-        "rationale": "CL-3 (line 351) and Edge Cases (line 313)."
+        "statement": "When a user is served the fallback text, Screen 1 shows a Locale gap badge on that version's row; it clears when that locale's text is published.",
+        "rationale": "CL-3 and Edge Cases. The task for the Admin is a badge on the existing list, not a new entity or screen."
       }
     },
     {
@@ -80627,9 +80627,9 @@
       "owner_fr": "FR-027",
       "title": "Version label unique per document type",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Version must be unique per document type.",
+        "statement": "Version label must be unique per document type; all locale texts of a version share it (REQ-027-061).",
         "rationale": "Screen 1 Version (line 137) and Screen 2 Version Label (line 172: must be unique per type)."
       }
     },
@@ -80637,12 +80637,12 @@
       "id": "REQ-027-041",
       "type": "Rule",
       "owner_fr": "FR-027",
-      "title": "Effective date cannot be in the past",
+      "title": "Effective date is a UTC date and time, checked at save and again at Publish",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Effective Date must be today or in the future; it cannot be in the past.",
-        "rationale": "Screen 1 Effective Date (line 139: must be today or future) and Screen 2 Effective Date (line 171: cannot be in the past)."
+        "statement": "Effective Date is a date and time stored in UTC and shown in the Admin's time zone; at save it cannot be in the past; it is checked again at Publish, and a time already past at Publish makes the version Current immediately.",
+        "rationale": "Screen 1 and Screen 2 gave different types and no time zone, and a stale draft could be published with a past date."
       }
     },
     {
@@ -80735,9 +80735,9 @@
       "owner_fr": "FR-027",
       "title": "Edit opens only Draft versions; Current and Archived are view-only",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Edit action opens the Draft/Edit screen for Draft versions; Current/Archived versions are view-only (preview/history).",
+        "statement": "Edit opens only Draft versions; Scheduled, Current and Archived versions are view-only (preview/history). Create draft from this version is offered on Current and Archived rows; View history filters the list to that document type.",
         "rationale": "Screen 1 business rules and Actions field: Edit is shown for Draft versions only."
       }
     },
@@ -80747,9 +80747,9 @@
       "owner_fr": "FR-027",
       "title": "Publish disabled until the draft passes validation",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Publish is disabled unless the draft passes validation; the preview shows the effective date and Material Change exactly as set in the draft, and the version diff summary must be generated from the draft.",
+        "statement": "Publish is disabled unless the draft passes validation, which is repeated at Publish; the preview shows the effective date and Material Change exactly as set in the draft, and the version diff summary must be generated from the draft; for the first version of a document type the summary reads Initial version and does not block Publish.",
         "rationale": "Screen 1 Actions (line 142), Screen 3 Effective Date, Material Change, Version Diff Summary and Publish Button (lines 197-200)."
       }
     },
@@ -80783,10 +80783,10 @@
       "owner_fr": "FR-027",
       "title": "Acceptance Rate base is the users who must accept that document, computed from the ledger; Pending Users are those who must accept and have not",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Acceptance Rate is the % accepted out of the users who must accept that document, computed from the acceptance ledger; Pending Users are the users who must accept that document and have not.",
-        "rationale": "Screen 4 Acceptance Rate and Pending Users. Computes ENT-legal-document.acceptance_rate and pending_user_count."
+        "statement": "Acceptance Rate is the % accepted out of the users who must accept that document: patient accounts in Active state and provider team members of Active providers whose latest accepted version of that type is older than the version in question. Dormant, deletion-requested, deleted, suspended and offboarded accounts are not counted and are prompted at their next sign-in if they return; accounts created after the effective date accept at first run and are not counted as pending. Pending Users are the users in that base who have not accepted. For the Cancellation Policy and any version with Material Change = No, rate and pending are shown as not applicable.",
+        "rationale": "Owner default 80. The ledger holds only acceptances, so the population needed a definition; the same base gives the re-accept count on Screen 3 (REQ-027-052)."
       }
     },
     {
@@ -80835,6 +80835,78 @@
       "attrs": {
         "statement": "User filter input (name, email or user ID) is sanitized.",
         "rationale": "Screen 4A User Filter (line 254)."
+      }
+    },
+    {
+      "id": "REQ-027-058",
+      "type": "Rule",
+      "owner_fr": "FR-027",
+      "title": "Acceptance prompt screen shared by the patient app and the provider portal",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The acceptance prompt MUST list each document that needs acceptance with its version and effective date, MUST enable Accept for a document only after its full text has been opened, MUST give one Accept per document, MUST show the fallback-language notice when REQ-027-036 applies, and MUST show a blocked state until every listed document is accepted and an accepted state afterwards.",
+        "rationale": "The user-facing half of the flow had no screen, so the acceptance steps could not be built or tested. One spec serves the patient app and the provider portal (REQ-027-012, REQ-027-015)."
+      }
+    },
+    {
+      "id": "REQ-027-059",
+      "type": "Rule",
+      "owner_fr": "FR-027",
+      "title": "Admin edits the four legal settings in a panel on Screen 1; behaviour while a value is unset",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Admin MUST edit the acceptance rules, the coverage threshold (percent), the reminder limit (reminders per user per version) and the export limit (exports per Admin per day) in a Legal settings panel on Screen 1; each change is audited. While a value is unset there is no banner or alert (threshold), no reminders (reminder limit) and CSV export is blocked (export limit); while the acceptance rules are unset, a version with Material Change = Yes gates all patients and all provider team members.",
+        "rationale": "Owner default 77. The four values had no screen and no behaviour while unset, so the gating rule, the banner, the alert, the reminders and the export could not be built. Unset values switch the optional features off, and the acceptance rules fall back to the strictest reading so a material change is never silently ungated."
+      }
+    },
+    {
+      "id": "REQ-027-060",
+      "type": "Rule",
+      "owner_fr": "FR-027",
+      "title": "A Scheduled version is view-only, one per document type, and can be withdrawn to Draft",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "A Scheduled version is view-only. There MUST be at most one Scheduled version per document type; a second Publish for the type is rejected until the Scheduled version is withdrawn or has gone live. Admin MAY withdraw a Scheduled version back to Draft; the withdrawal is audited.",
+        "rationale": "Owner default 78. Scheduled could be entered but not left except by going live, so a wrong text could only wait to be published and then be restored. Withdrawal returns it to Draft before any user sees it."
+      }
+    },
+    {
+      "id": "REQ-027-061",
+      "type": "Rule",
+      "owner_fr": "FR-027",
+      "title": "Version-level attributes belong to the version; locale texts are children of it",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Version label, status, effective date, Material Change and change summary belong to the version, and each locale text is a child of the version. Version uniqueness and the one-Current rule apply per document type and version, never per locale.",
+        "rationale": "Screens 1 and 2 give each row a locale and a version, so uniqueness and the one-Current rule were undetermined when two locales share a version. The graph entity fields are not restructured; this rule states the model."
+      }
+    },
+    {
+      "id": "REQ-027-062",
+      "type": "Rule",
+      "owner_fr": "FR-027",
+      "title": "First-run acceptance at registration and at invitation acceptance",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "A new patient at registration and a new provider team member at invitation acceptance MUST accept the Current Terms & Conditions and the Current Privacy Policy; the general consent is asked at the first sign-in. A Scheduled version is never shown or recorded before its effective date.",
+        "rationale": "Owner default 81. The first-run entry points had no step and FR-001 records only the Terms checkbox. Accounts created after an effective date accept at first run and are not counted as pending (REQ-027-053)."
+      }
+    },
+    {
+      "id": "REQ-027-063",
+      "type": "Rule",
+      "owner_fr": "FR-027",
+      "title": "Daily job sends reminders and checks coverage",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "A daily system job MUST send each pending user one reminder at most every 7 days, up to the reminder limit, and MUST evaluate the Acceptance Rate of the Current version of each document type daily from 14 days after it became Current, raising the coverage alert once per version while the rate is below the threshold. reminders_sent_count is the count of the version's legal reminder records.",
+        "rationale": "Owner default 85. Reminders and the coverage alert had no trigger, cadence or producer, and at publication the rate is 0 percent so the alert would have fired at once. The 14-day wait removes that."
       }
     },
     {
@@ -98826,10 +98898,10 @@
       "owner_fr": "FR-027",
       "title": "Admin: Legal Documents List",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
-        "description": "PRD Screen 1 (prd.md line 125). Lists all legal document types and versions with entry points to draft, edit, preview and publish. UI controls, not fields: Actions buttons (Draft new version, Edit draft, View history, Preview, Publish) and filters by Document Type, Status and Locale (criteria owned by FR-022, REQ-022-110); behaviour in REQ-027-049 and REQ-027-050. Shows warning banners (REQ-027-024)."
+        "description": "PRD Screen 1. Lists all legal document types and versions with entry points to draft, edit, preview and publish. UI controls, not fields: Actions buttons (Draft new version, Edit draft, Create draft from this version on Current and Archived rows, View history that filters the list to the document type, Preview, Publish, Withdraw on a Scheduled row), filters by Document Type, Status and Locale (criteria owned by FR-022, REQ-022-110), the Legal settings panel (REQ-027-059), the read-only Audit trail list filtered to one document (REQ-027-013) and the Locale gap badge on a version row (REQ-027-037). Behaviour in REQ-027-049, REQ-027-050 and REQ-027-060. Shows the warning banner (REQ-027-024)."
       }
     },
     {
@@ -98878,6 +98950,18 @@
       "attrs": {
         "platform": "admin",
         "description": "PRD Screen 4A (prd.md line 244). Paginated list of users per version, accepted versus pending, with filters and export; sortable by acceptance timestamp and user ID. UI controls, not fields: User Filter, Status Filter (Accepted or Pending, default Pending) and Export button; criteria owned by FR-022 (REQ-022-111)."
+      }
+    },
+    {
+      "id": "SCR-027-06",
+      "type": "Screen",
+      "owner_fr": "FR-027",
+      "title": "Patient and provider: Acceptance prompt",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "platform": "patient and provider",
+        "description": "Shared by the patient app and the provider portal (REQ-027-058). Lists each document that needs acceptance with version and effective date; Accept per document is enabled after the full text is opened; shows the fallback-language notice (REQ-027-036) and the blocked and accepted states. UI controls, not fields: the Accept buttons."
       }
     },
     {
@@ -100733,9 +100817,9 @@
       "owner_fr": "FR-027",
       "title": "Legal acceptance rules: who must accept and when enforcement applies",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Admin-configurable acceptance rules: who must accept, and when enforcement applies. FR-027 owns this setting (CL-5)."
+        "description": "Admin-configurable acceptance rules: who must accept, and when enforcement applies. Edited in the Legal settings panel on Screen 1 (REQ-027-059). Unset: a version with Material Change = Yes gates all patients and all provider team members. FR-027 owns this setting (CL-5)."
       }
     },
     {
@@ -100744,10 +100828,11 @@
       "owner_fr": "FR-027",
       "title": "Acceptance coverage threshold",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Coverage level below which the Admin is notified and the document list shows a warning banner. Set by Admin; no default value. FR-027 owns this setting (CL-5).",
-        "unit": "percent"
+        "description": "Acceptance Rate of the Current version below which the Admin is notified and the document list shows a warning banner. Edited in the Legal settings panel on Screen 1 (REQ-027-059). Unset: no banner and no alert. FR-027 owns this setting (CL-5).",
+        "unit": "percent",
+        "default": "Unset means no banner and no alert"
       }
     },
     {
@@ -100756,9 +100841,11 @@
       "owner_fr": "FR-027",
       "title": "Acceptance export limit",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Limit on CSV exports from the acceptance dashboard and detail list. Set by Admin; no default value (CL-5)."
+        "description": "Maximum CSV exports per Admin per day from the acceptance dashboard and detail list. Edited in the Legal settings panel on Screen 1 (REQ-027-059). Unset: CSV export is blocked (CL-5).",
+        "unit": "exports per Admin per day",
+        "default": "Unset means export is blocked"
       }
     },
     {
@@ -100767,9 +100854,11 @@
       "owner_fr": "FR-027",
       "title": "Reminder limit for pending acceptance",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Limit on reminders sent to users with pending acceptance. Set by Admin; no default value (CL-5)."
+        "description": "Maximum reminders per user per version. Edited in the Legal settings panel on Screen 1 (REQ-027-059). Unset: no reminders are sent (CL-5).",
+        "unit": "reminders per user per version",
+        "default": "Unset means no reminders"
       }
     },
     {
@@ -103806,7 +103895,7 @@
       "owner_fr": null,
       "title": "Configuration",
       "status": "active",
-      "version": 11,
+      "version": 12,
       "attrs": {
         "timeline": "platform-admin",
         "sequence": 1,
@@ -103924,7 +104013,7 @@
       "owner_fr": null,
       "title": "Inquiry",
       "status": "active",
-      "version": 22,
+      "version": 23,
       "attrs": {
         "timeline": "main",
         "sequence": 1,
@@ -104107,7 +104196,7 @@
       "owner_fr": null,
       "title": "Active",
       "status": "active",
-      "version": 25,
+      "version": 26,
       "attrs": {
         "timeline": "patient-account",
         "sequence": 3,
@@ -104211,7 +104300,7 @@
       "owner_fr": null,
       "title": "Invited",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "timeline": "provider-account",
         "sequence": 1,
@@ -104237,7 +104326,7 @@
       "owner_fr": null,
       "title": "Active",
       "status": "active",
-      "version": 28,
+      "version": 29,
       "attrs": {
         "timeline": "provider-account",
         "sequence": 3,
@@ -118957,9 +119046,9 @@
       "id": "STP-027-003",
       "type": "Step",
       "owner_fr": "FR-027",
-      "title": "Admin sets publication details",
+      "title": "Admin reviews the effective date and Material Change set in the draft and confirms publication",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Main Flow: Admin Publishes New Legal Version, step 3"
       }
@@ -118968,9 +119057,9 @@
       "id": "STP-027-004",
       "type": "Step",
       "owner_fr": "FR-027",
-      "title": "System publishes the version: it is Scheduled until its effective date, then becomes current and the previous version is archived",
+      "title": "System publishes the version at the Publish click; it is Current at once, or Scheduled when the effective date is in the future",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow: Admin Publishes New Legal Version, step 4"
       }
@@ -118981,7 +119070,7 @@
       "owner_fr": "FR-027",
       "title": "System records the audit entry and notifies the Admin",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow: Admin Publishes New Legal Version, step 5"
       }
@@ -118992,7 +119081,7 @@
       "owner_fr": "FR-027",
       "title": "System prompts patients to accept",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow: Admin Publishes New Legal Version, step 6"
       }
@@ -119003,7 +119092,7 @@
       "owner_fr": "FR-027",
       "title": "System prompts providers to accept",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Admin Publishes New Legal Version, step 6"
       }
@@ -119014,7 +119103,7 @@
       "owner_fr": "FR-027",
       "title": "Patient reviews the legal content and accepts",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow: User Accepts New Version, step 2"
       }
@@ -119023,9 +119112,9 @@
       "id": "STP-027-009",
       "type": "Step",
       "owner_fr": "FR-027",
-      "title": "Provider account holder reviews the legal content and accepts for the clinic",
+      "title": "Provider team member reviews the legal content and accepts",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow: User Accepts New Version, step 2"
       }
@@ -119034,11 +119123,34 @@
       "id": "STP-027-010",
       "type": "Step",
       "owner_fr": "FR-027",
-      "title": "System shows the current legal documents requiring acceptance",
+      "title": "System shows a signed-in patient or provider team member the current legal documents requiring acceptance",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow: User Accepts New Version, step 1"
+      }
+    },
+    {
+      "id": "STP-027-011",
+      "type": "Step",
+      "owner_fr": "FR-027",
+      "title": "System asks a new patient at registration, or a new provider team member at invitation acceptance, to accept the Current Terms and Privacy Policy",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow User Accepts New Version, first-run step",
+        "handoff_from": "FR-001: STP-001-003, patient creates the account"
+      }
+    },
+    {
+      "id": "STP-027-012",
+      "type": "Step",
+      "owner_fr": "FR-027",
+      "title": "System sends reminders to pending users and checks the coverage of each Current version daily",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow User Accepts New Version, reminder job step"
       }
     },
     {
@@ -119056,9 +119168,9 @@
       "id": "STP-027-021",
       "type": "Step",
       "owner_fr": "FR-027",
-      "title": "System makes the version current on the effective date and prompts begin",
+      "title": "System makes the version current on the effective date, records the audit entry and prompts begin",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A1: Scheduled Effective Date, step 2"
       }
@@ -119069,29 +119181,18 @@
       "owner_fr": "FR-027",
       "title": "Admin creates a new draft from an earlier version (there is no revert button)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flow B1: Restoring an Earlier Version, step 1"
-      }
-    },
-    {
-      "id": "STP-027-031",
-      "type": "Step",
-      "owner_fr": "FR-027",
-      "title": "System updates the prompts and records an audit entry",
-      "status": "active",
-      "version": 3,
-      "attrs": {
-        "prd_ref": "Alternative Flow B1: Restoring an Earlier Version, step 3"
       }
     },
     {
       "id": "STP-027-032",
       "type": "Step",
       "owner_fr": "FR-027",
-      "title": "System records the acceptance with user, document type, version, timestamp and locale",
+      "title": "System records the acceptance with user, document type, version, timestamp, locale and channel",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: User Accepts New Version, step 3"
       }
@@ -119111,9 +119212,9 @@
       "id": "STP-027-034",
       "type": "Step",
       "owner_fr": "FR-027",
-      "title": "Admin publishes the restored text as a new version through the normal publishing flow",
+      "title": "Admin publishes the restored text as a new version with Material Change fixed to Yes",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B1: Restoring an Earlier Version, step 2"
       }
@@ -140359,7 +140460,7 @@
       "name": "reminders_sent_count",
       "data_type": "int",
       "required": false,
-      "calculated_by": null
+      "calculated_by": "REQ-027-063"
     },
     {
       "id": "ENT-legal-document.requires_acceptance",
@@ -156669,9 +156770,33 @@
     },
     {
       "field_id": "ENT-legal-audit-entry.action",
-      "value": "revert",
-      "label": "Revert",
-      "sort_order": 3
+      "value": "schedule",
+      "label": "Schedule",
+      "sort_order": 4
+    },
+    {
+      "field_id": "ENT-legal-audit-entry.action",
+      "value": "activate",
+      "label": "Activate",
+      "sort_order": 5
+    },
+    {
+      "field_id": "ENT-legal-audit-entry.action",
+      "value": "archive",
+      "label": "Archive",
+      "sort_order": 6
+    },
+    {
+      "field_id": "ENT-legal-audit-entry.action",
+      "value": "withdraw",
+      "label": "Withdraw",
+      "sort_order": 7
+    },
+    {
+      "field_id": "ENT-legal-audit-entry.action",
+      "value": "settings_change",
+      "label": "Settings change",
+      "sort_order": 8
     },
     {
       "field_id": "ENT-legal-document.document_type",
@@ -156714,6 +156839,12 @@
       "value": "archived",
       "label": "Archived",
       "sort_order": 2
+    },
+    {
+      "field_id": "ENT-legal-document.status",
+      "value": "scheduled",
+      "label": "Scheduled",
+      "sort_order": 3
     },
     {
       "field_id": "ENT-locale.direction",
@@ -161574,6 +161705,12 @@
     {
       "from_id": "ACT-patient",
       "verb": "uses",
+      "to_id": "SCR-027-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "ACT-patient",
+      "verb": "uses",
       "to_id": "SCR-035-01",
       "attrs": {}
     },
@@ -163387,6 +163524,12 @@
       "from_id": "ACT-provider",
       "verb": "uses",
       "to_id": "SCR-024-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "ACT-provider",
+      "verb": "uses",
+      "to_id": "SCR-027-06",
       "attrs": {}
     },
     {
@@ -165829,6 +165972,12 @@
       "from_id": "ENT-legal-document.reaccept_user_count",
       "verb": "calculated by",
       "to_id": "REQ-027-052",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-legal-document.reminders_sent_count",
+      "verb": "calculated by",
+      "to_id": "REQ-027-063",
       "attrs": {}
     },
     {
@@ -174740,7 +174889,7 @@
       "verb": "active in",
       "to_id": "STG-admin-01-configuration",
       "attrs": {
-        "rules": 43
+        "rules": 47
       },
       "derived": true
     },
@@ -174748,6 +174897,15 @@
       "from_id": "FR-027",
       "verb": "active in",
       "to_id": "STG-main-01-inquiry",
+      "attrs": {
+        "rules": 1
+      },
+      "derived": true
+    },
+    {
+      "from_id": "FR-027",
+      "verb": "active in",
+      "to_id": "STG-main-02-quote",
       "attrs": {
         "rules": 1
       },
@@ -174765,9 +174923,27 @@
     {
       "from_id": "FR-027",
       "verb": "active in",
+      "to_id": "STG-main-04-booking",
+      "attrs": {
+        "rules": 1
+      },
+      "derived": true
+    },
+    {
+      "from_id": "FR-027",
+      "verb": "active in",
+      "to_id": "STG-main-05-payment",
+      "attrs": {
+        "rules": 2
+      },
+      "derived": true
+    },
+    {
+      "from_id": "FR-027",
+      "verb": "active in",
       "to_id": "STG-patient-01-registered",
       "attrs": {
-        "rules": 8
+        "rules": 9
       },
       "derived": true
     },
@@ -174776,7 +174952,16 @@
       "verb": "active in",
       "to_id": "STG-patient-03-active",
       "attrs": {
-        "rules": 16
+        "rules": 18
+      },
+      "derived": true
+    },
+    {
+      "from_id": "FR-027",
+      "verb": "active in",
+      "to_id": "STG-provider-01-invited",
+      "attrs": {
+        "rules": 1
       },
       "derived": true
     },
@@ -174785,7 +174970,7 @@
       "verb": "active in",
       "to_id": "STG-provider-03-active",
       "attrs": {
-        "rules": 15
+        "rules": 17
       },
       "derived": true
     },
@@ -267438,12 +267623,6 @@
     {
       "from_id": "REQ-027-004",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-027-004",
-      "verb": "applies at",
       "to_id": "STG-patient-03-active",
       "attrs": {}
     },
@@ -267683,6 +267862,30 @@
     },
     {
       "from_id": "REQ-027-011",
+      "verb": "applies to",
+      "to_id": "SCR-027-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-011",
+      "verb": "applies to",
+      "to_id": "SCR-027-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-011",
+      "verb": "applies to",
+      "to_id": "SCR-027-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-011",
+      "verb": "applies to",
+      "to_id": "SCR-027-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-011",
       "verb": "decided by",
       "to_id": "SRC-PRD-027",
       "attrs": {}
@@ -267725,6 +267928,12 @@
     },
     {
       "from_id": "REQ-027-012",
+      "verb": "applies to",
+      "to_id": "SCR-027-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-012",
       "verb": "decided by",
       "to_id": "SRC-PRD-027",
       "attrs": {}
@@ -267745,6 +267954,12 @@
       "from_id": "REQ-027-013",
       "verb": "applies to",
       "to_id": "ENT-legal-audit-entry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-013",
+      "verb": "applies to",
+      "to_id": "SCR-027-01",
       "attrs": {}
     },
     {
@@ -267965,6 +268180,12 @@
     },
     {
       "from_id": "REQ-027-021",
+      "verb": "applies to",
+      "to_id": "SCR-027-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-021",
       "verb": "decided by",
       "to_id": "SRC-PRD-027",
       "attrs": {}
@@ -268074,7 +268295,13 @@
     {
       "from_id": "REQ-027-026",
       "verb": "applies at",
-      "to_id": "STG-main-03-acceptance",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-026",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
       "attrs": {}
     },
     {
@@ -268296,6 +268523,30 @@
     {
       "from_id": "REQ-027-033",
       "verb": "applies at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-033",
+      "verb": "applies at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-033",
+      "verb": "applies at",
+      "to_id": "STG-main-03-acceptance",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-033",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-033",
+      "verb": "applies at",
       "to_id": "STG-patient-03-active",
       "attrs": {}
     },
@@ -268427,6 +268678,12 @@
     },
     {
       "from_id": "REQ-027-036",
+      "verb": "applies to",
+      "to_id": "SCR-027-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-036",
       "verb": "decided by",
       "to_id": "SRC-PRD-027",
       "attrs": {}
@@ -268439,6 +268696,18 @@
     },
     {
       "from_id": "REQ-027-037",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-037",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-037",
       "verb": "applies to",
       "to_id": "ACT-platform-admin",
       "attrs": {}
@@ -268447,6 +268716,12 @@
       "from_id": "REQ-027-037",
       "verb": "applies to",
       "to_id": "ENT-legal-document.locale",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-037",
+      "verb": "applies to",
+      "to_id": "SCR-027-01",
       "attrs": {}
     },
     {
@@ -268975,6 +269250,210 @@
       "from_id": "REQ-027-057",
       "verb": "decided by",
       "to_id": "SRC-PRD-027",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-058",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-058",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-058",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-058",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-058",
+      "verb": "applies to",
+      "to_id": "SCR-027-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-058",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-027",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-059",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-059",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-059",
+      "verb": "applies to",
+      "to_id": "SCR-027-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-059",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-027",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-059",
+      "verb": "governed by",
+      "to_id": "SET-legal-acceptance-rules",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-059",
+      "verb": "governed by",
+      "to_id": "SET-legal-coverage-threshold",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-059",
+      "verb": "governed by",
+      "to_id": "SET-legal-export-limit",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-059",
+      "verb": "governed by",
+      "to_id": "SET-legal-reminder-limit",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-060",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-060",
+      "verb": "applies to",
+      "to_id": "ENT-legal-document.status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-060",
+      "verb": "applies to",
+      "to_id": "SCR-027-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-060",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-027",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-061",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-061",
+      "verb": "applies to",
+      "to_id": "ENT-legal-document",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-061",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-027",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-062",
+      "verb": "applies at",
+      "to_id": "STG-patient-01-registered",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-062",
+      "verb": "applies at",
+      "to_id": "STG-provider-01-invited",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-062",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-062",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-062",
+      "verb": "applies to",
+      "to_id": "ENT-legal-acceptance",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-062",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-027",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-063",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-063",
+      "verb": "applies to",
+      "to_id": "ENT-legal-reminder",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-063",
+      "verb": "applies to",
+      "to_id": "EVT-legal-acceptance-reminder",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-063",
+      "verb": "applies to",
+      "to_id": "EVT-legal-coverage-below-threshold",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-063",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-027",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-063",
+      "verb": "governed by",
+      "to_id": "SET-legal-coverage-threshold",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-063",
+      "verb": "governed by",
+      "to_id": "SET-legal-reminder-limit",
       "attrs": {}
     },
     {
@@ -330531,6 +331010,46 @@
     {
       "from_id": "SCR-027-01",
       "verb": "shows",
+      "to_id": "ENT-legal-audit-entry.action",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Audit action",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-027-01",
+      "verb": "shows",
+      "to_id": "ENT-legal-audit-entry.actor_id",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Audit actor",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-027-01",
+      "verb": "shows",
+      "to_id": "ENT-legal-audit-entry.occurred_at",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Audit time",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-027-01",
+      "verb": "shows",
+      "to_id": "ENT-legal-audit-entry.summary",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Audit summary",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-027-01",
+      "verb": "shows",
       "to_id": "ENT-legal-document.document_type",
       "attrs": {
         "provenance": "retrieved",
@@ -330899,6 +331418,68 @@
       "attrs": {
         "provenance": "retrieved",
         "label": "Reminder Status",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-027-06",
+      "verb": "belongs to",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "SCR-027-06",
+      "verb": "belongs to",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "SCR-027-06",
+      "verb": "shows",
+      "to_id": "ENT-legal-document.content",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Full text",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-027-06",
+      "verb": "shows",
+      "to_id": "ENT-legal-document.document_type",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Document",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-027-06",
+      "verb": "shows",
+      "to_id": "ENT-legal-document.effective_date",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Effective date",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-027-06",
+      "verb": "shows",
+      "to_id": "ENT-legal-document.locale",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Language",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-027-06",
+      "verb": "shows",
+      "to_id": "ENT-legal-document.version",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Version",
         "editable": false
       }
     },
@@ -340990,6 +341571,12 @@
     {
       "from_id": "STG-admin-01-configuration",
       "verb": "emits",
+      "to_id": "EVT-legal-acceptance-reminder",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "emits",
       "to_id": "EVT-legal-coverage-below-threshold",
       "attrs": {}
     },
@@ -341147,6 +341734,12 @@
       "from_id": "STG-admin-01-configuration",
       "verb": "reads",
       "to_id": "ENT-legal-acceptance",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "reads",
+      "to_id": "ENT-legal-audit-entry",
       "attrs": {}
     },
     {
@@ -341500,7 +342093,19 @@
     {
       "from_id": "STG-admin-01-configuration",
       "verb": "writes",
+      "to_id": "ENT-legal-audit-entry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "writes",
       "to_id": "ENT-legal-document",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "writes",
+      "to_id": "ENT-legal-reminder",
       "attrs": {}
     },
     {
@@ -342394,12 +342999,6 @@
     {
       "from_id": "STG-main-01-inquiry",
       "verb": "emits",
-      "to_id": "EVT-legal-coverage-below-threshold",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-main-01-inquiry",
-      "verb": "emits",
       "to_id": "EVT-medical-alert-generated",
       "attrs": {}
     },
@@ -342502,19 +343101,7 @@
     {
       "from_id": "STG-main-01-inquiry",
       "verb": "reads",
-      "to_id": "ENT-legal-audit-entry",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-main-01-inquiry",
-      "verb": "reads",
       "to_id": "ENT-legal-document",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-main-01-inquiry",
-      "verb": "reads",
-      "to_id": "ENT-legal-reminder",
       "attrs": {}
     },
     {
@@ -342737,18 +343324,6 @@
       "from_id": "STG-main-01-inquiry",
       "verb": "writes",
       "to_id": "ENT-intake-processing-result",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-main-01-inquiry",
-      "verb": "writes",
-      "to_id": "ENT-legal-audit-entry",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-main-01-inquiry",
-      "verb": "writes",
-      "to_id": "ENT-legal-document",
       "attrs": {}
     },
     {
@@ -346060,12 +346635,6 @@
     {
       "from_id": "STG-patient-03-active",
       "verb": "emits",
-      "to_id": "EVT-legal-acceptance-reminder",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-patient-03-active",
-      "verb": "emits",
       "to_id": "EVT-missing-translation-logged",
       "attrs": {}
     },
@@ -346588,12 +347157,6 @@
     {
       "from_id": "STG-patient-03-active",
       "verb": "writes",
-      "to_id": "ENT-legal-reminder",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-patient-03-active",
-      "verb": "writes",
       "to_id": "ENT-medical-data-access-log",
       "attrs": {}
     },
@@ -347080,6 +347643,12 @@
     {
       "from_id": "STG-provider-01-invited",
       "verb": "reads",
+      "to_id": "ENT-legal-document",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-01-invited",
+      "verb": "reads",
       "to_id": "ENT-provider",
       "attrs": {}
     },
@@ -347105,6 +347674,12 @@
       "from_id": "STG-provider-01-invited",
       "verb": "writes",
       "to_id": "ENT-commission-rate-config",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-provider-01-invited",
+      "verb": "writes",
+      "to_id": "ENT-legal-acceptance",
       "attrs": {}
     },
     {
@@ -347165,12 +347740,6 @@
       "from_id": "STG-provider-03-active",
       "verb": "emits",
       "to_id": "EVT-analytics-export-ready",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-provider-03-active",
-      "verb": "emits",
-      "to_id": "EVT-legal-acceptance-reminder",
       "attrs": {}
     },
     {
@@ -348041,12 +348610,6 @@
       "from_id": "STG-provider-03-active",
       "verb": "writes",
       "to_id": "ENT-legal-acceptance",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-provider-03-active",
-      "verb": "writes",
-      "to_id": "ENT-legal-reminder",
       "attrs": {}
     },
     {
@@ -394581,7 +395144,7 @@
     {
       "from_id": "STP-027-003",
       "verb": "applies",
-      "to_id": "REQ-027-021",
+      "to_id": "REQ-027-011",
       "attrs": {}
     },
     {
@@ -394631,11 +395194,17 @@
     {
       "from_id": "STP-027-003",
       "verb": "next",
-      "to_id": "STP-027-020",
+      "to_id": "STP-027-034",
       "attrs": {
-        "label": "future effective date",
-        "condition": "REQ-027-030"
+        "label": "restored text",
+        "condition": "REQ-027-031"
       }
+    },
+    {
+      "from_id": "STP-027-003",
+      "verb": "on",
+      "to_id": "SCR-027-03",
+      "attrs": {}
     },
     {
       "from_id": "STP-027-004",
@@ -394686,6 +395255,12 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-027-004",
+      "verb": "on",
+      "to_id": "SCR-027-03",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-027-005",
       "verb": "applies",
       "to_id": "REQ-027-007",
@@ -394705,6 +395280,12 @@
     },
     {
       "from_id": "STP-027-005",
+      "verb": "applies",
+      "to_id": "REQ-027-060",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-027-005",
       "verb": "at",
       "to_id": "STG-admin-01-configuration",
       "attrs": {}
@@ -394719,13 +395300,28 @@
       "from_id": "STP-027-005",
       "verb": "next",
       "to_id": "STP-027-006",
-      "attrs": {}
+      "attrs": {
+        "label": "effective now and Material Change = Yes and Requires Acceptance = Yes",
+        "condition": "REQ-027-004"
+      }
     },
     {
       "from_id": "STP-027-005",
       "verb": "next",
       "to_id": "STP-027-007",
-      "attrs": {}
+      "attrs": {
+        "label": "effective now and Material Change = Yes and Requires Acceptance = Yes",
+        "condition": "REQ-027-004"
+      }
+    },
+    {
+      "from_id": "STP-027-005",
+      "verb": "next",
+      "to_id": "STP-027-020",
+      "attrs": {
+        "label": "future effective date",
+        "condition": "REQ-027-030"
+      }
     },
     {
       "from_id": "STP-027-006",
@@ -394764,6 +395360,15 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-027-006",
+      "verb": "next",
+      "to_id": "STP-027-012",
+      "attrs": {
+        "label": "user has not accepted",
+        "condition": "REQ-027-063"
+      }
+    },
+    {
       "from_id": "STP-027-007",
       "verb": "applies",
       "to_id": "REQ-027-004",
@@ -394800,6 +395405,15 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-027-007",
+      "verb": "next",
+      "to_id": "STP-027-012",
+      "attrs": {
+        "label": "user has not accepted",
+        "condition": "REQ-027-063"
+      }
+    },
+    {
       "from_id": "STP-027-008",
       "verb": "applies",
       "to_id": "REQ-027-005",
@@ -394827,6 +395441,12 @@
       "from_id": "STP-027-008",
       "verb": "next",
       "to_id": "STP-027-032",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-027-008",
+      "verb": "on",
+      "to_id": "SCR-027-06",
       "attrs": {}
     },
     {
@@ -394866,6 +395486,12 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-027-009",
+      "verb": "on",
+      "to_id": "SCR-027-06",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-027-010",
       "verb": "applies",
       "to_id": "REQ-027-012",
@@ -394875,6 +395501,24 @@
       "from_id": "STP-027-010",
       "verb": "applies",
       "to_id": "REQ-027-033",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-027-010",
+      "verb": "applies",
+      "to_id": "REQ-027-036",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-027-010",
+      "verb": "applies",
+      "to_id": "REQ-027-037",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-027-010",
+      "verb": "applies",
+      "to_id": "REQ-027-058",
       "attrs": {}
     },
     {
@@ -394893,7 +395537,123 @@
       "from_id": "STP-027-010",
       "verb": "next",
       "to_id": "STP-027-008",
+      "attrs": {
+        "label": "patient signs in"
+      }
+    },
+    {
+      "from_id": "STP-027-010",
+      "verb": "next",
+      "to_id": "STP-027-009",
+      "attrs": {
+        "label": "provider team member signs in",
+        "condition": "REQ-027-019"
+      }
+    },
+    {
+      "from_id": "STP-027-010",
+      "verb": "on",
+      "to_id": "SCR-027-06",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-027-011",
+      "verb": "applies",
+      "to_id": "REQ-027-005",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-027-011",
+      "verb": "applies",
+      "to_id": "REQ-027-009",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-027-011",
+      "verb": "applies",
+      "to_id": "REQ-027-012",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-027-011",
+      "verb": "applies",
+      "to_id": "REQ-027-062",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-027-011",
+      "verb": "at",
+      "to_id": "STG-patient-01-registered",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-027-011",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-027-011",
+      "verb": "next",
+      "to_id": "STP-027-008",
+      "attrs": {
+        "label": "new patient",
+        "condition": "REQ-027-062"
+      }
+    },
+    {
+      "from_id": "STP-027-011",
+      "verb": "next",
+      "to_id": "STP-027-009",
+      "attrs": {
+        "label": "new provider team member",
+        "condition": "REQ-027-062"
+      }
+    },
+    {
+      "from_id": "STP-027-011",
+      "verb": "on",
+      "to_id": "SCR-027-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-027-012",
+      "verb": "applies",
+      "to_id": "REQ-027-014",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-027-012",
+      "verb": "applies",
+      "to_id": "REQ-027-023",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-027-012",
+      "verb": "applies",
+      "to_id": "REQ-027-063",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-027-012",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-027-012",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-027-012",
+      "verb": "next",
+      "to_id": "STP-027-010",
+      "attrs": {
+        "label": "reminder sent and the user signs in",
+        "condition": "REQ-027-063"
+      }
     },
     {
       "from_id": "STP-027-020",
@@ -394928,6 +395688,18 @@
     {
       "from_id": "STP-027-021",
       "verb": "applies",
+      "to_id": "REQ-027-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-027-021",
+      "verb": "applies",
+      "to_id": "REQ-027-013",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-027-021",
+      "verb": "applies",
       "to_id": "REQ-027-029",
       "attrs": {}
     },
@@ -394950,9 +395722,33 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-027-021",
+      "verb": "next",
+      "to_id": "STP-027-006",
+      "attrs": {
+        "label": "Material Change = Yes and Requires Acceptance = Yes",
+        "condition": "REQ-027-004"
+      }
+    },
+    {
+      "from_id": "STP-027-021",
+      "verb": "next",
+      "to_id": "STP-027-007",
+      "attrs": {
+        "label": "Material Change = Yes and Requires Acceptance = Yes",
+        "condition": "REQ-027-004"
+      }
+    },
+    {
       "from_id": "STP-027-030",
       "verb": "applies",
       "to_id": "REQ-027-031",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-027-030",
+      "verb": "applies",
+      "to_id": "REQ-027-049",
       "attrs": {}
     },
     {
@@ -394970,49 +395766,13 @@
     {
       "from_id": "STP-027-030",
       "verb": "next",
-      "to_id": "STP-027-034",
+      "to_id": "STP-027-001",
       "attrs": {}
     },
     {
       "from_id": "STP-027-030",
       "verb": "on",
-      "to_id": "SCR-027-02",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-027-031",
-      "verb": "applies",
-      "to_id": "REQ-027-007",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-027-031",
-      "verb": "applies",
-      "to_id": "REQ-027-014",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-027-031",
-      "verb": "applies",
-      "to_id": "REQ-027-031",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-027-031",
-      "verb": "applies",
-      "to_id": "REQ-027-032",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-027-031",
-      "verb": "at",
-      "to_id": "STG-admin-01-configuration",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-027-031",
-      "verb": "done by",
-      "to_id": "ACT-system",
+      "to_id": "SCR-027-01",
       "attrs": {}
     },
     {
@@ -395095,6 +395855,12 @@
     },
     {
       "from_id": "STP-027-034",
+      "verb": "applies",
+      "to_id": "REQ-027-032",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-027-034",
       "verb": "at",
       "to_id": "STG-admin-01-configuration",
       "attrs": {}
@@ -395108,7 +395874,7 @@
     {
       "from_id": "STP-027-034",
       "verb": "next",
-      "to_id": "STP-027-031",
+      "to_id": "STP-027-004",
       "attrs": {}
     },
     {
@@ -430396,6 +431162,86 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-070158-5892c1a3",
+      "at": "2026-11-24T07:01:58.146115+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-027 logic review pass 1: Legal settings panel and unset behaviour (owner default 77); shared acceptance prompt screen; publish and audit run at the Publish click on both branches and prompts start when the version is Current; Scheduled status added, view-only and withdrawable (default 78); one version model with locale texts as children; one general consent (default 79); Cancellation Policy Material Change fixed to No; acceptance base and first-run acceptance (defaults 80, 81); acceptance once per version (default 82); each provider team member accepts (default 83); gated actions named (default 84); daily reminder and coverage job (default 85); Cancellation Policy shown through the FR-006 policy link (default 86); restore reuses the main publish steps and is always material; audit actions replaced; effective date as UTC date and time with a re-check at Publish; first-version diff summary; fallback fixed to English; Locale gap badge; stage edges cleaned.",
+      "source_id": null,
+      "nodes_added": [
+        "REQ-027-058",
+        "REQ-027-059",
+        "REQ-027-060",
+        "REQ-027-061",
+        "REQ-027-062",
+        "REQ-027-063",
+        "SCR-027-06",
+        "STP-027-011",
+        "STP-027-012"
+      ],
+      "nodes_updated": [
+        "ACT-patient",
+        "ACT-provider",
+        "ENT-legal-audit-entry.action",
+        "ENT-legal-document.reminders_sent_count",
+        "ENT-legal-document.status",
+        "EVT-legal-acceptance-reminder",
+        "EVT-legal-coverage-below-threshold",
+        "FLW-027-user-accepts",
+        "REQ-027-004",
+        "REQ-027-008",
+        "REQ-027-011",
+        "REQ-027-012",
+        "REQ-027-013",
+        "REQ-027-017",
+        "REQ-027-019",
+        "REQ-027-021",
+        "REQ-027-023",
+        "REQ-027-024",
+        "REQ-027-025",
+        "REQ-027-026",
+        "REQ-027-027",
+        "REQ-027-030",
+        "REQ-027-031",
+        "REQ-027-032",
+        "REQ-027-033",
+        "REQ-027-034",
+        "REQ-027-035",
+        "REQ-027-036",
+        "REQ-027-037",
+        "REQ-027-040",
+        "REQ-027-041",
+        "REQ-027-049",
+        "REQ-027-050",
+        "REQ-027-053",
+        "SCR-027-01",
+        "SET-legal-acceptance-rules",
+        "SET-legal-coverage-threshold",
+        "SET-legal-export-limit",
+        "SET-legal-reminder-limit",
+        "STG-admin-01-configuration",
+        "STG-main-01-inquiry",
+        "STG-patient-03-active",
+        "STG-provider-01-invited",
+        "STG-provider-03-active",
+        "STP-027-003",
+        "STP-027-004",
+        "STP-027-005",
+        "STP-027-006",
+        "STP-027-007",
+        "STP-027-008",
+        "STP-027-009",
+        "STP-027-010",
+        "STP-027-021",
+        "STP-027-030",
+        "STP-027-031",
+        "STP-027-032",
+        "STP-027-034"
+      ],
+      "edges_added": 113,
+      "edges_removed": 25,
+      "rows": 267
+    },
     {
       "id": "cs-20261124-063024-73f1d593",
       "at": "2026-11-24T06:30:24.816799+00:00",
