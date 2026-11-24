@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T14:55:33Z",
+  "generated_at": "2026-11-24T15:07:28Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -39853,7 +39853,7 @@
       "owner_fr": null,
       "title": "Provider Management (Admin-Initiated)",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "module": "fr015-provider-management",
         "prd_path": "project-requirements/functional-requirements/fr015-provider-management/prd.md",
@@ -61492,9 +61492,9 @@
       "owner_fr": "FR-015",
       "title": "Suspension cascade: cancel unaccepted quotes, close pre-treatment bookings",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Effective provider suspension MUST automatically cancel the provider's unaccepted Parent Quotes with the FR-004 status `cancelled_provider_status` and close all related non-terminal Accepted and Confirmed cases under A5/Screen 4, while an accepted Parent Quote keeps `accepted`; release active reservations and block further payment. Closed accepted bookings MUST enter the FR-006 provider-fault transfer instead of cancelling their inquiry. In Progress bookings MUST NOT be closed automatically; they MUST stay `In Progress` with the cause and support marker until an admin moves them to `Aftercare` with aftercare reassignment or cancels them with a reason. Aftercare bookings and FR-011 standalone aftercare cases assigned to that provider MUST NOT be closed; they MUST keep their status, receive the cause and support marker, and move to admin aftercare reassignment with no new acceptance or payment. Effective deactivation MUST apply the same cascade scope with the `ProviderDeactivated` cause, without overwriting an earlier `ProviderSuspended` cause.",
+        "statement": "Effective provider suspension MUST automatically cancel the provider's unaccepted Parent Quotes with the FR-004 status `cancelled_provider_status` and close all related non-terminal Accepted and Confirmed cases under A5/Screen 4, while an accepted Parent Quote keeps `accepted`; release active reservations and block further payment. Closed accepted bookings MUST enter the FR-006 provider-fault transfer instead of cancelling their inquiry. In Progress bookings MUST NOT be closed automatically; they MUST stay `In Progress` with the cause and support marker until an admin moves them to `Aftercare` with aftercare reassignment or cancels them with a reason. Aftercare bookings and FR-011 standalone aftercare cases assigned to that provider MUST NOT be closed; they MUST keep their status, receive the cause and support marker, and move to admin aftercare reassignment with no new acceptance or payment. Effective deactivation MUST apply the same cascade scope with the `ProviderDeactivated` cause, without overwriting an earlier `ProviderSuspended` cause. Suspension and deactivation MUST also end every FR-037 monitoring assignment of the provider, as FR-037 Rule 5e (REQ-037-094) rules.",
         "rationale": "Alternative Flow A5 steps 1 to 7 and the Screen 4 Suspension and Deactivation bullets restate this rule; deactivation runs the same cascade with ProviderDeactivated and also disables login."
       }
     },
@@ -61528,9 +61528,9 @@
       "owner_fr": "FR-015",
       "title": "Eligibility revalidation and idempotent cascade",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST revalidate provider eligibility at allocation, submission, acceptance, booking confirmation, and the FR-006 admin actions admin Revive Booking, admin appointment change (reschedule), and admin acceptance of a replacement quote (FR-006 B5) (each requires an Active provider, per FR-006 REQ-006-020), prevent in-flight operations/callbacks from reviving cancelled cases, and deduplicate cascade processing by provider-status event and affected record. The status change and its provider status event MUST be written in one transaction; the cascade MUST run as an idempotent background job with a target completion within 5 minutes, and a reactivation MUST NOT stop a running cascade for the earlier event.",
+        "statement": "System MUST revalidate provider eligibility at allocation, submission, acceptance, booking confirmation, and the FR-006 admin actions admin Revive Booking, admin appointment change (reschedule), and admin acceptance of a replacement quote (FR-006 B5) (each requires an Active provider, per FR-006 REQ-006-020), prevent in-flight operations/callbacks from reviving cancelled cases, and deduplicate cascade processing by provider-status event and affected record. The status change and its provider status event MUST be written in one transaction; the cascade MUST run as an idempotent background job with a target completion within 5 minutes, and a reactivation MUST NOT stop a running cascade for the earlier event. The cascade MUST act only on records that existed at the effective time of the status event.",
         "rationale": "Restated by General Module Rule 9 and Integration 5. The A5 background job targets completion within 5 minutes of the effective time."
       }
     },
@@ -61660,9 +61660,9 @@
       "owner_fr": "FR-015",
       "title": "Provider without a password is excluded from inquiry distribution",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "An Active provider with `password_set = false` is excluded from FR-003 inquiry distribution (including explicit patient selection and reassignment) until the password is set; it may still be featured or edited by admins.",
+        "statement": "An Active provider with `password_set = false` is excluded from FR-003 inquiry distribution (including explicit patient selection and reassignment) until the password is set; it may still be featured or edited by admins. A Suspended provider is not eligible either, even with a password set (Rule 9); it becomes eligible only once reactivated.",
         "rationale": "Restated by Main Flow steps 12 and 21, FR-003 distribution (CR-aligned) and the Dependencies FR-003 entry."
       }
     },
@@ -61672,9 +61672,9 @@
       "owner_fr": "FR-015",
       "title": "Deactivation is permanent; new account needed to re-onboard",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Deactivation is permanent—deactivated providers cannot be reactivated; admin must create new provider account if re-onboarding required. Deactivation frees the provider's emails: Contact Email uniqueness counts only Active and Suspended providers, and login Email follows the FR-009 global provider email identity rule (Rule 3, REQ-009-008), under which the Owner, team member, and pending-invitation emails of a Deactivated provider are freed. The new account may reuse those emails; the deactivated record and its history are retained unchanged, and Screen 3 Tab 1 is read-only.",
+        "statement": "Deactivation is permanent—deactivated providers cannot be reactivated; admin must create new provider account if re-onboarding required. Deactivation frees the provider's emails: Contact Email uniqueness counts only Active and Suspended providers, and login Email follows the FR-009 global provider email identity rule (Rule 3, REQ-009-008), under which the Owner, team member, and pending-invitation emails of a Deactivated provider are freed. The new account may reuse those emails; the deactivated record and its history are retained unchanged, and Screen 3 Tab 1 is read-only. For a Deactivated provider the Screen 3 header Edit Profile is hidden and all tabs are read-only; documents can still be viewed and downloaded and the activity log read. Tab 3 and Tab 7 keep their own rules (Tab 7 allows the Payout Method change of REQ-015-138), and review actions in Tab 5 are per FR-013.",
         "rationale": "Screen 4 describes deactivation as permanent and irreversible; Alternative Flow A7 adds that there is no separate Deleted status and that data is retained per FR-023."
       }
     },
@@ -62101,9 +62101,9 @@
       "id": "REQ-015-068",
       "type": "Rule",
       "owner_fr": "FR-015",
-      "title": "Deactivated provider data retained at least 7 years, never hard-deleted",
+      "title": "Deactivated provider data retained for the platform retention period, never hard-deleted",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "Deactivated providers' data is retained for legal/audit purposes (retention follows the system PRD, Platform-Wide Rules: One 10-year retention period), then archived; it is never hard-deleted. GDPR/data deletion requests are handled via separate data privacy workflows (not in-scope for A-02)",
         "rationale": "Also stated in Security Considerations (Compliance) and the Screen 4 Deactivation bullet (data retained for audit and legal purposes but marked deactivated)."
@@ -62115,9 +62115,9 @@
       "owner_fr": "FR-015",
       "title": "Admin actions require the matching FR-031 permission",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Each action checks its FR-031 permission: View Providers (read-only access), Onboard Providers (create), Edit Providers (profile, documents, commission, seat limit, featured flag), Suspend Providers (all status changes). Resend Activation Email requires Edit Providers. Login as Provider is Super Admin only. Roles are defined in FR-031, not in this FR",
+        "statement": "Each action checks its FR-031 permission: View Providers (read-only access), Onboard Providers (create), Edit Providers (profile, documents, commission, seat limit, featured flag), Suspend Providers (all status changes, and Reject Request on an account-closure request). Resend Activation Email requires Edit Providers. Login as Provider is Super Admin only. Roles are defined in FR-031, not in this FR",
         "rationale": "Dependencies FR-031 entry lists the same permissions per screen."
       }
     },
@@ -62330,9 +62330,9 @@
       "owner_fr": "FR-015",
       "title": "Account-closure request rejection needs review notes",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "If the admin rejects the request instead (e.g., the provider withdraws it), the admin enters review notes (required, min 20 chars); the request is marked Rejected, the provider keeps its current status, the Closure Requested marker clears, and the provider receives the FR-020 `provider.closure_rejected` email with the review notes (mandatory).",
+        "statement": "If the admin rejects the request instead (e.g., the provider withdraws it) with \"Reject Request\" on the Closure request notice in the Screen 3 header, which requires the FR-031 Suspend Providers permission (the same as the deactivation it declines), the admin enters review notes (required, min 20 chars); the request is marked Rejected, the provider keeps its current status, the Closure Requested marker clears, and the provider receives the FR-020 `provider.closure_rejected` email with the review notes (mandatory).",
         "rationale": "Alternative Flow A7 step 6."
       }
     },
@@ -62911,6 +62911,18 @@
       "attrs": {
         "statement": "Deactivation cancels every Pending team invitation of the provider (FR-009 REQ-009-194) in the same transaction as the status change, with an audit entry in Tab 8; a scheduled deactivation does this on the Effective Date.",
         "rationale": "Alternative Flow A5 Deactivation, Screen 4 Deactivation rules and General Module Rule 4."
+      }
+    },
+    {
+      "id": "REQ-015-138",
+      "type": "Rule",
+      "owner_fr": "FR-015",
+      "title": "Earnings on normally completed bookings are released by an admin; a Deactivated clinic's Payout Method stays editable while shares are unpaid",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Money earned on bookings completed normally before a suspension or deactivation is not touched by the status cascade and gets no automatic statement (FR-017 REQ-017-062). An admin releases it through the FR-017 admin financial resolution route, whatever the clinic's status. While unpaid shares remain, an admin may change the Payout Method of a Deactivated clinic in Tab 7.",
+        "rationale": "Payment and Billing Rules (Earnings Release Rule) and Tab 7 edit eligibility. Owner default 253."
       }
     },
     {
@@ -99368,10 +99380,10 @@
       "owner_fr": "FR-015",
       "title": "Provider Profile Details",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
-        "description": "Tabbed provider view: Basic Information, Languages, Staff List, Awards, Reviews, Documents, Commission and Financials, Activity Log; header quick actions including Login as Provider (Screen 3)."
+        "description": "Tabbed provider view: Basic Information, Languages, Staff List, Awards, Reviews, Documents, Commission and Financials, Activity Log; header quick actions including Login as Provider, and a Closure request notice with Deactivate Provider and Reject Request while a closure request is pending (Screen 3). Edit Profile is hidden and all tabs are read-only for a Deactivated provider."
       }
     },
     {
@@ -113890,7 +113902,7 @@
       "owner_fr": "FR-015",
       "title": "Provider logs in",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 18"
       }
@@ -113921,9 +113933,9 @@
       "id": "STP-015-021",
       "type": "Step",
       "owner_fr": "FR-015",
-      "title": "Provider becomes eligible for inquiry distribution",
+      "title": "Provider, Active with a password set, becomes eligible for inquiry distribution",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Main Flow step 21"
       }
@@ -114143,7 +114155,7 @@
       "owner_fr": "FR-015",
       "title": "Admin confirms suspension and new activity is blocked",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "prd_ref": "A5 step 2"
       }
@@ -114251,9 +114263,9 @@
       "id": "STP-015-171",
       "type": "Step",
       "owner_fr": "FR-015",
-      "title": "Admin opens the pending account-closure request",
+      "title": "Admin opens the pending account-closure request from the Closure request notice on Screen 3",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A7 step 1"
       }
@@ -114275,7 +114287,7 @@
       "owner_fr": "FR-015",
       "title": "Admin chooses immediate or scheduled deactivation and confirms",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "A7 step 3"
       }
@@ -114286,7 +114298,7 @@
       "owner_fr": "FR-015",
       "title": "System applies the deactivation cascade and notifications",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "prd_ref": "A7 step 4"
       }
@@ -114306,9 +114318,9 @@
       "id": "STP-015-176",
       "type": "Step",
       "owner_fr": "FR-015",
-      "title": "Admin rejects the request with review notes",
+      "title": "Admin rejects the request with review notes (requires Suspend Providers)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A7 step 6"
       }
@@ -177447,7 +177459,7 @@
       "verb": "active in",
       "to_id": "STG-provider-04-suspended",
       "attrs": {
-        "rules": 44
+        "rules": 45
       },
       "derived": true
     },
@@ -177456,7 +177468,7 @@
       "verb": "active in",
       "to_id": "STG-provider-05-offboarded",
       "attrs": {
-        "rules": 37
+        "rules": 38
       },
       "derived": true
     },
@@ -177572,6 +177584,12 @@
       "from_id": "FR-015",
       "verb": "references",
       "to_id": "REQ-032-014",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-015",
+      "verb": "references",
+      "to_id": "REQ-037-094",
       "attrs": {}
     },
     {
@@ -230587,6 +230605,12 @@
     {
       "from_id": "REQ-015-032",
       "verb": "applies to",
+      "to_id": "SCR-015-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-032",
+      "verb": "applies to",
       "to_id": "SCR-015-04",
       "attrs": {}
     },
@@ -232380,6 +232404,12 @@
     },
     {
       "from_id": "REQ-015-087",
+      "verb": "applies to",
+      "to_id": "SCR-015-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-087",
       "verb": "decided by",
       "to_id": "SRC-PRD-015",
       "attrs": {}
@@ -233790,6 +233820,36 @@
     },
     {
       "from_id": "REQ-015-137",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-015",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-138",
+      "verb": "applies at",
+      "to_id": "STG-provider-04-suspended",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-138",
+      "verb": "applies at",
+      "to_id": "STG-provider-05-offboarded",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-138",
+      "verb": "applies to",
+      "to_id": "ENT-provider.payout_method",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-138",
+      "verb": "applies to",
+      "to_id": "SCR-015-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-138",
       "verb": "decided by",
       "to_id": "SRC-PRD-015",
       "attrs": {}
@@ -383167,7 +383227,10 @@
       "from_id": "STP-015-018",
       "verb": "next",
       "to_id": "STP-015-019",
-      "attrs": {}
+      "attrs": {
+        "label": "provider status is Active",
+        "condition": "REQ-015-031"
+      }
     },
     {
       "from_id": "STP-015-019",
@@ -383799,6 +383862,12 @@
     },
     {
       "from_id": "STP-015-152",
+      "verb": "applies",
+      "to_id": "REQ-037-094",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-015-152",
       "verb": "at",
       "to_id": "STG-provider-04-suspended",
       "attrs": {}
@@ -384193,7 +384262,17 @@
       "from_id": "STP-015-171",
       "verb": "next",
       "to_id": "STP-015-172",
-      "attrs": {}
+      "attrs": {
+        "label": "admin deactivates the provider"
+      }
+    },
+    {
+      "from_id": "STP-015-171",
+      "verb": "next",
+      "to_id": "STP-015-176",
+      "attrs": {
+        "label": "admin rejects the request"
+      }
     },
     {
       "from_id": "STP-015-171",
@@ -384259,15 +384338,6 @@
     },
     {
       "from_id": "STP-015-173",
-      "verb": "next",
-      "to_id": "STP-015-176",
-      "attrs": {
-        "label": "admin rejects the request",
-        "back": true
-      }
-    },
-    {
-      "from_id": "STP-015-173",
       "verb": "on",
       "to_id": "SCR-015-04",
       "attrs": {}
@@ -384288,6 +384358,12 @@
       "from_id": "STP-015-174",
       "verb": "applies",
       "to_id": "REQ-015-137",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-015-174",
+      "verb": "applies",
+      "to_id": "REQ-037-094",
       "attrs": {}
     },
     {
@@ -384362,6 +384438,12 @@
       "from_id": "STP-015-176",
       "verb": "done by",
       "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-015-176",
+      "verb": "on",
+      "to_id": "SCR-015-03",
       "attrs": {}
     },
     {
@@ -446112,6 +446194,37 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-150622-ae7595e1",
+      "at": "2026-11-24T15:06:22.575609+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-015 logic review pass 2: a Suspended clinic that sets its password stays read-only and is not eligible for distribution until reactivated; closure request notice on Screen 3 with Deactivate Provider and Reject Request, Reject Request needs Suspend Providers, reject edge moved to the request step; cascade also ends FR-037 monitoring assignments and acts only on records that existed at the effective time; Deactivated provider has Edit Profile hidden and all tabs read-only; earnings on normally completed bookings released by an admin through FR-017 and Payout Method of a Deactivated clinic editable while unpaid shares remain (new REQ-015-138, owner default 253); REQ-015-068 title corrected.",
+      "source_id": null,
+      "nodes_added": [
+        "REQ-015-138"
+      ],
+      "nodes_updated": [
+        "FR-015",
+        "REQ-015-017",
+        "REQ-015-020",
+        "REQ-015-031",
+        "REQ-015-032",
+        "REQ-015-068",
+        "REQ-015-069",
+        "REQ-015-087",
+        "SCR-015-03",
+        "STP-015-018",
+        "STP-015-021",
+        "STP-015-152",
+        "STP-015-171",
+        "STP-015-173",
+        "STP-015-174",
+        "STP-015-176"
+      ],
+      "edges_added": 14,
+      "edges_removed": 3,
+      "rows": 34
+    },
     {
       "id": "cs-20261124-145427-05db75b2",
       "at": "2026-11-24T14:54:27.751036+00:00",
