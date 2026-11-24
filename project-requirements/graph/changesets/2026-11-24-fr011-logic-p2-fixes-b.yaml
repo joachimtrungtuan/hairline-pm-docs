@@ -1,0 +1,5 @@
+# FR-011 logic review pass 2, follow-up: the aftercare coordinator now configures the plan in the recovery-plan stage, so the actor is linked to that stage.
+reason: "FR-011 logic review pass 2 follow-up: the aftercare coordinator acts in the recovery-plan stage (the coordinator configures the plan for a case delivered by the Hairline team)"
+by: controller
+operations:
+  - {"op": "add_edge", "from": "ACT-aftercare-coordinator", "verb": "acts in", "to": "STG-aftercare-01-recovery-plan"}
