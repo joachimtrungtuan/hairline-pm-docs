@@ -1,0 +1,7 @@
+reason: 'FR-002 logic review pass 2: after distribution (STP-003-024) the provider consumes the processed result (STP-002-014); this edge restores the path removed when the read step was placed before distribution'
+by: controller
+operations:
+- op: add_edge
+  from: STP-003-024
+  verb: next
+  to: STP-002-014

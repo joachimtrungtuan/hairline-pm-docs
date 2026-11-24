@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T06:04:42Z",
+  "generated_at": "2026-11-24T06:29:06Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -11872,9 +11872,9 @@
       "owner_fr": "FR-002",
       "title": "Processing ID",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "processingId (REQ-002-007)."
+        "description": "processingId, issued to every submit attempt and media-only call, also a rejected one (REQ-002-007, REQ-002-052)."
       }
     },
     {
@@ -11889,14 +11889,25 @@
       }
     },
     {
+      "id": "ENT-intake-audit-entry.template_set_id",
+      "type": "Field",
+      "owner_fr": "FR-002",
+      "title": "Template set",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "templateSetId: the FR-025 set the version belongs to, recorded with the version on every submit attempt that names one (REQ-002-052)."
+      }
+    },
+    {
       "id": "ENT-intake-audit-entry.template_version_used",
       "type": "Field",
       "owner_fr": "FR-002",
       "title": "Template version used",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Alternative Flow A2: the engine records templateVersionUsed in the audit log."
+        "description": "Alternative Flow A2: the engine records templateVersionUsed in the audit entry, with templateSetId (REQ-002-052)."
       }
     },
     {
@@ -11916,9 +11927,9 @@
       "owner_fr": "FR-002",
       "title": "Head scan photo set",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "headScanPhotoSet: required list of up to 5 photo items { stagedRef, viewHint? } (REQ-002-038). The V1 request carries no other media; visual evidence is validated and stored by FR-003."
+        "description": "headScanPhotoSet: required list of up to 5 photo items { stagedRef, or scanRef with photoIndex, viewHint? } (REQ-002-038). A scanRef item is copied, never moved or replaced. The V1 request carries no other media; visual evidence is validated and stored by FR-003."
       }
     },
     {
@@ -11927,9 +11938,9 @@
       "owner_fr": "FR-002",
       "title": "Idempotency key",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "idempotencyKey (string): a retry with the same key replaces the artifact set stored by the earlier attempt (REQ-002-045)."
+        "description": "idempotencyKey (string): the FR-003 draft id (a media-only call sends the caller's scan id). A retry with an identical payload returns the first result; a changed payload supersedes the earlier set (REQ-002-045)."
       }
     },
     {
@@ -11960,9 +11971,9 @@
       "owner_fr": "FR-002",
       "title": "Responses",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Questionnaire responses, an object keyed by questionId per FR-025."
+        "description": "Questionnaire responses, an object keyed by questionId per FR-025. Absent on a media-only call (REQ-002-047)."
       }
     },
     {
@@ -11971,9 +11982,9 @@
       "owner_fr": "FR-002",
       "title": "Template set",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "templateSetId (string): the FR-025 questionnaire set the patient answered (REQ-002-037, REQ-002-041)."
+        "description": "templateSetId (string): the FR-025 questionnaire set the patient answered (REQ-002-037, REQ-002-041). Absent on a media-only call."
       }
     },
     {
@@ -11982,9 +11993,9 @@
       "owner_fr": "FR-002",
       "title": "Template version",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "templateVersion (string): the questionnaire template version the patient answered. A prior version of the set, or of the prior Active set, is accepted and recorded; an unknown or never-published version is rejected (REQ-002-037)."
+        "description": "templateVersion (string): the questionnaire template version the patient answered. Any version that is, or at some time was, designated Active for Inquiry is accepted and recorded; every other version is rejected (REQ-002-037). Absent on a media-only call."
       }
     },
     {
@@ -11999,14 +12010,25 @@
       }
     },
     {
+      "id": "ENT-intake-processing-result.alert_tier",
+      "type": "Field",
+      "owner_fr": "FR-002",
+      "title": "Alert tier",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "alertTier (critical, standard or none): the highest severity among the alerts of the result; same vocabulary as ENT-risk-tag.severity (REQ-002-002). Returned by submit and by the derive-only call."
+      }
+    },
+    {
       "id": "ENT-intake-processing-result.alerts",
       "type": "Field",
       "owner_fr": "FR-002",
       "title": "Alerts",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "alerts[]: the RiskTag objects derived for this request (see ENT-risk-tag)."
+        "description": "alerts[]: the RiskTag objects derived for this request (see ENT-risk-tag); never empty, one tag with severity none when no tag is raised (REQ-002-002). Absent on a media-only call."
       }
     },
     {
@@ -12015,9 +12037,9 @@
       "owner_fr": "FR-002",
       "title": "Audit entry",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "audit: points to the ENT-intake-audit-entry of this processing run."
+        "description": "audit: points to the ENT-intake-audit-entry of this processing run. A derive-only call or a read has none (REQ-002-010)."
       }
     },
     {
@@ -12026,9 +12048,9 @@
       "owner_fr": "FR-002",
       "title": "Normalized payload",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "normalizedPayload: the normalized questionnaire responses (responsesNormalized in the response contract)."
+        "description": "normalizedPayload: the normalized questionnaire responses (responsesNormalized in the response contract). Absent on a media-only call."
       }
     },
     {
@@ -12048,9 +12070,9 @@
       "owner_fr": "FR-002",
       "title": "Processing ID",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "processingId: identifies one processing run; copy of the audit entry value."
+        "description": "processingId: identifies one processing run; issued to every submit attempt, also a rejected one (REQ-002-052); copy of the audit entry value."
       }
     },
     {
@@ -12065,14 +12087,25 @@
       }
     },
     {
+      "id": "ENT-intake-processing-result.superseded_by",
+      "type": "Field",
+      "owner_fr": "FR-002",
+      "title": "Superseded by",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "processingId of the later attempt that superseded this result after a retry with a changed payload; empty otherwise. The superseded set is archived, never hard-deleted (REQ-002-045)."
+      }
+    },
+    {
       "id": "ENT-intake-processing-result.template_set_id",
       "type": "Field",
       "owner_fr": "FR-002",
       "title": "Template set",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "templateSetId: the FR-025 set the processed version belongs to; stamped with templateVersionUsed (REQ-002-005)."
+        "description": "templateSetId: the FR-025 set the processed version belongs to; stamped with templateVersionUsed (REQ-002-005). Absent on a media-only call."
       }
     },
     {
@@ -12081,9 +12114,9 @@
       "owner_fr": "FR-002",
       "title": "Template version used",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "templateVersionUsed: the single configuration stamp, the template version actually applied. FR-003 questionnaireVersion is a copy of it (REQ-002-005)."
+        "description": "templateVersionUsed: the single configuration stamp, the template version actually applied. FR-003 questionnaireVersion is a copy of it (REQ-002-005). Absent on a media-only call."
       }
     },
     {
@@ -13088,6 +13121,17 @@
       }
     },
     {
+      "id": "ENT-media-artifact.provider_copy_uri",
+      "type": "Field",
+      "owner_fr": "FR-002",
+      "title": "Provider copy URI",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "providerCopyUri: where the provider copy of the photo is stored, made by S-01 at promotion with device and location metadata stripped (REQ-002-048). The only location providers reach, by signed link (REQ-002-049); stored_uri is never sent to providers."
+      }
+    },
+    {
       "id": "ENT-media-artifact.quality_score",
       "type": "Field",
       "owner_fr": "FR-002",
@@ -13104,9 +13148,9 @@
       "owner_fr": "FR-002",
       "title": "Stored URI",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "storedUri: where the media is stored, under anonymizedPatientId (REQ-002-009)."
+        "description": "storedUri: where the original media is stored, under anonymizedPatientId (REQ-002-009). Never sent to providers (REQ-002-048)."
       }
     },
     {
@@ -26177,9 +26221,9 @@
       "owner_fr": "FR-002",
       "title": "Code",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Risk tag code."
+        "description": "Risk tag code: the questionId of the Yes answer that raised the tag; NONE on the one tag with severity none (REQ-002-002)."
       }
     },
     {
@@ -26188,9 +26232,9 @@
       "owner_fr": "FR-002",
       "title": "Derived from",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "What the tag was derived from (the response or rule that raised it). The PRD does not define the value format."
+        "description": "The questionId the tag was derived from; empty on the NONE tag (REQ-002-002)."
       }
     },
     {
@@ -26199,9 +26243,9 @@
       "owner_fr": "FR-002",
       "title": "Label",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Risk tag label shown with the alert."
+        "description": "Risk tag label shown with the alert: the question text of the version used (REQ-002-002)."
       }
     },
     {
@@ -33815,6 +33859,19 @@
       }
     },
     {
+      "id": "FLW-002-media-only",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Media only (FR-011 and FR-037)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "main",
+        "description": "Workflow 5: Media Only (FR-011 and FR-037)",
+        "prd_ref": "Workflow 5"
+      }
+    },
+    {
       "id": "FLW-002-media-validation-fails",
       "type": "Flow",
       "owner_fr": null,
@@ -33838,6 +33895,19 @@
         "kind": "alternative",
         "description": "Questionnaire or template version rejected",
         "prd_ref": "Alternative Flows A3"
+      }
+    },
+    {
+      "id": "FLW-002-staging-cleanup",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Staging clean-up (scheduled)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "main",
+        "description": "Workflow 6: Staging Clean-up (Scheduled)",
+        "prd_ref": "Workflow 6"
       }
     },
     {
@@ -41476,10 +41546,10 @@
       "owner_fr": "FR-002",
       "title": "Derive risk tags deterministically; the engine is the only producer",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Engine MUST derive risk/alert tags deterministically from the severity flags FR-025 sets on the answers of the version named in the request. It is the only producer of risk tags: one tag per Yes answer, and the highest severity among them sets the tier (Critical is Red, Standard is Amber; FR-025 REQ-025-064). When every answer is No it returns one tag with severity none (Green).",
-        "rationale": "Core Requirements. FR-003 and FR-025 point here instead of deriving tags themselves. The tier reading (one tag per Yes answer, highest severity wins) follows REQ-025-064."
+        "statement": "Engine MUST derive risk/alert tags deterministically from the severity flags FR-025 sets on the answers of the version named in the request. It is the only producer of risk tags: one tag per Yes answer on a Critical or Standard question (code is the questionId, label is the question text of that version); a Yes on a No Alert question produces no tag. The highest severity among the tags is returned as alertTier (Critical is Red, Standard is Amber; FR-025 REQ-025-064). When no tag is raised it returns one tag with code NONE and severity none (Green), so alerts is never empty.",
+        "rationale": "Core Requirements. FR-003 and FR-025 point here instead of deriving tags themselves. A consumer takes alertTier as returned and does not aggregate severities itself. The admin input is the severity flags in FR-025; there is no separate risk-tag rule configuration."
       }
     },
     {
@@ -41500,10 +41570,10 @@
       "owner_fr": "FR-002",
       "title": "Return normalized payload, alerts, per-photo media results, scanRef and audit fields",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Engine MUST return normalized payload, alerts, media URIs, and audit fields",
-        "rationale": "Core Requirements. Response contract in Screen Specifications: processingId, normalized, alerts, scanRef, one media item per photo, audit."
+        "statement": "Engine MUST return processingId, normalized payload, alerts and alertTier, per-photo media results, scanRef and audit fields",
+        "rationale": "Core Requirements. Response contract in Screen Specifications: processingId, normalized, alerts, alertTier, scanRef, one media item per photo, audit."
       }
     },
     {
@@ -41572,10 +41642,10 @@
       "owner_fr": "FR-002",
       "title": "All operations auditable and retention-compliant",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "All operations MUST be fully auditable and retention-compliant",
-        "rationale": "Security and Privacy Requirements (line 306). Security Considerations (line 395): full audit trail for processing operations and configuration versions."
+        "statement": "Every submit attempt (accepted or rejected) and every media-only call MUST be fully auditable and retention-compliant; the derive-only and read calls write no audit entry.",
+        "rationale": "Security and Privacy Requirements. The derive-only call persists nothing and the read call changes nothing, so neither writes an audit entry (REQ-002-044, REQ-002-043)."
       }
     },
     {
@@ -41656,10 +41726,10 @@
       "owner_fr": "FR-002",
       "title": "Engine passive after initial processing",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Provider review UI is handled by FR-003/PR-02; engine remains passive after initial processing",
-        "rationale": "Provider Platform breakdown (line 35). Workflow 2 step 4: provider actions (review, revision request) are handled by FR-003/FR-004; engine remains passive."
+        "statement": "Provider review UI is handled by FR-003/PR-02; engine remains passive after processing, except scheduled staging clean-up (REQ-002-051)",
+        "rationale": "Provider Platform breakdown. Workflow 2 step 5: provider actions (review, revision request) are handled by FR-003/FR-004; the engine only removes staged photos on a schedule."
       }
     },
     {
@@ -41668,10 +41738,10 @@
       "owner_fr": "FR-002",
       "title": "Admin manages templates, fields and risk-tag rules",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Admin manages questionnaire templates, sections, fields, and risk-tag rules via FR-025",
-        "rationale": "Admin Platform breakdown. Admin Editability 1: admin can manage templates, guidance copy, and risk-tag rules. Workflow 3 states that template creation and editing are owned by FR-025. Merged as one rule."
+        "statement": "Admin manages questionnaire templates, sections, fields, guidance copy and the severity flags on answers via FR-025",
+        "rationale": "Admin Platform breakdown. Admin Editability 1. Template creation and editing are owned by FR-025. Alert severity comes from the severity flags (REQ-002-020); FR-025 has no separate risk-tag rule configuration."
       }
     },
     {
@@ -41752,9 +41822,9 @@
       "owner_fr": "FR-002",
       "title": "Engine operations auditable with who, when and the rejection reason on rejected attempts",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Engine operations are fully auditable (timestamps, actor/service, the rejection reason on rejected attempts).",
+        "statement": "Every submit attempt (accepted or rejected) and every media-only call is fully auditable (timestamps, actor/service, processingId, template set and version, the rejection reason on rejected attempts); the derive-only and read calls write no audit entry.",
         "rationale": "General Rules 1. The audit reason field is written when an attempt is rejected (REQ-002-036); no override exists in this FR."
       }
     },
@@ -41872,9 +41942,9 @@
       "owner_fr": "FR-002",
       "title": "Failed validation returns error codes with per-photo detail, stores nothing and writes an audit entry",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "On validation failure, engine returns structured error codes with per-photo detail and guidance to the caller (FR-003); no artifacts are persisted, and an audit entry records the rejection reason. Error codes cover every enforced rule: MEDIA_FORMAT_NOT_ALLOWED, MEDIA_COUNT_EXCEEDED, MEDIA_SIZE_EXCEEDED, MEDIA_QUALITY_INSUFFICIENT, MEDIA_NO_PHOTO, TEMPLATE_VERSION_UNKNOWN, NO_ACTIVE_TEMPLATE_SET, ANSWER_REQUIRED_MISSING.",
+        "statement": "On validation failure, engine returns the error items (REQ-002-052) with per-photo detail and guidance to the caller (FR-003); no artifacts are persisted, and an audit entry records the rejection reason. Error codes cover every enforced rule: MEDIA_FORMAT_NOT_ALLOWED, MEDIA_COUNT_EXCEEDED, MEDIA_SIZE_EXCEEDED, MEDIA_QUALITY_INSUFFICIENT, MEDIA_NO_PHOTO, TEMPLATE_VERSION_UNKNOWN, NO_ACTIVE_TEMPLATE_SET, ANSWER_REQUIRED_MISSING.",
         "rationale": "Media Rules 6 and Alternative Flows A1 and A3. MEDIA_NO_PHOTO replaces the earlier view-set code, which named a rule that does not exist. The audit reason field holds the rejection reason."
       }
     },
@@ -41884,10 +41954,10 @@
       "owner_fr": "FR-002",
       "title": "Prior template version or prior Active set accepted and recorded; unknown version rejected",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Engine accepts a submission made on a prior version of the same set, or on the prior Active set, and records the version used (templateVersionUsed) in the audit log; validation and alert derivation use that version. An unknown or never-published version is rejected with TEMPLATE_VERSION_UNKNOWN, and a state with no set designated Active for Inquiry (FR-025 REQ-025-052) is rejected with NO_ACTIVE_TEMPLATE_SET.",
-        "rationale": "Alternative Flows A2 and A3. The request names the set and the version, so the engine can tell a prior version from an unknown one."
+        "statement": "Engine accepts a submission made on any version that is, or at some time was, designated Active for Inquiry (the history comes from FR-025), and records the template set id and the version used (templateVersionUsed) in the audit entry; validation and alert derivation use that version. Every other version, including one published but never designated Active, is rejected with TEMPLATE_VERSION_UNKNOWN, and a state with no set designated Active for Inquiry (FR-025 REQ-025-052) is rejected with NO_ACTIVE_TEMPLATE_SET. The derive-only call applies the same rule.",
+        "rationale": "Alternative Flows A2 and A3. The request names the set and the version, so the engine can tell a version that was once Active from one that never was; a published set is not Active until an admin designates it (FR-025 REQ-025-049)."
       }
     },
     {
@@ -41896,9 +41966,9 @@
       "owner_fr": "FR-002",
       "title": "Request carries the head scan photo set only",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "The V1 request carries headScanPhotoSet (required, a list of up to 5 photo items) as its only media. Visual evidence is validated and stored by FR-003 and does not pass through FR-002. headVideo is future and is not part of the V1 contract (REQ-002-035). The response returns one item per photo (storedUri, validationStatus, qualityScore) and the scanRef FR-003 reads.",
+        "statement": "The V1 request carries headScanPhotoSet (required, a list of up to 5 photo items, each a stagedRef or an existing scanRef with photoIndex) as its only media. A scanRef item names a stored scan, which is copied into this inquiry's set and never moved or replaced; the same validation runs again. Visual evidence is validated and stored by FR-003 and does not pass through FR-002. headVideo is future and is not part of the V1 contract (REQ-002-035). The response returns one item per photo (storedUri, providerCopyUri, validationStatus, qualityScore) and the scanRef FR-003 reads.",
         "rationale": "Integration contract. The earlier list of four media forms did not match what FR-003 sends or what FR-002 stores."
       }
     },
@@ -41956,9 +42026,9 @@
       "owner_fr": "FR-002",
       "title": "Processing result persisted by processingId and read back by it",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "Engine MUST persist the processing result (normalized payload, alerts, per-photo media results, scanRef and audit fields) keyed by processingId and return it on a read by processingId. Retention follows REQ-SYS-002.",
+        "statement": "Engine MUST persist the processing result (normalized payload, alerts, alertTier, per-photo media results, scanRef and audit fields) keyed by processingId and return it on a read by processingId. A provider open returns the media as signed links (REQ-002-049). The read writes no audit entry. Retention follows REQ-SYS-002.",
         "rationale": "FR-003 reads the result by processingId when it distributes the inquiry, so FR-002 keeps it. The earlier wording kept only the media; the engine is stateless between calls only in that it holds no session state. FR-003 stores processingId on the inquiry."
       }
     },
@@ -41968,9 +42038,9 @@
       "owner_fr": "FR-002",
       "title": "Derive-only call returns the risk tags and persists nothing",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "Engine MUST offer a derive-only call: FR-003 sends templateSetId, templateVersion and the completed answers, the engine validates them, returns the risk tags and the alert tier, and persists nothing (a missing required answer is returned as ANSWER_REQUIRED_MISSING). Submit runs the same derivation.",
+        "statement": "Engine MUST offer a derive-only call: FR-003 sends templateSetId, templateVersion and the completed answers, the engine validates them, returns the risk tags and the alertTier, persists nothing and writes no audit entry (a missing required answer is returned as ANSWER_REQUIRED_MISSING). Submit runs the same derivation.",
         "rationale": "FR-002 is the only producer of risk tags; FR-003 calls this when the patient completes the questionnaire so the tags it shows are the ones submit will derive."
       }
     },
@@ -41978,24 +42048,24 @@
       "id": "REQ-002-045",
       "type": "Rule",
       "owner_fr": "FR-002",
-      "title": "Submit retry with the same idempotency key replaces the earlier artifact set",
+      "title": "Idempotency key is the draft id; an identical retry returns the first result, a changed retry supersedes",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "A submit request MUST carry an idempotencyKey; a retry with the same key replaces the artifact set stored by the earlier attempt instead of adding a second one.",
-        "rationale": "A dropped response must not leave two stored photo sets for one inquiry."
+        "statement": "A submit request MUST carry an idempotencyKey, which is the FR-003 draft id (for a media-only call, the caller's scan id). A retry with an identical payload MUST return the first result. A retry with a changed payload MUST supersede the earlier set: that set is archived, never hard-deleted (REQ-002-028, REQ-SYS-002), and the earlier processingId is marked superseded.",
+        "rationale": "A dropped response must not leave two stored photo sets for one inquiry, and a replaced set is still a retained record, so it is archived. Keying on the draft id stops a key reused for another inquiry from overwriting the first inquiry's photos."
       }
     },
     {
       "id": "REQ-002-046",
       "type": "Rule",
       "owner_fr": "FR-002",
-      "title": "Photos staged at capture and promoted at submit; staged files outside retention",
+      "title": "Photos staged at capture and promoted at submit",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "Photos MUST be held in staging from capture until submit, when the engine promotes them under anonymizedPatientId. Staged photos are removed when the 7-day draft expires and are outside the REQ-SYS-002 retention rule; only promoted artifacts are retained.",
-        "rationale": "The patient captures before the engine stores anything, so the files need a holding place. A draft that is never submitted must not leave files for ten years."
+        "statement": "Photos MUST be held in staging from capture until submit, when the engine promotes them under anonymizedPatientId. Staging identity, access and removal are in REQ-002-051.",
+        "rationale": "The patient captures before the engine stores anything, so the files need a holding place."
       }
     },
     {
@@ -42004,9 +42074,9 @@
       "owner_fr": "FR-002",
       "title": "Media-only call for FR-011 and FR-037 with no responses or templateVersion",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "Engine MUST offer a media-only validation and storage call for FR-011 and FR-037: it takes anonymizedPatientId and headScanPhotoSet with no responses or templateVersion, applies the limits of REQ-002-032 to REQ-002-036, and returns scanRef and the per-photo results.",
+        "statement": "Engine MUST offer a media-only validation and storage call for FR-011 and FR-037: it takes anonymizedPatientId, an idempotencyKey (the caller's scan id) and headScanPhotoSet with no responses or templateVersion, applies the limits of REQ-002-032 to REQ-002-036, and returns processingId, scanRef and the per-photo results. The questionnaire fields are absent on this call, and the call is audited (REQ-002-010).",
         "rationale": "Aftercare and the scan-only flow store a head scan without a questionnaire. Whether the scan is optional or needs at least one photo is set by FR-011 and FR-037."
       }
     },
@@ -42016,9 +42086,9 @@
       "owner_fr": "FR-002",
       "title": "Provider copy of the media has metadata stripped; face and free text are a documented exception to REQ-SYS-001",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "Providers MUST receive a transformed copy of the head scan photos with device and location metadata stripped; the original stays unmodified for the patient and Admin. A visible face in the photos and the free-text answers are a documented exception to REQ-SYS-001: providers may see them before payment.",
+        "statement": "Providers MUST receive a transformed copy of the head scan photos with device and location metadata stripped, made by S-01 at promotion and returned as providerCopyUri; the original stays unmodified for the patient and Admin, and storedUri is never sent to providers. A visible face in the photos and the free-text answers are a documented exception to REQ-SYS-001: providers may see them before payment.",
         "rationale": "Owner default 75: the face and free text are clinically needed to quote, so they are shown unblurred and unfiltered. Other options were blurring or cropping the face, or holding the front view until booking. Confirmation by the owner is requested."
       }
     },
@@ -42026,12 +42096,12 @@
       "id": "REQ-002-049",
       "type": "Rule",
       "owner_fr": "FR-002",
-      "title": "Provider media access by a signed link scoped to the distribution",
+      "title": "Provider media access by a 15-minute signed link scoped to the distribution",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "Provider access to the media MUST use a time-limited signed link scoped to the providers the inquiry was distributed to; the link is withdrawn when the inquiry is cancelled or the provider leaves the distribution.",
-        "rationale": "A stored URI must not be a permanent public address."
+        "statement": "Provider access to the media MUST use a signed link to the provider copy that lives 15 minutes; the read call issues a new link on each authorised open, only for a provider the inquiry was distributed to. FR-003 asks for no further link when access ends: for providers who declined or were not selected, once a quote is accepted; for every provider, at inquiry cancellation. The booked provider keeps access while the booking is active.",
+        "rationale": "A stored URI must not be a permanent public address. A short link that is reissued on each authorised open needs no revocation call: access ends when FR-003 stops asking. Owner default 76; other options were one fixed window for all distributed providers, or access ending for everybody at cancellation."
       }
     },
     {
@@ -42044,6 +42114,42 @@
       "attrs": {
         "statement": "The engine check MUST be authoritative. The device check at capture is advisory and uses the same FR-026 quality thresholds; when the engine rejects the media, FR-003 returns the patient to the capture screen.",
         "rationale": "A modified or older app cannot be trusted to enforce the limits."
+      }
+    },
+    {
+      "id": "REQ-002-051",
+      "type": "Rule",
+      "owner_fr": "FR-002",
+      "title": "Staged photos: keyed by draft, restricted, removed on a schedule",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Staged photos MUST be keyed by the FR-003 draft id (for a media-only call, the scan id), readable only by the uploading patient and the engine, encrypted as REQ-002-030 requires, and removed by S-05 on a schedule: 7 days after the draft's last activity, or for a media-only call 7 days after staging. They are outside the REQ-SYS-002 retention rule; only promoted artifacts are retained.",
+        "rationale": "Staged face photos need an owner, an access rule and a removal trigger. Removal is a scheduled job inside S-05, so no cross-FR event is needed; the last-activity time comes from the FR-003 draft inactivity rule (REQ-003-004). FR-011 and FR-037 have no draft, so their staged photos expire 7 days after staging."
+      }
+    },
+    {
+      "id": "REQ-002-052",
+      "type": "Rule",
+      "owner_fr": "FR-002",
+      "title": "Every submit attempt gets a processingId; version is checked first; rejections have one body shape",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Every submit attempt, accepted or rejected, MUST get a processingId. The engine MUST check the version first (REQ-002-037), then validate the answers and the photos, also on a prior version. A rejection MUST return error items { code, questionId or the photo's stagedRef or scanRef, message, guidance }; when answers and photos both fail, both lists come back in one response. The audit entry MUST carry the processingId, the template set id and the version.",
+        "rationale": "The audit entry needs a processingId even when the attempt is rejected, and a caller needs to know which question or photo each error names. A fixed order stops a prior-version submission from skipping validation."
+      }
+    },
+    {
+      "id": "REQ-002-053",
+      "type": "Rule",
+      "owner_fr": "FR-002",
+      "title": "The error code tells the caller where to land the patient",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The error code MUST tell the caller where to land the patient: ANSWER_REQUIRED_MISSING to the questionnaire (first, when photos also fail); TEMPLATE_VERSION_UNKNOWN makes FR-003 reload the Active set and keep the draft; NO_ACTIVE_TEMPLATE_SET keeps the draft and shows a submission-unavailable message; the media codes return the patient to capture (REQ-002-050).",
+        "rationale": "Only a missing answer can be fixed in the questionnaire. An unknown version is fixed by loading the current set, and with no Active set there is nothing for the patient to correct, so a retry loop would return the same code."
       }
     },
     {
@@ -104733,7 +104839,7 @@
       "owner_fr": "FR-002",
       "title": "FR-003 submits the idempotency key, template set and version, questionnaire responses and the head scan photo set",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "prd_ref": "Workflow 1 step 1"
       }
@@ -104753,9 +104859,9 @@
       "id": "STP-002-004",
       "type": "Step",
       "owner_fr": "FR-002",
-      "title": "Engine promotes the staged photos under the anonymized patient identifier and persists the processing result",
+      "title": "Engine promotes the staged photos under the anonymized patient identifier, S-01 makes the provider copy, and the engine persists the processing result",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Workflow 1 step 4"
       }
@@ -104764,9 +104870,9 @@
       "id": "STP-002-005",
       "type": "Step",
       "owner_fr": "FR-002",
-      "title": "Engine returns the normalized intake payload, alert tags and per-photo media results to FR-003",
+      "title": "Engine returns the processingId, normalized intake payload, alert tags and alert tier, and per-photo media results to FR-003",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "prd_ref": "Workflow 1 step 5"
       }
@@ -104775,9 +104881,9 @@
       "id": "STP-002-007",
       "type": "Step",
       "owner_fr": "FR-002",
-      "title": "Engine writes an audit entry with the rejection reason and returns structured error codes with per-photo detail and remediation guidance",
+      "title": "Engine writes an audit entry with the rejection reason and returns the processingId and the error items with per-photo detail and remediation guidance",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flow A1 step 2"
       }
@@ -104788,7 +104894,7 @@
       "owner_fr": "FR-002",
       "title": "No artifacts are persisted; the caller (FR-003) receives the error and returns the patient to capture",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flow A1 step 3"
       }
@@ -104810,7 +104916,7 @@
       "owner_fr": "FR-002",
       "title": "Engine accepts the submission on the older version",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flow A2 step 3"
       }
@@ -104821,7 +104927,7 @@
       "owner_fr": "FR-002",
       "title": "FR-003 reads the stored processing result by processingId",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Workflow 2 step 1"
       }
@@ -104830,9 +104936,9 @@
       "id": "STP-002-014",
       "type": "Step",
       "owner_fr": "FR-002",
-      "title": "Provider consumes the read-only normalized payload and the provider copy of the media through a signed link",
+      "title": "Provider consumes the read-only normalized payload and the provider copy of the media through a 15-minute signed link",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "prd_ref": "Workflow 2 step 3"
       }
@@ -104841,9 +104947,9 @@
       "id": "STP-002-022",
       "type": "Step",
       "owner_fr": "FR-002",
-      "title": "Engine writes an audit entry with the rejection reason and returns structured error codes for a missing required answer or an unusable template version",
+      "title": "Engine writes an audit entry with the rejection reason and returns the processingId and the error items for a missing required answer or an unusable template version, with any photo errors found in the same attempt",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A3 step 1"
       }
@@ -104852,9 +104958,9 @@
       "id": "STP-002-023",
       "type": "Step",
       "owner_fr": "FR-002",
-      "title": "No artifacts are persisted; the caller (FR-003) returns the patient to the questionnaire",
+      "title": "No artifacts are persisted; the caller (FR-003) lands the patient by error code: the questionnaire, a reload of the Active set with the draft kept, or a submission-unavailable message with the draft kept",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A3 step 2"
       }
@@ -104879,6 +104985,50 @@
       "version": 1,
       "attrs": {
         "prd_ref": "Workflow 4 step 2"
+      }
+    },
+    {
+      "id": "STP-002-026",
+      "type": "Step",
+      "owner_fr": "FR-002",
+      "title": "Engine validates the answers and the photos against the version named in the request and the media constraints",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 1 step 2"
+      }
+    },
+    {
+      "id": "STP-002-027",
+      "type": "Step",
+      "owner_fr": "FR-002",
+      "title": "FR-011 or FR-037 sends the anonymized patient identifier, the idempotency key (the caller's scan id) and the head scan photo set to the media-only call",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 5 step 1"
+      }
+    },
+    {
+      "id": "STP-002-028",
+      "type": "Step",
+      "owner_fr": "FR-002",
+      "title": "Engine validates the photos, promotes them, S-01 makes the provider copy, and the engine returns processingId, scanRef and the per-photo results",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 5 step 2"
+      }
+    },
+    {
+      "id": "STP-002-029",
+      "type": "Step",
+      "owner_fr": "FR-002",
+      "title": "S-05 removes staged photos 7 days after the draft's last activity, or 7 days after staging for a media-only caller",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 6 step 1"
       }
     },
     {
@@ -105129,7 +105279,7 @@
       "owner_fr": "FR-003",
       "title": "System distributes and notifies providers within 5 minutes",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 2 (Inquiry Distribution)"
       }
@@ -139716,6 +139866,14 @@
       "calculated_by": null
     },
     {
+      "id": "ENT-intake-audit-entry.template_set_id",
+      "entity_id": "ENT-intake-audit-entry",
+      "name": "template_set_id",
+      "data_type": "text",
+      "required": false,
+      "calculated_by": null
+    },
+    {
       "id": "ENT-intake-audit-entry.template_version_used",
       "entity_id": "ENT-intake-audit-entry",
       "name": "template_version_used",
@@ -139780,11 +139938,19 @@
       "calculated_by": null
     },
     {
+      "id": "ENT-intake-processing-result.alert_tier",
+      "entity_id": "ENT-intake-processing-result",
+      "name": "alert_tier",
+      "data_type": "enum",
+      "required": true,
+      "calculated_by": "REQ-002-002"
+    },
+    {
       "id": "ENT-intake-processing-result.alerts",
       "entity_id": "ENT-intake-processing-result",
       "name": "alerts",
       "data_type": "json",
-      "required": false,
+      "required": true,
       "calculated_by": "REQ-002-002"
     },
     {
@@ -139826,6 +139992,14 @@
       "data_type": "id",
       "required": true,
       "calculated_by": "REQ-002-003"
+    },
+    {
+      "id": "ENT-intake-processing-result.superseded_by",
+      "entity_id": "ENT-intake-processing-result",
+      "name": "superseded_by",
+      "data_type": "id",
+      "required": false,
+      "calculated_by": null
     },
     {
       "id": "ENT-intake-processing-result.template_set_id",
@@ -140538,6 +140712,14 @@
       "data_type": "json",
       "required": false,
       "calculated_by": null
+    },
+    {
+      "id": "ENT-media-artifact.provider_copy_uri",
+      "entity_id": "ENT-media-artifact",
+      "name": "provider_copy_uri",
+      "data_type": "text",
+      "required": true,
+      "calculated_by": "REQ-002-048"
     },
     {
       "id": "ENT-media-artifact.quality_score",
@@ -156342,6 +156524,24 @@
       "sort_order": 3
     },
     {
+      "field_id": "ENT-intake-processing-result.alert_tier",
+      "value": "critical",
+      "label": "Critical",
+      "sort_order": 0
+    },
+    {
+      "field_id": "ENT-intake-processing-result.alert_tier",
+      "value": "standard",
+      "label": "Standard",
+      "sort_order": 1
+    },
+    {
+      "field_id": "ENT-intake-processing-result.alert_tier",
+      "value": "none",
+      "label": "None",
+      "sort_order": 2
+    },
+    {
       "field_id": "ENT-invitation.delivery_state",
       "value": "pending_send",
       "label": "Pending Send",
@@ -165536,6 +165736,12 @@
       "attrs": {}
     },
     {
+      "from_id": "ENT-intake-processing-result.alert_tier",
+      "verb": "calculated by",
+      "to_id": "REQ-002-002",
+      "attrs": {}
+    },
+    {
       "from_id": "ENT-intake-processing-result.alerts",
       "verb": "calculated by",
       "to_id": "REQ-002-002",
@@ -165695,6 +165901,12 @@
       "from_id": "ENT-media-artifact",
       "verb": "decided by",
       "to_id": "SRC-PRD-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-media-artifact.provider_copy_uri",
+      "verb": "calculated by",
+      "to_id": "REQ-002-048",
       "attrs": {}
     },
     {
@@ -168122,6 +168334,12 @@
       "attrs": {}
     },
     {
+      "from_id": "FLW-002-media-only",
+      "verb": "starts at",
+      "to_id": "STP-002-027",
+      "attrs": {}
+    },
+    {
       "from_id": "FLW-002-media-validation-fails",
       "verb": "starts at",
       "to_id": "STP-002-007",
@@ -168131,6 +168349,12 @@
       "from_id": "FLW-002-questionnaire-rejected",
       "verb": "starts at",
       "to_id": "STP-002-022",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-002-staging-cleanup",
+      "verb": "starts at",
+      "to_id": "STP-002-029",
       "attrs": {}
     },
     {
@@ -170640,7 +170864,52 @@
       "verb": "active in",
       "to_id": "STG-main-01-inquiry",
       "attrs": {
-        "rules": 49
+        "rules": 52
+      },
+      "derived": true
+    },
+    {
+      "from_id": "FR-002",
+      "verb": "active in",
+      "to_id": "STG-main-02-quote",
+      "attrs": {
+        "rules": 2
+      },
+      "derived": true
+    },
+    {
+      "from_id": "FR-002",
+      "verb": "active in",
+      "to_id": "STG-main-03-acceptance",
+      "attrs": {
+        "rules": 2
+      },
+      "derived": true
+    },
+    {
+      "from_id": "FR-002",
+      "verb": "active in",
+      "to_id": "STG-main-04-booking",
+      "attrs": {
+        "rules": 2
+      },
+      "derived": true
+    },
+    {
+      "from_id": "FR-002",
+      "verb": "active in",
+      "to_id": "STG-main-07-aftercare",
+      "attrs": {
+        "rules": 1
+      },
+      "derived": true
+    },
+    {
+      "from_id": "FR-002",
+      "verb": "active in",
+      "to_id": "STG-main-08-monitoring",
+      "attrs": {
+        "rules": 1
       },
       "derived": true
     },
@@ -180738,6 +181007,24 @@
     },
     {
       "from_id": "REQ-002-043",
+      "verb": "applies at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-043",
+      "verb": "applies at",
+      "to_id": "STG-main-03-acceptance",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-043",
+      "verb": "applies at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-043",
       "verb": "applies to",
       "to_id": "ENT-intake-processing-result",
       "attrs": {}
@@ -180786,6 +181073,12 @@
     },
     {
       "from_id": "REQ-002-045",
+      "verb": "applies to",
+      "to_id": "ENT-intake-processing-result.superseded_by",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-045",
       "verb": "decided by",
       "to_id": "SRC-PRD-002",
       "attrs": {}
@@ -180812,6 +181105,18 @@
       "from_id": "REQ-002-047",
       "verb": "applies at",
       "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-047",
+      "verb": "applies at",
+      "to_id": "STG-main-07-aftercare",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-047",
+      "verb": "applies at",
+      "to_id": "STG-main-08-monitoring",
       "attrs": {}
     },
     {
@@ -180864,6 +181169,24 @@
     },
     {
       "from_id": "REQ-002-049",
+      "verb": "applies at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-049",
+      "verb": "applies at",
+      "to_id": "STG-main-03-acceptance",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-049",
+      "verb": "applies at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-049",
       "verb": "applies to",
       "to_id": "ACT-provider",
       "attrs": {}
@@ -180872,6 +181195,12 @@
       "from_id": "REQ-002-049",
       "verb": "applies to",
       "to_id": "ENT-media-artifact",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-049",
+      "verb": "applies to",
+      "to_id": "ENT-media-artifact.provider_copy_uri",
       "attrs": {}
     },
     {
@@ -180894,6 +181223,72 @@
     },
     {
       "from_id": "REQ-002-050",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-051",
+      "verb": "applies at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-051",
+      "verb": "applies to",
+      "to_id": "ENT-media-artifact",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-051",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-052",
+      "verb": "applies at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-052",
+      "verb": "applies to",
+      "to_id": "ENT-intake-audit-entry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-052",
+      "verb": "applies to",
+      "to_id": "ENT-intake-audit-entry.template_set_id",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-052",
+      "verb": "applies to",
+      "to_id": "ENT-intake-processing-result.processing_id",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-052",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-053",
+      "verb": "applies at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-053",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-053",
       "verb": "decided by",
       "to_id": "SRC-PRD-002",
       "attrs": {}
@@ -350219,6 +350614,12 @@
     {
       "from_id": "STP-002-001",
       "verb": "applies",
+      "to_id": "REQ-002-037",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-001",
+      "verb": "applies",
       "to_id": "REQ-002-038",
       "attrs": {}
     },
@@ -350236,6 +350637,12 @@
     },
     {
       "from_id": "STP-002-001",
+      "verb": "applies",
+      "to_id": "REQ-002-052",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-001",
       "verb": "at",
       "to_id": "STG-main-01-inquiry",
       "attrs": {}
@@ -350249,26 +350656,9 @@
     {
       "from_id": "STP-002-001",
       "verb": "next",
-      "to_id": "STP-002-003",
-      "attrs": {
-        "label": "answers and photos pass the checks"
-      }
-    },
-    {
-      "from_id": "STP-002-001",
-      "verb": "next",
-      "to_id": "STP-002-007",
-      "attrs": {
-        "label": "a photo fails the format, count, size or quality check",
-        "condition": "REQ-002-036"
-      }
-    },
-    {
-      "from_id": "STP-002-001",
-      "verb": "next",
       "to_id": "STP-002-010",
       "attrs": {
-        "label": "version is a prior version of the set or of the prior Active set",
+        "label": "version is not the Active one now but was designated Active before",
         "condition": "REQ-002-037"
       }
     },
@@ -350277,8 +350667,17 @@
       "verb": "next",
       "to_id": "STP-002-022",
       "attrs": {
-        "label": "required answer missing, version unknown or no Active set",
-        "condition": "REQ-002-001"
+        "label": "version never designated Active, or no set designated Active",
+        "condition": "REQ-002-037"
+      }
+    },
+    {
+      "from_id": "STP-002-001",
+      "verb": "next",
+      "to_id": "STP-002-026",
+      "attrs": {
+        "label": "version is the one now designated Active",
+        "condition": "REQ-002-037"
       }
     },
     {
@@ -350320,13 +350719,31 @@
     {
       "from_id": "STP-002-004",
       "verb": "applies",
+      "to_id": "REQ-002-006",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-004",
+      "verb": "applies",
       "to_id": "REQ-002-009",
       "attrs": {}
     },
     {
       "from_id": "STP-002-004",
       "verb": "applies",
+      "to_id": "REQ-002-023",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-004",
+      "verb": "applies",
       "to_id": "REQ-002-024",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-004",
+      "verb": "applies",
+      "to_id": "REQ-002-042",
       "attrs": {}
     },
     {
@@ -350345,6 +350762,12 @@
       "from_id": "STP-002-004",
       "verb": "applies",
       "to_id": "REQ-002-046",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-004",
+      "verb": "applies",
+      "to_id": "REQ-002-048",
       "attrs": {}
     },
     {
@@ -350457,6 +350880,12 @@
     },
     {
       "from_id": "STP-002-007",
+      "verb": "applies",
+      "to_id": "REQ-002-052",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-007",
       "verb": "at",
       "to_id": "STG-main-01-inquiry",
       "attrs": {}
@@ -350483,6 +350912,12 @@
       "from_id": "STP-002-008",
       "verb": "applies",
       "to_id": "REQ-002-050",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-008",
+      "verb": "applies",
+      "to_id": "REQ-002-053",
       "attrs": {}
     },
     {
@@ -350554,7 +350989,7 @@
     {
       "from_id": "STP-002-011",
       "verb": "next",
-      "to_id": "STP-002-003",
+      "to_id": "STP-002-026",
       "attrs": {}
     },
     {
@@ -350567,6 +351002,12 @@
       "from_id": "STP-002-012",
       "verb": "applies",
       "to_id": "REQ-002-043",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-012",
+      "verb": "applies",
+      "to_id": "REQ-002-049",
       "attrs": {}
     },
     {
@@ -350584,7 +351025,7 @@
     {
       "from_id": "STP-002-012",
       "verb": "next",
-      "to_id": "STP-002-014",
+      "to_id": "STP-003-021",
       "attrs": {}
     },
     {
@@ -350661,6 +351102,18 @@
     },
     {
       "from_id": "STP-002-022",
+      "verb": "applies",
+      "to_id": "REQ-002-052",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-022",
+      "verb": "applies",
+      "to_id": "REQ-002-053",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-022",
       "verb": "at",
       "to_id": "STG-main-01-inquiry",
       "attrs": {}
@@ -350685,6 +351138,12 @@
     },
     {
       "from_id": "STP-002-023",
+      "verb": "applies",
+      "to_id": "REQ-002-053",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-023",
       "verb": "at",
       "to_id": "STG-main-01-inquiry",
       "attrs": {}
@@ -350699,7 +351158,9 @@
       "from_id": "STP-002-023",
       "verb": "next",
       "to_id": "STP-003-009",
-      "attrs": {}
+      "attrs": {
+        "label": "required answer missing"
+      }
     },
     {
       "from_id": "STP-002-024",
@@ -350751,6 +351212,170 @@
     },
     {
       "from_id": "STP-002-025",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-026",
+      "verb": "applies",
+      "to_id": "REQ-002-001",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-026",
+      "verb": "applies",
+      "to_id": "REQ-002-036",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-026",
+      "verb": "applies",
+      "to_id": "REQ-002-052",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-026",
+      "verb": "at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-026",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-026",
+      "verb": "next",
+      "to_id": "STP-002-003",
+      "attrs": {
+        "label": "answers and photos pass the checks"
+      }
+    },
+    {
+      "from_id": "STP-002-026",
+      "verb": "next",
+      "to_id": "STP-002-007",
+      "attrs": {
+        "label": "only photos fail: format, count, size, quality or no photo",
+        "condition": "REQ-002-036"
+      }
+    },
+    {
+      "from_id": "STP-002-026",
+      "verb": "next",
+      "to_id": "STP-002-022",
+      "attrs": {
+        "label": "a required answer is missing, with or without photo errors",
+        "condition": "REQ-002-001"
+      }
+    },
+    {
+      "from_id": "STP-002-027",
+      "verb": "applies",
+      "to_id": "REQ-002-047",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-027",
+      "verb": "applies",
+      "to_id": "REQ-002-051",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-027",
+      "verb": "at",
+      "to_id": "STG-main-07-aftercare",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-027",
+      "verb": "at",
+      "to_id": "STG-main-08-monitoring",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-027",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-027",
+      "verb": "next",
+      "to_id": "STP-002-028",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-028",
+      "verb": "applies",
+      "to_id": "REQ-002-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-028",
+      "verb": "applies",
+      "to_id": "REQ-002-006",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-028",
+      "verb": "applies",
+      "to_id": "REQ-002-026",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-028",
+      "verb": "applies",
+      "to_id": "REQ-002-042",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-028",
+      "verb": "applies",
+      "to_id": "REQ-002-047",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-028",
+      "verb": "applies",
+      "to_id": "REQ-002-048",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-028",
+      "verb": "at",
+      "to_id": "STG-main-07-aftercare",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-028",
+      "verb": "at",
+      "to_id": "STG-main-08-monitoring",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-028",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-029",
+      "verb": "applies",
+      "to_id": "REQ-002-051",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-029",
+      "verb": "at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-029",
       "verb": "done by",
       "to_id": "ACT-system",
       "attrs": {}
@@ -351665,6 +352290,12 @@
       "from_id": "STP-003-024",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-003-024",
+      "verb": "next",
+      "to_id": "STP-002-014",
       "attrs": {}
     },
     {
@@ -429765,6 +430396,90 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-062749-ec4af672",
+      "at": "2026-11-24T06:27:49.107630+00:00",
+      "changed_by": "controller",
+      "reason": "FR-002 logic review pass 2: after distribution (STP-003-024) the provider consumes the processed result (STP-002-014); this edge restores the path removed when the read step was placed before distribution",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "STP-003-024"
+      ],
+      "edges_added": 1,
+      "edges_removed": 0,
+      "rows": 1
+    },
+    {
+      "id": "cs-20261124-062613-cab1dfc4",
+      "at": "2026-11-24T06:26:13.357202+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-002 logic review pass 2: audit scope stated (submit attempts and media-only calls; derive-only and read write no entry); alertTier added and the risk tag code and label sourced from the question, severity flags replace risk-tag rules; version checked first and validation runs on every path including a prior version, any version once designated Active accepted; processingId for every attempt, one error item shape, set id in the audit entry; idempotency key is the draft id with a changed retry superseding and archiving the earlier set; staging rule with scheduled removal; provider copy made at promotion with providerCopyUri; provider link lives 15 minutes with access-end rules (owner default 76); landing per error code; a stored scan may be reused in a submit; media-only call and staging clean-up given steps and stages; read, build views, distribute, consume order repaired on the FR-002 side.",
+      "source_id": null,
+      "nodes_added": [
+        "ENT-intake-audit-entry.template_set_id",
+        "ENT-intake-processing-result.alert_tier",
+        "ENT-intake-processing-result.superseded_by",
+        "ENT-media-artifact.provider_copy_uri",
+        "FLW-002-media-only",
+        "FLW-002-staging-cleanup",
+        "REQ-002-051",
+        "REQ-002-052",
+        "REQ-002-053",
+        "STP-002-026",
+        "STP-002-027",
+        "STP-002-028",
+        "STP-002-029"
+      ],
+      "nodes_updated": [
+        "ENT-intake-audit-entry.processing_id",
+        "ENT-intake-audit-entry.template_version_used",
+        "ENT-intake-processing-request.head_scan_photo_set",
+        "ENT-intake-processing-request.idempotency_key",
+        "ENT-intake-processing-request.responses",
+        "ENT-intake-processing-request.template_set_id",
+        "ENT-intake-processing-request.template_version",
+        "ENT-intake-processing-result.alerts",
+        "ENT-intake-processing-result.audit_id",
+        "ENT-intake-processing-result.normalized_payload",
+        "ENT-intake-processing-result.processing_id",
+        "ENT-intake-processing-result.template_set_id",
+        "ENT-intake-processing-result.template_version_used",
+        "ENT-media-artifact.stored_uri",
+        "ENT-risk-tag.code",
+        "ENT-risk-tag.derived_from",
+        "ENT-risk-tag.label",
+        "REQ-002-002",
+        "REQ-002-004",
+        "REQ-002-010",
+        "REQ-002-017",
+        "REQ-002-019",
+        "REQ-002-026",
+        "REQ-002-036",
+        "REQ-002-037",
+        "REQ-002-038",
+        "REQ-002-043",
+        "REQ-002-044",
+        "REQ-002-045",
+        "REQ-002-046",
+        "REQ-002-047",
+        "REQ-002-048",
+        "REQ-002-049",
+        "STP-002-001",
+        "STP-002-004",
+        "STP-002-005",
+        "STP-002-007",
+        "STP-002-008",
+        "STP-002-011",
+        "STP-002-012",
+        "STP-002-014",
+        "STP-002-022",
+        "STP-002-023"
+      ],
+      "edges_added": 69,
+      "edges_removed": 7,
+      "rows": 217
+    },
     {
       "id": "cs-20261124-060331-ad58c287",
       "at": "2026-11-24T06:03:31.407905+00:00",
