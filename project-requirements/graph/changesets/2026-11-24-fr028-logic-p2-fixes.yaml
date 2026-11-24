@@ -1,0 +1,922 @@
+# Operations ordered so new nodes and fields come first, then edge removals, then updates, retirements and enum values, then new edges. Neighbour needs (FR-001, FR-003, FR-026, FR-029, FR-031) are queued in the ledger, not in this file.
+reason: 'FR-028 logic review pass 2 (final pass): Inactive switch obeys the Stripe block; a price chain step that cannot show a price passes to the next step; price rows may not overlap and the fallback tie-break is stated; deactivated countries keep applying in groupings and starting prices and can still be saved; Screen 2 banners shown when the tab opens; read-only Change history panels on Screens 1 and 2; Screen 3 simulates saved configuration only; destination default currency and system-wide default price get a stored home (new ENT-pricing-default) and audit entity types; every active country is a destination; deactivated-country warning replaces the provider-location warning; patient currency is the profile preference, else the FR-029 system default; admin-side rules move to the configuration stage. Owner defaults 153, 154, 155, 156.'
+by: docs-manager
+operations:
+- op: add_node
+  id: ENT-pricing-default
+  type: Entity
+  owner_fr: FR-028
+  title: Pricing default
+  attrs:
+    description: The default currency of one destination location (stored once per destination, not on each price row) and the one system-wide default starting price (one amount and its currency). Set on the pricing screen (Screen 2).
+- op: add_field
+  id: ENT-pricing-default.default_id
+  entity_id: ENT-pricing-default
+  name: default_id
+  data_type: id
+  title: Pricing default id
+  owner_fr: FR-028
+  required: true
+  attrs:
+    description: Identifier of the pricing default record.
+- op: add_field
+  id: ENT-pricing-default.default_type
+  entity_id: ENT-pricing-default
+  name: default_type
+  data_type: enum
+  title: Pricing default type
+  owner_fr: FR-028
+  required: true
+  attrs:
+    description: 'Which default the record holds: the default currency of one destination or the system-wide default starting price.'
+- op: add_field
+  id: ENT-pricing-default.location_id
+  entity_id: ENT-pricing-default
+  name: location_id
+  data_type: text
+  title: Destination
+  owner_fr: FR-028
+  required: false
+  attrs:
+    description: The destination country (FR-026 country key) for a destination default currency; empty on the system-wide default record.
+- op: add_field
+  id: ENT-pricing-default.currency_code
+  entity_id: ENT-pricing-default
+  name: currency_code
+  data_type: text
+  title: Currency
+  owner_fr: FR-028
+  required: true
+  attrs:
+    description: The default currency of the destination, or the currency of the system-wide default amount.
+- op: add_field
+  id: ENT-pricing-default.amount
+  entity_id: ENT-pricing-default
+  name: amount
+  data_type: decimal
+  title: System-wide default starting price
+  owner_fr: FR-028
+  required: false
+  attrs:
+    description: The system-wide default starting price amount; empty on a destination default currency record.
+- op: add_node
+  id: STP-028-013
+  type: Step
+  owner_fr: FR-028
+  title: Admin opens the Change history panel of the grouping screen
+  attrs:
+    prd_ref: 'Main Flow: Admin Configures Regional Location Presentation step 13'
+- op: add_node
+  id: STP-028-214
+  type: Step
+  owner_fr: FR-028
+  title: Admin opens the Change history panel of the pricing screen
+  attrs:
+    prd_ref: 'Main Flow: Admin Configures Starting Prices Per Location step 14'
+- op: remove_edge
+  from: REQ-028-014
+  verb: applies to
+  to: SCR-031-05
+- op: remove_edge
+  from: STP-028-424
+  verb: next
+  to: STP-028-428
+- op: remove_edge
+  from: REQ-028-089
+  verb: applies to
+  to: ENT-location-starting-price.location_default_currency
+- op: remove_edge
+  from: SCR-028-02
+  verb: shows
+  to: ENT-location-starting-price.location_default_currency
+- op: remove_edge
+  from: REQ-028-001
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-002
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-005
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-006
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-008
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-009
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-010
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-013
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-014
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-015
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-017
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-018
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-020
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-021
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-022
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-023
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-024
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-025
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-026
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-027
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-028
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-029
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-030
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-031
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-032
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-045
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-046
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-050
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-051
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-052
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-053
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-054
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-055
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-056
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-057
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-058
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-059
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-060
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-061
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-062
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-063
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-064
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-067
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-069
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-070
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-071
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-072
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-073
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-074
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-075
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-076
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-077
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-078
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-080
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-081
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-082
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-083
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-086
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-089
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-090
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-091
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: remove_edge
+  from: REQ-028-092
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: update_node
+  id: REQ-028-008
+  attrs:
+    statement: System MUST let admins preview configuration before saving (the Screen 1 preview pane for a grouping and the formatted amount on Screen 2 for a price); the Location Display Preview tab simulates saved configuration only
+    rationale: 'Screen 1 preview pane (Main Flow step 5), Screen 2 formatted amount (Main Flow: Starting Prices step 6) and Screen 3, which shows saved configuration only. User Story 5.'
+- op: update_node
+  id: REQ-028-081
+  title: 'Preview aids: side-by-side comparison, tooltips, cache status'
+  attrs:
+    statement: The preview screen lets the admin compare two patient locations side by side, shows a tooltip explaining why a location is in its position (the regional grouping rule), and shows a cache status indicator with the time patient-facing data was last refreshed.
+    rationale: Screen 3 notes.
+- op: update_node
+  id: REQ-028-029
+  attrs:
+    statement: 'Inactive and archived regional groupings are one state: retained in the system but not applied to patient location presentation, and their countries are released to other groupings. Switching a grouping back to Active re-runs the country check and the unique name check and is blocked with the error of REQ-028-021 while a country of the grouping sits in another active grouping, or while another active grouping has the same name (REQ-028-025).'
+- op: update_node
+  id: REQ-028-030
+  attrs:
+    statement: At the 51st active regional grouping System warns the admin, who may continue; inactive and archived groupings do not count; the number 50 is fixed in the code.
+- op: update_node
+  id: REQ-028-033
+  attrs:
+    statement: The number of destinations shown first is set per regional grouping by the admin (default 10, allowed range 5-20; any other value is refused with "Destinations shown first must be a whole number from 5 to 20."). It only decides how many destinations show first; the rest sit behind "Show all destinations". A patient with no matching grouping gets the default 10.
+- op: update_node
+  id: REQ-028-037
+  attrs:
+    statement: System displays each destination to the patient with the location name and flag, the starting price in the patient's currency ("Starting from £2,500"), a brief location description and the number of providers available in the location (0 when the country has no provider).
+- op: update_node
+  id: REQ-028-038
+  title: Patient currency from the profile, else the FR-029 system default currency
+  attrs:
+    statement: System identifies the patient's currency from the patient profile preference, else from the FR-029 system default currency; it is one currency for the whole destination list, and the location default currency is used only as step 4 of the lookup chain (REQ-028-040).
+- op: update_node
+  id: REQ-028-040
+  attrs:
+    statement: 'System follows one lookup chain for the starting price of a displayed location, always shown in the patient''s currency: (1) the price for the location in the patient''s currency; (2) else the fallback price for the patient''s country, where a fallback row already in the patient''s currency is preferred and, when none is, the row in the location''s default currency is used, else the row in the FR-029 system default currency, else the earliest created; (3) else the system-wide default starting price; (4) else the price in the location''s default currency; (5) else "Price available on request" with an error logged for admin review (REQ-028-041). A price found in another currency at steps 2 to 4 is converted with the FR-029 conversion rate with markup and marked "approx." ("Starting from approx. £2,500"). A step whose price cannot be shown (no conversion rate, or no price row in that currency) passes to the next step, so "Price available on request" shows only when step 4 also fails.'
+- op: update_node
+  id: REQ-028-041
+  attrs:
+    statement: When no step of the chain of REQ-028-040 can show a price (including the price in the location's default currency), System displays the location without a starting price, shows the text "Price available on request" to the patient and logs an error for admin review; Screen 2 shows the banner "[Location] missing fallback pricing - patients seeing no price estimate."
+- op: update_node
+  id: REQ-028-046
+  attrs:
+    statement: The save confirmation of any configuration change (grouping, starting price, default currency or system-wide default) is the on-screen message only; System sends no separate notification.
+- op: update_node
+  id: REQ-028-063
+  attrs:
+    statement: System keeps no separate price history; the history of all price changes for audit and trend analysis is read from the configuration change audit log (REQ-028-014) and shown in the read-only Change history panel of Screens 1 and 2.
+- op: update_node
+  id: REQ-028-083
+  title: A country deactivated in FR-026 is flagged on the grouping edit screen; nothing is forced
+  attrs:
+    statement: When a country is deactivated in FR-026, regional groupings and price rows that reference it keep applying, and the grouping edit screen warns "[Country] is deactivated. Remove from ordering?"; nothing is forced, and an existing grouping or row of a deactivated country can still be saved (REQ-028-092).
+    rationale: Edge case on a country deactivated in FR-026. FR-026 deactivates countries and never removes them.
+- op: update_node
+  id: REQ-028-086
+  attrs:
+    statement: The destination chosen for a starting price, and each destination in a grouping's location order, MUST be a country from the FR-026 active country list when it is newly selected (an existing grouping or row of a deactivated country keeps applying, REQ-028-092), the same key as the inquiry treatment countries (ENT-inquiry.treatment_countries). Every active FR-026 country is listed to patients as a destination, with a provider count of 0 where it has no provider.
+- op: update_node
+  id: REQ-028-088
+  attrs:
+    statement: System MUST provide one system-wide default starting price, stored with its amount and currency, set by admins on the pricing screen; it is empty until an admin sets it
+- op: update_node
+  id: REQ-028-089
+  title: Default currency set per destination location, stored once per destination
+  attrs:
+    statement: System MUST let admins set a default currency for each destination location; it is stored once per destination, not on each price row
+- op: update_node
+  id: REQ-028-090
+  title: A future-dated price change is a new dated row; rows may not overlap; the lookup uses the row whose window contains today
+  attrs:
+    statement: 'A future-dated price change MUST be saved as a new row for the same destination and currency; the lookup picks the row whose window contains the current day, dates are UTC and the expiry day is included, and price history is read from the configuration change audit log. Rows for the same destination and currency (and patient country on a fallback row) MUST NOT overlap in dates: a new dated row ends the previous open row the day before its effective date, and a bulk update changes the row current today'
+- op: update_node
+  id: REQ-028-091
+  title: A grouping with an assigned Stripe account cannot be set inactive, archived or lose a country
+  attrs:
+    statement: Setting a regional grouping Inactive, archiving it, or removing a country from it, MUST be blocked while a Stripe account is assigned to the grouping (FR-029), and the screen names the account
+- op: update_node
+  id: REQ-028-092
+  title: A deactivated country keeps applying in groupings and starting prices until an admin edits them
+  attrs:
+    statement: A country deactivated in FR-026 MUST keep applying in regional groupings and starting prices (destination rows and fallback rows) until an admin edits them; the active check runs only when a country is newly selected, so an existing grouping or row of a deactivated country can still be saved, for example to set an expiry date
+- op: update_node
+  id: STP-028-152
+  title: System re-checks the country conflicts and the unique name when the status is set to Active
+- op: update_node
+  id: SET-system-wide-default-starting-price
+  attrs:
+    description: One default starting price (one amount and its currency), set by admins on the pricing screen (Screen 2) and stored as the system-wide record of ENT-pricing-default; empty until an admin sets it. Shown when no specific or fallback price applies, before any converted price is used.
+- op: update_node
+  id: EVT-regional-configuration-saved
+  attrs:
+    description: A regional grouping change (including its status), a starting price change, a destination default currency change or a system-wide default starting price change was saved; the save confirmation is the on-screen message only and no separate notification is sent.
+- op: update_node
+  id: ENT-configuration-change-audit-log
+  attrs:
+    description: One record per change to a regional grouping, starting price, destination default currency or the system-wide default starting price, kept for compliance and troubleshooting and read in the Change history panels of Screens 1 and 2 (Key Entities, Entity 3).
+- op: retire_node
+  id: ENT-location-starting-price.location_default_currency
+- op: add_enum_value
+  field_id: ENT-configuration-change-audit-log.entity_type
+  value: location_default_currency
+  label: Location default currency
+- op: add_enum_value
+  field_id: ENT-configuration-change-audit-log.entity_type
+  value: system_default_price
+  label: System-wide default starting price
+- op: add_enum_value
+  field_id: ENT-pricing-default.default_type
+  value: location_default_currency
+  label: Location default currency
+- op: add_enum_value
+  field_id: ENT-pricing-default.default_type
+  value: system_default_price
+  label: System-wide default starting price
+- op: add_edge
+  from: ENT-pricing-default
+  verb: decided by
+  to: SRC-PRD-028
+- op: add_edge
+  from: REQ-028-088
+  verb: applies to
+  to: ENT-pricing-default.amount
+- op: add_edge
+  from: REQ-028-089
+  verb: applies to
+  to: ENT-pricing-default.currency_code
+- op: add_edge
+  from: SCR-028-02
+  verb: shows
+  to: ENT-pricing-default.currency_code
+  attrs:
+    provenance: user input
+    label: Location Default Currency
+    editable: true
+- op: add_edge
+  from: SCR-028-02
+  verb: shows
+  to: ENT-pricing-default.amount
+  attrs:
+    provenance: user input
+    label: System-Wide Default Starting Price
+    editable: true
+- op: add_edge
+  from: STP-028-151
+  verb: applies
+  to: REQ-028-091
+- op: add_edge
+  from: STP-028-424
+  verb: next
+  to: STP-028-428
+  attrs:
+    label: Conversion unavailable, or no price in the location default currency
+    condition: REQ-028-041
+- op: add_edge
+  from: STP-028-423
+  verb: next
+  to: STP-028-427
+  attrs:
+    label: Fallback price cannot be shown, system-wide default set
+    condition: REQ-028-040
+- op: add_edge
+  from: STP-028-423
+  verb: next
+  to: STP-028-424
+  attrs:
+    label: Fallback price cannot be shown, no system-wide default
+    condition: REQ-028-040
+- op: add_edge
+  from: STP-028-427
+  verb: next
+  to: STP-028-424
+  attrs:
+    label: System-wide default cannot be shown (no conversion rate)
+    condition: REQ-028-040
+- op: add_edge
+  from: STP-028-317
+  verb: applies
+  to: REQ-028-090
+- op: add_edge
+  from: REQ-028-092
+  verb: applies to
+  to: ENT-location-starting-price
+- op: add_edge
+  from: STP-028-105
+  verb: applies
+  to: REQ-028-092
+- op: add_edge
+  from: STP-028-208
+  verb: applies
+  to: REQ-028-092
+- op: add_edge
+  from: STP-028-306
+  verb: applies
+  to: REQ-028-092
+- op: add_edge
+  from: STP-028-317
+  verb: applies
+  to: REQ-028-092
+- op: add_edge
+  from: STP-028-203
+  verb: applies
+  to: REQ-028-061
+- op: add_edge
+  from: STP-028-203
+  verb: applies
+  to: REQ-028-041
+- op: add_edge
+  from: REQ-028-014
+  verb: applies to
+  to: SCR-028-01
+- op: add_edge
+  from: REQ-028-014
+  verb: applies to
+  to: SCR-028-02
+- op: add_edge
+  from: REQ-028-063
+  verb: applies to
+  to: SCR-028-01
+- op: add_edge
+  from: REQ-028-063
+  verb: applies to
+  to: SCR-028-02
+- op: add_edge
+  from: REQ-028-067
+  verb: applies to
+  to: SCR-028-01
+- op: add_edge
+  from: REQ-028-067
+  verb: applies to
+  to: SCR-028-02
+- op: add_edge
+  from: SCR-028-01
+  verb: shows
+  to: ENT-configuration-change-audit-log.change_details
+  attrs:
+    provenance: system calculated
+    label: Change History
+    editable: false
+- op: add_edge
+  from: SCR-028-02
+  verb: shows
+  to: ENT-configuration-change-audit-log.change_details
+  attrs:
+    provenance: system calculated
+    label: Change History
+    editable: false
+- op: add_edge
+  from: STP-028-013
+  verb: at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: STP-028-013
+  verb: done by
+  to: ACT-platform-admin
+- op: add_edge
+  from: STP-028-013
+  verb: 'on'
+  to: SCR-028-01
+- op: add_edge
+  from: STP-028-013
+  verb: applies
+  to: REQ-028-063
+- op: add_edge
+  from: STP-028-013
+  verb: applies
+  to: REQ-028-067
+- op: add_edge
+  from: STP-028-012
+  verb: next
+  to: STP-028-013
+- op: add_edge
+  from: STP-028-214
+  verb: at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: STP-028-214
+  verb: done by
+  to: ACT-platform-admin
+- op: add_edge
+  from: STP-028-214
+  verb: 'on'
+  to: SCR-028-02
+- op: add_edge
+  from: STP-028-214
+  verb: applies
+  to: REQ-028-063
+- op: add_edge
+  from: STP-028-214
+  verb: applies
+  to: REQ-028-067
+- op: add_edge
+  from: STP-028-212
+  verb: next
+  to: STP-028-214
+- op: add_edge
+  from: STP-028-005
+  verb: applies
+  to: REQ-028-008
+- op: add_edge
+  from: STP-028-206
+  verb: applies
+  to: REQ-028-008
+- op: add_edge
+  from: REQ-028-008
+  verb: applies to
+  to: SCR-028-01
+- op: add_edge
+  from: REQ-028-008
+  verb: applies to
+  to: SCR-028-02
+- op: add_edge
+  from: REQ-028-038
+  verb: applies to
+  to: ENT-patient.preferred_currency
+- op: add_edge
+  from: REQ-028-001
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-002
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-005
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-006
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-008
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-009
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-010
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-013
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-014
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-015
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-017
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-018
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-020
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-021
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-022
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-023
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-024
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-025
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-026
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-027
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-028
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-029
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-030
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-031
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-032
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-045
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-046
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-050
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-051
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-052
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-053
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-054
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-055
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-056
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-057
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-058
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-059
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-060
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-061
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-062
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-063
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-064
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-067
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-069
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-070
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-071
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-072
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-073
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-074
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-075
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-076
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-077
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-078
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-080
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-081
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-082
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-083
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-086
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-089
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-090
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-091
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-092
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-007
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-033
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-041
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-049
+  verb: applies at
+  to: STG-admin-01-configuration
+- op: add_edge
+  from: REQ-028-088
+  verb: applies at
+  to: STG-admin-01-configuration

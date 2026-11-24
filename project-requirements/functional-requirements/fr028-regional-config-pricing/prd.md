@@ -10,7 +10,7 @@
 
 ## Executive Summary
 
-The Regional Configuration & Pricing module enables Hairline administrators to control how treatment locations (countries/cities) are presented to patients and set starting price estimates for different regions and currencies. This foundational configuration system directly influences the patient's initial experience when browsing treatment destinations and helps set appropriate pricing expectations based on their location and currency.
+The Regional Configuration & Pricing module enables Hairline administrators to control how treatment locations (countries) are presented to patients and set starting price estimates for different regions and currencies. This foundational configuration system directly influences the patient's initial experience when browsing treatment destinations and helps set appropriate pricing expectations based on their location and currency.
 
 ### Purpose
 
@@ -74,7 +74,7 @@ This module provides the administrative infrastructure to:
 
 **In Scope**:
 
-- The save confirmation of a regional grouping change or a starting price change is the on-screen message only; there is no separate notification (REQ-028-046)
+- The save confirmation of any configuration change (grouping, starting price, default currency or system-wide default) is the on-screen message only; there is no separate notification (REQ-028-046)
 - Configuration changes propagate to patient-facing APIs within 1 minute (cache refresh) (REQ-028-005)
 
 **Out of Scope**:
@@ -88,7 +88,7 @@ This module provides the administrative infrastructure to:
 **Admin Entry Point**:
 
 - Admin navigates to Settings > General Settings and opens the Location Presentation by Country tab, the Location Pricing tab or the Location Display Preview tab (Hairline app settings now live under General Settings) (REQ-028-049)
-- The Location Display Preview tab is read-only and shows what a simulated patient country and currency will see (Main Flow: Admin Previews Patient Location Display)
+- The Location Display Preview tab is read-only and shows what a simulated patient country and currency will see from the saved configuration (Main Flow: Admin Previews Patient Location Display)
 - Access requires the FR-031 permission "Manage App Data", which guards both regional groupings and starting prices (REQ-028-013)
 - Configuration changes take effect immediately upon save (within 1-minute cache propagation)
 
@@ -113,13 +113,13 @@ This module provides the administrative infrastructure to:
 
 1. Admin navigates to Settings > General Settings > Location Presentation by Country tab
 2. Admin clicks "Add New Regional Grouping"
-   - At the 51st grouping the system warns that the limit of 50 is reached; the admin may continue (REQ-028-030)
+   - At the 51st active grouping the system warns that the limit of 50 is reached; the admin may continue; inactive and archived groupings do not count (REQ-028-030)
 3. Admin enters grouping name (e.g., "Eastern Europe", "Middle East", "UK Only")
 4. Admin selects countries that belong to this grouping from multi-select country list
    - System validates at least one country is selected
    - System blocks selection of countries that already exist in other active groupings and displays error: "Each country can only belong to one regional grouping. Remove it from the other grouping first." An inactive (archived) grouping does not hold its countries
 5. Admin defines location presentation order for this grouping:
-   - Drags and drops destination countries (countries from the FR-026 active country list) into preferred order
+   - Drags and drops destination countries (countries from the FR-026 active country list; a country deactivated later stays in the order until an admin edits it, REQ-028-092) into preferred order
    - First position = shown first to patients, second position = shown second, etc.
    - Optionally sets how many destinations patients from this region see first (5 to 20, default 10); the rest sit behind "Show all destinations" (REQ-028-033)
    - System displays preview of how patients from this region will see destinations
@@ -130,6 +130,7 @@ This module provides the administrative infrastructure to:
 10. System clears location presentation cache
 11. System displays success confirmation: "Regional grouping saved. Changes will be live for patients within 1 minute."
 12. System logs configuration change in audit trail (REQ-028-014)
+13. Admin can open the read-only "Change history" panel on this screen, which lists past grouping changes from the configuration change audit log with admin, time, change reason and old and new values (REQ-028-063, REQ-028-067)
 
 ### Alternative Flows
 
@@ -164,7 +165,7 @@ This module provides the administrative infrastructure to:
 - **Trigger**: Admin wants to switch a grouping off without deleting it, or bring an inactive or archived grouping back
 - **Steps**:
   1. Admin selects the grouping and switches its status to Inactive or back to Active
-  2. When switching to Active, the system re-runs the one-country-one-grouping check; the switch is blocked with the error of REQ-028-021 while a country of the grouping sits in another active grouping
+  2. When switching to Inactive, the system blocks the switch while a Stripe account is assigned to the grouping (FR-029); the screen names the account (REQ-028-091). When switching to Active, the system re-runs the one-country-one-grouping check and the unique grouping name check; the switch is blocked with the error of REQ-028-021 while a country of the grouping sits in another active grouping, and while another active grouping has the same name (REQ-028-025)
   3. Admin enters change reason (required)
   4. System saves the status, clears cache and logs the change in the audit trail
 - **Outcome**: An inactive grouping is not applied to patients and releases its countries; an active grouping is applied again (REQ-028-029)
@@ -212,12 +213,14 @@ This module provides the administrative infrastructure to:
 3. System displays current pricing configuration for selected location:
    - List of currencies with configured starting prices
    - Currencies without configured prices marked as "Not Set"
+   - System shows the expiry banner and the missing-price banner for this tab (REQ-028-061, REQ-028-041)
 4. Admin clicks "Add Currency" or "Edit" for existing currency
 5. Admin selects currency from dropdown (GBP, EUR, USD, TRY, etc.)
 6. Admin enters starting price amount for selected destination-currency combination
    - System validates amount is positive number
    - System displays format guidance: "Enter base starting price (e.g., 2500 for £2,500)"
-7. Admin optionally sets the price effective date and expiry date (dates are UTC and the expiry day is included). A future-dated change is saved as a new row for the same destination and currency (REQ-028-090)
+   - System shows the entered amount formatted for its currency (for example £2,500) before the admin saves (REQ-028-008)
+7. Admin optionally sets the price effective date and expiry date (dates are UTC and the expiry day is included). A future-dated change is saved as a new row for the same destination and currency; rows for the same destination and currency may not overlap in dates, so the new row ends the previous open row the day before its effective date (REQ-028-090)
 8. Admin enters change reason (required)
 9. Admin saves currency-price configuration
    - If another admin saved the same price since this admin opened it, the system warns "This price was modified by [Admin Name] at [Time]. Your changes will overwrite theirs. Continue?" (REQ-028-082)
@@ -230,6 +233,7 @@ This module provides the administrative infrastructure to:
 11. System saves pricing configuration to database and clears the location presentation cache (REQ-028-005)
 12. System displays success confirmation: "Starting price for [Location] in [Currency] set to [Amount]."
 13. System logs pricing change in audit trail (REQ-028-014)
+14. Admin can open the read-only "Change history" panel on this screen, which lists past price, default currency and system-wide default changes from the configuration change audit log with admin, time, change reason and old and new values (REQ-028-063, REQ-028-067)
 
 **Alternative Flows**:
 
@@ -257,7 +261,7 @@ This module provides the administrative infrastructure to:
   4. Admin enters adjustment value
   5. System displays preview of new prices for all currencies
   6. Admin enters change reason (required) and confirms or adjusts
-  7. System checks every new price against the amount, decimals and currency rules (REQ-028-053, REQ-028-054, REQ-028-055); a bulk apply that would break them is blocked. Otherwise the system saves all currency price updates simultaneously, clears cache and logs the change in the audit trail. If another admin saved one of the prices since the preview, the system gives the stale-edit warning (REQ-028-082)
+  7. System checks every new price against the amount, decimals and currency rules (REQ-028-053, REQ-028-054, REQ-028-055); a bulk apply that would break them is blocked. Otherwise the system saves all currency price updates simultaneously, changing the row current today for each currency (REQ-028-090), clears cache and logs the change in the audit trail. If another admin saved one of the prices since the preview, the system gives the stale-edit warning (REQ-028-082)
   8. System confirms: "[X] currency prices updated for [Location]."
 - **Outcome**: All currency prices for destination updated proportionally
 
@@ -266,7 +270,7 @@ This module provides the administrative infrastructure to:
 - **Trigger**: Admin wants the destination's default currency to be used when a patient's currency has no price
 - **Steps**:
   1. Admin selects the destination on the Location Pricing tab and opens its default currency setting
-  2. Admin selects the location default currency from the FR-029 supported currency list; it is the same on every price row of that location (REQ-028-089)
+  2. Admin selects the location default currency from the FR-029 supported currency list; it is stored once for the destination, not on each price row (REQ-028-089)
   3. Admin enters change reason (required)
   4. System saves the default currency, clears cache, logs the change in the audit trail and shows an on-screen success message
 - **Outcome**: The location default currency is set once per location
@@ -330,13 +334,13 @@ This module provides the administrative infrastructure to:
    - Additional locations not in config appear at end ordered by proximity to the patient's country (REQ-028-036)
 7. System applies the display cap: the first N destinations are shown first and the rest sit behind "Show all destinations", where N is the grouping's number of destinations shown (default 10 when the patient has no grouping) (REQ-028-033)
 8. For each displayed location, system fetches starting price:
-   - System identifies patient's currency: the profile preference, else the location default currency, else the FR-029 system default currency (REQ-028-038)
+   - System identifies patient's currency: the profile preference, else the FR-029 system default currency; one currency for the whole list (REQ-028-038)
    - System follows the price lookup chain of REQ-028-040; the price is always shown in the patient's currency and a converted price is marked "approx."
 9. System displays destination list to patient with:
    - Location name and flag
    - Starting price in patient's currency: "Starting from £2,500"
    - Brief location description
-   - Provider count available in location
+   - Provider count available in location (0 when the country has no provider; every active FR-026 country is listed, REQ-028-086)
 10. Patient selects preferred destination(s) to proceed with quote request
 
 **Alternative Flows**:
@@ -347,7 +351,7 @@ This module provides the administrative infrastructure to:
 - **Steps**:
   1. System detects no matching regional grouping
   2. System falls back to proximity-based location ordering from a fixed country-to-country distance table kept in the product code (REQ-028-035)
-  3. System displays all available destinations in default order, the first 10 first and the rest behind "Show all destinations" (REQ-028-033)
+  3. System displays all destinations (every active FR-026 country) in default order, the first 10 first and the rest behind "Show all destinations" (REQ-028-033)
   4. Starting prices displayed by the price lookup chain of REQ-028-040
 - **Outcome**: Patient sees destinations in default order with appropriate pricing
 
@@ -356,19 +360,19 @@ This module provides the administrative infrastructure to:
 - **Trigger**: Patient views location that doesn't have pricing configured for their currency
 - **Steps**:
   1. System detects missing currency-specific pricing
-  2. System checks for fallback pricing for the patient's country; a fallback row already in the patient's currency is preferred
+  2. System checks for fallback pricing for the patient's country; a fallback row already in the patient's currency is preferred; when none is, the row in the location's default currency is used, else the row in the FR-029 system default currency, else the earliest created
   3. If fallback exists, display fallback price (converted and marked approx. when it is in another currency)
   4. If no fallback, display the system-wide default starting price (if an admin has set one; converted and marked approx. when it is in another currency)
   5. If there is no system-wide default, display the price in the location's default currency converted to the patient's currency and marked approx.: "Starting from approx. £2,500"
-  6. Conversion uses the admin-configured conversion rate with markup from FR-029
-  7. If no price can be shown (no fallback, no system-wide default and conversion unavailable), the location shows "Price available on request" and the system logs an error for admin review (REQ-028-041)
+  6. Conversion uses the admin-configured conversion rate with markup from FR-029; a step whose price cannot be shown (no conversion rate, or no price row in that currency) passes to the next step of the chain (REQ-028-040)
+  7. If the last step also fails (no price in the location's default currency, or no conversion rate), no price can be shown and the location shows "Price available on request" and the system logs an error for admin review (REQ-028-041)
 - **Outcome**: Patient sees a price in their own currency, marked approx. when converted, or "Price available on request"
 
 ### Main Flow: Admin Previews Patient Location Display
 
 **Actors**: Admin (with the "Manage App Data" permission, per FR-031)
 **Trigger**: Admin wants to check what patients from a given country and currency will see
-**Outcome**: Admin sees the grouping, destination order and prices applied for the simulated patient, without changing anything
+**Outcome**: Admin sees the grouping, destination order and prices applied for the simulated patient from the saved configuration, without changing anything
 
 **Steps**:
 
@@ -376,7 +380,7 @@ This module provides the administrative infrastructure to:
 2. Admin selects the simulated patient country and currency; the currency defaults to the FR-029 system default currency (REQ-028-075)
 3. System shows the matched regional grouping, the destination order, the starting prices with fallback indicators and the provider counts for the simulated patient (REQ-028-070, REQ-028-071, REQ-028-073)
 4. Admin changes the country or currency, or refreshes, and the preview updates (REQ-028-069, REQ-028-074)
-- **Outcome**: The preview never changes configuration
+- **Outcome**: The preview never changes configuration and shows saved configuration only; unsaved changes are previewed in the Screen 1 preview pane and the Screen 2 formatted amount (REQ-028-008)
 
 ---
 
@@ -394,12 +398,13 @@ This module provides the administrative infrastructure to:
 | Description | Text | No | Internal description of grouping purpose | Max 500 chars | ENT-regional-grouping.description |
 | Countries | Multi-select | Yes | List of countries that belong to this grouping | At least 1 country must be selected (REQ-028-022) | ENT-regional-grouping.country_list |
 | Location Order | Drag-and-drop list | Yes | Ordered list of destination countries from the FR-026 active country list | At least 1 location must be ordered (REQ-028-023) | ENT-regional-grouping.location_order |
-| Locations Displayed | Number | No | How many destinations patients from this grouping see first; the rest sit behind "Show all destinations" | Whole number from 5 to 20; default 10 (REQ-028-033) | ENT-regional-grouping.locations_displayed |
-| Status | Toggle | Yes | Active/Inactive status | Active = applies to patients, Inactive = archived (one state) and releases its countries; switching back to Active re-runs the country check (REQ-028-029) | ENT-regional-grouping.status |
+| Locations Displayed | Number | No | How many destinations patients from this grouping see first; the rest sit behind "Show all destinations" | Whole number from 5 to 20; default 10; otherwise the error "Destinations shown first must be a whole number from 5 to 20." (REQ-028-033) | ENT-regional-grouping.locations_displayed |
+| Status | Toggle | Yes | Active/Inactive status | Active = applies to patients, Inactive = archived (one state) and releases its countries, and is blocked while a Stripe account is assigned (REQ-028-091); switching back to Active re-runs the country and name checks (REQ-028-029) | ENT-regional-grouping.status |
 | Change Reason | Text | Yes | Reason for grouping change (create/update/archive) | 10-500 chars | ENT-configuration-change-audit-log.change_reason |
 | Created Date | Date (read-only) | - | When grouping was created | Auto-generated | ENT-regional-grouping.created_at |
 | Last Modified | Date (read-only) | - | When grouping was last updated | Auto-updated on save | ENT-regional-grouping.updated_at |
 | Modified By | Text (read-only) | - | Admin user who last modified | Auto-populated | ENT-regional-grouping.updated_by_admin_id |
+| Change History | Display (read-only) | - | Panel listing past grouping changes from the configuration change audit log: admin, time, change reason and old and new values (REQ-028-063) | - | ENT-configuration-change-audit-log.change_details |
 
 **Business Rules**:
 
@@ -413,7 +418,7 @@ This module provides the administrative infrastructure to:
 **Notes**:
 
 - Provide drag-and-drop interface for location ordering (intuitive reordering) (REQ-028-076)
-- Display preview pane showing how patients from selected countries will see location list (REQ-028-076)
+- Display preview pane showing how patients from selected countries will see location list as the admin edits, before saving (REQ-028-076, REQ-028-008)
 - Show country flags next to country names for visual clarity (REQ-028-076)
 - Disable selection state or visually indicate countries already assigned to another grouping (e.g., greyed out with tooltip "Already assigned to [Grouping Name]") (REQ-028-076)
 - Provide bulk actions: duplicate grouping, export configuration, import from template (REQ-028-077)
@@ -428,8 +433,8 @@ This module provides the administrative infrastructure to:
 
 | Field Name | Type | Required | Description | Validation Rules | Graph field |
 |------------|------|----------|-------------|------------------|-------------|
-| Destination Location | Select | Yes | Treatment destination: a country from the FR-026 active country list, the same key as treatment countries in an inquiry | Must be an active country in FR-026 (REQ-028-086) | ENT-location-starting-price.location_id |
-| Location Default Currency | Select | No | Default currency for the selected destination; used when a patient's currency has no price and a converted price is shown | Must be supported currency; the same on every price row of the destination (REQ-028-089) | ENT-location-starting-price.location_default_currency |
+| Destination Location | Select | Yes | Treatment destination: a country from the FR-026 active country list, the same key as treatment countries in an inquiry | Must be an active country in FR-026 when newly selected; an existing row of a deactivated country can still be saved (REQ-028-086, REQ-028-092) | ENT-location-starting-price.location_id |
+| Location Default Currency | Select | No | Default currency for the selected destination; used when a patient's currency has no price and a converted price is shown | Must be supported currency; stored once per destination, not on each price row (REQ-028-089) | ENT-pricing-default.currency_code |
 | Currency | Select | Yes | Currency for pricing (GBP, EUR, USD, etc.) | Must be supported currency | ENT-location-starting-price.currency_code |
 | Starting Price | Number | Yes | Base starting price estimate | Positive number, decimals per the currency's minor units in the FR-029 currency catalogue (REQ-028-055) | ENT-location-starting-price.starting_price_amount |
 | Price Effective Date | Date | No | When this pricing becomes active | Future date optional, defaults to immediate; UTC (REQ-028-090) | ENT-location-starting-price.effective_date |
@@ -437,10 +442,11 @@ This module provides the administrative infrastructure to:
 | Bulk Update Pricing | Button/Action | No | Opens bulk update modal (percentage or fixed adjustment across all currencies for selected destination) | Visible on the pricing screen; enabled only when a destination is selected or at least one pricing row is checked; requires change reason inside modal before apply (REQ-028-059) | no graph field (control) |
 | Fallback Price | Checkbox | No | Use as fallback for unconfigured patient locations (REQ-028-056) | - | ENT-location-starting-price.is_fallback_price |
 | Fallback Patient Country | Select | Yes when Fallback Price is checked | Patient country this fallback price is shown to | Must be a valid country in system | ENT-location-starting-price.country_code |
-| System-Wide Default Starting Price | Number and currency | No | One default starting price (one amount and its currency) shown when no specific or fallback price applies; before any converted price is used | Positive number, decimals per the FR-029 currency catalogue; empty until an admin sets it; change reason required to save | no graph field (setting SET-system-wide-default-starting-price) |
+| System-Wide Default Starting Price | Number and currency | No | One default starting price (one amount and its currency) shown when no specific or fallback price applies; before any converted price is used | Positive number, decimals per the FR-029 currency catalogue; empty until an admin sets it; change reason required to save; stored with its amount and currency (REQ-028-088) | ENT-pricing-default.amount |
 | Last Updated | Date (read-only) | - | When price was last changed | Auto-updated | ENT-location-starting-price.updated_at |
 | Updated By | Text (read-only) | - | Admin who updated price | Auto-populated | ENT-location-starting-price.updated_by_admin_id |
 | Change Reason | Text | Yes | Reason for price change (for audit) | 10-500 chars | ENT-location-starting-price.change_reason |
+| Change History | Display (read-only) | - | Panel listing past price, default currency and system-wide default changes from the configuration change audit log: admin, time, change reason and old and new values (REQ-028-063) | - | ENT-configuration-change-audit-log.change_details |
 
 **Business Rules**:
 
@@ -449,10 +455,10 @@ This module provides the administrative infrastructure to:
 - **Positive Values Only**: Starting prices must be positive numbers greater than 0 (REQ-028-054)
 - **Fallback Priority**: The price lookup chain is stated once in REQ-028-040
 - **Price Expiry**: After a starting price's expiry date passes, patients no longer see it and the next step of the lookup chain applies. A price with no expiry date stays active until an admin changes it (REQ-028-087)
-- **Price History**: Price history is read from the configuration change audit log (REQ-028-063)
+- **Price History**: Price history is read from the configuration change audit log and shown in the read-only Change history panel of this screen (REQ-028-063)
 - **Bulk Update**: Admins can apply percentage or fixed adjustments to multiple currency prices simultaneously through the bulk update modal (no CSV import or export) (REQ-028-057)
-- **Preview Mode**: Admins can preview how prices appear to patients before saving (REQ-028-008)
-- **Effective Dating**: A future-dated change is a new row for the same destination and currency; the lookup uses the row whose window contains the current day (REQ-028-060, REQ-028-090)
+- **Preview Before Saving**: The entered amount shows formatted for its currency before the admin saves; how patients see saved prices is simulated on Screen 3 (REQ-028-008)
+- **Effective Dating**: A future-dated change is a new row for the same destination and currency; rows for the same destination and currency (and patient country on a fallback row) may not overlap in dates; the lookup uses the row whose window contains the current day (REQ-028-060, REQ-028-090)
 - **Expiry Warning**: A banner on this screen warns the admin 7 days before a price expiry date (REQ-028-061)
 - **Missing Price Warning**: A banner on this screen names destinations whose patients see no price estimate (REQ-028-041)
 - **Stale Edit**: If another admin saved the same price since this admin opened it, or since the bulk update preview, the system warns before the save (REQ-028-082)
@@ -479,7 +485,7 @@ This module provides the administrative infrastructure to:
 
 ### Screen 3: Location Display Preview (Admin)
 
-**Purpose**: Allow admins to preview how location recommendations will appear to patients from different regions
+**Purpose**: Allow admins to preview how location recommendations will appear to patients from different regions, from saved configuration
 
 **Data Fields**:
 
@@ -505,7 +511,7 @@ This module provides the administrative infrastructure to:
 
 - Display side-by-side comparison: select two patient locations to compare how location lists differ (REQ-028-081)
 - Show explanation tooltips: hover over location to see why it's in that position (regional grouping rule) (REQ-028-081)
-- Provide "Test Mode" toggle: see how changes will appear without saving them (REQ-028-081)
+- Screen 3 shows saved configuration only; unsaved changes are previewed in the Screen 1 preview pane and the Screen 2 formatted amount (REQ-028-008)
 - Display cache status indicator: shows when patient-facing data was last refreshed (REQ-028-081)
 
 ---
@@ -518,11 +524,11 @@ This module provides the administrative infrastructure to:
 - **Rule 2**: Location ordering is strictly advisory for patient presentation - it does not restrict which locations patients can select or providers can serve. (REQ-028-042)
 - **Rule 3**: Starting prices are estimates only and do not constrain provider quote pricing. Providers can quote higher or lower than starting prices. (REQ-028-043)
 - **Rule 4**: All configuration changes propagate to patient-facing APIs within 1 minute via cache invalidation (cache TTL = 60 seconds). (REQ-028-005)
-- **Rule 5**: At the 51st regional grouping the Admin gets a warning and may continue; the number 50 is fixed in code. (REQ-028-030)
-- **Rule 6**: Inactive and archived regional groupings are one state: retained in system, not applied to patient location presentation, and their countries are released to other groupings. Switching back to Active re-runs the country check. (REQ-028-029)
+- **Rule 5**: At the 51st active regional grouping the Admin gets a warning and may continue; inactive and archived groupings do not count; the number 50 is fixed in code. (REQ-028-030)
+- **Rule 6**: Inactive and archived regional groupings are one state: retained in system, not applied to patient location presentation, and their countries are released to other groupings. Switching back to Active re-runs the country and unique name checks. (REQ-028-029)
 - **Rule 7**: All create/update/archive actions require a change reason (10-500 chars) (REQ-028-024)
-- **Rule 8**: Archiving a regional grouping or removing a country from it is blocked while a Stripe account is assigned to it (FR-029); the screen names the account. (REQ-028-091)
-- **Rule 9**: A country deactivated in FR-026 keeps applying in regional groupings and fallback prices until an Admin edits them. (REQ-028-092)
+- **Rule 8**: Setting a regional grouping Inactive, archiving it or removing a country from it is blocked while a Stripe account is assigned to it (FR-029); the screen names the account. (REQ-028-091)
+- **Rule 9**: A country deactivated in FR-026 keeps applying in regional groupings and starting prices (destination rows and fallback rows) until an Admin edits them; the active check runs only when a country is newly selected, so an existing grouping or row of a deactivated country can still be saved, for example to set an expiry date. (REQ-028-092)
 - **Error handling**: If regional configuration unavailable, fall back to default location ordering and "Price available on request" (REQ-028-085)
 - **Error handling**: If country list unavailable, use cached country list (refreshed daily)
 
@@ -552,7 +558,7 @@ This module provides the administrative infrastructure to:
 
 - Cache propagation timing (1-minute TTL fixed for performance/consistency balance)
 - Country-to-country distance table used for proximity ordering (kept in the product code, REQ-028-035)
-- Maximum regional groupings limit (50 groupings; the 51st triggers a warning)
+- Maximum regional groupings limit (50 active groupings; the 51st triggers a warning)
 
 **Configurable with Restrictions**:
 
@@ -566,8 +572,6 @@ This module provides the administrative infrastructure to:
 **Carried from dropped sections (original wording)**:
 
 - **None**: This module does not integrate with external services. Currency conversion rates are provided internally by FR-029.
-- **Entity 1: Provider Locations**: Active provider locations with service coverage
-- **Source**: Provider onboarding module (PR-01) maintains list of provider locations
 - **Integration 1: Patient API to Regional Configuration Service**
 - **Authentication**: Internal service-to-service authentication (OAuth2 client credentials)
 - **Integration 2: Admin UI to Regional Configuration API**
@@ -580,10 +584,10 @@ This module provides the administrative infrastructure to:
 
 ## Dependencies
 
-- **FR-026 / Module A-09 (App Settings & Security Policies)**: Regional configuration requires FR-026's centralized country list; a destination is a country from the FR-026 active country list, the same key as the inquiry's treatment countries (FR-003). A country deactivated there keeps applying here until an Admin edits it (REQ-028-092)
+- **FR-026 / Module A-09 (App Settings & Security Policies)**: Regional configuration requires FR-026's centralized country list; a destination is a country from the FR-026 active country list, the same key as the inquiry's treatment countries (FR-003). A country deactivated there keeps applying in groupings and starting prices here until an Admin edits it (REQ-028-092)
 - **FR-001 / Module P-01 (Auth & Profile Management)**: The patient's country in the profile (required at registration) is the key that matches a regional grouping
 - **FR-003 / Module P-02 (Inquiry Submission & Distribution)**: Inquiry flow consumes regional configuration for location presentation
-- **FR-029 / Module S-02 (Payment System Configuration)**: Supplies currency conversion rates, the supported currency list with minor units, and the system default currency. FR-029 also consumes FR-028 regional groupings: a Stripe account assigned to a grouping blocks archiving the grouping or removing a country from it (REQ-028-091)
+- **FR-029 / Module S-02 (Payment System Configuration)**: Supplies currency conversion rates, the supported currency list with minor units, and the system default currency. FR-029 also consumes FR-028 regional groupings: a Stripe account assigned to a grouping blocks setting the grouping Inactive, archiving it or removing a country from it (REQ-028-091)
 - **FR-031 / Module A-09 (Admin Access Control)**: The permission "Manage App Data" guards both regional groupings and starting prices
 
 ---
@@ -604,7 +608,7 @@ This module provides the administrative infrastructure to:
 2. **Given** admin clicks "Add New Regional Grouping", **When** admin enters name "UK", selects "United Kingdom" from country list, and orders locations (Turkey 1st, Poland 2nd, UK 3rd), **Then** system displays preview showing UK patients will see Turkey first
 3. **Given** admin has configured regional grouping with valid data, **When** admin clicks "Save", **Then** system validates configuration, saves to database, clears cache, and displays confirmation "Regional grouping saved. Changes will be live within 1 minute."
 4. **Given** regional grouping has been saved for 60+ seconds, **When** UK patient reaches destination selection screen, **Then** patient sees Turkey as first location option, Poland as second, UK as third (matching configured order)
-5. **Given** admin has created regional grouping, **When** admin views audit log, **Then** log shows configuration change with admin username, timestamp, and details (countries added, location order)
+5. **Given** admin has created regional grouping, **When** admin opens the Change history panel on the same tab, **Then** the panel shows the configuration change with admin username, timestamp, and details (countries added, location order)
 
 ---
 
@@ -632,7 +636,7 @@ This module provides the administrative infrastructure to:
 
 **Why this priority**: While P2 (not as critical as core regional configuration), this ensures platform gracefully handles patients from regions admins haven't configured yet. This becomes more important as platform expands globally. Without fallback pricing, patients from unconfigured regions see no pricing or confusing currency conversions, hurting conversion rates.
 
-**Independent Test**: Configure fallback pricing for Turkey in USD for patients from Australia. Simulate Australian patient (no regional grouping, no AUD pricing configured) viewing Turkey. Verify patient sees fallback USD price with currency conversion note.
+**Independent Test**: Configure fallback pricing for Turkey in USD for patients from Australia. Simulate Australian patient (no regional grouping, no AUD pricing configured) viewing Turkey. Verify patient sees the fallback USD price converted to AUD and marked approx.
 
 **Acceptance Scenarios**:
 
@@ -661,18 +665,18 @@ This module provides the administrative infrastructure to:
 
 ### User Story 5 - Admin Previews Configuration Before Applying Changes (Priority: P3)
 
-**Description**: As a Hairline admin, I need to preview how regional grouping and pricing changes will appear to patients from different regions before saving them, so I can verify configurations are correct and avoid publishing errors to production.
+**Description**: As a Hairline admin, I need to see how regional grouping and pricing changes will appear to patients before saving them (the Screen 1 preview pane and the Screen 2 formatted amount) and how saved configuration appears to patients from different regions (Screen 3), so I can verify configurations are correct and avoid publishing errors to production.
 
-**Why this priority**: P3 because preview mode is a quality-of-life feature for admins, not essential functionality. Admins can test configurations by saving and checking patient app directly, but preview mode improves admin confidence and reduces configuration errors. More valuable as system complexity grows.
+**Why this priority**: P3 because preview is a quality-of-life feature for admins, not essential functionality. Admins can test configurations by saving and checking patient app directly, but preview improves admin confidence and reduces configuration errors. More valuable as system complexity grows.
 
-**Independent Test**: Create or edit regional grouping in preview mode (unsaved changes). Select different patient locations in preview tool. Verify preview updates in real-time to show how unsaved configuration will appear. Verify saving applies changes and refreshing preview.
+**Independent Test**: Edit a regional grouping without saving and verify the Screen 1 preview pane updates in real time. Save it, open the Location Display Preview tab, select different patient countries and verify the preview shows the saved configuration.
 
 **Acceptance Scenarios**:
 
-1. **Given** admin is editing regional grouping (unsaved changes), **When** admin toggles "Preview Mode" on, **Then** admin sees side panel with preview tool (select patient location, view resulting location order)
-2. **Given** preview mode is active, **When** admin reorders locations in configuration panel (e.g., moves Poland to 1st position), **Then** preview panel updates in real-time to show Poland now appears first for selected patient region
-3. **Given** admin views preview for UK patient, **When** admin changes preview selection to "Germany", **Then** preview refreshes to show location ordering and pricing as German patient would see (different regional grouping may apply)
-4. **Given** admin has verified configuration in preview mode, **When** admin clicks "Save and Apply", **Then** system saves configuration and preview updates to show "Live Configuration" (no longer preview mode)
+1. **Given** admin is editing a regional grouping (unsaved changes), **When** admin reorders locations (e.g., moves Poland to 1st position), **Then** the preview pane on the same screen updates in real time to show Poland first for the selected patient countries
+2. **Given** admin is entering a starting price (unsaved), **When** admin types the amount, **Then** Screen 2 shows the amount formatted for its currency before saving
+3. **Given** configuration has been saved, **When** admin opens the Location Display Preview tab and selects a UK patient, **Then** admin sees the location ordering and pricing as a UK patient would see them from the saved configuration; changing the selection to "Germany" refreshes the preview (a different regional grouping may apply)
+4. **Given** admin has just saved a change, **When** admin refreshes the Location Display Preview tab, **Then** the preview shows the saved configuration; the tab never shows unsaved changes
 
 ---
 
@@ -680,15 +684,15 @@ This module provides the administrative infrastructure to:
 
 - **What happens when admin tries to assign a country to more than one regional grouping?** System blocks the change, shows error listing conflicting groupings, and requires admin to resolve by keeping the country in only one grouping. (REQ-028-021)
 
-- **How does system handle location with no pricing configured for patient's currency?** System follows the price lookup chain of REQ-028-040: the fallback price for the patient's country, then the system-wide default starting price, then the location's default currency price; a price in another currency is converted using the admin-configured conversion rate with markup (from FR-029) and shown in the patient's currency marked approx. ("Starting from approx. £2,500"). (REQ-028-040)
+- **How does system handle location with no pricing configured for patient's currency?** System follows the price lookup chain of REQ-028-040: the fallback price for the patient's country, then the system-wide default starting price, then the location's default currency price; a step whose price cannot be shown (no conversion rate, or no price row in that currency) passes to the next step; a price in another currency is converted using the admin-configured conversion rate with markup (from FR-029) and shown in the patient's currency marked approx. ("Starting from approx. £2,500"). (REQ-028-040)
 
 - **What occurs if admin deletes a regional grouping while patients are actively viewing destinations using that grouping?** Cached data serves existing sessions for up to 60 seconds (cache TTL). After cache expiration, patients see default location ordering. No errors displayed to patients - graceful degradation. (REQ-028-027, REQ-028-084)
 
 - **How to manage concurrent admin edits to the same regional grouping, price row or bulk apply?** If another admin saved the same data since this admin opened it (or since the bulk update preview), the second save gets the warning "This [grouping or price] was modified by [Admin Name] at [Time]. Your changes will overwrite theirs. Continue?" and goes through only when the admin confirms. (REQ-028-082)
 
-- **What happens when provider location is added or removed while regional groupings reference it?** System maintains location references even if provider deactivated (preserves configuration). If provider reactivates, location ordering still applies. If location permanently removed from system, admin sees warning in regional grouping edit screen: "[Location] is no longer active. Remove from ordering?" (REQ-028-083)
+- **What happens when a country is deactivated in FR-026 while a regional grouping or price row references it?** The grouping and price rows keep applying until an admin edits them, and nothing is forced. The grouping edit screen warns "[Country] is deactivated. Remove from ordering?". An existing grouping or row of a deactivated country can still be saved, for example to set an expiry date; only a newly selected country must be active. (REQ-028-083, REQ-028-092)
 
-- **How does system handle fallback pricing when no fallback or system-wide default is configured and currency conversion unavailable?** System displays location without starting price, shows generic text "Price available on request" to patient, and logs error for admin review. Screen 2 shows a banner: "[Location] missing fallback pricing - patients seeing no price estimate." (REQ-028-041)
+- **What happens when no step of the price lookup chain can show a price?** System displays location without starting price, shows generic text "Price available on request" to patient, and logs error for admin review. Screen 2 shows a banner: "[Location] missing fallback pricing - patients seeing no price estimate." (REQ-028-041)
 
 - **What occurs if admin sets effective date for pricing but forgets to set expiry date?** Pricing remains active indefinitely until admin manually updates or sets expiry. System displays info note in pricing table: "No expiry set - pricing active indefinitely." No automatic expiration enforced. (When an expiry date is set and has passed, the price stops showing and the next step of the lookup chain shows instead.) (REQ-028-062)
 
@@ -705,13 +709,13 @@ This module provides the administrative infrastructure to:
 - **REQ-028-005**: System MUST propagate configuration changes to patient-facing APIs within 1 minute via cache invalidation
 - **REQ-028-006**: System MUST prevent overlapping regional groupings by enforcing one-to-one mapping between country and active regional grouping at configuration time
 - **REQ-028-007**: System MUST support fallback pricing for locations when patient's specific currency is not configured; the fallback price is chosen by the patient's country
-- **REQ-028-008**: System MUST allow admins to preview how configurations will appear to patients from different regions before saving
+- **REQ-028-008**: System MUST let admins preview configuration before saving (the Screen 1 preview pane for a grouping and the formatted amount on Screen 2 for a price); the Location Display Preview tab simulates saved configuration only
 - **REQ-028-087**: After a starting price's expiry date has passed, patients MUST no longer see that price; the next step of the lookup chain (REQ-028-040) applies. Prices with no expiry date stay active until an admin changes them
-- **REQ-028-088**: System MUST provide one system-wide default starting price (one amount and its currency), set by admins on the pricing screen; it is empty until an admin sets it
-- **REQ-028-089**: System MUST let admins set a default currency for each destination location; it is the same on every price row of that location
-- **REQ-028-090**: A future-dated price change MUST be saved as a new row for the same destination and currency; the lookup picks the row whose window contains the current day, dates are UTC and the expiry day is included, and price history is read from the configuration change audit log
-- **REQ-028-091**: Archiving a regional grouping, or removing a country from it, MUST be blocked while a Stripe account is assigned to the grouping (FR-029), and the screen names the account
-- **REQ-028-092**: A country deactivated in FR-026 MUST keep applying in regional groupings and fallback prices until an admin edits them
+- **REQ-028-088**: System MUST provide one system-wide default starting price, stored with its amount and currency, set by admins on the pricing screen; it is empty until an admin sets it
+- **REQ-028-089**: System MUST let admins set a default currency for each destination location; it is stored once per destination, not on each price row
+- **REQ-028-090**: A future-dated price change MUST be saved as a new row for the same destination and currency; the lookup picks the row whose window contains the current day, dates are UTC and the expiry day is included, and price history is read from the configuration change audit log. Rows for the same destination and currency (and patient country on a fallback row) MUST NOT overlap in dates: a new dated row ends the previous open row the day before its effective date, and a bulk update changes the row current today
+- **REQ-028-091**: Setting a regional grouping Inactive, archiving it, or removing a country from it, MUST be blocked while a Stripe account is assigned to the grouping (FR-029), and the screen names the account
+- **REQ-028-092**: A country deactivated in FR-026 MUST keep applying in regional groupings and starting prices (destination rows and fallback rows) until an admin edits them; the active check runs only when a country is newly selected, so an existing grouping or row of a deactivated country can still be saved, for example to set an expiry date
 
 ### Data Requirements
 
@@ -741,6 +745,7 @@ This module provides the administrative infrastructure to:
 | 2026-11-22 | 1.5 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.4) and the change requests (the PRD names none) are in `archived/prd-baseline-2026-11-08/` and in git history. | Product Team |
 | 2026-11-23 | 1.6 | Independent compression review: 10 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Team |
 | 2026-11-24 | 1.61 | Logic review corrections: one price lookup chain in the patient's currency with approx. marking and a "Price available on request" end; destination cap becomes a display cap with "Show all destinations"; number of destinations shown first is a grouping field; Manage App Data permission; inactive and archived groupings are one state that releases countries; 51st-grouping warning; destinations are FR-026 active countries; profile country is the matching key (no IP geolocation); fixed distance table for proximity ordering; preview entry point and flow; effective and expiry dates, location default currency and system-wide default price flows; dated rows and UTC dates; audit and cache-clear on every save; save confirmation is on-screen only; admin screens belong to the configuration stage; Stripe-assigned groupings cannot be archived or lose a country; deactivated countries keep applying until edited; stale-edit warning covers prices and bulk apply; decimals come from the FR-029 currency catalogue; audit rules merged into REQ-028-014. | Product Team |
+| 2026-11-24 | 1.62 | Final logic review corrections: setting a Stripe-assigned grouping Inactive is blocked like archiving it; a price lookup step that cannot show a price passes to the next step; price rows may not overlap in dates and the fallback tie-break is stated; deactivated countries keep applying in groupings and all starting-price rows and can still be saved; the Screen 2 banners are shown when the tab opens; read-only Change history panels on Screens 1 and 2; Screen 3 simulates saved configuration only; destination default currency and system-wide default price have a stored home; every active country is a destination (provider count 0 where none); the deactivated-country warning replaces the provider-location warning; patient currency is the profile preference, else the FR-029 system default currency; error text for destinations shown first; unique name check on reactivation; only active groupings count toward the 51st-grouping warning. | Product Team |
 
 ---
 

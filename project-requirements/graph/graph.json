@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T09:37:05Z",
+  "generated_at": "2026-11-24T09:39:53Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -6942,9 +6942,9 @@
       "owner_fr": "FR-028",
       "title": "Configuration change audit log",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "One record per change to a regional grouping or starting price, kept for compliance and troubleshooting (Key Entities, Entity 3)."
+        "description": "One record per change to a regional grouping, starting price, destination default currency or the system-wide default starting price, kept for compliance and troubleshooting and read in the Change history panels of Screens 1 and 2 (Key Entities, Entity 3)."
       }
     },
     {
@@ -7013,7 +7013,7 @@
       "owner_fr": "FR-028",
       "title": "Entity type",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {}
     },
     {
@@ -12969,17 +12969,6 @@
       "version": 1,
       "attrs": {
         "description": "Use as fallback for unconfigured patient locations."
-      }
-    },
-    {
-      "id": "ENT-location-starting-price.location_default_currency",
-      "type": "Field",
-      "owner_fr": "FR-028",
-      "title": "Location default currency",
-      "status": "active",
-      "version": 1,
-      "attrs": {
-        "description": "Default currency of the destination location, set once per destination on the pricing screen (Screen 2 Location Default Currency); used when a patient's currency has no price and a converted price is shown. Same value on every price row of the destination."
       }
     },
     {
@@ -19758,6 +19747,72 @@
       "status": "active",
       "version": 1,
       "attrs": {}
+    },
+    {
+      "id": "ENT-pricing-default",
+      "type": "Entity",
+      "owner_fr": "FR-028",
+      "title": "Pricing default",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "The default currency of one destination location (stored once per destination, not on each price row) and the one system-wide default starting price (one amount and its currency). Set on the pricing screen (Screen 2)."
+      }
+    },
+    {
+      "id": "ENT-pricing-default.amount",
+      "type": "Field",
+      "owner_fr": "FR-028",
+      "title": "System-wide default starting price",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "The system-wide default starting price amount; empty on a destination default currency record."
+      }
+    },
+    {
+      "id": "ENT-pricing-default.currency_code",
+      "type": "Field",
+      "owner_fr": "FR-028",
+      "title": "Currency",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "The default currency of the destination, or the currency of the system-wide default amount."
+      }
+    },
+    {
+      "id": "ENT-pricing-default.default_id",
+      "type": "Field",
+      "owner_fr": "FR-028",
+      "title": "Pricing default id",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Identifier of the pricing default record."
+      }
+    },
+    {
+      "id": "ENT-pricing-default.default_type",
+      "type": "Field",
+      "owner_fr": "FR-028",
+      "title": "Pricing default type",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Which default the record holds: the default currency of one destination or the system-wide default starting price."
+      }
+    },
+    {
+      "id": "ENT-pricing-default.location_id",
+      "type": "Field",
+      "owner_fr": "FR-028",
+      "title": "Destination",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "The destination country (FR-026 country key) for a destination default currency; empty on the system-wide default record."
+      }
     },
     {
       "id": "ENT-promotion-adoption",
@@ -33187,9 +33242,9 @@
       "owner_fr": "FR-028",
       "title": "Regional configuration saved",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "A regional grouping or starting price change was saved; the save confirmation is the on-screen message only and no separate notification is sent.",
+        "description": "A regional grouping change (including its status), a starting price change, a destination default currency change or a system-wide default starting price change was saved; the save confirmation is the on-screen message only and no separate notification is sent.",
         "payload": "admin user, entity type, change reason, change details"
       }
     },
@@ -81232,7 +81287,7 @@
       "owner_fr": "FR-028",
       "title": "Admin creates regional groupings with name, countries and location order",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "System MUST allow admins to create regional groupings by selecting group name, countries, and location presentation order",
         "rationale": "Restated by Main Flow step 2-7 (113-124) and Screen 1 (331-347)."
@@ -81244,7 +81299,7 @@
       "owner_fr": "FR-028",
       "title": "Admin configures starting price per location per currency",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "System MUST allow admins to configure starting price estimates per location per currency",
         "rationale": "Restated by Main Flow: Admin Configures Starting Prices Per Location (185-213) and Screen 2 (367-384)."
@@ -81280,7 +81335,7 @@
       "owner_fr": "FR-028",
       "title": "Configuration changes reach patient APIs within 1 minute by cache invalidation",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "System MUST propagate configuration changes to patient-facing APIs within 1 minute via cache invalidation",
         "rationale": "Restated by Communication Structure (78), Entry Points (92), Main Flow step 10-11 (127-128), Screen 1 Cache Propagation (353), General Module Rule 4 (459: cache TTL = 60 seconds) and SC-009, SC-013. The system clears the location presentation cache on every save (step 10, A1 step 6, A2 step 4)."
@@ -81292,7 +81347,7 @@
       "owner_fr": "FR-028",
       "title": "A country belongs to at most one active regional grouping, enforced at configuration time",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "System MUST prevent overlapping active regional groupings by enforcing one-to-one mapping between country and active regional grouping at configuration time",
         "rationale": "General Module Rule 1, Main Flow step 4 and Screen 1 Unique Membership. Inactive groupings release their countries (REQ-028-029). The error text is REQ-028-021."
@@ -81304,7 +81359,7 @@
       "owner_fr": "FR-028",
       "title": "Fallback pricing chosen by the patient's country when the patient's currency is not configured",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "System MUST support fallback pricing for locations when patient's specific currency is not configured; the fallback price is chosen by the patient's country",
         "rationale": "Restated by Screen 2 Fallback Priority (391: fallback prices apply when the patient's location-currency combination is not configured), A3 (217-228), A5 (306-314) and User Story 3 (694-706). Configuration steps are REQ-028-056."
@@ -81316,10 +81371,10 @@
       "owner_fr": "FR-028",
       "title": "Admin previews configuration before saving",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST allow admins to preview how configurations will appear to patients from different regions before saving",
-        "rationale": "Restated by Screen 2 Preview Mode (394), Screen 3 (419-448: Test Mode toggle) and User Story 5 (727-740: preview of unsaved changes, then Save and Apply turns the panel into Live Configuration)."
+        "statement": "System MUST let admins preview configuration before saving (the Screen 1 preview pane for a grouping and the formatted amount on Screen 2 for a price); the Location Display Preview tab simulates saved configuration only",
+        "rationale": "Screen 1 preview pane (Main Flow step 5), Screen 2 formatted amount (Main Flow: Starting Prices step 6) and Screen 3, which shows saved configuration only. User Story 5."
       }
     },
     {
@@ -81328,7 +81383,7 @@
       "owner_fr": "FR-028",
       "title": "Regional grouping stored with name, country list, location order, destinations shown first and status",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "System MUST store regional grouping configuration with grouping name, country list, location ordering, number of destinations shown first, and status (active/inactive)",
         "rationale": "Restated by Key Entities, Entity 1 (800-802) and Screen 1 data fields (337-347)."
@@ -81340,7 +81395,7 @@
       "owner_fr": "FR-028",
       "title": "Starting price stored with location, currency, amount, dates, fallback flag and fallback patient country",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "System MUST store starting price configuration with location, currency, amount, effective date, expiry date, fallback flag, and (for a fallback price) the patient country it applies to",
         "rationale": "Restated by Key Entities, Entity 2 (804-806) and Screen 2 data fields (373-384)."
@@ -81352,7 +81407,7 @@
       "owner_fr": "FR-028",
       "title": "Regional configuration restricted to admins with the Manage App Data permission",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "System MUST restrict regional configuration and pricing management to admin users with the FR-031 permission \"Manage App Data\", which guards both regional groupings and starting prices",
         "rationale": "Entry Points, Dependencies FR-031 and Security Considerations Authentication and Authorization (read-only roles cannot modify regional groupings or pricing)."
@@ -81364,7 +81419,7 @@
       "owner_fr": "FR-028",
       "title": "Every configuration change logged with user id, timestamp, IP address, reason and details",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "System MUST log all configuration changes with admin user ID, timestamp, IP address, change reason, and full change details for audit trail",
         "rationale": "Security Considerations Audit Trail (old value to new value). Includes the earlier audit trail rule REQ-028-011, merged here; it covers groupings, location ordering, starting prices, default currencies and the system-wide default price.",
@@ -81377,7 +81432,7 @@
       "owner_fr": "FR-028",
       "title": "All admin inputs validated server-side",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "System MUST validate all admin inputs server-side (country codes, currency codes, positive pricing amounts) to prevent invalid configurations",
         "rationale": "Restated by Security Considerations Input Validation (649)."
@@ -81389,7 +81444,7 @@
       "owner_fr": "FR-028",
       "title": "Country selection uses the FR-026 country list",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "System MUST integrate with FR-026 country list API for country selection in regional grouping configuration",
         "rationale": "Restated by Internal Dependencies FR-026 (542-544), Data Dependencies Entity 2 (572-574) and Integration 3 (630-633)."
@@ -81401,7 +81456,7 @@
       "owner_fr": "FR-028",
       "title": "Currency validation and conversion rates come from FR-029",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "System MUST integrate with FR-029 currency API for currency validation and conversion rate retrieval",
         "rationale": "Restated by Internal Dependencies FR-029 (554-556), Data Dependencies Entity 3 (576-578) and External Dependencies (564)."
@@ -81425,7 +81480,7 @@
       "owner_fr": "FR-028",
       "title": "Admin configuration API with role-based access control",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "System MUST expose admin configuration API for CRUD operations on regional groupings and starting prices with role-based access control",
         "rationale": "Restated by Integration 2 (625-628) and Security Considerations Authorization (646)."
@@ -81437,7 +81492,7 @@
       "owner_fr": "FR-028",
       "title": "Conflicting country assignment blocked with the conflicting groupings listed",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "System MUST block selection or save of a country that already belongs to another active regional grouping and MUST show the error \"Each country can only belong to one regional grouping. Remove it from the other grouping first.\" together with the list of conflicting groupings.",
         "rationale": "Main Flow step 4 (118), Screen 1 Unique Membership (351) and the first edge case (746). The no-overlap rule itself is REQ-028-006."
@@ -81449,7 +81504,7 @@
       "owner_fr": "FR-028",
       "title": "Grouping needs at least one country",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "System MUST NOT save a regional grouping with no country selected and MUST show \"At least one country must be selected for this regional grouping.\"",
         "rationale": "Main Flow step 4 and 8 (117, 125), B1 (156-163) and Screen 1 Countries validation (341)."
@@ -81461,7 +81516,7 @@
       "owner_fr": "FR-028",
       "title": "Grouping needs at least one ordered destination",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "System MUST NOT save a regional grouping without a destination order and MUST show \"At least one destination must be ordered for this regional grouping.\"",
         "rationale": "B2 (165-172) and Screen 1 Location Order validation (342)."
@@ -81473,7 +81528,7 @@
       "owner_fr": "FR-028",
       "title": "Every create, update and archive needs a change reason of 10-500 characters",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "All create/update/archive actions require a change reason (10-500 chars). System MUST NOT save a regional grouping change or a price change without it and MUST show \"Change reason is required (10-500 characters).\"",
         "rationale": "General Module Rule 7 (462), Main Flow steps 6 and 8 (123, 125), A1 step 4 (140), A2 step 3 (151), B3 (174-181), pricing steps 7 and 9 (204, 210), A3 step 5 (225), A4 step 6 (239), B5 (262-269) and the Change Reason fields of Screen 1 and Screen 2 (344, 384)."
@@ -81485,7 +81540,7 @@
       "owner_fr": "FR-028",
       "title": "Grouping name unique and at most 100 characters; description at most 500",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "A regional grouping name is required, MUST be unique and at most 100 characters; the description is optional (internal purpose of the grouping) and at most 500 characters.",
         "rationale": "Screen 1 data fields Grouping Name and Description (339-340)."
@@ -81497,7 +81552,7 @@
       "owner_fr": "FR-028",
       "title": "Editing an existing grouping follows the creation steps",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "When an admin edits an existing regional grouping, System shows the current countries and location order, requires a change reason, and then validates, saves, clears the cache and confirms as for a new grouping; patients from the affected region see the updated order within 1 minute.",
         "rationale": "Alternative Flow A1 (133-143)."
@@ -81509,7 +81564,7 @@
       "owner_fr": "FR-028",
       "title": "Deleting a grouping warns, needs a reason and confirmation",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Before a regional grouping is deleted, System MUST warn \"Deleting this grouping will affect patients from [X countries]. They will fall back to proximity-based destination ordering. Continue?\" and the admin MUST enter a change reason and confirm.",
         "rationale": "Alternative Flow A2 steps 2-3 (150-151)."
@@ -81521,7 +81576,7 @@
       "owner_fr": "FR-028",
       "title": "Deleted groupings are archived, never permanently deleted",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "Deleting a regional grouping MUST archive it (soft delete), never remove it permanently, so the audit trail stays complete; an archived grouping is an inactive grouping; System clears the cache and confirms \"Regional grouping archived. Patients from affected countries will now see proximity-based destination ordering.\"",
         "rationale": "A2 steps 4-5 (152-154) and Screen 1 Soft Delete (355)."
@@ -81533,9 +81588,9 @@
       "owner_fr": "FR-028",
       "title": "Inactive and archived groupings are one state, not applied, and release their countries",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Inactive and archived regional groupings are one state: retained in the system but not applied to patient location presentation, and their countries are released to other groupings. Switching a grouping back to Active re-runs the country check and is blocked with the error of REQ-028-021 while a country of the grouping sits in another active grouping.",
+        "statement": "Inactive and archived regional groupings are one state: retained in the system but not applied to patient location presentation, and their countries are released to other groupings. Switching a grouping back to Active re-runs the country check and the unique name check and is blocked with the error of REQ-028-021 while a country of the grouping sits in another active grouping, or while another active grouping has the same name (REQ-028-025).",
         "rationale": "General Module Rule 6, Screen 1 Status field and Alternative Flow A7."
       }
     },
@@ -81545,9 +81600,9 @@
       "owner_fr": "FR-028",
       "title": "At the 51st regional grouping the admin is warned and may continue",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "At the 51st regional grouping System warns the admin, who may continue; the number 50 is fixed in the code.",
+        "statement": "At the 51st active regional grouping System warns the admin, who may continue; inactive and archived groupings do not count; the number 50 is fixed in the code.",
         "rationale": "General Module Rule 5, Admin Editability Fixed in Codebase and the Add step of the main grouping flow."
       }
     },
@@ -81557,7 +81612,7 @@
       "owner_fr": "FR-028",
       "title": "Cache timing, the proximity distance table and the grouping warning number are fixed in the codebase",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "Cache propagation timing (1-minute TTL), the country-to-country distance table used for proximity ordering and the number of regional groupings that triggers the warning (50) are fixed in the codebase and not editable by admin.",
         "rationale": "Admin Editability, Fixed in Codebase. Decimal places are not fixed here; they come from the FR-029 currency catalogue (REQ-028-055)."
@@ -81569,7 +81624,7 @@
       "owner_fr": "FR-028",
       "title": "Admin-editable items",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "Admins can edit regional grouping names, countries and location ordering; starting price amounts for any location-currency combination; fallback pricing configuration per location; regional grouping active or inactive status; price effective and expiry dates; the number of destinations shown first per regional grouping; the default currency per destination location; and the system-wide default starting price.",
         "rationale": "Admin Editability, Editable by Admin (475-482). Per-item behaviour is in the rules of this module; Admin Platform scope (61-67)."
@@ -81581,9 +81636,9 @@
       "owner_fr": "FR-028",
       "title": "Number of destinations shown first per grouping: default 10, range 5-20, the rest behind Show all destinations",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "The number of destinations shown first is set per regional grouping by the admin (default 10, allowed range 5-20). It only decides how many destinations show first; the rest sit behind \"Show all destinations\". A patient with no matching grouping gets the default 10.",
+        "statement": "The number of destinations shown first is set per regional grouping by the admin (default 10, allowed range 5-20; any other value is refused with \"Destinations shown first must be a whole number from 5 to 20.\"). It only decides how many destinations show first; the rest sit behind \"Show all destinations\". A patient with no matching grouping gets the default 10.",
         "rationale": "Admin Editability, Screen 1 field Locations Displayed and the display cap step of the patient flow. Stored on ENT-regional-grouping.locations_displayed."
       }
     },
@@ -81619,9 +81674,9 @@
       "owner_fr": "FR-028",
       "title": "Destination list shows name, flag, starting price, description and provider count",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System displays each destination to the patient with the location name and flag, the starting price in the patient's currency (\"Starting from £2,500\"), a brief location description and the number of providers available in the location.",
+        "statement": "System displays each destination to the patient with the location name and flag, the starting price in the patient's currency (\"Starting from £2,500\"), a brief location description and the number of providers available in the location (0 when the country has no provider).",
         "rationale": "Main Flow: Patient Views Personalized Location Recommendations step 8 (297-301). The screen is FR-003 Screen 2 (SCR-003-02); the patient then selects destinations (step 9)."
       }
     },
@@ -81629,11 +81684,11 @@
       "id": "REQ-028-038",
       "type": "Rule",
       "owner_fr": "FR-028",
-      "title": "Patient currency from the profile, else the location default, else the FR-029 system default currency",
+      "title": "Patient currency from the profile, else the FR-029 system default currency",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System identifies the patient's currency from the patient profile preference, else from the location default currency, else from the FR-029 system default currency.",
+        "statement": "System identifies the patient's currency from the patient profile preference, else from the FR-029 system default currency; it is one currency for the whole destination list, and the location default currency is used only as step 4 of the lookup chain (REQ-028-040).",
         "rationale": "Main Flow: Patient Views Personalized Location Recommendations step 8."
       }
     },
@@ -81655,9 +81710,9 @@
       "owner_fr": "FR-028",
       "title": "Starting price lookup chain, always shown in the patient's currency",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "System follows one lookup chain for the starting price of a displayed location, always shown in the patient's currency: (1) the price for the location in the patient's currency; (2) else the fallback price for the patient's country, where a fallback row already in the patient's currency is preferred; (3) else the system-wide default starting price; (4) else the price in the location's default currency; (5) else \"Price available on request\" with an error logged for admin review (REQ-028-041). A price found in another currency at steps 2 to 4 is converted with the FR-029 conversion rate with markup and marked \"approx.\" (\"Starting from approx. £2,500\").",
+        "statement": "System follows one lookup chain for the starting price of a displayed location, always shown in the patient's currency: (1) the price for the location in the patient's currency; (2) else the fallback price for the patient's country, where a fallback row already in the patient's currency is preferred and, when none is, the row in the location's default currency is used, else the row in the FR-029 system default currency, else the earliest created; (3) else the system-wide default starting price; (4) else the price in the location's default currency; (5) else \"Price available on request\" with an error logged for admin review (REQ-028-041). A price found in another currency at steps 2 to 4 is converted with the FR-029 conversion rate with markup and marked \"approx.\" (\"Starting from approx. £2,500\"). A step whose price cannot be shown (no conversion rate, or no price row in that currency) passes to the next step, so \"Price available on request\" shows only when step 4 also fails.",
         "rationale": "A6 and the second edge case. This is the only statement of the chain; REQ-028-004, REQ-028-039, REQ-028-085 and REQ-028-087 point to it."
       }
     },
@@ -81667,9 +81722,9 @@
       "owner_fr": "FR-028",
       "title": "No price can be shown: Price available on request, error logged, banner on Screen 2",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "When no price can be shown by the chain of REQ-028-040 (no fallback or system-wide default, and currency conversion unavailable), System displays the location without a starting price, shows the text \"Price available on request\" to the patient and logs an error for admin review; Screen 2 shows the banner \"[Location] missing fallback pricing - patients seeing no price estimate.\"",
+        "statement": "When no step of the chain of REQ-028-040 can show a price (including the price in the location's default currency), System displays the location without a starting price, shows the text \"Price available on request\" to the patient and logs an error for admin review; Screen 2 shows the banner \"[Location] missing fallback pricing - patients seeing no price estimate.\"",
         "rationale": "Sixth edge case (756)."
       }
     },
@@ -81715,7 +81770,7 @@
       "owner_fr": "FR-028",
       "title": "Future phase: admin can enable or disable specific destinations for specific patient regions",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "statement": "In a future phase, admins will be able to enable or disable specific destinations for specific patient regions.",
         "rationale": "prd.md lines 66 (Future phase: Enable/disable specific destinations for specific patient regions). The PRD marks it a future phase and gives it no screen, field or flow."
@@ -81727,9 +81782,9 @@
       "owner_fr": "FR-028",
       "title": "The save confirmation is the on-screen message only",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "The save confirmation of a regional grouping change or a starting price change is the on-screen message only; System sends no separate notification.",
+        "statement": "The save confirmation of any configuration change (grouping, starting price, default currency or system-wide default) is the on-screen message only; System sends no separate notification.",
         "rationale": "Communication Structure, In Scope."
       }
     },
@@ -81763,7 +81818,7 @@
       "owner_fr": "FR-028",
       "title": "Entry points to regional configuration, pricing and preview",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "statement": "Admin reaches the configuration at Settings > General Settings, on the Location Presentation by Country tab, the Location Pricing tab or the Location Display Preview tab, with the FR-031 permission \"Manage App Data\", and changes take effect on save within the 1-minute cache propagation. Patient reaches it through the \"Choose Your Destination\" screen of the quote request flow, where System reads the patient's country from the profile, applies the regional configuration to order the destinations, and shows starting prices in the patient's currency.",
         "rationale": "Entry Points; the PRD names the three tabs."
@@ -81775,7 +81830,7 @@
       "owner_fr": "FR-028",
       "title": "Save confirmation messages",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "statement": "After a successful save System confirms: \"Regional grouping saved. Changes will be live for patients within 1 minute.\" for a grouping; \"Starting price for [Location] in [Currency] set to [Amount].\" for a price; \"Fallback pricing enabled for [Location]. Patients from [Country] without specific pricing will see these prices.\" for fallback pricing; \"[X] currency prices updated for [Location].\" for a bulk update; an on-screen success message for a location default currency and for the system-wide default starting price.",
         "rationale": "Main Flow step 11 (128) and 11 (212), A3 step 7 (227), A4 step 8 (241) and Screen 2 bulk modal banner (415)."
@@ -81787,7 +81842,7 @@
       "owner_fr": "FR-028",
       "title": "Pricing view shows configured currencies and marks missing ones Not Set",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "After the admin selects a destination, System shows the current pricing configuration for it: the currencies with configured starting prices, with currencies that have no configured price marked \"Not Set\".",
         "rationale": "Main Flow: Starting Prices step 2-3 (195-198)."
@@ -81799,7 +81854,7 @@
       "owner_fr": "FR-028",
       "title": "Currency list read-only from FR-029; no inline currency creation",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "The currency dropdown for starting prices is populated from the FR-029 supported currency list (Settings > Billing Settings > Currency Management); currencies are not created or edited on this screen, and currency support must be configured in FR-029 before location pricing can be configured.",
         "rationale": "Main Flow: Starting Prices step 1 (194), Screen 2 notes (407-408) and Admin Editability, Configurable with Restrictions (493)."
@@ -81811,7 +81866,7 @@
       "owner_fr": "FR-028",
       "title": "Only supported currencies; unsupported currency refused with a pointer to Currency Management",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Only currencies configured in the system can be selected for a starting price; when the admin tries to save a price for an unsupported currency System shows \"[Currency] is not currently supported. Add currency to system first via Currency Management.\" and does not save the price.",
         "rationale": "Main Flow: Starting Prices step 9 (207), B4 (253-260) and Screen 2 Currency Validation (388)."
@@ -81823,7 +81878,7 @@
       "owner_fr": "FR-028",
       "title": "Starting price must be a positive number greater than 0",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "A starting price MUST be a positive number greater than 0; for a non-numeric or negative value System shows \"Starting price must be a positive number.\" and does not save it, and shows the format guidance \"Enter base starting price (e.g., 2500 for £2,500)\".",
         "rationale": "Main Flow: Starting Prices steps 6 and 9 (202-208), B3 (244-251) and Screen 2 Positive Values Only (390)."
@@ -81835,7 +81890,7 @@
       "owner_fr": "FR-028",
       "title": "Decimal places follow the currency's minor units in the FR-029 catalogue",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "System enforces the decimal places of the currency's minor units in the FR-029 currency catalogue (ENT-currency.minor_units) for every starting price, including fallback prices and bulk-updated prices.",
         "rationale": "Main Flow: Starting Prices step 10 and Screen 2 Decimal Precision."
@@ -81847,7 +81902,7 @@
       "owner_fr": "FR-028",
       "title": "Fallback pricing configuration",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "To set fallback pricing the admin goes to Location Pricing > Fallback Pricing, selects the destination, enables the fallback pricing option, selects the patient country the fallback price applies to, enters the fallback price per currency and a change reason; System saves the fallback configuration.",
         "rationale": "Alternative Flow A3 (217-228) and Screen 2 Fallback Price field (381). Application of fallback prices is REQ-028-007."
@@ -81859,7 +81914,7 @@
       "owner_fr": "FR-028",
       "title": "Bulk price update by percentage or fixed amount",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "Admins can update all currency prices of one destination at once by a percentage increase or decrease or a fixed amount adjustment; System shows a preview of the new prices for all currencies, the admin enters a change reason and confirms, and System saves all currency price updates simultaneously. A bulk apply whose result would break the amount, decimals or currency checks (REQ-028-053 to REQ-028-055) is blocked.",
         "rationale": "Alternative Flow A4 (230-242), Screen 2 Bulk Update (393) and User Story 4 (710-723)."
@@ -81871,7 +81926,7 @@
       "owner_fr": "FR-028",
       "title": "Bulk update modal inputs",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "The bulk update modal has a method selector (percentage increase or decrease, or fixed amount adjustment), an adjustment value input that is numeric and may be negative for a decrease, an optional rounding rule (round to the nearest 5, 10 or 50 of the currency unit), a preview table of current versus new prices per currency, and a required change reason logged in the audit trail.",
         "rationale": "Screen 2 notes, Bulk Update modal (409-415)."
@@ -81883,7 +81938,7 @@
       "owner_fr": "FR-028",
       "title": "Bulk update action visible on the pricing screen, enabled only with a destination or rows selected",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "The Bulk Update Pricing action is visible on the pricing screen and enabled only when a destination is selected or at least one pricing row is checked; the bulk update modal (percentage or fixed adjustment, no CSV import or export) requires a change reason before apply.",
         "rationale": "Screen 2 field Bulk Update Pricing (380) and notes (400)."
@@ -81895,7 +81950,7 @@
       "owner_fr": "FR-028",
       "title": "A future effective date keeps the current price in use until then, as a new row",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "If a price's effective date is in the future, the change is a new row (REQ-028-090) and the current pricing remains in use until the effective date; without an effective date pricing is effective immediately.",
         "rationale": "Screen 2 Effective Dating (395) and field Price Effective Date (378)."
@@ -81907,7 +81962,7 @@
       "owner_fr": "FR-028",
       "title": "Expiry date after effective date; banner on Screen 2 7 days before expiry",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "A price expiry date, when set, MUST be after the effective date, and a banner on Screen 2 warns the admin 7 days before the price expiry date.",
         "rationale": "Screen 2 field Price Expiry Date (379) and Expiry Warning (396)."
@@ -81919,7 +81974,7 @@
       "owner_fr": "FR-028",
       "title": "Price without expiry stays active indefinitely",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "When an effective date is set without an expiry date, the pricing remains active indefinitely until the admin updates it or sets an expiry; System shows the info note \"No expiry set - pricing active indefinitely.\" in the pricing table and enforces no automatic expiration.",
         "rationale": "Seventh edge case (758). What happens when a set expiry date passes is not stated; question raised."
@@ -81931,9 +81986,9 @@
       "owner_fr": "FR-028",
       "title": "Price history is read from the configuration change audit log",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System keeps no separate price history; the history of all price changes for audit and trend analysis is read from the configuration change audit log (REQ-028-014).",
+        "statement": "System keeps no separate price history; the history of all price changes for audit and trend analysis is read from the configuration change audit log (REQ-028-014) and shown in the read-only Change history panel of Screens 1 and 2.",
         "rationale": "Screen 2 Price History (392). Retention periods are REQ-028-012 and REQ-028-064."
       }
     },
@@ -81943,7 +81998,7 @@
       "owner_fr": "FR-028",
       "title": "Pricing history and configuration audit logs retained 10 years",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "Pricing history and configuration change audit logs are retained for 10 years (Constitution compliance).",
         "rationale": "Data & Privacy Retention Rule, which keeps pricing history and audit logs and points to the system PRD for the one 10-year retention period (REQ-SYS-002). The former 3-year pricing history Rule (REQ-028-012) is merged here.",
@@ -81980,7 +82035,7 @@
       "owner_fr": "FR-028",
       "title": "Pricing history names the admin, never patient-level pricing",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Pricing history includes the admin user who made each change for accountability, but not patient-level pricing data.",
         "rationale": "Data & Privacy Privacy Rule 3 (468)."
@@ -82004,7 +82059,7 @@
       "owner_fr": "FR-028",
       "title": "Preview updates immediately when patient location or currency changes",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "The location display preview updates immediately when the admin selects a different patient location or currency.",
         "rationale": "Screen 3 Real-Time Preview (436) and User Story 5 scenarios 2-3 (738-739)."
@@ -82016,7 +82071,7 @@
       "owner_fr": "FR-028",
       "title": "Preview shows which grouping and pricing rules were applied",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "The preview shows which regional grouping and which pricing rules were applied for the simulated patient.",
         "rationale": "Screen 3 Applied Config Display (437) and field Applied Regional Grouping (431)."
@@ -82028,7 +82083,7 @@
       "owner_fr": "FR-028",
       "title": "Preview highlights locations using fallback pricing",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "Locations using fallback pricing are visually distinguished in the preview (for example italic text or an info icon with the tooltip \"Using fallback pricing - AUD pricing not configured for this location\").",
         "rationale": "Screen 3 Fallback Highlighting (438), field Fallback Indicators (432) and User Story 3 scenario 3 (706)."
@@ -82040,7 +82095,7 @@
       "owner_fr": "FR-028",
       "title": "Preview warns when a location has no price for the preview currency",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "If any location has no pricing for the preview currency, the preview displays a warning.",
         "rationale": "Screen 3 Missing Price Warning (439)."
@@ -82052,7 +82107,7 @@
       "owner_fr": "FR-028",
       "title": "Preview shows the actual provider count per location",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "The preview shows the number of available providers per location, using actual counts from the provider database.",
         "rationale": "Screen 3 Provider Count Display (440)."
@@ -82064,7 +82119,7 @@
       "owner_fr": "FR-028",
       "title": "Admin can refresh the preview manually",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "The admin can manually refresh the preview to see the latest data after configuration changes.",
         "rationale": "Screen 3 Refresh Button (441)."
@@ -82076,7 +82131,7 @@
       "owner_fr": "FR-028",
       "title": "Preview inputs: a valid country and a currency defaulting to the FR-029 system default currency",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "statement": "The preview requires a patient country that is valid in the system and a patient currency preference, which defaults to the FR-029 system default currency.",
         "rationale": "Screen 3 fields Preview Patient Location and Preview Currency (427-428)."
@@ -82088,7 +82143,7 @@
       "owner_fr": "FR-028",
       "title": "Grouping screen aids: drag and drop, preview pane, flags, assigned countries marked",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "The regional grouping screen provides a drag-and-drop interface for location ordering, a preview pane showing how patients from the selected countries will see the location list, country flags next to country names, and a disabled or visibly marked state (for example greyed out with the tooltip \"Already assigned to [Grouping Name]\") for countries already assigned to another grouping.",
         "rationale": "Screen 1 notes (359-362) and Main Flow step 5 (120-122)."
@@ -82100,7 +82155,7 @@
       "owner_fr": "FR-028",
       "title": "Grouping screen bulk actions: duplicate, export, import from template",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "The regional grouping screen provides bulk actions: duplicate grouping, export configuration, and import from template.",
         "rationale": "Screen 1 notes (363)."
@@ -82112,7 +82167,7 @@
       "owner_fr": "FR-028",
       "title": "Pricing table: locations as rows, currencies as columns, missing prices highlighted",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "The pricing screen shows a table with locations as rows and currencies as columns, highlights cells without configured pricing in yellow, and shows the last updated timestamp and admin name on hover for each price.",
         "rationale": "Screen 2 notes (401-403)."
@@ -82124,7 +82179,7 @@
       "owner_fr": "FR-028",
       "title": "Exchange rate reference and price calculator for admins",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "The pricing screen displays an exchange rate reference for admin guidance from the FR-029 currency service, and a calculator that suggests prices for other currencies from a price entered in one currency, based on exchange rates.",
         "rationale": "Screen 2 notes (405-406)."
@@ -82134,12 +82189,12 @@
       "id": "REQ-028-081",
       "type": "Rule",
       "owner_fr": "FR-028",
-      "title": "Preview aids: side-by-side comparison, tooltips, Test Mode, cache status",
+      "title": "Preview aids: side-by-side comparison, tooltips, cache status",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "The preview screen lets the admin compare two patient locations side by side, shows a tooltip explaining why a location is in its position (the regional grouping rule), provides a Test Mode toggle to see changes without saving them, and shows a cache status indicator with the time patient-facing data was last refreshed.",
-        "rationale": "Screen 3 notes (445-448)."
+        "statement": "The preview screen lets the admin compare two patient locations side by side, shows a tooltip explaining why a location is in its position (the regional grouping rule), and shows a cache status indicator with the time patient-facing data was last refreshed.",
+        "rationale": "Screen 3 notes."
       }
     },
     {
@@ -82148,7 +82203,7 @@
       "owner_fr": "FR-028",
       "title": "Concurrent edits: a stale-edit warning before overwriting",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "When another admin saved the same regional grouping, price row or bulk-updated price since this admin opened it (or since the bulk update preview), System warns \"This [grouping or price] was modified by [Admin Name] at [Time]. Your changes will overwrite theirs. Continue?\" and saves only when the admin confirms.",
         "rationale": "Fourth edge case, A1 step 5, Main Flow: Starting Prices step 9 and A4 step 7."
@@ -82158,12 +82213,12 @@
       "id": "REQ-028-083",
       "type": "Rule",
       "owner_fr": "FR-028",
-      "title": "Provider location changes keep grouping references; permanently removed locations are flagged",
+      "title": "A country deactivated in FR-026 is flagged on the grouping edit screen; nothing is forced",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System keeps location references in regional groupings even when a provider is deactivated, and the ordering applies again if the provider reactivates; when a location is permanently removed from the system, the grouping edit screen warns \"[Location] is no longer active. Remove from ordering?\"",
-        "rationale": "Fifth edge case (754)."
+        "statement": "When a country is deactivated in FR-026, regional groupings and price rows that reference it keep applying, and the grouping edit screen warns \"[Country] is deactivated. Remove from ordering?\"; nothing is forced, and an existing grouping or row of a deactivated country can still be saved (REQ-028-092).",
+        "rationale": "Edge case on a country deactivated in FR-026. FR-026 deactivates countries and never removes them."
       }
     },
     {
@@ -82196,9 +82251,9 @@
       "owner_fr": "FR-028",
       "title": "A destination is a country from the FR-026 active country list",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "The destination chosen for a starting price, and each destination in a grouping's location order, MUST be a country from the FR-026 active country list, the same key as the inquiry treatment countries (ENT-inquiry.treatment_countries).",
+        "statement": "The destination chosen for a starting price, and each destination in a grouping's location order, MUST be a country from the FR-026 active country list when it is newly selected (an existing grouping or row of a deactivated country keeps applying, REQ-028-092), the same key as the inquiry treatment countries (ENT-inquiry.treatment_countries). Every active FR-026 country is listed to patients as a destination, with a provider count of 0 where it has no provider.",
         "rationale": "Screen 2 field Destination Location and Main Flow step 5 of the grouping flow."
       }
     },
@@ -82220,9 +82275,9 @@
       "owner_fr": "FR-028",
       "title": "System-wide default starting price, set on the pricing screen, empty at launch",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System MUST provide one system-wide default starting price (one amount and its currency), set by admins on the pricing screen; it is empty until an admin sets it",
+        "statement": "System MUST provide one system-wide default starting price, stored with its amount and currency, set by admins on the pricing screen; it is empty until an admin sets it",
         "rationale": "Screen 2 field System-Wide Default Starting Price and Functional Requirements Summary. Where it sits in the price lookup is REQ-028-039 and REQ-028-040."
       }
     },
@@ -82230,11 +82285,11 @@
       "id": "REQ-028-089",
       "type": "Rule",
       "owner_fr": "FR-028",
-      "title": "Default currency set per destination location",
+      "title": "Default currency set per destination location, stored once per destination",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST let admins set a default currency for each destination location; it is the same on every price row of that location",
+        "statement": "System MUST let admins set a default currency for each destination location; it is stored once per destination, not on each price row",
         "rationale": "Screen 2 field Location Default Currency and Functional Requirements Summary. The converted price that uses it is REQ-028-040."
       }
     },
@@ -82242,11 +82297,11 @@
       "id": "REQ-028-090",
       "type": "Rule",
       "owner_fr": "FR-028",
-      "title": "A future-dated price change is a new dated row; the lookup uses the row whose window contains today",
+      "title": "A future-dated price change is a new dated row; rows may not overlap; the lookup uses the row whose window contains today",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "A future-dated price change MUST be saved as a new row for the same destination and currency; the lookup picks the row whose window contains the current day, dates are UTC and the expiry day is included, and price history is read from the configuration change audit log",
+        "statement": "A future-dated price change MUST be saved as a new row for the same destination and currency; the lookup picks the row whose window contains the current day, dates are UTC and the expiry day is included, and price history is read from the configuration change audit log. Rows for the same destination and currency (and patient country on a fallback row) MUST NOT overlap in dates: a new dated row ends the previous open row the day before its effective date, and a bulk update changes the row current today",
         "rationale": "Main Flow: Starting Prices step 7 and Screen 2 Effective Dating. Effective and expiry date rules are REQ-028-060 to REQ-028-062."
       }
     },
@@ -82254,11 +82309,11 @@
       "id": "REQ-028-091",
       "type": "Rule",
       "owner_fr": "FR-028",
-      "title": "A grouping with an assigned Stripe account cannot be archived or lose a country",
+      "title": "A grouping with an assigned Stripe account cannot be set inactive, archived or lose a country",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "Archiving a regional grouping, or removing a country from it, MUST be blocked while a Stripe account is assigned to the grouping (FR-029), and the screen names the account",
+        "statement": "Setting a regional grouping Inactive, archiving it, or removing a country from it, MUST be blocked while a Stripe account is assigned to the grouping (FR-029), and the screen names the account",
         "rationale": "General Module Rule 8 and Dependencies FR-029. The account assignment itself is owned by FR-029."
       }
     },
@@ -82266,11 +82321,11 @@
       "id": "REQ-028-092",
       "type": "Rule",
       "owner_fr": "FR-028",
-      "title": "A deactivated country keeps applying in groupings and fallback prices until an admin edits them",
+      "title": "A deactivated country keeps applying in groupings and starting prices until an admin edits them",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "A country deactivated in FR-026 MUST keep applying in regional groupings and fallback prices until an admin edits them",
+        "statement": "A country deactivated in FR-026 MUST keep applying in regional groupings and starting prices (destination rows and fallback rows) until an admin edits them; the active check runs only when a country is newly selected, so an existing grouping or row of a deactivated country can still be saved, for example to set an expiry date",
         "rationale": "General Module Rule 9 and Dependencies FR-026."
       }
     },
@@ -99288,7 +99343,7 @@
       "owner_fr": "FR-028",
       "title": "Regional Grouping Management (Screen 1)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
         "description": "Admin creates, edits, archives and orders regional groupings that control the location presentation order for patients from different regions."
@@ -99300,7 +99355,7 @@
       "owner_fr": "FR-028",
       "title": "Location Pricing Configuration (Screen 2)",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "platform": "admin",
         "description": "Admin configures starting price estimates per destination and currency, with fallback prices, effective and expiry dates, and bulk update."
@@ -101968,9 +102023,9 @@
       "owner_fr": "FR-028",
       "title": "System-wide default starting price",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "One default starting price (one amount and its currency), set by admins on the pricing screen (Screen 2); empty until an admin sets it. Shown when no specific or fallback price applies, before any converted price is used."
+        "description": "One default starting price (one amount and its currency), set by admins on the pricing screen (Screen 2) and stored as the system-wide record of ENT-pricing-default; empty until an admin sets it. Shown when no specific or fallback price applies, before any converted price is used."
       }
     },
     {
@@ -119783,7 +119838,7 @@
       "owner_fr": "FR-028",
       "title": "Admin defines the location presentation order and sees the preview",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Main Flow: Admin Configures Regional Location Presentation step 5"
       }
@@ -119849,9 +119904,20 @@
       "owner_fr": "FR-028",
       "title": "System logs the configuration change in the audit trail",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Main Flow: Admin Configures Regional Location Presentation step 12"
+      }
+    },
+    {
+      "id": "STP-028-013",
+      "type": "Step",
+      "owner_fr": "FR-028",
+      "title": "Admin opens the Change history panel of the grouping screen",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow: Admin Configures Regional Location Presentation step 13"
       }
     },
     {
@@ -119904,7 +119970,7 @@
       "owner_fr": "FR-028",
       "title": "Admin saves the changes",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flow A1: Admin Edits Existing Regional Grouping step 5"
       }
@@ -120080,7 +120146,7 @@
       "owner_fr": "FR-028",
       "title": "Admin switches the grouping status to Inactive or back to Active",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A7: Admin Sets a Regional Grouping Inactive or Back to Active step 1"
       }
@@ -120089,9 +120155,9 @@
       "id": "STP-028-152",
       "type": "Step",
       "owner_fr": "FR-028",
-      "title": "System re-checks the country conflicts when the status is set to Active",
+      "title": "System re-checks the country conflicts and the unique name when the status is set to Active",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A7: Admin Sets a Regional Grouping Inactive or Back to Active step 2"
       }
@@ -120146,7 +120212,7 @@
       "owner_fr": "FR-028",
       "title": "System displays the current pricing configuration for the destination",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow: Admin Configures Starting Prices Per Location step 3"
       }
@@ -120179,7 +120245,7 @@
       "owner_fr": "FR-028",
       "title": "Admin enters the starting price amount",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Main Flow: Admin Configures Starting Prices Per Location step 6"
       }
@@ -120201,7 +120267,7 @@
       "owner_fr": "FR-028",
       "title": "Admin saves the currency-price configuration",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "prd_ref": "Main Flow: Admin Configures Starting Prices Per Location step 8"
       }
@@ -120234,7 +120300,7 @@
       "owner_fr": "FR-028",
       "title": "System logs the pricing change in the audit trail",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Main Flow: Admin Configures Starting Prices Per Location step 12"
       }
@@ -120248,6 +120314,17 @@
       "version": 1,
       "attrs": {
         "prd_ref": "Main Flow: Admin Configures Starting Prices Per Location step 7"
+      }
+    },
+    {
+      "id": "STP-028-214",
+      "type": "Step",
+      "owner_fr": "FR-028",
+      "title": "Admin opens the Change history panel of the pricing screen",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow: Admin Configures Starting Prices Per Location step 14"
       }
     },
     {
@@ -120311,7 +120388,7 @@
       "owner_fr": "FR-028",
       "title": "System saves the fallback configuration",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "prd_ref": "Alternative Flow A3: Admin Sets Fallback Pricing for Region step 7"
       }
@@ -120399,7 +120476,7 @@
       "owner_fr": "FR-028",
       "title": "System saves all currency price updates simultaneously",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flow A4: Admin Bulk Updates Pricing Across Multiple Currencies step 7"
       }
@@ -120685,7 +120762,7 @@
       "owner_fr": "FR-028",
       "title": "System displays the fallback price, converted and marked approx. when it is in another currency",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A6: Patient's Currency Not Configured for Selected Location step 3"
       }
@@ -120696,7 +120773,7 @@
       "owner_fr": "FR-028",
       "title": "System displays the price in the location's default currency converted to the patient's currency and marked approx. when there is no fallback and no system-wide default",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flow A6: Patient's Currency Not Configured for Selected Location step 5"
       }
@@ -120729,7 +120806,7 @@
       "owner_fr": "FR-028",
       "title": "System displays the system-wide default starting price when an admin has set one, converted and marked approx. when it is in another currency",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A6: Patient's Currency Not Configured for Selected Location step 4"
       }
@@ -141742,14 +141819,6 @@
       "calculated_by": null
     },
     {
-      "id": "ENT-location-starting-price.location_default_currency",
-      "entity_id": "ENT-location-starting-price",
-      "name": "location_default_currency",
-      "data_type": "text",
-      "required": false,
-      "calculated_by": null
-    },
-    {
       "id": "ENT-location-starting-price.location_id",
       "entity_id": "ENT-location-starting-price",
       "name": "location_id",
@@ -146748,6 +146817,46 @@
       "data_type": "json",
       "required": false,
       "calculated_by": "REQ-014-294"
+    },
+    {
+      "id": "ENT-pricing-default.amount",
+      "entity_id": "ENT-pricing-default",
+      "name": "amount",
+      "data_type": "decimal",
+      "required": false,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-pricing-default.currency_code",
+      "entity_id": "ENT-pricing-default",
+      "name": "currency_code",
+      "data_type": "text",
+      "required": true,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-pricing-default.default_id",
+      "entity_id": "ENT-pricing-default",
+      "name": "default_id",
+      "data_type": "id",
+      "required": true,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-pricing-default.default_type",
+      "entity_id": "ENT-pricing-default",
+      "name": "default_type",
+      "data_type": "enum",
+      "required": true,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-pricing-default.location_id",
+      "entity_id": "ENT-pricing-default",
+      "name": "location_id",
+      "data_type": "text",
+      "required": false,
+      "calculated_by": null
     },
     {
       "id": "ENT-promotion-adoption.comment",
@@ -156754,6 +156863,18 @@
       "sort_order": 1
     },
     {
+      "field_id": "ENT-configuration-change-audit-log.entity_type",
+      "value": "location_default_currency",
+      "label": "Location default currency",
+      "sort_order": 2
+    },
+    {
+      "field_id": "ENT-configuration-change-audit-log.entity_type",
+      "value": "system_default_price",
+      "label": "System-wide default starting price",
+      "sort_order": 3
+    },
+    {
       "field_id": "ENT-content-attachment.audience",
       "value": "provider",
       "label": null,
@@ -159356,6 +159477,18 @@
       "value": "delete",
       "label": "Delete",
       "sort_order": 2
+    },
+    {
+      "field_id": "ENT-pricing-default.default_type",
+      "value": "location_default_currency",
+      "label": "Location default currency",
+      "sort_order": 0
+    },
+    {
+      "field_id": "ENT-pricing-default.default_type",
+      "value": "system_default_price",
+      "label": "System-wide default starting price",
+      "sort_order": 1
     },
     {
       "field_id": "ENT-promotion-adoption.status",
@@ -168228,6 +168361,12 @@
       "attrs": {}
     },
     {
+      "from_id": "ENT-pricing-default",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-028",
+      "attrs": {}
+    },
+    {
       "from_id": "ENT-promotion-adoption",
       "verb": "decided by",
       "to_id": "SRC-PRD-019",
@@ -176291,9 +176430,18 @@
     {
       "from_id": "FR-028",
       "verb": "active in",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {
+        "rules": 67
+      },
+      "derived": true
+    },
+    {
+      "from_id": "FR-028",
+      "verb": "active in",
       "to_id": "STG-main-01-inquiry",
       "attrs": {
-        "rules": 87
+        "rules": 25
       },
       "derived": true
     },
@@ -270893,7 +271041,7 @@
     {
       "from_id": "REQ-028-001",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -270923,7 +271071,7 @@
     {
       "from_id": "REQ-028-002",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -271025,7 +271173,7 @@
     {
       "from_id": "REQ-028-005",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -271049,7 +271197,7 @@
     {
       "from_id": "REQ-028-006",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -271068,6 +271216,12 @@
       "from_id": "REQ-028-006",
       "verb": "decided by",
       "to_id": "SRC-PRD-028",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-028-007",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -271103,13 +271257,25 @@
     {
       "from_id": "REQ-028-008",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
       "from_id": "REQ-028-008",
       "verb": "applies to",
       "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-028-008",
+      "verb": "applies to",
+      "to_id": "SCR-028-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-028-008",
+      "verb": "applies to",
+      "to_id": "SCR-028-02",
       "attrs": {}
     },
     {
@@ -271127,7 +271293,7 @@
     {
       "from_id": "REQ-028-009",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -271145,7 +271311,7 @@
     {
       "from_id": "REQ-028-010",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -271169,7 +271335,7 @@
     {
       "from_id": "REQ-028-013",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -271205,7 +271371,7 @@
     {
       "from_id": "REQ-028-014",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -271217,7 +271383,13 @@
     {
       "from_id": "REQ-028-014",
       "verb": "applies to",
-      "to_id": "SCR-031-05",
+      "to_id": "SCR-028-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-028-014",
+      "verb": "applies to",
+      "to_id": "SCR-028-02",
       "attrs": {}
     },
     {
@@ -271229,7 +271401,7 @@
     {
       "from_id": "REQ-028-015",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -271259,7 +271431,7 @@
     {
       "from_id": "REQ-028-017",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -271289,7 +271461,7 @@
     {
       "from_id": "REQ-028-018",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -271343,7 +271515,7 @@
     {
       "from_id": "REQ-028-020",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -271373,7 +271545,7 @@
     {
       "from_id": "REQ-028-021",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -271397,7 +271569,7 @@
     {
       "from_id": "REQ-028-022",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -271421,7 +271593,7 @@
     {
       "from_id": "REQ-028-023",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -271445,7 +271617,7 @@
     {
       "from_id": "REQ-028-024",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -271481,7 +271653,7 @@
     {
       "from_id": "REQ-028-025",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -271505,7 +271677,7 @@
     {
       "from_id": "REQ-028-026",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -271535,7 +271707,7 @@
     {
       "from_id": "REQ-028-027",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -271565,7 +271737,7 @@
     {
       "from_id": "REQ-028-028",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -271589,7 +271761,7 @@
     {
       "from_id": "REQ-028-029",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -271607,7 +271779,7 @@
     {
       "from_id": "REQ-028-030",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -271625,7 +271797,7 @@
     {
       "from_id": "REQ-028-031",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -271649,7 +271821,7 @@
     {
       "from_id": "REQ-028-032",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -271686,6 +271858,12 @@
       "from_id": "REQ-028-032",
       "verb": "decided by",
       "to_id": "SRC-PRD-028",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-028-033",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -271822,6 +272000,12 @@
     },
     {
       "from_id": "REQ-028-038",
+      "verb": "applies to",
+      "to_id": "ENT-patient.preferred_currency",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-028-038",
       "verb": "decided by",
       "to_id": "SRC-PRD-028",
       "attrs": {}
@@ -271884,6 +272068,12 @@
       "from_id": "REQ-028-040",
       "verb": "decided by",
       "to_id": "SRC-PRD-028",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-028-041",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -272003,7 +272193,7 @@
     {
       "from_id": "REQ-028-045",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -272021,7 +272211,7 @@
     {
       "from_id": "REQ-028-046",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -272087,6 +272277,12 @@
     {
       "from_id": "REQ-028-049",
       "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-028-049",
+      "verb": "applies at",
       "to_id": "STG-main-01-inquiry",
       "attrs": {}
     },
@@ -272129,7 +272325,7 @@
     {
       "from_id": "REQ-028-050",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -272153,7 +272349,7 @@
     {
       "from_id": "REQ-028-051",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -272177,7 +272373,7 @@
     {
       "from_id": "REQ-028-052",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -272207,7 +272403,7 @@
     {
       "from_id": "REQ-028-053",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -272231,7 +272427,7 @@
     {
       "from_id": "REQ-028-054",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -272255,7 +272451,7 @@
     {
       "from_id": "REQ-028-055",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -272285,7 +272481,7 @@
     {
       "from_id": "REQ-028-056",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -272321,7 +272517,7 @@
     {
       "from_id": "REQ-028-057",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -272351,7 +272547,7 @@
     {
       "from_id": "REQ-028-058",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -272375,7 +272571,7 @@
     {
       "from_id": "REQ-028-059",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -272393,7 +272589,7 @@
     {
       "from_id": "REQ-028-060",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -272411,7 +272607,7 @@
     {
       "from_id": "REQ-028-061",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -272435,7 +272631,7 @@
     {
       "from_id": "REQ-028-062",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -272459,13 +272655,25 @@
     {
       "from_id": "REQ-028-063",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
       "from_id": "REQ-028-063",
       "verb": "applies to",
       "to_id": "ENT-configuration-change-audit-log",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-028-063",
+      "verb": "applies to",
+      "to_id": "SCR-028-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-028-063",
+      "verb": "applies to",
+      "to_id": "SCR-028-02",
       "attrs": {}
     },
     {
@@ -272477,7 +272685,7 @@
     {
       "from_id": "REQ-028-064",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -272543,13 +272751,25 @@
     {
       "from_id": "REQ-028-067",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
       "from_id": "REQ-028-067",
       "verb": "applies to",
       "to_id": "ENT-configuration-change-audit-log",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-028-067",
+      "verb": "applies to",
+      "to_id": "SCR-028-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-028-067",
+      "verb": "applies to",
+      "to_id": "SCR-028-02",
       "attrs": {}
     },
     {
@@ -272585,7 +272805,7 @@
     {
       "from_id": "REQ-028-069",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -272603,7 +272823,7 @@
     {
       "from_id": "REQ-028-070",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -272621,7 +272841,7 @@
     {
       "from_id": "REQ-028-071",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -272639,7 +272859,7 @@
     {
       "from_id": "REQ-028-072",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -272657,7 +272877,7 @@
     {
       "from_id": "REQ-028-073",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -272675,7 +272895,7 @@
     {
       "from_id": "REQ-028-074",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -272693,7 +272913,7 @@
     {
       "from_id": "REQ-028-075",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -272711,7 +272931,7 @@
     {
       "from_id": "REQ-028-076",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -272735,7 +272955,7 @@
     {
       "from_id": "REQ-028-077",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -272753,7 +272973,7 @@
     {
       "from_id": "REQ-028-078",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -272771,7 +272991,7 @@
     {
       "from_id": "REQ-028-080",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -272789,7 +273009,7 @@
     {
       "from_id": "REQ-028-081",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -272807,7 +273027,7 @@
     {
       "from_id": "REQ-028-082",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -272837,7 +273057,7 @@
     {
       "from_id": "REQ-028-083",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -272909,7 +273129,7 @@
     {
       "from_id": "REQ-028-086",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -272957,7 +273177,19 @@
     {
       "from_id": "REQ-028-088",
       "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-028-088",
+      "verb": "applies at",
       "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-028-088",
+      "verb": "applies to",
+      "to_id": "ENT-pricing-default.amount",
       "attrs": {}
     },
     {
@@ -272981,13 +273213,13 @@
     {
       "from_id": "REQ-028-089",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
       "from_id": "REQ-028-089",
       "verb": "applies to",
-      "to_id": "ENT-location-starting-price.location_default_currency",
+      "to_id": "ENT-pricing-default.currency_code",
       "attrs": {}
     },
     {
@@ -273005,7 +273237,7 @@
     {
       "from_id": "REQ-028-090",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -273023,7 +273255,7 @@
     {
       "from_id": "REQ-028-091",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
       "attrs": {}
     },
     {
@@ -273047,7 +273279,13 @@
     {
       "from_id": "REQ-028-092",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-028-092",
+      "verb": "applies to",
+      "to_id": "ENT-location-starting-price",
       "attrs": {}
     },
     {
@@ -333005,6 +333243,16 @@
     {
       "from_id": "SCR-028-01",
       "verb": "shows",
+      "to_id": "ENT-configuration-change-audit-log.change_details",
+      "attrs": {
+        "provenance": "system calculated",
+        "label": "Change History",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-028-01",
+      "verb": "shows",
       "to_id": "ENT-configuration-change-audit-log.change_reason",
       "attrs": {
         "provenance": "user input",
@@ -333111,6 +333359,16 @@
     {
       "from_id": "SCR-028-02",
       "verb": "shows",
+      "to_id": "ENT-configuration-change-audit-log.change_details",
+      "attrs": {
+        "provenance": "system calculated",
+        "label": "Change History",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-028-02",
+      "verb": "shows",
       "to_id": "ENT-location-starting-price.change_reason",
       "attrs": {
         "provenance": "user input",
@@ -333171,16 +333429,6 @@
     {
       "from_id": "SCR-028-02",
       "verb": "shows",
-      "to_id": "ENT-location-starting-price.location_default_currency",
-      "attrs": {
-        "provenance": "user input",
-        "label": "Location Default Currency",
-        "editable": true
-      }
-    },
-    {
-      "from_id": "SCR-028-02",
-      "verb": "shows",
       "to_id": "ENT-location-starting-price.location_id",
       "attrs": {
         "provenance": "user input",
@@ -333216,6 +333464,26 @@
         "provenance": "system calculated",
         "label": "Updated By",
         "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-028-02",
+      "verb": "shows",
+      "to_id": "ENT-pricing-default.amount",
+      "attrs": {
+        "provenance": "user input",
+        "label": "System-Wide Default Starting Price",
+        "editable": true
+      }
+    },
+    {
+      "from_id": "SCR-028-02",
+      "verb": "shows",
+      "to_id": "ENT-pricing-default.currency_code",
+      "attrs": {
+        "provenance": "user input",
+        "label": "Location Default Currency",
+        "editable": true
       }
     },
     {
@@ -398680,6 +398948,12 @@
     {
       "from_id": "STP-028-005",
       "verb": "applies",
+      "to_id": "REQ-028-008",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-028-005",
+      "verb": "applies",
       "to_id": "REQ-028-023",
       "attrs": {}
     },
@@ -398907,6 +399181,42 @@
     },
     {
       "from_id": "STP-028-012",
+      "verb": "next",
+      "to_id": "STP-028-013",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-028-012",
+      "verb": "on",
+      "to_id": "SCR-028-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-028-013",
+      "verb": "applies",
+      "to_id": "REQ-028-063",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-028-013",
+      "verb": "applies",
+      "to_id": "REQ-028-067",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-028-013",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-028-013",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-028-013",
       "verb": "on",
       "to_id": "SCR-028-01",
       "attrs": {}
@@ -399047,6 +399357,12 @@
       "from_id": "STP-028-105",
       "verb": "applies",
       "to_id": "REQ-028-082",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-028-105",
+      "verb": "applies",
+      "to_id": "REQ-028-092",
       "attrs": {}
     },
     {
@@ -399543,6 +399859,12 @@
     },
     {
       "from_id": "STP-028-151",
+      "verb": "applies",
+      "to_id": "REQ-028-091",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-028-151",
       "verb": "at",
       "to_id": "STG-admin-01-configuration",
       "attrs": {}
@@ -399736,7 +400058,19 @@
     {
       "from_id": "STP-028-203",
       "verb": "applies",
+      "to_id": "REQ-028-041",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-028-203",
+      "verb": "applies",
       "to_id": "REQ-028-051",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-028-203",
+      "verb": "applies",
+      "to_id": "REQ-028-061",
       "attrs": {}
     },
     {
@@ -399827,6 +400161,12 @@
       "from_id": "STP-028-205",
       "verb": "on",
       "to_id": "SCR-028-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-028-206",
+      "verb": "applies",
+      "to_id": "REQ-028-008",
       "attrs": {}
     },
     {
@@ -399939,6 +400279,12 @@
     },
     {
       "from_id": "STP-028-208",
+      "verb": "applies",
+      "to_id": "REQ-028-092",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-028-208",
       "verb": "at",
       "to_id": "STG-admin-01-configuration",
       "attrs": {}
@@ -400047,6 +400393,12 @@
     },
     {
       "from_id": "STP-028-212",
+      "verb": "next",
+      "to_id": "STP-028-214",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-028-212",
       "verb": "on",
       "to_id": "SCR-028-02",
       "attrs": {}
@@ -400089,6 +400441,36 @@
     },
     {
       "from_id": "STP-028-213",
+      "verb": "on",
+      "to_id": "SCR-028-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-028-214",
+      "verb": "applies",
+      "to_id": "REQ-028-063",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-028-214",
+      "verb": "applies",
+      "to_id": "REQ-028-067",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-028-214",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-028-214",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-028-214",
       "verb": "on",
       "to_id": "SCR-028-02",
       "attrs": {}
@@ -400301,6 +400683,12 @@
       "from_id": "STP-028-306",
       "verb": "applies",
       "to_id": "REQ-028-056",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-028-306",
+      "verb": "applies",
+      "to_id": "REQ-028-092",
       "attrs": {}
     },
     {
@@ -400607,6 +400995,18 @@
       "from_id": "STP-028-317",
       "verb": "applies",
       "to_id": "REQ-028-082",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-028-317",
+      "verb": "applies",
+      "to_id": "REQ-028-090",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-028-317",
+      "verb": "applies",
+      "to_id": "REQ-028-092",
       "attrs": {}
     },
     {
@@ -401421,6 +401821,24 @@
     },
     {
       "from_id": "STP-028-423",
+      "verb": "next",
+      "to_id": "STP-028-424",
+      "attrs": {
+        "label": "Fallback price cannot be shown, no system-wide default",
+        "condition": "REQ-028-040"
+      }
+    },
+    {
+      "from_id": "STP-028-423",
+      "verb": "next",
+      "to_id": "STP-028-427",
+      "attrs": {
+        "label": "Fallback price cannot be shown, system-wide default set",
+        "condition": "REQ-028-040"
+      }
+    },
+    {
+      "from_id": "STP-028-423",
       "verb": "on",
       "to_id": "SCR-003-02",
       "attrs": {}
@@ -401456,7 +401874,7 @@
       "verb": "next",
       "to_id": "STP-028-428",
       "attrs": {
-        "label": "Conversion unavailable",
+        "label": "Conversion unavailable, or no price in the location default currency",
         "condition": "REQ-028-041"
       }
     },
@@ -401543,6 +401961,15 @@
       "verb": "done by",
       "to_id": "ACT-system",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-028-427",
+      "verb": "next",
+      "to_id": "STP-028-424",
+      "attrs": {
+        "label": "System-wide default cannot be shown (no conversion rate)",
+        "condition": "REQ-028-040"
+      }
     },
     {
       "from_id": "STP-028-427",
@@ -435994,6 +436421,119 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-093853-2177fa33",
+      "at": "2026-11-24T09:38:53.506682+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-028 logic review pass 2 (final pass): Inactive switch obeys the Stripe block; a price chain step that cannot show a price passes to the next step; price rows may not overlap and the fallback tie-break is stated; deactivated countries keep applying in groupings and starting prices and can still be saved; Screen 2 banners shown when the tab opens; read-only Change history panels on Screens 1 and 2; Screen 3 simulates saved configuration only; destination default currency and system-wide default price get a stored home (new ENT-pricing-default) and audit entity types; every active country is a destination; deactivated-country warning replaces the provider-location warning; patient currency is the profile preference, else the FR-029 system default; admin-side rules move to the configuration stage. Owner defaults 153, 154, 155, 156.",
+      "source_id": null,
+      "nodes_added": [
+        "ENT-pricing-default",
+        "ENT-pricing-default.amount",
+        "ENT-pricing-default.currency_code",
+        "ENT-pricing-default.default_id",
+        "ENT-pricing-default.default_type",
+        "ENT-pricing-default.location_id",
+        "STP-028-013",
+        "STP-028-214"
+      ],
+      "nodes_updated": [
+        "ENT-configuration-change-audit-log",
+        "ENT-configuration-change-audit-log.entity_type",
+        "ENT-location-starting-price.location_default_currency",
+        "EVT-regional-configuration-saved",
+        "REQ-028-001",
+        "REQ-028-002",
+        "REQ-028-005",
+        "REQ-028-006",
+        "REQ-028-007",
+        "REQ-028-008",
+        "REQ-028-009",
+        "REQ-028-010",
+        "REQ-028-013",
+        "REQ-028-014",
+        "REQ-028-015",
+        "REQ-028-017",
+        "REQ-028-018",
+        "REQ-028-020",
+        "REQ-028-021",
+        "REQ-028-022",
+        "REQ-028-023",
+        "REQ-028-024",
+        "REQ-028-025",
+        "REQ-028-026",
+        "REQ-028-027",
+        "REQ-028-028",
+        "REQ-028-029",
+        "REQ-028-030",
+        "REQ-028-031",
+        "REQ-028-032",
+        "REQ-028-033",
+        "REQ-028-037",
+        "REQ-028-038",
+        "REQ-028-040",
+        "REQ-028-041",
+        "REQ-028-045",
+        "REQ-028-046",
+        "REQ-028-049",
+        "REQ-028-050",
+        "REQ-028-051",
+        "REQ-028-052",
+        "REQ-028-053",
+        "REQ-028-054",
+        "REQ-028-055",
+        "REQ-028-056",
+        "REQ-028-057",
+        "REQ-028-058",
+        "REQ-028-059",
+        "REQ-028-060",
+        "REQ-028-061",
+        "REQ-028-062",
+        "REQ-028-063",
+        "REQ-028-064",
+        "REQ-028-067",
+        "REQ-028-069",
+        "REQ-028-070",
+        "REQ-028-071",
+        "REQ-028-072",
+        "REQ-028-073",
+        "REQ-028-074",
+        "REQ-028-075",
+        "REQ-028-076",
+        "REQ-028-077",
+        "REQ-028-078",
+        "REQ-028-080",
+        "REQ-028-081",
+        "REQ-028-082",
+        "REQ-028-083",
+        "REQ-028-086",
+        "REQ-028-088",
+        "REQ-028-089",
+        "REQ-028-090",
+        "REQ-028-091",
+        "REQ-028-092",
+        "SCR-028-01",
+        "SCR-028-02",
+        "SET-system-wide-default-starting-price",
+        "STP-028-005",
+        "STP-028-012",
+        "STP-028-105",
+        "STP-028-151",
+        "STP-028-152",
+        "STP-028-203",
+        "STP-028-206",
+        "STP-028-208",
+        "STP-028-212",
+        "STP-028-306",
+        "STP-028-317",
+        "STP-028-423",
+        "STP-028-424",
+        "STP-028-427"
+      ],
+      "edges_added": 110,
+      "edges_removed": 66,
+      "rows": 273
+    },
     {
       "id": "cs-20261124-093556-ec9bd19b",
       "at": "2026-11-24T09:35:56.278635+00:00",
