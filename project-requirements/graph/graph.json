@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T08:10:58Z",
+  "generated_at": "2026-11-24T08:15:45Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -71596,9 +71596,9 @@
       "owner_fr": "FR-020",
       "title": "Mandatory provider-status cancellation notices",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System MUST send mandatory provider.status_cancellation_patient and provider.status_cancellation_admin_support notifications for each record affected by an FR-015 provider suspension/deactivation, regardless of the Notify Provider checkbox, with privacy-safe patient content (no patient-cancelled wording, no payment instruction, no confidential reason), and MUST use the FR-003 pre-acceptance variants (Workflow 2 Alternative Flow B4, REQ-003-021): \"[Clinic] is no longer available. Your other offers are still open.\" when other offers remain open; \"[Clinic] is no longer available. We are finding new offers for you.\" when the inquiry is redistributed, or a confirmation request first, with Confirm and Decline deep links to FR-003 Screen 8, when the patient had explicitly selected the affected provider. When the patient has not answered after 48 hours, one mandatory reminder provider.status_redistribution_reminder follows (REQ-020-159).",
+        "statement": "System MUST send mandatory provider.status_cancellation_patient and provider.status_cancellation_admin_support notifications for each record affected by an FR-015 provider suspension/deactivation, regardless of the Notify Provider checkbox, with privacy-safe patient content (no patient-cancelled wording, no payment instruction, no confidential reason), and MUST use the FR-003 pre-acceptance variants (Workflow 2 Alternative Flow B4, REQ-003-021): in this order: (1) \"[Clinic] is no longer available. Your other offers are still open.\" when other live offers remain; (2) a confirmation request first, with Confirm and Decline deep links to FR-003 Screen 8, when no live offer remains and the patient had explicitly selected the affected provider; (3) \"[Clinic] is no longer available. We are finding new offers for you.\" when no live offer remains and the patient made no explicit selection. When the patient has not answered after 48 hours, one mandatory reminder provider.status_redistribution_reminder follows (REQ-020-159).",
         "rationale": "Functional Requirements Summary, prd.md line 501. Also stated at line 302 (Business Rules, Provider-Status Cancellation Notifications): patient content uses provider-caused wording and a Contact Admin/Support action, with the three pre-acceptance variants from FR-003 REQ-003-021 (CR links in the PRD line are not read)."
       }
     },
@@ -71681,9 +71681,9 @@
       "owner_fr": "FR-020",
       "title": "quote.cancelled_inquiry goes only to quote-holding providers and is critical",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST always send quote.cancelled_inquiry, and only that notice, to each provider holding a quote for the inquiry in draft, sent or expired state when a patient cancels the inquiry or an admin closes it (never to the provider of a replacement draft quote, REQ-003-127); a provider that never quoted is told nothing; neither FR-030 toggles nor FR-032 provider notification preferences may suppress it. The reason is patient-private: a patient cancellation says only Inquiry cancelled by patient, an admin close says the inquiry was closed by Hairline and gives no reason. The notice is critical (REQ-020-158): its target is a first send attempt within 5 minutes, and a failed first attempt is retried under the FR-030 retry rule (up to 3 retries, 1 hour apart by default), so 5 minutes is a target, not a guarantee.",
+        "statement": "System MUST always send quote.cancelled_inquiry, and only that notice, to each provider holding a quote for the inquiry in draft, sent or expired state when a patient cancels the inquiry or the system cancels it at the approval of an account deletion (FR-023 REQ-023-042) (never to the provider of a replacement draft quote, REQ-003-127); a provider that never quoted is told nothing; an admin Close inquiry sends no provider notice; neither FR-030 toggles nor FR-032 provider notification preferences may suppress it. The reason is patient-private: a patient cancellation says only Inquiry cancelled by patient; the deletion cancellation shows no reason. The notice is critical (REQ-020-158): its target is a first send attempt within 5 minutes, and a failed first attempt is retried under the FR-030 retry rule (up to 3 retries, 1 hour apart by default), so 5 minutes is a target, not a guarantee.",
         "rationale": "Functional Requirements Summary and the quote.cancelled_inquiry catalogue row (a pointer to REQ-030-039). FR-030 and FR-003 are queued to align REQ-030-039, REQ-030-219 and REQ-003-100."
       }
     },
@@ -71873,7 +71873,7 @@
       "owner_fr": "FR-020",
       "title": "Delivery attempt and status recorded with audit",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "Records delivery attempt and status; exposes audit.",
         "rationale": "prd.md line 158. Main Flow step 4."
@@ -71897,9 +71897,9 @@
       "owner_fr": "FR-020",
       "title": "A1: disabled channel suppressed, others still attempted",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Preference Disabled. Trigger: Recipient has disabled Email or Push. Outcome: Channel suppressed; delivery attempted on remaining enabled channels (back to step 3). A mandatory patient notice is sent by email even when the patient has switched off every channel, and always appears in the in-app list; a non-mandatory notice with no channel left is recorded with status suppressed and ends.",
+        "statement": "Preference Disabled. Trigger: Recipient has disabled Email or Push. Outcome: Channel suppressed; delivery attempted on remaining enabled channels (back to step 3). A mandatory patient notice is sent by email even when the patient has switched off every channel; a non-mandatory notice with no channel left is recorded with status suppressed and ends. Every patient notice creates the in-app record whatever the channel toggles (dsr.fulfilled excepted, REQ-020-161); suppressed describes the email and push attempts only.",
         "rationale": "Alternative Flow A1."
       }
     },
@@ -71909,7 +71909,7 @@
       "owner_fr": "FR-020",
       "title": "B1: excessive events coalesced or deferred, suppression audited",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Throttling. Trigger: Excessive events in short time window. Outcome: Coalesce or defer per policy; record suppression in audit. A deferred notice returns to step 3 when its hold ends; a notice merged into another ends with status coalesced. A critical notice (REQ-020-158) is never coalesced or deferred.",
         "rationale": "Alternative Flow B1."
@@ -71921,9 +71921,9 @@
       "owner_fr": "FR-020",
       "title": "B2: failed channel attempts retried under the FR-030 retry rule",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Channel Failure. Trigger: Email/push/SMS provider unavailable. Outcome: Failed attempts are retried under the FR-030 retry rule (up to 3 retries, 1 hour apart by default), each retry returning to step 4; status reflects failure cause; after the last retry the notice ends with status failed.",
+        "statement": "Channel Failure. Trigger: Email/push/SMS provider unavailable. Outcome: Failed attempts are retried under the FR-030 retry rule (up to 3 retries, 1 hour apart by default), each retry returning to step 4; status reflects failure cause; after the last retry the notice ends with status failed. A notice counts as complete when its first attempt has been handed to a channel or it has ended failed after the last retry.",
         "rationale": "Alternative Flow B2. The failover clause is removed; the retry rule is owned by FR-030."
       }
     },
@@ -71933,7 +71933,7 @@
       "owner_fr": "FR-020",
       "title": "One notification record per recipient and event, one attempt row per channel attempt",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "statement": "One notification record per recipient and event, with one attempt row per channel attempt under it; each attempt row carries channel, provider, status, timestamp and, on failure, the cause. Attempt status is one of queued, sent, delivered, failed, suppressed, deferred, coalesced.",
         "rationale": "Business Rules, Delivery Audit. FR-030 delivery log is a view of the same rows (queued)."
@@ -71945,7 +71945,7 @@
       "owner_fr": "FR-020",
       "title": "Throttling and suppression visible in audit logs",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "Throttling and suppression policies are transparent in audit logs: a suppressed, deferred or coalesced notice is an attempt row with that status.",
         "rationale": "prd.md line 337."
@@ -71957,7 +71957,7 @@
       "owner_fr": "FR-020",
       "title": "Event handlers are idempotent; failed deliveries retried under the FR-030 retry rule",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "Event-driven design; idempotent handlers; failed deliveries retried under the FR-030 retry rule (up to 3 retries, 1 hour apart by default).",
         "rationale": "Implementation Notes: promoted because idempotency is a business rule."
@@ -71993,7 +71993,7 @@
       "owner_fr": "FR-020",
       "title": "Admin recipients and coverage come from the FR-030 catalog",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "Admin recipients and event coverage are defined by the FR-030 event catalog and configured rules (no additional hard-coded admin event list in FR-020). An Admin recipient may be defined by a held permission, for example the Admins holding A-09 Edit Settings for legal.coverage_below_threshold.",
         "rationale": "Business Rules, Admin Notifications."
@@ -72258,9 +72258,9 @@
       "owner_fr": "FR-020",
       "title": "Notification lists persist 90 days, then archive",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Notifications persist for 90 days then archive. The same 90-day window applies to the patient, provider and admin lists; an archived notice is no longer in the lists, and a deep link to it opens the list with a no longer available message.",
+        "statement": "Notifications persist for 90 days then archive. The same 90-day window applies to the patient, provider and admin lists; an archived notice is no longer in the lists, and a deep link to it opens the list with a no longer available message; on the provider and admin surfaces it opens the notification dropdown with that message.",
         "rationale": "Consolidated Screen Notes, Patient listing; Screens 2 and 3 point to it."
       }
     },
@@ -72294,9 +72294,9 @@
       "owner_fr": "FR-020",
       "title": "inquiry.cancelled delivered by email and push within 5 minutes",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Given patient cancels inquiry with 2 active quotes, when cancellation completes, then patient receives `inquiry.cancelled` notification via both email and push within 5 minutes confirming cancellation with reason visible.",
+        "statement": "Given patient cancels inquiry with 2 active quotes, when cancellation completes, then a first send attempt of `inquiry.cancelled` is made within 5 minutes on both email and push, confirming the cancellation and showing the patient's own cancellation reason.",
         "rationale": "prd.md line 445. Promoted from User Story 4 acceptance scenario 1 because it states a delivery time and channel requirement. Change Log line 528 records the SLA alignment."
       }
     },
@@ -72342,9 +72342,9 @@
       "owner_fr": "FR-020",
       "title": "Catalog: Inquiry Cancelled (inquiry.cancelled)",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Notification catalog event inquiry.cancelled (Inquiry Cancelled), category Inquiry. Primary recipients: Patient, Admin (optional). Notes: Fires when a patient cancels the inquiry in the Inquiry or Quoted stage (FR-003 Workflow 5) and when an admin closes the inquiry (FR-006 Close inquiry, cancelled_by = admin; REQ-003-014). The patient receives the cancellation confirmation (mandatory, aligns with FR-003 Workflow 5 step 4 and Screen 8b); for an admin close the patient notice carries the reason as FR-006 defines. Providers are not recipients: each provider holding a quote for the inquiry in draft, sent or expired state is told by quote.cancelled_inquiry only, and a provider that never quoted is told nothing (REQ-020-020). The reason a patient gives is patient-private. MVP default channels: Email + Push.",
+        "statement": "Notification catalog event inquiry.cancelled (Inquiry Cancelled), category Inquiry. Primary recipients: Patient, Admin (optional). Notes: Fires when a patient cancels the inquiry in the Inquiry or Quoted stage (FR-003 Workflow 5) and when an admin closes the inquiry (FR-006 Close inquiry, cancelled_by = admin; REQ-003-014). The patient receives the cancellation confirmation (mandatory, aligns with FR-003 Workflow 5 step 4 and Screen 8b); an admin close is one event key with a second variant: the notice says the inquiry was closed by Hairline, gives the reason as FR-006 defines (REQ-003-014), says no replacement will follow and carries the Contact Admin/Support action. A system cancellation at the approval of an account deletion (FR-023 REQ-023-042) sends the patient no inquiry.cancelled. Providers are not recipients: each provider holding a quote for the inquiry in draft, sent or expired state is told by quote.cancelled_inquiry only, and a provider that never quoted is told nothing (REQ-020-020). The reason a patient gives is patient-private. MVP default channels: Email + Push.",
         "rationale": "Event Catalog table. The table mirrors FR-030; FR-030 prevails on any mismatch."
       }
     },
@@ -72378,9 +72378,9 @@
       "owner_fr": "FR-020",
       "title": "Catalog: Booking Cancelled (booking.cancelled)",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Notification catalog event booking.cancelled (Booking Cancelled), category Booking/Schedule. Primary recipients: Patient, Provider, Admin (optional). Notes: Covers every cause of a booking cancellation: Admin cancellation, patient drop-out, unpaid balance or installment plan default (FR-007B), and provider fault. The reason text each recipient sees is the one FR-006 defines (REQ-006-011).",
+        "statement": "Notification catalog event booking.cancelled (Booking Cancelled), category Booking/Schedule. Primary recipients: Patient, Provider, Admin (optional). Notes: Fires for an Admin cancellation, a provider drop-out at the FR-006 Screen 10 submit, and a system cancellation for an unpaid balance (including an FR-007B installment plan default). A closure for provider suspension or deactivation sends booking.provider_fault_replacement to the patient and not booking.cancelled. The reason text each recipient sees is the one FR-006 defines (REQ-006-011).",
         "rationale": "Event Catalog table. The table mirrors FR-030; FR-030 prevails on any mismatch. EVT-booking-cancelled is FR-030-owned; the emits edge at STG-main-05-payment is queued for FR-030."
       }
     },
@@ -73017,9 +73017,9 @@
       "owner_fr": "FR-020",
       "title": "Catalog: Redistribution Confirmation Reminder (provider.status_redistribution_reminder)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "Notification catalog event provider.status_redistribution_reminder (Redistribution Confirmation Reminder), category Provider/Compliance. Primary recipients: Patient. Notes: FR-003 Workflow 2 Alternative Flow B4 step 3 (STP-003-095, REQ-003-128). Sent once, when the patient has not answered the confirm variant of provider.status_cancellation_patient after 48 hours; same Confirm and Decline deep links to FR-003 Screen 8 and the Contact Admin/Support action; no second reminder. Mandatory (cannot be disabled in FR-030 rules).",
+        "statement": "Notification catalog event provider.status_redistribution_reminder (Redistribution Confirmation Reminder), category Provider/Compliance. Primary recipients: Patient. Notes: FR-003 Workflow 2 Alternative Flow B4 step 3 (STP-003-095, REQ-003-128). Sent once, when the patient has not answered the confirm variant of provider.status_cancellation_patient after 48 hours; same Confirm and Decline deep links to FR-003 Screen 8 and the Contact Admin/Support action; no second reminder. The reminder is not sent, and a pending one is dropped, when the redistribution is no longer awaiting the patient's confirmation (the patient answered, the inquiry was cancelled, an Admin reassigned providers or reran distribution, or the support marker was cleared). Mandatory (cannot be disabled in FR-030 rules).",
         "rationale": "Event Catalog table. The table mirrors FR-030; FR-030 prevails on any mismatch. No Event node exists yet; FR-003 is queued to add it."
       }
     },
@@ -73041,9 +73041,9 @@
       "owner_fr": "FR-020",
       "title": "Catalog: Data Request Status Notices (dsr.verification_required, dsr.in_progress, dsr.fulfilled, dsr.denied, dsr.blocked_by_obligation)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "Notification catalog events dsr.verification_required, dsr.in_progress, dsr.fulfilled, dsr.denied and dsr.blocked_by_obligation (Data Request Status Notices), category Account/Auth. Primary recipients: Patient. Notes: FR-023 REQ-023-008. Status notices on a deletion request: identity proof insufficient (the patient provides more), approved and processing, completed (with the actions taken and the legal basis of any retained records), denied (with the reason), approval blocked by an active obligation (with the expected timeline). The outcome notices dsr.fulfilled and dsr.denied are mandatory; admin cannot disable them.",
+        "statement": "Notification catalog events dsr.verification_required, dsr.in_progress, dsr.fulfilled, dsr.denied and dsr.blocked_by_obligation (Data Request Status Notices), category Account/Auth. Primary recipients: Patient. Notes: FR-023 REQ-023-008. Status notices on a deletion request: identity proof insufficient (the patient provides more), approved and processing, completed (with the actions taken and the legal basis of any retained records), denied (with the reason), approval blocked by an active obligation (with the expected timeline). The outcome notices dsr.fulfilled and dsr.denied are mandatory; admin cannot disable them. dsr.fulfilled is sent by email only, to the contact address FR-023 captured (REQ-023-033), is critical and creates no in-app record; when the email still fails after all retries, the captured address is deleted anyway and the Admin sees the failure in the delivery log.",
         "rationale": "Event Catalog table. The table mirrors FR-030; FR-030 prevails on any mismatch. One grouped row for the five patient status notices of one request."
       }
     },
@@ -115330,7 +115330,7 @@
       "owner_fr": "FR-020",
       "title": "Channel is suppressed and delivery is attempted on the remaining enabled channels",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "A1 outcome",
         "description": "A1: the disabled channel is suppressed and delivery continues on the remaining channels (back to step 3). May also end: a mandatory patient notice still goes by email; a non-mandatory notice with no channel left is recorded as suppressed and ends."
@@ -115342,7 +115342,7 @@
       "owner_fr": "FR-020",
       "title": "Notifications are coalesced or deferred per policy and the suppression is recorded in the audit",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "B1 outcome",
         "description": "B1: the notice is coalesced or deferred per policy and the suppression is audited. A deferred notice returns to step 3 when its hold ends. May also end: a coalesced notice ends with status coalesced. A critical notice skips this step."
@@ -115352,12 +115352,12 @@
       "id": "STP-020-008",
       "type": "Step",
       "owner_fr": "FR-020",
-      "title": "Delivery is retried with backoff, failover is used when configured, and the status reflects the failure cause",
+      "title": "Delivery is retried under the FR-030 retry rule and the status reflects the failure cause",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "B2 outcome",
-        "description": "B2: a failed channel attempt is retried under the FR-030 retry rule (up to 3 retries, 1 hour apart by default), each retry returning to step 4. May also end: after the last retry the notice ends with status failed."
+        "description": "B2: a failed channel attempt is retried under the FR-030 retry rule (up to 3 retries, 1 hour apart by default), each retry returning to step 4. May also end: after the last retry the notice ends with status failed. A notice counts as complete when its first attempt has been handed to a channel or it has ended failed after the last retry."
       }
     },
     {
@@ -174532,7 +174532,7 @@
       "verb": "active in",
       "to_id": "STG-main-01-inquiry",
       "attrs": {
-        "rules": 33
+        "rules": 25
       },
       "derived": true
     },
@@ -174541,7 +174541,7 @@
       "verb": "active in",
       "to_id": "STG-main-02-quote",
       "attrs": {
-        "rules": 11
+        "rules": 12
       },
       "derived": true
     },
@@ -174559,7 +174559,7 @@
       "verb": "active in",
       "to_id": "STG-main-04-booking",
       "attrs": {
-        "rules": 10
+        "rules": 11
       },
       "derived": true
     },
@@ -174658,7 +174658,7 @@
       "verb": "active in",
       "to_id": "STG-platform-01-all-stages",
       "attrs": {
-        "rules": 3
+        "rules": 11
       },
       "derived": true
     },
@@ -249353,7 +249353,7 @@
     {
       "from_id": "REQ-020-036",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-platform-01-all-stages",
       "attrs": {}
     },
     {
@@ -249401,7 +249401,7 @@
     {
       "from_id": "REQ-020-038",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-platform-01-all-stages",
       "attrs": {}
     },
     {
@@ -249413,7 +249413,7 @@
     {
       "from_id": "REQ-020-039",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-platform-01-all-stages",
       "attrs": {}
     },
     {
@@ -249431,7 +249431,7 @@
     {
       "from_id": "REQ-020-040",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-platform-01-all-stages",
       "attrs": {}
     },
     {
@@ -249449,13 +249449,19 @@
     {
       "from_id": "REQ-020-041",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-platform-01-all-stages",
       "attrs": {}
     },
     {
       "from_id": "REQ-020-041",
       "verb": "applies to",
       "to_id": "ENT-notification-attempt",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-041",
+      "verb": "applies to",
+      "to_id": "ENT-notification-record",
       "attrs": {}
     },
     {
@@ -249467,7 +249473,7 @@
     {
       "from_id": "REQ-020-042",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-platform-01-all-stages",
       "attrs": {}
     },
     {
@@ -249485,7 +249491,7 @@
     {
       "from_id": "REQ-020-043",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-platform-01-all-stages",
       "attrs": {}
     },
     {
@@ -249563,7 +249569,7 @@
     {
       "from_id": "REQ-020-046",
       "verb": "applies at",
-      "to_id": "STG-main-01-inquiry",
+      "to_id": "STG-platform-01-all-stages",
       "attrs": {}
     },
     {
@@ -250446,6 +250452,18 @@
       "from_id": "REQ-020-076",
       "verb": "applies at",
       "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-076",
+      "verb": "applies at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-076",
+      "verb": "applies at",
+      "to_id": "STG-main-04-booking",
       "attrs": {}
     },
     {
@@ -383728,7 +383746,17 @@
       "verb": "next",
       "to_id": "STP-020-003",
       "attrs": {
-        "label": "Remaining channels still enabled"
+        "label": "Remaining channels still enabled, or the forced email for a mandatory notice with every channel off",
+        "condition": "REQ-020-038"
+      }
+    },
+    {
+      "from_id": "STP-020-006",
+      "verb": "next",
+      "to_id": "STP-020-004",
+      "attrs": {
+        "label": "No channel left: recorded as suppressed",
+        "condition": "REQ-020-038"
       }
     },
     {
@@ -383770,6 +383798,15 @@
       }
     },
     {
+      "from_id": "STP-020-007",
+      "verb": "next",
+      "to_id": "STP-020-004",
+      "attrs": {
+        "label": "Coalesced: recorded as coalesced",
+        "condition": "REQ-020-039"
+      }
+    },
+    {
       "from_id": "STP-020-008",
       "verb": "applies",
       "to_id": "REQ-020-040",
@@ -383798,7 +383835,8 @@
       "verb": "next",
       "to_id": "STP-020-004",
       "attrs": {
-        "label": "Retry attempt recorded"
+        "label": "Retry attempt recorded; after the last retry the status is failed",
+        "condition": "REQ-020-040"
       }
     },
     {
@@ -432375,6 +432413,38 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-081433-b01924ac",
+      "at": "2026-11-24T08:14:33.263285+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-020 logic review pass 2 (15 findings; 14 accepted or ruled, P2-13 deferred to the backlog; PRD 2.18). The three provider-status variants are chosen in a stated order; the redistribution reminder is dropped when no confirmation is awaited; booking.cancelled causes follow FR-006; inquiry.cancelled has an Admin-close variant that says no replacement will follow; an Admin Close inquiry sends no provider notice and an account-deletion cancellation does; a notice counts as complete when its first attempt is handed to a channel or it has ended failed; dsr.fulfilled goes by email to the captured address with no in-app record; every patient notice creates the in-app record; the 5-minute figure is a first-attempt target in the acceptance scenario; an archived-notice link opens the dropdown on provider and admin surfaces; flow steps 006, 007 and 008 reach step 004; delivery and audit rules move to the all-stages platform stage. Neighbour changes in FR-003, FR-004, FR-006, FR-023, FR-030 are queued in plans/reports/logic-review-ledger.md (pass 2 section), not made here.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-020-013",
+        "REQ-020-020",
+        "REQ-020-036",
+        "REQ-020-038",
+        "REQ-020-039",
+        "REQ-020-040",
+        "REQ-020-041",
+        "REQ-020-042",
+        "REQ-020-043",
+        "REQ-020-046",
+        "REQ-020-068",
+        "REQ-020-071",
+        "REQ-020-076",
+        "REQ-020-092",
+        "REQ-020-159",
+        "REQ-020-161",
+        "STP-020-006",
+        "STP-020-007",
+        "STP-020-008"
+      ],
+      "edges_added": 15,
+      "edges_removed": 10,
+      "rows": 37
+    },
     {
       "id": "cs-20261124-080925-506a07ec",
       "at": "2026-11-24T08:09:25.763163+00:00",
