@@ -14,7 +14,7 @@ This repository contains comprehensive documentation for the **Hairline Platform
 
 ### For New Team Members
 
-1. **Start Here**: Read [`project-requirements/constitution-summary.md`](project-requirements/constitution-summary.md) for project overview
+1. **Start Here**: Read [`project-requirements/constitution.md`](project-requirements/constitution.md) for project overview
 2. **Core Requirements**: Review [`project-requirements/system-prd.md`](project-requirements/system-prd.md) for functional requirements
 3. **Technical Details**: Check [`project-requirements/system-technical-spec.md`](project-requirements/system-technical-spec.md) for implementation guidance
 
@@ -32,7 +32,7 @@ This repository contains comprehensive documentation for the **Hairline Platform
 
 ```sh
 project-requirements/
-├── constitution-summary.md      # 🎯 START HERE - Project overview & principles
+├── constitution.md      # 🎯 START HERE - Project overview & principles
 ├── system-prd.md                # 📋 Functional requirements with module mapping
 ├── system-technical-spec.md     # ⚙️ Technical architecture & implementation
 ├── system-data-schema.md        # 🗄️ Database design and relationships
@@ -62,7 +62,7 @@ project-automation/task-prompt/  # 📝 Task generation templates
 
 ### Product Managers
 
-- **Primary**: [`constitution-summary.md`](project-requirements/constitution-summary.md) - Project vision & principles
+- **Primary**: [`constitution.md`](project-requirements/constitution.md) - Project vision & principles
 - **Secondary**: [`system-prd.md`](project-requirements/system-prd.md) - Detailed requirements
 
 ### Developers
@@ -77,7 +77,7 @@ project-automation/task-prompt/  # 📝 Task generation templates
 
 ### Project Managers
 
-- **Primary**: [`constitution-summary.md`](project-requirements/constitution-summary.md) - Project scope
+- **Primary**: [`constitution.md`](project-requirements/constitution.md) - Project scope
 - **Secondary**: [`reports/`](reports/) - Progress tracking
 
 ## 🏗️ System Architecture
@@ -125,7 +125,7 @@ All documentation changes are tracked in [`project-requirements/update-logs/`](p
 
 ## 🎯 Getting Started Checklist
 
-- [ ] Read [`constitution-summary.md`](project-requirements/constitution-summary.md)
+- [ ] Read [`constitution.md`](project-requirements/constitution.md)
 - [ ] Review relevant sections of [`system-prd.md`](project-requirements/system-prd.md)
 - [ ] Check [`update-logs/README.md`](project-requirements/update-logs/README.md) for recent changes
 - [ ] Familiarize yourself with module codes (P-01, PR-01, A-01, S-01)

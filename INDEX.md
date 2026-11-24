@@ -22,7 +22,7 @@ Find your task, go to the listed area, then jump via the Section Maps in §C.
 | System-wide requirements, personas, core workflows | `project-requirements/system-prd.md` | §C.2 |
 | Database tables, fields, relationships | `project-requirements/system-data-schema.md` | §C.3 |
 | Architecture, APIs, integrations, deployment | `project-requirements/system-technical-spec.md` | §C.4 |
-| Project principles / scope / vision | `project-requirements/constitution-summary.md` | read top-to-mid only |
+| Project principles / scope / vision | `project-requirements/constitution.md` | ⚠️ >1000 lines: read "How to use this document" first, then only the Part you need (the old summary is merged in as the Appendix) |
 | Original client requirements (verbatim) | `project-requirements/transcriptions/` | locate file first |
 | Subsequent stakeholder meetings, files, and extracted decisions | `project-requirements/sources/source-register.md` | read the register, then one normalized source record; raw files are evidence only |
 | Verifying an FR is built correctly | run the `verify-fr` skill | skill is authoritative |
@@ -94,7 +94,7 @@ local-docs/
 ├── README.md                     Human onboarding (people, not routing)
 ├── INDEX.md                      ← THIS FILE (agent routing)
 ├── project-requirements/
-│   ├── constitution-summary.md   Project principles & scope
+│   ├── constitution.md           Project constitution (principles, rules, PRD standards; summary merged in)
 │   ├── system-prd.md             System PRD — 38 FRs, personas, workflows  ⚠️ ~2000 lines
 │   ├── system-technical-spec.md  Architecture, APIs, deploy               ⚠️ ~2070 lines
 │   ├── system-data-schema.md     97 tables, relationships                 ⚠️ ~2027 lines
