@@ -91,11 +91,11 @@ Financial records remain booking-based: one patient invoice resolves through its
 | Payment received / receipt | Patient, Provider (optional), Admin (optional) | Email + Push | Triggered on successful Stripe payment |
 | Payment failed | Patient, Admin (optional) | Email + Push | Triggered on failed charge or webhook |
 | Payment due reminder (installment / balance) | Patient | Email + Push | Sent 3 days before due date |
-| Provider payout processed | Provider, Admin (optional) | Email + Push | Sent after admin confirms payout |
+| Provider payout processed | Provider, Admin (optional) | Email + Push | Sent when a Stripe Connect payout is paid, or when the admin marks a settlement statement as paid |
 | Affiliate payout processed | Affiliate, Admin (optional) | Email + Push | Sent after monthly affiliate payout |
-| Payout failed | Admin (primary), Provider (optional), Affiliate (optional) | Email + Push | Triggered on failed Stripe transfer |
-| Outstanding invoice alert | Admin | Email + Push | Internal alert for overdue patient invoices once an invoice has been overdue for the alert threshold (admin setting, expressed in days overdue) (REQ-017-182) |
-| Overdue payout alert | Admin | Email + Push | Triggered on payout day when a statement was not approved between the cutoff day and the payout day and was skipped by auto-processing |
+| Payout failed | Admin (primary), Provider (optional), Affiliate (optional) | Email + Push | Triggered on a failed Stripe transfer of a per-booking payout or an affiliate payout |
+| Outstanding invoice alert | Admin | Email + Push | Internal alert for overdue patient invoices once an invoice has been overdue for the alert threshold (admin setting, expressed in days overdue, default 7) (REQ-017-182) |
+| Overdue payout alert | Admin | Email + Push | Triggered on payout day when a statement was not approved between the cutoff day and the payout day and became Overdue |
 
 **Channels**: Email and in-app push (notification dropdown) for both admin and provider platforms. SMS is deferred to a future phase. (REQ-017-035)
 
@@ -117,20 +117,20 @@ Financial records remain booking-based: one patient invoice resolves through its
 
 **Automated Triggers**:
 
-- Treatment completion triggers provider payout eligibility calculation; eligible earnings are immediately added to the provider's running earnings total (REQ-017-037)
+- Treatment completion triggers provider payout eligibility calculation; eligible earnings are added to the provider's running earnings total as Pending release, and become Released when the booking's funds are released: the confirmation window ends with no open problem case, or an admin resolves the case (REQ-017-037, REQ-017-189)
 - Scheduled cron job runs on the platform-wide cutoff day (Sunday by default) for manual-rail clinics: for each active clinic with eligible earnings, the system generates a payout statement with status "Pending Approval"; admin notified to review and approve newly generated statements. The review time is the gap between the cutoff day and the payout day (REQ-017-038)
-- Scheduled cron job on payout day (Wednesday by default, admin-editable) auto-processes all statements with status "Approved" — no admin action required on payout day; statements still in "Pending Approval" are marked "Overdue" and admin is notified
-- Scheduled cron jobs check for upcoming installment payments (daily at 3 AM UTC) (REQ-017-183)
+- Scheduled cron job on payout day (Wednesday by default, admin-editable) makes the statements with status "Approved" due for payment by the admin, who pays each by bank transfer and marks it as paid; statements still in "Pending Approval" are marked "Overdue" and admin is notified (REQ-017-153, REQ-017-188)
+- One scheduled job runs hourly and acts on each installment plan whose due day has started in the clinic's timezone; payment reminders use the same day boundary at 9 AM clinic time, 3 days before the due date (REQ-017-183)
 - Scheduled cron jobs generate monthly affiliate payout summaries on the affiliate payout day each month (a platform setting owned by FR-018, default the 7th)
-- Stripe webhook events (`transfer.created`, `transfer.paid`, `transfer.failed`) trigger real-time payout status updates (REQ-017-039)
+- Stripe webhook events (`transfer.created`, `transfer.paid`, `transfer.failed`) trigger real-time status updates of Stripe Connect per-booking payouts and affiliate payouts, never of a settlement statement (REQ-017-039, REQ-017-186)
 - Failed payment events trigger admin alerts and retry mechanisms
 
 **Provider Access**:
 
 - Provider logs into Provider Platform → navigates to "Financial Management" section (REQ-017-036)
 - Stage 1 (earnings tracking): Provider sees per-treatment earnings accumulate in real time as treatments complete — this is always visible (REQ-017-040)
-- Stage 2 (payout visibility): Provider sees a confirmed payout entry ONLY after admin has approved the payout statement and the Stripe transfer is initiated — providers do NOT see draft statements during the review window between the cutoff day and the payout day (REQ-017-040)
-- Providers download invoice PDFs after a payout is fully confirmed (Stripe transfer complete)
+- Stage 2 (payout visibility): Provider sees a confirmed payout entry ONLY after the payout is confirmed: a Stripe Connect payout once its transfer is initiated, a manual-rail statement once the admin marks it as paid — providers do NOT see draft statements during the review window between the cutoff day and the payout day (REQ-017-040)
+- Providers download invoice PDFs after a payout is fully confirmed (Stripe transfer complete, or statement marked as paid)
 
 ---
 
@@ -139,20 +139,20 @@ Financial records remain booking-based: one patient invoice resolves through its
 ### Main Flow: Provider Payout Processing
 
 **Actors**: Admin, Provider, System (Payment Processing Service), Stripe
-**Trigger**: System auto-generates payout statement on the platform-wide cutoff day; admin reviews and approves between the cutoff day and the payout day; system auto-processes on payout day
-**Outcome**: Provider receives payout; invoice generated and sent; transaction logged (REQ-017-041, REQ-017-042, REQ-017-043)
+**Trigger**: System auto-generates payout statement on the platform-wide cutoff day; admin reviews and approves between the cutoff day and the payout day; on payout day the admin pays the approved statements and marks them as paid
+**Outcome**: Provider is paid; invoice generated and sent; transaction logged (REQ-017-041, REQ-017-042, REQ-017-043)
 
-> **Rail scope**: this flow is the manual settlement rail's cycle (statement, review, payout day). A Stripe Connect clinic is not paid through this cycle: it is paid one payout per released booking, at release (see Business Rules, Fund Release and Payout Rules).
+> **Rail scope**: this flow is the manual settlement rail's cycle (statement, review, payout day). A settlement statement exists only for a manual-rail clinic and has five states: Pending Approval, Approved, Overdue, Paid (set when the admin marks it paid) and Voided (REQ-017-186). A Stripe Connect clinic is not paid through this cycle: it is paid one payout per released booking, at release, and Processing, Failed, the `transfer.*` webhooks and Retry Payout belong to that payout (see Business Rules, Fund Release and Payout Rules, and the Stripe Connect payouts section of Screen 2; REQ-017-187).
 >
-> On the manual settlement rail the clinic is paid by bank transfer after the statement is generated on the cutoff day and approved by the admin; the admin records the payment by marking the statement as paid (Release Rules 2 to 4). Steps 14 to 17 below show the Stripe transfer path; for a manual-rail clinic the "Paid" status follows the admin marking the statement as paid.
+> On the manual settlement rail the clinic is paid by bank transfer after the statement is generated on the cutoff day and approved by the admin; the admin records the payment with Mark as Paid on Screen 3 (steps 14 to 16, REQ-017-188; Release Rules 2 to 4). An Overdue statement that is approved is payable at once: it does not wait for the next payout day (REQ-017-076).
 >
-> This diagram incorporates the optional note flow, overdue payout path, and payout failure/retry path as decision branches — see Alternative Flows for Bulk Approval (A2), Dispute Resolution (B2), and Currency Alert (B3).
+> This diagram incorporates the optional note flow and the overdue payout path as decision branches. The Stripe Connect per-booking payout path is described under Alternative Flow B4 — see Alternative Flows for Bulk Approval (A1), Dispute Resolution (B1), Currency Alert (B2) and held-money resolution (B4).
 
 **Flow Diagram**:
 
 ```mermaid
 flowchart TD
-  S1["1. Cron runs on the platform-wide cutoff day for manual-rail clinics"] --> S2["2. System calculates eligible earnings per provider: completed/aftercare treatments, commission from each booking's confirmation-time snapshot (Percentage or Flat Rate per completed procedure), net payout amount"]
+  S1["1. Cron runs on the platform-wide cutoff day for manual-rail clinics"] --> S2["2. System calculates eligible earnings per provider: completed/aftercare treatments whose funds are released (REQ-017-189), commission from each booking's confirmation-time snapshot (Percentage or Flat Rate per completed procedure), net payout amount"]
   S2 --> S3["3. Payout statement created per provider — status &quot;Pending Approval&quot;; dashboard view only, no PDF generated"]
   S3 --> S4["4. System notifies admin via push + email: &quot;X statements ready for review. Payout date: [date]&quot;"]
   S4 --> S5["5. Provider does NOT see the statement — internal to admin review workflow only"]
@@ -165,21 +165,16 @@ flowchart TD
   S9 --> S10{"10. Admin confirms approval?"}
   S10 -->|"No — cancel"| S6
   S10 -->|"Yes"| S11["11. Statement status → &quot;Approved&quot;; admin repeats for remaining providers (or uses Bulk Approval — see A1)"]
-  S11 --> S12["12. Payout day cron runs — auto-processes all &quot;Approved&quot; statements; no admin action required on payout day"]
+  S11 -->|"Approved in the review time"| S12["12. Payout day arrives — Approved statements are due for payment; no payout is started automatically"]
   S12 --> S13{"13. Any statements still in &quot;Pending Approval&quot; on payout day?"}
   S13 -->|"Yes — admin missed the review time"| S13A["13a. Skipped statements → status &quot;Overdue&quot;; admin notified via push + email"]
-  S13A --> S13B["13b. Overdue section surfaces at top of Provider Billing list — admin reviews and approves at any time"]
+  S13A --> S13B["13b. Overdue section surfaces at top of Provider Billing list — admin approves; an approved Overdue statement is payable at once"]
   S13B --> S9
-  S13 -->|"No — all approved"| S14["14. Payout day cron initiates Stripe transfer for each approved statement — status → &quot;Processing&quot;"]
-  S14 --> S15["15. Stripe processes transfer (typically 1–2 business days)"]
-  S15 --> S16{"16. Stripe webhook received"}
-  S16 -->|"transfer.paid"| S17["17. Status → &quot;Paid&quot;; system generates invoice PDF with itemised treatment breakdown"]
-  S16 -->|"transfer.failed"| S16A["16a. Status → &quot;Failed&quot;; admin notified: &quot;Payout failed for [Provider Name]&quot;"]
-  S16A --> S16B{"16b. Failure cause"}
-  S16B -->|"Invalid bank account"| S16C["16c. Admin contacts provider (A-10); provider updates bank details in FR-032 / PR-06 Billing Settings; admin retries payout"]
-  S16B -->|"Other Stripe error"| S16D["16d. Admin investigates error; resolves; retries transfer"]
-  S16C --> S14
-  S16D --> S14
+  S13 -->|"No — all approved"| S14["14. Admin pays the clinic by bank transfer outside the platform"]
+  S11 -->|"Overdue statement just approved"| S14
+  S14 --> S15["15. Admin clicks &quot;Mark as Paid&quot; on the payout detail: re-authentication, bank reference, payment date, optional bank charge"]
+  S15 --> S16["16. Statement status → &quot;Paid&quot;; a bank charge is recorded as a Bank Charge adjustment; audit entry &quot;Payout Marked Paid&quot;"]
+  S16 --> S17["17. System generates the invoice document with itemised treatment breakdown"]
   S17 --> S18["18. System sends email + push notification to provider with invoice attachment"]
   S18 --> S19["19. Provider Financial Management dashboard updates — confirmed payout and invoice download available"]
   S19 --> S20["20. Full transaction logged in audit trail (timestamp, payout amount, provider ID, statement ID)"]
@@ -190,7 +185,7 @@ flowchart TD
 **A1: Bulk Payout Processing (Multiple Providers)**
 
 - **Trigger**: Admin wants to approve all pending statements at once rather than one by one
-- **Outcome**: Batch of payouts approved and queued; failed transactions flagged individually for retry
+- **Outcome**: Batch of statements approved; failed approvals flagged individually for retry
 - **Flow Diagram**:
 
 ```mermaid
@@ -206,7 +201,7 @@ flowchart TD
   A2S6 -->|"Yes"| A2S7["7. System marks each selected statement as Approved sequentially; displays live progress: &quot;Approving X of Y statements...&quot;"]
   A2S7 --> A2S8["8. Batch completes — system displays summary: total approved, successful count, failed count with error details"]
   A2S8 --> A2S9{"9. Any failed payouts?"}
-  A2S9 -->|"No — all successful"| A2S10["10. All selected payouts queued for payout day auto-processing (main flow step 12)"]
+  A2S9 -->|"No — all successful"| A2S10["10. All selected statements are Approved and wait for the payout day (main flow step 12)"]
   A2S9 -->|"Yes"| A2S11["11. Admin reviews each failed payout individually and retries (returns to main flow step 9)"]
 ```
 
@@ -271,8 +266,44 @@ flowchart TD
   B3S4 -->|"Yes"| B3S5["5. System records the capture as a real transaction against the booking invoice (or the cancelled case/inquiry when no booking exists); booking stays cancelled and the case is not revived"]
   B3S5 --> B3S6["6. System sets Reconciliation Flag &quot;Captured after provider cancellation&quot;, linking the case/inquiry and the FR-015 provider-status event; amount excluded from provider earnings, payout, and commission recognition"]
   B3S6 --> B3S7["7. Booking amounts are held from provider payout statements until admin financial resolution"]
-  B3S7 --> B3S8["8. Admin reviews the flagged invoice (Screen 4 / 4a) and resolves via the existing refund or adjustment workflow (Screen 4b) with mandatory reason"]
+  B3S7 --> B3S8["8. Admin reviews the flagged invoice (Screen 4 / 4a) and resolves via the existing refund or adjustment workflow (Screen 4b opens FR-007 Screen 6) with mandatory reason"]
   B3S8 --> B3S9["9. System writes the audit entry and clears the flag; no new refund percentage, fee, or payout rail applies"]
+```
+
+**B4: Per-Booking Payout, Held Money and Release of Earnings**
+
+- **Trigger**: A booking's funds are released, or a booking's payout is held (open problem case, interrupted treatment, provider-status cancellation) and an admin resolves it on Screen 7
+- **Outcome**: The held money ends as a release (statement or per-booking payout) or a refund started in FR-007 Screen 6; for a Stripe Connect clinic the per-booking payout is paid, waits for clinic setup, or goes to manual review (REQ-017-187, REQ-017-189, REQ-017-190, REQ-017-193)
+- **Flow Diagram**:
+
+```mermaid
+flowchart TD
+  C0["0. System releases a booking's funds when the confirmation window ends with no open problem case (REQ-017-189)"] --> C6
+  C1["1. System holds the booking's payout while a completion problem case is open, a started treatment was interrupted by the provider's fault, or the booking was cancelled by a provider-status event"] --> C2{"2. Admin resolves on Screen 7"}
+  C2 -->|"Refund in full, or refund in part and release the rest"| C3["3. Screen 7 opens FR-007 Screen 6 with invoice and booking prefilled; admin sets the amount (zero to the full paid amount), reason and audit entry"]
+  C2 -->|"Release in full"| C4["4. System releases the held amount"]
+  C3 -->|"Part refund: the rest is released"| C4
+  C2 -->|"Release earnings — Suspended or Deactivated clinic, no target cycle"| C5["5. Manual rail: one-off manual statement; Stripe Connect: direct per-booking payout; internal note and audit entry"]
+  C4 --> C6{"6. Clinic's payout rail"}
+  C6 -->|"Manual rail"| C7["7. Earnings enter the next statement (main flow step 1)"]
+  C6 -->|"Stripe Connect, setup Ready"| C8["8. System starts the per-booking payout; status Processing, then Paid or Failed from the Stripe webhook"]
+  C6 -->|"Stripe Connect, setup not Ready"| C9["9. Payout shows Waiting for clinic setup until the clinic is Ready"]
+  C9 --> C8
+  C8 -->|"Failed three times"| C10["10. Payout set to Manual Review Required; admin retries from the Stripe Connect payouts section of Screen 2, or clears the flag with a review note"]
+```
+
+**B5: Clinic Balance Entry and Write-Off**
+
+- **Trigger**: A refund after payout, a chargeback, a clinic cancellation deduction or a manual-transfer bank charge leaves money owed by the clinic
+- **Outcome**: One signed entry on the clinic's balance record, applied to the clinic's next payout on either rail; a debt with no further payout stays open until an admin writes it off with a reason (REQ-017-191, REQ-017-192)
+- **Flow Diagram**:
+
+```mermaid
+flowchart TD
+  D1["1. System adds a signed entry to the clinic balance record: refund deduction, chargeback recovery, clinic cancellation deduction or bank charge"] --> D2{"2. Does a further payout come for the clinic?"}
+  D2 -->|"Yes"| D3["3. System applies open entries to the next payout: an adjustment row on a statement, a deduction on a per-booking payout"]
+  D2 -->|"No"| D4["4. Debt stays open on the clinic's balance, shown on Screens 2, 3 and 9"]
+  D4 --> D5["5. Admin writes the debt off with a mandatory reason; audit entry"]
 ```
 
 ---
@@ -310,13 +341,13 @@ flowchart TD
 | Platform Commission | currency | Yes | Total Hairline commission earned | Auto-calculated | ENT-financial-report.platform_commission |
 | Provider Payouts | currency | Yes | Total paid to providers | Auto-calculated | ENT-financial-report.provider_payouts |
 | Affiliate Payouts | currency | Yes | Total paid to affiliates | Auto-calculated | ENT-financial-report.affiliate_payouts |
-| At Risk Invoice Count | number | Yes | Count of invoices currently in "At Risk" status | Auto-calculated | ENT-financial-report.at_risk_invoice_count |
+| At Risk Invoice Count | number | Yes | Count of invoices currently carrying the "At Risk" flag (a flag, not a payment status, REQ-017-051) | Auto-calculated | ENT-financial-report.at_risk_invoice_count |
 | Failed Payout Count | number | Yes | Count of provider + affiliate payouts currently in "Failed" status | Auto-calculated | ENT-financial-report.failed_payout_count |
 | Active Currency Alerts | number | Yes | Count of unacknowledged currency fluctuation alerts. Clicking opens the notification list filtered to unresolved currency alerts; each alert links to Screen 8. Displays "0" when no active alerts (badge hidden at zero) | Auto-calculated from alert state in FR-029 (REQ-017-164) | ENT-financial-report.active_currency_alerts |
 | Refund Trend | chart | Yes | Time-series view of refund amount and refund count across the selected period | Interactive line/bar chart | ENT-financial-report.refund_trend |
-| Outstanding Patient Invoices | currency | Yes | Pending patient payments (total). Clicking this KPI opens an aging breakdown panel: 0–30 days overdue, 31–60 days overdue, 60+ days overdue — each showing count and total amount | Auto-calculated | ENT-financial-report.outstanding_patient_invoices |
+| Outstanding Patient Invoices | currency | Yes | Unpaid balance of bookings with an open final payment (total). Clicking this KPI opens an aging breakdown panel: 0–30 days overdue, 31–60 days overdue, 60+ days overdue — each showing count and total amount | Auto-calculated | ENT-financial-report.outstanding_patient_invoices |
 | Overdue Aging Breakdown | panel | Yes | Drill-down from Outstanding Patient Invoices KPI: three buckets (0–30 days, 31–60 days, 60+ days) each showing invoice count and total outstanding amount. "At Risk" invoices shown as a separate row | Visible on click of KPI | ENT-financial-report.overdue_aging_breakdown |
-| Pending Provider Payouts | currency | Yes | Provider earnings awaiting payout | Auto-calculated | ENT-financial-report.pending_provider_payouts |
+| Pending Provider Payouts | currency | Yes | Provider earnings awaiting payout, shown in two parts: "Pending release" (confirmation window still open or a problem case open) and "Released" (funds released, not yet paid) (REQ-017-052) | Auto-calculated | ENT-financial-report.pending_provider_payouts |
 | Affiliate Payout Status Summary | table | Yes | Summary counts and totals grouped by affiliate payout status: Pending, Processing, Paid, Failed | Sortable table | ENT-financial-report.affiliate_payout_status_summary |
 | Revenue by Country | chart | Yes | Geographic breakdown of patient bookings | Interactive pie/bar chart | ENT-financial-report.revenue_by_country |
 | Revenue by Treatment Type | chart | Yes | Breakdown by FUE, FUT, DHI, etc. | Interactive bar chart | ENT-financial-report.revenue_by_treatment_type |
@@ -330,10 +361,10 @@ flowchart TD
 - All currency amounts displayed in selected currency (with real-time conversion if multi-currency) (REQ-017-048)
 - Currency selector initializes to the system default currency configured in FR-029 / A-09 Currency Management; MVP environments seed this default to USD unless an admin changes it later (REQ-017-048)
 - "Active Currency Alerts" count reflects alerts triggered by FR-029 / A-09 rate monitoring that have not yet had a decision recorded via Screen 8; count resets to 0 once all active alerts have a confirmed admin decision (REQ-017-049)
-- "Outstanding Patient Invoices" includes ONLY invoices with status "Pending", "Partial", "Overdue", or "At Risk" (REQ-017-050)
-- Overdue aging buckets calculated from the invoice Due Date to today: 0–30 days, 31–60 days, 60+ days; "At Risk" (all retries exhausted) shown as a separate row regardless of age (REQ-017-051)
-- "Pending Provider Payouts" includes treatments with status "Completed" or "Aftercare" not yet paid (REQ-017-052)
-- "Failed Payout Count" includes both provider payouts and affiliate payouts currently awaiting retry or manual resolution (REQ-017-053)
+- "Outstanding Patient Invoices" includes ONLY invoices of bookings whose FR-007 Payment Status is "Unpaid", "Deposit only" or "Installments active" (an unpaid balance remains); "Overdue" is read from the booking's Final Payment Status and "At Risk" is a separate flag, neither is a Payment Status (REQ-017-050)
+- Overdue aging buckets count from the day after the invoice Due Date (the day the Final Payment Status becomes Overdue, FR-007) to today: 0–30 days, 31–60 days, 60+ days; the "At Risk" flag (all installment retries exhausted) is shown as a separate row regardless of age (REQ-017-051)
+- "Pending Provider Payouts" includes treatments with status "Completed" or "Aftercare" not yet paid, split into "Pending release" and "Released"; only released funds can enter a statement or a per-booking payout (REQ-017-052, REQ-017-189)
+- "Failed Payout Count" includes failed Stripe Connect per-booking payouts and failed affiliate payouts currently awaiting retry or manual resolution; a statement has no Failed state (REQ-017-053, REQ-017-186)
 - Revenue by Country based on patient location (not provider location) (REQ-017-054)
 - Revenue by Treatment Type excludes refunded bookings (REQ-017-055)
 - Refund Trend includes full and partial refunds and supports drill-down into Screen 4a (REQ-017-056)
@@ -367,10 +398,11 @@ flowchart TD
 | Commission | text | Yes | Effective commission snapshot for the bookings in this statement. Source: provider-specific commission configuration managed in FR-015 / A-02 or FR-029 / A-09 when defined; otherwise the FR-029 / A-09 global default captured at booking confirmation | Display: 15% or £150 Flat (REQ-017-063) | ENT-provider-payout.commission_value |
 | Net Payout | currency | Yes | Provider payout after commission | Auto-calculated | ENT-provider-payout.net_payout |
 | Bank Account | text | Yes | Bank account last 4 digits (masked) | Display: ****1234 | ENT-provider-payout.bank_account_id |
-| Payout Readiness | badge | Yes | Indicates whether the statement can be approved: "Ready", "Missing Bank Details", "Invalid Bank Details", "Manual Review Required" | Color-coded | ENT-provider-payout.payout_readiness_status |
-| Status | badge | Yes | "Pending Approval", "Approved", "Processing", "Paid", "Failed", "Overdue", "Voided" | Color-coded | ENT-provider-payout.payout_status |
+| Payout Readiness | badge | Yes | Statement (manual rail): "Ready", "Missing Bank Details", "Invalid Bank Details", "Manual Review Required". Stripe Connect payout: "Not onboarded", "Restricted", "Ready", "Manual Review Required" (REQ-017-194, REQ-017-196) | Color-coded | ENT-provider-payout.payout_readiness_status |
+| Status | badge | Yes | Statement: "Pending Approval", "Approved", "Overdue", "Paid", "Voided" (REQ-017-186). Stripe Connect payout: "Waiting for clinic setup", "Processing", "Paid", "Failed" (REQ-017-187) | Color-coded | ENT-provider-payout.payout_status |
+| Open Clinic Balance | currency | Conditional | Signed sum of the clinic's open balance entries (refund deduction, chargeback recovery, clinic cancellation deduction, bank charge); a negative amount is money the clinic owes Hairline (REQ-017-191) | Visible when not zero; display only | ENT-clinic-balance-entry.amount |
 | Blocked Reason | text | Conditional | Explanation shown when payout approval is unavailable | Visible when Payout Readiness is not "Ready" | ENT-provider-payout.blocked_reason |
-| Actions | buttons | Yes | "View Details", "Approve Payout", "Unapprove", "Void Statement", "Add Note", "Retry Payout" | Conditional visibility | no graph field (control) |
+| Actions | buttons | Yes | "View Details", "Approve Payout", "Unapprove", "Void Statement", "Add Note" on a statement; "Retry Payout" and "Clear Manual Review" on a Stripe Connect payout; "Write Off Balance" on an open clinic balance | Conditional visibility | no graph field (control) |
 
 **Batch Approval Toolbar** (shown when one or more rows are selected):
 
@@ -384,30 +416,33 @@ flowchart TD
 **Business Rules**:
 
 - Providers appear in list ONLY if a payout statement has been auto-generated for them (i.e., the platform-wide cutoff day has passed)
-- All manual-rail clinics share one platform-wide settlement period (weekly by default: Sunday cutoff, Wednesday payout; all admin-editable). There is no per-clinic payout frequency for manual-rail clinics; Stripe Connect clinics are paid per released booking and do not appear on a settlement cycle (REQ-017-074)
+- All manual-rail clinics share one platform-wide settlement period (weekly by default: Sunday cutoff, Wednesday payout; all admin-editable). There is no per-clinic payout frequency for manual-rail clinics; Stripe Connect clinics are paid per released booking and do not appear on a settlement cycle, so they have no statement and are listed in the Stripe Connect payouts section below (REQ-017-074, REQ-017-186)
 - Payout statement is auto-generated on the cutoff day; only then does the provider appear in this list. The review time is the gap between the cutoff day and the payout day
-- Payout amount MUST include all treatments with status "Completed" or "Aftercare" completed since the last payout cycle (REQ-017-061)
+- Payout amount MUST include all treatments with status "Completed" or "Aftercare" completed since the last payout cycle whose funds are released: the confirmation window has ended with no open problem case, or an admin has resolved the case (REQ-017-061, REQ-017-189)
 - Treatments with status "Scheduled", "In Progress", or "Cancelled" are NOT included (REQ-017-061)
-- Providers with status "Suspended" or "Deactivated" do NOT have statements generated (REQ-017-062)
+- Providers with status "Suspended" or "Deactivated" do NOT have statements generated; an admin releases their earnings with the Release earnings resolution on Screen 7 (REQ-017-062, REQ-017-193)
 - Commission shown in this list comes from the commission snapshot captured at booking confirmation (FR-006): provider-specific commission configuration managed in FR-015 / A-02 or FR-029 / A-09 when defined, otherwise the FR-029 / A-09 global default; supported models are Percentage and Flat Rate where applicable (REQ-017-063)
 - Bank account details shown ONLY if provider has a valid bank account on file in FR-032 Billing Settings (REQ-017-064)
 - A manually paid clinic is "Ready" once the admin has set its payout method to manual bank transfer and saved valid bank details; for such a clinic the admin records the bank details
-- When a clinic's account ends as Inactive with the reason "banned", its whole pending balance is forfeited (see Rule 18)
+- Nothing is forfeited: the earnings of a clinic removed from the platform are always settled by an admin through General Module Rule 16 and the Release earnings resolution on Screen 7 (REQ-017-193)
 - Statements with missing or invalid bank details remain visible in the list for operational follow-up, but Payout Readiness is not "Ready" and approval controls remain disabled until the provider updates payout details in FR-032 / PR-06 (REQ-017-064)
-- "Approve Payout" button enabled ONLY for statements with status "Pending Approval" or "Overdue" (REQ-017-065)
-- "Retry Payout" button enabled ONLY for statements with status "Failed"; clicking it re-initiates the Stripe transfer for that statement; retry is logged in audit trail with admin ID, timestamp, and failure reason from prior attempt. A failed Stripe Connect payout first gets 3 automatic attempts with exponential backoff and then goes to manual review; this button stays available for the manual retry. Manual-rail payouts are not retried this way: an admin marks them as paid (REQ-017-066)
-- "Unapprove" button enabled ONLY for statements with status "Approved" and ONLY before the payout-day cron runs (i.e., the payout date has not yet been reached); on click, admin must enter a mandatory reason (max 500 chars); statement reverts to "Pending Approval"; action logged in audit trail with action_type "Payout Unapproved" (REQ-017-067)
+- "Approve Payout" button enabled ONLY for statements with status "Pending Approval" or "Overdue", and not while Payout Readiness is "Manual Review Required" (REQ-017-065, REQ-017-194). Approving an Overdue statement never waits for the next payout day: it is payable at once and the admin pays it and marks it as paid (REQ-017-076)
+- "Retry Payout" button is shown only in the Stripe Connect payouts section and is enabled ONLY for a Failed per-booking payout that is not in "Manual Review Required"; clicking it re-initiates the Stripe transfer; retry is logged in audit trail with admin ID, timestamp, and failure reason from prior attempt. A failed Stripe Connect payout first gets 3 automatic attempts with exponential backoff and then goes to Manual Review Required; once an admin clears it with a review note, this button is available for the manual retry. A statement has no retry: an admin marks it as paid (REQ-017-066, REQ-017-194)
+- The Stripe Connect payouts section lists each per-booking payout with the states "Waiting for clinic setup" (the clinic's Stripe setup is not Ready), "Processing", "Paid" and "Failed", and the readiness values "Not onboarded", "Restricted" and "Ready"; Stripe webhooks move these payouts and never a statement (REQ-017-187, REQ-017-196)
+- "Manual Review Required" is set by the fraud flag of REQ-017-161 or by three failed payout attempts; approval and retry are disabled while it is set; "Clear Manual Review" requires a review note and is recorded in the audit trail with action type "Manual Review Cleared" (REQ-017-194)
+- Open balance entries of a clinic are applied to its next payout on either rail; a debt with no further payout coming stays open and is listed in the Open clinic balances section, where an admin may "Write Off Balance" with a mandatory reason and an audit entry (REQ-017-191, REQ-017-192)
+- "Unapprove" button enabled ONLY for statements with status "Approved" and ONLY before the payout day (it is not offered once the payout day has passed); on click, admin must enter a mandatory reason (max 500 chars); statement reverts to "Pending Approval"; action logged in audit trail with action_type "Payout Unapproved" (REQ-017-067)
 - "Void Statement" button enabled ONLY for statements with status "Pending Approval" or "Overdue"; on click, admin must enter a mandatory reason (max 500 chars); statement is marked "Voided" and permanently removed from auto-processing; action logged with action_type "Payout Voided"; a new statement can be re-generated on the next payout cycle; voided statements remain visible in list with "Voided" status badge for audit history (REQ-017-068)
 - "Add Note" button available for all statements at any status (for audit documentation) (REQ-017-069)
 - Batch selection is allowed ONLY for statements with Status = "Pending Approval" or "Overdue" and Payout Readiness = "Ready" (REQ-017-070)
 - Clicking "Approve All Selected Payouts" opens a batch confirmation modal showing selected count, total net payout amount, and a financial re-authentication challenge; confirm remains disabled until re-authentication succeeds (REQ-017-070)
 - After batch approval, the UI MUST show a batch result summary with: total selected, total approved, total failed, and error details per failed statement (REQ-017-071)
 - Statements with status "Overdue" are surfaced at the top of the list in a dedicated "Overdue" section (REQ-017-072)
-- Statements with status "Failed" are surfaced in a dedicated "Failed" section below "Overdue", above "Upcoming / Pending Approval" (REQ-017-072)
+- Failed Stripe Connect payouts are surfaced in a dedicated "Failed" part of the Stripe Connect payouts section, which sits below "Upcoming / Pending Approval" (REQ-017-072)
 
 **Notes**:
 
-- List is divided into three sections: **Overdue** (top, highlighted), **Failed** (below Overdue, highlighted in red), and **Upcoming / Pending Approval** (below)
+- List is divided into four sections: **Overdue** (top, highlighted), **Upcoming / Pending Approval**, **Stripe Connect payouts** (Failed rows highlighted in red) and **Open clinic balances**
 - List should support filtering by: status, payment schedule, date range, provider name/ID (REQ-017-073)
 - List should support sorting by: payout date, net payout amount (ascending/descending) (REQ-017-073)
 - Export to CSV functionality for batch processing and accounting reconciliation (REQ-017-073)
@@ -416,7 +451,7 @@ flowchart TD
 
 #### Screen 3: Provider Payout Detail Modal
 
-**Purpose**: Display itemized breakdown of provider payout with treatment-level details
+**Purpose**: Display itemized breakdown of provider payout with treatment-level details. The modal opens for a settlement statement (manual rail) and for a Stripe Connect per-booking payout (from the Stripe Connect payouts section of Screen 2); the Stripe fields below are shown only for the second kind (REQ-017-186, REQ-017-187)
 
 **Data Fields**:
 
@@ -425,22 +460,27 @@ flowchart TD
 | Provider Name | text | Yes | Clinic name | Display only | ENT-provider.name |
 | Provider ID | text | Yes | Unique provider identifier | Display only | ENT-provider.id |
 | Payout Reference | text | Yes | Unique payout statement reference | Display only | ENT-provider-payout.payout_reference |
-| Statement Status | badge | Yes | "Pending Approval", "Approved", "Overdue", "Processing", "Paid", "Failed", "Voided" | Color-coded | ENT-provider-payout.payout_status |
+| Statement Status | badge | Yes | Statement: "Pending Approval", "Approved", "Overdue", "Paid", "Voided". Stripe Connect payout: "Waiting for clinic setup", "Processing", "Paid", "Failed" | Color-coded | ENT-provider-payout.payout_status |
 | Payout Period | daterange | Yes | Date range covered by payout | Format: DD-MM-YYYY to DD-MM-YYYY | ENT-provider-payout.payout_period |
-| Payout Readiness | badge | Yes | Indicates whether approval can proceed: "Ready", "Missing Bank Details", "Invalid Bank Details", "Manual Review Required" | Color-coded | ENT-provider-payout.payout_readiness_status |
-| Blocked Reason | text | Conditional | Reason the statement cannot currently be approved or retried | Visible when Payout Readiness is not "Ready" or Statement Status = "Failed" | ENT-provider-payout.blocked_reason |
-| Bank Account | text | Yes | Destination bank account (masked) | Display: ****1234 | ENT-provider-payout.bank_account_id |
+| Payout Readiness | badge | Yes | Indicates whether approval or payment can proceed. Statement: "Ready", "Missing Bank Details", "Invalid Bank Details", "Manual Review Required". Stripe Connect payout: "Not onboarded", "Restricted", "Ready", "Manual Review Required" | Color-coded | ENT-provider-payout.payout_readiness_status |
+| Blocked Reason | text | Conditional | Reason the statement cannot currently be approved, or the payout cannot be retried or is waiting for clinic setup | Visible when Payout Readiness is not "Ready" or the status is "Failed" or "Waiting for clinic setup" | ENT-provider-payout.blocked_reason |
+| Bank Account | text | Conditional | Destination bank account (masked) of a manual-rail statement | Display: ****1234 | ENT-provider-payout.bank_account_id |
 | Treatment List | table | Yes | Itemized list of included bookings | See sub-table below | no graph field (list of treatment rows below) |
 | Payout Adjustments | table | Conditional | Non-treatment deductions or credits applied to this payout, including refund deductions carried from previously paid bookings | See adjustment sub-table below; visible only when adjustments exist | no graph field (list of adjustment rows below) |
 | Total Revenue | currency | Yes | Sum of treatment amounts | Auto-calculated | ENT-provider-payout.total_revenue |
+| Hairline Discount Reimbursement | currency | Conditional | The Hairline share of the discount reimbursed to the clinic on top of the commission effect, summed from the included bookings; each booking's amount is read from the frozen booking snapshot (REQ-017-195, REQ-019-017) | Visible when not zero; display only | ENT-provider-payout.hairline_discount_reimbursement |
 | Commission Configuration | text | Yes | Platform commission model/value applied to this payout | Display: 15% or £150 Flat | ENT-provider-payout.commission_model, ENT-provider-payout.commission_value |
 | Commission Amount | currency | Yes | Commission deducted | Auto-calculated | ENT-provider-payout.commission_amount |
-| Net Payout | currency | Yes | Provider receives this amount | Auto-calculated | ENT-provider-payout.net_payout |
-| Approved By | text | Conditional | Admin who approved the statement | Visible once status is "Approved", "Processing", "Paid", or "Failed" | ENT-provider-payout.approved_by_admin_id |
+| Net Payout | currency | Yes | Provider receives this amount: revenue less commission, plus the discount reimbursement, adjusted by the balance entries applied to this payout | Auto-calculated | ENT-provider-payout.net_payout |
+| Approved By | text | Conditional | Admin who approved the statement | Visible once a statement is "Approved" or "Paid" | ENT-provider-payout.approved_by_admin_id |
 | Approved At | datetime | Conditional | Date/time the statement was approved | Format: DD-MM-YYYY HH:MM:SS UTC | ENT-provider-payout.approved_at |
-| Processed At | datetime | Conditional | Date/time Stripe transfer was initiated | Visible once status is "Processing", "Paid", or "Failed" | ENT-provider-payout.processed_at |
-| Stripe Transfer ID | text | Conditional | Stripe transfer reference for reconciliation | Visible once Stripe transfer has been created | ENT-provider-payout.stripe_transfer_id |
-| Failure Reason | text | Conditional | Human-readable reason for transfer failure or manual review block | Visible when status is "Failed" or retry is blocked | ENT-provider-payout.failure_reason |
+| Processed At | datetime | Conditional | Date/time the Stripe transfer was initiated (Stripe Connect payout only) | Visible once the payout is "Processing", "Paid", or "Failed" | ENT-provider-payout.processed_at |
+| Stripe Transfer ID | text | Conditional | Stripe transfer reference for reconciliation (Stripe Connect payout only) | Visible once Stripe transfer has been created | ENT-provider-payout.stripe_transfer_id |
+| Failure Reason | text | Conditional | Human-readable reason for transfer failure or manual review block (Stripe Connect payout only) | Visible when status is "Failed" or retry is blocked | ENT-provider-payout.failure_reason |
+| Bank Reference | text | Conditional | The bank transfer reference the admin entered when marking the statement as paid | Required in the Mark as Paid modal; display only afterwards | ENT-provider-payout.bank_reference |
+| Payment Date | date | Conditional | Date the admin paid the clinic by bank transfer | Required in the Mark as Paid modal; not in the future; format DD-MM-YYYY | ENT-provider-payout.payment_date |
+| Marked Paid By | text | Conditional | Admin who marked the statement as paid | Visible once the statement is "Paid" | ENT-provider-payout.paid_by_admin_id |
+| Manual Review Note | textarea | Conditional | Review note an admin entered when clearing "Manual Review Required" (REQ-017-194) | Required to clear; visible after clearing | ENT-provider-payout.manual_review_note |
 | Internal Notes | textarea | No | Admin notes (not visible to provider) | Max 500 characters | ENT-provider-payout.internal_notes |
 
 **Treatment List Sub-Table** (nested within payout detail):
@@ -452,6 +492,7 @@ flowchart TD
 | Treatment Date | date | Yes | Date treatment was performed | Format: DD-MM-YYYY | ENT-booking.appointment_at |
 | Treatment Type | text | Yes | FUE, FUT, DHI, etc. | Display only | ENT-treatment.name |
 | Treatment Amount | currency | Yes | Total booking amount (inc. packages) | Display only | ENT-provider-earning.gross_amount |
+| Hairline Discount Reimbursement | currency | Conditional | The reimbursement row for this booking: the Hairline share of the discount, read from the frozen booking snapshot (REQ-017-195) | Visible when not zero; display only | ENT-provider-earning.hairline_discount_reimbursement |
 | Commission Deducted | currency | Yes | Commission withheld for this treatment | Auto-calculated | ENT-provider-earning.commission_deducted |
 | Net Contribution | currency | Yes | Net payout contribution from this treatment | Auto-calculated | ENT-provider-earning.net_earning |
 | Currency | text | Yes | Original booking currency | Display: GBP, EUR, USD, etc. | ENT-provider-earning.currency |
@@ -462,7 +503,7 @@ flowchart TD
 
 | Field Name | Type | Required | Description | Validation Rules | Graph field |
 |------------|------|----------|-------------|------------------|---------|
-| Adjustment Type | badge | Yes | "Refund Deduction", "Carry-Forward Adjustment" or "Bank Charge" (a manual-transfer bank charge borne by the clinic, deducted from the statement amount) | Color-coded | ENT-payout-adjustment.adjustment_type |
+| Adjustment Type | badge | Yes | "Refund Deduction", "Chargeback Recovery", "Clinic Cancellation Deduction", "Carry-Forward Adjustment" or "Bank Charge" (a manual-transfer bank charge borne by the clinic, recorded when the statement is marked as paid). Each is an entry of the clinic balance record applied to this payout (REQ-017-191) | Color-coded | ENT-payout-adjustment.adjustment_type |
 | Booking Reference | text | Yes | Original booking tied to the adjustment | Clickable link | ENT-booking.booking_reference |
 | Effective Date | date | Yes | Date the adjustment first applied to a payout statement | Format: DD-MM-YYYY | ENT-payout-adjustment.effective_date |
 | Description | text | Yes | Provider-visible label shown on the payout statement | Display only; format example: "Adjustment: Refund deducted — [Booking Reference] — [Date]" | ENT-payout-adjustment.description |
@@ -472,19 +513,20 @@ flowchart TD
 
 **Business Rules**:
 
-- Payout MUST include ALL treatments with status "Completed" or "Aftercare" within the payout period
+- Payout MUST include ALL treatments with status "Completed" or "Aftercare" within the payout period whose funds are released (the confirmation window has ended with no open problem case, or an admin has resolved it); the running total of a statement counts released earnings only (REQ-017-189)
 - Payout period determined by the one platform-wide settlement period for manual-rail clinics (weekly by default, ending on the Sunday cutoff day; set in admin payment settings). Per-clinic payout frequency no longer applies (REQ-017-074)
 - The commission model/value (and Flat Rate currency) for each included booking is fixed at booking confirmation (FR-006) from the effective commission configuration at that moment: provider-specific commission configuration managed in FR-015 / A-02 or FR-029 / A-09 when defined, otherwise the FR-029 / A-09 global default. Nothing is fixed at quote creation
 - If provider commission model is Percentage, the base is the accepted price after promotion, in the quote currency, read from the acceptance snapshot; the result is converted to the payout currency at the rate locked at subquote acceptance (if applicable)
 - If provider commission model is Flat Rate, the snapshotted fixed amount (in its snapshotted currency) is deducted once per FR-010 completed procedure included in the payout, regardless of procedure price; later changes to the provider's commission configuration do not alter existing snapshots
 - Exchange rates are locked at subquote acceptance (FR-005 AcceptanceEvent) and read from the acceptance snapshot (no fluctuation risk to provider during payout)
 - If a patient refund is processed AFTER the provider has already been paid, the next provider payout statement MUST include a row in `Payout Adjustments` labelled `Adjustment: Refund deducted — [Booking Reference] — [Date]` (REQ-017-075)
-- If a refund deduction exceeds the provider's current payout amount, the unapplied balance remains visible in `Remaining Balance` and carries forward to the next payout cycle until fully recovered (REQ-017-075)
+- If a refund deduction exceeds the provider's current payout amount, the unapplied balance remains visible in `Remaining Balance` and carries forward to the next payout cycle until fully recovered; the same applies to every entry of the clinic balance record, on either rail. A debt with no further payout coming stays open on the clinic's balance until an admin writes it off (REQ-017-075, REQ-017-191, REQ-017-192)
 - Internal notes visible ONLY to admins (never exposed to provider) (REQ-017-069)
 - "Approve Payout" is enabled ONLY when Payout Readiness = "Ready", the user role is Billing Admin or Super Admin, and financial re-authentication succeeds (REQ-017-065)
-- "Approve Payout" button marks the statement as "Approved" and queues it for the payout-day cron; Stripe transfer is not initiated during the review action (REQ-017-076)
-- On payout day, the cron initiates Stripe transfer for all statements already in "Approved" status; status changes to "Processing" → "Paid" after Stripe confirmation webhook
-- Stripe Transfer ID remains blank until Stripe confirms `transfer.created`; failure reason remains blank unless Stripe or validation returns a blocking error (REQ-017-077)
+- "Approve Payout" button marks the statement as "Approved"; no payment is started by the review action. An approved statement is paid by the admin by bank transfer outside the platform and marked as paid. An Overdue statement that is approved is payable at once and does not wait for the next payout day (REQ-017-076)
+- "Mark as Paid" is offered for a statement in "Approved" status, and for an "Overdue" one that has just been approved. The admin enters the bank reference and the payment date, may enter a bank charge, and re-authenticates; the statement becomes "Paid", a "Payout Marked Paid" entry is written to the audit trail, the clinic is notified, and the payout invoice document is generated on that event. A bank charge is recorded as a "Bank Charge" adjustment (REQ-017-188)
+- For a Stripe Connect payout, the Stripe Transfer ID remains blank until Stripe confirms `transfer.created`; failure reason remains blank unless Stripe or validation returns a blocking error (REQ-017-077, REQ-017-187)
+- A booking's Hairline discount reimbursement is shown as its own row and in the payout total; it is read from the frozen booking snapshot and never recomputed (REQ-017-195)
 
 **Batch Approval Confirmation Modal** (appears when admin clicks "Approve All Selected Payouts" in Screen 2):
 
@@ -509,7 +551,19 @@ flowchart TD
 | Confirm button | "Yes, Approve" — marks statement "Approved". Enabled ONLY after successful re-authentication (REQ-017-078) | no graph field (control) |
 | Cancel button | "No, Cancel" — returns to payout detail without change | no graph field (control) |
 
-**Retry Payout Confirmation Modal** (appears when admin retries a failed payout):
+**Mark as Paid Modal** (appears when admin clicks "Mark as Paid" on an Approved statement; REQ-017-188):
+
+| Element | Description | Graph field |
+|---------|-------------|---------|
+| Summary line | "Mark payout of [Net Payout amount] to [Provider Name] as paid?" | no graph field (display) |
+| Bank reference | Reference of the bank transfer the admin made; required | ENT-provider-payout.bank_reference |
+| Payment date | Date the transfer was made; required, not in the future | ENT-provider-payout.payment_date |
+| Bank charge | Optional amount; when entered it is recorded as a "Bank Charge" adjustment | ENT-payout-adjustment.adjustment_amount |
+| Re-authentication | Password re-entry in MVP; MFA challenge after shared MFA rollout. Confirm remains disabled until re-authentication succeeds | no graph field (control) |
+| Confirm button | "Yes, Mark as Paid" — statement becomes "Paid" | no graph field (control) |
+| Cancel button | "No, Cancel" — closes modal with no change | no graph field (control) |
+
+**Retry Payout Confirmation Modal** (appears when admin retries a failed Stripe Connect payout):
 
 | Element | Description | Graph field |
 |---------|-------------|---------|
@@ -541,12 +595,14 @@ flowchart TD
 | Patient ID | text | Yes | Unique patient identifier (e.g., "HP-PAT-00789") | Clickable link | ENT-patient-invoice.patient_id |
 | Booking Reference | text | Yes | Associated booking and its accepted-subquote context | Clickable link to FR-006; preserve acceptance provenance | ENT-booking.booking_reference |
 | Invoice Date | date | Yes | Date invoice generated | Format: DD-MM-YYYY | ENT-patient-invoice.invoice_date |
-| Due Date | date | Yes | Payment due date. Derived from FR-007B installment schedule (if installment plan) or booking confirmation terms (if full/deposit payment — 7 days before treatment date per Payment Rule 2) | Format: DD-MM-YYYY | ENT-patient-invoice.due_date |
+| Due Date | date | Yes | Payment due date. Derived from FR-007B installment schedule (if installment plan) or booking confirmation terms (if full/deposit payment — the FR-029 balance-due days before the treatment date, launch default 7, per Payment Rule 2) | Format: DD-MM-YYYY | ENT-patient-invoice.due_date |
 | Total Amount | currency | Yes | Accepted price after promotion for the booking's accepted subquote, read from the acceptance snapshot | Display: £X,XXX.XX; not a parent price range or sum of sibling alternatives | ENT-patient-invoice.total_amount |
 | Amount Paid | currency | Yes | Amount paid so far (for installment plans) | Display: £X,XXX.XX | ENT-patient-invoice.amount_paid |
 | Outstanding Balance | currency | Yes | Remaining amount due | Auto-calculated | ENT-patient-invoice.outstanding_balance |
 | Currency | text | Yes | Accepted payment currency retained by the booking | Display: GBP, EUR, USD, etc.; read-only locked snapshot | ENT-patient-invoice.currency |
-| Payment Status | badge | Yes | "Pending", "Partial", "Paid", "Overdue", "Refunded", "At Risk" | Color-coded. "At Risk" = all installment retries exhausted, booking requires admin intervention | ENT-patient-invoice.payment_status |
+| Payment Status | badge | Yes | The FR-007 Payment Status list: "Unpaid", "Deposit only", "Installments active", "Full paid", "Refunded". A part refund keeps the previous status and shows as a row in the refund history (REQ-017-086) | Color-coded | ENT-patient-invoice.payment_status |
+| Final Payment Status | badge | Yes | Read from FR-007: "Not Due", "Due", "Overdue". "Overdue" starts the day after the due date (REQ-017-083) | Color-coded; read-only | ENT-patient-invoice.final_payment_status |
+| At Risk | flag | No | Shown when all installment retries are exhausted and the booking requires admin intervention. It is a separate flag, not a payment status (REQ-017-084) | Admin-only; read-only | ENT-patient-invoice.at_risk_flag |
 | Payment Method | text | Yes | Masked Stripe payment method | Display: "Visa ending in 1234", "Mastercard ending in 5678", or masked bank transfer reference | ENT-patient-invoice.payment_method |
 | Reconciliation Flag | badge | No | "Captured after provider cancellation" when a payment was captured after an FR-015 `ProviderSuspended` / `ProviderDeactivated` cancellation (Rule 14). Links to the case/inquiry and the FR-015 provider-status event | Admin-only; cleared when admin resolution is saved with reason and audit entry | ENT-patient-invoice.reconciliation_flag |
 | Installment Plan | badge | No | Installment progress with retry indicator (if applicable): "2/5 installments paid" or "2/5 — Retry 2/3 in progress" if a payment is currently in retry | Display format | ENT-patient-invoice.installment_progress |
@@ -558,7 +614,7 @@ flowchart TD
 |---------|-------------|---------|
 | Summary line | "Send payment reminder to [Patient Name]?" | no graph field (display) |
 | Invoice reference | Invoice Number and Outstanding Balance shown for context | no graph field (display) |
-| Reminder Type | Auto-selected based on invoice status: "Upcoming Due Reminder" (Pending), "Overdue Reminder" (Overdue), "At Risk — Final Notice" (At Risk). The four reminder types are Upcoming Due, Overdue, At Risk - Final Notice, and Manual Reminder. Display-only; not editable by admin (REQ-017-080) | ENT-invoice-reminder.reminder_type |
+| Reminder Type | Auto-selected based on invoice status: "Upcoming Due Reminder" (Final Payment Status Not Due or Due), "Overdue Reminder" (Final Payment Status Overdue), "At Risk — Final Notice" (At Risk flag). The four reminder types are Upcoming Due, Overdue, At Risk - Final Notice, and Manual Reminder. Display-only; not editable by admin (REQ-017-080) | ENT-invoice-reminder.reminder_type |
 | Channel | "Via: Email + Push Notification" — display only (REQ-017-080) | no graph field (display) |
 | Confirm button | "Yes, Send Reminder" — triggers FR-020 notification event; creates entry in Reminder History | no graph field (control) |
 | Cancel button | "No, Cancel" — dismisses modal with no action | no graph field (control) |
@@ -575,16 +631,16 @@ flowchart TD
 - Invoice generated automatically when patient completes booking payment (deposit or full)
 - An eligible first installment also confirms booking and generates its invoice. Retain one invoice record per booking; later successful payments update that invoice/payment history and issue payment documents, not new invoices for unaccepted sibling options.
 - Invoices with installment plans display: "X of Y installments paid" (REQ-017-082)
-- "Overdue" status triggered if outstanding balance remains 7 days after due date (REQ-017-083)
-- **"At Risk" status** triggered when all 3 retry attempts for any installment have failed; booking is flagged for admin review. Admin MUST manually follow up with patient (contact via support, update payment method, or cancel booking) (REQ-017-084)
-- "Send Reminder" button available ONLY for invoices with status "Pending", "Overdue", or "At Risk" (REQ-017-085)
-- "Process Refund" button available ONLY for invoices with status "Paid" or "Partial" (REQ-017-086)
-- Refunds require admin to enter mandatory reason (max 500 characters) and follow the refund ladder set in FR-029 / A-09 (see Rule 7); see Screen 4b: Refund Confirmation Modal
+- "Overdue" is read from the booking's Final Payment Status in FR-007 and shows from the day after the due date while a balance is unpaid; FR-017 does not compute it. The 7 days named in reminders and alerts is only their cadence (REQ-017-083)
+- **"At Risk" flag** (not a payment status) raised when all 3 retry attempts for any installment have failed; booking is flagged for admin review. Admin MUST manually follow up with patient (contact via support, update payment method, or cancel booking) (REQ-017-084)
+- "Send Reminder" button available ONLY for invoices with an unpaid balance (Payment Status "Unpaid", "Deposit only" or "Installments active"), including those whose Final Payment Status is "Overdue" or that carry the "At Risk" flag (REQ-017-085)
+- "Process Refund" button available ONLY for invoices with Payment Status "Deposit only", "Installments active" or "Full paid" (money has been paid and not all of it returned) (REQ-017-086)
+- "Process Refund" opens FR-007 Screen 6 (Refund Processing) through the launcher on Screen 4b; the refund amount, reason and approval belong to FR-007 (REQ-017-086, REQ-017-199)
 - Clicking "Download Invoice" generates PDF with Hairline branding, itemized breakdown, and payment instructions (REQ-017-087)
 - Clicking "View Details" opens Screen 4a: Patient Invoice Detail
 - **Manual Payment Status Override**: Admin can manually override a payment status when the Stripe webhook fails, is delayed, or when an off-system payment adjustment is needed (REQ-017-088)
   - "Override Status" button available for ANY invoice (all statuses) (REQ-017-088)
-  - On click: admin selects new status from dropdown ("Pending", "Partial", "Paid", "Overdue", "Refunded", "At Risk"), enters mandatory reason (free text, max 500 characters), and confirms (REQ-017-088)
+  - On click: admin selects the new Payment Status from the dropdown (the FR-007 list: "Unpaid", "Deposit only", "Installments active", "Full paid", "Refunded"), enters mandatory reason (free text, max 500 characters), and confirms (REQ-017-088)
   - Override is logged to audit trail with: admin ID, timestamp, previous status, new status, reason entered (REQ-017-088)
   - Overridden invoices display a warning badge: "Status manually adjusted — [date]" visible to admins only (REQ-017-088)
   - Override does NOT automatically trigger Stripe refund or charge — admin is responsible for ensuring any off-system action is completed separately (REQ-017-089)
@@ -617,7 +673,9 @@ flowchart TD
 | Total Amount | currency | Accepted price after promotion for the one accepted subquote, read from the acceptance snapshot in the accepted currency; no live quote, library, or promotion re-pricing | ENT-patient-invoice.total_amount |
 | Adjusted Total After Refund | currency | Updated invoice total after any completed partial refund. Hidden if no refund adjustment exists | ENT-patient-invoice.adjusted_total_after_refund |
 | Outstanding Balance | currency | Remaining unpaid amount (auto-calculated) | ENT-patient-invoice.outstanding_balance |
-| Payment Status | badge | Current status (including "At Risk") | ENT-patient-invoice.payment_status |
+| Payment Status | badge | Current FR-007 Payment Status: "Unpaid", "Deposit only", "Installments active", "Full paid" or "Refunded" | ENT-patient-invoice.payment_status |
+| Final Payment Status | badge | Read from FR-007: "Not Due", "Due", "Overdue" (Overdue from the day after the due date) | ENT-patient-invoice.final_payment_status |
+| At Risk | flag | Shown when all installment retries are exhausted; a flag, not a payment status | ENT-patient-invoice.at_risk_flag |
 | Discount Code Applied | text | Promotion frozen in the acceptance snapshot (if any): code or program, source (provider-selected, auto-attached, or patient code), type, and discount amount in the quote currency, read from the snapshot and linked to the FR-019 application record for the same AcceptanceEvent. Never recalculated from current program settings. Link to FR-019 detail; "None" if no discount applied | ENT-patient-invoice.discount_code_applied |
 
 **Payment History Table**:
@@ -651,7 +709,7 @@ flowchart TD
 |------------|------|-------------|---------|
 | Refund Date | date | Date refund was processed | ENT-refund.refund_date |
 | Refund Amount | currency | Amount refunded | ENT-refund.refund_amount |
-| Refund Type | badge | "Full Refund" or "Partial Refund" | ENT-refund.refund_type |
+| Refund Type | badge | "Full Refund" or "Partial Refund". A part refund is one row here; it does not change the Payment Status | ENT-refund.refund_type |
 | Reason | text | Mandatory reason entered by admin at time of refund | ENT-refund.reason |
 | Processed By | text | Admin ID who processed the refund | ENT-refund.processed_by_admin_id |
 | Stripe Refund ID | text | Stripe reference ID for the refund | ENT-refund.stripe_refund_id |
@@ -678,8 +736,8 @@ flowchart TD
 
 **Actions** (same as Screen 4, available from this detail view):
 
-- Send Reminder (if status is "Pending", "Overdue", or "At Risk")
-- Process Refund → opens Screen 4b (if status is "Paid" or "Partial")
+- Send Reminder (if an unpaid balance remains)
+- Process Refund → opens Screen 4b, which opens FR-007 Screen 6 (if Payment Status is "Deposit only", "Installments active" or "Full paid")
 - Download Invoice
 - Override Status
 - Close (returns to Screen 4 list)
@@ -692,45 +750,33 @@ flowchart TD
 - Refund History Table visible ONLY if at least one refund exists for this invoice (REQ-017-092)
 - Reminder History Table visible ONLY if at least one automated or manual reminder event exists for this invoice (REQ-017-092)
 - Status Override History Table visible ONLY if at least one manual override has been applied (REQ-017-092)
-- "At Risk" invoices display a prominent warning banner at the top of the detail view: "All payment retries have been exhausted. Please contact the patient to resolve." (REQ-017-093)
+- Invoices with the "At Risk" flag display a prominent warning banner at the top of the detail view: "All payment retries have been exhausted. Please contact the patient to resolve." (REQ-017-093)
 - Discount Code Applied: if no discount was used, display "None — no discount applied" (REQ-017-092)
 
 ---
 
-#### Screen 4b: Refund Confirmation Modal
+#### Screen 4b: Refund Launcher
 
-**Purpose**: Presented when admin clicks "Process Refund" on Screen 4 or Screen 4a. Displays calculated refund amount per cancellation policy, requires mandatory reason before confirming.
+**Purpose**: Presented when admin clicks "Process Refund" on Screen 4 or Screen 4a. It carries the invoice and booking into FR-007 Screen 6 (Refund Processing), which owns the refund amount, reason, re-authentication, Stripe refund and any approval (REQ-017-199). FR-017 keeps only the effect of a refund on the invoice and on the clinic's payout.
 
 **Data Fields**:
 
 | Field Name | Type | Description | Graph field |
 |------------|------|-------------|---------|
-| Invoice Number | text | Read-only. Invoice being refunded | ENT-patient-invoice.invoice_id |
+| Invoice Number | text | Read-only. Invoice being refunded, prefilled into FR-007 Screen 6 | ENT-patient-invoice.invoice_id |
 | Patient Name | text | Read-only | ENT-patient.name |
-| Booking Reference | text | Read-only | ENT-booking.booking_reference |
+| Booking Reference | text | Read-only. Prefilled into FR-007 Screen 6 | ENT-booking.booking_reference |
 | Treatment Date | date | Read-only. Date of scheduled/completed treatment | ENT-booking.appointment_at |
-| Days Until/Since Treatment | number | Read-only. Calculated from today; used to determine applicable policy tier | ENT-refund.days_until_treatment |
-| Cancellation Policy Applied | text | Read-only. Auto-selected tier of the refund ladder set in FR-029 / A-09 (default ladder: ">30 days — 90% refund", "15–30 days — 50% refund", or "<15 days — 0% refund (non-refundable)") | ENT-refund.cancellation_policy_applied |
-| Original Invoice Amount | currency | Read-only. Full invoice total | ENT-refund.original_invoice_amount |
-| Calculated Refund Amount | currency | Read-only. Auto-calculated baseline refund amount from policy | ENT-refund.calculated_refund_amount |
-| Adjusted Refund Amount | currency | Editable only when a partial or manually adjusted refund is permitted. Defaults to the Calculated Refund Amount | ENT-refund.adjusted_refund_amount |
-| Final Refund Amount | currency | Read-only preview of the amount that will actually be sent to Stripe after any allowed adjustment | ENT-refund.refund_amount |
-| Non-Refundable Amount | currency | Read-only. Auto-calculated: invoice amount − Final Refund Amount. Labelled "Platform fee (non-refundable)" (REQ-017-094) | ENT-refund.non_refundable_amount |
-| Reason | textarea | **Mandatory**. Admin must enter reason before confirming. Max 500 characters. Placeholder: "Enter reason for refund (required)" | ENT-refund.reason |
-| Adjustment Justification | textarea | Mandatory ONLY if Adjusted Refund Amount differs from Calculated Refund Amount. Max 500 characters | ENT-refund.adjustment_justification |
-| Re-authentication | secure input | Password re-entry in MVP; replaced by MFA challenge after FR-026 / FR-031 | no graph field (control) |
-| Confirm Refund button | button | Enabled ONLY after required text fields are completed and re-authentication succeeds. Label: "Confirm Refund of [amount]" | no graph field (control) |
-| Cancel button | button | Dismisses modal; no action taken | no graph field (control) |
+| Open Refund Processing button | button | Opens FR-007 Screen 6 with the invoice and booking prefilled. Label: "Open Refund Processing" | no graph field (control) |
+| Cancel button | button | Dismisses the launcher; no action taken | no graph field (control) |
 
 **Business Rules**:
 
-- Modal auto-calculates refund amount using the refund ladder set in FR-029 / A-09 based on days until treatment at time admin opens the modal; the ladder does not apply to a provider-fault refund (Rules 13 and 19), where the amount follows that rule (REQ-017-094)
-- Adjusted Refund Amount defaults to Calculated Refund Amount (REQ-017-094)
-- Adjusted Refund Amount can be changed ONLY for eligible partial or discretionary pre-treatment refunds and for provider-fault refunds (Rule 13 full refund, Rule 19 admin-set amount from zero to the full amount paid); if changed, Adjustment Justification becomes mandatory (REQ-017-095)
-- "Confirm Refund" button is disabled until the Reason field contains at least 1 character, any required Adjustment Justification is provided, and re-authentication succeeds (REQ-017-096)
-- On confirm: Stripe refund API call is initiated; status changes to "Processing"; audit trail entry created with: admin ID, timestamp, invoice ID, refund amount, reason, before/after payment status (REQ-017-096)
-- If treatment date has already passed (treatment completed; a Rule 19 interrupted treatment is not covered here, the admin sets that amount), the <15 days tier applies (0% refund) — admin sees "0% refund — treatment has been completed" and the Confirm button is disabled; admin must use Override Status instead if a discretionary refund is needed (REQ-017-097, REQ-017-185)
-- Partial refunds (e.g., cancelling add-on packages only) use the same modal; the pre-calculated amount can be manually adjusted by admin with mandatory justification in the Adjustment Justification field (REQ-017-095)
+- The launcher calculates, validates and approves nothing: the refund amount (the FR-029 refund ladder, or the admin-set amount of a provider-fault refund under Rules 13 and 19), the mandatory reason, re-authentication and the Stripe refund are all handled in FR-007 Screen 6 (REQ-017-199)
+- A refund for a booking that is Completed with an open problem case is opened from Screen 7 with the admin-set amount, as described under Screen 7 (REQ-017-190)
+- Invoice effect owned by FR-017: when FR-007 completes a refund, the invoice shows it as a row in the refund history on Screen 4a and its adjusted total updates; a full refund moves the Payment Status to "Refunded" and a part refund leaves it unchanged (REQ-017-199, REQ-017-086)
+- Payout effect owned by FR-017: a refund of a booking not yet paid out removes it from, or reduces it in, the clinic's next statement or per-booking payout; a refund of a booking already paid out creates a refund deduction entry on the clinic's balance record (REQ-017-075, REQ-017-191)
+- The closure refund of Rule 13 is started by the system through FR-007; no admin action is needed on this screen (REQ-017-199)
 
 ---
 
@@ -744,15 +790,15 @@ flowchart TD
 
 | Field Name | Type | Required | Description | Validation Rules | Graph field |
 |------------|------|----------|-------------|------------------|---------|
-| Discount Code | text | Yes | Code identifier (e.g., "SUMMER25") | Display only; links to FR-019 detail | ENT-discount-code.discount_code |
-| Discount Name | text | Yes | Internal campaign name | Display only | ENT-discount-code.discount_name |
+| Discount Code | text | Yes | Code identifier (e.g., "SUMMER25") | Display only; links to FR-019 detail | ENT-promotion-code.code |
+| Discount Name | text | Yes | Internal campaign name | Display only | ENT-promotion-program.name |
 | Type | badge | Yes | Platform-Wide / Provider-Specific / Affiliate | Display only | ENT-discount-code.discount_type |
 | Times Used | number | Yes | Total bookings where discount applied | Display only | ENT-discount-usage-summary.times_used |
 | Total Discount Amount | currency | Yes | Cumulative discount value granted | Display only | ENT-discount-usage-summary.total_discount_amount |
 | Hairline Cost | currency | Yes | Portion borne by Hairline: the commission effect, plus, for a Both Fees discount, the Hairline share % of the discount defined in FR-019 that Hairline reimburses to the provider at payout | Display only | ENT-discount-usage-summary.hairline_cost |
 | Provider Cost | currency | Yes | Portion borne by the provider. Commission is always calculated on the price after promotion, so the provider bears part of every discount, including Hairline Only discounts. For a Both Fees discount, the FR-019 Hairline share % reimbursed by Hairline reduces Provider Cost | Display only | ENT-discount-usage-summary.provider_cost |
 | Revenue Generated | currency | Yes | Total booking revenue attributed to this code | Display only | ENT-discount-usage-summary.revenue_generated |
-| Active Window | daterange | Yes | Valid From — Valid Until | Display only | ENT-discount-code.valid_from, ENT-discount-code.valid_until |
+| Active Window | daterange | Yes | Valid From — Valid Until | Display only | ENT-promotion-program.start_at, ENT-promotion-program.end_at |
 | Status | badge | Yes | Active / Expired / Disabled | Display only | ENT-discount-code.status |
 
 **Business Rules**:
@@ -781,7 +827,7 @@ flowchart TD
 
 | Field Name | Type | Required | Description | Validation Rules | Graph field |
 |------------|------|----------|-------------|------------------|---------|
-| Select | checkbox | Conditional | Row selection for bulk payout processing | Enabled ONLY for Status = "Pending", past due date, and Payout Readiness = "Ready" | no graph field (control) |
+| Select | checkbox | Conditional | Row selection for bulk payout processing | Enabled ONLY when the payout is payable (see Business Rules; REQ-017-197) | no graph field (control) |
 | Affiliate Name | text | Yes | Affiliate partner name (individual or company) | Display only | ENT-affiliate.name |
 | Affiliate ID | text | Yes | Unique affiliate identifier (e.g., "HP-AFF-00012") | Display only | ENT-affiliate-commission.affiliate_id |
 | Payout Reference | text | Yes | Unique affiliate payout reference | Display only | ENT-affiliate-commission.payout_reference |
@@ -792,7 +838,8 @@ flowchart TD
 | Commission Rate | number | Yes | Percentage or fixed amount per booking | Display: X% or £X | ENT-affiliate-commission.commission_rate |
 | Commission Earned | currency | Yes | Total affiliate commission | Auto-calculated | ENT-affiliate-commission.commission_earned |
 | Payment Status | badge | Yes | "Pending", "Processing", "Paid", "Failed" | Color-coded | ENT-affiliate-commission.payout_status |
-| Payout Readiness | badge | Yes | Indicates whether a transfer can be initiated: "Ready", "Missing Destination", "Invalid Destination", "Manual Review Required" | Color-coded | ENT-affiliate-commission.payout_readiness_status |
+| Payout Readiness | badge | Yes | Indicates whether a transfer can be initiated: "Ready", "Missing Destination", "Invalid Destination", "Manual Review Required". Shown as set by FR-018 for the affiliate's payout (ENT-affiliate-payout.payout_readiness); FR-017 does not recompute it (REQ-017-198) | Color-coded | ENT-affiliate-commission.payout_readiness_status |
+| Held or Flagged | badge | Conditional | "Held" for the unpaid commission of a Suspended affiliate (held in the monthly run until reinstatement, FR-018); "Flagged" for a payout that includes a booking whose commission still breaches the margin check and was flagged for admin review (FR-018 margin guard) (REQ-017-197) | Display only; visible when set | ENT-affiliate-commission.held_or_flagged |
 | Payment Date | date | Conditional | Date payout processed (if paid) | Format: DD-MM-YYYY | ENT-affiliate-commission.payout_date |
 | Processed At | datetime | Conditional | Date/time transfer was initiated | Format: DD-MM-YYYY HH:MM:SS UTC | ENT-affiliate-commission.processed_at |
 | Payment Method | text | Yes | Affiliate's payout method; a single value, Stripe bank transfer. Source: FR-018 (A-07: Affiliate Program Management) onboarding; A-05 reads this value for payout execution | Display only | ENT-affiliate.payout_method |
@@ -807,8 +854,9 @@ flowchart TD
 - Affiliate payouts processed MONTHLY (default: 7th of each month for previous month's earnings) (REQ-017-101)
 - Commission amounts displayed here are calculated by FR-018 (A-07: Affiliate Program Management) — A-05 reads these values for affiliate billing and payout execution; it does not recalculate them (REQ-017-102)
 - Commission rate and referral attribution are managed in FR-018; any disputes on commission amounts must be resolved in FR-018 before admin processes payout here (REQ-017-102)
-- Payouts with status "Pending" become eligible for processing on scheduled payout date (REQ-017-101)
-- "Process Payout" button enabled ONLY for payouts with status "Pending", past due date, Payout Readiness = "Ready", and successful financial re-authentication (REQ-017-103)
+- A payout is payable on this screen only when all four hold: the payout month is closed (the scheduled payout date has arrived), the unpaid balance is at or above the USD 50 minimum (an Inactive affiliate has no minimum), Payout Readiness is "Ready", and no hold applies. A flagged payout stays visible with its flag for admin review (REQ-017-197)
+- All affiliate amounts are in USD (FR-018); the USD 50 floor is checked in USD after any conversion at the locked rate, with one threshold for all affiliates, not each affiliate's own currency (REQ-017-198)
+- "Process Payout" button enabled ONLY for payouts that are payable (status "Pending" and the payable condition above) and after successful financial re-authentication (REQ-017-103, REQ-017-197)
 - "Retry Payout" button enabled ONLY for payouts with status "Failed", Payout Readiness = "Ready", and successful financial re-authentication (REQ-017-103)
 - "Add Note" button available for all affiliate payouts at any status (admin-only internal notes, max 500 characters, not visible to affiliate); note saved and logged in audit trail with action_type "Note Added" (REQ-017-104)
 - Affiliates track their own earnings via the Affiliate Platform (read-only dashboard, managed in FR-018) (REQ-017-105)
@@ -838,7 +886,7 @@ flowchart TD
 
 **Business Rules** (bulk affiliate payout):
 
-- Batch selection is allowed ONLY for affiliate payouts with Status = "Pending", past due date, and Payout Readiness = "Ready" (REQ-017-106)
+- Batch selection is allowed ONLY for affiliate payouts that are payable under the same condition as "Process Payout" (REQ-017-106, REQ-017-197)
 - Processing is sequential; failures for individual affiliates do not block processing of others (REQ-017-106)
 - After batch completes, failed rows are pinned in the Failed / Requires Retry section for individual follow-up (REQ-017-106)
 
@@ -940,8 +988,9 @@ flowchart TD
 | Expected Net Payout | currency | Expected provider earning if the booking is eligible | ENT-payout-dispute-resolution.expected_net_payout |
 | Last Evaluated Payout Cycle | text | Most recent payout cycle in which the booking was checked | ENT-payout-dispute-resolution.last_evaluated_payout_cycle |
 | Prior Inclusion Status | badge | "Already Paid", "Eligible but Missed", "Not Yet Eligible", or "Needs Investigation" | ENT-payout-dispute-resolution.prior_inclusion_status |
-| Resolution Action | select | "Confirm Already Paid", "Add to Next Payout", or "Escalate Technical Investigation" | ENT-payout-dispute-resolution.resolution_action |
-| Target Payout Cycle | select | Required when Resolution Action = "Add to Next Payout". Dropdown of the affected provider's upcoming payout cycles, displayed as "[Provider Name] — [Payout Date]" (e.g., "TurkeyClinic — 02-05-2026"). Only cycles in "Pending Approval" or future-scheduled state are selectable | ENT-payout-dispute-resolution.target_payout_id |
+| Resolution Action | select | "Confirm Already Paid", "Add to Next Payout" or "Escalate Technical Investigation"; for a Completed booking with an open problem case also "Release in Full", "Refund in Full" or "Refund in Part and Release the Rest"; for a Suspended or Deactivated clinic also "Release Earnings" (REQ-017-190, REQ-017-193) | ENT-payout-dispute-resolution.resolution_action |
+| Refund Amount | currency | Required for "Refund in Part and Release the Rest"; set by the admin from zero to the full amount paid; for "Refund in Full" it is the full amount paid. The amount, a reason and an audit entry are carried into FR-007 Screen 6, which opens with the booking and this amount prefilled (REQ-017-190) | ENT-payout-dispute-resolution.refund_amount |
+| Target Payout Cycle | select | Required only when Resolution Action = "Add to Next Payout"; not used by the release outcomes or "Release Earnings". Dropdown of the affected provider's upcoming payout cycles, displayed as "[Provider Name] — [Payout Date]" (e.g., "TurkeyClinic — 02-05-2026"). Only cycles in "Pending Approval" or future-scheduled state are selectable | ENT-payout-dispute-resolution.target_payout_id |
 | Internal Note | textarea | Mandatory when Resolution Action is selected. Max 500 chars | ENT-payout-dispute-resolution.internal_note |
 | Notify Provider | checkbox | Visible for all resolution actions. Auto-selected and disabled when Resolution Action = "Add to Next Payout"; optional for other actions | ENT-payout-dispute-resolution.notify_provider |
 | Save Resolution | button | Persists decision and writes audit log entry | no graph field (control) |
@@ -954,6 +1003,8 @@ flowchart TD
 - Results sorted by date descending by default (REQ-017-109)
 - Clicking any row opens the relevant detail screen (Screen 3 for provider payouts, Screen 4a for invoices, etc.) (REQ-017-109)
 - "Add to Next Payout" is available ONLY when the booking was not already paid, is now eligible for payout, and the admin has provided an Internal Note and target payout cycle (REQ-017-110)
+- The three outcomes of a completion problem case are carried here: "Release in Full" releases the held amount; "Refund in Full" and "Refund in Part and Release the Rest" open FR-007 Screen 6 with the admin-set refund amount, and the rest is released. Each needs an Internal Note and writes an audit entry; a release makes the booking's funds Released so they enter the next statement (manual rail) or are paid as a per-booking payout (Stripe Connect) (REQ-017-190)
+- "Release Earnings" is offered for a Suspended or Deactivated clinic and needs no target payout cycle: a manual-rail clinic gets a one-off manual statement and a Stripe Connect clinic a direct per-booking payout, with an Internal Note and an audit entry. It covers bookings completed normally and bookings held under Rule 16 once the admin has resolved them (REQ-017-193)
 - Saving a dispute resolution writes an audit log entry; when Resolution Action = "Add to Next Payout", provider notification is mandatory and sent automatically. For other resolution actions, notification is sent only when selected (REQ-017-111)
 - If no results found: display "No financial records found for '[search term]'. Check the reference and try again." (REQ-017-109)
 
@@ -969,7 +1020,7 @@ flowchart TD
 |-------|------|-------------|---------|
 | Date Range | daterange | Filter by log entry timestamp | ENT-transaction-audit-log.timestamp |
 | Admin User | select | Filter by which admin performed the action | ENT-transaction-audit-log.admin_user_id |
-| Action Type | multi-select | Filter by: "Payout Approved", "Payout Unapproved", "Payout Voided", "Payout Retried", "Bulk Approval", "Refund Processed", "Invoice Generated", "Status Overridden", "Note Added", "Installment Retry", "Affiliate Payout Processed", "Affiliate Payout Retried", "Payout Added to Next Cycle", "Reminder Sent", "Currency Alert Decision", "Re-authentication Verified" | ENT-transaction-audit-log.action_type |
+| Action Type | multi-select | Filter by: "Payout Approved", "Payout Unapproved", "Payout Voided", "Payout Retried", "Bulk Approval", "Refund Processed", "Invoice Generated", "Status Overridden", "Note Added", "Installment Retry", "Affiliate Payout Processed", "Affiliate Payout Retried", "Payout Added to Next Cycle", "Payout Marked Paid", "Manual Review Cleared", "Balance Written Off", "Earnings Released", "Reminder Sent", "Currency Alert Decision", "Re-authentication Verified" | ENT-transaction-audit-log.action_type |
 | Affected Entity | multi-select | Filter by: Invoice, Provider Payout, Installment, Affiliate Commission, Booking, Currency Alert | ENT-transaction-audit-log.affected_entity_type |
 | Entity ID | text | Optional; filter to a specific entity ID (e.g., specific invoice or payout) | ENT-transaction-audit-log.affected_entity_id |
 
@@ -1071,13 +1122,16 @@ flowchart TD
 | Adjustment Marker | badge | Conditional | "Refunded", "Partial Refund", "Refunded — Deducted from Next Payout", or "Manual Adjustment" | Visible only when the net earning has changed after initial calculation | ENT-provider-earning.adjustment_marker |
 | Currency | text | Yes | Treatment currency | Display: GBP, USD, TRY | ENT-provider-earning.currency |
 | Treatment Status | badge | Yes | "Completed" or "Aftercare" | Color-coded | ENT-booking.status |
-| Payout Status | badge | Yes | "Pending Next Payout", "Included in Payout — [Date]", or "Payout Failed — [Date]" | Display only | ENT-provider-earning.payout_status |
+| Payout Status | badge | Yes | "Pending Release" (confirmation window open or a problem case open), "Pending Next Payout" (released, not yet paid), "Included in Payout — [Date]", or "Payout Failed — [Date]" (REQ-017-189) | Display only | ENT-provider-earning.payout_status |
 
 **Summary Bar** (above the treatment list):
 
 | Field | Description | Graph field |
 |-------|-------------|---------|
-| Total Pending Earnings | Sum of net earnings for all treatments with Payout Status "Pending Next Payout" | ENT-provider-earnings-summary.total_pending_earnings |
+| Pending Release | Sum of net earnings for treatments with Payout Status "Pending Release": the confirmation window is open or a problem case is open (REQ-017-189) | ENT-provider-earnings-summary.pending_release_earnings |
+| Released | Sum of net earnings for treatments with Payout Status "Pending Next Payout": funds released, not yet paid (REQ-017-189) | ENT-provider-earnings-summary.released_earnings |
+| Total Pending Earnings | Pending Release plus Released | ENT-provider-earnings-summary.total_pending_earnings |
+| Open Balance | The clinic's open balance owed to Hairline (refund deduction, chargeback recovery, cancellation deduction, bank charge), applied to the next payout; hidden when zero (REQ-017-191) | ENT-clinic-balance-entry.amount |
 | Next Payout Date | Provider's next scheduled payout date: the platform-wide payout day for a manual-rail clinic; for a Stripe Connect clinic, the payout is made at each booking's release | ENT-provider-earnings-summary.next_payout_date |
 | Treatments This Period | Count of eligible treatments in current payout cycle | ENT-provider-earnings-summary.treatments_this_period |
 
@@ -1087,8 +1141,8 @@ flowchart TD
 - Each row is directly linked to its treatment case via Booking Reference (→ FR-001 booking record / A-01 Patient Management) (REQ-017-117)
 - Earnings update in real time as treatment status changes
 - Provider cannot see the payout statement, its review status, or admin approval action
-- Once admin approves and Stripe transfer is initiated, affected treatments update to Payout Status "Included in Payout — [Date]" (REQ-017-118)
-- If the Stripe transfer fails (`transfer.failed` webhook), affected treatments update to Payout Status "Payout Failed — [Date]" and display a warning icon. They revert to "Pending Next Payout" once the admin retries and the transfer succeeds (REQ-017-118)
+- Manual rail: once the admin has marked the statement as paid, affected treatments update to Payout Status "Included in Payout — [Date]". Stripe Connect: once the per-booking payout is initiated at release, the booking updates to "Included in Payout — [Date]" (REQ-017-118, REQ-017-188)
+- If a Stripe Connect transfer fails (`transfer.failed` webhook), the booking updates to Payout Status "Payout Failed — [Date]" and displays a warning icon. It reverts once the admin retries and the transfer succeeds. A statement never fails (REQ-017-118, REQ-017-187)
 - **Refunded treatments**: If a patient refund is processed on a booking that had not yet been paid out, the treatment row is updated to show Net Earning as £0.00 with a "Refunded" label and a strikethrough on the original amount. The treatment is excluded from the Total Pending Earnings calculation. If the refund is partial (e.g., only add-on packages refunded), Net Earning is recalculated based on the adjusted booking amount (REQ-017-119)
 - If a patient refund is processed AFTER the provider has already been paid, the original treatment row remains visible with Adjustment Marker "Refunded — Deducted from Next Payout" and Net Earning showing the negative deduction amount clearly; if the deduction spans multiple cycles, the tooltip explains the remaining carry-forward balance (REQ-017-120)
 - Adjustment Marker opens a provider-friendly explanation tooltip (e.g., "Adjusted due to partial refund on 12-04-2026"); no internal admin notes are exposed
@@ -1120,7 +1174,7 @@ flowchart TD
 | Commission Deducted | currency | Yes | Total platform commission withheld | Display: £X,XXX.XX | ENT-provider-payout.commission_amount |
 | Net Payout | currency | Yes | Amount transferred to provider bank account | Display: £X,XXX.XX | ENT-provider-payout.net_payout |
 | Payout Method | badge | Yes | How this payout was made: "Stripe Connect" (one payout per released booking) or "Manual bank transfer" (weekly cycle) | Display only | ENT-provider-payout.payout_method |
-| Status | badge | Yes | "Processing", "Paid", or "Failed" | Color-coded. "Failed" = Stripe transfer failed; admin has been notified and will retry | ENT-provider-payout.payout_status |
+| Status | badge | Yes | A Stripe Connect payout shows "Processing", "Paid" or "Failed"; a manual-rail statement appears as "Paid" (REQ-017-186, REQ-017-187) | Color-coded. "Failed" = Stripe transfer failed; admin has been notified and will retry | ENT-provider-payout.payout_status |
 | Invoice | button | Conditional | Download invoice PDF | Available only when Status = "Paid" | no graph field (control) |
 | Failure Reason | text | Conditional | Brief description of why payout failed (e.g., "Bank account issue — admin has been notified") | Shown only when Status = "Failed" | ENT-provider-payout.failure_reason |
 | Retry Resolution History | timeline | Conditional | Timeline of prior failure and recovery attempts | Shown when the payout ever entered "Failed" status | ENT-provider-payout.retry_history |
@@ -1144,7 +1198,7 @@ flowchart TD
 - Payout entries appear in this list as soon as the Stripe transfer is initiated (status: "Processing"); they remain visible through "Paid" and "Failed" states. A manual-rail payout appears once an admin has marked it as paid (REQ-017-123)
 - "Failed" entries appear with a warning icon and a message: "Your payout of [amount] for [period] could not be processed. Hairline is investigating. You will be notified once resolved." (REQ-017-123, REQ-017-124)
 - Each payout entry links to all treatment cases included in that payout period (Booking Reference → FR-001 / A-01) (REQ-017-123)
-- Invoice PDF is generated only after Stripe `transfer.paid` confirmation; the Download button is disabled during "Processing" status (REQ-017-123, REQ-017-125)
+- Invoice PDF is generated only after Stripe `transfer.paid` confirmation for a Stripe Connect payout, and when the admin marks a manual-rail statement as paid; the Download button is disabled during "Processing" status (REQ-017-123, REQ-017-125, REQ-017-188)
 - Retry Resolution History remains visible even after a failed payout later resolves to "Paid", so providers can understand why timing changed (REQ-017-123)
 - Provider has read-only access to all data on this screen; no approval or editing actions are available
 - All amounts displayed in the provider's configured payout currency; exchange rate used is the rate locked at subquote acceptance (FR-005 AcceptanceEvent) (REQ-017-126)
@@ -1171,13 +1225,12 @@ flowchart TD
 - **Rule 10**: Affiliate commissions calculated ONLY on net revenue (after discounts and refunds) (REQ-017-134)
 - **Rule 11**: Multi-currency bookings display amounts in patient's selected currency; providers receive payouts in their configured currency (REQ-017-135)
 - **Rule 12**: Billing reads one accepted subquote's immutable commercial base through FR-006, not a parent range, sibling option/date rows, the live quote, or live library/promotion prices. The promotion and price after promotion are frozen at acceptance; billing never adds, removes, replaces, or recalculates a promotion after acceptance. The only exception is the FR-006 provider-fault transfer, which creates a new linked acceptance record that billing reads in place of the superseded one. The FR-019 application record is linked to the AcceptanceEvent; authorized finance interventions remain separate records; attribution, refund, installment, and payout policies are unchanged. (REQ-017-136)
-- **Rule 13**: Bookings cancelled by an FR-015 provider suspension or deactivation (cause `ProviderSuspended` / `ProviderDeactivated`) are excluded from provider payout calculation like other cancelled bookings. The Rule 7 refund ladder is not applied. As when the clinic withdraws or drops out, the patient is always refunded in full everything paid and pays no cancellation fee; the system issues no refund automatically, and the admin issues the full refund through admin financial resolution (Screen 4b, mandatory reason, audit trail). A replacement booking through the FR-006 provider-fault transfer takes a new payment. The fixed clinic cancellation charge applies to a clinic withdrawal or drop-out only, not to a provider suspension or deactivation (FR-006 Alternative Flow B4). Captured patient payments on these bookings, including payments captured while the cancellation cascade was running, remain recorded against the booking invoice and are routed to admin financial resolution through the existing refund and adjustment controls (Screen 4b, mandatory reason, audit trail). Provider reactivation does not restore cancelled bookings or their payout eligibility (REQ-017-137)
-- **Rule 14**: A payment captured after the booking or selected case was cancelled with cause `ProviderSuspended` / `ProviderDeactivated` (for example, a delayed processor webhook from FR-007 / S-02) MUST be recorded as a real transaction. It MUST NOT confirm a booking, revive the cancelled case, or count toward provider earnings, payout, or platform/affiliate commission recognition. The invoice is flagged "Captured after provider cancellation" with links to the case/inquiry and the FR-015 provider-status event, and admin resolves it through the existing refund/adjustment workflow (Screen 4b, mandatory reason, audit trail). No new refund percentage, fee, or payout rail is introduced
+- **Rule 13**: Bookings cancelled by an FR-015 provider suspension or deactivation (cause `ProviderSuspended` / `ProviderDeactivated`) are excluded from provider payout calculation like other cancelled bookings. The Rule 7 refund ladder is not applied. As when the clinic withdraws or drops out, the patient is always refunded in full everything paid and pays no cancellation fee; the system starts the full refund through the FR-007 refund flow without waiting for an admin (REQ-017-199). A replacement booking through the FR-006 provider-fault transfer takes a new payment. The fixed clinic cancellation charge applies to a clinic withdrawal or drop-out only, not to a provider suspension or deactivation (FR-006 Alternative Flow B4). Captured patient payments on these bookings, including payments captured while the cancellation cascade was running, remain recorded against the booking invoice and are routed to admin financial resolution through the refund launcher (Screen 4b, which opens FR-007 Screen 6) and the existing adjustment controls (mandatory reason, audit trail). Provider reactivation does not restore cancelled bookings or their payout eligibility (REQ-017-137)
+- **Rule 14**: A payment captured after the booking or selected case was cancelled with cause `ProviderSuspended` / `ProviderDeactivated` (for example, a delayed processor webhook from FR-007 / S-02) MUST be recorded as a real transaction. It MUST NOT confirm a booking, revive the cancelled case, or count toward provider earnings, payout, or platform/affiliate commission recognition. The invoice is flagged "Captured after provider cancellation" with links to the case/inquiry and the FR-015 provider-status event, and admin resolves it through the existing refund/adjustment workflow (Screen 4b opens FR-007 Screen 6; mandatory reason, audit trail). No new refund percentage, fee, or payout rail is introduced
 - **Rule 15**: When a booking is cancelled by provider suspension or deactivation, all its remaining unpaid scheduled installments are cancelled; no further automatic charges or retries run (Payment Rule 3 does not apply). Already-paid installments stay recorded and go to admin financial resolution under Rule 13
-- **Rule 16**: Amounts on bookings cancelled by provider suspension or deactivation, including any procedure already recorded as completed under FR-010 and any Rule 14 late capture, are held from provider payout statements until admin financial resolution is recorded. Release to a payout uses the existing "Add to Next Payout" resolution (Screen 7) subject to normal Rule 5 eligibility and Billing Rule 5 approval; payout timing is otherwise unchanged (REQ-017-138)
+- **Rule 16**: Amounts on bookings cancelled by provider suspension or deactivation, including any procedure already recorded as completed under FR-010 and any Rule 14 late capture, are held from provider payout statements until admin financial resolution is recorded. Release to a payout uses the existing "Add to Next Payout" resolution (Screen 7) while the clinic is active, and the "Release earnings" resolution (REQ-017-193) when the clinic is Suspended or Deactivated; payout timing is otherwise unchanged. The earnings of a removed clinic are never forfeited: an admin always settles them through this rule and the Release earnings route (REQ-017-138, REQ-017-193)
 - **Rule 17**: Hairline admins can view reconciliation dashboards, export payment and commission reports, and monitor financial reconciliation data and payment operations. FR-017 owns financial reconciliation; FR-007 points here for it (REQ-017-172)
-- **Rule 18**: When a clinic's account ends as Inactive with the reason "banned", its whole pending balance is forfeited: nothing further is paid out to that clinic (REQ-017-173)
-- **Rule 19**: When a treatment already started is interrupted by the provider's fault (FR-006 Alternative Flow B7, booking `In Progress`), the Rule 7 refund ladder is not applied. An admin reviews each case and sets the patient refund amount, from zero up to the full amount paid, with a mandatory reason and an audit entry, through the existing refund control (Screen 4b). The provider's payout for that booking is held until the admin decides (REQ-017-185)
+- **Rule 19**: When a treatment already started is interrupted by the provider's fault (FR-006 Alternative Flow B7, booking `In Progress`), the Rule 7 refund ladder is not applied. An admin reviews each case and sets the patient refund amount, from zero up to the full amount paid, with a mandatory reason and an audit entry, through the refund launcher (Screen 4b), which opens FR-007 Screen 6 with the amount the admin sets. The provider's payout for that booking is held, and stays off the unpaid statement and the per-booking payout, until the admin decides; the held amount then follows the Screen 7 outcomes (REQ-017-185, REQ-017-190)
 
 ### Data & Privacy Rules
 
@@ -1198,9 +1251,9 @@ flowchart TD
 - **[Not in scope — see FR-015/A-02 and FR-029]** Provider commission configuration (Percentage or Flat Rate): managed through the provider profile in FR-015 and surfaced centrally in FR-029 for global / provider-scope commission administration; A-05 reads the commission model, value, and Flat Rate currency snapshotted at booking confirmation (FR-006) for payout calculations
 - **[Not in scope — see FR-029]** Installment cutoff days (default: 30 days before treatment date): configured in FR-029 / A-09: Payment System Configuration; FR-017 reads this value at runtime to determine installment eligibility
 - **[Not in scope — see FR-029]** Currency conversion markup percentage: configured in FR-029 / A-09: Payment System Configuration
-- Patient confirmation window after a clinic marks a procedure complete (default 7 days), the fixed amount deducted from a clinic's next payout when the clinic cancels, the percentage by which a patient cancellation fee is split between Hairline and the clinic, and the number of days overdue after which an outstanding patient invoice raises an alert (default not yet set)
+- Patient confirmation window after a clinic marks a procedure complete (default 7 days), the fixed amount deducted from a clinic's next payout when the clinic cancels, the percentage by which a patient cancellation fee is split between Hairline and the clinic, and the number of days overdue after which an outstanding patient invoice raises an alert (default 7 days)
 - **[Not in scope — see FR-030]** Payment reminder schedule: notification timing configured in FR-030 (Notification Rules & Configuration); A-05 triggers the events that S-03 dispatches
-- Payout statement approval during the review time between the cutoff day and the payout day, and during overdue review; payout processing is automatic on payout day for approved statements and immediate only when an overdue statement is approved after the normal payout day (REQ-017-142)
+- Payout statement approval during the review time between the cutoff day and the payout day, and during overdue review; an approved statement is payable on the payout day and an Overdue statement is payable at once when approved, and the admin pays it and marks it paid (REQ-017-142, REQ-017-188)
 - Manual payment status override (with mandatory reason and audit trail — see Screen 4)
 - Internal notes on payouts and invoices (admin-only visibility)
 - Refund initiation and approval (subject to the refund ladder set in FR-029 / A-09)
@@ -1213,7 +1266,7 @@ flowchart TD
 - Stripe account connection parameters (API keys managed via secrets vault) (REQ-017-169)
 - Invoice PDF template structure (branding and layout fixed) (REQ-017-166)
 - Audit log retention period (system PRD, Platform-Wide Rules: One 10-year retention period) (REQ-017-020)
-- Payment retry logic (3 attempts with exponential backoff - hardcoded) (REQ-017-143)
+- Payout retry logic for Stripe Connect payouts (3 attempts with exponential backoff - hardcoded) (REQ-017-143)
 
 **Configurable with Restrictions**:
 
@@ -1227,10 +1280,10 @@ flowchart TD
 - **Payment Rule 2**: Final payment due 7 days before treatment date OR last installment 30 days before treatment (whichever is configured) (REQ-017-148)
 - **Payment Rule 3**: Failed installment payments trigger 3 automatic retry attempts after waits of 1, 3 and 7 days (see FR-007B); if all fail, booking flagged for admin review (REQ-017-149)
 - **Billing Rule 1**: Initial successful payment creates the booking's patient invoice; subsequent successful installment/final payments update that same invoice and generate the corresponding payment PDF/receipt. One invoice record per booking is retained; mere subquote acceptance or unpaid options do not create additional patient invoices.
-- **Billing Rule 2**: Provider payout statements (dashboard view) for manual-rail clinics are auto-generated on the platform-wide cutoff day. Provider invoice PDFs are generated separately only after the payout is confirmed (post-payout). Statements and invoices are two distinct artefacts. (REQ-017-150)
+- **Billing Rule 2**: Provider payout statements (dashboard view) for manual-rail clinics are auto-generated on the platform-wide cutoff day. Provider invoice PDFs are generated separately only after the payout is confirmed (post-payout): when the admin marks a statement as paid, or on `transfer.paid` for a Stripe Connect payout. Statements and invoices are two distinct artefacts. (REQ-017-150)
 - **Billing Rule 3**: Affiliate invoices are generated on the monthly affiliate payout day (a platform setting owned by FR-018, default the 7th); no payout buffer window applies (see Billing Rule 4) (REQ-017-151)
 - **Billing Rule 4**: The platform-wide cutoff day replaces the payout buffer window; the FR-029 buffer setting no longer exists. The review time is the gap between the cutoff day and the payout day. For example, with a Sunday cutoff and a Wednesday payout, the statement is generated on Sunday and the admin has until Wednesday to review it. (REQ-017-152)
-- **Billing Rule 5**: Admin must approve payout statements during the review time between the cutoff day and the payout day. On payout day, the system auto-processes only "Approved" statements. Any statement still in "Pending Approval" at that point moves to "Overdue" and is NOT auto-processed. Overdue statements can be approved and processed at any time outside the normal cycle; the Stripe transfer is initiated immediately on approval. For a manual-rail clinic the admin records the payment by marking the statement as paid. Delay is recorded in the audit trail. (REQ-017-153)
+- **Billing Rule 5**: Admin must approve payout statements during the review time between the cutoff day and the payout day. On payout day only "Approved" statements are payable: the admin pays them and marks them paid (REQ-017-188). Any statement still in "Pending Approval" at that point moves to "Overdue" and is NOT payable. An Overdue statement can be approved at any time outside the normal cycle; on approval it is payable at once, the admin pays it and marks it paid, and it never waits for the next payout day. Unapprove is not offered after the payout day. Delay is recorded in the audit trail. (REQ-017-153, REQ-017-076)
 - **Currency Rule 1**: Patients charged in their selected currency; providers paid in their configured currency; Hairline absorbs currency conversion costs (REQ-017-154)
 - **Currency Rule 2**: Exchange rates are locked at subquote acceptance (FR-005 AcceptanceEvent), recorded with the rate's timestamp in the acceptance snapshot, and never relocked; NO fluctuation risk to patient or provider during booking lifecycle
 - **Commission Rule 1**: Platform commission calculated BEFORE provider payout. Lock points: the exchange rate is locked at subquote acceptance; the commission model and value, with the deposit and installment settings, are fixed at booking confirmation; nothing is fixed at quote creation. The Percentage commission base is the accepted price after promotion, in the quote currency, read from the acceptance snapshot, for every discount type, including Hairline Only discounts; Flat Rate commission is a fixed deduction once per FR-010 completed procedure, independent of procedure price (REQ-017-155)
@@ -1240,14 +1293,17 @@ flowchart TD
 
 These rules record the product owner's decisions on how a clinic's money is released and paid. The four Stripe Connect money-movement decisions (Release Rules 5 and 6) replace the missing Payment Routing Spec.
 
-- **Release Rule 1**: Funds are released per booking at Treatment, then paid out per provider. The provider marks the procedure complete; the patient confirms or disputes within a confirmation window (default 7 days, an editable admin setting); no answer means automatic release; a dispute pauses release until an admin resolves it. Any admin with support access can resolve a completion problem case and choose the money outcome; there is no time limit. A completion problem case ends in one of three outcomes: release in full, refund in full, or refund in part and release the rest (REQ-017-174)
+- **Release Rule 1**: Funds are released per booking at Treatment, then paid out per provider. The provider marks the procedure complete; the patient confirms or disputes within a confirmation window (default 7 days, an editable admin setting); no answer means automatic release; a dispute pauses release until an admin resolves it. A booking's funds count as released when the window ends with no open case, or when an admin resolves the case; until then its earnings show as Pending release (REQ-017-189). Any admin with support access can resolve a completion problem case and choose the money outcome; there is no time limit. A completion problem case ends in one of three outcomes: release in full, refund in full, or refund in part and release the rest (REQ-017-174)
 - **Release Rule 2**: There are two payout rails: Stripe Connect, and a manual rail (manual first, Revolut later). The admin chooses the rail when creating the clinic (FR-015); the clinic sees the method and its readiness read-only and completes Stripe's own sign-up itself (REQ-017-175)
-- **Release Rule 3**: The manual rail runs one platform-wide weekly cycle: Sunday cutoff, Wednesday payout (both admin-editable). The admin records each payment by marking the statement as paid. A manually paid clinic is "Ready" once the admin has set its payout method to manual bank transfer and saved valid bank details. A booking with an open problem case leaves the unpaid settlement statement until the admin decides. A bank charge on a manual transfer is recorded against the settlement statement; the clinic bears it, and it is deducted from the clinic's statement amount and shown as a deduction (REQ-017-176)
-- **Release Rule 4**: A Stripe Connect clinic is paid one payout per released booking, at release, recorded on the booking ledger; the weekly cycle does not apply to it. A failed Stripe Connect payout gets 3 automatic attempts with exponential backoff, then goes to manual review, and the Retry Payout button (Screen 2) stays available (REQ-017-177)
+- **Release Rule 3**: The manual rail runs one platform-wide weekly cycle: Sunday cutoff, Wednesday payout (both admin-editable). The admin records each payment by marking the statement as paid. A manually paid clinic is "Ready" once the admin has set its payout method to manual bank transfer and saved valid bank details. A booking with an open problem case leaves the unpaid settlement statement until the admin decides. A bank charge on a manual transfer is recorded against the settlement statement; the clinic bears it, and it is entered when the admin marks the statement as paid, recorded as a Bank Charge adjustment, deducted from the clinic's statement amount and shown as a deduction (REQ-017-176, REQ-017-188)
+- **Release Rule 4**: A Stripe Connect clinic is paid one payout per released booking, at release, recorded on the booking ledger; the weekly cycle does not apply to it. A failed Stripe Connect payout gets 3 automatic attempts with exponential backoff, then goes to manual review, and the Retry Payout button on the Stripe Connect payouts list (Screen 2) stays available. Manual Review Required is also set by the fraud flag (REQ-017-161); while it is set, approval and retry are disabled until an admin clears it with a review note, which is audited (REQ-017-177, REQ-017-194)
 - **Release Rule 5**: On a card payment through Stripe Connect the seller is Hairline: its balance pays refunds, chargebacks and Stripe fees first and recovers the clinic's part afterwards. Hairline holds the payment; the clinic's share moves to the clinic's locked Stripe balance 60 days before treatment (30 days for instalments once fully paid) and is paid out at release. The deposit's share moves 60 days before the scheduled treatment date, the balance share moves when the balance is paid, and a fully paid instalment plan moves 30 days before; payout happens only at release. If fewer than 60 days remain at payment (30 for a fully paid instalment plan), the clinic share moves at once to the clinic's locked Stripe balance and is paid out only at release after completion (REQ-017-178)
-- **Release Rule 6**: When a clinic's Stripe payout setup is not Ready at the time its share is due to move, the share stays with Hairline, the clinic and the admin are told, it moves when the clinic becomes Ready, and nothing is paid out before then, even after treatment. If the patient cancels after the share has moved, Hairline refunds the patient per the refund ladder, pulls the share back from the clinic's locked balance, and deducts any shortfall from the clinic's next payout. If the treatment is rescheduled after the share has moved, the share is always pulled back and moved again 60 or 30 days before the new date; this also keeps the share inside Stripe's 90-day limit. The share can be pulled back to Hairline before Stripe's 90-day limit and moved again later; there is no deadline for moving it again (REQ-017-179)
-- **Release Rule 7**: When a clinic cancels, a fixed amount set in admin settings is deducted from the clinic's next payout. A patient cancellation fee is split between Hairline and the clinic by a percentage set in admin settings. The refund ladder is one global ladder now (General Module Rule 7) (REQ-017-180)
+- **Release Rule 6**: When a clinic's Stripe payout setup is not Ready at the time its share is due to move, the share stays with Hairline, the clinic and the admin are told, it moves when the clinic becomes Ready, and nothing is paid out before then, even after treatment. If the patient cancels after the share has moved, Hairline refunds the patient per the refund ladder, pulls the share back from the clinic's locked balance, and records any shortfall as a refund deduction on the clinic's balance (Release Rule 9). If the treatment is rescheduled after the share has moved, the share is always pulled back and moved again 60 or 30 days before the new date; this also keeps the share inside Stripe's 90-day limit. The share can be pulled back to Hairline before Stripe's 90-day limit and moved again later; there is no deadline for moving it again (REQ-017-179)
+- **Release Rule 7**: When a clinic cancels, the fixed amount set in FR-029 Screen 7 is deducted from the clinic's next payout, only while it is set, in its Fee Currency converted to the payout currency, as an entry on the clinic balance (Release Rule 9). A patient cancellation fee is split between Hairline and the clinic by a percentage set in admin settings. The refund ladder is one global ladder now (General Module Rule 7) (REQ-017-180)
 - **Release Rule 8**: Bookings that are Completed or Aftercare at go-live follow the old payout rule and are payable as they are (REQ-017-181)
+- **Release Rule 9**: Each clinic has one balance record of signed entries: refund deduction, chargeback recovery, clinic cancellation deduction and bank charge. It is applied to the clinic's next payout on either rail and shown on Screens 2, 3 and 9. A debt with no further payout coming stays open on the clinic's balance; an admin may write it off with a mandatory reason and an audit entry (REQ-017-191, REQ-017-192)
+- **Release Rule 10**: A Hairline-funded discount is reimbursed to the clinic as its own row on the statement and on the per-booking payout, read from the frozen booking snapshot (FR-019 REQ-019-017) and shown on Screen 3 (REQ-017-195)
+- **Release Rule 11**: A Stripe Connect clinic's payout setup shows as Not onboarded, Restricted or Ready; a booking whose clinic is not Ready shows "Waiting for clinic setup" on the per-booking payout list until it is Ready (REQ-017-196)
 
 ### Integration Boundaries with Other FRs
 
@@ -1270,7 +1326,7 @@ These rules record the product owner's decisions on how a clinic's money is rele
   - **Integration point**: Initial successful payment/confirmation creates the booking-linked invoice; subsequent payments/status changes update its financial state without changing acceptance history. Consume the FR-006 acceptance snapshot and provenance; refund amounts follow its existing cancellation policy, and provider deductions from post-payout refunds retain existing subsequent-cycle reconciliation.
 
 - **FR-007 / Module S-02: Payment Processing Service**
-  - **Integration point**: S-02 handles Stripe API calls, webhook processing, and payment retry logic; A-05 consumes transaction events. S-02 still executes captures and charges; A-05 classifies captures that arrive after an FR-015 provider-status cancellation (Rule 14) and stops scheduling remaining installments on such bookings (Rule 15)
+  - **Integration point**: S-02 handles Stripe API calls, webhook processing, and payment retry logic; A-05 consumes transaction events. S-02 still executes captures and charges; A-05 classifies captures that arrive after an FR-015 provider-status cancellation (Rule 14) and stops scheduling remaining installments on such bookings (Rule 15). A-05 shows the FR-007 Payment Status list and Final Payment Status as FR-007 defines them; refunds are made on FR-007 Screen 6, which Screen 4b opens (REQ-017-199)
 
 - **FR-010 / Module PR-03: Treatment Execution & Documentation**
   - **Integration point**: Status change "In Progress" → "Aftercare" signals completed treatment; triggers payout calculation in A-05
@@ -1281,18 +1337,18 @@ These rules record the product owner's decisions on how a clinic's money is rele
   - **Provider-status cancellations**: FR-015 Rule 9 requires payments captured after suspension/deactivation to stay recorded and reach admin financial reconciliation. A-05 owns that reconciliation (Rules 13 to 16, Workflow B3): late captures are flagged and excluded from earnings, payout, and commission; remaining installments are cancelled; amounts are held from payout statements until admin resolution
 
 - **FR-019 / Module A-06: Discount & Promotion Management**
-  - **Integration point**: A-06 manages discount code creation and approval and owns the Both Fees Hairline share %; A-05 tracks discount usage and financial impact and applies that share in payout settlement
+  - **Integration point**: A-06 manages discount code creation and approval and owns the Both Fees Hairline share %; A-05 tracks discount usage and financial impact and applies that share in payout settlement, including the Hairline discount reimbursement row (FR-019 REQ-019-017, REQ-017-195)
 
 - **FR-020 / Module S-03: Notification Service**
   - **Integration point**: A-05 triggers notification events (payment success, payout processed, installment due); S-03 sends emails
 
 - **FR-018 / Module A-07: Affiliate Program Management**
   - **Why needed**: Affiliate commission calculation, referral tracking, and commission rate agreements are owned by FR-018; A-05 owns affiliate billing and payout execution based on these values
-  - **Integration point**: A-05 reads affiliate commission amounts calculated in FR-018 for billing and payout execution (Screen 6); commission disputes resolved in FR-018 before payout processing in A-05
+  - **Integration point**: A-05 reads affiliate commission amounts calculated in FR-018 for billing and payout execution (Screen 6); commission disputes resolved in FR-018 before payout processing in A-05; payout readiness, holds and the margin flag come from FR-018 (REQ-017-197, REQ-017-198)
 
 - **FR-029 / Module A-09: Payment System Configuration**
   - **Why needed**: Stripe account configuration, currency conversion pair setup, markup percentages, the refund ladder, deposit rates, the global commission default, and the central provider-scope commission screen are all owned by FR-029
-  - **Integration point**: A-05 consumes configured Stripe accounts for payout execution, reads currency pairs and rates for multi-currency calculations, reads the FR-029 system default currency to initialize Screen 1 reporting filters, reads the refund ladder, and consumes the effective commission snapshot resolved from FR-029 global/provider-scope settings plus any single-provider edits made in FR-015
+  - **Integration point**: A-05 consumes configured Stripe accounts for payout execution, reads currency pairs and rates for multi-currency calculations, reads the FR-029 system default currency to initialize Screen 1 reporting filters, reads the refund ladder, reads the clinic cancellation deduction from FR-029 Screen 7, and consumes the effective commission snapshot resolved from FR-029 global/provider-scope settings plus any single-provider edits made in FR-015
 
 - **FR-030 / Module A-09: Notification Rules & Configuration**
   - **Integration point**: A-05 triggers billing notification events; FR-030 configures timing, channels, and admin preferences for those events
@@ -1304,7 +1360,7 @@ These rules record the product owner's decisions on how a clinic's money is rele
 ### External Service and Data Boundaries
 
 - **External Service 1: Stripe Payment API**
-  - **Failure handling**: Retry failed transactions with exponential backoff (exact gaps left to the dev team); flag for manual review after 3 failures
+  - **Failure handling**: Retry failed transactions with exponential backoff (exact gaps left to the dev team); flag as Manual Review Required after 3 failures (REQ-017-194)
 
 - **External Service 2: Currency Exchange API (xe.com or equivalent)**
   - **Integration**: RESTful API calls (hourly) to retrieve exchange rates; cache rates for 1 hour (REQ-017-024)
@@ -1352,13 +1408,13 @@ These rules record the product owner's decisions on how a clinic's money is rele
 
 - **[Not in scope — see FR-007]** Stripe Payment Intents API (patient charges, deposits, installments): integration is owned by FR-007 / Payment Processing. A-05 consumes payment completion events but does not initiate payment intents.
 
-- **Integration 1: Stripe Transfers API (Provider & Affiliate Payouts)**
-  - **Purpose**: Initiate payouts to provider connected accounts and affiliate bank accounts after admin approval
+- **Integration 1: Stripe Transfers API (Stripe Connect Clinic Payouts & Affiliate Payouts)**
+  - **Purpose**: Initiate one payout per released booking to a Stripe Connect clinic account, and affiliate payouts after admin approval. A manual-rail clinic is not paid through this API: the admin pays the settlement statement by bank transfer and marks it paid (REQ-017-186, REQ-017-187, REQ-017-188)
   - **Data format**: JSON payload with destination (provider/affiliate connected account ID), amount, currency, metadata (booking IDs, payout period)
   - **Authentication**: Stripe secret API key with `transfer_funds` permission (stored in secrets vault)
-  - **Error handling**: Retry failed transfers up to 3 times; flag for manual review and trigger `payout.failed` event if all retries fail (REQ-017-170)
+  - **Error handling**: Retry failed transfers up to 3 times; set Manual Review Required and trigger `payout.failed` event if all retries fail (REQ-017-170, REQ-017-194)
 
-- **[Not in scope — see FR-007]** Stripe Webhooks for payment events (`payment_intent.succeeded`, `payment_intent.failed`, `charge.refunded`): owned by FR-007. A-05 consumes payout-specific webhooks only:
+- **[Not in scope — see FR-007]** Stripe Webhooks for payment events (`payment_intent.succeeded`, `payment_intent.failed`, `charge.refunded`): owned by FR-007. A-05 consumes payout-specific webhooks only, for Stripe Connect payouts and affiliate payouts (a manual-rail statement never receives them):
   - `transfer.created` — confirms payout initiated; update status "Pending" → "Processing" (REQ-017-039)
   - `transfer.paid` — confirms provider/affiliate received funds; update status "Processing" → "Paid" (REQ-017-039)
   - `transfer.failed` — trigger retry logic and `payout.failed` notification event (REQ-017-039)
@@ -1392,6 +1448,11 @@ These rules record the product owner's decisions on how a clinic's money is rele
 - **PCI-DSS Compliance**: NO credit card data stored in Hairline database; all payment data handled by Stripe (PCI-compliant processor) (REQ-017-129)
 - **Data retention**: retention follows the system PRD, Platform-Wide Rules: One 10-year retention period; soft-delete only (no hard deletes) (REQ-017-020)
 - **Sensitive data masking**: Mask payment methods in UI (show "Visa ending in 1234" not full card number) (REQ-017-019)
+
+**Clinic Balance**
+
+- **Entity 9 - Clinic Balance Entry**
+  - **Relationships**: One clinic has many signed balance entries (refund deduction, chargeback recovery, clinic cancellation deduction, bank charge), each linked to the booking or payout that caused it; open entries are applied to the clinic's next payout (REQ-017-191)
 
 **Currency Alert (from the removed entity list)**
 
@@ -1435,17 +1496,17 @@ These rules record the product owner's decisions on how a clinic's money is rele
 
 ### User Story 1 - Weekly Provider Payout Processing (Priority: P1)
 
-An admin processes weekly provider payouts every Friday for providers who have completed treatments in the past 7 days, ensuring timely payments and accurate commission calculations.
+An admin reviews and pays the weekly settlement statements of manual-rail providers (statement generated on the Sunday cutoff, paid on the Wednesday payout; both days admin-editable), ensuring timely payments and accurate commission calculations.
 
 **Why this priority**: Core financial operation; providers depend on regular payouts for cash flow; delays damage provider relationships and platform reputation.
 
-**Independent Test**: Can be fully tested by creating completed bookings for multiple providers, navigating to "Provider Billing" → "Upcoming Payments", selecting providers, and processing payouts. Verify Stripe transfer initiated, provider notified, and invoice generated.
+**Independent Test**: Can be fully tested by creating completed bookings for multiple providers, navigating to "Provider Billing" → "Upcoming Payments", selecting providers, approving statements and marking them paid. Verify the statement becomes Paid, provider notified, and invoice generated.
 
 **Acceptance Scenarios**:
 
 1. **Given** admin is logged into Admin Platform AND navigates to "Provider Billing" → "Upcoming Payments"
    **When** admin views the list of manual-rail providers with earnings in the weekly settlement period
-   **Then** system displays all providers with completed treatments in past 7 days, showing: provider name, outstanding earnings, commission model/value, net payout, bank account last 4 digits
+   **Then** system displays all providers with released earnings in the weekly settlement period (REQ-017-189), showing: provider name, outstanding earnings, commission model/value, net payout, bank account last 4 digits
 
 2. **Given** admin selects a provider from "Upcoming Payments" list AND clicks "View Details"
    **When** payout detail modal opens
@@ -1453,15 +1514,15 @@ An admin processes weekly provider payouts every Friday for providers who have c
 
 3. **Given** admin reviews payout details AND clicks "Approve Payout" AND confirms payout amount during the review time between the cutoff day and the payout day
    **When** system records the approval
-   **Then** payout status changes to "Approved", no Stripe transfer is initiated yet, and the statement is queued for the scheduled payout day
+   **Then** payout status changes to "Approved", no payment is made yet, and the statement is payable on the payout day
 
-4. **Given** payout day arrives AND the statement status is "Approved"
-   **When** the payout-day cron runs and Stripe transfer completes successfully (webhook received)
-   **Then** payout status updates from "Processing" to "Paid", invoice PDF generated, email sent to provider with invoice attachment, transaction logged in audit trail
+4. **Given** payout day arrives AND the statement status is "Approved" (or "Overdue" and just approved, which is payable at once)
+   **When** admin pays the clinic by bank transfer and clicks "Mark as Paid" with re-authentication, bank reference and payment date
+   **Then** payout status updates to "Paid", invoice PDF generated, email sent to provider with invoice attachment, audit entry "Payout Marked Paid" logged (REQ-017-188)
 
 5. **Given** multiple providers (10+) have payouts due on same date
    **When** admin uses "Select All" AND clicks "Approve All Selected Payouts"
-   **Then** system approves statements in batch, displays progress indicator, queues all successful approvals for payout-day auto-processing, and flags any failures for manual review
+   **Then** system approves statements in batch, displays progress indicator, marks all successful approvals payable on the payout day, and flags any failures for manual review
 
 ---
 
@@ -1480,11 +1541,11 @@ Patients book treatments with split payment plans (2-9 monthly installments), an
    **Then** system calculates remaining 4 installments (equal amounts), schedules charges for days 30, 60, 90, 120, generates invoice with installment schedule, confirms booking
 
 2. **Given** installment payment due in 3 days
-   **When** scheduled reminder job runs daily at 9 AM
+   **When** the hourly job reaches 9 AM in the clinic's timezone (REQ-017-183)
    **Then** system sends email reminder to patient: "Your next payment of £XXX is due on [date]. Your card ending in 1234 will be charged automatically."
 
 3. **Given** installment payment due date arrives
-   **When** scheduled charge job runs at 12 AM (midnight)
+   **When** the hourly job runs after the due day has started in the clinic's timezone (REQ-017-183)
    **Then** system charges patient's stored payment method via Stripe, generates receipt, sends confirmation email, updates invoice "2 of 5 installments paid"
 
 4. **Given** installment payment fails (insufficient funds)
@@ -1493,7 +1554,7 @@ Patients book treatments with split payment plans (2-9 monthly installments), an
 
 5. **Given** all 3 retry attempts fail
    **When** final retry fails
-   **Then** system flags booking as "Payment Failed", sends admin alert, sends email to patient: "Payment unsuccessful after 3 attempts. Please update payment method or contact support.", booking moves to "At Risk" status
+   **Then** system flags booking as "Payment Failed", sends admin alert, sends email to patient: "Payment unsuccessful after 3 attempts. Please update payment method or contact support.", booking carries the "At Risk" flag
 
 6. **Given** multiple parent quotes/options/date-price rows but only one accepted subquote and confirmed booking,
    **When** invoice detail/PDF is produced and subsequent installments succeed,
@@ -1613,9 +1674,9 @@ A patient requests refund due to cancellation, admin reviews request against can
 
 1. **Given** patient cancels booking 45 days before treatment date
    **When** admin navigates to "Patient Billing" → searches for patient invoice → clicks "Process Refund"
-   **Then** system calculates refund amount per cancellation policy (90% of total = £1,800 for £2,000 booking), displays: "Refund Amount: £1,800 (90% per policy)", "Platform Fee (non-refundable): £200"
+   **Then** the launcher on Screen 4b opens FR-007 Screen 6 (Refund Processing) with the invoice and booking prefilled, and FR-007 shows the refund amount per cancellation policy (90% of total = £1,800 for £2,000 booking) (REQ-017-199)
 
-2. **Given** admin reviews refund details AND clicks "Approve Refund"
+2. **Given** admin reviews refund details on FR-007 Screen 6 AND clicks "Approve Refund"
    **When** system prompts admin to enter a mandatory reason (free text, max 500 characters) and confirm
    **Then** admin enters reason (e.g., "Patient cancelled >30 days before treatment — 90% refund per policy") and confirms
 
@@ -1625,7 +1686,7 @@ A patient requests refund due to cancellation, admin reviews request against can
 
 4. **Given** Stripe refund completes (webhook received)
    **When** system processes webhook event
-   **Then** invoice updated: "Status: Refunded", "Refund Amount: £1,800", "Refund Date: [date]", patient receives email: "Your refund of £1,800 has been processed", provider payout adjusted (if not yet processed)
+   **Then** invoice updated: a refund-history row is added ("Refund Amount: £1,800", "Refund Date: [date]"), and a full refund sets Payment Status "Refunded" while a part refund only adds the row and leaves Payment Status as it was (REQ-017-086), patient receives email: "Your refund of £1,800 has been processed", provider payout adjusted (if not yet processed)
 
 5. **Given** provider payout not yet processed (treatment was upcoming)
    **When** refund completes
@@ -1667,21 +1728,20 @@ A patient requests refund due to cancellation, admin reviews request against can
   - System preserves the valid "AFFILIATE10" affiliate referral attribution separately because the provider-side promotion is outside the patient's knowledge
   - When the booking completes with payment confirmation, FR-017 processes affiliate payout execution using the FR-018 commission output for the preserved affiliate attribution
 
-- **What happens when** a patient is refunded after the provider has already been paid out?
-  - Patient cancels booking 10 days before treatment; provider was paid out 3 weeks ago (Stripe transfer complete)
-  - Admin processes refund for patient per cancellation policy (e.g., 0% refund if <15 days, but admin may apply discretionary partial refund with mandatory justification)
-  - Refund is returned to patient via Stripe; the provider payout is NOT clawed back immediately — the equivalent provider amount (commission-adjusted) is deducted from the provider's NEXT payout cycle
+- **What happens when** a patient is refunded, or a chargeback arrives, after the clinic has already been paid?
+  - This happens only after release, for example a refund decided on FR-007 Screen 6 or a chargeback that arrives after the clinic was paid. A cancellation before treatment never meets it, because nothing is paid out before release
+  - Refund is returned to patient through FR-007; the clinic payout is NOT clawed back immediately — the equivalent clinic amount (commission-adjusted) is recorded as a refund deduction (or chargeback recovery) entry on the clinic's balance and applied to the clinic's NEXT payout on either rail (Release Rule 9, REQ-017-191)
   - Screen 9 (Provider Earnings Tracker): the refunded treatment row is updated with Adjustment Marker "Refunded — Deducted from Next Payout" and Net Earning shows the negative adjustment amount clearly
   - The deduction is included as a separate line item in the provider's next payout statement (Screen 3 — Provider Payout Detail Modal), labelled "Adjustment: Refund deducted — [Booking Reference] — [Date]", reducing the net payout for that cycle
-  - If the deduction exceeds the provider's next payout amount (e.g., provider has no other completed treatments that cycle), the deduction carries forward to the subsequent cycle — it is never silently absorbed by Hairline
+  - If the deduction exceeds the provider's next payout amount (e.g., provider has no other completed treatments that cycle), the deduction carries forward to the subsequent payout. If no further payout is coming, the debt stays open on the clinic's balance and an admin may write it off with a mandatory reason and an audit entry (REQ-017-192); it is never silently absorbed by Hairline
   - The audit trail records: refund event, deduction amount, affected payout statement ID, and admin ID
 
 - **What happens when** a provider is suspended or deactivated while the patient has a paid booking?
   - FR-006 Alternative Flow B4 cancels the provider's non-terminal Accepted and Confirmed bookings with cause `ProviderSuspended` / `ProviderDeactivated` and marks them Admin Support Required (FR-016); admin then rehomes each patient through the FR-006 provider-fault transfer, under the Rule 13 payment terms: the patient is refunded in full everything paid, pays no cancellation fee, and the replacement booking takes a new payment. A booking already In Progress stays In Progress and follows Rule 19; one in Aftercare stays in Aftercare (FR-006 Alternative Flow B6)
-  - FR-017 does not issue any refund automatically; captured deposits, installments, or payments captured while the cascade was running stay recorded on the booking invoice and appear for admin financial resolution
-  - Admin issues the full refund of everything paid through Screen 4b with mandatory reason and audit trail; the cancelled booking is excluded from provider payout calculation, and statements are not generated while the provider is Suspended or Deactivated
+  - FR-017 does not start the refund; the system starts it through FR-007 (Rule 13). Captured deposits, installments, or payments captured while the cascade was running stay recorded on the booking invoice and appear for admin financial resolution
+  - The full refund of everything paid is started by the system through FR-007; any payment still open goes through the Screen 4b launcher with mandatory reason and audit trail. The cancelled booking is excluded from provider payout calculation, and statements are not generated while the provider is Suspended or Deactivated
   - A procedure already recorded as completed under FR-010 is not erased by the cancellation; resolution of its payout stays with admin financial resolution
-  - For a booking In Progress when the provider is suspended, deactivated, withdraws, or drops out, the admin sets the patient refund amount (zero up to the full amount paid) with mandatory reason and audit entry through Screen 4b, and the provider's payout for that booking is held until the admin decides (Rule 19)
+  - For a booking In Progress when the provider is suspended, deactivated, withdraws, or drops out, the admin sets the patient refund amount (zero up to the full amount paid) with mandatory reason and audit entry on FR-007 Screen 6, opened through Screen 4b, and the provider's payout for that booking is held until the admin decides (Rule 19)
   - Remaining unpaid scheduled installments are cancelled; no further automatic charges or retries run (Rule 15)
   - If a payment is captured after the cancellation (e.g., delayed webhook), it is recorded, flagged "Captured after provider cancellation", does not confirm a booking or revive the case, and is excluded from provider earnings, payout, and commission until admin resolves it (Rule 14, Workflow B3)
 
@@ -1698,7 +1758,7 @@ A patient requests refund due to cancellation, admin reviews request against can
 
 ### Core Requirements
 
-- **REQ-017-001**: System MUST allow admins to view all patient invoices with filtering by payment status (Pending, Partial, Paid, Overdue, Refunded, At Risk)
+- **REQ-017-001**: System MUST allow admins to view all patient invoices with filtering by Payment Status (Unpaid, Deposit only, Installments active, Full paid, Refunded), Final Payment Status (Not Due, Due, Overdue) and the At Risk flag
 - **REQ-017-002**: System MUST allow admins to view the manual-rail provider payment schedule (the one platform-wide weekly settlement period) and process payouts with itemized treatment breakdowns
 - **REQ-017-003**: System MUST allow admins to view discount code usage, fee split, attributed revenue, and ROI for discounts created and managed in FR-019 / A-06
 - **REQ-017-004**: System MUST automatically generate invoice/payment PDFs upon successful patient payment, retaining one invoice record per booking and updating its payment history for later installments/final payments. Invoice amounts and itemization use the accepted subquote snapshot via FR-006, including the promotion and price after promotion frozen at acceptance; billing never recalculates the promotion, and unaccepted alternatives are not billed.
@@ -1747,6 +1807,7 @@ A patient requests refund due to cancellation, admin reviews request against can
 |------|---------|---------|--------|
 | 2026-11-22 | 2.17 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v2.16) and the change requests (CR-FR017-20261015-01, file change-request-2026-10-15-post-suspension-payment-reconciliation.md; CR-FR017-20261016-01, file change-request-2026-10-16-mtg002-quote-model-alignment.md) are in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
 | 2026-11-23 | 2.18 | Independent compression review: 8 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
+| 2026-11-24 | 2.19 | Logic review: a settlement statement is manual-rail only (Mark as Paid on Screen 3, Overdue payable at once), Stripe Connect per-booking payouts listed on Screen 2; funds-released gate with Pending release and Released; Screen 7 outcomes and Release earnings; Screen 4b is a launcher into FR-007 Screen 6; FR-007 Payment Status list read as defined there; one hourly job for installments; clinic balance record with write-off; no forfeiture (earlier ban rule removed); Stripe readiness and Manual Review Required; Hairline discount reimbursement row; affiliate payable condition and readiness from FR-018. | Product Owner / Documentation |
 
 ---
 
@@ -1765,4 +1826,4 @@ A patient requests refund due to cancellation, admin reviews request against can
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-017 Admin Billing & Financial Management (system-prd.md), with FR-005/FR-006 accepted-subquote context
-**Last Updated**: 2026-11-23
+**Last Updated**: 2026-11-24

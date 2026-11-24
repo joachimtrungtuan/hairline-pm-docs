@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T18:37:58Z",
+  "generated_at": "2026-11-24T18:59:01Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -2184,6 +2184,17 @@
       "attrs": {}
     },
     {
+      "id": "ENT-affiliate-commission.held_or_flagged",
+      "type": "Field",
+      "owner_fr": "FR-017",
+      "title": "Held or flagged",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Held for the unpaid commission of a Suspended affiliate; Flagged for a payout with a booking that still breaches the margin check."
+      }
+    },
+    {
       "id": "ENT-affiliate-commission.payment_destination",
       "type": "Field",
       "owner_fr": "FR-017",
@@ -2220,7 +2231,7 @@
       "owner_fr": "FR-017",
       "title": "Payout readiness",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {}
     },
     {
@@ -6906,6 +6917,28 @@
       "status": "active",
       "version": 1,
       "attrs": {}
+    },
+    {
+      "id": "ENT-clinic-balance-entry",
+      "type": "Entity",
+      "owner_fr": "FR-017",
+      "title": "Clinic Balance Entry",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "One signed entry on a clinic's balance record: refund deduction, chargeback recovery, clinic cancellation deduction or bank charge. Open entries are applied to the clinic's next payout on either rail; a debt with no further payout stays open until an admin writes it off (Entity 9)."
+      }
+    },
+    {
+      "id": "ENT-clinic-balance-entry.amount",
+      "type": "Field",
+      "owner_fr": "FR-017",
+      "title": "Balance entry amount",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Signed amount of the entry; a negative amount is money the clinic owes Hairline."
+      }
     },
     {
       "id": "ENT-commission",
@@ -17489,6 +17522,17 @@
       "attrs": {}
     },
     {
+      "id": "ENT-patient-invoice.at_risk_flag",
+      "type": "Field",
+      "owner_fr": "FR-017",
+      "title": "At Risk flag",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Raised when all installment retries are exhausted; a flag, not a payment status."
+      }
+    },
+    {
       "id": "ENT-patient-invoice.booking_id",
       "type": "Field",
       "owner_fr": "FR-017",
@@ -17530,6 +17574,17 @@
       "version": 1,
       "attrs": {
         "description": "From the FR-007B installment schedule, or 7 days before treatment for full or deposit payment (Payment Rule 2)."
+      }
+    },
+    {
+      "id": "ENT-patient-invoice.final_payment_status",
+      "type": "Field",
+      "owner_fr": "FR-017",
+      "title": "Final payment status",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Read from FR-007: Not Due, Due, Overdue. Overdue starts the day after the due date."
       }
     },
     {
@@ -17609,7 +17664,7 @@
       "owner_fr": "FR-017",
       "title": "Payment status",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {}
     },
     {
@@ -18746,7 +18801,7 @@
       "owner_fr": "FR-017",
       "title": "Adjustment type",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {}
     },
     {
@@ -18884,12 +18939,23 @@
       "attrs": {}
     },
     {
+      "id": "ENT-payout-dispute-resolution.refund_amount",
+      "type": "Field",
+      "owner_fr": "FR-017",
+      "title": "Refund amount",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Admin-set refund amount for a refund outcome, from zero to the full amount paid; carried into FR-007 Screen 6."
+      }
+    },
+    {
       "id": "ENT-payout-dispute-resolution.resolution_action",
       "type": "Field",
       "owner_fr": "FR-017",
       "title": "Resolution action",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {}
     },
     {
@@ -21847,6 +21913,17 @@
       }
     },
     {
+      "id": "ENT-provider-earning.hairline_discount_reimbursement",
+      "type": "Field",
+      "owner_fr": "FR-017",
+      "title": "Hairline discount reimbursement",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Reimbursement row for one booking, read from the frozen booking snapshot (REQ-019-017)."
+      }
+    },
+    {
       "id": "ENT-provider-earning.net_earning",
       "type": "Field",
       "owner_fr": "FR-017",
@@ -21863,7 +21940,7 @@
       "owner_fr": "FR-017",
       "title": "Payout status",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Shown with the payout date for Included and Failed."
       }
@@ -21897,6 +21974,28 @@
       "version": 1,
       "attrs": {
         "description": "Derived from the provider's payout frequency in FR-015 / A-02."
+      }
+    },
+    {
+      "id": "ENT-provider-earnings-summary.pending_release_earnings",
+      "type": "Field",
+      "owner_fr": "FR-017",
+      "title": "Pending release earnings",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Net earnings whose funds are not yet released."
+      }
+    },
+    {
+      "id": "ENT-provider-earnings-summary.released_earnings",
+      "type": "Field",
+      "owner_fr": "FR-017",
+      "title": "Released earnings",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Net earnings whose funds are released and not yet paid."
       }
     },
     {
@@ -22261,6 +22360,17 @@
       }
     },
     {
+      "id": "ENT-provider-payout.bank_reference",
+      "type": "Field",
+      "owner_fr": "FR-017",
+      "title": "Bank reference",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Bank transfer reference the admin enters when marking a statement as paid."
+      }
+    },
+    {
       "id": "ENT-provider-payout.blocked_reason",
       "type": "Field",
       "owner_fr": "FR-017",
@@ -22310,6 +22420,17 @@
       "attrs": {}
     },
     {
+      "id": "ENT-provider-payout.hairline_discount_reimbursement",
+      "type": "Field",
+      "owner_fr": "FR-017",
+      "title": "Hairline discount reimbursement",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Hairline share of the discount reimbursed to the clinic, summed from the included bookings (REQ-019-017)."
+      }
+    },
+    {
       "id": "ENT-provider-payout.internal_notes",
       "type": "Field",
       "owner_fr": "FR-017",
@@ -22332,6 +22453,17 @@
       }
     },
     {
+      "id": "ENT-provider-payout.manual_review_note",
+      "type": "Field",
+      "owner_fr": "FR-017",
+      "title": "Manual review note",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Review note an admin enters when clearing Manual Review Required."
+      }
+    },
+    {
       "id": "ENT-provider-payout.net_payout",
       "type": "Field",
       "owner_fr": "FR-017",
@@ -22339,6 +22471,28 @@
       "status": "active",
       "version": 1,
       "attrs": {}
+    },
+    {
+      "id": "ENT-provider-payout.paid_by_admin_id",
+      "type": "Field",
+      "owner_fr": "FR-017",
+      "title": "Marked paid by",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Admin who marked the statement as paid."
+      }
+    },
+    {
+      "id": "ENT-provider-payout.payment_date",
+      "type": "Field",
+      "owner_fr": "FR-017",
+      "title": "Payment date",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Date the admin paid the clinic by bank transfer; not in the future."
+      }
     },
     {
       "id": "ENT-provider-payout.payout_date",
@@ -22384,7 +22538,7 @@
       "owner_fr": "FR-017",
       "title": "Payout readiness",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {}
     },
     {
@@ -22404,7 +22558,7 @@
       "owner_fr": "FR-017",
       "title": "Payout status",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {}
     },
     {
@@ -25697,7 +25851,7 @@
       "owner_fr": "FR-017",
       "title": "Calculated refund amount",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {}
     },
     {
@@ -25706,7 +25860,7 @@
       "owner_fr": "FR-017",
       "title": "Cancellation policy applied",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {}
     },
     {
@@ -25715,7 +25869,7 @@
       "owner_fr": "FR-017",
       "title": "Days until or since treatment",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {}
     },
     {
@@ -29884,7 +30038,7 @@
       "owner_fr": "FR-017",
       "title": "Action type",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {}
     },
     {
@@ -36986,6 +37140,19 @@
       }
     },
     {
+      "id": "FLW-017-clinic-balance",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "B5: Clinic Balance Entry and Write-Off",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "B5: Clinic Balance Entry and Write-Off",
+        "prd_ref": "B5"
+      }
+    },
+    {
       "id": "FLW-017-currency-alert",
       "type": "Flow",
       "owner_fr": null,
@@ -37004,10 +37171,10 @@
       "owner_fr": null,
       "title": "Provider payout processing",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "kind": "main",
-        "description": "Provider payout processing: payout-day statements, admin approval, Stripe transfer, confirmation and failure handling.",
+        "description": "Provider payout processing on the manual rail: cutoff-day statements, admin approval, payment by bank transfer outside the platform, Mark as Paid, invoice and provider notification.",
         "prd_ref": "Business Workflows: Main Flow"
       }
     },
@@ -37022,6 +37189,19 @@
         "kind": "alternative",
         "description": "Provider disputes a payout; admin traces the booking and, when it was missed, adds it to the next payout.",
         "prd_ref": "Alternative Flow B1"
+      }
+    },
+    {
+      "id": "FLW-017-per-booking-payout",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "B4: Per-Booking Payout, Held Money and Release of Earnings",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "B4: Per-Booking Payout, Held Money and Release of Earnings",
+        "prd_ref": "B4"
       }
     },
     {
@@ -66293,9 +66473,9 @@
       "owner_fr": "FR-017",
       "title": "Admins view all patient invoices filtered by payment status",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST allow admins to view all patient invoices with filtering by payment status (Pending, Partial, Paid, Overdue, Refunded, At Risk)",
+        "statement": "System MUST allow admins to view all patient invoices with filtering by Payment Status (Unpaid, Deposit only, Installments active, Full paid, Refunded), Final Payment Status (Not Due, Due, Overdue) and the At Risk flag",
         "rationale": "PRD id REQ-017-001 (prd.md line 1764). Restated by Admin Platform scope Patient Billing (line 69) and Screen 4 (lines 544-612)."
       }
     },
@@ -66711,11 +66891,11 @@
       "id": "REQ-017-037",
       "type": "Rule",
       "owner_fr": "FR-017",
-      "title": "Treatment completion makes earnings payout-eligible immediately",
+      "title": "Treatment completion adds earnings as Pending release",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Treatment completion triggers provider payout eligibility calculation; eligible earnings are immediately added to the provider's running earnings total",
+        "statement": "Treatment completion triggers provider payout eligibility calculation; eligible earnings are added to the provider's running earnings total as Pending release, and become Released when the booking's funds are released: the confirmation window ends with no open problem case, or an admin resolves the case (REQ-017-189)",
         "rationale": "Entry Points, Automated Triggers (prd.md line 121). Data Dependencies Entity 2 (lines 1376-1378): the provider platform updates treatment status and the financial module monitors status changes."
       }
     },
@@ -66737,9 +66917,9 @@
       "owner_fr": "FR-017",
       "title": "Stripe transfer webhooks drive payout status",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Stripe webhook events (`transfer.created`, `transfer.paid`, `transfer.failed`) trigger real-time payout status updates. `transfer.created` — confirms payout initiated; update status \"Pending\" → \"Processing\". `transfer.paid` — confirms provider/affiliate received funds; update status \"Processing\" → \"Paid\". `transfer.failed` — trigger retry logic and `payout.failed` notification event",
+        "statement": "Stripe webhook events (`transfer.created`, `transfer.paid`, `transfer.failed`) trigger real-time status updates of Stripe Connect per-booking payouts and affiliate payouts, never of a settlement statement. `transfer.created` — confirms payout initiated; update status \"Pending\" → \"Processing\". `transfer.paid` — confirms provider/affiliate received funds; update status \"Processing\" → \"Paid\". `transfer.failed` — trigger retry logic and `payout.failed` notification event",
         "rationale": "Entry Points, Automated Triggers (prd.md line 126) and Integration Points payout webhooks (lines 1444-1446). Main Flow steps 16-17 (lines 166-172)."
       }
     },
@@ -66749,9 +66929,9 @@
       "owner_fr": "FR-017",
       "title": "Providers never see draft statements",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Stage 1 (earnings tracking): Provider sees per-treatment earnings accumulate in real time as treatments complete — this is always visible. Stage 2 (payout visibility): Provider sees a confirmed payout entry ONLY after admin has approved the payout statement and the Stripe transfer is initiated — providers do NOT see draft statements during the review window between the cutoff day and the payout day",
+        "statement": "Stage 1 (earnings tracking): Provider sees per-treatment earnings accumulate in real time as treatments complete — this is always visible. Stage 2 (payout visibility): Provider sees a confirmed payout entry ONLY after the payout is confirmed: a Stripe Connect payout once its transfer is initiated, a manual-rail statement once the admin marks it as paid — providers do NOT see draft statements during the review window between the cutoff day and the payout day",
         "rationale": "Entry Points, Provider Access (prd.md lines 132-133). Restated by Main Flow step 5 (line 150: the statement is internal to the admin review workflow) and Screen 9 rule (line 1099: provider cannot see the payout statement, buffer window status, or admin approval action)."
       }
     },
@@ -66773,10 +66953,10 @@
       "owner_fr": "FR-017",
       "title": "Failed transfer marks the payout Failed and alerts admin",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Status → \"Failed\"; admin notified: \"Payout failed for [Provider Name]\". Invalid bank account: Admin contacts provider (A-10); provider updates bank details in FR-032 / PR-06 Billing Settings; admin retries payout. Other Stripe error: Admin investigates error; resolves; retries transfer",
-        "rationale": "Main Flow steps 16a-16d (prd.md lines 167-171). Restated by the closed-bank-account edge case (lines 1702-1707). Integration 1 error handling (line 1441: retry failed transfers up to 3 times, then manual review and `payout.failed`) differs from this manual retry; raised as a product owner question."
+        "statement": "A failed Stripe Connect payout is marked \"Failed\" and the admin is notified: \"Payout failed for [Provider Name]\". After three failed attempts it is set to Manual Review Required. Invalid bank account: Admin contacts provider (A-10); provider updates bank details in FR-032 / PR-06 Billing Settings; admin retries the payout. Other Stripe error: Admin investigates error; resolves; retries transfer. A settlement statement never has a Failed state",
+        "rationale": "Alternative Flow B4 and Release Rule 4: Failed belongs to a Stripe Connect per-booking payout, never to a settlement statement; three automatic attempts, then manual review (REQ-017-143, REQ-017-170, REQ-017-194)."
       }
     },
     {
@@ -66857,9 +67037,9 @@
       "owner_fr": "FR-017",
       "title": "Outstanding Patient Invoices statuses",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "\"Outstanding Patient Invoices\" includes ONLY invoices with status \"Pending\", \"Partial\", \"Overdue\", or \"At Risk\"",
+        "statement": "\"Outstanding Patient Invoices\" includes ONLY invoices of bookings whose FR-007 Payment Status is \"Unpaid\", \"Deposit only\" or \"Installments active\" (an unpaid balance remains); \"Overdue\" is read from the booking's Final Payment Status and \"At Risk\" is a separate flag, neither is a Payment Status",
         "rationale": "Screen 1 business rules (prd.md line 334)."
       }
     },
@@ -66867,11 +67047,11 @@
       "id": "REQ-017-051",
       "type": "Rule",
       "owner_fr": "FR-017",
-      "title": "Overdue aging buckets from Due Date",
+      "title": "Overdue aging buckets from the day after the Due Date",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Overdue aging buckets calculated from the invoice Due Date to today: 0–30 days, 31–60 days, 60+ days; \"At Risk\" (all retries exhausted) shown as a separate row regardless of age",
+        "statement": "Overdue aging buckets count from the day after the invoice Due Date (the day the Final Payment Status becomes Overdue, FR-007) to today: 0–30 days, 31–60 days, 60+ days; the \"At Risk\" flag (all installment retries exhausted) is shown as a separate row regardless of age",
         "rationale": "Screen 1 business rules (prd.md line 335)."
       }
     },
@@ -66881,9 +67061,9 @@
       "owner_fr": "FR-017",
       "title": "Pending Provider Payouts are unpaid Completed or Aftercare treatments",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "\"Pending Provider Payouts\" includes treatments with status \"Completed\" or \"Aftercare\" not yet paid",
+        "statement": "\"Pending Provider Payouts\" includes treatments with status \"Completed\" or \"Aftercare\" not yet paid, split into \"Pending release\" and \"Released\"; only released funds can enter a statement or a per-booking payout",
         "rationale": "Screen 1 business rules (prd.md line 336)."
       }
     },
@@ -66893,9 +67073,9 @@
       "owner_fr": "FR-017",
       "title": "Failed Payout Count covers provider and affiliate payouts",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "\"Failed Payout Count\" includes both provider payouts and affiliate payouts currently awaiting retry or manual resolution",
+        "statement": "\"Failed Payout Count\" includes failed Stripe Connect per-booking payouts and failed affiliate payouts currently awaiting retry or manual resolution; a statement has no Failed state",
         "rationale": "Screen 1 business rules (prd.md line 337)."
       }
     },
@@ -66987,11 +67167,11 @@
       "id": "REQ-017-061",
       "type": "Rule",
       "owner_fr": "FR-017",
-      "title": "Payout includes all Completed or Aftercare treatments of the period",
+      "title": "Payout includes all released Completed or Aftercare treatments of the period",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Payout amount MUST include all treatments with status \"Completed\" or \"Aftercare\" completed since the last payout cycle. Treatments with status \"Scheduled\", \"In Progress\", or \"Cancelled\" are NOT included",
+        "statement": "Payout amount MUST include all treatments with status \"Completed\" or \"Aftercare\" completed since the last payout cycle whose funds are released: the confirmation window has ended with no open problem case, or an admin has resolved the case. Treatments with status \"Scheduled\", \"In Progress\", or \"Cancelled\" are NOT included",
         "rationale": "Screen 2 business rules (prd.md lines 390-391). Restated by the Screen 3 rule (line 485: ALL treatments with status Completed or Aftercare within the payout period)."
       }
     },
@@ -67001,9 +67181,9 @@
       "owner_fr": "FR-017",
       "title": "No statements for Suspended or Deactivated providers",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Providers with status \"Suspended\" or \"Deactivated\" do NOT have statements generated",
+        "statement": "Providers with status \"Suspended\" or \"Deactivated\" do NOT have statements generated; an admin releases their earnings with the Release earnings resolution on Screen 7",
         "rationale": "Screen 2 business rules (prd.md line 392). Restated by the provider-suspension edge case (line 1738)."
       }
     },
@@ -67037,9 +67217,9 @@
       "owner_fr": "FR-017",
       "title": "When Approve Payout is enabled",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "\"Approve Payout\" button enabled ONLY for statements with status \"Pending Approval\" or \"Overdue\". \"Approve Payout\" is enabled ONLY when Payout Readiness = \"Ready\", the user role is Billing Admin or Super Admin, and financial re-authentication succeeds",
+        "statement": "\"Approve Payout\" button enabled ONLY for statements with status \"Pending Approval\" or \"Overdue\", and not while Payout Readiness is \"Manual Review Required\". \"Approve Payout\" is enabled ONLY when Payout Readiness = \"Ready\", the user role is Billing Admin or Super Admin, and financial re-authentication succeeds",
         "rationale": "Screen 2 business rules (prd.md line 408) and Screen 3 business rules (line 495)."
       }
     },
@@ -67047,11 +67227,11 @@
       "id": "REQ-017-066",
       "type": "Rule",
       "owner_fr": "FR-017",
-      "title": "Retry Payout only for Failed statements",
+      "title": "Retry Payout only for Failed Stripe Connect payouts",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "\"Retry Payout\" button enabled ONLY for statements with status \"Failed\"; clicking it re-initiates the Stripe transfer for that statement; retry is logged in audit trail with admin ID, timestamp, and failure reason from prior attempt",
+        "statement": "\"Retry Payout\" button is shown only in the Stripe Connect payouts section and is enabled ONLY for a Failed per-booking payout that is not in \"Manual Review Required\"; clicking it re-initiates the Stripe transfer; retry is logged in audit trail with admin ID, timestamp, and failure reason from prior attempt. A failed Stripe Connect payout first gets 3 automatic attempts with exponential backoff and then goes to Manual Review Required; once an admin clears it with a review note, this button is available for the manual retry. A statement has no retry: an admin marks it as paid",
         "rationale": "Screen 2 business rules (prd.md line 399). Retry Payout Confirmation Modal (lines 525-534): shows prior failure reason, current payout readiness and destination last 4 digits; confirm re-initiates the transfer after successful re-authentication."
       }
     },
@@ -67061,9 +67241,9 @@
       "owner_fr": "FR-017",
       "title": "Unapprove only before payout day, with reason",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "\"Unapprove\" button enabled ONLY for statements with status \"Approved\" and ONLY before the payout-day cron runs (i.e., the payout date has not yet been reached); on click, admin must enter a mandatory reason (max 500 chars); statement reverts to \"Pending Approval\"; action logged in audit trail with action_type \"Payout Unapproved\"",
+        "statement": "\"Unapprove\" button enabled ONLY for statements with status \"Approved\" and ONLY before the payout day (it is not offered once the payout day has passed); on click, admin must enter a mandatory reason (max 500 chars); statement reverts to \"Pending Approval\"; action logged in audit trail with action_type \"Payout Unapproved\"",
         "rationale": "Screen 2 business rules (prd.md line 400)."
       }
     },
@@ -67119,11 +67299,11 @@
       "id": "REQ-017-072",
       "type": "Rule",
       "owner_fr": "FR-017",
-      "title": "Overdue and Failed sections at the top of the payout list",
+      "title": "Overdue section on top of the payout list; Failed Stripe Connect payouts in their own part",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Statements with status \"Overdue\" are surfaced at the top of the list in a dedicated \"Overdue\" section. Statements with status \"Failed\" are surfaced in a dedicated \"Failed\" section below \"Overdue\", above \"Upcoming / Pending Approval\"",
+        "statement": "Statements with status \"Overdue\" are surfaced at the top of the list in a dedicated \"Overdue\" section. Failed Stripe Connect payouts are surfaced in a dedicated \"Failed\" part of the Stripe Connect payouts section, which sits below \"Upcoming / Pending Approval\"",
         "rationale": "Screen 2 business rules (prd.md lines 407-408) and notes (line 419). Restated by Main Flow step 13b (line 163)."
       }
     },
@@ -67145,9 +67325,9 @@
       "owner_fr": "FR-017",
       "title": "Payout period follows the platform-wide settlement period",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Payout period determined by the one platform-wide settlement period for manual-rail clinics (weekly by default, ending on the Sunday cutoff day; set in admin payment settings). Per-clinic payout frequency no longer applies",
+        "statement": "Payout period determined by the one platform-wide settlement period for manual-rail clinics (weekly by default, ending on the Sunday cutoff day; set in admin payment settings). Per-clinic payout frequency no longer applies; Stripe Connect clinics are paid per released booking, have no statement and are listed in the Stripe Connect payouts section of Screen 2",
         "rationale": "Screen 3 business rules (prd.md lines 477-480)."
       }
     },
@@ -67157,9 +67337,9 @@
       "owner_fr": "FR-017",
       "title": "Refund after payout deducted on the next statement and carried forward",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "If a patient refund is processed AFTER the provider has already been paid, the next provider payout statement MUST include a row in `Payout Adjustments` labelled `Adjustment: Refund deducted — [Booking Reference] — [Date]`. If a refund deduction exceeds the provider's current payout amount, the unapplied balance remains visible in `Remaining Balance` and carries forward to the next payout cycle until fully recovered",
+        "statement": "If a patient refund is processed AFTER the provider has already been paid, the next provider payout statement MUST include a row in `Payout Adjustments` labelled `Adjustment: Refund deducted — [Booking Reference] — [Date]`. If a refund deduction exceeds the provider's current payout amount, the unapplied balance remains visible in `Remaining Balance` and carries forward to the next payout cycle until fully recovered; the same applies to every entry of the clinic balance record, on either rail. A debt with no further payout coming stays open on the clinic's balance until an admin writes it off",
         "rationale": "Screen 3 business rules (prd.md lines 492-493). Restated by the refund-after-payout edge case (lines 1729-1736: no immediate clawback; the commission-adjusted amount is deducted from the next cycle; never silently absorbed by Hairline; the audit trail records the refund event, deduction amount, affected payout statement ID and admin ID)."
       }
     },
@@ -67167,12 +67347,12 @@
       "id": "REQ-017-076",
       "type": "Rule",
       "owner_fr": "FR-017",
-      "title": "Approve queues the statement; no transfer during the review",
+      "title": "Approve marks the statement Approved; an Overdue one is payable at once",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "\"Approve Payout\" button marks the statement as \"Approved\" and queues it for the payout-day cron; Stripe transfer is not initiated during the review action",
-        "rationale": "Screen 3 business rules (prd.md line 486). Billing Rule 5 (line 1239) initiates the transfer immediately when an Overdue statement is approved; see the product owner question on approval timing."
+        "statement": "\"Approve Payout\" button marks the statement as \"Approved\"; no payment is started by the review action. An approved statement is paid by the admin by bank transfer outside the platform and marked as paid. An Overdue statement that is approved is payable at once and does not wait for the next payout day",
+        "rationale": "Screen 3 business rules and Billing Rule 5: an Overdue statement is payable at once on approval, and Unapprove is not offered once the payout day has passed."
       }
     },
     {
@@ -67181,9 +67361,9 @@
       "owner_fr": "FR-017",
       "title": "Transfer ID and failure reason stay blank until set",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Stripe Transfer ID remains blank until Stripe confirms `transfer.created`; failure reason remains blank unless Stripe or validation returns a blocking error",
+        "statement": "Stripe Transfer ID of a Stripe Connect payout remains blank until Stripe confirms `transfer.created`; failure reason remains blank unless Stripe or validation returns a blocking error",
         "rationale": "Screen 3 business rules (prd.md line 488)."
       }
     },
@@ -67217,9 +67397,9 @@
       "owner_fr": "FR-017",
       "title": "Manual reminder type follows invoice status",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Reminder Type: Auto-selected based on invoice status: \"Upcoming Due Reminder\" (Pending), \"Overdue Reminder\" (Overdue), \"At Risk — Final Notice\" (At Risk). The four reminder types are Upcoming Due, Overdue, At Risk - Final Notice, and Manual Reminder. Display-only; not editable by admin. Channel: \"Via: Email + Push Notification\"",
+        "statement": "Reminder Type: Auto-selected based on invoice status: \"Upcoming Due Reminder\" (Final Payment Status Not Due or Due), \"Overdue Reminder\" (Final Payment Status Overdue), \"At Risk — Final Notice\" (At Risk flag). The four reminder types are Upcoming Due, Overdue, At Risk - Final Notice, and Manual Reminder. Display-only; not editable by admin. Channel: \"Via: Email + Push Notification\"",
         "rationale": "Send Reminder Confirmation Modal (prd.md lines 568-580). The Screen 4a Reminder History lists different type values; see the product owner question."
       }
     },
@@ -67251,11 +67431,11 @@
       "id": "REQ-017-083",
       "type": "Rule",
       "owner_fr": "FR-017",
-      "title": "Invoice Overdue 7 days after due date",
+      "title": "Invoice Overdue from the day after the due date",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "\"Overdue\" status triggered if outstanding balance remains 7 days after due date",
+        "statement": "\"Overdue\" is read from the booking's Final Payment Status in FR-007 and shows from the day after the due date while a balance is unpaid; FR-017 does not compute it. The 7 days named in reminders and alerts is only their cadence",
         "rationale": "Screen 4 business rules (prd.md line 579)."
       }
     },
@@ -67263,11 +67443,11 @@
       "id": "REQ-017-084",
       "type": "Rule",
       "owner_fr": "FR-017",
-      "title": "Invoice At Risk when all installment retries fail",
+      "title": "Invoice carries the At Risk flag when all installment retries fail",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "\"At Risk\" status triggered when all 3 retry attempts for any installment have failed; booking is flagged for admin review. Admin MUST manually follow up with patient (contact via support, update payment method, or cancel booking)",
+        "statement": "The \"At Risk\" flag (not a payment status) is raised when all 3 retry attempts for any installment have failed; booking is flagged for admin review. Admin MUST manually follow up with patient (contact via support, update payment method, or cancel booking)",
         "rationale": "Screen 4 business rules (prd.md line 580). Restated by Payment Rule 3 (line 1234) and the Screen 4a At Risk banner rule (line 708)."
       }
     },
@@ -67275,11 +67455,11 @@
       "id": "REQ-017-085",
       "type": "Rule",
       "owner_fr": "FR-017",
-      "title": "Send Reminder only for Pending, Overdue or At Risk",
+      "title": "Send Reminder only for invoices with an unpaid balance",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "\"Send Reminder\" button available ONLY for invoices with status \"Pending\", \"Overdue\", or \"At Risk\"",
+        "statement": "\"Send Reminder\" button available ONLY for invoices with an unpaid balance (Payment Status \"Unpaid\", \"Deposit only\" or \"Installments active\"), including those whose Final Payment Status is \"Overdue\" or that carry the \"At Risk\" flag",
         "rationale": "Screen 4 business rules (prd.md line 581)."
       }
     },
@@ -67287,11 +67467,11 @@
       "id": "REQ-017-086",
       "type": "Rule",
       "owner_fr": "FR-017",
-      "title": "Process Refund only for Paid or Partial invoices",
+      "title": "Process Refund only for invoices with money paid and not all returned",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "\"Process Refund\" button available ONLY for invoices with status \"Paid\" or \"Partial\"",
+        "statement": "\"Process Refund\" button available ONLY for invoices with Payment Status \"Deposit only\", \"Installments active\" or \"Full paid\" (money has been paid and not all of it returned); it opens FR-007 Screen 6 (Refund Processing) through the launcher on Screen 4b, and the refund amount, reason and approval belong to FR-007. A part refund keeps the previous Payment Status and shows as a row in the refund history",
         "rationale": "Screen 4 business rules (prd.md line 582)."
       }
     },
@@ -67313,9 +67493,9 @@
       "owner_fr": "FR-017",
       "title": "Manual payment status override with reason and audit",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Admin can manually override a payment status when the Stripe webhook fails, is delayed, or when an off-system payment adjustment is needed. \"Override Status\" button available for ANY invoice (all statuses). On click: admin selects new status from dropdown (\"Pending\", \"Partial\", \"Paid\", \"Overdue\", \"Refunded\", \"At Risk\"), enters mandatory reason (free text, max 500 characters), and confirms. Override is logged to audit trail with: admin ID, timestamp, previous status, new status, reason entered. Overridden invoices display a warning badge: \"Status manually adjusted — [date]\" visible to admins only",
+        "statement": "Admin can manually override a payment status when the Stripe webhook fails, is delayed, or when an off-system payment adjustment is needed. \"Override Status\" button available for ANY invoice (all statuses). On click: admin selects the new Payment Status from the dropdown (the FR-007 list: \"Unpaid\", \"Deposit only\", \"Installments active\", \"Full paid\", \"Refunded\"), enters mandatory reason (free text, max 500 characters), and confirms. Override is logged to audit trail with: admin ID, timestamp, previous status, new status, reason entered. Overridden invoices display a warning badge: \"Status manually adjusted — [date]\" visible to admins only",
         "rationale": "Screen 4 business rules (prd.md lines 598-602). Restated by Admin Editability (line 1211)."
       }
     },
@@ -67337,9 +67517,9 @@
       "owner_fr": "FR-017",
       "title": "At Risk and flagged invoices surface at the top",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Invoices with a Reconciliation Flag are surfaced in a dedicated exceptions section alongside \"At Risk\" until resolved. \"At Risk\" invoices surfaced at top of list in a dedicated section, similar to Overdue pattern in Screen 2. Display warning icon for installments with upcoming payment dates (within 7 days)",
+        "statement": "Invoices with a Reconciliation Flag are surfaced in a dedicated exceptions section alongside invoices that carry the \"At Risk\" flag until resolved. Invoices with the \"At Risk\" flag are surfaced at top of list in a dedicated section, similar to Overdue pattern in Screen 2. Display warning icon for installments with upcoming payment dates (within 7 days)",
         "rationale": "Screen 4 notes (prd.md lines 609, 611, 612)."
       }
     },
@@ -67373,58 +67553,10 @@
       "owner_fr": "FR-017",
       "title": "At Risk invoices show a warning banner",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "\"At Risk\" invoices display a prominent warning banner at the top of the detail view: \"All payment retries have been exhausted. Please contact the patient to resolve.\"",
+        "statement": "Invoices with the \"At Risk\" flag display a prominent warning banner at the top of the detail view: \"All payment retries have been exhausted. Please contact the patient to resolve.\"",
         "rationale": "Screen 4a business rules (prd.md line 696)."
-      }
-    },
-    {
-      "id": "REQ-017-094",
-      "type": "Rule",
-      "owner_fr": "FR-017",
-      "title": "Refund amount auto-calculated from the cancellation policy",
-      "status": "active",
-      "version": 5,
-      "attrs": {
-        "statement": "Modal auto-calculates refund amount using the refund ladder set in FR-029 / A-09 based on days until treatment at time admin opens the modal; the ladder does not apply to a provider-fault refund (Rules 13 and 19), where the amount follows that rule. Adjusted Refund Amount defaults to Calculated Refund Amount. Non-Refundable Amount: invoice amount − Final Refund Amount. Labelled \"Platform fee (non-refundable)\"",
-        "rationale": "Screen 4b business rules (prd.md lines 739-740) and field Non-Refundable Amount (line 731). Field Cancellation Policy Applied (line 726) lists the tiers of Rule 7."
-      }
-    },
-    {
-      "id": "REQ-017-095",
-      "type": "Rule",
-      "owner_fr": "FR-017",
-      "title": "Adjusted refund needs a justification",
-      "status": "active",
-      "version": 5,
-      "attrs": {
-        "statement": "Adjusted Refund Amount can be changed ONLY for eligible partial or discretionary pre-treatment refunds and for provider-fault refunds (Rule 13 full refund, Rule 19 admin-set amount from zero to the full amount paid); if changed, Adjustment Justification becomes mandatory. Partial refunds (e.g., cancelling add-on packages only) use the same modal; the pre-calculated amount can be manually adjusted by admin with mandatory justification in the Adjustment Justification field",
-        "rationale": "Screen 4b business rules (prd.md lines 734 and 738) and field Adjustment Justification (line 733: max 500 characters)."
-      }
-    },
-    {
-      "id": "REQ-017-096",
-      "type": "Rule",
-      "owner_fr": "FR-017",
-      "title": "Refund confirm gating, Stripe refund and audit",
-      "status": "active",
-      "version": 3,
-      "attrs": {
-        "statement": "\"Confirm Refund\" button is disabled until the Reason field contains at least 1 character, any required Adjustment Justification is provided, and re-authentication succeeds. On confirm: Stripe refund API call is initiated; status changes to \"Processing\"; audit trail entry created with: admin ID, timestamp, invoice ID, refund amount, reason, before/after payment status",
-        "rationale": "Screen 4b business rules (prd.md lines 742-743)."
-      }
-    },
-    {
-      "id": "REQ-017-097",
-      "type": "Rule",
-      "owner_fr": "FR-017",
-      "title": "No refund through the modal once treatment has passed",
-      "status": "active",
-      "version": 6,
-      "attrs": {
-        "statement": "If treatment date has already passed (treatment completed; a Rule 19 interrupted treatment is not covered here, the admin sets that amount), the <15 days tier applies (0% refund) — admin sees \"0% refund — treatment has been completed\" and the Confirm button is disabled; admin must use Override Status instead if a discretionary refund is needed",
-        "rationale": "Screen 4b business rules (prd.md line 733)."
       }
     },
     {
@@ -67493,9 +67625,9 @@
       "owner_fr": "FR-017",
       "title": "When Process Payout and Retry Payout are enabled for affiliates",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "\"Process Payout\" button enabled ONLY for payouts with status \"Pending\", past due date, Payout Readiness = \"Ready\", and successful financial re-authentication. \"Retry Payout\" button enabled ONLY for payouts with status \"Failed\", Payout Readiness = \"Ready\", and successful financial re-authentication",
+        "statement": "\"Process Payout\" button enabled ONLY for payouts that are payable (status \"Pending\" and the payable condition of REQ-017-197) and after successful financial re-authentication. \"Retry Payout\" button enabled ONLY for payouts with status \"Failed\", Payout Readiness = \"Ready\", and successful financial re-authentication",
         "rationale": "Screen 6 business rules (prd.md lines 812-813). Process and Retry Payout Confirmation Modals (lines 858-880)."
       }
     },
@@ -67529,9 +67661,9 @@
       "owner_fr": "FR-017",
       "title": "Bulk affiliate payouts: selection and sequential processing",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Batch selection is allowed ONLY for affiliate payouts with Status = \"Pending\", past due date, and Payout Readiness = \"Ready\". Processing is sequential; failures for individual affiliates do not block processing of others. After batch completes, failed rows are pinned in the Failed / Requires Retry section for individual follow-up",
+        "statement": "Batch selection is allowed ONLY for affiliate payouts that are payable under the same condition as \"Process Payout\". Processing is sequential; failures for individual affiliates do not block processing of others. After batch completes, failed rows are pinned in the Failed / Requires Retry section for individual follow-up",
         "rationale": "Bulk affiliate payout business rules (prd.md lines 852-854). Bulk Payout Toolbar and Confirmation Modal (lines 829-850): confirm initiates Stripe transfers sequentially, status Processing for each, enabled only after re-authentication; result summary \"X payouts initiated. Y failed.\""
       }
     },
@@ -67671,11 +67803,11 @@
       "id": "REQ-017-118",
       "type": "Rule",
       "owner_fr": "FR-017",
-      "title": "Earnings payout status follows the transfer",
+      "title": "Earnings payout status follows the payment",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Once admin approves and Stripe transfer is initiated, affected treatments update to Payout Status \"Included in Payout — [Date]\". If the Stripe transfer fails (`transfer.failed` webhook), affected treatments update to Payout Status \"Payout Failed — [Date]\" and display a warning icon. They revert to \"Pending Next Payout\" once the admin retries and the transfer succeeds",
+        "statement": "Manual rail: once the admin has marked the statement as paid, affected treatments update to Payout Status \"Included in Payout — [Date]\". Stripe Connect: once the per-booking payout is initiated at release, the booking updates to \"Included in Payout — [Date]\". If a Stripe Connect transfer fails (`transfer.failed` webhook), the booking updates to Payout Status \"Payout Failed — [Date]\" and displays a warning icon; it reverts once the admin retries and the transfer succeeds. A statement never fails",
         "rationale": "Screen 9 business rules (prd.md lines 1092-1093). The revert-to-Pending wording after a successful retry is raised as a product owner question."
       }
     },
@@ -67731,11 +67863,11 @@
       "id": "REQ-017-123",
       "type": "Rule",
       "owner_fr": "FR-017",
-      "title": "Payout history entries appear at Processing and stay",
+      "title": "Payout history entries appear when the payout starts or is marked paid",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Payout entries appear in this list as soon as the Stripe transfer is initiated (status: \"Processing\"); they remain visible through \"Paid\" and \"Failed\" states. Each payout entry links to all treatment cases included in that payout period (Booking Reference → FR-001 / A-01). Retry Resolution History remains visible even after a failed payout later resolves to \"Paid\", so providers can understand why timing changed. Provider has read-only access to all data on this screen; no approval or editing actions are available",
+        "statement": "Payout entries appear in this list as soon as the Stripe transfer is initiated (status: \"Processing\"); they remain visible through \"Paid\" and \"Failed\" states. A manual-rail payout appears once an admin has marked it as paid. Each payout entry links to all treatment cases included in that payout period (Booking Reference → FR-001 / A-01). Retry Resolution History remains visible even after a failed payout later resolves to \"Paid\", so providers can understand why timing changed. Provider has read-only access to all data on this screen; no approval or editing actions are available",
         "rationale": "Screen 10 business rules (prd.md lines 1154, 1156, 1158, 1159)."
       }
     },
@@ -67755,11 +67887,11 @@
       "id": "REQ-017-125",
       "type": "Rule",
       "owner_fr": "FR-017",
-      "title": "Provider invoice PDF only after transfer.paid",
+      "title": "Provider invoice PDF only after the payout is confirmed",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Invoice PDF is generated only after Stripe `transfer.paid` confirmation; the Download button is disabled during \"Processing\" status",
+        "statement": "Invoice PDF is generated only after Stripe `transfer.paid` confirmation for a Stripe Connect payout, and when the admin marks a manual-rail statement as paid; the Download button is disabled during \"Processing\" status",
         "rationale": "Screen 10 business rules (prd.md line 1148). Restated by Main Flow step 17 (line 172), Entry Points (line 134: providers download invoice PDFs after the Stripe transfer is complete) and Billing Rule 2 second sentence (line 1236)."
       }
     },
@@ -67899,11 +68031,11 @@
       "id": "REQ-017-137",
       "type": "Rule",
       "owner_fr": "FR-017",
-      "title": "Provider-status cancellations: no automatic refund; admin resolution",
+      "title": "Provider-status cancellations: full refund started by the system; admin resolution of captured payments",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Bookings cancelled by an FR-015 provider suspension or deactivation (cause `ProviderSuspended` / `ProviderDeactivated`) are excluded from provider payout calculation like other cancelled bookings. The Rule 7 refund ladder is not applied. As when the clinic withdraws or drops out, the patient is always refunded in full everything paid and pays no cancellation fee; the system issues no refund automatically, and the admin issues the full refund through admin financial resolution (Screen 4b, mandatory reason, audit trail). A replacement booking through the FR-006 provider-fault transfer takes a new payment. The fixed clinic cancellation charge applies to a clinic withdrawal or drop-out only, not to a provider suspension or deactivation (FR-006 Alternative Flow B4). Captured patient payments on these bookings, including payments captured while the cancellation cascade was running, remain recorded against the booking invoice and are routed to admin financial resolution through the existing refund and adjustment controls (Screen 4b, mandatory reason, audit trail). Provider reactivation does not restore cancelled bookings or their payout eligibility",
+        "statement": "Bookings cancelled by an FR-015 provider suspension or deactivation (cause `ProviderSuspended` / `ProviderDeactivated`) are excluded from provider payout calculation like other cancelled bookings. The Rule 7 refund ladder is not applied. As when the clinic withdraws or drops out, the patient is always refunded in full everything paid and pays no cancellation fee; the system starts the full refund through the FR-007 refund flow without waiting for an admin. A replacement booking through the FR-006 provider-fault transfer takes a new payment. The fixed clinic cancellation charge applies to a clinic withdrawal or drop-out only, not to a provider suspension or deactivation (FR-006 Alternative Flow B4). Captured patient payments on these bookings, including payments captured while the cancellation cascade was running, remain recorded against the booking invoice and are routed to admin financial resolution through the refund launcher (Screen 4b, which opens FR-007 Screen 6) and the existing adjustment controls (mandatory reason, audit trail). Provider reactivation does not restore cancelled bookings or their payout eligibility",
         "rationale": "General Module Rule 13 (prd.md line 1175). Restated by the provider-suspension edge case (lines 1743-1751: a procedure already recorded as completed under FR-010 is not erased by the cancellation). Owner ruling 2026-11-22: a provider-status cancellation takes the same payment terms as a provider withdrawal or drop-out (FR-006 Alternative Flow B4 and B5): full refund of everything paid, no cancellation fee, new payment on the replacement booking; the fixed clinic charge is not extended to it."
       }
     },
@@ -67913,9 +68045,9 @@
       "owner_fr": "FR-017",
       "title": "Provider-status cancellation amounts held from payout until resolved",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Amounts on bookings cancelled by provider suspension or deactivation, including any procedure already recorded as completed under FR-010 and any Rule 14 late capture, are held from provider payout statements until admin financial resolution is recorded. Release to a payout uses the existing \"Add to Next Payout\" resolution (Screen 7) subject to normal Rule 5 eligibility and Billing Rule 5 approval; payout timing is otherwise unchanged",
+        "statement": "Amounts on bookings cancelled by provider suspension or deactivation, including any procedure already recorded as completed under FR-010 and any Rule 14 late capture, are held from provider payout statements until admin financial resolution is recorded. Release to a payout uses the existing \"Add to Next Payout\" resolution (Screen 7) while the clinic is active, and the \"Release earnings\" resolution (REQ-017-193) when the clinic is Suspended or Deactivated; payout timing is otherwise unchanged. The earnings of a removed clinic are never forfeited: an admin always settles them through this rule and the Release earnings route",
         "rationale": "General Module Rule 16 (prd.md line 1178)."
       }
     },
@@ -67959,11 +68091,11 @@
       "id": "REQ-017-142",
       "type": "Rule",
       "owner_fr": "FR-017",
-      "title": "Overdue statements processed immediately on approval",
+      "title": "Overdue statements payable at once on approval",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Payout statement approval during the review time between the cutoff day and the payout day, and during overdue review; payout processing is automatic on payout day for approved statements and immediate only when an overdue statement is approved after the normal payout day",
+        "statement": "Payout statement approval during the review time between the cutoff day and the payout day, and during overdue review; an approved statement is payable on the payout day and an Overdue statement is payable at once when approved, and the admin pays it and marks it paid",
         "rationale": "Admin Editability, Editable by Admin (prd.md line 1203). Restated by Billing Rule 5 (line 1239) and User Behavior Assumption 1 (line 1398)."
       }
     },
@@ -67971,11 +68103,11 @@
       "id": "REQ-017-143",
       "type": "Rule",
       "owner_fr": "FR-017",
-      "title": "Payment retry logic fixed at 3 attempts",
+      "title": "Stripe Connect payout retry fixed at 3 attempts",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Payment retry logic (3 attempts with exponential backoff - hardcoded)",
+        "statement": "Payout retry logic for Stripe Connect payouts (3 attempts with exponential backoff - hardcoded)",
         "rationale": "Fixed in Codebase (prd.md line 1216). Payment Rule 3 (line 1234: day 1, day 3, day 7) and External Service 1 (line 1358: 1 hour, 6 hours, 24 hours) give different schedules; see the product owner question."
       }
     },
@@ -67989,18 +68121,6 @@
       "attrs": {
         "statement": "Admin can manually adjust payout amounts ONLY with documented justification (audit trail required)",
         "rationale": "Configurable with Restrictions (prd.md line 1220)."
-      }
-    },
-    {
-      "id": "REQ-017-146",
-      "type": "Rule",
-      "owner_fr": "FR-017",
-      "title": "Refunds need a reason; no second approver",
-      "status": "active",
-      "version": 4,
-      "attrs": {
-        "statement": "Admin can process refunds ONLY with a mandatory reason entered (free text, max 500 characters) and full audit trail logged; no secondary approver required",
-        "rationale": "Configurable with Restrictions (prd.md line 1222). Restated by Screen 4 business rules (line 595), Screen 4b field Reason (line 732) and Business Process Assumption 4 (line 1414: refund requests reviewed manually by admin; no automated refund approvals)."
       }
     },
     {
@@ -68045,9 +68165,9 @@
       "owner_fr": "FR-017",
       "title": "Payout statements and provider invoices are distinct artefacts",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Provider payout statements (dashboard view) for manual-rail clinics are auto-generated on the platform-wide cutoff day. Provider invoice PDFs are generated separately only after the payout is confirmed (post-payout). Statements and invoices are two distinct artefacts.",
+        "statement": "Provider payout statements (dashboard view) for manual-rail clinics are auto-generated on the platform-wide cutoff day. Provider invoice PDFs are generated separately only after the payout is confirmed (post-payout): when the admin marks a statement as paid, or on `transfer.paid` for a Stripe Connect payout. Statements and invoices are two distinct artefacts.",
         "rationale": "Billing Rule 2 (prd.md line 1230). Restated by Main Flow step 3 (line 148)."
       }
     },
@@ -68079,11 +68199,11 @@
       "id": "REQ-017-153",
       "type": "Rule",
       "owner_fr": "FR-017",
-      "title": "Approve between cutoff and payout day; payout day processes only Approved",
+      "title": "Approve between cutoff and payout day; payout day makes only Approved payable",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "Admin must approve payout statements during the review time between the cutoff day and the payout day. On payout day, the system auto-processes only \"Approved\" statements. Any statement still in \"Pending Approval\" at that point moves to \"Overdue\" and is NOT auto-processed. Overdue statements can be approved and processed at any time outside the normal cycle; the Stripe transfer is initiated immediately on approval. For a manual-rail clinic the admin records the payment by marking the statement as paid. Delay is recorded in the audit trail.",
+        "statement": "Admin must approve payout statements during the review time between the cutoff day and the payout day. On payout day only \"Approved\" statements are payable: the admin pays them and marks them paid. Any statement still in \"Pending Approval\" at that point moves to \"Overdue\" and is NOT payable. An Overdue statement can be approved at any time outside the normal cycle; on approval it is payable at once, the admin pays it and marks it paid, and it never waits for the next payout day. Unapprove is not offered after the payout day. Delay is recorded in the audit trail.",
         "rationale": "Billing Rule 5 (prd.md line 1233). Restated by Entry Points (line 123: payout-day cron, e.g. Friday 6 AM UTC), Main Flow steps 11-14 (lines 159-165) and the Screen 3 rule (line 497: status Processing then Paid after the Stripe confirmation webhook)."
       }
     },
@@ -68274,9 +68394,9 @@
       "owner_fr": "FR-017",
       "title": "Failed Stripe transfers are retried up to 3 times",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "A failed Stripe transfer for a provider or affiliate payout is retried up to 3 times; if all retries fail the payout is flagged for manual review and the payout failed event is triggered.",
+        "statement": "A failed Stripe transfer for a provider or affiliate payout is retried up to 3 times; if all retries fail the payout is set to Manual Review Required and the payout failed event is triggered.",
         "rationale": "Implementation Notes, Integration 1: Stripe Transfers API (PRD line 1443)."
       }
     },
@@ -68305,26 +68425,14 @@
       }
     },
     {
-      "id": "REQ-017-173",
-      "type": "Rule",
-      "owner_fr": "FR-017",
-      "title": "A banned clinic forfeits its whole pending balance",
-      "status": "active",
-      "version": 2,
-      "attrs": {
-        "statement": "When a clinic's account ends as Inactive with the reason \"banned\", its whole pending balance is forfeited: nothing further is paid out to that clinic",
-        "rationale": "FR-017 PRD, General Module Rule 18."
-      }
-    },
-    {
       "id": "REQ-017-174",
       "type": "Rule",
       "owner_fr": "FR-017",
       "title": "Funds are released per booking at Treatment, then paid out per provider",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Funds are released per booking at Treatment, then paid out per provider. The provider marks the procedure complete; the patient confirms or disputes within a confirmation window (default 7 days, an editable admin setting); no answer means automatic release; a dispute pauses release until an admin resolves it. Any admin with support access can resolve a completion problem case and choose the money outcome; there is no time limit. A completion problem case ends in one of three outcomes: release in full, refund in full, or refund in part and release the rest",
+        "statement": "Funds are released per booking at Treatment, then paid out per provider. The provider marks the procedure complete; the patient confirms or disputes within a confirmation window (default 7 days, an editable admin setting); no answer means automatic release; a dispute pauses release until an admin resolves it. A booking's funds count as released when the window ends with no open case, or when an admin resolves the case; until then its earnings show as Pending release. Any admin with support access can resolve a completion problem case and choose the money outcome; there is no time limit. A completion problem case ends in one of three outcomes: release in full, refund in full, or refund in part and release the rest",
         "rationale": "FR-017 PRD, Fund Release and Payout Rules, Release Rule 1."
       }
     },
@@ -68346,9 +68454,9 @@
       "owner_fr": "FR-017",
       "title": "Manual rail runs one platform-wide weekly cycle",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "The manual rail runs one platform-wide weekly cycle: Sunday cutoff, Wednesday payout (both admin-editable). The admin records each payment by marking the statement as paid. A manually paid clinic is \"Ready\" once the admin has set its payout method to manual bank transfer and saved valid bank details. A booking with an open problem case leaves the unpaid settlement statement until the admin decides. A bank charge on a manual transfer is recorded against the settlement statement; the clinic bears it, and it is deducted from the clinic's statement amount and shown as a deduction",
+        "statement": "The manual rail runs one platform-wide weekly cycle: Sunday cutoff, Wednesday payout (both admin-editable). The admin records each payment by marking the statement as paid. A manually paid clinic is \"Ready\" once the admin has set its payout method to manual bank transfer and saved valid bank details. A booking with an open problem case leaves the unpaid settlement statement until the admin decides. A bank charge on a manual transfer is recorded against the settlement statement; the clinic bears it, and it is entered when the admin marks the statement as paid, recorded as a Bank Charge adjustment, deducted from the clinic's statement amount and shown as a deduction",
         "rationale": "FR-017 PRD, Fund Release and Payout Rules, Release Rule 3."
       }
     },
@@ -68358,9 +68466,9 @@
       "owner_fr": "FR-017",
       "title": "A Stripe Connect clinic is paid one payout per released booking",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "A Stripe Connect clinic is paid one payout per released booking, at release, recorded on the booking ledger; the weekly cycle does not apply to it. A failed Stripe Connect payout gets 3 automatic attempts with exponential backoff, then goes to manual review, and the Retry Payout button (Screen 2) stays available",
+        "statement": "A Stripe Connect clinic is paid one payout per released booking, at release, recorded on the booking ledger; the weekly cycle does not apply to it. A failed Stripe Connect payout gets 3 automatic attempts with exponential backoff, then goes to manual review, and the Retry Payout button on the Stripe Connect payouts list (Screen 2) stays available. Manual Review Required is also set by the fraud flag (REQ-017-161); while it is set, approval and retry are disabled until an admin clears it with a review note, which is audited",
         "rationale": "FR-017 PRD, Fund Release and Payout Rules, Release Rule 4."
       }
     },
@@ -68382,9 +68490,9 @@
       "owner_fr": "FR-017",
       "title": "The clinic share waits until Ready; pulled back on cancellation or reschedule",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "When a clinic's Stripe payout setup is not Ready at the time its share is due to move, the share stays with Hairline, the clinic and the admin are told, it moves when the clinic becomes Ready, and nothing is paid out before then, even after treatment. If the patient cancels after the share has moved, Hairline refunds the patient per the refund ladder, pulls the share back from the clinic's locked balance, and deducts any shortfall from the clinic's next payout. If the treatment is rescheduled after the share has moved, the share is always pulled back and moved again 60 or 30 days before the new date; this also keeps the share inside Stripe's 90-day limit. The share can be pulled back to Hairline before Stripe's 90-day limit and moved again later; there is no deadline for moving it again",
+        "statement": "When a clinic's Stripe payout setup is not Ready at the time its share is due to move, the share stays with Hairline, the clinic and the admin are told, it moves when the clinic becomes Ready, and nothing is paid out before then, even after treatment. If the patient cancels after the share has moved, Hairline refunds the patient per the refund ladder, pulls the share back from the clinic's locked balance, and records any shortfall as a refund deduction on the clinic's balance. If the treatment is rescheduled after the share has moved, the share is always pulled back and moved again 60 or 30 days before the new date; this also keeps the share inside Stripe's 90-day limit. The share can be pulled back to Hairline before Stripe's 90-day limit and moved again later; there is no deadline for moving it again",
         "rationale": "FR-017 PRD, Fund Release and Payout Rules, Release Rule 6."
       }
     },
@@ -68392,11 +68500,11 @@
       "id": "REQ-017-180",
       "type": "Rule",
       "owner_fr": "FR-017",
-      "title": "Clinic cancellation deduction and patient cancellation fee split",
+      "title": "Clinic cancellation deduction from FR-029 Screen 7 and patient cancellation fee split",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "When a clinic cancels, a fixed amount set in admin settings is deducted from the clinic's next payout. A patient cancellation fee is split between Hairline and the clinic by a percentage set in admin settings. The refund ladder is one global ladder now (General Module Rule 7)",
+        "statement": "When a clinic cancels, the fixed amount set in FR-029 Screen 7 is deducted from the clinic's next payout, only while it is set, in its Fee Currency converted to the payout currency, as an entry on the clinic balance. A patient cancellation fee is split between Hairline and the clinic by a percentage set in admin settings. The refund ladder is one global ladder now (General Module Rule 7)",
         "rationale": "FR-017 PRD, Fund Release and Payout Rules, Release Rule 7."
       }
     },
@@ -68418,9 +68526,9 @@
       "owner_fr": "FR-017",
       "title": "Outstanding invoice alert after the overdue threshold",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "The admin gets an internal alert (email and push) for an overdue patient invoice once the invoice has been overdue for the alert threshold. The threshold is an admin setting expressed in days overdue, and no default is set yet.",
+        "statement": "The admin gets an internal alert (email and push) for an overdue patient invoice once the invoice has been overdue for the alert threshold. The threshold is an admin setting expressed in days overdue, and it defaults to 7 days.",
         "rationale": "prd.md lines 98, 1201 (Notification table and Admin Editability)."
       }
     },
@@ -68428,11 +68536,11 @@
       "id": "REQ-017-183",
       "type": "Rule",
       "owner_fr": "FR-017",
-      "title": "Daily 3 AM UTC check of upcoming installment payments",
+      "title": "Hourly installment job in the clinic's timezone",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "Scheduled cron jobs check for upcoming installment payments once a day at 3 AM UTC.",
+        "statement": "One scheduled job runs hourly and acts on each installment plan whose due day has started in the clinic's timezone; payment reminders use the same day boundary at 9 AM clinic time, 3 days before the due date.",
         "rationale": "prd.md line 124 (Automated Triggers)."
       }
     },
@@ -68455,10 +68563,178 @@
       "owner_fr": "FR-017",
       "title": "Interrupted treatment: admin sets the refund, payout held until decided",
       "status": "active",
+      "version": 2,
+      "attrs": {
+        "statement": "When a treatment already started is interrupted by the provider's fault (FR-006 Alternative Flow B7, booking `In Progress`), the Rule 7 refund ladder is not applied. An admin reviews each case and sets the patient refund amount, from zero up to the full amount paid, with a mandatory reason and an audit entry, through the refund launcher (Screen 4b), which opens FR-007 Screen 6 with the amount the admin sets. The provider's payout for that booking is held, and stays off the unpaid statement and the per-booking payout, until the admin decides; the held amount then follows the Screen 7 outcomes",
+        "rationale": "General Module Rule 19 (prd.md line 1181), added by the owner ruling 2026-11-22 for FR-006 Alternative Flow B7 (provider fault while the booking is In Progress). Restated by the provider-suspension edge case (In Progress bullet) and the Screen 4b business rules on provider-fault refunds."
+      }
+    },
+    {
+      "id": "REQ-017-186",
+      "type": "Rule",
+      "owner_fr": "FR-017",
+      "title": "A settlement statement is manual-rail only, with five states",
+      "status": "active",
       "version": 1,
       "attrs": {
-        "statement": "When a treatment already started is interrupted by the provider's fault (FR-006 Alternative Flow B7, booking `In Progress`), the Rule 7 refund ladder is not applied. An admin reviews each case and sets the patient refund amount, from zero up to the full amount paid, with a mandatory reason and an audit entry, through the existing refund control (Screen 4b). The provider's payout for that booking is held until the admin decides",
-        "rationale": "General Module Rule 19 (prd.md line 1181), added by the owner ruling 2026-11-22 for FR-006 Alternative Flow B7 (provider fault while the booking is In Progress). Restated by the provider-suspension edge case (In Progress bullet) and the Screen 4b business rules on provider-fault refunds."
+        "statement": "A settlement statement exists only for a manual-rail clinic and has five states: Pending Approval, Approved, Overdue, Paid (set when the admin marks it paid) and Voided. A statement never has Processing or Failed, and Stripe webhooks never change it.",
+        "rationale": "Main Flow rail scope note; Screen 2 and Screen 3 status rules; Entry Points."
+      }
+    },
+    {
+      "id": "REQ-017-187",
+      "type": "Rule",
+      "owner_fr": "FR-017",
+      "title": "A Stripe Connect payout has its own states and is listed on Screen 2",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "A Stripe Connect clinic is paid one payout per released booking, listed in the Stripe Connect payouts section of Screen 2. That payout has the states Waiting for clinic setup, Processing, Paid and Failed, moved by the Stripe transfer webhooks; Retry Payout and the three automatic attempts belong to it.",
+        "rationale": "Alternative Flow B4; Screen 2 Stripe Connect payouts section; Release Rules 4 and 11."
+      }
+    },
+    {
+      "id": "REQ-017-188",
+      "type": "Rule",
+      "owner_fr": "FR-017",
+      "title": "Mark as Paid records a manual payment on Screen 3",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "A manual-rail statement in Approved status, or an Overdue one just approved, is marked paid by the admin on Screen 3 with financial re-authentication, a bank reference, a payment date (not in the future) and an optional bank charge. Marking it paid sets the statement to Paid, records a bank charge as a Bank Charge adjustment, writes the audit entry Payout Marked Paid, notifies the clinic and generates the invoice document.",
+        "rationale": "Main Flow steps 14 to 16; Screen 3 Mark as Paid modal; Release Rule 3."
+      }
+    },
+    {
+      "id": "REQ-017-189",
+      "type": "Rule",
+      "owner_fr": "FR-017",
+      "title": "Earnings are Pending release until the booking's funds are released",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "A booking's earnings are Pending release until its funds are released, and Released afterwards. Funds are released when the confirmation window ends with no open problem case, or when an admin resolves the case. Only released earnings enter a statement, the running total available for payout, or a per-booking payout.",
+        "rationale": "Entry Points; Screen 1 Pending Provider Payouts; Screen 9 summary; Release Rule 1."
+      }
+    },
+    {
+      "id": "REQ-017-190",
+      "type": "Rule",
+      "owner_fr": "FR-017",
+      "title": "Screen 7 carries the three outcomes of a completion problem case",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Screen 7 carries the three outcomes of a completion problem case. Release in full releases the held amount; refund in full, and refund in part with release of the rest, open FR-007 Screen 6 with an admin-set refund amount from zero to the full amount paid, a reason and an audit entry. Each outcome needs an internal note and writes an audit entry.",
+        "rationale": "Screen 7 business rules; Alternative Flow B4; Screen 4b rules; Rule 19."
+      }
+    },
+    {
+      "id": "REQ-017-191",
+      "type": "Rule",
+      "owner_fr": "FR-017",
+      "title": "One clinic balance record of signed entries, applied to the next payout",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Each clinic has one balance record of signed entries: refund deduction, chargeback recovery, clinic cancellation deduction and bank charge. Open entries are applied to the clinic's next payout on either rail and are shown on Screens 2, 3 and 9.",
+        "rationale": "Release Rule 9; Alternative Flow B5; Screens 2, 3 and 9 balance rows."
+      }
+    },
+    {
+      "id": "REQ-017-192",
+      "type": "Rule",
+      "owner_fr": "FR-017",
+      "title": "An open clinic debt is written off by an admin with a reason",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "A clinic debt with no further payout coming stays open on the clinic's balance until an admin writes it off with a mandatory reason; the write-off is recorded in the audit trail.",
+        "rationale": "Release Rule 9; Alternative Flow B5; Screen 2 Open clinic balances."
+      }
+    },
+    {
+      "id": "REQ-017-193",
+      "type": "Rule",
+      "owner_fr": "FR-017",
+      "title": "Release earnings resolves a Suspended or Deactivated clinic's money",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "For a Suspended or Deactivated clinic, an admin releases earnings with a Release earnings resolution on Screen 7 that needs no target payout cycle: a manual-rail clinic gets a one-off manual statement and a Stripe Connect clinic a direct per-booking payout, with an internal note and an audit entry. It covers bookings completed normally and bookings held under General Module Rule 16 once the admin has resolved them.",
+        "rationale": "Screen 7 business rules; General Module Rule 16; Alternative Flow B4."
+      }
+    },
+    {
+      "id": "REQ-017-194",
+      "type": "Rule",
+      "owner_fr": "FR-017",
+      "title": "Manual Review Required blocks approval and retry until an admin clears it",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Payout Readiness becomes Manual Review Required when the fraud flag (REQ-017-161) is raised or after three failed payout attempts. Approval and retry are disabled while it is set. An admin clears it with a review note, recorded in the audit trail as Manual Review Cleared.",
+        "rationale": "Screen 2 business rules; Screen 3 Manual Review Note; Release Rule 4."
+      }
+    },
+    {
+      "id": "REQ-017-195",
+      "type": "Rule",
+      "owner_fr": "FR-017",
+      "title": "Hairline discount reimbursement is its own payout row",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "A Hairline-funded discount is reimbursed to the clinic as its own row on the statement and on the per-booking payout, read from the frozen booking snapshot (REQ-019-017) and shown on Screen 3.",
+        "rationale": "Release Rule 10; Screen 3 reimbursement rows."
+      }
+    },
+    {
+      "id": "REQ-017-196",
+      "type": "Rule",
+      "owner_fr": "FR-017",
+      "title": "Stripe Connect readiness: Not onboarded, Restricted, Ready",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "A Stripe Connect clinic's payout setup is shown as Not onboarded, Restricted or Ready. A booking whose clinic is not Ready shows Waiting for clinic setup on the per-booking payout list until the clinic is Ready.",
+        "rationale": "Release Rule 11; Screen 2 Payout Readiness and Stripe Connect payouts section."
+      }
+    },
+    {
+      "id": "REQ-017-197",
+      "type": "Rule",
+      "owner_fr": "FR-017",
+      "title": "When an affiliate payout is payable on Screen 6",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "An affiliate payout is payable on Screen 6 only when the payout month is closed, the unpaid balance is at or above the USD 50 minimum (an Inactive affiliate has no minimum), Payout Readiness is Ready and no hold applies. Screen 6 shows a Held or Flagged column: Held for the unpaid commission of a Suspended affiliate, Flagged for a payout with a booking that still breaches the margin check.",
+        "rationale": "Screen 6 business rules; FR-018 payout and margin guard rules."
+      }
+    },
+    {
+      "id": "REQ-017-198",
+      "type": "Rule",
+      "owner_fr": "FR-017",
+      "title": "Affiliate payout readiness comes from FR-018; the USD floor is checked in USD",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The affiliate payout readiness shown on Screen 6 is derived from ENT-affiliate-payout.payout_readiness, set by FR-018; FR-017 does not recompute it. The USD 50 minimum is checked in USD after conversion at the locked rate, with one threshold for all affiliates.",
+        "rationale": "Screen 6 Payout Readiness row and business rules; FR-018 REQ-018-311."
+      }
+    },
+    {
+      "id": "REQ-017-199",
+      "type": "Rule",
+      "owner_fr": "FR-017",
+      "title": "Process Refund is a launcher into FR-007 Screen 6",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Process Refund is a launcher on Screen 4b into FR-007 Screen 6 with the invoice and booking prefilled; FR-007 owns the refund amount, reason, re-authentication, Stripe refund and any approval. FR-017 keeps the effect on the invoice (a refund row in the refund history; a full refund sets Payment Status Refunded) and on the clinic's payout. The closure refund of General Module Rule 13 is started by the system through FR-007.",
+        "rationale": "Screen 4b; Screen 4 Process Refund rule; General Module Rule 13."
       }
     },
     {
@@ -100665,10 +100941,10 @@
       "owner_fr": "FR-017",
       "title": "Provider Billing: Upcoming Payments List",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
-        "description": "PRD prd.md lines 364-425. UI controls (no field): Select checkbox; Actions (View Details, Approve Payout, Unapprove, Void Statement, Add Note, Retry Payout); Batch Approval Toolbar (Selected Statements, Selected Net Total, Approve All Selected Payouts, Clear Selection); Unapprove and Void reason inputs; Filters, sort and CSV export."
+        "description": "UI controls (no field): Select checkbox; Actions (View Details, Approve Payout, Unapprove, Void Statement, Add Note on a statement; Retry Payout, Clear Manual Review on a Stripe Connect payout; Write Off Balance on an open clinic balance); Batch Approval Toolbar (Selected Statements, Selected Net Total, Approve All Selected Payouts, Clear Selection); Unapprove and Void reason inputs; Filters, sort and CSV export. Sections: Upcoming / Pending Approval statements, Overdue, Stripe Connect payouts (Waiting for clinic setup, Processing, Paid, Failed), Open clinic balances."
       }
     },
     {
@@ -100677,10 +100953,10 @@
       "owner_fr": "FR-017",
       "title": "Provider Payout Detail Modal",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "admin",
-        "description": "PRD prd.md lines 427-542. UI controls (no field): Batch Approval Confirmation Modal (summary, counts, warning, re-authentication, confirm, cancel, result summary); Approve Payout Confirmation Modal; Retry Payout Confirmation Modal; Export payout report."
+        "description": "UI controls (no field): Batch Approval Confirmation Modal (summary, counts, warning, re-authentication, confirm, cancel, result summary); Approve Payout Confirmation Modal; Mark as Paid Modal (re-authentication, bank reference, payment date, optional bank charge, confirm); Retry Payout Confirmation Modal; Clear Manual Review input; Export payout report."
       }
     },
     {
@@ -100689,7 +100965,7 @@
       "owner_fr": "FR-017",
       "title": "Patient Billing: Invoice Management",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "admin",
         "description": "PRD prd.md lines 544-614. UI controls (no field): Actions (View Details, Send Reminder, Process Refund, Download Invoice, Override Status); Send Reminder Confirmation Modal (summary, invoice reference, channel, confirm, cancel); Override Status reason input; Filters, search and bulk actions."
@@ -100701,7 +100977,7 @@
       "owner_fr": "FR-017",
       "title": "Patient Invoice Detail",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "admin",
         "description": "PRD prd.md lines 616-711. UI controls (no field): Actions (same as Screen 4); At Risk warning banner."
@@ -100711,12 +100987,12 @@
       "id": "SCR-017-06",
       "type": "Screen",
       "owner_fr": "FR-017",
-      "title": "Refund Confirmation Modal",
+      "title": "Refund Launcher",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "admin",
-        "description": "PRD prd.md lines 713-748. UI controls (no field): Re-authentication input; Confirm Refund button; Cancel button."
+        "description": "Screen 4b. Launcher into FR-007 Screen 6 (Refund Processing) with the invoice and booking prefilled; FR-007 owns the refund amount, reason, re-authentication, Stripe refund and approval. UI controls (no field): Open Refund Processing button; Cancel button."
       }
     },
     {
@@ -100725,7 +101001,7 @@
       "owner_fr": "FR-017",
       "title": "Discount Usage Overview",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "admin",
         "description": "PRD prd.md lines 750-785. UI controls (no field): FR-019 detail link; Filters, search and export."
@@ -100737,7 +101013,7 @@
       "owner_fr": "FR-017",
       "title": "Affiliate Billing: Commission Payouts",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "admin",
         "description": "PRD prd.md lines 787-901. UI controls (no field): Select checkbox; Actions (View Details, Process Payout, Retry Payout, Add Note, Download Report); Bulk Payout Toolbar (Selected Payouts, Selected Total, Process All Selected Payouts, Clear Selection); Bulk Affiliate Payout Confirmation Modal; Process Payout Confirmation Modal; Retry Payout Confirmation Modal; Pending and Paid tabs, filters."
@@ -100749,10 +101025,10 @@
       "owner_fr": "FR-017",
       "title": "Transaction Search and Audit Log",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "admin",
-        "description": "PRD prd.md lines 909-1006. UI controls (no field): Search controls (Search By, Search Input, Record Type, Date Range, Status); Search Results Record Type badge (names which record the row is); Save Resolution button; Audit log filter controls (Date Range, Admin User, Action Type, Affected Entity, Entity ID); Audit log export."
+        "description": "UI controls (no field): Search controls (Search By, Search Input, Record Type, Date Range, Status); Search Results Record Type badge (names which record the row is); Save Resolution button (Confirm Already Paid, Add to Next Payout, Escalate Technical Investigation, Release in Full, Refund in Full, Refund in Part and Release the Rest, Release Earnings); Audit log filter controls (Date Range, Admin User, Action Type, Affected Entity, Entity ID); Audit log export."
       }
     },
     {
@@ -100773,7 +101049,7 @@
       "owner_fr": "FR-017",
       "title": "Provider Earnings Tracker",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "provider",
         "description": "PRD prd.md lines 1065-1113. UI controls (no field): Filters, sort and CSV export."
@@ -103803,9 +104079,9 @@
       "owner_fr": "FR-017",
       "title": "Outstanding invoice alert threshold",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Number of days overdue after which an outstanding patient invoice raises an alert (FR-017 Admin Editability). Default not yet set.",
+        "description": "Number of days overdue after which an outstanding patient invoice raises an alert (FR-017 Admin Editability). Defaults to 7 days.",
         "unit": "days overdue"
       }
     },
@@ -116902,7 +117178,7 @@
       "owner_fr": "FR-017",
       "title": "Statement becomes Approved; admin repeats for remaining providers or uses bulk approval",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow step 11"
       }
@@ -116911,9 +117187,9 @@
       "id": "STP-017-007",
       "type": "Step",
       "owner_fr": "FR-017",
-      "title": "Admin sees the Overdue section at the top of the list and approves at any time",
+      "title": "Admin sees the Overdue section at the top of the list and approves it; an approved Overdue statement is payable at once",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow step 13b"
       }
@@ -116922,9 +117198,9 @@
       "id": "STP-017-008",
       "type": "Step",
       "owner_fr": "FR-017",
-      "title": "Invalid bank account: admin contacts the provider, who updates bank details in Billing Settings; admin retries the payout",
+      "title": "Invalid bank account: admin contacts the provider, who updates bank details in Billing Settings; admin retries the per-booking payout from the Stripe Connect payouts section",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "prd_ref": "Main Flow step 16c"
       }
@@ -116933,9 +117209,9 @@
       "id": "STP-017-009",
       "type": "Step",
       "owner_fr": "FR-017",
-      "title": "Other Stripe error: admin investigates, resolves and retries the transfer",
+      "title": "Other Stripe error: admin investigates, resolves and retries the per-booking payout from the Stripe Connect payouts section",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Main Flow step 16d"
       }
@@ -117066,9 +117342,9 @@
       "id": "STP-017-034",
       "type": "Step",
       "owner_fr": "FR-017",
-      "title": "Admin reviews the flagged invoice and resolves it by refund or adjustment with a mandatory reason",
+      "title": "Admin reviews the flagged invoice and resolves it through the refund launcher (opens FR-007 Screen 6) or an adjustment, with a mandatory reason",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B3 step 8"
       }
@@ -117088,9 +117364,9 @@
       "id": "STP-017-038",
       "type": "Step",
       "owner_fr": "FR-017",
-      "title": "System calculates eligible earnings, commission from the booking snapshot and net payout",
+      "title": "System calculates eligible earnings of released bookings, commission from the booking snapshot and net payout",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow step 2"
       }
@@ -117121,9 +117397,9 @@
       "id": "STP-017-041",
       "type": "Step",
       "owner_fr": "FR-017",
-      "title": "Payout-day cron auto-processes Approved statements",
+      "title": "Payout day: Approved statements become due for payment; no payout is started automatically",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "prd_ref": "Main Flow step 12"
       }
@@ -117154,9 +117430,9 @@
       "id": "STP-017-044",
       "type": "Step",
       "owner_fr": "FR-017",
-      "title": "Cron initiates the Stripe transfer; status Processing",
+      "title": "System starts the clinic's per-booking payout at release; status Processing",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Main Flow step 14"
       }
@@ -117187,9 +117463,9 @@
       "id": "STP-017-047",
       "type": "Step",
       "owner_fr": "FR-017",
-      "title": "transfer.paid: status Paid and invoice PDF with itemised breakdown generated",
+      "title": "Payout becomes Paid (marked by the admin, or transfer.paid for a per-booking payout) and the system generates the invoice document with itemised breakdown",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow step 17"
       }
@@ -117220,9 +117496,9 @@
       "id": "STP-017-050",
       "type": "Step",
       "owner_fr": "FR-017",
-      "title": "transfer.failed: status Failed and admin notified",
+      "title": "transfer.failed: the per-booking payout becomes Failed and admin is notified; three automatic attempts, then Manual Review Required",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Main Flow step 16a"
       }
@@ -117275,9 +117551,9 @@
       "id": "STP-017-056",
       "type": "Step",
       "owner_fr": "FR-017",
-      "title": "All successful payouts are queued for payout-day processing",
+      "title": "Approved statements wait for the payout day, when the admin pays them",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A1 step 10"
       }
@@ -117500,6 +117776,182 @@
       "version": 1,
       "attrs": {
         "prd_ref": "Alternative Flow B1 step 10"
+      }
+    },
+    {
+      "id": "STP-017-084",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Admin pays the clinic by bank transfer outside the platform",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main flow step 14"
+      }
+    },
+    {
+      "id": "STP-017-085",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Admin clicks Mark as Paid and enters re-authentication, bank reference, payment date and an optional bank charge",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main flow step 15"
+      }
+    },
+    {
+      "id": "STP-017-086",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Statement becomes Paid; a bank charge is recorded as a Bank Charge adjustment; audit entry Payout Marked Paid; the clinic is notified",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main flow step 16"
+      }
+    },
+    {
+      "id": "STP-017-087",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "System checks the booking's funds when the confirmation window ends: with no open problem case they are released; with an open case, an interrupted treatment or a provider-status cancellation the payout is held",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B4 steps 0 and 1"
+      }
+    },
+    {
+      "id": "STP-017-088",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Admin resolves the held booking on Screen 7: release in full, refund in full, refund in part and release the rest, or Release earnings",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B4 step 2"
+      }
+    },
+    {
+      "id": "STP-017-089",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Screen 7 opens FR-007 Screen 6 with invoice and booking prefilled; the admin sets the refund amount, zero to the full amount paid, with a reason and an audit entry",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B4 step 3"
+      }
+    },
+    {
+      "id": "STP-017-090",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "System releases the held amount",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B4 step 4"
+      }
+    },
+    {
+      "id": "STP-017-091",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Release earnings for a Suspended or Deactivated clinic: a one-off manual statement (manual rail) or a direct per-booking payout (Stripe Connect), with an internal note and an audit entry",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B4 step 5"
+      }
+    },
+    {
+      "id": "STP-017-092",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Manual rail: the released earnings enter the clinic's next statement",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B4 step 7"
+      }
+    },
+    {
+      "id": "STP-017-093",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Stripe Connect, setup not Ready: the payout shows Waiting for clinic setup until the clinic is Ready",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B4 step 9"
+      }
+    },
+    {
+      "id": "STP-017-094",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "After three failed attempts the payout is set to Manual Review Required; approval and retry are disabled",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B4 step 10"
+      }
+    },
+    {
+      "id": "STP-017-095",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Admin clears Manual Review Required with a review note, recorded in the audit trail; the payout can then be retried",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B4 step 10"
+      }
+    },
+    {
+      "id": "STP-017-096",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "System adds a signed entry to the clinic balance record: refund deduction, chargeback recovery, clinic cancellation deduction or bank charge",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B5 step 1"
+      }
+    },
+    {
+      "id": "STP-017-097",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "System applies the open entries to the clinic's next payout: an adjustment row on a statement, a deduction on a per-booking payout",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B5 step 3"
+      }
+    },
+    {
+      "id": "STP-017-098",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "With no further payout coming, the debt stays open on the clinic's balance, shown on Screens 2, 3 and 9",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B5 step 4"
+      }
+    },
+    {
+      "id": "STP-017-099",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Admin writes the debt off with a mandatory reason; audit entry",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B5 step 5"
       }
     },
     {
@@ -137834,6 +138286,14 @@
       "calculated_by": null
     },
     {
+      "id": "ENT-affiliate-commission.held_or_flagged",
+      "entity_id": "ENT-affiliate-commission",
+      "name": "held_or_flagged",
+      "data_type": "enum",
+      "required": false,
+      "calculated_by": "REQ-017-197"
+    },
+    {
       "id": "ENT-affiliate-commission.payment_destination",
       "entity_id": "ENT-affiliate-commission",
       "name": "payment_destination",
@@ -137863,7 +138323,7 @@
       "name": "payout_readiness_status",
       "data_type": "enum",
       "required": true,
-      "calculated_by": null
+      "calculated_by": "REQ-017-198"
     },
     {
       "id": "ENT-affiliate-commission.payout_reference",
@@ -141592,6 +142052,14 @@
       "data_type": "datetime",
       "required": false,
       "calculated_by": null
+    },
+    {
+      "id": "ENT-clinic-balance-entry.amount",
+      "entity_id": "ENT-clinic-balance-entry",
+      "name": "amount",
+      "data_type": "money",
+      "required": false,
+      "calculated_by": "REQ-017-191"
     },
     {
       "id": "ENT-commission-rate-config.commission_model",
@@ -149146,6 +149614,14 @@
       "calculated_by": null
     },
     {
+      "id": "ENT-patient-invoice.at_risk_flag",
+      "entity_id": "ENT-patient-invoice",
+      "name": "at_risk_flag",
+      "data_type": "bool",
+      "required": false,
+      "calculated_by": "REQ-017-084"
+    },
+    {
       "id": "ENT-patient-invoice.booking_id",
       "entity_id": "ENT-patient-invoice",
       "name": "booking_id",
@@ -149175,6 +149651,14 @@
       "name": "due_date",
       "data_type": "date",
       "required": true,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-patient-invoice.final_payment_status",
+      "entity_id": "ENT-patient-invoice",
+      "name": "final_payment_status",
+      "data_type": "enum",
+      "required": false,
       "calculated_by": null
     },
     {
@@ -150159,6 +150643,14 @@
       "name": "provider_id",
       "data_type": "id",
       "required": true,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-payout-dispute-resolution.refund_amount",
+      "entity_id": "ENT-payout-dispute-resolution",
+      "name": "refund_amount",
+      "data_type": "money",
+      "required": false,
       "calculated_by": null
     },
     {
@@ -152418,6 +152910,14 @@
       "calculated_by": null
     },
     {
+      "id": "ENT-provider-earning.hairline_discount_reimbursement",
+      "entity_id": "ENT-provider-earning",
+      "name": "hairline_discount_reimbursement",
+      "data_type": "money",
+      "required": false,
+      "calculated_by": "REQ-017-195"
+    },
+    {
       "id": "ENT-provider-earning.net_earning",
       "entity_id": "ENT-provider-earning",
       "name": "net_earning",
@@ -152448,6 +152948,22 @@
       "data_type": "date",
       "required": true,
       "calculated_by": null
+    },
+    {
+      "id": "ENT-provider-earnings-summary.pending_release_earnings",
+      "entity_id": "ENT-provider-earnings-summary",
+      "name": "pending_release_earnings",
+      "data_type": "money",
+      "required": false,
+      "calculated_by": "REQ-017-189"
+    },
+    {
+      "id": "ENT-provider-earnings-summary.released_earnings",
+      "entity_id": "ENT-provider-earnings-summary",
+      "name": "released_earnings",
+      "data_type": "money",
+      "required": false,
+      "calculated_by": "REQ-017-189"
     },
     {
       "id": "ENT-provider-earnings-summary.total_pending_earnings",
@@ -152706,6 +153222,14 @@
       "calculated_by": null
     },
     {
+      "id": "ENT-provider-payout.bank_reference",
+      "entity_id": "ENT-provider-payout",
+      "name": "bank_reference",
+      "data_type": "text",
+      "required": false,
+      "calculated_by": null
+    },
+    {
       "id": "ENT-provider-payout.blocked_reason",
       "entity_id": "ENT-provider-payout",
       "name": "blocked_reason",
@@ -152746,6 +153270,14 @@
       "calculated_by": null
     },
     {
+      "id": "ENT-provider-payout.hairline_discount_reimbursement",
+      "entity_id": "ENT-provider-payout",
+      "name": "hairline_discount_reimbursement",
+      "data_type": "money",
+      "required": false,
+      "calculated_by": "REQ-017-195"
+    },
+    {
       "id": "ENT-provider-payout.internal_notes",
       "entity_id": "ENT-provider-payout",
       "name": "internal_notes",
@@ -152762,12 +153294,36 @@
       "calculated_by": null
     },
     {
+      "id": "ENT-provider-payout.manual_review_note",
+      "entity_id": "ENT-provider-payout",
+      "name": "manual_review_note",
+      "data_type": "text",
+      "required": false,
+      "calculated_by": null
+    },
+    {
       "id": "ENT-provider-payout.net_payout",
       "entity_id": "ENT-provider-payout",
       "name": "net_payout",
       "data_type": "money",
       "required": true,
       "calculated_by": "REQ-017-006"
+    },
+    {
+      "id": "ENT-provider-payout.paid_by_admin_id",
+      "entity_id": "ENT-provider-payout",
+      "name": "paid_by_admin_id",
+      "data_type": "id",
+      "required": false,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-provider-payout.payment_date",
+      "entity_id": "ENT-provider-payout",
+      "name": "payment_date",
+      "data_type": "date",
+      "required": false,
+      "calculated_by": null
     },
     {
       "id": "ENT-provider-payout.payout_date",
@@ -155127,7 +155683,7 @@
       "name": "calculated_refund_amount",
       "data_type": "money",
       "required": true,
-      "calculated_by": "REQ-017-094"
+      "calculated_by": null
     },
     {
       "id": "ENT-refund.cancellation_policy_applied",
@@ -155135,7 +155691,7 @@
       "name": "cancellation_policy_applied",
       "data_type": "text",
       "required": true,
-      "calculated_by": "REQ-017-094"
+      "calculated_by": null
     },
     {
       "id": "ENT-refund.days_until_treatment",
@@ -155143,7 +155699,7 @@
       "name": "days_until_treatment",
       "data_type": "int",
       "required": true,
-      "calculated_by": "REQ-017-094"
+      "calculated_by": null
     },
     {
       "id": "ENT-refund.invoice_id",
@@ -160406,6 +160962,24 @@
       "sort_order": 2
     },
     {
+      "field_id": "ENT-affiliate-commission.held_or_flagged",
+      "value": "none",
+      "label": "None",
+      "sort_order": 0
+    },
+    {
+      "field_id": "ENT-affiliate-commission.held_or_flagged",
+      "value": "held",
+      "label": "Held",
+      "sort_order": 1
+    },
+    {
+      "field_id": "ENT-affiliate-commission.held_or_flagged",
+      "value": "flagged",
+      "label": "Flagged",
+      "sort_order": 2
+    },
+    {
       "field_id": "ENT-affiliate-commission.payout_readiness_status",
       "value": "ready",
       "label": "Ready",
@@ -163928,27 +164502,45 @@
       "sort_order": 2
     },
     {
-      "field_id": "ENT-patient-invoice.payment_status",
-      "value": "pending",
-      "label": "Pending",
+      "field_id": "ENT-patient-invoice.final_payment_status",
+      "value": "not_due",
+      "label": "Not Due",
       "sort_order": 0
     },
     {
-      "field_id": "ENT-patient-invoice.payment_status",
-      "value": "partial",
-      "label": "Partial",
+      "field_id": "ENT-patient-invoice.final_payment_status",
+      "value": "due",
+      "label": "Due",
       "sort_order": 1
     },
     {
-      "field_id": "ENT-patient-invoice.payment_status",
-      "value": "paid",
-      "label": "Paid",
+      "field_id": "ENT-patient-invoice.final_payment_status",
+      "value": "overdue",
+      "label": "Overdue",
       "sort_order": 2
     },
     {
       "field_id": "ENT-patient-invoice.payment_status",
-      "value": "overdue",
-      "label": "Overdue",
+      "value": "unpaid",
+      "label": "Unpaid",
+      "sort_order": 0
+    },
+    {
+      "field_id": "ENT-patient-invoice.payment_status",
+      "value": "deposit_only",
+      "label": "Deposit only",
+      "sort_order": 1
+    },
+    {
+      "field_id": "ENT-patient-invoice.payment_status",
+      "value": "installments_active",
+      "label": "Installments active",
+      "sort_order": 2
+    },
+    {
+      "field_id": "ENT-patient-invoice.payment_status",
+      "value": "full_paid",
+      "label": "Full paid",
       "sort_order": 3
     },
     {
@@ -163956,12 +164548,6 @@
       "value": "refunded",
       "label": "Refunded",
       "sort_order": 4
-    },
-    {
-      "field_id": "ENT-patient-invoice.payment_status",
-      "value": "at_risk",
-      "label": "At Risk",
-      "sort_order": 5
     },
     {
       "field_id": "ENT-patient-invoice.reconciliation_flag",
@@ -164186,6 +164772,24 @@
       "sort_order": 1
     },
     {
+      "field_id": "ENT-payout-adjustment.adjustment_type",
+      "value": "bank_charge",
+      "label": "Bank Charge",
+      "sort_order": 2
+    },
+    {
+      "field_id": "ENT-payout-adjustment.adjustment_type",
+      "value": "chargeback_recovery",
+      "label": "Chargeback Recovery",
+      "sort_order": 3
+    },
+    {
+      "field_id": "ENT-payout-adjustment.adjustment_type",
+      "value": "clinic_cancellation_deduction",
+      "label": "Clinic Cancellation Deduction",
+      "sort_order": 4
+    },
+    {
       "field_id": "ENT-payout-adjustment.status",
       "value": "applied",
       "label": "Applied",
@@ -164238,6 +164842,30 @@
       "value": "escalate_technical_investigation",
       "label": "Escalate Technical Investigation",
       "sort_order": 2
+    },
+    {
+      "field_id": "ENT-payout-dispute-resolution.resolution_action",
+      "value": "release_in_full",
+      "label": "Release in Full",
+      "sort_order": 3
+    },
+    {
+      "field_id": "ENT-payout-dispute-resolution.resolution_action",
+      "value": "refund_in_full",
+      "label": "Refund in Full",
+      "sort_order": 4
+    },
+    {
+      "field_id": "ENT-payout-dispute-resolution.resolution_action",
+      "value": "refund_part_release_rest",
+      "label": "Refund in Part and Release the Rest",
+      "sort_order": 5
+    },
+    {
+      "field_id": "ENT-payout-dispute-resolution.resolution_action",
+      "value": "release_earnings",
+      "label": "Release Earnings",
+      "sort_order": 6
     },
     {
       "field_id": "ENT-pending-provider-status-change.change_type",
@@ -164756,6 +165384,12 @@
       "sort_order": 2
     },
     {
+      "field_id": "ENT-provider-earning.payout_status",
+      "value": "pending_release",
+      "label": "Pending Release",
+      "sort_order": 3
+    },
+    {
       "field_id": "ENT-provider-engagement-snapshot.engagement_status",
       "value": "active",
       "label": "Active",
@@ -164864,6 +165498,18 @@
       "sort_order": 3
     },
     {
+      "field_id": "ENT-provider-payout.payout_readiness_status",
+      "value": "not_onboarded",
+      "label": "Not onboarded",
+      "sort_order": 4
+    },
+    {
+      "field_id": "ENT-provider-payout.payout_readiness_status",
+      "value": "restricted",
+      "label": "Restricted",
+      "sort_order": 5
+    },
+    {
       "field_id": "ENT-provider-payout.payout_status",
       "value": "pending_approval",
       "label": "Pending Approval",
@@ -164904,6 +165550,12 @@
       "value": "voided",
       "label": "Voided",
       "sort_order": 6
+    },
+    {
+      "field_id": "ENT-provider-payout.payout_status",
+      "value": "waiting_for_clinic_setup",
+      "label": "Waiting for clinic setup",
+      "sort_order": 7
     },
     {
       "field_id": "ENT-provider-response.status",
@@ -166560,6 +167212,30 @@
       "value": "re_authentication_verified",
       "label": "Re-authentication Verified",
       "sort_order": 15
+    },
+    {
+      "field_id": "ENT-transaction-audit-log.action_type",
+      "value": "payout_marked_paid",
+      "label": "Payout Marked Paid",
+      "sort_order": 16
+    },
+    {
+      "field_id": "ENT-transaction-audit-log.action_type",
+      "value": "manual_review_cleared",
+      "label": "Manual Review Cleared",
+      "sort_order": 17
+    },
+    {
+      "field_id": "ENT-transaction-audit-log.action_type",
+      "value": "balance_written_off",
+      "label": "Balance Written Off",
+      "sort_order": 18
+    },
+    {
+      "field_id": "ENT-transaction-audit-log.action_type",
+      "value": "earnings_released",
+      "label": "Earnings Released",
+      "sort_order": 19
     },
     {
       "field_id": "ENT-transaction-audit-log.affected_entity_type",
@@ -170722,6 +171398,18 @@
       "attrs": {}
     },
     {
+      "from_id": "ENT-affiliate-commission.held_or_flagged",
+      "verb": "calculated by",
+      "to_id": "REQ-017-197",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-affiliate-commission.payout_readiness_status",
+      "verb": "calculated by",
+      "to_id": "REQ-017-198",
+      "attrs": {}
+    },
+    {
       "from_id": "ENT-affiliate-discount-code",
       "verb": "decided by",
       "to_id": "SRC-PRD-018",
@@ -171481,6 +172169,18 @@
       "from_id": "ENT-booking.remaining_balance",
       "verb": "calculated by",
       "to_id": "REQ-006-070",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-clinic-balance-entry",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-clinic-balance-entry.amount",
+      "verb": "calculated by",
+      "to_id": "REQ-017-191",
       "attrs": {}
     },
     {
@@ -172708,6 +173408,12 @@
       "attrs": {}
     },
     {
+      "from_id": "ENT-patient-invoice.at_risk_flag",
+      "verb": "calculated by",
+      "to_id": "REQ-017-084",
+      "attrs": {}
+    },
+    {
       "from_id": "ENT-patient-invoice.installment_progress",
       "verb": "calculated by",
       "to_id": "REQ-017-082",
@@ -173560,6 +174266,12 @@
       "attrs": {}
     },
     {
+      "from_id": "ENT-provider-earning.hairline_discount_reimbursement",
+      "verb": "calculated by",
+      "to_id": "REQ-017-195",
+      "attrs": {}
+    },
+    {
       "from_id": "ENT-provider-earning.net_earning",
       "verb": "calculated by",
       "to_id": "REQ-017-006",
@@ -173569,6 +174281,18 @@
       "from_id": "ENT-provider-earnings-summary",
       "verb": "decided by",
       "to_id": "SRC-PRD-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-provider-earnings-summary.pending_release_earnings",
+      "verb": "calculated by",
+      "to_id": "REQ-017-189",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-provider-earnings-summary.released_earnings",
+      "verb": "calculated by",
+      "to_id": "REQ-017-189",
       "attrs": {}
     },
     {
@@ -173659,6 +174383,12 @@
       "from_id": "ENT-provider-payout.commission_amount",
       "verb": "calculated by",
       "to_id": "REQ-017-155",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-provider-payout.hairline_discount_reimbursement",
+      "verb": "calculated by",
+      "to_id": "REQ-017-195",
       "attrs": {}
     },
     {
@@ -174019,24 +174749,6 @@
       "from_id": "ENT-refund-fee-settings",
       "verb": "decided by",
       "to_id": "SRC-PRD-029",
-      "attrs": {}
-    },
-    {
-      "from_id": "ENT-refund.calculated_refund_amount",
-      "verb": "calculated by",
-      "to_id": "REQ-017-094",
-      "attrs": {}
-    },
-    {
-      "from_id": "ENT-refund.cancellation_policy_applied",
-      "verb": "calculated by",
-      "to_id": "REQ-017-094",
-      "attrs": {}
-    },
-    {
-      "from_id": "ENT-refund.days_until_treatment",
-      "verb": "calculated by",
-      "to_id": "REQ-017-094",
       "attrs": {}
     },
     {
@@ -175948,6 +176660,12 @@
       "attrs": {}
     },
     {
+      "from_id": "FLW-017-clinic-balance",
+      "verb": "starts at",
+      "to_id": "STP-017-096",
+      "attrs": {}
+    },
+    {
       "from_id": "FLW-017-currency-alert",
       "verb": "starts at",
       "to_id": "STP-017-062",
@@ -175963,6 +176681,12 @@
       "from_id": "FLW-017-payout-dispute",
       "verb": "starts at",
       "to_id": "STP-017-074",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-017-per-booking-payout",
+      "verb": "starts at",
+      "to_id": "STP-017-087",
       "attrs": {}
     },
     {
@@ -180326,7 +181050,7 @@
       "verb": "active in",
       "to_id": "STG-main-05-payment",
       "attrs": {
-        "rules": 95
+        "rules": 91
       },
       "derived": true
     },
@@ -180335,7 +181059,7 @@
       "verb": "active in",
       "to_id": "STG-main-06-treatment",
       "attrs": {
-        "rules": 115
+        "rules": 117
       },
       "derived": true
     },
@@ -180353,7 +181077,16 @@
       "verb": "active in",
       "to_id": "STG-payout-01-statement",
       "attrs": {
-        "rules": 1
+        "rules": 3
+      },
+      "derived": true
+    },
+    {
+      "from_id": "FR-017",
+      "verb": "active in",
+      "to_id": "STG-payout-02-approval",
+      "attrs": {
+        "rules": 8
       },
       "derived": true
     },
@@ -180362,7 +181095,7 @@
       "verb": "active in",
       "to_id": "STG-payout-03-transfer",
       "attrs": {
-        "rules": 1
+        "rules": 2
       },
       "derived": true
     },
@@ -180370,15 +181103,6 @@
       "from_id": "FR-017",
       "verb": "active in",
       "to_id": "STG-provider-01-invited",
-      "attrs": {
-        "rules": 1
-      },
-      "derived": true
-    },
-    {
-      "from_id": "FR-017",
-      "verb": "active in",
-      "to_id": "STG-provider-05-offboarded",
       "attrs": {
         "rules": 1
       },
@@ -244813,114 +245537,6 @@
       "attrs": {}
     },
     {
-      "from_id": "REQ-017-094",
-      "verb": "applies at",
-      "to_id": "STG-main-05-payment",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-017-094",
-      "verb": "applies to",
-      "to_id": "ENT-refund",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-017-094",
-      "verb": "applies to",
-      "to_id": "SCR-017-06",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-017-094",
-      "verb": "decided by",
-      "to_id": "SRC-PRD-017",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-017-094",
-      "verb": "governed by",
-      "to_id": "SET-refund-ladder",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-017-095",
-      "verb": "applies at",
-      "to_id": "STG-main-05-payment",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-017-095",
-      "verb": "applies to",
-      "to_id": "ENT-refund",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-017-095",
-      "verb": "applies to",
-      "to_id": "SCR-017-06",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-017-095",
-      "verb": "decided by",
-      "to_id": "SRC-PRD-017",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-017-096",
-      "verb": "applies at",
-      "to_id": "STG-main-05-payment",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-017-096",
-      "verb": "applies to",
-      "to_id": "ENT-refund",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-017-096",
-      "verb": "applies to",
-      "to_id": "SCR-017-06",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-017-096",
-      "verb": "decided by",
-      "to_id": "SRC-PRD-017",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-017-097",
-      "verb": "applies at",
-      "to_id": "STG-main-05-payment",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-017-097",
-      "verb": "applies to",
-      "to_id": "ENT-refund",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-017-097",
-      "verb": "applies to",
-      "to_id": "SCR-017-06",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-017-097",
-      "verb": "decided by",
-      "to_id": "SRC-PRD-017",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-017-097",
-      "verb": "governed by",
-      "to_id": "SET-refund-ladder",
-      "attrs": {}
-    },
-    {
       "from_id": "REQ-017-098",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
@@ -246157,30 +246773,6 @@
       "attrs": {}
     },
     {
-      "from_id": "REQ-017-146",
-      "verb": "applies at",
-      "to_id": "STG-main-05-payment",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-017-146",
-      "verb": "applies to",
-      "to_id": "ACT-platform-admin",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-017-146",
-      "verb": "applies to",
-      "to_id": "ENT-refund",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-017-146",
-      "verb": "decided by",
-      "to_id": "SRC-PRD-017",
-      "attrs": {}
-    },
-    {
       "from_id": "REQ-017-147",
       "verb": "applies at",
       "to_id": "STG-main-05-payment",
@@ -246817,24 +247409,6 @@
       "attrs": {}
     },
     {
-      "from_id": "REQ-017-173",
-      "verb": "applies at",
-      "to_id": "STG-provider-05-offboarded",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-017-173",
-      "verb": "applies to",
-      "to_id": "ENT-provider-payout",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-017-173",
-      "verb": "decided by",
-      "to_id": "SRC-PRD-017",
-      "attrs": {}
-    },
-    {
       "from_id": "REQ-017-174",
       "verb": "applies at",
       "to_id": "STG-main-06-treatment",
@@ -247096,6 +247670,384 @@
       "from_id": "REQ-017-185",
       "verb": "decided by",
       "to_id": "SRC-PO-001-Q45",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-186",
+      "verb": "applies at",
+      "to_id": "STG-payout-02-approval",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-186",
+      "verb": "applies to",
+      "to_id": "ENT-provider-payout",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-186",
+      "verb": "applies to",
+      "to_id": "SCR-017-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-186",
+      "verb": "applies to",
+      "to_id": "SCR-017-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-186",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-187",
+      "verb": "applies at",
+      "to_id": "STG-payout-03-transfer",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-187",
+      "verb": "applies to",
+      "to_id": "ENT-provider-payout",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-187",
+      "verb": "applies to",
+      "to_id": "SCR-017-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-187",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-188",
+      "verb": "applies at",
+      "to_id": "STG-payout-02-approval",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-188",
+      "verb": "applies to",
+      "to_id": "ENT-provider-payout",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-188",
+      "verb": "applies to",
+      "to_id": "SCR-017-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-188",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-189",
+      "verb": "applies at",
+      "to_id": "STG-payout-01-statement",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-189",
+      "verb": "applies to",
+      "to_id": "ENT-provider-earning",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-189",
+      "verb": "applies to",
+      "to_id": "ENT-provider-earnings-summary",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-189",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-190",
+      "verb": "applies at",
+      "to_id": "STG-payout-02-approval",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-190",
+      "verb": "applies to",
+      "to_id": "ENT-payout-dispute-resolution",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-190",
+      "verb": "applies to",
+      "to_id": "SCR-017-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-190",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-191",
+      "verb": "applies at",
+      "to_id": "STG-payout-02-approval",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-191",
+      "verb": "applies to",
+      "to_id": "ENT-clinic-balance-entry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-191",
+      "verb": "applies to",
+      "to_id": "ENT-payout-adjustment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-191",
+      "verb": "applies to",
+      "to_id": "SCR-017-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-191",
+      "verb": "applies to",
+      "to_id": "SCR-017-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-191",
+      "verb": "applies to",
+      "to_id": "SCR-017-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-191",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-192",
+      "verb": "applies at",
+      "to_id": "STG-payout-02-approval",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-192",
+      "verb": "applies to",
+      "to_id": "ENT-clinic-balance-entry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-192",
+      "verb": "applies to",
+      "to_id": "SCR-017-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-192",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-193",
+      "verb": "applies at",
+      "to_id": "STG-payout-02-approval",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-193",
+      "verb": "applies to",
+      "to_id": "ENT-payout-dispute-resolution",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-193",
+      "verb": "applies to",
+      "to_id": "SCR-017-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-193",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-194",
+      "verb": "applies at",
+      "to_id": "STG-payout-02-approval",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-194",
+      "verb": "applies to",
+      "to_id": "ENT-provider-payout",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-194",
+      "verb": "applies to",
+      "to_id": "SCR-017-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-194",
+      "verb": "applies to",
+      "to_id": "SCR-017-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-194",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-195",
+      "verb": "applies at",
+      "to_id": "STG-payout-01-statement",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-195",
+      "verb": "applies to",
+      "to_id": "ENT-provider-earning",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-195",
+      "verb": "applies to",
+      "to_id": "ENT-provider-payout",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-195",
+      "verb": "applies to",
+      "to_id": "SCR-017-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-195",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-196",
+      "verb": "applies at",
+      "to_id": "STG-payout-02-approval",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-196",
+      "verb": "applies to",
+      "to_id": "ENT-provider-payout",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-196",
+      "verb": "applies to",
+      "to_id": "SCR-017-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-196",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-197",
+      "verb": "applies at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-197",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-commission",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-197",
+      "verb": "applies to",
+      "to_id": "SCR-017-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-197",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-198",
+      "verb": "applies at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-198",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-commission.payout_readiness_status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-198",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-payout.payout_readiness",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-198",
+      "verb": "applies to",
+      "to_id": "SCR-017-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-198",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-199",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-199",
+      "verb": "applies to",
+      "to_id": "ENT-patient-invoice",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-199",
+      "verb": "applies to",
+      "to_id": "SCR-017-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-199",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-017",
       "attrs": {}
     },
     {
@@ -333511,6 +334463,15 @@
     {
       "from_id": "SCR-017-02",
       "verb": "shows",
+      "to_id": "ENT-clinic-balance-entry.amount",
+      "attrs": {
+        "provenance": "system calculated",
+        "label": "Open Clinic Balance"
+      }
+    },
+    {
+      "from_id": "SCR-017-02",
+      "verb": "shows",
       "to_id": "ENT-provider-payout.bank_account_id",
       "attrs": {
         "provenance": "retrieved",
@@ -333742,6 +334703,15 @@
     {
       "from_id": "SCR-017-03",
       "verb": "shows",
+      "to_id": "ENT-provider-earning.hairline_discount_reimbursement",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Treatment Breakdown: Hairline Discount Reimbursement"
+      }
+    },
+    {
+      "from_id": "SCR-017-03",
+      "verb": "shows",
       "to_id": "ENT-provider-earning.net_earning",
       "attrs": {
         "provenance": "system calculated",
@@ -333773,6 +334743,16 @@
       "attrs": {
         "provenance": "retrieved",
         "label": "Bank Account"
+      }
+    },
+    {
+      "from_id": "SCR-017-03",
+      "verb": "shows",
+      "to_id": "ENT-provider-payout.bank_reference",
+      "attrs": {
+        "provenance": "user input",
+        "label": "Bank Reference",
+        "editable": true
       }
     },
     {
@@ -333823,6 +334803,15 @@
     {
       "from_id": "SCR-017-03",
       "verb": "shows",
+      "to_id": "ENT-provider-payout.hairline_discount_reimbursement",
+      "attrs": {
+        "provenance": "system calculated",
+        "label": "Hairline Discount Reimbursement"
+      }
+    },
+    {
+      "from_id": "SCR-017-03",
+      "verb": "shows",
       "to_id": "ENT-provider-payout.internal_notes",
       "attrs": {
         "provenance": "user input",
@@ -333833,10 +334822,39 @@
     {
       "from_id": "SCR-017-03",
       "verb": "shows",
+      "to_id": "ENT-provider-payout.manual_review_note",
+      "attrs": {
+        "provenance": "user input",
+        "label": "Manual Review Note",
+        "editable": true
+      }
+    },
+    {
+      "from_id": "SCR-017-03",
+      "verb": "shows",
       "to_id": "ENT-provider-payout.net_payout",
       "attrs": {
         "provenance": "system calculated",
         "label": "Net Payout"
+      }
+    },
+    {
+      "from_id": "SCR-017-03",
+      "verb": "shows",
+      "to_id": "ENT-provider-payout.paid_by_admin_id",
+      "attrs": {
+        "provenance": "system calculated",
+        "label": "Marked Paid By"
+      }
+    },
+    {
+      "from_id": "SCR-017-03",
+      "verb": "shows",
+      "to_id": "ENT-provider-payout.payment_date",
+      "attrs": {
+        "provenance": "user input",
+        "label": "Payment Date",
+        "editable": true
       }
     },
     {
@@ -333965,6 +334983,15 @@
     {
       "from_id": "SCR-017-04",
       "verb": "shows",
+      "to_id": "ENT-patient-invoice.at_risk_flag",
+      "attrs": {
+        "provenance": "system calculated",
+        "label": "At Risk"
+      }
+    },
+    {
+      "from_id": "SCR-017-04",
+      "verb": "shows",
       "to_id": "ENT-patient-invoice.currency",
       "attrs": {
         "provenance": "inherited from another FR",
@@ -333978,6 +335005,15 @@
       "attrs": {
         "provenance": "system calculated",
         "label": "Due Date"
+      }
+    },
+    {
+      "from_id": "SCR-017-04",
+      "verb": "shows",
+      "to_id": "ENT-patient-invoice.final_payment_status",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Final Payment Status"
       }
     },
     {
@@ -334205,6 +335241,15 @@
     {
       "from_id": "SCR-017-05",
       "verb": "shows",
+      "to_id": "ENT-patient-invoice.at_risk_flag",
+      "attrs": {
+        "provenance": "system calculated",
+        "label": "At Risk"
+      }
+    },
+    {
+      "from_id": "SCR-017-05",
+      "verb": "shows",
       "to_id": "ENT-patient-invoice.currency",
       "attrs": {
         "provenance": "inherited from another FR",
@@ -334218,6 +335263,15 @@
       "attrs": {
         "provenance": "inherited from another FR",
         "label": "Discount Code Applied"
+      }
+    },
+    {
+      "from_id": "SCR-017-05",
+      "verb": "shows",
+      "to_id": "ENT-patient-invoice.final_payment_status",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Final Payment Status"
       }
     },
     {
@@ -334434,112 +335488,10 @@
       }
     },
     {
-      "from_id": "SCR-017-06",
-      "verb": "shows",
-      "to_id": "ENT-refund.adjusted_refund_amount",
-      "attrs": {
-        "provenance": "user input",
-        "label": "Adjusted Refund Amount",
-        "editable": true
-      }
-    },
-    {
-      "from_id": "SCR-017-06",
-      "verb": "shows",
-      "to_id": "ENT-refund.adjustment_justification",
-      "attrs": {
-        "provenance": "user input",
-        "label": "Adjustment Justification",
-        "editable": true
-      }
-    },
-    {
-      "from_id": "SCR-017-06",
-      "verb": "shows",
-      "to_id": "ENT-refund.calculated_refund_amount",
-      "attrs": {
-        "provenance": "system calculated",
-        "label": "Calculated Refund Amount"
-      }
-    },
-    {
-      "from_id": "SCR-017-06",
-      "verb": "shows",
-      "to_id": "ENT-refund.cancellation_policy_applied",
-      "attrs": {
-        "provenance": "system calculated",
-        "label": "Cancellation Policy Applied"
-      }
-    },
-    {
-      "from_id": "SCR-017-06",
-      "verb": "shows",
-      "to_id": "ENT-refund.days_until_treatment",
-      "attrs": {
-        "provenance": "system calculated",
-        "label": "Days Until/Since Treatment"
-      }
-    },
-    {
-      "from_id": "SCR-017-06",
-      "verb": "shows",
-      "to_id": "ENT-refund.non_refundable_amount",
-      "attrs": {
-        "provenance": "system calculated",
-        "label": "Non-Refundable Amount"
-      }
-    },
-    {
-      "from_id": "SCR-017-06",
-      "verb": "shows",
-      "to_id": "ENT-refund.original_invoice_amount",
-      "attrs": {
-        "provenance": "retrieved",
-        "label": "Original Invoice Amount"
-      }
-    },
-    {
-      "from_id": "SCR-017-06",
-      "verb": "shows",
-      "to_id": "ENT-refund.reason",
-      "attrs": {
-        "provenance": "user input",
-        "label": "Reason",
-        "editable": true
-      }
-    },
-    {
-      "from_id": "SCR-017-06",
-      "verb": "shows",
-      "to_id": "ENT-refund.refund_amount",
-      "attrs": {
-        "provenance": "system calculated",
-        "label": "Final Refund Amount"
-      }
-    },
-    {
       "from_id": "SCR-017-07",
       "verb": "belongs to",
       "to_id": "STG-main-05-payment",
       "attrs": {}
-    },
-    {
-      "from_id": "SCR-017-07",
-      "verb": "shows",
-      "to_id": "ENT-discount-code.discount_code",
-      "attrs": {
-        "provenance": "inherited from another FR",
-        "label": "Discount Code"
-      }
-    },
-    {
-      "from_id": "SCR-017-07",
-      "verb": "shows",
-      "to_id": "ENT-discount-code.discount_name",
-      "attrs": {
-        "provenance": "inherited from another FR",
-        "label": "Discount Name"
-      }
     },
     {
       "from_id": "SCR-017-07",
@@ -334557,24 +335509,6 @@
       "attrs": {
         "provenance": "inherited from another FR",
         "label": "Status"
-      }
-    },
-    {
-      "from_id": "SCR-017-07",
-      "verb": "shows",
-      "to_id": "ENT-discount-code.valid_from",
-      "attrs": {
-        "provenance": "inherited from another FR",
-        "label": "Active Window: Valid From"
-      }
-    },
-    {
-      "from_id": "SCR-017-07",
-      "verb": "shows",
-      "to_id": "ENT-discount-code.valid_until",
-      "attrs": {
-        "provenance": "inherited from another FR",
-        "label": "Active Window: Valid Until"
       }
     },
     {
@@ -334620,6 +335554,42 @@
       "attrs": {
         "provenance": "system calculated",
         "label": "Total Discount Amount"
+      }
+    },
+    {
+      "from_id": "SCR-017-07",
+      "verb": "shows",
+      "to_id": "ENT-promotion-code.code",
+      "attrs": {
+        "provenance": "inherited from another FR",
+        "label": "Discount Code"
+      }
+    },
+    {
+      "from_id": "SCR-017-07",
+      "verb": "shows",
+      "to_id": "ENT-promotion-program.end_at",
+      "attrs": {
+        "provenance": "inherited from another FR",
+        "label": "Active Window: Valid Until"
+      }
+    },
+    {
+      "from_id": "SCR-017-07",
+      "verb": "shows",
+      "to_id": "ENT-promotion-program.name",
+      "attrs": {
+        "provenance": "inherited from another FR",
+        "label": "Discount Name"
+      }
+    },
+    {
+      "from_id": "SCR-017-07",
+      "verb": "shows",
+      "to_id": "ENT-promotion-program.start_at",
+      "attrs": {
+        "provenance": "inherited from another FR",
+        "label": "Active Window: Valid From"
       }
     },
     {
@@ -334680,6 +335650,15 @@
       "attrs": {
         "provenance": "retrieved",
         "label": "Failure Reason"
+      }
+    },
+    {
+      "from_id": "SCR-017-08",
+      "verb": "shows",
+      "to_id": "ENT-affiliate-commission.held_or_flagged",
+      "attrs": {
+        "provenance": "system calculated",
+        "label": "Held or Flagged"
       }
     },
     {
@@ -335039,6 +336018,16 @@
       "attrs": {
         "provenance": "system calculated",
         "label": "Dispute Resolution: Prior Inclusion Status"
+      }
+    },
+    {
+      "from_id": "SCR-017-09",
+      "verb": "shows",
+      "to_id": "ENT-payout-dispute-resolution.refund_amount",
+      "attrs": {
+        "provenance": "user input",
+        "label": "Refund Amount",
+        "editable": true
       }
     },
     {
@@ -335420,6 +336409,15 @@
     {
       "from_id": "SCR-017-11",
       "verb": "shows",
+      "to_id": "ENT-clinic-balance-entry.amount",
+      "attrs": {
+        "provenance": "system calculated",
+        "label": "Open Balance"
+      }
+    },
+    {
+      "from_id": "SCR-017-11",
+      "verb": "shows",
       "to_id": "ENT-patient.name",
       "attrs": {
         "provenance": "retrieved",
@@ -335496,6 +336494,24 @@
       "attrs": {
         "provenance": "system calculated",
         "label": "Next Payout Date"
+      }
+    },
+    {
+      "from_id": "SCR-017-11",
+      "verb": "shows",
+      "to_id": "ENT-provider-earnings-summary.pending_release_earnings",
+      "attrs": {
+        "provenance": "system calculated",
+        "label": "Pending Release"
+      }
+    },
+    {
+      "from_id": "SCR-017-11",
+      "verb": "shows",
+      "to_id": "ENT-provider-earnings-summary.released_earnings",
+      "attrs": {
+        "provenance": "system calculated",
+        "label": "Released"
       }
     },
     {
@@ -393730,7 +394746,19 @@
       "from_id": "STP-017-006",
       "verb": "next",
       "to_id": "STP-017-041",
-      "attrs": {}
+      "attrs": {
+        "label": "approved in the review time",
+        "condition": "REQ-017-153"
+      }
+    },
+    {
+      "from_id": "STP-017-006",
+      "verb": "next",
+      "to_id": "STP-017-084",
+      "attrs": {
+        "label": "Overdue statement just approved: payable at once",
+        "condition": "REQ-017-076"
+      }
     },
     {
       "from_id": "STP-017-006",
@@ -394241,7 +395269,7 @@
     {
       "from_id": "STP-017-034",
       "verb": "applies",
-      "to_id": "REQ-017-146",
+      "to_id": "REQ-017-199",
       "attrs": {}
     },
     {
@@ -394320,6 +395348,12 @@
       "from_id": "STP-017-038",
       "verb": "applies",
       "to_id": "REQ-017-155",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-038",
+      "verb": "applies",
+      "to_id": "REQ-017-189",
       "attrs": {}
     },
     {
@@ -394429,9 +395463,10 @@
     {
       "from_id": "STP-017-041",
       "verb": "next",
-      "to_id": "STP-017-044",
+      "to_id": "STP-017-084",
       "attrs": {
-        "label": "Approved"
+        "label": "Approved",
+        "condition": "REQ-017-188"
       }
     },
     {
@@ -394486,6 +395521,12 @@
       "from_id": "STP-017-044",
       "verb": "applies",
       "to_id": "REQ-017-039",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-044",
+      "verb": "applies",
+      "to_id": "REQ-017-187",
       "attrs": {}
     },
     {
@@ -394590,6 +395631,12 @@
     },
     {
       "from_id": "STP-017-047",
+      "verb": "applies",
+      "to_id": "REQ-017-188",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-047",
       "verb": "at",
       "to_id": "STG-payout-03-transfer",
       "attrs": {}
@@ -394662,6 +395709,12 @@
     },
     {
       "from_id": "STP-017-050",
+      "verb": "applies",
+      "to_id": "REQ-017-194",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-050",
       "verb": "at",
       "to_id": "STG-payout-03-transfer",
       "attrs": {}
@@ -394688,6 +395741,15 @@
       "attrs": {
         "label": "other Stripe error",
         "back": true
+      }
+    },
+    {
+      "from_id": "STP-017-050",
+      "verb": "next",
+      "to_id": "STP-017-094",
+      "attrs": {
+        "label": "three automatic attempts failed",
+        "condition": "REQ-017-194"
       }
     },
     {
@@ -395388,6 +396450,565 @@
       "from_id": "STP-017-083",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-084",
+      "verb": "applies",
+      "to_id": "REQ-017-176",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-084",
+      "verb": "at",
+      "to_id": "STG-payout-02-approval",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-084",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-084",
+      "verb": "next",
+      "to_id": "STP-017-085",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-084",
+      "verb": "on",
+      "to_id": "SCR-017-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-085",
+      "verb": "applies",
+      "to_id": "REQ-017-188",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-085",
+      "verb": "at",
+      "to_id": "STG-payout-02-approval",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-085",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-085",
+      "verb": "next",
+      "to_id": "STP-017-086",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-085",
+      "verb": "on",
+      "to_id": "SCR-017-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-086",
+      "verb": "applies",
+      "to_id": "REQ-017-186",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-086",
+      "verb": "applies",
+      "to_id": "REQ-017-188",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-086",
+      "verb": "at",
+      "to_id": "STG-payout-03-transfer",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-086",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-086",
+      "verb": "next",
+      "to_id": "STP-017-047",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-087",
+      "verb": "applies",
+      "to_id": "REQ-017-138",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-087",
+      "verb": "applies",
+      "to_id": "REQ-017-185",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-087",
+      "verb": "applies",
+      "to_id": "REQ-017-189",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-087",
+      "verb": "at",
+      "to_id": "STG-payout-01-statement",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-087",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-087",
+      "verb": "next",
+      "to_id": "STP-017-044",
+      "attrs": {
+        "label": "released, Stripe Connect, setup Ready",
+        "condition": "REQ-017-177"
+      }
+    },
+    {
+      "from_id": "STP-017-087",
+      "verb": "next",
+      "to_id": "STP-017-088",
+      "attrs": {
+        "label": "held",
+        "condition": "REQ-017-185"
+      }
+    },
+    {
+      "from_id": "STP-017-087",
+      "verb": "next",
+      "to_id": "STP-017-092",
+      "attrs": {
+        "label": "released, manual rail",
+        "condition": "REQ-017-176"
+      }
+    },
+    {
+      "from_id": "STP-017-087",
+      "verb": "next",
+      "to_id": "STP-017-093",
+      "attrs": {
+        "label": "released, Stripe Connect, setup not Ready",
+        "condition": "REQ-017-196"
+      }
+    },
+    {
+      "from_id": "STP-017-088",
+      "verb": "applies",
+      "to_id": "REQ-017-190",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-088",
+      "verb": "applies",
+      "to_id": "REQ-017-193",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-088",
+      "verb": "at",
+      "to_id": "STG-payout-02-approval",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-088",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-088",
+      "verb": "next",
+      "to_id": "STP-017-089",
+      "attrs": {
+        "label": "refund in full, or refund in part and release the rest",
+        "condition": "REQ-017-190"
+      }
+    },
+    {
+      "from_id": "STP-017-088",
+      "verb": "next",
+      "to_id": "STP-017-090",
+      "attrs": {
+        "label": "release in full",
+        "condition": "REQ-017-190"
+      }
+    },
+    {
+      "from_id": "STP-017-088",
+      "verb": "next",
+      "to_id": "STP-017-091",
+      "attrs": {
+        "label": "Release earnings (Suspended or Deactivated clinic)",
+        "condition": "REQ-017-193"
+      }
+    },
+    {
+      "from_id": "STP-017-088",
+      "verb": "on",
+      "to_id": "SCR-017-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-089",
+      "verb": "applies",
+      "to_id": "REQ-017-190",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-089",
+      "verb": "applies",
+      "to_id": "REQ-017-199",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-089",
+      "verb": "at",
+      "to_id": "STG-payout-02-approval",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-089",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-089",
+      "verb": "next",
+      "to_id": "STP-017-090",
+      "attrs": {
+        "label": "part refund: the rest is released"
+      }
+    },
+    {
+      "from_id": "STP-017-089",
+      "verb": "on",
+      "to_id": "SCR-007-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-090",
+      "verb": "applies",
+      "to_id": "REQ-017-189",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-090",
+      "verb": "applies",
+      "to_id": "REQ-017-190",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-090",
+      "verb": "at",
+      "to_id": "STG-payout-02-approval",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-090",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-090",
+      "verb": "next",
+      "to_id": "STP-017-044",
+      "attrs": {
+        "label": "Stripe Connect, setup Ready",
+        "condition": "REQ-017-177"
+      }
+    },
+    {
+      "from_id": "STP-017-090",
+      "verb": "next",
+      "to_id": "STP-017-092",
+      "attrs": {
+        "label": "manual rail",
+        "condition": "REQ-017-176"
+      }
+    },
+    {
+      "from_id": "STP-017-090",
+      "verb": "next",
+      "to_id": "STP-017-093",
+      "attrs": {
+        "label": "Stripe Connect, setup not Ready",
+        "condition": "REQ-017-196"
+      }
+    },
+    {
+      "from_id": "STP-017-091",
+      "verb": "applies",
+      "to_id": "REQ-017-193",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-091",
+      "verb": "at",
+      "to_id": "STG-payout-02-approval",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-091",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-091",
+      "verb": "on",
+      "to_id": "SCR-017-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-092",
+      "verb": "applies",
+      "to_id": "REQ-017-176",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-092",
+      "verb": "applies",
+      "to_id": "REQ-017-189",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-092",
+      "verb": "at",
+      "to_id": "STG-payout-02-approval",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-092",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-093",
+      "verb": "applies",
+      "to_id": "REQ-017-179",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-093",
+      "verb": "applies",
+      "to_id": "REQ-017-196",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-093",
+      "verb": "at",
+      "to_id": "STG-payout-02-approval",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-093",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-093",
+      "verb": "next",
+      "to_id": "STP-017-044",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-094",
+      "verb": "applies",
+      "to_id": "REQ-017-177",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-094",
+      "verb": "applies",
+      "to_id": "REQ-017-194",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-094",
+      "verb": "at",
+      "to_id": "STG-payout-03-transfer",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-094",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-094",
+      "verb": "next",
+      "to_id": "STP-017-095",
+      "attrs": {
+        "back": true
+      }
+    },
+    {
+      "from_id": "STP-017-095",
+      "verb": "applies",
+      "to_id": "REQ-017-066",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-095",
+      "verb": "applies",
+      "to_id": "REQ-017-194",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-095",
+      "verb": "at",
+      "to_id": "STG-payout-02-approval",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-095",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-095",
+      "verb": "next",
+      "to_id": "STP-017-044",
+      "attrs": {
+        "label": "retry the per-booking payout",
+        "condition": "REQ-017-066"
+      }
+    },
+    {
+      "from_id": "STP-017-095",
+      "verb": "on",
+      "to_id": "SCR-017-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-096",
+      "verb": "applies",
+      "to_id": "REQ-017-191",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-096",
+      "verb": "at",
+      "to_id": "STG-payout-02-approval",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-096",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-096",
+      "verb": "next",
+      "to_id": "STP-017-097",
+      "attrs": {
+        "label": "a further payout comes",
+        "condition": "REQ-017-191"
+      }
+    },
+    {
+      "from_id": "STP-017-096",
+      "verb": "next",
+      "to_id": "STP-017-098",
+      "attrs": {
+        "label": "no further payout comes",
+        "condition": "REQ-017-192"
+      }
+    },
+    {
+      "from_id": "STP-017-097",
+      "verb": "applies",
+      "to_id": "REQ-017-075",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-097",
+      "verb": "applies",
+      "to_id": "REQ-017-191",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-097",
+      "verb": "at",
+      "to_id": "STG-payout-02-approval",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-097",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-098",
+      "verb": "applies",
+      "to_id": "REQ-017-192",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-098",
+      "verb": "at",
+      "to_id": "STG-payout-02-approval",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-098",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-098",
+      "verb": "next",
+      "to_id": "STP-017-099",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-099",
+      "verb": "applies",
+      "to_id": "REQ-017-192",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-099",
+      "verb": "at",
+      "to_id": "STG-payout-02-approval",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-099",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-099",
+      "verb": "on",
+      "to_id": "SCR-017-02",
       "attrs": {}
     },
     {
@@ -454101,6 +455722,152 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-185743-aebcccdd",
+      "at": "2026-11-24T18:57:43.207110+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-017 logic review pass 1: a settlement statement is manual-rail only with Mark as Paid and an Overdue statement payable at once; Stripe Connect per-booking payouts with Waiting for clinic setup, readiness and Manual Review Required; funds-released gate with Pending release and Released; Screen 7 outcomes and Release earnings; Screen 4b is a launcher into FR-007 Screen 6 (refund rules retired); FR-007 Payment Status list with Final Payment Status and an At Risk flag; Overdue from the day after the due date; one hourly installment job in the clinic timezone; clinic balance record with write-off; no forfeiture for a removed clinic; Hairline discount reimbursement row; affiliate payable condition, Held or Flagged column and readiness from FR-018; clinic cancellation deduction from FR-029 Screen 7; Screen 5 fields re-pointed to the promotion entities; outstanding-invoice alert defaults to 7 days.",
+      "source_id": null,
+      "nodes_added": [
+        "ENT-affiliate-commission.held_or_flagged",
+        "ENT-clinic-balance-entry",
+        "ENT-clinic-balance-entry.amount",
+        "ENT-patient-invoice.at_risk_flag",
+        "ENT-patient-invoice.final_payment_status",
+        "ENT-payout-dispute-resolution.refund_amount",
+        "ENT-provider-earning.hairline_discount_reimbursement",
+        "ENT-provider-earnings-summary.pending_release_earnings",
+        "ENT-provider-earnings-summary.released_earnings",
+        "ENT-provider-payout.bank_reference",
+        "ENT-provider-payout.hairline_discount_reimbursement",
+        "ENT-provider-payout.manual_review_note",
+        "ENT-provider-payout.paid_by_admin_id",
+        "ENT-provider-payout.payment_date",
+        "FLW-017-clinic-balance",
+        "FLW-017-per-booking-payout",
+        "REQ-017-186",
+        "REQ-017-187",
+        "REQ-017-188",
+        "REQ-017-189",
+        "REQ-017-190",
+        "REQ-017-191",
+        "REQ-017-192",
+        "REQ-017-193",
+        "REQ-017-194",
+        "REQ-017-195",
+        "REQ-017-196",
+        "REQ-017-197",
+        "REQ-017-198",
+        "REQ-017-199",
+        "STP-017-084",
+        "STP-017-085",
+        "STP-017-086",
+        "STP-017-087",
+        "STP-017-088",
+        "STP-017-089",
+        "STP-017-090",
+        "STP-017-091",
+        "STP-017-092",
+        "STP-017-093",
+        "STP-017-094",
+        "STP-017-095",
+        "STP-017-096",
+        "STP-017-097",
+        "STP-017-098",
+        "STP-017-099"
+      ],
+      "nodes_updated": [
+        "ENT-affiliate-commission.payout_readiness_status",
+        "ENT-patient-invoice.payment_status",
+        "ENT-payout-adjustment.adjustment_type",
+        "ENT-payout-dispute-resolution.resolution_action",
+        "ENT-provider-earning.payout_status",
+        "ENT-provider-payout.payout_readiness_status",
+        "ENT-provider-payout.payout_status",
+        "ENT-refund.calculated_refund_amount",
+        "ENT-refund.cancellation_policy_applied",
+        "ENT-refund.days_until_treatment",
+        "ENT-transaction-audit-log.action_type",
+        "FLW-017-main",
+        "REQ-017-001",
+        "REQ-017-037",
+        "REQ-017-039",
+        "REQ-017-040",
+        "REQ-017-042",
+        "REQ-017-050",
+        "REQ-017-051",
+        "REQ-017-052",
+        "REQ-017-053",
+        "REQ-017-061",
+        "REQ-017-062",
+        "REQ-017-065",
+        "REQ-017-066",
+        "REQ-017-067",
+        "REQ-017-072",
+        "REQ-017-074",
+        "REQ-017-075",
+        "REQ-017-076",
+        "REQ-017-077",
+        "REQ-017-080",
+        "REQ-017-083",
+        "REQ-017-084",
+        "REQ-017-085",
+        "REQ-017-086",
+        "REQ-017-088",
+        "REQ-017-090",
+        "REQ-017-093",
+        "REQ-017-094",
+        "REQ-017-095",
+        "REQ-017-096",
+        "REQ-017-097",
+        "REQ-017-103",
+        "REQ-017-106",
+        "REQ-017-118",
+        "REQ-017-123",
+        "REQ-017-125",
+        "REQ-017-137",
+        "REQ-017-138",
+        "REQ-017-142",
+        "REQ-017-143",
+        "REQ-017-146",
+        "REQ-017-150",
+        "REQ-017-153",
+        "REQ-017-170",
+        "REQ-017-173",
+        "REQ-017-174",
+        "REQ-017-176",
+        "REQ-017-177",
+        "REQ-017-179",
+        "REQ-017-180",
+        "REQ-017-182",
+        "REQ-017-183",
+        "REQ-017-185",
+        "SCR-017-02",
+        "SCR-017-03",
+        "SCR-017-04",
+        "SCR-017-05",
+        "SCR-017-06",
+        "SCR-017-07",
+        "SCR-017-08",
+        "SCR-017-09",
+        "SCR-017-11",
+        "SET-outstanding-invoice-alert-threshold",
+        "STP-017-006",
+        "STP-017-007",
+        "STP-017-008",
+        "STP-017-009",
+        "STP-017-034",
+        "STP-017-038",
+        "STP-017-041",
+        "STP-017-044",
+        "STP-017-047",
+        "STP-017-050",
+        "STP-017-056"
+      ],
+      "edges_added": 189,
+      "edges_removed": 19,
+      "rows": 627
+    },
     {
       "id": "cs-20261124-183639-34cd8a38",
       "at": "2026-11-24T18:36:39.804049+00:00",
