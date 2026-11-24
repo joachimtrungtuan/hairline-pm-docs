@@ -1,0 +1,135 @@
+# FR-016 logic review pass 2: ruled fixes applied to the PRD (Admin Patient Management). New rules, steps, flows and audit action values come first, then removed edges (write.py rejects a duplicate edge key, so a changed edge is removed before it is added again), then new edges, then updates and the retired audit value.
+# Cross-FR edges (from an FR-016 node to another FR's node; no other FR's node is updated): FR-016 references REQ-007-015, REQ-007-097, REQ-007B-080 and REQ-007B-090; STP-016-034 applies REQ-007-015. STP-016-080 keeps its existing next edge to STP-006-301.
+# Queued for other FRs, not done here: FR-006 (cancellation cause Patient account suspended on Screen 9), FR-001 (login rule and message for a Suspended account; Screen 19 Suspend opens the FR-016 flow, REQ-001-025 and REQ-001-028), FR-012 (REQ-012-018 read-only conversations while the patient is suspended), FR-030 (patient warning notice event), FR-031 (wording of the Issue Refunds approval line and the permission for Retry Charge and Take Action), FR-007 (nothing to restate, refund approval is cited by reference).
+# Left alone on purpose: the minor observations of the review (see the ledger leftovers). The Overview has no separate bookings panel; the Cancellation failed mark is stated on the patient's Overview tab and no field or screen is added.
+reason: "FR-016 logic review pass 2: Approve only for Pending Admin Review and a Denied outcome step; refunds enter an FR-007 manual refund; Payment Retry and Send Payment Reminder use the FR-007B Retry Charge access; suspension cascade cause, audit booking ids and Cancellation failed mark; password reset never changes Suspended; conversations read-only while suspended; Take Action offers a patient warning or suspension; three audit action types added and provider warning retired; flows for lift, unlock, automatic suspension end and Take Action; deletion review and cascade wiring completed."
+by: docs-manager
+operations:
+  - {"op": "add_node", "id": "REQ-016-223", "type": "Rule", "owner_fr": "FR-016", "title": "A password reset never changes a Suspended status; only a Locked account becomes Active after a reset", "attrs": {"statement": "A password reset never changes a Suspended status and the Reset Password button is hidden for a Suspended patient; a Locked account becomes Active after a reset, and any other status is unchanged.", "rationale": "General Module Rules, Rule 12; Alternative Flow A4 step 2; User Story 4 scenario 4; Screen 2 quick actions."}}
+  - {"op": "add_node", "id": "REQ-016-224", "type": "Rule", "owner_fr": "FR-016", "title": "While a patient is suspended, conversations are read-only and open inquiries and quotes stay as they are", "attrs": {"statement": "While a patient is suspended, their conversations are read-only; their open inquiries and quotes stay as they are and follow their own expiry; nothing is cancelled except the bookings in the suspension cascade. When the suspension is lifted or ends, the conversations reopen.", "rationale": "General Module Rules, Rule 10; Alternative Flow A6 step 14; Alternative Flow A9 step 3. The FR-012 side is queued for FR-012."}}
+  - {"op": "add_node", "id": "REQ-016-225", "type": "Rule", "owner_fr": "FR-016", "title": "Take Action on a flagged conversation offers a formal warning to the patient or a suspension", "attrs": {"statement": "Take Action on a flagged conversation offers one step: send a formal warning to the patient, or suspend the account through the existing suspension flow; it needs Edit Patients, and provider warnings are not sent from the patient page.", "rationale": "Screen 6 Business Rules; Alternative Flow A12; User Story 5 scenario 4; General Module Rule 3."}}
+  - {"op": "add_node", "id": "STP-016-121", "type": "Step", "owner_fr": "FR-016", "title": "A denied request ends Denied and the patient is notified with the reason", "attrs": {"prd_ref": "Alternative Flow B5 step 3"}}
+  - {"op": "add_node", "id": "STP-016-122", "type": "Step", "owner_fr": "FR-016", "title": "Admin clicks Lift Suspension on a Suspended patient, enters a justification and confirms", "attrs": {"prd_ref": "Alternative Flow A9 steps 1 and 2"}}
+  - {"op": "add_node", "id": "STP-016-123", "type": "Step", "owner_fr": "FR-016", "title": "System sets the account to Active, logs Suspension Lifted, notifies the patient and reopens the conversations", "attrs": {"prd_ref": "Alternative Flow A9 step 3"}}
+  - {"op": "add_node", "id": "STP-016-124", "type": "Step", "owner_fr": "FR-016", "title": "Admin clicks Unlock Account on a Locked patient, enters a justification and confirms", "attrs": {"prd_ref": "Alternative Flow A10 steps 1 and 2"}}
+  - {"op": "add_node", "id": "STP-016-125", "type": "Step", "owner_fr": "FR-016", "title": "System sets the account to Active and logs Account Unlock", "attrs": {"prd_ref": "Alternative Flow A10 step 3"}}
+  - {"op": "add_node", "id": "STP-016-126", "type": "Step", "owner_fr": "FR-016", "title": "At the end date of a timed suspension the system sets the account to Active, logs a System-generated Suspension Ended entry and notifies the patient", "attrs": {"prd_ref": "Alternative Flow A11 step 1"}}
+  - {"op": "add_node", "id": "STP-016-127", "type": "Step", "owner_fr": "FR-016", "title": "Admin clicks Take Action on a flagged conversation and chooses a formal warning to the patient or a suspension", "attrs": {"prd_ref": "Alternative Flow A12 step 1"}}
+  - {"op": "add_node", "id": "STP-016-128", "type": "Step", "owner_fr": "FR-016", "title": "System logs a Patient Warning audit entry with the admin's justification", "attrs": {"prd_ref": "Alternative Flow A12 step 2"}}
+  - {"op": "add_node", "id": "STP-016-129", "type": "Step", "owner_fr": "FR-016", "title": "While the suspension lasts the patient's conversations are read-only and open inquiries and quotes stay as they are", "attrs": {"prd_ref": "Alternative Flow A6 step 14"}}
+  - {"op": "add_node", "id": "FLW-016-lift-suspension", "type": "Flow", "title": "Admin lifts a suspension early", "attrs": {"kind": "alternative", "description": "Admin lifts a suspension early", "prd_ref": "Alternative Flow A9"}}
+  - {"op": "add_node", "id": "FLW-016-unlock-account", "type": "Flow", "title": "Admin unlocks a Locked account", "attrs": {"kind": "alternative", "description": "Admin unlocks a Locked account", "prd_ref": "Alternative Flow A10"}}
+  - {"op": "add_node", "id": "FLW-016-suspension-auto-end", "type": "Flow", "title": "A timed suspension ends by itself", "attrs": {"kind": "alternative", "description": "A timed suspension ends by itself", "prd_ref": "Alternative Flow A11"}}
+  - {"op": "add_node", "id": "FLW-016-take-action", "type": "Flow", "title": "Admin takes action on a flagged conversation", "attrs": {"kind": "alternative", "description": "Admin takes action on a flagged conversation", "prd_ref": "Alternative Flow A12"}}
+  - {"op": "add_enum_value", "field_id": "ENT-admin-action-log.action_type", "value": "payment_reminder", "label": "Payment Reminder"}
+  - {"op": "add_enum_value", "field_id": "ENT-admin-action-log.action_type", "value": "provider_medical_report_request", "label": "Provider Medical Report Request"}
+  - {"op": "add_enum_value", "field_id": "ENT-admin-action-log.action_type", "value": "data_export", "label": "Data Export"}
+  - {"op": "remove_edge", "from": "STP-016-112", "verb": "next", "to": "STP-016-113"}
+  - {"op": "remove_edge", "from": "STP-016-080", "verb": "next", "to": "STP-016-120"}
+  - {"op": "remove_edge", "from": "STP-016-118", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "remove_edge", "from": "STP-016-119", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "remove_edge", "from": "REQ-016-201", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-016-223", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-016-223", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-016-223", "verb": "applies to", "to": "ENT-patient"}
+  - {"op": "add_edge", "from": "REQ-016-223", "verb": "applies to", "to": "ENT-patient.account_status"}
+  - {"op": "add_edge", "from": "REQ-016-223", "verb": "applies to", "to": "SCR-016-02"}
+  - {"op": "add_edge", "from": "REQ-016-223", "verb": "decided by", "to": "SRC-PRD-016"}
+  - {"op": "add_edge", "from": "REQ-016-224", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-016-224", "verb": "applies to", "to": "ENT-conversation"}
+  - {"op": "add_edge", "from": "REQ-016-224", "verb": "applies to", "to": "ENT-inquiry"}
+  - {"op": "add_edge", "from": "REQ-016-224", "verb": "applies to", "to": "ENT-patient"}
+  - {"op": "add_edge", "from": "REQ-016-224", "verb": "applies to", "to": "ENT-quote"}
+  - {"op": "add_edge", "from": "REQ-016-224", "verb": "decided by", "to": "SRC-PRD-016"}
+  - {"op": "add_edge", "from": "REQ-016-225", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-016-225", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-016-225", "verb": "applies to", "to": "ENT-conversation"}
+  - {"op": "add_edge", "from": "REQ-016-225", "verb": "applies to", "to": "ENT-patient"}
+  - {"op": "add_edge", "from": "REQ-016-225", "verb": "applies to", "to": "SCR-016-06"}
+  - {"op": "add_edge", "from": "REQ-016-225", "verb": "decided by", "to": "SRC-PRD-016"}
+  - {"op": "add_edge", "from": "REQ-016-201", "verb": "applies to", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-016-121", "verb": "at", "to": "STG-patient-05-deleted"}
+  - {"op": "add_edge", "from": "STP-016-121", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-016-121", "verb": "applies", "to": "REQ-016-173"}
+  - {"op": "add_edge", "from": "STP-016-121", "verb": "applies", "to": "REQ-016-191"}
+  - {"op": "add_edge", "from": "STP-016-121", "verb": "on", "to": "SCR-016-08"}
+  - {"op": "add_edge", "from": "STP-016-122", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-016-122", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-016-122", "verb": "applies", "to": "REQ-016-220"}
+  - {"op": "add_edge", "from": "STP-016-122", "verb": "applies", "to": "REQ-016-110"}
+  - {"op": "add_edge", "from": "STP-016-122", "verb": "applies", "to": "REQ-016-070"}
+  - {"op": "add_edge", "from": "STP-016-122", "verb": "on", "to": "SCR-016-02"}
+  - {"op": "add_edge", "from": "STP-016-123", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-016-123", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-016-123", "verb": "applies", "to": "REQ-016-220"}
+  - {"op": "add_edge", "from": "STP-016-123", "verb": "applies", "to": "REQ-016-224"}
+  - {"op": "add_edge", "from": "STP-016-124", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-016-124", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-016-124", "verb": "applies", "to": "REQ-016-009"}
+  - {"op": "add_edge", "from": "STP-016-124", "verb": "applies", "to": "REQ-016-110"}
+  - {"op": "add_edge", "from": "STP-016-124", "verb": "applies", "to": "REQ-016-070"}
+  - {"op": "add_edge", "from": "STP-016-124", "verb": "on", "to": "SCR-016-02"}
+  - {"op": "add_edge", "from": "STP-016-125", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-016-125", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-016-125", "verb": "applies", "to": "REQ-016-009"}
+  - {"op": "add_edge", "from": "STP-016-125", "verb": "applies", "to": "REQ-016-049"}
+  - {"op": "add_edge", "from": "STP-016-126", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-016-126", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-016-126", "verb": "applies", "to": "REQ-016-201"}
+  - {"op": "add_edge", "from": "STP-016-127", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-016-127", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-016-127", "verb": "applies", "to": "REQ-016-225"}
+  - {"op": "add_edge", "from": "STP-016-127", "verb": "applies", "to": "REQ-016-070"}
+  - {"op": "add_edge", "from": "STP-016-127", "verb": "on", "to": "SCR-016-06"}
+  - {"op": "add_edge", "from": "STP-016-128", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-016-128", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-016-128", "verb": "applies", "to": "REQ-016-225"}
+  - {"op": "add_edge", "from": "STP-016-128", "verb": "applies", "to": "REQ-016-007"}
+  - {"op": "add_edge", "from": "STP-016-129", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-016-129", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-016-129", "verb": "applies", "to": "REQ-016-224"}
+  - {"op": "add_edge", "from": "STP-016-122", "verb": "next", "to": "STP-016-123"}
+  - {"op": "add_edge", "from": "STP-016-124", "verb": "next", "to": "STP-016-125"}
+  - {"op": "add_edge", "from": "STP-016-127", "verb": "next", "to": "STP-016-128", "attrs": {"condition": "REQ-016-225", "label": "formal warning to the patient"}}
+  - {"op": "add_edge", "from": "STP-016-127", "verb": "next", "to": "STP-016-074", "attrs": {"condition": "REQ-016-225", "label": "suspend account"}}
+  - {"op": "add_edge", "from": "STP-016-082", "verb": "next", "to": "STP-016-129"}
+  - {"op": "add_edge", "from": "STP-016-118", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-016-119", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-016-112", "verb": "next", "to": "STP-016-113", "attrs": {"condition": "REQ-016-207", "label": "verification validated or not needed"}}
+  - {"op": "add_edge", "from": "STP-016-112", "verb": "next", "to": "STP-016-121", "attrs": {"condition": "REQ-016-191", "label": "admin denies"}}
+  - {"op": "add_edge", "from": "STP-016-113", "verb": "next", "to": "STP-016-121", "attrs": {"condition": "REQ-016-191", "label": "admin denies"}}
+  - {"op": "add_edge", "from": "STP-016-114", "verb": "next", "to": "STP-016-113", "attrs": {"condition": "REQ-016-171", "label": "obligation ended, admin approves again", "back": true}}
+  - {"op": "add_edge", "from": "STP-016-080", "verb": "next", "to": "STP-016-120", "attrs": {"condition": "REQ-016-218", "label": "a cancellation failed"}}
+  - {"op": "add_edge", "from": "STP-016-080", "verb": "next", "to": "STP-016-081", "attrs": {"condition": "REQ-016-217", "label": "all cancellations succeeded"}}
+  - {"op": "add_edge", "from": "FLW-016-lift-suspension", "verb": "starts at", "to": "STP-016-122"}
+  - {"op": "add_edge", "from": "FLW-016-unlock-account", "verb": "starts at", "to": "STP-016-124"}
+  - {"op": "add_edge", "from": "FLW-016-suspension-auto-end", "verb": "starts at", "to": "STP-016-126"}
+  - {"op": "add_edge", "from": "FLW-016-take-action", "verb": "starts at", "to": "STP-016-127"}
+  - {"op": "add_edge", "from": "FR-016", "verb": "references", "to": "REQ-007-015"}
+  - {"op": "add_edge", "from": "FR-016", "verb": "references", "to": "REQ-007-097"}
+  - {"op": "add_edge", "from": "FR-016", "verb": "references", "to": "REQ-007B-080"}
+  - {"op": "add_edge", "from": "FR-016", "verb": "references", "to": "REQ-007B-090"}
+  - {"op": "add_edge", "from": "STP-016-034", "verb": "applies", "to": "REQ-007-015"}
+  - {"op": "add_edge", "from": "STP-016-062", "verb": "applies", "to": "REQ-016-223"}
+  - {"op": "add_edge", "from": "STP-016-082", "verb": "applies", "to": "REQ-016-217"}
+  - {"op": "update_node", "id": "STP-016-034", "title": "Admin starts a refund as an FR-007 manual refund; the enhanced confirmation for amounts over $1,000 applies in addition"}
+  - {"op": "update_node", "id": "STP-016-062", "title": "Admin clicks Reset Password (hidden for a Suspended patient)"}
+  - {"op": "update_node", "id": "STP-016-081", "attrs": {"prd_ref": "Alternative Flow A6 step 12"}}
+  - {"op": "update_node", "id": "STP-016-082", "title": "System logs the suspension in the audit trail with full justification and the booking ids cancelled, failed and left untouched", "attrs": {"prd_ref": "Alternative Flow A6 step 13"}}
+  - {"op": "update_node", "id": "STP-016-120", "title": "If a cancellation fails, the suspension still applies, the failed bookings are listed and marked Cancellation failed, and the admin retries each through the FR-006 cancel action"}
+  - {"op": "update_node", "id": "STP-016-113", "title": "Admin approves a request in Pending Admin Review (a Verification Required request is validated first) with the retention confirmation and a justification, or denies a request in Pending Admin Review or Verification Required with a reason; on approval the active bookings and financial obligations are checked"}
+  - {"op": "update_node", "id": "REQ-016-011", "title": "Admins start a refund as an FR-007 manual refund approved by another admin, with enhanced confirmation for amounts over $1,000 in addition", "attrs": {"statement": "System MUST let admins start a refund from the patient page as an FR-007 manual refund, which another admin with billing permission approves or denies (never the requesting admin), with enhanced confirmation workflow for amounts > $1,000 (US dollars; other currencies are converted at the rate FR-007 applies to that payment) in addition", "rationale": "Admin Intervention Requirements; Alternative Flow A3 step 4; Screen 5 Business Rules. The approval rule is owned by FR-007."}}
+  - {"op": "update_node", "id": "REQ-016-020", "attrs": {"statement": "System MUST require enhanced confirmation + justification for high-impact actions (account suspension of any duration, refunds exceeding $1,000 (US dollars; other currencies converted at the rate FR-007 applies to that payment), manual booking modifications during active treatment, bulk patient notifications, patient data deletion for GDPR requests) even when the admin holds the FR-031 permission for the action; a refund is also an FR-007 manual refund that another admin with billing permission approves or denies"}}
+  - {"op": "update_node", "id": "REQ-016-070", "attrs": {"statement": "Admin visibility and edit rights follow the FR-031 role permissions: View Patients grants patient visibility (all default roles), Edit Patients grants patient edits (Super Admin by default), Manage Aftercare covers aftercare actions and access to medical data and scans (Super Admin and Aftercare Coordinator by default), View Support Center and Respond to Support cover support actions (Super Admin, Aftercare Coordinator, and Support Staff by default), Issue Refunds covers refunds, and Delete Patients covers approving deletion requests. Actions the FR-031 list does not name map as follows: Reset Password, Unlock Account, Lift Suspension, and Take Action on a flagged conversation need Edit Patients; Payment Retry and Send Payment Reminder use the same access as the FR-007B Retry Charge action, and the FR-016 buttons call that action; Send Notification needs Respond to Support; the Payments tab needs View Patient Billing; the Communications tab needs View Provider-Patient Messages, and flagging a conversation needs Flag Communications"}}
+  - {"op": "update_node", "id": "REQ-016-079", "title": "Admins can start a manual refund and retry a payment", "attrs": {"statement": "Editable by admin: Payment status (starting an FR-007 manual refund, payment retry through the FR-007B Retry Charge action)"}}
+  - {"op": "update_node", "id": "REQ-016-140", "attrs": {"statement": "\"Send Payment Reminder\" button for overdue installments; it uses the same access as the FR-007B Retry Charge action"}}
+  - {"op": "update_node", "id": "REQ-016-190", "attrs": {"statement": "Approve deletion request: Approves deletion request; Shown only for Pending Admin Review, not for Verification Required (the admin validates first, FR-023) or In Progress; requires the retention confirmation (the protected categories stay in anonymized form with restricted access, FR-023), enhanced confirmation, and justification"}}
+  - {"op": "update_node", "id": "REQ-016-012", "attrs": {"statement": "System MUST allow admins to suspend patient accounts (30 days / 90 days / Permanent) with justification; a suspension started from any admin screen runs the Alternative Flow A6 steps"}}
+  - {"op": "update_node", "id": "REQ-016-217", "attrs": {"statement": "A suspension cancels only the patient's bookings in `Accepted`, `Payment Window Expired`, and `Confirmed`; `In Progress` and `Aftercare` bookings are left untouched and listed on the suspension confirmation dialog for admin follow-up. The suspension audit entry lists the booking ids cancelled, failed and left untouched."}}
+  - {"op": "update_node", "id": "REQ-016-218", "attrs": {"statement": "If a booking cancellation in a suspension fails, the suspension still applies, the failed bookings are listed for admin follow-up and marked \"Cancellation failed\" on the patient's Overview tab, and the admin retries each through the FR-006 cancel action."}}
+  - {"op": "update_node", "id": "REQ-016-219", "attrs": {"statement": "The cancellation cause in a suspension cascade is \"Patient account suspended\" (admin-initiated, request source Admin, the acting admin carried from this flow); the reason sent to the patient and the provider is the fixed text \"Booking cancelled because the patient account was suspended\"; the admin justification stays in the audit entry only."}}
+  - {"op": "update_node", "id": "REQ-016-160", "attrs": {"rationale": "Stated in prd.md, Screen 7: Patient Detail View - Admin Actions Tab. The allowed list also holds Payment Reminder, Provider Medical Report Request, Data Export, Manual Notification, Patient Warning, Suspension Lifted and Suspension Ended. Provider warnings are not sent from the patient page."}}
+  - {"op": "update_node", "id": "ENT-admin-action-log.action_type", "attrs": {"description": "Type of intervention. Values follow the Screen 7 allowed list, which also holds payment reminder, provider medical report request, data export (the export name is in the entry), manual notification, patient warning, suspension lifted, and suspension ended (a system-generated entry)."}}
+  - {"op": "update_node", "id": "SCR-016-06", "attrs": {"description": "Read-only conversation history with providers, support and aftercare for compliance monitoring. Controls: flag and unflag, Flag for Review, Take Action (formal warning to the patient or suspend account), search within thread, PDF export."}}
+  - {"op": "update_node", "id": "SCR-016-08", "attrs": {"description": "Queue of patient account and data deletion requests with a review modal. Filter offers all five request statuses; badges show Overdue, Blocked by obligation, Jurisdiction review and Needs attention. Controls: search, filters, Review, Approve (Pending Admin Review only, with a retention confirmation), Deny (Pending Admin Review and Verification Required), Validate Verification, Close, call and email actions."}}
+  - {"op": "retire_enum_value", "field_id": "ENT-admin-action-log.action_type", "value": "provider_warning"}

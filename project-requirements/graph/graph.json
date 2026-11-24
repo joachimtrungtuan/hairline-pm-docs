@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T13:27:44Z",
+  "generated_at": "2026-11-24T13:35:12Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -1138,9 +1138,9 @@
       "owner_fr": "FR-016",
       "title": "Action type",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "description": "Type of intervention. Values follow the Screen 7 allowed list, which also holds manual notification, patient and provider warning, suspension lifted, and suspension ended (a system-generated entry)."
+        "description": "Type of intervention. Values follow the Screen 7 allowed list, which also holds payment reminder, provider medical report request, data export (the export name is in the entry), manual notification, patient warning, suspension lifted, and suspension ended (a system-generated entry)."
       }
     },
     {
@@ -36236,6 +36236,19 @@
       }
     },
     {
+      "id": "FLW-016-lift-suspension",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Admin lifts a suspension early",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Admin lifts a suspension early",
+        "prd_ref": "Alternative Flow A9"
+      }
+    },
+    {
       "id": "FLW-016-manual-intervention",
       "type": "Flow",
       "owner_fr": null,
@@ -36340,6 +36353,32 @@
       }
     },
     {
+      "id": "FLW-016-suspension-auto-end",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "A timed suspension ends by itself",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "A timed suspension ends by itself",
+        "prd_ref": "Alternative Flow A11"
+      }
+    },
+    {
+      "id": "FLW-016-take-action",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Admin takes action on a flagged conversation",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Admin takes action on a flagged conversation",
+        "prd_ref": "Alternative Flow A12"
+      }
+    },
+    {
       "id": "FLW-016-treatment-milestone-timeline",
       "type": "Flow",
       "owner_fr": null,
@@ -36350,6 +36389,19 @@
         "kind": "alternative",
         "description": "Admin views the patient treatment milestone timeline",
         "prd_ref": "Alternative Flow A1"
+      }
+    },
+    {
+      "id": "FLW-016-unlock-account",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Admin unlocks a Locked account",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Admin unlocks a Locked account",
+        "prd_ref": "Alternative Flow A10"
       }
     },
     {
@@ -39598,7 +39650,7 @@
       "owner_fr": null,
       "title": "Admin Patient Management",
       "status": "active",
-      "version": 9,
+      "version": 10,
       "attrs": {
         "module": "fr016-admin-patient-mgmt",
         "prd_path": "project-requirements/functional-requirements/fr016-admin-patient-mgmt/prd.md",
@@ -62661,12 +62713,12 @@
       "id": "REQ-016-011",
       "type": "Rule",
       "owner_fr": "FR-016",
-      "title": "Allow admins to initiate refunds with enhanced confirmation workflow",
+      "title": "Admins start a refund as an FR-007 manual refund approved by another admin, with enhanced confirmation for amounts over $1,000 in addition",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST allow admins to initiate refunds with enhanced confirmation workflow for amounts > $1,000 (US dollars; other currencies are converted at the rate FR-007 applies to that payment)",
-        "rationale": "Stated in prd.md, Admin Intervention Requirements (line 1114). Restated: prd.md line 169: \"Admin can initiate refund with enhanced confirmation for amounts > $1,000\" prd.md line 513: \"Refunds require admin justification; amounts > $1,000 trigger extended confirmation modal (no separate role)\""
+        "statement": "System MUST let admins start a refund from the patient page as an FR-007 manual refund, which another admin with billing permission approves or denies (never the requesting admin), with enhanced confirmation workflow for amounts > $1,000 (US dollars; other currencies are converted at the rate FR-007 applies to that payment) in addition",
+        "rationale": "Admin Intervention Requirements; Alternative Flow A3 step 4; Screen 5 Business Rules. The approval rule is owned by FR-007."
       }
     },
     {
@@ -62675,9 +62727,9 @@
       "owner_fr": "FR-016",
       "title": "Allow admins to suspend patient accounts (30 days / 90 days /",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST allow admins to suspend patient accounts (30 days / 90 days / Permanent) with justification",
+        "statement": "System MUST allow admins to suspend patient accounts (30 days / 90 days / Permanent) with justification; a suspension started from any admin screen runs the Alternative Flow A6 steps",
         "rationale": "Stated in prd.md, Admin Intervention Requirements (line 1115). Restated: prd.md line 245: \"Admin selects suspension duration: 30 days, 90 days, Permanent\""
       }
     },
@@ -62759,9 +62811,9 @@
       "owner_fr": "FR-016",
       "title": "Require enhanced confirmation + justification for high-impact actions",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System MUST require enhanced confirmation + justification for high-impact actions (account suspension of any duration, refunds exceeding $1,000 (US dollars; other currencies converted at the rate FR-007 applies to that payment), manual booking modifications during active treatment, bulk patient notifications, patient data deletion for GDPR requests) even when the admin holds the FR-031 permission for the action",
+        "statement": "System MUST require enhanced confirmation + justification for high-impact actions (account suspension of any duration, refunds exceeding $1,000 (US dollars; other currencies converted at the rate FR-007 applies to that payment), manual booking modifications during active treatment, bulk patient notifications, patient data deletion for GDPR requests) even when the admin holds the FR-031 permission for the action; a refund is also an FR-007 manual refund that another admin with billing permission approves or denies",
         "rationale": "Stated in prd.md, Functional Requirements Summary, Security & Privacy Requirements; same list as General Module Rule 4 and Admin Editability Rules, High-Impact Actions.",
         "aliases": "REQ-016-082"
       }
@@ -63348,9 +63400,9 @@
       "owner_fr": "FR-016",
       "title": "Admin visibility and edit rights follow FR-031 role permissions",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "Admin visibility and edit rights follow the FR-031 role permissions: View Patients grants patient visibility (all default roles), Edit Patients grants patient edits (Super Admin by default), Manage Aftercare covers aftercare actions and access to medical data and scans (Super Admin and Aftercare Coordinator by default), View Support Center and Respond to Support cover support actions (Super Admin, Aftercare Coordinator, and Support Staff by default), Issue Refunds covers refunds and payment retry, and Delete Patients covers approving deletion requests. Actions the FR-031 list does not name map as follows: Reset Password, Unlock Account, and Lift Suspension need Edit Patients; Send Notification needs Respond to Support; the Payments tab needs View Patient Billing; the Communications tab needs View Provider-Patient Messages, and flagging a conversation needs Flag Communications",
+        "statement": "Admin visibility and edit rights follow the FR-031 role permissions: View Patients grants patient visibility (all default roles), Edit Patients grants patient edits (Super Admin by default), Manage Aftercare covers aftercare actions and access to medical data and scans (Super Admin and Aftercare Coordinator by default), View Support Center and Respond to Support cover support actions (Super Admin, Aftercare Coordinator, and Support Staff by default), Issue Refunds covers refunds, and Delete Patients covers approving deletion requests. Actions the FR-031 list does not name map as follows: Reset Password, Unlock Account, Lift Suspension, and Take Action on a flagged conversation need Edit Patients; Payment Retry and Send Payment Reminder use the same access as the FR-007B Retry Charge action, and the FR-016 buttons call that action; Send Notification needs Respond to Support; the Payments tab needs View Patient Billing; the Communications tab needs View Provider-Patient Messages, and flagging a conversation needs Flag Communications",
         "rationale": "Stated in prd.md, General Module Rules (line 683)."
       }
     },
@@ -63442,11 +63494,11 @@
       "id": "REQ-016-079",
       "type": "Rule",
       "owner_fr": "FR-016",
-      "title": "Admins can edit payment status (manual refund, payment retry)",
+      "title": "Admins can start a manual refund and retry a payment",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Editable by admin: Payment status (manual refund issuance, payment retry)",
+        "statement": "Editable by admin: Payment status (starting an FR-007 manual refund, payment retry through the FR-007B Retry Charge action)",
         "rationale": "Stated in prd.md, Admin Editability Rules (line 709)."
       }
     },
@@ -64164,9 +64216,9 @@
       "owner_fr": "FR-016",
       "title": "\"Send Payment Reminder\" button for overdue installments",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "\"Send Payment Reminder\" button for overdue installments",
+        "statement": "\"Send Payment Reminder\" button for overdue installments; it uses the same access as the FR-007B Retry Charge action",
         "rationale": "Stated in prd.md, Screen 5: Patient Detail View - Payments Tab (line 519)."
       }
     },
@@ -64404,10 +64456,10 @@
       "owner_fr": "FR-016",
       "title": "Action types are limited to the enumerated list; a new type needs a PRD update",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
         "statement": "Action types restricted to enumerated list above; any new action type requires PRD update",
-        "rationale": "Stated in prd.md, Screen 7: Patient Detail View - Admin Actions Tab. The allowed list also holds Manual Notification, Patient Warning, Provider Warning, Suspension Lifted and Suspension Ended."
+        "rationale": "Stated in prd.md, Screen 7: Patient Detail View - Admin Actions Tab. The allowed list also holds Payment Reminder, Provider Medical Report Request, Data Export, Manual Notification, Patient Warning, Suspension Lifted and Suspension Ended. Provider warnings are not sent from the patient page."
       }
     },
     {
@@ -64752,9 +64804,9 @@
       "owner_fr": "FR-016",
       "title": "Approve deletion request requires enhanced confirmation and justification",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Approve deletion request: Approves deletion request; Shown only for Pending Admin Review and Verification Required, not for In Progress; requires the retention confirmation (the protected categories stay in anonymized form with restricted access, FR-023), enhanced confirmation, and justification",
+        "statement": "Approve deletion request: Approves deletion request; Shown only for Pending Admin Review, not for Verification Required (the admin validates first, FR-023) or In Progress; requires the retention confirmation (the protected categories stay in anonymized form with restricted access, FR-023), enhanced confirmation, and justification",
         "rationale": "Stated in prd.md, Screen 8: Patient Deletion Requests List (GDPR) (line 630)."
       }
     },
@@ -64884,7 +64936,7 @@
       "owner_fr": "FR-016",
       "title": "A 30-day or 90-day suspension ends by itself on its end date",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "A 30-day or 90-day account suspension ends by itself: when the suspension end date is reached the patient account returns to Active without an admin action, the system logs a System-generated Suspension Ended audit entry and sends the patient a notice. A permanent suspension has no end date",
         "rationale": "Stated in prd.md, Business Rules, General Module Rule 9; Screen 2 Suspension End Date row."
@@ -65076,9 +65128,9 @@
       "owner_fr": "FR-016",
       "title": "A suspension cancels only bookings in the FR-006 cancel states and lists the others",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "A suspension cancels only the patient's bookings in `Accepted`, `Payment Window Expired`, and `Confirmed`; `In Progress` and `Aftercare` bookings are left untouched and listed on the suspension confirmation dialog for admin follow-up.",
+        "statement": "A suspension cancels only the patient's bookings in `Accepted`, `Payment Window Expired`, and `Confirmed`; `In Progress` and `Aftercare` bookings are left untouched and listed on the suspension confirmation dialog for admin follow-up. The suspension audit entry lists the booking ids cancelled, failed and left untouched.",
         "rationale": "General Module Rules, Rule 10; Alternative Flow A6 steps 5 and 10; User Story 7 scenario 4."
       }
     },
@@ -65088,9 +65140,9 @@
       "owner_fr": "FR-016",
       "title": "If a suspension cancellation fails, the suspension still applies",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "If a booking cancellation in a suspension fails, the suspension still applies and the failed bookings are listed for admin follow-up.",
+        "statement": "If a booking cancellation in a suspension fails, the suspension still applies, the failed bookings are listed for admin follow-up and marked \"Cancellation failed\" on the patient's Overview tab, and the admin retries each through the FR-006 cancel action.",
         "rationale": "General Module Rules, Rule 10; Alternative Flow A6 step 11."
       }
     },
@@ -65100,9 +65152,9 @@
       "owner_fr": "FR-016",
       "title": "Suspension cancellations send a fixed neutral reason; the justification stays in the audit entry",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "The cancellation reason sent to the patient and the provider in a suspension cascade is the fixed text \"Booking cancelled because the patient account was suspended\"; the admin justification stays in the audit entry only.",
+        "statement": "The cancellation cause in a suspension cascade is \"Patient account suspended\" (admin-initiated, request source Admin, the acting admin carried from this flow); the reason sent to the patient and the provider is the fixed text \"Booking cancelled because the patient account was suspended\"; the admin justification stays in the audit entry only.",
         "rationale": "General Module Rules, Rule 10; Alternative Flow A6 step 10."
       }
     },
@@ -65140,6 +65192,42 @@
       "attrs": {
         "statement": "Each deletion request row shows a badge only while its condition applies: Overdue (past the SLA due date), Blocked by obligation, Jurisdiction review, and Needs attention (the open inquiry could not be cancelled; the signal is owned by FR-023 and has no field in this module).",
         "rationale": "Screen 8 table columns; FR-023 queue requirements."
+      }
+    },
+    {
+      "id": "REQ-016-223",
+      "type": "Rule",
+      "owner_fr": "FR-016",
+      "title": "A password reset never changes a Suspended status; only a Locked account becomes Active after a reset",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "A password reset never changes a Suspended status and the Reset Password button is hidden for a Suspended patient; a Locked account becomes Active after a reset, and any other status is unchanged.",
+        "rationale": "General Module Rules, Rule 12; Alternative Flow A4 step 2; User Story 4 scenario 4; Screen 2 quick actions."
+      }
+    },
+    {
+      "id": "REQ-016-224",
+      "type": "Rule",
+      "owner_fr": "FR-016",
+      "title": "While a patient is suspended, conversations are read-only and open inquiries and quotes stay as they are",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "While a patient is suspended, their conversations are read-only; their open inquiries and quotes stay as they are and follow their own expiry; nothing is cancelled except the bookings in the suspension cascade. When the suspension is lifted or ends, the conversations reopen.",
+        "rationale": "General Module Rules, Rule 10; Alternative Flow A6 step 14; Alternative Flow A9 step 3. The FR-012 side is queued for FR-012."
+      }
+    },
+    {
+      "id": "REQ-016-225",
+      "type": "Rule",
+      "owner_fr": "FR-016",
+      "title": "Take Action on a flagged conversation offers a formal warning to the patient or a suspension",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Take Action on a flagged conversation offers one step: send a formal warning to the patient, or suspend the account through the existing suspension flow; it needs Edit Patients, and provider warnings are not sent from the patient page.",
+        "rationale": "Screen 6 Business Rules; Alternative Flow A12; User Story 5 scenario 4; General Module Rule 3."
       }
     },
     {
@@ -98872,10 +98960,10 @@
       "owner_fr": "FR-016",
       "title": "Patient Detail View - Communications Tab",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "admin",
-        "description": "Read-only conversation history with providers, support and aftercare for compliance monitoring. Controls: flag and unflag, Flag for Review, search within thread, PDF export."
+        "description": "Read-only conversation history with providers, support and aftercare for compliance monitoring. Controls: flag and unflag, Flag for Review, Take Action (formal warning to the patient or suspend account), search within thread, PDF export."
       }
     },
     {
@@ -98896,10 +98984,10 @@
       "owner_fr": "FR-016",
       "title": "Patient Deletion Requests List (GDPR)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
-        "description": "Queue of patient account and data deletion requests with a review modal. Filter offers all five request statuses; badges show Overdue, Blocked by obligation, Jurisdiction review and Needs attention. Controls: search, filters, Review, Approve and Deny (Pending Admin Review and Verification Required only, Approve with a retention confirmation), Validate Verification, Close, call and email actions."
+        "description": "Queue of patient account and data deletion requests with a review modal. Filter offers all five request statuses; badges show Overdue, Blocked by obligation, Jurisdiction review and Needs attention. Controls: search, filters, Review, Approve (Pending Admin Review only, with a retention confirmation), Deny (Pending Admin Review and Verification Required), Validate Verification, Close, call and email actions."
       }
     },
     {
@@ -113826,9 +113914,9 @@
       "id": "STP-016-034",
       "type": "Step",
       "owner_fr": "FR-016",
-      "title": "Admin initiates a refund with enhanced confirmation for amounts over $1,000",
+      "title": "Admin starts a refund as an FR-007 manual refund; the enhanced confirmation for amounts over $1,000 applies in addition",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A3 step 4"
       }
@@ -114002,9 +114090,9 @@
       "id": "STP-016-062",
       "type": "Step",
       "owner_fr": "FR-016",
-      "title": "Admin clicks Reset Password",
+      "title": "Admin clicks Reset Password (hidden for a Suspended patient)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A4 step 2"
       }
@@ -114191,7 +114279,7 @@
       "owner_fr": "FR-016",
       "title": "System cancels each Accepted, Payment Window Expired or Confirmed booking through the FR-006 admin booking cancellation with the fixed neutral reason; the admin justification stays in the audit entry only",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flow A6 step 10"
       }
@@ -114202,20 +114290,20 @@
       "owner_fr": "FR-016",
       "title": "System sends the suspension notification; the notice tells the patient to contact support to appeal",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Alternative Flow A6 step 11"
+        "prd_ref": "Alternative Flow A6 step 12"
       }
     },
     {
       "id": "STP-016-082",
       "type": "Step",
       "owner_fr": "FR-016",
-      "title": "System logs the suspension in the audit trail with full justification",
+      "title": "System logs the suspension in the audit trail with full justification and the booking ids cancelled, failed and left untouched",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A6 step 12"
+        "prd_ref": "Alternative Flow A6 step 13"
       }
     },
     {
@@ -114356,7 +114444,7 @@
       "owner_fr": "FR-016",
       "title": "If the identity proof is not sufficient the request becomes Verification Required and the admin validates the additional verification on Screen 8",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B5 step 2"
       }
@@ -114365,9 +114453,9 @@
       "id": "STP-016-113",
       "type": "Step",
       "owner_fr": "FR-016",
-      "title": "Admin approves with the retention confirmation and a justification, or denies with a reason; on approval the active bookings and financial obligations are checked",
+      "title": "Admin approves a request in Pending Admin Review (a Verification Required request is validated first) with the retention confirmation and a justification, or denies a request in Pending Admin Review or Verification Required with a reason; on approval the active bookings and financial obligations are checked",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B5 step 3"
       }
@@ -114378,7 +114466,7 @@
       "owner_fr": "FR-016",
       "title": "If an active obligation exists, approval is blocked: the request stays Pending Admin Review, marked blocked by obligation, until the obligation ends",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B5 step 4"
       }
@@ -114411,7 +114499,7 @@
       "owner_fr": "FR-016",
       "title": "System sends the patient one outcome notice with the actions taken and the legal basis",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flow B5 step 8"
       }
@@ -114422,7 +114510,7 @@
       "owner_fr": "FR-016",
       "title": "The request ends Fulfilled with the actions taken recorded on the request",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B5 step 9"
       }
@@ -114431,11 +114519,110 @@
       "id": "STP-016-120",
       "type": "Step",
       "owner_fr": "FR-016",
-      "title": "If a cancellation fails, the suspension still applies and the failed bookings are listed for admin follow-up",
+      "title": "If a cancellation fails, the suspension still applies, the failed bookings are listed and marked Cancellation failed, and the admin retries each through the FR-006 cancel action",
+      "status": "active",
+      "version": 2,
+      "attrs": {
+        "prd_ref": "A6 step 11"
+      }
+    },
+    {
+      "id": "STP-016-121",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "A denied request ends Denied and the patient is notified with the reason",
       "status": "active",
       "version": 1,
       "attrs": {
-        "prd_ref": "A6 step 11"
+        "prd_ref": "Alternative Flow B5 step 3"
+      }
+    },
+    {
+      "id": "STP-016-122",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "Admin clicks Lift Suspension on a Suspended patient, enters a justification and confirms",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A9 steps 1 and 2"
+      }
+    },
+    {
+      "id": "STP-016-123",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "System sets the account to Active, logs Suspension Lifted, notifies the patient and reopens the conversations",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A9 step 3"
+      }
+    },
+    {
+      "id": "STP-016-124",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "Admin clicks Unlock Account on a Locked patient, enters a justification and confirms",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A10 steps 1 and 2"
+      }
+    },
+    {
+      "id": "STP-016-125",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "System sets the account to Active and logs Account Unlock",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A10 step 3"
+      }
+    },
+    {
+      "id": "STP-016-126",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "At the end date of a timed suspension the system sets the account to Active, logs a System-generated Suspension Ended entry and notifies the patient",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A11 step 1"
+      }
+    },
+    {
+      "id": "STP-016-127",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "Admin clicks Take Action on a flagged conversation and chooses a formal warning to the patient or a suspension",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A12 step 1"
+      }
+    },
+    {
+      "id": "STP-016-128",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "System logs a Patient Warning audit entry with the admin's justification",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A12 step 2"
+      }
+    },
+    {
+      "id": "STP-016-129",
+      "type": "Step",
+      "owner_fr": "FR-016",
+      "title": "While the suspension lasts the patient's conversations are read-only and open inquiries and quotes stay as they are",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A6 step 14"
       }
     },
     {
@@ -156760,12 +156947,6 @@
     },
     {
       "field_id": "ENT-admin-action-log.action_type",
-      "value": "provider_warning",
-      "label": "Provider Warning",
-      "sort_order": 17
-    },
-    {
-      "field_id": "ENT-admin-action-log.action_type",
       "value": "suspension_ended",
       "label": "Suspension Ended",
       "sort_order": 18
@@ -156775,6 +156956,24 @@
       "value": "suspension_lifted",
       "label": "Suspension Lifted",
       "sort_order": 19
+    },
+    {
+      "field_id": "ENT-admin-action-log.action_type",
+      "value": "payment_reminder",
+      "label": "Payment Reminder",
+      "sort_order": 20
+    },
+    {
+      "field_id": "ENT-admin-action-log.action_type",
+      "value": "provider_medical_report_request",
+      "label": "Provider Medical Report Request",
+      "sort_order": 21
+    },
+    {
+      "field_id": "ENT-admin-action-log.action_type",
+      "value": "data_export",
+      "label": "Data Export",
+      "sort_order": 22
     },
     {
       "field_id": "ENT-admin-action-log.approval_status",
@@ -172247,6 +172446,12 @@
       "attrs": {}
     },
     {
+      "from_id": "FLW-016-lift-suspension",
+      "verb": "starts at",
+      "to_id": "STP-016-122",
+      "attrs": {}
+    },
+    {
       "from_id": "FLW-016-manual-intervention",
       "verb": "starts at",
       "to_id": "STP-016-051",
@@ -172295,9 +172500,27 @@
       "attrs": {}
     },
     {
+      "from_id": "FLW-016-suspension-auto-end",
+      "verb": "starts at",
+      "to_id": "STP-016-126",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-016-take-action",
+      "verb": "starts at",
+      "to_id": "STP-016-127",
+      "attrs": {}
+    },
+    {
       "from_id": "FLW-016-treatment-milestone-timeline",
       "verb": "starts at",
       "to_id": "STP-016-011",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-016-unlock-account",
+      "verb": "starts at",
+      "to_id": "STP-016-124",
       "attrs": {}
     },
     {
@@ -176319,7 +176542,7 @@
       "verb": "active in",
       "to_id": "STG-patient-03-active",
       "attrs": {
-        "rules": 170
+        "rules": 173
       },
       "derived": true
     },
@@ -176413,13 +176636,37 @@
     {
       "from_id": "FR-016",
       "verb": "references",
+      "to_id": "REQ-007-015",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-016",
+      "verb": "references",
       "to_id": "REQ-007-024",
       "attrs": {}
     },
     {
       "from_id": "FR-016",
       "verb": "references",
+      "to_id": "REQ-007-097",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-016",
+      "verb": "references",
       "to_id": "REQ-007B-008",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-016",
+      "verb": "references",
+      "to_id": "REQ-007B-080",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-016",
+      "verb": "references",
+      "to_id": "REQ-007B-090",
       "attrs": {}
     },
     {
@@ -236611,7 +236858,7 @@
     {
       "from_id": "REQ-016-201",
       "verb": "applies to",
-      "to_id": "ACT-platform-admin",
+      "to_id": "ACT-system",
       "attrs": {}
     },
     {
@@ -237156,6 +237403,114 @@
     },
     {
       "from_id": "REQ-016-222",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-016",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-223",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-223",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-223",
+      "verb": "applies to",
+      "to_id": "ENT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-223",
+      "verb": "applies to",
+      "to_id": "ENT-patient.account_status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-223",
+      "verb": "applies to",
+      "to_id": "SCR-016-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-223",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-016",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-224",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-224",
+      "verb": "applies to",
+      "to_id": "ENT-conversation",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-224",
+      "verb": "applies to",
+      "to_id": "ENT-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-224",
+      "verb": "applies to",
+      "to_id": "ENT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-224",
+      "verb": "applies to",
+      "to_id": "ENT-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-224",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-016",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-225",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-225",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-225",
+      "verb": "applies to",
+      "to_id": "ENT-conversation",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-225",
+      "verb": "applies to",
+      "to_id": "ENT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-225",
+      "verb": "applies to",
+      "to_id": "SCR-016-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-225",
       "verb": "decided by",
       "to_id": "SRC-PRD-016",
       "attrs": {}
@@ -381930,6 +382285,12 @@
     {
       "from_id": "STP-016-034",
       "verb": "applies",
+      "to_id": "REQ-007-015",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-034",
+      "verb": "applies",
       "to_id": "REQ-016-011",
       "attrs": {}
     },
@@ -382351,6 +382712,12 @@
       "from_id": "STP-016-062",
       "verb": "applies",
       "to_id": "REQ-016-024",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-062",
+      "verb": "applies",
+      "to_id": "REQ-016-223",
       "attrs": {}
     },
     {
@@ -382806,8 +383173,20 @@
     {
       "from_id": "STP-016-080",
       "verb": "next",
+      "to_id": "STP-016-081",
+      "attrs": {
+        "condition": "REQ-016-217",
+        "label": "all cancellations succeeded"
+      }
+    },
+    {
+      "from_id": "STP-016-080",
+      "verb": "next",
       "to_id": "STP-016-120",
-      "attrs": {}
+      "attrs": {
+        "condition": "REQ-016-218",
+        "label": "a cancellation failed"
+      }
     },
     {
       "from_id": "STP-016-081",
@@ -382841,6 +383220,12 @@
     },
     {
       "from_id": "STP-016-082",
+      "verb": "applies",
+      "to_id": "REQ-016-217",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-082",
       "verb": "at",
       "to_id": "STG-patient-03-active",
       "attrs": {}
@@ -382849,6 +383234,12 @@
       "from_id": "STP-016-082",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-082",
+      "verb": "next",
+      "to_id": "STP-016-129",
       "attrs": {}
     },
     {
@@ -383332,7 +383723,19 @@
       "from_id": "STP-016-112",
       "verb": "next",
       "to_id": "STP-016-113",
-      "attrs": {}
+      "attrs": {
+        "condition": "REQ-016-207",
+        "label": "verification validated or not needed"
+      }
+    },
+    {
+      "from_id": "STP-016-112",
+      "verb": "next",
+      "to_id": "STP-016-121",
+      "attrs": {
+        "condition": "REQ-016-191",
+        "label": "admin denies"
+      }
     },
     {
       "from_id": "STP-016-113",
@@ -383377,6 +383780,15 @@
       }
     },
     {
+      "from_id": "STP-016-113",
+      "verb": "next",
+      "to_id": "STP-016-121",
+      "attrs": {
+        "condition": "REQ-016-191",
+        "label": "admin denies"
+      }
+    },
+    {
       "from_id": "STP-016-114",
       "verb": "applies",
       "to_id": "REQ-016-060",
@@ -383399,6 +383811,16 @@
       "verb": "done by",
       "to_id": "ACT-platform-admin",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-016-114",
+      "verb": "next",
+      "to_id": "STP-016-113",
+      "attrs": {
+        "condition": "REQ-016-171",
+        "label": "obligation ended, admin approves again",
+        "back": true
+      }
     },
     {
       "from_id": "STP-016-115",
@@ -383499,7 +383921,7 @@
     {
       "from_id": "STP-016-118",
       "verb": "done by",
-      "to_id": "ACT-platform-admin",
+      "to_id": "ACT-system",
       "attrs": {}
     },
     {
@@ -383523,7 +383945,7 @@
     {
       "from_id": "STP-016-119",
       "verb": "done by",
-      "to_id": "ACT-platform-admin",
+      "to_id": "ACT-system",
       "attrs": {}
     },
     {
@@ -383548,6 +383970,276 @@
       "from_id": "STP-016-120",
       "verb": "next",
       "to_id": "STP-016-081",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-121",
+      "verb": "applies",
+      "to_id": "REQ-016-173",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-121",
+      "verb": "applies",
+      "to_id": "REQ-016-191",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-121",
+      "verb": "at",
+      "to_id": "STG-patient-05-deleted",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-121",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-121",
+      "verb": "on",
+      "to_id": "SCR-016-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-122",
+      "verb": "applies",
+      "to_id": "REQ-016-070",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-122",
+      "verb": "applies",
+      "to_id": "REQ-016-110",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-122",
+      "verb": "applies",
+      "to_id": "REQ-016-220",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-122",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-122",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-122",
+      "verb": "next",
+      "to_id": "STP-016-123",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-122",
+      "verb": "on",
+      "to_id": "SCR-016-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-123",
+      "verb": "applies",
+      "to_id": "REQ-016-220",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-123",
+      "verb": "applies",
+      "to_id": "REQ-016-224",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-123",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-123",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-124",
+      "verb": "applies",
+      "to_id": "REQ-016-009",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-124",
+      "verb": "applies",
+      "to_id": "REQ-016-070",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-124",
+      "verb": "applies",
+      "to_id": "REQ-016-110",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-124",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-124",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-124",
+      "verb": "next",
+      "to_id": "STP-016-125",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-124",
+      "verb": "on",
+      "to_id": "SCR-016-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-125",
+      "verb": "applies",
+      "to_id": "REQ-016-009",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-125",
+      "verb": "applies",
+      "to_id": "REQ-016-049",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-125",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-125",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-126",
+      "verb": "applies",
+      "to_id": "REQ-016-201",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-126",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-126",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-127",
+      "verb": "applies",
+      "to_id": "REQ-016-070",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-127",
+      "verb": "applies",
+      "to_id": "REQ-016-225",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-127",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-127",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-127",
+      "verb": "next",
+      "to_id": "STP-016-074",
+      "attrs": {
+        "condition": "REQ-016-225",
+        "label": "suspend account"
+      }
+    },
+    {
+      "from_id": "STP-016-127",
+      "verb": "next",
+      "to_id": "STP-016-128",
+      "attrs": {
+        "condition": "REQ-016-225",
+        "label": "formal warning to the patient"
+      }
+    },
+    {
+      "from_id": "STP-016-127",
+      "verb": "on",
+      "to_id": "SCR-016-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-128",
+      "verb": "applies",
+      "to_id": "REQ-016-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-128",
+      "verb": "applies",
+      "to_id": "REQ-016-225",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-128",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-128",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-129",
+      "verb": "applies",
+      "to_id": "REQ-016-224",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-129",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-016-129",
+      "verb": "done by",
+      "to_id": "ACT-system",
       "attrs": {}
     },
     {
@@ -441730,6 +442422,63 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-133409-ed8d1aae",
+      "at": "2026-11-24T13:34:09.401930+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-016 logic review pass 2: Approve only for Pending Admin Review and a Denied outcome step; refunds enter an FR-007 manual refund; Payment Retry and Send Payment Reminder use the FR-007B Retry Charge access; suspension cascade cause, audit booking ids and Cancellation failed mark; password reset never changes Suspended; conversations read-only while suspended; Take Action offers a patient warning or suspension; three audit action types added and provider warning retired; flows for lift, unlock, automatic suspension end and Take Action; deletion review and cascade wiring completed.",
+      "source_id": null,
+      "nodes_added": [
+        "FLW-016-lift-suspension",
+        "FLW-016-suspension-auto-end",
+        "FLW-016-take-action",
+        "FLW-016-unlock-account",
+        "REQ-016-223",
+        "REQ-016-224",
+        "REQ-016-225",
+        "STP-016-121",
+        "STP-016-122",
+        "STP-016-123",
+        "STP-016-124",
+        "STP-016-125",
+        "STP-016-126",
+        "STP-016-127",
+        "STP-016-128",
+        "STP-016-129"
+      ],
+      "nodes_updated": [
+        "ENT-admin-action-log.action_type",
+        "FR-016",
+        "REQ-016-011",
+        "REQ-016-012",
+        "REQ-016-020",
+        "REQ-016-070",
+        "REQ-016-079",
+        "REQ-016-140",
+        "REQ-016-160",
+        "REQ-016-190",
+        "REQ-016-201",
+        "REQ-016-217",
+        "REQ-016-218",
+        "REQ-016-219",
+        "SCR-016-06",
+        "SCR-016-08",
+        "STP-016-034",
+        "STP-016-062",
+        "STP-016-080",
+        "STP-016-081",
+        "STP-016-082",
+        "STP-016-112",
+        "STP-016-113",
+        "STP-016-114",
+        "STP-016-118",
+        "STP-016-119",
+        "STP-016-120"
+      ],
+      "edges_added": 83,
+      "edges_removed": 5,
+      "rows": 203
+    },
     {
       "id": "cs-20261124-132640-4adea3fa",
       "at": "2026-11-24T13:26:40.323723+00:00",
