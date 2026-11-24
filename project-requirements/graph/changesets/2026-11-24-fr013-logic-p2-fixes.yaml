@@ -1,0 +1,259 @@
+# Operations ordered so new nodes come first, then edge removals, then updates, then new edges. Neighbour needs (FR-010, FR-022, FR-030) are queued in the ledger, not in this file. ENT-review.last_edited_at is already linked to REQ-013-033 by an applies-to edge; its calculated-by rule stays REQ-013-032.
+reason: 'FR-013 logic review pass 2 (closing): provider list and detail show the treatment name only and filter by alias search, treatment, rating, date, response status and source type; an admin removal that closes a Pending takedown records the admin, time and removal reason and sends one notice; redact and removal clear the flag; Respond is hidden once a replacement was published; the provider gets one notice with the reason when an admin removes its response; two reviews per case in total; only cases marked Completed in FR-010 can be reviewed, counted from that day; aggregates count Published or Flagged reviews; admin Edit and Remove only for Published or Flagged reviews; latest takedown request shown; alias always public with admin unmask as an RBAC view; takedown flow hands over to the admin decision flow; audit admin id optional; rule and step titles aligned.'
+by: docs-manager
+operations:
+- op: add_node
+  id: STP-013-083
+  type: Step
+  owner_fr: FR-013
+  title: System notifies the provider that the response was removed, with the removal reason
+  attrs:
+    prd_ref: B3 step 3
+- op: remove_edge
+  from: STP-013-082
+  verb: next
+  to: STP-013-051
+- op: remove_edge
+  from: SCR-013-05
+  verb: shows
+  to: ENT-review.procedure_id
+- op: remove_edge
+  from: SCR-013-06
+  verb: shows
+  to: ENT-review.procedure_id
+- op: remove_edge
+  from: REQ-013-058
+  verb: applies to
+  to: ENT-review.procedure_id
+- op: update_field
+  id: ENT-admin-action.admin_id
+  required: false
+- op: update_node
+  id: ENT-admin-action.admin_id
+  attrs:
+    description: The admin who acted; set when the actor type is admin, empty for patient and provider actions.
+- op: update_node
+  id: ENT-admin-action.action_type
+  attrs:
+    description: 'Kind of admin action. The PRD lists eleven values: insert, edit, remove, takedown_approve, takedown_reject, settings_change, export, response_remove, flag_resolve, patient_edit, response_publish.'
+- op: update_node
+  id: REQ-013-001
+  attrs:
+    statement: System MUST allow eligible patients, those with a treatment case marked Completed in FR-010 (not Closed Early or Cancelled), to submit reviews (overall + categories, feedback, optional photos).
+- op: update_node
+  id: REQ-013-002
+  title: Review needs 3 months since the case was marked Completed; at most two reviews per case
+  attrs:
+    statement: System MUST enforce time gating (≥ 3 months counted from the day the case was marked Completed) and one published review per treatment case. After a removal (approved takedown or admin policy removal) the patient MAY submit one further review for the case; a case has at most two reviews in total, so once the further review is removed the case cannot be reviewed again. Removed reviews are kept in the archive and are never restored.
+- op: update_node
+  id: REQ-013-008
+  attrs:
+    statement: System MUST calculate and display provider average rating, count, and distribution over Published or Flagged reviews, including admin-seeded `Verified Off-platform` reviews.
+- op: update_node
+  id: REQ-013-009
+  attrs:
+    statement: System MUST provide provider-side list/filter/detail screens across treatment cases, including search by reviewer alias and filtering by treatment, rating, date, response status, and source type.
+- op: update_node
+  id: REQ-013-014
+  title: Reviewer identity always aliased; no PII in public views
+  attrs:
+    rationale: 'Restated by Data & Privacy Rules ("Patient display name is always the alias; see canonical reviewer alias algorithm below."), Screen 4 ("Always the alias; no PII exposure") and the reviewer alias rows of Screens 5 and 6 (no PII exposure). Algorithm: see the reviewer alias rule.'
+- op: update_node
+  id: REQ-013-016
+  attrs:
+    statement: System MUST support unpublish + archival for compliance removals and approved takedown requests; an admin removal of a review also closes any Pending takedown request on it as Approved, decided by the removing admin at the removal time with the removal reason as its decision note (audited as the `remove` action with the takedown request id; the patient gets the removal notice only). A removal or approved takedown clears any flag reason, and a Removed review is read-only for admins. There is no Restore action.
+- op: update_node
+  id: REQ-013-017
+  attrs:
+    statement: 'The review module raises a notification on each of these events: new published review, provider reply, admin removal of a review (to the reviewing patient), admin removal of a provider response (to the provider, with the reason), takedown decision, review edited by the patient (to the provider, informational only), review edited by an admin (to the reviewing patient), takedown requested (to admins), and takedown overdue (to admins). Notices that would go to the placeholder patient of an admin-seeded review are not sent. The invitation fires on the eligibility date (3 months after the treatment case was marked Completed in FR-010) and reminder timing counts from that date; reminder cadence is owned by FR-030. Delivery, recipients, content and opt-out follow the notification-service Rule in FR-020 and the FR-030 notification catalogue.'
+- op: update_node
+  id: REQ-013-023
+  attrs:
+    statement: System MUST additionally expose a per-treatment aggregated sub-scores endpoint that returns, for a given provider, `{treatment_id → {avg_overall, avg_facility, avg_staff, avg_results, avg_value, review_count, distribution}}` over Published or Flagged reviews only. This endpoint is the data contract consumed by FR-014 "review sub-scores per treatment" analytics; cache invalidation MUST be triggered on every change of a review's visibility or rating (publish, edit republish, admin add, admin edit of a rating, removal, unpublish from flag resolution, and approved takedown).
+- op: update_node
+  id: REQ-013-024
+  attrs:
+    statement: The review invitation fires on the eligibility date (3 months after the treatment case was marked Completed in FR-010) and triggers the review flow; reminders count from that date. Patient navigates to “Write a Review” from provider history. Patient views published reviews from provider profile/offer evaluation surfaces. Patient navigates to “Submitted Reviews” to view review history and request takedown from detail page. Providers access “Reviews” in dashboard to list/filter/detail reviews and respond. Admins access “Review Management”, “Takedown Requests”, and “Review Settings” from Admin platform navigation.
+- op: update_node
+  id: REQ-013-025
+  attrs:
+    statement: System validates inputs (rating ranges, feedback length, file type/size) and verifies eligibility. Ineligible attempts (too early, case not marked Completed, or both reviews of the case already used) are blocked with clear messaging; the submission screen says no more reviews can be submitted for the case.
+- op: update_node
+  id: REQ-013-027
+  attrs:
+    statement: 'Fixed in Codebase (Not Editable): Eligibility logic requires a case marked Completed and the time threshold. Minimum and maximum lengths for text fields and rating scale bounds.'
+- op: update_node
+  id: REQ-013-031
+  attrs:
+    statement: 'System publishes (or republishes, on edit) the review immediately and recalculates provider rating metrics (average, count, distribution) with associated cache invalidation. Recalculation applies whether the action is an initial submission or an edit to an already-published review, and, under the same rule, to every other change of a review''s visibility or rating (REQ-013-031): admin add, admin edit of a rating, admin removal, unpublish from flag resolution, and approved takedown. Published and Flagged reviews count in the aggregates, so setting or clearing a flag needs no recalculation. Admin-seeded reviews count in the average and distribution and are labelled Verified Off-platform.'
+- op: update_node
+  id: REQ-013-033
+  attrs:
+    statement: Edited reviews (patient or admin edit) surface an "Edited {relative_time}" marker on all public surfaces (Patient list, Patient detail, Provider list/detail, Provider Profile Reviews Section) so readers can distinguish current content from the original publish. An admin edit sets the marker but does not change the edit count, which counts patient edits.
+- op: update_node
+  id: REQ-013-040
+  attrs:
+    statement: 'Review status badge uses app-facing labels: `Published`, `Removed`. A review with status `Flagged` stays publicly visible and shows as `Published` to the patient. `Submitted` is not a review status in V1; successful review submission immediately creates a `Published` review. Takedown request state is displayed separately from review status when applicable (`Pending`, `Approved`, `Rejected`), for the latest request only; earlier requests stay in the admin history. `Removed` means no longer publicly visible due to admin action or approved takedown.'
+- op: update_node
+  id: REQ-013-046
+  attrs:
+    statement: 'Admin reviews request reason, review content, and compliance context. Admin approves or rejects request with decision note. System applies decision: approved -> review unpublished/archived (any flag on it is cleared) and provider rating metrics recalculated; rejected -> review remains published. System notifies patient of decision and reason; the decision note is also shown on Review Detail (Screen 3).'
+- op: update_node
+  id: REQ-013-052
+  title: Reviewer alias algorithm; seeded display name; always alias
+  attrs:
+    statement: 'Reviewer alias algorithm (canonical, applied uniformly across Patient, Provider, and Admin public surfaces): `{first_name} {last_initial}.` (e.g., "Sarah M."); collisions within the same provider''s review list are deduplicated with a numeric suffix (`Sarah M. 2`, `Sarah M. 3`, …). Admin-seeded reviews use an admin-entered `reviewer_display_name` field (free text, subject to the same PII-safety policy — no full last name, no contact info) instead of the algorithmic alias; the `Verified Off-platform` badge accompanies the display name. Public surfaces always show the alias; there is no setting or option to change that. Admin views may unmask the patient identity per RBAC for review handling; this is not a public display option.'
+    rationale: Data & Privacy Rules, canonical alias, whole bullet verbatim (Change Log 1.13 item 6). Includes the admin-seeded reviewer_display_name rule and the always-alias rule.
+- op: update_node
+  id: REQ-013-056
+  attrs:
+    statement: 'Provider may have at most one active public response per review in V1. If admin removes a prior response for policy violation, provider may submit one replacement response; both the removed and replacement responses are retained in the audit trail (`AdminAction` for the removal, `ProviderResponse` history for the lifecycle). If the replacement is removed too, the provider may not respond again: a review has at most one original and one replacement response.'
+- op: update_node
+  id: REQ-013-057
+  title: Respond action only on published reviews without an active response or earlier replacement; submission recorded and patient notified
+  attrs:
+    statement: Respond as Provider is visible only when the review is published (a Flagged review counts as published), the provider account is active, and the review has no active response and no replacement response was ever published (a removed original response does not count; once a replacement is published, Respond stays hidden even if the replacement is later removed). Submission records provider identity and timestamp and triggers patient notification (not sent when the review is an admin-seeded review linked to a placeholder patient, REQ-013-077). A suspended provider sees the review view-only, with no Respond control.
+- op: update_node
+  id: REQ-013-058
+  title: Provider detail and list show the treatment name and date; no patient or case filter
+  attrs:
+    statement: Detail and list show the treatment name and date, so multi-case histories are told apart by treatment and date, not by case identifier. The list has no patient or case filter.
+- op: update_node
+  id: REQ-013-070
+  title: Admin edits review labels, photo guidelines and removal reasons
+- op: update_node
+  id: REQ-013-073
+  attrs:
+    statement: 'Trigger: Content flagged by system-automated detection (keyword matching, duplicate submission patterns, rate-limit triggers). User-initiated flagging is a future enhancement. Steps: System sets the review status to Flagged and queues the content for admin review; Admin resolves the flag on Screen 8 with a reason: uphold (the review returns to Published and the flag reason is cleared), redact (an admin edit; the review returns to Published and the flag reason is cleared) or unpublish (an admin removal). Outcome: Policy-compliant content remains; violations are removed with audit record. A flagged review stays publicly visible (shown as Published) until an admin removes it.'
+    rationale: 'Workflow B2. Edge Cases: "Duplicate or spam reviews: auto‑flag for admin review post-publication." Implementation Notes (technical, not migrated) add that anti-abuse covers duplicate detection, keyword flags and rate limits for submissions. User-initiated flagging is a future enhancement (Change Log 1.11).'
+- op: update_node
+  id: REQ-013-079
+  attrs:
+    statement: A review with status Flagged MUST stay publicly visible until an admin removes it; patients and the public see it as Published. Every rule keyed on Published (visibility, patient Edit and Request Takedown, provider Respond, the rating aggregates and the sub-score endpoint) also covers Flagged, so setting or clearing a flag needs no recalculation. An admin resolves a flag as uphold or redact (back to Published, flag reason cleared) or unpublish.
+- op: update_node
+  id: STP-013-005
+  title: Patient sees the confirmation and the live review, with the Edited marker after an edit
+- op: update_node
+  id: STP-013-072
+  title: System sets the status to Removed and clears any flag reason, stores the reason, writes the audit record, closes a Pending takedown request as Approved with the admin, time and removal reason as its decision, and notifies the patient
+- op: update_node
+  id: ENT-takedown-request.decided_by
+  attrs:
+    description: The admin who decided; for a request closed by an admin removal, the removing admin.
+- op: update_node
+  id: ENT-takedown-request.decided_at
+  attrs:
+    description: When the request was resolved; for a request closed by an admin removal, the removal time.
+- op: update_node
+  id: ENT-takedown-request.decision_note
+  attrs:
+    description: Admin justification, 10-1000 characters; for a request closed by an admin removal, the removal reason.
+- op: update_node
+  id: ENT-review.flag_reason
+  attrs:
+    description: Reason for the auto or manual flag, shown on the admin review detail. Cleared on uphold, redact, removal and approved takedown.
+- op: update_node
+  id: ENT-review.edit_count
+  attrs:
+    description: Incremented on each patient edit; an admin edit does not change it.
+- op: update_node
+  id: ENT-review.last_edited_at
+  attrs:
+    description: Set when the patient or an admin edits a published review.
+- op: update_node
+  id: ENT-review.reviewer_name
+  attrs:
+    description: Public reviewer display name computed by the reviewer alias rule (always the alias; admin-entered display name for seeded reviews). Stub from the FR-032 migration, filled in here.
+- op: update_node
+  id: SCR-013-05
+  attrs:
+    description: List of the provider's published reviews across treatment cases with ratings summary, source type, reviewer alias, treatment context, response status, filters and sort. Final placement (dashboard list or embedded in the provider profile detail) is a UX/UI design decision.
+- op: update_node
+  id: ENT-provider-review-summary
+  attrs:
+    description: 'Per-provider aggregate of Published or Flagged reviews: average rating, count and distribution, recalculated on every publish, edit republish, removal and approved takedown, with caching. Shown read-only on the provider profile review section, the provider review list and the FR-005 quote comparison.'
+- op: update_node
+  id: ENT-provider-review-summary.average_rating
+  attrs:
+    description: Average rating of Published or Flagged reviews, shown read-only in comparison, on the provider profile and the provider review list; half-star display allowed.
+- op: update_node
+  id: ENT-provider-review-summary.review_count
+  attrs:
+    description: Number of Published or Flagged reviews, shown read-only with the rating summary.
+- op: update_node
+  id: ENT-provider-review-summary.rating_distribution
+  attrs:
+    description: Count of Published or Flagged reviews per star rating for one provider (percentage/count visualization 5 to 1 stars). Read-only.
+- op: update_node
+  id: ENT-provider-treatment-review-summary
+  attrs:
+    description: Per-provider, per-treatment aggregate of Published or Flagged reviews (average sub-scores, count, distribution). Data contract consumed by FR-014 review sub-scores per treatment analytics.
+- op: update_node
+  id: ENT-provider-treatment-review-summary.avg_overall
+  attrs:
+    description: Average over Published or Flagged reviews.
+- op: update_node
+  id: ENT-provider-treatment-review-summary.avg_facility
+  attrs:
+    description: Average over Published or Flagged reviews.
+- op: update_node
+  id: ENT-provider-treatment-review-summary.avg_staff
+  attrs:
+    description: Average over Published or Flagged reviews.
+- op: update_node
+  id: ENT-provider-treatment-review-summary.avg_results
+  attrs:
+    description: Average over Published or Flagged reviews.
+- op: update_node
+  id: ENT-provider-treatment-review-summary.avg_value
+  attrs:
+    description: Average over Published or Flagged reviews.
+- op: update_node
+  id: ENT-provider-treatment-review-summary.review_count
+  attrs:
+    description: Number of Published or Flagged reviews.
+- op: add_edge
+  from: STP-013-083
+  verb: at
+  to: STG-main-09-review-close
+- op: add_edge
+  from: STP-013-083
+  verb: done by
+  to: ACT-system
+- op: add_edge
+  from: STP-013-083
+  verb: applies
+  to: REQ-013-017
+- op: add_edge
+  from: STP-013-083
+  verb: applies
+  to: REQ-013-056
+- op: add_edge
+  from: STP-013-082
+  verb: next
+  to: STP-013-083
+  attrs:
+    label: response removed
+- op: add_edge
+  from: STP-013-083
+  verb: next
+  to: STP-013-051
+  attrs:
+    label: provider may submit the one replacement response
+    condition: REQ-013-056
+- op: add_edge
+  from: STP-013-034
+  verb: next
+  to: STP-013-041
+  attrs:
+    label: admin opens the request from the queue
+- op: add_edge
+  from: STP-013-035
+  verb: next
+  to: STP-013-041
+  attrs:
+    label: overdue request is still decided by an admin
+- op: add_edge
+  from: STP-013-022
+  verb: applies
+  to: REQ-013-079

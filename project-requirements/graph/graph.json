@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T08:54:16Z",
+  "generated_at": "2026-11-24T09:07:33Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -1255,9 +1255,9 @@
       "owner_fr": "FR-013",
       "title": "Action type",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "description": "Kind of admin action. The PRD lists nine values: insert, edit, remove, takedown_approve, takedown_reject, settings_change, export, response_remove, flag_resolve."
+        "description": "Kind of admin action. The PRD lists eleven values: insert, edit, remove, takedown_approve, takedown_reject, settings_change, export, response_remove, flag_resolve, patient_edit, response_publish."
       }
     },
     {
@@ -1288,9 +1288,9 @@
       "owner_fr": "FR-013",
       "title": "Admin identity",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "The admin who acted; set when the actor type is admin."
+        "description": "The admin who acted; set when the actor type is admin, empty for patient and provider actions."
       }
     },
     {
@@ -22456,9 +22456,9 @@
       "owner_fr": "FR-013",
       "title": "Provider review summary",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "description": "Per-provider aggregate of Published reviews: average rating, count and distribution, recalculated on every publish, edit republish, removal and approved takedown, with caching. Shown read-only on the provider profile review section, the provider review list and the FR-005 quote comparison."
+        "description": "Per-provider aggregate of Published or Flagged reviews: average rating, count and distribution, recalculated on every publish, edit republish, removal and approved takedown, with caching. Shown read-only on the provider profile review section, the provider review list and the FR-005 quote comparison."
       }
     },
     {
@@ -22467,9 +22467,9 @@
       "owner_fr": "FR-013",
       "title": "Review rating",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Average rating of Published reviews, shown read-only in comparison, on the provider profile and the provider review list; half-star display allowed."
+        "description": "Average rating of Published or Flagged reviews, shown read-only in comparison, on the provider profile and the provider review list; half-star display allowed."
       }
     },
     {
@@ -22500,9 +22500,9 @@
       "owner_fr": "FR-013",
       "title": "Rating distribution",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Count of Published reviews per star rating for one provider (percentage/count visualization 5 to 1 stars). Read-only."
+        "description": "Count of Published or Flagged reviews per star rating for one provider (percentage/count visualization 5 to 1 stars). Read-only."
       }
     },
     {
@@ -22511,9 +22511,9 @@
       "owner_fr": "FR-013",
       "title": "Review count",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Number of Published reviews, shown read-only with the rating summary."
+        "description": "Number of Published or Flagged reviews, shown read-only with the rating summary."
       }
     },
     {
@@ -22788,9 +22788,9 @@
       "owner_fr": "FR-013",
       "title": "Provider treatment review summary",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Per-provider, per-treatment aggregate of Published reviews (average sub-scores, count, distribution). Data contract consumed by FR-014 review sub-scores per treatment analytics."
+        "description": "Per-provider, per-treatment aggregate of Published or Flagged reviews (average sub-scores, count, distribution). Data contract consumed by FR-014 review sub-scores per treatment analytics."
       }
     },
     {
@@ -22799,9 +22799,9 @@
       "owner_fr": "FR-013",
       "title": "Average facility rating",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Average over Published reviews."
+        "description": "Average over Published or Flagged reviews."
       }
     },
     {
@@ -22810,9 +22810,9 @@
       "owner_fr": "FR-013",
       "title": "Average overall rating",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Average over Published reviews."
+        "description": "Average over Published or Flagged reviews."
       }
     },
     {
@@ -22821,9 +22821,9 @@
       "owner_fr": "FR-013",
       "title": "Average results rating",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Average over Published reviews."
+        "description": "Average over Published or Flagged reviews."
       }
     },
     {
@@ -22832,9 +22832,9 @@
       "owner_fr": "FR-013",
       "title": "Average staff rating",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Average over Published reviews."
+        "description": "Average over Published or Flagged reviews."
       }
     },
     {
@@ -22843,9 +22843,9 @@
       "owner_fr": "FR-013",
       "title": "Average value rating",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Average over Published reviews."
+        "description": "Average over Published or Flagged reviews."
       }
     },
     {
@@ -22876,9 +22876,9 @@
       "owner_fr": "FR-013",
       "title": "Review count",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Number of Published reviews."
+        "description": "Number of Published or Flagged reviews."
       }
     },
     {
@@ -26012,9 +26012,9 @@
       "owner_fr": "FR-013",
       "title": "Edit count",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Incremented on each patient edit."
+        "description": "Incremented on each patient edit; an admin edit does not change it."
       }
     },
     {
@@ -26045,9 +26045,9 @@
       "owner_fr": "FR-013",
       "title": "Flag reason",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Reason for the auto or manual flag, shown on the admin review detail."
+        "description": "Reason for the auto or manual flag, shown on the admin review detail. Cleared on uphold, redact, removal and approved takedown."
       }
     },
     {
@@ -26056,9 +26056,9 @@
       "owner_fr": "FR-013",
       "title": "Last edited at",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Set when the patient edits a published review."
+        "description": "Set when the patient or an admin edits a published review."
       }
     },
     {
@@ -26166,9 +26166,9 @@
       "owner_fr": "FR-013",
       "title": "Reviewer name",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Public reviewer display name computed by the reviewer alias rule (alias by default; admin-entered display name for seeded reviews). Stub from the FR-032 migration, filled in here."
+        "description": "Public reviewer display name computed by the reviewer alias rule (always the alias; admin-entered display name for seeded reviews). Stub from the FR-032 migration, filled in here."
       }
     },
     {
@@ -28720,9 +28720,9 @@
       "owner_fr": "FR-013",
       "title": "Decided at",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "When the request was resolved."
+        "description": "When the request was resolved; for a request closed by an admin removal, the removal time."
       }
     },
     {
@@ -28731,9 +28731,9 @@
       "owner_fr": "FR-013",
       "title": "Decision actor",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "The admin who decided."
+        "description": "The admin who decided; for a request closed by an admin removal, the removing admin."
       }
     },
     {
@@ -28742,9 +28742,9 @@
       "owner_fr": "FR-013",
       "title": "Decision note",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Admin justification, 10-1000 characters."
+        "description": "Admin justification, 10-1000 characters; for a request closed by an admin removal, the removal reason."
       }
     },
     {
@@ -55918,9 +55918,9 @@
       "owner_fr": "FR-013",
       "title": "Eligible patients submit reviews with ratings, feedback and photos",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST allow eligible patients to submit reviews (overall + categories, feedback, optional photos).",
+        "statement": "System MUST allow eligible patients, those with a treatment case marked Completed in FR-010 (not Closed Early or Cancelled), to submit reviews (overall + categories, feedback, optional photos).",
         "rationale": "Restated by the Executive Summary, Main Flow steps 1 and 2 and Screen 1. General Module Rules: \"Eligibility check required: only patients with a completed procedure may review.\""
       }
     },
@@ -55928,11 +55928,11 @@
       "id": "REQ-013-002",
       "type": "Rule",
       "owner_fr": "FR-013",
-      "title": "Review needs 3 months since completion; one published review per procedure",
+      "title": "Review needs 3 months since the case was marked Completed; at most two reviews per case",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System MUST enforce time gating (≥ 3 months) and one published review per treatment case. After a removal (approved takedown or admin policy removal) the patient MAY submit one further review for the case. Removed reviews are kept in the archive and are never restored.",
+        "statement": "System MUST enforce time gating (≥ 3 months counted from the day the case was marked Completed) and one published review per treatment case. After a removal (approved takedown or admin policy removal) the patient MAY submit one further review for the case; a case has at most two reviews in total, so once the further review is removed the case cannot be reviewed again. Removed reviews are kept in the archive and are never restored.",
         "rationale": "Restated by Module Scope, Entry Points, Main Flow prerequisites and General Module Rules (\"Time gating: review invitation and entry allowed ≥ 3 months post-procedure.\"). Change Log 1.13 records the 3-month gate as a product-owner additional requirement that needs no client-transcription evidence."
       }
     },
@@ -56002,9 +56002,9 @@
       "owner_fr": "FR-013",
       "title": "Provider average rating, count and distribution calculated",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST calculate and display provider average rating, count, and distribution over Published reviews, including admin-seeded `Verified Off-platform` reviews.",
+        "statement": "System MUST calculate and display provider average rating, count, and distribution over Published or Flagged reviews, including admin-seeded `Verified Off-platform` reviews.",
         "rationale": "Restated by Screen 5 (Ratings summary: average rating, count, distribution), Screen 4 (rating summary teaser, cached summary allowed) and Main Flow step 3. Scalability Considerations: caching of ratings summary and distribution per provider (technical, not migrated)."
       }
     },
@@ -56014,9 +56014,9 @@
       "owner_fr": "FR-013",
       "title": "Provider list, filter and detail screens across treatment cases",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST provide provider-side list/filter/detail screens across treatment cases, including filtering by patient, case, rating, date, response status, and source type.",
+        "statement": "System MUST provide provider-side list/filter/detail screens across treatment cases, including search by reviewer alias and filtering by treatment, rating, date, response status, and source type.",
         "rationale": "Restated by the Provider Platform scope and Screens 5 and 6. The filter criteria themselves are owned by FR-022 (REQ-022-092, REQ-022-042)."
       }
     },
@@ -56072,12 +56072,12 @@
       "id": "REQ-013-014",
       "type": "Rule",
       "owner_fr": "FR-013",
-      "title": "Reviewer identity aliased by default; no PII in public views",
+      "title": "Reviewer identity always aliased; no PII in public views",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "System MUST always alias reviewer identity and prevent exposure of PII in public views.",
-        "rationale": "Restated by Data & Privacy Rules (\"Patient display name uses aliasing by default; see canonical reviewer alias algorithm below.\"), Screen 4 (\"Reviewer identity is aliased by default and must not expose patient PII.\") and the reviewer alias rows of Screens 5 and 6 (no PII exposure). Algorithm: see the reviewer alias rule."
+        "rationale": "Restated by Data & Privacy Rules (\"Patient display name is always the alias; see canonical reviewer alias algorithm below.\"), Screen 4 (\"Always the alias; no PII exposure\") and the reviewer alias rows of Screens 5 and 6 (no PII exposure). Algorithm: see the reviewer alias rule."
       }
     },
     {
@@ -56098,9 +56098,9 @@
       "owner_fr": "FR-013",
       "title": "Unpublish and archive for compliance removals and takedowns",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST support unpublish + archival for compliance removals and approved takedown requests; an admin removal of a review also closes any Pending takedown request on it as Approved. There is no Restore action.",
+        "statement": "System MUST support unpublish + archival for compliance removals and approved takedown requests; an admin removal of a review also closes any Pending takedown request on it as Approved, decided by the removing admin at the removal time with the removal reason as its decision note (audited as the `remove` action with the takedown request id; the patient gets the removal notice only). A removal or approved takedown clears any flag reason, and a Removed review is read-only for admins. There is no Restore action.",
         "rationale": "Restated by Screen 8 (\"Removed reviews are unpublished + archived (not hard deleted).\"), Screen 9 (\"Approve decision: review unpublished + archived.\"), Security Considerations (soft-delete (unpublish) for takedowns) and the approved-takedown edge case."
       }
     },
@@ -56110,9 +56110,9 @@
       "owner_fr": "FR-013",
       "title": "Review events raise notifications; delivery follows FR-020 and FR-030",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "The review module raises a notification on each of these events: new published review, provider reply, admin removal, takedown decision, review edited by the patient (to the provider, informational only), review edited by an admin (to the reviewing patient), takedown requested (to admins), and takedown overdue (to admins). Notices that would go to the placeholder patient of an admin-seeded review are not sent. The invitation fires on the eligibility date (3 months after confirmed procedure completion) and reminder timing counts from that date; reminder cadence is owned by FR-030. Delivery, recipients, content and opt-out follow the notification-service Rule in FR-020 and the FR-030 notification catalogue.",
+        "statement": "The review module raises a notification on each of these events: new published review, provider reply, admin removal of a review (to the reviewing patient), admin removal of a provider response (to the provider, with the reason), takedown decision, review edited by the patient (to the provider, informational only), review edited by an admin (to the reviewing patient), takedown requested (to admins), and takedown overdue (to admins). Notices that would go to the placeholder patient of an admin-seeded review are not sent. The invitation fires on the eligibility date (3 months after the treatment case was marked Completed in FR-010) and reminder timing counts from that date; reminder cadence is owned by FR-030. Delivery, recipients, content and opt-out follow the notification-service Rule in FR-020 and the FR-030 notification catalogue.",
         "rationale": "Restated by Main Flow step 4(d), workflows A3 step 4, A4 step 4 and B1 outcome, the Provider Platform scope (receive notification on new published reviews) and Shared Services. Invite and reminder timing is owned by FR-030; delivery, recipients, content and opt-out are owned by FR-020 and the FR-030 catalogue."
       }
     },
@@ -56182,9 +56182,9 @@
       "owner_fr": "FR-013",
       "title": "Per-treatment sub-scores endpoint for FR-014 (PRD id REQ-013-018a)",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST additionally expose a per-treatment aggregated sub-scores endpoint that returns, for a given provider, `{treatment_id → {avg_overall, avg_facility, avg_staff, avg_results, avg_value, review_count, distribution}}` over Published reviews only. This endpoint is the data contract consumed by FR-014 \"review sub-scores per treatment\" analytics; cache invalidation MUST be triggered on every change of a review's visibility or rating (publish, edit republish, admin add, admin edit of a rating, removal, unpublish from flag resolution, and approved takedown).",
+        "statement": "System MUST additionally expose a per-treatment aggregated sub-scores endpoint that returns, for a given provider, `{treatment_id → {avg_overall, avg_facility, avg_staff, avg_results, avg_value, review_count, distribution}}` over Published or Flagged reviews only. This endpoint is the data contract consumed by FR-014 \"review sub-scores per treatment\" analytics; cache invalidation MUST be triggered on every change of a review's visibility or rating (publish, edit republish, admin add, admin edit of a rating, removal, unpublish from flag resolution, and approved takedown).",
         "rationale": "Renumbered from REQ-013-018a because Rule ids carry digits only. Change Log 1.13 item 4; Dependencies FR-014."
       }
     },
@@ -56194,9 +56194,9 @@
       "owner_fr": "FR-013",
       "title": "Entry points to reviews, takedown requests and review settings",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "The review invitation fires on the eligibility date (3 months after confirmed procedure completion) and triggers the review flow; reminders count from that date. Patient navigates to “Write a Review” from provider history. Patient views published reviews from provider profile/offer evaluation surfaces. Patient navigates to “Submitted Reviews” to view review history and request takedown from detail page. Providers access “Reviews” in dashboard to list/filter/detail reviews and respond. Admins access “Review Management”, “Takedown Requests”, and “Review Settings” from Admin platform navigation.",
+        "statement": "The review invitation fires on the eligibility date (3 months after the treatment case was marked Completed in FR-010) and triggers the review flow; reminders count from that date. Patient navigates to “Write a Review” from provider history. Patient views published reviews from provider profile/offer evaluation surfaces. Patient navigates to “Submitted Reviews” to view review history and request takedown from detail page. Providers access “Reviews” in dashboard to list/filter/detail reviews and respond. Admins access “Review Management”, “Takedown Requests”, and “Review Settings” from Admin platform navigation.",
         "rationale": "prd.md lines 56, 57."
       }
     },
@@ -56206,9 +56206,9 @@
       "owner_fr": "FR-013",
       "title": "Submission validated; ineligible attempts blocked with clear messaging",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System validates inputs (rating ranges, feedback length, file type/size) and verifies eligibility. Ineligible attempts (too early/no completed procedure) are blocked with clear messaging.",
+        "statement": "System validates inputs (rating ranges, feedback length, file type/size) and verifies eligibility. Ineligible attempts (too early, case not marked Completed, or both reviews of the case already used) are blocked with clear messaging; the submission screen says no more reviews can be submitted for the case.",
         "rationale": "Main Flow step 2 and the Edge Cases list. Rating ranges and lengths are in the rating and feedback rule; file limits in the photo rule."
       }
     },
@@ -56230,9 +56230,9 @@
       "owner_fr": "FR-013",
       "title": "Eligibility logic, text lengths and rating scale fixed in code",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Fixed in Codebase (Not Editable): Eligibility logic requires completed procedure and time threshold. Minimum and maximum lengths for text fields and rating scale bounds.",
+        "statement": "Fixed in Codebase (Not Editable): Eligibility logic requires a case marked Completed and the time threshold. Minimum and maximum lengths for text fields and rating scale bounds.",
         "rationale": "Admin Editability Rules, Fixed in Codebase list. Statement is the two list items verbatim under the list heading."
       }
     },
@@ -56278,9 +56278,9 @@
       "owner_fr": "FR-013",
       "title": "Publish and edit republish recalculate provider rating metrics",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System publishes (or republishes, on edit) the review immediately and recalculates provider rating metrics (average, count, distribution) with associated cache invalidation. Recalculation applies whether the action is an initial submission or an edit to an already-published review, and, under the same rule, to every other change of a review's visibility or rating (REQ-013-031): admin add, admin edit of a rating, admin removal, unpublish from flag resolution, and approved takedown. Admin-seeded reviews count in the average and distribution and are labelled Verified Off-platform.",
+        "statement": "System publishes (or republishes, on edit) the review immediately and recalculates provider rating metrics (average, count, distribution) with associated cache invalidation. Recalculation applies whether the action is an initial submission or an edit to an already-published review, and, under the same rule, to every other change of a review's visibility or rating (REQ-013-031): admin add, admin edit of a rating, admin removal, unpublish from flag resolution, and approved takedown. Published and Flagged reviews count in the aggregates, so setting or clearing a flag needs no recalculation. Admin-seeded reviews count in the average and distribution and are labelled Verified Off-platform.",
         "rationale": "Main Flow step 3. The takedown decision rule repeats the recalculation on approval."
       }
     },
@@ -56302,9 +56302,9 @@
       "owner_fr": "FR-013",
       "title": "Edited reviews show an Edited relative-time marker on public surfaces",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Edited reviews (patient or admin edit) surface an \"Edited {relative_time}\" marker on all public surfaces (Patient list, Patient detail, Provider list/detail, Provider Profile Reviews Section) so readers can distinguish current content from the original publish.",
+        "statement": "Edited reviews (patient or admin edit) surface an \"Edited {relative_time}\" marker on all public surfaces (Patient list, Patient detail, Provider list/detail, Provider Profile Reviews Section) so readers can distinguish current content from the original publish. An admin edit sets the marker but does not change the edit count, which counts patient edits.",
         "rationale": "Main Flow step 5, second sentence."
       }
     },
@@ -56386,9 +56386,9 @@
       "owner_fr": "FR-013",
       "title": "Review status labels Published and Removed; takedown state shown separately",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Review status badge uses app-facing labels: `Published`, `Removed`. A review with status `Flagged` stays publicly visible and shows as `Published` to the patient. `Submitted` is not a review status in V1; successful review submission immediately creates a `Published` review. Takedown request state is displayed separately from review status when applicable (`Pending`, `Approved`, `Rejected`). `Removed` means no longer publicly visible due to admin action or approved takedown.",
+        "statement": "Review status badge uses app-facing labels: `Published`, `Removed`. A review with status `Flagged` stays publicly visible and shows as `Published` to the patient. `Submitted` is not a review status in V1; successful review submission immediately creates a `Published` review. Takedown request state is displayed separately from review status when applicable (`Pending`, `Approved`, `Rejected`), for the latest request only; earlier requests stay in the admin history. `Removed` means no longer publicly visible due to admin action or approved takedown.",
         "rationale": "Screen 2 business rules. Key Entities give the review a third status, Flagged, which admins see and patients and the public see as Published (REQ-013-079). Change Log 1.10."
       }
     },
@@ -56458,9 +56458,9 @@
       "owner_fr": "FR-013",
       "title": "Admin approves or rejects takedown with note; approval unpublishes, recalculates, notifies",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Admin reviews request reason, review content, and compliance context. Admin approves or rejects request with decision note. System applies decision: approved -> review unpublished/archived and provider rating metrics recalculated; rejected -> review remains published. System notifies patient of decision and reason; the decision note is also shown on Review Detail (Screen 3).",
+        "statement": "Admin reviews request reason, review content, and compliance context. Admin approves or rejects request with decision note. System applies decision: approved -> review unpublished/archived (any flag on it is cleared) and provider rating metrics recalculated; rejected -> review remains published. System notifies patient of decision and reason; the decision note is also shown on Review Detail (Screen 3).",
         "rationale": "Workflow A4. Edge Cases add that on a rejected request the review stays published and the decision reason is visible to the patient on Review Detail (Screen 3)."
       }
     },
@@ -56528,12 +56528,12 @@
       "id": "REQ-013-052",
       "type": "Rule",
       "owner_fr": "FR-013",
-      "title": "Reviewer alias algorithm; seeded display name; alias-only default",
+      "title": "Reviewer alias algorithm; seeded display name; always alias",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Reviewer alias algorithm (canonical, applied uniformly across Patient, Provider, and Admin public surfaces): `{first_name} {last_initial}.` (e.g., \"Sarah M.\"); collisions within the same provider's review list are deduplicated with a numeric suffix (`Sarah M. 2`, `Sarah M. 3`, …). Admin views may unmask to full identity per RBAC. Admin-seeded reviews use an admin-entered `reviewer_display_name` field (free text, subject to the same PII-safety policy — no full last name, no contact info) instead of the algorithmic alias; the `Verified Off-platform` badge accompanies the display name. The alias is always used: there is no full-name option for patients or admins, and no display-policy setting.",
-        "rationale": "Data & Privacy Rules, canonical alias, whole bullet verbatim (Change Log 1.13 item 6). Includes the admin-seeded reviewer_display_name rule and the alias-only default of the reviewer display policy setting."
+        "statement": "Reviewer alias algorithm (canonical, applied uniformly across Patient, Provider, and Admin public surfaces): `{first_name} {last_initial}.` (e.g., \"Sarah M.\"); collisions within the same provider's review list are deduplicated with a numeric suffix (`Sarah M. 2`, `Sarah M. 3`, …). Admin-seeded reviews use an admin-entered `reviewer_display_name` field (free text, subject to the same PII-safety policy — no full last name, no contact info) instead of the algorithmic alias; the `Verified Off-platform` badge accompanies the display name. Public surfaces always show the alias; there is no setting or option to change that. Admin views may unmask the patient identity per RBAC for review handling; this is not a public display option.",
+        "rationale": "Data & Privacy Rules, canonical alias, whole bullet verbatim (Change Log 1.13 item 6). Includes the admin-seeded reviewer_display_name rule and the always-alias rule."
       }
     },
     {
@@ -56578,9 +56578,9 @@
       "owner_fr": "FR-013",
       "title": "One active provider response per review; one replacement after admin removal",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Provider may have at most one active public response per review in V1. If admin removes a prior response for policy violation, provider may submit one replacement response; both the removed and replacement responses are retained in the audit trail (`AdminAction` for the removal, `ProviderResponse` history for the lifecycle).",
+        "statement": "Provider may have at most one active public response per review in V1. If admin removes a prior response for policy violation, provider may submit one replacement response; both the removed and replacement responses are retained in the audit trail (`AdminAction` for the removal, `ProviderResponse` history for the lifecycle). If the replacement is removed too, the provider may not respond again: a review has at most one original and one replacement response.",
         "rationale": "Screen 6 rule; Change Log 1.12 item 2."
       }
     },
@@ -56588,11 +56588,11 @@
       "id": "REQ-013-057",
       "type": "Rule",
       "owner_fr": "FR-013",
-      "title": "Respond action only on published reviews without a response; submission recorded and patient notified",
+      "title": "Respond action only on published reviews without an active response or earlier replacement; submission recorded and patient notified",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Respond as Provider is visible only when the review is published (a Flagged review counts as published), the provider account is active, and the review has no active response (a removed response does not count). Submission records provider identity and timestamp and triggers patient notification (not sent when the review is an admin-seeded review linked to a placeholder patient, REQ-013-077). A suspended provider sees the review view-only, with no Respond control.",
+        "statement": "Respond as Provider is visible only when the review is published (a Flagged review counts as published), the provider account is active, and the review has no active response and no replacement response was ever published (a removed original response does not count; once a replacement is published, Respond stays hidden even if the replacement is later removed). Submission records provider identity and timestamp and triggers patient notification (not sent when the review is an admin-seeded review linked to a placeholder patient, REQ-013-077). A suspended provider sees the review view-only, with no Respond control.",
         "rationale": "Composed from the Screen 6 row Respond as Provider (Visible only when review is published and no response exists) and the Screen 6 rule (Submission records provider identity and timestamp and triggers patient notification.)."
       }
     },
@@ -56600,11 +56600,11 @@
       "id": "REQ-013-058",
       "type": "Rule",
       "owner_fr": "FR-013",
-      "title": "Provider detail and list keep treatment-case context and support case filtering",
+      "title": "Provider detail and list show the treatment name and date; no patient or case filter",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Detail view must preserve treatment-case context so provider can differentiate multi-case patient histories. One patient may have multiple treatment cases; list must support case-specific filtering.",
+        "statement": "Detail and list show the treatment name and date, so multi-case histories are told apart by treatment and date, not by case identifier. The list has no patient or case filter.",
         "rationale": "Screens 5 and 6 business rules."
       }
     },
@@ -56744,9 +56744,9 @@
       "id": "REQ-013-070",
       "type": "Rule",
       "owner_fr": "FR-013",
-      "title": "Admin edits review labels, photo guidelines, removal reasons and display-name policy",
+      "title": "Admin edits review labels, photo guidelines and removal reasons",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "statement": "Editable by Admin: review category labels (canonical keys remain fixed); photo guidelines text; removal reasons catalogue.",
         "rationale": "Composed from the Admin Editability Rules (Editable by Admin) and the Screen 10 row Review categories/labels (Admin-editable labels; canonical keys remain fixed). Invitation timing and reminders are configured in FR-030, not here (REQ-013-022, Screen 10 and Change Logs 1.12 and 1.14)."
@@ -56782,10 +56782,10 @@
       "owner_fr": "FR-013",
       "title": "System-automated flagging queues content for admin review post-publication",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Trigger: Content flagged by system-automated detection (keyword matching, duplicate submission patterns, rate-limit triggers). User-initiated flagging is a future enhancement. Steps: System sets the review status to Flagged and queues the content for admin review; Admin resolves the flag on Screen 8 with a reason: uphold (the review returns to Published and the flag reason is cleared), redact (an admin edit) or unpublish (an admin removal). Outcome: Policy-compliant content remains; violations are removed with audit record. A flagged review stays publicly visible (shown as Published) until an admin removes it.",
-        "rationale": "Workflow B2. Edge Cases: \"Duplicate or spam reviews: auto‑flag for admin review post-publication.\" Implementation Notes (technical, not migrated) add that anti-abuse covers duplicate detection, keyword flags and rate limits for submissions and responses. User-initiated flagging is a future enhancement (Change Log 1.11)."
+        "statement": "Trigger: Content flagged by system-automated detection (keyword matching, duplicate submission patterns, rate-limit triggers). User-initiated flagging is a future enhancement. Steps: System sets the review status to Flagged and queues the content for admin review; Admin resolves the flag on Screen 8 with a reason: uphold (the review returns to Published and the flag reason is cleared), redact (an admin edit; the review returns to Published and the flag reason is cleared) or unpublish (an admin removal). Outcome: Policy-compliant content remains; violations are removed with audit record. A flagged review stays publicly visible (shown as Published) until an admin removes it.",
+        "rationale": "Workflow B2. Edge Cases: \"Duplicate or spam reviews: auto‑flag for admin review post-publication.\" Implementation Notes (technical, not migrated) add that anti-abuse covers duplicate detection, keyword flags and rate limits for submissions. User-initiated flagging is a future enhancement (Change Log 1.11)."
       }
     },
     {
@@ -56854,9 +56854,9 @@
       "owner_fr": "FR-013",
       "title": "Flagged review stays publicly visible, shows as Published",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "A review with status Flagged MUST stay publicly visible until an admin removes it; patients and the public see it as Published. Every rule keyed on Published (visibility, patient Edit and Request Takedown, and provider Respond) also covers Flagged. An admin resolves a flag as uphold (back to Published, flag reason cleared), redact or unpublish.",
+        "statement": "A review with status Flagged MUST stay publicly visible until an admin removes it; patients and the public see it as Published. Every rule keyed on Published (visibility, patient Edit and Request Takedown, provider Respond, the rating aggregates and the sub-score endpoint) also covers Flagged, so setting or clearing a flag needs no recalculation. An admin resolves a flag as uphold or redact (back to Published, flag reason cleared) or unpublish.",
         "rationale": "Security and Privacy Requirements, workflow B2 outcome and Edge Cases (duplicate or spam). Admins see the Flagged status; the public view does not change until a removal."
       }
     },
@@ -97696,10 +97696,10 @@
       "owner_fr": "FR-013",
       "title": "Provider - Reviews List and Filters",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "provider",
-        "description": "List of the provider's published reviews across treatment cases with ratings summary, source type, reviewer alias, case context, response status, filters and sort. Final placement (dashboard list or embedded in the provider profile detail) is a UX/UI design decision."
+        "description": "List of the provider's published reviews across treatment cases with ratings summary, source type, reviewer alias, treatment context, response status, filters and sort. Final placement (dashboard list or embedded in the provider profile detail) is a UX/UI design decision."
       }
     },
     {
@@ -97708,7 +97708,7 @@
       "owner_fr": "FR-013",
       "title": "Provider - Review Detail and Response",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "provider",
         "description": "Review detail for the provider with an inline response composer (not a separate screen): Respond as Provider, response text with live character counter, cancel with confirmation, submit."
@@ -111560,9 +111560,9 @@
       "id": "STP-013-005",
       "type": "Step",
       "owner_fr": "FR-013",
-      "title": "Patient sees the confirmation and the live review with the Edited marker",
+      "title": "Patient sees the confirmation and the live review, with the Edited marker after an edit",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow step 5"
       }
@@ -111628,7 +111628,7 @@
       "owner_fr": "FR-013",
       "title": "System records before and after values, reason and admin identity, sets the Edited marker and notifies the reviewing patient",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "A2 step 2"
       }
@@ -111683,7 +111683,7 @@
       "owner_fr": "FR-013",
       "title": "System notifies the admin takedown queue",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "A3 step 4"
       }
@@ -111694,7 +111694,7 @@
       "owner_fr": "FR-013",
       "title": "System shows the request as Overdue and notifies admins when the deadline passes",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A3 step 5"
       }
@@ -111846,9 +111846,9 @@
       "id": "STP-013-072",
       "type": "Step",
       "owner_fr": "FR-013",
-      "title": "System sets the status to Removed, stores the reason, writes the audit record, closes a Pending takedown request as Approved and notifies the patient",
+      "title": "System sets the status to Removed and clears any flag reason, stores the reason, writes the audit record, closes a Pending takedown request as Approved with the admin, time and removal reason as its decision, and notifies the patient",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A5 step 2"
       }
@@ -111881,9 +111881,20 @@
       "owner_fr": "FR-013",
       "title": "System sets the response status to removed, writes the audit record and shows No response again",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "B3 step 2"
+      }
+    },
+    {
+      "id": "STP-013-083",
+      "type": "Step",
+      "owner_fr": "FR-013",
+      "title": "System notifies the provider that the response was removed, with the removal reason",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B3 step 3"
       }
     },
     {
@@ -132552,7 +132563,7 @@
       "entity_id": "ENT-admin-action",
       "name": "admin_id",
       "data_type": "id",
-      "required": true,
+      "required": false,
       "calculated_by": null
     },
     {
@@ -213750,12 +213761,6 @@
       "from_id": "REQ-013-058",
       "verb": "applies at",
       "to_id": "STG-main-09-review-close",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-013-058",
-      "verb": "applies to",
-      "to_id": "ENT-review.procedure_id",
       "attrs": {}
     },
     {
@@ -318146,16 +318151,6 @@
     {
       "from_id": "SCR-013-05",
       "verb": "shows",
-      "to_id": "ENT-review.procedure_id",
-      "attrs": {
-        "provenance": "retrieved",
-        "label": "Case/treatment context (treatment case)",
-        "editable": false
-      }
-    },
-    {
-      "from_id": "SCR-013-05",
-      "verb": "shows",
       "to_id": "ENT-review.response_status",
       "attrs": {
         "provenance": "retrieved",
@@ -318286,16 +318281,6 @@
       "attrs": {
         "provenance": "retrieved",
         "label": "Photos",
-        "editable": false
-      }
-    },
-    {
-      "from_id": "SCR-013-06",
-      "verb": "shows",
-      "to_id": "ENT-review.procedure_id",
-      "attrs": {
-        "provenance": "retrieved",
-        "label": "Review detail payload (treatment case context)",
         "editable": false
       }
     },
@@ -373517,6 +373502,12 @@
     },
     {
       "from_id": "STP-013-022",
+      "verb": "applies",
+      "to_id": "REQ-013-079",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-022",
       "verb": "at",
       "to_id": "STG-main-09-review-close",
       "attrs": {}
@@ -373720,6 +373711,14 @@
       }
     },
     {
+      "from_id": "STP-013-034",
+      "verb": "next",
+      "to_id": "STP-013-041",
+      "attrs": {
+        "label": "admin opens the request from the queue"
+      }
+    },
+    {
       "from_id": "STP-013-035",
       "verb": "applies",
       "to_id": "REQ-013-017",
@@ -373742,6 +373741,14 @@
       "verb": "done by",
       "to_id": "ACT-system",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-013-035",
+      "verb": "next",
+      "to_id": "STP-013-041",
+      "attrs": {
+        "label": "overdue request is still decided by an admin"
+      }
     },
     {
       "from_id": "STP-013-035",
@@ -374413,10 +374420,9 @@
     {
       "from_id": "STP-013-082",
       "verb": "next",
-      "to_id": "STP-013-051",
+      "to_id": "STP-013-083",
       "attrs": {
-        "label": "provider submits the one replacement response",
-        "condition": "REQ-013-056"
+        "label": "response removed"
       }
     },
     {
@@ -374424,6 +374430,39 @@
       "verb": "on",
       "to_id": "SCR-013-08",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-013-083",
+      "verb": "applies",
+      "to_id": "REQ-013-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-083",
+      "verb": "applies",
+      "to_id": "REQ-013-056",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-083",
+      "verb": "at",
+      "to_id": "STG-main-09-review-close",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-083",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-083",
+      "verb": "next",
+      "to_id": "STP-013-051",
+      "attrs": {
+        "label": "provider may submit the one replacement response",
+        "condition": "REQ-013-056"
+      }
     },
     {
       "from_id": "STP-014-001",
@@ -434018,6 +434057,71 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-090630-04d78f59",
+      "at": "2026-11-24T09:06:30.680122+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-013 logic review pass 2 (closing): provider list and detail show the treatment name only and filter by alias search, treatment, rating, date, response status and source type; an admin removal that closes a Pending takedown records the admin, time and removal reason and sends one notice; redact and removal clear the flag; Respond is hidden once a replacement was published; the provider gets one notice with the reason when an admin removes its response; two reviews per case in total; only cases marked Completed in FR-010 can be reviewed, counted from that day; aggregates count Published or Flagged reviews; admin Edit and Remove only for Published or Flagged reviews; latest takedown request shown; alias always public with admin unmask as an RBAC view; takedown flow hands over to the admin decision flow; audit admin id optional; rule and step titles aligned.",
+      "source_id": null,
+      "nodes_added": [
+        "STP-013-083"
+      ],
+      "nodes_updated": [
+        "ENT-admin-action.action_type",
+        "ENT-admin-action.admin_id",
+        "ENT-provider-review-summary",
+        "ENT-provider-review-summary.average_rating",
+        "ENT-provider-review-summary.rating_distribution",
+        "ENT-provider-review-summary.review_count",
+        "ENT-provider-treatment-review-summary",
+        "ENT-provider-treatment-review-summary.avg_facility",
+        "ENT-provider-treatment-review-summary.avg_overall",
+        "ENT-provider-treatment-review-summary.avg_results",
+        "ENT-provider-treatment-review-summary.avg_staff",
+        "ENT-provider-treatment-review-summary.avg_value",
+        "ENT-provider-treatment-review-summary.review_count",
+        "ENT-review.edit_count",
+        "ENT-review.flag_reason",
+        "ENT-review.last_edited_at",
+        "ENT-review.reviewer_name",
+        "ENT-takedown-request.decided_at",
+        "ENT-takedown-request.decided_by",
+        "ENT-takedown-request.decision_note",
+        "REQ-013-001",
+        "REQ-013-002",
+        "REQ-013-008",
+        "REQ-013-009",
+        "REQ-013-014",
+        "REQ-013-016",
+        "REQ-013-017",
+        "REQ-013-023",
+        "REQ-013-024",
+        "REQ-013-025",
+        "REQ-013-027",
+        "REQ-013-031",
+        "REQ-013-033",
+        "REQ-013-040",
+        "REQ-013-046",
+        "REQ-013-052",
+        "REQ-013-056",
+        "REQ-013-057",
+        "REQ-013-058",
+        "REQ-013-070",
+        "REQ-013-073",
+        "REQ-013-079",
+        "SCR-013-05",
+        "SCR-013-06",
+        "STP-013-005",
+        "STP-013-022",
+        "STP-013-034",
+        "STP-013-035",
+        "STP-013-072",
+        "STP-013-082"
+      ],
+      "edges_added": 9,
+      "edges_removed": 4,
+      "rows": 71
+    },
     {
       "id": "cs-20261124-085306-65ece30d",
       "at": "2026-11-24T08:53:06.233973+00:00",
