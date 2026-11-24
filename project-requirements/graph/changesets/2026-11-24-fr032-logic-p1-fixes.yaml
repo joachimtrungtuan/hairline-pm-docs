@@ -1,0 +1,243 @@
+# FR-032 logic review, pass 1: graph change-set.
+# Mirrors the revised PRD (functional-requirements/fr032-provider-dashboard-settings/prd.md).
+#
+# Ordering: new fields, rules and steps first; then new edges; then node updates;
+# then edge removals; then the edges that needed a prior removal to change their
+# attributes or target (Account Email shows edge, the two support-notice steps moved
+# to the case detail screen); then retirements. The removals sit after the updates
+# because the retired fields and rule must lose their edges before they are retired.
+#
+# Edges from FR-032 nodes to other FRs' nodes (no other FR's node is updated):
+#   FR-032 references REQ-013-032, REQ-015-114, REQ-017-064, REQ-021-119, REQ-026-121,
+#   REQ-031-005, REQ-033-096, REQ-033-097 and REQ-034-139 (the schema allows references only FR to Rule);
+#   SCR-032-04 shows ENT-review.last_edited_at (the FR-013 screen links stay in the PRD text);
+#   SCR-032-12 shows ENT-help-centre-content.resource_category;
+#   SCR-032-18 shows ENT-support-case-message.content;
+#   STP-032-193 and 330 apply REQ-033-096 (vote write); STP-032-326 to 329 apply REQ-033-097 (view write);
+#   STP-032-332 applies REQ-034-139; SCR-032-06 shows ENT-team-member fields owned by FR-009.
+# Two new fields on ENT-team-member (timezone, account_name) are owned by FR-032, as
+# preferred_language is owned by FR-021 on the same entity.
+#
+# Queued for neighbour FRs (not in this file): FR-009 team member email change action;
+# FR-031 permission row "View and Edit Billing Settings"; FR-033 overall status value
+# "Status not available" (REQ-033-080); FR-017 corrected bank details for a Deactivated
+# clinic; FR-020 closure wording; FR-015, 021, 026, 034 notes.
+reason: FR-032 logic review pass 1, PRD revised from version 1.17 to 1.18
+by: docs-manager
+operations:
+  - {"op": "add_field", "id": "ENT-team-member.timezone", "entity_id": "ENT-team-member", "name": "timezone", "data_type": "text", "title": "Timezone", "owner_fr": "FR-032", "required": false, "attrs": {"description": "This person's local timezone for date/time display; fixed-offset option from the FR-026 list (GMT-12 to GMT+14). The browser timezone is offered at first login, otherwise UTC."}}
+  - {"op": "add_field", "id": "ENT-team-member.account_name", "entity_id": "ENT-team-member", "name": "account_name", "data_type": "text", "title": "Account name", "owner_fr": "FR-032", "required": false, "attrs": {"description": "Display name of this person's account, max 200 chars. For the Owner it is the clinic name (read-only, synced from the clinic profile); for staff it defaults to first and last name and can be customised."}}
+  - {"op": "add_node", "id": "REQ-032-141", "type": "Rule", "owner_fr": "FR-032", "title": "Who edits what is fixed per area", "attrs": {"statement": "System MUST apply the who-edits-what table in Screen 1 (General Business Rules): clinic profile, languages, awards and documents are edited by the Owner and a Manager; the account closure request by the Owner only; personal account settings by every role for their own account only; billing settings need the permission \"View and Edit Billing Settings\", held by FR-031 with the default Owner only (REQ-031-005).", "rationale": "One table replaces the scattered role wording. The billing permission is owned by FR-031, not FR-009."}}
+  - {"op": "add_node", "id": "REQ-032-142", "type": "Rule", "owner_fr": "FR-032", "title": "Only Owner and Manager change notification settings", "attrs": {"statement": "System MUST let only the Owner and a Manager change the clinic's notification settings; other roles see them read-only; every change is audit-logged with the user who made it.", "rationale": "Notification settings are clinic-wide, so they follow the same editors as the clinic profile."}}
+  - {"op": "add_node", "id": "REQ-032-143", "type": "Rule", "owner_fr": "FR-032", "title": "Support case notices are always sent", "attrs": {"statement": "System MUST send support case notices (admin reply, status change, resolved) always, with no toggle; Email and Push MAY both be off for a notification type, but mandatory notices ignore the setting.", "rationale": "A provider must not miss an admin answer on a support case."}}
+  - {"op": "add_node", "id": "REQ-032-144", "type": "Rule", "owner_fr": "FR-032", "title": "Account Email is read-only for every role", "attrs": {"statement": "System MUST show Account Email read-only for every role. The Owner's login email is changed only by a Hairline admin (FR-015, REQ-015-114); a team member's email is changed by contacting support.", "rationale": "The login email is the identity key and is unique per FR-009; changing it needs an admin check."}}
+  - {"op": "add_node", "id": "REQ-032-145", "type": "Rule", "owner_fr": "FR-032", "title": "Timezone is saved per person", "attrs": {"statement": "System MUST save the timezone per person: the browser timezone is offered at first login, otherwise UTC; dates display with the fixed offsets of the FR-026 timezone list (REQ-026-121).", "rationale": "Team members work from different places; one clinic-wide value would show wrong times to some of them."}}
+  - {"op": "add_node", "id": "REQ-032-146", "type": "Rule", "owner_fr": "FR-032", "title": "Bank form only for Manual bank transfer", "attrs": {"statement": "System MUST show and require the bank form only when the Payout Method is Manual bank transfer; for Stripe Connect it MUST show a status panel and a \"Complete Stripe sign-up\" link; Payout Readiness is display only and owned by FR-017 (REQ-017-064).", "rationale": "A Stripe Connect clinic has no bank form to fill; FR-017 owns the payout method and readiness."}}
+  - {"op": "add_node", "id": "REQ-032-147", "type": "Rule", "owner_fr": "FR-032", "title": "Language list offers Active and Preparation locales", "attrs": {"statement": "System MUST offer Active and Preparation locales in the language list, display every catalog locale already saved, and keep a saved entry when its locale becomes Inactive.", "rationale": "A provider's saved language must not vanish when FR-021 retires a locale."}}
+  - {"op": "add_node", "id": "REQ-032-148", "type": "Rule", "owner_fr": "FR-032", "title": "Reviews tab filters, sorts and pages on the server", "attrs": {"statement": "System MUST run Reviews tab filter, sort and paging on the server over the whole review list, show the Edited marker (FR-013 REQ-013-032), and link to the FR-013 provider review list and review detail screens.", "rationale": "Paging on the client would filter only the loaded page; FR-013 owns the review list and detail screens."}}
+  - {"op": "add_node", "id": "STP-032-326", "type": "Step", "owner_fr": "FR-032", "title": "System records the FAQ view for admin analytics through the FR-033 view write"}
+  - {"op": "add_node", "id": "STP-032-327", "type": "Step", "owner_fr": "FR-032", "title": "System records the guide view for admin analytics through the FR-033 view write"}
+  - {"op": "add_node", "id": "STP-032-328", "type": "Step", "owner_fr": "FR-032", "title": "System records the resource view for admin analytics through the FR-033 view write"}
+  - {"op": "add_node", "id": "STP-032-329", "type": "Step", "owner_fr": "FR-032", "title": "System records the video view for admin analytics through the FR-033 view write"}
+  - {"op": "add_node", "id": "STP-032-330", "type": "Step", "owner_fr": "FR-032", "title": "System records the video helpful vote through the FR-033 vote write"}
+  - {"op": "add_node", "id": "STP-032-331", "type": "Step", "owner_fr": "FR-032", "title": "Display the Stripe Connect status panel with the Complete Stripe sign-up link instead of the bank form"}
+  - {"op": "add_node", "id": "STP-032-332", "type": "Step", "owner_fr": "FR-032", "title": "Reopen the case when the provider replies to a Resolved case"}
+  - {"op": "add_edge", "from": "REQ-032-141", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-032-141", "verb": "applies to", "to": "SCR-032-06"}
+  - {"op": "add_edge", "from": "REQ-032-141", "verb": "applies to", "to": "SCR-032-07"}
+  - {"op": "add_edge", "from": "REQ-032-141", "verb": "applies to", "to": "SCR-032-08"}
+  - {"op": "add_edge", "from": "REQ-032-141", "verb": "decided by", "to": "SRC-PRD-032"}
+  - {"op": "add_edge", "from": "REQ-032-142", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-032-142", "verb": "applies to", "to": "SCR-032-07"}
+  - {"op": "add_edge", "from": "REQ-032-142", "verb": "decided by", "to": "SRC-PRD-032"}
+  - {"op": "add_edge", "from": "REQ-032-143", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-032-143", "verb": "applies to", "to": "SCR-032-07"}
+  - {"op": "add_edge", "from": "REQ-032-143", "verb": "decided by", "to": "SRC-PRD-032"}
+  - {"op": "add_edge", "from": "REQ-032-144", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-032-144", "verb": "applies to", "to": "SCR-032-06"}
+  - {"op": "add_edge", "from": "REQ-032-144", "verb": "applies to", "to": "ENT-team-member.email"}
+  - {"op": "add_edge", "from": "REQ-032-144", "verb": "decided by", "to": "SRC-PRD-032"}
+  - {"op": "add_edge", "from": "REQ-032-145", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-032-145", "verb": "applies to", "to": "SCR-032-06"}
+  - {"op": "add_edge", "from": "REQ-032-145", "verb": "applies to", "to": "ENT-team-member.timezone"}
+  - {"op": "add_edge", "from": "REQ-032-145", "verb": "decided by", "to": "SRC-PRD-032"}
+  - {"op": "add_edge", "from": "REQ-032-146", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-032-146", "verb": "applies to", "to": "SCR-032-08"}
+  - {"op": "add_edge", "from": "REQ-032-146", "verb": "decided by", "to": "SRC-PRD-032"}
+  - {"op": "add_edge", "from": "REQ-032-147", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-032-147", "verb": "applies to", "to": "SCR-032-02"}
+  - {"op": "add_edge", "from": "REQ-032-147", "verb": "decided by", "to": "SRC-PRD-032"}
+  - {"op": "add_edge", "from": "REQ-032-148", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-032-148", "verb": "applies to", "to": "SCR-032-04"}
+  - {"op": "add_edge", "from": "REQ-032-148", "verb": "decided by", "to": "SRC-PRD-032"}
+  - {"op": "add_edge", "from": "FR-032", "verb": "references", "to": "REQ-013-032"}
+  - {"op": "add_edge", "from": "FR-032", "verb": "references", "to": "REQ-015-114"}
+  - {"op": "add_edge", "from": "FR-032", "verb": "references", "to": "REQ-017-064"}
+  - {"op": "add_edge", "from": "FR-032", "verb": "references", "to": "REQ-021-119"}
+  - {"op": "add_edge", "from": "FR-032", "verb": "references", "to": "REQ-026-121"}
+  - {"op": "add_edge", "from": "FR-032", "verb": "references", "to": "REQ-031-005"}
+  - {"op": "add_edge", "from": "FR-032", "verb": "references", "to": "REQ-033-096"}
+  - {"op": "add_edge", "from": "FR-032", "verb": "references", "to": "REQ-033-097"}
+  - {"op": "add_edge", "from": "FR-032", "verb": "references", "to": "REQ-034-139"}
+  - {"op": "add_edge", "from": "STP-032-190", "verb": "next", "to": "STP-032-326", "attrs": {"label": "FAQ opened"}}
+  - {"op": "add_edge", "from": "STP-032-326", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-032-326", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-032-326", "verb": "on", "to": "SCR-032-10"}
+  - {"op": "add_edge", "from": "STP-032-326", "verb": "applies", "to": "REQ-033-097"}
+  - {"op": "add_edge", "from": "STP-032-197", "verb": "next", "to": "STP-032-327", "attrs": {"label": "guide opened"}}
+  - {"op": "add_edge", "from": "STP-032-327", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-032-327", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-032-327", "verb": "on", "to": "SCR-032-11"}
+  - {"op": "add_edge", "from": "STP-032-327", "verb": "applies", "to": "REQ-033-097"}
+  - {"op": "add_edge", "from": "STP-032-207", "verb": "next", "to": "STP-032-328", "attrs": {"label": "resource opened"}}
+  - {"op": "add_edge", "from": "STP-032-328", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-032-328", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-032-328", "verb": "on", "to": "SCR-032-12"}
+  - {"op": "add_edge", "from": "STP-032-328", "verb": "applies", "to": "REQ-033-097"}
+  - {"op": "add_edge", "from": "STP-032-213", "verb": "next", "to": "STP-032-329", "attrs": {"label": "video opened"}}
+  - {"op": "add_edge", "from": "STP-032-329", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-032-329", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-032-329", "verb": "on", "to": "SCR-032-13"}
+  - {"op": "add_edge", "from": "STP-032-329", "verb": "applies", "to": "REQ-033-097"}
+  - {"op": "add_edge", "from": "STP-032-215", "verb": "next", "to": "STP-032-330", "attrs": {"label": "vote recorded"}}
+  - {"op": "add_edge", "from": "STP-032-330", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-032-330", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-032-330", "verb": "on", "to": "SCR-032-13"}
+  - {"op": "add_edge", "from": "STP-032-330", "verb": "applies", "to": "REQ-033-096"}
+  - {"op": "add_edge", "from": "STP-032-139", "verb": "next", "to": "STP-032-331", "attrs": {"label": "payout method is Stripe Connect", "condition": "REQ-032-146"}}
+  - {"op": "add_edge", "from": "STP-032-331", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-032-331", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-032-331", "verb": "on", "to": "SCR-032-08"}
+  - {"op": "add_edge", "from": "STP-032-331", "verb": "applies", "to": "REQ-032-146"}
+  - {"op": "add_edge", "from": "STP-032-267", "verb": "next", "to": "STP-032-332", "attrs": {"label": "case is Resolved", "condition": "REQ-032-109"}}
+  - {"op": "add_edge", "from": "STP-032-332", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-032-332", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-032-332", "verb": "on", "to": "SCR-032-17"}
+  - {"op": "add_edge", "from": "STP-032-332", "verb": "applies", "to": "REQ-032-109"}
+  - {"op": "add_edge", "from": "STP-032-332", "verb": "applies", "to": "REQ-034-139"}
+  - {"op": "add_edge", "from": "STP-032-193", "verb": "applies", "to": "REQ-033-096"}
+  - {"op": "add_edge", "from": "STP-032-025", "verb": "applies", "to": "REQ-032-147"}
+  - {"op": "add_edge", "from": "STP-032-087", "verb": "applies", "to": "REQ-032-145"}
+  - {"op": "add_edge", "from": "STP-032-102", "verb": "applies", "to": "REQ-032-145"}
+  - {"op": "add_edge", "from": "STP-032-139", "verb": "applies", "to": "REQ-032-141"}
+  - {"op": "add_edge", "from": "STP-032-164", "verb": "applies", "to": "REQ-032-141"}
+  - {"op": "add_edge", "from": "STP-032-140", "verb": "applies", "to": "REQ-032-146"}
+  - {"op": "add_edge", "from": "STP-032-159", "verb": "applies", "to": "REQ-032-146"}
+  - {"op": "add_edge", "from": "STP-032-054", "verb": "applies", "to": "REQ-032-143"}
+  - {"op": "add_edge", "from": "STP-032-055", "verb": "applies", "to": "REQ-032-142"}
+  - {"op": "add_edge", "from": "STP-032-312", "verb": "applies", "to": "REQ-032-067"}
+  - {"op": "add_edge", "from": "SCR-032-04", "verb": "shows", "to": "ENT-review.last_edited_at", "attrs": {"provenance": "inherited from another FR", "label": "Edited marker", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-032-12", "verb": "shows", "to": "ENT-help-centre-content.resource_category", "attrs": {"provenance": "inherited from another FR", "label": "Resource Category Filter", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-032-18", "verb": "shows", "to": "ENT-support-case-message.content", "attrs": {"provenance": "user input", "label": "Reopening Reason", "editable": true}}
+  - {"op": "add_edge", "from": "REQ-032-112", "verb": "applies to", "to": "SCR-032-17"}
+  - {"op": "add_edge", "from": "SCR-032-06", "verb": "shows", "to": "ENT-team-member.account_name", "attrs": {"provenance": "user input", "label": "Account Name", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-032-06", "verb": "shows", "to": "ENT-team-member.phone_number", "attrs": {"provenance": "user input", "label": "Phone Number - Country Code and Number", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-032-06", "verb": "shows", "to": "ENT-team-member.timezone", "attrs": {"provenance": "user input", "label": "Timezone", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-032-06", "verb": "shows", "to": "ENT-team-member.password", "attrs": {"provenance": "user input", "label": "New Password", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-032-06", "verb": "shows", "to": "ENT-team-member.password_changed_at", "attrs": {"provenance": "retrieved", "label": "Last password change date", "editable": false}}
+  - {"op": "add_edge", "from": "REQ-032-019", "verb": "applies to", "to": "ENT-team-member.password"}
+  - {"op": "add_edge", "from": "REQ-032-061", "verb": "applies to", "to": "ENT-team-member.account_name"}
+  - {"op": "add_edge", "from": "REQ-032-062", "verb": "applies to", "to": "ENT-team-member.account_name"}
+  - {"op": "add_edge", "from": "REQ-032-063", "verb": "applies to", "to": "ENT-team-member.account_name"}
+  - {"op": "add_edge", "from": "REQ-032-064", "verb": "applies to", "to": "ENT-team-member.timezone"}
+  - {"op": "add_edge", "from": "REQ-032-006", "verb": "applies to", "to": "ENT-team-member.timezone"}
+  - {"op": "add_edge", "from": "REQ-032-005", "verb": "applies to", "to": "ENT-team-member.phone_number"}
+  - {"op": "add_edge", "from": "REQ-032-125", "verb": "applies to", "to": "ENT-team-member.phone_number"}
+  - {"op": "add_edge", "from": "REQ-032-015", "verb": "applies to", "to": "ENT-team-member.phone_number"}
+  - {"op": "add_edge", "from": "REQ-032-015", "verb": "applies to", "to": "ENT-team-member.timezone"}
+  - {"op": "add_edge", "from": "REQ-032-015", "verb": "applies to", "to": "ENT-team-member.password"}
+  - {"op": "add_edge", "from": "REQ-032-020", "verb": "applies to", "to": "ENT-team-member"}
+  - {"op": "update_node", "id": "REQ-032-002", "attrs": {"statement": "System MUST allow providers to select supported languages using the centrally managed system language options owned by FR-021 (Multi-Language & Localization), which are surfaced via FR-026 App Settings. The list offers Active and Preparation locales, shows every catalog locale already saved, and keeps a saved entry when its locale becomes Inactive (REQ-032-147)."}}
+  - {"op": "update_node", "id": "REQ-032-005", "attrs": {"statement": "System MUST allow each team member to configure their own phone number with worldwide country code selection (FR-026 country codes)"}}
+  - {"op": "update_node", "id": "REQ-032-006", "attrs": {"statement": "System MUST allow each team member to select their own timezone from the FR-026 list of fixed-offset options (GMT-12 to GMT+14)"}}
+  - {"op": "update_node", "id": "REQ-032-007", "attrs": {"statement": "System MUST allow each team member to change their own password with current password verification and the platform password policy (REQ-SYS-007)"}}
+  - {"op": "update_node", "id": "REQ-032-011", "title": "Billing settings need the View and Edit Billing Settings permission", "attrs": {"statement": "System MUST restrict billing settings access to the holder of the permission \"View and Edit Billing Settings\", held by FR-031 with the default Owner only (REQ-031-005)"}}
+  - {"op": "update_node", "id": "REQ-032-013", "title": "Owner requests account closure", "attrs": {"statement": "System MUST allow the Owner to request account closure; the request is processed by an admin, who deactivates the provider through FR-015 (no self-service deactivation)"}}
+  - {"op": "update_node", "id": "REQ-032-015", "attrs": {"statement": "System MUST persist account settings per person on the team member record (phone number in international format, timezone, password hash), for every role"}}
+  - {"op": "update_node", "id": "REQ-032-022", "title": "Permission-based access to billing settings", "attrs": {"statement": "System MUST enforce role-based access control for billing settings (permission \"View and Edit Billing Settings\", FR-031, default Owner only; roles without it cannot see or access billing settings tab)"}}
+  - {"op": "update_node", "id": "REQ-032-027", "attrs": {"statement": "System MUST integrate with FR-026 to provide country codes and fixed-offset timezone options in account settings"}}
+  - {"op": "update_node", "id": "REQ-032-041", "attrs": {"statement": "Rule 5: All profile, language, awards, account, and notification fields documented in this FR are editable within the Provider Dashboard by the roles in the who-edits-what table (REQ-032-141); reviews content and Help Centre articles are read-only views fed by their respective modules (staff roster managed by FR-009); providers may post responses to reviews via FR-013 Screen 6 response composer but cannot edit or delete review records"}}
+  - {"op": "update_node", "id": "REQ-032-063", "attrs": {"statement": "Account Name: Max 200 chars; First Name and Last Name: 2-50 characters, letters, spaces, hyphens (same as FR-009); Account Email: Valid email format, unique per FR-009 Rule 3 (an email belongs to at most one provider organization at a time); Account Email is read-only for every role (REQ-032-144)"}}
+  - {"op": "update_node", "id": "REQ-032-064", "attrs": {"statement": "Timezone is saved per person and applies to all date/time displays in that person's provider dashboard session; the browser timezone is offered at first login, otherwise UTC (REQ-032-145); existing timestamps in the database remain in UTC, converted for display with the fixed offsets of the FR-026 timezone list (REQ-026-121)"}}
+  - {"op": "update_node", "id": "REQ-032-067", "attrs": {"statement": "Suspended: The Owner and every FR-009 team member can still log in and see a persistent, non-dismissible banner on every Provider Platform page: \"Your account is temporarily suspended. Reason: [admin-provided reason]. Contact support@hairlineapp.com for assistance.\" The reason is the Screen 4 reason recorded in FR-015. While suspended, the provider cannot receive new inquiries, submit quotes, or accept new work (FR-015 Rule 9); profile, documents, reviews, billing, and team management (FR-009 Rule 10) are view-only, except that the Owner can still update the bank details (audit-logged). Account security (password change), notification preferences, Help Centre, and support cases (Screens 5.5–5.9) remain available so the provider can contact admins, and the Owner can still submit the account closure request. A Suspended Owner who has not yet set a password can still use the activation link; the status stays Suspended afterwards (FR-015). Chat with patients on the provider's open `In Progress` and `Aftercare` cases also stays available. Clinical notes, photos, and aftercare answers and actions are blocked until the admin reassigns or decides the case (FR-015 Screen 4)."}}
+  - {"op": "update_node", "id": "REQ-032-074", "title": "Account keeps its status while closure is pending", "attrs": {"statement": "Provider account keeps its current status until admin processes the request. If the admin schedules the deactivation for a future date, the request stays \"Pending Admin Review\" until the deactivation takes effect; if the scheduled deactivation is cancelled, the request stays \"Pending Admin Review\" and no rejection email is sent"}}
+  - {"op": "update_node", "id": "REQ-032-076", "title": "Closure rejection keeps the account status", "attrs": {"statement": "If the admin rejects the request instead (e.g., the provider asks to withdraw it), the system sets the request status to \"Rejected\" with review notes, the provider account keeps its current status, and the provider receives the FR-020 `provider.closure_rejected` email with the review notes (mandatory). The provider may submit a new request later"}}
+  - {"op": "update_node", "id": "REQ-032-078", "attrs": {"statement": "Notification preferences are profile-specific (apply to entire provider organization, not individual team members); only the Owner and a Manager can change them, other roles see them read-only (REQ-032-142)"}}
+  - {"op": "update_node", "id": "REQ-032-079", "attrs": {"statement": "If all notification types are disabled, the system shows a confirmation dialog \"Warning: You have disabled all notifications. You may miss important updates about inquiries, appointments, and reviews. Are you sure?\" before saving. Email and Push may both be off for a type, and mandatory notices ignore the setting (REQ-032-143)"}}
+  - {"op": "update_node", "id": "REQ-032-080", "attrs": {"statement": "Global channel preferences override individual notification types (e.g., if Email disabled, no notifications sent via email regardless of individual toggles); mandatory notices ignore the setting (REQ-032-143)"}}
+  - {"op": "update_node", "id": "REQ-032-082", "attrs": {"statement": "Preference changes are logged in the audit trail with the user who made them (REQ-032-142)"}}
+  - {"op": "update_node", "id": "REQ-032-089", "attrs": {"statement": "Existing bank account details stay with the clinic and are accessible to the new Owner after a role change"}}
+  - {"op": "update_node", "id": "REQ-032-103", "attrs": {"statement": "Support request confirmation displayed: \"Support request submitted. Case #[number]. We aim to respond within 24 hours on business days.\""}}
+  - {"op": "update_node", "id": "REQ-032-105", "attrs": {"statement": "Status updates follow unified workflow: Open → In Progress → Resolved → Closed (feedback resolution outcome—Implemented, Planned, Declined, Under Review—tracked separately in FR-034)"}}
+  - {"op": "update_node", "id": "REQ-032-109", "title": "Replies allowed on Open, In Progress and Resolved cases", "attrs": {"statement": "Providers can reply to admin messages for Open, In Progress and Resolved cases via Reply Message Box; a reply to a Resolved case reopens it (banner: \"This case was marked as resolved. Replying will reopen it.\"); for Closed cases, Reply Message Box is disabled; provider can only click \"Request Reopen\" button"}}
+  - {"op": "update_node", "id": "REQ-032-110", "attrs": {"statement": "Reply Message Box: Max 5000 chars; enabled for Open, In Progress and Resolved cases, disabled for Closed cases; Character counter displayed; Attach Files Button: Max 5 files, 10MB per file, formats: JPG, PNG, PDF, DOC, DOCX; Attachment files validated before upload (file type, size, virus scan)"}}
+  - {"op": "update_node", "id": "REQ-032-112", "attrs": {"statement": "System opens the provider platform and opens the case directly on Screen 5.8, whatever the filters of the case list, with the new reply in the Communication Thread"}}
+  - {"op": "update_node", "id": "REQ-032-113", "attrs": {"statement": "Modal only accessible from Screen 5.8 when viewing Closed cases; Reopening reason required (min 20 chars) to prevent accidental/spam reopening; Reopening Reason: Min 20 chars, max 500 chars; the reason and, optionally, the requested priority are sent to FR-034 as a flagged reopen-request message in the case thread (text)"}}
+  - {"op": "update_node", "id": "REQ-032-114", "title": "Reopen request is sent to the admin and the case stays Closed", "attrs": {"statement": "The reopen request is sent to FR-034 as a flagged message in the case thread; the case stays Closed until the admin reopens it; the provider sees \"Request sent, awaiting admin\" with the reply box disabled; FR-034 notifies the admin through the user-reply notice (support.case_user_reply, REQ-034-178)"}}
+  - {"op": "update_node", "id": "REQ-032-115", "title": "Service status updates; subscription is a future enhancement", "attrs": {"statement": "Status updates automatically when admin updates status via admin platform; status update notifications by email are a future enhancement, not in this release (FR-033 REQ-033-032)"}}
+  - {"op": "update_node", "id": "REQ-032-117", "title": "My Support Cases Quick Stats bar is independent of the current filters", "attrs": {"statement": "Quick Stats bar shows the counts Open, In Progress, Resolved and Unread Messages over all of the clinic's cases, independent of the current filters"}}
+  - {"op": "update_node", "id": "STP-032-025", "title": "Display the Active and Preparation locales from the language catalog and every saved locale"}
+  - {"op": "update_node", "id": "STP-032-087", "title": "Save the timezone preference for this person"}
+  - {"op": "update_node", "id": "STP-032-102", "title": "Save the timezone preference for this person"}
+  - {"op": "update_node", "id": "STP-032-139", "title": "Validate that the user holds the View and Edit Billing Settings permission"}
+  - {"op": "update_node", "id": "STP-032-164", "title": "Detect that the user does not hold the View and Edit Billing Settings permission"}
+  - {"op": "update_node", "id": "STP-032-140", "title": "Display the bank form with existing bank details when the payout method is Manual bank transfer"}
+  - {"op": "update_node", "id": "STP-032-159", "title": "Fill in all bank account fields (Manual bank transfer only)"}
+  - {"op": "update_node", "id": "STP-032-193", "title": "Record the vote through the FR-033 vote write for admin analytics"}
+  - {"op": "update_node", "id": "STP-032-224", "title": "Display the overall platform status indicator, or Status not available when no status can be read"}
+  - {"op": "update_node", "id": "STP-032-228", "title": "Note that subscribing to status update notifications is a future enhancement, not in this release"}
+  - {"op": "update_node", "id": "STP-032-267", "title": "Validate the message and that the case is Open, In Progress or Resolved"}
+  - {"op": "update_node", "id": "STP-032-283", "title": "Validate the reason (min 20 chars) and send it to FR-034 as a flagged reopen-request message"}
+  - {"op": "update_node", "id": "STP-032-284", "title": "FR-034 notifies the admin through the user-reply notice (support.case_user_reply)"}
+  - {"op": "update_node", "id": "STP-032-285", "title": "Display the reopen-request-submitted confirmation and Request sent, awaiting admin"}
+  - {"op": "update_node", "id": "STP-032-286", "title": "Keep the case Closed until the admin decides on the reopen request"}
+  - {"op": "update_node", "id": "STP-032-301", "title": "Open the provider platform directly on the case in Support Case Detail"}
+  - {"op": "update_node", "id": "STP-032-302", "title": "Show the case with the new reply in the Communication Thread"}
+  - {"op": "update_node", "id": "STP-032-312", "title": "Create the closure request with status Pending Admin Review (the Owner only)"}
+  - {"op": "update_node", "id": "STP-032-316", "title": "Provider account keeps its current status until the admin processes the request"}
+  - {"op": "update_node", "id": "STP-032-320", "title": "Set the closure request to Rejected if the admin rejects it; the account keeps its status"}
+  - {"op": "update_node", "id": "SCR-032-02", "attrs": {"description": "Provider Platform, Settings > Profile, Tab 2 (PRD Screen 1). Chip list with \"+ Add Language\" searchable dropdown, x to remove (confirmation on the last chip), drag-and-drop reordering. UI controls, not fields: add-language dropdown, chip remove button. The list offers Active and Preparation locales and keeps a saved entry when its locale becomes Inactive (REQ-032-147)."}}
+  - {"op": "update_node", "id": "SCR-032-04", "attrs": {"description": "Provider Platform, Settings > Profile, Tab 5 (PRD Screen 1). Read-only reviews from the Reviews module with rating summary, distribution, filters, sort and pagination (10/20/50 per page); responses through the FR-013 Screen 6 composer. Empty state: \"No reviews yet\". UI controls, not fields: Rating Filters, Sort Dropdown, Pagination Controls, \"Read more\" link. Filter, sort and paging run on the server; reviews carry an Edited marker and link to the FR-013 review screens (REQ-032-148)."}}
+  - {"op": "update_node", "id": "SCR-032-06", "attrs": {"description": "Provider Platform, Settings > Account Settings (PRD Screen 2), including the password change section and the Account Closure card with its warning dialog. UI controls, not fields: Current Password and Confirm New Password inputs (verification only, not stored), Save button, \"Request Account Closure\" button, acknowledgement checkbox, Submit / Cancel in the closure dialog. Personal settings belong to the signed-in person and are saved on the team member record. Account Name is read-only for the Owner role and editable for staff roles. Account Email is read-only for every role (REQ-032-144). The Account Closure card is shown to the Owner only (REQ-032-141)."}}
+  - {"op": "update_node", "id": "SCR-032-07", "attrs": {"description": "Provider Platform, Settings > Notifications (PRD Screen 3). Six notification-type toggles and two channel toggles, organization-wide. No toggle for mandatory notices (REQ-032-031). UI controls, not fields: Save button, Disable-all confirmation dialog. Only the Owner and a Manager can change them; other roles see them read-only (REQ-032-142)."}}
+  - {"op": "update_node", "id": "SCR-032-08", "attrs": {"description": "Provider Platform, Settings > Billing, visible to the holder of the View and Edit Billing Settings permission, the Owner by default (PRD Screen 4): bank account details for payouts (form only when the payout method is Manual bank transfer; a Stripe Connect status panel with a Complete Stripe sign-up link otherwise) and the read-only Commission & Payout panel. UI controls, not fields: Edit / Save / Cancel buttons."}}
+  - {"op": "update_node", "id": "SCR-032-12", "attrs": {"description": "Help Centre downloadable resources (PRD Screen 5.3). UI controls, not fields: Preview button (PDF and images), Download button, filters. The category filter maps to the resource category."}}
+  - {"op": "update_node", "id": "SCR-032-16", "attrs": {"description": "Provider list of support and feedback cases (PRD Screen 5.7). Empty state when no cases match. UI controls, not fields: Filter Bar (status, type, date range), Search Bar, Quick Stats Bar (counts per status and unread over all of the clinic's cases, independent of the list filters), Pagination Controls."}}
+  - {"op": "update_node", "id": "SCR-032-17", "attrs": {"description": "Provider view of one support case (PRD Screen 5.8) with thread (oldest first) and timeline (newest first). UI controls, not fields: Send Reply, Request Reopen and Back to List buttons. The reply box is enabled for Open, In Progress and Resolved cases; a reply to a Resolved case reopens it."}}
+  - {"op": "update_node", "id": "SCR-032-18", "attrs": {"description": "Modal opened from Case Detail for Closed cases only (PRD Screen 5.9). The reason and the optional requested priority go to FR-034 as a flagged reopen-request message; the case stays Closed until the admin decides. UI controls, not fields: Priority selector, Submit Reopen Request and Cancel buttons."}}
+  - {"op": "update_node", "id": "SCR-032-19", "attrs": {"description": "Platform status page (PRD Screen 5.10). Shows Status not available when no status can be read; status update notifications are a future enhancement."}}
+  - {"op": "update_node", "id": "ENT-provider-account-settings", "attrs": {"description": "Clinic-level account configuration. One provider has one account settings record, linked to the provider profile. Personal settings (phone number, timezone, password, account name) live on the team member record, not here."}}
+  - {"op": "remove_edge", "from": "SCR-032-06", "verb": "shows", "to": "ENT-provider-account-settings.account_name"}
+  - {"op": "remove_edge", "from": "SCR-032-06", "verb": "shows", "to": "ENT-provider-account-settings.country_code"}
+  - {"op": "remove_edge", "from": "SCR-032-06", "verb": "shows", "to": "ENT-provider-account-settings.password_changed_at"}
+  - {"op": "remove_edge", "from": "SCR-032-06", "verb": "shows", "to": "ENT-provider-account-settings.password_hash"}
+  - {"op": "remove_edge", "from": "SCR-032-06", "verb": "shows", "to": "ENT-provider-account-settings.phone_number"}
+  - {"op": "remove_edge", "from": "SCR-032-06", "verb": "shows", "to": "ENT-provider-account-settings.timezone"}
+  - {"op": "remove_edge", "from": "REQ-032-015", "verb": "applies to", "to": "ENT-provider-account-settings"}
+  - {"op": "remove_edge", "from": "REQ-032-019", "verb": "applies to", "to": "ENT-provider-account-settings.password_hash"}
+  - {"op": "remove_edge", "from": "REQ-032-061", "verb": "applies to", "to": "ENT-provider-account-settings.account_name"}
+  - {"op": "remove_edge", "from": "REQ-032-062", "verb": "applies to", "to": "ENT-provider-account-settings.account_name"}
+  - {"op": "remove_edge", "from": "REQ-032-063", "verb": "applies to", "to": "ENT-provider-account-settings.account_name"}
+  - {"op": "remove_edge", "from": "REQ-032-064", "verb": "applies to", "to": "ENT-provider-account-settings.timezone"}
+  - {"op": "remove_edge", "from": "REQ-032-125", "verb": "applies to", "to": "ENT-provider-account-settings.country_code"}
+  - {"op": "remove_edge", "from": "SCR-032-12", "verb": "shows", "to": "ENT-help-centre-content.topic"}
+  - {"op": "remove_edge", "from": "SCR-032-18", "verb": "shows", "to": "ENT-support-case-reopening.reopening_reason"}
+  - {"op": "remove_edge", "from": "SCR-032-18", "verb": "shows", "to": "ENT-support-case.priority"}
+  - {"op": "remove_edge", "from": "REQ-032-112", "verb": "applies to", "to": "SCR-032-16"}
+  - {"op": "remove_edge", "from": "REQ-032-139", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "remove_edge", "from": "REQ-032-139", "verb": "applies to", "to": "SCR-032-18"}
+  - {"op": "remove_edge", "from": "REQ-032-139", "verb": "decided by", "to": "SRC-PRD-032"}
+  - {"op": "remove_edge", "from": "SCR-032-06", "verb": "shows", "to": "ENT-team-member.email"}
+  - {"op": "remove_edge", "from": "STP-032-301", "verb": "on", "to": "SCR-032-16"}
+  - {"op": "remove_edge", "from": "STP-032-302", "verb": "on", "to": "SCR-032-16"}
+  - {"op": "add_edge", "from": "SCR-032-06", "verb": "shows", "to": "ENT-team-member.email", "attrs": {"provenance": "retrieved", "label": "Account Email", "editable": false}}
+  - {"op": "add_edge", "from": "STP-032-301", "verb": "on", "to": "SCR-032-17"}
+  - {"op": "add_edge", "from": "STP-032-302", "verb": "on", "to": "SCR-032-17"}
+  - {"op": "retire_node", "id": "ENT-provider-account-settings.account_name"}
+  - {"op": "retire_node", "id": "ENT-provider-account-settings.country_code"}
+  - {"op": "retire_node", "id": "ENT-provider-account-settings.password_change_history"}
+  - {"op": "retire_node", "id": "ENT-provider-account-settings.password_changed_at"}
+  - {"op": "retire_node", "id": "ENT-provider-account-settings.password_hash"}
+  - {"op": "retire_node", "id": "ENT-provider-account-settings.phone_number"}
+  - {"op": "retire_node", "id": "ENT-provider-account-settings.timezone"}
+  - {"op": "retire_node", "id": "REQ-032-139"}

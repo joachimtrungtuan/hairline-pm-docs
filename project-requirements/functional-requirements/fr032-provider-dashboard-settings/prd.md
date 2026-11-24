@@ -49,8 +49,8 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 - Providers submit support requests via Contact Support form (Screen 5.5) and feedback via Feedback & Suggestions form (Screen 5.6)
 - Providers view all their submitted support cases and feedback via My Support Cases screen (Screen 5.7) with complete case details, communication thread, and status tracking
 - Providers engage in two-way communication with admin by replying to admin messages within their support cases
-- Providers request to reopen closed cases if issue persists or resolution was unsatisfactory
-- Providers request account closure (admin processes the request by deactivating the provider in FR-015; no self-service deactivation)
+- Providers request to reopen closed cases if issue persists or resolution was unsatisfactory (the admin decides; the case stays Closed until then)
+- The Owner requests account closure (admin processes the request by deactivating the provider in FR-015; no self-service deactivation)
 - Providers browse Reviews as a tab within the Provider Profile detailed page to read patient feedback, filter by rating, and post public responses to individual reviews (response composer defined in FR-013 Screen 6)
 
 **Admin Platform (A-XX)**:
@@ -97,7 +97,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 
 ### Main Flow: Update Provider Profile Information
 
-**Actors**: Provider (Admin, Owner), System
+**Actors**: Provider (Owner, Manager), System
 **Trigger**: Provider navigates to "Profile" section and clicks "Edit Profile"
 **Outcome**: Provider profile information updated and visible to patients during quote comparison
 
@@ -151,7 +151,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 
 - **Trigger**: Provider opens language selection dropdown
 - **Steps**:
-  1. System displays all available languages from the FR-021 language/locale catalog surfaced through settings
+  1. System displays the languages from the FR-021 language/locale catalog surfaced through settings: the offered list holds the Active and Preparation locales, every catalog locale already saved on the profile is shown, and a saved language stays on the profile when its locale becomes Inactive (REQ-032-147)
   2. Provider selects multiple languages (e.g., English, Turkish, Spanish)
   3. System updates language tags in profile
   4. System saves language preferences
@@ -200,7 +200,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 
 ### Main Flow: Configure Notification Preferences
 
-**Actors**: Provider (any role), System
+**Actors**: Provider (Owner or Manager can change; other roles see the settings read-only, REQ-032-142), System
 **Trigger**: Provider navigates to "Settings" → "Notifications"
 **Outcome**: Provider notification preferences updated and enforced by S-03 Notification Service
 
@@ -218,14 +218,16 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
    - ☐ Aftercare Notifications (patient milestone completed, urgent aftercare alert) — DISABLED
    - ☑ Review Notifications (new review posted, review requires response)
    - ☑ Promotion/Discount Notifications (new platform discounts created by admin that require provider acceptance/opt-in)
+   - Support case notices (admin reply, status change, resolved) have no toggle and are always sent (REQ-032-143)
 5. Provider configures global channel preferences:
    - Email: ☑ Enabled (default email address from profile)
    - Push/In-App: ☑ Enabled (web portal notifications)
+   - Email and Push may both be off for a type; mandatory notices ignore the setting and are still sent (REQ-032-143)
 6. Provider clicks "Save Preferences" on the Notifications tab
 7. System validates settings
 8. System saves notification preferences to database
 9. System displays success message "Notification preferences updated"
-10. System logs preference change in audit trail
+10. System logs preference change in audit trail (REQ-032-082, REQ-032-142)
 11. System updates S-03 Notification Service with new preference rules
 12. S-03 enforces preferences for all future notifications (e.g., aftercare notifications will NOT be sent)
 
@@ -238,9 +240,9 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 **Steps**:
 
 1. Provider opens Provider Profile page and selects Reviews tab.
-2. System loads rating summary, distribution bars, filters, and first page of review cards.
+2. System loads rating summary, distribution bars, filters, and first page of review cards; a card for a review the patient edited after publishing shows the "Edited" marker (FR-013 REQ-013-032, REQ-032-148).
 3. Provider applies rating filters or changes sort order (e.g., "Most recent").
-4. System updates list instantly; provider paginates if needed to view more results.
+4. System runs the filter, sort and paging on the server over the whole review list (not only the page on screen) and updates the list; provider paginates if needed to view more results (REQ-032-148).
 5. If provider arrived via a Review Notification, the associated review is auto-highlighted/highlighted within list.
 
 **Outcome**: Provider can quickly review patient sentiment and correlate it with notifications without modifying review content.
@@ -276,7 +278,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 
 ### Main Flow: Update Account Settings (Phone, Timezone, Password)
 
-**Actors**: Provider (any role), System
+**Actors**: Provider (any role, for their own account only, REQ-032-141), System
 **Trigger**: Provider navigates to "Settings" → "Account Settings"
 **Outcome**: Provider account settings updated (phone number with country code, timezone, password)
 
@@ -286,6 +288,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 2. System displays account settings form with current values:
    - Phone Number: +90 555 123 4567 (country code + number)
    - Timezone: (GMT+3) Istanbul
+   - Account Email: shown read-only for every role (REQ-032-144)
    - Password: ●●●●●●●● (masked)
 3. Provider clicks "Edit Phone Number"
 4. System displays phone number editor with country code dropdown (consumes FR-026 country calling codes list)
@@ -297,13 +300,13 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 10. Provider clicks "Change Timezone"
 11. System displays timezone dropdown with multiple timezone options (GMT-12 to GMT+14)
 12. Provider selects timezone (e.g., (GMT+0) London)
-13. System saves timezone preference
+13. System saves the timezone preference for this person only; at a person's first login the browser timezone is offered, and with none UTC is used; dates display with the fixed offsets of the FR-026 list (REQ-026-121, REQ-032-145)
 14. Provider clicks "Change Password"
 15. System displays password change form:
     - Current Password: [input field]
     - New Password: [input field]
     - Confirm New Password: [input field]
-16. Provider enters current password and new password (following password policy from FR-026)
+16. Provider enters current password and new password (following REQ-SYS-007)
 17. System validates:
     - Current password matches database
     - New password meets the password policy. See system PRD, Platform-Wide Rules: Password and one-time-code policy
@@ -328,13 +331,13 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 
 **A7: Provider Changes Timezone for Different Region**:
 
-- **Trigger**: Provider relocates clinic to different timezone
+- **Trigger**: Provider works in a different timezone from the one saved
 - **Steps**:
   1. Provider selects new timezone from dropdown
-  2. System saves timezone preference
-  3. All future timestamps in provider dashboard display in new timezone
+  2. System saves timezone preference for this person only; other team members keep their own (REQ-032-145)
+  3. All future timestamps in this person's provider dashboard display in new timezone
   4. Existing data timestamps remain in UTC but display converted to new timezone
-- **Outcome**: Provider sees all dates/times in new local timezone
+- **Outcome**: Provider sees all dates/times in new local timezone (fixed offsets of the FR-026 list, REQ-026-121)
 
 **B5: Invalid Phone Number Format**:
 
@@ -372,7 +375,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
   1. Provider enters current password correctly
   2. Provider enters new password "password123" (missing uppercase, special char)
   3. Provider clicks "Change Password"
-  4. System validates new password against FR-026 password policy
+  4. System validates new password against the platform password policy (REQ-SYS-007)
   5. System detects policy violations
   6. System displays error "Password must contain at least 12 characters, one uppercase letter, one lowercase letter, one digit, and one special character from !@#$%^&(),.?\":{}|<>"
   7. Provider enters stronger password "MyP@ssw0rd2024!"
@@ -404,8 +407,8 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 **Steps**:
 
 1. Provider Owner navigates to Settings → Billing
-2. System validates user role = Owner (permission check per FR-009)
-3. System displays billing settings form with existing bank account details (if previously saved):
+2. System validates the user holds the "View and Edit Billing Settings" permission (FR-031, default Owner only, REQ-032-141)
+3. System shows the form for the clinic's Payout Method (REQ-032-146). For Manual bank transfer it displays the bank account details (if previously saved); for Stripe Connect it displays a status panel with a "Complete Stripe sign-up" link instead of the bank form:
    - Account Holder Name: [text field]
    - Bank Name: [text field]
    - Account Number: [masked, e.g., ●●●●●●1234]
@@ -413,7 +416,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
    - IBAN (if applicable): [text field]
 4. Provider Owner clicks "Edit Bank Account Details"
 5. System displays editable form with current values (account number unmasked)
-6. Provider Owner updates bank account information:
+6. Provider Owner updates bank account information (Manual bank transfer only; the bank form is shown and required only for this Payout Method, REQ-032-146):
    - Account Holder Name: "Istanbul Hair Clinic Ltd"
    - Bank Name: "Garanti BBVA"
    - Account Number: "TR123456789012345678901234"
@@ -451,7 +454,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 - **Steps**:
   1. Provider Owner navigates to Settings → Billing
   2. System displays empty billing form with message "No bank account on file. Add your bank account details to receive payouts."
-  3. Provider Owner fills in all bank account fields
+  3. Provider Owner (Payout Method Manual bank transfer) fills in all bank account fields; for Stripe Connect the panel with the "Complete Stripe sign-up" link is shown instead (REQ-032-146)
   4. System validates and saves bank account details
   5. System displays success message "Bank account added successfully. You will now receive payouts to this account."
 - **Outcome**: Bank account details saved, provider can receive payouts
@@ -464,7 +467,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
   2. System validates user role
   3. System detects user role ≠ Owner
   4. System hides the Billing tab from navigation (non-owner cannot see or access billing settings)
-- **Outcome**: Non-owner cannot see or access billing settings (per FR-009 single-owner permissions)
+- **Outcome**: Non-owner cannot see or access billing settings (permission "View and Edit Billing Settings", FR-031, default Owner only, REQ-032-141)
 
 **B10: Invalid Bank Account Format**:
 
@@ -520,14 +523,14 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 6. Provider clicks on topic "Quote Management"
 7. System displays expandable FAQ questions within topic
 8. Provider clicks on question "How do I edit a quote after submission?"
-9. System expands answer with detailed instructions
+9. System expands answer with detailed instructions and records the view through the FR-033 view write (REQ-033-097)
 10. Provider reads answer
 11. Provider clicks "Was this helpful?" feedback (Yes/No)
-12. System records feedback for admin analytics
+12. System records the vote through the FR-033 vote write for admin analytics (REQ-033-096)
 13. Provider navigates to "Tutorial Guides" category
 14. System displays guide list (e.g., "How to Create Your First Quote", "Setting Up Notifications")
 15. Provider clicks on guide "How to Create Your First Quote"
-16. System displays step-by-step guide with screenshots
+16. System displays step-by-step guide with screenshots and records the view through the FR-033 view write (REQ-033-097)
 17. Provider reads guide
 18. Provider returns to Help Centre home
 19. Provider clicks "Contact Support"
@@ -539,7 +542,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
     - Attachment: [file upload - optional]
 21. Provider fills form and submits support request
 22. System sends support request to admin team
-23. System displays confirmation "Support request submitted. Case #[number]. Our team will respond within 24 hours."
+23. System displays confirmation "Support request submitted. Case #[number]. We aim to respond within 24 hours on business days."
 
 ### Alternative Flows
 
@@ -550,7 +553,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
   1. Provider navigates to "Resource Library" category
   2. System displays list of downloadable resources (PDFs, templates, guides)
   3. Provider clicks "Download Quote Template"
-  4. System initiates file download
+  4. System records the view through the FR-033 view write (REQ-033-097) and initiates file download
   5. Provider saves file to local device
 - **Outcome**: Provider downloads resource file
 
@@ -561,9 +564,9 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
   1. Provider navigates to "Video Tutorials" category
   2. System displays video list with thumbnails
   3. Provider clicks on video "How to Manage Inquiries"
-  4. System loads video player
+  4. System loads video player and records the view through the FR-033 view write (REQ-033-097)
   5. Provider watches video tutorial
-  6. Provider clicks "Was this helpful?" feedback
+  6. Provider clicks "Was this helpful?" feedback; System records the vote through the FR-033 vote write (REQ-033-096)
 - **Outcome**: Provider learns from video tutorial
 
 **A12: Provider Submits Feedback/Feature Request**:
@@ -585,12 +588,11 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 - **Steps**:
   1. Provider navigates to Help Centre and selects "Service Status" category
   2. System calls Service Status endpoint backed by FR-033 and loads status page interface
-  3. System displays overall platform status indicator (All Systems Operational, Partial Outage, Major Outage)
+  3. System displays overall platform status indicator (All Systems Operational, Partial Outage, Major Outage, or Status not available when no status can be shown; the status values are owned by FR-033, REQ-033-080)
   4. System shows list of service components with current status and last updated time
   5. System displays recent incident history timeline and upcoming maintenance schedule (if any)
   6. Provider reviews status information to determine whether issue is platform-wide or local
-  7. Provider optionally subscribes to status update notifications (if enabled per FR-020/notifications)
-  8. Provider decides whether to wait, retry, or contact support (Contact Support flows above)
+  7. Provider decides whether to wait, retry, or contact support (Contact Support flows above)
 - **Outcome**: Provider is informed of current platform status and can plan accordingly
 
 **B12: Help Centre Content Not Loading**:
@@ -662,7 +664,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 15. Provider selects screenshot file (PNG, 2MB)
 16. System validates file (size, format) and displays file preview with remove option
 17. Provider clicks "Send Reply" button
-18. System validates message (not empty, case is Open or In Progress)
+18. System validates message (not empty; case is Open, In Progress or Resolved; a reply to a Resolved case reopens it, REQ-032-109)
 19. System sends message to FR-034 with:
     - Case ID
     - Sender: Provider (provider ID)
@@ -695,14 +697,12 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
      - Priority Update (dropdown: Keep Current / Low / Medium / High / Urgent)
   6. Provider fills reopening reason and selects "High" priority
   7. Provider clicks "Submit Reopen Request"
-  8. System validates reason (min 20 chars) and sends request to FR-034
-  9. FR-034 creates reopen request notification to admin (support.case_reopened event)
-  10. System displays confirmation: "Reopen request submitted. We'll review your case shortly."
-  11. Case status changes from "Closed" to "Open" (admin can override if needed)
-  12. Admin receives notification and reviews reopening reason
-  13. Admin replies to case with next troubleshooting steps
-  14. Provider receives notification and conversation continues
-- **Outcome**: Closed case reopened; two-way communication resumes
+  8. System validates reason (min 20 chars) and sends it to FR-034 as a flagged reopen-request message in the case thread (reason and, optionally, the requested priority as text) (REQ-032-113)
+  9. FR-034 notifies the admin through the user-reply notice (support.case_user_reply, REQ-034-178); the case stays Closed
+  10. System displays confirmation: "Reopen request submitted. We'll review your case shortly." and Screen 5.8 shows "Request sent, awaiting admin" with the reply box still disabled (REQ-032-114)
+  11. Admin reviews the flagged message and, if accepted, reopens the case in FR-034
+  12. Provider receives the FR-034 notice and conversation continues
+- **Outcome**: Reopen request delivered to the admin; the case stays Closed until an admin reopens it
 
 **A2: Provider Filters and Searches Cases**:
 
@@ -725,8 +725,8 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
   3. S-03 sends email to provider: "Your support case CASE-2025-12345 has a new reply from our team"
   4. Email includes link to case: "View case in My Support Cases"
   5. Provider clicks link in email
-  6. System opens provider platform and navigates to My Support Cases Screen 5.7
-  7. System highlights and auto-expands the case with new reply (REQ-032-112)
+  6. System opens provider platform and opens the case directly on Screen 5.8, whatever the filters of the case list (REQ-032-112)
+  7. System shows the case with the new reply in the Communication Thread (REQ-032-112)
   8. Provider reads admin's response in Communication Thread
   9. Provider replies if needed or marks issue as resolved
 - **Outcome**: Provider notified of admin reply and can continue conversation seamlessly
@@ -735,8 +735,8 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 
 ### Main Flow: Request Account Closure
 
-**Actors**: Provider (any role), Admin, System
-**Trigger**: Provider navigates to "Settings" → "Account Settings" → "Request account closure"
+**Actors**: Provider (Owner only, REQ-032-141), Admin, System
+**Trigger**: Provider Owner navigates to "Settings" → "Account Settings" → "Request account closure"
 **Outcome**: Provider account-closure request submitted to admin; when the admin processes it, the provider is deactivated through FR-015 (Provider Management) Screen 4 (status "Deactivated", standard deactivation cascade). There is no separate "Deleted" status and no self-service deactivation.
 
 **Steps**:
@@ -754,11 +754,11 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 5. Provider checks "I understand" checkbox
 6. Provider enters reason for closure (optional): "Closing clinic permanently"
 7. Provider clicks "Submit Closure Request"
-8. System creates account closure request record with status "Pending Admin Review" (only one pending request per provider; no booking or payout check blocks submission) (REQ-032-071)
+8. System creates account closure request record with status "Pending Admin Review" (only one pending request per provider; no booking or payout check blocks submission; a Suspended Owner can still submit) (REQ-032-071, REQ-032-067)
 9. System logs closure request in audit trail (user, timestamp, reason)
 10. System notifies admins of the request (FR-020 `provider.closure_requested`, a mandatory notice; recipients and content are defined by the notification Rules REQ-020-016 and REQ-030-101), and FR-015 Screen 1 shows the provider with the Closure Requested marker and filter (REQ-032-072)
 11. System displays confirmation to provider "Account closure request submitted. Our team will review and process your request within 5 business days. You will receive an email once your account is deactivated." (REQ-032-073)
-12. Provider account remains Active until admin processes the request. If the admin schedules the deactivation for a future date, the request stays "Pending Admin Review" until the deactivation takes effect; if the scheduled deactivation is cancelled, the request stays "Pending Admin Review" and no rejection email is sent (REQ-032-074)
+12. Provider account keeps its current status until admin processes the request. If the admin schedules the deactivation for a future date, the request stays "Pending Admin Review" until the deactivation takes effect; if the scheduled deactivation is cancelled, the request stays "Pending Admin Review" and no rejection email is sent (REQ-032-074)
 13. Admin reviews the closure request in FR-015 (A-02: Provider Management) and processes it per FR-015 Alternative Flow A7: deactivates the provider via FR-015 Screen 4 (immediate or scheduled), with a reason that references the request
 14. System applies the FR-015 deactivation:
     - Provider account status changed to "Deactivated"
@@ -768,7 +768,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
     - All provider data retained in archive (retention follows the system PRD, Platform-Wide Rules: One 10-year retention period)
     - Bank account details encrypted and archived
 15. When the deactivation takes effect, the system sets the closure request status to "Approved", links it to the FR-015 deactivation status event, and sends the FR-015 deactivation email (`provider.deactivated`, FR-020). FR-015 locks "Notify Provider" on for closure deactivations, so this email is always sent, as step 11 promises (REQ-032-075)
-16. If the admin rejects the request instead (e.g., the provider asks to withdraw it), the system sets the request status to "Rejected" with review notes, the provider account remains Active, and the provider receives the FR-020 `provider.closure_rejected` email with the review notes (mandatory). The provider may submit a new request later (REQ-032-076)
+16. If the admin rejects the request instead (e.g., the provider asks to withdraw it), the system sets the request status to "Rejected" with review notes, the provider account keeps its current status, and the provider receives the FR-020 `provider.closure_rejected` email with the review notes (mandatory). The provider may submit a new request later (REQ-032-076)
 
 ### Alternative Flows
 
@@ -781,7 +781,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
   3. Provider reads warning
   4. Provider clicks "Cancel" button
   5. System closes dialog without creating closure request (REQ-032-070)
-- **Outcome**: No closure request created; provider account remains active
+- **Outcome**: No closure request created; provider account is unchanged
 
 ---
 
@@ -845,12 +845,12 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 
 | Field Name | Type | Required | Description | Validation Rules | Inline Editing | Graph field |
 |------------|------|----------|-------------|------------------|----------------|---|
-| Supported Languages | chip/pill list | Yes | Languages spoken at clinic | At least 1 language required; consumes the FR-021 language/locale catalog surfaced through settings | **Inline Edit**: Add language: click "+ Add Language" button to open dropdown with all available languages from FR-021; select language to add chip immediately; Remove language: click X icon on chip to remove (confirmation required if last language); Reorder: drag-and-drop chips to prioritize; changes save automatically or via "Save" button; unsaved changes indicator appears on tab label | ENT-provider-profile.supported_languages |
+| Supported Languages | chip/pill list | Yes | Languages spoken at clinic | At least 1 language required; consumes the FR-021 language/locale catalog surfaced through settings | **Inline Edit**: Add language: click "+ Add Language" button to open dropdown with the offered languages from FR-021 (Active and Preparation locales, REQ-032-147); select language to add chip immediately; Remove language: click X icon on chip to remove (confirmation required if last language); Reorder: drag-and-drop chips to prioritize; changes save automatically or via "Save" button; unsaved changes indicator appears on tab label | ENT-provider-profile.supported_languages |
 
 **Business Rules**:
 
 - Languages displayed as removable chips/pills with X button on each chip
-- Clicking "+ Add Language" opens dropdown with all available languages from FR-021
+- Clicking "+ Add Language" opens dropdown with the offered languages from FR-021: the Active and Preparation locales. Every catalog locale already saved is displayed, and a saved language stays when its locale becomes Inactive (REQ-032-147)
 - Selected languages immediately appear as chips; removing a chip removes it from selection
 - At least 1 language must be selected (validation prevents removing last language) (REQ-032-043)
 - Changes saved automatically when language added/removed, or via "Save" button
@@ -917,10 +917,10 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 |------------|------|----------|-------------|------------------|----------------|---|
 | Overall Rating Summary | display | No | Average rating and total review count (e.g., "4.8/5.0 - Based on 127 reviews") | Read-only; calculated from Reviews service | **Read-only**: Displays current average rating with star display and total review count; updates automatically when new reviews added | ENT-provider-review-summary.average_rating, ENT-provider-review-summary.review_count |
 | Rating Distribution | bar chart | No | Percentage/count visualization for 5★ through 1★ reviews | Read-only; calculated from Reviews service | **Read-only**: Bar chart showing distribution of ratings (e.g., 60% 5-star, 25% 4-star, etc.) with counts; updates automatically | ENT-provider-review-summary.rating_distribution |
-| Rating Filters | checkbox/pill group | No | Filter reviews by rating (5★, 4★, 3★, 2★, 1★); multiple selections allowed | Client-side filtering; selections persist per session | **Interactive**: Click rating pill/checkbox to toggle filter; multiple ratings can be selected; filtered results update immediately; filter state persists during session | no graph field (control) |
-| Sort Dropdown | dropdown | No | Sort order options: "Most recent" (default), "Highest rated", "Lowest rated", "Oldest first" | Client-side sorting; selection persists per session | **Interactive**: Select from dropdown to change sort order; results update immediately; sort preference persists during session | no graph field (control) |
-| Review Cards | list | No | List of review cards displaying: reviewer avatar/name, treatment type, rating stars, review date, review text (truncated), optional "Read more" link | Read-only content from Reviews service; pagination supported | **Read-only**: Review cards display review information; click "Read more" to expand full review text; click reviewer name/avatar (if implemented) may show reviewer profile; cards update automatically when new reviews added | ENT-review.reviewer_avatar_url, ENT-review.reviewer_name, ENT-review.treatment_name, ENT-review.overall_rating, ENT-review.created_at, ENT-review.feedback_text |
-| Pagination Controls | control group | No | Page navigation: page numbers, next/previous buttons, page-size selector (10/20/50 per page) | Client-side pagination | **Interactive**: Click page numbers or next/previous to navigate; select page size from dropdown; pagination state persists during session (REQ-032-122) | no graph field (control) |
+| Rating Filters | checkbox/pill group | No | Filter reviews by rating (5★, 4★, 3★, 2★, 1★); multiple selections allowed | Filtering runs on the server over the whole review list (REQ-032-148); selections persist per session | **Interactive**: Click rating pill/checkbox to toggle filter; multiple ratings can be selected; filtered results update immediately; filter state persists during session | no graph field (control) |
+| Sort Dropdown | dropdown | No | Sort order options: "Most recent" (default), "Highest rated", "Lowest rated", "Oldest first" | Sorting runs on the server over the whole review list (REQ-032-148); selection persists per session | **Interactive**: Select from dropdown to change sort order; results update immediately; sort preference persists during session | no graph field (control) |
+| Review Cards | list | No | List of review cards displaying: reviewer avatar/name, treatment type, rating stars, review date, review text (truncated), optional "Read more" link | Read-only content from Reviews service; pagination supported; a review edited by the patient after publishing carries the "Edited" marker (FR-013 REQ-013-032, REQ-032-148) | **Read-only**: Review cards display review information; click "Read more" to expand full review text; click reviewer name/avatar (if implemented) may show reviewer profile; cards update automatically when new reviews added | ENT-review.reviewer_avatar_url, ENT-review.reviewer_name, ENT-review.treatment_name, ENT-review.overall_rating, ENT-review.created_at, ENT-review.feedback_text |
+| Pagination Controls | control group | No | Page navigation: page numbers, next/previous buttons, page-size selector (10/20/50 per page) | Paging runs on the server over the whole review list (REQ-032-148) | **Interactive**: Click page numbers or next/previous to navigate; select page size from dropdown; pagination state persists during session (REQ-032-122) | no graph field (control) |
 
 **Business Rules**:
 
@@ -928,7 +928,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 - Providers may post a public response to any published review via the inline response composer defined in FR-013 Screen 6; see FR-013 for response rules and immutability (REQ-032-050)
 - Overall rating displays average (e.g., "4.8/5.0") with total count (e.g., "Based on 127 reviews") (REQ-032-116)
 - Rating distribution shows bar chart with counts/percentages for each star rating
-- Rating filter and sort options, defaults and per-session persistence are defined by FR-022 (REQ-022-084)
+- Rating filter and sort options, defaults and per-session persistence are defined by FR-022 (REQ-022-084); filter, sort and paging run on the server over the whole list, and the tab links to the FR-013 provider review list and review detail screens (REQ-032-148)
 - Clicking a review notification (from notifications) opens this tab with relevant review auto-highlighted (REQ-032-052)
 - Data sourced from Reviews service; loading/empty/error states handled
 - Reviews update automatically when new reviews are posted
@@ -1009,6 +1009,16 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 - All profile changes logged in audit trail with timestamp and user (REQ-032-020)
 - Profile updates propagate to patient app within 1 minute (REQ-032-014)
 - All profile fields are provider-editable from the provider dashboard (subject to role/permissions defined in FR-009 where applicable) (REQ-032-041)
+- **Who edits what** (REQ-032-141; the per-feature permission matrix is configured in FR-031):
+
+| Area | Who can edit |
+|------|--------------|
+| Clinic profile, languages, awards, documents | Owner and Manager |
+| Notification preferences (REQ-032-142) | Owner and Manager; other roles see them read-only |
+| Account closure request | Owner only |
+| Personal account settings (Screen 2) | Every role, for their own account only |
+| Billing settings (permission "View and Edit Billing Settings") | Owner only by default (FR-031, REQ-031-005) |
+
 - Inline editing: clicking editable fields activates edit mode with save/cancel buttons; changes persist immediately on save
 - **Tab Editability**:
   - **Fully Editable**: Tab 1 (Basic Information), Tab 2 (Languages), Tab 4 (Awards), Tab 6 (Documents) - providers can add, edit, delete content inline
@@ -1019,21 +1029,21 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 
 ### Screen 2: Account Settings
 
-**Purpose**: Allow provider to manage phone number, timezone, and password for account security and localization. This screen is organized as a tab within the Settings page (Settings & Support > Settings > Account Information tab).
+**Purpose**: Allow each team member (any role) to manage their own account details: display name, phone number, timezone, and password, for account security and localization. Account Email is shown read-only (REQ-032-144). These values belong to the person, not the clinic (REQ-032-141). This screen is organized as a tab within the Settings page (Settings & Support > Settings > Account Information tab).
 
 **Data Fields**:
 
 | Field Name | Type | Required | Description | Validation Rules | Role-Based Behavior | Graph field |
 |------------|------|----------|-------------|------------------|-------------------|---|
-| Account Name | text/display | Yes | Display name for the account | Max 200 chars (REQ-032-063) | **Owner**: Unified with clinic name (read-only, synced from Tab 1: Basic Information); **Staff**: Editable display name (defaults to First Name + Last Name, can be customized) | ENT-provider-account-settings.account_name |
+| Account Name | text/display | Yes | Display name for the account | Max 200 chars (REQ-032-063) | **Owner**: Unified with clinic name (read-only, synced from Tab 1: Basic Information); **Staff**: Editable display name (defaults to First Name + Last Name, can be customized) | ENT-team-member.account_name |
 | First Name | text | Yes | User's first name | 2-50 characters, letters, spaces, hyphens (same as FR-009) (REQ-032-063) | Editable by all roles (Owner and Staff) | ENT-team-member.first_name |
 | Last Name | text | Yes | User's last name | 2-50 characters, letters, spaces, hyphens (same as FR-009) (REQ-032-063) | Editable by all roles (Owner and Staff) | ENT-team-member.last_name |
-| Account Email | email | Yes | Email address for login and communications | Valid email format, unique per FR-009 Rule 3 (an email belongs to at most one provider organization at a time) (REQ-032-063) | Editable by all roles (Owner and Staff) | ENT-team-member.email |
-| Phone Number - Country Code | dropdown | Yes (if phone provided) (REQ-032-125) | Worldwide country calling code | Consumes FR-026 country calling codes list (e.g., +1, +44, +90, +234) | Editable by all roles | ENT-provider-account-settings.country_code |
-| Phone Number - Number | text | No | Provider phone number | Numeric only, length validated per country code format | Editable by all roles | ENT-provider-account-settings.phone_number |
-| Timezone | dropdown | Yes | Provider's local timezone for date/time display | Multiple timezone options (GMT-12 to GMT+14) | Editable by all roles | ENT-provider-account-settings.timezone |
+| Account Email | email | Yes | Email address for login and communications | Valid email format, unique per FR-009 Rule 3 (an email belongs to at most one provider organization at a time) (REQ-032-063) | **Read-only for every role.** The Owner's login email is changed only by a Hairline admin (FR-015, REQ-015-114); a team member's email is changed by contacting support (REQ-032-144) | ENT-team-member.email |
+| Phone Number - Country Code | dropdown | Yes (if phone provided) (REQ-032-125) | Worldwide country calling code | Consumes FR-026 country calling codes list (e.g., +1, +44, +90, +234) | Editable by all roles, for their own account | ENT-team-member.phone_number (country code and number saved together in international format) |
+| Phone Number - Number | text | No | Provider phone number | Numeric only, length validated per country code format | Editable by all roles, for their own account | ENT-team-member.phone_number |
+| Timezone | dropdown | Yes | This person's local timezone for date/time display; the browser timezone is offered at first login, otherwise UTC (REQ-032-145) | Fixed-offset options from the FR-026 timezone list (GMT-12 to GMT+14, REQ-026-121) | Editable by all roles, for their own account | ENT-team-member.timezone |
 | Current Password | password | Yes (for password change) | Current password for verification | Must match existing password hash | Editable by all roles | no graph field (input checked against the stored hash) |
-| New Password | password | Yes (for password change) | New password | See system PRD, Platform-Wide Rules: Password and one-time-code policy | Editable by all roles | ENT-provider-account-settings.password_hash |
+| New Password | password | Yes (for password change) | New password | See system PRD, Platform-Wide Rules: Password and one-time-code policy | Editable by all roles, for their own account | ENT-team-member.password |
 | Confirm New Password | password | Yes (for password change) | Confirm new password | Must match New Password field (REQ-032-065) | Editable by all roles | no graph field (input that must match New Password) |
 
 **Business Rules**:
@@ -1054,13 +1064,13 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
   - Rationale: Staff are individual team members, not the clinic itself, so they should have personalized display names
   
 - Phone number country code and number stored together in international format (e.g., +44 7700 900123) (REQ-032-015)
-- Timezone preference applies to all date/time displays in provider dashboard (REQ-032-064)
-- Existing timestamps in database remain in UTC, converted to provider's timezone for display (REQ-032-064)
+- Timezone is saved per person and applies to all date/time displays in that person's provider dashboard session; the browser timezone is offered at first login, otherwise UTC (REQ-032-064, REQ-032-145)
+- Existing timestamps in database remain in UTC, converted for display with the fixed offsets of the FR-026 timezone list (REQ-032-064, REQ-026-121)
 - Password change requires correct current password (security measure) (REQ-032-007)
 - New password must meet the password policy. See system PRD, Platform-Wide Rules: Password and one-time-code policy
 - Password change event logged in audit trail (timestamp, user ID, IP address) (REQ-032-020)
 - Email notification sent to provider email address after successful password change (security alert) (REQ-032-021)
-- All account-level fields (account name, first name, last name, account email, phone number, timezone, password) are provider-editable by the logged-in user, subject to role-based restrictions (Account Name read-only for Owner) and FR-026 security rules and FR-009 role permissions (REQ-032-041)
+- All account-level fields (account name, first name, last name, phone number, timezone, password) are editable by the logged-in user for their own account only; Account Email is read-only for every role (REQ-032-144). Editing is subject to role-based restrictions (Account Name read-only for Owner) and FR-026 security rules and FR-009 role permissions (REQ-032-041)
 
 **Notes**:
 
@@ -1075,7 +1085,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 - Timezone dropdown should include offset and city examples (e.g., "(GMT+3) Istanbul")
 - Provide "Show/Hide Password" toggle icon for password fields
 - Display last password change date below password section
-- Include a dedicated **Account Closure** warning card at the bottom of the Account Information tab with explanatory copy and a red `Request account closure` button; clicking the button opens the Account Closure dialog described in the "Request Account Closure" flow, where the reason textarea remains provider-editable while approval status stays admin-controlled
+- Include a dedicated **Account Closure** warning card (shown to the Owner only, REQ-032-141) at the bottom of the Account Information tab with explanatory copy and a red `Request account closure` button; clicking the button opens the Account Closure dialog described in the "Request Account Closure" flow, where the reason textarea remains provider-editable while approval status stays admin-controlled
 - Account Settings shares the Settings page with Notification Preferences as a two-tab interface; the `Account Information` tab (this screen) is the default tab when landing on Settings
 - Each tab can be saved independently; system displays unsaved changes indicator on tabs with edits (REQ-032-040)
 - When provider attempts to navigate away or quit, system displays reminder dialog for unsaved changes (REQ-032-040)
@@ -1101,17 +1111,18 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 
 **Business Rules**:
 
-- Notification preferences are profile-specific (apply to entire provider organization, not individual team members) (REQ-032-078)
-- If all notification types disabled, show confirmation dialog warning provider may miss important updates (REQ-032-079)
+- Notification preferences are profile-specific (apply to entire provider organization, not individual team members) (REQ-032-078); only the Owner and a Manager can change them, other roles see them read-only (REQ-032-142)
+- If all notification types disabled, show confirmation dialog warning provider may miss important updates (REQ-032-079); Email and Push may both be off for a type, and mandatory notices ignore the setting (REQ-032-143)
 - Notification preferences saved and enforced by S-03 Notification Service (FR-020) (REQ-032-009)
 - Global channel preferences override individual notification types (e.g., if Email disabled, no notifications sent via email regardless of individual toggles) (REQ-032-080)
 - Each tab (Profile, Account Information, Notification Preferences, Billing) can be saved independently; system displays unsaved changes indicator (e.g., dot or asterisk) on tabs with unsaved edits (REQ-032-040)
 - See REQ-032-040.
 - Critical system alerts (e.g., payment failure, security breach) bypass preferences and always sent via all available channels (REQ-032-081)
 - Mandatory provider notices (defined in FR-030 Non-Disableable by Default; for the inquiry-cancelled quote notice, FR-020 REQ-020-020) are exempt from these preferences. This screen offers no toggle for them, and neither the Quote or Schedule Notifications toggles, "Disable All" nor the channel preferences can suppress them (REQ-032-031)
-- Preference changes logged in audit trail (REQ-032-082)
+- Every preference change is logged in audit trail with the user who made it (REQ-032-082, REQ-032-142)
+- Support case notices (admin reply, status change, resolved) have no toggle on this screen and are always sent (REQ-032-143)
 - Preference updates propagate to S-03 within 1 minute (REQ-032-016)
-- All notification type and channel toggles are provider-editable from the `Settings → Notification Preferences` tab in the provider dashboard (REQ-032-041)
+- All notification type and channel toggles are editable by the Owner and a Manager from the `Settings → Notification Preferences` tab in the provider dashboard (REQ-032-041, REQ-032-142)
 
 **Notes**:
 
@@ -1127,16 +1138,16 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 
 ### Screen 4: Billing Settings (Owner Role Only)
 
-**Purpose**: Allow provider Owner to manage bank account details for receiving payouts from Hairline platform. This screen is organized as a tab within the Settings page (Settings & Support > Settings > Billing tab). Non-owner roles cannot see or access this tab.
+**Purpose**: Allow provider Owner to manage bank account details for receiving payouts from Hairline platform. This screen is organized as a tab within the Settings page (Settings & Support > Settings > Billing tab). Non-owner roles cannot see or access this tab. The bank form below is shown and required only when the Payout Method is Manual bank transfer; for Stripe Connect the tab shows a status panel and a "Complete Stripe sign-up" link instead (REQ-032-146).
 
 **Data Fields**:
 
 | Field Name | Type | Required | Description | Validation Rules | Graph field |
 |------------|------|----------|-------------|------------------|---|
-| Account Holder Name | text | Yes | Full name or business name on bank account | Max 200 chars, alphabetic and spaces only (REQ-032-085) | ENT-provider-billing-settings.account_holder_name |
-| Bank Name | text | Yes | Official name of bank | Max 200 chars | ENT-provider-billing-settings.bank_name |
-| Account Number | text | Yes | Bank account number | Format varies by country, validated by S-02 Payment Service | ENT-provider-billing-settings.account_number |
-| Routing/SWIFT Code | text | Yes | Bank routing code (USA) or SWIFT code (international) | 8-11 chars for SWIFT, 9 digits for USA routing (REQ-032-085) | ENT-provider-billing-settings.routing_swift_code |
+| Account Holder Name | text | Yes (Manual bank transfer only) | Full name or business name on bank account | Max 200 chars, alphabetic and spaces only (REQ-032-085) | ENT-provider-billing-settings.account_holder_name |
+| Bank Name | text | Yes (Manual bank transfer only) | Official name of bank | Max 200 chars | ENT-provider-billing-settings.bank_name |
+| Account Number | text | Yes (Manual bank transfer only) | Bank account number | Format varies by country, validated by S-02 Payment Service | ENT-provider-billing-settings.account_number |
+| Routing/SWIFT Code | text | Yes (Manual bank transfer only) | Bank routing code (USA) or SWIFT code (international) | 8-11 chars for SWIFT, 9 digits for USA routing (REQ-032-085) | ENT-provider-billing-settings.routing_swift_code |
 | IBAN | text | Conditional (if applicable) | International Bank Account Number | Format validated per country (e.g., Turkey = 26 chars) (REQ-032-085) | ENT-provider-billing-settings.iban |
 
 **Commission & Payout (Read-Only Panel)**:
@@ -1148,12 +1159,12 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 | Effective Date | display | N/A | Date from which the current configuration applies to newly confirmed bookings | Retrieved from FR-015 Tab 7 (FR-029 `effective_date`); format DD-MM-YYYY; read-only | ENT-commission-rate-config.effective_date |
 | Scheduled Configuration | display | N/A | Next configuration and its Effective Date, if an admin has set a future-dated change. At most one pending configuration exists per provider; a newer future-dated edit by an admin replaces it (FR-015 Tab 7, FR-029) | Retrieved from FR-015 Tab 7; hidden when none is pending; read-only | ENT-commission-rate-config.status, ENT-commission-rate-config.effective_date |
 | Payout Method | display | N/A | "Stripe Connect" or "Manual bank transfer"; chosen by the admin when the clinic is created in FR-015 | Read-only; the provider cannot change it | ENT-provider.payout_method |
-| Payout Readiness | display | N/A | Whether the clinic's payout set-up is ready; for Stripe Connect the clinic completes Stripe's own sign-up itself | Read-only | no graph field (display) |
+| Payout Readiness | display | N/A | Whether the clinic's payout set-up is ready; for Stripe Connect the clinic completes Stripe's own sign-up itself through the "Complete Stripe sign-up" link in the status panel | Read-only, display only; readiness is owned by FR-017 (REQ-017-064) (REQ-032-146) | no graph field (display) |
 | Payout Timing | display | N/A | Stripe Connect: "Released automatically after completion" (FR-017). Manual bank transfer: follows the one platform-wide settlement period set in FR-029 (default weekly, Sunday cutoff, Wednesday payout). There is no per-clinic payout frequency | Read-only; shown according to the clinic's payout method | no graph field (display) |
 
 **Business Rules**:
 
-- Billing settings accessible ONLY to Owner role (per FR-009 role permissions) (REQ-032-011)
+- Billing settings accessible ONLY to the Owner by default: the permission "View and Edit Billing Settings" is held by FR-031 with the default Owner only (REQ-031-005); the Billing tab is hidden from roles without it (REQ-032-011, REQ-032-141)
 - See REQ-032-022.
 - Account number masked in read-only view (e.g., ●●●●●●1234), unmasked in edit mode (REQ-032-086)
 - See REQ-032-017.
@@ -1162,6 +1173,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 - Email confirmation sent to Owner after bank account details updated (REQ-032-088)
 - Bank account details used by FR-017 billing workflow for provider payouts
 - **Commission & Payout panel**: Read-only; values are set by admins in FR-015 Tab 7 and synchronized with FR-029. Providers cannot edit them and must contact support to discuss changes. The panel notes that existing confirmed bookings keep the commission snapshot taken at their confirmation (FR-029) (REQ-032-090)
+- **Suspended clinic**: while the provider is Suspended, the Owner can still update the bank details (the change is audit-logged); the rest of billing is view-only (REQ-032-067)
 - **Payout method and readiness**: The admin chooses the payout method (Stripe Connect or manual bank transfer) when creating the clinic in FR-015. The Owner sees the method and the readiness read-only and cannot change the method
 - If bank account validation fails, display error message from S-02 and prevent saving (REQ-032-087)
 
@@ -1283,7 +1295,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 | Field Name | Type | Required | Description | Validation Rules | Graph field |
 |------------|------|----------|-------------|------------------|---|
 | Resource List | card/grid | No | List of downloadable resources with thumbnails/icons | Each resource: name, description, file type, file size, download count, last updated | ENT-help-centre-content.title, ENT-help-centre-content.summary, ENT-help-centre-content.file_type, ENT-help-centre-content.file_size, ENT-help-centre-content.download_count, ENT-help-centre-content.updated_at, ENT-help-centre-content.thumbnail_url |
-| Resource Category Filter | filter | No | Filter by resource type (Templates, Documents, Forms, etc.) | Pre-defined categories from admin | ENT-help-centre-content.topic |
+| Resource Category Filter | filter | No | Filter by resource type (Templates, Documents, Forms, etc.) | Pre-defined categories from admin | ENT-help-centre-content.resource_category |
 | File Type Filter | filter | No | Filter by file format (PDF, DOCX, XLSX, etc.) | Pre-defined file types | ENT-help-centre-content.file_type |
 | Preview Button | button | No | Preview resource before download (if supported format) | Opens preview modal or new tab | no graph field (control) |
 | Download Button | button | No | Download resource file | Initiates file download | ENT-help-centre-content.attachments |
@@ -1293,7 +1305,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 - Resources displayed as cards/grid with file type icons and metadata
 - Clicking resource card shows details: description, file size, download count, last updated date
 - Preview available for PDF and image files (opens in modal or new tab) (REQ-032-131)
-- Download initiates file download; download count incremented (REQ-032-098)
+- Download initiates file download; download count incremented (REQ-032-098); opening a resource records the view through the FR-033 view write (REQ-033-097)
 - Resources can be filtered by category and file type
 - Search functionality searches resource names and descriptions
 
@@ -1364,11 +1376,11 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 
 - Support contact form auto-populates provider contact information (name, email, clinic name) (REQ-032-101)
 - Form submission creates a support case with a unique case number
-- Support request confirmation displayed: "Support request submitted. Case #[number]. Our team will respond within 24 hours." (REQ-032-103)
+- Support request confirmation displayed: "Support request submitted. Case #[number]. We aim to respond within 24 hours on business days." (REQ-032-103)
 - Form submissions automatically create support cases in FR-034 Support Center & Ticketing System with status 'Open'; case management, admin responses, and status updates are handled in FR-034 (REQ-032-100)
 - Submission tracking shows all user's support requests with status updates
 - Status updates: Open → In Progress → Resolved → Closed (REQ-032-105)
-- Provider can view request details and add follow-up messages (if implemented)
+- Provider can view request details and add follow-up messages (REQ-032-109)
 - Email notification sent to provider when admin responds or updates status (REQ-032-111)
 
 **Notes**:
@@ -1376,8 +1388,8 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 - Form layout: fields stacked vertically with clear labels and validation
 - File upload: drag-and-drop or file picker, shows upload progress
 - Submission tracking: table/list view with status badges, sortable by date/status
-- Ticket details: expandable view showing full conversation thread (if multi-message support implemented)
-- Estimated response time displayed: "Average response time: 24 hours"
+- Ticket details: expandable view showing the full conversation thread (Screen 5.8)
+- Response time note displayed: "We aim to respond within 24 hours on business days" (REQ-032-103)
 
 ---
 
@@ -1395,7 +1407,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 | Feedback Form - Title | text | Yes | Brief title for feedback | Max 100 chars (REQ-032-104) | ENT-support-case.title |
 | Feedback Form - Description | textarea | Yes | Detailed feedback description | Max 5000 chars, min 20 chars (REQ-032-104) | ENT-support-case.description |
 | Feedback Form - Priority | dropdown | No | Suggested priority (Low, Medium, High) | Default: Low (REQ-032-104) | ENT-support-case.priority |
-| Submission Tracking | list | No | List of submitted feedback with status | Each submission: title, type, status (Open, In Progress, Resolved, Closed), feedback resolution (if applicable: Implemented, Planned, Declined), submitted date, admin response | ENT-support-case.title, ENT-support-case.feedback_type, ENT-support-case.status, ENT-support-case.feedback_resolution, ENT-support-case.submitted_at, ENT-support-case-message.content |
+| Submission Tracking | list | No | List of submitted feedback with status | Each submission: title, type, status (Open, In Progress, Resolved, Closed), feedback resolution (if applicable: Implemented, Planned, Declined, Under Review), submitted date, admin response | ENT-support-case.title, ENT-support-case.feedback_type, ENT-support-case.status, ENT-support-case.feedback_resolution, ENT-support-case.submitted_at, ENT-support-case-message.content |
 
 **Business Rules**:
 
@@ -1404,8 +1416,8 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 - Confirmation displayed: "Thank you for your feedback! We'll review your submission."
 - Form submissions automatically create feedback cases in FR-034 Support Center & Ticketing System with status 'Open'; case tracking, admin responses, and resolution status are handled in FR-034 (REQ-032-100)
 - Submission tracking shows all user's feedback submissions with status
-- Status updates follow unified workflow: Open → In Progress → Resolved → Closed (feedback resolution outcome—Implemented, Planned, Declined—tracked separately in FR-034) (REQ-032-105)
-- Admin can respond to feedback (if implemented); response visible in tracking list
+- Status updates follow unified workflow: Open → In Progress → Resolved → Closed (feedback resolution outcome—Implemented, Planned, Declined, Under Review—tracked separately in FR-034) (REQ-032-105)
+- Admin can respond to feedback; response visible in tracking list
 - Feedback helps prioritize platform improvements
 
 **Notes**:
@@ -1431,7 +1443,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 |------------|------|----------|-------------|------------------|---|
 | Filter Bar | filter group | No | Filter controls including: **Status Filter** (multi-select dropdown: Open, In Progress, Resolved, Closed; Default: Open + In Progress), **Type Filter** (multi-select dropdown: Support Request, Feedback; Default: All types), **Date Range Filter** (date picker; Default: Last 90 days) | Filters are cumulative (AND logic) | ENT-support-case.status, ENT-support-case.submitted_at |
 | Search Bar | text input | No | Search cases by case ID, title, keywords | Min 3 chars to trigger search, real-time search; searches across Case ID, Title, Description, Message content (REQ-032-107) | no graph field (control) |
-| Quick Stats Bar | stats component | N/A | Displays summary metrics: Open (X), In Progress (X), Resolved (X), Unread Messages (X) | Display only, updates based on current filters | no graph field (display component) |
+| Quick Stats Bar | stats component | N/A | Displays summary metrics: Open (X), In Progress (X), Resolved (X), Unread Messages (X) | Display only; computed over all of the clinic's cases, independent of the list filters (REQ-032-117) | no graph field (display component) |
 | Case List Table | data table | N/A | Displays cases matching filters with 8 columns (see below); 20 cases per page default | Sortable columns, paginated; default sort by Last Updated descending | no graph field (list of the column rows below) |
 | **Table Column 1**: Case ID | link | N/A | Unique case identifier (format: CASE-YYYY-#####); Width: 140px | Clickable link to case detail view (Screen 5.8); Sortable | ENT-support-case.case_id |
 | **Table Column 2**: Title | text | N/A | Case title; Width: 250px | Truncated with ellipsis if >40 chars; full title shown on hover; Sortable | ENT-support-case.title |
@@ -1448,7 +1460,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 - Default view shows Open and In Progress cases from last 90 days, sorted by Last Updated descending (one shared Rule with the admin case list: FR-034 REQ-034-114)
 - The case list shows 20 cases per page by default (REQ-032-118)
 - Providers can view all their submitted cases (both support requests from Screen 5.5 and feedback from Screen 5.6)
-- Clicking case row or Case ID opens Screen 5.8 (Support Case Detail View)
+- Clicking case row or Case ID opens Screen 5.8 (Support Case Detail View); a case opened from a notification link opens directly on Screen 5.8 whatever the list filters (REQ-032-112)
 - Status badges color-coded (Open=blue, In Progress=yellow, Resolved=green, Closed=gray)
 - Type badges color-coded (Support Request=orange, Feedback=purple)
 - Feedback Resolution badges color-coded (Implemented=green, Planned=yellow, Declined=red, Under Review=blue)
@@ -1458,7 +1470,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 - Filters are cumulative (AND logic between different filter types) (REQ-032-107)
 - Filter options: Status (Open, In Progress, Resolved, Closed; default Open and In Progress), Type (Support Request, Feedback; default all types), Date Range (custom range on the case creation date; default last 90 days); several selections within one filter combine as OR (REQ-032-107)
 - Filter selections persist during session (REQ-032-107)
-- Quick Stats bar shows counts based on current filters (REQ-032-117)
+- Quick Stats bar shows counts over all of the clinic's cases, independent of the list filters (REQ-032-117)
 - If case has new admin messages since last view, "New Reply" badge shown prominently
 
 **Notes**:
@@ -1492,9 +1504,9 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 | Last Updated | datetime (readonly) | N/A | Most recent modification | Display only | ENT-support-case.last_updated_at |
 | Original Description | text block | N/A | Initial submission description | Display only, expandable if long | ENT-support-case.description |
 | Communication Thread | threaded conversation | N/A | Two-way conversation showing all messages from admin and provider with full context | Scrollable, chronological (oldest first), shows sender name, sender type badge, timestamp, message content, attachments | ENT-support-case-message.sender_name, ENT-support-case-message.sender_type, ENT-support-case-message.sent_at, ENT-support-case-message.content, ENT-support-case-message.attachments |
-| Reply Message Box | textarea | No | Message composer for replying to admin | Max 5000 chars; only enabled for Open and In Progress cases; Character counter displayed (REQ-032-110) | ENT-support-case-message.content |
+| Reply Message Box | textarea | No | Message composer for replying to admin | Max 5000 chars; enabled for Open, In Progress and Resolved cases, disabled for Closed cases (after a reopen request is sent it stays disabled and the screen shows "Request sent, awaiting admin"); Character counter displayed (REQ-032-110, REQ-032-114) | ENT-support-case-message.content |
 | Attach Files Button | file upload | No | Attach files to reply message | Max 5 files, 10MB per file, formats: JPG, PNG, PDF, DOC, DOCX (REQ-032-110) | ENT-support-case-message.attachments |
-| Send Reply Button | button | N/A | Sends reply message to admin | Enabled only if message box has content; disabled for Resolved/Closed cases | no graph field (control) |
+| Send Reply Button | button | N/A | Sends reply message to admin | Enabled only if message box has content; disabled for Closed cases; a reply to a Resolved case reopens it (REQ-032-109) | no graph field (control) |
 | Request Reopen Button | button | N/A | Request to reopen closed case | Only visible for Closed cases; opens reopen request modal (Screen 5.9) | no graph field (control) |
 | Case Timeline | vertical timeline | N/A | Shows all case events with full context | Displays: case created, status changes, feedback resolution updates, messages sent/received, case resolved, case closed; Readonly, scrollable, reverse chronological (newest first) | ENT-support-case-timeline-event.event_type, ENT-support-case-timeline-event.event_timestamp, ENT-support-case-timeline-event.description |
 | Back to List Button | button | N/A | Returns to My Support Cases list (Screen 5.7) | Click action, preserves filter state (REQ-032-132) | no graph field (control) |
@@ -1513,13 +1525,13 @@ Each message in the thread displays:
 **Business Rules**:
 
 - Case detail view shows complete communication thread with all messages from admin and provider
-- Providers can reply to admin messages for Open and In Progress cases via Reply Message Box (REQ-032-109)
+- Providers can reply to admin messages for Open, In Progress and Resolved cases via Reply Message Box; a reply to a Resolved case reopens it (FR-034 REQ-034-139) (REQ-032-109)
 - When provider replies, message is sent to FR-034 system and appears in admin's case view (FR-034 Screen 3)
 - An admin reply notifies the provider (support.case_admin_reply) and a provider reply notifies the assigned admin, or all support staff if unassigned (support.case_user_reply); recipients, content and channels are defined by the notification catalogue (FR-030 REQ-030-065 and REQ-030-066) (REQ-032-111)
 - System marks messages as read when provider opens case detail view (REQ-032-108)
 - Unread admin messages marked with "New" badge until provider views case
-- For Resolved cases, Reply Message Box is read-only with message: "This case has been marked as resolved. If the issue persists, click 'Request Reopen'." (REQ-032-109)
-- For Closed cases, Reply Message Box is disabled; provider can only click "Request Reopen" button (REQ-032-109)
+- For Resolved cases, Reply Message Box stays enabled with the banner: "This case was marked as resolved. Replying will reopen it." (REQ-032-109)
+- For Closed cases, Reply Message Box is disabled; provider can only click "Request Reopen" button; after a request is sent the screen shows "Request sent, awaiting admin" (REQ-032-109, REQ-032-114)
 - Communication Thread displays messages in chronological order (oldest first) to show conversation flow
 - Case Timeline displays events in reverse chronological order (newest first) to show latest updates
 - Attachment files validated before upload (file type, size, virus scan) (REQ-032-110)
@@ -1541,7 +1553,7 @@ Each message in the thread displays:
 
 #### Screen 5.9: Reopen Case Request Modal
 
-**Purpose**: Allow provider to request reopening of closed case with reason
+**Purpose**: Allow provider to ask the admin to reopen a closed case, with a reason
 
 **Layout Type**: Modal dialog
 
@@ -1551,31 +1563,28 @@ Each message in the thread displays:
 |------------|------|----------|-------------|------------------|---|
 | Previous Resolution Summary | text (readonly) | N/A | Resolution summary from when case was previously resolved | Display only, helps provider provide context | ENT-support-case-resolution.resolution_summary |
 | Previous Closure Date | datetime (readonly) | N/A | Date when case was closed | Display only | ENT-support-case.closed_at |
-| Reopening Reason | textarea | Yes | Reason for reopening case | Min 20 chars, max 500 chars; Example: "The issue is still occurring after following all troubleshooting steps" (REQ-032-113) | ENT-support-case-reopening.reopening_reason |
-| Priority Update | dropdown select | No | Adjust priority for reopened case | Options: Keep Current, Low, Medium, High, Urgent; Default: Keep Current | ENT-support-case.priority |
-| Submit Reopen Request Button | button | Yes | Submits reopen request to admin | Validates reason length; Sends notification to admin via S-03 | no graph field (control) |
-| Cancel Button | button | Yes | Closes modal without reopening case | No changes made | no graph field (control) |
+| Reopening Reason | textarea | Yes | Reason for reopening case | Min 20 chars, max 500 chars; Example: "The issue is still occurring after following all troubleshooting steps" (REQ-032-113) | ENT-support-case-message.content |
+| Priority Update | dropdown select | No | Priority the provider would like, sent as text in the reopen-request message; the admin decides | Options: Keep Current, Low, Medium, High, Urgent; Default: Keep Current | no graph field (sent as text in the message) |
+| Submit Reopen Request Button | button | Yes | Submits the reopen request to admin as a flagged message in the case thread | Validates reason length; the admin is told through the FR-034 user-reply notice | no graph field (control) |
+| Cancel Button | button | Yes | Closes modal without sending a request | No changes made | no graph field (control) |
 
 **Business Rules**:
 
 - Modal only accessible from Screen 5.8 when viewing Closed cases (REQ-032-113)
 - System displays previous resolution summary and closure date for context
 - Reopening reason required (min 20 chars) to prevent accidental/spam reopening (REQ-032-113)
-- Provider can optionally adjust priority when reopening (e.g., escalate if issue was marked resolved incorrectly) (REQ-032-113)
+- Provider can optionally state a requested priority, sent as text; the admin decides the priority (REQ-032-113)
 - When submitted: (REQ-032-114)
-  - Case status changes from "Closed" to "Open"
-  - System logs reopening in case timeline with timestamp, reopening reason, and provider who requested
-  - FR-034 triggers support.case_reopened notification event to S-03
-  - S-03 sends email notification to assigned admin (or all support staff if unassigned)
-  - Admin receives notification with reopening reason and previous resolution for context
+  - A flagged reopen-request message (reason and optional requested priority as text) is added to the case thread through FR-034 (REQ-034-178)
+  - The case stays Closed; only an admin can reopen it in FR-034
+  - The admin is told through the FR-034 user-reply notice (support.case_user_reply) to the assigned admin, or all support staff if unassigned
 - System displays confirmation: "Reopen request submitted. We'll review your case shortly." (REQ-032-137)
-- After submission, modal closes and provider returns to Screen 5.8 with updated case status "Open"
-- Reply Message Box becomes enabled again for reopened cases
+- After submission, modal closes and provider returns to Screen 5.8, which shows "Request sent, awaiting admin"; the case status is still Closed and the Reply Message Box stays disabled
+- If an admin accepts the request, FR-034 reopens the case and the Reply Message Box is enabled again
 
 **Notes**:
 
 - Display warning if case was recently closed (e.g., within 24 hours): "This case was recently closed. Are you sure the issue persists?" (REQ-032-138)
-- Show estimated response time: "Our team typically responds to reopen requests within 4 hours." (REQ-032-139)
 - Consider adding "Reopen Reason Templates" dropdown for quick selection (e.g., "Issue persists", "New information available") (future enhancement)
 
 ---
@@ -1590,7 +1599,7 @@ Each message in the thread displays:
 
 | Field Name | Type | Required | Description | Validation Rules | Graph field |
 |------------|------|----------|-------------|------------------|---|
-| Overall Status Indicator | badge | No | Current platform status (All Systems Operational, Partial Outage, Major Outage) | Color-coded: green/yellow/red | ENT-service-status.overall_status |
+| Overall Status Indicator | badge | No | Current platform status (All Systems Operational, Partial Outage, Major Outage, or Status not available when no status can be shown; the values are owned by FR-033, REQ-033-080) | Color-coded: green/yellow/red | ENT-service-status.overall_status |
 | Service Components Status | list | No | Status of individual services/components | Each component: name, status (Operational, Degraded, Down), last updated | ENT-service-status.components |
 | Incident History | timeline | No | Recent incidents and maintenance windows | Each incident: title, description, status (Investigating, Identified, Monitoring, Resolved), start time, end time, affected services | ENT-service-status.incidents |
 | Maintenance Schedule | list | No | Upcoming scheduled maintenance | Each maintenance: title, description, scheduled start/end time, affected services | ENT-service-status.maintenance |
@@ -1598,12 +1607,12 @@ Each message in the thread displays:
 **Business Rules**:
 
 - Service status page displays real-time platform health
-- Overall status: "All Systems Operational" (green), "Partial Outage" (yellow), "Major Outage" (red)
+- Overall status: "All Systems Operational" (green), "Partial Outage" (yellow), "Major Outage" (red), "Status not available" (grey) when no status can be shown
 - Individual service components show status: Operational (green), Degraded (yellow), Down (red)
 - Incident history shows recent incidents with timeline and resolution details
 - Maintenance schedule shows upcoming planned maintenance windows
 - Status updates automatically when admin updates status via admin platform (REQ-032-115)
-- Providers can subscribe to status updates (email notifications for incidents) (REQ-032-115)
+- Status update notifications by email are a future enhancement, not in this release (FR-033 REQ-033-032) (REQ-032-115)
 
 **Notes**:
 
@@ -1612,7 +1621,6 @@ Each message in the thread displays:
 - Service components: grid/list with status badges and last updated timestamps
 - Incident timeline: chronological list with expandable details
 - Maintenance schedule: calendar view or list view with countdown timers
-- Subscribe button: "Get email notifications for service incidents"
 
 ---
 
@@ -1623,10 +1631,10 @@ Each message in the thread displays:
 - **Rule 1**: All provider profile changes (logo, name, description, languages, awards) propagate to patient-facing quote comparison view within 1 minute (REQ-032-014)
 - **Rule 2**: Provider notification preferences enforced by S-03 Notification Service for all platform notifications, except critical system alerts and mandatory provider notices, which bypass preferences. Which notices are mandatory, their recipients and their content are defined by the notification Rules (FR-020 REQ-020-020 and FR-030 Non-Disableable by Default) (REQ-032-009; REQ-032-031)
 - **Rule 3**: All account settings changes (phone, timezone, password) logged in audit trail with timestamp, user ID, and IP address (REQ-032-020)
-- **Rule 4**: Billing settings accessible ONLY to Owner role; non-owner roles cannot see or access billing settings (tab hidden from navigation) (REQ-032-022)
+- **Rule 4**: Billing settings are accessible only to the holder of the "View and Edit Billing Settings" permission, which FR-031 grants to the Owner by default (REQ-031-005); roles without it cannot see or access billing settings (tab hidden from navigation) (REQ-032-022, REQ-032-141)
 - **Rule 5**: All profile, language, awards, account, and notification fields documented in this FR are provider-editable within the Provider Dashboard (subject to role restrictions noted); reviews content and Help Centre articles are read-only views fed by their respective modules (staff roster managed by FR-009); providers may post responses to reviews via FR-013 Screen 6 response composer but cannot edit or delete review records (REQ-032-041)
 - **Rule 6 — Provider account-status banner**: Provider account status is owned by FR-015. (REQ-032-030)
-  - **Suspended**: The Owner and every FR-009 team member can still log in and see a persistent, non-dismissible banner on every Provider Platform page: "Your account is temporarily suspended. Reason: [admin-provided reason]. Contact support@hairlineapp.com for assistance." The reason is the Screen 4 reason recorded in FR-015. While suspended, the provider cannot receive new inquiries, submit quotes, or accept new work (FR-015 Rule 9); profile, documents, reviews, billing, and team management (FR-009 Rule 10) are view-only. Account security (password change), notification preferences, Help Centre, and support cases (Screens 5.5–5.9) remain available so the provider can contact admins. Chat with patients on the provider's open `In Progress` and `Aftercare` cases also stays available. Clinical notes, photos, and aftercare answers and actions are blocked until the admin reassigns or decides the case (FR-015 Screen 4). (REQ-032-067)
+  - **Suspended**: The Owner and every FR-009 team member can still log in and see a persistent, non-dismissible banner on every Provider Platform page: "Your account is temporarily suspended. Reason: [admin-provided reason]. Contact support@hairlineapp.com for assistance." The reason is the Screen 4 reason recorded in FR-015. While suspended, the provider cannot receive new inquiries, submit quotes, or accept new work (FR-015 Rule 9); profile, documents, reviews, billing, and team management (FR-009 Rule 10) are view-only, except that the Owner can still update the bank details (audit-logged, REQ-032-067). Account security (password change), notification preferences, Help Centre, and support cases (Screens 5.5–5.9) remain available so the provider can contact admins, and the Owner can still submit the account closure request (REQ-032-067). A Suspended Owner who has not yet set a password can still use the activation link; the status stays Suspended afterwards (FR-015, REQ-032-067). Chat with patients on the provider's open `In Progress` and `Aftercare` cases also stays available. Clinical notes, photos, and aftercare answers and actions are blocked until the admin reassigns or decides the case (FR-015 Screen 4). (REQ-032-067)
   - **Deactivated**: Login is disabled for the Owner and all team members. A login attempt shows "This account has been deactivated. Contact support@hairlineapp.com for assistance." and no session is created. (REQ-032-068)
   - **Reactivated**: The banner is removed on the next page load and normal editing returns; nothing cancelled by the suspension is restored (FR-015 Screen 5). (REQ-032-069)
 
@@ -1654,7 +1662,7 @@ Each message in the thread displays:
 
 - Password complexity requirements: see system PRD, Platform-Wide Rules: Password and one-time-code policy (FR-026)
 - Encryption algorithms: AES-256 for data at rest, TLS 1.3 for data in transit
-- Role-based access control rules: billing settings accessible only to Owner role (FR-009)
+- Role-based access control rules: billing settings need the permission "View and Edit Billing Settings", held by FR-031 with the default Owner only (REQ-032-141)
 - Password hash algorithm: bcrypt with cost factor 12+
 - Account closure workflow: admin deactivation through FR-015 only (no "Deleted" status), data retained (retention follows the system PRD, Platform-Wide Rules: One 10-year retention period)
 
@@ -1667,7 +1675,7 @@ Each message in the thread displays:
 
 - **Billing Rule 1**: Bank account details validated by S-02 Payment Service before saving (format validation only, no funds verification) (REQ-032-025)
 - **Billing Rule 2**: Bank account details used by FR-017 billing workflow for provider payouts (admin-triggered after treatment completion)
-- **Billing Rule 3**: Bank account changes require Owner role; non-owner roles cannot see or access billing settings (tab hidden from navigation) (REQ-032-022)
+- **Billing Rule 3**: Bank account changes need the permission "View and Edit Billing Settings" (FR-031, default Owner only); roles without it cannot see or access billing settings (tab hidden from navigation) (REQ-032-022, REQ-032-141)
 - **Billing Rule 4**: Bank account details encrypted at rest and masked in UI (only last 4 digits visible in read-only view) (REQ-032-017)
 
 ### Integration, Security and Operating Rules
@@ -1682,7 +1690,7 @@ Each message in the thread displays:
 - **Entity 1: Provider Profile Data (from PR-01: Auth & Team Management)**: Provider account information
   - **Why needed**: Settings module requires existing provider account with clinic name, email, and role information
   - **Source**: Provider onboarding module (A-02: Provider Management & Onboarding creates provider account; PR-01 manages team members)
-- Provider support requests submitted via Help Centre receive first response within 24 hours for 95% of requests
+- Provider support requests submitted via Help Centre: we aim to respond within 24 hours on business days (REQ-032-103)
 - Providers access web platform via modern browsers (Chrome, Safari, Firefox, Edge - last 2 versions) per NFR-006
 - Admins update Help Centre content at least monthly to keep resources current and relevant
 - Admins review and process provider account closure requests within 5 business days
@@ -1700,7 +1708,7 @@ Each message in the thread displays:
   - **Authentication**: Internal API (user authentication required, RBAC enforced per FR-009 as this is an authenticated provider area)
   - **Error handling**: If content unavailable, display cached version with "Content may be outdated" warning; retry after 1 minute
 - **Authentication**: Multi-factor authentication (MFA) required for Owner role when accessing billing settings (future enhancement)
-- **Authorization**: Role-based access control (RBAC) enforced for billing settings (Owner role only); API endpoints validate user role before allowing access
+- **Authorization**: Role-based access control (RBAC) enforced for billing settings (permission "View and Edit Billing Settings", FR-031, default Owner only); API endpoints validate user role before allowing access
 - **Encryption**: All provider data encrypted in transit (TLS 1.3) and at rest (AES-256); bank account details use field-level encryption with separate encryption keys
 - **Audit trail**: Log all settings changes (profile, account, notifications, billing) with timestamp, user ID, IP address, action, old value, new value (REQ-032-020)
 - **Threat mitigation**: Rate limiting on password change endpoint (max 5 attempts/hour/user) to prevent brute force attacks; rate limiting on image upload endpoint (max 10 uploads/hour/user) to prevent abuse (REQ-032-049)
@@ -1714,10 +1722,12 @@ Each message in the thread displays:
 - FR-015: Commission display and account status
 - FR-020 / S-03: Notification preferences integration
 - FR-021: Language options for provider profile capacity
-- FR-026: Country codes, timezone options, password policy
-- FR-009: Role-based access control for billing settings
-- FR-017: Bank account details for payouts
-- FR-033: Help Centre content
+- FR-026: Country codes, timezone options (fixed offsets, REQ-026-121), password policy (REQ-SYS-007)
+- FR-031: Permission "View and Edit Billing Settings" (default Owner only) and the per-feature role matrix
+- FR-009: Team roles and team member accounts
+- FR-017: Bank account details for payouts and payout readiness (REQ-017-064)
+- FR-033: Help Centre content, view and vote records (REQ-033-096, REQ-033-097)
+- FR-013: Provider review list and review detail screens
 - FR-034: Provider support request and feedback submission management with two-way communication
 
 ---
@@ -1757,7 +1767,7 @@ A provider clinic coordinator configures notification preferences to receive ema
 
 ### User Story 3 - Update Account Settings (Phone, Timezone, Password) (Priority: P1)
 
-A provider updates their phone number, changes timezone to match clinic location after relocation, and changes password for security.
+A team member updates their own phone number, changes their own timezone, and changes their password for security.
 
 **Why this priority**: Account settings ensure provider security and localization. Timezone accuracy ensures providers don't miss appointment times due to timezone confusion.
 
@@ -1765,7 +1775,7 @@ A provider updates their phone number, changes timezone to match clinic location
 
 **Acceptance Scenarios**:
 
-1. **Given** provider has phone number +90 555 123 4567 (Turkey) and timezone (GMT+3) Istanbul, **When** provider navigates to Account Settings, changes country code to +44 (UK), enters phone number 7700 900123, changes timezone to (GMT+0) London, saves settings, **Then** system validates phone number format for UK, saves phone number in international format (+44 7700 900123), saves timezone preference, displays success message, and all future dashboard timestamps display in London timezone
+1. **Given** provider has phone number +90 555 123 4567 (Turkey) and timezone (GMT+3) Istanbul, **When** provider navigates to Account Settings, changes country code to +44 (UK), enters phone number 7700 900123, changes timezone to (GMT+0) London, saves settings, **Then** system validates phone number format for UK, saves phone number in international format (+44 7700 900123), saves the timezone for this person only, displays success message, and all future dashboard timestamps for this person display in London timezone (other team members keep their own, REQ-032-145)
 2. **Given** provider wants to change password, **When** provider enters current password "OldP@ssw0rd2023!", enters new password "NewP@ssw0rd2024!", enters confirmation "NewP@ssw0rd2024!", clicks "Change Password", **Then** system validates current password matches database, validates new password meets security policy (≥12 chars, 1 uppercase, 1 lowercase, 1 digit, 1 special char), hashes new password using bcrypt, saves password hash, logs password change in audit trail, displays "Password changed successfully" message, and sends email notification to provider email address
 3. **Given** provider enters incorrect current password when changing password, **When** provider submits password change form, **Then** system validates current password, detects mismatch, displays error "Current password is incorrect", and prevents password change until correct current password entered
 
@@ -1783,7 +1793,7 @@ A provider Owner adds bank account details for receiving payouts from Hairline p
 
 1. **Given** provider Owner has completed first treatment and needs to receive payout, **When** provider Owner navigates to Settings → Billing, enters bank account details (Account Holder: "Istanbul Hair Clinic Ltd", Bank: "Garanti BBVA", Account Number: "TR123456789012345678901234", SWIFT: "TGBATRISXXX", IBAN: "TR12 0001 0012 3456 7890 1234 56"), clicks "Save Bank Account", **Then** system sends validation request to S-02 Payment Service, S-02 validates bank account format, system saves bank account details encrypted with AES-256, logs billing settings change in audit trail, displays "Bank account details saved successfully" message, sends confirmation email to Owner, and bank account used for next provider payout
 2. **Given** provider Owner enters invalid IBAN format (too short), **When** provider Owner submits bank account form with IBAN "TR1234", **Then** system validates IBAN format, detects invalid format (Turkey IBAN requires 26 chars), displays error "Invalid IBAN format. Turkey IBAN must be 26 characters (e.g., TR12 0001 0012 3456 7890 1234 56)", and prevents saving until valid IBAN entered
-3. **Given** provider has Admin role (not Owner), **When** provider Admin navigates to Settings & Support > Settings, **Then** system validates user role, detects role ≠ Owner, and hides the Billing tab from navigation (non-owner cannot see or access billing settings)
+3. **Given** provider has Manager role (not Owner), **When** the Manager navigates to Settings & Support > Settings, **Then** system validates the "View and Edit Billing Settings" permission (FR-031, default Owner only), finds it missing, and hides the Billing tab from navigation (non-owner cannot see or access billing settings)
 
 ---
 
@@ -1798,7 +1808,7 @@ A provider searches Help Centre for answer to question "How do I edit a quote af
 **Acceptance Scenarios**:
 
 1. **Given** provider has question about editing quotes, **When** provider navigates to Help Centre, clicks "FAQs" category, selects topic "Quote Management", clicks question "How do I edit a quote after submission?", **Then** system expands answer with detailed instructions, provider reads answer, clicks "Was this helpful? Yes", system records feedback for admin analytics
-2. **Given** provider needs to contact support, **When** provider navigates to Help Centre, clicks "Contact Support", fills support form (Subject: "Payment issue", Message: "I haven't received my payout for last week", uploads screenshot 2MB PNG), submits request, **Then** system validates form, sends support request to admin team, displays confirmation "Support request submitted. Case #[number]. Our team will respond within 24 hours.", and admin receives support request in admin dashboard
+2. **Given** provider needs to contact support, **When** provider navigates to Help Centre, clicks "Contact Support", fills support form (Subject: "Payment issue", Message: "I haven't received my payout for last week", uploads screenshot 2MB PNG), submits request, **Then** system validates form, sends support request to admin team, displays confirmation "Support request submitted. Case #[number]. We aim to respond within 24 hours on business days.", and admin receives support request in admin dashboard
 3. **Given** provider wants to download quote template, **When** provider navigates to Help Centre, clicks "Resource Library", clicks "Download Quote Template" (PDF file), **Then** system initiates file download, provider saves file to local device
 
 ---
@@ -1813,9 +1823,9 @@ A provider submits a support request about a technical issue, receives admin res
 
 **Acceptance Scenarios**:
 
-1. **Given** provider submitted support request yesterday about payment issue, **When** admin replies to case with troubleshooting steps, **Then** provider receives email notification "Your support case CASE-2025-12345 has a new reply", provider clicks link in email, system opens My Support Cases screen with case auto-expanded, provider reads admin's reply in Communication Thread, provider clicks Reply Message Box, types "Thank you, I tried those steps but still having the issue", attaches error screenshot, clicks Send Reply, system sends reply to FR-034, displays confirmation "Reply sent", and admin receives notification via S-03
+1. **Given** provider submitted support request yesterday about payment issue, **When** admin replies to case with troubleshooting steps, **Then** provider receives email notification "Your support case CASE-2025-12345 has a new reply", provider clicks link in email, system opens the case directly on its detail screen, provider reads admin's reply in Communication Thread, provider clicks Reply Message Box, types "Thank you, I tried those steps but still having the issue", attaches error screenshot, clicks Send Reply, system sends reply to FR-034, displays confirmation "Reply sent", and admin receives notification via S-03
 2. **Given** provider has 3 open support cases and 2 closed cases, **When** provider navigates to Help Centre → My Support Cases, **Then** system displays case list with 5 cases total, default filter shows 3 open cases (Open + In Progress statuses), each case row shows Case ID, Title, Type, Status badge, Submitted Date, Last Updated, and Unread indicator showing "2" for cases with new admin replies, provider clicks filter to include Closed status, system displays all 5 cases
-3. **Given** provider's issue was resolved and case is marked Closed, **When** provider discovers issue persists 2 days later, navigates to My Support Cases, opens closed case, **Then** system displays case with Status "Closed" and resolution summary, Reply Message Box is disabled with message "This case is closed. Click 'Request Reopen' if issue persists.", provider clicks Request Reopen button, system opens modal, provider enters reopening reason "Issue is still occurring after following all troubleshooting steps", selects priority "High", clicks Submit, system changes case status to Open, sends notification to admin via S-03, displays confirmation "Reopen request submitted"
+3. **Given** provider's issue was resolved and case is marked Closed, **When** provider discovers issue persists 2 days later, navigates to My Support Cases, opens closed case, **Then** system displays case with Status "Closed" and resolution summary, Reply Message Box is disabled with message "This case is closed. Click 'Request Reopen' if issue persists.", provider clicks Request Reopen button, system opens modal, provider enters reopening reason "Issue is still occurring after following all troubleshooting steps", selects priority "High", clicks Submit, system adds a flagged reopen-request message to the thread, tells the admin through the FR-034 user-reply notice, keeps the case Closed, displays confirmation "Reopen request submitted" and shows "Request sent, awaiting admin" with the reply box still disabled (REQ-032-113, REQ-032-114)
 4. **Given** provider wants to find past case about billing, **When** provider opens My Support Cases, enters "payout" in search bar, selects Resolved status filter, **Then** system displays all resolved cases containing keyword "payout" in Case ID, Title, Description, or Messages, provider clicks case to view details and reviews the case history for reference
 
 ---
@@ -1830,7 +1840,7 @@ A provider closing their clinic permanently requests account closure, and an adm
 
 **Acceptance Scenarios**:
 
-1. **Given** provider is closing clinic permanently, **When** provider navigates to Settings → Account Settings, clicks "Request account closure", checks "I understand" checkbox, enters reason "Closing clinic permanently", clicks "Submit Closure Request", **Then** system creates account closure request with status "Pending Admin Review", logs the request in audit trail, sends notification to admin team, displays confirmation "Account closure request submitted. Our team will review and process your request within 5 business days. You will receive an email once your account is deactivated.", and provider account remains Active until admin processes it
+1. **Given** provider is closing clinic permanently, **When** provider navigates to Settings → Account Settings, clicks "Request account closure", checks "I understand" checkbox, enters reason "Closing clinic permanently", clicks "Submit Closure Request", **Then** system creates account closure request with status "Pending Admin Review", logs the request in audit trail, sends notification to admin team, displays confirmation "Account closure request submitted. Our team will review and process your request within 5 business days. You will receive an email once your account is deactivated.", and provider account keeps its current status until admin processes it
 2. **Given** admin receives account closure request, **When** admin deactivates the provider from the request via FR-015 Screen 4, **Then** system sets account status to "Deactivated", blocks provider login, hides the provider profile, cancels non-terminal cases under the FR-015 cascade, retains all data in archive per FR-023, sets the request to "Approved", and sends the FR-015 deactivation email
 3. **Given** provider has 3 active bookings, **When** provider submits an account closure request, **Then** system accepts the request without blocking; when the admin later deactivates the provider, the 3 bookings are cancelled under the FR-015 cascade with patient and admin-support notifications, and any captured payments are reconciled by FR-017
 
@@ -1850,8 +1860,8 @@ A provider closing their clinic permanently requests account closure, and an adm
 - What happens when **S-02 Payment Service returns validation error for bank account details**?
   - System receives validation error from S-02 (e.g., "Bank not found" or "SWIFT code mismatch"), displays error message to provider "Bank account validation failed: [error detail from S-02]. Please verify your bank details and try again.", prevents saving bank account details, and provider must correct details and retry (REQ-032-087)
 
-- How does system handle **provider Owner changes role to Admin (no longer Owner)**?
-  - When admin changes provider's role from Owner to Admin (via FR-009), system detects role change, and next time user navigates to Settings & Support > Settings, the Billing tab is hidden from navigation (non-owner cannot see or access billing settings); existing bank account details remain saved and accessible to new Owner role user (REQ-032-089)
+- How does system handle **the Owner role is handed to another person**?
+  - A Hairline admin hands the Owner role over (FR-015); the previous Owner becomes a Manager, and next time that user navigates to Settings & Support > Settings, the Billing tab is hidden from navigation (non-owner cannot see or access billing settings); existing bank account details stay with the clinic and are accessible to the new Owner (REQ-032-089)
 
 - What occurs if **Help Centre content fails to load due to network issue**?
   - System attempts to fetch Help Centre content from admin content database, detects network timeout or error, displays cached version of Help Centre content (if available) with warning banner "Content may be outdated. Please refresh to load latest updates.", and provides "Retry" button for manual refresh (REQ-032-097)
@@ -1869,20 +1879,20 @@ A provider closing their clinic permanently requests account closure, and an adm
 - **REQ-032-002**: System MUST allow providers to select supported languages using the centrally managed system language options owned by FR-021 (Multi-Language & Localization), which are surfaced via FR-026 App Settings.
 - **REQ-032-003**: System MUST allow providers to add, edit, delete awards with direct image upload (name, description, year, award image max 2MB)
 - **REQ-032-004**: System MUST allow providers to update basic clinic information (name, description, contact email)
-- **REQ-032-005**: System MUST allow providers to configure phone number with worldwide country code selection (FR-026 country codes)
-- **REQ-032-006**: System MUST allow providers to select timezone from multiple timezone options (GMT-12 to GMT+14)
-- **REQ-032-007**: System MUST allow providers to change password with current password verification and security policy validation (FR-026)
+- **REQ-032-005**: System MUST allow each team member to configure their own phone number with worldwide country code selection (FR-026 country codes)
+- **REQ-032-006**: System MUST allow each team member to select their own timezone from the FR-026 list of fixed-offset options (GMT-12 to GMT+14)
+- **REQ-032-007**: System MUST allow each team member to change their own password with current password verification and the platform password policy (REQ-SYS-007)
 - **REQ-032-008**: System MUST allow providers to configure unified notification preferences (individual notification type toggles for quote, schedule, treatment start, aftercare, review, and promotion/discount notifications + global channel preferences: email, push)
 - **REQ-032-009**: System MUST enforce notification preferences via S-03 Notification Service (FR-020 integration)
 - **REQ-032-010**: System MUST allow provider Owners to manage billing settings (bank account details for payouts, FR-017 integration)
-- **REQ-032-011**: System MUST restrict billing settings access to Owner role only (FR-009 role permissions)
+- **REQ-032-011**: System MUST restrict billing settings access to the holder of the permission "View and Edit Billing Settings", held by FR-031 with the default Owner only (REQ-031-005)
 - **REQ-032-012**: System MUST allow providers to access Help Centre with admin-managed content (FR-033 integration)
-- **REQ-032-013**: System MUST allow providers to request account closure; the request is processed by an admin, who deactivates the provider through FR-015 (no self-service deactivation)
+- **REQ-032-013**: System MUST allow the Owner to request account closure; the request is processed by an admin, who deactivates the provider through FR-015 (no self-service deactivation)
 
 ### Data Requirements
 
 - **REQ-032-014**: System MUST persist provider profile data (logo, name, description, languages, awards) and propagate to patient quote comparison view within 1 minute
-- **REQ-032-015**: System MUST persist account settings (phone number in international format, timezone, password hash)
+- **REQ-032-015**: System MUST persist account settings per person on the team member record (phone number in international format, timezone, password hash), for every role
 - **REQ-032-016**: System MUST persist notification preferences and synchronize with S-03 Notification Service within 1 minute
 - **REQ-032-017**: System MUST persist bank account details encrypted at rest (AES-256) and mask in UI (last 4 digits visible)
 
@@ -1892,7 +1902,7 @@ A provider closing their clinic permanently requests account closure, and an adm
 - **REQ-032-019**: System MUST hash passwords using bcrypt (cost factor 12+) and never store plain text passwords
 - **REQ-032-020**: System MUST log all profile changes, account settings changes, billing settings changes, and account closure requests in audit trail (timestamp, user ID, IP address, action, and old/new values; bank details, password, phone and email values are masked)
 - **REQ-032-021**: System MUST send email notification to provider after password change (security alert)
-- **REQ-032-022**: System MUST enforce role-based access control for billing settings (Owner role only; non-owners cannot see or access billing settings tab)
+- **REQ-032-022**: System MUST enforce role-based access control for billing settings (permission "View and Edit Billing Settings", FR-031, default Owner only; roles without it cannot see or access billing settings tab)
 - **REQ-032-023**: System MUST process approved account-closure requests as FR-015 deactivation (account status = "Deactivated", standard FR-015 cascade, data archived; retention follows the system PRD, Platform-Wide Rules: One 10-year retention period)
 
 ### Integration Requirements
@@ -1900,11 +1910,19 @@ A provider closing their clinic permanently requests account closure, and an adm
 - **REQ-032-024**: System MUST integrate with S-03 Notification Service to enforce provider notification preferences (FR-020)
 - **REQ-032-025**: System MUST integrate with S-02 Payment Service to validate bank account details format before saving
 - **REQ-032-026**: System MUST integrate with FR-026/FR-021 language configuration to provide centrally managed language options in profile language selection (FR-021 is canonical for supported locales; FR-026 surfaces these via App Settings)
-- **REQ-032-027**: System MUST integrate with FR-026 to provide country codes and timezone options in account settings
+- **REQ-032-027**: System MUST integrate with FR-026 to provide country codes and fixed-offset timezone options in account settings
 - **REQ-032-028**: System MUST integrate with FR-033 to display admin-managed Help Centre content
 - **REQ-032-029**: System MUST show provider Owners a read-only Commission & Payout panel in Screen 4 with commission model, value, Flat Rate Currency, Effective Date, any scheduled configuration, and payout timing (automatic release on the Stripe Connect rail; the one platform-wide settlement period owned by FR-029 on the manual rail; there is no per-clinic payout frequency), plus the payout method (chosen by the admin when the clinic is created in FR-015) and payout readiness
 - **REQ-032-030**: System MUST apply Rule 6: show a persistent Account Suspended banner with the admin reason to all provider users while suspended, restrict editing to the listed exceptions, and block login with a deactivation message once deactivated
 - **REQ-032-031**: System MUST NOT offer a provider notification preference toggle for any mandatory provider notice, and MUST deliver each mandatory notice to the affected provider regardless of notification type and channel preferences. Which notices are mandatory, to whom they go and what they say is defined by the notification Rules: FR-020 REQ-020-020 for the inquiry-cancelled quote notice (`quote.cancelled_inquiry`) and FR-030 Non-Disableable by Default for the others
+- **REQ-032-141**: System MUST apply the who-edits-what table in Screen 1 (General Business Rules): clinic profile, languages, awards and documents are edited by the Owner and a Manager; the account closure request by the Owner only; personal account settings by every role for their own account only; billing settings need the permission "View and Edit Billing Settings", held by FR-031 with the default Owner only (REQ-031-005). The PRD cites FR-031, not FR-009, for the billing permission
+- **REQ-032-142**: System MUST let only the Owner and a Manager change the clinic's notification settings; other roles see them read-only; every change is audit-logged with the user who made it
+- **REQ-032-143**: System MUST send support case notices (admin reply, status change, resolved) always, with no toggle; Email and Push MAY both be off for a notification type, but mandatory notices ignore the setting
+- **REQ-032-144**: System MUST show Account Email read-only for every role. The Owner's login email is changed only by a Hairline admin (FR-015, REQ-015-114); a team member's email is changed by contacting support
+- **REQ-032-145**: System MUST save the timezone per person: the browser timezone is offered at first login, otherwise UTC; dates display with the fixed offsets of the FR-026 timezone list (REQ-026-121)
+- **REQ-032-146**: System MUST show and require the bank form only when the Payout Method is Manual bank transfer; for Stripe Connect it MUST show a status panel and a "Complete Stripe sign-up" link; Payout Readiness is display only and owned by FR-017 (REQ-017-064)
+- **REQ-032-147**: System MUST offer Active and Preparation locales in the language list, display every catalog locale already saved, and keep a saved entry when its locale becomes Inactive
+- **REQ-032-148**: System MUST run Reviews tab filter, sort and paging on the server over the whole review list, show the Edited marker (FR-013 REQ-013-032), and link to the FR-013 provider review list and review detail screens
 
 ---
 
@@ -1912,6 +1930,7 @@ A provider closing their clinic permanently requests account closure, and an adm
 
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
+| 2026-11-24 | 1.18 | Logic review pass 1: support case reply and reopen rules aligned with FR-034 (reply enabled for Resolved, reopen request is a flagged message, case stays Closed); 24-hour response note on business days; Service Status fourth value and no subscription; closure and role wording (keeps its current status, Owner role handed over by an admin, Suspended Owner exceptions); Account Email read-only and per-person account settings including timezone; notification settings roles and support notices; bank form for Manual bank transfer only with Stripe panel; language list; Help Centre view and vote records; Reviews tab server-side paging and Edited marker; billing permission cited from FR-031 with a who-edits-what table; new rules REQ-032-141 to REQ-032-148. | Product Owner / Documentation |
 | 2026-11-22 | 1.17 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.16) and the change requests CR-FR032-20261015-01, CR-FR032-20261015-02, CR-FR032-20261015-03, CR-FR032-20261016-01, CR-FR015-20261027-01 and CR-FR029-20261015-01 are in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
 
 ---
@@ -1928,4 +1947,4 @@ A provider closing their clinic permanently requests account closure, and an adm
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B
 **Based on**: FR-032 from system-prd.md, Provider Platform Transcriptions Part 1 & 2
-**Last Updated**: 2026-11-20
+**Last Updated**: 2026-11-24

@@ -1,0 +1,7 @@
+# FR-032 logic review, pass 1: follow-up. The Stripe Connect panel step was linked
+# from a retired step; link it from the active step before it so a Flow reaches it.
+reason: FR-032 logic review pass 1, link the Stripe Connect panel step from an active step
+by: controller
+operations:
+  - {"op": "remove_edge", "from": "STP-032-139", "verb": "next", "to": "STP-032-331"}
+  - {"op": "add_edge", "from": "STP-032-138", "verb": "next", "to": "STP-032-331", "attrs": {"label": "payout method is Stripe Connect", "condition": "REQ-032-146"}}
