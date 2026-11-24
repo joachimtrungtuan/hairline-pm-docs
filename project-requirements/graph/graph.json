@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T20:58:18Z",
+  "generated_at": "2026-11-24T21:13:29Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -16725,9 +16725,9 @@
       "owner_fr": "FR-030",
       "title": "Language",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Key Entities: language (en-US, tr-TR and others). Must be in the FR-021 supported locales."
+        "description": "Key Entities: language (en-US, tr-TR and others). Must be in the FR-021 locale catalogue (Active, Preparation or Inactive); a template in a locale that becomes Inactive is kept (REQ-021-076)."
       }
     },
     {
@@ -33456,9 +33456,20 @@
       "owner_fr": "FR-030",
       "title": "monitoring.advice_posted",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "monitoring.advice_posted: The provider submits advice; the patient is notified (REQ-037-078)."
+        "description": "monitoring.advice_posted: the provider submits advice and the patient is notified; an edit by the provider, or a text change by an Admin, sends the same notice marked \"updated\" (REQ-037-078)."
+      }
+    },
+    {
+      "id": "EVT-monitoring-assignment-ended",
+      "type": "Event",
+      "owner_fr": "FR-030",
+      "title": "monitoring.assignment_ended",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "monitoring.assignment_ended: a monitoring assignment ends other than by the provider's own withdrawal; the patient and Admin are notified, and the provider only when an Admin ends the assignment (REQ-037-078)."
       }
     },
     {
@@ -33522,9 +33533,9 @@
       "owner_fr": "FR-030",
       "title": "monitoring.provider_assigned",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "monitoring.provider_assigned: Admin saves an assignment; the patient is notified and the provider is notified of the assignment (REQ-037-078)."
+        "description": "monitoring.provider_assigned: Admin saves an initial assignment; the patient is notified and the provider is notified of the assignment (REQ-037-078). A reassignment uses monitoring.provider_reassigned."
       }
     },
     {
@@ -33676,9 +33687,9 @@
       "owner_fr": "FR-030",
       "title": "Promotion discount approval requested",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "promotion.discount_approval_requested: FR-030 notification catalogue event. Targeted providers are notified that a Both Fees program awaits their approval, including on re-invite. Fires when the program enters Pending Approval (Screen 2 save, Screen 3 Re-invite); the one approval-requested event."
+        "description": "promotion.discount_approval_requested: FR-030 notification catalogue event. Targeted providers are notified that a Both Fees program awaits their approval. Fires when an admin publishes an Admin-via-Provider program and on Re-invite, not when the program enters Pending Approval (REQ-019-010); the one approval-requested event."
       }
     },
     {
@@ -33919,9 +33930,9 @@
       "owner_fr": "FR-030",
       "title": "Quote cancelled (inquiry cancelled)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Sent through FR-020 only to providers whose quotes the patient inquiry-cancellation cascade cancelled. The PRD does not name FR-004 as its producer explicitly."
+        "description": "quote.cancelled_inquiry: sent to each provider holding a draft, sent or expired quote when the patient cancels the inquiry and when an approved account deletion cancels it; not sent for an admin Close inquiry; never sent to the provider of a replacement draft quote."
       }
     },
     {
@@ -34177,9 +34188,9 @@
       "owner_fr": "FR-030",
       "title": "Support case escalated",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "description": "support.case_escalated: emitted when a case is escalated to senior staff or the technical team. Notifies the recipient."
+        "description": "support.case_escalated: emitted when a case is escalated to a Super Admin; a manual escalation notifies the chosen new assignee and a system escalation of an overdue case notifies all Super Admins."
       }
     },
     {
@@ -87430,9 +87441,9 @@
       "owner_fr": "FR-030",
       "title": "Catalog event: Support Case Escalated",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Support Case Escalated (support.case_escalated) is an admin-configurable notification event. Primary recipients: Admin. Sent to escalation recipient (senior admin or technical team) when case is escalated",
+        "statement": "Support Case Escalated (support.case_escalated) is an admin-configurable notification event. Primary recipients: Admin (Super Admins). Sent to the Super Admin chosen as the new assignee when a case is escalated manually, and to all Super Admins when the system escalates an overdue case (FR-034 REQ-034-092, REQ-034-103, REQ-034-173)",
         "rationale": "prd.md line 166. Category: Messaging/Support. Event nodes: EVT-support-case-escalated (new stub owned by FR-034)."
       }
     },
@@ -87543,9 +87554,9 @@
       "owner_fr": "FR-030",
       "title": "Catalog event: Monitoring Provider Assigned",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Monitoring Provider Assigned (monitoring.provider_assigned) is an admin-configurable notification event. Primary recipients: Patient, Provider. Initial assignment or reassignment; assignment type distinguished in payload (FR-037 only)",
+        "statement": "Monitoring Provider Assigned (monitoring.provider_assigned) is an admin-configurable notification event. Primary recipients: Patient, Provider. Initial assignment only; a reassignment uses `monitoring.provider_reassigned` (FR-037 only)",
         "rationale": "prd.md line 175. Category: Monitoring. Event nodes: EVT-monitoring-provider-assigned (existing node)."
       }
     },
@@ -87580,9 +87591,9 @@
       "owner_fr": "FR-030",
       "title": "Catalog event: Monitoring Advice Posted",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Monitoring Advice Posted (monitoring.advice_posted) is an admin-configurable notification event. Primary recipients: Patient. Provider submits or edits the one advice-window paragraph for the current window; an edit sends the same notice marked \"updated\" (FR-037 only)",
+        "statement": "Monitoring Advice Posted (monitoring.advice_posted) is an admin-configurable notification event. Primary recipients: Patient. Provider submits or edits the one advice-window paragraph for the current window; an edit by the provider, or a text change by an Admin, sends the same notice marked \"updated\" (FR-037 only)",
         "rationale": "prd.md line 178. Category: Monitoring. Event nodes: EVT-monitoring-advice-posted (existing node)."
       }
     },
@@ -87688,9 +87699,9 @@
       "owner_fr": "FR-030",
       "title": "Catalog event: Provider Approval Needed for Platform Discount",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Provider Approval Needed for Platform Discount (promotion.discount_approval_requested) is an admin-configurable notification event. Primary recipients: Provider. “Approval notifications to providers when new platform discount is created”",
+        "statement": "Provider Approval Needed for Platform Discount (promotion.discount_approval_requested) is an admin-configurable notification event. Primary recipients: Provider. Sent to the targeted providers when an admin publishes an Admin-via-Provider (Both Fees) program and when an admin Re-invites a provider; not sent when the program only enters Pending Approval (FR-019 REQ-019-010)",
         "rationale": "prd.md line 187. Category: Promotions/Discounts. Event nodes: EVT-promotion-discount-approval-requested (new stub owned by FR-019)."
       }
     },
@@ -88110,12 +88121,12 @@
       "id": "REQ-030-127",
       "type": "Rule",
       "owner_fr": "FR-030",
-      "title": "Hidden post-MVP events: SMS delivery, aftercare reminders, travel, quote declined",
+      "title": "Hidden post-MVP events: SMS delivery, aftercare reminders, quote declined",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Hidden until enabled: SMS Delivery Enabled `channel.sms_enabled` SMS is future; not available in MVP; Medication / Washing / Activity Reminders `aftercare.medication_reminder` / `aftercare.washing_reminder` / `aftercare.activity_reminder` Scheduled reminders referenced in system PRD; enable when milestone engine supports schedules; Passport / Travel Document Required `travel.passport_required` Only show once travel module + event publishing exists; Flight / Hotel Itinerary Updates `travel.itinerary_updated` Post‑release travel roadmap; Quote Declined `quote.declined` Reserved for an explicit governed decline flow; no MVP producer exists because patients have no explicit decline action (FR-005). FR-005 sibling Not Selected and competing-parent cancellation outcomes do not use this event.",
-        "rationale": "prd.md lines 221, 222, 223, 224, 225. None has a producer stage; no Event node created. Keys: channel.sms_enabled, aftercare.medication_reminder, aftercare.washing_reminder, aftercare.activity_reminder, travel.passport_required, travel.itinerary_updated, quote.declined."
+        "statement": "Hidden until enabled: SMS Delivery Enabled `channel.sms_enabled` SMS is future; not available in MVP; Medication / Washing / Activity Reminders `aftercare.medication_reminder` / `aftercare.washing_reminder` / `aftercare.activity_reminder` Scheduled reminders referenced in system PRD; enable when milestone engine supports schedules; Quote Declined `quote.declined` Reserved for an explicit governed decline flow; no MVP producer exists because patients have no explicit decline action (FR-005). FR-005 sibling Not Selected and competing-parent cancellation outcomes do not use this event.",
+        "rationale": "Post-MVP hidden events table. None has a producer stage; no Event node created. Keys: channel.sms_enabled, aftercare.medication_reminder, aftercare.washing_reminder, aftercare.activity_reminder, quote.declined. The travel notices are MVP events with catalogue rows (FR-008 REQ-008-071; REQ-030-265 to REQ-030-271)."
       }
     },
     {
@@ -88220,9 +88231,9 @@
       "owner_fr": "FR-030",
       "title": "Security-critical account events cannot be disabled",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Account/Auth notifications (OTP verification, email change code, password reset) are security-critical and MUST be non-disableable by default in the admin UI (toggle locked; no pause).",
+        "statement": "Account/Auth notifications (OTP verification, email change code, re-verification code, password reset) are security-critical and MUST be non-disableable by default in the admin UI (toggle locked; no pause).",
         "rationale": "prd.md line 559. Restating: prd.md line 241 (OTP verification and password reset show a locked toggle)."
       }
     },
@@ -88400,10 +88411,10 @@
       "owner_fr": "FR-030",
       "title": "Templates can be multi-language; supported locales come from FR-021",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Trigger: Admin needs to support multiple locales for the same event (initially English and Turkish per FR-021) Admin selects language: English (default) from the supported locales list (managed in FR-021)",
-        "rationale": "prd.md lines 305, 309, 312, 463. Initially English and Turkish. Language dropdown is populated from the FR-021 supported locales."
+        "statement": "Trigger: Admin needs to support multiple locales for the same event (initially English and Turkish per FR-021) Admin selects language: English (default) from the locale list (the FR-021 locale catalogue: Active, Preparation and Inactive locales)",
+        "rationale": "prd.md lines 305, 309, 312, 463. Initially English and Turkish. Language dropdown is populated from the FR-021 locale catalogue (FR-021 REQ-021-076)."
       }
     },
     {
@@ -88772,9 +88783,9 @@
       "owner_fr": "FR-030",
       "title": "Screen 3 field validations",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Template Editor fields: Template Name: Max 100 chars, unique per event, channel and language; Event Type: Predefined event list; Channel Type: Fixed at creation (cannot change); Language: Must be in supported locales list (FR-021); can create multiple language versions; Email Subject: Max 200 chars, supports variables; Email Body: Max 10,000 chars, supports HTML/variables; Push Title: Max 100 chars, supports variables; Push Body: Max 500 chars, supports variables; SMS Body: Max 160 chars (1 SMS segment), supports variables; Available Variables: Display only; click to insert; Variable Preview Values: Valid JSON; used only for preview; Template Status: Default: Draft.",
+        "statement": "Template Editor fields: Template Name: Max 100 chars, unique per event, channel and language; Event Type: Predefined event list; Channel Type: Fixed at creation (cannot change); Language: Must be in the FR-021 locale catalogue (Active, Preparation or Inactive); can create multiple language versions; Email Subject: Max 200 chars, supports variables; Email Body: Max 10,000 chars, supports HTML/variables; Push Title: Max 100 chars, supports variables; Push Body: Max 500 chars, supports variables; SMS Body: Max 160 chars (1 SMS segment), supports variables; Available Variables: Display only; click to insert; Variable Preview Values: Valid JSON; used only for preview; Template Status: Default: Draft.",
         "rationale": "Screen 3 field table. Variable Preview Values is a transient preview input, not stored."
       }
     },
@@ -89300,9 +89311,9 @@
       "owner_fr": "FR-030",
       "title": "Every event that produces a notification is owned by FR-030",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "Event ownership: every event that produces a notification is owned by FR-030 and listed in this catalog, including events triggered by other features (the producing feature is named in the Notes). An event that produces no notification is owned by the feature that triggers it and is not listed here.",
+        "statement": "Event ownership: every event that produces a notification is owned by FR-030 and listed in this catalog, including events triggered by other features (the producing feature is named in the Notes). An event that produces no notification is owned by the feature that triggers it and is not listed here. Affiliate account emails (activation, code created, commission change, suspension, offboarding) go through the notification service as emails to the affiliate (FR-018 Rule 17, REQ-018-315); they are not catalogue events, and `payout.affiliate_processed` is the one affiliate event listed.",
         "rationale": "prd.md line 111 (Core Rule, Event ownership)."
       }
     },
@@ -89544,6 +89555,498 @@
       "attrs": {
         "statement": "Email Change Code (account.email_change_code) is an admin-configurable notification event. Primary recipients: Patient. 6-digit code sent to the new address when a patient changes the profile email (FR-001); its own event, separate from the registration code; security-critical and non-disableable by default",
         "rationale": "Event Catalog table, row account.email_change_code. Category: Account/Auth. Event nodes: EVT-email-change-otp-sent. Lock rule: Account/Auth notifications (OTP verification, email change code, password reset) are security-critical and non-disableable by default."
+      }
+    },
+    {
+      "id": "REQ-030-254",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Monitoring Assignment Ended",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Monitoring Assignment Ended (monitoring.assignment_ended) is an admin-configurable notification event. Primary recipients: Patient, Admin, Provider (only when an Admin ends the assignment). Fires when a monitoring assignment ends other than by the provider's own withdrawal, which uses `monitoring.provider_withdrawn`. The patient and the Admin are always notified. The provider is notified only when an Admin ends the assignment, in neutral wording that does not show the reason; the provider gets no notice on completion or conversion (FR-037 REQ-037-078, REQ-037-079)",
+        "rationale": "Event Catalog table, row monitoring.assignment_ended. Category: Monitoring. Event nodes: EVT-monitoring-assignment-ended."
+      }
+    },
+    {
+      "id": "REQ-030-255",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Admin Intervention Notice",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Admin Intervention Notice (message.admin_intervention) is an admin-configurable notification event. Primary recipients: Patient, Provider. Sent to both parties of a conversation when an Admin intervenes in it (FR-012 REQ-012-007). Locked: the toggle cannot be switched off and the notice is held for no one",
+        "rationale": "Event Catalog table, row message.admin_intervention. Category: Messaging/Support. Event nodes: EVT-admin-intervention-sent."
+      }
+    },
+    {
+      "id": "REQ-030-256",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Keyword Flag Raised",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Keyword Flag Raised (message.keyword_flag_raised) is an admin-configurable notification event. Primary recipients: Admin. Sent to Admins when a conversation is flagged for a policy keyword, with a link to the flagged conversation (FR-012 REQ-012-094, REQ-012-026). The patient and the provider are not told. Locked: the toggle cannot be switched off",
+        "rationale": "Event Catalog table, row message.keyword_flag_raised. Category: Messaging/Support. Event nodes: EVT-keyword-flag-raised."
+      }
+    },
+    {
+      "id": "REQ-030-257",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Provider Response Reminder",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Provider Response Reminder (message.provider_response_reminder) is an admin-configurable notification event. Primary recipients: Provider. Sent when a patient message has had no provider reply for 48 hours, once per unanswered stretch and not while the conversation is read-only; if there is still no reply at 72 hours further reminders follow (FR-012 REQ-012-098)",
+        "rationale": "Event Catalog table, row message.provider_response_reminder. Category: Messaging/Support. Event nodes: EVT-provider-response-reminder, EVT-provider-response-escalated."
+      }
+    },
+    {
+      "id": "REQ-030-258",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Urgent Case Unassigned Alert",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Urgent Case Unassigned Alert (support.urgent_case_unassigned) is an admin-configurable notification event. Primary recipients: Admin (Support Staff pool). Sent when an Open or In Progress Urgent case is still unassigned 1 hour after the Urgent clock started (FR-034 REQ-034-092, REQ-034-173)",
+        "rationale": "Event Catalog table, row support.urgent_case_unassigned. Category: Messaging/Support. Event nodes: none (Rule only)."
+      }
+    },
+    {
+      "id": "REQ-030-259",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Support Case Orphaned",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Support Case Orphaned (support.case_orphaned) is an admin-configurable notification event. Primary recipients: Admin (Support Staff pool). Sent when the assigned admin of a case is deactivated and the case becomes unassigned, so that the case can be reassigned (FR-034 REQ-034-108)",
+        "rationale": "Event Catalog table, row support.case_orphaned. Category: Messaging/Support. Event nodes: none (Rule only)."
+      }
+    },
+    {
+      "id": "REQ-030-260",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Support Notice Delivery Failed",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Support Notice Delivery Failed (support.notice_delivery_failed) is an admin-configurable notification event. Primary recipients: Admin (the assigned admin, or the Support Staff pool when the case is unassigned). Sent when a support notice to a patient or provider still fails once the retry rule is exhausted, so that the admin contacts the person manually (FR-034 REQ-034-113)",
+        "rationale": "Event Catalog table, row support.notice_delivery_failed. Category: Messaging/Support. Event nodes: none (Rule only)."
+      }
+    },
+    {
+      "id": "REQ-030-261",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Payout Dispute Resolved",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Payout Dispute Resolved (payout.dispute_resolved) is an admin-configurable notification event. Primary recipients: Provider. Sent when an admin saves a dispute resolution (FR-017 REQ-017-111): automatic and mandatory for Add to Next Payout and Pay Now, and for the other resolution actions only when the admin ticks Notify Provider. Locked: the toggle cannot be switched off",
+        "rationale": "Event Catalog table, row payout.dispute_resolved. Category: Billing/Payouts. Event nodes: EVT-billing-dispute-payout-added."
+      }
+    },
+    {
+      "id": "REQ-030-262",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Identity Re-verification Code",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Identity Re-verification Code (account.reauth_code) is an admin-configurable notification event. Primary recipients: Patient. 6-digit code sent to the patient's registered email when the patient re-verifies identity before a sensitive change (FR-001 Screen 18); its own event, separate from the registration code; security-critical and non-disableable by default",
+        "rationale": "Event Catalog table, row account.reauth_code. Category: Account/Auth. Event nodes: EVT-reauth-otp-sent."
+      }
+    },
+    {
+      "id": "REQ-030-263",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Patient Profile Changed by Admin",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Patient Profile Changed by Admin (account.profile_changed_by_admin) is an admin-configurable notification event. Primary recipients: Patient. Sent by email after every admin edit of the patient profile; the notice lists the changed fields and the patient has no review screen (FR-001 REQ-001-034, REQ-001-035)",
+        "rationale": "Event Catalog table, row account.profile_changed_by_admin. Category: Account/Auth. Event nodes: EVT-patient-profile-changed-by-admin."
+      }
+    },
+    {
+      "id": "REQ-030-264",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Formal Warning to Patient",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Formal Warning to Patient (account.formal_warning) is an admin-configurable notification event. Primary recipients: Patient. Sent when an admin sends a formal warning from Take Action on a flagged conversation (FR-016 REQ-016-225)",
+        "rationale": "Event Catalog table, row account.formal_warning. Category: Account/Auth. Event nodes: none (Rule only)."
+      }
+    },
+    {
+      "id": "REQ-030-265",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Travel Information Requested",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Travel Information Requested (travel.request_sent) is an admin-configurable notification event. Primary recipients: Patient. Email and in-app (FR-008 REQ-008-071). Covers the initial passport request, the initial flight and hotel request, an admin Re-notify and the passport Incomplete notice",
+        "rationale": "Event Catalog table, row travel.request_sent. Category: Travel. Event nodes: EVT-travel-request-sent."
+      }
+    },
+    {
+      "id": "REQ-030-266",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Travel Record Submitted",
+      "status": "active",
+      "version": 2,
+      "attrs": {
+        "statement": "Travel Record Submitted (travel.record_submitted) is an admin-configurable notification event. Primary recipients: Provider. The clinic is told by email and in-app that its patient has handed in flight or hotel details (FR-008 REQ-008-071)",
+        "rationale": "Event Catalog table, row travel.record_submitted. Category: Travel. Event nodes: EVT-travel-record-submitted."
+      }
+    },
+    {
+      "id": "REQ-030-267",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Travel Record Entered",
+      "status": "active",
+      "version": 2,
+      "attrs": {
+        "statement": "Travel Record Entered (travel.record_entered) is an admin-configurable notification event. Primary recipients: Patient. Asks the patient to check travel details that the clinic typed in on the patient's behalf; email and in-app (FR-008 REQ-008-071)",
+        "rationale": "Event Catalog table, row travel.record_entered. Category: Travel. Event nodes: EVT-travel-record-entered."
+      }
+    },
+    {
+      "id": "REQ-030-268",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Travel Record Corrected",
+      "status": "active",
+      "version": 2,
+      "attrs": {
+        "statement": "Travel Record Corrected (travel.record_corrected) is an admin-configurable notification event. Primary recipients: Patient, Provider. Goes to both sides after a Hairline admin has corrected stored travel details; channels email and in-app (FR-008 REQ-008-071)",
+        "rationale": "Event Catalog table, row travel.record_corrected. Category: Travel. Event nodes: EVT-travel-record-corrected."
+      }
+    },
+    {
+      "id": "REQ-030-269",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Travel Date Review Required",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Travel Date Review Required (travel.date_review_required) is an admin-configurable notification event. Primary recipients: Patient, Provider, Admin. Email and in-app (FR-008 REQ-008-071). Sent when a change of treatment date means the travel dates must be reviewed",
+        "rationale": "Event Catalog table, row travel.date_review_required. Category: Travel. Event nodes: EVT-travel-date-review-required."
+      }
+    },
+    {
+      "id": "REQ-030-270",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: No Travel Declared",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "No Travel Declared (travel.no_travel_declared) is an admin-configurable notification event. Primary recipients: Provider. Email and in-app (FR-008 REQ-008-071). Sent when the patient declares that no travel is needed and when an admin overrides that declaration (FR-008 REQ-008-059)",
+        "rationale": "Event Catalog table, row travel.no_travel_declared. Category: Travel. Event nodes: none (Rule only)."
+      }
+    },
+    {
+      "id": "REQ-030-271",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Travel Record Re-entry Requested",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Travel Record Re-entry Requested (travel.record_reentry_requested) is an admin-configurable notification event. Primary recipients: Patient or Provider (the owner of the item). Email and in-app (FR-008 REQ-008-071). Sent after an admin soft-deletes a travel or passport item, asking its owner to enter it again (FR-008 REQ-008-067, REQ-008-076)",
+        "rationale": "Event Catalog table, row travel.record_reentry_requested. Category: Travel. Event nodes: none (Rule only)."
+      }
+    },
+    {
+      "id": "REQ-030-272",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Treatment Added to Catalog",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Treatment Added to Catalog (treatment.added) is an admin-configurable notification event. Primary recipients: Provider. Sent to all active providers the first time a treatment becomes Active, by any route; a treatment saved as Draft or Inactive sends nothing until then (FR-024 REQ-024-041)",
+        "rationale": "Event Catalog table, row treatment.added. Category: Treatment Catalog. Event nodes: EVT-treatment-added."
+      }
+    },
+    {
+      "id": "REQ-030-273",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Treatment Updated in Catalog",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Treatment Updated in Catalog (treatment.updated) is an admin-configurable notification event. Primary recipients: Provider. Sent to the providers who currently offer the treatment when an admin updates an Active treatment; an edit of a Draft, Inactive or Pending Media Upload treatment sends nothing. When an Inactive treatment that has been Active before is switched back to Active, the notice reads that the treatment is available again and goes only to providers with a pricing configuration for it; the same event is used (FR-024 REQ-024-042)",
+        "rationale": "Event Catalog table, row treatment.updated. Category: Treatment Catalog. Event nodes: EVT-treatment-updated."
+      }
+    },
+    {
+      "id": "REQ-030-274",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Treatment Deactivated in Catalog",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Treatment Deactivated in Catalog (treatment.deactivated) is an admin-configurable notification event. Primary recipients: Provider. Sent to the providers who offer the treatment when an admin deactivates it (FR-024 REQ-024-043)",
+        "rationale": "Event Catalog table, row treatment.deactivated. Category: Treatment Catalog. Event nodes: EVT-treatment-deactivated."
+      }
+    },
+    {
+      "id": "REQ-030-275",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Promotion Terms Changed",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Promotion Terms Changed (promotion.terms_changed) is an admin-configurable notification event. Primary recipients: Provider (every adopting provider). Sent when an admin edits the Value or the Hairline Share % of an adopted Both Fees program; the notice shows the old and the new terms, and each adoption stays Accepted (FR-019 REQ-019-118, REQ-019-010)",
+        "rationale": "Event Catalog table, row promotion.terms_changed. Category: Promotions/Discounts. Event nodes: none (Rule only)."
+      }
+    },
+    {
+      "id": "REQ-030-276",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Promotion Adoption Force-Revoked, Program Paused or Resumed",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Promotion Adoption Force-Revoked, Program Paused or Resumed (promotion.adoption_force_revoked / promotion.program_paused / promotion.program_resumed) is an admin-configurable notification event. Primary recipients: Provider (the adopting providers). Sent to the adopting providers when an admin Force-Revokes an adoption, pauses an adopted program or resumes it (FR-019 REQ-019-010)",
+        "rationale": "Event Catalog table, row promotion.adoption_force_revoked / promotion.program_paused / promotion.program_resumed. Category: Promotions/Discounts. Event nodes: none (Rule only)."
+      }
+    },
+    {
+      "id": "REQ-030-277",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Promotion Adoption Revoked by Provider",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Promotion Adoption Revoked by Provider (promotion.adoption_revoked_by_provider) is an admin-configurable notification event. Primary recipients: Admin. Sent to admins when a provider revokes its own adoption of a program (FR-019 REQ-019-010)",
+        "rationale": "Event Catalog table, row promotion.adoption_revoked_by_provider. Category: Promotions/Discounts. Event nodes: none (Rule only)."
+      }
+    },
+    {
+      "id": "REQ-030-278",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Team Invitation Sent",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Team Invitation Sent (team.invitation_sent) is an admin-configurable notification event. Primary recipients: Team invitee. Invitation email to a person invited to join a provider team (FR-009)",
+        "rationale": "Event Catalog table, row team.invitation_sent. Category: Provider Team. Event nodes: EVT-team-invitation-sent."
+      }
+    },
+    {
+      "id": "REQ-030-279",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Team Invitation Accepted",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Team Invitation Accepted (team.invitation_accepted) is an admin-configurable notification event. Primary recipients: Provider Owner, the new team member. Confirmation email to both when an invitation is accepted (FR-009 REQ-009-046)",
+        "rationale": "Event Catalog table, row team.invitation_accepted. Category: Provider Team. Event nodes: EVT-team-invitation-accepted."
+      }
+    },
+    {
+      "id": "REQ-030-280",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Team Member Role Changed",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Team Member Role Changed (team.member_role_changed) is an admin-configurable notification event. Primary recipients: Provider (the affected team member). Email telling the member the new role (FR-009 REQ-009-058)",
+        "rationale": "Event Catalog table, row team.member_role_changed. Category: Provider Team. Event nodes: EVT-team-member-role-changed."
+      }
+    },
+    {
+      "id": "REQ-030-281",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Team Member Removed",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Team Member Removed (team.member_removed) is an admin-configurable notification event. Primary recipients: Provider (the removed member), Provider Owner. Sent when a member is removed from the team (FR-009 REQ-009-081)",
+        "rationale": "Event Catalog table, row team.member_removed. Category: Provider Team. Event nodes: EVT-team-member-removed."
+      }
+    },
+    {
+      "id": "REQ-030-282",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Team Member Suspended or Reactivated",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Team Member Suspended or Reactivated (team.member_suspended / team.member_reactivated) is an admin-configurable notification event. Primary recipients: Provider (the affected team member). Sent to the member when a suspension is set and again when it is lifted (FR-009 REQ-009-082, REQ-009-192)",
+        "rationale": "Event Catalog table, row team.member_suspended / team.member_reactivated. Category: Provider Team. Event nodes: EVT-team-member-suspended."
+      }
+    },
+    {
+      "id": "REQ-030-283",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Owner Role Handed Over",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Owner Role Handed Over (team.owner_handover) is an admin-configurable notification event. Primary recipients: Provider Owner (the new Owner and the previous Owner). Email to both when a Hairline admin hands the Owner role to another team member (FR-009 REQ-009-174)",
+        "rationale": "Event Catalog table, row team.owner_handover. Category: Provider Team. Event nodes: none (Rule only)."
+      }
+    },
+    {
+      "id": "REQ-030-284",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Team Invitation Delivery Failed",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Team Invitation Delivery Failed (team.invitation_delivery_failed) is an admin-configurable notification event. Primary recipients: Admin. Sent when an invitation email still fails once the retry rule is exhausted (FR-009 REQ-009-055)",
+        "rationale": "Event Catalog table, row team.invitation_delivery_failed. Category: Provider Team. Event nodes: EVT-team-invitation-delivery-failed."
+      }
+    },
+    {
+      "id": "REQ-030-285",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Aftercare Request Assigned",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Aftercare Request Assigned (aftercare.request_assigned) is an admin-configurable notification event. Primary recipients: Provider. Sent to the provider an aftercare request is assigned to (FR-011)",
+        "rationale": "Event Catalog table, row aftercare.request_assigned. Category: Aftercare. Event nodes: EVT-aftercare-request-assigned."
+      }
+    },
+    {
+      "id": "REQ-030-286",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Aftercare Payment Due",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Aftercare Payment Due (aftercare.payment_due) is an admin-configurable notification event. Primary recipients: Patient. Sent when payment for an aftercare request is due (FR-011)",
+        "rationale": "Event Catalog table, row aftercare.payment_due. Category: Aftercare. Event nodes: EVT-aftercare-payment-due."
+      }
+    },
+    {
+      "id": "REQ-030-287",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Aftercare Request Rejected or Expired",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Aftercare Request Rejected or Expired (aftercare.request_rejected / aftercare.request_expired) is an admin-configurable notification event. Primary recipients: Patient. Sent when an aftercare request is rejected or expires; for a request converted from a monitoring case the notice says the patient may start a new standalone request pre-filled from the same source data (FR-011 REQ-011-094)",
+        "rationale": "Event Catalog table, row aftercare.request_rejected / aftercare.request_expired. Category: Aftercare. Event nodes: EVT-aftercare-request-rejected, EVT-aftercare-request-expired."
+      }
+    },
+    {
+      "id": "REQ-030-288",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Aftercare Awaiting Provider Availability",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Aftercare Awaiting Provider Availability (aftercare.awaiting_availability) is an admin-configurable notification event. Primary recipients: Patient. Sent when an aftercare request is waiting for a provider to become available (FR-011)",
+        "rationale": "Event Catalog table, row aftercare.awaiting_availability. Category: Aftercare. Event nodes: EVT-aftercare-awaiting-availability."
+      }
+    },
+    {
+      "id": "REQ-030-289",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Aftercare Provider Withdrawn",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Aftercare Provider Withdrawn (aftercare.provider_withdrawn) is an admin-configurable notification event. Primary recipients: Admin. Sent when the provider of an aftercare case withdraws (FR-011)",
+        "rationale": "Event Catalog table, row aftercare.provider_withdrawn. Category: Aftercare. Event nodes: EVT-aftercare-provider-withdrawn."
+      }
+    },
+    {
+      "id": "REQ-030-290",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Aftercare Assigned to Hairline Team",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Aftercare Assigned to Hairline Team (aftercare.team_assigned) is an admin-configurable notification event. Primary recipients: Admin, aftercare team. Sent when an aftercare case is assigned to the Hairline team (FR-011)",
+        "rationale": "Event Catalog table, row aftercare.team_assigned. Category: Aftercare. Event nodes: EVT-aftercare-team-assigned."
+      }
+    },
+    {
+      "id": "REQ-030-291",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Aftercare Plan Setup Reminder and Escalation",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Aftercare Plan Setup Reminder and Escalation (aftercare.plan_setup_reminder / aftercare.plan_setup_escalated) is an admin-configurable notification event. Primary recipients: Provider (reminder), Admin (escalation). Sent when an aftercare plan is not finished: the assignee is reminded after 2 days and the case is escalated to the admin after 4 days; both day counts are admin settings (FR-011 REQ-011-090)",
+        "rationale": "Event Catalog table, row aftercare.plan_setup_reminder / aftercare.plan_setup_escalated. Category: Aftercare. Event nodes: none (Rule only)."
+      }
+    },
+    {
+      "id": "REQ-030-292",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Provider Role Sync Failed",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Provider Role Sync Failed (system.role_sync_failed) is an admin-configurable notification event. Primary recipients: Admin (all Super Admins). In-app alert sent when a provider role permission change fails to reach the Provider Platform after the automatic retries (FR-031 REQ-031-130)",
+        "rationale": "Event Catalog table, row system.role_sync_failed. Category: System/Operations. Event nodes: none (Rule only)."
+      }
+    },
+    {
+      "id": "REQ-030-293",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Recurring Export Paused",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Recurring Export Paused (analytics.recurring_export_paused) is an admin-configurable notification event. Primary recipients: Provider (the clinic Owner). In-app notice sent when a recurring export is paused because its owner was removed or lost access to a widget in it (FR-014 REQ-014-322)",
+        "rationale": "Event Catalog table, row analytics.recurring_export_paused. Category: System/Operations. Event nodes: none (Rule only)."
+      }
+    },
+    {
+      "id": "REQ-030-294",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Recurring Export Failed",
+      "status": "active",
+      "version": 2,
+      "attrs": {
+        "statement": "Recurring Export Failed (analytics.recurring_export_failed) is an admin-configurable notification event. Primary recipients: Provider (the configuration owner). After the last retry of a scheduled run has failed, the person who set up the export gets an in-app notice (FR-014 REQ-014-323)",
+        "rationale": "Event Catalog table, row analytics.recurring_export_failed. Category: System/Operations. Event nodes: none (Rule only)."
       }
     },
     {
@@ -107440,7 +107943,7 @@
       "owner_fr": null,
       "title": "Inquiry",
       "status": "active",
-      "version": 28,
+      "version": 29,
       "attrs": {
         "timeline": "main",
         "sequence": 1,
@@ -107571,7 +108074,7 @@
       "owner_fr": null,
       "title": "Tracking",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
         "timeline": "monitoring",
         "sequence": 2,
@@ -107714,7 +108217,7 @@
       "owner_fr": null,
       "title": "All stages",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "timeline": "platform",
         "sequence": 1,
@@ -127869,9 +128372,9 @@
       "id": "STP-030-040",
       "type": "Step",
       "owner_fr": "FR-030",
-      "title": "Admin selects the default language English from the supported locales list",
+      "title": "Admin selects the default language English from the locale list",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "A3: Admin Creates Multi-Language Notification Template step 3"
       }
@@ -127902,9 +128405,9 @@
       "id": "STP-030-043",
       "type": "Step",
       "owner_fr": "FR-030",
-      "title": "System displays a language dropdown populated from FR-021 supported locales",
+      "title": "System displays a language dropdown populated from the FR-021 locale catalogue",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "A3: Admin Creates Multi-Language Notification Template step 6"
       }
@@ -183790,7 +184293,7 @@
       "verb": "active in",
       "to_id": "STG-admin-01-configuration",
       "attrs": {
-        "rules": 3
+        "rules": 4
       },
       "derived": true
     },
@@ -183799,7 +184302,7 @@
       "verb": "active in",
       "to_id": "STG-aftercare-01-recovery-plan",
       "attrs": {
-        "rules": 2
+        "rules": 7
       },
       "derived": true
     },
@@ -183808,7 +184311,7 @@
       "verb": "active in",
       "to_id": "STG-aftercare-02-follow-up",
       "attrs": {
-        "rules": 7
+        "rules": 9
       },
       "derived": true
     },
@@ -183826,7 +184329,7 @@
       "verb": "active in",
       "to_id": "STG-main-02-quote",
       "attrs": {
-        "rules": 10
+        "rules": 13
       },
       "derived": true
     },
@@ -183844,7 +184347,7 @@
       "verb": "active in",
       "to_id": "STG-main-04-booking",
       "attrs": {
-        "rules": 9
+        "rules": 16
       },
       "derived": true
     },
@@ -183889,7 +184392,7 @@
       "verb": "active in",
       "to_id": "STG-monitoring-02-tracking",
       "attrs": {
-        "rules": 7
+        "rules": 8
       },
       "derived": true
     },
@@ -183916,7 +184419,7 @@
       "verb": "active in",
       "to_id": "STG-patient-03-active",
       "attrs": {
-        "rules": 7
+        "rules": 10
       },
       "derived": true
     },
@@ -183935,6 +184438,15 @@
       "to_id": "STG-patient-06-deletion-requested",
       "attrs": {
         "rules": 3
+      },
+      "derived": true
+    },
+    {
+      "from_id": "FR-030",
+      "verb": "active in",
+      "to_id": "STG-payout-02-approval",
+      "attrs": {
+        "rules": 1
       },
       "derived": true
     },
@@ -183970,7 +184482,7 @@
       "verb": "active in",
       "to_id": "STG-provider-03-active",
       "attrs": {
-        "rules": 12
+        "rules": 30
       },
       "derived": true
     },
@@ -289466,6 +289978,12 @@
     {
       "from_id": "REQ-030-070",
       "verb": "applies to",
+      "to_id": "ACT-super-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-070",
+      "verb": "applies to",
       "to_id": "EVT-support-case-escalated",
       "attrs": {}
     },
@@ -292981,6 +293499,978 @@
     },
     {
       "from_id": "REQ-030-253",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-254",
+      "verb": "applies at",
+      "to_id": "STG-monitoring-02-tracking",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-254",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-254",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-254",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-254",
+      "verb": "applies to",
+      "to_id": "EVT-monitoring-assignment-ended",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-254",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-255",
+      "verb": "applies at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-255",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-255",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-255",
+      "verb": "applies to",
+      "to_id": "EVT-admin-intervention-sent",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-255",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-256",
+      "verb": "applies at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-256",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-256",
+      "verb": "applies to",
+      "to_id": "EVT-keyword-flag-raised",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-256",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-257",
+      "verb": "applies at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-257",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-257",
+      "verb": "applies to",
+      "to_id": "EVT-provider-response-escalated",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-257",
+      "verb": "applies to",
+      "to_id": "EVT-provider-response-reminder",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-257",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-258",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-258",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-258",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-259",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-259",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-259",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-260",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-260",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-260",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-261",
+      "verb": "applies at",
+      "to_id": "STG-payout-02-approval",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-261",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-261",
+      "verb": "applies to",
+      "to_id": "EVT-billing-dispute-payout-added",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-261",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-262",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-262",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-262",
+      "verb": "applies to",
+      "to_id": "EVT-reauth-otp-sent",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-262",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-263",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-263",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-263",
+      "verb": "applies to",
+      "to_id": "EVT-patient-profile-changed-by-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-263",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-264",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-264",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-264",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-265",
+      "verb": "applies at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-265",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-265",
+      "verb": "applies to",
+      "to_id": "EVT-travel-request-sent",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-265",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-266",
+      "verb": "applies at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-266",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-266",
+      "verb": "applies to",
+      "to_id": "EVT-travel-record-submitted",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-266",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-267",
+      "verb": "applies at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-267",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-267",
+      "verb": "applies to",
+      "to_id": "EVT-travel-record-entered",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-267",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-268",
+      "verb": "applies at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-268",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-268",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-268",
+      "verb": "applies to",
+      "to_id": "EVT-travel-record-corrected",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-268",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-269",
+      "verb": "applies at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-269",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-269",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-269",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-269",
+      "verb": "applies to",
+      "to_id": "EVT-travel-date-review-required",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-269",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-270",
+      "verb": "applies at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-270",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-270",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-271",
+      "verb": "applies at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-271",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-271",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-271",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-272",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-272",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-272",
+      "verb": "applies to",
+      "to_id": "EVT-treatment-added",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-272",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-273",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-273",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-273",
+      "verb": "applies to",
+      "to_id": "EVT-treatment-updated",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-273",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-274",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-274",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-274",
+      "verb": "applies to",
+      "to_id": "EVT-treatment-deactivated",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-274",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-275",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-275",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-275",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-276",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-276",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-276",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-277",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-277",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-277",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-278",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-278",
+      "verb": "applies to",
+      "to_id": "ACT-team-invitee",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-278",
+      "verb": "applies to",
+      "to_id": "EVT-team-invitation-sent",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-278",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-279",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-279",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-279",
+      "verb": "applies to",
+      "to_id": "ACT-provider-owner",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-279",
+      "verb": "applies to",
+      "to_id": "EVT-team-invitation-accepted",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-279",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-280",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-280",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-280",
+      "verb": "applies to",
+      "to_id": "EVT-team-member-role-changed",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-280",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-281",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-281",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-281",
+      "verb": "applies to",
+      "to_id": "ACT-provider-owner",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-281",
+      "verb": "applies to",
+      "to_id": "EVT-team-member-removed",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-281",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-282",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-282",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-282",
+      "verb": "applies to",
+      "to_id": "EVT-team-member-suspended",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-282",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-283",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-283",
+      "verb": "applies to",
+      "to_id": "ACT-provider-owner",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-283",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-284",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-284",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-284",
+      "verb": "applies to",
+      "to_id": "EVT-team-invitation-delivery-failed",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-284",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-285",
+      "verb": "applies at",
+      "to_id": "STG-aftercare-01-recovery-plan",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-285",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-285",
+      "verb": "applies to",
+      "to_id": "EVT-aftercare-request-assigned",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-285",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-286",
+      "verb": "applies at",
+      "to_id": "STG-aftercare-01-recovery-plan",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-286",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-286",
+      "verb": "applies to",
+      "to_id": "EVT-aftercare-payment-due",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-286",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-287",
+      "verb": "applies at",
+      "to_id": "STG-aftercare-01-recovery-plan",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-287",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-287",
+      "verb": "applies to",
+      "to_id": "EVT-aftercare-request-expired",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-287",
+      "verb": "applies to",
+      "to_id": "EVT-aftercare-request-rejected",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-287",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-288",
+      "verb": "applies at",
+      "to_id": "STG-aftercare-01-recovery-plan",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-288",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-288",
+      "verb": "applies to",
+      "to_id": "EVT-aftercare-awaiting-availability",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-288",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-289",
+      "verb": "applies at",
+      "to_id": "STG-aftercare-02-follow-up",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-289",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-289",
+      "verb": "applies to",
+      "to_id": "EVT-aftercare-provider-withdrawn",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-289",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-290",
+      "verb": "applies at",
+      "to_id": "STG-aftercare-02-follow-up",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-290",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-290",
+      "verb": "applies to",
+      "to_id": "EVT-aftercare-team-assigned",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-290",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-291",
+      "verb": "applies at",
+      "to_id": "STG-aftercare-01-recovery-plan",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-291",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-291",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-291",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-292",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-292",
+      "verb": "applies to",
+      "to_id": "ACT-super-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-292",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-293",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-293",
+      "verb": "applies to",
+      "to_id": "ACT-provider-owner",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-293",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-294",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-294",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-294",
       "verb": "decided by",
       "to_id": "SRC-PRD-030",
       "attrs": {}
@@ -358308,30 +359798,6 @@
     {
       "from_id": "STG-main-01-inquiry",
       "verb": "reads",
-      "to_id": "ENT-notification-delivery-log",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-main-01-inquiry",
-      "verb": "reads",
-      "to_id": "ENT-notification-engagement-metrics",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-main-01-inquiry",
-      "verb": "reads",
-      "to_id": "ENT-notification-rule",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-main-01-inquiry",
-      "verb": "reads",
-      "to_id": "ENT-notification-template",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-main-01-inquiry",
-      "verb": "reads",
       "to_id": "ENT-patient",
       "attrs": {}
     },
@@ -358531,30 +359997,6 @@
       "from_id": "STG-main-01-inquiry",
       "verb": "writes",
       "to_id": "ENT-mt-provider-credential",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-main-01-inquiry",
-      "verb": "writes",
-      "to_id": "ENT-notification-delivery-log",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-main-01-inquiry",
-      "verb": "writes",
-      "to_id": "ENT-notification-engagement-metrics",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-main-01-inquiry",
-      "verb": "writes",
-      "to_id": "ENT-notification-rule",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-main-01-inquiry",
-      "verb": "writes",
-      "to_id": "ENT-notification-template",
       "attrs": {}
     },
     {
@@ -361320,6 +362762,12 @@
     {
       "from_id": "STG-monitoring-02-tracking",
       "verb": "emits",
+      "to_id": "EVT-monitoring-assignment-ended",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-monitoring-02-tracking",
+      "verb": "emits",
       "to_id": "EVT-monitoring-completed",
       "attrs": {}
     },
@@ -362772,13 +364220,49 @@
     {
       "from_id": "STG-platform-01-all-stages",
       "verb": "reads",
+      "to_id": "ENT-notification-delivery-log",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-platform-01-all-stages",
+      "verb": "reads",
+      "to_id": "ENT-notification-engagement-metrics",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-platform-01-all-stages",
+      "verb": "reads",
       "to_id": "ENT-notification-event",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-platform-01-all-stages",
+      "verb": "reads",
+      "to_id": "ENT-notification-rule",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-platform-01-all-stages",
+      "verb": "reads",
+      "to_id": "ENT-notification-template",
       "attrs": {}
     },
     {
       "from_id": "STG-platform-01-all-stages",
       "verb": "writes",
       "to_id": "ENT-notification-attempt",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-platform-01-all-stages",
+      "verb": "writes",
+      "to_id": "ENT-notification-delivery-log",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-platform-01-all-stages",
+      "verb": "writes",
+      "to_id": "ENT-notification-engagement-metrics",
       "attrs": {}
     },
     {
@@ -459059,6 +460543,99 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-211207-bd7015a1",
+      "at": "2026-11-24T21:12:07.279022+00:00",
+      "changed_by": "controller",
+      "reason": "Reword four new notification catalogue rules so each is distinct from its neighbours (duplicate-rule lint).",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-030-266",
+        "REQ-030-267",
+        "REQ-030-268",
+        "REQ-030-294"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 4
+    },
+    {
+      "id": "cs-20261124-211028-386bb457",
+      "at": "2026-11-24T21:10:28.876783+00:00",
+      "changed_by": "docs-manager",
+      "reason": "Cross-FR alignment of the notification catalogue: new catalogue rules REQ-030-254 to REQ-030-294 with their stage, actor, event and source edges, a new event for the monitoring assignment end, wording fixes on four existing rows and on the language list, the affiliate and re-verification statements, and the notification entities moved to the platform stage.",
+      "source_id": null,
+      "nodes_added": [
+        "EVT-monitoring-assignment-ended",
+        "REQ-030-254",
+        "REQ-030-255",
+        "REQ-030-256",
+        "REQ-030-257",
+        "REQ-030-258",
+        "REQ-030-259",
+        "REQ-030-260",
+        "REQ-030-261",
+        "REQ-030-262",
+        "REQ-030-263",
+        "REQ-030-264",
+        "REQ-030-265",
+        "REQ-030-266",
+        "REQ-030-267",
+        "REQ-030-268",
+        "REQ-030-269",
+        "REQ-030-270",
+        "REQ-030-271",
+        "REQ-030-272",
+        "REQ-030-273",
+        "REQ-030-274",
+        "REQ-030-275",
+        "REQ-030-276",
+        "REQ-030-277",
+        "REQ-030-278",
+        "REQ-030-279",
+        "REQ-030-280",
+        "REQ-030-281",
+        "REQ-030-282",
+        "REQ-030-283",
+        "REQ-030-284",
+        "REQ-030-285",
+        "REQ-030-286",
+        "REQ-030-287",
+        "REQ-030-288",
+        "REQ-030-289",
+        "REQ-030-290",
+        "REQ-030-291",
+        "REQ-030-292",
+        "REQ-030-293",
+        "REQ-030-294"
+      ],
+      "nodes_updated": [
+        "ENT-notification-template.language",
+        "EVT-monitoring-advice-posted",
+        "EVT-monitoring-provider-assigned",
+        "EVT-promotion-discount-approval-requested",
+        "EVT-quote-cancelled-inquiry",
+        "EVT-support-case-escalated",
+        "REQ-030-070",
+        "REQ-030-079",
+        "REQ-030-082",
+        "REQ-030-091",
+        "REQ-030-127",
+        "REQ-030-137",
+        "REQ-030-152",
+        "REQ-030-186",
+        "REQ-030-233",
+        "STG-main-01-inquiry",
+        "STG-monitoring-02-tracking",
+        "STG-platform-01-all-stages",
+        "STP-030-040",
+        "STP-030-043"
+      ],
+      "edges_added": 170,
+      "edges_removed": 8,
+      "rows": 449
+    },
     {
       "id": "cs-20261124-205708-9af7cf85",
       "at": "2026-11-24T20:57:08.438690+00:00",

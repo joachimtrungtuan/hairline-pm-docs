@@ -1,0 +1,8 @@
+# Cross-FR pass follow-up: four new FR-030 catalogue rules reworded so they do not read as copies of their neighbours
+reason: "Reword four new notification catalogue rules so each is distinct from its neighbours (duplicate-rule lint)."
+by: controller
+operations:
+  - {"op": "update_node", "id": "REQ-030-266", "attrs": {"statement": "Travel Record Submitted (travel.record_submitted) is an admin-configurable notification event. Primary recipients: Provider. The clinic is told by email and in-app that its patient has handed in flight or hotel details (FR-008 REQ-008-071)"}}
+  - {"op": "update_node", "id": "REQ-030-267", "attrs": {"statement": "Travel Record Entered (travel.record_entered) is an admin-configurable notification event. Primary recipients: Patient. Asks the patient to check travel details that the clinic typed in on the patient's behalf; email and in-app (FR-008 REQ-008-071)"}}
+  - {"op": "update_node", "id": "REQ-030-268", "attrs": {"statement": "Travel Record Corrected (travel.record_corrected) is an admin-configurable notification event. Primary recipients: Patient, Provider. Goes to both sides after a Hairline admin has corrected stored travel details; channels email and in-app (FR-008 REQ-008-071)"}}
+  - {"op": "update_node", "id": "REQ-030-294", "attrs": {"statement": "Recurring Export Failed (analytics.recurring_export_failed) is an admin-configurable notification event. Primary recipients: Provider (the configuration owner). After the last retry of a scheduled run has failed, the person who set up the export gets an in-app notice (FR-014 REQ-014-323)"}}
