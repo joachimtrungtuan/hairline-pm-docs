@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T18:22:06Z",
+  "generated_at": "2026-11-24T18:23:48Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -1376,7 +1376,7 @@
       "owner_fr": "FR-031",
       "title": "Action type",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {}
     },
     {
@@ -1599,6 +1599,28 @@
       }
     },
     {
+      "id": "ENT-admin-user-account.pending_role_effective_from",
+      "type": "Field",
+      "owner_fr": "FR-031",
+      "title": "Pending role effective from",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "When the pending role takes over; never earlier than the moment the change is made."
+      }
+    },
+    {
+      "id": "ENT-admin-user-account.pending_role_id",
+      "type": "Field",
+      "owner_fr": "FR-031",
+      "title": "Pending role",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Foreign key to the role definition the user will hold from pending_role_effective_from; empty when no role change is waiting. The current role applies until then, and a second change replaces it."
+      }
+    },
+    {
       "id": "ENT-admin-user-account.personal_message",
       "type": "Field",
       "owner_fr": "FR-031",
@@ -1646,9 +1668,9 @@
       "owner_fr": "FR-031",
       "title": "Role effective from",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "When the assigned role becomes active for authorization checks."
+        "description": "When the current assigned role became active for authorization checks; a later change waits in the pending role fields until its Effective From."
       }
     },
     {
@@ -1657,7 +1679,7 @@
       "owner_fr": "FR-031",
       "title": "Status",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {}
     },
     {
@@ -19029,9 +19051,9 @@
       "owner_fr": "FR-031",
       "title": "Sensitive",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Flag that triggers the sensitive-permission warning; Key Entities has no such attribute."
+        "description": "Flag that triggers the sensitive-permission warning (REQ-031-073)."
       }
     },
     {
@@ -26535,9 +26557,9 @@
       "owner_fr": "FR-031",
       "title": "Last synced to Provider Platform",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Shown as the sync status indicator on the provider roles tab."
+        "description": "Shown as the sync status indicator on the provider roles tab; a role whose sync failed shows Sync failed and not yet applied until a retry succeeds."
       }
     },
     {
@@ -38466,6 +38488,32 @@
       }
     },
     {
+      "id": "FLW-031-a10-request-new-invitation",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "A10: Request New Invitation",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "A10: Request New Invitation",
+        "prd_ref": "A10"
+      }
+    },
+    {
+      "id": "FLW-031-a11-delete-clone-role",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "A11: Delete or Clone a Custom Admin Role",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "A11: Delete or Clone a Custom Admin Role",
+        "prd_ref": "A11"
+      }
+    },
+    {
       "id": "FLW-031-a2-role-change",
       "type": "Flow",
       "owner_fr": null,
@@ -38499,6 +38547,45 @@
       "attrs": {
         "kind": "alternative",
         "prd_ref": "A4: Configure Provider Role Permissions"
+      }
+    },
+    {
+      "id": "FLW-031-a7-edit-admin-role",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "A7: Edit Admin Role Permissions",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "A7: Edit Admin Role Permissions",
+        "prd_ref": "A7"
+      }
+    },
+    {
+      "id": "FLW-031-a8-suspend-reactivate-delete",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "A8: Suspend, Reactivate or Delete an Admin Account",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "A8: Suspend, Reactivate or Delete an Admin Account",
+        "prd_ref": "A8"
+      }
+    },
+    {
+      "id": "FLW-031-a9-cancel-invitation",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "A9: Cancel a Pending Invitation",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "A9: Cancel a Pending Invitation",
+        "prd_ref": "A9"
       }
     },
     {
@@ -40113,7 +40200,7 @@
       "owner_fr": null,
       "title": "Admin Access Control & Permissions",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "module": "fr031-admin-access-control",
         "prd_path": "project-requirements/functional-requirements/fr031-admin-access-control/prd.md",
@@ -88465,9 +88552,9 @@
       "owner_fr": "FR-031",
       "title": "Super Admin accounts are never suspended, removed, demoted or self-deactivated in the product",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System MUST NOT allow a Super Admin account to be suspended by another user, or removed, demoted or self-deactivated inside the product (system protection; if ever needed, this is done outside the product). When another admin tries to suspend one, including one Super Admin trying to suspend another, the action is blocked with \"A Super Admin account cannot be suspended. Super Admin accounts can only be changed outside the product.\" and both accounts stay active; when a Super Admin tries to change their own role or deactivate their own account, the action is blocked with \"A Super Admin account cannot be demoted or deactivated in the product. This can only be done outside the product.\"",
+        "statement": "System MUST NOT allow a Super Admin account to be suspended by another user, or removed, demoted or self-deactivated inside the product (system protection; if ever needed, this is done outside the product). When another admin tries to suspend one, including one Super Admin trying to suspend another, the action is blocked with \"A Super Admin account cannot be suspended. Super Admin accounts can only be changed outside the product.\" and both accounts stay active; when a Super Admin tries to change their own role or deactivate their own account, the action is blocked with \"A Super Admin account cannot be demoted or deactivated in the product. This can only be done outside the product.\" The Admin Users tab shows no Change Role, Suspend or Delete action on a Super Admin row.",
         "rationale": "PRD Functional Requirements Summary, REQ-031-009; Tab 2 business rules; Business Rule 7; User Story 6. Business Rule 4 (at least one active Super Admin must exist at all times, system protection against lockout) is merged here. prd.md lines 1304-1310 (User Story 6 scenarios 1 to 3 give the two messages)."
       }
     },
@@ -88489,9 +88576,9 @@
       "owner_fr": "FR-031",
       "title": "Role changes carry an Effective From date and time",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System MUST support role assignment changes with **Effective From** date/time tracking (stored and auditable)",
+        "statement": "System MUST support role assignment changes with **Effective From** date/time tracking (stored and auditable); the current role stays in force until Effective From",
         "rationale": "PRD Functional Requirements Summary, REQ-031-011. Business Rule 8 repeats this (role assignments stored with an Effective From timestamp; enforcement respects that date/time on authorization checks); merged here."
       }
     },
@@ -88501,9 +88588,9 @@
       "owner_fr": "FR-031",
       "title": "Admin user account data",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST maintain admin user accounts with: email, name, password hash, assigned role, role effective date/time, role change acknowledgement time, status (active/pending/suspended), creation date, last login timestamp",
+        "statement": "System MUST maintain admin user accounts with: email, name, password hash, assigned role, role effective date/time, pending role and its effective date/time, role change acknowledgement time, status (active/invited/suspended), creation date, last login timestamp",
         "rationale": "PRD Functional Requirements Summary, REQ-031-012; Key Entities, Entity 1. One admin user has one assigned role (Business Rule 1)."
       }
     },
@@ -88525,9 +88612,9 @@
       "owner_fr": "FR-031",
       "title": "Audit trail entry data",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System MUST maintain audit trail entries with: timestamp, user ID, action type, action details, IP address, outcome (success/failed/denied)",
+        "statement": "System MUST maintain audit trail entries with: timestamp, user ID, action type (the access-control events listed on the user detail screen), action details, IP address, outcome (success/failed/denied)",
         "rationale": "PRD Functional Requirements Summary, REQ-031-014. Privacy Rule 2 (IP addresses logged for security audit purposes, GDPR-compliant logging) merged here. Key Entities, Entity 3."
       }
     },
@@ -88730,9 +88817,9 @@
       "owner_fr": "FR-031",
       "title": "Invitation form fields and limits",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "The invitation form requires first name, last name, email address and an assigned role. First and last name are max 50 characters (letters, spaces, hyphens only); the email is converted to lowercase; phone number is optional (E.164 format); personal message is optional but recommended for first-time team setup (max 500 characters, included in the invitation email). The form cannot be submitted until all required fields pass validation.",
+        "statement": "The invitation form requires first name, last name, email address and an assigned role. First and last name are 2 to 50 characters (letters, spaces, hyphens only); the email is converted to lowercase; phone number is optional (E.164 format); personal message is optional but recommended for first-time team setup (max 500 characters, included in the invitation email). The form cannot be submitted until all required fields pass validation.",
         "rationale": "Screen 2 data fields and business rules; Main Flow steps 6 to 7. prd.md lines 429 (personal message is optional but recommended for first-time team setup)."
       }
     },
@@ -88754,9 +88841,9 @@
       "owner_fr": "FR-031",
       "title": "Duplicate admin email blocked",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System checks the invitation email against all admin users (active, suspended, pending) and pending invitations; a duplicate is blocked with the error \"This email is already associated with an admin account. Please use a different email or check existing team members.\" and the system suggests \"View team member\" or, if pending, \"Resend invitation\". The existing record is kept.",
+        "statement": "System checks the invitation email against all admin users (active, suspended, invited) and pending invitations; a duplicate is blocked with the error \"This email is already associated with an admin account. Please use a different email or check existing team members.\" and the system suggests \"View team member\" or, if the invitation is pending, \"Resend invitation\". The existing record is kept.",
         "rationale": "Alternative Flow B2 and Screen 2 (one message in both places)."
       }
     },
@@ -88764,11 +88851,11 @@
       "id": "REQ-031-036",
       "type": "Rule",
       "owner_fr": "FR-031",
-      "title": "Only active admin roles can be assigned",
+      "title": "Any admin role can be assigned",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "The role dropdown on the invitation form is populated from active admin roles, including custom admin roles, and shows role name plus a brief description on hover; an expandable role permission summary is shown below it, and a role must be selected (\"Please select a role for this team member.\"). Only active roles can be assigned to new or existing users.",
+        "statement": "The role dropdown on the invitation form is populated from the admin roles, including custom admin roles, and shows role name plus a brief description on hover; an expandable role permission summary is shown below it, and a role must be selected (\"Please select a role for this team member.\"). Every existing role can be assigned to new or existing users; roles have no active or inactive status and cannot be deactivated.",
         "rationale": "Screen 2 business rules and notes; Data Dependencies (State: Active Roles)."
       }
     },
@@ -88778,9 +88865,9 @@
       "owner_fr": "FR-031",
       "title": "Invitation token expiry",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Invitation tokens expire after 7 days (168 hours). The expiry is configurable by Super Admin through A-09 settings within a range of 1 to 30 days.",
+        "statement": "Invitation tokens expire after the configured invitation expiry (7 days, 168 hours, at launch), which a Super Admin can set through A-09 settings within a range of 1 to 30 days.",
         "rationale": "Business Rule 6; Screen 2; Admin Editability (Editable and Configurable with Restrictions); Main Flow step 10."
       }
     },
@@ -88790,9 +88877,9 @@
       "owner_fr": "FR-031",
       "title": "Invitation email content and preview",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "The invitation email carries the invitation link, Hairline Admin Platform branding and the role being offered, plus the personal message when provided. Before sending, the form can preview the email (invitee name, role, personal message, invitation link placeholder) and shows \"Invitation will expire in 7 days on [date] at [time]\". After sending, it shows \"Invitation sent to [email]. They have 7 days to accept.\"",
+        "statement": "The invitation email carries the invitation link, Hairline Admin Platform branding and the role being offered, plus the personal message when provided. Before sending, the form can preview the email (invitee name, role, personal message, invitation link placeholder) and shows \"Invitation will expire in [N] days on [date] at [time]\". After sending, it shows \"Invitation sent to [email]. They have [N] days to accept.\" N is the configured invitation expiry.",
         "rationale": "Main Flow steps 10 to 13; Screen 2 actions and notes."
       }
     },
@@ -88802,9 +88889,9 @@
       "owner_fr": "FR-031",
       "title": "Invitation status on the account",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "When an invitation is sent, System records it on the new admin user's account with status \"Invited\", marks it \"Accepted\" when the account is created and shows it as \"Expired\" when the token has passed its expiry, when Cancel is used on Admin Account Setup, or when it still cannot be sent 24 hours after it was created. The pending invitations list shows each invitation's status.",
+        "statement": "When an invitation is sent, System creates the new admin user's account with the assigned role and status \"Invited\" and records the invitation on it. The invitation shows \"Accepted\" when the account is set up (the account then becomes Active), \"Expired\" when the token has passed its expiry, when Cancel is used on Admin Account Setup, or when it still cannot be sent 24 hours after it was created, and \"Pending Send\" while the email cannot be delivered. The Pending Invitations sub-tab shows each invitation's status.",
         "rationale": "Main Flow steps 12 and 21; Alternative Flows A1 and B4; Screen 3 Cancel. The account status before acceptance is \"Pending\"; \"Pending Send\" is the invitation status while sending fails (REQ-031-043)."
       }
     },
@@ -88814,9 +88901,9 @@
       "owner_fr": "FR-031",
       "title": "Invitation link validated before the setup form",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "When the invitee opens the invitation link, System validates the token (not expired, not already used) before showing the Admin Account Setup screen pre-filled with email, first name and last name. An expired or invalid token redirects to an error page with a \"Request New Invitation\" option.",
+        "statement": "When the invitee opens the invitation link, System validates the token (not expired, not already used) before showing the Admin Account Setup screen pre-filled with email, first name and last name. An expired or invalid token redirects to an error page with a \"Request New Invitation\" option. Request New Invitation notifies all Super Admins (REQ-031-128).",
         "rationale": "Main Flow steps 15 to 16; Screen 3 business rules."
       }
     },
@@ -88838,9 +88925,9 @@
       "owner_fr": "FR-031",
       "title": "Super Admin can resend an invitation",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "A Super Admin can resend an invitation for a pending account, including an expired one: System generates a new token, sends a new email, and invalidates the old token. The invitee receives a fresh invitation with a new expiry. The pending invitations list shows a notification dot when invitations are about to expire (< 24 hours).",
+        "statement": "A Super Admin can resend an invitation for an invitation that is still pending (Invited or Pending Send) or has expired: System generates a new token, sends a new email, and invalidates the old token. The invitee receives a fresh invitation with a new expiry. The Pending Invitations sub-tab shows a notification dot when invitations are about to expire (< 24 hours).",
         "rationale": "Alternative Flow A1; Admin Editability (re-send invitation emails for pending accounts); Screen 2 B2 suggestion; Screen 1 Tab 2 notes."
       }
     },
@@ -88850,9 +88937,9 @@
       "owner_fr": "FR-031",
       "title": "Invitation email delivery failure follows the FR-030 retry rule",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "If the invitation email fails to send, System logs each failed delivery in the audit trail and retries under the notification retry rule owned by FR-030 (this flow sets no retry count or interval of its own). While sending fails the invitation shows \"Pending Send\" and the Super Admin is warned \"Invitation created but email failed. We'll retry automatically.\"; if the invitation still cannot be sent 24 hours after it was created, it becomes \"Expired\" and the system alerts the admin team. The Super Admin can resend the invitation.",
+        "statement": "If the invitation email fails to send, System logs each failed delivery in the audit trail and retries under the notification retry rule owned by FR-030 (this flow sets no retry count or interval of its own). While sending fails the invitation shows \"Pending Send\" and the Super Admin is warned \"Invitation created but the email could not be sent yet. The system keeps retrying and the invitation expires if it is still unsent after 24 hours.\"; if the invitation still cannot be sent 24 hours after it was created, it becomes \"Expired\" and the system alerts the admin team. The Super Admin can resend the invitation.",
         "rationale": "Alternative Flow B4; Edge Case 3; External Dependencies (failure handling); Integration 2. The retry rule is FR-030 General Module Rule 7."
       }
     },
@@ -88884,11 +88971,11 @@
       "id": "REQ-031-046",
       "type": "Rule",
       "owner_fr": "FR-031",
-      "title": "Terms of Service acceptance required",
+      "title": "Admin Terms of Service acceptance required",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "The new admin user must accept the Terms of Service (\"You must accept the Terms of Service to continue.\"); \"Create Account\" stays disabled until all required fields are valid and terms are accepted.",
+        "statement": "The new admin user must accept the Admin Terms of Service (\"You must accept the Admin Terms of Service to continue.\"); \"Create Account\" stays disabled until all required fields are valid and terms are accepted. Acceptance belongs to this feature; the legal text is managed in FR-027.",
         "rationale": "Screen 3 data fields and business rules; Main Flow step 17 and 19."
       }
     },
@@ -88922,9 +89009,9 @@
       "owner_fr": "FR-031",
       "title": "Account creation completes onboarding",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "When the new admin user clicks Create Account, System validates all inputs, creates the admin account with the role from the invitation, marks the invitation \"Accepted\", logs the account creation in the audit trail, sends a confirmation email to both the new admin user and the Super Admin who sent the invitation, shows \"Account created successfully! Redirecting to login...\" and redirects to the admin login page after 3 seconds. The new admin user can log in immediately.",
+        "statement": "When the new admin user clicks Create Account, System validates all inputs, sets the account Active with the role from the invitation, marks the invitation \"Accepted\", logs the account creation in the audit trail, sends a confirmation email to both the new admin user and the Super Admin who sent the invitation, shows \"Account created successfully! Redirecting to login...\" and redirects to the admin login page after 3 seconds. The new admin user can log in immediately.",
         "rationale": "Main Flow steps 17 to 25; Screen 3 Success Flow. User Story 1 expects the invitation email within 1 minute and the account status \"Pending\" before acceptance."
       }
     },
@@ -88970,9 +89057,9 @@
       "owner_fr": "FR-031",
       "title": "Suspended admin users cannot log in",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Suspended admin users cannot log in but their accounts remain in the system (soft suspension, not deletion); Super Admin accounts are never suspended inside the product. Super Admins can suspend and reactivate the other admin accounts.",
+        "statement": "Suspended admin users cannot log in but their accounts remain in the system (soft suspension); Super Admin accounts are never suspended inside the product. Super Admins can suspend (with a required reason), reactivate, and delete a suspended non-Super Admin account (REQ-031-126).",
         "rationale": "Business Rule 7; Tab 2 business rules and actions; Admin Editability. REQ-031-021 covers rejection of API calls."
       }
     },
@@ -88982,9 +89069,9 @@
       "owner_fr": "FR-031",
       "title": "Super Admins assign and change admin roles",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "A Super Admin can assign or change the role of any admin user.",
+        "statement": "A Super Admin can assign or change the role of any admin user except Super Admin accounts.",
         "rationale": "Admin Editability (Editable by Super Admin); Alternative Flow A2."
       }
     },
@@ -89018,9 +89105,9 @@
       "owner_fr": "FR-031",
       "title": "Custom admin roles lifecycle",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Custom admin roles can be created, edited, and deleted (deleted only if no users are assigned). A role name is unique within the role's guard (max 50 characters) and a role description is required (max 500 characters). Clone Role creates a new custom admin role based on an existing role.",
+        "statement": "Custom admin roles can be created, edited, and deleted (deleted only while no admin user, including an Invited account, and no pending role change holds the role). A role name is unique within the role's guard (max 50 characters) and a role description is required (max 500 characters). Clone Role creates a new custom admin role based on an existing role, named \"Copy of [role name]\" and cut to 50 characters.",
         "rationale": "Tab 1 business rules and actions; Screen 4 data fields; Admin Editability. Custom roles exist for admin roles only; the four provider roles are fixed."
       }
     },
@@ -89078,9 +89165,9 @@
       "owner_fr": "FR-031",
       "title": "Super Admin-only permissions",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "The admin permissions Edit Settings, Manage Users and Manage Roles are write permissions reserved for Super Admin only.",
+        "statement": "The admin permissions Edit Settings, Manage Users and Manage Roles are write permissions reserved for Super Admin only. The following actions are also Super Admin only: the Manage Localization actions of FR-021 (editing English source values, changing the default language, publishing, rollback, moving a language to Active, the free-text translation switch and budget, and machine translation credentials), the Affiliate Program Settings panel and the commission ceiling override under Manage Affiliates, Login as Provider (REQ-015-069), and the Support Center settings (Screen 7 of FR-034) and the support audit export (REQ-034-094).",
         "rationale": "Screen 4 System Settings category (A-09); permission field is_super_admin_only."
       }
     },
@@ -89090,9 +89177,9 @@
       "owner_fr": "FR-031",
       "title": "Provider permissions limited to named roles",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Provider permissions Manage Bank Details, Edit Settings and Remove Team Members are Owner only; Document Treatment is limited to Owner or Clinical Staff; Edit Team Member Roles (non-Owner) is limited to Owner or Manager.",
+        "statement": "Provider permissions Manage Bank Details and Edit Settings are Owner only; Document Treatment is limited to Owner or Clinical Staff (not Manager); Remove Team Members is limited to Owner (any non-Owner member) or Manager (Clinical Staff and Billing Staff only); Invite Team Members and Edit Team Member Roles (non-Owner) are limited to Owner or Manager, and a Manager may invite or set only Clinical Staff and Billing Staff and cannot create a Manager.",
         "rationale": "Screen 4 provider permission categories (PR-03, PR-05, PR-06, PR-01)."
       }
     },
@@ -89102,9 +89189,9 @@
       "owner_fr": "FR-031",
       "title": "Issue Refunds requires approval",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "The admin permission Issue Refunds is a write permission that requires approval; any admin holding the permission may approve, no second person is required, and the approval step is defined in FR-007.",
+        "statement": "The admin permission Issue Refunds is a write permission that requires approval by another admin holding the permission, never the requester; FR-007 owns the approval step and its 2-business-day escalation.",
         "rationale": "Screen 4 Billing & Financial category (A-05), access level \"Write (requires approval)\". FR-007 owns the approval rule (REQ-007-015)."
       }
     },
@@ -89112,11 +89199,11 @@
       "id": "REQ-031-070",
       "type": "Rule",
       "owner_fr": "FR-031",
-      "title": "Edit permission selects View automatically",
+      "title": "A write permission selects its View automatically",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Permission dependencies apply across all roles: selecting an Edit permission automatically selects the matching View permission (for example \"Edit Patients\" requires \"View Patients\") and the dependency is highlighted.",
+        "statement": "Permission dependencies apply across all roles: selecting any write permission that has a matching View permission (such as Edit Patients, Manage Aftercare or Moderate Reviews) automatically selects that View permission (for example \"Edit Patients\" requires \"View Patients\") and the dependency is highlighted.",
         "rationale": "Screen 4 Both Modes and Validation; Matrix Mode business rules; Alternative Flow A6 (dependency validation)."
       }
     },
@@ -89138,9 +89225,9 @@
       "owner_fr": "FR-031",
       "title": "Permissions organised by module code",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Permissions are organised by module code (A-01, A-02 for admin; PR-01, PR-02 for provider) for traceability, and a Select All checkbox is available for each category.",
+        "statement": "Permissions are organised by module code (A-01, A-02 for admin; PR-01, PR-02 for provider) for traceability, and a Select All checkbox is available for each category. Select All skips the Super Admin-only permissions.",
         "rationale": "Screen 4 Both Modes."
       }
     },
@@ -89150,9 +89237,9 @@
       "owner_fr": "FR-031",
       "title": "Sensitive permission warning",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "When a role contains permissions flagged \"sensitive\" in the permission definition (billing, user management, provider suspension, financial data), System shows a warning modal \"This role grants access to sensitive features: [Billing & Financial Data, Process Payouts, View Transactions]. Confirm assignment?\" together with the full permission summary; the Super Admin either confirms or cancels to select a different role.",
+        "statement": "When a permission matrix is saved with a newly granted sensitive permission, and again when a role holding one is assigned to a user, System shows a warning modal \"This role grants access to sensitive features: [Issue Refunds, Process Payouts, Manage Users]. Confirm?\" together with the full permission summary; the Super Admin either confirms or cancels. Sensitive permissions are all financial write permissions (refunds, payouts, payment settings), Manage Roles, Manage Users and Delete Patients.",
         "rationale": "Alternative Flow B6; Screen 4 Validation. Key Entities Permission has no sensitive flag; ENT-permission.is_sensitive was added (orphan field)."
       }
     },
@@ -89186,9 +89273,9 @@
       "owner_fr": "FR-031",
       "title": "Reset to Default and Preview Impact",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "In Single Role Mode, Reset to Default resets the role to the system-recommended permissions when they are available, and Preview Impact shows which users and providers will be affected by the changes. In matrix mode, Reset Role to Default resets the selected roles and asks for confirmation when unsaved changes exist.",
+        "statement": "In Single Role Mode, Reset to Default resets a predefined role to its default permissions (the full default tables, REQ-031-134) and is not offered on custom roles, and Preview Impact shows which users and providers will be affected by the changes. In matrix mode, Reset Role to Default resets the selected predefined roles and asks for confirmation when unsaved changes exist.",
         "rationale": "Screen 4 modal actions (both modes)."
       }
     },
@@ -89198,9 +89285,9 @@
       "owner_fr": "FR-031",
       "title": "Matrix comparison view",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "The matrix view shows permissions as rows grouped by category/module and all roles of the same type (Admin or Provider, including custom admin roles) as columns, with checkboxes or access-level indicators. Super Admins can edit several roles at once and save all changes together; bulk actions are Select All on a column header, Select All on a row header, and Select Category; locked cells (Super Admin, Owner) show a lock icon and a disabled checkbox. The matrix can be filtered by category, searched by permission name, set to show only differences, sorted by role or permission, and exported to CSV or Excel.",
+        "statement": "The matrix view shows permissions as rows grouped by category/module and all roles of the same type (Admin or Provider, including custom admin roles) as columns, with checkboxes or access-level indicators. Super Admins can edit several roles at once and save all changes together; bulk actions are Select All on a column header, Select All on a row header, and Select Category, all of which skip the Super Admin-only permissions (their cells stay disabled for every role other than Super Admin); locked cells (Super Admin, Owner) show a lock icon and a disabled checkbox. The matrix can be filtered by category, searched by permission name, set to show only differences, sorted by role or permission, and exported to CSV or Excel.",
         "rationale": "Screen 4 View Mode 2 (layout, features, modal actions, business rules). The example matrices are illustrative; see the migration report decision list."
       }
     },
@@ -89222,9 +89309,9 @@
       "owner_fr": "FR-031",
       "title": "Provider sync status shown",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "The Provider Roles tab shows \"Last synced to Provider Platform: [timestamp]\".",
+        "statement": "The Provider Roles tab shows \"Last synced to Provider Platform: [timestamp]\". A role whose sync failed shows \"Sync failed\" and \"not yet applied\" until a retry succeeds (REQ-031-130).",
         "rationale": "Tab 3 notes."
       }
     },
@@ -89258,9 +89345,9 @@
       "owner_fr": "FR-031",
       "title": "Role change for an existing admin user",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "To change an admin user's role, the Super Admin opens Change Role, picks the new role and sets Effective From (default now); System shows the permission comparison and effective date/time, requires confirmation, validates that Effective From is not in the past, and updates the role assignment with the Effective From timestamp. System enforces the new role's permissions on the first API call at or after Effective From.",
+        "statement": "To change an admin user's role, the Super Admin opens Change Role, picks the new role and sets Effective From (default now); System shows the permission comparison and effective date/time, requires confirmation, validates that Effective From is not before now, and stores the new role as the user's pending role with its Effective From; the current role stays in force until then and a second change made before then replaces the pending one (REQ-031-125). At Effective From the pending role becomes the user's role and System enforces its permissions on the first API call at or after that time.",
         "rationale": "Alternative Flow A2; Business Rule 8 and REQ-031-011."
       }
     },
@@ -89292,11 +89379,11 @@
       "id": "REQ-031-085",
       "type": "Rule",
       "owner_fr": "FR-031",
-      "title": "Last Super Admin cannot change own role",
+      "title": "Warning banner while only one Super Admin exists",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "When only one Super Admin exists, that Super Admin cannot change their own role to a non-Super Admin role; the action is blocked with \"You are the last Super Admin. Assign Super Admin role to another user before changing your role.\" A warning banner \"Warning: Only one Super Admin account. Consider adding backup admin.\" is shown on the Admin Users tab while only one exists.",
+        "statement": "A warning banner \"Warning: Only one Super Admin account. Consider adding backup admin.\" is shown on the Admin Users tab while only one Super Admin exists. No Super Admin can be demoted, removed or deactivated inside the product (REQ-031-009).",
         "rationale": "User Story 6 scenario 3; Tab 2 notes."
       }
     },
@@ -89354,9 +89441,9 @@
       "owner_fr": "FR-031",
       "title": "Repeated access denial alerts Super Admin",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System sends an alert to Super Admin when one admin is refused access 5 times within 10 minutes (launch default; the count and the time window are admin settings in A-09; potential security issue).",
+        "statement": "System sends an alert to Super Admin when one admin is refused access 5 times within 10 minutes (launch default; the count and the time window are each an admin setting in A-09; potential security issue).",
         "rationale": "Alternative Flow B5 step 6; Communication Structure (system notifications for access denial attempts); Admin Editability (Configurable with Restrictions)."
       }
     },
@@ -89390,9 +89477,9 @@
       "owner_fr": "FR-031",
       "title": "Super Admin sends a password reset",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Super Admins can send a password reset from the user detail page, which forces a password reset on the user's next login. A pending-activation account does not support password reset (no password set yet): the user must request a new invitation from a Super Admin, and the original invitation token is invalidated to prevent duplicate accounts.",
+        "statement": "Super Admins can send a password reset from the user detail page, which forces a password reset on the user's next login. An account still in the Invited status does not support password reset (no password set yet): the user must request a new invitation from a Super Admin, and the original invitation token is invalidated to prevent duplicate accounts.",
         "rationale": "Screen 5 notes; Edge Case 4."
       }
     },
@@ -89402,9 +89489,9 @@
       "owner_fr": "FR-031",
       "title": "Audit trail view",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "The audit trail on the user detail page shows the last 100 actions by default with a Load More option; each row shows timestamp, action type (Login, Role Change, Permission Grant, Access Denied), details, IP address and outcome (Success, Failed, Denied). Sensitive actions (role changes, permission grants) are highlighted, and role change events offer a comparison of old and new role permissions. Login failures are logged with the reason (invalid password, account suspended, and so on).",
+        "statement": "The audit trail on the user detail page shows the last 30 days by default, 100 rows at a time with a Load More option, and the date range filter reaches further back; it shows access-control events only (REQ-031-132). Each row shows timestamp, action type (Login, Role Change, Permission Grant, Access Denied, Password Reset, User Suspended, User Reactivated, User Deleted, Account Created, Role Created, Role Deleted, Role Permissions Edited, Invitation Sent, Invitation Resent, Invitation Cancelled, Invitation Delivery Failed, Sensitive Access), details, IP address and outcome (Success, Failed, Denied). Sensitive actions (role changes, permission grants) are highlighted, and role change events offer a comparison of old and new role permissions. Login failures are logged with the reason (invalid password, account suspended, and so on).",
         "rationale": "Screen 5. Filtering by action type, date range and outcome is specified in FR-022 REQ-022-117 (cited, not restated). The PRD names six action types in Key Entities but four on the screen."
       }
     },
@@ -89462,9 +89549,9 @@
       "owner_fr": "FR-031",
       "title": "Authentication limits configurable in A-09",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "The maximum failed login attempts before lockout (default 5 failed attempts with a 15-minute lockout, the same setting as FR-001), the session timeout duration (the admin inactivity timeout of A-09, default 30 minutes) and the number of concurrent sessions per admin user (default 3, range 1-5) are configurable in A-09 Authentication Settings.",
+        "statement": "The maximum failed login attempts before lockout (default 5 failed attempts with a 15-minute lockout, the same setting as FR-001; the admin login rate limit of REQ-031-100 is a separate control and whichever trips first applies, REQ-026-116), the session timeout duration (the admin inactivity timeout of A-09, whole minutes from 5 to 240, default 30) and the number of concurrent sessions per admin user (default 3, range 1-5; at the limit a new sign-in ends the oldest session) are configurable in A-09 Authentication Settings.",
         "rationale": "Admin Editability (Configurable with Restrictions). The session timeout is the admin inactivity timeout SET-admin-inactivity-timeout (FR-026); the lockout default is the FR-001 / FR-026 lockout setting. The admin login rate limit (REQ-031-100) is a separate control."
       }
     },
@@ -89498,9 +89585,9 @@
       "owner_fr": "FR-031",
       "title": "Admin permissions: Patient Management (A-01)",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Permission category \"Patient Management\" (A-01) in the admin permission matrix offers: View Patients (View patient list and profiles; Read); Edit Patients (Modify patient information; Write); Delete Patients (Archive patient accounts; Delete).",
+        "statement": "Permission category \"Patient Management\" (A-01) in the admin permission matrix offers: View Patients (View patient list and profiles; Read); Edit Patients (Modify patient information; Write); Delete Patients (Approve patient account deletion requests (FR-016); Delete).",
         "rationale": "Screen 4 permission matrix structure, admin platform categories. Rows copied from the PRD table (Permission, Description, Access Level)."
       }
     },
@@ -89510,9 +89597,9 @@
       "owner_fr": "FR-031",
       "title": "Admin permissions: Provider Management (A-02)",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Permission category \"Provider Management\" (A-02) in the admin permission matrix offers: View Providers (View provider list and profiles; Read); Edit Providers (Modify provider information; Write); Onboard Providers (Create new provider accounts; Write); Suspend Providers (Suspend/activate provider accounts; Delete).",
+        "statement": "Permission category \"Provider Management\" (A-02) in the admin permission matrix offers: View Providers (View provider list and profiles; Read); Edit Providers (Modify provider information; Write); Onboard Providers (Create new provider accounts; Write); Suspend Providers (Suspend/activate provider accounts, including Reject Request on an account-closure request; Delete).",
         "rationale": "Screen 4 permission matrix structure, admin platform categories. Rows copied from the PRD table (Permission, Description, Access Level)."
       }
     },
@@ -89547,9 +89634,9 @@
       "owner_fr": "FR-031",
       "title": "Admin permissions: Reviews & Ratings Management (A-01)",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Permission category \"Reviews & Ratings Management\" (A-01) in the admin permission matrix offers: View Reviews (View all patient reviews; Read); Moderate Reviews (Approve/reject/edit reviews; Write); Add Reviews (Import authenticated reviews for providers; Write); Manage Review Categories (Configure review categories and labels; Write).",
+        "statement": "Permission category \"Reviews & Ratings Management\" (A-01) in the admin permission matrix offers: View Reviews (View all patient reviews; Read); Moderate Reviews (Decide takedown requests, remove a review, remove a provider response and resolve a flag; Write); Add Reviews (Import authenticated reviews for providers; Write); Manage Review Categories (Configure review categories and labels; Write); Manage Review Settings (Configure photo guidelines, the removal reason catalog, flagging and the takedown decision deadline; Write); Export Reviews (Export review data (audited); Read).",
         "rationale": "Screen 4 permission matrix structure, admin platform categories. Rows copied from the PRD table (Permission, Description, Access Level)."
       }
     },
@@ -89559,9 +89646,9 @@
       "owner_fr": "FR-031",
       "title": "Admin permissions: Billing & Financial (A-05)",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Permission category \"Billing & Financial\" (A-05) in the admin permission matrix offers: View Transactions (View patient and provider transactions; Read); Process Payouts (Initiate provider payouts; Write); Issue Refunds (Process patient refunds; Write (requires approval; any admin holding this permission may approve, no second person is required; approval step defined in FR-007)); View Financial Reports (Access revenue analytics; Read); View Patient Billing (View patient invoices and payment status; Read); Send Payment Reminders (Send payment reminders to patients; Write); Download Invoices (Download patient/provider invoices; Read).",
+        "statement": "Permission category \"Billing & Financial\" (A-05) in the admin permission matrix offers: View Transactions (View patient and provider transactions; Read); Process Payouts (Initiate provider payouts; Write); Issue Refunds (Process patient refunds; Write (requires approval by another admin holding this permission, never the requester; the approval step and its 2-business-day escalation are defined in FR-007)); View Financial Reports (Access revenue analytics; Read); View Patient Billing (View patient invoices and payment status; Read); Send Payment Reminders (Send payment reminders to patients; Write); Retry Charge (Retry a failed patient payment charge (FR-007B); Write); Download Invoices (Download patient/provider invoices; Read).",
         "rationale": "Screen 4 permission matrix structure, admin platform categories. Rows copied from the PRD table (Permission, Description, Access Level)."
       }
     },
@@ -89583,9 +89670,9 @@
       "owner_fr": "FR-031",
       "title": "Admin permissions: Affiliate Management (A-07)",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Permission category \"Affiliate Management\" (A-07) in the admin permission matrix offers: View Affiliates (View affiliate list and details; Read); Create Affiliates (Add new affiliate accounts; Write); Edit Affiliates (Modify affiliate profiles and commission rules; Write); Process Affiliate Payouts (Process affiliate commission payments; Write); View Affiliate Performance (View referral counts and conversions; Read).",
+        "statement": "Permission category \"Affiliate Management\" (A-07) in the admin permission matrix offers: View Affiliates (View affiliate list and details; Read); Manage Affiliates (Add affiliates, edit profiles and commission rules, generate codes, suspend, reinstate, offboard and ban; Write (the Affiliate Program Settings panel and the commission ceiling override stay Super Admin only)); Process Affiliate Payouts (Process affiliate commission payments; Write); View Affiliate Performance (View referral counts and conversions; Read).",
         "rationale": "Screen 4 permission matrix structure, admin platform categories. Rows copied from the PRD table (Permission, Description, Access Level)."
       }
     },
@@ -89607,9 +89694,9 @@
       "owner_fr": "FR-031",
       "title": "Admin permissions: Communication & Support (A-10)",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Permission category \"Communication & Support\" (A-10) in the admin permission matrix offers: View Support Center (Access patient support cases; Read); Respond to Support (Send messages to patients/providers; Write); View Provider-Patient Messages (Monitor provider-to-patient communications; Read); Flag Communications (Flag suspicious or policy-violating messages; Write); Export Conversation Transcripts (Export chat transcripts for compliance; Read).",
+        "statement": "Permission category \"Communication & Support\" (A-10) in the admin permission matrix offers: View Support Center (Access patient support cases; Read); Respond to Support (Send messages to patients/providers; Write); View Provider-Patient Messages (Read patient and provider conversations for monitoring; Read); Flag Communications (Flag suspicious or policy-violating messages; Write); Enable Emergency Intervention (Step into a conversation as an emergency intervention (FR-012); Write); Export Conversation Transcripts (Export chat transcripts for compliance (deferred to a future phase; conversation export is not available yet); Read).",
         "rationale": "Screen 4 permission matrix structure, admin platform categories. Rows copied from the PRD table (Permission, Description, Access Level)."
       }
     },
@@ -89631,9 +89718,9 @@
       "owner_fr": "FR-031",
       "title": "Admin permissions: System Settings (A-09)",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Permission category \"System Settings\" (A-09) in the admin permission matrix offers: View Settings (View system configuration; Read); Edit Settings (Modify system settings; Write (Super Admin only)); Manage Users (Create/edit admin accounts; Write (Super Admin only)); Manage Roles (Create/edit roles and permissions; Write (Super Admin only)); Manage Terms & Conditions (Edit patient/provider terms and consent; Write); Manage App Data (Edit countries, discovery questions, location presentation; Write); Manage Treatment Catalog (Create/edit treatments and packages; Write); Manage Aftercare Templates (Create/edit aftercare milestone templates; Write); Manage Notification Templates (Edit email templates (OTP, confirmations); Write); Configure Payment Settings (Manage Stripe accounts, commission rates, split pay; Write); Manage Help Centre (Create/edit Help Centre content for providers; Write); View Sensitive Settings (View the full value of sensitive settings (for example API keys); Read); Manage Authentication Policies (Edit authentication policy settings (for example lockout and session timeout); Write).",
+        "statement": "Permission category \"System Settings\" (A-09) in the admin permission matrix offers: View Settings (View system configuration; Read); Edit Settings (Modify system settings; Write (Super Admin only)); Manage Users (Create/edit admin accounts; Write (Super Admin only)); Manage Roles (Create/edit roles and permissions; Write (Super Admin only)); Manage App Data (Edit countries, discovery questions, location presentation and starting prices; Write); Manage Treatment Catalog (Create, edit and deactivate treatments and manage the treatment types list; provider packages are view-only for admins; Write); Manage Aftercare Templates (Create/edit aftercare milestone templates; Write); Manage Notification Templates (Edit email templates (OTP, confirmations); Write); Configure Payment Settings (Manage Stripe accounts, commission rates, split pay (the permission FR-029 calls PaymentConfigAdmin); Write); Manage Help Centre (Create/edit Help Centre content for providers and patients; Write); View Sensitive Settings (View the full value of sensitive settings (for example API keys); Read); Manage Authentication Policies (Edit authentication policy settings (for example lockout, session timeout and the one-time-code (OTP) settings); Write); Manage Localization (Manage languages, translations and machine translation (FR-021); Write (editing English source values, changing the default language, publishing, rollback, moving a language to Active, the free-text translation switch and budget, and machine translation credentials stay Super Admin only)).",
         "rationale": "Screen 4 permission matrix structure, admin platform categories. Rows copied from the PRD table (Permission, Description, Access Level)."
       }
     },
@@ -89703,9 +89790,9 @@
       "owner_fr": "FR-031",
       "title": "Provider permissions: Team Management (PR-01)",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Permission category \"Team Management\" (PR-01) in the provider permission matrix offers: View Team Members (View team member list; Read); Invite Team Members (Send team member invitations; Write); Edit Team Member Roles (Change team member roles (non-Owner); Write (Owner or Manager only)); Remove Team Members (Remove or suspend team members; Write (Owner only)); View Team Activity (Access team activity logs; Read).",
+        "statement": "Permission category \"Team Management\" (PR-01) in the provider permission matrix offers: View Team Members (View team member list; Read); Invite Team Members (Send team member invitations; Write (a Manager may invite Clinical Staff and Billing Staff only)); Edit Team Member Roles (Change team member roles (non-Owner); Write (Owner or Manager only; a Manager may set only Clinical Staff and Billing Staff and cannot create a Manager)); Remove Team Members (Remove or suspend team members; Write (Owner: any non-Owner member; Manager: Clinical Staff and Billing Staff only)); View Team Activity (Access team activity logs; Read).",
         "rationale": "Screen 4 permission matrix structure, provider platform categories. Rows copied from the PRD table (Permission, Description, Access Level)."
       }
     },
@@ -89715,9 +89802,9 @@
       "owner_fr": "FR-031",
       "title": "Provider permissions: Provider Settings (PR-06)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Permission category \"Provider Settings\" (PR-06) in the provider permission matrix offers: View Profile (View provider profile information; Read); Edit Profile (Update provider profile details; Write); Manage Treatments (Add/edit treatment offerings; Write); Manage Promotions (Create and edit discount codes; Write); View Settings (View provider settings; Read); Edit Settings (Modify provider settings; Write (Owner only)).",
+        "statement": "Permission category \"Provider Settings\" (PR-06) in the provider permission matrix offers: View Profile (View provider profile information; Read); Edit Profile (Update provider profile details; Write); Manage Treatments (Set a treatment Offered or Not Offered and configure its pricing, including Quick Copy Pricing (FR-024); Write); Manage Packages (Create, edit, clone and deactivate packages and use quick price edit (FR-024); Write); Manage Promotions (Create and edit discount codes; Write); View Settings (View provider settings; Read); Edit Settings (Modify provider settings; Write (Owner only)).",
         "rationale": "Screen 4 permission matrix structure, provider platform categories. Rows copied from the PRD table (Permission, Description, Access Level)."
       }
     },
@@ -89763,10 +89850,130 @@
       "owner_fr": "FR-031",
       "title": "Role change must be acknowledged within 24 hours",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System MUST ask an admin user to acknowledge a role change within 24 hours; the acknowledgement time is stored on the account and shown to Super Admins",
+        "statement": "System MUST ask an admin user to acknowledge a role change within 24 hours of it taking effect; the acknowledgement time is stored on the account and shown to Super Admins, who see an \"Overdue\" flag when it is late; nothing is blocked and no reminder is sent.",
         "rationale": "PRD Functional Requirements Summary, REQ-031-124; Business Rule 10; Alternative Flow A2 step 13 (Acknowledge role change action as a banner after sign-in and a link in the email); Tab 2 notes; Screen 5 field Role Change Acknowledged; Key Entity 1."
+      }
+    },
+    {
+      "id": "REQ-031-125",
+      "type": "Rule",
+      "owner_fr": "FR-031",
+      "title": "A role change waits as a pending role until its Effective From",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "System MUST store a role change as a pending role with its Effective From (never earlier than now); the current role applies until Effective From, and a second change made before then replaces the pending one.",
+        "rationale": "PRD Business Rule 8; Alternative Flow A2 steps 6 to 14; Tab 2 pending-role note; Core Requirements."
+      }
+    },
+    {
+      "id": "REQ-031-126",
+      "type": "Rule",
+      "owner_fr": "FR-031",
+      "title": "Suspend, reactivate and delete admin accounts",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "System MUST let a Super Admin suspend (with a required reason), reactivate, and delete a suspended non-Super Admin account; suspension ends the user's sessions and emails the user, reactivation returns the account to Active and emails the user, and deletion anonymises the account under REQ-031-022 and keeps the audit entries. A Super Admin account can never be suspended, demoted or deleted inside the product.",
+        "rationale": "PRD Alternative Flow A8; Tab 2 actions; Business Rule 7; Admin Editability."
+      }
+    },
+    {
+      "id": "REQ-031-127",
+      "type": "Rule",
+      "owner_fr": "FR-031",
+      "title": "Pending Invitations sub-tab with resend and cancel",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "System MUST list every invitation not yet accepted (Invited, Expired or Pending Send) in a Pending Invitations sub-tab of the Admin Users tab, with Name, Email, Role, Invited by, Expires at and Status; a Super Admin can resend an invitation (REQ-031-042) or cancel it, and cancelling removes the Invited account, invalidates the invitation link and writes an audit entry.",
+        "rationale": "PRD Alternative Flows A1 and A9; Tab 2 Pending Invitations sub-tab."
+      }
+    },
+    {
+      "id": "REQ-031-128",
+      "type": "Rule",
+      "owner_fr": "FR-031",
+      "title": "Request New Invitation notifies all Super Admins",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "System MUST notify all Super Admins by email and in the app when an invitee uses Request New Invitation on an expired or invalid invitation link, with a link to the invitation row in the Pending Invitations sub-tab.",
+        "rationale": "PRD Alternative Flow A10; Screen 3 notes."
+      }
+    },
+    {
+      "id": "REQ-031-129",
+      "type": "Rule",
+      "owner_fr": "FR-031",
+      "title": "Delete and clone custom admin roles",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "System MUST let a Super Admin delete a custom admin role only while no admin user (including an Invited account) and no pending role change holds it, and MUST name a cloned role \"Copy of [role name]\", editable and cut to 50 characters; roles have no active or inactive status.",
+        "rationale": "PRD Alternative Flow A11; Tab 1 actions and rules."
+      }
+    },
+    {
+      "id": "REQ-031-130",
+      "type": "Rule",
+      "owner_fr": "FR-031",
+      "title": "Provider role sync failure is shown and retried",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "System MUST, when a provider role permission change fails to reach the Provider Platform, mark the role \"Sync failed\", retry automatically 3 times, send an in-app alert to all Super Admins, and show the role as \"not yet applied\" on the Provider Roles tab until a retry succeeds.",
+        "rationale": "PRD Alternative Flow A4 steps 17 to 19; Tab 3 sync indicator."
+      }
+    },
+    {
+      "id": "REQ-031-131",
+      "type": "Rule",
+      "owner_fr": "FR-031",
+      "title": "Editing an admin role applies to all its holders",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "System MUST let a Super Admin edit the permissions of an admin role other than Super Admin, show the sensitive-permission warning when needed, log the change with before and after, email every admin user holding the role, and apply the new permissions to everyone holding it from their next request without ending any session.",
+        "rationale": "PRD Alternative Flow A7."
+      }
+    },
+    {
+      "id": "REQ-031-132",
+      "type": "Rule",
+      "owner_fr": "FR-031",
+      "title": "User detail audit trail shows access-control events only",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The audit trail on the admin user detail screen shows access-control events only (sign-ins, access denials, invitations, role and permission changes, suspensions, reactivations and deletions); actions on patient accounts, reviews and other records stay in the logs of their own features, such as the FR-016 patient action log.",
+        "rationale": "PRD Screen 5 purpose and business rules."
+      }
+    },
+    {
+      "id": "REQ-031-133",
+      "type": "Rule",
+      "owner_fr": "FR-031",
+      "title": "Admin Terms of Service acceptance belongs to this feature",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "System MUST ask a new admin to accept the Admin Terms of Service when setting up the account; acceptance is recorded by this feature, while the legal text is edited under Edit Settings and viewed under View Settings in FR-027.",
+        "rationale": "PRD Main Flow steps 17 and 19; Screen 3 notes."
+      }
+    },
+    {
+      "id": "REQ-031-134",
+      "type": "Rule",
+      "owner_fr": "FR-031",
+      "title": "Default permission tables are complete defaults",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "System MUST define each predefined role's default permissions as a full table: Super Admin holds every admin permission, Owner holds every provider permission, and for every other predefined role a permission not listed in its default table is off; Reset to Default restores exactly that table.",
+        "rationale": "PRD Screen 4 default permission tables and Reset to Default."
       }
     },
     {
@@ -101258,10 +101465,10 @@
       "owner_fr": "FR-031",
       "title": "User Roles & Permissions",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
-        "description": "Admin Platform, Settings > User Roles & Permissions, three tabs: Admin Roles, Admin Users, Provider Roles (PRD Screen 1). UI controls, not fields: tab switcher, role list action buttons (Edit Permissions, View Users, Clone Role; disabled for Super Admin), Create Custom Role, Invite Team Member, user action menu (Change Role, Suspend, View Audit), search bar and filters (Tab 2 specified in FR-022 REQ-022-115, Tab 1 in REQ-022-116), pending invitations sub-tab and notification dot, sync status indicator, warning banner when only one Super Admin exists. Tab 3 View Users links to FR-015. Tab 2 rows also show whether the user has acknowledged the latest role change (Acknowledged or Awaiting acknowledgement)."
+        "description": "Admin Platform, Settings > User Roles & Permissions, three tabs: Admin Roles, Admin Users, Provider Roles (PRD Screen 1). UI controls, not fields: tab switcher, role list action buttons (Edit Permissions, View Users, Clone Role, and Delete on custom roles; Edit Permissions and Clone Role are disabled for Super Admin), Create Custom Role, Invite Team Member, user action menu (Change Role, Suspend or Reactivate, Delete on a suspended account, View Audit; a Super Admin row shows View Audit only), search bar and filters (Tab 2 specified in FR-022 REQ-022-115, Tab 1 in REQ-022-116), Pending Invitations sub-tab (Resend, Cancel) and notification dot, sync status indicator, warning banner when only one Super Admin exists. Tab 3 View Users links to FR-015. Tab 2 rows also show whether the user has acknowledged the latest role change (Acknowledged, Awaiting acknowledgement or Overdue) and any pending role change with its Effective From."
       }
     },
     {
@@ -101306,10 +101513,10 @@
       "owner_fr": "FR-031",
       "title": "User Detail & Audit Trail",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
-        "description": "Admin Platform page with an admin user's profile and audit trail (PRD Screen 5). UI controls: Send Password Reset, Load More, Export audit trail to CSV, security alerts, audit filters (specified in FR-022 REQ-022-117). Admin actions on a patient account (FR-016) appear in the acting admin's audit trail; the records stay separate. Shows the Role Change Acknowledged status."
+        "description": "Admin Platform page with an admin user's profile and audit trail (PRD Screen 5). UI controls: Send Password Reset, Load More, Export audit trail to CSV, security alerts, audit filters (specified in FR-022 REQ-022-117). The audit trail shows access-control events only (REQ-031-132); actions on patient accounts stay in the FR-016 patient action log, and patient accounts and admin accounts remain separate records. Shows the Role Change Acknowledged status (Acknowledged, Awaiting acknowledgement or Overdue)."
       }
     },
     {
@@ -102401,9 +102608,9 @@
       "owner_fr": "FR-031",
       "title": "Admin invitation token expiry",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Lifetime of an admin team invitation token, configurable by Super Admin in A-09 settings; range 1-30 days. Separate from FR-009's provider invitation setting; whether they are one setting is an open question.",
+        "description": "Lifetime of an admin team invitation token, configurable by Super Admin in A-09 settings; range 1-30 days, 7 days at launch. It applies to admin team invitations only.",
         "default": "7",
         "unit": "days"
       }
@@ -102414,11 +102621,24 @@
       "owner_fr": "FR-031",
       "title": "Repeated access denial alert threshold",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Refusals of one admin that trigger the Super Admin alert: 5 refusals within 10 minutes at launch; both the count and the 10-minute window are admin settings in A-09 (FR-031 Alternative Flow B5, Admin Editability).",
+        "description": "Refusals of one admin that trigger the Super Admin alert: 5 refusals at launch; an admin setting in A-09 (FR-031 Alternative Flow B5, Admin Editability). The time window is SET-admin-repeated-denial-window.",
         "default": "5",
         "unit": "refusals"
+      }
+    },
+    {
+      "id": "SET-admin-repeated-denial-window",
+      "type": "Setting",
+      "owner_fr": "FR-031",
+      "title": "Repeated access denial time window",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Time window in which the refusals of one admin are counted for the Super Admin alert: 10 minutes at launch; admin setting in A-09 (FR-031 Alternative Flow B5, Admin Editability).",
+        "default": "10",
+        "unit": "minutes"
       }
     },
     {
@@ -126348,9 +126568,9 @@
       "id": "STP-031-010",
       "type": "Step",
       "owner_fr": "FR-031",
-      "title": "System generates a seven-day token",
+      "title": "System generates the invitation token with the configured expiry",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow step 10"
       }
@@ -126359,9 +126579,9 @@
       "id": "STP-031-011",
       "type": "Step",
       "owner_fr": "FR-031",
-      "title": "System emails the invitation",
+      "title": "System creates the Invited account",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow step 11"
       }
@@ -126370,9 +126590,9 @@
       "id": "STP-031-012",
       "type": "Step",
       "owner_fr": "FR-031",
-      "title": "System creates the Invited record",
+      "title": "System emails the invitation",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow step 12"
       }
@@ -126436,9 +126656,9 @@
       "id": "STP-031-020",
       "type": "Step",
       "owner_fr": "FR-031",
-      "title": "System creates the admin account",
+      "title": "System sets the account Active",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow step 20"
       }
@@ -126502,9 +126722,9 @@
       "id": "STP-031-101",
       "type": "Step",
       "owner_fr": "FR-031",
-      "title": "Super Admin views pending invitations",
+      "title": "Super Admin opens the Pending Invitations sub-tab",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "A1 step 1"
       }
@@ -126513,9 +126733,9 @@
       "id": "STP-031-102",
       "type": "Step",
       "owner_fr": "FR-031",
-      "title": "System shows Expired",
+      "title": "System shows each invitation's status",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "A1 step 2"
       }
@@ -126551,6 +126771,72 @@
       "version": 2,
       "attrs": {
         "prd_ref": "A1 step 5"
+      }
+    },
+    {
+      "id": "STP-031-121",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "Super Admin clicks Cancel on an invitation in the Pending Invitations sub-tab",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A9 step 1"
+      }
+    },
+    {
+      "id": "STP-031-122",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "System asks for confirmation",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A9 step 2"
+      }
+    },
+    {
+      "id": "STP-031-123",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "System removes the Invited account, invalidates the invitation link and logs the cancellation",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A9 step 3"
+      }
+    },
+    {
+      "id": "STP-031-131",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "System shows the error page with a Request New Invitation option",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A10 step 1"
+      }
+    },
+    {
+      "id": "STP-031-132",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "Invitee clicks Request New Invitation",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A10 step 2"
+      }
+    },
+    {
+      "id": "STP-031-133",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "System notifies all Super Admins by email and in the app",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A10 step 3"
       }
     },
     {
@@ -126645,9 +126931,9 @@
       "id": "STP-031-210",
       "type": "Step",
       "owner_fr": "FR-031",
-      "title": "System updates role assignment",
+      "title": "System stores the new role as the pending role",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "A2 step 10"
       }
@@ -126678,9 +126964,9 @@
       "id": "STP-031-213",
       "type": "Step",
       "owner_fr": "FR-031",
-      "title": "System enforces new role on next API call",
+      "title": "At Effective From the pending role applies and System enforces it on the next API call",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "A2 step 14"
       }
@@ -126689,11 +126975,88 @@
       "id": "STP-031-214",
       "type": "Step",
       "owner_fr": "FR-031",
-      "title": "System shows the Acknowledge role change action",
+      "title": "System shows the Acknowledge role change action once the change takes effect",
+      "status": "active",
+      "version": 2,
+      "attrs": {
+        "prd_ref": "A2 step 13"
+      }
+    },
+    {
+      "id": "STP-031-221",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "Super Admin clicks Suspend on a non-Super Admin user's row",
       "status": "active",
       "version": 1,
       "attrs": {
-        "prd_ref": "A2 step 13"
+        "prd_ref": "A8 step 1"
+      }
+    },
+    {
+      "id": "STP-031-222",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "System asks for confirmation and a required reason",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A8 step 2"
+      }
+    },
+    {
+      "id": "STP-031-223",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "System sets Suspended, ends the user's sessions, emails the user and logs the action with the reason",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A8 step 3"
+      }
+    },
+    {
+      "id": "STP-031-224",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "Super Admin clicks Reactivate on the suspended user",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A8 step 4"
+      }
+    },
+    {
+      "id": "STP-031-225",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "System sets the account Active, emails the user and logs the action",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A8 step 4"
+      }
+    },
+    {
+      "id": "STP-031-226",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "Super Admin clicks Delete on the suspended user and confirms",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A8 step 5"
+      }
+    },
+    {
+      "id": "STP-031-227",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "System anonymises the user's name and email, keeps the audit entries and logs the deletion",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A8 step 5"
       }
     },
     {
@@ -126815,6 +127178,50 @@
       "version": 2,
       "attrs": {
         "prd_ref": "A3 step 12"
+      }
+    },
+    {
+      "id": "STP-031-321",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "Super Admin clicks Delete on a custom admin role",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A11 step 1"
+      }
+    },
+    {
+      "id": "STP-031-322",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "System blocks the deletion while any admin user or pending role change holds the role",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A11 step 2"
+      }
+    },
+    {
+      "id": "STP-031-323",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "System asks for confirmation, deletes the role and logs the deletion",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A11 step 3"
+      }
+    },
+    {
+      "id": "STP-031-324",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "Super Admin clicks Clone Role; System opens the creation form named Copy of the role, cut to 50 characters",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A11 step 4"
       }
     },
     {
@@ -126955,7 +127362,7 @@
       "owner_fr": "FR-031",
       "title": "System syncs to Provider Platform",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "A4 step 14"
       }
@@ -126980,6 +127387,105 @@
       "version": 2,
       "attrs": {
         "prd_ref": "A4 step 16"
+      }
+    },
+    {
+      "id": "STP-031-417",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "If the sync fails, System marks the role Sync failed and retries automatically 3 times",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A4 step 17"
+      }
+    },
+    {
+      "id": "STP-031-418",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "System sends an in-app alert to all Super Admins",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A4 step 18"
+      }
+    },
+    {
+      "id": "STP-031-419",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "The Provider Roles tab shows the role as not yet applied until a retry succeeds",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A4 step 19"
+      }
+    },
+    {
+      "id": "STP-031-421",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "Super Admin clicks Edit Permissions on an admin role",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A7 step 1"
+      }
+    },
+    {
+      "id": "STP-031-422",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "System opens the Permission Matrix Modal with the role's current permissions",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A7 step 2"
+      }
+    },
+    {
+      "id": "STP-031-423",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "Super Admin changes permissions and saves; System shows the comparison and the sensitive-permission warning when needed",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A7 step 3"
+      }
+    },
+    {
+      "id": "STP-031-424",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "System saves the matrix and logs the change with before and after",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A7 step 4"
+      }
+    },
+    {
+      "id": "STP-031-425",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "System emails every admin user holding the role",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A7 step 5"
+      }
+    },
+    {
+      "id": "STP-031-426",
+      "type": "Step",
+      "owner_fr": "FR-031",
+      "title": "System checks the updated permissions on each user's next request without ending sessions",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A7 step 6"
       }
     },
     {
@@ -136219,6 +136725,22 @@
       "name": "password_hash",
       "data_type": "text",
       "required": true,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-admin-user-account.pending_role_effective_from",
+      "entity_id": "ENT-admin-user-account",
+      "name": "pending_role_effective_from",
+      "data_type": "datetime",
+      "required": false,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-admin-user-account.pending_role_id",
+      "entity_id": "ENT-admin-user-account",
+      "name": "pending_role_id",
+      "data_type": "id",
+      "required": false,
       "calculated_by": null
     },
     {
@@ -158874,6 +159396,72 @@
       "sort_order": 5
     },
     {
+      "field_id": "ENT-admin-audit-trail-entry.action_type",
+      "value": "user_reactivated",
+      "label": "User Reactivated",
+      "sort_order": 6
+    },
+    {
+      "field_id": "ENT-admin-audit-trail-entry.action_type",
+      "value": "user_deleted",
+      "label": "User Deleted",
+      "sort_order": 7
+    },
+    {
+      "field_id": "ENT-admin-audit-trail-entry.action_type",
+      "value": "account_created",
+      "label": "Account Created",
+      "sort_order": 8
+    },
+    {
+      "field_id": "ENT-admin-audit-trail-entry.action_type",
+      "value": "role_created",
+      "label": "Role Created",
+      "sort_order": 9
+    },
+    {
+      "field_id": "ENT-admin-audit-trail-entry.action_type",
+      "value": "role_deleted",
+      "label": "Role Deleted",
+      "sort_order": 10
+    },
+    {
+      "field_id": "ENT-admin-audit-trail-entry.action_type",
+      "value": "role_permissions_edited",
+      "label": "Role Permissions Edited",
+      "sort_order": 11
+    },
+    {
+      "field_id": "ENT-admin-audit-trail-entry.action_type",
+      "value": "invitation_sent",
+      "label": "Invitation Sent",
+      "sort_order": 12
+    },
+    {
+      "field_id": "ENT-admin-audit-trail-entry.action_type",
+      "value": "invitation_resent",
+      "label": "Invitation Resent",
+      "sort_order": 13
+    },
+    {
+      "field_id": "ENT-admin-audit-trail-entry.action_type",
+      "value": "invitation_cancelled",
+      "label": "Invitation Cancelled",
+      "sort_order": 14
+    },
+    {
+      "field_id": "ENT-admin-audit-trail-entry.action_type",
+      "value": "invitation_delivery_failed",
+      "label": "Invitation Delivery Failed",
+      "sort_order": 15
+    },
+    {
+      "field_id": "ENT-admin-audit-trail-entry.action_type",
+      "value": "sensitive_access",
+      "label": "Sensitive Access",
+      "sort_order": 16
+    },
+    {
       "field_id": "ENT-admin-audit-trail-entry.outcome",
       "value": "success",
       "label": "Success",
@@ -158923,15 +159511,15 @@
     },
     {
       "field_id": "ENT-admin-user-account.status",
-      "value": "pending",
-      "label": "Pending",
-      "sort_order": 1
-    },
-    {
-      "field_id": "ENT-admin-user-account.status",
       "value": "suspended",
       "label": "Suspended",
       "sort_order": 2
+    },
+    {
+      "field_id": "ENT-admin-user-account.status",
+      "value": "invited",
+      "label": "Invited",
+      "sort_order": 3
     },
     {
       "field_id": "ENT-affiliate-attribution.booking_status",
@@ -175316,6 +175904,18 @@
       "attrs": {}
     },
     {
+      "from_id": "FLW-031-a10-request-new-invitation",
+      "verb": "starts at",
+      "to_id": "STP-031-131",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-031-a11-delete-clone-role",
+      "verb": "starts at",
+      "to_id": "STP-031-321",
+      "attrs": {}
+    },
+    {
       "from_id": "FLW-031-a2-role-change",
       "verb": "starts at",
       "to_id": "STP-031-201",
@@ -175331,6 +175931,24 @@
       "from_id": "FLW-031-a4-provider-role-permissions",
       "verb": "starts at",
       "to_id": "STP-031-401",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-031-a7-edit-admin-role",
+      "verb": "starts at",
+      "to_id": "STP-031-421",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-031-a8-suspend-reactivate-delete",
+      "verb": "starts at",
+      "to_id": "STP-031-221",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-031-a9-cancel-invitation",
+      "verb": "starts at",
+      "to_id": "STP-031-121",
       "attrs": {}
     },
     {
@@ -181008,7 +181626,7 @@
       "verb": "active in",
       "to_id": "STG-admin-01-configuration",
       "attrs": {
-        "rules": 106
+        "rules": 116
       },
       "derived": true
     },
@@ -181025,6 +181643,12 @@
       "from_id": "FR-031",
       "verb": "references",
       "to_id": "REQ-007-015",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-031",
+      "verb": "references",
+      "to_id": "REQ-015-069",
       "attrs": {}
     },
     {
@@ -181048,7 +181672,31 @@
     {
       "from_id": "FR-031",
       "verb": "references",
+      "to_id": "REQ-026-116",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-031",
+      "verb": "references",
+      "to_id": "REQ-027-011",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-031",
+      "verb": "references",
+      "to_id": "REQ-027-025",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-031",
+      "verb": "references",
       "to_id": "REQ-030-008",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-031",
+      "verb": "references",
+      "to_id": "REQ-034-094",
       "attrs": {}
     },
     {
@@ -288493,6 +289141,12 @@
     {
       "from_id": "REQ-031-011",
       "verb": "applies to",
+      "to_id": "ENT-admin-user-account.pending_role_effective_from",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-011",
+      "verb": "applies to",
       "to_id": "ENT-admin-user-account.role_effective_from",
       "attrs": {}
     },
@@ -290065,6 +290719,18 @@
     {
       "from_id": "REQ-031-082",
       "verb": "applies to",
+      "to_id": "ENT-admin-user-account.pending_role_effective_from",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-082",
+      "verb": "applies to",
+      "to_id": "ENT-admin-user-account.pending_role_id",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-082",
+      "verb": "applies to",
       "to_id": "ENT-admin-user-account.role_effective_from",
       "attrs": {}
     },
@@ -290264,6 +290930,12 @@
       "from_id": "REQ-031-090",
       "verb": "governed by",
       "to_id": "SET-admin-repeated-denial-threshold",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-090",
+      "verb": "governed by",
+      "to_id": "SET-admin-repeated-denial-window",
       "attrs": {}
     },
     {
@@ -291078,6 +291750,324 @@
     },
     {
       "from_id": "REQ-031-124",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-031",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-125",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-125",
+      "verb": "applies to",
+      "to_id": "ACT-super-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-125",
+      "verb": "applies to",
+      "to_id": "ENT-admin-user-account.pending_role_effective_from",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-125",
+      "verb": "applies to",
+      "to_id": "ENT-admin-user-account.pending_role_id",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-125",
+      "verb": "applies to",
+      "to_id": "SCR-031-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-125",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-031",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-126",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-126",
+      "verb": "applies to",
+      "to_id": "ACT-super-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-126",
+      "verb": "applies to",
+      "to_id": "ENT-admin-user-account.status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-126",
+      "verb": "applies to",
+      "to_id": "SCR-031-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-126",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-031",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-127",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-127",
+      "verb": "applies to",
+      "to_id": "ACT-super-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-127",
+      "verb": "applies to",
+      "to_id": "ENT-admin-user-account.invitation_status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-127",
+      "verb": "applies to",
+      "to_id": "SCR-031-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-127",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-031",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-128",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-128",
+      "verb": "applies to",
+      "to_id": "ACT-admin-invitee",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-128",
+      "verb": "applies to",
+      "to_id": "ACT-super-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-128",
+      "verb": "applies to",
+      "to_id": "SCR-031-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-128",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-031",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-129",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-129",
+      "verb": "applies to",
+      "to_id": "ACT-super-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-129",
+      "verb": "applies to",
+      "to_id": "ENT-role-permission-definition",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-129",
+      "verb": "applies to",
+      "to_id": "SCR-031-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-129",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-031",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-130",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-130",
+      "verb": "applies to",
+      "to_id": "ACT-super-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-130",
+      "verb": "applies to",
+      "to_id": "ENT-role-permission-definition.last_synced_at",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-130",
+      "verb": "applies to",
+      "to_id": "SCR-031-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-130",
+      "verb": "applies to",
+      "to_id": "SCR-031-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-130",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-031",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-131",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-131",
+      "verb": "applies to",
+      "to_id": "ACT-super-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-131",
+      "verb": "applies to",
+      "to_id": "ENT-role-permission-definition.permissions",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-131",
+      "verb": "applies to",
+      "to_id": "SCR-031-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-131",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-031",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-132",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-132",
+      "verb": "applies to",
+      "to_id": "ENT-admin-audit-trail-entry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-132",
+      "verb": "applies to",
+      "to_id": "ENT-admin-audit-trail-entry.action_type",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-132",
+      "verb": "applies to",
+      "to_id": "SCR-031-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-132",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-031",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-133",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-133",
+      "verb": "applies to",
+      "to_id": "ACT-admin-invitee",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-133",
+      "verb": "applies to",
+      "to_id": "ENT-admin-user-account.terms_accepted_at",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-133",
+      "verb": "applies to",
+      "to_id": "SCR-031-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-133",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-031",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-134",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-134",
+      "verb": "applies to",
+      "to_id": "ACT-super-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-134",
+      "verb": "applies to",
+      "to_id": "ENT-role-permission-definition",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-134",
+      "verb": "applies to",
+      "to_id": "ENT-role-permission-definition.permissions",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-134",
+      "verb": "applies to",
+      "to_id": "SCR-031-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-031-134",
       "verb": "decided by",
       "to_id": "SRC-PRD-031",
       "attrs": {}
@@ -342327,6 +343317,26 @@
       "attrs": {
         "provenance": "retrieved",
         "label": "User Name",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-031-01",
+      "verb": "shows",
+      "to_id": "ENT-admin-user-account.pending_role_effective_from",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Pending Role Effective From",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-031-01",
+      "verb": "shows",
+      "to_id": "ENT-admin-user-account.pending_role_id",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Pending Role",
         "editable": false
       }
     },
@@ -421874,7 +422884,7 @@
     {
       "from_id": "STP-031-011",
       "verb": "applies",
-      "to_id": "REQ-031-038",
+      "to_id": "REQ-031-039",
       "attrs": {}
     },
     {
@@ -421904,7 +422914,7 @@
     {
       "from_id": "STP-031-012",
       "verb": "applies",
-      "to_id": "REQ-031-039",
+      "to_id": "REQ-031-038",
       "attrs": {}
     },
     {
@@ -422454,6 +423464,190 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-031-121",
+      "verb": "applies",
+      "to_id": "REQ-031-127",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-121",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-121",
+      "verb": "done by",
+      "to_id": "ACT-super-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-121",
+      "verb": "next",
+      "to_id": "STP-031-122",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-031-121",
+      "verb": "on",
+      "to_id": "SCR-031-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-122",
+      "verb": "applies",
+      "to_id": "REQ-031-127",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-122",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-122",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-122",
+      "verb": "next",
+      "to_id": "STP-031-123",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-031-122",
+      "verb": "on",
+      "to_id": "SCR-031-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-123",
+      "verb": "applies",
+      "to_id": "REQ-031-127",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-123",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-123",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-123",
+      "verb": "on",
+      "to_id": "SCR-031-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-131",
+      "verb": "applies",
+      "to_id": "REQ-031-040",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-131",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-131",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-131",
+      "verb": "next",
+      "to_id": "STP-031-132",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-031-131",
+      "verb": "on",
+      "to_id": "SCR-031-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-132",
+      "verb": "applies",
+      "to_id": "REQ-031-128",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-132",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-132",
+      "verb": "done by",
+      "to_id": "ACT-admin-invitee",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-132",
+      "verb": "next",
+      "to_id": "STP-031-133",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-031-132",
+      "verb": "on",
+      "to_id": "SCR-031-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-133",
+      "verb": "applies",
+      "to_id": "REQ-031-128",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-133",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-133",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-133",
+      "verb": "next",
+      "to_id": "STP-031-103",
+      "attrs": {
+        "label": "a Super Admin resends the invitation"
+      }
+    },
+    {
+      "from_id": "STP-031-133",
+      "verb": "on",
+      "to_id": "SCR-031-03",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-031-201",
       "verb": "applies",
       "to_id": "REQ-031-054",
@@ -422743,6 +423937,12 @@
     },
     {
       "from_id": "STP-031-210",
+      "verb": "applies",
+      "to_id": "REQ-031-125",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-210",
       "verb": "at",
       "to_id": "STG-admin-01-configuration",
       "attrs": {}
@@ -422839,6 +424039,12 @@
     },
     {
       "from_id": "STP-031-213",
+      "verb": "applies",
+      "to_id": "REQ-031-125",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-213",
       "verb": "at",
       "to_id": "STG-admin-01-configuration",
       "attrs": {}
@@ -422881,6 +424087,242 @@
     },
     {
       "from_id": "STP-031-214",
+      "verb": "on",
+      "to_id": "SCR-031-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-221",
+      "verb": "applies",
+      "to_id": "REQ-031-053",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-221",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-221",
+      "verb": "done by",
+      "to_id": "ACT-super-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-221",
+      "verb": "next",
+      "to_id": "STP-031-222",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-031-221",
+      "verb": "on",
+      "to_id": "SCR-031-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-222",
+      "verb": "applies",
+      "to_id": "REQ-031-126",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-222",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-222",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-222",
+      "verb": "next",
+      "to_id": "STP-031-223",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-031-222",
+      "verb": "on",
+      "to_id": "SCR-031-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-223",
+      "verb": "applies",
+      "to_id": "REQ-031-021",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-223",
+      "verb": "applies",
+      "to_id": "REQ-031-053",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-223",
+      "verb": "applies",
+      "to_id": "REQ-031-126",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-223",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-223",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-223",
+      "verb": "next",
+      "to_id": "STP-031-224",
+      "attrs": {
+        "label": "to restore access",
+        "condition": "REQ-031-126"
+      }
+    },
+    {
+      "from_id": "STP-031-223",
+      "verb": "next",
+      "to_id": "STP-031-226",
+      "attrs": {
+        "label": "to remove the account",
+        "condition": "REQ-031-126"
+      }
+    },
+    {
+      "from_id": "STP-031-223",
+      "verb": "on",
+      "to_id": "SCR-031-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-224",
+      "verb": "applies",
+      "to_id": "REQ-031-126",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-224",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-224",
+      "verb": "done by",
+      "to_id": "ACT-super-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-224",
+      "verb": "next",
+      "to_id": "STP-031-225",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-031-224",
+      "verb": "on",
+      "to_id": "SCR-031-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-225",
+      "verb": "applies",
+      "to_id": "REQ-031-126",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-225",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-225",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-225",
+      "verb": "on",
+      "to_id": "SCR-031-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-226",
+      "verb": "applies",
+      "to_id": "REQ-031-126",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-226",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-226",
+      "verb": "done by",
+      "to_id": "ACT-super-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-226",
+      "verb": "next",
+      "to_id": "STP-031-227",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-031-226",
+      "verb": "on",
+      "to_id": "SCR-031-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-227",
+      "verb": "applies",
+      "to_id": "REQ-031-022",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-227",
+      "verb": "applies",
+      "to_id": "REQ-031-126",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-227",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-227",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-227",
       "verb": "on",
       "to_id": "SCR-031-01",
       "attrs": {}
@@ -423247,6 +424689,141 @@
     },
     {
       "from_id": "STP-031-312",
+      "verb": "on",
+      "to_id": "SCR-031-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-321",
+      "verb": "applies",
+      "to_id": "REQ-031-129",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-321",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-321",
+      "verb": "done by",
+      "to_id": "ACT-super-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-321",
+      "verb": "next",
+      "to_id": "STP-031-322",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-031-321",
+      "verb": "next",
+      "to_id": "STP-031-324",
+      "attrs": {
+        "label": "Clone Role instead",
+        "condition": "REQ-031-129"
+      }
+    },
+    {
+      "from_id": "STP-031-321",
+      "verb": "on",
+      "to_id": "SCR-031-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-322",
+      "verb": "applies",
+      "to_id": "REQ-031-129",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-322",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-322",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-322",
+      "verb": "next",
+      "to_id": "STP-031-323",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-031-322",
+      "verb": "on",
+      "to_id": "SCR-031-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-323",
+      "verb": "applies",
+      "to_id": "REQ-031-129",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-323",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-323",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-323",
+      "verb": "on",
+      "to_id": "SCR-031-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-324",
+      "verb": "applies",
+      "to_id": "REQ-031-057",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-324",
+      "verb": "applies",
+      "to_id": "REQ-031-129",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-324",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-324",
+      "verb": "done by",
+      "to_id": "ACT-super-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-324",
+      "verb": "next",
+      "to_id": "STP-031-308",
+      "attrs": {
+        "label": "saving continues as in A3"
+      }
+    },
+    {
+      "from_id": "STP-031-324",
       "verb": "on",
       "to_id": "SCR-031-01",
       "attrs": {}
@@ -423673,6 +425250,15 @@
     },
     {
       "from_id": "STP-031-414",
+      "verb": "next",
+      "to_id": "STP-031-417",
+      "attrs": {
+        "label": "sync fails",
+        "condition": "REQ-031-130"
+      }
+    },
+    {
+      "from_id": "STP-031-414",
       "verb": "on",
       "to_id": "SCR-031-04",
       "attrs": {}
@@ -423729,6 +425315,302 @@
       "from_id": "STP-031-416",
       "verb": "on",
       "to_id": "SCR-031-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-417",
+      "verb": "applies",
+      "to_id": "REQ-031-130",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-417",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-417",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-417",
+      "verb": "next",
+      "to_id": "STP-031-418",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-031-417",
+      "verb": "on",
+      "to_id": "SCR-031-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-418",
+      "verb": "applies",
+      "to_id": "REQ-031-130",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-418",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-418",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-418",
+      "verb": "next",
+      "to_id": "STP-031-419",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-031-418",
+      "verb": "on",
+      "to_id": "SCR-031-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-419",
+      "verb": "applies",
+      "to_id": "REQ-031-079",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-419",
+      "verb": "applies",
+      "to_id": "REQ-031-130",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-419",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-419",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-419",
+      "verb": "on",
+      "to_id": "SCR-031-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-421",
+      "verb": "applies",
+      "to_id": "REQ-031-131",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-421",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-421",
+      "verb": "done by",
+      "to_id": "ACT-super-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-421",
+      "verb": "next",
+      "to_id": "STP-031-422",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-031-421",
+      "verb": "on",
+      "to_id": "SCR-031-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-422",
+      "verb": "applies",
+      "to_id": "REQ-031-131",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-422",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-422",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-422",
+      "verb": "next",
+      "to_id": "STP-031-423",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-031-422",
+      "verb": "on",
+      "to_id": "SCR-031-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-423",
+      "verb": "applies",
+      "to_id": "REQ-031-073",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-423",
+      "verb": "applies",
+      "to_id": "REQ-031-075",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-423",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-423",
+      "verb": "done by",
+      "to_id": "ACT-super-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-423",
+      "verb": "next",
+      "to_id": "STP-031-424",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-031-423",
+      "verb": "on",
+      "to_id": "SCR-031-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-424",
+      "verb": "applies",
+      "to_id": "REQ-031-081",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-424",
+      "verb": "applies",
+      "to_id": "REQ-031-131",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-424",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-424",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-424",
+      "verb": "next",
+      "to_id": "STP-031-425",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-031-424",
+      "verb": "on",
+      "to_id": "SCR-031-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-425",
+      "verb": "applies",
+      "to_id": "REQ-031-032",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-425",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-425",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-425",
+      "verb": "next",
+      "to_id": "STP-031-426",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-031-425",
+      "verb": "on",
+      "to_id": "SCR-031-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-426",
+      "verb": "applies",
+      "to_id": "REQ-031-087",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-426",
+      "verb": "applies",
+      "to_id": "REQ-031-131",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-426",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-426",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-031-426",
+      "verb": "on",
+      "to_id": "SCR-031-01",
       "attrs": {}
     },
     {
@@ -450075,6 +451957,127 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-182232-7364c37c",
+      "at": "2026-11-24T18:22:32.371723+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-031 logic review pass 1: invitation creates the account as Invited with steps and labels aligned, pending role with Effective From, Super Admin accounts cannot be demoted, suspended or deleted in the product, suspend, reactivate and delete flows, widened sensitive permission list, provider team-removal and refund-approval rules corrected, audit trail limited to access-control events with a 30-day default and wider action types, new flows for editing admin role permissions, cancelling invitations, requesting a new invitation, deleting and cloning roles and provider sync failure, permission rows added or reworded for messaging, localization, reviews, treatments, packages, patients, retry charge and affiliates, full default tables, and settings pointers to FR-021, FR-027 and FR-034.",
+      "source_id": null,
+      "nodes_added": [
+        "ENT-admin-user-account.pending_role_effective_from",
+        "ENT-admin-user-account.pending_role_id",
+        "FLW-031-a10-request-new-invitation",
+        "FLW-031-a11-delete-clone-role",
+        "FLW-031-a7-edit-admin-role",
+        "FLW-031-a8-suspend-reactivate-delete",
+        "FLW-031-a9-cancel-invitation",
+        "REQ-031-125",
+        "REQ-031-126",
+        "REQ-031-127",
+        "REQ-031-128",
+        "REQ-031-129",
+        "REQ-031-130",
+        "REQ-031-131",
+        "REQ-031-132",
+        "REQ-031-133",
+        "REQ-031-134",
+        "SET-admin-repeated-denial-window",
+        "STP-031-121",
+        "STP-031-122",
+        "STP-031-123",
+        "STP-031-131",
+        "STP-031-132",
+        "STP-031-133",
+        "STP-031-221",
+        "STP-031-222",
+        "STP-031-223",
+        "STP-031-224",
+        "STP-031-225",
+        "STP-031-226",
+        "STP-031-227",
+        "STP-031-321",
+        "STP-031-322",
+        "STP-031-323",
+        "STP-031-324",
+        "STP-031-417",
+        "STP-031-418",
+        "STP-031-419",
+        "STP-031-421",
+        "STP-031-422",
+        "STP-031-423",
+        "STP-031-424",
+        "STP-031-425",
+        "STP-031-426"
+      ],
+      "nodes_updated": [
+        "ENT-admin-audit-trail-entry.action_type",
+        "ENT-admin-user-account.role_effective_from",
+        "ENT-admin-user-account.status",
+        "ENT-permission.is_sensitive",
+        "ENT-role-permission-definition.last_synced_at",
+        "FR-031",
+        "REQ-031-009",
+        "REQ-031-011",
+        "REQ-031-012",
+        "REQ-031-014",
+        "REQ-031-033",
+        "REQ-031-035",
+        "REQ-031-036",
+        "REQ-031-037",
+        "REQ-031-038",
+        "REQ-031-039",
+        "REQ-031-040",
+        "REQ-031-042",
+        "REQ-031-043",
+        "REQ-031-046",
+        "REQ-031-049",
+        "REQ-031-053",
+        "REQ-031-054",
+        "REQ-031-057",
+        "REQ-031-067",
+        "REQ-031-068",
+        "REQ-031-069",
+        "REQ-031-070",
+        "REQ-031-072",
+        "REQ-031-073",
+        "REQ-031-076",
+        "REQ-031-077",
+        "REQ-031-079",
+        "REQ-031-082",
+        "REQ-031-085",
+        "REQ-031-090",
+        "REQ-031-093",
+        "REQ-031-094",
+        "REQ-031-099",
+        "REQ-031-102",
+        "REQ-031-103",
+        "REQ-031-106",
+        "REQ-031-107",
+        "REQ-031-109",
+        "REQ-031-111",
+        "REQ-031-113",
+        "REQ-031-119",
+        "REQ-031-120",
+        "REQ-031-124",
+        "SCR-031-01",
+        "SCR-031-05",
+        "SET-admin-invitation-token-expiry",
+        "SET-admin-repeated-denial-threshold",
+        "STP-031-010",
+        "STP-031-011",
+        "STP-031-012",
+        "STP-031-020",
+        "STP-031-101",
+        "STP-031-102",
+        "STP-031-210",
+        "STP-031-213",
+        "STP-031-214",
+        "STP-031-414"
+      ],
+      "edges_added": 208,
+      "edges_removed": 2,
+      "rows": 531
+    },
     {
       "id": "cs-20261124-182100-e6e2bb74",
       "at": "2026-11-24T18:21:00.444754+00:00",

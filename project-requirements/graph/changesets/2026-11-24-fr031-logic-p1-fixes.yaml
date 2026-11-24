@@ -1,0 +1,333 @@
+# FR-031 logic review pass 1: graph change-set mirroring the revised PRD (Admin Access Control & Permissions). New fields, setting, rules, flows and steps come first, then removals, updates, new enum values and new edges.
+# Cross-FR edges: FR-031 references REQ-027-011, REQ-027-025 (FR-027), REQ-015-069 (FR-015), REQ-034-094 (FR-034) and REQ-026-116 (FR-026); no node owned by another FR is updated. New steps in the A10 and A11 flows link to FR-031 steps only.
+# Queued for other FRs, not done here: FR-022 (admin user list role filter, Billing Admin wording, FR-031 status values, fixed permission categories, and the FR-022 edges to FR-031 nodes), FR-016 (REQ-016-198 Billing Staff to Billing Admin). Also noted: FR-030 catalogue entries for the suspend, reactivate and request-new-invitation notices, and the FR-026 settings screen entry for the new denial time window.
+# Left alone on purpose: minor observations not ruled in; Manage Treatments and Manage Packages have no default holder beyond Owner.
+reason: "FR-031 logic review pass 1: invitation creates the account as Invited with steps and labels aligned, pending role with Effective From, Super Admin accounts cannot be demoted, suspended or deleted in the product, suspend, reactivate and delete flows, widened sensitive permission list, provider team-removal and refund-approval rules corrected, audit trail limited to access-control events with a 30-day default and wider action types, new flows for editing admin role permissions, cancelling invitations, requesting a new invitation, deleting and cloning roles and provider sync failure, permission rows added or reworded for messaging, localization, reviews, treatments, packages, patients, retry charge and affiliates, full default tables, and settings pointers to FR-021, FR-027 and FR-034."
+by: docs-manager
+operations:
+  - {"op": "add_field", "id": "ENT-admin-user-account.pending_role_id", "entity_id": "ENT-admin-user-account", "name": "pending_role_id", "data_type": "id", "title": "Pending role", "owner_fr": "FR-031", "required": false, "attrs": {"description": "Foreign key to the role definition the user will hold from pending_role_effective_from; empty when no role change is waiting. The current role applies until then, and a second change replaces it."}}
+  - {"op": "add_field", "id": "ENT-admin-user-account.pending_role_effective_from", "entity_id": "ENT-admin-user-account", "name": "pending_role_effective_from", "data_type": "datetime", "title": "Pending role effective from", "owner_fr": "FR-031", "required": false, "attrs": {"description": "When the pending role takes over; never earlier than the moment the change is made."}}
+  - {"op": "add_node", "id": "SET-admin-repeated-denial-window", "type": "Setting", "owner_fr": "FR-031", "title": "Repeated access denial time window", "attrs": {"description": "Time window in which the refusals of one admin are counted for the Super Admin alert: 10 minutes at launch; admin setting in A-09 (FR-031 Alternative Flow B5, Admin Editability).", "default": "10", "unit": "minutes"}}
+  - {"op": "add_node", "id": "REQ-031-125", "type": "Rule", "owner_fr": "FR-031", "title": "A role change waits as a pending role until its Effective From", "attrs": {"statement": "System MUST store a role change as a pending role with its Effective From (never earlier than now); the current role applies until Effective From, and a second change made before then replaces the pending one.", "rationale": "PRD Business Rule 8; Alternative Flow A2 steps 6 to 14; Tab 2 pending-role note; Core Requirements."}}
+  - {"op": "add_node", "id": "REQ-031-126", "type": "Rule", "owner_fr": "FR-031", "title": "Suspend, reactivate and delete admin accounts", "attrs": {"statement": "System MUST let a Super Admin suspend (with a required reason), reactivate, and delete a suspended non-Super Admin account; suspension ends the user's sessions and emails the user, reactivation returns the account to Active and emails the user, and deletion anonymises the account under REQ-031-022 and keeps the audit entries. A Super Admin account can never be suspended, demoted or deleted inside the product.", "rationale": "PRD Alternative Flow A8; Tab 2 actions; Business Rule 7; Admin Editability."}}
+  - {"op": "add_node", "id": "REQ-031-127", "type": "Rule", "owner_fr": "FR-031", "title": "Pending Invitations sub-tab with resend and cancel", "attrs": {"statement": "System MUST list every invitation not yet accepted (Invited, Expired or Pending Send) in a Pending Invitations sub-tab of the Admin Users tab, with Name, Email, Role, Invited by, Expires at and Status; a Super Admin can resend an invitation (REQ-031-042) or cancel it, and cancelling removes the Invited account, invalidates the invitation link and writes an audit entry.", "rationale": "PRD Alternative Flows A1 and A9; Tab 2 Pending Invitations sub-tab."}}
+  - {"op": "add_node", "id": "REQ-031-128", "type": "Rule", "owner_fr": "FR-031", "title": "Request New Invitation notifies all Super Admins", "attrs": {"statement": "System MUST notify all Super Admins by email and in the app when an invitee uses Request New Invitation on an expired or invalid invitation link, with a link to the invitation row in the Pending Invitations sub-tab.", "rationale": "PRD Alternative Flow A10; Screen 3 notes."}}
+  - {"op": "add_node", "id": "REQ-031-129", "type": "Rule", "owner_fr": "FR-031", "title": "Delete and clone custom admin roles", "attrs": {"statement": "System MUST let a Super Admin delete a custom admin role only while no admin user (including an Invited account) and no pending role change holds it, and MUST name a cloned role \"Copy of [role name]\", editable and cut to 50 characters; roles have no active or inactive status.", "rationale": "PRD Alternative Flow A11; Tab 1 actions and rules."}}
+  - {"op": "add_node", "id": "REQ-031-130", "type": "Rule", "owner_fr": "FR-031", "title": "Provider role sync failure is shown and retried", "attrs": {"statement": "System MUST, when a provider role permission change fails to reach the Provider Platform, mark the role \"Sync failed\", retry automatically 3 times, send an in-app alert to all Super Admins, and show the role as \"not yet applied\" on the Provider Roles tab until a retry succeeds.", "rationale": "PRD Alternative Flow A4 steps 17 to 19; Tab 3 sync indicator."}}
+  - {"op": "add_node", "id": "REQ-031-131", "type": "Rule", "owner_fr": "FR-031", "title": "Editing an admin role applies to all its holders", "attrs": {"statement": "System MUST let a Super Admin edit the permissions of an admin role other than Super Admin, show the sensitive-permission warning when needed, log the change with before and after, email every admin user holding the role, and apply the new permissions to everyone holding it from their next request without ending any session.", "rationale": "PRD Alternative Flow A7."}}
+  - {"op": "add_node", "id": "REQ-031-132", "type": "Rule", "owner_fr": "FR-031", "title": "User detail audit trail shows access-control events only", "attrs": {"statement": "The audit trail on the admin user detail screen shows access-control events only (sign-ins, access denials, invitations, role and permission changes, suspensions, reactivations and deletions); actions on patient accounts, reviews and other records stay in the logs of their own features, such as the FR-016 patient action log.", "rationale": "PRD Screen 5 purpose and business rules."}}
+  - {"op": "add_node", "id": "REQ-031-133", "type": "Rule", "owner_fr": "FR-031", "title": "Admin Terms of Service acceptance belongs to this feature", "attrs": {"statement": "System MUST ask a new admin to accept the Admin Terms of Service when setting up the account; acceptance is recorded by this feature, while the legal text is edited under Edit Settings and viewed under View Settings in FR-027.", "rationale": "PRD Main Flow steps 17 and 19; Screen 3 notes."}}
+  - {"op": "add_node", "id": "REQ-031-134", "type": "Rule", "owner_fr": "FR-031", "title": "Default permission tables are complete defaults", "attrs": {"statement": "System MUST define each predefined role's default permissions as a full table: Super Admin holds every admin permission, Owner holds every provider permission, and for every other predefined role a permission not listed in its default table is off; Reset to Default restores exactly that table.", "rationale": "PRD Screen 4 default permission tables and Reset to Default."}}
+  - {"op": "add_node", "id": "FLW-031-a7-edit-admin-role", "type": "Flow", "title": "A7: Edit Admin Role Permissions", "attrs": {"kind": "alternative", "description": "A7: Edit Admin Role Permissions", "prd_ref": "A7"}}
+  - {"op": "add_node", "id": "STP-031-421", "type": "Step", "owner_fr": "FR-031", "title": "Super Admin clicks Edit Permissions on an admin role", "attrs": {"prd_ref": "A7 step 1"}}
+  - {"op": "add_node", "id": "STP-031-422", "type": "Step", "owner_fr": "FR-031", "title": "System opens the Permission Matrix Modal with the role's current permissions", "attrs": {"prd_ref": "A7 step 2"}}
+  - {"op": "add_node", "id": "STP-031-423", "type": "Step", "owner_fr": "FR-031", "title": "Super Admin changes permissions and saves; System shows the comparison and the sensitive-permission warning when needed", "attrs": {"prd_ref": "A7 step 3"}}
+  - {"op": "add_node", "id": "STP-031-424", "type": "Step", "owner_fr": "FR-031", "title": "System saves the matrix and logs the change with before and after", "attrs": {"prd_ref": "A7 step 4"}}
+  - {"op": "add_node", "id": "STP-031-425", "type": "Step", "owner_fr": "FR-031", "title": "System emails every admin user holding the role", "attrs": {"prd_ref": "A7 step 5"}}
+  - {"op": "add_node", "id": "STP-031-426", "type": "Step", "owner_fr": "FR-031", "title": "System checks the updated permissions on each user's next request without ending sessions", "attrs": {"prd_ref": "A7 step 6"}}
+  - {"op": "add_node", "id": "FLW-031-a8-suspend-reactivate-delete", "type": "Flow", "title": "A8: Suspend, Reactivate or Delete an Admin Account", "attrs": {"kind": "alternative", "description": "A8: Suspend, Reactivate or Delete an Admin Account", "prd_ref": "A8"}}
+  - {"op": "add_node", "id": "STP-031-221", "type": "Step", "owner_fr": "FR-031", "title": "Super Admin clicks Suspend on a non-Super Admin user's row", "attrs": {"prd_ref": "A8 step 1"}}
+  - {"op": "add_node", "id": "STP-031-222", "type": "Step", "owner_fr": "FR-031", "title": "System asks for confirmation and a required reason", "attrs": {"prd_ref": "A8 step 2"}}
+  - {"op": "add_node", "id": "STP-031-223", "type": "Step", "owner_fr": "FR-031", "title": "System sets Suspended, ends the user's sessions, emails the user and logs the action with the reason", "attrs": {"prd_ref": "A8 step 3"}}
+  - {"op": "add_node", "id": "STP-031-224", "type": "Step", "owner_fr": "FR-031", "title": "Super Admin clicks Reactivate on the suspended user", "attrs": {"prd_ref": "A8 step 4"}}
+  - {"op": "add_node", "id": "STP-031-225", "type": "Step", "owner_fr": "FR-031", "title": "System sets the account Active, emails the user and logs the action", "attrs": {"prd_ref": "A8 step 4"}}
+  - {"op": "add_node", "id": "STP-031-226", "type": "Step", "owner_fr": "FR-031", "title": "Super Admin clicks Delete on the suspended user and confirms", "attrs": {"prd_ref": "A8 step 5"}}
+  - {"op": "add_node", "id": "STP-031-227", "type": "Step", "owner_fr": "FR-031", "title": "System anonymises the user's name and email, keeps the audit entries and logs the deletion", "attrs": {"prd_ref": "A8 step 5"}}
+  - {"op": "add_node", "id": "FLW-031-a9-cancel-invitation", "type": "Flow", "title": "A9: Cancel a Pending Invitation", "attrs": {"kind": "alternative", "description": "A9: Cancel a Pending Invitation", "prd_ref": "A9"}}
+  - {"op": "add_node", "id": "STP-031-121", "type": "Step", "owner_fr": "FR-031", "title": "Super Admin clicks Cancel on an invitation in the Pending Invitations sub-tab", "attrs": {"prd_ref": "A9 step 1"}}
+  - {"op": "add_node", "id": "STP-031-122", "type": "Step", "owner_fr": "FR-031", "title": "System asks for confirmation", "attrs": {"prd_ref": "A9 step 2"}}
+  - {"op": "add_node", "id": "STP-031-123", "type": "Step", "owner_fr": "FR-031", "title": "System removes the Invited account, invalidates the invitation link and logs the cancellation", "attrs": {"prd_ref": "A9 step 3"}}
+  - {"op": "add_node", "id": "FLW-031-a10-request-new-invitation", "type": "Flow", "title": "A10: Request New Invitation", "attrs": {"kind": "alternative", "description": "A10: Request New Invitation", "prd_ref": "A10"}}
+  - {"op": "add_node", "id": "STP-031-131", "type": "Step", "owner_fr": "FR-031", "title": "System shows the error page with a Request New Invitation option", "attrs": {"prd_ref": "A10 step 1"}}
+  - {"op": "add_node", "id": "STP-031-132", "type": "Step", "owner_fr": "FR-031", "title": "Invitee clicks Request New Invitation", "attrs": {"prd_ref": "A10 step 2"}}
+  - {"op": "add_node", "id": "STP-031-133", "type": "Step", "owner_fr": "FR-031", "title": "System notifies all Super Admins by email and in the app", "attrs": {"prd_ref": "A10 step 3"}}
+  - {"op": "add_node", "id": "FLW-031-a11-delete-clone-role", "type": "Flow", "title": "A11: Delete or Clone a Custom Admin Role", "attrs": {"kind": "alternative", "description": "A11: Delete or Clone a Custom Admin Role", "prd_ref": "A11"}}
+  - {"op": "add_node", "id": "STP-031-321", "type": "Step", "owner_fr": "FR-031", "title": "Super Admin clicks Delete on a custom admin role", "attrs": {"prd_ref": "A11 step 1"}}
+  - {"op": "add_node", "id": "STP-031-322", "type": "Step", "owner_fr": "FR-031", "title": "System blocks the deletion while any admin user or pending role change holds the role", "attrs": {"prd_ref": "A11 step 2"}}
+  - {"op": "add_node", "id": "STP-031-323", "type": "Step", "owner_fr": "FR-031", "title": "System asks for confirmation, deletes the role and logs the deletion", "attrs": {"prd_ref": "A11 step 3"}}
+  - {"op": "add_node", "id": "STP-031-324", "type": "Step", "owner_fr": "FR-031", "title": "Super Admin clicks Clone Role; System opens the creation form named Copy of the role, cut to 50 characters", "attrs": {"prd_ref": "A11 step 4"}}
+  - {"op": "add_node", "id": "STP-031-417", "type": "Step", "owner_fr": "FR-031", "title": "If the sync fails, System marks the role Sync failed and retries automatically 3 times", "attrs": {"prd_ref": "A4 step 17"}}
+  - {"op": "add_node", "id": "STP-031-418", "type": "Step", "owner_fr": "FR-031", "title": "System sends an in-app alert to all Super Admins", "attrs": {"prd_ref": "A4 step 18"}}
+  - {"op": "add_node", "id": "STP-031-419", "type": "Step", "owner_fr": "FR-031", "title": "The Provider Roles tab shows the role as not yet applied until a retry succeeds", "attrs": {"prd_ref": "A4 step 19"}}
+  - {"op": "remove_edge", "from": "STP-031-011", "verb": "applies", "to": "REQ-031-038"}
+  - {"op": "remove_edge", "from": "STP-031-012", "verb": "applies", "to": "REQ-031-039"}
+  - {"op": "retire_enum_value", "field_id": "ENT-admin-user-account.status", "value": "pending"}
+  - {"op": "update_node", "id": "REQ-031-009", "attrs": {"statement": "System MUST NOT allow a Super Admin account to be suspended by another user, or removed, demoted or self-deactivated inside the product (system protection; if ever needed, this is done outside the product). When another admin tries to suspend one, including one Super Admin trying to suspend another, the action is blocked with \"A Super Admin account cannot be suspended. Super Admin accounts can only be changed outside the product.\" and both accounts stay active; when a Super Admin tries to change their own role or deactivate their own account, the action is blocked with \"A Super Admin account cannot be demoted or deactivated in the product. This can only be done outside the product.\" The Admin Users tab shows no Change Role, Suspend or Delete action on a Super Admin row."}}
+  - {"op": "update_node", "id": "REQ-031-011", "attrs": {"statement": "System MUST support role assignment changes with **Effective From** date/time tracking (stored and auditable); the current role stays in force until Effective From"}}
+  - {"op": "update_node", "id": "REQ-031-012", "attrs": {"statement": "System MUST maintain admin user accounts with: email, name, password hash, assigned role, role effective date/time, pending role and its effective date/time, role change acknowledgement time, status (active/invited/suspended), creation date, last login timestamp"}}
+  - {"op": "update_node", "id": "REQ-031-014", "attrs": {"statement": "System MUST maintain audit trail entries with: timestamp, user ID, action type (the access-control events listed on the user detail screen), action details, IP address, outcome (success/failed/denied)"}}
+  - {"op": "update_node", "id": "REQ-031-033", "attrs": {"statement": "The invitation form requires first name, last name, email address and an assigned role. First and last name are 2 to 50 characters (letters, spaces, hyphens only); the email is converted to lowercase; phone number is optional (E.164 format); personal message is optional but recommended for first-time team setup (max 500 characters, included in the invitation email). The form cannot be submitted until all required fields pass validation."}}
+  - {"op": "update_node", "id": "REQ-031-035", "attrs": {"statement": "System checks the invitation email against all admin users (active, suspended, invited) and pending invitations; a duplicate is blocked with the error \"This email is already associated with an admin account. Please use a different email or check existing team members.\" and the system suggests \"View team member\" or, if the invitation is pending, \"Resend invitation\". The existing record is kept."}}
+  - {"op": "update_node", "id": "REQ-031-036", "attrs": {"statement": "The role dropdown on the invitation form is populated from the admin roles, including custom admin roles, and shows role name plus a brief description on hover; an expandable role permission summary is shown below it, and a role must be selected (\"Please select a role for this team member.\"). Every existing role can be assigned to new or existing users; roles have no active or inactive status and cannot be deactivated."}, "title": "Any admin role can be assigned"}
+  - {"op": "update_node", "id": "REQ-031-037", "attrs": {"statement": "Invitation tokens expire after the configured invitation expiry (7 days, 168 hours, at launch), which a Super Admin can set through A-09 settings within a range of 1 to 30 days."}}
+  - {"op": "update_node", "id": "REQ-031-038", "attrs": {"statement": "The invitation email carries the invitation link, Hairline Admin Platform branding and the role being offered, plus the personal message when provided. Before sending, the form can preview the email (invitee name, role, personal message, invitation link placeholder) and shows \"Invitation will expire in [N] days on [date] at [time]\". After sending, it shows \"Invitation sent to [email]. They have [N] days to accept.\" N is the configured invitation expiry."}}
+  - {"op": "update_node", "id": "REQ-031-039", "attrs": {"statement": "When an invitation is sent, System creates the new admin user's account with the assigned role and status \"Invited\" and records the invitation on it. The invitation shows \"Accepted\" when the account is set up (the account then becomes Active), \"Expired\" when the token has passed its expiry, when Cancel is used on Admin Account Setup, or when it still cannot be sent 24 hours after it was created, and \"Pending Send\" while the email cannot be delivered. The Pending Invitations sub-tab shows each invitation's status."}}
+  - {"op": "update_node", "id": "REQ-031-040", "attrs": {"statement": "When the invitee opens the invitation link, System validates the token (not expired, not already used) before showing the Admin Account Setup screen pre-filled with email, first name and last name. An expired or invalid token redirects to an error page with a \"Request New Invitation\" option. Request New Invitation notifies all Super Admins (REQ-031-128)."}}
+  - {"op": "update_node", "id": "REQ-031-042", "attrs": {"statement": "A Super Admin can resend an invitation for an invitation that is still pending (Invited or Pending Send) or has expired: System generates a new token, sends a new email, and invalidates the old token. The invitee receives a fresh invitation with a new expiry. The Pending Invitations sub-tab shows a notification dot when invitations are about to expire (< 24 hours)."}}
+  - {"op": "update_node", "id": "REQ-031-043", "attrs": {"statement": "If the invitation email fails to send, System logs each failed delivery in the audit trail and retries under the notification retry rule owned by FR-030 (this flow sets no retry count or interval of its own). While sending fails the invitation shows \"Pending Send\" and the Super Admin is warned \"Invitation created but the email could not be sent yet. The system keeps retrying and the invitation expires if it is still unsent after 24 hours.\"; if the invitation still cannot be sent 24 hours after it was created, it becomes \"Expired\" and the system alerts the admin team. The Super Admin can resend the invitation."}}
+  - {"op": "update_node", "id": "REQ-031-046", "attrs": {"statement": "The new admin user must accept the Admin Terms of Service (\"You must accept the Admin Terms of Service to continue.\"); \"Create Account\" stays disabled until all required fields are valid and terms are accepted. Acceptance belongs to this feature; the legal text is managed in FR-027."}, "title": "Admin Terms of Service acceptance required"}
+  - {"op": "update_node", "id": "REQ-031-049", "attrs": {"statement": "When the new admin user clicks Create Account, System validates all inputs, sets the account Active with the role from the invitation, marks the invitation \"Accepted\", logs the account creation in the audit trail, sends a confirmation email to both the new admin user and the Super Admin who sent the invitation, shows \"Account created successfully! Redirecting to login...\" and redirects to the admin login page after 3 seconds. The new admin user can log in immediately."}}
+  - {"op": "update_node", "id": "REQ-031-053", "attrs": {"statement": "Suspended admin users cannot log in but their accounts remain in the system (soft suspension); Super Admin accounts are never suspended inside the product. Super Admins can suspend (with a required reason), reactivate, and delete a suspended non-Super Admin account (REQ-031-126)."}}
+  - {"op": "update_node", "id": "REQ-031-054", "attrs": {"statement": "A Super Admin can assign or change the role of any admin user except Super Admin accounts."}}
+  - {"op": "update_node", "id": "REQ-031-057", "attrs": {"statement": "Custom admin roles can be created, edited, and deleted (deleted only while no admin user, including an Invited account, and no pending role change holds the role). A role name is unique within the role's guard (max 50 characters) and a role description is required (max 500 characters). Clone Role creates a new custom admin role based on an existing role, named \"Copy of [role name]\" and cut to 50 characters."}}
+  - {"op": "update_node", "id": "REQ-031-067", "attrs": {"statement": "The admin permissions Edit Settings, Manage Users and Manage Roles are write permissions reserved for Super Admin only. The following actions are also Super Admin only: the Manage Localization actions of FR-021 (editing English source values, changing the default language, publishing, rollback, moving a language to Active, the free-text translation switch and budget, and machine translation credentials), the Affiliate Program Settings panel and the commission ceiling override under Manage Affiliates, Login as Provider (REQ-015-069), and the Support Center settings (Screen 7 of FR-034) and the support audit export (REQ-034-094)."}}
+  - {"op": "update_node", "id": "REQ-031-068", "attrs": {"statement": "Provider permissions Manage Bank Details and Edit Settings are Owner only; Document Treatment is limited to Owner or Clinical Staff (not Manager); Remove Team Members is limited to Owner (any non-Owner member) or Manager (Clinical Staff and Billing Staff only); Invite Team Members and Edit Team Member Roles (non-Owner) are limited to Owner or Manager, and a Manager may invite or set only Clinical Staff and Billing Staff and cannot create a Manager."}}
+  - {"op": "update_node", "id": "REQ-031-069", "attrs": {"statement": "The admin permission Issue Refunds is a write permission that requires approval by another admin holding the permission, never the requester; FR-007 owns the approval step and its 2-business-day escalation."}}
+  - {"op": "update_node", "id": "REQ-031-070", "attrs": {"statement": "Permission dependencies apply across all roles: selecting any write permission that has a matching View permission (such as Edit Patients, Manage Aftercare or Moderate Reviews) automatically selects that View permission (for example \"Edit Patients\" requires \"View Patients\") and the dependency is highlighted."}, "title": "A write permission selects its View automatically"}
+  - {"op": "update_node", "id": "REQ-031-072", "attrs": {"statement": "Permissions are organised by module code (A-01, A-02 for admin; PR-01, PR-02 for provider) for traceability, and a Select All checkbox is available for each category. Select All skips the Super Admin-only permissions."}}
+  - {"op": "update_node", "id": "REQ-031-073", "attrs": {"statement": "When a permission matrix is saved with a newly granted sensitive permission, and again when a role holding one is assigned to a user, System shows a warning modal \"This role grants access to sensitive features: [Issue Refunds, Process Payouts, Manage Users]. Confirm?\" together with the full permission summary; the Super Admin either confirms or cancels. Sensitive permissions are all financial write permissions (refunds, payouts, payment settings), Manage Roles, Manage Users and Delete Patients."}}
+  - {"op": "update_node", "id": "REQ-031-076", "attrs": {"statement": "In Single Role Mode, Reset to Default resets a predefined role to its default permissions (the full default tables, REQ-031-134) and is not offered on custom roles, and Preview Impact shows which users and providers will be affected by the changes. In matrix mode, Reset Role to Default resets the selected predefined roles and asks for confirmation when unsaved changes exist."}}
+  - {"op": "update_node", "id": "REQ-031-077", "attrs": {"statement": "The matrix view shows permissions as rows grouped by category/module and all roles of the same type (Admin or Provider, including custom admin roles) as columns, with checkboxes or access-level indicators. Super Admins can edit several roles at once and save all changes together; bulk actions are Select All on a column header, Select All on a row header, and Select Category, all of which skip the Super Admin-only permissions (their cells stay disabled for every role other than Super Admin); locked cells (Super Admin, Owner) show a lock icon and a disabled checkbox. The matrix can be filtered by category, searched by permission name, set to show only differences, sorted by role or permission, and exported to CSV or Excel."}}
+  - {"op": "update_node", "id": "REQ-031-079", "attrs": {"statement": "The Provider Roles tab shows \"Last synced to Provider Platform: [timestamp]\". A role whose sync failed shows \"Sync failed\" and \"not yet applied\" until a retry succeeds (REQ-031-130)."}}
+  - {"op": "update_node", "id": "REQ-031-082", "attrs": {"statement": "To change an admin user's role, the Super Admin opens Change Role, picks the new role and sets Effective From (default now); System shows the permission comparison and effective date/time, requires confirmation, validates that Effective From is not before now, and stores the new role as the user's pending role with its Effective From; the current role stays in force until then and a second change made before then replaces the pending one (REQ-031-125). At Effective From the pending role becomes the user's role and System enforces its permissions on the first API call at or after that time."}}
+  - {"op": "update_node", "id": "REQ-031-085", "attrs": {"statement": "A warning banner \"Warning: Only one Super Admin account. Consider adding backup admin.\" is shown on the Admin Users tab while only one Super Admin exists. No Super Admin can be demoted, removed or deactivated inside the product (REQ-031-009)."}, "title": "Warning banner while only one Super Admin exists"}
+  - {"op": "update_node", "id": "REQ-031-090", "attrs": {"statement": "System sends an alert to Super Admin when one admin is refused access 5 times within 10 minutes (launch default; the count and the time window are each an admin setting in A-09; potential security issue)."}}
+  - {"op": "update_node", "id": "REQ-031-093", "attrs": {"statement": "Super Admins can send a password reset from the user detail page, which forces a password reset on the user's next login. An account still in the Invited status does not support password reset (no password set yet): the user must request a new invitation from a Super Admin, and the original invitation token is invalidated to prevent duplicate accounts."}}
+  - {"op": "update_node", "id": "REQ-031-094", "attrs": {"statement": "The audit trail on the user detail page shows the last 30 days by default, 100 rows at a time with a Load More option, and the date range filter reaches further back; it shows access-control events only (REQ-031-132). Each row shows timestamp, action type (Login, Role Change, Permission Grant, Access Denied, Password Reset, User Suspended, User Reactivated, User Deleted, Account Created, Role Created, Role Deleted, Role Permissions Edited, Invitation Sent, Invitation Resent, Invitation Cancelled, Invitation Delivery Failed, Sensitive Access), details, IP address and outcome (Success, Failed, Denied). Sensitive actions (role changes, permission grants) are highlighted, and role change events offer a comparison of old and new role permissions. Login failures are logged with the reason (invalid password, account suspended, and so on)."}}
+  - {"op": "update_node", "id": "REQ-031-099", "attrs": {"statement": "The maximum failed login attempts before lockout (default 5 failed attempts with a 15-minute lockout, the same setting as FR-001; the admin login rate limit of REQ-031-100 is a separate control and whichever trips first applies, REQ-026-116), the session timeout duration (the admin inactivity timeout of A-09, whole minutes from 5 to 240, default 30) and the number of concurrent sessions per admin user (default 3, range 1-5; at the limit a new sign-in ends the oldest session) are configurable in A-09 Authentication Settings."}}
+  - {"op": "update_node", "id": "REQ-031-124", "attrs": {"statement": "System MUST ask an admin user to acknowledge a role change within 24 hours of it taking effect; the acknowledgement time is stored on the account and shown to Super Admins, who see an \"Overdue\" flag when it is late; nothing is blocked and no reminder is sent."}}
+  - {"op": "update_node", "id": "REQ-031-102", "attrs": {"statement": "Permission category \"Patient Management\" (A-01) in the admin permission matrix offers: View Patients (View patient list and profiles; Read); Edit Patients (Modify patient information; Write); Delete Patients (Approve patient account deletion requests (FR-016); Delete)."}}
+  - {"op": "update_node", "id": "REQ-031-103", "attrs": {"statement": "Permission category \"Provider Management\" (A-02) in the admin permission matrix offers: View Providers (View provider list and profiles; Read); Edit Providers (Modify provider information; Write); Onboard Providers (Create new provider accounts; Write); Suspend Providers (Suspend/activate provider accounts, including Reject Request on an account-closure request; Delete)."}}
+  - {"op": "update_node", "id": "REQ-031-106", "attrs": {"statement": "Permission category \"Reviews & Ratings Management\" (A-01) in the admin permission matrix offers: View Reviews (View all patient reviews; Read); Moderate Reviews (Decide takedown requests, remove a review, remove a provider response and resolve a flag; Write); Add Reviews (Import authenticated reviews for providers; Write); Manage Review Categories (Configure review categories and labels; Write); Manage Review Settings (Configure photo guidelines, the removal reason catalog, flagging and the takedown decision deadline; Write); Export Reviews (Export review data (audited); Read)."}}
+  - {"op": "update_node", "id": "REQ-031-107", "attrs": {"statement": "Permission category \"Billing & Financial\" (A-05) in the admin permission matrix offers: View Transactions (View patient and provider transactions; Read); Process Payouts (Initiate provider payouts; Write); Issue Refunds (Process patient refunds; Write (requires approval by another admin holding this permission, never the requester; the approval step and its 2-business-day escalation are defined in FR-007)); View Financial Reports (Access revenue analytics; Read); View Patient Billing (View patient invoices and payment status; Read); Send Payment Reminders (Send payment reminders to patients; Write); Retry Charge (Retry a failed patient payment charge (FR-007B); Write); Download Invoices (Download patient/provider invoices; Read)."}}
+  - {"op": "update_node", "id": "REQ-031-109", "attrs": {"statement": "Permission category \"Affiliate Management\" (A-07) in the admin permission matrix offers: View Affiliates (View affiliate list and details; Read); Manage Affiliates (Add affiliates, edit profiles and commission rules, generate codes, suspend, reinstate, offboard and ban; Write (the Affiliate Program Settings panel and the commission ceiling override stay Super Admin only)); Process Affiliate Payouts (Process affiliate commission payments; Write); View Affiliate Performance (View referral counts and conversions; Read)."}}
+  - {"op": "update_node", "id": "REQ-031-111", "attrs": {"statement": "Permission category \"Communication & Support\" (A-10) in the admin permission matrix offers: View Support Center (Access patient support cases; Read); Respond to Support (Send messages to patients/providers; Write); View Provider-Patient Messages (Read patient and provider conversations for monitoring; Read); Flag Communications (Flag suspicious or policy-violating messages; Write); Enable Emergency Intervention (Step into a conversation as an emergency intervention (FR-012); Write); Export Conversation Transcripts (Export chat transcripts for compliance (deferred to a future phase; conversation export is not available yet); Read)."}}
+  - {"op": "update_node", "id": "REQ-031-113", "attrs": {"statement": "Permission category \"System Settings\" (A-09) in the admin permission matrix offers: View Settings (View system configuration; Read); Edit Settings (Modify system settings; Write (Super Admin only)); Manage Users (Create/edit admin accounts; Write (Super Admin only)); Manage Roles (Create/edit roles and permissions; Write (Super Admin only)); Manage App Data (Edit countries, discovery questions, location presentation and starting prices; Write); Manage Treatment Catalog (Create, edit and deactivate treatments and manage the treatment types list; provider packages are view-only for admins; Write); Manage Aftercare Templates (Create/edit aftercare milestone templates; Write); Manage Notification Templates (Edit email templates (OTP, confirmations); Write); Configure Payment Settings (Manage Stripe accounts, commission rates, split pay (the permission FR-029 calls PaymentConfigAdmin); Write); Manage Help Centre (Create/edit Help Centre content for providers and patients; Write); View Sensitive Settings (View the full value of sensitive settings (for example API keys); Read); Manage Authentication Policies (Edit authentication policy settings (for example lockout, session timeout and the one-time-code (OTP) settings); Write); Manage Localization (Manage languages, translations and machine translation (FR-021); Write (editing English source values, changing the default language, publishing, rollback, moving a language to Active, the free-text translation switch and budget, and machine translation credentials stay Super Admin only))."}}
+  - {"op": "update_node", "id": "REQ-031-119", "attrs": {"statement": "Permission category \"Team Management\" (PR-01) in the provider permission matrix offers: View Team Members (View team member list; Read); Invite Team Members (Send team member invitations; Write (a Manager may invite Clinical Staff and Billing Staff only)); Edit Team Member Roles (Change team member roles (non-Owner); Write (Owner or Manager only; a Manager may set only Clinical Staff and Billing Staff and cannot create a Manager)); Remove Team Members (Remove or suspend team members; Write (Owner: any non-Owner member; Manager: Clinical Staff and Billing Staff only)); View Team Activity (Access team activity logs; Read)."}}
+  - {"op": "update_node", "id": "REQ-031-120", "attrs": {"statement": "Permission category \"Provider Settings\" (PR-06) in the provider permission matrix offers: View Profile (View provider profile information; Read); Edit Profile (Update provider profile details; Write); Manage Treatments (Set a treatment Offered or Not Offered and configure its pricing, including Quick Copy Pricing (FR-024); Write); Manage Packages (Create, edit, clone and deactivate packages and use quick price edit (FR-024); Write); Manage Promotions (Create and edit discount codes; Write); View Settings (View provider settings; Read); Edit Settings (Modify provider settings; Write (Owner only))."}}
+  - {"op": "update_node", "id": "SET-admin-invitation-token-expiry", "attrs": {"description": "Lifetime of an admin team invitation token, configurable by Super Admin in A-09 settings; range 1-30 days, 7 days at launch. It applies to admin team invitations only."}}
+  - {"op": "update_node", "id": "SET-admin-repeated-denial-threshold", "attrs": {"description": "Refusals of one admin that trigger the Super Admin alert: 5 refusals at launch; an admin setting in A-09 (FR-031 Alternative Flow B5, Admin Editability). The time window is SET-admin-repeated-denial-window."}}
+  - {"op": "update_node", "id": "ENT-permission.is_sensitive", "attrs": {"description": "Flag that triggers the sensitive-permission warning (REQ-031-073)."}}
+  - {"op": "update_node", "id": "ENT-role-permission-definition.last_synced_at", "attrs": {"description": "Shown as the sync status indicator on the provider roles tab; a role whose sync failed shows Sync failed and not yet applied until a retry succeeds."}}
+  - {"op": "update_node", "id": "ENT-admin-user-account.role_effective_from", "attrs": {"description": "When the current assigned role became active for authorization checks; a later change waits in the pending role fields until its Effective From."}}
+  - {"op": "update_node", "id": "SCR-031-01", "attrs": {"description": "Admin Platform, Settings > User Roles & Permissions, three tabs: Admin Roles, Admin Users, Provider Roles (PRD Screen 1). UI controls, not fields: tab switcher, role list action buttons (Edit Permissions, View Users, Clone Role, and Delete on custom roles; Edit Permissions and Clone Role are disabled for Super Admin), Create Custom Role, Invite Team Member, user action menu (Change Role, Suspend or Reactivate, Delete on a suspended account, View Audit; a Super Admin row shows View Audit only), search bar and filters (Tab 2 specified in FR-022 REQ-022-115, Tab 1 in REQ-022-116), Pending Invitations sub-tab (Resend, Cancel) and notification dot, sync status indicator, warning banner when only one Super Admin exists. Tab 3 View Users links to FR-015. Tab 2 rows also show whether the user has acknowledged the latest role change (Acknowledged, Awaiting acknowledgement or Overdue) and any pending role change with its Effective From."}}
+  - {"op": "update_node", "id": "SCR-031-05", "attrs": {"description": "Admin Platform page with an admin user's profile and audit trail (PRD Screen 5). UI controls: Send Password Reset, Load More, Export audit trail to CSV, security alerts, audit filters (specified in FR-022 REQ-022-117). The audit trail shows access-control events only (REQ-031-132); actions on patient accounts stay in the FR-016 patient action log, and patient accounts and admin accounts remain separate records. Shows the Role Change Acknowledged status (Acknowledged, Awaiting acknowledgement or Overdue)."}}
+  - {"op": "update_node", "id": "STP-031-010", "title": "System generates the invitation token with the configured expiry"}
+  - {"op": "update_node", "id": "STP-031-011", "title": "System creates the Invited account"}
+  - {"op": "update_node", "id": "STP-031-012", "title": "System emails the invitation"}
+  - {"op": "update_node", "id": "STP-031-020", "title": "System sets the account Active"}
+  - {"op": "update_node", "id": "STP-031-101", "title": "Super Admin opens the Pending Invitations sub-tab"}
+  - {"op": "update_node", "id": "STP-031-102", "title": "System shows each invitation's status"}
+  - {"op": "update_node", "id": "STP-031-210", "title": "System stores the new role as the pending role"}
+  - {"op": "update_node", "id": "STP-031-214", "title": "System shows the Acknowledge role change action once the change takes effect"}
+  - {"op": "update_node", "id": "STP-031-213", "title": "At Effective From the pending role applies and System enforces it on the next API call"}
+  - {"op": "add_enum_value", "field_id": "ENT-admin-user-account.status", "value": "invited", "label": "Invited"}
+  - {"op": "add_enum_value", "field_id": "ENT-admin-audit-trail-entry.action_type", "value": "user_reactivated", "label": "User Reactivated"}
+  - {"op": "add_enum_value", "field_id": "ENT-admin-audit-trail-entry.action_type", "value": "user_deleted", "label": "User Deleted"}
+  - {"op": "add_enum_value", "field_id": "ENT-admin-audit-trail-entry.action_type", "value": "account_created", "label": "Account Created"}
+  - {"op": "add_enum_value", "field_id": "ENT-admin-audit-trail-entry.action_type", "value": "role_created", "label": "Role Created"}
+  - {"op": "add_enum_value", "field_id": "ENT-admin-audit-trail-entry.action_type", "value": "role_deleted", "label": "Role Deleted"}
+  - {"op": "add_enum_value", "field_id": "ENT-admin-audit-trail-entry.action_type", "value": "role_permissions_edited", "label": "Role Permissions Edited"}
+  - {"op": "add_enum_value", "field_id": "ENT-admin-audit-trail-entry.action_type", "value": "invitation_sent", "label": "Invitation Sent"}
+  - {"op": "add_enum_value", "field_id": "ENT-admin-audit-trail-entry.action_type", "value": "invitation_resent", "label": "Invitation Resent"}
+  - {"op": "add_enum_value", "field_id": "ENT-admin-audit-trail-entry.action_type", "value": "invitation_cancelled", "label": "Invitation Cancelled"}
+  - {"op": "add_enum_value", "field_id": "ENT-admin-audit-trail-entry.action_type", "value": "invitation_delivery_failed", "label": "Invitation Delivery Failed"}
+  - {"op": "add_enum_value", "field_id": "ENT-admin-audit-trail-entry.action_type", "value": "sensitive_access", "label": "Sensitive Access"}
+  - {"op": "add_edge", "from": "REQ-031-125", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-031-125", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-031-125", "verb": "applies to", "to": "ENT-admin-user-account.pending_role_id"}
+  - {"op": "add_edge", "from": "REQ-031-125", "verb": "applies to", "to": "ENT-admin-user-account.pending_role_effective_from"}
+  - {"op": "add_edge", "from": "REQ-031-125", "verb": "applies to", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "REQ-031-125", "verb": "decided by", "to": "SRC-PRD-031"}
+  - {"op": "add_edge", "from": "REQ-031-126", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-031-126", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-031-126", "verb": "applies to", "to": "ENT-admin-user-account.status"}
+  - {"op": "add_edge", "from": "REQ-031-126", "verb": "applies to", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "REQ-031-126", "verb": "decided by", "to": "SRC-PRD-031"}
+  - {"op": "add_edge", "from": "REQ-031-127", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-031-127", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-031-127", "verb": "applies to", "to": "ENT-admin-user-account.invitation_status"}
+  - {"op": "add_edge", "from": "REQ-031-127", "verb": "applies to", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "REQ-031-127", "verb": "decided by", "to": "SRC-PRD-031"}
+  - {"op": "add_edge", "from": "REQ-031-128", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-031-128", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-031-128", "verb": "applies to", "to": "ACT-admin-invitee"}
+  - {"op": "add_edge", "from": "REQ-031-128", "verb": "applies to", "to": "SCR-031-03"}
+  - {"op": "add_edge", "from": "REQ-031-128", "verb": "decided by", "to": "SRC-PRD-031"}
+  - {"op": "add_edge", "from": "REQ-031-129", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-031-129", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-031-129", "verb": "applies to", "to": "ENT-role-permission-definition"}
+  - {"op": "add_edge", "from": "REQ-031-129", "verb": "applies to", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "REQ-031-129", "verb": "decided by", "to": "SRC-PRD-031"}
+  - {"op": "add_edge", "from": "REQ-031-130", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-031-130", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-031-130", "verb": "applies to", "to": "ENT-role-permission-definition.last_synced_at"}
+  - {"op": "add_edge", "from": "REQ-031-130", "verb": "applies to", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "REQ-031-130", "verb": "applies to", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "REQ-031-130", "verb": "decided by", "to": "SRC-PRD-031"}
+  - {"op": "add_edge", "from": "REQ-031-131", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-031-131", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-031-131", "verb": "applies to", "to": "ENT-role-permission-definition.permissions"}
+  - {"op": "add_edge", "from": "REQ-031-131", "verb": "applies to", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "REQ-031-131", "verb": "decided by", "to": "SRC-PRD-031"}
+  - {"op": "add_edge", "from": "REQ-031-132", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-031-132", "verb": "applies to", "to": "SCR-031-05"}
+  - {"op": "add_edge", "from": "REQ-031-132", "verb": "applies to", "to": "ENT-admin-audit-trail-entry"}
+  - {"op": "add_edge", "from": "REQ-031-132", "verb": "applies to", "to": "ENT-admin-audit-trail-entry.action_type"}
+  - {"op": "add_edge", "from": "REQ-031-132", "verb": "decided by", "to": "SRC-PRD-031"}
+  - {"op": "add_edge", "from": "REQ-031-133", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-031-133", "verb": "applies to", "to": "ACT-admin-invitee"}
+  - {"op": "add_edge", "from": "REQ-031-133", "verb": "applies to", "to": "ENT-admin-user-account.terms_accepted_at"}
+  - {"op": "add_edge", "from": "REQ-031-133", "verb": "applies to", "to": "SCR-031-03"}
+  - {"op": "add_edge", "from": "REQ-031-133", "verb": "decided by", "to": "SRC-PRD-031"}
+  - {"op": "add_edge", "from": "REQ-031-134", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-031-134", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-031-134", "verb": "applies to", "to": "ENT-role-permission-definition"}
+  - {"op": "add_edge", "from": "REQ-031-134", "verb": "applies to", "to": "ENT-role-permission-definition.permissions"}
+  - {"op": "add_edge", "from": "REQ-031-134", "verb": "applies to", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "REQ-031-134", "verb": "decided by", "to": "SRC-PRD-031"}
+  - {"op": "add_edge", "from": "FLW-031-a7-edit-admin-role", "verb": "starts at", "to": "STP-031-421"}
+  - {"op": "add_edge", "from": "STP-031-421", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-031-421", "verb": "done by", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "STP-031-421", "verb": "on", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "STP-031-421", "verb": "applies", "to": "REQ-031-131"}
+  - {"op": "add_edge", "from": "STP-031-422", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-031-422", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-031-422", "verb": "on", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "STP-031-422", "verb": "applies", "to": "REQ-031-131"}
+  - {"op": "add_edge", "from": "STP-031-423", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-031-423", "verb": "done by", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "STP-031-423", "verb": "on", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "STP-031-423", "verb": "applies", "to": "REQ-031-073"}
+  - {"op": "add_edge", "from": "STP-031-423", "verb": "applies", "to": "REQ-031-075"}
+  - {"op": "add_edge", "from": "STP-031-424", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-031-424", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-031-424", "verb": "on", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "STP-031-424", "verb": "applies", "to": "REQ-031-081"}
+  - {"op": "add_edge", "from": "STP-031-424", "verb": "applies", "to": "REQ-031-131"}
+  - {"op": "add_edge", "from": "STP-031-425", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-031-425", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-031-425", "verb": "on", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "STP-031-425", "verb": "applies", "to": "REQ-031-032"}
+  - {"op": "add_edge", "from": "STP-031-426", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-031-426", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-031-426", "verb": "on", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "STP-031-426", "verb": "applies", "to": "REQ-031-087"}
+  - {"op": "add_edge", "from": "STP-031-426", "verb": "applies", "to": "REQ-031-131"}
+  - {"op": "add_edge", "from": "STP-031-421", "verb": "next", "to": "STP-031-422", "attrs": {"label": "then"}}
+  - {"op": "add_edge", "from": "STP-031-422", "verb": "next", "to": "STP-031-423", "attrs": {"label": "then"}}
+  - {"op": "add_edge", "from": "STP-031-423", "verb": "next", "to": "STP-031-424", "attrs": {"label": "then"}}
+  - {"op": "add_edge", "from": "STP-031-424", "verb": "next", "to": "STP-031-425", "attrs": {"label": "then"}}
+  - {"op": "add_edge", "from": "STP-031-425", "verb": "next", "to": "STP-031-426", "attrs": {"label": "then"}}
+  - {"op": "add_edge", "from": "FLW-031-a8-suspend-reactivate-delete", "verb": "starts at", "to": "STP-031-221"}
+  - {"op": "add_edge", "from": "STP-031-221", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-031-221", "verb": "done by", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "STP-031-221", "verb": "on", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "STP-031-221", "verb": "applies", "to": "REQ-031-053"}
+  - {"op": "add_edge", "from": "STP-031-222", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-031-222", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-031-222", "verb": "on", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "STP-031-222", "verb": "applies", "to": "REQ-031-126"}
+  - {"op": "add_edge", "from": "STP-031-223", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-031-223", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-031-223", "verb": "on", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "STP-031-223", "verb": "applies", "to": "REQ-031-021"}
+  - {"op": "add_edge", "from": "STP-031-223", "verb": "applies", "to": "REQ-031-053"}
+  - {"op": "add_edge", "from": "STP-031-223", "verb": "applies", "to": "REQ-031-126"}
+  - {"op": "add_edge", "from": "STP-031-224", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-031-224", "verb": "done by", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "STP-031-224", "verb": "on", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "STP-031-224", "verb": "applies", "to": "REQ-031-126"}
+  - {"op": "add_edge", "from": "STP-031-225", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-031-225", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-031-225", "verb": "on", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "STP-031-225", "verb": "applies", "to": "REQ-031-126"}
+  - {"op": "add_edge", "from": "STP-031-226", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-031-226", "verb": "done by", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "STP-031-226", "verb": "on", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "STP-031-226", "verb": "applies", "to": "REQ-031-126"}
+  - {"op": "add_edge", "from": "STP-031-227", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-031-227", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-031-227", "verb": "on", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "STP-031-227", "verb": "applies", "to": "REQ-031-022"}
+  - {"op": "add_edge", "from": "STP-031-227", "verb": "applies", "to": "REQ-031-126"}
+  - {"op": "add_edge", "from": "STP-031-221", "verb": "next", "to": "STP-031-222", "attrs": {"label": "then"}}
+  - {"op": "add_edge", "from": "STP-031-222", "verb": "next", "to": "STP-031-223", "attrs": {"label": "then"}}
+  - {"op": "add_edge", "from": "STP-031-223", "verb": "next", "to": "STP-031-224", "attrs": {"label": "to restore access", "condition": "REQ-031-126"}}
+  - {"op": "add_edge", "from": "STP-031-224", "verb": "next", "to": "STP-031-225", "attrs": {"label": "then"}}
+  - {"op": "add_edge", "from": "STP-031-223", "verb": "next", "to": "STP-031-226", "attrs": {"label": "to remove the account", "condition": "REQ-031-126"}}
+  - {"op": "add_edge", "from": "STP-031-226", "verb": "next", "to": "STP-031-227", "attrs": {"label": "then"}}
+  - {"op": "add_edge", "from": "FLW-031-a9-cancel-invitation", "verb": "starts at", "to": "STP-031-121"}
+  - {"op": "add_edge", "from": "STP-031-121", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-031-121", "verb": "done by", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "STP-031-121", "verb": "on", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "STP-031-121", "verb": "applies", "to": "REQ-031-127"}
+  - {"op": "add_edge", "from": "STP-031-122", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-031-122", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-031-122", "verb": "on", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "STP-031-122", "verb": "applies", "to": "REQ-031-127"}
+  - {"op": "add_edge", "from": "STP-031-123", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-031-123", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-031-123", "verb": "on", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "STP-031-123", "verb": "applies", "to": "REQ-031-127"}
+  - {"op": "add_edge", "from": "STP-031-121", "verb": "next", "to": "STP-031-122", "attrs": {"label": "then"}}
+  - {"op": "add_edge", "from": "STP-031-122", "verb": "next", "to": "STP-031-123", "attrs": {"label": "then"}}
+  - {"op": "add_edge", "from": "FLW-031-a10-request-new-invitation", "verb": "starts at", "to": "STP-031-131"}
+  - {"op": "add_edge", "from": "STP-031-131", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-031-131", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-031-131", "verb": "on", "to": "SCR-031-03"}
+  - {"op": "add_edge", "from": "STP-031-131", "verb": "applies", "to": "REQ-031-040"}
+  - {"op": "add_edge", "from": "STP-031-132", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-031-132", "verb": "done by", "to": "ACT-admin-invitee"}
+  - {"op": "add_edge", "from": "STP-031-132", "verb": "on", "to": "SCR-031-03"}
+  - {"op": "add_edge", "from": "STP-031-132", "verb": "applies", "to": "REQ-031-128"}
+  - {"op": "add_edge", "from": "STP-031-133", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-031-133", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-031-133", "verb": "on", "to": "SCR-031-03"}
+  - {"op": "add_edge", "from": "STP-031-133", "verb": "applies", "to": "REQ-031-128"}
+  - {"op": "add_edge", "from": "STP-031-131", "verb": "next", "to": "STP-031-132", "attrs": {"label": "then"}}
+  - {"op": "add_edge", "from": "STP-031-132", "verb": "next", "to": "STP-031-133", "attrs": {"label": "then"}}
+  - {"op": "add_edge", "from": "STP-031-133", "verb": "next", "to": "STP-031-103", "attrs": {"label": "a Super Admin resends the invitation"}}
+  - {"op": "add_edge", "from": "FLW-031-a11-delete-clone-role", "verb": "starts at", "to": "STP-031-321"}
+  - {"op": "add_edge", "from": "STP-031-321", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-031-321", "verb": "done by", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "STP-031-321", "verb": "on", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "STP-031-321", "verb": "applies", "to": "REQ-031-129"}
+  - {"op": "add_edge", "from": "STP-031-322", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-031-322", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-031-322", "verb": "on", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "STP-031-322", "verb": "applies", "to": "REQ-031-129"}
+  - {"op": "add_edge", "from": "STP-031-323", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-031-323", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-031-323", "verb": "on", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "STP-031-323", "verb": "applies", "to": "REQ-031-129"}
+  - {"op": "add_edge", "from": "STP-031-324", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-031-324", "verb": "done by", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "STP-031-324", "verb": "on", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "STP-031-324", "verb": "applies", "to": "REQ-031-057"}
+  - {"op": "add_edge", "from": "STP-031-324", "verb": "applies", "to": "REQ-031-129"}
+  - {"op": "add_edge", "from": "STP-031-321", "verb": "next", "to": "STP-031-322", "attrs": {"label": "then"}}
+  - {"op": "add_edge", "from": "STP-031-322", "verb": "next", "to": "STP-031-323", "attrs": {"label": "then"}}
+  - {"op": "add_edge", "from": "STP-031-321", "verb": "next", "to": "STP-031-324", "attrs": {"label": "Clone Role instead", "condition": "REQ-031-129"}}
+  - {"op": "add_edge", "from": "STP-031-324", "verb": "next", "to": "STP-031-308", "attrs": {"label": "saving continues as in A3"}}
+  - {"op": "add_edge", "from": "STP-031-417", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-031-417", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-031-417", "verb": "on", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "STP-031-417", "verb": "applies", "to": "REQ-031-130"}
+  - {"op": "add_edge", "from": "STP-031-418", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-031-418", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-031-418", "verb": "on", "to": "SCR-031-04"}
+  - {"op": "add_edge", "from": "STP-031-418", "verb": "applies", "to": "REQ-031-130"}
+  - {"op": "add_edge", "from": "STP-031-419", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-031-419", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-031-419", "verb": "on", "to": "SCR-031-01"}
+  - {"op": "add_edge", "from": "STP-031-419", "verb": "applies", "to": "REQ-031-079"}
+  - {"op": "add_edge", "from": "STP-031-419", "verb": "applies", "to": "REQ-031-130"}
+  - {"op": "add_edge", "from": "STP-031-414", "verb": "next", "to": "STP-031-417", "attrs": {"label": "sync fails", "condition": "REQ-031-130"}}
+  - {"op": "add_edge", "from": "STP-031-417", "verb": "next", "to": "STP-031-418", "attrs": {"label": "then"}}
+  - {"op": "add_edge", "from": "STP-031-418", "verb": "next", "to": "STP-031-419", "attrs": {"label": "then"}}
+  - {"op": "add_edge", "from": "STP-031-011", "verb": "applies", "to": "REQ-031-039"}
+  - {"op": "add_edge", "from": "STP-031-012", "verb": "applies", "to": "REQ-031-038"}
+  - {"op": "add_edge", "from": "STP-031-210", "verb": "applies", "to": "REQ-031-125"}
+  - {"op": "add_edge", "from": "STP-031-213", "verb": "applies", "to": "REQ-031-125"}
+  - {"op": "add_edge", "from": "REQ-031-011", "verb": "applies to", "to": "ENT-admin-user-account.pending_role_effective_from"}
+  - {"op": "add_edge", "from": "REQ-031-082", "verb": "applies to", "to": "ENT-admin-user-account.pending_role_effective_from"}
+  - {"op": "add_edge", "from": "REQ-031-082", "verb": "applies to", "to": "ENT-admin-user-account.pending_role_id"}
+  - {"op": "add_edge", "from": "REQ-031-090", "verb": "governed by", "to": "SET-admin-repeated-denial-window"}
+  - {"op": "add_edge", "from": "SCR-031-01", "verb": "shows", "to": "ENT-admin-user-account.pending_role_id", "attrs": {"provenance": "retrieved", "label": "Pending Role", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-031-01", "verb": "shows", "to": "ENT-admin-user-account.pending_role_effective_from", "attrs": {"provenance": "retrieved", "label": "Pending Role Effective From", "editable": false}}
+  - {"op": "add_edge", "from": "FR-031", "verb": "references", "to": "REQ-027-011"}
+  - {"op": "add_edge", "from": "FR-031", "verb": "references", "to": "REQ-027-025"}
+  - {"op": "add_edge", "from": "FR-031", "verb": "references", "to": "REQ-015-069"}
+  - {"op": "add_edge", "from": "FR-031", "verb": "references", "to": "REQ-034-094"}
+  - {"op": "add_edge", "from": "FR-031", "verb": "references", "to": "REQ-026-116"}
