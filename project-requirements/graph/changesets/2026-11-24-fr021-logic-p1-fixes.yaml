@@ -1,0 +1,183 @@
+# Cross-FR edges written by this change-set (the FR-021 node is the only end owned here):
+#   FR-021 references REQ-026-121 (GMT timezone list; FR-026 owns it, FR-021 is a consumer for provider and admin formatting)
+#   FR-021 references REQ-032-006 (provider timezone; FR-032 owns it, read by General Module Rule 17)
+# Neighbour nodes are NOT updated or retired. Rows queued for FR-031, FR-026, FR-030, FR-032 and FR-014 are in the pass report.
+# Left alone on purpose: steps and rules pinned to STG-admin-01-configuration (accepted leftover);
+#   FR-024 and FR-031 nodes (their own passes); ENT-translation-value.status and ENT-translation-version.status free text.
+reason: "FR-021 logic review pass 1: Manage Localization permission and the four Super Admin operations, import into the source locale, draft-only import when rows are skipped, fallback chain and Screen 5 control, Review Needed handling, one machine-translation flow with connection check, preview and confirm, job statuses and enable/disable, Free-text translation panel, locale-aware formatting rule, interface versus spoken-language lists, library text key groups, notification surface retired, Preparation to Active rule, and flow wiring."
+by: docs-manager
+operations:
+  - {"op": "add_node", "id": "STP-021-056", "type": "Step", "owner_fr": "FR-021", "title": "System treats an import into the English source locale as an English source edit", "attrs": {"prd_ref": "Business Workflows: Main Flow and Alternative Flow C1; Screens 7, 8 and 10"}}
+  - {"op": "add_node", "id": "STP-021-057", "type": "Step", "owner_fr": "FR-021", "title": "Admin accepts a Review Needed value as reviewed", "attrs": {"prd_ref": "Business Workflows: Main Flow and Alternative Flow C1; Screens 7, 8 and 10"}}
+  - {"op": "add_node", "id": "STP-021-058", "type": "Step", "owner_fr": "FR-021", "title": "System stores the encrypted credential and verifies the connection", "attrs": {"prd_ref": "Business Workflows: Main Flow and Alternative Flow C1; Screens 7, 8 and 10"}}
+  - {"op": "add_node", "id": "STP-021-059", "type": "Step", "owner_fr": "FR-021", "title": "System sets the provider status to Error and stops; no job starts", "attrs": {"prd_ref": "Business Workflows: Main Flow and Alternative Flow C1; Screens 7, 8 and 10"}}
+  - {"op": "add_node", "id": "STP-021-060", "type": "Step", "owner_fr": "FR-021", "title": "Admin reviews the preview counts, enters a reason, and confirms", "attrs": {"prd_ref": "Business Workflows: Main Flow and Alternative Flow C1; Screens 7, 8 and 10"}}
+  - {"op": "add_node", "id": "STP-021-061", "type": "Step", "owner_fr": "FR-021", "title": "Admin enables or disables a machine-translation provider", "attrs": {"prd_ref": "Business Workflows: Main Flow and Alternative Flow C1; Screens 7, 8 and 10"}}
+  - {"op": "add_node", "id": "REQ-021-122", "type": "Rule", "owner_fr": "FR-021", "title": "Manage Localization permission covers everyday localization work; four operations stay Super Admin only", "attrs": {"statement": "The Manage Localization permission MUST cover editing non-English translation values, importing JSON as a draft, and generating machine-translation drafts. The Super Admin holds it and MAY grant it to another admin role in the FR-031 permission matrix. Editing the English source, changing the default locale, publishing, and rollback MUST stay Super Admin only.", "rationale": "Pass 1 logic review. Stated in the PRD Functional Requirements Summary and restated at the screen or rule that applies it."}}
+  - {"op": "add_node", "id": "REQ-021-123", "type": "Rule", "owner_fr": "FR-021", "title": "Import into the English source locale is an English source edit", "attrs": {"statement": "An import into the English source locale MUST be treated as an English source edit with the REQ-021-020 controls, and a new key created through import MUST carry an English value in the same file or the row is an error.", "rationale": "Pass 1 logic review. Stated in the PRD Functional Requirements Summary and restated at the screen or rule that applies it."}}
+  - {"op": "add_node", "id": "REQ-021-124", "type": "Rule", "owner_fr": "FR-021", "title": "Review Needed values do not block publish; the publish confirmation shows the count", "attrs": {"statement": "Review Needed values MUST NOT block publish; the Screen 9 publish confirmation MUST show how many values remain flagged.", "rationale": "Pass 1 logic review. Stated in the PRD Functional Requirements Summary and restated at the screen or rule that applies it."}}
+  - {"op": "add_node", "id": "REQ-021-125", "type": "Rule", "owner_fr": "FR-021", "title": "Preparation to Active is Super Admin only and needs a published bundle for every surface", "attrs": {"statement": "Moving a locale from Preparation to Active MUST be Super Admin only and MUST require a published bundle for every surface (Patient App, Provider Dashboard, Admin Platform). The default locale MUST be Active.", "rationale": "Pass 1 logic review. Stated in the PRD Functional Requirements Summary and restated at the screen or rule that applies it."}}
+  - {"op": "add_node", "id": "REQ-021-126", "type": "Rule", "owner_fr": "FR-021", "title": "Provider and admin screens format dates and numbers by the selected locale", "attrs": {"statement": "Provider and admin screens MUST format dates and numbers by the selected locale. Provider screens MUST use the provider timezone set in FR-032 (a value from the FR-026 GMT list); admin screens MUST use the platform default timezone.", "rationale": "Pass 1 logic review. Stated in the PRD Functional Requirements Summary and restated at the screen or rule that applies it."}}
+  - {"op": "add_node", "id": "REQ-021-127", "type": "Rule", "owner_fr": "FR-021", "title": "Admin-authored library text is registered as translation key groups", "attrs": {"statement": "Admin-authored library text (treatment type descriptions and technique specifications) MUST be registered as translation key groups on the Patient App and Provider Dashboard inventories. Provider-authored package names and descriptions are free text under REQ-021-119 and are not keys.", "rationale": "Pass 1 logic review. Stated in the PRD Functional Requirements Summary and restated at the screen or rule that applies it."}}
+  - {"op": "remove_edge", "from": "STP-021-001", "verb": "next", "to": "STP-021-005"}
+  - {"op": "remove_edge", "from": "STP-021-003", "verb": "next", "to": "STP-021-015"}
+  - {"op": "remove_edge", "from": "STP-021-003", "verb": "next", "to": "STP-021-018"}
+  - {"op": "remove_edge", "from": "STP-021-015", "verb": "next", "to": "STP-021-016"}
+  - {"op": "remove_edge", "from": "STP-021-015", "verb": "next", "to": "STP-021-017"}
+  - {"op": "remove_edge", "from": "STP-021-015", "verb": "next", "to": "STP-021-018"}
+  - {"op": "remove_edge", "from": "STP-021-021", "verb": "next", "to": "STP-021-018"}
+  - {"op": "remove_edge", "from": "STP-021-021", "verb": "next", "to": "STP-021-022"}
+  - {"op": "remove_edge", "from": "STP-021-007", "verb": "next", "to": "STP-021-008"}
+  - {"op": "remove_edge", "from": "STP-021-007", "verb": "next", "to": "STP-021-009"}
+  - {"op": "remove_edge", "from": "STP-021-008", "verb": "next", "to": "STP-021-009"}
+  - {"op": "remove_edge", "from": "STP-021-008", "verb": "next", "to": "STP-021-031"}
+  - {"op": "remove_edge", "from": "STP-021-009", "verb": "next", "to": "STP-021-032"}
+  - {"op": "remove_edge", "from": "STP-021-009", "verb": "next", "to": "STP-021-033"}
+  - {"op": "update_node", "id": "STP-021-015", "title": "After validation passes, system marks dependent non-English translations Review Needed unless the edit is confirmed non-semantic"}
+  - {"op": "update_node", "id": "STP-021-021", "title": "Admin chooses whether to import valid rows only as a draft or cancel for correction"}
+  - {"op": "update_node", "id": "STP-021-007", "title": "Admin opens Machine Translation Provider and Draft Generation (Alternative Flow C1)"}
+  - {"op": "update_node", "id": "STP-021-034", "title": "System saves the values that pass validation as Review Needed drafts, records failed rows in job history, and sets the job status"}
+  - {"op": "update_node", "id": "ENT-locale.fallback_order", "attrs": {"description": "This language's fallback locale, used when the language has no value for a key; English is always the last resort after it."}}
+  - {"op": "update_node", "id": "ENT-mt-job.status", "attrs": {"description": "Job status: Queued, Running, Completed, Partially failed, or Failed."}}
+  - {"op": "update_node", "id": "REQ-021-006", "attrs": {"statement": "Admin MUST be able to manage supported locales, activation state, fallback order, native names, and locale direction metadata; only a Super Admin can change the default locale."}}
+  - {"op": "update_node", "id": "REQ-021-020", "attrs": {"statement": "English source value edits MUST require elevated authorization, reason capture, audit logging, and review-needed marking for dependent locale values once the edit passes validation, unless the Super Admin confirms the source change is non-semantic in the English edit dialog. A rejected edit marks nothing."}}
+  - {"op": "update_node", "id": "REQ-021-025", "attrs": {"statement": "System MUST provide language/locale catalog data consumable by FR-032 provider spoken-language profile selection and FR-030 template-language selection, without conflating it with provider UI language preference. Interface-language selectors show Active locales only; the spoken-language and template-language lists show Active and Preparation locales."}}
+  - {"op": "update_node", "id": "REQ-021-036", "attrs": {"statement": "Inline text edits save draft changes only; JSON imports default to Import as Draft, with Import and Publish Version allowed only when no row was skipped for an error, after full validation preview, publish-summary entry, and Super Admin authorization. When any row is skipped for an error, only Import as Draft is offered."}}
+  - {"op": "update_node", "id": "REQ-021-037", "attrs": {"statement": "Fallback applies per key: the selected locale first, then that locale's configured fallback locale, then always the English source locale."}}
+  - {"op": "update_node", "id": "REQ-021-046", "attrs": {"statement": "Editable by Admin: Supported locales, native names, activation state, fallback order, and locale direction metadata; Translation values for non-source locales; Translation key metadata such as description/context and group where allowed; Draft translation changes and import confirmations (publish and rollback are Super Admin only); Machine-translation provider credentials, provider activation state, and machine-translation draft generation jobs; The free-text translation switch and its monthly budget; Currency display configuration where already owned by A-09/S-02."}}
+  - {"op": "update_node", "id": "REQ-021-049", "attrs": {"statement": "Default locale changes require approval by the Super Admin alone (no second approver); the new default locale must be Active, and English always remains the last-resort fallback."}}
+  - {"op": "update_node", "id": "REQ-021-051", "attrs": {"statement": "Elevated authorization means the Super Admin role as defined in FR-031. Only Super Admin role holders may edit English source values (including by import into the English locale), change the default locale, publish translation versions, and perform rollback operations. These four protected operations cannot be delegated. Moving a locale from Preparation to Active is also Super Admin only (REQ-021-125). The exact per-operation permission scope must be aligned with FR-031 configuration at implementation time."}}
+  - {"op": "update_node", "id": "REQ-021-055", "attrs": {"statement": "Only authenticated admins holding the Manage Localization permission can access localization-management Screens 4 to 10; the Screen 3 language selector is open to every authenticated admin."}}
+  - {"op": "update_node", "id": "REQ-021-074", "attrs": {"statement": "English (`en`) is always the source locale and is the initial default locale; only the default locale can be changed, and only by a Super Admin."}}
+  - {"op": "update_node", "id": "REQ-021-075", "attrs": {"statement": "New languages start in Preparation state and become Active only under REQ-021-125: Super Admin only, with a published bundle for every surface."}}
+  - {"op": "update_node", "id": "REQ-021-076", "attrs": {"statement": "Only Active locales appear in the Patient, Provider, and Admin interface-language selectors; Inactive and Preparation locales are hidden from them. The spoken-language and notification-template language lists used by FR-032 and FR-030 show Active and Preparation locales."}}
+  - {"op": "update_node", "id": "REQ-021-078", "attrs": {"statement": "Exactly one default locale exists; the default locale must be Active and cannot be removed."}}
+  - {"op": "update_node", "id": "REQ-021-079", "attrs": {"statement": "An admin holding the Manage Localization permission can also open machine translation for non-English languages when provider credentials are available."}}
+  - {"op": "update_node", "id": "REQ-021-094", "attrs": {"statement": "Unknown keys are blocked unless Admin has explicit permission to create new registry keys through import. A new key created through import must carry an English value in the same file; a row without one is an error."}}
+  - {"op": "update_node", "id": "REQ-021-095", "attrs": {"statement": "When a JSON import has row-level errors or warnings, Admin chooses whether to import valid rows only, as a draft, or cancel for correction. When any row is skipped for an error, only Import as Draft is offered; publishing is a separate later action."}}
+  - {"op": "update_node", "id": "REQ-021-099", "attrs": {"statement": "Admin cannot publish if required validation errors exist, such as malformed ICU syntax or placeholder mismatch. Review Needed values do not block publish (REQ-021-124)."}}
+  - {"op": "update_node", "id": "REQ-021-105", "attrs": {"statement": "All machine-generated values are marked Review Needed until Admin saves a reviewed value or selects Accept as reviewed on Screen 7."}}
+  - {"op": "update_node", "id": "REQ-021-109", "attrs": {"statement": "When Admin adds a provider, the system stores the encrypted credential and verifies the connection. A failed connection sets the provider status to Error and stops; no job starts unless the provider is Connected. Admin can enable or disable a provider; a Disabled provider cannot start a job, and enabling it verifies the connection again."}}
+  - {"op": "update_node", "id": "REQ-021-110", "attrs": {"statement": "Generate draft action: Requires a Connected and enabled provider, preview, confirmation, and the Manage Localization permission. Preview counts and a confirmation reason are required before generation."}}
+  - {"op": "update_node", "id": "REQ-021-111", "attrs": {"statement": "Provider errors, quota limits, unsupported languages, placeholder mismatches, or malformed outputs are recorded in job history; accepted results remain draft and cannot publish until validation passes. Job status is one of Queued, Running, Completed, Partially failed, or Failed."}}
+  - {"op": "update_node", "id": "REQ-021-115", "attrs": {"statement": "Use the fallback locale template/content when the recipient locale is missing. FR-021 supplies the locale catalog and fallback order to FR-030; notification wording lives only in FR-030 templates, not in a translation bundle."}}
+  - {"op": "update_node", "id": "REQ-021-119", "attrs": {"statement": "When free-text translation is switched on, free text written by one user for another (messages, free-text fields in an inquiry, provider-authored package names and descriptions, support messages and notes, and reviews) MUST be machine-translated into the reader's own language using the active machine-translation provider. Uploaded documents MUST NOT be translated. The switch is one platform-wide setting controlled by Admin from the Free-text translation panel on Screen 10 and MUST be off by default."}}
+  - {"op": "update_node", "id": "REQ-021-120", "attrs": {"statement": "Admin MUST be able to configure a monthly budget for free-text translation in the Free-text translation panel on Screen 10 (no default figure); when the monthly limit is reached, free text MUST be shown untranslated."}}
+  - {"op": "update_node", "id": "REQ-021-121", "attrs": {"statement": "Only an admin holding the Manage Localization permission MUST be able to use the machine-translation route for translation drafts."}}
+  - {"op": "update_field", "id": "ENT-mt-job.status", "data_type": "enum"}
+  - {"op": "add_enum_value", "field_id": "ENT-mt-job.status", "value": "queued", "label": "Queued", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-mt-job.status", "value": "running", "label": "Running", "sort_order": 1}
+  - {"op": "add_enum_value", "field_id": "ENT-mt-job.status", "value": "completed", "label": "Completed", "sort_order": 2}
+  - {"op": "add_enum_value", "field_id": "ENT-mt-job.status", "value": "partially_failed", "label": "Partially failed", "sort_order": 3}
+  - {"op": "add_enum_value", "field_id": "ENT-mt-job.status", "value": "failed", "label": "Failed", "sort_order": 4}
+  - {"op": "retire_enum_value", "field_id": "ENT-translation-key.surface", "value": "shared_notification"}
+  - {"op": "retire_enum_value", "field_id": "ENT-translation-import.surface", "value": "shared_notification"}
+  - {"op": "retire_enum_value", "field_id": "ENT-translation-bundle.surface", "value": "shared_notification"}
+  - {"op": "retire_enum_value", "field_id": "ENT-translation-version.surface", "value": "shared_notification"}
+  - {"op": "retire_enum_value", "field_id": "ENT-mt-job.surface_scope", "value": "shared_notification"}
+  - {"op": "retire_node", "id": "STP-021-005"}
+  - {"op": "retire_node", "id": "STP-021-006"}
+  - {"op": "retire_node", "id": "STP-021-023"}
+  - {"op": "retire_node", "id": "STP-021-024"}
+  - {"op": "add_edge", "from": "STP-021-001", "verb": "next", "to": "STP-021-007", "attrs": {"label": "Machine translation"}}
+  - {"op": "add_edge", "from": "STP-021-003", "verb": "next", "to": "STP-021-015", "attrs": {"label": "Patch valid, English source value changed"}}
+  - {"op": "add_edge", "from": "STP-021-003", "verb": "next", "to": "STP-021-018", "attrs": {"label": "Patch valid, English source value not changed"}}
+  - {"op": "add_edge", "from": "STP-021-015", "verb": "next", "to": "STP-021-018", "attrs": {"label": "Marking done"}}
+  - {"op": "add_edge", "from": "STP-021-003", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-021-020", "verb": "next", "to": "STP-021-056", "attrs": {"label": "Import into the English source locale", "condition": "REQ-021-123"}}
+  - {"op": "add_edge", "from": "STP-021-056", "verb": "next", "to": "STP-021-015", "attrs": {"label": "Review Needed marking after validation"}}
+  - {"op": "add_edge", "from": "STP-021-021", "verb": "next", "to": "STP-021-018", "attrs": {"label": "Import valid rows only, as a draft"}}
+  - {"op": "add_edge", "from": "STP-021-017", "verb": "on", "to": "SCR-021-08"}
+  - {"op": "add_edge", "from": "STP-021-017", "verb": "on", "to": "SCR-021-09"}
+  - {"op": "add_edge", "from": "STP-021-018", "verb": "on", "to": "SCR-021-08"}
+  - {"op": "add_edge", "from": "STP-021-018", "verb": "on", "to": "SCR-021-10"}
+  - {"op": "add_edge", "from": "STP-021-018", "verb": "applies", "to": "REQ-021-092"}
+  - {"op": "add_edge", "from": "STP-021-022", "verb": "applies", "to": "REQ-021-092"}
+  - {"op": "add_edge", "from": "STP-021-029", "verb": "applies", "to": "REQ-021-098"}
+  - {"op": "add_edge", "from": "STP-021-013", "verb": "applies", "to": "REQ-021-098"}
+  - {"op": "add_edge", "from": "STP-021-026", "verb": "applies", "to": "REQ-021-124"}
+  - {"op": "add_edge", "from": "STP-021-022", "verb": "applies", "to": "REQ-021-124"}
+  - {"op": "add_edge", "from": "STP-021-007", "verb": "next", "to": "STP-021-008", "attrs": {"label": "No enabled provider with a Connected status"}}
+  - {"op": "add_edge", "from": "STP-021-007", "verb": "next", "to": "STP-021-009", "attrs": {"label": "Enabled provider with a Connected status"}}
+  - {"op": "add_edge", "from": "STP-021-007", "verb": "next", "to": "STP-021-061", "attrs": {"label": "Provider is Disabled"}}
+  - {"op": "add_edge", "from": "STP-021-008", "verb": "next", "to": "STP-021-058"}
+  - {"op": "add_edge", "from": "STP-021-061", "verb": "next", "to": "STP-021-058", "attrs": {"label": "Provider enabled"}}
+  - {"op": "add_edge", "from": "STP-021-058", "verb": "next", "to": "STP-021-009", "attrs": {"label": "Connection verified"}}
+  - {"op": "add_edge", "from": "STP-021-058", "verb": "next", "to": "STP-021-059", "attrs": {"label": "Connection check failed"}}
+  - {"op": "add_edge", "from": "STP-021-009", "verb": "next", "to": "STP-021-060"}
+  - {"op": "add_edge", "from": "STP-021-060", "verb": "next", "to": "STP-021-032", "attrs": {"label": "Prefill missing keys"}}
+  - {"op": "add_edge", "from": "STP-021-060", "verb": "next", "to": "STP-021-033", "attrs": {"label": "Replace entire language"}}
+  - {"op": "add_edge", "from": "STP-021-032", "verb": "applies", "to": "REQ-021-106"}
+  - {"op": "add_edge", "from": "STP-021-033", "verb": "applies", "to": "REQ-021-106"}
+  - {"op": "add_edge", "from": "STP-021-032", "verb": "applies", "to": "REQ-021-111"}
+  - {"op": "add_edge", "from": "STP-021-033", "verb": "applies", "to": "REQ-021-111"}
+  - {"op": "add_edge", "from": "STP-021-035", "verb": "next", "to": "STP-021-026"}
+  - {"op": "add_edge", "from": "STP-021-035", "verb": "next", "to": "STP-021-057", "attrs": {"label": "Value still flagged Review Needed"}}
+  - {"op": "add_edge", "from": "STP-021-057", "verb": "next", "to": "STP-021-026"}
+  - {"op": "add_edge", "from": "STP-021-056", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-021-056", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-056", "verb": "on", "to": "SCR-021-08"}
+  - {"op": "add_edge", "from": "STP-021-056", "verb": "applies", "to": "REQ-021-123"}
+  - {"op": "add_edge", "from": "STP-021-056", "verb": "applies", "to": "REQ-021-020"}
+  - {"op": "add_edge", "from": "STP-021-057", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-021-057", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-021-057", "verb": "on", "to": "SCR-021-07"}
+  - {"op": "add_edge", "from": "STP-021-057", "verb": "applies", "to": "REQ-021-105"}
+  - {"op": "add_edge", "from": "STP-021-058", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-021-058", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-058", "verb": "on", "to": "SCR-021-10"}
+  - {"op": "add_edge", "from": "STP-021-058", "verb": "applies", "to": "REQ-021-109"}
+  - {"op": "add_edge", "from": "STP-021-058", "verb": "applies", "to": "REQ-021-031"}
+  - {"op": "add_edge", "from": "STP-021-059", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-021-059", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-021-059", "verb": "on", "to": "SCR-021-10"}
+  - {"op": "add_edge", "from": "STP-021-059", "verb": "applies", "to": "REQ-021-109"}
+  - {"op": "add_edge", "from": "STP-021-060", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-021-060", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-021-060", "verb": "on", "to": "SCR-021-10"}
+  - {"op": "add_edge", "from": "STP-021-060", "verb": "applies", "to": "REQ-021-110"}
+  - {"op": "add_edge", "from": "STP-021-060", "verb": "applies", "to": "REQ-021-104"}
+  - {"op": "add_edge", "from": "STP-021-060", "verb": "applies", "to": "REQ-021-029"}
+  - {"op": "add_edge", "from": "STP-021-061", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-021-061", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-021-061", "verb": "on", "to": "SCR-021-10"}
+  - {"op": "add_edge", "from": "STP-021-061", "verb": "applies", "to": "REQ-021-109"}
+  - {"op": "add_edge", "from": "REQ-021-122", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-021-122", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-021-122", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-021-122", "verb": "applies to", "to": "SCR-021-05"}
+  - {"op": "add_edge", "from": "REQ-021-122", "verb": "applies to", "to": "SCR-021-10"}
+  - {"op": "add_edge", "from": "REQ-021-122", "verb": "decided by", "to": "SRC-PRD-021"}
+  - {"op": "add_edge", "from": "REQ-021-123", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-021-123", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-021-123", "verb": "applies to", "to": "SCR-021-08"}
+  - {"op": "add_edge", "from": "REQ-021-123", "verb": "applies to", "to": "ENT-translation-import"}
+  - {"op": "add_edge", "from": "REQ-021-123", "verb": "decided by", "to": "SRC-PRD-021"}
+  - {"op": "add_edge", "from": "REQ-021-124", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-021-124", "verb": "applies to", "to": "SCR-021-09"}
+  - {"op": "add_edge", "from": "REQ-021-124", "verb": "applies to", "to": "ENT-locale.review_needed_count"}
+  - {"op": "add_edge", "from": "REQ-021-124", "verb": "decided by", "to": "SRC-PRD-021"}
+  - {"op": "add_edge", "from": "REQ-021-125", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-021-125", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-021-125", "verb": "applies to", "to": "SCR-021-04"}
+  - {"op": "add_edge", "from": "REQ-021-125", "verb": "applies to", "to": "ENT-locale.status"}
+  - {"op": "add_edge", "from": "REQ-021-125", "verb": "decided by", "to": "SRC-PRD-021"}
+  - {"op": "add_edge", "from": "REQ-021-126", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-021-126", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-021-126", "verb": "decided by", "to": "SRC-PRD-021"}
+  - {"op": "add_edge", "from": "REQ-021-127", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-021-127", "verb": "applies to", "to": "ENT-translation-key"}
+  - {"op": "add_edge", "from": "REQ-021-127", "verb": "applies to", "to": "SCR-021-06"}
+  - {"op": "add_edge", "from": "REQ-021-127", "verb": "decided by", "to": "SRC-PRD-021"}
+  - {"op": "add_edge", "from": "REQ-021-121", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-021-121", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-021-079", "verb": "applies to", "to": "ACT-super-admin"}
+  - {"op": "add_edge", "from": "REQ-021-119", "verb": "applies to", "to": "SCR-021-10"}
+  - {"op": "add_edge", "from": "REQ-021-120", "verb": "applies to", "to": "SCR-021-10"}
+  - {"op": "add_edge", "from": "REQ-021-105", "verb": "applies to", "to": "SCR-021-07"}
+  - {"op": "add_edge", "from": "REQ-021-025", "verb": "applies to", "to": "SCR-021-04"}
+  - {"op": "add_edge", "from": "REQ-021-076", "verb": "applies to", "to": "SCR-021-04"}
+  - {"op": "add_edge", "from": "SCR-021-05", "verb": "shows", "to": "ENT-locale.fallback_order", "attrs": {"provenance": "user input", "label": "Fallback locale", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-021-09", "verb": "shows", "to": "ENT-locale.review_needed_count", "attrs": {"provenance": "system calculated", "label": "Review Needed count"}}
+  - {"op": "add_edge", "from": "FR-021", "verb": "references", "to": "REQ-026-121"}
+  - {"op": "add_edge", "from": "FR-021", "verb": "references", "to": "REQ-032-006"}

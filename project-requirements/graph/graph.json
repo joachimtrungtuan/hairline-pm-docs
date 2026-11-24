@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T10:41:57Z",
+  "generated_at": "2026-11-24T11:02:20Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -12810,8 +12810,10 @@
       "owner_fr": "FR-021",
       "title": "Fallback order",
       "status": "active",
-      "version": 1,
-      "attrs": {}
+      "version": 2,
+      "attrs": {
+        "description": "This language's fallback locale, used when the language has no value for a key; English is always the last resort after it."
+      }
     },
     {
       "id": "ENT-locale.is_default",
@@ -15141,8 +15143,10 @@
       "owner_fr": "FR-021",
       "title": "Status",
       "status": "active",
-      "version": 1,
-      "attrs": {}
+      "version": 2,
+      "attrs": {
+        "description": "Job status: Queued, Running, Completed, Partially failed, or Failed."
+      }
     },
     {
       "id": "ENT-mt-job.surface_scope",
@@ -15150,7 +15154,7 @@
       "owner_fr": "FR-021",
       "title": "Tenant/surface scope",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {}
     },
     {
@@ -29780,7 +29784,7 @@
       "owner_fr": "FR-021",
       "title": "Tenant/surface",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {}
     },
     {
@@ -29899,7 +29903,7 @@
       "owner_fr": "FR-021",
       "title": "Tenant/surface",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {}
     },
     {
@@ -30054,7 +30058,7 @@
       "owner_fr": "FR-021",
       "title": "Tenant/surface",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {}
     },
     {
@@ -30256,7 +30260,7 @@
       "owner_fr": "FR-021",
       "title": "Tenant/surface",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {}
     },
     {
@@ -39548,7 +39552,7 @@
       "owner_fr": null,
       "title": "Multi-Language & Localization",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "module": "fr021-i18n-localization",
         "prd_path": "project-requirements/functional-requirements/fr021-i18n-localization/prd.md",
@@ -73528,9 +73532,9 @@
       "owner_fr": "FR-021",
       "title": "Admin manages locales, activation, default, fallback order, names, direction",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Admin MUST be able to manage supported locales, activation state, default locale, fallback order, native names, and locale direction metadata.",
+        "statement": "Admin MUST be able to manage supported locales, activation state, fallback order, native names, and locale direction metadata; only a Super Admin can change the default locale.",
         "rationale": "PRD Functional Requirements Summary (prd.md line 1056). PRD id REQ-021-006.  Restated at: Module Scope A-09 (line 58)."
       }
     },
@@ -73696,9 +73700,9 @@
       "owner_fr": "FR-021",
       "title": "English source edits need elevated authorization, reason, audit and review-needed marking, unless confirmed non-semantic",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "English source value edits MUST require elevated authorization, reason capture, audit logging, and review-needed marking for dependent locale values, unless Admin explicitly confirms the source change is non-semantic.",
+        "statement": "English source value edits MUST require elevated authorization, reason capture, audit logging, and review-needed marking for dependent locale values once the edit passes validation, unless the Super Admin confirms the source change is non-semantic in the English edit dialog. A rejected edit marks nothing.",
         "rationale": "PRD Functional Requirements Summary (prd.md line 1083). PRD id REQ-021-020. Restated at: Configurable with restrictions: English source.",
         "aliases": "REQ-021-086"
       }
@@ -73757,9 +73761,9 @@
       "owner_fr": "FR-021",
       "title": "Language catalog consumable by FR-032 provider spoken-language selection",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System MUST provide language/locale catalog data consumable by FR-032 provider spoken-language profile selection without conflating it with provider UI language preference.",
+        "statement": "System MUST provide language/locale catalog data consumable by FR-032 provider spoken-language profile selection and FR-030 template-language selection, without conflating it with provider UI language preference. Interface-language selectors show Active locales only; the spoken-language and template-language lists show Active and Preparation locales.",
         "rationale": "PRD Functional Requirements Summary (prd.md line 1093). PRD id REQ-021-025.  Restated at: Module Scope PR-06 (line 53)."
       }
     },
@@ -73889,9 +73893,9 @@
       "owner_fr": "FR-021",
       "title": "Edits save as draft; imports default to draft; import and publish is gated",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Inline text edits save draft changes only; JSON imports default to Import as Draft, with Import and Publish Version allowed only after full validation preview, publish-summary entry, and required authorization.",
+        "statement": "Inline text edits save draft changes only; JSON imports default to Import as Draft, with Import and Publish Version allowed only when no row was skipped for an error, after full validation preview, publish-summary entry, and Super Admin authorization. When any row is skipped for an error, only Import as Draft is offered.",
         "rationale": "PRD Business Rules (prd.md line 654)."
       }
     },
@@ -73901,9 +73905,9 @@
       "owner_fr": "FR-021",
       "title": "Fallback chain: selected locale, fallback locale, default locale",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Fallback applies per key using selected locale, configured fallback locale, and default/source locale.",
+        "statement": "Fallback applies per key: the selected locale first, then that locale's configured fallback locale, then always the English source locale.",
         "rationale": "PRD Business Rules (prd.md line 658)."
       }
     },
@@ -74009,9 +74013,9 @@
       "owner_fr": "FR-021",
       "title": "Items editable by Admin",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Editable by Admin: Supported locales, native names, activation state, fallback order, and locale direction metadata; Translation values for non-source locales; Translation key metadata such as description/context and group where allowed; Draft translation changes, import confirmations, publish actions, and rollback actions; Machine-translation provider credentials, provider activation state, and machine-translation draft generation jobs; Currency display configuration where already owned by A-09/S-02.",
+        "statement": "Editable by Admin: Supported locales, native names, activation state, fallback order, and locale direction metadata; Translation values for non-source locales; Translation key metadata such as description/context and group where allowed; Draft translation changes and import confirmations (publish and rollback are Super Admin only); Machine-translation provider credentials, provider activation state, and machine-translation draft generation jobs; The free-text translation switch and its monthly budget; Currency display configuration where already owned by A-09/S-02.",
         "rationale": "PRD Business Rules (prd.md line 673). Restated at: Editable list: translation values (line 674); Editable list: key metadata (line 675); Editable list: publish and rollback (line 676); Editable list: MT credentials and jobs (line 677); Editable list: currency display (line 678)."
       }
     },
@@ -74045,9 +74049,9 @@
       "owner_fr": "FR-021",
       "title": "Default locale change needs Super Admin approval alone and cannot deactivate the source locale",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Default locale changes require approval by the Super Admin alone (no second approver) and must not deactivate the source locale.",
+        "statement": "Default locale changes require approval by the Super Admin alone (no second approver); the new default locale must be Active, and English always remains the last-resort fallback.",
         "rationale": "PRD Business Rules, Admin Editability (prd.md line 700)."
       }
     },
@@ -74069,9 +74073,9 @@
       "owner_fr": "FR-021",
       "title": "Elevated authorization means Super Admin for four protected operations",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "**Elevated Authorization Definition**: For the purposes of FR-021, \"elevated authorization\" means the **Super Admin** role as defined in FR-031 (Admin Access Control & Permissions). Only Super Admin role holders may edit English source values, change the default locale, publish translation versions, and perform rollback operations. The exact per-operation permission scope must be aligned with FR-031 configuration at implementation time.",
+        "statement": "Elevated authorization means the Super Admin role as defined in FR-031. Only Super Admin role holders may edit English source values (including by import into the English locale), change the default locale, publish translation versions, and perform rollback operations. These four protected operations cannot be delegated. Moving a locale from Preparation to Active is also Super Admin only (REQ-021-125). The exact per-operation permission scope must be aligned with FR-031 configuration at implementation time.",
         "rationale": "PRD Business Rules (prd.md line 704). Restated at: Dependency FR-031 (line 777); Integration note: HTTP 403 (line 879); Security: authorization (line 902)."
       }
     },
@@ -74117,9 +74121,9 @@
       "owner_fr": "FR-021",
       "title": "Only authenticated Admin users reach localization management",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Only authenticated Admin users can access localization-management screens.",
+        "statement": "Only authenticated admins holding the Manage Localization permission can access localization-management Screens 4 to 10; the Screen 3 language selector is open to every authenticated admin.",
         "rationale": "PRD Implementation Notes (prd.md line 909)."
       }
     },
@@ -74322,9 +74326,9 @@
       "owner_fr": "FR-021",
       "title": "English is the initial default and source locale",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "English (`en`) is the initial default/source locale unless changed through approved governance.",
+        "statement": "English (`en`) is always the source locale and is the initial default locale; only the default locale can be changed, and only by a Super Admin.",
         "rationale": "PRD Screen Specifications, Screen 4 (prd.md line 344)."
       }
     },
@@ -74334,9 +74338,9 @@
       "owner_fr": "FR-021",
       "title": "New languages start in Preparation state",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "New languages should start in Preparation state until required tenant bundles are ready.",
+        "statement": "New languages start in Preparation state and become Active only under REQ-021-125: Super Admin only, with a published bundle for every surface.",
         "rationale": "PRD Screen Specifications, Screen 4 (prd.md line 345)."
       }
     },
@@ -74346,9 +74350,9 @@
       "owner_fr": "FR-021",
       "title": "Only Active locales appear in language selectors",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Only Active locales appear in user-facing language selectors; Inactive and Preparation locales are hidden from all patient, provider, and admin language selector controls.",
+        "statement": "Only Active locales appear in the Patient, Provider, and Admin interface-language selectors; Inactive and Preparation locales are hidden from them. The spoken-language and notification-template language lists used by FR-032 and FR-030 show Active and Preparation locales.",
         "rationale": "PRD Screen Specifications, Screen 4 (prd.md line 346). Restated at: Screen 1 rule (line 246); Screen 2 row: available languages (line 268); Screen 3 row: available languages (line 298); Alternative flow A1 step 2 (line 176)."
       }
     },
@@ -74370,9 +74374,9 @@
       "owner_fr": "FR-021",
       "title": "Exactly one default locale; it cannot be deactivated or removed",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Exactly one default locale exists; the default locale cannot be inactive and cannot be removed",
+        "statement": "Exactly one default locale exists; the default locale must be Active and cannot be removed.",
         "rationale": "PRD Screen Specifications, Screen 4 (prd.md line 329). Restated at: Screen 4 row: status (line 328); Screen 4 note: default protected (line 350)."
       }
     },
@@ -74382,9 +74386,9 @@
       "owner_fr": "FR-021",
       "title": "Machine translation route is offered only for non-English languages and authorized Admins",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Admin can also open machine translation for non-English languages when provider credentials and authorization are available.",
+        "statement": "An admin holding the Manage Localization permission can also open machine translation for non-English languages when provider credentials are available.",
         "rationale": "PRD Screen Specifications, Screen 5 (prd.md line 380). Restated at: Screen 5 row: machine translation route (line 371)."
       }
     },
@@ -74550,9 +74554,9 @@
       "owner_fr": "FR-021",
       "title": "Unknown keys are blocked unless Admin may create registry keys",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Unknown keys are blocked unless Admin has explicit permission to create new registry keys through import.",
+        "statement": "Unknown keys are blocked unless Admin has explicit permission to create new registry keys through import. A new key created through import must carry an English value in the same file; a row without one is an error.",
         "rationale": "PRD Screen Specifications, Screen 8 (prd.md line 558). Restated at: Screen 8 row: group (line 538)."
       }
     },
@@ -74562,9 +74566,9 @@
       "owner_fr": "FR-021",
       "title": "Row-level import errors: import valid rows only or cancel",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "When a JSON import has row-level errors or warnings, Admin chooses whether to import valid rows only or cancel for correction",
+        "statement": "When a JSON import has row-level errors or warnings, Admin chooses whether to import valid rows only, as a draft, or cancel for correction. When any row is skipped for an error, only Import as Draft is offered; publishing is a separate later action.",
         "rationale": "PRD Main Flow (prd.md line 141)."
       }
     },
@@ -74610,9 +74614,9 @@
       "owner_fr": "FR-021",
       "title": "Publishing is blocked by required validation errors",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Admin cannot publish if required validation errors exist, such as malformed ICU syntax or placeholder mismatch.",
+        "statement": "Admin cannot publish if required validation errors exist, such as malformed ICU syntax or placeholder mismatch. Review Needed values do not block publish (REQ-021-124).",
         "rationale": "PRD Screen Specifications, Screen 9 (prd.md line 595). Restated at: Screen 9 row: publish action (line 581); External dependency: translator files (line 790)."
       }
     },
@@ -74682,9 +74686,9 @@
       "owner_fr": "FR-021",
       "title": "Machine-generated values stay Review Needed until reviewed or accepted",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "All machine-generated values are marked Review Needed until reviewed or explicitly accepted by Admin.",
+        "statement": "All machine-generated values are marked Review Needed until Admin saves a reviewed value or selects Accept as reviewed on Screen 7.",
         "rationale": "PRD Screen Specifications, Screen 10 (prd.md line 632)."
       }
     },
@@ -74730,9 +74734,9 @@
       "owner_fr": "FR-021",
       "title": "Adding a provider stores the credential encrypted and verifies the connection",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "When Admin adds a provider, the system stores the encrypted credential and verifies the connection",
+        "statement": "When Admin adds a provider, the system stores the encrypted credential and verifies the connection. A failed connection sets the provider status to Error and stops; no job starts unless the provider is Connected. Admin can enable or disable a provider; a Disabled provider cannot start a job, and enabling it verifies the connection again.",
         "rationale": "PRD Alternative Flows (prd.md line 209)."
       }
     },
@@ -74742,9 +74746,9 @@
       "owner_fr": "FR-021",
       "title": "Starting a translation job needs an active provider, preview, reason and authorization",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Generate draft action: Requires active provider, preview, confirmation, and authorization. Preview counts and a confirmation reason are required before generation",
+        "statement": "Generate draft action: Requires a Connected and enabled provider, preview, confirmation, and the Manage Localization permission. Preview counts and a confirmation reason are required before generation.",
         "rationale": "PRD Screen Specifications, Screen 10 (prd.md line 619). Restated at: Screen 10 row: preview counts (line 617); Screen 10 row: confirmation reason (line 618)."
       }
     },
@@ -74754,9 +74758,9 @@
       "owner_fr": "FR-021",
       "title": "Translation job failures are recorded and create no publishable values",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Provider errors, quota limits, unsupported languages, placeholder mismatches, or malformed outputs are recorded in job history; accepted results remain draft and cannot publish until validation passes.",
+        "statement": "Provider errors, quota limits, unsupported languages, placeholder mismatches, or malformed outputs are recorded in job history; accepted results remain draft and cannot publish until validation passes. Job status is one of Queued, Running, Completed, Partially failed, or Failed.",
         "rationale": "PRD Dependencies (prd.md line 803). Restated at: Integration note: machine translation errors (line 889)."
       }
     },
@@ -74802,9 +74806,9 @@
       "owner_fr": "FR-021",
       "title": "Notification delivery uses fallback locale template",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Use fallback locale template/content when recipient locale is missing.",
+        "statement": "Use the fallback locale template/content when the recipient locale is missing. FR-021 supplies the locale catalog and fallback order to FR-030; notification wording lives only in FR-030 templates, not in a translation bundle.",
         "rationale": "PRD Integration Points, Notification Service (prd.md line 892)."
       }
     },
@@ -74850,9 +74854,9 @@
       "owner_fr": "FR-021",
       "title": "Free text between users is machine-translated for the reader when the Admin switch is on",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "When free-text translation is switched on, free text written by one user for another (messages, free-text fields in an inquiry, support messages and notes, and reviews) MUST be machine-translated into the reader's own language. Uploaded documents MUST NOT be translated. The switch is one platform-wide setting controlled by Admin and MUST be off by default.",
+        "statement": "When free-text translation is switched on, free text written by one user for another (messages, free-text fields in an inquiry, provider-authored package names and descriptions, support messages and notes, and reviews) MUST be machine-translated into the reader's own language using the active machine-translation provider. Uploaded documents MUST NOT be translated. The switch is one platform-wide setting controlled by Admin from the Free-text translation panel on Screen 10 and MUST be off by default.",
         "rationale": "PRD Functional Requirements Summary (prd.md line 1068). PRD id REQ-021-119. Restated at: General Module Rule 15 (line 664); Module Scope (lines 46, 62, 82, 86)."
       }
     },
@@ -74862,9 +74866,9 @@
       "owner_fr": "FR-021",
       "title": "Free-text translation has a monthly budget; at the limit text is shown untranslated",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Admin MUST be able to configure a monthly budget for free-text translation (no default figure); when the monthly limit is reached, free text MUST be shown untranslated.",
+        "statement": "Admin MUST be able to configure a monthly budget for free-text translation in the Free-text translation panel on Screen 10 (no default figure); when the monthly limit is reached, free text MUST be shown untranslated.",
         "rationale": "PRD Functional Requirements Summary (prd.md line 1069). PRD id REQ-021-120. Restated at: General Module Rule 16 (line 665)."
       }
     },
@@ -74874,10 +74878,82 @@
       "owner_fr": "FR-021",
       "title": "Only Platform Admin and Super Admin may use the machine-translation route",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Only Platform Admin and Super Admin MUST be able to use the machine-translation route for translation drafts.",
+        "statement": "Only an admin holding the Manage Localization permission MUST be able to use the machine-translation route for translation drafts.",
         "rationale": "PRD Functional Requirements Summary (prd.md line 1070). PRD id REQ-021-121. Restated at: Screen 10 business rules (line 628)."
+      }
+    },
+    {
+      "id": "REQ-021-122",
+      "type": "Rule",
+      "owner_fr": "FR-021",
+      "title": "Manage Localization permission covers everyday localization work; four operations stay Super Admin only",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The Manage Localization permission MUST cover editing non-English translation values, importing JSON as a draft, and generating machine-translation drafts. The Super Admin holds it and MAY grant it to another admin role in the FR-031 permission matrix. Editing the English source, changing the default locale, publishing, and rollback MUST stay Super Admin only.",
+        "rationale": "Pass 1 logic review. Stated in the PRD Functional Requirements Summary and restated at the screen or rule that applies it."
+      }
+    },
+    {
+      "id": "REQ-021-123",
+      "type": "Rule",
+      "owner_fr": "FR-021",
+      "title": "Import into the English source locale is an English source edit",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "An import into the English source locale MUST be treated as an English source edit with the REQ-021-020 controls, and a new key created through import MUST carry an English value in the same file or the row is an error.",
+        "rationale": "Pass 1 logic review. Stated in the PRD Functional Requirements Summary and restated at the screen or rule that applies it."
+      }
+    },
+    {
+      "id": "REQ-021-124",
+      "type": "Rule",
+      "owner_fr": "FR-021",
+      "title": "Review Needed values do not block publish; the publish confirmation shows the count",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Review Needed values MUST NOT block publish; the Screen 9 publish confirmation MUST show how many values remain flagged.",
+        "rationale": "Pass 1 logic review. Stated in the PRD Functional Requirements Summary and restated at the screen or rule that applies it."
+      }
+    },
+    {
+      "id": "REQ-021-125",
+      "type": "Rule",
+      "owner_fr": "FR-021",
+      "title": "Preparation to Active is Super Admin only and needs a published bundle for every surface",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Moving a locale from Preparation to Active MUST be Super Admin only and MUST require a published bundle for every surface (Patient App, Provider Dashboard, Admin Platform). The default locale MUST be Active.",
+        "rationale": "Pass 1 logic review. Stated in the PRD Functional Requirements Summary and restated at the screen or rule that applies it."
+      }
+    },
+    {
+      "id": "REQ-021-126",
+      "type": "Rule",
+      "owner_fr": "FR-021",
+      "title": "Provider and admin screens format dates and numbers by the selected locale",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Provider and admin screens MUST format dates and numbers by the selected locale. Provider screens MUST use the provider timezone set in FR-032 (a value from the FR-026 GMT list); admin screens MUST use the platform default timezone.",
+        "rationale": "Pass 1 logic review. Stated in the PRD Functional Requirements Summary and restated at the screen or rule that applies it."
+      }
+    },
+    {
+      "id": "REQ-021-127",
+      "type": "Rule",
+      "owner_fr": "FR-021",
+      "title": "Admin-authored library text is registered as translation key groups",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Admin-authored library text (treatment type descriptions and technique specifications) MUST be registered as translation key groups on the Patient App and Provider Dashboard inventories. Provider-authored package names and descriptions are free text under REQ-021-119 and are not keys.",
+        "rationale": "Pass 1 logic review. Stated in the PRD Functional Requirements Summary and restated at the screen or rule that applies it."
       }
     },
     {
@@ -99213,7 +99289,7 @@
       "owner_fr": "FR-021",
       "title": "Admin - Language Detail",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
         "description": "PRD Screen 5 (prd.md line 354). Purpose: Primary working screen for one language: coverage, draft changes, edit, import, export, version history and machine-translation routes. Route and action controls (Edit keys, Import JSON, Export JSON, Version history, Machine translation) are UI controls; each keeps the selected language context."
@@ -99261,7 +99337,7 @@
       "owner_fr": "FR-021",
       "title": "Admin - Language Version History & Rollback",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
         "description": "PRD Screen 9 (prd.md line 564). Purpose: Manage published versions for a language, inspect changes, publish drafts and roll back. Language-focused when entered from Language Detail, with filters for a global history view. Version history shows whether a version came from manual patching, JSON import, import and publish, machine translation or rollback. Publish, Rollback and Compare are UI controls."
@@ -116095,7 +116171,7 @@
       "owner_fr": "FR-021",
       "title": "Admin opens Localization Management",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow step 1"
       }
@@ -116117,7 +116193,7 @@
       "owner_fr": "FR-021",
       "title": "Admin selects a key from Translation Key Inventory and edits values in the editor",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "prd_ref": "Main Flow step 4P"
       }
@@ -116134,34 +116210,12 @@
       }
     },
     {
-      "id": "STP-021-005",
-      "type": "Step",
-      "owner_fr": "FR-021",
-      "title": "Admin opens Machine Translation Provider and Draft Generation",
-      "status": "active",
-      "version": 2,
-      "attrs": {
-        "prd_ref": "Main Flow step 4M"
-      }
-    },
-    {
-      "id": "STP-021-006",
-      "type": "Step",
-      "owner_fr": "FR-021",
-      "title": "Admin selects provider, target non-English language, tenant/surface scope, and generation mode",
-      "status": "active",
-      "version": 3,
-      "attrs": {
-        "prd_ref": "Main Flow step 5M"
-      }
-    },
-    {
       "id": "STP-021-007",
       "type": "Step",
       "owner_fr": "FR-021",
-      "title": "Admin opens Machine Translation Provider and Draft Generation",
+      "title": "Admin opens Machine Translation Provider and Draft Generation (Alternative Flow C1)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "C1 step 1"
       }
@@ -116172,7 +116226,7 @@
       "owner_fr": "FR-021",
       "title": "Admin adds provider, API key, supported languages, and usage notes",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "prd_ref": "C1 step 3 (no active provider)"
       }
@@ -116183,7 +116237,7 @@
       "owner_fr": "FR-021",
       "title": "Admin selects target language, tenant/surface scope, and generation mode",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "C1 step 3 (active provider)"
       }
@@ -116216,7 +116270,7 @@
       "owner_fr": "FR-021",
       "title": "System creates new rollback version from prior bundle contents and marks it active",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow step 6R"
       }
@@ -116225,9 +116279,9 @@
       "id": "STP-021-015",
       "type": "Step",
       "owner_fr": "FR-021",
-      "title": "System marks dependent non-English translations Review Needed",
+      "title": "After validation passes, system marks dependent non-English translations Review Needed unless the edit is confirmed non-semantic",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "prd_ref": "Main Flow step 7P"
       }
@@ -116238,7 +116292,7 @@
       "owner_fr": "FR-021",
       "title": "System blocks save, import, or publish and shows errors for correction",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow step 9"
       }
@@ -116249,7 +116303,7 @@
       "owner_fr": "FR-021",
       "title": "System saves accepted changes as draft and marks keys Pending Publish",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow step 9A"
       }
@@ -116260,7 +116314,7 @@
       "owner_fr": "FR-021",
       "title": "System shows validation preview with created, updated, unchanged, skipped, row-warning, and error counts",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow step 7J"
       }
@@ -116269,9 +116323,9 @@
       "id": "STP-021-021",
       "type": "Step",
       "owner_fr": "FR-021",
-      "title": "Admin chooses whether to import valid rows only or cancel for correction",
+      "title": "Admin chooses whether to import valid rows only as a draft or cancel for correction",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow step 9J"
       }
@@ -116282,31 +116336,9 @@
       "owner_fr": "FR-021",
       "title": "Admin enters publish summary and confirms import and publish",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "prd_ref": "Main Flow step 11J"
-      }
-    },
-    {
-      "id": "STP-021-023",
-      "type": "Step",
-      "owner_fr": "FR-021",
-      "title": "System generates draft values only for missing target-language keys",
-      "status": "active",
-      "version": 3,
-      "attrs": {
-        "prd_ref": "Main Flow step 7M (prefill)"
-      }
-    },
-    {
-      "id": "STP-021-024",
-      "type": "Step",
-      "owner_fr": "FR-021",
-      "title": "System generates replacement draft values for all selected target-language keys except English source",
-      "status": "active",
-      "version": 3,
-      "attrs": {
-        "prd_ref": "Main Flow step 7M (replace)"
       }
     },
     {
@@ -116315,7 +116347,7 @@
       "owner_fr": "FR-021",
       "title": "Admin opens Language Version History and Rollback and reviews pending changes",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow step 10"
       }
@@ -116337,7 +116369,7 @@
       "owner_fr": "FR-021",
       "title": "System creates immutable published bundle version and marks it active",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow step 13"
       }
@@ -116359,7 +116391,7 @@
       "owner_fr": "FR-021",
       "title": "System translates missing target-language keys only",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "C1 step 6A"
       }
@@ -116370,7 +116402,7 @@
       "owner_fr": "FR-021",
       "title": "System translates all selected target-language keys and stages replacements",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "C1 step 6B"
       }
@@ -116379,9 +116411,9 @@
       "id": "STP-021-034",
       "type": "Step",
       "owner_fr": "FR-021",
-      "title": "System saves machine-generated values as draft and marks Review Needed",
+      "title": "System saves the values that pass validation as Review Needed drafts, records failed rows in job history, and sets the job status",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "C1 step 7"
       }
@@ -116392,7 +116424,7 @@
       "owner_fr": "FR-021",
       "title": "Admin reviews draft values in registry and key detail and publishes through Version History when ready",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "C1 step 8"
       }
@@ -116615,6 +116647,72 @@
       "version": 1,
       "attrs": {
         "prd_ref": "Alternative Flow B1 step 6"
+      }
+    },
+    {
+      "id": "STP-021-056",
+      "type": "Step",
+      "owner_fr": "FR-021",
+      "title": "System treats an import into the English source locale as an English source edit",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Business Workflows: Main Flow and Alternative Flow C1; Screens 7, 8 and 10"
+      }
+    },
+    {
+      "id": "STP-021-057",
+      "type": "Step",
+      "owner_fr": "FR-021",
+      "title": "Admin accepts a Review Needed value as reviewed",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Business Workflows: Main Flow and Alternative Flow C1; Screens 7, 8 and 10"
+      }
+    },
+    {
+      "id": "STP-021-058",
+      "type": "Step",
+      "owner_fr": "FR-021",
+      "title": "System stores the encrypted credential and verifies the connection",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Business Workflows: Main Flow and Alternative Flow C1; Screens 7, 8 and 10"
+      }
+    },
+    {
+      "id": "STP-021-059",
+      "type": "Step",
+      "owner_fr": "FR-021",
+      "title": "System sets the provider status to Error and stops; no job starts",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Business Workflows: Main Flow and Alternative Flow C1; Screens 7, 8 and 10"
+      }
+    },
+    {
+      "id": "STP-021-060",
+      "type": "Step",
+      "owner_fr": "FR-021",
+      "title": "Admin reviews the preview counts, enters a reason, and confirms",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Business Workflows: Main Flow and Alternative Flow C1; Screens 7, 8 and 10"
+      }
+    },
+    {
+      "id": "STP-021-061",
+      "type": "Step",
+      "owner_fr": "FR-021",
+      "title": "Admin enables or disables a machine-translation provider",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Business Workflows: Main Flow and Alternative Flow C1; Screens 7, 8 and 10"
       }
     },
     {
@@ -143848,7 +143946,7 @@
       "id": "ENT-mt-job.status",
       "entity_id": "ENT-mt-job",
       "name": "status",
-      "data_type": "text",
+      "data_type": "enum",
       "required": false,
       "calculated_by": null
     },
@@ -159111,6 +159209,36 @@
       "sort_order": 1
     },
     {
+      "field_id": "ENT-mt-job.status",
+      "value": "queued",
+      "label": "Queued",
+      "sort_order": 0
+    },
+    {
+      "field_id": "ENT-mt-job.status",
+      "value": "running",
+      "label": "Running",
+      "sort_order": 1
+    },
+    {
+      "field_id": "ENT-mt-job.status",
+      "value": "completed",
+      "label": "Completed",
+      "sort_order": 2
+    },
+    {
+      "field_id": "ENT-mt-job.status",
+      "value": "partially_failed",
+      "label": "Partially failed",
+      "sort_order": 3
+    },
+    {
+      "field_id": "ENT-mt-job.status",
+      "value": "failed",
+      "label": "Failed",
+      "sort_order": 4
+    },
+    {
       "field_id": "ENT-mt-job.surface_scope",
       "value": "patient_app",
       "label": "Patient App",
@@ -159127,12 +159255,6 @@
       "value": "admin_platform",
       "label": "Admin Platform",
       "sort_order": 2
-    },
-    {
-      "field_id": "ENT-mt-job.surface_scope",
-      "value": "shared_notification",
-      "label": "Shared/Notification",
-      "sort_order": 3
     },
     {
       "field_id": "ENT-mt-provider-credential.status",
@@ -162417,12 +162539,6 @@
       "sort_order": 2
     },
     {
-      "field_id": "ENT-translation-bundle.surface",
-      "value": "shared_notification",
-      "label": "Shared/Notification",
-      "sort_order": 3
-    },
-    {
       "field_id": "ENT-translation-import.decision",
       "value": "import_as_draft",
       "label": "Import as Draft",
@@ -162463,12 +162579,6 @@
       "value": "admin_platform",
       "label": "Admin Platform",
       "sort_order": 2
-    },
-    {
-      "field_id": "ENT-translation-import.surface",
-      "value": "shared_notification",
-      "label": "Shared/Notification",
-      "sort_order": 3
     },
     {
       "field_id": "ENT-translation-key.flexibility_status",
@@ -162567,12 +162677,6 @@
       "sort_order": 2
     },
     {
-      "field_id": "ENT-translation-key.surface",
-      "value": "shared_notification",
-      "label": "Shared/Notification",
-      "sort_order": 3
-    },
-    {
       "field_id": "ENT-translation-version.source_type",
       "value": "manual_patch",
       "label": "Manual patch",
@@ -162619,12 +162723,6 @@
       "value": "admin_platform",
       "label": "Admin Platform",
       "sort_order": 2
-    },
-    {
-      "field_id": "ENT-translation-version.surface",
-      "value": "shared_notification",
-      "label": "Shared/Notification",
-      "sort_order": 3
     },
     {
       "field_id": "ENT-translation-version.validation_status",
@@ -176334,7 +176432,7 @@
       "verb": "active in",
       "to_id": "STG-admin-01-configuration",
       "attrs": {
-        "rules": 110
+        "rules": 116
       },
       "derived": true
     },
@@ -176352,7 +176450,7 @@
       "verb": "active in",
       "to_id": "STG-provider-03-active",
       "attrs": {
-        "rules": 10
+        "rules": 11
       },
       "derived": true
     },
@@ -176372,6 +176470,12 @@
       "from_id": "FR-021",
       "verb": "references",
       "to_id": "REQ-024-081",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-021",
+      "verb": "references",
+      "to_id": "REQ-026-121",
       "attrs": {}
     },
     {
@@ -176426,6 +176530,12 @@
       "from_id": "FR-021",
       "verb": "references",
       "to_id": "REQ-032-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-021",
+      "verb": "references",
+      "to_id": "REQ-032-006",
       "attrs": {}
     },
     {
@@ -254790,6 +254900,12 @@
     },
     {
       "from_id": "REQ-021-025",
+      "verb": "applies to",
+      "to_id": "SCR-021-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-025",
       "verb": "decided by",
       "to_id": "SRC-PRD-021",
       "attrs": {}
@@ -255948,6 +256064,12 @@
     },
     {
       "from_id": "REQ-021-076",
+      "verb": "applies to",
+      "to_id": "SCR-021-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-076",
       "verb": "decided by",
       "to_id": "SRC-PRD-021",
       "attrs": {}
@@ -256010,6 +256132,12 @@
       "from_id": "REQ-021-079",
       "verb": "applies to",
       "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-079",
+      "verb": "applies to",
+      "to_id": "ACT-super-admin",
       "attrs": {}
     },
     {
@@ -256518,6 +256646,12 @@
     },
     {
       "from_id": "REQ-021-105",
+      "verb": "applies to",
+      "to_id": "SCR-021-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-105",
       "verb": "decided by",
       "to_id": "SRC-PRD-021",
       "attrs": {}
@@ -256788,6 +256922,12 @@
     },
     {
       "from_id": "REQ-021-119",
+      "verb": "applies to",
+      "to_id": "SCR-021-10",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-119",
       "verb": "decided by",
       "to_id": "SRC-PRD-021",
       "attrs": {}
@@ -256802,6 +256942,12 @@
       "from_id": "REQ-021-120",
       "verb": "applies at",
       "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-120",
+      "verb": "applies to",
+      "to_id": "SCR-021-10",
       "attrs": {}
     },
     {
@@ -256825,11 +256971,185 @@
     {
       "from_id": "REQ-021-121",
       "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-121",
+      "verb": "applies to",
+      "to_id": "ACT-super-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-121",
+      "verb": "applies to",
       "to_id": "SCR-021-10",
       "attrs": {}
     },
     {
       "from_id": "REQ-021-121",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-021",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-122",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-122",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-122",
+      "verb": "applies to",
+      "to_id": "ACT-super-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-122",
+      "verb": "applies to",
+      "to_id": "SCR-021-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-122",
+      "verb": "applies to",
+      "to_id": "SCR-021-10",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-122",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-021",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-123",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-123",
+      "verb": "applies to",
+      "to_id": "ACT-super-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-123",
+      "verb": "applies to",
+      "to_id": "ENT-translation-import",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-123",
+      "verb": "applies to",
+      "to_id": "SCR-021-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-123",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-021",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-124",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-124",
+      "verb": "applies to",
+      "to_id": "ENT-locale.review_needed_count",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-124",
+      "verb": "applies to",
+      "to_id": "SCR-021-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-124",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-021",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-125",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-125",
+      "verb": "applies to",
+      "to_id": "ACT-super-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-125",
+      "verb": "applies to",
+      "to_id": "ENT-locale.status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-125",
+      "verb": "applies to",
+      "to_id": "SCR-021-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-125",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-021",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-126",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-126",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-126",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-021",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-127",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-127",
+      "verb": "applies to",
+      "to_id": "ENT-translation-key",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-127",
+      "verb": "applies to",
+      "to_id": "SCR-021-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-127",
       "verb": "decided by",
       "to_id": "SRC-PRD-021",
       "attrs": {}
@@ -331571,6 +331891,16 @@
     {
       "from_id": "SCR-021-05",
       "verb": "shows",
+      "to_id": "ENT-locale.fallback_order",
+      "attrs": {
+        "provenance": "user input",
+        "label": "Fallback locale",
+        "editable": true
+      }
+    },
+    {
+      "from_id": "SCR-021-05",
+      "verb": "shows",
       "to_id": "ENT-locale.missing_key_count",
       "attrs": {
         "provenance": "system calculated",
@@ -331938,6 +332268,15 @@
       "verb": "belongs to",
       "to_id": "STG-admin-01-configuration",
       "attrs": {}
+    },
+    {
+      "from_id": "SCR-021-09",
+      "verb": "shows",
+      "to_id": "ENT-locale.review_needed_count",
+      "attrs": {
+        "provenance": "system calculated",
+        "label": "Review Needed count"
+      }
     },
     {
       "from_id": "SCR-021-09",
@@ -387562,7 +387901,7 @@
     {
       "from_id": "STP-021-001",
       "verb": "next",
-      "to_id": "STP-021-005",
+      "to_id": "STP-021-007",
       "attrs": {
         "label": "Machine translation"
       }
@@ -387642,6 +387981,12 @@
     {
       "from_id": "STP-021-003",
       "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-003",
+      "verb": "done by",
       "to_id": "ACT-super-admin",
       "attrs": {}
     },
@@ -387650,7 +387995,7 @@
       "verb": "next",
       "to_id": "STP-021-015",
       "attrs": {
-        "label": "English source value changed"
+        "label": "Patch valid, English source value changed"
       }
     },
     {
@@ -387666,7 +388011,7 @@
       "verb": "next",
       "to_id": "STP-021-018",
       "attrs": {
-        "label": "Patch valid"
+        "label": "Patch valid, English source value not changed"
       }
     },
     {
@@ -387728,82 +388073,6 @@
       "attrs": {}
     },
     {
-      "from_id": "STP-021-005",
-      "verb": "applies",
-      "to_id": "REQ-021-079",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-021-005",
-      "verb": "at",
-      "to_id": "STG-admin-01-configuration",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-021-005",
-      "verb": "done by",
-      "to_id": "ACT-platform-admin",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-021-005",
-      "verb": "next",
-      "to_id": "STP-021-006",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-021-005",
-      "verb": "on",
-      "to_id": "SCR-021-10",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-021-006",
-      "verb": "applies",
-      "to_id": "REQ-021-104",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-021-006",
-      "verb": "applies",
-      "to_id": "REQ-021-110",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-021-006",
-      "verb": "at",
-      "to_id": "STG-admin-01-configuration",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-021-006",
-      "verb": "done by",
-      "to_id": "ACT-platform-admin",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-021-006",
-      "verb": "next",
-      "to_id": "STP-021-023",
-      "attrs": {
-        "label": "Prefill missing keys"
-      }
-    },
-    {
-      "from_id": "STP-021-006",
-      "verb": "next",
-      "to_id": "STP-021-024",
-      "attrs": {
-        "label": "Replace entire language"
-      }
-    },
-    {
-      "from_id": "STP-021-006",
-      "verb": "on",
-      "to_id": "SCR-021-10",
-      "attrs": {}
-    },
-    {
       "from_id": "STP-021-007",
       "verb": "applies",
       "to_id": "REQ-021-079",
@@ -387826,7 +388095,7 @@
       "verb": "next",
       "to_id": "STP-021-008",
       "attrs": {
-        "label": "No active provider key"
+        "label": "No enabled provider with a Connected status"
       }
     },
     {
@@ -387834,7 +388103,15 @@
       "verb": "next",
       "to_id": "STP-021-009",
       "attrs": {
-        "label": "Active provider key configured"
+        "label": "Enabled provider with a Connected status"
+      }
+    },
+    {
+      "from_id": "STP-021-007",
+      "verb": "next",
+      "to_id": "STP-021-061",
+      "attrs": {
+        "label": "Provider is Disabled"
       }
     },
     {
@@ -387876,7 +388153,7 @@
     {
       "from_id": "STP-021-008",
       "verb": "next",
-      "to_id": "STP-021-009",
+      "to_id": "STP-021-058",
       "attrs": {}
     },
     {
@@ -387912,18 +388189,8 @@
     {
       "from_id": "STP-021-009",
       "verb": "next",
-      "to_id": "STP-021-032",
-      "attrs": {
-        "label": "Prefill missing keys"
-      }
-    },
-    {
-      "from_id": "STP-021-009",
-      "verb": "next",
-      "to_id": "STP-021-033",
-      "attrs": {
-        "label": "Replace entire language"
-      }
+      "to_id": "STP-021-060",
+      "attrs": {}
     },
     {
       "from_id": "STP-021-009",
@@ -388011,6 +388278,12 @@
     },
     {
       "from_id": "STP-021-013",
+      "verb": "applies",
+      "to_id": "REQ-021-098",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-013",
       "verb": "at",
       "to_id": "STG-admin-01-configuration",
       "attrs": {}
@@ -388066,17 +388339,9 @@
     {
       "from_id": "STP-021-015",
       "verb": "next",
-      "to_id": "STP-021-017",
-      "attrs": {
-        "label": "Patch invalid"
-      }
-    },
-    {
-      "from_id": "STP-021-015",
-      "verb": "next",
       "to_id": "STP-021-018",
       "attrs": {
-        "label": "Patch valid"
+        "label": "Marking done"
       }
     },
     {
@@ -388110,9 +388375,27 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-021-017",
+      "verb": "on",
+      "to_id": "SCR-021-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-017",
+      "verb": "on",
+      "to_id": "SCR-021-09",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-021-018",
       "verb": "applies",
       "to_id": "REQ-021-008",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-018",
+      "verb": "applies",
+      "to_id": "REQ-021-092",
       "attrs": {}
     },
     {
@@ -388137,6 +388420,18 @@
       "from_id": "STP-021-018",
       "verb": "on",
       "to_id": "SCR-021-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-018",
+      "verb": "on",
+      "to_id": "SCR-021-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-018",
+      "verb": "on",
+      "to_id": "SCR-021-10",
       "attrs": {}
     },
     {
@@ -388183,6 +388478,15 @@
     },
     {
       "from_id": "STP-021-020",
+      "verb": "next",
+      "to_id": "STP-021-056",
+      "attrs": {
+        "label": "Import into the English source locale",
+        "condition": "REQ-021-123"
+      }
+    },
+    {
+      "from_id": "STP-021-020",
       "verb": "on",
       "to_id": "SCR-021-08",
       "attrs": {}
@@ -388218,21 +388522,19 @@
       "verb": "next",
       "to_id": "STP-021-018",
       "attrs": {
-        "label": "Import valid rows only, Import as Draft"
-      }
-    },
-    {
-      "from_id": "STP-021-021",
-      "verb": "next",
-      "to_id": "STP-021-022",
-      "attrs": {
-        "label": "Import valid rows only, Import and Publish Version"
+        "label": "Import valid rows only, as a draft"
       }
     },
     {
       "from_id": "STP-021-021",
       "verb": "on",
       "to_id": "SCR-021-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-022",
+      "verb": "applies",
+      "to_id": "REQ-021-092",
       "attrs": {}
     },
     {
@@ -388251,6 +388553,12 @@
       "from_id": "STP-021-022",
       "verb": "applies",
       "to_id": "REQ-021-102",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-022",
+      "verb": "applies",
+      "to_id": "REQ-021-124",
       "attrs": {}
     },
     {
@@ -388288,95 +388596,9 @@
       "attrs": {}
     },
     {
-      "from_id": "STP-021-023",
+      "from_id": "STP-021-026",
       "verb": "applies",
-      "to_id": "REQ-021-028",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-021-023",
-      "verb": "applies",
-      "to_id": "REQ-021-106",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-021-023",
-      "verb": "at",
-      "to_id": "STG-admin-01-configuration",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-021-023",
-      "verb": "done by",
-      "to_id": "ACT-system",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-021-023",
-      "verb": "next",
-      "to_id": "STP-021-017",
-      "attrs": {
-        "label": "Validation failed"
-      }
-    },
-    {
-      "from_id": "STP-021-023",
-      "verb": "next",
-      "to_id": "STP-021-018",
-      "attrs": {
-        "label": "Validation passed"
-      }
-    },
-    {
-      "from_id": "STP-021-023",
-      "verb": "on",
-      "to_id": "SCR-021-10",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-021-024",
-      "verb": "applies",
-      "to_id": "REQ-021-029",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-021-024",
-      "verb": "applies",
-      "to_id": "REQ-021-106",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-021-024",
-      "verb": "at",
-      "to_id": "STG-admin-01-configuration",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-021-024",
-      "verb": "done by",
-      "to_id": "ACT-system",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-021-024",
-      "verb": "next",
-      "to_id": "STP-021-017",
-      "attrs": {
-        "label": "Validation failed"
-      }
-    },
-    {
-      "from_id": "STP-021-024",
-      "verb": "next",
-      "to_id": "STP-021-018",
-      "attrs": {
-        "label": "Validation passed"
-      }
-    },
-    {
-      "from_id": "STP-021-024",
-      "verb": "on",
-      "to_id": "SCR-021-10",
+      "to_id": "REQ-021-124",
       "attrs": {}
     },
     {
@@ -388469,6 +388691,12 @@
     },
     {
       "from_id": "STP-021-029",
+      "verb": "applies",
+      "to_id": "REQ-021-098",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-029",
       "verb": "at",
       "to_id": "STG-admin-01-configuration",
       "attrs": {}
@@ -388523,6 +388751,18 @@
     },
     {
       "from_id": "STP-021-032",
+      "verb": "applies",
+      "to_id": "REQ-021-106",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-032",
+      "verb": "applies",
+      "to_id": "REQ-021-111",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-032",
       "verb": "at",
       "to_id": "STG-admin-01-configuration",
       "attrs": {}
@@ -388549,6 +388789,18 @@
       "from_id": "STP-021-033",
       "verb": "applies",
       "to_id": "REQ-021-029",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-033",
+      "verb": "applies",
+      "to_id": "REQ-021-106",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-033",
+      "verb": "applies",
+      "to_id": "REQ-021-111",
       "attrs": {}
     },
     {
@@ -388628,6 +388880,20 @@
       "verb": "done by",
       "to_id": "ACT-platform-admin",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-021-035",
+      "verb": "next",
+      "to_id": "STP-021-026",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-035",
+      "verb": "next",
+      "to_id": "STP-021-057",
+      "attrs": {
+        "label": "Value still flagged Review Needed"
+      }
     },
     {
       "from_id": "STP-021-035",
@@ -389293,6 +389559,228 @@
       "from_id": "STP-021-055",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-056",
+      "verb": "applies",
+      "to_id": "REQ-021-020",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-056",
+      "verb": "applies",
+      "to_id": "REQ-021-123",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-056",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-056",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-056",
+      "verb": "next",
+      "to_id": "STP-021-015",
+      "attrs": {
+        "label": "Review Needed marking after validation"
+      }
+    },
+    {
+      "from_id": "STP-021-056",
+      "verb": "on",
+      "to_id": "SCR-021-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-057",
+      "verb": "applies",
+      "to_id": "REQ-021-105",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-057",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-057",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-057",
+      "verb": "next",
+      "to_id": "STP-021-026",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-057",
+      "verb": "on",
+      "to_id": "SCR-021-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-058",
+      "verb": "applies",
+      "to_id": "REQ-021-031",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-058",
+      "verb": "applies",
+      "to_id": "REQ-021-109",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-058",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-058",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-058",
+      "verb": "next",
+      "to_id": "STP-021-009",
+      "attrs": {
+        "label": "Connection verified"
+      }
+    },
+    {
+      "from_id": "STP-021-058",
+      "verb": "next",
+      "to_id": "STP-021-059",
+      "attrs": {
+        "label": "Connection check failed"
+      }
+    },
+    {
+      "from_id": "STP-021-058",
+      "verb": "on",
+      "to_id": "SCR-021-10",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-059",
+      "verb": "applies",
+      "to_id": "REQ-021-109",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-059",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-059",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-059",
+      "verb": "on",
+      "to_id": "SCR-021-10",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-060",
+      "verb": "applies",
+      "to_id": "REQ-021-029",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-060",
+      "verb": "applies",
+      "to_id": "REQ-021-104",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-060",
+      "verb": "applies",
+      "to_id": "REQ-021-110",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-060",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-060",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-060",
+      "verb": "next",
+      "to_id": "STP-021-032",
+      "attrs": {
+        "label": "Prefill missing keys"
+      }
+    },
+    {
+      "from_id": "STP-021-060",
+      "verb": "next",
+      "to_id": "STP-021-033",
+      "attrs": {
+        "label": "Replace entire language"
+      }
+    },
+    {
+      "from_id": "STP-021-060",
+      "verb": "on",
+      "to_id": "SCR-021-10",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-061",
+      "verb": "applies",
+      "to_id": "REQ-021-109",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-061",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-061",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-021-061",
+      "verb": "next",
+      "to_id": "STP-021-058",
+      "attrs": {
+        "label": "Provider enabled"
+      }
+    },
+    {
+      "from_id": "STP-021-061",
+      "verb": "on",
+      "to_id": "SCR-021-10",
       "attrs": {}
     },
     {
@@ -438607,6 +439095,89 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-110115-c2f503fc",
+      "at": "2026-11-24T11:01:15.564305+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-021 logic review pass 1: Manage Localization permission and the four Super Admin operations, import into the source locale, draft-only import when rows are skipped, fallback chain and Screen 5 control, Review Needed handling, one machine-translation flow with connection check, preview and confirm, job statuses and enable/disable, Free-text translation panel, locale-aware formatting rule, interface versus spoken-language lists, library text key groups, notification surface retired, Preparation to Active rule, and flow wiring.",
+      "source_id": null,
+      "nodes_added": [
+        "REQ-021-122",
+        "REQ-021-123",
+        "REQ-021-124",
+        "REQ-021-125",
+        "REQ-021-126",
+        "REQ-021-127",
+        "STP-021-056",
+        "STP-021-057",
+        "STP-021-058",
+        "STP-021-059",
+        "STP-021-060",
+        "STP-021-061"
+      ],
+      "nodes_updated": [
+        "ENT-locale.fallback_order",
+        "ENT-mt-job.status",
+        "ENT-mt-job.surface_scope",
+        "ENT-translation-bundle.surface",
+        "ENT-translation-import.surface",
+        "ENT-translation-key.surface",
+        "ENT-translation-version.surface",
+        "FR-021",
+        "REQ-021-006",
+        "REQ-021-020",
+        "REQ-021-025",
+        "REQ-021-036",
+        "REQ-021-037",
+        "REQ-021-046",
+        "REQ-021-049",
+        "REQ-021-051",
+        "REQ-021-055",
+        "REQ-021-074",
+        "REQ-021-075",
+        "REQ-021-076",
+        "REQ-021-078",
+        "REQ-021-079",
+        "REQ-021-094",
+        "REQ-021-095",
+        "REQ-021-099",
+        "REQ-021-105",
+        "REQ-021-109",
+        "REQ-021-110",
+        "REQ-021-111",
+        "REQ-021-115",
+        "REQ-021-119",
+        "REQ-021-120",
+        "REQ-021-121",
+        "SCR-021-05",
+        "SCR-021-09",
+        "STP-021-001",
+        "STP-021-003",
+        "STP-021-005",
+        "STP-021-006",
+        "STP-021-007",
+        "STP-021-008",
+        "STP-021-009",
+        "STP-021-013",
+        "STP-021-015",
+        "STP-021-017",
+        "STP-021-018",
+        "STP-021-020",
+        "STP-021-021",
+        "STP-021-022",
+        "STP-021-023",
+        "STP-021-024",
+        "STP-021-026",
+        "STP-021-029",
+        "STP-021-032",
+        "STP-021-033",
+        "STP-021-034",
+        "STP-021-035"
+      ],
+      "edges_added": 102,
+      "edges_removed": 14,
+      "rows": 228
+    },
     {
       "id": "cs-20261124-104053-dfe5829f",
       "at": "2026-11-24T10:40:53.303523+00:00",
