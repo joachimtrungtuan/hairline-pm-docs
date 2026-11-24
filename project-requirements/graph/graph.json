@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T13:37:06Z",
+  "generated_at": "2026-11-24T13:59:47Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -10064,7 +10064,7 @@
       "owner_fr": "FR-033",
       "title": "Helpfulness rating",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "List of FAQ items with question and expandable answer. Each FAQ: question (text), answer (rich text/HTML), topic category, helpfulness rating"
       }
@@ -10075,7 +10075,7 @@
       "owner_fr": "FR-033",
       "title": "Processing status",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Background video processing status."
       }
@@ -10109,6 +10109,17 @@
       "version": 1,
       "attrs": {
         "description": "Related articles from same or other categories. Read-only, links to other articles"
+      }
+    },
+    {
+      "id": "ENT-help-centre-content.resource_category",
+      "type": "Field",
+      "owner_fr": "FR-033",
+      "title": "Resource category",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Optional resource category chosen from Templates, Documents or Forms (Screens 4.1 and 11.1). Replaces the retired category field, whose kind is carried by content_type."
       }
     },
     {
@@ -90831,11 +90842,11 @@
       "id": "REQ-033-005",
       "type": "Rule",
       "owner_fr": "FR-033",
-      "title": "Six content types for both audiences",
+      "title": "Six content types; Policy Document is provider-only",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST support multiple content types (FAQ, Tutorial Guide, Troubleshooting Tip, Video Tutorial, Resource Document, Policy Document) applicable to both audiences",
+        "statement": "System MUST support multiple content types (FAQ, Tutorial Guide, Troubleshooting Tip, Video Tutorial, Resource Document, Policy Document) applicable to both audiences, except that Policy Document is for the provider audience only (REQ-033-036).",
         "rationale": "Restated by Admin Editability (content type options are fixed in code)."
       }
     },
@@ -90891,11 +90902,11 @@
       "id": "REQ-033-010",
       "type": "Rule",
       "owner_fr": "FR-033",
-      "title": "File upload size limits: PDF 50MB, video 500MB, image 10MB",
+      "title": "File upload size limits by upload kind",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST support file uploads for Help Centre content (PDFs max 50MB, videos max 500MB, images max 10MB) for both audiences",
+        "statement": "System MUST support file uploads for Help Centre content with a size limit per upload kind (resource file 50MB whatever its type, uploaded video 500MB, resource thumbnail 1MB, video thumbnail 2MB, image placed inside article or FAQ text 10MB) for both audiences.",
         "rationale": "Restated by Alternative Flow B2, Admin Editability (upload size limits fixed in code) and Edge Cases (upload over the limit)."
       }
     },
@@ -91180,11 +91191,11 @@
       "id": "REQ-033-034",
       "type": "Rule",
       "owner_fr": "FR-033",
-      "title": "Publish, edit and reorder take effect in the provider Help Centre within 1 minute",
+      "title": "Publish, edit, unpublish and reorder take effect in the provider and patient Help Centre within 1 minute",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Publishing content, editing published content, reordering FAQ topics or FAQs, and unpublishing content take effect in the provider Help Centre within 1 minute.",
+        "statement": "Publishing content, editing published content, reordering FAQ topics or FAQs, and unpublishing content take effect in the provider Help Centre (via FR-032) and the patient Help Centre (via FR-035, REQ-035-028) within 1 minute.",
         "rationale": "Main Flow step 14, A2 step 10, A3 step 11, A5 step 7 (all say within 1 minute)."
       }
     },
@@ -91206,9 +91217,9 @@
       "owner_fr": "FR-033",
       "title": "Content tagged with audience and kind; the kind decides the section",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Content must be tagged with audience type (Provider or Patient) and with its kind (FAQ, Tutorial Guide, Troubleshooting Tip, Video Tutorial, Resource Document, Policy Document); the kind decides the Help Centre section the content appears in, and admins do not pick a section separately.",
+        "statement": "Content must be tagged with audience type (Provider or Patient) and with its kind (FAQ, Tutorial Guide, Troubleshooting Tip, Video Tutorial, Resource Document, Policy Document); the kind decides the Help Centre section the content appears in, and admins do not pick a section separately; Policy Document is for the provider audience only and is blocked for the patient audience, whose Article Type values are Tutorial Guide and Troubleshooting Tip.",
         "rationale": "Business Rules, General Module Rules, Rule 3."
       }
     },
@@ -91266,9 +91277,9 @@
       "owner_fr": "FR-033",
       "title": "Fixed in code: categories, content types, audiences, size and character limits",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "These are fixed in code and not editable by admins: the 10 provider Help Centre categories; 5 content types for providers and 4 for patients (no Service Status); the audience types Provider and Patient (no new audience types); the content type options (FAQ, Tutorial Guide, Troubleshooting Tip, Video Tutorial, Resource Document, Policy Document); the file upload size limits (PDF 50MB, Video 500MB, Image 10MB); the content body character limits (max 5000 characters for FAQ answers, max 10,000 characters for tutorial guides); the audit log retention period.",
+        "statement": "These are fixed in code and not editable by admins: the 10 provider Help Centre categories; 5 content types for providers and 4 for patients (no Service Status); the audience types Provider and Patient (no new audience types); the content type options (FAQ, Tutorial Guide, Troubleshooting Tip, Video Tutorial, Resource Document, Policy Document); the file upload size limits per upload kind (resource file 50MB, uploaded video 500MB, resource thumbnail 1MB, video thumbnail 2MB, image placed inside article or FAQ text 10MB); the content body character limits (max 5000 characters for FAQ answers, max 10,000 characters for tutorial guides); the audit log retention period.",
         "rationale": "Admin Editability, Fixed in Codebase. No Setting node is created because the PRD names none as configurable. PRD: Admin Editability, Fixed in Codebase (1052-1058)."
       }
     },
@@ -91420,11 +91431,11 @@
       "id": "REQ-033-054",
       "type": "Rule",
       "owner_fr": "FR-033",
-      "title": "Editing content creates a version; optional version note",
+      "title": "Editing content creates a version on save; optional version note",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "When an admin edits existing content, the editor is pre-filled with the existing content and the system creates a new version in version control; the admin may add an optional \"Version note\" describing what changed; the system updates the content version and logs the change in the audit trail.",
+        "statement": "When an admin edits existing content, the editor is pre-filled with the existing content; the system creates a new version on save (opening the editor or cancelling creates none); the admin may add an optional \"Version note\" describing what changed; the system updates the content version and logs the change in the audit trail; if two admins edit the same item, the last save wins and both saves are versions.",
         "rationale": "Alternative Flow A2. PRD: Alternative Flow A2 (171-186)."
       }
     },
@@ -91434,9 +91445,9 @@
       "owner_fr": "FR-033",
       "title": "Unpublish needs confirmation and a reason; content stays in admin view",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "To unpublish content the admin must confirm and enter a reason; the status changes from Published to Unpublished, the content is removed immediately from the audience's Help Centre view, the action is logged in the audit trail with the reason, and the content remains in admin view as Unpublished for editing or re-publishing.",
+        "statement": "To unpublish content the admin must confirm and enter a reason; the status changes from Published to Unpublished, the content is removed from the audience's Help Centre view within 1 minute (REQ-033-034), the action is logged in the audit trail with the reason, and the content remains in admin view as Unpublished for editing or re-publishing.",
         "rationale": "Alternative Flow A5. PRD: Alternative Flow A5 (222-233)."
       }
     },
@@ -91444,11 +91455,11 @@
       "id": "REQ-033-056",
       "type": "Rule",
       "owner_fr": "FR-033",
-      "title": "Publish validates required fields and formats",
+      "title": "Save as Draft and Publish run the same required-field check",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "On Publish the system validates required fields (category, title, content body) and file formats, highlights missing or invalid fields with an error message, and publishes only after the admin corrects them and re-submits.",
+        "statement": "On Save as Draft and on Publish the system runs the same check of the required fields for the content kind (FAQ: question, answer, topic; article: title, content, article type; resource: name, file; video: title, source type) and of file formats, highlights missing or invalid fields with an error message, and saves or publishes only after the admin corrects them and re-submits.",
         "rationale": "Alternative Flow B1; Screen forms validate required fields before saving. PRD: Alternative Flow B1 (235-247)."
       }
     },
@@ -91458,9 +91469,9 @@
       "owner_fr": "FR-033",
       "title": "Over-limit upload shows the limit and alternatives",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "When a file exceeds its size limit (videos 500MB, PDFs 50MB, images 10MB) the system displays an error message with the limit and suggested alternatives (compress the file, use external video hosting); the admin may re-upload a smaller file or add an external video embed link (YouTube or Vimeo).",
+        "statement": "When a file exceeds the size limit of its upload kind (resource file 50MB, uploaded video 500MB, resource thumbnail 1MB, video thumbnail 2MB, image placed inside article or FAQ text 10MB) the system displays an error message with the limit and suggested alternatives (compress the file, use external video hosting); the admin may re-upload a smaller file or add an external video embed link (YouTube or Vimeo).",
         "rationale": "Alternative Flow B2. PRD: Alternative Flow B2 (249-262)."
       }
     },
@@ -91554,9 +91565,9 @@
       "owner_fr": "FR-033",
       "title": "FAQ field rules",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "FAQ question is required (max 200 characters); FAQ answer is required (max 5000 characters, HTML formatting supported); FAQ topic is required and chosen from pre-defined topics or a newly created one; display order is optional (an integer, auto-incremented within the topic if not specified); publish status is Draft, Published or Unpublished and defaults to Draft; question and answer are required before saving.",
+        "statement": "FAQ question is required (max 200 characters); FAQ answer is required (max 5000 characters, HTML formatting supported); FAQ topic is required and chosen from pre-defined topics or a newly created one; display order is optional (an integer, auto-incremented within the topic if not specified); publish status is Draft or Published (an Unpublished item can only move to Published, REQ-033-099) and defaults to Draft; question, answer and topic are required before saving, with the same check for Save as Draft and for Publish.",
         "rationale": "Screens 2 and 2.1. PRD: Screen 2 (352-359); Screen 2.1 (398-418)."
       }
     },
@@ -91614,9 +91625,9 @@
       "owner_fr": "FR-033",
       "title": "Article field rules",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Article title is required (max 200 characters); article content is required (max 10,000 characters; HTML, headings, lists, images and tables supported); article type is required (Tutorial Guide, Troubleshooting Tip or Policy Information); category/tags and related articles are optional; publish status defaults to Draft; title and content are required before saving.",
+        "statement": "Article title is required (max 200 characters); article content is required (max 10,000 characters; HTML, headings, lists, images and tables supported); article type is required (Tutorial Guide, Troubleshooting Tip or Policy Information; patient articles use Tutorial Guide or Troubleshooting Tip only, REQ-033-036); tags and related articles are optional; publish status defaults to Draft; title, content and article type are required before saving, with the same check for Save as Draft and for Publish.",
         "rationale": "Screens 3 and 3.1. PRD: Screen 3 (474-483); Screen 3.1 (522-545)."
       }
     },
@@ -91638,9 +91649,9 @@
       "owner_fr": "FR-033",
       "title": "Resource field rules",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Resource name is required (max 200 characters); description is optional (max 500 characters); the resource file is required for new resources (max 50MB; whitelist PDF, DOCX, XLSX, PNG, JPG); resource category is optional and pre-defined (Templates, Documents, Forms and similar); thumbnail or icon is optional (max 1MB, PNG or JPG, 128x128px recommended); publish status defaults to Draft; name and file are required before saving.",
+        "statement": "Resource name is required (max 200 characters); description is optional (max 500 characters); the resource file is required for new resources (max 50MB whatever the file type; whitelist PDF, DOCX, XLSX, PNG, JPG); resource category is optional and chosen from Templates, Documents or Forms; thumbnail or icon is optional (max 1MB, PNG or JPG, 128x128px recommended); publish status defaults to Draft; name and file are required before saving.",
         "rationale": "Screens 4 and 4.1. The resource whitelist is the same list as REQ-033-024. prd.md lines 575, 622, 638, 1245."
       }
     },
@@ -91696,11 +91707,11 @@
       "id": "REQ-033-077",
       "type": "Rule",
       "owner_fr": "FR-033",
-      "title": "Upload File videos: format, size, processing, duration and thumbnail",
+      "title": "Upload File videos: format, size, processing, duration, thumbnail and publish gate",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "For Upload File videos the video file is required for new videos (MP4 or MOV, max 500MB) with a progress indicator; after upload a background job processes the video for streaming optimization (transcoding, thumbnail generation); the video duration is auto-extracted (read-only); the thumbnail is auto-generated from the video frame at the 10% mark unless the admin uploads a custom one; a processing status (uploading, processing, ready) is shown.",
+        "statement": "For Upload File videos the video file is required for new videos (MP4 or MOV, max 500MB) with a progress indicator; after upload a background job processes the video for streaming optimization (transcoding, thumbnail generation); the video duration is auto-extracted (read-only); the thumbnail is auto-generated from the video frame at the 10% mark unless the admin uploads a custom one; a processing status (uploading, processing, ready, failed) is shown; an uploaded video cannot be published until its processing status is ready (embedded videos are exempt); if processing fails the status becomes failed, the admin is told and can re-upload, and the item stays Draft.",
         "rationale": "Alternative Flow A4, Screens 5 and 5.1. PRD: Alternative Flow A4 (200-217); Screen 5.1 (741-752)."
       }
     },
@@ -91734,9 +91745,9 @@
       "owner_fr": "FR-033",
       "title": "Overall service status is calculated from components",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "The overall status is calculated automatically from the service component statuses and recalculated when a component or an incident changes; a Degraded component does not count: if no component is Down the overall status is All Systems Operational, if some components are Down it is Partial Outage, and if all components are Down it is Major Outage; the options are All Systems Operational, Partial Outage and Major Outage, and an admin may pick another value by hand (see REQ-033-093).",
+        "statement": "The overall status is calculated automatically from the statuses of the active service components only and recalculated when a component changes; open incidents and maintenance in progress do not change it. A Degraded component does not count: if no active component is Down the overall status is All Systems Operational, if some but not all active components are Down it is Partial Outage, and if all active components are Down (including the case of a single active component) it is Major Outage; with no active component the page shows \"Status not available\" unless an admin sets the overall status by hand (see REQ-033-093); the options are All Systems Operational, Partial Outage and Major Outage.",
         "rationale": "Alternative Flow A6 step 4, Screen 6 Data Fields (Overall Status) and Business Rules, Screen 6.1 and 6.2 rules."
       }
     },
@@ -91782,9 +91793,9 @@
       "owner_fr": "FR-033",
       "title": "Maintenance window management",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Admins can schedule, edit, cancel and mark as completed maintenance windows; title and description are required (title max 200 characters, description max 2000 characters); scheduled start and end times are required and the end must be after the start; scheduled times must be in the future for new maintenance windows; at least one affected service is required; the status is Scheduled, In Progress, Completed or Cancelled and defaults to Scheduled.",
+        "statement": "Admins can schedule, edit, cancel and mark as completed maintenance windows; title and description are required (title max 200 characters, description max 2000 characters); scheduled start and end times are required and the end must be after the start; scheduled times must be in the future for new maintenance windows; at least one affected service is required; the status is Scheduled, In Progress, Completed or Cancelled and defaults to Scheduled; the status changes only by admin action, and a window past its end time stays as the admin left it.",
         "rationale": "Screens 6 and 6.3. Screen 6 and 6.3 data fields and rules limit the future start time to new windows. prd.md lines 801, 816-818, 918-921, 930."
       }
     },
@@ -91818,9 +91829,9 @@
       "owner_fr": "FR-033",
       "title": "Helpfulness rating is aggregated Yes/No feedback, read-only",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "The helpfulness rating shown to admins is the aggregated Yes/No feedback counts from provider feedback (or aggregated patient feedback), read-only, and tracked per FAQ, article and video for analytics.",
+        "statement": "The helpfulness rating shown to admins is the aggregated Yes/No feedback counts from provider feedback (or aggregated patient feedback), read-only, and tracked per FAQ, article, resource and video for analytics; how a vote is recorded is stated by REQ-033-096.",
         "rationale": "Screens 2, 3 and 5. Recording the feedback is stated by REQ-032-094 and REQ-035-007. PRD: Screen 2 (356, 371); Screen 3 (480); Screen 5 (683)."
       }
     },
@@ -91882,6 +91893,66 @@
       "attrs": {
         "statement": "Helpfulness ratings on Help Centre content (Yes and No) are kept as counts only: no user identity is stored (patients are anonymous; providers are counted at clinic level at most), and the ratings are not publicly displayed.",
         "rationale": "prd.md lines 1248 (Security Considerations, Data Privacy: ratings kept as Yes/No counts only, no user identity stored, not publicly displayed), 1414 (content analytics: Yes and No counts only, no user identity)."
+      }
+    },
+    {
+      "id": "REQ-033-096",
+      "type": "Rule",
+      "owner_fr": "FR-033",
+      "title": "A helpful vote is one anonymous Yes or No; repeat votes count",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "A \"Was this helpful?\" vote on a FAQ, article, resource or video is one anonymous Yes or No added to the item's helpfulness count, written through the FR-032 and FR-035 content interfaces; no identity is kept, so repeat votes count.",
+        "rationale": "Core Requirements and Data & Privacy. Recording the vote on the audience side is stated by REQ-032-094 and REQ-035-007."
+      }
+    },
+    {
+      "id": "REQ-033-097",
+      "type": "Rule",
+      "owner_fr": "FR-033",
+      "title": "Views of FAQs, articles and resources are counted per open and stored with their date",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "A view of a FAQ, article or resource is counted each time its detail (or the FAQ answer) is opened, for both audiences; a video view keeps the 30-second rule (REQ-033-079); a resource download is counted for both audiences; each view is stored with its date so views over time (REQ-033-018) and the FR-035 30-day popular list can be derived.",
+        "rationale": "Core Requirements and Data & Privacy (View records). FR-032 keeps REQ-032-098 (download) and REQ-032-099 (video view) as the calculating rules of the two counters."
+      }
+    },
+    {
+      "id": "REQ-033-098",
+      "type": "Rule",
+      "owner_fr": "FR-033",
+      "title": "A file that fails the virus scan is rejected and not stored",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "A file that fails the virus scan MUST be rejected and not stored; the admin sees \"File failed security scan. Upload a clean file.\" and the event is written to the audit trail.",
+        "rationale": "Alternative Flow B2 step 8 and the security rules. Extends REQ-033-022 and REQ-033-029."
+      }
+    },
+    {
+      "id": "REQ-033-099",
+      "type": "Rule",
+      "owner_fr": "FR-033",
+      "title": "Content status moves are limited; only Unpublish leaves Published",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Content status moves are limited to Draft to Published, Published to Unpublished (only through the Unpublish action with its reason), Unpublished to Published, and any state to Archived by Delete; the Publish Status dropdown offers Draft and Published only and is read-only while the item is Published.",
+        "rationale": "General Rule 4 and the Publish Status rows on the content forms."
+      }
+    },
+    {
+      "id": "REQ-033-100",
+      "type": "Rule",
+      "owner_fr": "FR-033",
+      "title": "Admins can filter archived content and restore it as Draft",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Each content list MUST have an admin-only \"Archived\" filter, and a Restore action MUST return an archived item as Draft; Related Content links removed at deletion (REQ-033-092) are not put back.",
+        "rationale": "Alternative Flow A7 and General Rule 6 (soft delete supports recovery)."
       }
     },
     {
@@ -100743,7 +100814,7 @@
       "owner_fr": "FR-033",
       "title": "Provider Resource Library Management",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "platform": "admin",
         "description": "List of provider resources organised by category (PRD Screen 4). UI controls, not fields: Add New Resource, Edit, Delete, Preview, Download buttons."
@@ -100755,7 +100826,7 @@
       "owner_fr": "FR-033",
       "title": "Provider Resource Add/Edit Form",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
         "description": "Create or edit a provider resource (PRD Screen 4.1). UI controls, not fields: Preview, Save and Cancel buttons."
@@ -100911,7 +100982,7 @@
       "owner_fr": "FR-033",
       "title": "Patient Resource Library Management",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
         "description": "Admin list of patient resources; mirrors Screen 4 (PRD Screen 11). Admin-only screen. UI controls, not fields: Add New Resource, Edit, Delete, Preview, Download buttons."
@@ -100923,7 +100994,7 @@
       "owner_fr": "FR-033",
       "title": "Patient Resource Add/Edit Form",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
         "description": "Create or edit a patient resource; mirrors Screen 4.1 (PRD Screen 11.1). Admin-only screen. UI controls, not fields: Preview, Save and Cancel buttons."
@@ -129298,7 +129369,7 @@
       "owner_fr": "FR-033",
       "title": "Upload attachments if needed",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow: Admin Creates Help Centre Content step 7"
       }
@@ -129364,7 +129435,7 @@
       "owner_fr": "FR-033",
       "title": "System logs creation in the audit trail",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow: Admin Creates Help Centre Content step 13"
       }
@@ -129375,7 +129446,7 @@
       "owner_fr": "FR-033",
       "title": "If published, system makes content available in the provider Help Centre category within 1 minute",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow: Admin Creates Help Centre Content step 14"
       }
@@ -129408,7 +129479,7 @@
       "owner_fr": "FR-033",
       "title": "Search or filter content by category, title or tags",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A2 (Admin Edits Existing Help Centre Content) step 2"
       }
@@ -129430,20 +129501,9 @@
       "owner_fr": "FR-033",
       "title": "System loads the editor pre-filled with existing content",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A2 (Admin Edits Existing Help Centre Content) step 4"
-      }
-    },
-    {
-      "id": "STP-033-020",
-      "type": "Step",
-      "owner_fr": "FR-033",
-      "title": "System creates a new version in version control",
-      "status": "active",
-      "version": 2,
-      "attrs": {
-        "prd_ref": "Alternative Flow A2 (Admin Edits Existing Help Centre Content) step 5"
       }
     },
     {
@@ -129483,9 +129543,9 @@
       "id": "STP-033-024",
       "type": "Step",
       "owner_fr": "FR-033",
-      "title": "System updates the version and logs the change in the audit trail",
+      "title": "System creates a new version on save, updates the version and logs the change in the audit trail",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A2 (Admin Edits Existing Help Centre Content) step 9"
       }
@@ -129496,7 +129556,7 @@
       "owner_fr": "FR-033",
       "title": "If content is published, system updates provider-facing content within 1 minute",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A2 (Admin Edits Existing Help Centre Content) step 10"
       }
@@ -129540,7 +129600,7 @@
       "owner_fr": "FR-033",
       "title": "System shows topic management with drag-and-drop",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A3 (Admin Organizes FAQ Content into Topics) step 4"
       }
@@ -129606,7 +129666,7 @@
       "owner_fr": "FR-033",
       "title": "System updates FAQ navigation for the provider Help Centre",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A3 (Admin Organizes FAQ Content into Topics) step 10"
       }
@@ -129617,7 +129677,7 @@
       "owner_fr": "FR-033",
       "title": "Provider Help Centre reflects the new organisation in accordion layout within 1 minute",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A3 (Admin Organizes FAQ Content into Topics) step 11"
       }
@@ -129672,7 +129732,7 @@
       "owner_fr": "FR-033",
       "title": "Upload video file (MP4 or MOV, max 500MB)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flow A4 (Admin Uploads Video Tutorial) step 5"
       }
@@ -129727,7 +129787,7 @@
       "owner_fr": "FR-033",
       "title": "Preview in the video player interface",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A4 (Admin Uploads Video Tutorial) step 11"
       }
@@ -129736,9 +129796,9 @@
       "id": "STP-033-048",
       "type": "Step",
       "owner_fr": "FR-033",
-      "title": "Publish the video tutorial",
+      "title": "Publish the video tutorial; an uploaded video can be published only when its processing status is Ready (embedded videos are exempt)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A4 (Admin Uploads Video Tutorial) step 12"
       }
@@ -129747,9 +129807,9 @@
       "id": "STP-033-049",
       "type": "Step",
       "owner_fr": "FR-033",
-      "title": "System processes video for streaming optimisation",
+      "title": "System processes the uploaded video for streaming optimisation; if processing fails the status becomes Failed, the admin is told and can re-upload, and the item stays Draft",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A4 (Admin Uploads Video Tutorial) step 13"
       }
@@ -129760,7 +129820,7 @@
       "owner_fr": "FR-033",
       "title": "System makes video available in the provider Video Tutorials subscreen",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A4 (Admin Uploads Video Tutorial) step 14"
       }
@@ -129826,7 +129886,7 @@
       "owner_fr": "FR-033",
       "title": "System changes status from Published to Unpublished",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A5 (Admin Unpublishes Outdated Content) step 6"
       }
@@ -129837,7 +129897,7 @@
       "owner_fr": "FR-033",
       "title": "System removes content from the provider Help Centre view within 1 minute",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A5 (Admin Unpublishes Outdated Content) step 7"
       }
@@ -129848,7 +129908,7 @@
       "owner_fr": "FR-033",
       "title": "System logs unpublish with reason in the audit trail",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A5 (Admin Unpublishes Outdated Content) step 8"
       }
@@ -129868,9 +129928,9 @@
       "id": "STP-033-060",
       "type": "Step",
       "owner_fr": "FR-033",
-      "title": "Complete the content form and click Publish",
+      "title": "Complete the content form and click Save as Draft or Publish; the same required-field check runs on both",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "prd_ref": "Alternative Flow B1 (Content Validation Fails) step 1"
       }
@@ -129901,9 +129961,9 @@
       "id": "STP-033-065",
       "type": "Step",
       "owner_fr": "FR-033",
-      "title": "Re-submit content for publishing",
+      "title": "Re-submit content for saving or publishing",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B1 (Content Validation Fails) step 6"
       }
@@ -129914,7 +129974,7 @@
       "owner_fr": "FR-033",
       "title": "Select a file for upload in a management screen",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "prd_ref": "Alternative Flow B2 (File Upload Exceeds Size Limit) step 1"
       }
@@ -129958,7 +130018,7 @@
       "owner_fr": "FR-033",
       "title": "Re-upload the compressed file or add an external embed link",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B2 (File Upload Exceeds Size Limit) step 6"
       }
@@ -129980,7 +130040,7 @@
       "owner_fr": "FR-033",
       "title": "System shows overall status, components, incident history, maintenance schedule",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A6 (Admin Updates Service Status) step 2"
       }
@@ -130002,7 +130062,7 @@
       "owner_fr": "FR-033",
       "title": "System automatically recalculates overall status from component statuses (unless an admin has set the overall status by hand)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A6 (Admin Updates Service Status) step 4"
       }
@@ -130057,7 +130117,7 @@
       "owner_fr": "FR-033",
       "title": "Status updates propagate to the provider Service Status subscreen within 1 minute",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A6 (Admin Updates Service Status) step 9"
       }
@@ -130068,7 +130128,7 @@
       "owner_fr": "FR-033",
       "title": "Providers see the updated status on the status page within 1 minute",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A6 (Admin Updates Service Status) step 10"
       }
@@ -130145,7 +130205,7 @@
       "owner_fr": "FR-033",
       "title": "System shows the changed categories in the provider Help Centre navigation within 1 minute",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Screen 1.1 (Provider Help Centre Category Configuration)"
       }
@@ -130951,6 +131011,39 @@
       "version": 1,
       "attrs": {
         "prd_ref": "Screen 5.1 (Provider Video Add/Edit Form)"
+      }
+    },
+    {
+      "id": "STP-033-164",
+      "type": "Step",
+      "owner_fr": "FR-033",
+      "title": "System makes published, edited, unpublished or reordered content available in the patient Help Centre within 1 minute",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 14 (patient audience)"
+      }
+    },
+    {
+      "id": "STP-033-165",
+      "type": "Step",
+      "owner_fr": "FR-033",
+      "title": "System rejects a file that fails the virus scan, does not store it, shows File failed security scan. Upload a clean file. and writes the event to the audit trail",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B2 step 8"
+      }
+    },
+    {
+      "id": "STP-033-166",
+      "type": "Step",
+      "owner_fr": "FR-033",
+      "title": "Admin selects the Archived filter and clicks Restore; the item returns as Draft and the Related Content links removed at deletion are not put back",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A7"
       }
     },
     {
@@ -141197,7 +141290,7 @@
       "name": "helpfulness_rating",
       "data_type": "json",
       "required": false,
-      "calculated_by": null
+      "calculated_by": "REQ-033-096"
     },
     {
       "id": "ENT-help-centre-content.processing_status",
@@ -141228,6 +141321,14 @@
       "entity_id": "ENT-help-centre-content",
       "name": "related_content_ids",
       "data_type": "id[]",
+      "required": false,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-help-centre-content.resource_category",
+      "entity_id": "ENT-help-centre-content",
+      "name": "resource_category",
+      "data_type": "enum",
       "required": false,
       "calculated_by": null
     },
@@ -159146,6 +159247,12 @@
       "sort_order": 2
     },
     {
+      "field_id": "ENT-help-centre-content.processing_status",
+      "value": "failed",
+      "label": "Failed",
+      "sort_order": 3
+    },
+    {
       "field_id": "ENT-help-centre-content.publish_status",
       "value": "draft",
       "label": null,
@@ -159168,6 +159275,24 @@
       "value": "archived",
       "label": null,
       "sort_order": 3
+    },
+    {
+      "field_id": "ENT-help-centre-content.resource_category",
+      "value": "templates",
+      "label": "Templates",
+      "sort_order": 0
+    },
+    {
+      "field_id": "ENT-help-centre-content.resource_category",
+      "value": "documents",
+      "label": "Documents",
+      "sort_order": 1
+    },
+    {
+      "field_id": "ENT-help-centre-content.resource_category",
+      "value": "forms",
+      "label": "Forms",
+      "sort_order": 2
     },
     {
       "field_id": "ENT-help-centre-content.video_source_type",
@@ -168649,6 +168774,12 @@
       "from_id": "ENT-help-centre-content.file_type",
       "verb": "calculated by",
       "to_id": "REQ-033-073",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-help-centre-content.helpfulness_rating",
+      "verb": "calculated by",
+      "to_id": "REQ-033-096",
       "attrs": {}
     },
     {
@@ -179258,7 +179389,7 @@
       "verb": "active in",
       "to_id": "STG-admin-01-configuration",
       "attrs": {
-        "rules": 84
+        "rules": 87
       },
       "derived": true
     },
@@ -179267,7 +179398,7 @@
       "verb": "active in",
       "to_id": "STG-patient-03-active",
       "attrs": {
-        "rules": 4
+        "rules": 6
       },
       "derived": true
     },
@@ -179276,7 +179407,7 @@
       "verb": "active in",
       "to_id": "STG-provider-03-active",
       "attrs": {
-        "rules": 6
+        "rules": 8
       },
       "derived": true
     },
@@ -292837,6 +292968,234 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-033-096",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-096",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-096",
+      "verb": "applies to",
+      "to_id": "ENT-help-centre-content.helpfulness_rating",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-096",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-033",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-097",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-097",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-097",
+      "verb": "applies to",
+      "to_id": "ENT-content-analytics",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-097",
+      "verb": "applies to",
+      "to_id": "ENT-help-centre-content.download_count",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-097",
+      "verb": "applies to",
+      "to_id": "ENT-help-centre-content.view_count",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-097",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-033",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-098",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-098",
+      "verb": "applies to",
+      "to_id": "SCR-033-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-098",
+      "verb": "applies to",
+      "to_id": "SCR-033-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-098",
+      "verb": "applies to",
+      "to_id": "SCR-033-23",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-098",
+      "verb": "applies to",
+      "to_id": "SCR-033-25",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-098",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-033",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-099",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-099",
+      "verb": "applies to",
+      "to_id": "ENT-help-centre-content.publish_status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-099",
+      "verb": "applies to",
+      "to_id": "SCR-033-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-099",
+      "verb": "applies to",
+      "to_id": "SCR-033-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-099",
+      "verb": "applies to",
+      "to_id": "SCR-033-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-099",
+      "verb": "applies to",
+      "to_id": "SCR-033-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-099",
+      "verb": "applies to",
+      "to_id": "SCR-033-19",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-099",
+      "verb": "applies to",
+      "to_id": "SCR-033-21",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-099",
+      "verb": "applies to",
+      "to_id": "SCR-033-23",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-099",
+      "verb": "applies to",
+      "to_id": "SCR-033-25",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-099",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-033",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-100",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-100",
+      "verb": "applies to",
+      "to_id": "ENT-help-centre-content.publish_status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-100",
+      "verb": "applies to",
+      "to_id": "SCR-033-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-100",
+      "verb": "applies to",
+      "to_id": "SCR-033-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-100",
+      "verb": "applies to",
+      "to_id": "SCR-033-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-100",
+      "verb": "applies to",
+      "to_id": "SCR-033-10",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-100",
+      "verb": "applies to",
+      "to_id": "SCR-033-18",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-100",
+      "verb": "applies to",
+      "to_id": "SCR-033-20",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-100",
+      "verb": "applies to",
+      "to_id": "SCR-033-22",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-100",
+      "verb": "applies to",
+      "to_id": "SCR-033-24",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-100",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-033",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-034-001",
       "verb": "applies at",
       "to_id": "STG-patient-03-active",
@@ -341116,10 +341475,30 @@
     {
       "from_id": "SCR-033-08",
       "verb": "shows",
+      "to_id": "ENT-help-centre-content.helpfulness_rating",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Helpfulness Rating",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-033-08",
+      "verb": "shows",
       "to_id": "ENT-help-centre-content.publish_status",
       "attrs": {
         "provenance": "retrieved",
         "label": "Publish Status",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-033-08",
+      "verb": "shows",
+      "to_id": "ENT-help-centre-content.resource_category",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Resource Category",
         "editable": false
       }
     },
@@ -341150,16 +341529,6 @@
       "attrs": {
         "provenance": "retrieved",
         "label": "Resource Name",
-        "editable": false
-      }
-    },
-    {
-      "from_id": "SCR-033-08",
-      "verb": "shows",
-      "to_id": "ENT-help-centre-content.topic",
-      "attrs": {
-        "provenance": "retrieved",
-        "label": "Resource Category",
         "editable": false
       }
     },
@@ -341212,10 +341581,30 @@
     {
       "from_id": "SCR-033-09",
       "verb": "shows",
+      "to_id": "ENT-help-centre-content.helpfulness_rating",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Helpfulness Rating",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-033-09",
+      "verb": "shows",
       "to_id": "ENT-help-centre-content.publish_status",
       "attrs": {
         "provenance": "user input",
         "label": "Publish Status",
+        "editable": true
+      }
+    },
+    {
+      "from_id": "SCR-033-09",
+      "verb": "shows",
+      "to_id": "ENT-help-centre-content.resource_category",
+      "attrs": {
+        "provenance": "user input",
+        "label": "Resource Category",
         "editable": true
       }
     },
@@ -341246,16 +341635,6 @@
       "attrs": {
         "provenance": "user input",
         "label": "Resource Name",
-        "editable": true
-      }
-    },
-    {
-      "from_id": "SCR-033-09",
-      "verb": "shows",
-      "to_id": "ENT-help-centre-content.topic",
-      "attrs": {
-        "provenance": "user input",
-        "label": "Resource Category",
         "editable": true
       }
     },
@@ -342320,10 +342699,30 @@
     {
       "from_id": "SCR-033-22",
       "verb": "shows",
+      "to_id": "ENT-help-centre-content.helpfulness_rating",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Helpfulness Rating",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-033-22",
+      "verb": "shows",
       "to_id": "ENT-help-centre-content.publish_status",
       "attrs": {
         "provenance": "retrieved",
         "label": "Publish Status",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-033-22",
+      "verb": "shows",
+      "to_id": "ENT-help-centre-content.resource_category",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Resource Category",
         "editable": false
       }
     },
@@ -342354,16 +342753,6 @@
       "attrs": {
         "provenance": "retrieved",
         "label": "Resource Name",
-        "editable": false
-      }
-    },
-    {
-      "from_id": "SCR-033-22",
-      "verb": "shows",
-      "to_id": "ENT-help-centre-content.topic",
-      "attrs": {
-        "provenance": "retrieved",
-        "label": "Resource Category",
         "editable": false
       }
     },
@@ -342406,10 +342795,30 @@
     {
       "from_id": "SCR-033-23",
       "verb": "shows",
+      "to_id": "ENT-help-centre-content.helpfulness_rating",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Helpfulness Rating",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-033-23",
+      "verb": "shows",
       "to_id": "ENT-help-centre-content.publish_status",
       "attrs": {
         "provenance": "user input",
         "label": "Publish Status",
+        "editable": true
+      }
+    },
+    {
+      "from_id": "SCR-033-23",
+      "verb": "shows",
+      "to_id": "ENT-help-centre-content.resource_category",
+      "attrs": {
+        "provenance": "user input",
+        "label": "Resource Category",
         "editable": true
       }
     },
@@ -342440,16 +342849,6 @@
       "attrs": {
         "provenance": "user input",
         "label": "Resource Name",
-        "editable": true
-      }
-    },
-    {
-      "from_id": "SCR-033-23",
-      "verb": "shows",
-      "to_id": "ENT-help-centre-content.topic",
-      "attrs": {
-        "provenance": "user input",
-        "label": "Resource Category",
         "editable": true
       }
     },
@@ -427539,6 +427938,18 @@
     },
     {
       "from_id": "STP-033-007",
+      "verb": "applies",
+      "to_id": "REQ-033-022",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-007",
+      "verb": "applies",
+      "to_id": "REQ-033-029",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-007",
       "verb": "at",
       "to_id": "STG-admin-01-configuration",
       "attrs": {}
@@ -427553,6 +427964,48 @@
       "from_id": "STP-033-007",
       "verb": "next",
       "to_id": "STP-033-008",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-007",
+      "verb": "on",
+      "to_id": "SCR-033-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-007",
+      "verb": "on",
+      "to_id": "SCR-033-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-007",
+      "verb": "on",
+      "to_id": "SCR-033-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-007",
+      "verb": "on",
+      "to_id": "SCR-033-19",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-007",
+      "verb": "on",
+      "to_id": "SCR-033-21",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-007",
+      "verb": "on",
+      "to_id": "SCR-033-23",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-007",
+      "verb": "on",
+      "to_id": "SCR-033-25",
       "attrs": {}
     },
     {
@@ -427862,6 +428315,48 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-033-013",
+      "verb": "on",
+      "to_id": "SCR-033-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-013",
+      "verb": "on",
+      "to_id": "SCR-033-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-013",
+      "verb": "on",
+      "to_id": "SCR-033-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-013",
+      "verb": "on",
+      "to_id": "SCR-033-19",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-013",
+      "verb": "on",
+      "to_id": "SCR-033-21",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-013",
+      "verb": "on",
+      "to_id": "SCR-033-23",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-013",
+      "verb": "on",
+      "to_id": "SCR-033-25",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-033-014",
       "verb": "applies",
       "to_id": "REQ-033-034",
@@ -427883,6 +428378,21 @@
       "from_id": "STP-033-014",
       "verb": "next",
       "to_id": "STP-033-015",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-014",
+      "verb": "next",
+      "to_id": "STP-033-164",
+      "attrs": {
+        "label": "patient audience content",
+        "condition": "REQ-033-034"
+      }
+    },
+    {
+      "from_id": "STP-033-014",
+      "verb": "on",
+      "to_id": "SCR-032-09",
       "attrs": {}
     },
     {
@@ -428001,6 +428511,15 @@
     },
     {
       "from_id": "STP-033-017",
+      "verb": "next",
+      "to_id": "STP-033-166",
+      "attrs": {
+        "label": "Archived filter",
+        "condition": "REQ-033-100"
+      }
+    },
+    {
+      "from_id": "STP-033-017",
       "verb": "on",
       "to_id": "SCR-033-06",
       "attrs": {}
@@ -428116,7 +428635,7 @@
     {
       "from_id": "STP-033-019",
       "verb": "next",
-      "to_id": "STP-033-020",
+      "to_id": "STP-033-021",
       "attrs": {}
     },
     {
@@ -428159,30 +428678,6 @@
       "from_id": "STP-033-019",
       "verb": "on",
       "to_id": "SCR-033-25",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-033-020",
-      "verb": "applies",
-      "to_id": "REQ-033-054",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-033-020",
-      "verb": "at",
-      "to_id": "STG-admin-01-configuration",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-033-020",
-      "verb": "done by",
-      "to_id": "ACT-system",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-033-020",
-      "verb": "next",
-      "to_id": "STP-033-021",
       "attrs": {}
     },
     {
@@ -428378,6 +428873,48 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-033-024",
+      "verb": "on",
+      "to_id": "SCR-033-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-024",
+      "verb": "on",
+      "to_id": "SCR-033-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-024",
+      "verb": "on",
+      "to_id": "SCR-033-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-024",
+      "verb": "on",
+      "to_id": "SCR-033-19",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-024",
+      "verb": "on",
+      "to_id": "SCR-033-21",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-024",
+      "verb": "on",
+      "to_id": "SCR-033-23",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-024",
+      "verb": "on",
+      "to_id": "SCR-033-25",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-033-025",
       "verb": "applies",
       "to_id": "REQ-033-034",
@@ -428393,6 +428930,12 @@
       "from_id": "STP-033-025",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-025",
+      "verb": "on",
+      "to_id": "SCR-032-09",
       "attrs": {}
     },
     {
@@ -428489,6 +429032,12 @@
       "from_id": "STP-033-029",
       "verb": "applies",
       "to_id": "REQ-033-066",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-029",
+      "verb": "applies",
+      "to_id": "REQ-033-067",
       "attrs": {}
     },
     {
@@ -428702,6 +429251,12 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-033-035",
+      "verb": "on",
+      "to_id": "SCR-032-10",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-033-036",
       "verb": "applies",
       "to_id": "REQ-033-034",
@@ -428717,6 +429272,12 @@
       "from_id": "STP-033-036",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-036",
+      "verb": "on",
+      "to_id": "SCR-032-10",
       "attrs": {}
     },
     {
@@ -428867,6 +429428,12 @@
       "from_id": "STP-033-041",
       "verb": "applies",
       "to_id": "REQ-033-027",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-041",
+      "verb": "applies",
+      "to_id": "REQ-033-058",
       "attrs": {}
     },
     {
@@ -429076,7 +429643,7 @@
     {
       "from_id": "STP-033-047",
       "verb": "next",
-      "to_id": "STP-033-048",
+      "to_id": "STP-033-049",
       "attrs": {}
     },
     {
@@ -429106,7 +429673,7 @@
     {
       "from_id": "STP-033-048",
       "verb": "next",
-      "to_id": "STP-033-049",
+      "to_id": "STP-033-050",
       "attrs": {}
     },
     {
@@ -429142,7 +429709,22 @@
     {
       "from_id": "STP-033-049",
       "verb": "next",
-      "to_id": "STP-033-050",
+      "to_id": "STP-033-048",
+      "attrs": {
+        "label": "processing ready, or embedded video",
+        "condition": "REQ-033-077"
+      }
+    },
+    {
+      "from_id": "STP-033-049",
+      "verb": "on",
+      "to_id": "SCR-033-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-049",
+      "verb": "on",
+      "to_id": "SCR-033-25",
       "attrs": {}
     },
     {
@@ -429161,6 +429743,12 @@
       "from_id": "STP-033-050",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-050",
+      "verb": "on",
+      "to_id": "SCR-032-13",
       "attrs": {}
     },
     {
@@ -429471,6 +430059,12 @@
     },
     {
       "from_id": "STP-033-056",
+      "verb": "applies",
+      "to_id": "REQ-033-099",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-056",
       "verb": "at",
       "to_id": "STG-admin-01-configuration",
       "attrs": {}
@@ -429554,6 +430148,12 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-033-057",
+      "verb": "on",
+      "to_id": "SCR-032-09",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-033-058",
       "verb": "applies",
       "to_id": "REQ-033-015",
@@ -429581,6 +430181,42 @@
       "from_id": "STP-033-058",
       "verb": "next",
       "to_id": "STP-033-059",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-058",
+      "verb": "on",
+      "to_id": "SCR-033-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-058",
+      "verb": "on",
+      "to_id": "SCR-033-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-058",
+      "verb": "on",
+      "to_id": "SCR-033-18",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-058",
+      "verb": "on",
+      "to_id": "SCR-033-20",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-058",
+      "verb": "on",
+      "to_id": "SCR-033-22",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-058",
+      "verb": "on",
+      "to_id": "SCR-033-24",
       "attrs": {}
     },
     {
@@ -429641,6 +430277,12 @@
       "from_id": "STP-033-060",
       "verb": "applies",
       "to_id": "REQ-033-056",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-060",
+      "verb": "applies",
+      "to_id": "REQ-033-099",
       "attrs": {}
     },
     {
@@ -429909,6 +430551,12 @@
     },
     {
       "from_id": "STP-033-067",
+      "verb": "applies",
+      "to_id": "REQ-033-098",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-067",
       "verb": "at",
       "to_id": "STG-admin-01-configuration",
       "attrs": {}
@@ -430101,6 +430749,12 @@
     },
     {
       "from_id": "STP-033-072",
+      "verb": "next",
+      "to_id": "STP-033-165",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-072",
       "verb": "on",
       "to_id": "SCR-033-09",
       "attrs": {}
@@ -430151,6 +430805,12 @@
       "from_id": "STP-033-075",
       "verb": "applies",
       "to_id": "REQ-033-080",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-075",
+      "verb": "applies",
+      "to_id": "REQ-033-085",
       "attrs": {}
     },
     {
@@ -430211,6 +430871,12 @@
       "from_id": "STP-033-077",
       "verb": "applies",
       "to_id": "REQ-033-080",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-077",
+      "verb": "applies",
+      "to_id": "REQ-033-093",
       "attrs": {}
     },
     {
@@ -430388,6 +431054,12 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-033-082",
+      "verb": "on",
+      "to_id": "SCR-032-19",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-033-083",
       "verb": "applies",
       "to_id": "REQ-033-033",
@@ -430403,6 +431075,12 @@
       "from_id": "STP-033-083",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-083",
+      "verb": "on",
+      "to_id": "SCR-032-19",
       "attrs": {}
     },
     {
@@ -430595,6 +431273,12 @@
       "from_id": "STP-033-090",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-090",
+      "verb": "on",
+      "to_id": "SCR-032-09",
       "attrs": {}
     },
     {
@@ -432563,6 +433247,168 @@
       "from_id": "STP-033-163",
       "verb": "on",
       "to_id": "SCR-033-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-164",
+      "verb": "applies",
+      "to_id": "REQ-033-008",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-164",
+      "verb": "applies",
+      "to_id": "REQ-033-026",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-164",
+      "verb": "applies",
+      "to_id": "REQ-033-034",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-164",
+      "verb": "applies",
+      "to_id": "REQ-035-028",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-164",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-164",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-164",
+      "verb": "on",
+      "to_id": "SCR-035-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-165",
+      "verb": "applies",
+      "to_id": "REQ-033-022",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-165",
+      "verb": "applies",
+      "to_id": "REQ-033-029",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-165",
+      "verb": "applies",
+      "to_id": "REQ-033-098",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-165",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-165",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-165",
+      "verb": "on",
+      "to_id": "SCR-033-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-165",
+      "verb": "on",
+      "to_id": "SCR-033-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-165",
+      "verb": "on",
+      "to_id": "SCR-033-23",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-165",
+      "verb": "on",
+      "to_id": "SCR-033-25",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-166",
+      "verb": "applies",
+      "to_id": "REQ-033-100",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-166",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-166",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-166",
+      "verb": "on",
+      "to_id": "SCR-033-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-166",
+      "verb": "on",
+      "to_id": "SCR-033-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-166",
+      "verb": "on",
+      "to_id": "SCR-033-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-166",
+      "verb": "on",
+      "to_id": "SCR-033-10",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-166",
+      "verb": "on",
+      "to_id": "SCR-033-18",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-166",
+      "verb": "on",
+      "to_id": "SCR-033-20",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-166",
+      "verb": "on",
+      "to_id": "SCR-033-22",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-166",
+      "verb": "on",
+      "to_id": "SCR-033-24",
       "attrs": {}
     },
     {
@@ -442891,6 +443737,80 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-135820-46e7506e",
+      "at": "2026-11-24T13:58:20.031658+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-033 logic review pass 1: size limit per upload kind, the helpful vote on resources, view and download counting, an uploaded video published only when processed (Failed status), virus scan rejection, the same required-field check on Save as Draft and Publish, resource category field replacing the retired category, status moves limited to Unpublish from Published, Archived filter and Restore, version on save, wiring of steps to screens and rules, overall status from active components only, patient Article Type values",
+      "source_id": null,
+      "nodes_added": [
+        "ENT-help-centre-content.resource_category",
+        "REQ-033-096",
+        "REQ-033-097",
+        "REQ-033-098",
+        "REQ-033-099",
+        "REQ-033-100",
+        "STP-033-164",
+        "STP-033-165",
+        "STP-033-166"
+      ],
+      "nodes_updated": [
+        "ENT-help-centre-content.category",
+        "ENT-help-centre-content.helpfulness_rating",
+        "ENT-help-centre-content.processing_status",
+        "REQ-033-005",
+        "REQ-033-010",
+        "REQ-033-034",
+        "REQ-033-036",
+        "REQ-033-041",
+        "REQ-033-054",
+        "REQ-033-055",
+        "REQ-033-056",
+        "REQ-033-057",
+        "REQ-033-065",
+        "REQ-033-070",
+        "REQ-033-072",
+        "REQ-033-077",
+        "REQ-033-080",
+        "REQ-033-084",
+        "REQ-033-087",
+        "SCR-033-08",
+        "SCR-033-09",
+        "SCR-033-22",
+        "SCR-033-23",
+        "STP-033-007",
+        "STP-033-013",
+        "STP-033-014",
+        "STP-033-017",
+        "STP-033-019",
+        "STP-033-020",
+        "STP-033-024",
+        "STP-033-025",
+        "STP-033-029",
+        "STP-033-035",
+        "STP-033-036",
+        "STP-033-041",
+        "STP-033-047",
+        "STP-033-048",
+        "STP-033-049",
+        "STP-033-050",
+        "STP-033-056",
+        "STP-033-057",
+        "STP-033-058",
+        "STP-033-060",
+        "STP-033-065",
+        "STP-033-067",
+        "STP-033-072",
+        "STP-033-075",
+        "STP-033-077",
+        "STP-033-082",
+        "STP-033-083",
+        "STP-033-090"
+      ],
+      "edges_added": 128,
+      "edges_removed": 9,
+      "rows": 230
+    },
     {
       "id": "cs-20261124-133552-fb2829b6",
       "at": "2026-11-24T13:35:52.990564+00:00",

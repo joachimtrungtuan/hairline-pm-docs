@@ -1,0 +1,186 @@
+# FR-033 logic review pass 1: ruled fixes applied to the PRD (Help Centre Content Management). New rules, steps, field and enum values come first, then edges, then updates, retirements and removals.
+# Cross-FR edges (edges only; no other FR's node is updated or retired): STP-033-164 on SCR-035-02 and applies REQ-035-028; STP-033-014, 025, 035, 036, 050, 057, 082, 083 and 090 are put on the FR-032 screens SCR-032-09, 10, 13 and 19.
+# Queued for other FRs, not done here: FR-032 (SCR-032-12 Resource Category Filter still maps to topic; its view and download counter rules REQ-032-098 and REQ-032-099 do not cover FAQ, article and resource views, so view_count and download_count keep their FR-032 calculated_by and REQ-033-097 only applies to them), FR-035 (REQ-035-028 wording and how a vote and a view are written).
+# Left alone on purpose: ENT-help-centre-content.category was already retired, so its enum values are retired and the field is made not required; REQ-033-089, 090 and 091 are retired and get no edge; minor observations (see the ledger Leftovers).
+reason: "FR-033 logic review pass 1: size limit per upload kind, the helpful vote on resources, view and download counting, an uploaded video published only when processed (Failed status), virus scan rejection, the same required-field check on Save as Draft and Publish, resource category field replacing the retired category, status moves limited to Unpublish from Published, Archived filter and Restore, version on save, wiring of steps to screens and rules, overall status from active components only, patient Article Type values"
+by: docs-manager
+operations:
+  - {"op": "add_node", "id": "REQ-033-096", "type": "Rule", "owner_fr": "FR-033", "title": "A helpful vote is one anonymous Yes or No; repeat votes count", "attrs": {"statement": "A \"Was this helpful?\" vote on a FAQ, article, resource or video is one anonymous Yes or No added to the item's helpfulness count, written through the FR-032 and FR-035 content interfaces; no identity is kept, so repeat votes count.", "rationale": "Core Requirements and Data & Privacy. Recording the vote on the audience side is stated by REQ-032-094 and REQ-035-007."}}
+  - {"op": "add_node", "id": "REQ-033-097", "type": "Rule", "owner_fr": "FR-033", "title": "Views of FAQs, articles and resources are counted per open and stored with their date", "attrs": {"statement": "A view of a FAQ, article or resource is counted each time its detail (or the FAQ answer) is opened, for both audiences; a video view keeps the 30-second rule (REQ-033-079); a resource download is counted for both audiences; each view is stored with its date so views over time (REQ-033-018) and the FR-035 30-day popular list can be derived.", "rationale": "Core Requirements and Data & Privacy (View records). FR-032 keeps REQ-032-098 (download) and REQ-032-099 (video view) as the calculating rules of the two counters."}}
+  - {"op": "add_node", "id": "REQ-033-098", "type": "Rule", "owner_fr": "FR-033", "title": "A file that fails the virus scan is rejected and not stored", "attrs": {"statement": "A file that fails the virus scan MUST be rejected and not stored; the admin sees \"File failed security scan. Upload a clean file.\" and the event is written to the audit trail.", "rationale": "Alternative Flow B2 step 8 and the security rules. Extends REQ-033-022 and REQ-033-029."}}
+  - {"op": "add_node", "id": "REQ-033-099", "type": "Rule", "owner_fr": "FR-033", "title": "Content status moves are limited; only Unpublish leaves Published", "attrs": {"statement": "Content status moves are limited to Draft to Published, Published to Unpublished (only through the Unpublish action with its reason), Unpublished to Published, and any state to Archived by Delete; the Publish Status dropdown offers Draft and Published only and is read-only while the item is Published.", "rationale": "General Rule 4 and the Publish Status rows on the content forms."}}
+  - {"op": "add_node", "id": "REQ-033-100", "type": "Rule", "owner_fr": "FR-033", "title": "Admins can filter archived content and restore it as Draft", "attrs": {"statement": "Each content list MUST have an admin-only \"Archived\" filter, and a Restore action MUST return an archived item as Draft; Related Content links removed at deletion (REQ-033-092) are not put back.", "rationale": "Alternative Flow A7 and General Rule 6 (soft delete supports recovery)."}}
+  - {"op": "add_node", "id": "STP-033-164", "type": "Step", "owner_fr": "FR-033", "title": "System makes published, edited, unpublished or reordered content available in the patient Help Centre within 1 minute", "attrs": {"prd_ref": "Main Flow step 14 (patient audience)"}}
+  - {"op": "add_node", "id": "STP-033-165", "type": "Step", "owner_fr": "FR-033", "title": "System rejects a file that fails the virus scan, does not store it, shows File failed security scan. Upload a clean file. and writes the event to the audit trail", "attrs": {"prd_ref": "Alternative Flow B2 step 8"}}
+  - {"op": "add_node", "id": "STP-033-166", "type": "Step", "owner_fr": "FR-033", "title": "Admin selects the Archived filter and clicks Restore; the item returns as Draft and the Related Content links removed at deletion are not put back", "attrs": {"prd_ref": "Alternative Flow A7"}}
+  - {"op": "add_field", "id": "ENT-help-centre-content.resource_category", "entity_id": "ENT-help-centre-content", "name": "resource_category", "data_type": "enum", "title": "Resource category", "owner_fr": "FR-033", "required": false, "attrs": {"description": "Optional resource category chosen from Templates, Documents or Forms (Screens 4.1 and 11.1). Replaces the retired category field, whose kind is carried by content_type."}}
+  - {"op": "add_enum_value", "field_id": "ENT-help-centre-content.processing_status", "value": "failed", "label": "Failed"}
+  - {"op": "add_enum_value", "field_id": "ENT-help-centre-content.resource_category", "value": "templates", "label": "Templates", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-help-centre-content.resource_category", "value": "documents", "label": "Documents", "sort_order": 1}
+  - {"op": "add_enum_value", "field_id": "ENT-help-centre-content.resource_category", "value": "forms", "label": "Forms", "sort_order": 2}
+  - {"op": "add_edge", "from": "REQ-033-096", "verb": "decided by", "to": "SRC-PRD-033"}
+  - {"op": "add_edge", "from": "REQ-033-096", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-033-097", "verb": "decided by", "to": "SRC-PRD-033"}
+  - {"op": "add_edge", "from": "REQ-033-097", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-033-098", "verb": "decided by", "to": "SRC-PRD-033"}
+  - {"op": "add_edge", "from": "REQ-033-098", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-033-099", "verb": "decided by", "to": "SRC-PRD-033"}
+  - {"op": "add_edge", "from": "REQ-033-099", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-033-100", "verb": "decided by", "to": "SRC-PRD-033"}
+  - {"op": "add_edge", "from": "REQ-033-100", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-033-096", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-033-097", "verb": "applies at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "REQ-033-096", "verb": "applies to", "to": "ENT-help-centre-content.helpfulness_rating"}
+  - {"op": "add_edge", "from": "REQ-033-097", "verb": "applies to", "to": "ENT-help-centre-content.view_count"}
+  - {"op": "add_edge", "from": "REQ-033-097", "verb": "applies to", "to": "ENT-help-centre-content.download_count"}
+  - {"op": "add_edge", "from": "REQ-033-097", "verb": "applies to", "to": "ENT-content-analytics"}
+  - {"op": "add_edge", "from": "REQ-033-098", "verb": "applies to", "to": "SCR-033-09"}
+  - {"op": "add_edge", "from": "REQ-033-098", "verb": "applies to", "to": "SCR-033-11"}
+  - {"op": "add_edge", "from": "REQ-033-098", "verb": "applies to", "to": "SCR-033-23"}
+  - {"op": "add_edge", "from": "REQ-033-098", "verb": "applies to", "to": "SCR-033-25"}
+  - {"op": "add_edge", "from": "REQ-033-099", "verb": "applies to", "to": "ENT-help-centre-content.publish_status"}
+  - {"op": "add_edge", "from": "REQ-033-099", "verb": "applies to", "to": "SCR-033-04"}
+  - {"op": "add_edge", "from": "REQ-033-099", "verb": "applies to", "to": "SCR-033-07"}
+  - {"op": "add_edge", "from": "REQ-033-099", "verb": "applies to", "to": "SCR-033-09"}
+  - {"op": "add_edge", "from": "REQ-033-099", "verb": "applies to", "to": "SCR-033-11"}
+  - {"op": "add_edge", "from": "REQ-033-099", "verb": "applies to", "to": "SCR-033-19"}
+  - {"op": "add_edge", "from": "REQ-033-099", "verb": "applies to", "to": "SCR-033-21"}
+  - {"op": "add_edge", "from": "REQ-033-099", "verb": "applies to", "to": "SCR-033-23"}
+  - {"op": "add_edge", "from": "REQ-033-099", "verb": "applies to", "to": "SCR-033-25"}
+  - {"op": "add_edge", "from": "REQ-033-100", "verb": "applies to", "to": "ENT-help-centre-content.publish_status"}
+  - {"op": "add_edge", "from": "REQ-033-100", "verb": "applies to", "to": "SCR-033-03"}
+  - {"op": "add_edge", "from": "REQ-033-100", "verb": "applies to", "to": "SCR-033-06"}
+  - {"op": "add_edge", "from": "REQ-033-100", "verb": "applies to", "to": "SCR-033-08"}
+  - {"op": "add_edge", "from": "REQ-033-100", "verb": "applies to", "to": "SCR-033-10"}
+  - {"op": "add_edge", "from": "REQ-033-100", "verb": "applies to", "to": "SCR-033-18"}
+  - {"op": "add_edge", "from": "REQ-033-100", "verb": "applies to", "to": "SCR-033-20"}
+  - {"op": "add_edge", "from": "REQ-033-100", "verb": "applies to", "to": "SCR-033-22"}
+  - {"op": "add_edge", "from": "REQ-033-100", "verb": "applies to", "to": "SCR-033-24"}
+  - {"op": "add_edge", "from": "STP-033-164", "verb": "at", "to": "STG-patient-03-active"}
+  - {"op": "add_edge", "from": "STP-033-164", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-033-164", "verb": "on", "to": "SCR-035-02"}
+  - {"op": "add_edge", "from": "STP-033-164", "verb": "applies", "to": "REQ-033-034"}
+  - {"op": "add_edge", "from": "STP-033-164", "verb": "applies", "to": "REQ-035-028"}
+  - {"op": "add_edge", "from": "STP-033-164", "verb": "applies", "to": "REQ-033-008"}
+  - {"op": "add_edge", "from": "STP-033-164", "verb": "applies", "to": "REQ-033-026"}
+  - {"op": "add_edge", "from": "STP-033-014", "verb": "next", "to": "STP-033-164", "attrs": {"label": "patient audience content", "condition": "REQ-033-034"}}
+  - {"op": "add_edge", "from": "STP-033-165", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-033-165", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-033-165", "verb": "on", "to": "SCR-033-09"}
+  - {"op": "add_edge", "from": "STP-033-165", "verb": "on", "to": "SCR-033-11"}
+  - {"op": "add_edge", "from": "STP-033-165", "verb": "on", "to": "SCR-033-23"}
+  - {"op": "add_edge", "from": "STP-033-165", "verb": "on", "to": "SCR-033-25"}
+  - {"op": "add_edge", "from": "STP-033-165", "verb": "applies", "to": "REQ-033-098"}
+  - {"op": "add_edge", "from": "STP-033-165", "verb": "applies", "to": "REQ-033-022"}
+  - {"op": "add_edge", "from": "STP-033-165", "verb": "applies", "to": "REQ-033-029"}
+  - {"op": "add_edge", "from": "STP-033-072", "verb": "next", "to": "STP-033-165"}
+  - {"op": "add_edge", "from": "STP-033-166", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-033-166", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-033-166", "verb": "on", "to": "SCR-033-03"}
+  - {"op": "add_edge", "from": "STP-033-166", "verb": "on", "to": "SCR-033-06"}
+  - {"op": "add_edge", "from": "STP-033-166", "verb": "on", "to": "SCR-033-08"}
+  - {"op": "add_edge", "from": "STP-033-166", "verb": "on", "to": "SCR-033-10"}
+  - {"op": "add_edge", "from": "STP-033-166", "verb": "on", "to": "SCR-033-18"}
+  - {"op": "add_edge", "from": "STP-033-166", "verb": "on", "to": "SCR-033-20"}
+  - {"op": "add_edge", "from": "STP-033-166", "verb": "on", "to": "SCR-033-22"}
+  - {"op": "add_edge", "from": "STP-033-166", "verb": "on", "to": "SCR-033-24"}
+  - {"op": "add_edge", "from": "STP-033-166", "verb": "applies", "to": "REQ-033-100"}
+  - {"op": "add_edge", "from": "STP-033-017", "verb": "next", "to": "STP-033-166", "attrs": {"label": "Archived filter", "condition": "REQ-033-100"}}
+  - {"op": "add_edge", "from": "STP-033-019", "verb": "next", "to": "STP-033-021"}
+  - {"op": "add_edge", "from": "STP-033-047", "verb": "next", "to": "STP-033-049"}
+  - {"op": "add_edge", "from": "STP-033-049", "verb": "next", "to": "STP-033-048", "attrs": {"label": "processing ready, or embedded video", "condition": "REQ-033-077"}}
+  - {"op": "add_edge", "from": "STP-033-048", "verb": "next", "to": "STP-033-050"}
+  - {"op": "add_edge", "from": "SCR-033-08", "verb": "shows", "to": "ENT-help-centre-content.resource_category", "attrs": {"provenance": "retrieved", "label": "Resource Category", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-22", "verb": "shows", "to": "ENT-help-centre-content.resource_category", "attrs": {"provenance": "retrieved", "label": "Resource Category", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-09", "verb": "shows", "to": "ENT-help-centre-content.resource_category", "attrs": {"provenance": "user input", "label": "Resource Category", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-23", "verb": "shows", "to": "ENT-help-centre-content.resource_category", "attrs": {"provenance": "user input", "label": "Resource Category", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-033-08", "verb": "shows", "to": "ENT-help-centre-content.helpfulness_rating", "attrs": {"provenance": "retrieved", "label": "Helpfulness Rating", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-09", "verb": "shows", "to": "ENT-help-centre-content.helpfulness_rating", "attrs": {"provenance": "retrieved", "label": "Helpfulness Rating", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-22", "verb": "shows", "to": "ENT-help-centre-content.helpfulness_rating", "attrs": {"provenance": "retrieved", "label": "Helpfulness Rating", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-033-23", "verb": "shows", "to": "ENT-help-centre-content.helpfulness_rating", "attrs": {"provenance": "retrieved", "label": "Helpfulness Rating", "editable": false}}
+  - {"op": "add_edge", "from": "STP-033-007", "verb": "on", "to": "SCR-033-04"}
+  - {"op": "add_edge", "from": "STP-033-007", "verb": "on", "to": "SCR-033-07"}
+  - {"op": "add_edge", "from": "STP-033-007", "verb": "on", "to": "SCR-033-09"}
+  - {"op": "add_edge", "from": "STP-033-007", "verb": "on", "to": "SCR-033-19"}
+  - {"op": "add_edge", "from": "STP-033-007", "verb": "on", "to": "SCR-033-21"}
+  - {"op": "add_edge", "from": "STP-033-007", "verb": "on", "to": "SCR-033-23"}
+  - {"op": "add_edge", "from": "STP-033-007", "verb": "on", "to": "SCR-033-25"}
+  - {"op": "add_edge", "from": "STP-033-013", "verb": "on", "to": "SCR-033-04"}
+  - {"op": "add_edge", "from": "STP-033-013", "verb": "on", "to": "SCR-033-07"}
+  - {"op": "add_edge", "from": "STP-033-013", "verb": "on", "to": "SCR-033-09"}
+  - {"op": "add_edge", "from": "STP-033-013", "verb": "on", "to": "SCR-033-19"}
+  - {"op": "add_edge", "from": "STP-033-013", "verb": "on", "to": "SCR-033-21"}
+  - {"op": "add_edge", "from": "STP-033-013", "verb": "on", "to": "SCR-033-23"}
+  - {"op": "add_edge", "from": "STP-033-013", "verb": "on", "to": "SCR-033-25"}
+  - {"op": "add_edge", "from": "STP-033-024", "verb": "on", "to": "SCR-033-04"}
+  - {"op": "add_edge", "from": "STP-033-024", "verb": "on", "to": "SCR-033-07"}
+  - {"op": "add_edge", "from": "STP-033-024", "verb": "on", "to": "SCR-033-09"}
+  - {"op": "add_edge", "from": "STP-033-024", "verb": "on", "to": "SCR-033-19"}
+  - {"op": "add_edge", "from": "STP-033-024", "verb": "on", "to": "SCR-033-21"}
+  - {"op": "add_edge", "from": "STP-033-024", "verb": "on", "to": "SCR-033-23"}
+  - {"op": "add_edge", "from": "STP-033-024", "verb": "on", "to": "SCR-033-25"}
+  - {"op": "add_edge", "from": "STP-033-014", "verb": "on", "to": "SCR-032-09"}
+  - {"op": "add_edge", "from": "STP-033-025", "verb": "on", "to": "SCR-032-09"}
+  - {"op": "add_edge", "from": "STP-033-057", "verb": "on", "to": "SCR-032-09"}
+  - {"op": "add_edge", "from": "STP-033-090", "verb": "on", "to": "SCR-032-09"}
+  - {"op": "add_edge", "from": "STP-033-035", "verb": "on", "to": "SCR-032-10"}
+  - {"op": "add_edge", "from": "STP-033-036", "verb": "on", "to": "SCR-032-10"}
+  - {"op": "add_edge", "from": "STP-033-049", "verb": "on", "to": "SCR-033-11"}
+  - {"op": "add_edge", "from": "STP-033-049", "verb": "on", "to": "SCR-033-25"}
+  - {"op": "add_edge", "from": "STP-033-050", "verb": "on", "to": "SCR-032-13"}
+  - {"op": "add_edge", "from": "STP-033-058", "verb": "on", "to": "SCR-033-06"}
+  - {"op": "add_edge", "from": "STP-033-058", "verb": "on", "to": "SCR-033-08"}
+  - {"op": "add_edge", "from": "STP-033-058", "verb": "on", "to": "SCR-033-18"}
+  - {"op": "add_edge", "from": "STP-033-058", "verb": "on", "to": "SCR-033-20"}
+  - {"op": "add_edge", "from": "STP-033-058", "verb": "on", "to": "SCR-033-22"}
+  - {"op": "add_edge", "from": "STP-033-058", "verb": "on", "to": "SCR-033-24"}
+  - {"op": "add_edge", "from": "STP-033-082", "verb": "on", "to": "SCR-032-19"}
+  - {"op": "add_edge", "from": "STP-033-083", "verb": "on", "to": "SCR-032-19"}
+  - {"op": "add_edge", "from": "STP-033-007", "verb": "applies", "to": "REQ-033-022"}
+  - {"op": "add_edge", "from": "STP-033-007", "verb": "applies", "to": "REQ-033-029"}
+  - {"op": "add_edge", "from": "STP-033-067", "verb": "applies", "to": "REQ-033-098"}
+  - {"op": "add_edge", "from": "STP-033-041", "verb": "applies", "to": "REQ-033-058"}
+  - {"op": "add_edge", "from": "STP-033-029", "verb": "applies", "to": "REQ-033-067"}
+  - {"op": "add_edge", "from": "STP-033-075", "verb": "applies", "to": "REQ-033-085"}
+  - {"op": "add_edge", "from": "STP-033-077", "verb": "applies", "to": "REQ-033-093"}
+  - {"op": "add_edge", "from": "STP-033-060", "verb": "applies", "to": "REQ-033-099"}
+  - {"op": "add_edge", "from": "STP-033-056", "verb": "applies", "to": "REQ-033-099"}
+  - {"op": "update_node", "id": "REQ-033-005", "title": "Six content types; Policy Document is provider-only", "attrs": {"statement": "System MUST support multiple content types (FAQ, Tutorial Guide, Troubleshooting Tip, Video Tutorial, Resource Document, Policy Document) applicable to both audiences, except that Policy Document is for the provider audience only (REQ-033-036)."}}
+  - {"op": "update_node", "id": "REQ-033-010", "title": "File upload size limits by upload kind", "attrs": {"statement": "System MUST support file uploads for Help Centre content with a size limit per upload kind (resource file 50MB whatever its type, uploaded video 500MB, resource thumbnail 1MB, video thumbnail 2MB, image placed inside article or FAQ text 10MB) for both audiences."}}
+  - {"op": "update_node", "id": "REQ-033-034", "title": "Publish, edit, unpublish and reorder take effect in the provider and patient Help Centre within 1 minute", "attrs": {"statement": "Publishing content, editing published content, reordering FAQ topics or FAQs, and unpublishing content take effect in the provider Help Centre (via FR-032) and the patient Help Centre (via FR-035, REQ-035-028) within 1 minute."}}
+  - {"op": "update_node", "id": "REQ-033-036", "attrs": {"statement": "Content must be tagged with audience type (Provider or Patient) and with its kind (FAQ, Tutorial Guide, Troubleshooting Tip, Video Tutorial, Resource Document, Policy Document); the kind decides the Help Centre section the content appears in, and admins do not pick a section separately; Policy Document is for the provider audience only and is blocked for the patient audience, whose Article Type values are Tutorial Guide and Troubleshooting Tip."}}
+  - {"op": "update_node", "id": "REQ-033-041", "attrs": {"statement": "These are fixed in code and not editable by admins: the 10 provider Help Centre categories; 5 content types for providers and 4 for patients (no Service Status); the audience types Provider and Patient (no new audience types); the content type options (FAQ, Tutorial Guide, Troubleshooting Tip, Video Tutorial, Resource Document, Policy Document); the file upload size limits per upload kind (resource file 50MB, uploaded video 500MB, resource thumbnail 1MB, video thumbnail 2MB, image placed inside article or FAQ text 10MB); the content body character limits (max 5000 characters for FAQ answers, max 10,000 characters for tutorial guides); the audit log retention period."}}
+  - {"op": "update_node", "id": "REQ-033-054", "title": "Editing content creates a version on save; optional version note", "attrs": {"statement": "When an admin edits existing content, the editor is pre-filled with the existing content; the system creates a new version on save (opening the editor or cancelling creates none); the admin may add an optional \"Version note\" describing what changed; the system updates the content version and logs the change in the audit trail; if two admins edit the same item, the last save wins and both saves are versions."}}
+  - {"op": "update_node", "id": "REQ-033-055", "attrs": {"statement": "To unpublish content the admin must confirm and enter a reason; the status changes from Published to Unpublished, the content is removed from the audience's Help Centre view within 1 minute (REQ-033-034), the action is logged in the audit trail with the reason, and the content remains in admin view as Unpublished for editing or re-publishing."}}
+  - {"op": "update_node", "id": "REQ-033-056", "title": "Save as Draft and Publish run the same required-field check", "attrs": {"statement": "On Save as Draft and on Publish the system runs the same check of the required fields for the content kind (FAQ: question, answer, topic; article: title, content, article type; resource: name, file; video: title, source type) and of file formats, highlights missing or invalid fields with an error message, and saves or publishes only after the admin corrects them and re-submits."}}
+  - {"op": "update_node", "id": "REQ-033-057", "attrs": {"statement": "When a file exceeds the size limit of its upload kind (resource file 50MB, uploaded video 500MB, resource thumbnail 1MB, video thumbnail 2MB, image placed inside article or FAQ text 10MB) the system displays an error message with the limit and suggested alternatives (compress the file, use external video hosting); the admin may re-upload a smaller file or add an external video embed link (YouTube or Vimeo)."}}
+  - {"op": "update_node", "id": "REQ-033-065", "attrs": {"statement": "FAQ question is required (max 200 characters); FAQ answer is required (max 5000 characters, HTML formatting supported); FAQ topic is required and chosen from pre-defined topics or a newly created one; display order is optional (an integer, auto-incremented within the topic if not specified); publish status is Draft or Published (an Unpublished item can only move to Published, REQ-033-099) and defaults to Draft; question, answer and topic are required before saving, with the same check for Save as Draft and for Publish."}}
+  - {"op": "update_node", "id": "REQ-033-070", "attrs": {"statement": "Article title is required (max 200 characters); article content is required (max 10,000 characters; HTML, headings, lists, images and tables supported); article type is required (Tutorial Guide, Troubleshooting Tip or Policy Information; patient articles use Tutorial Guide or Troubleshooting Tip only, REQ-033-036); tags and related articles are optional; publish status defaults to Draft; title, content and article type are required before saving, with the same check for Save as Draft and for Publish."}}
+  - {"op": "update_node", "id": "REQ-033-072", "attrs": {"statement": "Resource name is required (max 200 characters); description is optional (max 500 characters); the resource file is required for new resources (max 50MB whatever the file type; whitelist PDF, DOCX, XLSX, PNG, JPG); resource category is optional and chosen from Templates, Documents or Forms; thumbnail or icon is optional (max 1MB, PNG or JPG, 128x128px recommended); publish status defaults to Draft; name and file are required before saving."}}
+  - {"op": "update_node", "id": "REQ-033-077", "title": "Upload File videos: format, size, processing, duration, thumbnail and publish gate", "attrs": {"statement": "For Upload File videos the video file is required for new videos (MP4 or MOV, max 500MB) with a progress indicator; after upload a background job processes the video for streaming optimization (transcoding, thumbnail generation); the video duration is auto-extracted (read-only); the thumbnail is auto-generated from the video frame at the 10% mark unless the admin uploads a custom one; a processing status (uploading, processing, ready, failed) is shown; an uploaded video cannot be published until its processing status is ready (embedded videos are exempt); if processing fails the status becomes failed, the admin is told and can re-upload, and the item stays Draft."}}
+  - {"op": "update_node", "id": "REQ-033-080", "attrs": {"statement": "The overall status is calculated automatically from the statuses of the active service components only and recalculated when a component changes; open incidents and maintenance in progress do not change it. A Degraded component does not count: if no active component is Down the overall status is All Systems Operational, if some but not all active components are Down it is Partial Outage, and if all active components are Down (including the case of a single active component) it is Major Outage; with no active component the page shows \"Status not available\" unless an admin sets the overall status by hand (see REQ-033-093); the options are All Systems Operational, Partial Outage and Major Outage."}}
+  - {"op": "update_node", "id": "REQ-033-084", "attrs": {"statement": "Admins can schedule, edit, cancel and mark as completed maintenance windows; title and description are required (title max 200 characters, description max 2000 characters); scheduled start and end times are required and the end must be after the start; scheduled times must be in the future for new maintenance windows; at least one affected service is required; the status is Scheduled, In Progress, Completed or Cancelled and defaults to Scheduled; the status changes only by admin action, and a window past its end time stays as the admin left it."}}
+  - {"op": "update_node", "id": "REQ-033-087", "title": "Helpfulness rating is aggregated Yes/No feedback, read-only", "attrs": {"statement": "The helpfulness rating shown to admins is the aggregated Yes/No feedback counts from provider feedback (or aggregated patient feedback), read-only, and tracked per FAQ, article, resource and video for analytics; how a vote is recorded is stated by REQ-033-096."}}
+  - {"op": "update_node", "id": "STP-033-024", "title": "System creates a new version on save, updates the version and logs the change in the audit trail"}
+  - {"op": "update_node", "id": "STP-033-048", "title": "Publish the video tutorial; an uploaded video can be published only when its processing status is Ready (embedded videos are exempt)"}
+  - {"op": "update_node", "id": "STP-033-049", "title": "System processes the uploaded video for streaming optimisation; if processing fails the status becomes Failed, the admin is told and can re-upload, and the item stays Draft"}
+  - {"op": "update_node", "id": "STP-033-060", "title": "Complete the content form and click Save as Draft or Publish; the same required-field check runs on both"}
+  - {"op": "update_node", "id": "STP-033-065", "title": "Re-submit content for saving or publishing"}
+  - {"op": "update_field", "id": "ENT-help-centre-content.helpfulness_rating", "calculated_by": "REQ-033-096"}
+  - {"op": "update_field", "id": "ENT-help-centre-content.category", "required": false}
+  - {"op": "retire_enum_value", "field_id": "ENT-help-centre-content.category", "value": "faq"}
+  - {"op": "retire_enum_value", "field_id": "ENT-help-centre-content.category", "value": "tutorial_guide"}
+  - {"op": "retire_enum_value", "field_id": "ENT-help-centre-content.category", "value": "troubleshooting"}
+  - {"op": "retire_enum_value", "field_id": "ENT-help-centre-content.category", "value": "resource_library"}
+  - {"op": "retire_enum_value", "field_id": "ENT-help-centre-content.category", "value": "video_tutorial"}
+  - {"op": "retire_enum_value", "field_id": "ENT-help-centre-content.category", "value": "policy_information"}
+  - {"op": "retire_node", "id": "STP-033-020"}
+  - {"op": "remove_edge", "from": "STP-033-019", "verb": "next", "to": "STP-033-020"}
+  - {"op": "remove_edge", "from": "STP-033-020", "verb": "next", "to": "STP-033-021"}
+  - {"op": "remove_edge", "from": "STP-033-047", "verb": "next", "to": "STP-033-048"}
+  - {"op": "remove_edge", "from": "STP-033-048", "verb": "next", "to": "STP-033-049"}
+  - {"op": "remove_edge", "from": "STP-033-049", "verb": "next", "to": "STP-033-050"}
+  - {"op": "remove_edge", "from": "SCR-033-08", "verb": "shows", "to": "ENT-help-centre-content.topic"}
+  - {"op": "remove_edge", "from": "SCR-033-22", "verb": "shows", "to": "ENT-help-centre-content.topic"}
+  - {"op": "remove_edge", "from": "SCR-033-09", "verb": "shows", "to": "ENT-help-centre-content.topic"}
+  - {"op": "remove_edge", "from": "SCR-033-23", "verb": "shows", "to": "ENT-help-centre-content.topic"}
