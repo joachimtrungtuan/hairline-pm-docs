@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T07:26:24Z",
+  "generated_at": "2026-11-24T07:55:13Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -15170,9 +15170,9 @@
       "owner_fr": "FR-020",
       "title": "Notification attempt",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "One delivery attempt on one channel, with its status (PRD Key Entities; REQ-020-007; one notification record per attempt)."
+        "description": "One delivery attempt on one channel, with its status (PRD Key Entities; REQ-020-007). Many attempt rows sit under one notification record (REQ-020-041)."
       }
     },
     {
@@ -15207,6 +15207,17 @@
       }
     },
     {
+      "id": "ENT-notification-attempt.notification_id",
+      "type": "Field",
+      "owner_fr": "FR-020",
+      "title": "Notification ID",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "The notification record this attempt belongs to (ENT-notification-record.notification_id). One record per recipient and event; one attempt row per channel attempt under it (REQ-020-041)."
+      }
+    },
+    {
       "id": "ENT-notification-attempt.provider",
       "type": "Field",
       "owner_fr": "FR-020",
@@ -15223,9 +15234,9 @@
       "owner_fr": "FR-020",
       "title": "Delivery status",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Status of the attempt. The PRD lists no status values."
+        "description": "Status of the attempt: queued, sent, delivered, failed, suppressed, deferred or coalesced (REQ-020-041, REQ-020-042)."
       }
     },
     {
@@ -15714,9 +15725,9 @@
       "owner_fr": "FR-020",
       "title": "Notification record",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "In-app notification shown on the notification listing screens (PRD Key Entities). Two fields (severity, priority) exist only because Screen 3 shows them; see the migration report."
+        "description": "In-app notification shown on the notification listing screens (PRD Key Entities); one per recipient and event (REQ-020-041). Two fields (severity, priority) exist only because Screen 3 shows them; see the migration report. Affiliates have a record for the audit but no in-app list; their notices go by email only (REQ-020-027)."
       }
     },
     {
@@ -15781,7 +15792,7 @@
       "owner_fr": "FR-020",
       "title": "Recipient type",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {}
     },
     {
@@ -71563,9 +71574,9 @@
       "owner_fr": "FR-020",
       "title": "Mandatory provider-status cancellation notices",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST send mandatory `provider.status_cancellation_patient` and `provider.status_cancellation_admin_support` notifications for each record affected by an FR-015 provider suspension/deactivation, regardless of the \"Notify Provider\" checkbox, with privacy-safe patient content (no patient-cancelled wording, no payment instruction, no confidential reason), and MUST use the FR-003 pre-acceptance variants (Workflow 2 Alternative Flow B4, REQ-003-021): \"[Clinic] is no longer available. Your other offers are still open.\" when other offers remain open; \"[Clinic] is no longer available. We are finding new offers for you.\" when the inquiry is redistributed, or a confirmation request first when the patient had explicitly selected the affected provider.",
+        "statement": "System MUST send mandatory provider.status_cancellation_patient and provider.status_cancellation_admin_support notifications for each record affected by an FR-015 provider suspension/deactivation, regardless of the Notify Provider checkbox, with privacy-safe patient content (no patient-cancelled wording, no payment instruction, no confidential reason), and MUST use the FR-003 pre-acceptance variants (Workflow 2 Alternative Flow B4, REQ-003-021): \"[Clinic] is no longer available. Your other offers are still open.\" when other offers remain open; \"[Clinic] is no longer available. We are finding new offers for you.\" when the inquiry is redistributed, or a confirmation request first, with Confirm and Decline deep links to FR-003 Screen 8, when the patient had explicitly selected the affected provider. When the patient has not answered after 48 hours, one mandatory reminder provider.status_redistribution_reminder follows (REQ-020-159).",
         "rationale": "Functional Requirements Summary, prd.md line 501. Also stated at line 302 (Business Rules, Provider-Status Cancellation Notifications): patient content uses provider-caused wording and a Contact Admin/Support action, with the three pre-acceptance variants from FR-003 REQ-003-021 (CR links in the PRD line are not read)."
       }
     },
@@ -71646,12 +71657,12 @@
       "id": "REQ-020-020",
       "type": "Rule",
       "owner_fr": "FR-020",
-      "title": "quote.cancelled_inquiry always sent to affected providers",
+      "title": "quote.cancelled_inquiry goes only to quote-holding providers and is critical",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST always send `quote.cancelled_inquiry` to each provider whose quote is auto-cancelled by an inquiry cancellation; neither FR-030 toggles nor FR-032 provider notification preferences may suppress it.",
-        "rationale": "Functional Requirements Summary, prd.md line 501."
+        "statement": "System MUST always send quote.cancelled_inquiry, and only that notice, to each provider holding a quote for the inquiry in draft, sent or expired state when a patient cancels the inquiry or an admin closes it (never to the provider of a replacement draft quote, REQ-003-127); a provider that never quoted is told nothing; neither FR-030 toggles nor FR-032 provider notification preferences may suppress it. The reason is patient-private: a patient cancellation says only Inquiry cancelled by patient, an admin close says the inquiry was closed by Hairline and gives no reason. The notice is critical (REQ-020-158): its target is a first send attempt within 5 minutes, and a failed first attempt is retried under the FR-030 retry rule (up to 3 retries, 1 hour apart by default), so 5 minutes is a target, not a guarantee.",
+        "rationale": "Functional Requirements Summary and the quote.cancelled_inquiry catalogue row (a pointer to REQ-030-039). FR-030 and FR-003 are queued to align REQ-030-039, REQ-030-219 and REQ-003-100."
       }
     },
     {
@@ -71732,9 +71743,9 @@
       "owner_fr": "FR-020",
       "title": "Affiliate payout notifications when program enabled",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Affiliate Program (if enabled): Receive affiliate payout notifications; configuration is managed via FR-030 event catalog and rules.",
+        "statement": "Affiliate Program (if enabled): Receive affiliate payout notifications by email only, with no preference setting; configuration is managed via FR-030 event catalog and rules.",
         "rationale": "prd.md line 29."
       }
     },
@@ -71864,10 +71875,10 @@
       "owner_fr": "FR-020",
       "title": "A1: disabled channel suppressed, others still attempted",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Preference Disabled. Trigger: Recipient has disabled Email or Push. Outcome: Channel suppressed; delivery attempted on remaining enabled channels.",
-        "rationale": "prd.md line 160. Alternative Flow A1 (lines 160 to 162)."
+        "statement": "Preference Disabled. Trigger: Recipient has disabled Email or Push. Outcome: Channel suppressed; delivery attempted on remaining enabled channels (back to step 3). A mandatory patient notice is sent by email even when the patient has switched off every channel, and always appears in the in-app list; a non-mandatory notice with no channel left is recorded with status suppressed and ends.",
+        "rationale": "Alternative Flow A1."
       }
     },
     {
@@ -71876,34 +71887,34 @@
       "owner_fr": "FR-020",
       "title": "B1: excessive events coalesced or deferred, suppression audited",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Throttling. Trigger: Excessive events in short time window. Outcome: Coalesce or defer per policy; record suppression in audit.",
-        "rationale": "prd.md line 164. Alternative Flow B1."
+        "statement": "Throttling. Trigger: Excessive events in short time window. Outcome: Coalesce or defer per policy; record suppression in audit. A deferred notice returns to step 3 when its hold ends; a notice merged into another ends with status coalesced. A critical notice (REQ-020-158) is never coalesced or deferred.",
+        "rationale": "Alternative Flow B1."
       }
     },
     {
       "id": "REQ-020-040",
       "type": "Rule",
       "owner_fr": "FR-020",
-      "title": "B2: channel failure retried with backoff, failover when configured",
+      "title": "B2: failed channel attempts retried under the FR-030 retry rule",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Channel Failure. Trigger: Email/push/SMS provider unavailable. Outcome: Retry with backoff; failover when configured; status reflects failure cause.",
-        "rationale": "prd.md line 168. Alternative Flow B2."
+        "statement": "Channel Failure. Trigger: Email/push/SMS provider unavailable. Outcome: Failed attempts are retried under the FR-030 retry rule (up to 3 retries, 1 hour apart by default), each retry returning to step 4; status reflects failure cause; after the last retry the notice ends with status failed.",
+        "rationale": "Alternative Flow B2. The failover clause is removed; the retry rule is owned by FR-030."
       }
     },
     {
       "id": "REQ-020-041",
       "type": "Rule",
       "owner_fr": "FR-020",
-      "title": "One notification record per attempt",
+      "title": "One notification record per recipient and event, one attempt row per channel attempt",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "One notification record per attempt with channel, provider, status, and timestamp.",
-        "rationale": "prd.md line 336."
+        "statement": "One notification record per recipient and event, with one attempt row per channel attempt under it; each attempt row carries channel, provider, status, timestamp and, on failure, the cause. Attempt status is one of queued, sent, delivered, failed, suppressed, deferred, coalesced.",
+        "rationale": "Business Rules, Delivery Audit. FR-030 delivery log is a view of the same rows (queued)."
       }
     },
     {
@@ -71912,9 +71923,9 @@
       "owner_fr": "FR-020",
       "title": "Throttling and suppression visible in audit logs",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Throttling and suppression policies are transparent in audit logs.",
+        "statement": "Throttling and suppression policies are transparent in audit logs: a suppressed, deferred or coalesced notice is an attempt row with that status.",
         "rationale": "prd.md line 337."
       }
     },
@@ -71922,12 +71933,12 @@
       "id": "REQ-020-043",
       "type": "Rule",
       "owner_fr": "FR-020",
-      "title": "Event handlers are idempotent and retried with backoff",
+      "title": "Event handlers are idempotent; failed deliveries retried under the FR-030 retry rule",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Event-driven design; idempotent handlers; retries with backoff.",
-        "rationale": "prd.md line 387. Implementation Notes: promoted because idempotency is a business rule."
+        "statement": "Event-driven design; idempotent handlers; failed deliveries retried under the FR-030 retry rule (up to 3 retries, 1 hour apart by default).",
+        "rationale": "Implementation Notes: promoted because idempotency is a business rule."
       }
     },
     {
@@ -71960,10 +71971,10 @@
       "owner_fr": "FR-020",
       "title": "Admin recipients and coverage come from the FR-030 catalog",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Admin recipients and event coverage are defined by the FR-030 event catalog and configured rules (no additional hard-coded admin event list in FR-020).",
-        "rationale": "prd.md line 304."
+        "statement": "Admin recipients and event coverage are defined by the FR-030 event catalog and configured rules (no additional hard-coded admin event list in FR-020). An Admin recipient may be defined by a held permission, for example the Admins holding A-09 Edit Settings for legal.coverage_below_threshold.",
+        "rationale": "Business Rules, Admin Notifications."
       }
     },
     {
@@ -72223,12 +72234,12 @@
       "id": "REQ-020-068",
       "type": "Rule",
       "owner_fr": "FR-020",
-      "title": "Notifications persist 90 days, then archive",
+      "title": "Notification lists persist 90 days, then archive",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Notifications persist for 90 days then archive.",
-        "rationale": "prd.md line 283. Consolidated Screen Notes, Patient listing."
+        "statement": "Notifications persist for 90 days then archive. The same 90-day window applies to the patient, provider and admin lists; an archived notice is no longer in the lists, and a deep link to it opens the list with a no longer available message.",
+        "rationale": "Consolidated Screen Notes, Patient listing; Screens 2 and 3 point to it."
       }
     },
     {
@@ -72309,10 +72320,10 @@
       "owner_fr": "FR-020",
       "title": "Catalog: Inquiry Cancelled (inquiry.cancelled)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Notification catalog event inquiry.cancelled (Inquiry Cancelled), category Inquiry. Primary recipients: Patient, Provider, Admin (optional). Notes: Patient-initiated inquiry cancellation (FR-003 Workflow 5). Fires when patient cancels inquiry in Inquiry, Quoted, or Accepted stages. Patient receives cancellation confirmation (mandatory — aligns with FR-003 Workflow 5 step 4 and Screen 8b). Cancellation reason is patient-private — provider notification says only \"Inquiry cancelled by patient\". MVP default channels: Email + Push.",
-        "rationale": "Event Catalog table, prd.md line 46. The table mirrors FR-030; FR-030 prevails on any mismatch."
+        "statement": "Notification catalog event inquiry.cancelled (Inquiry Cancelled), category Inquiry. Primary recipients: Patient, Admin (optional). Notes: Fires when a patient cancels the inquiry in the Inquiry or Quoted stage (FR-003 Workflow 5) and when an admin closes the inquiry (FR-006 Close inquiry, cancelled_by = admin; REQ-003-014). The patient receives the cancellation confirmation (mandatory, aligns with FR-003 Workflow 5 step 4 and Screen 8b); for an admin close the patient notice carries the reason as FR-006 defines. Providers are not recipients: each provider holding a quote for the inquiry in draft, sent or expired state is told by quote.cancelled_inquiry only, and a provider that never quoted is told nothing (REQ-020-020). The reason a patient gives is patient-private. MVP default channels: Email + Push.",
+        "rationale": "Event Catalog table. The table mirrors FR-030; FR-030 prevails on any mismatch."
       }
     },
     {
@@ -72345,10 +72356,10 @@
       "owner_fr": "FR-020",
       "title": "Catalog: Booking Cancelled (booking.cancelled)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Notification catalog event booking.cancelled (Booking Cancelled), category Booking/Schedule. Primary recipients: Patient, Provider, Admin (optional). Notes: Include cancellation reason where appropriate",
-        "rationale": "Event Catalog table, prd.md line 62. The table mirrors FR-030; FR-030 prevails on any mismatch."
+        "statement": "Notification catalog event booking.cancelled (Booking Cancelled), category Booking/Schedule. Primary recipients: Patient, Provider, Admin (optional). Notes: Covers every cause of a booking cancellation: Admin cancellation, patient drop-out, unpaid balance or installment plan default (FR-007B), and provider fault. The reason text each recipient sees is the one FR-006 defines (REQ-006-011).",
+        "rationale": "Event Catalog table. The table mirrors FR-030; FR-030 prevails on any mismatch. EVT-booking-cancelled is FR-030-owned; the emits edge at STG-main-05-payment is queued for FR-030."
       }
     },
     {
@@ -72454,9 +72465,9 @@
       "owner_fr": "FR-020",
       "title": "Catalog: Affiliate Payout Processed (payout.affiliate_processed)",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Notification catalog event payout.affiliate_processed (Affiliate Payout Processed), category Billing/Payouts. Primary recipients: Affiliate, Admin (optional). Notes: If affiliate program is enabled",
+        "statement": "Notification catalog event payout.affiliate_processed (Affiliate Payout Processed), category Billing/Payouts. Primary recipients: Affiliate, Admin (optional). Notes: If affiliate program is enabled. The affiliate copy goes by email only, with no preference setting (REQ-020-027).",
         "rationale": "Event Catalog table, prd.md line 74. The table mirrors FR-030; FR-030 prevails on any mismatch."
       }
     },
@@ -72466,9 +72477,9 @@
       "owner_fr": "FR-020",
       "title": "Catalog: Payout Failed (payout.failed)",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Notification catalog event payout.failed (Payout Failed), category Billing/Payouts. Primary recipients: Admin, Provider (optional), Affiliate (optional). Notes: Failure processing payout; recipients depend on payout type",
+        "statement": "Notification catalog event payout.failed (Payout Failed), category Billing/Payouts. Primary recipients: Admin, Provider (optional), Affiliate (optional). Notes: Failure processing payout; recipients depend on payout type. The affiliate copy goes by email only, with no preference setting (REQ-020-027).",
         "rationale": "Event Catalog table, prd.md line 75. The table mirrors FR-030; FR-030 prevails on any mismatch."
       }
     },
@@ -72964,6 +72975,150 @@
       "attrs": {
         "statement": "An event that produces a notification belongs to the FR-030 catalogue, and this PRD cites it. This includes the provider.* events, `inquiry.ttfq_sla_breached` and `analytics.export_ready`. An event that produces no notification belongs to the FR that triggers it.",
         "rationale": "prd.md lines 307 (Business Rules, Event Ownership); also line 38"
+      }
+    },
+    {
+      "id": "REQ-020-158",
+      "type": "Rule",
+      "owner_fr": "FR-020",
+      "title": "A locked notice is critical and is never held back",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "A notice whose toggle is locked (mandatory) is critical. A critical notice is sent at once and is exempt from quiet hours, the hourly rate limit and coalescing. The Urgency badge on the admin dropdown only displays a level and drives none of these. Single exception: legal.acceptance_reminder is locked but not critical; it respects quiet hours and the rate limit.",
+        "rationale": "Business Rules, Critical Notices. Closes the gap between the locked toggle in FR-030 and the throttling flow (B1), which named no exemption."
+      }
+    },
+    {
+      "id": "REQ-020-159",
+      "type": "Rule",
+      "owner_fr": "FR-020",
+      "title": "Catalog: Redistribution Confirmation Reminder (provider.status_redistribution_reminder)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Notification catalog event provider.status_redistribution_reminder (Redistribution Confirmation Reminder), category Provider/Compliance. Primary recipients: Patient. Notes: FR-003 Workflow 2 Alternative Flow B4 step 3 (STP-003-095, REQ-003-128). Sent once, when the patient has not answered the confirm variant of provider.status_cancellation_patient after 48 hours; same Confirm and Decline deep links to FR-003 Screen 8 and the Contact Admin/Support action; no second reminder. Mandatory (cannot be disabled in FR-030 rules).",
+        "rationale": "Event Catalog table. The table mirrors FR-030; FR-030 prevails on any mismatch. No Event node exists yet; FR-003 is queued to add it."
+      }
+    },
+    {
+      "id": "REQ-020-160",
+      "type": "Rule",
+      "owner_fr": "FR-020",
+      "title": "Catalog: Account Deletion Requested (account.deletion_requested)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Notification catalog event account.deletion_requested (Account Deletion Requested), category Account/Auth. Primary recipients: Patient, Admin. Notes: FR-023 deletion request submitted through FR-001 (REQ-023-029). One event: the patient receives the submission confirmation and the admins are told of the new request.",
+        "rationale": "Event Catalog table. The table mirrors FR-030; FR-030 prevails on any mismatch."
+      }
+    },
+    {
+      "id": "REQ-020-161",
+      "type": "Rule",
+      "owner_fr": "FR-020",
+      "title": "Catalog: Data Request Status Notices (dsr.verification_required, dsr.in_progress, dsr.fulfilled, dsr.denied, dsr.blocked_by_obligation)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Notification catalog events dsr.verification_required, dsr.in_progress, dsr.fulfilled, dsr.denied and dsr.blocked_by_obligation (Data Request Status Notices), category Account/Auth. Primary recipients: Patient. Notes: FR-023 REQ-023-008. Status notices on a deletion request: identity proof insufficient (the patient provides more), approved and processing, completed (with the actions taken and the legal basis of any retained records), denied (with the reason), approval blocked by an active obligation (with the expected timeline). The outcome notices dsr.fulfilled and dsr.denied are mandatory; admin cannot disable them.",
+        "rationale": "Event Catalog table. The table mirrors FR-030; FR-030 prevails on any mismatch. One grouped row for the five patient status notices of one request."
+      }
+    },
+    {
+      "id": "REQ-020-162",
+      "type": "Rule",
+      "owner_fr": "FR-020",
+      "title": "Catalog: Data Request Deadline Approaching (dsr.deadline_approaching)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Notification catalog event dsr.deadline_approaching (Data Request Deadline Approaching), category Account/Auth. Primary recipients: Admin. Notes: FR-023 REQ-023-029. Sent 7 calendar days before the deadline of a request that is still open.",
+        "rationale": "Event Catalog table. The table mirrors FR-030; FR-030 prevails on any mismatch."
+      }
+    },
+    {
+      "id": "REQ-020-163",
+      "type": "Rule",
+      "owner_fr": "FR-020",
+      "title": "Catalog: Data Request Obligation Block Ended (dsr.obligation_block_ended)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Notification catalog event dsr.obligation_block_ended (Data Request Obligation Block Ended), category Account/Auth. Primary recipients: Admin. Notes: FR-023 REQ-023-029 and Main Flow step 3. Sent when the obligation that blocked approval ends, saying the request can be approved. FR-023 owns the emitting step.",
+        "rationale": "Event Catalog table. The table mirrors FR-030; FR-030 prevails on any mismatch. No Event node yet; FR-023 is queued to add the event and its emitting step."
+      }
+    },
+    {
+      "id": "REQ-020-164",
+      "type": "Rule",
+      "owner_fr": "FR-020",
+      "title": "Catalog: Installment Charge Failed (installment.failed)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Notification catalog event installment.failed (Installment Charge Failed), category Payment. Primary recipients: Patient. Notes: FR-007B REQ-007B-017. Immediate notice that an installment charge failed, with a clear error message. On the day after the due date the overdue notice replaces that day's failure notice (REQ-007B-101). Event key proposed by FR-020; FR-030 confirms.",
+        "rationale": "Event Catalog table. The table mirrors FR-030; FR-030 prevails on any mismatch."
+      }
+    },
+    {
+      "id": "REQ-020-165",
+      "type": "Rule",
+      "owner_fr": "FR-020",
+      "title": "Catalog: Installment Overdue (installment.overdue_notice)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Notification catalog event installment.overdue_notice (Installment Overdue), category Payment. Primary recipients: Patient, Admin (billing admins). Notes: FR-007B REQ-007B-101. One notice to the patient and one to the billing admins on the day after a due date passes unpaid, after that day's retry; the patient notice states the booking cancellation date when the cancellation point is set. The provider sees the Overdue banner only and gets no notice. FR-007B adds a late fee to the installment without a notice event of its own. Event key proposed by FR-020; FR-030 confirms.",
+        "rationale": "Event Catalog table. The table mirrors FR-030; FR-030 prevails on any mismatch."
+      }
+    },
+    {
+      "id": "REQ-020-166",
+      "type": "Rule",
+      "owner_fr": "FR-020",
+      "title": "Catalog: Installment Plan Defaulted (installment.plan_defaulted)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Notification catalog event installment.plan_defaulted (Installment Plan Defaulted), category Payment. Primary recipients: Admin, Patient, Provider. Notes: FR-007B REQ-007B-020. Sent when a plan is Defaulted; the admin notice is for intervention. Event key proposed by FR-020; FR-030 confirms.",
+        "rationale": "Event Catalog table. The table mirrors FR-030; FR-030 prevails on any mismatch."
+      }
+    },
+    {
+      "id": "REQ-020-167",
+      "type": "Rule",
+      "owner_fr": "FR-020",
+      "title": "Catalog: Legal Version Published (legal.version_published)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Notification catalog event legal.version_published (Legal Version Published), category System/Operations. Primary recipients: Admin (the publishing Admin). Notes: FR-027 REQ-027-022. Sent to the Admin who published the version once publication succeeds.",
+        "rationale": "Event Catalog table. The table mirrors FR-030; FR-030 prevails on any mismatch."
+      }
+    },
+    {
+      "id": "REQ-020-168",
+      "type": "Rule",
+      "owner_fr": "FR-020",
+      "title": "Catalog: Legal Acceptance Coverage Below Threshold (legal.coverage_below_threshold)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Notification catalog event legal.coverage_below_threshold (Legal Acceptance Coverage Below Threshold), category System/Operations. Primary recipients: Admin (holders of A-09 Edit Settings). Notes: FR-027 REQ-027-023. Sent once per version when the acceptance rate of a Current version is below the Admin-set threshold, evaluated daily from 14 days after the version became Current.",
+        "rationale": "Event Catalog table. The table mirrors FR-030; FR-030 prevails on any mismatch."
+      }
+    },
+    {
+      "id": "REQ-020-169",
+      "type": "Rule",
+      "owner_fr": "FR-020",
+      "title": "Catalog: Legal Acceptance Reminder (legal.acceptance_reminder)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Notification catalog event legal.acceptance_reminder (Legal Acceptance Reminder), category System/Operations. Primary recipients: Patient, Provider (team members in the Pending set). Notes: FR-027 REQ-027-063. One reminder to each user in the Pending set; FR-027 owns the cadence. The toggle is locked: the user cannot switch it off. It is not critical: it respects quiet hours and the rate limit (REQ-020-158).",
+        "rationale": "Event Catalog table. The table mirrors FR-030; FR-030 prevails on any mismatch. FR-027 emits the event at the Admin stage although its recipients are patients and providers; queued as a cross-FR remark."
       }
     },
     {
@@ -104013,7 +104168,7 @@
       "owner_fr": null,
       "title": "Inquiry",
       "status": "active",
-      "version": 23,
+      "version": 24,
       "attrs": {
         "timeline": "main",
         "sequence": 1,
@@ -104287,7 +104442,7 @@
       "owner_fr": null,
       "title": "All stages",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "timeline": "platform",
         "sequence": 1,
@@ -115120,7 +115275,7 @@
       "owner_fr": "FR-020",
       "title": "Notification Service evaluates preferences and throttling",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 2"
       }
@@ -115131,7 +115286,7 @@
       "owner_fr": "FR-020",
       "title": "Notification Service builds the message from the template and routes it to enabled channels",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 3"
       }
@@ -115142,7 +115297,7 @@
       "owner_fr": "FR-020",
       "title": "Notification Service records the delivery attempt and status and exposes the audit",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 4"
       }
@@ -115153,9 +115308,10 @@
       "owner_fr": "FR-020",
       "title": "SMS path is included when SMS is enabled and the event is urgent, otherwise email and push only",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Main Flow step 5"
+        "prd_ref": "Main Flow step 3",
+        "description": "Post-MVP, future phase: if SMS is enabled and the notice is urgent, the SMS path is included in routing. In MVP the step does not run; email and push only."
       }
     },
     {
@@ -115164,9 +115320,10 @@
       "owner_fr": "FR-020",
       "title": "Channel is suppressed and delivery is attempted on the remaining enabled channels",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "A1 outcome"
+        "prd_ref": "A1 outcome",
+        "description": "A1: the disabled channel is suppressed and delivery continues on the remaining channels (back to step 3). May also end: a mandatory patient notice still goes by email; a non-mandatory notice with no channel left is recorded as suppressed and ends."
       }
     },
     {
@@ -115175,9 +115332,10 @@
       "owner_fr": "FR-020",
       "title": "Notifications are coalesced or deferred per policy and the suppression is recorded in the audit",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "B1 outcome"
+        "prd_ref": "B1 outcome",
+        "description": "B1: the notice is coalesced or deferred per policy and the suppression is audited. A deferred notice returns to step 3 when its hold ends. May also end: a coalesced notice ends with status coalesced. A critical notice skips this step."
       }
     },
     {
@@ -115186,9 +115344,10 @@
       "owner_fr": "FR-020",
       "title": "Delivery is retried with backoff, failover is used when configured, and the status reflects the failure cause",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "B2 outcome"
+        "prd_ref": "B2 outcome",
+        "description": "B2: a failed channel attempt is retried under the FR-030 retry rule (up to 3 retries, 1 hour apart by default), each retry returning to step 4. May also end: after the last retry the notice ends with status failed."
       }
     },
     {
@@ -142382,6 +142541,14 @@
       "calculated_by": null
     },
     {
+      "id": "ENT-notification-attempt.notification_id",
+      "entity_id": "ENT-notification-attempt",
+      "name": "notification_id",
+      "data_type": "id",
+      "required": true,
+      "calculated_by": null
+    },
+    {
       "id": "ENT-notification-attempt.provider",
       "entity_id": "ENT-notification-attempt",
       "name": "provider",
@@ -142393,7 +142560,7 @@
       "id": "ENT-notification-attempt.status",
       "entity_id": "ENT-notification-attempt",
       "name": "status",
-      "data_type": "text",
+      "data_type": "enum",
       "required": true,
       "calculated_by": null
     },
@@ -157356,6 +157523,48 @@
       "sort_order": 2
     },
     {
+      "field_id": "ENT-notification-attempt.status",
+      "value": "queued",
+      "label": "Queued",
+      "sort_order": 0
+    },
+    {
+      "field_id": "ENT-notification-attempt.status",
+      "value": "sent",
+      "label": "Sent",
+      "sort_order": 1
+    },
+    {
+      "field_id": "ENT-notification-attempt.status",
+      "value": "delivered",
+      "label": "Delivered",
+      "sort_order": 2
+    },
+    {
+      "field_id": "ENT-notification-attempt.status",
+      "value": "failed",
+      "label": "Failed",
+      "sort_order": 3
+    },
+    {
+      "field_id": "ENT-notification-attempt.status",
+      "value": "suppressed",
+      "label": "Suppressed",
+      "sort_order": 4
+    },
+    {
+      "field_id": "ENT-notification-attempt.status",
+      "value": "deferred",
+      "label": "Deferred",
+      "sort_order": 5
+    },
+    {
+      "field_id": "ENT-notification-attempt.status",
+      "value": "coalesced",
+      "label": "Coalesced",
+      "sort_order": 6
+    },
+    {
       "field_id": "ENT-notification-delivery-log.channel_type",
       "value": "email",
       "label": "Email",
@@ -157534,6 +157743,12 @@
       "value": "admin",
       "label": "Admin",
       "sort_order": 2
+    },
+    {
+      "field_id": "ENT-notification-record.recipient_type",
+      "value": "affiliate",
+      "label": "Affiliate",
+      "sort_order": 3
     },
     {
       "field_id": "ENT-notification-record.urgency",
@@ -174135,7 +174350,7 @@
       "verb": "active in",
       "to_id": "STG-admin-01-configuration",
       "attrs": {
-        "rules": 11
+        "rules": 15
       },
       "derived": true
     },
@@ -174162,7 +174377,7 @@
       "verb": "active in",
       "to_id": "STG-main-01-inquiry",
       "attrs": {
-        "rules": 32
+        "rules": 33
       },
       "derived": true
     },
@@ -174198,7 +174413,7 @@
       "verb": "active in",
       "to_id": "STG-main-05-payment",
       "attrs": {
-        "rules": 4
+        "rules": 8
       },
       "derived": true
     },
@@ -174261,7 +174476,25 @@
       "verb": "active in",
       "to_id": "STG-patient-03-active",
       "attrs": {
-        "rules": 22
+        "rules": 23
+      },
+      "derived": true
+    },
+    {
+      "from_id": "FR-020",
+      "verb": "active in",
+      "to_id": "STG-patient-05-deleted",
+      "attrs": {
+        "rules": 1
+      },
+      "derived": true
+    },
+    {
+      "from_id": "FR-020",
+      "verb": "active in",
+      "to_id": "STG-patient-06-deletion-requested",
+      "attrs": {
+        "rules": 3
       },
       "derived": true
     },
@@ -174270,7 +174503,7 @@
       "verb": "active in",
       "to_id": "STG-platform-01-all-stages",
       "attrs": {
-        "rules": 2
+        "rules": 3
       },
       "derived": true
     },
@@ -174288,7 +174521,7 @@
       "verb": "active in",
       "to_id": "STG-provider-03-active",
       "attrs": {
-        "rules": 30
+        "rules": 31
       },
       "derived": true
     },
@@ -249844,7 +250077,19 @@
     {
       "from_id": "REQ-020-068",
       "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-068",
+      "verb": "applies at",
       "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-068",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
       "attrs": {}
     },
     {
@@ -250054,12 +250299,6 @@
     {
       "from_id": "REQ-020-076",
       "verb": "applies to",
-      "to_id": "ACT-provider",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-020-076",
-      "verb": "applies to",
       "to_id": "EVT-inquiry-cancelled",
       "attrs": {}
     },
@@ -250133,6 +250372,12 @@
       "from_id": "REQ-020-092",
       "verb": "applies at",
       "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-092",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
       "attrs": {}
     },
     {
@@ -251571,6 +251816,330 @@
     },
     {
       "from_id": "REQ-020-157",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-020",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-158",
+      "verb": "applies at",
+      "to_id": "STG-platform-01-all-stages",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-158",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-020",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-159",
+      "verb": "applies at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-159",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-159",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-020",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-160",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-160",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-160",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-160",
+      "verb": "applies to",
+      "to_id": "EVT-account-deletion-requested",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-160",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-020",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-161",
+      "verb": "applies at",
+      "to_id": "STG-patient-05-deleted",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-161",
+      "verb": "applies at",
+      "to_id": "STG-patient-06-deletion-requested",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-161",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-161",
+      "verb": "applies to",
+      "to_id": "EVT-dsr-blocked-by-obligation",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-161",
+      "verb": "applies to",
+      "to_id": "EVT-dsr-denied",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-161",
+      "verb": "applies to",
+      "to_id": "EVT-dsr-fulfilled",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-161",
+      "verb": "applies to",
+      "to_id": "EVT-dsr-in-progress",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-161",
+      "verb": "applies to",
+      "to_id": "EVT-dsr-verification-required",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-161",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-020",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-162",
+      "verb": "applies at",
+      "to_id": "STG-patient-06-deletion-requested",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-162",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-162",
+      "verb": "applies to",
+      "to_id": "EVT-dsr-deadline-approaching",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-162",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-020",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-163",
+      "verb": "applies at",
+      "to_id": "STG-patient-06-deletion-requested",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-163",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-163",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-020",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-164",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-164",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-164",
+      "verb": "applies to",
+      "to_id": "EVT-installment-failed",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-164",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-020",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-165",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-165",
+      "verb": "applies to",
+      "to_id": "ACT-finance-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-165",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-165",
+      "verb": "applies to",
+      "to_id": "EVT-installment-overdue-notice",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-165",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-020",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-166",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-166",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-166",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-166",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-166",
+      "verb": "applies to",
+      "to_id": "EVT-installment-plan-defaulted",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-166",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-020",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-167",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-167",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-167",
+      "verb": "applies to",
+      "to_id": "EVT-legal-version-published",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-167",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-020",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-168",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-168",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-168",
+      "verb": "applies to",
+      "to_id": "EVT-legal-coverage-below-threshold",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-168",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-020",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-169",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-169",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-169",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-169",
+      "verb": "applies to",
+      "to_id": "EVT-legal-acceptance-reminder",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-169",
       "verb": "decided by",
       "to_id": "SRC-PRD-020",
       "attrs": {}
@@ -343214,12 +343783,6 @@
     {
       "from_id": "STG-main-01-inquiry",
       "verb": "reads",
-      "to_id": "ENT-notification-attempt",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-main-01-inquiry",
-      "verb": "reads",
       "to_id": "ENT-notification-delivery-log",
       "attrs": {}
     },
@@ -343227,12 +343790,6 @@
       "from_id": "STG-main-01-inquiry",
       "verb": "reads",
       "to_id": "ENT-notification-engagement-metrics",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-main-01-inquiry",
-      "verb": "reads",
-      "to_id": "ENT-notification-event",
       "attrs": {}
     },
     {
@@ -343454,12 +344011,6 @@
     {
       "from_id": "STG-main-01-inquiry",
       "verb": "writes",
-      "to_id": "ENT-notification-attempt",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-main-01-inquiry",
-      "verb": "writes",
       "to_id": "ENT-notification-delivery-log",
       "attrs": {}
     },
@@ -343467,18 +344018,6 @@
       "from_id": "STG-main-01-inquiry",
       "verb": "writes",
       "to_id": "ENT-notification-engagement-metrics",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-main-01-inquiry",
-      "verb": "writes",
-      "to_id": "ENT-notification-event",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-main-01-inquiry",
-      "verb": "writes",
-      "to_id": "ENT-notification-record",
       "attrs": {}
     },
     {
@@ -347715,6 +348254,36 @@
       "from_id": "STG-platform-01-all-stages",
       "verb": "emits",
       "to_id": "EVT-system-escalation",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-platform-01-all-stages",
+      "verb": "reads",
+      "to_id": "ENT-notification-attempt",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-platform-01-all-stages",
+      "verb": "reads",
+      "to_id": "ENT-notification-event",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-platform-01-all-stages",
+      "verb": "writes",
+      "to_id": "ENT-notification-attempt",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-platform-01-all-stages",
+      "verb": "writes",
+      "to_id": "ENT-notification-event",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-platform-01-all-stages",
+      "verb": "writes",
+      "to_id": "ENT-notification-record",
       "attrs": {}
     },
     {
@@ -383120,6 +383689,12 @@
     },
     {
       "from_id": "STP-020-002",
+      "verb": "applies",
+      "to_id": "REQ-020-158",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-020-002",
       "verb": "at",
       "to_id": "STG-platform-01-all-stages",
       "attrs": {}
@@ -383185,6 +383760,15 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-020-003",
+      "verb": "next",
+      "to_id": "STP-020-005",
+      "attrs": {
+        "label": "Post-MVP: SMS enabled and the notice is urgent",
+        "condition": "REQ-020-037"
+      }
+    },
+    {
       "from_id": "STP-020-004",
       "verb": "applies",
       "to_id": "REQ-020-007",
@@ -383206,12 +383790,6 @@
       "from_id": "STP-020-004",
       "verb": "done by",
       "to_id": "ACT-system",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-020-004",
-      "verb": "next",
-      "to_id": "STP-020-005",
       "attrs": {}
     },
     {
@@ -383242,6 +383820,12 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-020-005",
+      "verb": "next",
+      "to_id": "STP-020-004",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-020-006",
       "verb": "applies",
       "to_id": "REQ-020-038",
@@ -383260,6 +383844,14 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-020-006",
+      "verb": "next",
+      "to_id": "STP-020-003",
+      "attrs": {
+        "label": "Remaining channels still enabled"
+      }
+    },
+    {
       "from_id": "STP-020-007",
       "verb": "applies",
       "to_id": "REQ-020-039",
@@ -383273,6 +383865,12 @@
     },
     {
       "from_id": "STP-020-007",
+      "verb": "applies",
+      "to_id": "REQ-020-158",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-020-007",
       "verb": "at",
       "to_id": "STG-platform-01-all-stages",
       "attrs": {}
@@ -383282,6 +383880,14 @@
       "verb": "done by",
       "to_id": "ACT-system",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-020-007",
+      "verb": "next",
+      "to_id": "STP-020-003",
+      "attrs": {
+        "label": "Deferred notice released"
+      }
     },
     {
       "from_id": "STP-020-008",
@@ -383306,6 +383912,14 @@
       "verb": "done by",
       "to_id": "ACT-system",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-020-008",
+      "verb": "next",
+      "to_id": "STP-020-004",
+      "attrs": {
+        "label": "Retry attempt recorded"
+      }
     },
     {
       "from_id": "STP-021-001",
@@ -431462,6 +432076,61 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-075412-b928d80d",
+      "at": "2026-11-24T07:54:12.887164+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-020 logic review pass 1 (17 findings, all accepted; PRD 2.17). A locked notice is critical (new REQ-020-158); inquiry cancellation tells only providers holding a draft, sent or expired quote, by quote.cancelled_inquiry; admin Close inquiry is covered; mandatory patient notices go by email when every channel is off; attempt status becomes an enum and one record per recipient and event; retry follows the FR-030 retry rule; 90-day window for all three lists; affiliate notices by email only; mirror rows for the redistribution reminder, the data request, legal and installment notices; flow steps rejoin the main path; notification entity reads and writes move to the all-stages platform stage. Neighbour changes in FR-030, FR-003, FR-001, FR-023, FR-027, FR-007B and FR-006 are queued in plans/reports/logic-review-ledger.md, not made here.",
+      "source_id": null,
+      "nodes_added": [
+        "ENT-notification-attempt.notification_id",
+        "REQ-020-158",
+        "REQ-020-159",
+        "REQ-020-160",
+        "REQ-020-161",
+        "REQ-020-162",
+        "REQ-020-163",
+        "REQ-020-164",
+        "REQ-020-165",
+        "REQ-020-166",
+        "REQ-020-167",
+        "REQ-020-168",
+        "REQ-020-169"
+      ],
+      "nodes_updated": [
+        "ENT-notification-attempt",
+        "ENT-notification-attempt.status",
+        "ENT-notification-record",
+        "ENT-notification-record.recipient_type",
+        "REQ-020-013",
+        "REQ-020-020",
+        "REQ-020-027",
+        "REQ-020-038",
+        "REQ-020-039",
+        "REQ-020-040",
+        "REQ-020-041",
+        "REQ-020-042",
+        "REQ-020-043",
+        "REQ-020-046",
+        "REQ-020-068",
+        "REQ-020-076",
+        "REQ-020-092",
+        "REQ-020-104",
+        "REQ-020-105",
+        "STG-main-01-inquiry",
+        "STG-platform-01-all-stages",
+        "STP-020-002",
+        "STP-020-003",
+        "STP-020-004",
+        "STP-020-005",
+        "STP-020-006",
+        "STP-020-007",
+        "STP-020-008"
+      ],
+      "edges_added": 69,
+      "edges_removed": 7,
+      "rows": 204
+    },
     {
       "id": "cs-20261124-072526-089cc0e3",
       "at": "2026-11-24T07:25:26.500301+00:00",
