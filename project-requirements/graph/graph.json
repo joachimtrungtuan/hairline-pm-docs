@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T04:56:18Z",
+  "generated_at": "2026-11-24T05:38:47Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -8207,9 +8207,9 @@
       "owner_fr": "FR-023",
       "title": "Blocked by obligation",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "True while an active obligation blocks approval; the status stays Pending Admin Review. Shown as a marker in the DSR queue and cleared when the obligation ends."
+        "description": "True while an active obligation blocks approval; the status stays Pending Admin Review. Shown as a marker in the DSR queue. The system clears it when the obligation ends or an approval check passes."
       }
     },
     {
@@ -8229,9 +8229,9 @@
       "owner_fr": "FR-023",
       "title": "Jurisdiction review required",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "True when the patient's data falls under a jurisdiction conflict (REQ-023-039); the Admin reviews it before approving. Shown as a marker in the DSR queue."
+        "description": "True when the patient's data falls under a jurisdiction conflict (REQ-023-039), set by the classification or by a refresh at approval that differs from what the Admin reviewed; the Admin reviews it and clears it by approving. Shown as a marker in the DSR queue."
       }
     },
     {
@@ -39104,7 +39104,7 @@
       "owner_fr": null,
       "title": "Data Retention & Compliance",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "module": "fr023-data-retention-compliance",
         "prd_path": "project-requirements/functional-requirements/fr023-data-retention-compliance/prd.md",
@@ -75717,12 +75717,12 @@
       "id": "REQ-023-003",
       "type": "Rule",
       "owner_fr": "FR-023",
-      "title": "Every delete is a soft delete; protected categories restricted; cancelled inquiries and cascade records retained",
+      "title": "Every delete is a soft delete except the passport number and passport photo; protected categories restricted; cancelled inquiries and cascade records retained",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Every delete MUST be a soft delete (REQ-SYS-003): the record is archived or anonymised in place and is never physically removed before the retention period ends (REQ-SYS-002). The protected categories (Medical Records, Financial Records, Account Profile) are additionally restricted, with access limited to the legal purpose. Patient-cancelled inquiries (FR-003 Workflow 5), inquiries cancelled by the system when a deletion request is approved (REQ-023-042), and all records generated from the cancellation cascade — including auto-cancelled quotes with status \"Cancelled (Inquiry Cancelled)\" per FR-004 — are subject to the same retention rules as completed inquiries and quotes. AcceptanceEvents are retained and never deleted (FR-005 REQ-005-023). This applies to inquiry records, quote records, acceptance events (including superseded AcceptanceEvents per FR-005), and associated audit trail entries, which are kept unchanged (REQ-023-011).",
-        "rationale": "Owner default 67: every category is anonymised or archived in place, so the old limit of soft deletion to three categories is removed (REQ-SYS-002, REQ-SYS-003). Cancelled records produced at approval fall under the same retention.",
+        "statement": "Every delete MUST be a soft delete (REQ-SYS-003): the record is archived or anonymised in place and is never physically removed before the retention period ends (REQ-SYS-002). The one named exception is the passport number and passport photo, which are physically erased at an approved deletion (FR-008 REQ-008-069); all other travel data is anonymised in place. The protected categories (Medical Records, Financial Records, Account Profile) are additionally restricted, with access limited to the legal purpose. Patient-cancelled inquiries (FR-003 Workflow 5), inquiries cancelled by the system when a deletion request is approved (REQ-023-042), and all records generated from the cancellation cascade — including auto-cancelled quotes with status \"Cancelled (Inquiry Cancelled)\" per FR-004 — are subject to the same retention rules as completed inquiries and quotes. AcceptanceEvents are retained and never deleted (FR-005 REQ-005-023). This applies to inquiry records, quote records, acceptance events (including superseded AcceptanceEvents per FR-005), and associated audit trail entries, which are kept unchanged (REQ-023-011).",
+        "rationale": "Owner default 67: every category is anonymised or archived in place (REQ-SYS-002, REQ-SYS-003). Owner default 73 narrows it: the passport number and passport photo are erased at an approved deletion, as FR-008 REQ-008-069 says. Cancelled records produced at approval fall under the same retention.",
         "scope": "global"
       }
     },
@@ -75730,11 +75730,11 @@
       "id": "REQ-023-004",
       "type": "Rule",
       "owner_fr": "FR-023",
-      "title": "Deletion request: no category physically removed; non-protected data anonymised or archived in place, protected records retained anonymised with restricted access",
+      "title": "Deletion request: no category physically removed except the passport number and passport photo; non-protected data anonymised or archived in place, protected records retained anonymised with restricted access",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System MUST allow patients to request data deletion (erasure). On an approved request no category is physically removed (REQ-SYS-002, REQ-SYS-003): the personal data of the non-protected categories (Communications, Media, Analytics) is anonymised in place, or archived and made inaccessible; the protected categories (Medical Records, Financial Records, Account Profile) are retained in anonymised form, with strict access restrictions and documented legal basis.",
+        "statement": "System MUST allow patients to request data deletion (erasure). On an approved request no category is physically removed, except the passport number and passport photo named in REQ-023-003 (REQ-SYS-002, REQ-SYS-003): the personal data of the non-protected categories (Communications, Media, Analytics) is anonymised in place, or archived and made inaccessible; the protected categories (Medical Records, Financial Records, Account Profile) are retained in anonymised form, with strict access restrictions and documented legal basis.",
         "rationale": "Owner default 67: anonymise or archive in place for every category; protected categories are Medical Records, Financial Records and Account Profile."
       }
     },
@@ -75899,7 +75899,7 @@
       "owner_fr": "FR-023",
       "title": "Programmatic DSR submission and status for the Patient app",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Provide programmatic access for DSR submission/status for Patient app integration.",
         "rationale": "prd.md line 155 (found by matching the rule statement to the PRD text)."
@@ -75911,7 +75911,7 @@
       "owner_fr": "FR-023",
       "title": "DSR lifecycle events notified to internal communication channels",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "Provide event notifications for DSR lifecycle events to internal communication channels.",
         "rationale": "prd.md line 156 (found by matching the rule statement to the PRD text)."
@@ -75935,7 +75935,7 @@
       "owner_fr": "FR-023",
       "title": "Patients can view the retention policy, request deletion and receive status updates",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Patients can view the retention policy, request account/data deletion, and receive status updates and outcomes.",
         "rationale": "prd.md line 30 (found by matching the rule statement to the PRD text)."
@@ -76032,11 +76032,11 @@
       "id": "REQ-023-029",
       "type": "Rule",
       "owner_fr": "FR-023",
-      "title": "Admins notified of new DSRs and 7 calendar days before the deadline",
+      "title": "Admins notified of new DSRs, of an approaching deadline 7 calendar days before it, and when an obligation block ends",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Admins are notified of new DSRs and, 7 calendar days before the deadline, of an approaching deadline.",
+        "statement": "Admins are notified of new DSRs, of an approaching deadline 7 calendar days before it on a request that is still open, and, when an obligation block ends, that the request can be approved (FR-016 REQ-016-067).",
         "rationale": "A fixed threshold of 7 calendar days (a default; no setting is added)."
       }
     },
@@ -76046,7 +76046,7 @@
       "owner_fr": "FR-023",
       "title": "Deletion request submitted from Profile > Delete Account and verified",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "statement": "A patient submits a deletion request from Profile > Delete Account and completes verification.",
         "rationale": "Restated by the Main Flow trigger (patient requests deletion from Profile > Delete Account) and Assumptions (patients are willing and able to complete identity verification for DSRs by standard methods)."
@@ -76058,9 +76058,9 @@
       "owner_fr": "FR-023",
       "title": "System classifies the patient's data by category, retention and jurisdiction",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System classifies the patient's data by category and applicable retention/jurisdiction when a deletion request is processed, and refreshes the classification when the Admin approves.",
+        "statement": "System classifies the patient's data by category and applicable retention/jurisdiction when a deletion request is processed, and refreshes the classification when the Admin approves. A refresh that differs from the classification the Admin reviewed (a new jurisdiction conflict or a changed retention period) returns the request to Admin review (REQ-023-039).",
         "rationale": "Classification is refreshed at approval so it cannot be stale."
       }
     },
@@ -76082,9 +76082,9 @@
       "owner_fr": "FR-023",
       "title": "Deletion actions audit-logged; outcome notice lists actions and legal basis",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System records the anonymisation actions in the audit log and notifies the patient of the outcome once, listing the actions taken and the legal basis and scope of the retained categories.",
+        "statement": "System records the anonymisation actions in the audit log and notifies the patient of the outcome once, listing the actions taken and the legal basis and scope of the retained categories. The notice goes to the contact address the system captured when the request was approved, before any anonymisation; that copy is kept only until the notice is delivered and is then anonymised with the rest.",
         "rationale": "The outcome notice is sent once, at the end of the main flow; the old second notice step is removed."
       }
     },
@@ -76130,10 +76130,10 @@
       "owner_fr": "FR-023",
       "title": "One list of active obligations; an obligation at approval blocks approval and the request stays pending",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST keep one list of active obligations: an inquiry at the Accepted stage or later that is not Cancelled (FR-003 REQ-003-103), an active booking, treatment or aftercare in progress, a payment in progress, and a pending refund. FR-001 and FR-003 block the submission of a request while an obligation of the list exists. An obligation that arises after submission blocks approval: the system checks the list again when the Admin approves, keeps the request Pending Admin Review, marks it blocked by obligation and tells the patient the expected timeline. Nothing else is restricted for the patient while the request is pending.",
-        "rationale": "Owner default 68: replaces the pause with FR-016's block at approval (REQ-016-171). FR-023 owns the one list; FR-001 and FR-003 block at submission from the same list. No new patient restriction while the request is pending is a default; the approval re-check covers anything that arises after submission."
+        "statement": "System MUST keep one list of active obligations: an inquiry at the Accepted stage or later that is not Completed or Cancelled (FR-003 REQ-003-103), an active booking, treatment or aftercare in progress, a payment in progress, and a pending refund. At submission FR-001 blocks treatment or aftercare in progress and a payment in progress (REQ-001-091, REQ-001-092), and FR-003 states the submission block for an inquiry at the Accepted stage or later (REQ-003-103). The full list is checked at approval: the system checks it when the Admin approves, and any item blocks approval, keeps the request Pending Admin Review, marks it blocked by obligation and tells the patient the expected timeline. The expected timeline is the end date of the obligation when the owning FR knows it, otherwise the text \"after the obligation completes\"; no field is added. The system clears the mark when the obligation ends or an approval check passes. Nothing else is restricted for the patient while the request is pending.",
+        "rationale": "Owner default 68: one list; an obligation at approval blocks approval and the request stays pending. A Completed inquiry is not an obligation (controller decision), so a patient who finished a treatment can be deleted. At submission FR-001 blocks only the items it names; the full list is checked at approval."
       }
     },
     {
@@ -76142,9 +76142,9 @@
       "owner_fr": "FR-023",
       "title": "Jurisdiction conflict applies the longer retention and flags Admin review before approval",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "On a jurisdiction conflict (for example EU versus non-EU residency), the system applies the longer retention period (REQ-023-045) and flags the request for Admin review before approval.",
+        "statement": "On a jurisdiction conflict (for example EU versus non-EU residency), the system applies the longer retention period (REQ-023-045) and flags the request for Admin review before approval. The classification (Main Flow step 2) and the refresh at approval (step 5) set the flag; the Admin clears it by approving after reviewing the conflict. The refresh sets it only when the conflict or the retention period differs from what the Admin reviewed, and the request then returns to Pending Admin Review.",
         "rationale": "Owner default 71: stricter means longer. The review flag is a field of the request."
       }
     },
@@ -76166,9 +76166,9 @@
       "owner_fr": "FR-023",
       "title": "Deletion request deadline runs from submission and does not pause during verification",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "The 30-day deadline of a deletion request always runs from submission (the earliest submission date of a merged request) and does not pause during verification or while an obligation blocks approval. When the deadline passes on an open request, the queue shows it as overdue and the request stays open; an overdue request blocked by an obligation is shown as an excused breach.",
+        "statement": "The 30-day deadline of a deletion request always runs from submission (the earliest submission date of a merged request) and does not pause during verification or while an obligation blocks approval. A request is open in any status before Fulfilled or Denied. When the deadline passes on an open request (Pending Admin Review, Verification Required or In Progress), the queue shows it as overdue and the request stays open; an overdue request blocked by an obligation is shown as an excused breach.",
         "rationale": "Owner default 68: one clock rule. The deadline runs from submission (the earliest date of a merged request), never pauses, and an overdue open request is shown, not closed; a breach while blocked by an obligation is excused."
       }
     },
@@ -76178,9 +76178,9 @@
       "owner_fr": "FR-023",
       "title": "Approval cancels the patient's open inquiry through FR-003 before anything is anonymised",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "When an Admin approves a deletion request, the system MUST cancel the patient's open inquiry through FR-003 (REQ-003-103) before any data is anonymised, so the cancellation and its provider notices run on the identifiable record. The cancellation happens at approval, never at submission; a denied request and a request blocked by an obligation cancel nothing. The cancelled inquiry and quotes are retained under REQ-023-003 and REQ-023-040.",
+        "statement": "When an Admin approves a deletion request, the system MUST cancel the patient's open inquiry through FR-003 (REQ-003-103) before any data is anonymised, so the cancellation and its provider notices run on the identifiable record. The cancellation happens at approval, never at submission; a denied request and a request blocked by an obligation cancel nothing. The cancelled inquiry and quotes are retained under REQ-023-003 and REQ-023-040. Anonymisation starts only after the FR-003 cancellation and its provider notices complete. If the cancellation fails, the request stays In Progress, the queue shows that it needs attention and the system retries; nothing is anonymised until the cancellation succeeds.",
         "rationale": "Owner default 63: cancel at admin approval, not at submission; a refused or blocked request cancels nothing. The cancellation runs first because it notifies providers and flips quotes on the identifiable record. FR-003 owns the cancellation (REQ-003-103)."
       }
     },
@@ -76190,9 +76190,9 @@
       "owner_fr": "FR-023",
       "title": "Admin may deny a deletion request with a required reason; the patient is notified and nothing is cancelled or anonymised",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "An Admin MAY deny a deletion request on the DSR Queue (FR-016) while it is open, including a request in Verification Required that cannot be completed. A denial requires a reason; the system sets the status to Denied, notifies the patient with the reason, cancels nothing and anonymises nothing, and the request stays auditable. The patient may submit a new deletion request after a denial.",
+        "statement": "An Admin MAY deny a deletion request on the DSR Queue (FR-016) while it is Pending Admin Review (including one blocked by an obligation) or Verification Required (for example when the proof cannot be completed). Deny is not available once the request is In Progress, because the inquiry is already cancelled. A denial requires a reason; the system sets the status to Denied, notifies the patient with the reason, cancels nothing and anonymises nothing, and the request stays auditable. The patient may submit a new deletion request after a denial.",
         "rationale": "Gives the FR-016 Deny action (REQ-016-173) a counterpart in the entity FR-023 owns; a refused request cancels nothing (owner default 63). Resubmission after a denial is allowed, as a default."
       }
     },
@@ -76227,9 +76227,9 @@
       "owner_fr": "FR-023",
       "title": "Status of a deletion request is set only by the named steps; the system sets Fulfilled and FR-016 owns the certificate",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "The status of a deletion request is set only as follows: Pending Admin Review at submission, and again when an Admin validates the verification or an obligation block clears; Verification Required when an Admin finds the proof insufficient; In Progress when an Admin approves and the obligation check passes; Fulfilled when the system sends the outcome notice after anonymisation; Denied when an Admin denies. The request also carries two flags, blocked by obligation and jurisdiction review required. FR-016 shows the status and owns the deletion certificate (REQ-016-062); it does not set Fulfilled.",
+        "statement": "The status of a deletion request is set only as follows: Pending Admin Review at submission and when an Admin validates the verification; Verification Required when an Admin finds the proof insufficient; In Progress when an Admin approves and the obligation check passes; Fulfilled when the system sends the outcome notice after anonymisation; Denied when an Admin denies. The request also carries two flags: blocked by obligation (set when an obligation blocks approval, cleared by the system when the obligation ends or an approval check passes; the status stays Pending Admin Review) and jurisdiction review required (REQ-023-039). FR-016 shows the status and owns the deletion certificate (REQ-016-062); it does not set Fulfilled.",
         "rationale": "Closes the lifecycle gaps: every status has a step that sets it. Fulfilment is set by the system at the outcome notice (a default); FR-016 shows it and generates the certificate (REQ-016-062)."
       }
     },
@@ -103896,7 +103896,7 @@
       "owner_fr": null,
       "title": "Deletion requested",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "timeline": "patient-account",
         "sequence": 5,
@@ -115871,7 +115871,7 @@
       "owner_fr": "FR-023",
       "title": "Patient submits the deletion request from Delete Account; the system records it as Pending Admin Review and sets the deadline",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Main Flow step 1"
       }
@@ -115882,7 +115882,7 @@
       "owner_fr": "FR-023",
       "title": "System classifies the data by category and applicable retention and jurisdiction, using the record-type mapping",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Main Flow step 2"
       }
@@ -115893,7 +115893,7 @@
       "owner_fr": "FR-023",
       "title": "Admin reviews the classification on Screen 8 and decides: approve, deny, or find the identity proof insufficient",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Main Flow step 3"
       }
@@ -115902,9 +115902,9 @@
       "id": "STP-023-004",
       "type": "Step",
       "owner_fr": "FR-023",
-      "title": "System anonymises or archives in place the data of every category and restricts access to the protected records",
+      "title": "System anonymises or archives in place the data of every category, erases the passport number and passport photo, and restricts access to the protected records",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Main Flow step 7"
       }
@@ -115913,9 +115913,9 @@
       "id": "STP-023-005",
       "type": "Step",
       "owner_fr": "FR-023",
-      "title": "System records the actions in the audit log, sets the request to Fulfilled and sends the patient one outcome notice with the actions taken and the legal basis",
+      "title": "System records the actions in the audit log, sets the request to Fulfilled and sends the patient one outcome notice, to the contact address captured at approval, with the actions taken and the legal basis",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow step 8"
       }
@@ -115926,7 +115926,7 @@
       "owner_fr": "FR-023",
       "title": "System checks the active obligations again and refreshes the classification at approval",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 5"
       }
@@ -115935,9 +115935,9 @@
       "id": "STP-023-007",
       "type": "Step",
       "owner_fr": "FR-023",
-      "title": "System sets the request to In Progress and emits dsr.in_progress",
+      "title": "System captures the contact address for the outcome notice, sets the request to In Progress and emits dsr.in_progress",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 5"
       }
@@ -115946,7 +115946,29 @@
       "id": "STP-023-008",
       "type": "Step",
       "owner_fr": "FR-023",
-      "title": "System cancels the patient's open inquiry through FR-003 before anything is anonymised",
+      "title": "System cancels the patient's open inquiry through FR-003 and waits for it to complete before anything is anonymised",
+      "status": "active",
+      "version": 2,
+      "attrs": {
+        "prd_ref": "Main Flow step 6"
+      }
+    },
+    {
+      "id": "STP-023-009",
+      "type": "Step",
+      "owner_fr": "FR-023",
+      "title": "System warns the Admins 7 calendar days before sla_due_by of an approaching deadline and emits dsr.deadline_approaching",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 1"
+      }
+    },
+    {
+      "id": "STP-023-010",
+      "type": "Step",
+      "owner_fr": "FR-023",
+      "title": "System keeps the request In Progress, shows it in the queue as needing attention and retries when the FR-003 cancellation fails",
       "status": "active",
       "version": 1,
       "attrs": {
@@ -116014,9 +116036,20 @@
       "owner_fr": "FR-023",
       "title": "System keeps the request Pending Admin Review, marks it blocked by obligation and tells the patient the expected timeline",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A3 step 1"
+      }
+    },
+    {
+      "id": "STP-023-033",
+      "type": "Step",
+      "owner_fr": "FR-023",
+      "title": "System clears the blocked mark when the obligation ends and notifies the Admins that the request can be approved",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A3 step 2"
       }
     },
     {
@@ -116025,7 +116058,7 @@
       "owner_fr": "FR-023",
       "title": "System shows the open request as overdue in the DSR queue after sla_due_by; the request stays open",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A1 outcome; Alternative Flow A3 outcome"
       }
@@ -173810,7 +173843,7 @@
       "verb": "active in",
       "to_id": "STG-patient-05-deleted",
       "attrs": {
-        "rules": 12
+        "rules": 10
       },
       "derived": true
     },
@@ -173819,7 +173852,7 @@
       "verb": "active in",
       "to_id": "STG-patient-06-deletion-requested",
       "attrs": {
-        "rules": 16
+        "rules": 19
       },
       "derived": true
     },
@@ -173877,6 +173910,12 @@
     {
       "from_id": "FR-023",
       "verb": "references",
+      "to_id": "REQ-008-069",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-023",
+      "verb": "references",
       "to_id": "REQ-014-210",
       "attrs": {}
     },
@@ -173884,6 +173923,12 @@
       "from_id": "FR-023",
       "verb": "references",
       "to_id": "REQ-016-062",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-023",
+      "verb": "references",
+      "to_id": "REQ-016-067",
       "attrs": {}
     },
     {
@@ -256778,6 +256823,12 @@
     },
     {
       "from_id": "REQ-023-017",
+      "verb": "applies at",
+      "to_id": "STG-patient-06-deletion-requested",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-023-017",
       "verb": "applies to",
       "to_id": "ACT-patient",
       "attrs": {}
@@ -256804,6 +256855,12 @@
       "from_id": "REQ-023-018",
       "verb": "applies at",
       "to_id": "STG-patient-05-deleted",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-023-018",
+      "verb": "applies at",
+      "to_id": "STG-patient-06-deletion-requested",
       "attrs": {}
     },
     {
@@ -256918,6 +256975,12 @@
       "from_id": "REQ-023-020",
       "verb": "applies at",
       "to_id": "STG-patient-05-deleted",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-023-020",
+      "verb": "applies at",
+      "to_id": "STG-patient-06-deletion-requested",
       "attrs": {}
     },
     {
@@ -257115,12 +257178,6 @@
     {
       "from_id": "REQ-023-029",
       "verb": "applies at",
-      "to_id": "STG-patient-05-deleted",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-023-029",
-      "verb": "applies at",
       "to_id": "STG-patient-06-deletion-requested",
       "attrs": {}
     },
@@ -257152,12 +257209,6 @@
       "from_id": "REQ-023-030",
       "verb": "applies at",
       "to_id": "STG-patient-03-active",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-023-030",
-      "verb": "applies at",
-      "to_id": "STG-patient-05-deleted",
       "attrs": {}
     },
     {
@@ -345971,6 +346022,30 @@
       "attrs": {}
     },
     {
+      "from_id": "STG-patient-06-deletion-requested",
+      "verb": "reads",
+      "to_id": "ENT-deletion-request",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-patient-06-deletion-requested",
+      "verb": "reads",
+      "to_id": "ENT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-patient-06-deletion-requested",
+      "verb": "reads",
+      "to_id": "ENT-retention-policy",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-patient-06-deletion-requested",
+      "verb": "writes",
+      "to_id": "ENT-deletion-request",
+      "attrs": {}
+    },
+    {
       "from_id": "STG-payout-01-statement",
       "verb": "emits",
       "to_id": "EVT-billing-statements-ready-for-review",
@@ -385377,6 +385452,14 @@
     },
     {
       "from_id": "STP-023-001",
+      "verb": "next",
+      "to_id": "STP-023-009",
+      "attrs": {
+        "label": "deadline set, warning scheduled"
+      }
+    },
+    {
+      "from_id": "STP-023-001",
       "verb": "on",
       "to_id": "SCR-001-16",
       "attrs": {}
@@ -385397,6 +385480,12 @@
       "from_id": "STP-023-002",
       "verb": "applies",
       "to_id": "REQ-023-031",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-023-002",
+      "verb": "applies",
+      "to_id": "REQ-023-039",
       "attrs": {}
     },
     {
@@ -385483,8 +385572,23 @@
     },
     {
       "from_id": "STP-023-003",
+      "verb": "next",
+      "to_id": "STP-023-041",
+      "attrs": {
+        "condition": "REQ-023-041",
+        "label": "sla_due_by passes while Pending Admin Review"
+      }
+    },
+    {
+      "from_id": "STP-023-003",
       "verb": "on",
       "to_id": "SCR-016-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-023-004",
+      "verb": "applies",
+      "to_id": "REQ-008-069",
       "attrs": {}
     },
     {
@@ -385569,6 +385673,12 @@
     },
     {
       "from_id": "STP-023-006",
+      "verb": "applies",
+      "to_id": "REQ-023-039",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-023-006",
       "verb": "at",
       "to_id": "STG-patient-06-deletion-requested",
       "attrs": {}
@@ -385578,6 +385688,16 @@
       "verb": "done by",
       "to_id": "ACT-system",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-023-006",
+      "verb": "next",
+      "to_id": "STP-023-003",
+      "attrs": {
+        "condition": "REQ-023-039",
+        "label": "refresh differs from the classification the Admin reviewed",
+        "back": true
+      }
     },
     {
       "from_id": "STP-023-006",
@@ -385595,6 +385715,12 @@
         "condition": "REQ-023-038",
         "label": "an active obligation exists"
       }
+    },
+    {
+      "from_id": "STP-023-007",
+      "verb": "applies",
+      "to_id": "REQ-023-033",
+      "attrs": {}
     },
     {
       "from_id": "STP-023-007",
@@ -385620,6 +385746,15 @@
       "to_id": "STP-023-008",
       "attrs": {
         "label": "approval recorded, request In Progress"
+      }
+    },
+    {
+      "from_id": "STP-023-007",
+      "verb": "next",
+      "to_id": "STP-023-041",
+      "attrs": {
+        "condition": "REQ-023-041",
+        "label": "sla_due_by passes while In Progress"
       }
     },
     {
@@ -385665,7 +385800,61 @@
       "verb": "next",
       "to_id": "STP-023-004",
       "attrs": {
-        "label": "cancellation done, anonymisation follows"
+        "label": "cancellation and provider notices complete, anonymisation follows"
+      }
+    },
+    {
+      "from_id": "STP-023-008",
+      "verb": "next",
+      "to_id": "STP-023-010",
+      "attrs": {
+        "condition": "REQ-023-042",
+        "label": "FR-003 cancellation fails"
+      }
+    },
+    {
+      "from_id": "STP-023-009",
+      "verb": "applies",
+      "to_id": "REQ-023-029",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-023-009",
+      "verb": "at",
+      "to_id": "STG-patient-06-deletion-requested",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-023-009",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-023-010",
+      "verb": "applies",
+      "to_id": "REQ-023-042",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-023-010",
+      "verb": "at",
+      "to_id": "STG-patient-06-deletion-requested",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-023-010",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-023-010",
+      "verb": "next",
+      "to_id": "STP-023-008",
+      "attrs": {
+        "label": "retry the cancellation",
+        "back": true
       }
     },
     {
@@ -385893,10 +386082,18 @@
     {
       "from_id": "STP-023-032",
       "verb": "next",
-      "to_id": "STP-023-003",
+      "to_id": "STP-023-031",
       "attrs": {
-        "label": "obligation cleared, Admin approves again",
-        "back": true
+        "condition": "REQ-023-043",
+        "label": "Admin denies the blocked request"
+      }
+    },
+    {
+      "from_id": "STP-023-032",
+      "verb": "next",
+      "to_id": "STP-023-033",
+      "attrs": {
+        "label": "obligation ends"
       }
     },
     {
@@ -385906,6 +386103,39 @@
       "attrs": {
         "condition": "REQ-023-041",
         "label": "sla_due_by passes while blocked"
+      }
+    },
+    {
+      "from_id": "STP-023-033",
+      "verb": "applies",
+      "to_id": "REQ-023-029",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-023-033",
+      "verb": "applies",
+      "to_id": "REQ-023-038",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-023-033",
+      "verb": "at",
+      "to_id": "STG-patient-06-deletion-requested",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-023-033",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-023-033",
+      "verb": "next",
+      "to_id": "STP-023-003",
+      "attrs": {
+        "label": "Admin approves",
+        "back": true
       }
     },
     {
@@ -385931,7 +386161,7 @@
       "verb": "next",
       "to_id": "STP-023-003",
       "attrs": {
-        "label": "request stays open for the Admin's decision",
+        "label": "request stays open; before In Progress the Admin still decides",
         "back": true
       }
     },
@@ -428923,6 +429153,52 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-050932-888ee214",
+      "at": "2026-11-24T05:09:32.174133+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-023 logic review pass 2: overdue display and 7-day warning reachable from every open request, Deny closed once In Progress; blocked mark cleared by the system with an Admin notice and a Deny path; outcome notice to the contact address captured at approval; refresh that differs from the reviewed classification returns to review; passport number and photo erased at approval as a named exception (owner default 73, narrows 67); record-type mapping completed; deletion-requested stage reads and writes; anonymisation waits for the FR-003 cancellation with a retry on failure; a Completed inquiry does not block a deletion request",
+      "source_id": null,
+      "nodes_added": [
+        "STP-023-009",
+        "STP-023-010",
+        "STP-023-033"
+      ],
+      "nodes_updated": [
+        "ENT-deletion-request.blocked_by_obligation",
+        "ENT-deletion-request.jurisdiction_review_required",
+        "FR-023",
+        "REQ-023-003",
+        "REQ-023-004",
+        "REQ-023-017",
+        "REQ-023-018",
+        "REQ-023-020",
+        "REQ-023-029",
+        "REQ-023-030",
+        "REQ-023-031",
+        "REQ-023-033",
+        "REQ-023-038",
+        "REQ-023-039",
+        "REQ-023-041",
+        "REQ-023-042",
+        "REQ-023-043",
+        "REQ-023-046",
+        "STG-patient-06-deletion-requested",
+        "STP-023-001",
+        "STP-023-002",
+        "STP-023-003",
+        "STP-023-004",
+        "STP-023-005",
+        "STP-023-006",
+        "STP-023-007",
+        "STP-023-008",
+        "STP-023-032",
+        "STP-023-041"
+      ],
+      "edges_added": 34,
+      "edges_removed": 5,
+      "rows": 76
+    },
     {
       "id": "cs-20261124-045514-7df39ffa",
       "at": "2026-11-24T04:55:14.022827+00:00",

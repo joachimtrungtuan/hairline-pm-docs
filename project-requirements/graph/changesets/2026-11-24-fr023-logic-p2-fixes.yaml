@@ -1,0 +1,281 @@
+# Operations ordered so nodes and fields are created before the edges that use them.
+reason: 'FR-023 logic review pass 2: overdue display and 7-day warning reachable from every open request, Deny closed once In Progress; blocked mark cleared by the system with an Admin notice and a Deny path; outcome notice to the contact address captured at approval; refresh that differs from the reviewed classification returns to review; passport number and photo erased at approval as a named exception (owner default 73, narrows 67); record-type mapping completed; deletion-requested stage reads and writes; anonymisation waits for the FR-003 cancellation with a retry on failure; a Completed inquiry does not block a deletion request'
+by: docs-manager
+operations:
+- op: add_node
+  id: STP-023-009
+  type: Step
+  owner_fr: FR-023
+  title: System warns the Admins 7 calendar days before sla_due_by of an approaching deadline and emits dsr.deadline_approaching
+  attrs:
+    prd_ref: Main Flow step 1
+- op: add_node
+  id: STP-023-010
+  type: Step
+  owner_fr: FR-023
+  title: System keeps the request In Progress, shows it in the queue as needing attention and retries when the FR-003 cancellation fails
+  attrs:
+    prd_ref: Main Flow step 6
+- op: add_node
+  id: STP-023-033
+  type: Step
+  owner_fr: FR-023
+  title: System clears the blocked mark when the obligation ends and notifies the Admins that the request can be approved
+  attrs:
+    prd_ref: Alternative Flow A3 step 2
+- op: update_node
+  id: REQ-023-003
+  title: Every delete is a soft delete except the passport number and passport photo; protected categories restricted; cancelled inquiries and cascade records retained
+  attrs:
+    statement: 'Every delete MUST be a soft delete (REQ-SYS-003): the record is archived or anonymised in place and is never physically removed before the retention period ends (REQ-SYS-002). The one named exception is the passport number and passport photo, which are physically erased at an approved deletion (FR-008 REQ-008-069); all other travel data is anonymised in place. The protected categories (Medical Records, Financial Records, Account Profile) are additionally restricted, with access limited to the legal purpose. Patient-cancelled inquiries (FR-003 Workflow 5), inquiries cancelled by the system when a deletion request is approved (REQ-023-042), and all records generated from the cancellation cascade — including auto-cancelled quotes with status "Cancelled (Inquiry Cancelled)" per FR-004 — are subject to the same retention rules as completed inquiries and quotes. AcceptanceEvents are retained and never deleted (FR-005 REQ-005-023). This applies to inquiry records, quote records, acceptance events (including superseded AcceptanceEvents per FR-005), and associated audit trail entries, which are kept unchanged (REQ-023-011).'
+    rationale: 'Owner default 67: every category is anonymised or archived in place (REQ-SYS-002, REQ-SYS-003). Owner default 73 narrows it: the passport number and passport photo are erased at an approved deletion, as FR-008 REQ-008-069 says. Cancelled records produced at approval fall under the same retention.'
+- op: update_node
+  id: REQ-023-004
+  title: 'Deletion request: no category physically removed except the passport number and passport photo; non-protected data anonymised or archived in place, protected records retained anonymised with restricted access'
+  attrs:
+    statement: 'System MUST allow patients to request data deletion (erasure). On an approved request no category is physically removed, except the passport number and passport photo named in REQ-023-003 (REQ-SYS-002, REQ-SYS-003): the personal data of the non-protected categories (Communications, Media, Analytics) is anonymised in place, or archived and made inaccessible; the protected categories (Medical Records, Financial Records, Account Profile) are retained in anonymised form, with strict access restrictions and documented legal basis.'
+- op: update_node
+  id: REQ-023-029
+  title: Admins notified of new DSRs, of an approaching deadline 7 calendar days before it, and when an obligation block ends
+  attrs:
+    statement: Admins are notified of new DSRs, of an approaching deadline 7 calendar days before it on a request that is still open, and, when an obligation block ends, that the request can be approved (FR-016 REQ-016-067).
+- op: update_node
+  id: REQ-023-031
+  attrs:
+    statement: System classifies the patient's data by category and applicable retention/jurisdiction when a deletion request is processed, and refreshes the classification when the Admin approves. A refresh that differs from the classification the Admin reviewed (a new jurisdiction conflict or a changed retention period) returns the request to Admin review (REQ-023-039).
+- op: update_node
+  id: REQ-023-033
+  attrs:
+    statement: System records the anonymisation actions in the audit log and notifies the patient of the outcome once, listing the actions taken and the legal basis and scope of the retained categories. The notice goes to the contact address the system captured when the request was approved, before any anonymisation; that copy is kept only until the notice is delivered and is then anonymised with the rest.
+- op: update_node
+  id: REQ-023-038
+  attrs:
+    statement: 'System MUST keep one list of active obligations: an inquiry at the Accepted stage or later that is not Completed or Cancelled (FR-003 REQ-003-103), an active booking, treatment or aftercare in progress, a payment in progress, and a pending refund. At submission FR-001 blocks treatment or aftercare in progress and a payment in progress (REQ-001-091, REQ-001-092), and FR-003 states the submission block for an inquiry at the Accepted stage or later (REQ-003-103). The full list is checked at approval: the system checks it when the Admin approves, and any item blocks approval, keeps the request Pending Admin Review, marks it blocked by obligation and tells the patient the expected timeline. The expected timeline is the end date of the obligation when the owning FR knows it, otherwise the text "after the obligation completes"; no field is added. The system clears the mark when the obligation ends or an approval check passes. Nothing else is restricted for the patient while the request is pending.'
+    rationale: 'Owner default 68: one list; an obligation at approval blocks approval and the request stays pending. A Completed inquiry is not an obligation (controller decision), so a patient who finished a treatment can be deleted. At submission FR-001 blocks only the items it names; the full list is checked at approval.'
+- op: update_node
+  id: REQ-023-039
+  attrs:
+    statement: On a jurisdiction conflict (for example EU versus non-EU residency), the system applies the longer retention period (REQ-023-045) and flags the request for Admin review before approval. The classification (Main Flow step 2) and the refresh at approval (step 5) set the flag; the Admin clears it by approving after reviewing the conflict. The refresh sets it only when the conflict or the retention period differs from what the Admin reviewed, and the request then returns to Pending Admin Review.
+- op: update_node
+  id: REQ-023-041
+  attrs:
+    statement: The 30-day deadline of a deletion request always runs from submission (the earliest submission date of a merged request) and does not pause during verification or while an obligation blocks approval. A request is open in any status before Fulfilled or Denied. When the deadline passes on an open request (Pending Admin Review, Verification Required or In Progress), the queue shows it as overdue and the request stays open; an overdue request blocked by an obligation is shown as an excused breach.
+- op: update_node
+  id: REQ-023-042
+  attrs:
+    statement: When an Admin approves a deletion request, the system MUST cancel the patient's open inquiry through FR-003 (REQ-003-103) before any data is anonymised, so the cancellation and its provider notices run on the identifiable record. The cancellation happens at approval, never at submission; a denied request and a request blocked by an obligation cancel nothing. The cancelled inquiry and quotes are retained under REQ-023-003 and REQ-023-040. Anonymisation starts only after the FR-003 cancellation and its provider notices complete. If the cancellation fails, the request stays In Progress, the queue shows that it needs attention and the system retries; nothing is anonymised until the cancellation succeeds.
+- op: update_node
+  id: REQ-023-043
+  attrs:
+    statement: An Admin MAY deny a deletion request on the DSR Queue (FR-016) while it is Pending Admin Review (including one blocked by an obligation) or Verification Required (for example when the proof cannot be completed). Deny is not available once the request is In Progress, because the inquiry is already cancelled. A denial requires a reason; the system sets the status to Denied, notifies the patient with the reason, cancels nothing and anonymises nothing, and the request stays auditable. The patient may submit a new deletion request after a denial.
+- op: update_node
+  id: REQ-023-046
+  attrs:
+    statement: 'The status of a deletion request is set only as follows: Pending Admin Review at submission and when an Admin validates the verification; Verification Required when an Admin finds the proof insufficient; In Progress when an Admin approves and the obligation check passes; Fulfilled when the system sends the outcome notice after anonymisation; Denied when an Admin denies. The request also carries two flags: blocked by obligation (set when an obligation blocks approval, cleared by the system when the obligation ends or an approval check passes; the status stays Pending Admin Review) and jurisdiction review required (REQ-023-039). FR-016 shows the status and owns the deletion certificate (REQ-016-062); it does not set Fulfilled.'
+- op: update_node
+  id: STP-023-004
+  title: System anonymises or archives in place the data of every category, erases the passport number and passport photo, and restricts access to the protected records
+- op: update_node
+  id: STP-023-005
+  title: System records the actions in the audit log, sets the request to Fulfilled and sends the patient one outcome notice, to the contact address captured at approval, with the actions taken and the legal basis
+- op: update_node
+  id: STP-023-007
+  title: System captures the contact address for the outcome notice, sets the request to In Progress and emits dsr.in_progress
+- op: update_node
+  id: STP-023-008
+  title: System cancels the patient's open inquiry through FR-003 and waits for it to complete before anything is anonymised
+- op: update_node
+  id: ENT-deletion-request.blocked_by_obligation
+  attrs:
+    description: True while an active obligation blocks approval; the status stays Pending Admin Review. Shown as a marker in the DSR queue. The system clears it when the obligation ends or an approval check passes.
+- op: update_node
+  id: ENT-deletion-request.jurisdiction_review_required
+  attrs:
+    description: True when the patient's data falls under a jurisdiction conflict (REQ-023-039), set by the classification or by a refresh at approval that differs from what the Admin reviewed; the Admin reviews it and clears it by approving. Shown as a marker in the DSR queue.
+- op: add_edge
+  from: STP-023-009
+  verb: at
+  to: STG-patient-06-deletion-requested
+- op: add_edge
+  from: STP-023-009
+  verb: done by
+  to: ACT-system
+- op: add_edge
+  from: STP-023-009
+  verb: applies
+  to: REQ-023-029
+- op: add_edge
+  from: STP-023-001
+  verb: next
+  to: STP-023-009
+  attrs:
+    label: deadline set, warning scheduled
+- op: add_edge
+  from: STP-023-003
+  verb: next
+  to: STP-023-041
+  attrs:
+    condition: REQ-023-041
+    label: sla_due_by passes while Pending Admin Review
+- op: add_edge
+  from: STP-023-007
+  verb: next
+  to: STP-023-041
+  attrs:
+    condition: REQ-023-041
+    label: sla_due_by passes while In Progress
+- op: remove_edge
+  from: STP-023-041
+  verb: next
+  to: STP-023-003
+- op: add_edge
+  from: STP-023-041
+  verb: next
+  to: STP-023-003
+  attrs:
+    label: request stays open; before In Progress the Admin still decides
+    back: true
+- op: add_edge
+  from: FR-023
+  verb: references
+  to: REQ-016-067
+- op: add_edge
+  from: STP-023-033
+  verb: at
+  to: STG-patient-06-deletion-requested
+- op: add_edge
+  from: STP-023-033
+  verb: done by
+  to: ACT-system
+- op: add_edge
+  from: STP-023-033
+  verb: applies
+  to: REQ-023-038
+- op: add_edge
+  from: STP-023-033
+  verb: applies
+  to: REQ-023-029
+- op: remove_edge
+  from: STP-023-032
+  verb: next
+  to: STP-023-003
+- op: add_edge
+  from: STP-023-032
+  verb: next
+  to: STP-023-033
+  attrs:
+    label: obligation ends
+- op: add_edge
+  from: STP-023-033
+  verb: next
+  to: STP-023-003
+  attrs:
+    label: Admin approves
+    back: true
+- op: add_edge
+  from: STP-023-032
+  verb: next
+  to: STP-023-031
+  attrs:
+    condition: REQ-023-043
+    label: Admin denies the blocked request
+- op: add_edge
+  from: STP-023-007
+  verb: applies
+  to: REQ-023-033
+- op: add_edge
+  from: STP-023-002
+  verb: applies
+  to: REQ-023-039
+- op: add_edge
+  from: STP-023-006
+  verb: applies
+  to: REQ-023-039
+- op: add_edge
+  from: STP-023-006
+  verb: next
+  to: STP-023-003
+  attrs:
+    condition: REQ-023-039
+    label: refresh differs from the classification the Admin reviewed
+    back: true
+- op: add_edge
+  from: FR-023
+  verb: references
+  to: REQ-008-069
+- op: add_edge
+  from: STP-023-004
+  verb: applies
+  to: REQ-008-069
+- op: add_edge
+  from: STG-patient-06-deletion-requested
+  verb: reads
+  to: ENT-deletion-request
+- op: add_edge
+  from: STG-patient-06-deletion-requested
+  verb: reads
+  to: ENT-patient
+- op: add_edge
+  from: STG-patient-06-deletion-requested
+  verb: reads
+  to: ENT-retention-policy
+- op: add_edge
+  from: STG-patient-06-deletion-requested
+  verb: writes
+  to: ENT-deletion-request
+- op: remove_edge
+  from: REQ-023-030
+  verb: applies at
+  to: STG-patient-05-deleted
+- op: remove_edge
+  from: REQ-023-029
+  verb: applies at
+  to: STG-patient-05-deleted
+- op: add_edge
+  from: REQ-023-017
+  verb: applies at
+  to: STG-patient-06-deletion-requested
+- op: add_edge
+  from: REQ-023-018
+  verb: applies at
+  to: STG-patient-06-deletion-requested
+- op: add_edge
+  from: REQ-023-020
+  verb: applies at
+  to: STG-patient-06-deletion-requested
+- op: add_edge
+  from: STP-023-010
+  verb: at
+  to: STG-patient-06-deletion-requested
+- op: add_edge
+  from: STP-023-010
+  verb: done by
+  to: ACT-system
+- op: add_edge
+  from: STP-023-010
+  verb: applies
+  to: REQ-023-042
+- op: add_edge
+  from: STP-023-008
+  verb: next
+  to: STP-023-010
+  attrs:
+    condition: REQ-023-042
+    label: FR-003 cancellation fails
+- op: add_edge
+  from: STP-023-010
+  verb: next
+  to: STP-023-008
+  attrs:
+    label: retry the cancellation
+    back: true
+- op: remove_edge
+  from: STP-023-008
+  verb: next
+  to: STP-023-004
+- op: add_edge
+  from: STP-023-008
+  verb: next
+  to: STP-023-004
+  attrs:
+    label: cancellation and provider notices complete, anonymisation follows
