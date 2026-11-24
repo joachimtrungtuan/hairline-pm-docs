@@ -12,7 +12,7 @@ Two passes per FR, then the FR is closed. One agent at a time; every agent is a 
 
 1. **Pass 1, review.** One adversarial reviewer looks for logic defects in what the FR owns: its rules, steps, flows, screens, fields, states and its hand-offs to and from neighbours. It reports findings only, each with the item id, the evidence (PRD line or graph row) and a proposed fix. No verdict row per item. It ends with a short list of what it did not check.
 2. **Triage (controller).** Each finding becomes: fix; owner decision (a real business choice only); rejected (with the evidence); or neighbour (the defect sits in another FR's item). Neighbour findings go to the shared ledger and are not fixed here.
-3. **Pass 1, fix.** One fixer writes the change-set and the PRD edit. The controller checks the change-set, backs up `graph.db`, applies it with `write.py`, reruns lint, exports, commits.
+3. **Pass 1, fix.** One fixer writes the change-set and the PRD edit. The controller checks the change-set, prunes old backups (keep the newest 10, folder under 1 GB; see the graph README), backs up `graph.db`, applies it with `write.py`, reruns lint, exports, commits.
 4. **Pass 2, review.** A different fresh reviewer gets the list of pass 1 fixes, confirms each one holds, and looks once more for defects, with attention to what the fixes added or changed. Same report form.
 5. **Pass 2, fix.** As step 3. Findings that are not worth a graph change go to the implementation backlog with a reason.
 6. **Close.** The FR's ledger rows are final. There is no third pass. A pass 2 finding that needs the owner is asked once; the FR closes without waiting if the answer is not needed for other FRs.
@@ -281,3 +281,4 @@ The owner approved the procedure and this checklist for the FR-005 pilot on 2026
 - 0.1 (2026-11-10): first draft from the phase 10 procedure (D39) under D43 item 6; not approved.
 - 0.2 (2026-11-23): approved by the owner for the FR-005 pilot. Nine drafting choices and three questions settled (section "Settled 2026-11-23", replacing "Open for approval"); the review reads the live compressed PRD instead of the frozen baseline; added the reviewer B coverage count to the gate checks; banner removed.
 - 1.0 (2026-11-23): owner gate 2 after the FR-005 pilot. Two passes per FR with one adversarial reviewer per pass, findings-only reports, neighbour findings to a shared ledger, no per-round planted defects or gate, no third pass. The v0.2 sections stay as the pilot record.
+- 1.1 (2026-11-24): backup retention rule from the owner added to step 3: prune `backups/` to the newest 10 files (under 1 GB) before each new backup.

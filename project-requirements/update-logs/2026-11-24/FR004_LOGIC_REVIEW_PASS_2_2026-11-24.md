@@ -38,3 +38,7 @@ The change-set was applied to a scratch copy of the graph only: 108 change rows,
 ## Applied
 
 Applied by the controller on 2026-11-24. Backup `graph/backups/graph-2026-11-24-pre-fr004-logic-p2.db`; lint 27 findings, unchanged; `graph.json` exported. The controller moved STP-004-125 to STG-main-04-booking (where FR-005 records the replacement acceptance), so the `STP-005-016 next STP-004-125` edge is a forward edge with no back flag. Cross-FR change: `STP-005-016 next STP-006-606` now runs through STP-004-125.
+
+## Minor update, same day: graph backup retention
+
+- Owner rule: `graph/backups/` stays under 1 GB. `graph/README.md` and `graph/checklists/logic-review.md` (v1.1, step 3) now say to keep only the newest 10 backups and prune before each new backup. 201 old backups (about 10.2 GB) were deleted; the folder is not tracked by git.

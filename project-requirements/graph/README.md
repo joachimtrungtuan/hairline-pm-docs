@@ -18,7 +18,7 @@ This folder holds the requirements graph. It stores FRs, stages, actors, entitie
 - `scripts/migrate_schema_v11.py`: moves a version 10 `graph.db` to schema version 11 (see "Schema version 11" below).
 - `scripts/check_crs.py`: checks that every Approved Change Request ID appears in its PRD's Appendix: Change Log (exit 1 when one does not; Proposed CRs are listed, not checked, and stay out of the graph, D42).
 - `scripts/headless_review.sh`: runs one checklist review through a headless OpenCode model (see "Headless review wrapper" below).
-- `backups/`: dated copies of `graph.db`, written before it is replaced.
+- `backups/`: dated copies of `graph.db`, written before it is replaced. Retention rule (owner, 2026-11-24): the folder stays under 1 GB. Keep only the newest 10 backups and delete older ones before taking a new backup (`plans/261108-1040-requirements-graph-programme/logic-review-tools/prune_backups.sh`, run from the workspace root). The folder is not tracked by git; committed change-sets and `graph.json` are the long-term record.
 - `checklists/`: the review and migration checklists every repeated task runs from (`checklists/README.md` lists them, their versions and how a brief must cite them).
 
 ## Database rules
