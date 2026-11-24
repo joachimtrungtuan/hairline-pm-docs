@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T21:13:29Z",
+  "generated_at": "2026-11-24T21:14:56Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -437,9 +437,9 @@
       "owner_fr": "FR-005",
       "title": "Patient-applied promotion code",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Entered by the patient on Screen 2 for one named subquote before acceptance, validated through FR-019, recorded against the patient's selection only (never on the provider's quote or promotion records), and frozen into the acceptance snapshot. Added for the Screen 2 Promotion Code field."
+        "description": "Entered by the patient on Screen 2 for one named subquote before acceptance, validated through FR-019, held only with the open subquote view until the patient confirms, then recorded only on the AcceptanceEvent (never on the provider's quote or promotion records), and frozen into the acceptance snapshot. Added for the Screen 2 Promotion Code field."
       }
     },
     {
@@ -6545,9 +6545,9 @@
       "owner_fr": "FR-006",
       "title": "Closure cause",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "description": "Why the booking was closed. Provider-fault causes named by FR-004: ProviderFault, ProviderSuspended, ProviderDeactivated; and UnpaidBalance for the system cancellation of an Installments booking whose balance is unpaid at the FR-029 cancellation point (Alternative Flow B8)."
+        "description": "Why the booking was closed. Provider-fault causes named by FR-004: ProviderFault, ProviderSuspended, ProviderDeactivated; UnpaidBalance for the system cancellation of an Installments booking whose balance is unpaid at the FR-029 cancellation point (Alternative Flow B8); and Patient account suspended for a booking cancelled by the FR-016 suspension cascade (REQ-006-084)."
       }
     },
     {
@@ -45520,9 +45520,9 @@
       "owner_fr": "FR-004",
       "title": "Shared eligible clinicians",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "A quote MUST support one or more eligible clinician assignments shared across every option."
+        "statement": "A quote MUST support one or more eligible clinician assignments shared across every option. When a team member is removed or suspended, has a role change that takes away the rights needed to work their open items, or is force-suspended or force-removed by an admin, the system rewrites the clinician list of every draft, sent and accepted quote of that provider that names the member to the replacement clinician chosen at that moment, as a system change recorded in the quote's audit history; reactivating the member does not give the quotes back (REQ-009-191)."
       }
     },
     {
@@ -45658,9 +45658,9 @@
       "owner_fr": "FR-004",
       "title": "Quote expiring soon emitted once",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST emit `quote.expiring_soon` once per expiry window of a sent parent quote when it reaches the FR-026 quote-expiring-soon lead time, and MUST NOT emit it for draft, accepted, or terminal quotes, including the replacement quote, which has no expiry."
+        "statement": "System MUST emit `quote.expiring_soon` once per expiry window of a sent parent quote when it reaches the FR-026 quote-expiring-soon lead time, and MUST NOT emit it for draft, accepted, or terminal quotes, including the replacement quote, which has no expiry. A lead time raised after the send applies only to reminders not yet sent; a reminder whose time has already passed is skipped, not sent late (REQ-026-031)."
       }
     },
     {
@@ -45771,9 +45771,9 @@
       "owner_fr": "FR-004",
       "title": "Replacement quote pricing, no expiry and ending the case",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System MUST NOT attach an automatic FR-019 promotion to an admin-authored replacement quote or take a promotion usage reservation for it; the admin sets the replacement price directly. A replacement quote MUST have no expiry and MUST NOT emit `quote.expiring_soon`; it stays a `draft` until the admin records the replacement acceptance, and a replacement draft that is never accepted follows the 7-day draft rule. It MUST leave the inquiry flagged `supportRequired` without cancelling it automatically, and the admin MAY author another replacement quote, close the inquiry with Close inquiry on FR-006 Screen 6 when the booking is already `Cancelled` with the marker, or cancel through FR-006 Alternative Flow B2 (Screen 9) when the fault is still pending."
+        "statement": "System MUST NOT attach an automatic FR-019 promotion to an admin-authored replacement quote or take a promotion usage reservation for it; the admin sets the replacement price directly, so the replacement quote carries no promotion, and the use held by the original acceptance's promotion, which FR-019 marks Superseded, returns to the usage limit. A replacement quote MUST have no expiry and MUST NOT emit `quote.expiring_soon`; it stays a `draft` until the admin records the replacement acceptance, and a replacement draft that is never accepted follows the 7-day draft rule. It MUST leave the inquiry flagged `supportRequired` without cancelling it automatically, and the admin MAY author another replacement quote, close the inquiry with Close inquiry on FR-006 Screen 6 when the booking is already `Cancelled` with the marker, or cancel through FR-006 Alternative Flow B2 (Screen 9) when the fault is still pending."
       }
     },
     {
@@ -45818,9 +45818,9 @@
       "owner_fr": "FR-004",
       "title": "Treatment from the admin-curated catalog",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Treatment type selection MUST use admin-curated treatment catalog; no free text.",
+        "statement": "Treatment type selection MUST use admin-curated treatment catalog; no free text. A treatment the provider has set to Not Offered blocks new quotes only: existing drafts and sent quotes are unchanged and a draft can still be sent (REQ-024-006).",
         "rationale": "prd.md line 642 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -45876,9 +45876,9 @@
       "owner_fr": "FR-004",
       "title": "Changing treatment after options exist",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Changing the treatment after options exist requires confirmation. The system must identify incompatible options and must not silently retain or discard dependent package, pricing, or plan data."
+        "statement": "Changing the treatment after options exist requires confirmation. Packages are not tied to a treatment (REQ-024-101), so the package choices stay; the system must identify the option pricing and plan data that depend on the old treatment and must not silently retain or discard them."
       }
     },
     {
@@ -46215,9 +46215,9 @@
       "owner_fr": "FR-004",
       "title": "Discount review threshold",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Discounts are provider-managed (reviewed by admin if above configured threshold).",
+        "statement": "Discounts are provider-managed with no admin review. A percentage discount above the maximum discount value (the FR-019 setting, starts at 50 percent) is refused as a hard cap; a fixed-amount discount has no cap (REQ-019-114).",
         "rationale": "prd.md line 671 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -46468,6 +46468,18 @@
       }
     },
     {
+      "id": "REQ-004-112",
+      "type": "Rule",
+      "owner_fr": "FR-004",
+      "title": "A provider who has not accepted the current legal documents cannot submit a quote",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "A provider who has not accepted the current legal documents MUST NOT be able to submit a quote (first send or re-send). The acceptance prompt of FR-027 is shown and the draft is kept unchanged; creating and editing a draft is not blocked (REQ-027-033).",
+        "rationale": "prd.md Workflow 1 legal acceptance check; creating and editing a draft stays open"
+      }
+    },
+    {
       "id": "REQ-005-001",
       "type": "Rule",
       "owner_fr": "FR-005",
@@ -46629,9 +46641,9 @@
       "owner_fr": "FR-005",
       "title": "Provider notified of quote questions within 5 minutes",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST deliver a patient's quote question to the provider as an FR-012 message, and the provider's notification of it MUST arrive within 5 minutes at the latest.",
+        "statement": "System MUST deliver a patient's quote question to the provider as an FR-012 message, and the provider's notification of it MUST arrive within 5 minutes at the latest, unless the provider has switched that notice off or held it in their notification preferences (REQ-012-007).",
         "rationale": "Restated by the Communication Structure (System to Provider: notify the provider of patient quote questions within 5 minutes)."
       }
     },
@@ -46725,9 +46737,9 @@
       "owner_fr": "FR-005",
       "title": "Patient promotion code on one named subquote before acceptance",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST let the patient apply a promotion code to one named subquote before acceptance, validated through FR-019, and MUST freeze the discounted price and promotion into the acceptance snapshot. The code MUST NOT be written to the provider's quote or promotion records, and the price and promotion MUST NOT change after acceptance except through an FR-006 provider-fault transfer. If the code is no longer valid, or its usage limit is exhausted, when the patient confirms, the acceptance MUST NOT happen and nothing is recorded as accepted; the patient MUST return to the subquote detail with the reason shown and the offered price unchanged, and may accept without the code or enter another.",
+        "statement": "System MUST let the patient apply a promotion code to one named subquote before acceptance, validated through FR-019, and MUST freeze the discounted price and promotion into the acceptance snapshot. The code MUST NOT be written to the provider's quote or promotion records, and the price and promotion MUST NOT change after acceptance except through an FR-006 provider-fault transfer. If the code is no longer valid, or its usage limit is exhausted, when the patient confirms, the acceptance MUST NOT happen and nothing is recorded as accepted; the patient MUST return to the subquote detail with the reason shown and the price is back to what the row carried when the quote was sent, including any promotion attached at send, and may accept without the code or enter another. The offered price is the price the provider entered for the row before any promotion (REQ-004-035).",
         "rationale": "Restated by Alternative Flow A8 (the discounted price is shown next to the offered price and carried into the confirmation summary; an invalid code shows the reason and leaves the offered price unchanged; the code does not carry over to another subquote; after acceptance the promotion and price cannot be removed, replaced, re-entered at checkout, or changed by revalidation, including an admin void), the Screen 2 Promotion Code field and business rule (not available after acceptance), and Payment & Billing pricing."
       }
     },
@@ -47149,6 +47161,30 @@
       }
     },
     {
+      "id": "REQ-005-066",
+      "type": "Rule",
+      "owner_fr": "FR-005",
+      "title": "Acceptance waits for the patient's legal document acceptance",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "System MUST block the patient's confirmation of an acceptance until the patient has accepted the current legal documents, showing the FR-027 acceptance prompt; viewing and comparing quotes stay available (REQ-027-033).",
+        "rationale": "prd.md General Module Rules and Screen 2 Accept Button; viewing and comparing stay available"
+      }
+    },
+    {
+      "id": "REQ-005-067",
+      "type": "Rule",
+      "owner_fr": "FR-005",
+      "title": "Acceptance is blocked and retryable when terms text or the Settings API is missing",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "System MUST block acceptance with a message, and let the patient retry, when the acceptance terms text (FR-026 A-09) has not been set, or when the Settings API is unavailable as the slot hold is placed; no stale or guessed hold duration is used and no AcceptanceEvent is created (REQ-026-118, REQ-026-144).",
+        "rationale": "prd.md General Module Rules; no stale or guessed hold duration and no AcceptanceEvent"
+      }
+    },
+    {
       "id": "REQ-006-001",
       "type": "Rule",
       "owner_fr": "FR-006",
@@ -47260,9 +47296,9 @@
       "owner_fr": "FR-006",
       "title": "Booking notification events",
       "status": "active",
-      "version": 7,
+      "version": 8,
       "attrs": {
-        "statement": "System MUST integrate with Notification Service for confirmations, reminders, and policy notices, and MUST trigger these FR-030 events: `booking.scheduled` (sent on patient acceptance and on an admin-authored replacement acceptance), `booking.rescheduled` (sent on an admin appointment change and on an emergency edit of the appointment time), `booking.cancelled` (sent on any booking cancellation with the reason or cause, and with the cancellation fee and the refund amount filled in by the system: an admin cancellation, a provider drop-out at the Screen 10 submit, and a system cancellation for an unpaid balance; not for a provider withdrawal, which FR-004 announces through `quote.withdrawn`), `booking.hold_expiring_soon`, `booking.payment_window_expired`, `booking.revived`, `booking.provider_fault_replacement`, `booking.confirmed` (sent when the first payment confirms the booking), and `booking.appointment_reminder` (sent ahead of a confirmed appointment). The patient notice sent at Close inquiry has its event and template owned by FR-020 and FR-030. Recipients, message content, and whether each notice is mandatory are owned by the notification Rules in FR-020 (for example REQ-020-021) and FR-030 and are not restated here. FR-004 is the only producer of `quote.withdrawn`; FR-006 does not emit it and reacts to it by starting the provider-fault transfer in Alternative Flow B5.",
+        "statement": "System MUST integrate with Notification Service for confirmations, reminders, and policy notices, and MUST trigger these FR-030 events: `booking.scheduled` (sent on patient acceptance and on an admin-authored replacement acceptance), `booking.rescheduled` (sent on an admin appointment change and on an emergency edit of the appointment time), `booking.cancelled` (sent on any booking cancellation with the reason or cause, and with the cancellation fee and the refund amount filled in by the system: an admin cancellation, a provider drop-out at the Screen 10 submit, and a system cancellation for an unpaid balance (cause `UnpaidBalance`, which an FR-007B installment plan that defaults and stays unpaid reaches at the cancellation point of Alternative Flow B8); not for a provider withdrawal, which FR-004 announces through `quote.withdrawn`), `booking.hold_expiring_soon`, `booking.payment_window_expired`, `booking.revived`, `booking.provider_fault_replacement` (sent to the patient and the admin at the admin submit of the provider-fault transfer; a withdrawal is announced before it by `quote.withdrawn`, a drop-out by `booking.cancelled` at the same submit, and a provider suspension or deactivation by this event only, REQ-030-044), `booking.confirmed` (sent when the first payment confirms the booking), and `booking.appointment_reminder` (sent twice by default, 7 days and 1 day before the appointment date, as FR-030 sets in REQ-030-048). The patient notice sent at Close inquiry is the admin-close variant of `inquiry.cancelled`, whose event and template are owned by FR-020 and FR-030 (REQ-020-076). Recipients, message content, and whether each notice is mandatory are owned by the notification Rules in FR-020 (for example REQ-020-021) and FR-030 and are not restated here. FR-004 is the only producer of `quote.withdrawn`; FR-006 does not emit it and reacts to it by starting the provider-fault transfer in Alternative Flow B5.",
         "rationale": "prd.md line 1144 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -47272,9 +47308,9 @@
       "owner_fr": "FR-006",
       "title": "Slot-hold duration and reminder lead time read from FR-026",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST read the slot-hold duration (default: 48 hours) and the \"hold expiring soon\" reminder lead time from FR-026 and MUST NOT keep a separate FR-006 hold setting.",
+        "statement": "System MUST read the slot-hold duration (default: 48 hours) and the \"hold expiring soon\" reminder lead time from FR-026 and MUST NOT keep a separate FR-006 hold setting. When the Settings API is unavailable as a hold is placed (subquote acceptance or admin revive), System MUST block the action so it can be retried and MUST NOT use a stale or guessed duration (REQ-026-144).",
         "rationale": "Restated by Admin Editability Rules (slot-hold duration and reminder lead time)."
       }
     },
@@ -47320,9 +47356,9 @@
       "owner_fr": "FR-006",
       "title": "Admin revive and appointment change; no other manual status change",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Admin MAY revive a `Payment Window Expired` booking to `Accepted` only through Screen 7 with a mandatory reason, a slot availability re-check, a check that the appointment is later than the new payment deadline, a new hold of the FR-026 duration, one promotion use taken again where the accepted promotion has a usage limit (re-reserved for a provider-selected promotion or patient code, taken again for an automatic promotion; the revive is rejected if the limit has no room), an audit entry, an unchanged AcceptanceEvent, and a mandatory \"booking revived\" notice to patient and provider. A revive MUST be blocked while the booking carries the marker of a pending provider fault. A revive MUST NOT extend the expired hold; it starts a new one, and the initial payment then MUST pass the Initial Payment Guard (REQ-007-017) against that new hold. Appointment date changes MUST be made through Screen 8 or the admin edit of the accepted quote's date range or appointment (REQ-005-023), both running the same checks (provider `Active`, slot availability, a feasible FR-007B plan recalculation, and for an `Accepted` booking an appointment later than the payment deadline), MUST NOT apply the FR-029 rescheduling fee, MUST update the booking's current appointment while the acceptance snapshot keeps the accepted baseline, MUST send `booking.rescheduled`, and MUST trigger an FR-008 travel review for any travel records already linked to the booking. No other manual status change is allowed.",
+        "statement": "Admin MAY revive a `Payment Window Expired` booking to `Accepted` only through Screen 7 with a mandatory reason, a slot availability re-check, a check that the appointment is later than the new payment deadline, a new hold of the FR-026 duration, one promotion use taken again where the accepted promotion has a usage limit (re-reserved for a provider-selected promotion or patient code, taken again for an automatic promotion; the revive is rejected if the limit has no room), an audit entry, an unchanged AcceptanceEvent, and a mandatory \"booking revived\" notice to patient and provider. A revived booking MUST count again in the FR-014 pending-payment figures, aged from the start of its new hold (REQ-014-139). A revive MUST be blocked while the booking carries the marker of a pending provider fault. A revive MUST NOT extend the expired hold; it starts a new one, and the initial payment then MUST pass the Initial Payment Guard (REQ-007-017) against that new hold. Appointment date changes MUST be made through Screen 8 or the admin edit of the accepted quote's date range or appointment (REQ-005-023), both running the same checks (provider `Active`, slot availability, a feasible FR-007B plan recalculation, and for an `Accepted` booking an appointment later than the payment deadline), MUST NOT apply the FR-029 rescheduling fee, MUST update the booking's current appointment while the acceptance snapshot keeps the accepted baseline, MUST send `booking.rescheduled`, and MUST trigger an FR-008 travel review for any travel records already linked to the booking. No other manual status change is allowed.",
         "rationale": "Restated by Admin Status and Date Intervention Rules (Revive, Change appointment date/time, No other status jumps) and Screens 7 and 8 business rules."
       }
     },
@@ -47474,9 +47510,9 @@
       "owner_fr": "FR-006",
       "title": "Deposit comes from the FR-029 calculation",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System uses the FR-029 calculation (REQ-029-016) for the first payment and presents the cancellation policy; FR-006 does not restate the percentage or the formula.",
+        "statement": "System uses the FR-029 calculation (REQ-029-016) for the first payment and presents the cancellation policy through the full Cancellation Policy link (FR-027), with the refund ladder numbers from FR-029 (REQ-027-026); FR-006 does not restate the percentage or the formula.",
         "rationale": "prd.md lines 94."
       }
     },
@@ -47534,9 +47570,9 @@
       "owner_fr": "FR-006",
       "title": "Hold-expiring-soon reminder to the patient",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Before the hold expires, the patient receives the `booking.hold_expiring_soon` reminder; the lead time is set by admin in FR-026, and the notice details are in the notification Rule (REQ-020-086). No reminder is sent while a provider fault is pending on the booking.",
+        "statement": "Before the hold expires, the patient receives the `booking.hold_expiring_soon` reminder; the lead time is set by admin in FR-026, and the notice details are in the notification Rule (REQ-020-086). No reminder is sent while a provider fault is pending on the booking. A lead time raised after the hold was placed applies only to reminders not yet sent; a reminder whose time has already passed is skipped, not sent late (REQ-026-031).",
         "rationale": "prd.md line 894 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -47546,9 +47582,9 @@
       "owner_fr": "FR-006",
       "title": "Blocked layout for Payment Window Expired and other closures",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "If the booking is `Payment Window Expired`, carries a pending provider fault, or is `Cancelled` for any other cause (provider withdrawal or fault, provider suspension or deactivation), the screen shows the same read-only blocked layout with the banner text of that cause and the Contact Support button; all payment fields and payment actions are hidden.",
+        "statement": "If the booking is `Payment Window Expired`, carries a pending provider fault, or is `Cancelled` for any other cause (provider withdrawal or fault, provider suspension or deactivation), the screen shows the same read-only blocked layout with the banner text of that cause and the Contact Support button; all payment fields and payment actions are hidden. The Contact Support button opens a plain support request with the booking reference and no request type (REQ-034-182).",
         "rationale": "prd.md line 267 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -47594,9 +47630,9 @@
       "owner_fr": "FR-006",
       "title": "Link to FR-008 travel booking when available",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Link to travel booking (FR-008) when available.",
+        "statement": "Link to travel booking (FR-008) when available: Screen 2 carries a Travel entry that opens the FR-008 patient itinerary view, Screen 4 hosts the FR-008 provider Travel section once the booking is `Confirmed`, and Screen 6 hosts the FR-008 admin Travel section for every confirmed booking; FR-008 defines what each shows.",
         "rationale": "prd.md line 316 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -47762,9 +47798,9 @@
       "owner_fr": "FR-006",
       "title": "Travel records carry over to the replacement booking",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Travel carries over through FR-008: when the replacement booking's travel context is created, the patient's passport record carries over to it, and the flight and hotel records are copied to it and flagged \"travel-date review required\" for admin review. The original travel records stay read-only on the closed booking, and the patient re-enters nothing.",
+        "statement": "Travel carries over through FR-008 only when the replacement booking's travel path (A or B) matches the original's: when the replacement booking's travel context is created, the patient's passport record carries over to it, and the flight and hotel records are copied to it and flagged \"travel-date review required\" for admin review. When the paths differ, nothing is carried over or copied and the replacement's own initial travel requests go out. The original travel records stay read-only on the closed booking, and the patient re-enters nothing that was carried over.",
         "rationale": "prd.md line 177 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -47797,9 +47833,9 @@
       "owner_fr": "FR-006",
       "title": "Booking status lifecycle",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "`Accepted` (subquote accepted, awaiting payment) → `Confirmed` (deposit paid) → `In Progress` (procedure started, via FR-010) → `Aftercare` (treatment complete, or closed early by an admin decision on Screen 11; aftercare active via FR-011) → `Completed` (aftercare complete / final review submitted). An `In Progress` booking with a provider fault moves to `Aftercare` only through the admin decision on Screen 11 (Alternative Flow B7), and the decision date is then the aftercare start date handed to FR-011. From `Accepted`, hold expiry transitions to `Payment Window Expired`. From `Payment Window Expired`, only the audited admin revive returns the booking to `Accepted` with a new hold. `Confirmed` is a booking status only, never a quote status. `supportRequired` is a marker, not a status.",
+        "statement": "`Accepted` (subquote accepted, awaiting payment) → `Confirmed` (deposit paid) → `In Progress` (procedure started, via FR-010) → `Aftercare` (treatment complete, or closed early by an admin decision on Screen 11; aftercare active via FR-011) → `Completed` (FR-011 emits the aftercare completion event, whatever its outcome value: completed, paperwork only, cancelled by the patient, or cancelled by an admin; REQ-011-096, REQ-011-101). An `In Progress` booking with a provider fault moves to `Aftercare` only through the admin decision on Screen 11 (Alternative Flow B7), and the decision date is then the aftercare start date handed to FR-011. From `Accepted`, hold expiry transitions to `Payment Window Expired`. From `Payment Window Expired`, only the audited admin revive returns the booking to `Accepted` with a new hold. `Confirmed` is a booking status only, never a quote status. `supportRequired` is a marker, not a status.",
         "rationale": "prd.md line 1163 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -48061,9 +48097,9 @@
       "owner_fr": "FR-006",
       "title": "Close inquiry ends the inquiry of a Cancelled booking that still carries supportRequired",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "An admin MAY close the inquiry of a `Cancelled` booking that still carries the `supportRequired` marker, through the Close inquiry action on Screen 6 with a mandatory reason; System MUST set the inquiry to `Cancelled`, clear the marker with an audited resolution, and send the patient a notice that no replacement will follow.",
+        "statement": "An admin MAY close the inquiry of a `Cancelled` booking that still carries the `supportRequired` marker, through the Close inquiry action on Screen 6 with a mandatory reason; System MUST set the inquiry to `Cancelled`, clear the marker with an audited resolution, and send the patient the admin-close variant of `inquiry.cancelled` (REQ-020-076) saying that no replacement will follow. System MUST NOT notify any provider of the close (REQ-020-020) and MUST cancel any draft replacement quote of the inquiry without notice (REQ-004-111, REQ-003-127).",
         "rationale": "prd.md Alternative Flow B5 (Replacement quote not accepted); Screen 6 Close inquiry"
       }
     },
@@ -48077,6 +48113,18 @@
       "attrs": {
         "statement": "System MUST start one refund per closure: Process Refund MUST be unavailable once the automatic refund of the closure has started, and the automatic refund MUST NOT start once Process Refund has been used for it.",
         "rationale": "prd.md Alternative Flow B2 step 6; Screens 6 and 9"
+      }
+    },
+    {
+      "id": "REQ-006-084",
+      "type": "Rule",
+      "owner_fr": "FR-006",
+      "title": "A patient suspension cascade cancels a booking with the cause Patient account suspended",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "When the FR-016 suspension cascade cancels a patient's `Accepted`, `Payment Window Expired` or `Confirmed` booking, System MUST cancel it through the admin booking cancellation with the cause \"Patient account suspended\" (admin-initiated, request source Admin, the acting admin carried from FR-016) and the fixed reason \"Booking cancelled because the patient account was suspended\" sent to the patient and the provider, keep the admin justification in the audit entry only, and refund by the refund ladder set in FR-029, or by the provider-fault terms where the provider is at fault (REQ-016-219).",
+        "rationale": "prd.md Alternative Flow B2, Screen 9 and Payment and Billing Rules"
       }
     },
     {
@@ -110465,7 +110513,7 @@
       "owner_fr": "FR-004",
       "title": "Provider reviews and submits the quote (Tab 7)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Main Flow step 13"
       }
@@ -110883,7 +110931,7 @@
       "owner_fr": "FR-005",
       "title": "Patient confirms the subquote with terms acknowledgment and a selection summary",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow step 5"
       }
@@ -111742,9 +111790,10 @@
       "owner_fr": "FR-006",
       "title": "System holds the provider payout for the booking from the fault until the chosen route completes; the refund comes out of the held payout and a shortfall after release is deducted from the provider's next payout",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "prd_ref": "Alternative Flow B7 step 1"
+        "prd_ref": "Alternative Flow B7 step 1",
+        "description": "System holds the provider payout for the booking from the fault until the chosen route completes; the refund comes out of the held payout and a shortfall after release becomes a clinic balance entry applied to the clinic's next payout (REQ-017-191)"
       }
     },
     {
@@ -163125,6 +163174,12 @@
       "sort_order": 3
     },
     {
+      "field_id": "ENT-booking.closure_cause",
+      "value": "patient_account_suspended",
+      "label": "Patient account suspended",
+      "sort_order": 4
+    },
+    {
       "field_id": "ENT-booking.deposit_payment_method",
       "value": "card",
       "label": "Card",
@@ -179970,7 +180025,7 @@
       "verb": "active in",
       "to_id": "STG-main-02-quote",
       "attrs": {
-        "rules": 86
+        "rules": 87
       },
       "derived": true
     },
@@ -180138,7 +180193,7 @@
       "verb": "active in",
       "to_id": "STG-main-03-acceptance",
       "attrs": {
-        "rules": 54
+        "rules": 56
       },
       "derived": true
     },
@@ -180300,7 +180355,7 @@
       "verb": "active in",
       "to_id": "STG-main-04-booking",
       "attrs": {
-        "rules": 78
+        "rules": 79
       },
       "derived": true
     },
@@ -198224,6 +198279,30 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-004-112",
+      "verb": "applies at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-112",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-112",
+      "verb": "applies to",
+      "to_id": "ENT-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-112",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-004",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-005-001",
       "verb": "applies at",
       "to_id": "STG-main-03-acceptance",
@@ -199502,6 +199581,54 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-005-066",
+      "verb": "applies at",
+      "to_id": "STG-main-03-acceptance",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-005-066",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-005-066",
+      "verb": "applies to",
+      "to_id": "SCR-005-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-005-066",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-005",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-005-067",
+      "verb": "applies at",
+      "to_id": "STG-main-03-acceptance",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-005-067",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-005-067",
+      "verb": "applies to",
+      "to_id": "SCR-005-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-005-067",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-005",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-006-001",
       "verb": "applies at",
       "to_id": "STG-main-04-booking",
@@ -200565,6 +200692,18 @@
     },
     {
       "from_id": "REQ-006-042",
+      "verb": "applies to",
+      "to_id": "SCR-006-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-042",
+      "verb": "applies to",
+      "to_id": "SCR-006-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-042",
       "verb": "decided by",
       "to_id": "SRC-PRD-006",
       "attrs": {}
@@ -200969,6 +201108,12 @@
       "from_id": "REQ-006-060",
       "verb": "applies to",
       "to_id": "ENT-booking.status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-060",
+      "verb": "applies to",
+      "to_id": "EVT-aftercare-completed",
       "attrs": {}
     },
     {
@@ -201579,6 +201724,42 @@
     },
     {
       "from_id": "REQ-006-083",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-006",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-084",
+      "verb": "applies at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-084",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-084",
+      "verb": "applies to",
+      "to_id": "ENT-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-084",
+      "verb": "applies to",
+      "to_id": "ENT-booking.closure_cause",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-084",
+      "verb": "applies to",
+      "to_id": "SCR-006-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-084",
       "verb": "decided by",
       "to_id": "SRC-PRD-006",
       "attrs": {}
@@ -373574,6 +373755,12 @@
     },
     {
       "from_id": "STP-004-013",
+      "verb": "applies",
+      "to_id": "REQ-004-112",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-013",
       "verb": "at",
       "to_id": "STG-main-02-quote",
       "attrs": {}
@@ -374850,6 +375037,18 @@
       "from_id": "STP-005-005",
       "verb": "applies",
       "to_id": "REQ-005-056",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-005",
+      "verb": "applies",
+      "to_id": "REQ-005-066",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-005-005",
+      "verb": "applies",
+      "to_id": "REQ-005-067",
       "attrs": {}
     },
     {
@@ -460543,6 +460742,47 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-211345-2ac7b594",
+      "at": "2026-11-24T21:13:45.645989+00:00",
+      "changed_by": "docs-manager",
+      "reason": "Cross-FR alignment of the quote submission, quote acceptance and booking PRDs with the neighbouring FRs: legal acceptance gating (REQ-004-112, REQ-005-066), settings and terms blocking (REQ-005-067, REQ-006-013), promotion and discount wording, clinician replacement, reminder skipping, Close inquiry notices, Travel entry, patient suspension cause (REQ-006-084), aftercare completion, and payout shortfall wording.",
+      "source_id": null,
+      "nodes_added": [
+        "REQ-004-112",
+        "REQ-005-066",
+        "REQ-005-067",
+        "REQ-006-084"
+      ],
+      "nodes_updated": [
+        "ENT-acceptance-event.promotion_code",
+        "ENT-booking.closure_cause",
+        "REQ-004-027",
+        "REQ-004-039",
+        "REQ-004-050",
+        "REQ-004-054",
+        "REQ-004-059",
+        "REQ-004-090",
+        "REQ-005-016",
+        "REQ-005-026",
+        "REQ-006-011",
+        "REQ-006-013",
+        "REQ-006-017",
+        "REQ-006-030",
+        "REQ-006-036",
+        "REQ-006-037",
+        "REQ-006-042",
+        "REQ-006-057",
+        "REQ-006-060",
+        "REQ-006-082",
+        "STP-004-013",
+        "STP-005-005",
+        "STP-006-804"
+      ],
+      "edges_added": 24,
+      "edges_removed": 0,
+      "rows": 70
+    },
     {
       "id": "cs-20261124-211207-bd7015a1",
       "at": "2026-11-24T21:12:07.279022+00:00",
