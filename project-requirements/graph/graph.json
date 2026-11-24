@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T05:38:47Z",
+  "generated_at": "2026-11-24T06:04:42Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -11883,9 +11883,9 @@
       "owner_fr": "FR-002",
       "title": "Reason",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "General Rule 1: reasons on overrides."
+        "description": "Rejection reason, written when an attempt is rejected (REQ-002-036); empty on accepted attempts."
       }
     },
     {
@@ -11911,25 +11911,25 @@
       }
     },
     {
-      "id": "ENT-intake-processing-request.media",
+      "id": "ENT-intake-processing-request.head_scan_photo_set",
       "type": "Field",
       "owner_fr": "FR-002",
-      "title": "Media",
+      "title": "Head scan photo set",
       "status": "active",
       "version": 1,
       "attrs": {
-        "description": "Exactly one of headScanPhotoSet, headVideo, altPhotos or altClips (REQ-002-038)."
+        "description": "headScanPhotoSet: required list of up to 5 photo items { stagedRef, viewHint? } (REQ-002-038). The V1 request carries no other media; visual evidence is validated and stored by FR-003."
       }
     },
     {
-      "id": "ENT-intake-processing-request.media_metadata",
+      "id": "ENT-intake-processing-request.idempotency_key",
       "type": "Field",
       "owner_fr": "FR-002",
-      "title": "Media metadata",
+      "title": "Idempotency key",
       "status": "active",
       "version": 1,
       "attrs": {
-        "description": "Key attribute 'media metadata': metadata of the submitted head scan media (for example sizeBytesTotal, viewHints, durationSeconds, frameHints)."
+        "description": "idempotencyKey (string): a retry with the same key replaces the artifact set stored by the earlier attempt (REQ-002-045)."
       }
     },
     {
@@ -11966,14 +11966,25 @@
       }
     },
     {
+      "id": "ENT-intake-processing-request.template_set_id",
+      "type": "Field",
+      "owner_fr": "FR-002",
+      "title": "Template set",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "templateSetId (string): the FR-025 questionnaire set the patient answered (REQ-002-037, REQ-002-041)."
+      }
+    },
+    {
       "id": "ENT-intake-processing-request.template_version",
       "type": "Field",
       "owner_fr": "FR-002",
       "title": "Template version",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "templateVersion (string): the questionnaire template version the caller used."
+        "description": "templateVersion (string): the questionnaire template version the patient answered. A prior version of the set, or of the prior Active set, is accepted and recorded; an unknown or never-published version is rejected (REQ-002-037)."
       }
     },
     {
@@ -12010,17 +12021,6 @@
       }
     },
     {
-      "id": "ENT-intake-processing-result.media_ref",
-      "type": "Field",
-      "owner_fr": "FR-002",
-      "title": "Media reference",
-      "status": "active",
-      "version": 1,
-      "attrs": {
-        "description": "mediaRef: points to the stored ENT-media-artifact."
-      }
-    },
-    {
       "id": "ENT-intake-processing-result.normalized_payload",
       "type": "Field",
       "owner_fr": "FR-002",
@@ -12054,14 +12054,25 @@
       }
     },
     {
-      "id": "ENT-intake-processing-result.ruleset_version",
+      "id": "ENT-intake-processing-result.scan_ref",
       "type": "Field",
       "owner_fr": "FR-002",
-      "title": "Ruleset version",
+      "title": "Scan reference",
       "status": "active",
-      "version": 2,
+      "version": 1,
       "attrs": {
-        "description": "rulesetVersion: the FR-025 questionnaire set version in force when the request was processed (General Rules 3)."
+        "description": "scanRef: the reference FR-003 reads to reach the stored head scan photo set (one ENT-media-artifact per photo)."
+      }
+    },
+    {
+      "id": "ENT-intake-processing-result.template_set_id",
+      "type": "Field",
+      "owner_fr": "FR-002",
+      "title": "Template set",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "templateSetId: the FR-025 set the processed version belongs to; stamped with templateVersionUsed (REQ-002-005)."
       }
     },
     {
@@ -12070,9 +12081,9 @@
       "owner_fr": "FR-002",
       "title": "Template version used",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "templateVersionUsed: the template version actually applied."
+        "description": "templateVersionUsed: the single configuration stamp, the template version actually applied. FR-003 questionnaireVersion is a copy of it (REQ-002-005)."
       }
     },
     {
@@ -13071,9 +13082,20 @@
       "owner_fr": "FR-002",
       "title": "Metadata",
       "status": "active",
+      "version": 2,
+      "attrs": {
+        "description": "Media metadata. The provider copy has device and location metadata stripped; the original is unmodified (REQ-002-048)."
+      }
+    },
+    {
+      "id": "ENT-media-artifact.quality_score",
+      "type": "Field",
+      "owner_fr": "FR-002",
+      "title": "Quality score",
+      "status": "active",
       "version": 1,
       "attrs": {
-        "description": "Media metadata."
+        "description": "qualityScore, 0 to 100: the value the FR-026 quality threshold check used for this photo (REQ-002-034). Returned per photo."
       }
     },
     {
@@ -33754,6 +33776,19 @@
       }
     },
     {
+      "id": "FLW-002-derive-only",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Derive only (questionnaire completed)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "main",
+        "description": "Workflow 4: Derive Only (Questionnaire Completed)",
+        "prd_ref": "Workflow 4"
+      }
+    },
+    {
       "id": "FLW-002-distribution-consumption",
       "type": "Flow",
       "owner_fr": null,
@@ -33790,6 +33825,19 @@
         "kind": "alternative",
         "description": "Alternative flow A1: media validation fails",
         "prd_ref": "Alternative Flows A1"
+      }
+    },
+    {
+      "id": "FLW-002-questionnaire-rejected",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Questionnaire or template version rejected",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Questionnaire or template version rejected",
+        "prd_ref": "Alternative Flows A3"
       }
     },
     {
@@ -38818,7 +38866,7 @@
       "owner_fr": null,
       "title": "Medical History & 3D Scanning",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "module": "fr002-medical-history",
         "prd_path": "project-requirements/functional-requirements/fr002-medical-history/prd.md",
@@ -41416,22 +41464,22 @@
       "owner_fr": "FR-002",
       "title": "Validate responses against questionnaire template",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Engine MUST validate responses against FR-025 template requirements",
-        "rationale": "Core Requirements (prd.md line 275). Workflow 1 step 2 (flow diagram, Workflow 1 at line 80): engine validates completeness against the FR-025 template and media constraints. Shared Services (line 49): Medical Intake Engine validates questionnaire responses. Integration contract rules (line 195): enforce FR-025 required fields and media constraints."
+        "statement": "Engine MUST validate responses against the FR-025 template requirements of the version named in the request; a missing required answer is rejected with ANSWER_REQUIRED_MISSING naming the question.",
+        "rationale": "Core Requirements. Validation uses the version in the request, not the latest published one (REQ-002-037, REQ-002-041)."
       }
     },
     {
       "id": "REQ-002-002",
       "type": "Rule",
       "owner_fr": "FR-002",
-      "title": "Derive risk tags deterministically",
+      "title": "Derive risk tags deterministically; the engine is the only producer",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Engine MUST derive risk/alert tags deterministically from rules",
-        "rationale": "Core Requirements (line 292). Workflow 1 step 3: engine computes severity alerts/risk tags based on configured rules. Implementation Notes (line 375): deterministic normalization and alert derivation based on versioned rules."
+        "statement": "Engine MUST derive risk/alert tags deterministically from the severity flags FR-025 sets on the answers of the version named in the request. It is the only producer of risk tags: one tag per Yes answer, and the highest severity among them sets the tier (Critical is Red, Standard is Amber; FR-025 REQ-025-064). When every answer is No it returns one tag with severity none (Green).",
+        "rationale": "Core Requirements. FR-003 and FR-025 point here instead of deriving tags themselves. The tier reading (one tag per Yes answer, highest severity wins) follows REQ-025-064."
       }
     },
     {
@@ -41450,36 +41498,36 @@
       "id": "REQ-002-004",
       "type": "Rule",
       "owner_fr": "FR-002",
-      "title": "Return normalized payload, alerts, media URIs, audit fields",
+      "title": "Return normalized payload, alerts, per-photo media results, scanRef and audit fields",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Engine MUST return normalized payload, alerts, media URIs, and audit fields",
-        "rationale": "Core Requirements (line 294). Workflow 1 step 5. Response contract (lines 188-191): normalized {responsesNormalized, templateVersionUsed}, alerts RiskTag[], media {storedUri, validationStatus}, audit {processingId, processedAt}."
+        "rationale": "Core Requirements. Response contract in Screen Specifications: processingId, normalized, alerts, scanRef, one media item per photo, audit."
       }
     },
     {
       "id": "REQ-002-005",
       "type": "Rule",
       "owner_fr": "FR-002",
-      "title": "Stamp responses with template and ruleset versions",
+      "title": "Stamp responses with one version: templateVersionUsed and the set identifier",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Responses MUST be stamped with templateVersionUsed and rulesetVersion",
-        "rationale": "Data Requirements (line 298). Repeated as General Rule 3 (line 206) and in Shared Services (line 51): all processing includes configuration version stamping (templateVersion, rulesetVersion); merged here as one rule."
+        "statement": "Responses MUST be stamped with templateVersionUsed and the set identifier (templateSetId); there is no separate ruleset stamp. Validation and alert derivation use the version named in the request, and FR-003 questionnaireVersion is a copy of templateVersionUsed.",
+        "rationale": "Data Requirements. The earlier second stamp (rulesetVersion) named the same FR-025 set version, so it is removed."
       }
     },
     {
       "id": "REQ-002-006",
       "type": "Rule",
       "owner_fr": "FR-002",
-      "title": "Media artifacts store validation status",
+      "title": "Media artifacts store validation status and quality score",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Media artifacts MUST store validationStatus",
-        "rationale": "Data Requirements (line 299). Key Entities MediaArtifact (line 347)."
+        "statement": "Media artifacts MUST store validationStatus and qualityScore (0 to 100).",
+        "rationale": "Data Requirements. The score is the value the FR-026 quality threshold check used (REQ-002-034)."
       }
     },
     {
@@ -41500,10 +41548,10 @@
       "owner_fr": "FR-002",
       "title": "No PII in engine responses",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "No PII in engine responses; anonymized identifiers only",
-        "rationale": "Security and Privacy Requirements (line 304). Repeated in integration contract rules (line 196, no PII in payloads) and Security Considerations (line 393)."
+        "statement": "No PII in the structured fields of engine responses; anonymized identifiers only. Free-text answers and a visible face in the head scan photos are the documented exception in REQ-002-048.",
+        "rationale": "Security and Privacy Requirements. Narrowed to structured fields because the free-text answers cannot be filtered (owner default 75)."
       }
     },
     {
@@ -41546,12 +41594,12 @@
       "id": "REQ-002-012",
       "type": "Rule",
       "owner_fr": "FR-002",
-      "title": "Expose processing API for FR-003",
+      "title": "Expose the submit, derive-only, read and media-only calls",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Engine MUST expose processing API consumed by FR-003",
-        "rationale": "Integration Requirements (line 311). Entry point 1 (line 74). Integration Points (lines 381-382)."
+        "statement": "Engine MUST expose the submit, derive-only and read calls consumed by FR-003, and the media-only call consumed by FR-011 and FR-037.",
+        "rationale": "Integration Requirements. Entry point 1. Detail in REQ-002-043, REQ-002-044 and REQ-002-047."
       }
     },
     {
@@ -41560,9 +41608,9 @@
       "owner_fr": "FR-002",
       "title": "Return structured error codes on validation failure",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Engine MUST return structured error codes for validation failures",
+        "statement": "Engine MUST return structured error codes for validation failures (the full list is in REQ-002-036).",
         "rationale": "Integration Requirements (line 312). The same outcome, with guidance and no persisted artifacts, is stated as REQ-002-036."
       }
     },
@@ -41594,12 +41642,12 @@
       "id": "REQ-002-016",
       "type": "Rule",
       "owner_fr": "FR-002",
-      "title": "Providers consume processed artifacts read-only",
+      "title": "Providers consume processed artifacts read-only (normalized questionnaire, alerts, provider copy of the media)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Providers consume read-only processed artifacts (normalized questionnaire, alerts, processed media)",
-        "rationale": "Provider Platform breakdown (line 34). Workflow 2 (from line 124): FR-003 retrieves the engine-normalized payload and media URIs, distributes to providers, and providers consume them read-only."
+        "statement": "Providers consume read-only processed artifacts: the normalized questionnaire, the alerts and the provider copy of the media (REQ-002-048).",
+        "rationale": "Provider Platform breakdown. Workflow 2: FR-003 reads the stored result by processingId, distributes it, and providers consume it read-only."
       }
     },
     {
@@ -41630,12 +41678,12 @@
       "id": "REQ-002-020",
       "type": "Rule",
       "owner_fr": "FR-002",
-      "title": "Admin configures validation and media constraints",
+      "title": "Admin configures the quality thresholds and video duration limits; photo count, size, formats and views are fixed",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Admin configures validation rules and media constraints (head scan photo limits are fixed). Alert severity is driven by the severity flags admins set on questionnaire answers in FR-025; there is no separate alert threshold setting.",
-        "rationale": "Admin Platform breakdown. Head scan photo limits are fixed in Media Rules 3, so they are not admin settings; alert severity follows the FR-025 severity flags."
+        "statement": "Admin configures the head scan quality thresholds and the video duration limits in FR-026. The head scan photo count, per-file size, formats and views are fixed by the product (REQ-002-032, REQ-002-033) and are not admin settings. Alert severity is driven by the severity flags admins set on questionnaire answers in FR-025; there is no separate alert threshold setting.",
+        "rationale": "Owner default 74: the product fixes the photo count, size, formats and views. The other option was to keep them editable in FR-026."
       }
     },
     {
@@ -41654,12 +41702,12 @@
       "id": "REQ-002-022",
       "type": "Rule",
       "owner_fr": "FR-002",
-      "title": "Template versioning and publishing owned by FR-025",
+      "title": "Template versioning and publishing owned by FR-025; engine consumes the set designated Active for Inquiry",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Template versioning and publishing managed through FR-025; engine consumes published versions",
-        "rationale": "Admin Platform breakdown. Workflow 3 states that template publishing is owned by FR-025 and the engine consumes the published version."
+        "statement": "Template versioning and publishing are managed through FR-025. The engine consumes the version of the set currently designated Active for Inquiry (FR-025 REQ-025-049, REQ-025-050).",
+        "rationale": "Admin Platform breakdown. FR-025 owns the designation; the engine does not pick a set itself."
       }
     },
     {
@@ -41702,24 +41750,24 @@
       "id": "REQ-002-026",
       "type": "Rule",
       "owner_fr": "FR-002",
-      "title": "Engine operations auditable with who, when, why",
+      "title": "Engine operations auditable with who, when and the rejection reason on rejected attempts",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Engine operations are fully auditable (timestamps, actor/service, reasons on overrides).",
-        "rationale": "General Rules 1 (prd.md line 187). Close to REQ-002-010 but adds the audit content. Assumption (line 368): access is mediated by platform RBAC and immutable audit logging."
+        "statement": "Engine operations are fully auditable (timestamps, actor/service, the rejection reason on rejected attempts).",
+        "rationale": "General Rules 1. The audit reason field is written when an attempt is rejected (REQ-002-036); no override exists in this FR."
       }
     },
     {
       "id": "REQ-002-027",
       "type": "Rule",
       "owner_fr": "FR-002",
-      "title": "Engine stateless; draft UX in FR-003",
+      "title": "Engine keeps no session state; the processing result and media are persisted; draft UX in FR-003",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Draft/submit/edit UX is defined in FR-003; engine is stateless between calls except persisted artifacts.",
-        "rationale": "General Rules 2 (line 205). Shared Services (line 50): engine operations are stateless between calls except for persisted artifacts. Implementation Notes (line 374): artifacts persisted in storage with references returned."
+        "statement": "Draft/submit/edit UX is defined in FR-003; the engine keeps no session state between calls, and the processing result and media are persisted (REQ-002-043).",
+        "rationale": "General Rules 2. The earlier wording said persisted artifacts only, which left the result without a home."
       }
     },
     {
@@ -41764,7 +41812,7 @@
       "owner_fr": "FR-002",
       "title": "V1 head media is a standardized photo set",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "For V1, head media is a standardized photo set captured in the patient app and uploaded to the system (not a true 3D model).",
         "rationale": "Media Rules 1 (line 217). Executive Summary (lines 11 and 13): V1 'scan' is a standardized head scan photo set (multiple 2D views); true 3D capture is deferred to V2."
@@ -41776,10 +41824,10 @@
       "owner_fr": "FR-002",
       "title": "Head scan needs at least one photo; no view is compulsory",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "The head scan offers five views (front, top, left, right, back). At least one photo is required; no single view is compulsory.",
-        "rationale": "Media Rules 2. Implementation Notes: V1 validates that at least one photo is present. Error code MEDIA_INCOMPLETE_VIEW_SET when no head scan photo is supplied (User Story 2)."
+        "statement": "The head scan offers five views (front, top, left, right, back). At least one photo is required; no single view is compulsory. The product fixes these views; they are not an admin setting.",
+        "rationale": "Media Rules 2. Error code MEDIA_NO_PHOTO when no head scan photo is supplied. Owner default 74."
       }
     },
     {
@@ -41788,10 +41836,10 @@
       "owner_fr": "FR-002",
       "title": "Allowed formats and fixed photo limits enforced",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Allowed formats: JPG/PNG. A head scan holds up to 5 photos of at most 2 MB each, counted on its own (separate from the FR-003 visual evidence limit, which has its own count).",
-        "rationale": "Media Rules 3. Error code MEDIA_SIZE_EXCEEDED with compression guidance (User Story 2); edge case 'oversize file'."
+        "statement": "Allowed formats: JPG/PNG. A head scan holds up to 5 photos of at most 2 MB each, with no total-size limit, counted on its own (separate from the FR-003 visual evidence limit, which has its own count). The product fixes the count, size and formats; they are not admin settings.",
+        "rationale": "Media Rules 3. Error codes MEDIA_FORMAT_NOT_ALLOWED, MEDIA_COUNT_EXCEEDED and MEDIA_SIZE_EXCEEDED (REQ-002-036). Owner default 74."
       }
     },
     {
@@ -41800,58 +41848,58 @@
       "owner_fr": "FR-002",
       "title": "Basic quality checks with actionable guidance",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Basic quality checks (e.g., brightness/blur) MUST be enforced and actionable guidance returned on failure.",
-        "rationale": "Media Rules 4 (line 220). Error code MEDIA_QUALITY_INSUFFICIENT with retake instructions (line 254); edge case 'media too short or poor lighting' (line 258). The thresholds are a Setting only by inference from 'below threshold' (line 254); see report."
+        "statement": "Basic quality checks (e.g., brightness/blur) MUST be enforced against the FR-026 quality thresholds and actionable guidance returned on failure. The quality score is 0 to 100 and is returned per photo.",
+        "rationale": "Media Rules 4. Error code MEDIA_QUALITY_INSUFFICIENT with retake instructions. The device check uses the same thresholds (REQ-002-050)."
       }
     },
     {
       "id": "REQ-002-035",
       "type": "Rule",
       "owner_fr": "FR-002",
-      "title": "Video duration limits apply if video is accepted",
+      "title": "Video is a future form and is not in the V1 contract; duration limits apply if it is added",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "If `headVideo` is accepted (optional fallback/future), duration constraints (min/max) apply via policy (A-09).",
-        "rationale": "Media Rules 5 (line 221). Implementation Notes (line 377): duration applies only if video is accepted."
+        "statement": "headVideo is a future form and is not part of the V1 contract; if it is added, the FR-026 duration limits (min/max) apply.",
+        "rationale": "Media Rules 5. Kept as a future note; the V1 request carries the photo set only (REQ-002-038)."
       }
     },
     {
       "id": "REQ-002-036",
       "type": "Rule",
       "owner_fr": "FR-002",
-      "title": "Failed validation returns error codes, stores nothing",
+      "title": "Failed validation returns error codes with per-photo detail, stores nothing and writes an audit entry",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "On validation failure, engine returns structured error codes and guidance to the caller (FR-003); no artifacts persisted.",
-        "rationale": "Media Rules 6 (line 222). Repeated as Alternative Flow A1 (from line 98, caller can retry), integration contract rules (line 198) and edge cases (lines 258-260). Error codes named in User Story 2 (lines 252-254): MEDIA_INCOMPLETE_VIEW_SET, MEDIA_SIZE_EXCEEDED, MEDIA_QUALITY_INSUFFICIENT. Close to REQ-002-013, which states only the error codes."
+        "statement": "On validation failure, engine returns structured error codes with per-photo detail and guidance to the caller (FR-003); no artifacts are persisted, and an audit entry records the rejection reason. Error codes cover every enforced rule: MEDIA_FORMAT_NOT_ALLOWED, MEDIA_COUNT_EXCEEDED, MEDIA_SIZE_EXCEEDED, MEDIA_QUALITY_INSUFFICIENT, MEDIA_NO_PHOTO, TEMPLATE_VERSION_UNKNOWN, NO_ACTIVE_TEMPLATE_SET, ANSWER_REQUIRED_MISSING.",
+        "rationale": "Media Rules 6 and Alternative Flows A1 and A3. MEDIA_NO_PHOTO replaces the earlier view-set code, which named a rule that does not exist. The audit reason field holds the rejection reason."
       }
     },
     {
       "id": "REQ-002-037",
       "type": "Rule",
       "owner_fr": "FR-002",
-      "title": "Older template version accepted and recorded",
+      "title": "Prior template version or prior Active set accepted and recorded; unknown version rejected",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Engine accepts a submission made on an older template version and records the version used (templateVersionUsed) in the audit log.",
-        "rationale": "Alternative Flow A2: when the submitted templateVersion is older than the currently published version, the engine accepts the submission and records the version used. Repeated in Edge Cases."
+        "statement": "Engine accepts a submission made on a prior version of the same set, or on the prior Active set, and records the version used (templateVersionUsed) in the audit log; validation and alert derivation use that version. An unknown or never-published version is rejected with TEMPLATE_VERSION_UNKNOWN, and a state with no set designated Active for Inquiry (FR-025 REQ-025-052) is rejected with NO_ACTIVE_TEMPLATE_SET.",
+        "rationale": "Alternative Flows A2 and A3. The request names the set and the version, so the engine can tell a prior version from an unknown one."
       }
     },
     {
       "id": "REQ-002-038",
       "type": "Rule",
       "owner_fr": "FR-002",
-      "title": "Accepted media forms in the request",
+      "title": "Request carries the head scan photo set only",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Request media is one of: headScanPhotoSet { uris[], sizeBytesTotal?, viewHints? } (V1: standardized photo set capture); headVideo { uri, durationSeconds, sizeBytes, frameHints? } (optional fallback / future); altPhotos { uris[] } or altClips { uris[] } (aligns with system PRD supplemental media support)",
-        "rationale": "Integration contract Request (lines 180-183). Key Entities note (line 336): V1 expects media as headScanPhotoSet; headVideo is optional fallback/future."
+        "statement": "The V1 request carries headScanPhotoSet (required, a list of up to 5 photo items) as its only media. Visual evidence is validated and stored by FR-003 and does not pass through FR-002. headVideo is future and is not part of the V1 contract (REQ-002-035). The response returns one item per photo (storedUri, validationStatus, qualityScore) and the scanRef FR-003 reads.",
+        "rationale": "Integration contract. The earlier list of four media forms did not match what FR-003 sends or what FR-002 stores."
       }
     },
     {
@@ -41860,10 +41908,10 @@
       "owner_fr": "FR-002",
       "title": "Distribution of processed payload through FR-003",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "FR-003 retrieves engine-normalized payload and media URIs for distribution",
-        "rationale": "Workflow 2 trigger and steps 1-2 (from line 124): FR-003 distributes to providers."
+        "statement": "FR-003 reads the stored processing result by processingId for distribution (REQ-002-043).",
+        "rationale": "Workflow 2 trigger and steps 1-2: FR-003 reads the stored result and distributes to providers."
       }
     },
     {
@@ -41882,12 +41930,12 @@
       "id": "REQ-002-041",
       "type": "Rule",
       "owner_fr": "FR-002",
-      "title": "New inquiries use latest published template",
+      "title": "New inquiries use the version of the set currently designated Active for Inquiry",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System keeps prior versions for existing inquiries; new inquiries use the latest published version",
-        "rationale": "prd.md lines 145, 151, 351 (Workflow 3 outcome: applies to new submissions only; Alternative Flow C1 owned by FR-025: prior versions kept for existing inquiries, new inquiries use the latest published version; Business Process assumption)."
+        "statement": "System keeps prior versions for existing inquiries; new inquiries use the version of the set currently designated Active for Inquiry (FR-025 REQ-025-049, REQ-025-050).",
+        "rationale": "Workflow 3 outcome and Alternative Flow C1 (owned by FR-025). The earlier wording said the latest published version, which FR-025 does not use."
       }
     },
     {
@@ -41900,6 +41948,102 @@
       "attrs": {
         "statement": "The original media file is kept unmodified; any transformation creates a separate copy.",
         "rationale": "Media Rules 7. Answers the open question under REQ-002-023 about what transformations may do to the original."
+      }
+    },
+    {
+      "id": "REQ-002-043",
+      "type": "Rule",
+      "owner_fr": "FR-002",
+      "title": "Processing result persisted by processingId and read back by it",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Engine MUST persist the processing result (normalized payload, alerts, per-photo media results, scanRef and audit fields) keyed by processingId and return it on a read by processingId. Retention follows REQ-SYS-002.",
+        "rationale": "FR-003 reads the result by processingId when it distributes the inquiry, so FR-002 keeps it. The earlier wording kept only the media; the engine is stateless between calls only in that it holds no session state. FR-003 stores processingId on the inquiry."
+      }
+    },
+    {
+      "id": "REQ-002-044",
+      "type": "Rule",
+      "owner_fr": "FR-002",
+      "title": "Derive-only call returns the risk tags and persists nothing",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Engine MUST offer a derive-only call: FR-003 sends templateSetId, templateVersion and the completed answers, the engine validates them, returns the risk tags and the alert tier, and persists nothing (a missing required answer is returned as ANSWER_REQUIRED_MISSING). Submit runs the same derivation.",
+        "rationale": "FR-002 is the only producer of risk tags; FR-003 calls this when the patient completes the questionnaire so the tags it shows are the ones submit will derive."
+      }
+    },
+    {
+      "id": "REQ-002-045",
+      "type": "Rule",
+      "owner_fr": "FR-002",
+      "title": "Submit retry with the same idempotency key replaces the earlier artifact set",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "A submit request MUST carry an idempotencyKey; a retry with the same key replaces the artifact set stored by the earlier attempt instead of adding a second one.",
+        "rationale": "A dropped response must not leave two stored photo sets for one inquiry."
+      }
+    },
+    {
+      "id": "REQ-002-046",
+      "type": "Rule",
+      "owner_fr": "FR-002",
+      "title": "Photos staged at capture and promoted at submit; staged files outside retention",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Photos MUST be held in staging from capture until submit, when the engine promotes them under anonymizedPatientId. Staged photos are removed when the 7-day draft expires and are outside the REQ-SYS-002 retention rule; only promoted artifacts are retained.",
+        "rationale": "The patient captures before the engine stores anything, so the files need a holding place. A draft that is never submitted must not leave files for ten years."
+      }
+    },
+    {
+      "id": "REQ-002-047",
+      "type": "Rule",
+      "owner_fr": "FR-002",
+      "title": "Media-only call for FR-011 and FR-037 with no responses or templateVersion",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Engine MUST offer a media-only validation and storage call for FR-011 and FR-037: it takes anonymizedPatientId and headScanPhotoSet with no responses or templateVersion, applies the limits of REQ-002-032 to REQ-002-036, and returns scanRef and the per-photo results.",
+        "rationale": "Aftercare and the scan-only flow store a head scan without a questionnaire. Whether the scan is optional or needs at least one photo is set by FR-011 and FR-037."
+      }
+    },
+    {
+      "id": "REQ-002-048",
+      "type": "Rule",
+      "owner_fr": "FR-002",
+      "title": "Provider copy of the media has metadata stripped; face and free text are a documented exception to REQ-SYS-001",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Providers MUST receive a transformed copy of the head scan photos with device and location metadata stripped; the original stays unmodified for the patient and Admin. A visible face in the photos and the free-text answers are a documented exception to REQ-SYS-001: providers may see them before payment.",
+        "rationale": "Owner default 75: the face and free text are clinically needed to quote, so they are shown unblurred and unfiltered. Other options were blurring or cropping the face, or holding the front view until booking. Confirmation by the owner is requested."
+      }
+    },
+    {
+      "id": "REQ-002-049",
+      "type": "Rule",
+      "owner_fr": "FR-002",
+      "title": "Provider media access by a signed link scoped to the distribution",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Provider access to the media MUST use a time-limited signed link scoped to the providers the inquiry was distributed to; the link is withdrawn when the inquiry is cancelled or the provider leaves the distribution.",
+        "rationale": "A stored URI must not be a permanent public address."
+      }
+    },
+    {
+      "id": "REQ-002-050",
+      "type": "Rule",
+      "owner_fr": "FR-002",
+      "title": "Engine media check is authoritative; device check is advisory",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The engine check MUST be authoritative. The device check at capture is advisory and uses the same FR-026 quality thresholds; when the engine rejects the media, FR-003 returns the patient to the capture screen.",
+        "rationale": "A modified or older app cannot be trusted to enforce the limits."
       }
     },
     {
@@ -104587,9 +104731,9 @@
       "id": "STP-002-001",
       "type": "Step",
       "owner_fr": "FR-002",
-      "title": "FR-003 submits questionnaire responses (with templateVersion) and head scan media metadata",
+      "title": "FR-003 submits the idempotency key, template set and version, questionnaire responses and the head scan photo set",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Workflow 1 step 1"
       }
@@ -104598,9 +104742,9 @@
       "id": "STP-002-003",
       "type": "Step",
       "owner_fr": "FR-002",
-      "title": "Engine computes severity alerts and risk tags from the configured rules",
+      "title": "Engine derives the risk tags and the alert tier from the severity flags of the version named in the request",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 1 step 3"
       }
@@ -104609,9 +104753,9 @@
       "id": "STP-002-004",
       "type": "Step",
       "owner_fr": "FR-002",
-      "title": "Engine persists the head scan media under the anonymized patient identifier and stores it",
+      "title": "Engine promotes the staged photos under the anonymized patient identifier and persists the processing result",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 1 step 4"
       }
@@ -104620,9 +104764,9 @@
       "id": "STP-002-005",
       "type": "Step",
       "owner_fr": "FR-002",
-      "title": "Engine returns the normalized intake payload, alert tags and media URIs to FR-003",
+      "title": "Engine returns the normalized intake payload, alert tags and per-photo media results to FR-003",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Workflow 1 step 5"
       }
@@ -104631,9 +104775,9 @@
       "id": "STP-002-007",
       "type": "Step",
       "owner_fr": "FR-002",
-      "title": "Engine returns structured error codes with remediation guidance",
+      "title": "Engine writes an audit entry with the rejection reason and returns structured error codes with per-photo detail and remediation guidance",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A1 step 2"
       }
@@ -104642,9 +104786,9 @@
       "id": "STP-002-008",
       "type": "Step",
       "owner_fr": "FR-002",
-      "title": "No artifacts are persisted; the caller (FR-003) receives the error and can retry",
+      "title": "No artifacts are persisted; the caller (FR-003) receives the error and returns the patient to capture",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A1 step 3"
       }
@@ -104666,7 +104810,7 @@
       "owner_fr": "FR-002",
       "title": "Engine accepts the submission on the older version",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A2 step 3"
       }
@@ -104675,33 +104819,66 @@
       "id": "STP-002-012",
       "type": "Step",
       "owner_fr": "FR-002",
-      "title": "FR-003 retrieves the engine-normalized payload and media URIs",
+      "title": "FR-003 reads the stored processing result by processingId",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 2 step 1"
-      }
-    },
-    {
-      "id": "STP-002-013",
-      "type": "Step",
-      "owner_fr": "FR-002",
-      "title": "FR-003 distributes the payload and media to providers",
-      "status": "active",
-      "version": 1,
-      "attrs": {
-        "prd_ref": "Workflow 2 step 2"
       }
     },
     {
       "id": "STP-002-014",
       "type": "Step",
       "owner_fr": "FR-002",
-      "title": "Provider consumes the read-only normalized payload and media",
+      "title": "Provider consumes the read-only normalized payload and the provider copy of the media through a signed link",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Workflow 2 step 3"
+      }
+    },
+    {
+      "id": "STP-002-022",
+      "type": "Step",
+      "owner_fr": "FR-002",
+      "title": "Engine writes an audit entry with the rejection reason and returns structured error codes for a missing required answer or an unusable template version",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A3 step 1"
+      }
+    },
+    {
+      "id": "STP-002-023",
+      "type": "Step",
+      "owner_fr": "FR-002",
+      "title": "No artifacts are persisted; the caller (FR-003) returns the patient to the questionnaire",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A3 step 2"
+      }
+    },
+    {
+      "id": "STP-002-024",
+      "type": "Step",
+      "owner_fr": "FR-002",
+      "title": "FR-003 sends the template set, version and completed answers to the derive-only call",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 4 step 1"
+      }
+    },
+    {
+      "id": "STP-002-025",
+      "type": "Step",
+      "owner_fr": "FR-002",
+      "title": "Engine validates the answers, derives the risk tags and the alert tier and returns them; nothing is persisted",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Workflow 4 step 2"
       }
     },
     {
@@ -139547,19 +139724,19 @@
       "calculated_by": null
     },
     {
-      "id": "ENT-intake-processing-request.media",
+      "id": "ENT-intake-processing-request.head_scan_photo_set",
       "entity_id": "ENT-intake-processing-request",
-      "name": "media",
-      "data_type": "json",
+      "name": "head_scan_photo_set",
+      "data_type": "media[]",
       "required": true,
       "calculated_by": null
     },
     {
-      "id": "ENT-intake-processing-request.media_metadata",
+      "id": "ENT-intake-processing-request.idempotency_key",
       "entity_id": "ENT-intake-processing-request",
-      "name": "media_metadata",
-      "data_type": "json",
-      "required": false,
+      "name": "idempotency_key",
+      "data_type": "text",
+      "required": true,
       "calculated_by": null
     },
     {
@@ -139583,6 +139760,14 @@
       "entity_id": "ENT-intake-processing-request",
       "name": "responses",
       "data_type": "json",
+      "required": true,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-intake-processing-request.template_set_id",
+      "entity_id": "ENT-intake-processing-request",
+      "name": "template_set_id",
+      "data_type": "text",
       "required": true,
       "calculated_by": null
     },
@@ -139611,14 +139796,6 @@
       "calculated_by": null
     },
     {
-      "id": "ENT-intake-processing-result.media_ref",
-      "entity_id": "ENT-intake-processing-result",
-      "name": "media_ref",
-      "data_type": "id",
-      "required": false,
-      "calculated_by": null
-    },
-    {
       "id": "ENT-intake-processing-result.normalized_payload",
       "entity_id": "ENT-intake-processing-result",
       "name": "normalized_payload",
@@ -139643,9 +139820,17 @@
       "calculated_by": "REQ-002-007"
     },
     {
-      "id": "ENT-intake-processing-result.ruleset_version",
+      "id": "ENT-intake-processing-result.scan_ref",
       "entity_id": "ENT-intake-processing-result",
-      "name": "ruleset_version",
+      "name": "scan_ref",
+      "data_type": "id",
+      "required": true,
+      "calculated_by": "REQ-002-003"
+    },
+    {
+      "id": "ENT-intake-processing-result.template_set_id",
+      "entity_id": "ENT-intake-processing-result",
+      "name": "template_set_id",
       "data_type": "text",
       "required": true,
       "calculated_by": "REQ-002-005"
@@ -140353,6 +140538,14 @@
       "data_type": "json",
       "required": false,
       "calculated_by": null
+    },
+    {
+      "id": "ENT-media-artifact.quality_score",
+      "entity_id": "ENT-media-artifact",
+      "name": "quality_score",
+      "data_type": "int",
+      "required": true,
+      "calculated_by": "REQ-002-034"
     },
     {
       "id": "ENT-media-artifact.stored_uri",
@@ -165367,7 +165560,13 @@
       "attrs": {}
     },
     {
-      "from_id": "ENT-intake-processing-result.ruleset_version",
+      "from_id": "ENT-intake-processing-result.scan_ref",
+      "verb": "calculated by",
+      "to_id": "REQ-002-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-intake-processing-result.template_set_id",
       "verb": "calculated by",
       "to_id": "REQ-002-005",
       "attrs": {}
@@ -165496,6 +165695,12 @@
       "from_id": "ENT-media-artifact",
       "verb": "decided by",
       "to_id": "SRC-PRD-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "ENT-media-artifact.quality_score",
+      "verb": "calculated by",
+      "to_id": "REQ-002-034",
       "attrs": {}
     },
     {
@@ -167899,6 +168104,12 @@
       "attrs": {}
     },
     {
+      "from_id": "FLW-002-derive-only",
+      "verb": "starts at",
+      "to_id": "STP-002-024",
+      "attrs": {}
+    },
+    {
       "from_id": "FLW-002-distribution-consumption",
       "verb": "starts at",
       "to_id": "STP-002-012",
@@ -167914,6 +168125,12 @@
       "from_id": "FLW-002-media-validation-fails",
       "verb": "starts at",
       "to_id": "STP-002-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-002-questionnaire-rejected",
+      "verb": "starts at",
+      "to_id": "STP-002-022",
       "attrs": {}
     },
     {
@@ -170423,7 +170640,7 @@
       "verb": "active in",
       "to_id": "STG-main-01-inquiry",
       "attrs": {
-        "rules": 41
+        "rules": 49
       },
       "derived": true
     },
@@ -170435,6 +170652,30 @@
         "rules": 1
       },
       "derived": true
+    },
+    {
+      "from_id": "FR-002",
+      "verb": "references",
+      "to_id": "REQ-025-049",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-002",
+      "verb": "references",
+      "to_id": "REQ-025-050",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-002",
+      "verb": "references",
+      "to_id": "REQ-025-052",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-002",
+      "verb": "references",
+      "to_id": "REQ-025-064",
+      "attrs": {}
     },
     {
       "from_id": "FR-002",
@@ -179729,6 +179970,12 @@
     },
     {
       "from_id": "REQ-002-001",
+      "verb": "applies to",
+      "to_id": "ENT-intake-processing-request.template_set_id",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-001",
       "verb": "decided by",
       "to_id": "SRC-PRD-002",
       "attrs": {}
@@ -179797,6 +180044,12 @@
       "from_id": "REQ-002-005",
       "verb": "applies to",
       "to_id": "ENT-intake-processing-result",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-005",
+      "verb": "applies to",
+      "to_id": "ENT-intake-processing-result.template_set_id",
       "attrs": {}
     },
     {
@@ -180240,7 +180493,7 @@
     {
       "from_id": "REQ-002-031",
       "verb": "applies to",
-      "to_id": "ENT-intake-processing-request.media",
+      "to_id": "ENT-intake-processing-request.head_scan_photo_set",
       "attrs": {}
     },
     {
@@ -180258,19 +180511,13 @@
     {
       "from_id": "REQ-002-032",
       "verb": "applies to",
-      "to_id": "ENT-intake-processing-request.media",
+      "to_id": "ENT-intake-processing-request.head_scan_photo_set",
       "attrs": {}
     },
     {
       "from_id": "REQ-002-032",
       "verb": "decided by",
       "to_id": "SRC-PRD-002",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-002-032",
-      "verb": "governed by",
-      "to_id": "SET-head-scan-required-views",
       "attrs": {}
     },
     {
@@ -180282,25 +180529,13 @@
     {
       "from_id": "REQ-002-033",
       "verb": "applies to",
-      "to_id": "ENT-intake-processing-request.media",
+      "to_id": "ENT-intake-processing-request.head_scan_photo_set",
       "attrs": {}
     },
     {
       "from_id": "REQ-002-033",
       "verb": "decided by",
       "to_id": "SRC-PRD-002",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-002-033",
-      "verb": "governed by",
-      "to_id": "SET-head-scan-max-file-size",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-002-033",
-      "verb": "governed by",
-      "to_id": "SET-head-scan-max-total-size",
       "attrs": {}
     },
     {
@@ -180312,7 +180547,7 @@
     {
       "from_id": "REQ-002-034",
       "verb": "applies to",
-      "to_id": "ENT-intake-processing-request.media",
+      "to_id": "ENT-intake-processing-request.head_scan_photo_set",
       "attrs": {}
     },
     {
@@ -180336,7 +180571,7 @@
     {
       "from_id": "REQ-002-035",
       "verb": "applies to",
-      "to_id": "ENT-intake-processing-request.media",
+      "to_id": "ENT-intake-processing-request",
       "attrs": {}
     },
     {
@@ -180384,6 +180619,12 @@
     {
       "from_id": "REQ-002-037",
       "verb": "applies to",
+      "to_id": "ENT-intake-processing-request.template_set_id",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-037",
+      "verb": "applies to",
       "to_id": "ENT-intake-processing-request.template_version",
       "attrs": {}
     },
@@ -180402,7 +180643,7 @@
     {
       "from_id": "REQ-002-038",
       "verb": "applies to",
-      "to_id": "ENT-intake-processing-request.media",
+      "to_id": "ENT-intake-processing-request.head_scan_photo_set",
       "attrs": {}
     },
     {
@@ -180456,6 +180697,12 @@
     {
       "from_id": "REQ-002-041",
       "verb": "applies to",
+      "to_id": "ENT-intake-processing-request.template_set_id",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-041",
+      "verb": "applies to",
       "to_id": "ENT-intake-processing-request.template_version",
       "attrs": {}
     },
@@ -180479,6 +180726,174 @@
     },
     {
       "from_id": "REQ-002-042",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-043",
+      "verb": "applies at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-043",
+      "verb": "applies to",
+      "to_id": "ENT-intake-processing-result",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-043",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-044",
+      "verb": "applies at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-044",
+      "verb": "applies to",
+      "to_id": "ENT-intake-processing-request.responses",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-044",
+      "verb": "applies to",
+      "to_id": "ENT-risk-tag",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-044",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-045",
+      "verb": "applies at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-045",
+      "verb": "applies to",
+      "to_id": "ENT-intake-processing-request.idempotency_key",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-045",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-046",
+      "verb": "applies at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-046",
+      "verb": "applies to",
+      "to_id": "ENT-media-artifact",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-046",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-047",
+      "verb": "applies at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-047",
+      "verb": "applies to",
+      "to_id": "ENT-intake-processing-request.head_scan_photo_set",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-047",
+      "verb": "applies to",
+      "to_id": "ENT-media-artifact",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-047",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-048",
+      "verb": "applies at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-048",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-048",
+      "verb": "applies to",
+      "to_id": "ENT-media-artifact",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-048",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-049",
+      "verb": "applies at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-049",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-049",
+      "verb": "applies to",
+      "to_id": "ENT-media-artifact",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-049",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-050",
+      "verb": "applies at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-050",
+      "verb": "applies to",
+      "to_id": "ENT-media-artifact",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-050",
       "verb": "decided by",
       "to_id": "SRC-PRD-002",
       "attrs": {}
@@ -349809,6 +350224,18 @@
     },
     {
       "from_id": "STP-002-001",
+      "verb": "applies",
+      "to_id": "REQ-002-045",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-001",
+      "verb": "applies",
+      "to_id": "REQ-002-050",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-001",
       "verb": "at",
       "to_id": "STG-main-01-inquiry",
       "attrs": {}
@@ -349823,12 +350250,47 @@
       "from_id": "STP-002-001",
       "verb": "next",
       "to_id": "STP-002-003",
-      "attrs": {}
+      "attrs": {
+        "label": "answers and photos pass the checks"
+      }
+    },
+    {
+      "from_id": "STP-002-001",
+      "verb": "next",
+      "to_id": "STP-002-007",
+      "attrs": {
+        "label": "a photo fails the format, count, size or quality check",
+        "condition": "REQ-002-036"
+      }
+    },
+    {
+      "from_id": "STP-002-001",
+      "verb": "next",
+      "to_id": "STP-002-010",
+      "attrs": {
+        "label": "version is a prior version of the set or of the prior Active set",
+        "condition": "REQ-002-037"
+      }
+    },
+    {
+      "from_id": "STP-002-001",
+      "verb": "next",
+      "to_id": "STP-002-022",
+      "attrs": {
+        "label": "required answer missing, version unknown or no Active set",
+        "condition": "REQ-002-001"
+      }
     },
     {
       "from_id": "STP-002-003",
       "verb": "applies",
       "to_id": "REQ-002-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-003",
+      "verb": "applies",
+      "to_id": "REQ-002-044",
       "attrs": {}
     },
     {
@@ -349865,6 +350327,24 @@
       "from_id": "STP-002-004",
       "verb": "applies",
       "to_id": "REQ-002-024",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-004",
+      "verb": "applies",
+      "to_id": "REQ-002-043",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-004",
+      "verb": "applies",
+      "to_id": "REQ-002-045",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-004",
+      "verb": "applies",
+      "to_id": "REQ-002-046",
       "attrs": {}
     },
     {
@@ -349948,6 +350428,12 @@
     {
       "from_id": "STP-002-007",
       "verb": "applies",
+      "to_id": "REQ-002-026",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-007",
+      "verb": "applies",
       "to_id": "REQ-002-033",
       "attrs": {}
     },
@@ -349991,6 +350477,12 @@
       "from_id": "STP-002-008",
       "verb": "applies",
       "to_id": "REQ-002-036",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-008",
+      "verb": "applies",
+      "to_id": "REQ-002-050",
       "attrs": {}
     },
     {
@@ -350060,55 +350552,37 @@
       "attrs": {}
     },
     {
-      "from_id": "STP-002-012",
-      "verb": "applies",
-      "to_id": "REQ-002-039",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-002-012",
-      "verb": "at",
-      "to_id": "STG-main-01-inquiry",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-002-012",
-      "verb": "done by",
-      "to_id": "ACT-system",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-002-012",
+      "from_id": "STP-002-011",
       "verb": "next",
-      "to_id": "STP-002-013",
+      "to_id": "STP-002-003",
       "attrs": {}
     },
     {
-      "from_id": "STP-002-013",
-      "verb": "applies",
-      "to_id": "REQ-002-016",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-002-013",
+      "from_id": "STP-002-012",
       "verb": "applies",
       "to_id": "REQ-002-039",
       "attrs": {}
     },
     {
-      "from_id": "STP-002-013",
+      "from_id": "STP-002-012",
+      "verb": "applies",
+      "to_id": "REQ-002-043",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-012",
       "verb": "at",
       "to_id": "STG-main-01-inquiry",
       "attrs": {}
     },
     {
-      "from_id": "STP-002-013",
+      "from_id": "STP-002-012",
       "verb": "done by",
       "to_id": "ACT-system",
       "attrs": {}
     },
     {
-      "from_id": "STP-002-013",
+      "from_id": "STP-002-012",
       "verb": "next",
       "to_id": "STP-002-014",
       "attrs": {}
@@ -350117,6 +350591,18 @@
       "from_id": "STP-002-014",
       "verb": "applies",
       "to_id": "REQ-002-016",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-014",
+      "verb": "applies",
+      "to_id": "REQ-002-048",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-014",
+      "verb": "applies",
+      "to_id": "REQ-002-049",
       "attrs": {}
     },
     {
@@ -350141,6 +350627,132 @@
       "from_id": "STP-002-014",
       "verb": "next",
       "to_id": "STP-003-027",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-022",
+      "verb": "applies",
+      "to_id": "REQ-002-001",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-022",
+      "verb": "applies",
+      "to_id": "REQ-002-013",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-022",
+      "verb": "applies",
+      "to_id": "REQ-002-026",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-022",
+      "verb": "applies",
+      "to_id": "REQ-002-036",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-022",
+      "verb": "applies",
+      "to_id": "REQ-002-037",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-022",
+      "verb": "at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-022",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-022",
+      "verb": "next",
+      "to_id": "STP-002-023",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-023",
+      "verb": "applies",
+      "to_id": "REQ-002-036",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-023",
+      "verb": "at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-023",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-023",
+      "verb": "next",
+      "to_id": "STP-003-009",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-024",
+      "verb": "applies",
+      "to_id": "REQ-002-044",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-024",
+      "verb": "at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-024",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-024",
+      "verb": "next",
+      "to_id": "STP-002-025",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-025",
+      "verb": "applies",
+      "to_id": "REQ-002-001",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-025",
+      "verb": "applies",
+      "to_id": "REQ-002-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-025",
+      "verb": "applies",
+      "to_id": "REQ-002-044",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-025",
+      "verb": "at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-002-025",
+      "verb": "done by",
+      "to_id": "ACT-system",
       "attrs": {}
     },
     {
@@ -429153,6 +429765,85 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-060331-ad58c287",
+      "at": "2026-11-24T06:03:31.407905+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-002 logic review pass 1: the engine persists the processing result by processingId and is the only producer of risk tags (derive-only call added); one version stamp (ruleset stamp removed); the Active-for-Inquiry set replaces latest published; head scan count, size, formats and views fixed by the product (owner default 74); request carries the photo set only, response is per photo with a quality score and scanRef; staging, idempotency and a wider error-code list with an audit row on rejection; provider copy with metadata stripped, signed link, and the documented REQ-SYS-001 exception for face and free text (owner default 75); media-only call for FR-011 and FR-037; flow wiring repaired around the retired steps.",
+      "source_id": null,
+      "nodes_added": [
+        "ENT-intake-processing-request.head_scan_photo_set",
+        "ENT-intake-processing-request.idempotency_key",
+        "ENT-intake-processing-request.template_set_id",
+        "ENT-intake-processing-result.scan_ref",
+        "ENT-intake-processing-result.template_set_id",
+        "ENT-media-artifact.quality_score",
+        "FLW-002-derive-only",
+        "FLW-002-questionnaire-rejected",
+        "REQ-002-043",
+        "REQ-002-044",
+        "REQ-002-045",
+        "REQ-002-046",
+        "REQ-002-047",
+        "REQ-002-048",
+        "REQ-002-049",
+        "REQ-002-050",
+        "STP-002-022",
+        "STP-002-023",
+        "STP-002-024",
+        "STP-002-025"
+      ],
+      "nodes_updated": [
+        "ENT-intake-audit-entry.reason",
+        "ENT-intake-processing-request.media",
+        "ENT-intake-processing-request.media_metadata",
+        "ENT-intake-processing-request.template_version",
+        "ENT-intake-processing-result.media_ref",
+        "ENT-intake-processing-result.ruleset_version",
+        "ENT-intake-processing-result.template_version_used",
+        "ENT-media-artifact.metadata",
+        "FR-002",
+        "REQ-002-001",
+        "REQ-002-002",
+        "REQ-002-004",
+        "REQ-002-005",
+        "REQ-002-006",
+        "REQ-002-008",
+        "REQ-002-012",
+        "REQ-002-013",
+        "REQ-002-016",
+        "REQ-002-020",
+        "REQ-002-022",
+        "REQ-002-026",
+        "REQ-002-027",
+        "REQ-002-031",
+        "REQ-002-032",
+        "REQ-002-033",
+        "REQ-002-034",
+        "REQ-002-035",
+        "REQ-002-036",
+        "REQ-002-037",
+        "REQ-002-038",
+        "REQ-002-039",
+        "REQ-002-041",
+        "STP-002-001",
+        "STP-002-002",
+        "STP-002-003",
+        "STP-002-004",
+        "STP-002-005",
+        "STP-002-006",
+        "STP-002-007",
+        "STP-002-008",
+        "STP-002-009",
+        "STP-002-011",
+        "STP-002-012",
+        "STP-002-013",
+        "STP-002-014"
+      ],
+      "edges_added": 85,
+      "edges_removed": 18,
+      "rows": 311
+    },
     {
       "id": "cs-20261124-050932-888ee214",
       "at": "2026-11-24T05:09:32.174133+00:00",

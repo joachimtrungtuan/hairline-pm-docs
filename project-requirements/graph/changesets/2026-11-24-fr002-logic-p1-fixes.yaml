@@ -1,0 +1,759 @@
+# Operations ordered so nodes and fields are created before the edges that use them.
+reason: 'FR-002 logic review pass 1: the engine persists the processing result by processingId and is the only producer of risk tags (derive-only call added); one version stamp (ruleset stamp removed); the Active-for-Inquiry set replaces latest published; head scan count, size, formats and views fixed by the product (owner default 74); request carries the photo set only, response is per photo with a quality score and scanRef; staging, idempotency and a wider error-code list with an audit row on rejection; provider copy with metadata stripped, signed link, and the documented REQ-SYS-001 exception for face and free text (owner default 75); media-only call for FR-011 and FR-037; flow wiring repaired around the retired steps.'
+by: docs-manager
+operations:
+- op: add_node
+  id: REQ-002-043
+  type: Rule
+  owner_fr: FR-002
+  title: Processing result persisted by processingId and read back by it
+  attrs:
+    statement: Engine MUST persist the processing result (normalized payload, alerts, per-photo media results, scanRef and audit fields) keyed by processingId and return it on a read by processingId. Retention follows REQ-SYS-002.
+    rationale: FR-003 reads the result by processingId when it distributes the inquiry, so FR-002 keeps it. The earlier wording kept only the media; the engine is stateless between calls only in that it holds no session state. FR-003 stores processingId on the inquiry.
+- op: add_node
+  id: REQ-002-044
+  type: Rule
+  owner_fr: FR-002
+  title: Derive-only call returns the risk tags and persists nothing
+  attrs:
+    statement: 'Engine MUST offer a derive-only call: FR-003 sends templateSetId, templateVersion and the completed answers, the engine validates them, returns the risk tags and the alert tier, and persists nothing (a missing required answer is returned as ANSWER_REQUIRED_MISSING). Submit runs the same derivation.'
+    rationale: FR-002 is the only producer of risk tags; FR-003 calls this when the patient completes the questionnaire so the tags it shows are the ones submit will derive.
+- op: add_node
+  id: REQ-002-045
+  type: Rule
+  owner_fr: FR-002
+  title: Submit retry with the same idempotency key replaces the earlier artifact set
+  attrs:
+    statement: A submit request MUST carry an idempotencyKey; a retry with the same key replaces the artifact set stored by the earlier attempt instead of adding a second one.
+    rationale: A dropped response must not leave two stored photo sets for one inquiry.
+- op: add_node
+  id: REQ-002-046
+  type: Rule
+  owner_fr: FR-002
+  title: Photos staged at capture and promoted at submit; staged files outside retention
+  attrs:
+    statement: Photos MUST be held in staging from capture until submit, when the engine promotes them under anonymizedPatientId. Staged photos are removed when the 7-day draft expires and are outside the REQ-SYS-002 retention rule; only promoted artifacts are retained.
+    rationale: The patient captures before the engine stores anything, so the files need a holding place. A draft that is never submitted must not leave files for ten years.
+- op: add_node
+  id: REQ-002-047
+  type: Rule
+  owner_fr: FR-002
+  title: Media-only call for FR-011 and FR-037 with no responses or templateVersion
+  attrs:
+    statement: 'Engine MUST offer a media-only validation and storage call for FR-011 and FR-037: it takes anonymizedPatientId and headScanPhotoSet with no responses or templateVersion, applies the limits of REQ-002-032 to REQ-002-036, and returns scanRef and the per-photo results.'
+    rationale: Aftercare and the scan-only flow store a head scan without a questionnaire. Whether the scan is optional or needs at least one photo is set by FR-011 and FR-037.
+- op: add_node
+  id: REQ-002-048
+  type: Rule
+  owner_fr: FR-002
+  title: Provider copy of the media has metadata stripped; face and free text are a documented exception to REQ-SYS-001
+  attrs:
+    statement: 'Providers MUST receive a transformed copy of the head scan photos with device and location metadata stripped; the original stays unmodified for the patient and Admin. A visible face in the photos and the free-text answers are a documented exception to REQ-SYS-001: providers may see them before payment.'
+    rationale: 'Owner default 75: the face and free text are clinically needed to quote, so they are shown unblurred and unfiltered. Other options were blurring or cropping the face, or holding the front view until booking. Confirmation by the owner is requested.'
+- op: add_node
+  id: REQ-002-049
+  type: Rule
+  owner_fr: FR-002
+  title: Provider media access by a signed link scoped to the distribution
+  attrs:
+    statement: Provider access to the media MUST use a time-limited signed link scoped to the providers the inquiry was distributed to; the link is withdrawn when the inquiry is cancelled or the provider leaves the distribution.
+    rationale: A stored URI must not be a permanent public address.
+- op: add_node
+  id: REQ-002-050
+  type: Rule
+  owner_fr: FR-002
+  title: Engine media check is authoritative; device check is advisory
+  attrs:
+    statement: The engine check MUST be authoritative. The device check at capture is advisory and uses the same FR-026 quality thresholds; when the engine rejects the media, FR-003 returns the patient to the capture screen.
+    rationale: A modified or older app cannot be trusted to enforce the limits.
+- op: add_node
+  id: STP-002-022
+  type: Step
+  owner_fr: FR-002
+  title: Engine writes an audit entry with the rejection reason and returns structured error codes for a missing required answer or an unusable template version
+  attrs:
+    prd_ref: Alternative Flow A3 step 1
+- op: add_node
+  id: STP-002-023
+  type: Step
+  owner_fr: FR-002
+  title: No artifacts are persisted; the caller (FR-003) returns the patient to the questionnaire
+  attrs:
+    prd_ref: Alternative Flow A3 step 2
+- op: add_node
+  id: STP-002-024
+  type: Step
+  owner_fr: FR-002
+  title: FR-003 sends the template set, version and completed answers to the derive-only call
+  attrs:
+    prd_ref: Workflow 4 step 1
+- op: add_node
+  id: STP-002-025
+  type: Step
+  owner_fr: FR-002
+  title: Engine validates the answers, derives the risk tags and the alert tier and returns them; nothing is persisted
+  attrs:
+    prd_ref: Workflow 4 step 2
+- op: add_node
+  id: FLW-002-questionnaire-rejected
+  type: Flow
+  title: Questionnaire or template version rejected
+  attrs:
+    kind: alternative
+    description: Questionnaire or template version rejected
+    prd_ref: Alternative Flows A3
+- op: add_node
+  id: FLW-002-derive-only
+  type: Flow
+  title: Derive only (questionnaire completed)
+  attrs:
+    kind: main
+    description: 'Workflow 4: Derive Only (Questionnaire Completed)'
+    prd_ref: Workflow 4
+- op: add_field
+  id: ENT-intake-processing-request.idempotency_key
+  entity_id: ENT-intake-processing-request
+  name: idempotency_key
+  data_type: text
+  title: Idempotency key
+  owner_fr: FR-002
+  required: true
+  attrs:
+    description: 'idempotencyKey (string): a retry with the same key replaces the artifact set stored by the earlier attempt (REQ-002-045).'
+- op: add_field
+  id: ENT-intake-processing-request.template_set_id
+  entity_id: ENT-intake-processing-request
+  name: template_set_id
+  data_type: text
+  title: Template set
+  owner_fr: FR-002
+  required: true
+  attrs:
+    description: 'templateSetId (string): the FR-025 questionnaire set the patient answered (REQ-002-037, REQ-002-041).'
+- op: add_field
+  id: ENT-intake-processing-request.head_scan_photo_set
+  entity_id: ENT-intake-processing-request
+  name: head_scan_photo_set
+  data_type: media[]
+  title: Head scan photo set
+  owner_fr: FR-002
+  required: true
+  attrs:
+    description: 'headScanPhotoSet: required list of up to 5 photo items { stagedRef, viewHint? } (REQ-002-038). The V1 request carries no other media; visual evidence is validated and stored by FR-003.'
+- op: add_field
+  id: ENT-intake-processing-result.template_set_id
+  entity_id: ENT-intake-processing-result
+  name: template_set_id
+  data_type: text
+  title: Template set
+  owner_fr: FR-002
+  required: true
+  calculated_by: REQ-002-005
+  attrs:
+    description: 'templateSetId: the FR-025 set the processed version belongs to; stamped with templateVersionUsed (REQ-002-005).'
+- op: add_field
+  id: ENT-intake-processing-result.scan_ref
+  entity_id: ENT-intake-processing-result
+  name: scan_ref
+  data_type: id
+  title: Scan reference
+  owner_fr: FR-002
+  required: true
+  calculated_by: REQ-002-003
+  attrs:
+    description: 'scanRef: the reference FR-003 reads to reach the stored head scan photo set (one ENT-media-artifact per photo).'
+- op: add_field
+  id: ENT-media-artifact.quality_score
+  entity_id: ENT-media-artifact
+  name: quality_score
+  data_type: int
+  title: Quality score
+  owner_fr: FR-002
+  required: true
+  calculated_by: REQ-002-034
+  attrs:
+    description: 'qualityScore, 0 to 100: the value the FR-026 quality threshold check used for this photo (REQ-002-034). Returned per photo.'
+- op: update_field
+  id: ENT-intake-processing-result.ruleset_version
+  calculated_by: null
+- op: update_node
+  id: REQ-002-001
+  attrs:
+    statement: Engine MUST validate responses against the FR-025 template requirements of the version named in the request; a missing required answer is rejected with ANSWER_REQUIRED_MISSING naming the question.
+    rationale: Core Requirements. Validation uses the version in the request, not the latest published one (REQ-002-037, REQ-002-041).
+- op: update_node
+  id: REQ-002-002
+  title: Derive risk tags deterministically; the engine is the only producer
+  attrs:
+    statement: 'Engine MUST derive risk/alert tags deterministically from the severity flags FR-025 sets on the answers of the version named in the request. It is the only producer of risk tags: one tag per Yes answer, and the highest severity among them sets the tier (Critical is Red, Standard is Amber; FR-025 REQ-025-064). When every answer is No it returns one tag with severity none (Green).'
+    rationale: Core Requirements. FR-003 and FR-025 point here instead of deriving tags themselves. The tier reading (one tag per Yes answer, highest severity wins) follows REQ-025-064.
+- op: update_node
+  id: REQ-002-004
+  title: Return normalized payload, alerts, per-photo media results, scanRef and audit fields
+  attrs:
+    rationale: 'Core Requirements. Response contract in Screen Specifications: processingId, normalized, alerts, scanRef, one media item per photo, audit.'
+- op: update_node
+  id: REQ-002-005
+  title: 'Stamp responses with one version: templateVersionUsed and the set identifier'
+  attrs:
+    statement: Responses MUST be stamped with templateVersionUsed and the set identifier (templateSetId); there is no separate ruleset stamp. Validation and alert derivation use the version named in the request, and FR-003 questionnaireVersion is a copy of templateVersionUsed.
+    rationale: Data Requirements. The earlier second stamp (rulesetVersion) named the same FR-025 set version, so it is removed.
+- op: update_node
+  id: REQ-002-006
+  title: Media artifacts store validation status and quality score
+  attrs:
+    statement: Media artifacts MUST store validationStatus and qualityScore (0 to 100).
+    rationale: Data Requirements. The score is the value the FR-026 quality threshold check used (REQ-002-034).
+- op: update_node
+  id: REQ-002-008
+  attrs:
+    statement: No PII in the structured fields of engine responses; anonymized identifiers only. Free-text answers and a visible face in the head scan photos are the documented exception in REQ-002-048.
+    rationale: Security and Privacy Requirements. Narrowed to structured fields because the free-text answers cannot be filtered (owner default 75).
+- op: update_node
+  id: REQ-002-012
+  title: Expose the submit, derive-only, read and media-only calls
+  attrs:
+    statement: Engine MUST expose the submit, derive-only and read calls consumed by FR-003, and the media-only call consumed by FR-011 and FR-037.
+    rationale: Integration Requirements. Entry point 1. Detail in REQ-002-043, REQ-002-044 and REQ-002-047.
+- op: update_node
+  id: REQ-002-013
+  attrs:
+    statement: Engine MUST return structured error codes for validation failures (the full list is in REQ-002-036).
+- op: update_node
+  id: REQ-002-016
+  title: Providers consume processed artifacts read-only (normalized questionnaire, alerts, provider copy of the media)
+  attrs:
+    statement: 'Providers consume read-only processed artifacts: the normalized questionnaire, the alerts and the provider copy of the media (REQ-002-048).'
+    rationale: 'Provider Platform breakdown. Workflow 2: FR-003 reads the stored result by processingId, distributes it, and providers consume it read-only.'
+- op: update_node
+  id: REQ-002-020
+  title: Admin configures the quality thresholds and video duration limits; photo count, size, formats and views are fixed
+  attrs:
+    statement: Admin configures the head scan quality thresholds and the video duration limits in FR-026. The head scan photo count, per-file size, formats and views are fixed by the product (REQ-002-032, REQ-002-033) and are not admin settings. Alert severity is driven by the severity flags admins set on questionnaire answers in FR-025; there is no separate alert threshold setting.
+    rationale: 'Owner default 74: the product fixes the photo count, size, formats and views. The other option was to keep them editable in FR-026.'
+- op: update_node
+  id: REQ-002-022
+  title: Template versioning and publishing owned by FR-025; engine consumes the set designated Active for Inquiry
+  attrs:
+    statement: Template versioning and publishing are managed through FR-025. The engine consumes the version of the set currently designated Active for Inquiry (FR-025 REQ-025-049, REQ-025-050).
+    rationale: Admin Platform breakdown. FR-025 owns the designation; the engine does not pick a set itself.
+- op: update_node
+  id: REQ-002-026
+  title: Engine operations auditable with who, when and the rejection reason on rejected attempts
+  attrs:
+    statement: Engine operations are fully auditable (timestamps, actor/service, the rejection reason on rejected attempts).
+    rationale: General Rules 1. The audit reason field is written when an attempt is rejected (REQ-002-036); no override exists in this FR.
+- op: update_node
+  id: REQ-002-027
+  title: Engine keeps no session state; the processing result and media are persisted; draft UX in FR-003
+  attrs:
+    statement: Draft/submit/edit UX is defined in FR-003; the engine keeps no session state between calls, and the processing result and media are persisted (REQ-002-043).
+    rationale: General Rules 2. The earlier wording said persisted artifacts only, which left the result without a home.
+- op: update_node
+  id: REQ-002-032
+  attrs:
+    statement: The head scan offers five views (front, top, left, right, back). At least one photo is required; no single view is compulsory. The product fixes these views; they are not an admin setting.
+    rationale: Media Rules 2. Error code MEDIA_NO_PHOTO when no head scan photo is supplied. Owner default 74.
+- op: update_node
+  id: REQ-002-033
+  title: Allowed formats and fixed photo limits enforced
+  attrs:
+    statement: 'Allowed formats: JPG/PNG. A head scan holds up to 5 photos of at most 2 MB each, with no total-size limit, counted on its own (separate from the FR-003 visual evidence limit, which has its own count). The product fixes the count, size and formats; they are not admin settings.'
+    rationale: Media Rules 3. Error codes MEDIA_FORMAT_NOT_ALLOWED, MEDIA_COUNT_EXCEEDED and MEDIA_SIZE_EXCEEDED (REQ-002-036). Owner default 74.
+- op: update_node
+  id: REQ-002-034
+  attrs:
+    statement: Basic quality checks (e.g., brightness/blur) MUST be enforced against the FR-026 quality thresholds and actionable guidance returned on failure. The quality score is 0 to 100 and is returned per photo.
+    rationale: Media Rules 4. Error code MEDIA_QUALITY_INSUFFICIENT with retake instructions. The device check uses the same thresholds (REQ-002-050).
+- op: update_node
+  id: REQ-002-035
+  title: Video is a future form and is not in the V1 contract; duration limits apply if it is added
+  attrs:
+    statement: headVideo is a future form and is not part of the V1 contract; if it is added, the FR-026 duration limits (min/max) apply.
+    rationale: Media Rules 5. Kept as a future note; the V1 request carries the photo set only (REQ-002-038).
+- op: update_node
+  id: REQ-002-036
+  title: Failed validation returns error codes with per-photo detail, stores nothing and writes an audit entry
+  attrs:
+    statement: 'On validation failure, engine returns structured error codes with per-photo detail and guidance to the caller (FR-003); no artifacts are persisted, and an audit entry records the rejection reason. Error codes cover every enforced rule: MEDIA_FORMAT_NOT_ALLOWED, MEDIA_COUNT_EXCEEDED, MEDIA_SIZE_EXCEEDED, MEDIA_QUALITY_INSUFFICIENT, MEDIA_NO_PHOTO, TEMPLATE_VERSION_UNKNOWN, NO_ACTIVE_TEMPLATE_SET, ANSWER_REQUIRED_MISSING.'
+    rationale: Media Rules 6 and Alternative Flows A1 and A3. MEDIA_NO_PHOTO replaces the earlier view-set code, which named a rule that does not exist. The audit reason field holds the rejection reason.
+- op: update_node
+  id: REQ-002-037
+  title: Prior template version or prior Active set accepted and recorded; unknown version rejected
+  attrs:
+    statement: Engine accepts a submission made on a prior version of the same set, or on the prior Active set, and records the version used (templateVersionUsed) in the audit log; validation and alert derivation use that version. An unknown or never-published version is rejected with TEMPLATE_VERSION_UNKNOWN, and a state with no set designated Active for Inquiry (FR-025 REQ-025-052) is rejected with NO_ACTIVE_TEMPLATE_SET.
+    rationale: Alternative Flows A2 and A3. The request names the set and the version, so the engine can tell a prior version from an unknown one.
+- op: update_node
+  id: REQ-002-038
+  title: Request carries the head scan photo set only
+  attrs:
+    statement: The V1 request carries headScanPhotoSet (required, a list of up to 5 photo items) as its only media. Visual evidence is validated and stored by FR-003 and does not pass through FR-002. headVideo is future and is not part of the V1 contract (REQ-002-035). The response returns one item per photo (storedUri, validationStatus, qualityScore) and the scanRef FR-003 reads.
+    rationale: Integration contract. The earlier list of four media forms did not match what FR-003 sends or what FR-002 stores.
+- op: update_node
+  id: REQ-002-039
+  attrs:
+    statement: FR-003 reads the stored processing result by processingId for distribution (REQ-002-043).
+    rationale: 'Workflow 2 trigger and steps 1-2: FR-003 reads the stored result and distributes to providers.'
+- op: update_node
+  id: REQ-002-041
+  title: New inquiries use the version of the set currently designated Active for Inquiry
+  attrs:
+    statement: System keeps prior versions for existing inquiries; new inquiries use the version of the set currently designated Active for Inquiry (FR-025 REQ-025-049, REQ-025-050).
+    rationale: Workflow 3 outcome and Alternative Flow C1 (owned by FR-025). The earlier wording said the latest published version, which FR-025 does not use.
+- op: update_node
+  id: ENT-intake-processing-request.template_version
+  attrs:
+    description: 'templateVersion (string): the questionnaire template version the patient answered. A prior version of the set, or of the prior Active set, is accepted and recorded; an unknown or never-published version is rejected (REQ-002-037).'
+- op: update_node
+  id: ENT-intake-processing-result.template_version_used
+  attrs:
+    description: 'templateVersionUsed: the single configuration stamp, the template version actually applied. FR-003 questionnaireVersion is a copy of it (REQ-002-005).'
+- op: update_node
+  id: ENT-intake-audit-entry.reason
+  attrs:
+    description: Rejection reason, written when an attempt is rejected (REQ-002-036); empty on accepted attempts.
+- op: update_node
+  id: ENT-media-artifact.metadata
+  attrs:
+    description: Media metadata. The provider copy has device and location metadata stripped; the original is unmodified (REQ-002-048).
+- op: update_node
+  id: STP-002-001
+  title: FR-003 submits the idempotency key, template set and version, questionnaire responses and the head scan photo set
+- op: update_node
+  id: STP-002-003
+  title: Engine derives the risk tags and the alert tier from the severity flags of the version named in the request
+- op: update_node
+  id: STP-002-004
+  title: Engine promotes the staged photos under the anonymized patient identifier and persists the processing result
+- op: update_node
+  id: STP-002-005
+  title: Engine returns the normalized intake payload, alert tags and per-photo media results to FR-003
+- op: update_node
+  id: STP-002-007
+  title: Engine writes an audit entry with the rejection reason and returns structured error codes with per-photo detail and remediation guidance
+- op: update_node
+  id: STP-002-008
+  title: No artifacts are persisted; the caller (FR-003) receives the error and returns the patient to capture
+- op: update_node
+  id: STP-002-012
+  title: FR-003 reads the stored processing result by processingId
+- op: update_node
+  id: STP-002-014
+  title: Provider consumes the read-only normalized payload and the provider copy of the media through a signed link
+- op: remove_edge
+  from: REQ-002-032
+  verb: governed by
+  to: SET-head-scan-required-views
+- op: remove_edge
+  from: REQ-002-033
+  verb: governed by
+  to: SET-head-scan-max-file-size
+- op: remove_edge
+  from: REQ-002-033
+  verb: governed by
+  to: SET-head-scan-max-total-size
+- op: remove_edge
+  from: REQ-002-031
+  verb: applies to
+  to: ENT-intake-processing-request.media
+- op: remove_edge
+  from: REQ-002-032
+  verb: applies to
+  to: ENT-intake-processing-request.media
+- op: remove_edge
+  from: REQ-002-033
+  verb: applies to
+  to: ENT-intake-processing-request.media
+- op: remove_edge
+  from: REQ-002-034
+  verb: applies to
+  to: ENT-intake-processing-request.media
+- op: remove_edge
+  from: REQ-002-035
+  verb: applies to
+  to: ENT-intake-processing-request.media
+- op: remove_edge
+  from: REQ-002-038
+  verb: applies to
+  to: ENT-intake-processing-request.media
+- op: add_edge
+  from: REQ-002-031
+  verb: applies to
+  to: ENT-intake-processing-request.head_scan_photo_set
+- op: add_edge
+  from: REQ-002-032
+  verb: applies to
+  to: ENT-intake-processing-request.head_scan_photo_set
+- op: add_edge
+  from: REQ-002-033
+  verb: applies to
+  to: ENT-intake-processing-request.head_scan_photo_set
+- op: add_edge
+  from: REQ-002-034
+  verb: applies to
+  to: ENT-intake-processing-request.head_scan_photo_set
+- op: add_edge
+  from: REQ-002-038
+  verb: applies to
+  to: ENT-intake-processing-request.head_scan_photo_set
+- op: add_edge
+  from: REQ-002-035
+  verb: applies to
+  to: ENT-intake-processing-request
+- op: retire_node
+  id: ENT-intake-processing-request.media
+- op: retire_node
+  id: ENT-intake-processing-request.media_metadata
+- op: retire_node
+  id: ENT-intake-processing-result.media_ref
+- op: retire_node
+  id: ENT-intake-processing-result.ruleset_version
+- op: add_edge
+  from: REQ-002-043
+  verb: decided by
+  to: SRC-PRD-002
+- op: add_edge
+  from: REQ-002-043
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: add_edge
+  from: REQ-002-043
+  verb: applies to
+  to: ENT-intake-processing-result
+- op: add_edge
+  from: REQ-002-044
+  verb: decided by
+  to: SRC-PRD-002
+- op: add_edge
+  from: REQ-002-044
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: add_edge
+  from: REQ-002-044
+  verb: applies to
+  to: ENT-risk-tag
+- op: add_edge
+  from: REQ-002-044
+  verb: applies to
+  to: ENT-intake-processing-request.responses
+- op: add_edge
+  from: REQ-002-045
+  verb: decided by
+  to: SRC-PRD-002
+- op: add_edge
+  from: REQ-002-045
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: add_edge
+  from: REQ-002-045
+  verb: applies to
+  to: ENT-intake-processing-request.idempotency_key
+- op: add_edge
+  from: REQ-002-046
+  verb: decided by
+  to: SRC-PRD-002
+- op: add_edge
+  from: REQ-002-046
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: add_edge
+  from: REQ-002-046
+  verb: applies to
+  to: ENT-media-artifact
+- op: add_edge
+  from: REQ-002-047
+  verb: decided by
+  to: SRC-PRD-002
+- op: add_edge
+  from: REQ-002-047
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: add_edge
+  from: REQ-002-047
+  verb: applies to
+  to: ENT-intake-processing-request.head_scan_photo_set
+- op: add_edge
+  from: REQ-002-047
+  verb: applies to
+  to: ENT-media-artifact
+- op: add_edge
+  from: REQ-002-048
+  verb: decided by
+  to: SRC-PRD-002
+- op: add_edge
+  from: REQ-002-048
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: add_edge
+  from: REQ-002-048
+  verb: applies to
+  to: ACT-provider
+- op: add_edge
+  from: REQ-002-048
+  verb: applies to
+  to: ENT-media-artifact
+- op: add_edge
+  from: REQ-002-049
+  verb: decided by
+  to: SRC-PRD-002
+- op: add_edge
+  from: REQ-002-049
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: add_edge
+  from: REQ-002-049
+  verb: applies to
+  to: ACT-provider
+- op: add_edge
+  from: REQ-002-049
+  verb: applies to
+  to: ENT-media-artifact
+- op: add_edge
+  from: REQ-002-050
+  verb: decided by
+  to: SRC-PRD-002
+- op: add_edge
+  from: REQ-002-050
+  verb: applies at
+  to: STG-main-01-inquiry
+- op: add_edge
+  from: REQ-002-050
+  verb: applies to
+  to: ENT-media-artifact
+- op: add_edge
+  from: REQ-002-001
+  verb: applies to
+  to: ENT-intake-processing-request.template_set_id
+- op: add_edge
+  from: REQ-002-037
+  verb: applies to
+  to: ENT-intake-processing-request.template_set_id
+- op: add_edge
+  from: REQ-002-041
+  verb: applies to
+  to: ENT-intake-processing-request.template_set_id
+- op: add_edge
+  from: REQ-002-005
+  verb: applies to
+  to: ENT-intake-processing-result.template_set_id
+- op: add_edge
+  from: FR-002
+  verb: references
+  to: REQ-025-049
+- op: add_edge
+  from: FR-002
+  verb: references
+  to: REQ-025-050
+- op: add_edge
+  from: FR-002
+  verb: references
+  to: REQ-025-052
+- op: add_edge
+  from: FR-002
+  verb: references
+  to: REQ-025-064
+- op: remove_edge
+  from: STP-002-001
+  verb: next
+  to: STP-002-002
+- op: remove_edge
+  from: STP-002-002
+  verb: next
+  to: STP-002-003
+- op: remove_edge
+  from: STP-002-006
+  verb: next
+  to: STP-002-007
+- op: remove_edge
+  from: STP-002-009
+  verb: next
+  to: STP-002-010
+- op: remove_edge
+  from: STP-002-001
+  verb: next
+  to: STP-002-003
+- op: remove_edge
+  from: STP-002-005
+  verb: next
+  to: STP-003-017
+- op: add_edge
+  from: STP-002-001
+  verb: next
+  to: STP-002-003
+  attrs:
+    label: answers and photos pass the checks
+- op: add_edge
+  from: STP-002-001
+  verb: next
+  to: STP-002-007
+  attrs:
+    label: a photo fails the format, count, size or quality check
+    condition: REQ-002-036
+- op: add_edge
+  from: STP-002-001
+  verb: next
+  to: STP-002-010
+  attrs:
+    label: version is a prior version of the set or of the prior Active set
+    condition: REQ-002-037
+- op: add_edge
+  from: STP-002-001
+  verb: next
+  to: STP-002-022
+  attrs:
+    label: required answer missing, version unknown or no Active set
+    condition: REQ-002-001
+- op: add_edge
+  from: STP-002-011
+  verb: next
+  to: STP-002-003
+- op: add_edge
+  from: STP-002-022
+  verb: next
+  to: STP-002-023
+- op: add_edge
+  from: STP-002-023
+  verb: next
+  to: STP-003-009
+- op: add_edge
+  from: STP-002-024
+  verb: next
+  to: STP-002-025
+- op: add_edge
+  from: STP-002-022
+  verb: done by
+  to: ACT-system
+- op: add_edge
+  from: STP-002-022
+  verb: at
+  to: STG-main-01-inquiry
+- op: add_edge
+  from: STP-002-023
+  verb: done by
+  to: ACT-system
+- op: add_edge
+  from: STP-002-023
+  verb: at
+  to: STG-main-01-inquiry
+- op: add_edge
+  from: STP-002-024
+  verb: done by
+  to: ACT-system
+- op: add_edge
+  from: STP-002-024
+  verb: at
+  to: STG-main-01-inquiry
+- op: add_edge
+  from: STP-002-025
+  verb: done by
+  to: ACT-system
+- op: add_edge
+  from: STP-002-025
+  verb: at
+  to: STG-main-01-inquiry
+- op: add_edge
+  from: STP-002-022
+  verb: applies
+  to: REQ-002-001
+- op: add_edge
+  from: STP-002-022
+  verb: applies
+  to: REQ-002-013
+- op: add_edge
+  from: STP-002-022
+  verb: applies
+  to: REQ-002-026
+- op: add_edge
+  from: STP-002-022
+  verb: applies
+  to: REQ-002-036
+- op: add_edge
+  from: STP-002-022
+  verb: applies
+  to: REQ-002-037
+- op: add_edge
+  from: STP-002-023
+  verb: applies
+  to: REQ-002-036
+- op: add_edge
+  from: STP-002-024
+  verb: applies
+  to: REQ-002-044
+- op: add_edge
+  from: STP-002-025
+  verb: applies
+  to: REQ-002-001
+- op: add_edge
+  from: STP-002-025
+  verb: applies
+  to: REQ-002-002
+- op: add_edge
+  from: STP-002-025
+  verb: applies
+  to: REQ-002-044
+- op: add_edge
+  from: FLW-002-questionnaire-rejected
+  verb: starts at
+  to: STP-002-022
+- op: add_edge
+  from: FLW-002-derive-only
+  verb: starts at
+  to: STP-002-024
+- op: add_edge
+  from: STP-002-001
+  verb: applies
+  to: REQ-002-045
+- op: add_edge
+  from: STP-002-001
+  verb: applies
+  to: REQ-002-050
+- op: add_edge
+  from: STP-002-003
+  verb: applies
+  to: REQ-002-044
+- op: add_edge
+  from: STP-002-004
+  verb: applies
+  to: REQ-002-043
+- op: add_edge
+  from: STP-002-004
+  verb: applies
+  to: REQ-002-045
+- op: add_edge
+  from: STP-002-004
+  verb: applies
+  to: REQ-002-046
+- op: add_edge
+  from: STP-002-007
+  verb: applies
+  to: REQ-002-026
+- op: add_edge
+  from: STP-002-008
+  verb: applies
+  to: REQ-002-050
+- op: remove_edge
+  from: STP-002-012
+  verb: next
+  to: STP-002-013
+- op: remove_edge
+  from: STP-002-013
+  verb: next
+  to: STP-002-014
+- op: retire_node
+  id: STP-002-013
+- op: add_edge
+  from: STP-002-012
+  verb: next
+  to: STP-002-014
+- op: add_edge
+  from: STP-002-012
+  verb: applies
+  to: REQ-002-043
+- op: add_edge
+  from: STP-002-014
+  verb: applies
+  to: REQ-002-048
+- op: add_edge
+  from: STP-002-014
+  verb: applies
+  to: REQ-002-049
