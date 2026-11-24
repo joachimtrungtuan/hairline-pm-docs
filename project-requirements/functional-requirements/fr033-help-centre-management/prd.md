@@ -41,7 +41,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 - Content managed by admins in FR-033 is displayed to patients in FR-035 as read-only resources
 - Patient Help Centre includes: FAQs, Tutorial Guides, Troubleshooting Tips, Resource Library, Video Tutorials (REQ-033-003)
 - No Service Status page for patients (provider-only feature)
-- Content updates from FR-033 propagate to FR-035 patient views within 1 minute, including edits, reordering and unpublishing (REQ-033-034, REQ-035-028)
+- Content updates from FR-033 propagate to FR-035 patient views within 1 minute, including edits, reordering, unpublishing and deleting (REQ-033-034, REQ-035-028)
 
 **Provider Platform (PR-06)**:
 
@@ -211,7 +211,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
   9. Admin uploads custom thumbnail image or uses auto-generated thumbnail
   10. Admin optionally enters video transcript for accessibility
   11. Admin previews video in video player interface (matches FR-032 Screen 5.4)
-  12. System processes video for streaming optimization (if applicable); if processing fails, the processing status becomes Failed, the admin is told and can re-upload, and the item stays Draft (REQ-033-077)
+  12. System processes video for streaming optimization (if applicable); if processing fails, the processing status becomes Failed, the admin is told and can re-upload, and a new item stays Draft; when the file of a Published video is replaced or its source is switched, the previous video stays live for viewers until the new one is Ready, and if the new file fails the old one stays in place and the admin is told (REQ-033-077)
   13. Admin publishes video tutorial; an uploaded video cannot be published until its processing status is Ready (embedded videos are exempt) (REQ-033-077)
   14. System makes video available in provider Help Centre Video Tutorials subscreen (FR-032 Screen 5.4)
 - **Outcome**: Video tutorial uploaded, processed, and published to Help Centre with video player interface
@@ -394,7 +394,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 - Topic selector with "Create New Topic" option
 - Drag-and-drop interface for reordering FAQs within topics
 - Preview shows accordion layout with expand/collapse functionality matching FR-032 Screen 5.1
-- Bulk operations: assign multiple FAQs to topic, change status for multiple FAQs, delete multiple FAQs (REQ-033-062)
+- Bulk operations: assign multiple FAQs to topic, change status (Publish or Unpublish only) for multiple FAQs, delete multiple FAQs (REQ-033-062)
 - Breadcrumb navigation: Settings > Help Centre Management > FAQs
 
 ---
@@ -521,7 +521,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 - Step-by-step tutorial format: numbered lists with visual separators
 - Preview shows: formatted article with table of contents (if applicable), related articles section matching FR-032 Screen 5.2
 - Character counter for content body
-- Bulk operations: change status for multiple articles, delete multiple articles (REQ-033-062)
+- Bulk operations: change status (Publish or Unpublish only) for multiple articles, delete multiple articles (REQ-033-062)
 - Breadcrumb navigation: Settings > Help Centre Management > Articles
 
 ---
@@ -617,7 +617,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 - Preview modal: shows resource card with thumbnail, name, description, file type badge, download button matching FR-032 Screen 5.3 (REQ-033-086)
 - Bulk upload: upload multiple files at once (REQ-033-062)
 - File replacement: replace existing file while keeping same resource record (REQ-033-074)
-- Bulk operations: change status for multiple resources, delete multiple resources (REQ-033-062)
+- Bulk operations: change status (Publish or Unpublish only) for multiple resources, delete multiple resources (REQ-033-062)
 - Breadcrumb navigation: Settings > Help Centre Management > Resources
 
 ---
@@ -722,7 +722,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 - Preview: embedded video player with play controls (play, pause, volume, fullscreen, playback speed) matching FR-032 Screen 5.4, supporting both uploaded and embedded videos
 - Transcript editor: textarea with character counter, searchable text
 - Video analytics: view count, average watch time, completion rate (REQ-033-079)
-- Bulk operations: change status for multiple videos, delete multiple videos (REQ-033-062)
+- Bulk operations: change status (Publish or Unpublish only) for multiple videos, delete multiple videos (REQ-033-062)
 - Breadcrumb navigation: Settings > Help Centre Management > Videos
 
 ---
@@ -764,7 +764,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
     - Video Embed URL becomes required. (REQ-033-078)
     - System validates URL format and that domain is in the allowed provider list (e.g., YouTube, Vimeo). (REQ-033-078)
     - No video file is uploaded; Video Duration may be fetched from provider API or left manual/optional (implementation detail). (REQ-033-078)
-- For existing videos, admin can change the source type (Upload File or Embed from Third-Party) by providing the new file or URL and confirming that the old file or URL is replaced; the video keeps its view counts. (REQ-033-094)
+- For existing videos, admin can change the source type (Upload File or Embed from Third-Party) by providing the new file or URL and confirming that the old file or URL is replaced; the video keeps its view counts. For a Published video the previous video stays live for viewers until the new one is Ready, and if the new file fails the old one stays in place and the admin is told. (REQ-033-094)
 - Thumbnail generation:
   - For uploaded videos, system auto-generates from frame at 10% mark, with option to override via custom thumbnail upload. (REQ-033-077)
   - For embedded videos, system may pull provider thumbnail (if supported) or allow only custom thumbnail upload. (REQ-033-078)
@@ -782,7 +782,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 **Notes**:
 
 - Video upload interface with progress tracking
-- Video processing status indicator (uploading, processing, ready, failed); on failed the admin is told and can re-upload, and the item stays Draft (REQ-033-077)
+- Video processing status indicator (uploading, processing, ready, failed); on failed the admin is told and can re-upload, and a new item stays Draft; a Published video whose file is replaced or whose source is switched stays live with the previous video until the new one is Ready (REQ-033-077)
 - Thumbnail editor with frame selection from video
 - Transcript editor: textarea with character counter (10,000 max), searchable text
 - Preview: embedded video player with play controls (play, pause, volume, fullscreen, playback speed) matching FR-032 Screen 5.4
@@ -822,7 +822,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 - Service Status overview displays: overall status, service components list, incident history, maintenance schedule
 - "Add Component" button allows admin to create new service components (REQ-033-081)
 - "Edit" button on each component allows admin to edit component name and status (REQ-033-081)
-- "Delete" button on each component prompts confirmation before deletion (soft delete: the component is archived, not permanently erased) (REQ-033-081)
+- "Delete" button on each component prompts confirmation before deletion (soft delete: the component is archived, not permanently erased); a component on an open incident or on a Scheduled or In Progress maintenance window cannot be deleted (REQ-033-081)
 - "Create Incident" button opens incident creation form (REQ-033-082)
 - "Edit" button on each incident allows admin to update incident details and status (REQ-033-082)
 - "Delete" button on each incident prompts confirmation before deletion (soft delete: the incident is archived, not permanently erased) (REQ-033-082)
@@ -871,6 +871,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 - If editing existing component, form is pre-filled with current component data
 - If creating new component, form starts empty with default status "Operational" (REQ-033-081)
 - Component status affects overall platform status calculation (a Down component counts; a Degraded component does not) (REQ-033-080)
+- A deleted component is kept on past incidents and maintenance windows and shown there as removed; deleting a component that is on an open incident (not Resolved) or on a Scheduled or In Progress maintenance window is refused with a message naming the incident or window (REQ-033-081)
 - On save, component is created/updated and admin returns to Screen 6 with updated component list (REQ-033-060)
 - On cancel, changes are discarded and admin returns to Screen 6 (REQ-033-060)
 
@@ -1030,7 +1031,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 - **Rule 1**: Help Centre content managed for TWO distinct audiences: Providers and Patients; content repositories completely separated by audience type (REQ-033-001)
 - **Rule 2**: Only admins can create, edit, or delete Help Centre content; providers and patients have read-only access to their respective content (REQ-033-020, REQ-033-007, REQ-033-008)
 - **Rule 3**: Content must be tagged with audience type (Provider or Patient) and with its kind (FAQ, Tutorial Guide, Troubleshooting Tip, Video Tutorial, Resource Document, Policy Document); the kind decides the Help Centre section the content appears in, and admins do not pick a section separately; Policy Document is for the provider audience only (REQ-033-036)
-- **Rule 4**: Content can exist in four states: Draft (admin-only), Published (audience-visible), Unpublished (admin-only, previously published), Archived (admin-only, set when content is deleted) (REQ-033-037). Allowed moves: Draft to Published; Published to Unpublished (only through the Unpublish action with its reason); Unpublished to Published; any state to Archived by Delete (REQ-033-099)
+- **Rule 4**: Content can exist in four states: Draft (admin-only), Published (audience-visible), Unpublished (admin-only, previously published), Archived (admin-only, set when content is deleted) (REQ-033-037). Allowed moves: Draft to Published; Published to Unpublished (only through the Unpublish action with its reason); Unpublished to Published; any state to Archived by Delete, so an admin may delete a Published item directly and it leaves the audience's view within 1 minute (REQ-033-099, REQ-033-034). Draft is not selectable for an Unpublished item. A bulk status change offers Publish and Unpublish only, a bulk Unpublish takes one shared reason for all selected items, and a bulk delete follows the single-item delete rules (REQ-033-062)
 - **Rule 5**: All content changes logged in audit trail with admin identity, timestamp, audience type, and action type (REQ-033-015)
 - **Rule 6**: Content deletion is soft-delete (archived) not permanent deletion to support recovery and audit compliance (REQ-033-016); an archived item can be restored as Draft (REQ-033-100)
 - **Rule 7**: Admin must explicitly select audience (Provider or Patient) when creating content; content cannot be shared across audiences without manual re-creation (REQ-033-004, REQ-033-052)
@@ -1288,11 +1289,11 @@ An admin content manager needs to reorganize existing FAQ items into logical top
 - **REQ-033-030**: Admins MUST be able to manage Service Status components, incidents, and maintenance windows for provider audience only (not applicable to patient audience)
 - **REQ-033-092**: When Help Centre content is deleted (archived), System MUST remove the Related Content links that point to it from other items
 - **REQ-033-093**: When an admin sets the overall service status by hand, System MUST keep that value until an admin switches the overall status back to automatic; Service Status Management MUST provide a control to switch back to automatic
-- **REQ-033-094**: Admins MUST be able to change the source type of an existing video (uploaded file or third-party link) by providing the new file or URL and confirming that the old one is replaced; the video keeps its view counts
+- **REQ-033-094**: Admins MUST be able to change the source type of an existing video (uploaded file or third-party link) by providing the new file or URL and confirming that the old one is replaced; the video keeps its view counts; for a Published video the previous video stays live for viewers until the new one is Ready, and if the new file fails the old one stays in place and the admin is told
 - **REQ-033-096**: A "Was this helpful?" vote on a FAQ, article, resource or video is one anonymous Yes or No added to the item's helpfulness count, written through the FR-032 and FR-035 content interfaces; no identity is kept, so repeat votes count
 - **REQ-033-097**: A view of a FAQ, article or resource is counted each time its detail (or the FAQ answer) is opened, for both audiences; a video view keeps the 30-second rule (REQ-033-079); a resource download is counted for both audiences; each view is stored with its date so views over time and the FR-035 30-day popular list can be derived
 - **REQ-033-098**: A file that fails the virus scan MUST be rejected and not stored; the admin sees "File failed security scan. Upload a clean file." and the event is written to the audit trail
-- **REQ-033-099**: Content status moves are limited to Draft to Published, Published to Unpublished (only through the Unpublish action with its reason), Unpublished to Published, and any state to Archived by Delete; the Publish Status dropdown offers Draft and Published only and is read-only while the item is Published
+- **REQ-033-099**: Content status moves are limited to Draft to Published, Published to Unpublished (only through the Unpublish action with its reason), Unpublished to Published, and any state to Archived by Delete; the Publish Status dropdown offers Draft and Published only, Draft is not selectable for an Unpublished item, and the dropdown is read-only while the item is Published
 - **REQ-033-100**: Each content list MUST have an admin-only "Archived" filter, and a Restore action MUST return an archived item as Draft; Related Content links removed at deletion (REQ-033-092) are not put back
 
 ---
@@ -1304,6 +1305,7 @@ An admin content manager needs to reorganize existing FAQ items into logical top
 | 2026-11-22 | 2.3 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v2.2) is in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
 | 2026-11-23 | 2.4 | Independent compression review: 2 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
 | 2026-11-24 | 2.5 | Logic review: size limit stated per upload kind; helpfulness vote and view recording rules (REQ-033-096, REQ-033-097); virus-scan rejection (REQ-033-098); uploaded video published only when processing is Ready, with a Failed state; same required-field check on Save as Draft and Publish; Resource Category field separated from FAQ topic; status-move rule (REQ-033-099); Archived filter and Restore (REQ-033-100); version created on save with last save wins; patient propagation within 1 minute; service status overall-status and maintenance clarifications; patient Article Type values and Policy Document blocked for patients. | Product Owner / Documentation |
+| 2026-11-24 | 2.6 | Logic review pass 2: a Published video whose file is replaced or whose source is switched stays live with the previous video until the new one is Ready (REQ-033-077, REQ-033-094); an admin may delete a Published item directly and it leaves the audience's view within 1 minute (REQ-033-034, REQ-033-099); bulk status change offers Publish and Unpublish only with one shared Unpublish reason, bulk delete follows single-item rules (REQ-033-062); Draft is not selectable for an Unpublished item; a deleted service component is kept on past incidents and maintenance windows and cannot be deleted while on an open incident or an upcoming or running maintenance window (REQ-033-081). | Product Owner / Documentation |
 
 ---
 

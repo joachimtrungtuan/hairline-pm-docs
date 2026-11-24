@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T14:15:27Z",
+  "generated_at": "2026-11-24T14:18:44Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -26755,6 +26755,17 @@
       "status": "active",
       "version": 1,
       "attrs": {}
+    },
+    {
+      "id": "ENT-service-component.is_active",
+      "type": "Field",
+      "owner_fr": "FR-033",
+      "title": "Is active",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "True for a component in use; false once an admin has deleted it. A deleted component is kept on past incidents and maintenance windows and shown there as removed, and it does not count towards the overall status."
+      }
     },
     {
       "id": "ENT-service-component.name",
@@ -91229,11 +91240,11 @@
       "id": "REQ-033-034",
       "type": "Rule",
       "owner_fr": "FR-033",
-      "title": "Publish, edit, unpublish and reorder take effect in the provider and patient Help Centre within 1 minute",
+      "title": "Publish, edit, unpublish, delete and reorder take effect in the provider and patient Help Centre within 1 minute",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Publishing content, editing published content, reordering FAQ topics or FAQs, and unpublishing content take effect in the provider Help Centre (via FR-032) and the patient Help Centre (via FR-035, REQ-035-028) within 1 minute.",
+        "statement": "Publishing content, editing published content, reordering FAQ topics or FAQs, unpublishing content, and deleting a Published item take effect in the provider Help Centre (via FR-032) and the patient Help Centre (via FR-035, REQ-035-028) within 1 minute.",
         "rationale": "Main Flow step 14, A2 step 10, A3 step 11, A5 step 7 (all say within 1 minute)."
       }
     },
@@ -91567,9 +91578,9 @@
       "owner_fr": "FR-033",
       "title": "Bulk operations on content",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Admins can run bulk operations: assign multiple FAQs to a topic, change status for multiple FAQs, articles, resources or videos, delete multiple items, and upload multiple resource files at once; multiple FAQs can be edited in batch.",
+        "statement": "Admins can run bulk operations: assign multiple FAQs to a topic, change status for multiple FAQs, articles, resources or videos (Publish and Unpublish only; a bulk Unpublish takes one shared reason for all selected items), delete multiple items (following the single-item delete rules), and upload multiple resource files at once; multiple FAQs can be edited in batch.",
         "rationale": "Screen 2, 3, 4 and 5 rules and notes; Shared Admin Capabilities (bulk operations). PRD: Screen 2 (368, 386); Screen 3 (515); Screen 4 (607); Screen 5 (704)."
       }
     },
@@ -91747,9 +91758,9 @@
       "owner_fr": "FR-033",
       "title": "Upload File videos: format, size, processing, duration, thumbnail and publish gate",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "For Upload File videos the video file is required for new videos (MP4 or MOV, max 500MB) with a progress indicator; after upload a background job processes the video for streaming optimization (transcoding, thumbnail generation); the video duration is auto-extracted (read-only); the thumbnail is auto-generated from the video frame at the 10% mark unless the admin uploads a custom one; a processing status (uploading, processing, ready, failed) is shown; an uploaded video cannot be published until its processing status is ready (embedded videos are exempt); if processing fails the status becomes failed, the admin is told and can re-upload, and the item stays Draft.",
+        "statement": "For Upload File videos the video file is required for new videos (MP4 or MOV, max 500MB) with a progress indicator; after upload a background job processes the video for streaming optimization (transcoding, thumbnail generation); the video duration is auto-extracted (read-only); the thumbnail is auto-generated from the video frame at the 10% mark unless the admin uploads a custom one; a processing status (uploading, processing, ready, failed) is shown; an uploaded video cannot be published until its processing status is ready (embedded videos are exempt); if processing fails the status becomes failed, the admin is told and can re-upload, and a new item stays Draft; when the file of a Published video is replaced or its source is switched, the previous video stays live for viewers until the new one is Ready, and if the new file fails the old one stays in place and the admin is told.",
         "rationale": "Alternative Flow A4, Screens 5 and 5.1. PRD: Alternative Flow A4 (200-217); Screen 5.1 (741-752)."
       }
     },
@@ -91783,7 +91794,7 @@
       "owner_fr": "FR-033",
       "title": "Overall service status is calculated from components",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "statement": "The overall status is calculated automatically from the statuses of the active service components only and recalculated when a component changes; open incidents and maintenance in progress do not change it. A Degraded component does not count: if no active component is Down the overall status is All Systems Operational, if some but not all active components are Down it is Partial Outage, and if all active components are Down (including the case of a single active component) it is Major Outage; with no active component the page shows \"Status not available\" unless an admin sets the overall status by hand (see REQ-033-093); the options are All Systems Operational, Partial Outage and Major Outage.",
         "rationale": "Alternative Flow A6 step 4, Screen 6 Data Fields (Overall Status) and Business Rules, Screen 6.1 and 6.2 rules."
@@ -91795,9 +91806,9 @@
       "owner_fr": "FR-033",
       "title": "Service component management",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Admins can create, edit and delete service components; delete prompts confirmation before deletion; the component name is required (max 100 characters); the component status is Operational, Degraded or Down and defaults to Operational for a new component; component status updates in real time and affects the overall platform status.",
+        "statement": "Admins can create, edit and delete service components; delete prompts confirmation before deletion and archives the component instead of erasing it (it stays on past incidents and maintenance windows and is shown there as removed); a component on an open incident (not Resolved) or on a Scheduled or In Progress maintenance window cannot be deleted, and the message names the incident or window; the component name is required (max 100 characters); the component status is Operational, Degraded or Down and defaults to Operational for a new component; component status updates in real time and affects the overall platform status.",
         "rationale": "Screens 6 and 6.1. PRD: Screen 6 (808-811, 826); Screen 6.1 (843-859)."
       }
     },
@@ -91915,9 +91926,9 @@
       "owner_fr": "FR-033",
       "title": "Changing the source type of an existing video needs a new file or URL and a replace confirmation",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Admins MUST be able to change the source type of an existing video (uploaded file or third-party link) by providing the new file or URL and confirming that the old one is replaced; the video keeps its view counts",
+        "statement": "Admins MUST be able to change the source type of an existing video (uploaded file or third-party link) by providing the new file or URL and confirming that the old one is replaced; the video keeps its view counts; for a Published video the previous video stays live for viewers until the new one is Ready, and if the new file fails the old one stays in place and the admin is told",
         "rationale": "Screen 5.1 (video source type). PRD: FR-033."
       }
     },
@@ -91973,11 +91984,11 @@
       "id": "REQ-033-099",
       "type": "Rule",
       "owner_fr": "FR-033",
-      "title": "Content status moves are limited; only Unpublish leaves Published",
+      "title": "Content status moves are limited; Published is left only by Unpublish or Delete",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "Content status moves are limited to Draft to Published, Published to Unpublished (only through the Unpublish action with its reason), Unpublished to Published, and any state to Archived by Delete; the Publish Status dropdown offers Draft and Published only and is read-only while the item is Published.",
+        "statement": "Content status moves are limited to Draft to Published, Published to Unpublished (only through the Unpublish action with its reason), Unpublished to Published, and any state to Archived by Delete; the Publish Status dropdown offers Draft and Published only, Draft is not selectable for an Unpublished item, and the dropdown is read-only while the item is Published.",
         "rationale": "General Rule 4 and the Publish Status rows on the content forms."
       }
     },
@@ -100996,7 +101007,7 @@
       "owner_fr": "FR-033",
       "title": "Patient Article Management",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
         "description": "Admin list of patient articles; mirrors Screen 3 (PRD Screen 10). Admin-only screen. UI controls, not fields: Add New Article, Edit, Delete, Preview buttons."
@@ -101020,7 +101031,7 @@
       "owner_fr": "FR-033",
       "title": "Patient Resource Library Management",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "platform": "admin",
         "description": "Admin list of patient resources; mirrors Screen 4 (PRD Screen 11). Admin-only screen. UI controls, not fields: Add New Resource, Edit, Delete, Preview, Download buttons."
@@ -101044,7 +101055,7 @@
       "owner_fr": "FR-033",
       "title": "Patient Video Tutorial Management",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
         "description": "Admin list of patient video tutorials; mirrors Screen 5 (PRD Screen 12). Admin-only screen. UI controls, not fields: Add New Video, Edit, Delete, Preview buttons."
@@ -129869,7 +129880,7 @@
       "owner_fr": "FR-033",
       "title": "Upload video file (MP4 or MOV, max 500MB)",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "prd_ref": "Alternative Flow A4 (Admin Uploads Video Tutorial) step 5"
       }
@@ -129944,9 +129955,9 @@
       "id": "STP-033-049",
       "type": "Step",
       "owner_fr": "FR-033",
-      "title": "System processes the uploaded video for streaming optimisation; if processing fails the status becomes Failed, the admin is told and can re-upload, and the item stays Draft",
+      "title": "System processes the uploaded video for streaming optimisation; if processing fails the status becomes Failed, the admin is told and can re-upload, and a new item stays Draft, while a Published video whose file was replaced keeps the previous video live",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flow A4 (Admin Uploads Video Tutorial) step 13"
       }
@@ -130980,7 +130991,7 @@
       "owner_fr": "FR-033",
       "title": "Admin uploads the resource file by drag and drop or file picker, or uses Replace File to keep the same resource record (provider)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Screen 4.1 (Resource Add/Edit Form)"
       }
@@ -131013,7 +131024,7 @@
       "owner_fr": "FR-033",
       "title": "Admin uploads the resource file by drag and drop or file picker, or uses Replace File to keep the same resource record (patient)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Screen 4.1 (Resource Add/Edit Form)"
       }
@@ -131154,9 +131165,9 @@
       "id": "STP-033-164",
       "type": "Step",
       "owner_fr": "FR-033",
-      "title": "System makes published, edited, unpublished or reordered content available in the patient Help Centre within 1 minute",
+      "title": "System makes published, edited or reordered content available in the patient Help Centre, and removes unpublished or deleted content, within 1 minute",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 14 (patient audience)"
       }
@@ -131167,7 +131178,7 @@
       "owner_fr": "FR-033",
       "title": "System rejects a file that fails the virus scan, does not store it, shows File failed security scan. Upload a clean file. and writes the event to the audit trail",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B2 step 8"
       }
@@ -153386,6 +153397,14 @@
       "entity_id": "ENT-service-component",
       "name": "component_id",
       "data_type": "id",
+      "required": true,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-service-component.is_active",
+      "entity_id": "ENT-service-component",
+      "name": "is_active",
+      "data_type": "bool",
       "required": true,
       "calculated_by": null
     },
@@ -292927,6 +292946,12 @@
     {
       "from_id": "REQ-033-080",
       "verb": "applies to",
+      "to_id": "ENT-service-component.is_active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-080",
+      "verb": "applies to",
       "to_id": "ENT-service-status",
       "attrs": {}
     },
@@ -292946,6 +292971,12 @@
       "from_id": "REQ-033-081",
       "verb": "applies to",
       "to_id": "ENT-service-component",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-081",
+      "verb": "applies to",
+      "to_id": "ENT-service-component.is_active",
       "attrs": {}
     },
     {
@@ -342826,6 +342857,26 @@
       }
     },
     {
+      "from_id": "SCR-033-20",
+      "verb": "shows",
+      "to_id": "ENT-help-centre-content.updated_at",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Last Updated",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-033-20",
+      "verb": "shows",
+      "to_id": "ENT-help-centre-content.view_count",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "View Count",
+        "editable": false
+      }
+    },
+    {
       "from_id": "SCR-033-21",
       "verb": "belongs to",
       "to_id": "STG-admin-01-configuration",
@@ -343004,6 +343055,16 @@
       "attrs": {
         "provenance": "retrieved",
         "label": "Resource Name",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-033-22",
+      "verb": "shows",
+      "to_id": "ENT-help-centre-content.updated_at",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Last Updated",
         "editable": false
       }
     },
@@ -343216,6 +343277,16 @@
       "attrs": {
         "provenance": "retrieved",
         "label": "Video Transcript",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-033-24",
+      "verb": "shows",
+      "to_id": "ENT-help-centre-content.updated_at",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Last Updated",
         "editable": false
       }
     },
@@ -430130,6 +430201,15 @@
     },
     {
       "from_id": "STP-033-041",
+      "verb": "next",
+      "to_id": "STP-033-165",
+      "attrs": {
+        "label": "file uploaded, scan",
+        "condition": "REQ-033-098"
+      }
+    },
+    {
+      "from_id": "STP-033-041",
       "verb": "on",
       "to_id": "SCR-033-11",
       "attrs": {}
@@ -430373,6 +430453,15 @@
       "verb": "done by",
       "to_id": "ACT-system",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-033-049",
+      "verb": "next",
+      "to_id": "STP-033-041",
+      "attrs": {
+        "label": "processing failed",
+        "condition": "REQ-033-077"
+      }
     },
     {
       "from_id": "STP-033-049",
@@ -433511,6 +433600,15 @@
     },
     {
       "from_id": "STP-033-148",
+      "verb": "next",
+      "to_id": "STP-033-165",
+      "attrs": {
+        "label": "file uploaded, scan",
+        "condition": "REQ-033-098"
+      }
+    },
+    {
+      "from_id": "STP-033-148",
       "verb": "on",
       "to_id": "SCR-033-09",
       "attrs": {}
@@ -433592,6 +433690,15 @@
       "verb": "next",
       "to_id": "STP-033-152",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-033-151",
+      "verb": "next",
+      "to_id": "STP-033-165",
+      "attrs": {
+        "label": "file uploaded, scan",
+        "condition": "REQ-033-098"
+      }
     },
     {
       "from_id": "STP-033-151",
@@ -433988,6 +434095,51 @@
       "verb": "done by",
       "to_id": "ACT-system",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-033-165",
+      "verb": "next",
+      "to_id": "STP-033-041",
+      "attrs": {
+        "label": "file rejected",
+        "condition": "REQ-033-098"
+      }
+    },
+    {
+      "from_id": "STP-033-165",
+      "verb": "next",
+      "to_id": "STP-033-148",
+      "attrs": {
+        "label": "file rejected",
+        "condition": "REQ-033-098"
+      }
+    },
+    {
+      "from_id": "STP-033-165",
+      "verb": "next",
+      "to_id": "STP-033-149",
+      "attrs": {
+        "label": "file clean",
+        "condition": "REQ-033-098"
+      }
+    },
+    {
+      "from_id": "STP-033-165",
+      "verb": "next",
+      "to_id": "STP-033-151",
+      "attrs": {
+        "label": "file rejected",
+        "condition": "REQ-033-098"
+      }
+    },
+    {
+      "from_id": "STP-033-165",
+      "verb": "next",
+      "to_id": "STP-033-152",
+      "attrs": {
+        "label": "file clean",
+        "condition": "REQ-033-098"
+      }
     },
     {
       "from_id": "STP-033-165",
@@ -444405,6 +444557,37 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-141739-85fb3750",
+      "at": "2026-11-24T14:17:39.697586+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-033 logic review pass 2: a Published video keeps its previous file live until a replacement is Ready; processing failure and the virus-scan step have exits and entries in the flow; Delete of a Published item is allowed and takes effect within 1 minute; bulk status change limited to Publish and Unpublish with one shared reason; a deleted service component is kept on past incidents and windows and cannot be deleted while on an open incident or scheduled or running window; patient list screens show the same columns as the provider lists; Draft is not selectable for an Unpublished item.",
+      "source_id": null,
+      "nodes_added": [
+        "ENT-service-component.is_active"
+      ],
+      "nodes_updated": [
+        "REQ-033-034",
+        "REQ-033-062",
+        "REQ-033-077",
+        "REQ-033-080",
+        "REQ-033-081",
+        "REQ-033-094",
+        "REQ-033-099",
+        "SCR-033-20",
+        "SCR-033-22",
+        "SCR-033-24",
+        "STP-033-041",
+        "STP-033-049",
+        "STP-033-148",
+        "STP-033-151",
+        "STP-033-164",
+        "STP-033-165"
+      ],
+      "edges_added": 16,
+      "edges_removed": 0,
+      "rows": 35
+    },
     {
       "id": "cs-20261124-141413-cbfce018",
       "at": "2026-11-24T14:14:13.756742+00:00",
