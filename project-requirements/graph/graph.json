@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T02:00:19Z",
+  "generated_at": "2026-11-24T02:28:40Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -24708,9 +24708,9 @@
       "owner_fr": "FR-004",
       "title": "Currency snapshot",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Captured read-only at first send from the active FR-026 quote configuration (FR-029 Default Currency); null on drafts; never provider input."
+        "description": "Captured read-only at first send from the active FR-026 quote configuration (FR-029 Default Currency); for an admin-authored replacement quote, captured when the admin records the replacement acceptance; null on drafts; never provider input."
       }
     },
     {
@@ -24730,9 +24730,9 @@
       "owner_fr": "FR-004",
       "title": "Expires at",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Computed at first send from the FR-026 quote expiry setting; null on drafts; no per-quote extension; shown as \"set on first send\" while drafting."
+        "description": "Computed at first send from the FR-026 quote expiry setting; null on drafts and always null on an admin-authored replacement quote; no per-quote extension; shown as \"set on first send\" while drafting."
       }
     },
     {
@@ -24741,9 +24741,9 @@
       "owner_fr": "FR-004",
       "title": "First sent at",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Set once on the first send; never changed by a re-send or new version; null on drafts. FR-014 Time to First Quote reads it."
+        "description": "Set once on the first send; for an admin-authored replacement quote, set when the admin records the replacement acceptance; never changed by a re-send or new version; null on drafts. FR-014 Time to First Quote reads it."
       }
     },
     {
@@ -32877,9 +32877,9 @@
       "owner_fr": "FR-030",
       "title": "Quote expired",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Emitted once per parent quote when expiry processing moves a sent quote to expired (FR-030)."
+        "description": "Emitted once per parent quote when expiry processing moves a sent quote to expired (FR-030); never for the admin-authored replacement quote, which has no expiry."
       }
     },
     {
@@ -32888,9 +32888,9 @@
       "owner_fr": "FR-030",
       "title": "Quote expiring soon",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Emitted once per sent parent quote when it reaches the FR-026 quote-expiring-soon lead time (FR-030); never for drafts, accepted or terminal quotes."
+        "description": "Emitted once per sent parent quote when it reaches the FR-026 quote-expiring-soon lead time (FR-030); never for drafts, accepted or terminal quotes, or the admin-authored replacement quote, which has no expiry."
       }
     },
     {
@@ -33977,12 +33977,12 @@
       "id": "FLW-004-abandoned-draft",
       "type": "Flow",
       "owner_fr": null,
-      "title": "Provider abandons a draft; system archives it after 7 days",
+      "title": "Provider abandons a draft; system archives it 7 days after the last edit",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "kind": "alternative",
-        "description": "Provider abandons a draft; system archives it after 7 days",
+        "description": "Provider abandons a draft; system archives it 7 days after the last edit",
         "prd_ref": "Alternative Flows bullet 1"
       }
     },
@@ -34000,6 +34000,19 @@
       }
     },
     {
+      "id": "FLW-004-admin-restore",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Admin restores an expired or archived quote",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Admin restores an expired or archived quote",
+        "prd_ref": "Alternative Flows bullet 14"
+      }
+    },
+    {
       "id": "FLW-004-draft-cancelled-other-accepted",
       "type": "Flow",
       "owner_fr": null,
@@ -34010,6 +34023,32 @@
         "kind": "alternative",
         "description": "Provider drafting while another quote is accepted",
         "prd_ref": "Alternative Flows bullet 8"
+      }
+    },
+    {
+      "id": "FLW-004-draft-soft-delete",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Provider soft-deletes a draft quote",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Provider soft-deletes a draft quote",
+        "prd_ref": "Alternative Flows bullet 15"
+      }
+    },
+    {
+      "id": "FLW-004-expiring-soon",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "A sent quote reaches the expiring-soon lead time",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "A sent quote reaches the expiring-soon lead time",
+        "prd_ref": "Alternative Flows bullet 16"
       }
     },
     {
@@ -34114,6 +34153,45 @@
         "kind": "alternative",
         "description": "Provider removes an option before submission",
         "prd_ref": "Alternative Flows bullet 5"
+      }
+    },
+    {
+      "id": "FLW-004-replacement-quote",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Admin authors the replacement quote after a provider fault",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Admin authors the replacement quote after a provider fault",
+        "prd_ref": "Alternative Flows bullet 13; Workflow 7"
+      }
+    },
+    {
+      "id": "FLW-004-withdraw-after-acceptance",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Provider withdraws the accepted quote and hands the case to the provider-fault transfer",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Provider withdraws the accepted quote and hands the case to the provider-fault transfer",
+        "prd_ref": "Alternative Flows bullet 12; Workflow 6"
+      }
+    },
+    {
+      "id": "FLW-004-withdraw-before-acceptance",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Provider withdraws a sent quote before acceptance",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Provider withdraws a sent quote before acceptance",
+        "prd_ref": "Alternative Flows bullet 11"
       }
     },
     {
@@ -43175,9 +43253,9 @@
       "owner_fr": "FR-004",
       "title": "Competing quotes cancelled on subquote acceptance",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System MUST cancel every other parent quote for the same inquiry as `cancelled_other_accepted` upon one subquote acceptance. Each sent parent quote MUST produce one not-selected notice per parent quote; unsent drafts MUST be cancelled silently without notice."
+        "statement": "System MUST cancel every other parent quote for the same inquiry as `cancelled_other_accepted` upon one subquote acceptance. Each sent parent quote MUST produce one not-selected notice per parent quote; unsent drafts MUST be cancelled silently without notice. The not-selected notice is the FR-030 `quote.accepted` event with `outcome` = `competing_parent_cancelled_other_subquote_accepted` (REQ-030-038)."
       }
     },
     {
@@ -43186,9 +43264,9 @@
       "owner_fr": "FR-004",
       "title": "Provider withdrawal after acceptance hands over to FR-006",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST support provider withdrawal after acceptance by moving the parent quote to `withdrawn`, keeping the AcceptanceEvent and snapshot unchanged, and handing the case to the FR-006 provider-fault transfer, with full audit and the mandatory `quote.withdrawn` notice."
+        "statement": "System MUST support provider withdrawal after acceptance, only while the booking is `Confirmed`, before check-in, and without a provider-fault marker, by moving the parent quote to `withdrawn`, keeping the AcceptanceEvent and snapshot unchanged, and handing the case to the FR-006 provider-fault transfer, with full audit and the mandatory `quote.withdrawn` notice."
       }
     },
     {
@@ -43197,9 +43275,9 @@
       "owner_fr": "FR-004",
       "title": "Admin inline edit of quotes, after acceptance except price, currency and promotion",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Admin MUST be able to inline edit policy-bound fields of `draft` and `sent` quotes with required reason and re-notifications. After a subquote is accepted, an admin MUST still be able to change any quote field except price, currency, and promotion (the date range and treatment details can be changed), with a mandatory reason and full before and after history; the change MUST be stored as a new version beside the acceptance snapshot, which stays unchanged, and payment records MUST NOT change."
+        "statement": "Admin MUST be able to inline edit policy-bound fields of `draft` and `sent` quotes with required reason and re-notifications. After a subquote is accepted, an admin MUST still be able to change any quote field except price, currency, and promotion (the date range and treatment details can be changed), with a mandatory reason and full before and after history; the change MUST be stored as a new version beside the acceptance snapshot, which stays unchanged, and payment records MUST NOT change. While the booking carries a provider-fault marker, this admin edit right is suspended (REQ-004-109)."
       }
     },
     {
@@ -43545,9 +43623,9 @@
       "owner_fr": "FR-004",
       "title": "No provider quote edits or new quotes after acceptance",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "After a subquote is accepted, System MUST block every FR-004 quote edit by providers; their treatment-detail changes (plan, clinicians, grafts) MUST go through FR-010. Admin edits after acceptance follow REQ-004-005. Price, currency, and promotion MUST never change after acceptance. An accepted parent quote MUST never be reopened, expired, or restored to an acceptable state, including after `Payment Window Expired`, and no new parent quote MAY be created or sent for an inquiry with an accepted subquote, except the admin-authored replacement quote of REQ-004-048."
+        "statement": "After a subquote is accepted, System MUST block every FR-004 quote edit by providers; their treatment-detail changes (plan, clinicians, grafts) MUST go through FR-010. Admin edits after acceptance follow REQ-004-005 and are blocked while the booking carries a provider-fault marker (REQ-004-109). Price, currency, and promotion MUST never change after acceptance. An accepted parent quote MUST never be reopened, expired, or restored to an acceptable state, including after `Payment Window Expired`, and no new parent quote MAY be created or sent for an inquiry with an active acceptance (REQ-004-110), except the admin-authored replacement quote of REQ-004-048."
       }
     },
     {
@@ -43567,9 +43645,9 @@
       "owner_fr": "FR-004",
       "title": "Quote expiring soon emitted once",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System MUST emit `quote.expiring_soon` once per sent parent quote when it reaches the FR-026 quote-expiring-soon lead time, and MUST NOT emit it for draft, accepted, or terminal quotes."
+        "statement": "System MUST emit `quote.expiring_soon` once per sent parent quote when it reaches the FR-026 quote-expiring-soon lead time, and MUST NOT emit it for draft, accepted, or terminal quotes, including the replacement quote, which has no expiry."
       }
     },
     {
@@ -43590,9 +43668,9 @@
       "owner_fr": "FR-004",
       "title": "Automatic promotion usage reservation",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "A sent quote carrying an automatic FR-019 promotion MUST hold exactly one reserved use of that promotion's usage limit. A re-send of a new version MUST keep the existing reservation, create one only if the new version newly qualifies, and release it if the new version no longer carries the promotion. The reservation MUST be released when the quote expires, is withdrawn, or ends not selected or cancelled, MUST be released with reason `not_applied` when the accepted row does not carry the promotion, and MUST be consumed at acceptance when the accepted row carries it, so the usage limit is never exceeded. If the booking later ends in `Payment Window Expired` or is cancelled before the first payment, FR-005 and FR-019 own the return of the consumed use to the limit."
+        "statement": "A sent quote carrying an automatic FR-019 promotion MUST hold exactly one reserved use of that promotion's usage limit. A re-send of a new version MUST keep the existing reservation, create one only if the new version newly qualifies, and release it if the new version no longer carries the promotion. The reservation MUST be released when the quote expires, is withdrawn, is archived, or ends not selected or cancelled, MUST be released with reason `not_applied` when the accepted row does not carry the promotion, and MUST be consumed at acceptance when the accepted row carries it, so the usage limit is never exceeded. When an admin restores an expired quote, System MUST re-check the promotion's validity and usage limit and take a new reservation; if the limit is used up or the promotion has ended, the restore MUST be blocked with a message and the provider MAY send a new quote (REQ-004-105). If the booking later ends in `Payment Window Expired` or is cancelled before the first payment, FR-005 and FR-019 own the return of the consumed use to the limit."
       }
     },
     {
@@ -43657,9 +43735,9 @@
       "owner_fr": "FR-004",
       "title": "Admin-authored replacement quote",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "During an FR-006 provider-fault transfer before treatment starts, System MUST let an admin author a replacement quote for the replacement provider inside the same inquiry through Screen 8, with a mandatory reason and full audit. The quote MUST be marked admin-authored for a replacement and linked to the closed AcceptanceEvent, MUST NOT be offered for patient comparison or emit `quote.submitted`, and MUST be the target of the FR-005 admin-authored replacement acceptance.",
+        "statement": "During an FR-006 provider-fault transfer before treatment starts, System MUST let an admin author a replacement quote for the replacement provider inside the same inquiry through Screen 8, with a mandatory reason and full audit. The quote MUST be marked admin-authored for a replacement and linked to the AcceptanceEvent it replaces, MUST NOT be offered for patient comparison, MUST stay a `draft` that the patient's quote list does not show while it is not accepted, MUST NOT emit `quote.submitted` or `quote.expired`, and MUST be the target of the FR-005 admin-authored replacement acceptance.",
         "rationale": "Business Rules: it is the only exception to the block on new quotes after acceptance."
       }
     },
@@ -43678,11 +43756,11 @@
       "id": "REQ-004-050",
       "type": "Rule",
       "owner_fr": "FR-004",
-      "title": "Replacement quote pricing and expiry",
+      "title": "Replacement quote pricing, no expiry and ending the case",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST NOT attach an automatic FR-019 promotion to an admin-authored replacement quote or take a promotion usage reservation for it; the admin sets the replacement price directly. A replacement quote that is not accepted MUST expire under the normal quote expiry, MUST leave the inquiry flagged `supportRequired` without cancelling it automatically, and MUST allow the admin to author another replacement quote or cancel the inquiry and booking."
+        "statement": "System MUST NOT attach an automatic FR-019 promotion to an admin-authored replacement quote or take a promotion usage reservation for it; the admin sets the replacement price directly. A replacement quote MUST have no expiry and MUST NOT emit `quote.expiring_soon`; it stays a `draft` until the admin records the replacement acceptance, and a replacement draft that is never accepted follows the 7-day draft rule. It MUST leave the inquiry flagged `supportRequired` without cancelling it automatically, and the admin MAY author another replacement quote, close the inquiry with Close inquiry on FR-006 Screen 6 when the booking is already `Cancelled` with the marker, or cancel through FR-006 Alternative Flow B2 (Screen 9) when the fault is still pending."
       }
     },
     {
@@ -43906,11 +43984,11 @@
       "id": "REQ-004-070",
       "type": "Rule",
       "owner_fr": "FR-004",
-      "title": "Provider withdraws or archives before acceptance",
+      "title": "Provider withdraws a sent quote before acceptance",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Provider may withdraw or archive quotes pre-acceptance.",
+        "statement": "A provider MAY withdraw a `sent` quote before acceptance from Screen 3, with an optional reason; the quote moves to `withdrawn`, its promotion reservation is released, and the patient receives `quote.withdrawn`. A provider soft-deletes drafts only (REQ-004-076).",
         "rationale": "prd.md line 145 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -43920,9 +43998,9 @@
       "owner_fr": "FR-004",
       "title": "Accepted quote stays accepted",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "An accepted parent quote stays `accepted` and is never reopened for acceptance or moved to `expired`, including after FR-006 moves the booking to `Payment Window Expired`; its status changes only through provider withdrawal (Workflow 6). An admin booking cancellation in FR-006 moves the booking and inquiry to `Cancelled` but leaves the accepted parent quote `accepted`. Competing parent quotes stay cancelled."
+        "statement": "An accepted parent quote stays `accepted` and is never reopened for acceptance or moved to `expired`, including after FR-006 moves the booking to `Payment Window Expired`; its status changes only through provider withdrawal (Workflow 6), which is allowed only while the booking is `Confirmed`, before check-in, and without a provider-fault marker (REQ-004-079). An admin booking cancellation in FR-006 moves the booking and inquiry to `Cancelled` but leaves the accepted parent quote `accepted`. Competing parent quotes stay cancelled."
       }
     },
     {
@@ -43977,11 +44055,11 @@
       "id": "REQ-004-076",
       "type": "Rule",
       "owner_fr": "FR-004",
-      "title": "Provider soft delete before acceptance",
+      "title": "Provider soft-deletes drafts only",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Provider may soft-delete a quote before acceptance (removes from provider listing, not from audit/archive or patient record); the system sets status = Archived with rationale. Quotes in terminal states (accepted, expired, withdrawn, cancelled_other_accepted, cancelled_inquiry_cancelled, cancelled_provider_status) cannot be soft-deleted by provider.",
+        "statement": "A provider MAY soft-delete a draft quote only (removes it from the provider listing, not from the audit/archive); the system sets status = Archived with rationale. A sent quote cannot be soft-deleted by the provider: it leaves the offered state only by withdrawal before acceptance (REQ-004-070), by expiry, or through the patient's choice. Quotes in any status other than draft (sent, accepted, expired, withdrawn, cancelled_other_accepted, cancelled_inquiry_cancelled, cancelled_provider_status) cannot be soft-deleted by the provider.",
         "rationale": "prd.md lines 70, 153 (Workflow 4: Quote Deletion)."
       }
     },
@@ -43991,9 +44069,9 @@
       "owner_fr": "FR-004",
       "title": "Admin soft delete and restore",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Soft-deletes are fully auditable and revertible only by admin. Admin can perform soft delete or restore and view the immutable audit trail and full quote history; soft delete and restore are unavailable for a quote in `accepted` status, which is never deleted or restored. Only admin can restore expired/archived quotes if justified (GDPR-compliant log); restore to an acceptable state is blocked when the inquiry already has an accepted subquote.",
+        "statement": "Soft-deletes are fully auditable and revertible only by admin. Admin can perform soft delete or restore and view the immutable audit trail and full quote history; soft delete and restore are unavailable for a quote in `accepted` status, which is never deleted or restored. Only admin can restore expired/archived quotes if justified (GDPR-compliant log); a restore is blocked while the inquiry has an active acceptance (REQ-004-110) and while the booking carries a provider-fault marker (REQ-004-109). An archived draft is restored to `draft` with the 7-day count restarted. An archived sent quote (admin archive only) is restored to `sent` when its original expiry has not passed, with no renewal, and to `expired` otherwise; an expired quote is then restored under REQ-004-105.",
         "rationale": "prd.md lines 57, 906."
       }
     },
@@ -44012,11 +44090,11 @@
       "id": "REQ-004-079",
       "type": "Rule",
       "owner_fr": "FR-004",
-      "title": "Withdrawal after acceptance needs a reason and edits nothing",
+      "title": "Withdrawal after acceptance needs a reason, a Confirmed booking and edits nothing",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Provider submits a withdrawal after acceptance with a mandatory reason; the parent quote moves from `accepted` to `withdrawn`. This is the only status change FR-004 makes after acceptance; no quote field, option, or option/date-price record is edited."
+        "statement": "A provider submits a withdrawal after acceptance with a mandatory reason, and only while the booking is `Confirmed`, before check-in, and carries no provider-fault marker; in every other booking state the action is hidden and the provider is pointed to contact support. The parent quote moves from `accepted` to `withdrawn`. This is the only status change FR-004 makes after acceptance; no quote field, option, or option/date-price record is edited."
       }
     },
     {
@@ -44025,9 +44103,9 @@
       "owner_fr": "FR-004",
       "title": "Replacement quote only before treatment starts",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "The provider-fault transfer with a replacement quote and a new acceptance applies only before treatment starts (booking `Accepted` or `Confirmed`); provider drop-out after acceptance, including an FR-010 reassignment, is not a quote withdrawal. If the fault happens in Aftercare, no replacement quote, new acceptance, or new payment is created. Screen 8 is unavailable for a booking in `In Progress` or later stages and for any inquiry with an active acceptance."
+        "statement": "The provider-fault transfer with a replacement quote and a new acceptance applies only before treatment starts (booking `Accepted`, `Confirmed`, or `Cancelled` with the support-required marker); provider drop-out after acceptance, including an FR-010 reassignment, is not a quote withdrawal. If the fault happens in Aftercare, no replacement quote, new acceptance, or new payment is created. Screen 8 is unavailable for a booking in `In Progress` or later stages and once a replacement acceptance has been recorded for this transfer."
       }
     },
     {
@@ -44036,20 +44114,20 @@
       "owner_fr": "FR-004",
       "title": "Replacement quote preconditions",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Before the admin authors a replacement quote, the system checks that the booking was closed with a provider-fault cause (`ProviderFault`, `ProviderSuspended`, or `ProviderDeactivated`), that the inquiry has no active acceptance, that treatment had not started, and that the replacement provider is `Active` and is not the provider at fault."
+        "statement": "Before the admin authors a replacement quote, the system checks that the booking carries a provider-fault marker (pending, or closed with `ProviderFault`, `ProviderSuspended`, or `ProviderDeactivated`) and is `Accepted`, `Confirmed`, or `Cancelled` with that marker, that no replacement acceptance has been recorded for this transfer, that treatment had not started, and that the replacement provider is `Active` and is not the provider at fault."
       }
     },
     {
       "id": "REQ-004-082",
       "type": "Rule",
       "owner_fr": "FR-004",
-      "title": "Replacement quote captures currency and expiry when saved for acceptance",
+      "title": "Replacement quote has no expiry and captures currency when accepted",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "A replacement quote captures its currency from the active FR-026 quote configuration, and its expiry is captured from the active FR-026 quote configuration when it is saved for acceptance."
+        "statement": "A replacement quote MUST have no expiry. When the admin records the replacement acceptance, the quote moves to `sent` and `accepted`, its first-send time is recorded, and its currency is captured from the active FR-026 quote configuration."
       }
     },
     {
@@ -44169,11 +44247,11 @@
       "id": "REQ-004-094",
       "type": "Rule",
       "owner_fr": "FR-004",
-      "title": "Abandoned drafts auto-archived after 7 days",
+      "title": "Abandoned drafts auto-archived 7 days after the last edit",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System retains an abandoned draft for 7 days, then auto-archives it.",
+        "statement": "System retains an abandoned draft for 7 days after its last edit, then auto-archives it. The 7 days are a fixed platform rule with no admin setting, and the rule applies to a replacement draft too.",
         "rationale": "prd.md line 215 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -44298,9 +44376,9 @@
       "owner_fr": "FR-004",
       "title": "Admin restores an expired quote with a fresh window",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Only an admin, with a mandatory reason, MAY restore an expired quote, and not when the inquiry already has an accepted subquote. The restored quote MUST return to `sent` with a fresh full window: its new expiry is the restore time plus the FR-026 quote expiry window in force at that time. This is the only case in which a quote's expiry is renewed.",
+        "statement": "Only an admin, with a mandatory reason, MAY restore an expired quote, and not when the inquiry has an active acceptance (REQ-004-110). Before restoring, System MUST re-check the validity and usage limit of the promotion on the quote's rows and take a new reservation; if the limit is used up or the promotion has ended, the restore MUST be blocked with a message and the provider MAY send a new quote. The same re-check applies when an archived sent quote is restored to `sent`. The restored quote MUST return to `sent` with a fresh full window: its new expiry is the restore time plus the FR-026 quote expiry window in force at that time. This is the only case in which a quote's expiry is renewed.",
         "rationale": "prd.md line 775 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -44310,9 +44388,9 @@
       "owner_fr": "FR-004",
       "title": "quote.restored notice to patient and provider",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "When an admin restores an expired quote, System MUST notify both the patient and the provider through `quote.restored`; FR-004 is the only producer. Drafted default channels are Email and Push; recipients, content, and whether the notice can be switched off are set in the FR-030 catalogue, where the event is to be added.",
+        "statement": "When an admin restores an expired quote, System MUST notify both the patient and the provider through `quote.restored`; FR-004 is the only producer. Drafted default channels are Email and Push; recipients, content, and whether the notice can be switched off are set in the FR-030 catalogue (REQ-030-218).",
         "rationale": "prd.md line 776 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -44338,6 +44416,42 @@
       "attrs": {
         "statement": "The admin Quote List MUST group quotes by inquiry by default, and the admin MUST be able to toggle the grouping on and off.",
         "rationale": "prd.md lines 552 (Screen 5 Inquiry Grouping control: Default grouped by inquiry, Toggle grouping)."
+      }
+    },
+    {
+      "id": "REQ-004-109",
+      "type": "Rule",
+      "owner_fr": "FR-004",
+      "title": "Provider-fault marker freezes the accepted quote; the replacement quote is the only quote write",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "While the booking carries the provider-fault support-required marker, whether the fault is pending or the booking is already `Cancelled` with the marker, System MUST block provider edits and admin Screen 7 edits of the accepted quote's date range, appointment, and treatment details, MUST block an admin restore of any quote of the inquiry, and MUST hide a second Withdraw action. The replacement quote on Screen 8 is the only quote write allowed; admin notes stay allowed. The marker stops payment, reminders, and revive in FR-006 (REQ-006-081).",
+        "rationale": "Keeps the accepted quote from changing underneath a pending replacement; mirrors the FR-006 pending-fault block."
+      }
+    },
+    {
+      "id": "REQ-004-110",
+      "type": "Rule",
+      "owner_fr": "FR-004",
+      "title": "Active acceptance is the latest AcceptanceEvent without a supersession record",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "An active acceptance is the latest AcceptanceEvent on the inquiry that has no supersession record, whatever the status of its parent quote or subquote. The original acceptance stays active, even after its quote is withdrawn, until the replacement acceptance is recorded; once it is superseded, superseded takes precedence over withdrawn for the original subquote. The original parent quote keeps its own status, and only the replacement parent quote counts as the inquiry's accepted quote. A restore stays blocked between a withdrawal and the replacement acceptance.",
+        "rationale": "One definition so every rule that says an acceptance is active reads the same fact."
+      }
+    },
+    {
+      "id": "REQ-004-111",
+      "type": "Rule",
+      "owner_fr": "FR-004",
+      "title": "A replacement draft is cancelled without notice when an admin closes or cancels the inquiry",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "When an admin closes the inquiry (Close inquiry on FR-006 Screen 6) or cancels it (FR-006 Screen 9), System MUST move any draft replacement quote of that inquiry to `cancelled_inquiry_cancelled`, MUST NOT send `quote.cancelled_inquiry` to the replacement provider, and no `quote.expired` follows. The cascade trigger is owned by FR-003 (REQ-003-013) and FR-006.",
+        "rationale": "The replacement draft is admin-authored and never offered to the patient, so the provider is not told and nothing expires."
       }
     },
     {
@@ -95639,10 +95753,10 @@
       "owner_fr": "FR-004",
       "title": "Quote List",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "provider",
-        "description": "Provider views all quotes in a single unified list with no tabs, reflecting global case statuses; actions (Edit, Soft Delete, View Details) are state-aware; cancelled quotes are greyed out with a badge and all actions disabled."
+        "description": "Provider views all quotes in a single unified list with no tabs, reflecting global case statuses; actions (Edit, Soft Delete for drafts only, View Details) are state-aware; cancelled quotes are greyed out with a badge and all actions disabled."
       }
     },
     {
@@ -95651,10 +95765,10 @@
       "owner_fr": "FR-004",
       "title": "Quote Details",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "provider",
-        "description": "Provider inspects full quote details, patient-first as a continuation of the inquiry (Patient, Inquiry, Quote, Audit); Edit and Soft Delete only when eligible; an Inquiry Cancelled banner and read-only state for cancelled quotes."
+        "description": "Provider inspects full quote details, patient-first as a continuation of the inquiry (Patient, Inquiry, Quote, Audit); Edit and Soft Delete (drafts only) when eligible, and Withdraw for a sent quote before acceptance or for an accepted quote only while the booking is Confirmed, before check-in, with no provider-fault marker; an Inquiry Cancelled banner and read-only state for cancelled quotes."
       }
     },
     {
@@ -95675,10 +95789,10 @@
       "owner_fr": "FR-004",
       "title": "Quote List (Admin)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
-        "description": "Admin lists and filters all quotes across providers, grouped by inquiry by default, with a multi-quote cue, per-quote audit trail and version history; Restore and Archive are hidden for accepted quotes."
+        "description": "Admin lists and filters all quotes across providers, grouped by inquiry by default, with a multi-quote cue, per-quote audit trail and version history; Restore and Archive are hidden for accepted quotes, and Restore is blocked while the inquiry has an active acceptance or the booking carries a provider-fault marker."
       }
     },
     {
@@ -95699,10 +95813,10 @@
       "owner_fr": "FR-004",
       "title": "Admin Inline Quote Edit",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
-        "description": "Admin performs inline edits with audit on draft, sent, and accepted quotes, with a mandatory reason; price, currency, and promotion stay read-only once accepted, and an edit after acceptance is stored as a new version beside the unchanged acceptance snapshot."
+        "description": "Admin performs inline edits with audit on draft, sent, and accepted quotes, with a mandatory reason; price, currency, and promotion stay read-only once accepted, an edit after acceptance is stored as a new version beside the unchanged acceptance snapshot, and edits of the accepted quote are blocked while the booking carries a provider-fault marker, except admin notes."
       }
     },
     {
@@ -95711,10 +95825,10 @@
       "owner_fr": "FR-004",
       "title": "Admin Replacement Quote Authoring",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "admin",
-        "description": "Admin authors a quote for the replacement provider during an FR-006 provider-fault transfer, opened only from the transfer; Save and Continue confirms the summary and returns to FR-006 to record the acceptance."
+        "description": "Admin authors a quote for the replacement provider during an FR-006 provider-fault transfer, pending or closed, opened only from the transfer; the quote stays a draft with no expiry, and Save and Continue confirms the summary and returns to FR-006 to record the acceptance."
       }
     },
     {
@@ -105382,7 +105496,7 @@
       "owner_fr": "FR-004",
       "title": "Provider receives inquiry and opens details",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Main Flow step 1"
       }
@@ -105481,7 +105595,7 @@
       "owner_fr": "FR-004",
       "title": "Provider reviews and submits the quote (Tab 7)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow step 13"
       }
@@ -105534,9 +105648,9 @@
       "id": "STP-004-101",
       "type": "Step",
       "owner_fr": "FR-004",
-      "title": "Draft is auto-archived after 7 days",
+      "title": "Draft is auto-archived 7 days after its last edit",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flows bullet 1"
       }
@@ -105635,7 +105749,7 @@
       "owner_fr": "FR-004",
       "title": "Draft, sent and expired quotes become Cancelled (Inquiry Cancelled)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flows bullet 9"
       }
@@ -105649,6 +105763,149 @@
       "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flows bullet 10"
+      }
+    },
+    {
+      "id": "STP-004-112",
+      "type": "Step",
+      "owner_fr": "FR-004",
+      "title": "Provider withdraws a sent quote from Screen 3, with an optional reason",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flows bullet 11"
+      }
+    },
+    {
+      "id": "STP-004-113",
+      "type": "Step",
+      "owner_fr": "FR-004",
+      "title": "System moves the quote to withdrawn, releases the promotion reservation and sends quote.withdrawn to the patient",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flows bullet 11"
+      }
+    },
+    {
+      "id": "STP-004-114",
+      "type": "Step",
+      "owner_fr": "FR-004",
+      "title": "Provider withdraws the accepted quote with a mandatory reason, only while the booking is Confirmed before check-in and has no provider-fault marker",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flows bullet 12; Workflow 6"
+      }
+    },
+    {
+      "id": "STP-004-115",
+      "type": "Step",
+      "owner_fr": "FR-004",
+      "title": "System moves the accepted quote to withdrawn, keeps the acceptance unchanged and sends quote.withdrawn to the patient and the admin",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flows bullet 12; Workflow 6"
+      }
+    },
+    {
+      "id": "STP-004-116",
+      "type": "Step",
+      "owner_fr": "FR-004",
+      "title": "Admin opens Screen 8 from the transfer; the system checks the provider-fault marker, the booking status, that no replacement acceptance exists, that treatment has not started and the replacement provider",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flows bullet 13; Workflow 7"
+      }
+    },
+    {
+      "id": "STP-004-117",
+      "type": "Step",
+      "owner_fr": "FR-004",
+      "title": "Admin builds the replacement quote and saves it as a draft with no expiry, no promotion and no notice",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flows bullet 13; Workflow 7"
+      }
+    },
+    {
+      "id": "STP-004-118",
+      "type": "Step",
+      "owner_fr": "FR-004",
+      "title": "Admin restores an expired or archived quote with a mandatory reason",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flows bullet 14"
+      }
+    },
+    {
+      "id": "STP-004-119",
+      "type": "Step",
+      "owner_fr": "FR-004",
+      "title": "System re-checks the promotion validity and usage limit and takes a new reservation",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flows bullet 14"
+      }
+    },
+    {
+      "id": "STP-004-120",
+      "type": "Step",
+      "owner_fr": "FR-004",
+      "title": "System returns the quote to its restored status and sends quote.restored for an expired quote",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flows bullet 14"
+      }
+    },
+    {
+      "id": "STP-004-121",
+      "type": "Step",
+      "owner_fr": "FR-004",
+      "title": "System blocks the restore with a message; the provider may send a new quote",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flows bullet 14"
+      }
+    },
+    {
+      "id": "STP-004-122",
+      "type": "Step",
+      "owner_fr": "FR-004",
+      "title": "Provider soft-deletes a draft quote with a rationale",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flows bullet 15"
+      }
+    },
+    {
+      "id": "STP-004-123",
+      "type": "Step",
+      "owner_fr": "FR-004",
+      "title": "System archives the draft with the rationale; only an admin can restore it",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flows bullet 15"
+      }
+    },
+    {
+      "id": "STP-004-124",
+      "type": "Step",
+      "owner_fr": "FR-004",
+      "title": "System emits quote.expiring_soon once for a sent quote at the lead time",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flows bullet 16"
       }
     },
     {
@@ -167245,9 +167502,27 @@
       "attrs": {}
     },
     {
+      "from_id": "FLW-004-admin-restore",
+      "verb": "starts at",
+      "to_id": "STP-004-118",
+      "attrs": {}
+    },
+    {
       "from_id": "FLW-004-draft-cancelled-other-accepted",
       "verb": "starts at",
       "to_id": "STP-004-109",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-004-draft-soft-delete",
+      "verb": "starts at",
+      "to_id": "STP-004-122",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-004-expiring-soon",
+      "verb": "starts at",
+      "to_id": "STP-004-124",
       "attrs": {}
     },
     {
@@ -167296,6 +167571,24 @@
       "from_id": "FLW-004-remove-option",
       "verb": "starts at",
       "to_id": "STP-004-106",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-004-replacement-quote",
+      "verb": "starts at",
+      "to_id": "STP-004-116",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-004-withdraw-after-acceptance",
+      "verb": "starts at",
+      "to_id": "STP-004-114",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-004-withdraw-before-acceptance",
+      "verb": "starts at",
+      "to_id": "STP-004-112",
       "attrs": {}
     },
     {
@@ -169790,7 +170083,7 @@
       "verb": "active in",
       "to_id": "STG-main-04-booking",
       "attrs": {
-        "rules": 16
+        "rules": 19
       },
       "derived": true
     },
@@ -184423,12 +184716,6 @@
       "attrs": {}
     },
     {
-      "from_id": "REQ-004-050",
-      "verb": "governed by",
-      "to_id": "SET-quote-expiry-window",
-      "attrs": {}
-    },
-    {
       "from_id": "REQ-004-051",
       "verb": "applies at",
       "to_id": "STG-main-02-quote",
@@ -185042,6 +185329,12 @@
     },
     {
       "from_id": "REQ-004-070",
+      "verb": "applies to",
+      "to_id": "SCR-004-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-070",
       "verb": "decided by",
       "to_id": "SRC-PRD-004",
       "attrs": {}
@@ -185271,6 +185564,12 @@
     {
       "from_id": "REQ-004-077",
       "verb": "applies to",
+      "to_id": "ENT-booking.support_required",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-077",
+      "verb": "applies to",
       "to_id": "ENT-quote",
       "attrs": {}
     },
@@ -185343,6 +185642,12 @@
     {
       "from_id": "REQ-004-079",
       "verb": "applies to",
+      "to_id": "ENT-booking.status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-079",
+      "verb": "applies to",
       "to_id": "ENT-quote",
       "attrs": {}
     },
@@ -185356,6 +185661,12 @@
       "from_id": "REQ-004-079",
       "verb": "applies to",
       "to_id": "EVT-quote-withdrawn",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-079",
+      "verb": "applies to",
+      "to_id": "SCR-004-03",
       "attrs": {}
     },
     {
@@ -185409,6 +185720,12 @@
     {
       "from_id": "REQ-004-081",
       "verb": "applies to",
+      "to_id": "ENT-booking.support_required",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-081",
+      "verb": "applies to",
       "to_id": "ENT-quote",
       "attrs": {}
     },
@@ -185439,7 +185756,7 @@
     {
       "from_id": "REQ-004-082",
       "verb": "applies to",
-      "to_id": "ENT-quote.expires_at",
+      "to_id": "ENT-quote.first_sent_at",
       "attrs": {}
     },
     {
@@ -185458,12 +185775,6 @@
       "from_id": "REQ-004-082",
       "verb": "governed by",
       "to_id": "SET-default-currency",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-004-082",
-      "verb": "governed by",
-      "to_id": "SET-quote-expiry-window",
       "attrs": {}
     },
     {
@@ -186135,6 +186446,12 @@
     {
       "from_id": "REQ-004-105",
       "verb": "applies to",
+      "to_id": "ENT-quote-option-date-price.promotion_id",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-105",
+      "verb": "applies to",
       "to_id": "ENT-quote.expires_at",
       "attrs": {}
     },
@@ -186230,6 +186547,126 @@
     },
     {
       "from_id": "REQ-004-108",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-004",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-109",
+      "verb": "applies at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-109",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-109",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-109",
+      "verb": "applies to",
+      "to_id": "ENT-booking.support_required",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-109",
+      "verb": "applies to",
+      "to_id": "ENT-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-109",
+      "verb": "applies to",
+      "to_id": "SCR-004-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-109",
+      "verb": "applies to",
+      "to_id": "SCR-004-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-109",
+      "verb": "applies to",
+      "to_id": "SCR-004-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-109",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-004",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-110",
+      "verb": "applies at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-110",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-110",
+      "verb": "applies to",
+      "to_id": "ENT-acceptance-event",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-110",
+      "verb": "applies to",
+      "to_id": "ENT-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-110",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-004",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-111",
+      "verb": "applies at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-111",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-111",
+      "verb": "applies to",
+      "to_id": "ENT-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-111",
+      "verb": "applies to",
+      "to_id": "ENT-quote.status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-111",
+      "verb": "applies to",
+      "to_id": "EVT-quote-cancelled-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-004-111",
       "verb": "decided by",
       "to_id": "SRC-PRD-004",
       "attrs": {}
@@ -298372,6 +298809,16 @@
     {
       "from_id": "SCR-004-03",
       "verb": "shows",
+      "to_id": "ENT-quote-audit.reason",
+      "attrs": {
+        "provenance": "user input",
+        "label": "Withdrawal Reason",
+        "editable": true
+      }
+    },
+    {
+      "from_id": "SCR-004-03",
+      "verb": "shows",
       "to_id": "ENT-quote-option-date-price.appointment_at",
       "attrs": {
         "provenance": "retrieved",
@@ -299631,6 +300078,15 @@
       "attrs": {
         "provenance": "inherited from another FR",
         "label": "Transfer Context: closed booking"
+      }
+    },
+    {
+      "from_id": "SCR-004-08",
+      "verb": "shows",
+      "to_id": "ENT-booking.support_required",
+      "attrs": {
+        "provenance": "inherited from another FR",
+        "label": "Transfer Context: provider-fault marker"
       }
     },
     {
@@ -352549,6 +353005,12 @@
     },
     {
       "from_id": "STP-004-110",
+      "verb": "applies",
+      "to_id": "REQ-004-111",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-110",
       "verb": "at",
       "to_id": "STG-main-02-quote",
       "attrs": {}
@@ -352599,6 +353061,468 @@
       "from_id": "STP-004-111",
       "verb": "next",
       "to_id": "STP-006-609",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-112",
+      "verb": "applies",
+      "to_id": "REQ-004-070",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-112",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-112",
+      "verb": "done by",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-112",
+      "verb": "next",
+      "to_id": "STP-004-113",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-112",
+      "verb": "on",
+      "to_id": "SCR-004-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-113",
+      "verb": "applies",
+      "to_id": "REQ-004-042",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-113",
+      "verb": "applies",
+      "to_id": "REQ-004-047",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-113",
+      "verb": "applies",
+      "to_id": "REQ-004-070",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-113",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-113",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-114",
+      "verb": "applies",
+      "to_id": "REQ-004-004",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-114",
+      "verb": "applies",
+      "to_id": "REQ-004-079",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-114",
+      "verb": "applies",
+      "to_id": "REQ-004-109",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-114",
+      "verb": "at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-114",
+      "verb": "done by",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-114",
+      "verb": "next",
+      "to_id": "STP-004-115",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-114",
+      "verb": "on",
+      "to_id": "SCR-004-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-115",
+      "verb": "applies",
+      "to_id": "REQ-004-004",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-115",
+      "verb": "applies",
+      "to_id": "REQ-004-047",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-115",
+      "verb": "applies",
+      "to_id": "REQ-004-071",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-115",
+      "verb": "applies",
+      "to_id": "REQ-004-079",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-115",
+      "verb": "at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-115",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-115",
+      "verb": "next",
+      "to_id": "STP-006-609",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-116",
+      "verb": "applies",
+      "to_id": "REQ-004-080",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-116",
+      "verb": "applies",
+      "to_id": "REQ-004-081",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-116",
+      "verb": "applies",
+      "to_id": "REQ-004-110",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-116",
+      "verb": "at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-116",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-116",
+      "verb": "next",
+      "to_id": "STP-004-117",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-116",
+      "verb": "on",
+      "to_id": "SCR-004-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-117",
+      "verb": "applies",
+      "to_id": "REQ-004-048",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-117",
+      "verb": "applies",
+      "to_id": "REQ-004-050",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-117",
+      "verb": "applies",
+      "to_id": "REQ-004-078",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-117",
+      "verb": "applies",
+      "to_id": "REQ-004-082",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-117",
+      "verb": "applies",
+      "to_id": "REQ-004-083",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-117",
+      "verb": "applies",
+      "to_id": "REQ-004-109",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-117",
+      "verb": "at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-117",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-117",
+      "verb": "next",
+      "to_id": "STP-006-605",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-117",
+      "verb": "on",
+      "to_id": "SCR-004-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-118",
+      "verb": "applies",
+      "to_id": "REQ-004-077",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-118",
+      "verb": "applies",
+      "to_id": "REQ-004-105",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-118",
+      "verb": "applies",
+      "to_id": "REQ-004-109",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-118",
+      "verb": "applies",
+      "to_id": "REQ-004-110",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-118",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-118",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-118",
+      "verb": "next",
+      "to_id": "STP-004-119",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-118",
+      "verb": "on",
+      "to_id": "SCR-004-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-119",
+      "verb": "applies",
+      "to_id": "REQ-004-042",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-119",
+      "verb": "applies",
+      "to_id": "REQ-004-105",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-119",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-119",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-119",
+      "verb": "next",
+      "to_id": "STP-004-120",
+      "attrs": {
+        "label": "promotion still available",
+        "condition": "REQ-004-105"
+      }
+    },
+    {
+      "from_id": "STP-004-119",
+      "verb": "next",
+      "to_id": "STP-004-121",
+      "attrs": {
+        "label": "limit used up or promotion ended",
+        "condition": "REQ-004-105"
+      }
+    },
+    {
+      "from_id": "STP-004-120",
+      "verb": "applies",
+      "to_id": "REQ-004-077",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-120",
+      "verb": "applies",
+      "to_id": "REQ-004-105",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-120",
+      "verb": "applies",
+      "to_id": "REQ-004-106",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-120",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-120",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-121",
+      "verb": "applies",
+      "to_id": "REQ-004-105",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-121",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-121",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-122",
+      "verb": "applies",
+      "to_id": "REQ-004-076",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-122",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-122",
+      "verb": "done by",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-122",
+      "verb": "next",
+      "to_id": "STP-004-123",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-122",
+      "verb": "on",
+      "to_id": "SCR-004-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-123",
+      "verb": "applies",
+      "to_id": "REQ-004-076",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-123",
+      "verb": "applies",
+      "to_id": "REQ-004-077",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-123",
+      "verb": "applies",
+      "to_id": "REQ-004-097",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-123",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-123",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-124",
+      "verb": "applies",
+      "to_id": "REQ-004-039",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-124",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-004-124",
+      "verb": "done by",
+      "to_id": "ACT-system",
       "attrs": {}
     },
     {
@@ -426185,6 +427109,76 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-022740-b6562d92",
+      "at": "2026-11-24T02:27:40.246306+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-004 logic review pass 1 - provider withdraws a sent quote before acceptance and may soft-delete drafts only; withdrawal after acceptance only while the booking is Confirmed before check-in with no provider-fault marker; the provider-fault transfer follows FR-006 (booking keeps its status and hold until the admin submit; Screen 8 opens for a pending or closed fault until a replacement acceptance is recorded); new rules for the frozen accepted quote (REQ-004-109), the definition of an active acceptance (REQ-004-110) and the replacement draft cascade (REQ-004-111); replacement quote has no expiry and stays a draft until accepted; archive releases and restore re-checks the promotion; restore targets for archived drafts and sent quotes; 7-day draft archive counted from the last edit; identity rule cites the platform rule; restore notice cites its catalogue entry; flows and steps for withdrawal, replacement quote, admin restore, draft soft-delete and expiring-soon; edges to retired steps removed. Business defaults per owner review entries 56 to 58.",
+      "source_id": null,
+      "nodes_added": [
+        "FLW-004-admin-restore",
+        "FLW-004-draft-soft-delete",
+        "FLW-004-expiring-soon",
+        "FLW-004-replacement-quote",
+        "FLW-004-withdraw-after-acceptance",
+        "FLW-004-withdraw-before-acceptance",
+        "REQ-004-109",
+        "REQ-004-110",
+        "REQ-004-111",
+        "STP-004-112",
+        "STP-004-113",
+        "STP-004-114",
+        "STP-004-115",
+        "STP-004-116",
+        "STP-004-117",
+        "STP-004-118",
+        "STP-004-119",
+        "STP-004-120",
+        "STP-004-121",
+        "STP-004-122",
+        "STP-004-123",
+        "STP-004-124"
+      ],
+      "nodes_updated": [
+        "ENT-quote.currency_snapshot",
+        "ENT-quote.expires_at",
+        "ENT-quote.first_sent_at",
+        "EVT-quote-expired",
+        "EVT-quote-expiring-soon",
+        "FLW-004-abandoned-draft",
+        "REQ-004-003",
+        "REQ-004-004",
+        "REQ-004-005",
+        "REQ-004-037",
+        "REQ-004-039",
+        "REQ-004-042",
+        "REQ-004-048",
+        "REQ-004-050",
+        "REQ-004-070",
+        "REQ-004-071",
+        "REQ-004-076",
+        "REQ-004-077",
+        "REQ-004-079",
+        "REQ-004-080",
+        "REQ-004-081",
+        "REQ-004-082",
+        "REQ-004-094",
+        "REQ-004-105",
+        "REQ-004-106",
+        "SCR-004-02",
+        "SCR-004-03",
+        "SCR-004-05",
+        "SCR-004-07",
+        "SCR-004-08",
+        "STP-004-001",
+        "STP-004-013",
+        "STP-004-101",
+        "STP-004-110"
+      ],
+      "edges_added": 112,
+      "edges_removed": 5,
+      "rows": 274
+    },
     {
       "id": "cs-20261124-015918-c85c5301",
       "at": "2026-11-24T01:59:18.525932+00:00",
