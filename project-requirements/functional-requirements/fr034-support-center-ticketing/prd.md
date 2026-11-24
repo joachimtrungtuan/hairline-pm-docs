@@ -213,10 +213,10 @@ The Support Center & Ticketing System provides a unified formal support system f
   1. Admin clicks "Reassign Case" (there is no separate escalation button or form) (REQ-034-103)
   2. System displays the Reassign Case modal (Screen 5)
   3. Admin ticks "Escalate", selects a Super Admin as the new assignee (the list shows active Super Admin users only), and enters the required reassignment reason
-  4. System raises case priority to "High" or "Urgent" as the admin chooses
+  4. System sets the case priority to the "High" or "Urgent" the admin chose; the choice offers only values at or above the current priority, and a case that is already Urgent stays Urgent with no choice shown (REQ-034-103)
   5. System sends the escalation notice to the chosen Super Admin
-  6. System logs the reassignment in case timeline, marked as an escalation
-- **Outcome**: Case reassigned to a Super Admin with increased priority (REQ-034-103)
+  6. System logs the reassignment in case timeline, marked as an escalation, with the new priority
+- **Outcome**: Case reassigned to a Super Admin at the chosen priority, never lower than before (REQ-034-103)
 
 **A2: Case Requires Patient Account Intervention**:
 
@@ -302,6 +302,15 @@ The Support Center & Ticketing System provides a unified formal support system f
   6. System logs intervention in both support case timeline and provider account audit trail (REQ-034-074)
 - **Outcome**: Provider account issue resolved with audit trail across both modules
 
+**A7: System Escalates an Overdue Case**:
+
+- **Trigger**: An Open or In Progress case reaches the Urgent Case Unassigned Threshold or the High Priority Case Threshold (Screen 7), with no admin action
+- **Steps**:
+  1. System finds that the Urgent Case Unassigned Threshold or the High Priority Case Threshold has run out for a case (REQ-034-155, REQ-034-173)
+  2. System marks the case as escalated in its timeline, without reassigning it or changing its priority (REQ-034-173)
+  3. System sends the escalation notice to all Super Admins (REQ-034-092, REQ-034-173)
+- **Outcome**: Super Admins are told the case has stalled; the case keeps its assignee and priority; an admin who escalates by hand uses A1 (REQ-034-173)
+
 **A8: Booking Request Raised from a Booking Screen**:
 
 - **Trigger**: Patient taps "Contact Support" on a booking screen (FR-006) and submits a booking cancellation or change request
@@ -310,6 +319,7 @@ The Support Center & Ticketing System provides a unified formal support system f
   2. System creates the support case with the request type, the booking reference and request status "Open"; Ticket Source is "Patient App" and Submitter Type is "Patient" (REQ-034-167, REQ-034-168, REQ-034-024)
   3. System sets case status to "Open", routes it to the Support Staff pool and notifies the pool (REQ-034-100, REQ-034-099)
   4. Admin completes the request or declines it in FR-016 (Screen 9, flow A8); the case cannot be Resolved until then (REQ-034-174)
+- **Other booking screens**: Contact Support on the Payment Window Expired and Cancelled booking screens (FR-006) creates a plain support case that carries the booking reference and has no request type; only cancellation and change requests carry a request type (REQ-034-182, REQ-034-167)
 - **Outcome**: A booking request raised from a booking screen is tracked as a support case; Request Type, Request Status, Decline Reason and Outcome are shown read-only on Screens 1 and 3, and declining stays in FR-016 (REQ-016-196, REQ-016-197)
 
 **B1: Invalid Patient Identifier**:
@@ -319,7 +329,7 @@ The Support Center & Ticketing System provides a unified formal support system f
   1. System validates patient identifier against patient database
   2. System displays error message: "Patient not found. Please verify identifier or create case without patient link." (REQ-034-104)
   3. Admin corrects identifier or ticks "No Patient Link" and enters the required contact email (contact name optional) (REQ-034-179)
-  4. System allows case creation without patient linkage and stores the contact on the case; replies, the confirmation and the resolution email go to that address (REQ-034-104, REQ-034-179)
+  4. System allows case creation without patient linkage and stores the contact on the case; every notice that would go to the patient goes to that address (REQ-034-104, REQ-034-179)
 - **Outcome**: Case created for inquiry from non-registered user or with corrected patient identifier
 
 **B2: Case Reassignment (Assigned Admin Unavailable)**:
@@ -340,9 +350,9 @@ The Support Center & Ticketing System provides a unified formal support system f
 - **Steps**:
   1. Admin receives the patient's email, which carries the case ID in the subject (FR-035 Closed Case Banner); when the support email setting is empty there is no email route and the patient creates a new ticket (REQ-034-177)
   2. Admin finds the closed case by that case ID in search
-  3. Admin clicks "Reopen Case" button
+  3. Admin clicks "Reopen Case" button (shown on Closed cases and on Resolved cases, REQ-034-181)
   4. System prompts for reopening reason
-  5. System changes case status from "Closed" to "Open"
+  5. System changes case status from "Closed" (or "Resolved") to "Open"
   6. System logs reopening action with timestamp and reason
   7. Admin reassigns or continues investigation
 - **Outcome**: Case lifecycle extended to ensure full resolution
@@ -407,7 +417,7 @@ The Support Center & Ticketing System provides a unified formal support system f
 | **Table Column 11**: Created Date | datetime | N/A | Case creation timestamp (format: YYYY-MM-DD HH:mm); Width: 130px | Local timezone; Sortable | ENT-support-case.submitted_at |
 | **Table Column 12**: Last Updated | datetime | N/A | Most recent modification timestamp (format: YYYY-MM-DD HH:mm); Width: 130px | Local timezone; Default sort column (descending); Sortable | ENT-support-case.last_updated_at |
 | **Table Column 13**: Actions | button group | N/A | Quick action buttons; Width: 180px | View, Reassign, Resolve, Reopen, Close; Buttons shown/hidden based on case status; Not sortable (REQ-034-118) | no graph field (control) |
-| Bulk Assign Button | button | N/A | Assign selected cases to admin user | Enabled only if cases selected (REQ-034-119) | no graph field (control) |
+| Bulk Assign Button | button | N/A | Assign selected cases to one admin user: opens the Screen 5 modal once for all selected cases, with one new assignee and one required reason | Enabled only if cases selected; only Open and In Progress cases are included, the others are skipped and the count skipped is shown; no Escalate option in bulk; each case gets the normal assignment notice and timeline entry (REQ-034-119) | no graph field (control) |
 | Bulk Close Button | button | N/A | Close selected cases (only if all are Resolved status) | Enabled only if cases selected and all Resolved (REQ-034-119) | no graph field (control) |
 | Pagination Controls | component | N/A | Navigate through case list pages | 50 cases per page default; Shows: Previous, 1, 2, 3, ..., Next (REQ-034-120) | no graph field (control) |
 
@@ -416,7 +426,7 @@ The Support Center & Ticketing System provides a unified formal support system f
 - **View**: Opens case detail view (Screen 3)
 - **Reassign**: Opens reassignment modal (Screen 5) - only for Open/In Progress cases
 - **Resolve**: Opens resolution modal (Screen 4) - only for In Progress cases
-- **Reopen**: Reopens case (changes status from Closed to Open) - only for Closed cases
+- **Reopen**: Reopens case (changes status from Closed or Resolved to Open) - only for Closed and Resolved cases (REQ-034-181)
 - **Close**: Closes case - only for Resolved cases
 
 **Business Rules**:
@@ -457,7 +467,7 @@ The Support Center & Ticketing System provides a unified formal support system f
 | Submitter Type | dropdown select (readonly if auto-created) | Yes | Type of user who submitted case | Options: Patient, Provider, Admin; Auto-populated for app-submitted tickets, editable for manual entries (REQ-034-124) | ENT-support-case.submitter_type |
 | Patient Identifier | text input with autocomplete | No | HPID, email, or phone to link case to patient record | Must match existing patient if provided; optional field; Required if Submitter Type = Patient, unless No Patient Link is chosen (REQ-034-123) | ENT-support-case.patient_id, ENT-patient.patient_id, ENT-patient.name |
 | No Patient Link | checkbox | No | Creates the case without a patient record (for example a non-registered sender) | When ticked, Contact Email is required (REQ-034-179, REQ-034-104) | no graph field (control) |
-| Contact Email | text input | Conditional | Contact address of the sender when No Patient Link is ticked; replies, the confirmation and the resolution email go here | Required when No Patient Link is ticked; valid email format (REQ-034-179) | ENT-support-case.contact_email |
+| Contact Email | text input | Conditional | Contact address of the sender when No Patient Link is ticked; every notice that would go to the patient goes here | Required when No Patient Link is ticked; valid email format (REQ-034-179) | ENT-support-case.contact_email |
 | Contact Name | text input | No | Name of the sender when No Patient Link is ticked | Optional; shown only when No Patient Link is ticked (REQ-034-179) | ENT-support-case.contact_name |
 | Provider Identifier | text input with autocomplete | No | Provider ID or clinic name (if case is provider-related) | Must match existing provider if provided; optional field; Required if Submitter Type = Provider (REQ-034-123) | ENT-support-case.provider_id, ENT-provider.name |
 | Description | textarea | Yes | Full details of inquiry or issue | Min 20 chars, max 5000 chars, supports plain text (REQ-034-128) | ENT-support-case.description |
@@ -481,8 +491,8 @@ The Support Center & Ticketing System provides a unified formal support system f
 - Attachments scanned for viruses before upload completes; when the scanner is unavailable the file is refused with a "try again later" message and the case can be saved without it (REQ-034-044)
 - Internal Notes section visible to every admin who has the "View Support Center" permission (REQ-034-083)
 - Status is "Open" for new cases and is not editable on this form when a case is edited (REQ-034-096, REQ-034-102)
-- Status follows unified workflow: Open → In Progress → Resolved → Closed (cannot skip stages except for case reopening); Resolved is reached only through Resolve Case, Closed only through Close Case, and Closed to Open only through Reopen Case (REQ-034-102)
-- Ticking "No Patient Link" makes Contact Email required; replies, the confirmation and the resolution email go to that address (REQ-034-179)
+- Status follows unified workflow: Open → In Progress → Resolved → Closed (cannot skip stages except for case reopening); Resolved is reached only through Resolve Case, Closed only through Close Case, and Closed or Resolved to Open only through Reopen Case (REQ-034-102)
+- Ticking "No Patient Link" makes Contact Email required; every notice that would go to the patient goes to that address (REQ-034-179)
 - Priority defaults to "Medium" for new cases (REQ-034-096)
 - Assigned To field optional on creation; can be assigned later (assignment is informational only - all admins can work on all cases) (REQ-034-126)
 - Feedback Resolution field only visible and applicable when Category = Feature Request, Bug Report, or Feedback (REQ-034-125)
@@ -532,10 +542,10 @@ The Support Center & Ticketing System provides a unified formal support system f
 | Case Timeline | vertical timeline component | N/A | Comprehensive timeline showing all case events with full context: case creation, status changes, feedback resolution updates, assignments, reassignments, internal notes, attachments, account interventions, case reopening | Readonly, scrollable, reverse chronological (newest first) | ENT-support-case-timeline-event.event_type, ENT-support-case-timeline-event.event_timestamp, ENT-support-case-timeline-event.actor_id, ENT-support-case-timeline-event.actor_type, ENT-support-case-timeline-event.description, ENT-support-case-timeline-event.is_internal_note, ENT-support-case-attachment.file_name, ENT-support-case-attachment.file_size, ENT-support-case-attachment.uploaded_by_id |
 | Add Internal Note Button | button | N/A | Allows admin to add internal note to case (not visible to patient/provider) | Opens note entry modal | no graph field (control) |
 | Reply to Patient/Provider Button | button | N/A | Allows admin to send message in communication thread (visible to patient/provider) | Opens message composition modal; sends notification email | no graph field (control) |
-| Update Status Button | button | N/A | Changes case status from Open to In Progress only | Opens status change modal; Resolved is reached only through Resolve Case, Closed only through Close Case, and Closed to Open only through Reopen Case (REQ-034-102) | no graph field (control) |
+| Update Status Button | button | N/A | Changes case status from Open to In Progress only | Opens status change modal; Resolved is reached only through Resolve Case, Closed only through Close Case, and Closed or Resolved to Open only through Reopen Case (REQ-034-102) | no graph field (control) |
 | Resolve Case Button | button | N/A | Marks case as Resolved with resolution summary | Opens resolution modal (Screen 4); only enabled for In Progress cases | no graph field (control) |
 | Reassign Case Button | button | N/A | Transfers case to another admin (informational only) | Opens reassignment modal (Screen 5) | no graph field (control) |
-| Reopen Case Button | button | N/A | Reopens closed case (changes status from Closed to Open) | Opens reopen reason modal; only visible for Closed cases | no graph field (control) |
+| Reopen Case Button | button | N/A | Reopens a Closed or Resolved case (changes status to Open) | Opens reopen reason modal; only visible for Closed and Resolved cases (REQ-034-181) | no graph field (control) |
 | Close Case Button | button | N/A | Marks case as Closed (only enabled if status is Resolved) | Confirmation required (REQ-034-134) | no graph field (control) |
 | Edit Case Button | button | N/A | Opens case edit form (Screen 2) to modify case details | Enabled for all statuses | no graph field (control) |
 
@@ -565,7 +575,7 @@ Each message in the thread displays:
 - **Case Resolved**: Shows resolution summary, resolution category, feedback resolution (if applicable), who resolved it
 - **Case Reopened**: Shows who reopened it (an admin, or System for an automatic reopen), reason for reopening, previous resolution summary
 - **Case Closed**: Shows who closed it, auto-close vs manual close indicator
-- **Case Escalated**: Shows the reassignment marked as an escalation, the reason, and the raised priority
+- **Case Escalated**: For a manual escalation, shows the reassignment marked as an escalation, the reason, and the new priority; for a system escalation (Alternative Flow A7), shows only the escalation marker, with no reassignment and no priority change (REQ-034-103, REQ-034-173)
 - **Notification Sent / Notification Failed**: Shows the notification, its recipient, and its delivery result
 - **Admin Deactivated**: Shows that the assigned admin account was deactivated and the case became unassigned
 
@@ -583,7 +593,7 @@ Each message in the thread displays:
 - System prevents closing case unless status is "Resolved" first (REQ-034-102)
 - Linked Patient/Provider names clickable to deep-link to patient/provider management modules (only if case is linked) (REQ-034-134)
 - Deep-link buttons only visible when case is linked to patient or provider record (REQ-034-134)
-- "Reopen Case" button only visible when case status is "Closed" (REQ-034-134)
+- "Reopen Case" button only visible when case status is "Closed" or "Resolved" (REQ-034-134, REQ-034-181)
 - "Resolve Case" button only visible when case status is "In Progress" (REQ-034-134)
 - A case whose request status is Open cannot be Resolved until the request is completed or declined (REQ-034-174)
 - A message that asks for a Closed case to be reopened (from a provider) carries a "Reopen request" flag in the Communication Thread; the case stays Closed until an admin uses Reopen Case (REQ-034-178)
@@ -654,7 +664,7 @@ Each message in the thread displays:
 | Current Assignee | text (readonly) | N/A | Current admin user assigned to case (or "Unassigned") | Display only | ENT-support-case.assigned_admin_id |
 | New Assignee | dropdown select | Yes | Admin user to reassign case to | List of active admin users with the Respond to Support permission; when Escalate is ticked, active Super Admin users only; cannot select current assignee (REQ-034-144, REQ-034-103) | ENT-support-case-assignment.assigned_to_admin_id |
 | Reassignment Reason | textarea | Yes | Reason for reassigning case (also the reason recorded for an escalation) | Min 10 chars, max 500 chars (REQ-034-144) | ENT-support-case-assignment.assignment_reason |
-| Escalate | checkbox | No | Marks the reassignment as an escalation: raises the case priority to High or Urgent and sends the escalation notice to the chosen Super Admin | Default: unchecked; when ticked, the New Assignee list shows Super Admins only and the admin chooses High or Urgent as the new priority (REQ-034-103) | ENT-support-case-assignment.is_escalation |
+| Escalate | checkbox | No | Marks the reassignment as an escalation: sets the case priority to the High or Urgent the admin chooses and sends the escalation notice to the chosen Super Admin | Default: unchecked; when ticked, the New Assignee list shows Super Admins only and the admin chooses High or Urgent from the values at or above the current priority; a case that is already Urgent stays Urgent and no choice is shown; the new priority is written to the case priority and shown on the timeline (REQ-034-103) | ENT-support-case-assignment.is_escalation |
 | Notify New Assignee | checkbox | Yes | Send email notification to new assignee | Default: checked (REQ-034-162) | no graph field (control) |
 | Reassign Case Button | button | Yes | Confirms reassignment and updates case | Saves and closes modal | no graph field (control) |
 | Cancel Button | button | Yes | Closes modal without saving | No changes made | no graph field (control) |
@@ -667,6 +677,7 @@ Each message in the thread displays:
 - Reassignment does not change case status or restrict access for other admins (REQ-034-143)
 - Escalation has no separate screen or form: it is the Escalate tick in this modal, with the reassignment reason required, and it always goes to a Super Admin. The timeline marks the reassignment as an escalation. This applies equally to patient-submitted and provider-submitted cases (REQ-034-103)
 - An overdue Urgent or High case is escalated by the system without this modal (Alternative Flow A7, REQ-034-173)
+- Bulk Assign on Screen 1 opens this modal once for all selected cases, with one new assignee and one required reason, and no Escalate option (REQ-034-119)
 - Admin can reassign case to themselves or to another team member (REQ-034-143)
 - System displays reassignment history in case timeline to track case ownership changes (REQ-034-142)
 
@@ -680,7 +691,7 @@ Each message in the thread displays:
 
 ### Screen 6: Reopen Case Modal
 
-**Purpose**: Allows admin to reopen closed case when patient/provider indicates issue not fully resolved
+**Purpose**: Allows admin to reopen a Closed case, or a Resolved case, when patient/provider indicates issue not fully resolved
 
 **Data Fields**:
 
@@ -692,7 +703,7 @@ Each message in the thread displays:
 | Assign To | dropdown select | No | Admin user to assign reopened case to | List of active admin users with the Respond to Support permission; optional, defaults to previous assignee if available (REQ-034-148, REQ-034-094) | ENT-support-case-reopening.new_assignee_id |
 | New Priority | dropdown select | Yes | Priority level for reopened case | Options: Low, Medium, High, Urgent; defaults to previous priority (REQ-034-148) | ENT-support-case-reopening.new_priority |
 | Notify Patient/Provider | checkbox | Yes | Send email to patient/provider acknowledging case reopening | Default: checked; unchecked and disabled when the patient account is deleted (REQ-034-163, REQ-034-109) | no graph field (control) |
-| Reopen Case Button | button | Yes | Changes case status from Closed to Open and logs reopening | Saves and closes modal | no graph field (control) |
+| Reopen Case Button | button | Yes | Changes case status from Closed or Resolved to Open and logs reopening | Saves and closes modal | no graph field (control) |
 | Cancel Button | button | Yes | Closes modal without reopening case | No changes made | no graph field (control) |
 
 **Business Rules**:
@@ -704,6 +715,7 @@ Each message in the thread displays:
 - Previous resolution summary remains in case history for reference (REQ-034-145)
 - Case timeline shows clear "Case Reopened" event with full context of why it was reopened (REQ-034-145)
 - Admin can adjust priority when reopening to reflect urgency (e.g., escalate if issue was marked resolved incorrectly) (REQ-034-148)
+- An admin can use this modal on a Resolved case as well as on a Closed one; the reopening reason is required, the auto-close timer is cancelled, the case returns to Open, and the Previous Closure Date is empty. No reopening request is involved, and the reopened notice of REQ-034-146 applies as for a Closed case (REQ-034-181)
 - A provider cannot reopen a Closed case; the provider's request arrives as a flagged message and an admin decides with this modal, as for a patient (Alternative Flow B3a, REQ-034-178)
 
 **Notes**:
@@ -754,8 +766,8 @@ Each message in the thread displays:
 | Tag Name (in modal) | text input | Yes | Name of tag | Max 30 chars; must be unique; Examples: Bug, Feature Request, Urgent, VIP (REQ-034-154) | ENT-support-case-tag.name |
 | Tag Color (in modal) | color picker | Yes | Badge color for tag display | Options: gray, blue, orange, red, green, purple, yellow, pink | ENT-support-case-tag.color |
 | **Section 6: Auto-Escalation Rules** | section header | N/A | Configure automatic case escalation thresholds | N/A | no graph field (section header) |
-| Urgent Case Unassigned Threshold | number input | Yes | Hours before an urgent case that is still unassigned is escalated by the system to all Super Admins (a fixed alert email goes to the Support Staff pool after 1 hour first) | Min: 1, Max: 48, Default: 24 hours (REQ-034-155, REQ-034-173) | no graph field (setting SET-support-urgent-unassigned-escalation-threshold) |
-| High Priority Case Threshold | number input | Yes | Hours before a high priority case is escalated by the system to all Super Admins if no status change (the clock restarts on any status change) | Min: 12, Max: 72, Default: 48 hours (REQ-034-155, REQ-034-173) | no graph field (setting SET-support-high-priority-escalation-threshold) |
+| Urgent Case Unassigned Threshold | number input | Yes | Hours before an Open or In Progress Urgent case that is still unassigned is escalated once by the system to all Super Admins; the clock starts when the case is Urgent and unassigned (at creation or when it becomes Urgent later) and stops when the case is assigned (a fixed alert email goes to the Support Staff pool after 1 hour first) | Min: 1, Max: 48, Default: 24 hours (REQ-034-155, REQ-034-173) | no graph field (setting SET-support-urgent-unassigned-escalation-threshold) |
+| High Priority Case Threshold | number input | Yes | Hours before an Open or In Progress High priority case is escalated once by the system to all Super Admins if no status change; the clock starts when the case is High and restarts on any status change; it is a stall alarm, separate from the resolution targets in Rule 12 | Min: 12, Max: 72, Default: 48 hours (REQ-034-155, REQ-034-173) | no graph field (setting SET-support-high-priority-escalation-threshold) |
 | Case Inactivity Threshold | number input | Yes | Days before an Open or In Progress case with no activity is flagged for admin review; also the one clock behind the inactivity warnings in the case list and case detail view | Min: 7, Max: 90, Default: 14 days (REQ-034-078, REQ-034-155) | no graph field (setting SET-support-case-inactivity-threshold) |
 | **Section 7: Reopen Reason Templates** | section header | N/A | Manage reopening reason templates for quick selection (optional) | N/A | no graph field (section header) |
 | Reopen Reason Templates Table | data table | N/A | Displays templates with columns: Template Text, Used Count, Actions (Edit, Deactivate/Activate, Delete) | Optional feature; admins can also enter custom reasons; a template cannot be deleted while in use (Deactivate is offered instead) (REQ-034-157) | ENT-support-reopen-template.template_text, ENT-support-reopen-template.used_count |
@@ -808,7 +820,7 @@ Each message in the thread displays:
 
 - **Rule 1**: All support cases must have unique case IDs generated sequentially (format: CASE-YYYY-#####) (REQ-034-002)
 - **Rule 2**: **Unified Status Workflow**: Case lifecycle follows strict progression: Open → In Progress → Resolved → Closed (consistent across all ticket types and sources; cannot skip stages, except for case reopening) (REQ-034-003)
-- **Rule 3**: Cases can be reopened after closure if patient/provider indicates issue not fully resolved (REQ-034-017)
+- **Rule 3**: Cases can be reopened after closure if patient/provider indicates issue not fully resolved; an admin can also reopen a Resolved case (REQ-034-017, REQ-034-181)
 - **Rule 4**: **Ticket Source Tracking**: All cases must have Ticket Source (Patient App, Provider Portal, Manual Admin Entry) to identify submission origin (REQ-034-004)
 - **Rule 5**: **Submitter Type Tracking**: All cases must have Submitter Type (Patient, Provider, Admin) to identify who submitted the case (REQ-034-005)
 - **Rule 6**: **Feedback Resolution Tracking**: Cases with Category = Feature Request, Bug Report, or Feedback can optionally track Feedback Resolution (Implemented, Planned, Declined, Under Review) independently of case status (REQ-034-006)
@@ -845,7 +857,7 @@ Each message in the thread displays:
 - **Authentication**: Admin staff authenticate via FR-031 (Admin Access Control). MFA is enforced once the shared MFA stack (FR-026 / FR-031) is delivered; until then, implement strong password policies, throttling, and re-authentication flows per Constitution.
 - **Authorization**: Role-Based Access Control (RBAC) enforces granular permissions on the FR-031 permission names (REQ-034-094, REQ-034-042, REQ-031-111):
   - View Support Center: open and read cases, including internal notes
-  - Respond to Support: reply, add internal notes, create, edit, reassign, resolve, close and reopen cases (assignment is informational only and does not restrict access); assignee lists show active admins with this permission
+  - Respond to Support: reply, add internal notes, create, edit, reassign, resolve, close and reopen cases (assignment is informational only and does not restrict access); assignee lists show active admins with this permission; the Support Staff pool, the recipient of every notice sent to the pool, is all active admin users who hold this permission (REQ-034-094)
   - Super Admin only: Support Center configuration (Screen 7), receipt of escalations, and audit log export (no hard delete; archive only)
   - A user without View Support Center who sees a case row in FR-016 Screen 9 gets the case reference without a link
   - There is no Support Manager role and no "Manage Support Configuration" permission
@@ -860,7 +872,7 @@ Each message in the thread displays:
 
 **Editable by Admin (via Admin Platform UI)**: (REQ-034-086)
 
-- Case category, priority, status, title, description (per-case editing in Screen 2)
+- Case category, priority, title, description (per-case editing in Screen 2); status changes follow REQ-034-102
 - Case assignment (transfer to another admin user via Screen 5)
 - Internal notes and admin-only comments (in Screen 3)
 - Patient/provider linkage (add, modify, or remove linked records in Screen 2)
@@ -923,7 +935,9 @@ Each message in the thread displays:
   - Case escalated to them (an escalation always goes to a Super Admin, and a system escalation goes to all Super Admins) (REQ-034-103, REQ-034-173)
   - Patient/provider replies to a case (one email per reply)
   - A case is reopened (a separate reopening notice, in addition to the reply email)
-  - Urgent case created and still unassigned after 1 hour (a fixed alert email to the Support Staff pool; if the case is still unassigned at the Urgent Case Unassigned Threshold in Screen 7, default 24 hours, the system escalates it to Super Admin)
+  - An Open or In Progress Urgent case is still unassigned 1 hour after the Urgent clock started (a fixed plain system email to the Support Staff pool; if the case is still unassigned at the Urgent Case Unassigned Threshold in Screen 7, default 24 hours, the system escalates it to Super Admin) (REQ-034-173)
+  - The assigned admin of a case is deactivated and the case becomes unassigned (a plain system email to the Support Staff pool, to reassign it) (REQ-034-108)
+  - A notice to the patient or provider still fails once the FR-030 retry rule is exhausted (a plain system email to the assigned admin, or to the Support Staff pool when the case is unassigned, to contact the patient or provider by hand) (REQ-034-113)
 - **Notification Rule 4**: All notifications sent via S-03 Notification Service; failed sends are retried following the FR-030 retry rule (REQ-034-047, REQ-034-051)
 - **Notification Rule 5**: Email notifications include case ID, title, status, and direct link to admin case view (for admin recipients) (REQ-034-093)
 
@@ -1062,7 +1076,7 @@ Support staff member encounters complex technical issue requiring more senior at
 
 - **How does system handle case assignment when assigned admin is deactivated or leaves organization?**
   - System automatically detects deactivated admin accounts and marks their assigned cases as "Unassigned" (REQ-034-108)
-  - Support Staff receive notification to reassign orphaned cases (REQ-034-108)
+  - The Support Staff pool receives a plain system email to reassign orphaned cases (REQ-034-108)
   - Case timeline logs admin account deactivation event (REQ-034-108)
 
 - **What occurs if patient deletes their account while support case is open?**
@@ -1091,7 +1105,7 @@ Support staff member encounters complex technical issue requiring more senior at
   - System queues the notification for retry following the FR-030 retry rule (FR-030 owns the retry schedule and count) (REQ-034-113)
   - Case timeline logs notification failure with timestamp (REQ-034-113)
   - Admin dashboard displays notification status indicator (sent, pending, failed) (REQ-034-113)
-  - If the notification still fails once the FR-030 retry rule is exhausted, admin receives alert to manually contact patient/provider (REQ-034-113)
+  - If the notification still fails once the FR-030 retry rule is exhausted, the assigned admin (or the Support Staff pool when the case is unassigned) receives a plain system email to manually contact the patient/provider (REQ-034-113)
 
 ---
 
@@ -1189,6 +1203,19 @@ Support staff member encounters complex technical issue requiring more senior at
 - **REQ-034-064**: System MUST log reopening reason in case timeline when case is reopened
 - **REQ-034-165**: System MUST record an automatic reopen (a patient or provider reply to a Resolved case) as a Reopening record reopened by System with the reason "User replied"
 
+### Escalation, Access and Case Handling Requirements
+
+- **REQ-034-173**: An overdue Urgent or High case MUST be escalated by the system to all Super Admins, once per clock start, only while the case is Open or In Progress, without reassigning it or changing its priority (Alternative Flow A7)
+- **REQ-034-174**: A case whose request status is Open MUST NOT be set to Resolved until the request is completed or declined
+- **REQ-034-175**: The first-response target is 24 hours on business days; it is a target only
+- **REQ-034-176**: Provider submissions MUST be limited to 10 new cases per hour per provider user
+- **REQ-034-177**: When the support email setting is empty there is no email route to ask for a Closed case to be reopened, and the patient creates a new ticket
+- **REQ-034-178**: A provider MUST NOT reopen a Closed case directly; the request is a flagged message and an admin decides with Reopen Case
+- **REQ-034-179**: When No Patient Link is ticked, a contact email MUST be required and every notice that would go to the patient MUST go to that address
+- **REQ-034-180**: An account intervention started from a case MUST need the FR-031 permission that FR-016 requires; an admin without it escalates the case to a Super Admin
+- **REQ-034-181**: An admin MUST be able to reopen a Resolved case as well as a Closed one, with a required reason; the auto-close timer is cancelled and the case returns to Open
+- **REQ-034-182**: Contact Support on the Payment Window Expired and Cancelled booking screens MUST create a plain support case that carries the booking reference and has no request type
+
 ### Performance & Scalability Requirements
 
 - **REQ-034-065**: System MUST complete case creation within 2 seconds for 95% of requests
@@ -1206,6 +1233,7 @@ Support staff member encounters complex technical issue requiring more senior at
 | 2026-11-22 | 2.7 | Requirements graph programme baseline: PRD compressed to the checklist structure (rules cited by REQ id, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v2.6) is in `archived/prd-baseline-2026-11-08/fr034-support-center-ticketing/` and in git history. The live PRD names no change requests. | AI Assistant |
 | 2026-11-23 | 2.8 | Independent compression review: 3 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | AI Assistant |
 | 2026-11-24 | 2.9 | Logic review pass 1: escalation always goes to a Super Admin, with one system escalation flow (A7, REQ-034-173); status changes only through Update Status (Open to In Progress), Resolve Case, Close Case and Reopen Case (REQ-034-102); booking request flow A8 and Open-request block (REQ-034-174); Support Center permissions on the FR-031 names (REQ-034-094, REQ-034-042, REQ-034-180); first response target 24 hours on business days (REQ-034-175); provider reopening request B3a (REQ-034-178); problem report details and provider submission limit (REQ-034-164, REQ-034-176); category Visible To (REQ-034-101); deleted-patient email rule (REQ-034-109); No Patient Link contact email (REQ-034-179); scanner-unavailable flow B4a (REQ-034-044); inactivity warning for Open and In Progress cases (REQ-034-058, REQ-034-078); Help Hub and email-reopen wording (A5, B3, REQ-034-177). | AI Assistant |
+| 2026-11-24 | 3.0 | Logic review pass 2: system escalation flow A7 written out and the Case Escalated timeline entry split into manual and system cases (REQ-034-173); escalation clocks run only while a case is Open or In Progress, start on Urgent and unassigned or on High, and escalate once per start (REQ-034-155, REQ-034-173); a manual escalation never lowers the priority (REQ-034-103); the three admin notices named as plain system emails and the Support Staff pool defined (REQ-034-092, REQ-034-094, REQ-034-108, REQ-034-113); status removed from Admin Editability (REQ-034-086); default date range 90 days with the Request Type and Request Status filters (REQ-034-116); Bulk Assign through one Screen 5 modal with one reason (REQ-034-119); Reopen Case also on Resolved cases (REQ-034-181, REQ-034-102); every patient notice goes to the contact email when No Patient Link is ticked (REQ-034-179); Contact Support on blocked booking screens creates a plain case with the booking reference (REQ-034-182). | AI Assistant |
 
 ---
 

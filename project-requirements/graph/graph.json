@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T14:46:20Z",
+  "generated_at": "2026-11-24T14:55:33Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -27731,9 +27731,9 @@
       "owner_fr": "FR-034",
       "title": "Escalation",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Escalate tick in the Reassign Case modal: marks the reassignment as an escalation, raises the case priority to High or Urgent and sends the escalation notice to the new assignee."
+        "description": "Escalate tick in the Reassign Case modal: marks the reassignment as an escalation, sets the case priority to the chosen High or Urgent (never lower than the current priority) and sends the escalation notice to the new assignee."
       }
     },
     {
@@ -28609,9 +28609,9 @@
       "owner_fr": "FR-034",
       "title": "Contact email",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Required when the case has no patient link (No Patient Link ticked); replies, the confirmation and the resolution email go to it."
+        "description": "Required when the case has no patient link (No Patient Link ticked); every notice that would go to the patient goes to it."
       }
     },
     {
@@ -93166,9 +93166,9 @@
       "owner_fr": "FR-034",
       "title": "Attributes admins can edit",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Editable by Admin (via Admin Platform UI): Case category, priority, status, title, description (per-case editing in Screen 2); Case assignment (transfer to another admin user via Screen 5); Internal notes and admin-only comments (in Screen 3); Patient/provider linkage (add, modify, or remove linked records in Screen 2); Case tags and labels (per-case in Screen 2); Resolution summary and resolution category (in Screen 4); Auto-close period (Immediately, 3, 7, or 14 days after resolution in Screen 4)",
+        "statement": "Editable by Admin (via Admin Platform UI): Case category, priority, title, description (per-case editing in Screen 2); status changes follow REQ-034-102; Case assignment (transfer to another admin user via Screen 5); Internal notes and admin-only comments (in Screen 3); Patient/provider linkage (add, modify, or remove linked records in Screen 2); Case tags and labels (per-case in Screen 2); Resolution summary and resolution category (in Screen 4); Auto-close period (Immediately, 3, 7, or 14 days after resolution in Screen 4)",
         "rationale": "Business Rules, Admin Editability (prd.md lines 787 to 795). Screens 2, 3, 4 and 5 are named in the line items."
       }
     },
@@ -93240,9 +93240,9 @@
       "owner_fr": "FR-034",
       "title": "Admin email notifications",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Admin staff receive email notifications when: Case assigned to them; Case escalated to them (an escalation always goes to a Super Admin, and a system escalation goes to all Super Admins); Patient/provider replies to a case (one email per reply); A case is reopened (a separate reopening notice, in addition to the reply email); Urgent case created and still unassigned after 1 hour (a fixed alert email to the Support Staff pool; if the case is still unassigned at the Urgent Case Unassigned Threshold in Screen 7, default 24 hours, the system escalates it to Super Admin)",
+        "statement": "Admin staff receive email notifications when: Case assigned to them; Case escalated to them (an escalation always goes to a Super Admin, and a system escalation goes to all Super Admins); Patient/provider replies to a case (one email per reply); A case is reopened (a separate reopening notice, in addition to the reply email); An Open or In Progress Urgent case is still unassigned 1 hour after the Urgent clock started (a fixed plain system email to the Support Staff pool; if the case is still unassigned at the Urgent Case Unassigned Threshold in Screen 7, default 24 hours, the system escalates it to Super Admin); The assigned admin of a case is deactivated and the case becomes unassigned (a plain system email to the Support Staff pool, to reassign it); A notice to the patient or provider still fails once the FR-030 retry rule is exhausted (a plain system email to the assigned admin, or to the Support Staff pool when the case is unassigned, to contact the patient or provider by hand)",
         "rationale": "Business Rules, Notification Rule 3. The 1-hour alert is fixed; the Screen 7 threshold is the point where the system escalates the case (REQ-034-173)."
       }
     },
@@ -93264,9 +93264,9 @@
       "owner_fr": "FR-034",
       "title": "Support Center permissions",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "View Support Center: open and read cases, including internal notes; Respond to Support: reply, add internal notes, create, edit, reassign, resolve, close and reopen cases (assignment is informational only and does not restrict access); Super Admin only: Support Center configuration (Screen 7), receipt of escalations and audit log export (no hard delete; archive only); There is no Support Manager role and no \"Manage Support Configuration\" permission; A user without View Support Center who sees a case row in FR-016 Screen 9 gets the case reference without a link",
+        "statement": "View Support Center: open and read cases, including internal notes; Respond to Support: reply, add internal notes, create, edit, reassign, resolve, close and reopen cases (assignment is informational only and does not restrict access); assignee lists show active admins with this permission; the Support Staff pool, the recipient of every notice sent to the pool, is all active admin users who hold this permission; Super Admin only: Support Center configuration (Screen 7), receipt of escalations and audit log export (no hard delete; archive only); There is no Support Manager role and no \"Manage Support Configuration\" permission; A user without View Support Center who sees a case row in FR-016 Screen 9 gets the case reference without a link",
         "rationale": "Data and Privacy Rules, Authorization. The two permission names are the FR-031 Communication and Support permissions (REQ-031-111); FR-031 owns the role definitions."
       }
     },
@@ -93360,9 +93360,9 @@
       "owner_fr": "FR-034",
       "title": "No skipped stages, no closing before Resolved",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Status follows unified workflow: Open → In Progress → Resolved → Closed (cannot skip stages except for case reopening); Case cannot be marked \"Closed\" until status is \"Resolved\" (validation rule); System prevents closing case unless status is \"Resolved\" first; Status is Open on create and is not editable on Screen 2 when a case is edited; the Update Status modal offers Open to In Progress only; Resolved is reached only through Resolve Case (Screen 4, resolution summary required), Closed only through Close Case, and Closed to Open only through Reopen Case",
+        "statement": "Status follows unified workflow: Open → In Progress → Resolved → Closed (cannot skip stages except for case reopening); Case cannot be marked \"Closed\" until status is \"Resolved\" (validation rule); System prevents closing case unless status is \"Resolved\" first; Status is Open on create and is not editable on Screen 2 when a case is edited; the Update Status modal offers Open to In Progress only; Resolved is reached only through Resolve Case (Screen 4, resolution summary required), Closed only through Close Case, and Closed or Resolved to Open only through Reopen Case",
         "rationale": "Screen 2, Screen 3 and Business Rule 2. Each later stage has one control that carries its own required input."
       }
     },
@@ -93372,9 +93372,9 @@
       "owner_fr": "FR-034",
       "title": "Escalate a case",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Admin clicks \"Reassign Case\" (there is no separate escalation button or form); System displays the Reassign Case modal (Screen 5); Admin ticks \"Escalate\", selects a Super Admin as the new assignee (the list shows active Super Admin users only), and enters the required reassignment reason; System raises case priority to \"High\" or \"Urgent\" as the admin chooses; System sends the escalation notice to the chosen Super Admin; System logs the reassignment in case timeline, marked as an escalation; Case reassigned to a Super Admin with increased priority",
+        "statement": "Admin clicks \"Reassign Case\" (there is no separate escalation button or form); System displays the Reassign Case modal (Screen 5); Admin ticks \"Escalate\", selects a Super Admin as the new assignee (the list shows active Super Admin users only), and enters the required reassignment reason; System sets the case priority to the \"High\" or \"Urgent\" the admin chose, from the values at or above the current priority only (a case that is already Urgent stays Urgent and no choice is shown), writes it to the case priority and shows it on the timeline; System sends the escalation notice to the chosen Super Admin; System logs the reassignment in case timeline, marked as an escalation; Case reassigned to a Super Admin at the chosen priority, never lower than before",
         "rationale": "Alternative Flow A1. Escalation is the Escalate tick in the Reassign Case modal (Screen 5); it has no separate screen or form, and it always goes to a Super Admin."
       }
     },
@@ -93432,9 +93432,9 @@
       "owner_fr": "FR-034",
       "title": "Deactivated admin leaves cases unassigned",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System automatically detects deactivated admin accounts and marks their assigned cases as \"Unassigned\"; Support Staff receive notification to reassign orphaned cases; Case timeline logs admin account deactivation event",
+        "statement": "System automatically detects deactivated admin accounts and marks their assigned cases as \"Unassigned\"; The Support Staff pool receives a plain system email to reassign orphaned cases; Case timeline logs admin account deactivation event",
         "rationale": "Edge Cases (prd.md lines 1150 to 1153). The timeline event list includes Admin Deactivated (prd.md line 529)."
       }
     },
@@ -93492,9 +93492,9 @@
       "owner_fr": "FR-034",
       "title": "Failed notifications retried and flagged",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System queues the notification for retry following the FR-030 retry rule (FR-030 owns the retry schedule and count); Case timeline logs notification failure with timestamp; Admin dashboard displays notification status indicator (sent, pending, failed); If the notification still fails once the FR-030 retry rule is exhausted, admin receives alert to manually contact patient/provider",
+        "statement": "System queues the notification for retry following the FR-030 retry rule (FR-030 owns the retry schedule and count); Case timeline logs notification failure with timestamp; Admin dashboard displays notification status indicator (sent, pending, failed); If the notification still fails once the FR-030 retry rule is exhausted, the assigned admin (or the Support Staff pool when the case is unassigned) receives a plain system email to manually contact the patient/provider",
         "rationale": "Edge Cases (prd.md lines 1165 to 1168) and Implementation Notes, Integration 3 (prd.md line 1005). REQ-034-051 says retry logic is configured in FR-030, not FR-034; see migration report."
       }
     },
@@ -93529,9 +93529,9 @@
       "owner_fr": "FR-034",
       "title": "Listing filters and defaults",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Filter Bar: Comprehensive filtering controls including: Status Filter (multi-select dropdown: Open, In Progress, Resolved, Closed; Default: Open + In Progress), Priority Filter (multi-select dropdown: Low, Medium, High, Urgent; Default: All priorities), Category Filter (multi-select dropdown from centralized category list; Default: All categories), Ticket Source Filter (multi-select dropdown: Patient App, Provider Portal, Manual Admin Entry; Default: All sources), Submitter Type Filter (multi-select dropdown: Patient, Provider, Admin; Default: All types), Date Range Filter (date picker for creation date range; Default: Last 30 days), Assigned To Filter (dropdown select: All Users, specific user; Default: All Users); Filters are cumulative (AND logic between different filter types); | Filter Bar (grouped) | filter group | No | Comprehensive filtering controls including: Status Filter (multi-select dropdown: Open, In Progress, Resolved, Closed; Default: Open + In Progress), Priority Filter (multi-select dropdown: Low, Medium, High, Urgent; Default: All priorities), Category Filter (multi-select dropdown from centralized category list; Default: All categories), Ticket Source Filter (multi-select dropdown: Patient App, Provider Portal, Manual Admin Entry; Default: All sources), Submitter Type Filter (multi-select dropdown: Patient, Provider, Admin; Default: All types), Date Range Filter (date picker for creation date range; Default: Last 30 days), Assigned To Filter (dropdown select: All Users, specific user; Default: All Users) | All filters are cumulative (AND logic); Filter selections persist during session |",
+        "statement": "Filter Bar: Comprehensive filtering controls including: Status Filter (multi-select dropdown: Open, In Progress, Resolved, Closed; Default: Open + In Progress), Priority Filter (multi-select dropdown: Low, Medium, High, Urgent; Default: All priorities), Category Filter (multi-select dropdown from centralized category list; Default: All categories), Ticket Source Filter (multi-select dropdown: Patient App, Provider Portal, Manual Admin Entry; Default: All sources), Submitter Type Filter (multi-select dropdown: Patient, Provider, Admin; Default: All types), Date Range Filter (date picker for creation date range; Default: Last 90 days), Assigned To Filter (dropdown select: All Users, specific user; Default: All Users), Request Type Filter (multi-select dropdown: Booking Cancellation, Booking Change; Default: All types), Request Status Filter (multi-select dropdown: Open, Resolved, Declined; Default: All statuses); Filters are cumulative (AND logic between different filter types); Filter selections persist during session",
         "rationale": "Screen 1 filter bar and business rules (prd.md lines 365, 403, 365). REQ-034-055 lists the filters without defaults."
       }
     },
@@ -93565,10 +93565,10 @@
       "owner_fr": "FR-034",
       "title": "Bulk assign and bulk close",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Bulk Assign: Assign selected cases to admin user (Enabled only if cases selected); Bulk Close: Close selected cases (only if all are Resolved status) (Enabled only if cases selected and all Resolved)",
-        "rationale": "Screen 1 data fields (prd.md lines 381, 382). Bulk assign has no reason field, unlike single reassignment on Screen 5."
+        "statement": "Bulk Assign: Assign selected cases to one admin user through the Screen 5 modal, opened once for all selected cases, with one new assignee and one required reason (Enabled only if cases selected); only Open and In Progress cases are included, the others are skipped and the count skipped is shown; there is no Escalate option in bulk; each case gets the normal assignment notice and timeline entry; Bulk Close: Close selected cases (only if all are Resolved status) (Enabled only if cases selected and all Resolved)",
+        "rationale": "Screen 1 data fields and Screen 5 business rules. Bulk assign uses the same modal and the same required reason as single reassignment, so the assignment history stays complete."
       }
     },
     {
@@ -93865,9 +93865,9 @@
       "owner_fr": "FR-034",
       "title": "Reopen sets Open and logs the reason",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Case status changes from \"Closed\" to \"Open\" when reopened; System logs reopening in case timeline with timestamp, reopening reason, admin who reopened it, and reference to previous resolution; Previous resolution summary remains in case history for reference; Case timeline shows clear \"Case Reopened\" event with full context of why it was reopened",
+        "statement": "Case status changes from \"Closed\" (or \"Resolved\") to \"Open\" when reopened; System logs reopening in case timeline with timestamp, reopening reason, admin who reopened it, and reference to previous resolution; Previous resolution summary remains in case history for reference; Case timeline shows clear \"Case Reopened\" event with full context of why it was reopened",
         "rationale": "Screen 6 business rules (prd.md lines 651 to 656) and alternative flow B3 steps 4 to 6 (prd.md lines 334 to 336)."
       }
     },
@@ -93985,9 +93985,9 @@
       "owner_fr": "FR-034",
       "title": "Auto-escalation thresholds",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Auto-escalation thresholds configurable within defined ranges to prevent overly aggressive or too lenient escalation; Urgent Case Unassigned Threshold: Hours before an urgent case that is still unassigned auto-escalates to Super Admin (REQ-034-173), after a fixed alert email to the Support Staff pool at 1 hour (Min: 1, Max: 48, Default: 24 hours); High Priority Case Threshold: Hours before a high priority case auto-escalates to Super Admin (REQ-034-173) if no status change (Min: 12, Max: 72, Default: 48 hours); Case Inactivity Threshold: Days before an Open or In Progress case with no activity is flagged for admin review, also the one clock behind the inactivity warnings in the case list and case detail view (Min: 7, Max: 90, Default: 14 days)",
+        "statement": "Auto-escalation thresholds configurable within defined ranges to prevent overly aggressive or too lenient escalation; Urgent Case Unassigned Threshold: Hours before an Open or In Progress urgent case that is still unassigned auto-escalates once to Super Admin (REQ-034-173), counted from when the case is Urgent and unassigned and stopped on assignment, after a fixed alert email to the Support Staff pool at 1 hour (Min: 1, Max: 48, Default: 24 hours); High Priority Case Threshold: Hours before an Open or In Progress high priority case auto-escalates once to Super Admin (REQ-034-173) if no status change, counted from when the case is High and restarted on any status change; a stall alarm, separate from the resolution targets of Rule 12 (Min: 12, Max: 72, Default: 48 hours); Case Inactivity Threshold: Days before an Open or In Progress case with no activity is flagged for admin review, also the one clock behind the inactivity warnings in the case list and case detail view (Min: 7, Max: 90, Default: 14 days)",
         "rationale": "Screen 7, Section 6. Notification Rule 3 states the 1-hour alert and the escalation to Super Admin; Alternative Flow A7 is the escalation itself."
       }
     },
@@ -94202,9 +94202,9 @@
       "owner_fr": "FR-034",
       "title": "An overdue Urgent or High case is escalated by the system to all Super Admins",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "When the Urgent Case Unassigned Threshold or the High Priority Case Threshold expires, the system marks the case as escalated in its timeline and sends the escalation notice to all Super Admins; it does not reassign the case or change its priority. The High clock restarts on any status change, and the fixed 1-hour alert for an unassigned Urgent case goes to the Support Staff pool",
+        "statement": "When the Urgent Case Unassigned Threshold or the High Priority Case Threshold runs out, the system marks the case as escalated in its timeline and sends the escalation notice to all Super Admins; it does not reassign the case or change its priority. Both clocks are stall alarms that run only while the case is Open or In Progress. The Urgent clock starts when a case is Urgent and unassigned (at creation, or when it becomes Urgent later) and stops when the case is assigned; the High clock starts when a case is High and restarts on any status change. Each clock escalates once per start, with no repeat. The fixed 1-hour alert for an unassigned Urgent case goes to the Support Staff pool, counted from the same start of the Urgent clock",
         "rationale": "Alternative Flow A7 and Screen 7, Section 6. It is the same Support Case Escalated event as a manual escalation (REQ-034-103), raised by a clock instead of an admin."
       }
     },
@@ -94274,9 +94274,9 @@
       "owner_fr": "FR-034",
       "title": "A case without a patient link carries a contact email",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "When No Patient Link is ticked on Screen 2, a contact email is required and a contact name is optional; both are stored on the case, and replies, the confirmation and the resolution email go to that address",
+        "statement": "When No Patient Link is ticked on Screen 2, a contact email is required and a contact name is optional; both are stored on the case, and every notice that would go to the patient goes to that address",
         "rationale": "Screen 2 and Alternative Flow B1. Owner ruling: a case without a patient link still gets its emails."
       }
     },
@@ -94290,6 +94290,30 @@
       "attrs": {
         "statement": "An account intervention started from a case needs the FR-031 permission that FR-016 requires for that action (Edit Patients for patient accounts, REQ-016-070 and REQ-016-220; Edit Providers for provider accounts); an admin without it escalates the case to a Super Admin (REQ-034-103)",
         "rationale": "Alternative Flows A2 and A6. The permission is settled by FR-016 and FR-031; FR-034 only states that the case route needs it."
+      }
+    },
+    {
+      "id": "REQ-034-181",
+      "type": "Rule",
+      "owner_fr": "FR-034",
+      "title": "An admin can reopen a Resolved case",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "An admin can use Reopen Case on a Resolved case as well as on a Closed one: the reopening reason is required, the auto-close timer is cancelled, the case returns to Open, and no reopening request is involved; the reopened notice of REQ-034-146 applies as for a Closed case",
+        "rationale": "Screens 1, 3 and 6; Alternative Flow B3. A mistaken Resolve is undone without Close then Reopen, which would write a Closed event for a case that was never closed. A patient or provider reply on a Resolved case still reopens it automatically (REQ-034-139)."
+      }
+    },
+    {
+      "id": "REQ-034-182",
+      "type": "Rule",
+      "owner_fr": "FR-034",
+      "title": "Contact Support on a blocked booking screen creates a plain case with the booking reference",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Contact Support on the Payment Window Expired and Cancelled booking screens (FR-006) creates a plain support case that carries the booking reference and has no request type; only booking cancellation and booking change requests carry a request type (REQ-034-167)",
+        "rationale": "Alternative Flow A8. A restore or refund question is not a booking request: FR-016 has no action to complete one, so it would add a request status nobody can finish."
       }
     },
     {
@@ -101422,10 +101446,10 @@
       "owner_fr": "FR-034",
       "title": "Reopen Case Modal",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "admin",
-        "description": "Allows admin to reopen closed case when patient/provider indicates issue not fully resolved. Modal opened from the detail view or the listing. Controls with no field of their own: Notify Patient/Provider checkbox, Reopen Case and Cancel buttons."
+        "description": "Allows admin to reopen a Closed or Resolved case when patient/provider indicates issue not fully resolved. Modal opened from the detail view or the listing. Controls with no field of their own: Notify Patient/Provider checkbox, Reopen Case and Cancel buttons."
       }
     },
     {
@@ -103220,9 +103244,9 @@
       "owner_fr": "FR-034",
       "title": "High priority escalation threshold",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Hours before a high priority case with no status change auto-escalates. Editable by Super Admin on Screen 7 within 12 to 72 hours.",
+        "description": "Hours before an Open or In Progress high priority case with no status change auto-escalates once to all Super Admins; the clock starts when the case is High and restarts on any status change; a stall alarm, separate from the resolution targets. Editable by Super Admin on Screen 7 within 12 to 72 hours.",
         "default": "48",
         "unit": "hours"
       }
@@ -103233,9 +103257,9 @@
       "owner_fr": "FR-034",
       "title": "Urgent unassigned escalation threshold",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Hours before an urgent case that is still unassigned auto-escalates to Super Admin (a fixed alert email goes to admins after 1 hour first). Editable by Super Admin on Screen 7 within 1 to 48 hours.",
+        "description": "Hours before an Open or In Progress urgent case that is still unassigned auto-escalates once to all Super Admins; the clock starts when the case is Urgent and unassigned and stops on assignment (a fixed alert email goes to the Support Staff pool after 1 hour first). Editable by Super Admin on Screen 7 within 1 to 48 hours.",
         "default": "24",
         "unit": "hours"
       }
@@ -131722,9 +131746,9 @@
       "id": "STP-034-024",
       "type": "Step",
       "owner_fr": "FR-034",
-      "title": "System raises case priority to \"High\" or \"Urgent\" as the admin chooses",
+      "title": "System sets the case priority to the High or Urgent the admin chose, never lower than the current priority (an Urgent case stays Urgent)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A1 step 4"
       }
@@ -131744,9 +131768,9 @@
       "id": "STP-034-026",
       "type": "Step",
       "owner_fr": "FR-034",
-      "title": "System logs the reassignment in case timeline, marked as an escalation",
+      "title": "System logs the reassignment in case timeline, marked as an escalation, with the new priority",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A1 step 6"
       }
@@ -132470,9 +132494,9 @@
       "id": "STP-034-093",
       "type": "Step",
       "owner_fr": "FR-034",
-      "title": "Admin clicks \"Reopen Case\" button",
+      "title": "Admin clicks \"Reopen Case\" button (shown on Closed and Resolved cases)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flow B3 step 3"
       }
@@ -132492,9 +132516,9 @@
       "id": "STP-034-095",
       "type": "Step",
       "owner_fr": "FR-034",
-      "title": "System changes case status from \"Closed\" to \"Open\"",
+      "title": "System changes case status from \"Closed\" or \"Resolved\" to \"Open\"",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B3 step 5"
       }
@@ -132569,9 +132593,9 @@
       "id": "STP-034-103",
       "type": "Step",
       "owner_fr": "FR-034",
-      "title": "System finds that the Urgent Case Unassigned Threshold or the High Priority Case Threshold has expired for a case",
+      "title": "System finds that the Urgent Case Unassigned Threshold or the High Priority Case Threshold has run out for a case",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A7 step 1"
       }
@@ -180249,7 +180273,7 @@
       "verb": "active in",
       "to_id": "STG-patient-03-active",
       "attrs": {
-        "rules": 167
+        "rules": 169
       },
       "derived": true
     },
@@ -180258,7 +180282,7 @@
       "verb": "active in",
       "to_id": "STG-provider-03-active",
       "attrs": {
-        "rules": 167
+        "rules": 169
       },
       "derived": true
     },
@@ -297990,6 +298014,60 @@
     },
     {
       "from_id": "REQ-034-180",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-034",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-181",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-181",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-181",
+      "verb": "applies to",
+      "to_id": "SCR-034-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-181",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-034",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-182",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-182",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-182",
+      "verb": "applies to",
+      "to_id": "ENT-support-case.booking_reference",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-182",
+      "verb": "applies to",
+      "to_id": "SCR-006-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-182",
       "verb": "decided by",
       "to_id": "SRC-PRD-034",
       "attrs": {}
@@ -437854,6 +437932,12 @@
     },
     {
       "from_id": "STP-034-093",
+      "verb": "applies",
+      "to_id": "REQ-034-181",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-093",
       "verb": "at",
       "to_id": "STG-patient-03-active",
       "attrs": {}
@@ -437910,6 +437994,12 @@
       "from_id": "STP-034-095",
       "verb": "applies",
       "to_id": "REQ-034-145",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-095",
+      "verb": "applies",
+      "to_id": "REQ-034-181",
       "attrs": {}
     },
     {
@@ -446022,6 +446112,45 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-145427-05db75b2",
+      "at": "2026-11-24T14:54:27.751036+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-034 logic review pass 2: system escalation flow, clocks that run only while a case is Open or In Progress and escalate once per start, manual escalation never lowering the priority, three plain system emails with recipients, Support Staff pool defined, status removed from Admin Editability, 90-day default with the Request Type and Request Status filters, Bulk Assign through one modal with one reason, Reopen Case on Resolved cases, every patient notice to the contact email when No Patient Link is ticked, and a plain case from blocked booking screens.",
+      "source_id": null,
+      "nodes_added": [
+        "REQ-034-181",
+        "REQ-034-182"
+      ],
+      "nodes_updated": [
+        "ENT-support-case-assignment.is_escalation",
+        "ENT-support-case.contact_email",
+        "REQ-034-086",
+        "REQ-034-092",
+        "REQ-034-094",
+        "REQ-034-102",
+        "REQ-034-103",
+        "REQ-034-108",
+        "REQ-034-113",
+        "REQ-034-116",
+        "REQ-034-119",
+        "REQ-034-145",
+        "REQ-034-155",
+        "REQ-034-173",
+        "REQ-034-179",
+        "SCR-034-06",
+        "SET-support-high-priority-escalation-threshold",
+        "SET-support-urgent-unassigned-escalation-threshold",
+        "STP-034-024",
+        "STP-034-026",
+        "STP-034-093",
+        "STP-034-095",
+        "STP-034-103"
+      ],
+      "edges_added": 11,
+      "edges_removed": 0,
+      "rows": 47
+    },
     {
       "id": "cs-20261124-144516-72fb65e9",
       "at": "2026-11-24T14:45:16.321523+00:00",
