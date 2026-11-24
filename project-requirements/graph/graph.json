@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T20:02:01Z",
+  "generated_at": "2026-11-24T20:40:15Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -77300,11 +77300,11 @@
       "id": "REQ-022-023",
       "type": "Rule",
       "owner_fr": "FR-022",
-      "title": "Admin searches logged with user, time, terms and result count",
+      "title": "Admin searches for patient and provider records logged with user, time, terms and result count",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST log all admin searches with user ID, timestamp, search terms, and result count; the log is written for admin searches only",
+        "statement": "System MUST log all admin searches for patient and provider records with user ID, timestamp, search terms, and result count; the log is written for admin searches only, not for patient or provider searches",
         "rationale": "Restated by the Data & Privacy Audit Rule (admin user ID, timestamp, search terms), Privacy Rule 2 (admin search logs MUST be retained for audit purposes: who searched for whom, when), Security Considerations Audit trail (adds result count) and Edge Case 6 (audit logs capture each admin's search independently). Stored as ENT-search-audit-log."
       }
     },
@@ -77512,9 +77512,9 @@
       "owner_fr": "FR-022",
       "title": "Provider analytics filters",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST allow providers to filter their analytics dashboard by date range and treatment type",
+        "statement": "System MUST allow providers to filter their analytics dashboard by date range, country and treatment type",
         "rationale": "Restated by Multi-Tenant Breakdown PR-05 (line 54). Screen criteria: FR-014 / Screen 1 rule."
       }
     },
@@ -77560,9 +77560,9 @@
       "owner_fr": "FR-022",
       "title": "Provider team member search",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST allow providers to search team members by name, email, role, and status",
+        "statement": "System MUST allow providers to search team members by name and email and filter them by role and status",
         "rationale": "Restated by Multi-Tenant Breakdown PR-01 (line 50). Screen criteria: FR-009 / Screen 10 rule."
       }
     },
@@ -77660,9 +77660,9 @@
       "owner_fr": "FR-022",
       "title": "Entry points to search and filter",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Patient Platform: [P2] Provider Search is accessed when the patient begins the quote request flow and needs to select destination/providers, is triggered from the \"Choose Destination\" or \"Select Providers\" screens, and is available throughout the quote request journey for comparison; [P2] Messaging search is accessed from the patient communications inbox once FR-012 messaging is scheduled; [P1] Help & Support search is accessed from the Help & Support hub, Help Center, and My Support Tickets screens. Provider Platform: PR-01 (Team) from Provider Dashboard → Team tab → Team Directory (FR-009/Screen 10); PR-02 (Inquiries/Quotes) from Provider Dashboard → Inquiries tab → Inquiry List (FR-003/Screen 9) and Quotes List (FR-004/Screen 2); PR-03 (Treatment) from Provider Dashboard → Treatments tab → In Progress Cases (FR-010/Screen 3); PR-04 (Aftercare) from Provider Dashboard → Aftercare tab → Aftercare Cases List (FR-011/Screen 8); PR-05 (Analytics) from Provider Dashboard → Analytics tab → Analytics Dashboard (FR-014/Screen 1); PR-06 (Profile/Settings) from Provider Dashboard → Profile/Settings section — Packages (FR-024/Screen 4), Help Centre (FR-032/Screen 5), Reviews (FR-032/Screen 1 Tab 5), Support Cases (FR-032/Screen 5.7); PR-07 (Messaging) [P2 - Post-MVP] from the provider secure messaging inbox once FR-012 is scheduled. Admin Platform [P1 - MVP]: each admin module (A-01 through A-10) provides context-specific search and filtering within its own interface.",
+        "statement": "Patient Platform: [P2] Provider Search is accessed when the patient begins the quote request flow and needs to select destination/providers, is triggered from the \"Choose Destination\" or \"Select Providers\" screens, and is available throughout the quote request journey for comparison; [P2] Messaging search is accessed from the patient communications inbox once FR-012 messaging is scheduled; [P1] Help & Support search is accessed from the Help & Support hub, Help Center, and My Support Tickets screens. Provider Platform: PR-01 (Team) from Provider Dashboard → Team tab → Team Management Dashboard (FR-009/Screen 1); PR-02 (Inquiries/Quotes) from Provider Dashboard → Inquiries tab → Inquiry List (FR-003/Screen 9) and Quotes List (FR-004/Screen 2); PR-03 (Treatment) from Provider Dashboard → Treatments tab → In Progress Cases (FR-010/Screen 3); PR-04 (Aftercare) from Provider Dashboard → Aftercare tab → Aftercare Cases List (FR-011/Screen 8); PR-05 (Analytics) from Provider Dashboard → Analytics tab → Analytics Dashboard (FR-014/Screen 1); PR-06 (Profile/Settings) from Provider Dashboard → Profile/Settings section — Packages (FR-024/Screen 4), Help Centre (FR-032/Screen 5), Reviews (FR-032/Screen 1 Tab 5), Support Cases (FR-032/Screen 5.7); PR-07 (Messaging) [P2 - Post-MVP] from the provider secure messaging inbox once FR-012 is scheduled. Admin Platform [P1 - MVP]: each admin module (A-01 through A-10) provides context-specific search and filtering within its own interface.",
         "rationale": "Entry Points (prd.md lines 86-110). Business Process Assumption 3: patient searches for providers occur during the quote request flow, not as standalone exploration [P2]. Change log 2.7 removed admin global/cross-module search entry points."
       }
     },
@@ -77833,12 +77833,12 @@
       "id": "REQ-022-074",
       "type": "Rule",
       "owner_fr": "FR-022",
-      "title": "Search and filter criteria: Team Directory (FR-009 / Screen 10)",
+      "title": "Search and filter criteria: Provider Team Directory (FR-009 / Screen 10)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "FR-009 / Screen 10: Team Directory [P1 — MVP]. Provider searches for and filters team members within the clinic. Search: Name / email / status (Type: text; Placeholder: \"Search team members…\"; Debounce: 500ms; Notes: Supports wildcard; case-insensitive). Filters: Role (Type: Multi-select; Options: All roles defined in clinic (e.g., Surgeon, Coordinator, Aftercare Specialist); Default: All; Logic: OR (within field)) / Status (Type: Multi-select; Options: Active, Inactive, Pending Invitation; Default: All; Logic: OR (within field)) / Region (Type: Dropdown; Options: All; admin-defined region list; Default: All; Logic: Exact match) / Role Compatibility (Type: Context filter (conditional); Options: Shown during reassignment workflows only; Default: —; Logic: Filters members eligible for role reassignment).",
-        "rationale": "Screen Specifications (prd.md lines 556-578). Screen owned by FR-009 (Provider tenant, Master Reference Table). Search inputs and filter controls are UI controls, not Fields; FR-022 owns the criteria (Maintenance Convention, line 319)."
+        "statement": "FR-009 / Screen 10: Provider Team Directory [P1 — MVP]. Admin searches for and filters team members across all providers for support and compliance. Search: Provider name / member email / status (Type: text; Placeholder: \"Search providers or team members…\"; Debounce: 500ms; Notes: Supports wildcard; case-insensitive). Filters: Status (Type: Multi-select; Options: Active, Suspended, Invited (a pending invitation); Default: All; Logic: OR (within field)) / Role (Type: Multi-select; Options: All provider roles; Default: All; Logic: OR (within field)) / Region (Type: Multi-select; Options: Admin-defined region list; Default: All; Logic: OR (within field)).",
+        "rationale": "Screen Specifications. Screen owned by FR-009 (Admin tenant, Master Reference Table). Search inputs and filter controls are UI controls, not Fields; FR-022 owns the criteria (Maintenance Convention)."
       }
     },
     {
@@ -77884,9 +77884,9 @@
       "owner_fr": "FR-022",
       "title": "Search and filter criteria: Aftercare Cases List (FR-011 / Screen 8)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "FR-011 / Screen 8: Aftercare Cases List [P1 — MVP]. Provider searches for and filters patient aftercare cases managed by their clinic. Search: Patient name / ID (Type: text; Placeholder: \"Search aftercare cases…\"; Debounce: 500ms; Notes: Debounced; case-insensitive). Filters: Milestone (Type: Dropdown; Options: All; aftercare plan milestone names; Default: All; Logic: Exact match) / Case Status (Type: Multi-select; Options: Active, Overdue, Completed; Default: All; Logic: OR (within field)) / Date Range (Type: Date range picker; Options: Custom; Default: All dates; Logic: Filters by aftercare start date).",
+        "statement": "FR-011 / Screen 8: Aftercare Cases List [P1 — MVP]. Provider searches for and filters patient aftercare cases managed by their clinic. Search: Patient name / ID (Type: text; Placeholder: \"Search aftercare cases…\"; Debounce: 500ms; Notes: Debounced; case-insensitive). Filters: Milestone (Type: Dropdown; Options: All; aftercare plan milestone names; Default: All; Logic: Exact match) / Case Status (Type: Multi-select; Options: Pending Activation, Active, Completed, Cancelled; Default: All; Logic: OR (within field)) / Overdue only (Type: Toggle; Options: Show only cases with overdue tasks; Default: Off; Logic: Single flag) / Date Range (Type: Date range picker; Options: Custom; Default: All dates; Logic: Filters by aftercare start date).",
         "rationale": "Screen Specifications (prd.md lines 670-691). Screen owned by FR-011 (Provider tenant, Master Reference Table). Search inputs and filter controls are UI controls, not Fields; FR-022 owns the criteria (Maintenance Convention, line 319)."
       }
     },
@@ -77896,9 +77896,9 @@
       "owner_fr": "FR-022",
       "title": "Search and filter criteria: Provider Analytics Dashboard (FR-014 / Screen 1)",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "FR-014 / Screen 1: Provider Analytics Dashboard [P1 — MVP]. Provider filters analytics reports by date range and treatment type. Filters: Date Range (Type: Segmented + custom picker; Options: Today, This week, Last 4 weeks, Last 12 weeks, Custom; Default: Last 4 weeks; Logic: Single selection) / Treatment Type (Type: Multi-select; Options: All, FUE, FUT, DHI, Sapphire FUE, and other admin-defined types; Default: All; Logic: OR (within field)) / Benchmarks Toggle (Type: Toggle; Options: Show industry benchmarks overlay; Default: Off; Logic: Single flag). Notes: No search input on this screen — filtering only.",
+        "statement": "FR-014 / Screen 1: Provider Analytics Dashboard [P1 — MVP]. Provider filters analytics reports by date range, country and treatment type. Filters: Date Range (Type: Segmented + custom picker; Options: Today, This week, Last 4 weeks, Last 12 weeks, Custom; Default: Last 4 weeks; Logic: Single selection) / Country (Type: Multi-select; Options: All countries; Default: All countries; Logic: OR (within field)) / Treatment Type (Type: Multi-select; Options: All, FUE, FUT, DHI, Sapphire FUE, and other admin-defined types; Default: All; Logic: OR (within field)). Notes: No search input on this screen — filtering only.",
         "rationale": "Screen Specifications (prd.md lines 698-715). Screen owned by FR-014 (Provider tenant, Master Reference Table). Search inputs and filter controls are UI controls, not Fields; FR-022 owns the criteria (Maintenance Convention, line 319)."
       }
     },
@@ -77908,9 +77908,9 @@
       "owner_fr": "FR-022",
       "title": "Search and filter criteria: Provider Package List (FR-024 / Screen 4)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "FR-024 / Screen 4: Provider Package List [P1 — MVP]. Provider searches for and filters their published treatment packages. Search: Package name (Type: text; Placeholder: \"Search packages…\"; Debounce: 300ms; Notes: Real-time filter; case-insensitive). Filters: Status (Type: Dropdown; Options: All, Active, Draft, Inactive; Default: All; Logic: Exact match).",
+        "statement": "FR-024 / Screen 4: Provider Package List [P1 — MVP]. Provider searches for and filters their treatment packages. Search: Package name (Type: text; Placeholder: \"Search packages…\"; Debounce: 300ms; Notes: Real-time filter; case-insensitive). Filters: Status (Type: Dropdown; Options: All, Active, Draft, Inactive; Default: All; Logic: Exact match).",
         "rationale": "Screen Specifications (prd.md lines 722-741). Screen owned by FR-024 (Provider tenant, Master Reference Table). Search inputs and filter controls are UI controls, not Fields; FR-022 owns the criteria (Maintenance Convention, line 319)."
       }
     },
@@ -77968,9 +77968,9 @@
       "owner_fr": "FR-022",
       "title": "Search and filter criteria: Provider Messages List (FR-012 / Screen 3) [P2]",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "FR-012 / Screen 3: Provider Messages List [P1 — MVP]. Provider searches for and filters their patient conversations from the header messages list. Search: Patient ID / inquiry or quote ID / message content (Type: text; Placeholder: \"Search messages…\"; Min Length: 2 chars; Debounce: 300ms; Notes: Filters the conversation list in real time; case-insensitive fuzzy match across Patient ID, inquiry/quote ID, and message content; the patient name is searchable only once the patient has confirmed payment (REQ-022-026)). Filters: Read Status (Type: Toggle; Options: All, Unread Only; Default: All; Logic: Exact match) / Date Range (Type: Dropdown; Options: Today, Last 7 days, Last 30 days, All; Default: All; Logic: Filters by activity date) / Service Type (Type: Dropdown; Options: All; options from service catalog; Default: All; Logic: Exact match).",
+        "statement": "FR-012 / Screen 3: Provider Messages List [P1 — MVP]. Provider searches for and filters their patient conversations from the header messages list. Search: Patient ID / inquiry or quote ID / message content (Type: text; Placeholder: \"Search messages…\"; Min Length: 2 chars; Debounce: 500ms; Notes: Filters the conversation list in real time; case-insensitive fuzzy match across Patient ID, inquiry/quote ID, and message content; the patient name is searchable only once the patient has confirmed payment (REQ-022-026)). Filters: Read Status (Type: Toggle; Options: All, Unread Only; Default: All; Logic: Exact match) / Date Range (Type: Dropdown; Options: Today, Last 7 days, Last 30 days, All; Default: All; Logic: Filters by activity date) / Service Type (Type: Dropdown; Options: All; options from service catalog; Default: All; Logic: Exact match).",
         "rationale": "Screen Specifications (prd.md lines 818-839). Screen owned by FR-012 (Provider tenant, Master Reference Table). Search inputs and filter controls are UI controls, not Fields; FR-022 owns the criteria (Maintenance Convention, line 319)."
       }
     },
@@ -78016,9 +78016,9 @@
       "owner_fr": "FR-022",
       "title": "Search and filter criteria: Admin Bookings Table (FR-006 / Screen 5)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "FR-006 / Screen 5: Admin Bookings Table [P1 — MVP]. Admin searches for and filters all bookings across the platform. Search: Booking reference / patient name / patient email / provider name (Type: text; Placeholder: \"Search bookings…\"; Debounce: 500ms; Notes: Case-insensitive; fuzzy match). Filters: Booking Status (Type: Multi-select; Options: Accepted, Payment Window Expired, Confirmed, In Progress, Aftercare, Completed, Cancelled; Default: All; Logic: OR (within field)) / Provider (Type: Dropdown; Options: All; provider list from DB; Default: All; Logic: Exact match) / Date Range (Type: Date range picker; Options: Custom; Default: All dates; Logic: Filters by booking date) / Treatment Type (Type: Dropdown; Options: All, Hair Transplant, Beard Transplant, Both; Default: All; Logic: Exact match) / Payment Status (Type: Multi-select; Options: Unpaid, Deposit Only, Installments Active, Full Paid, Refunded (the payment status list owned by FR-007); Default: All; Logic: OR (within field)) / Deposit Status (Type: Multi-select; Options: Pending, Paid, Partial; Default: All; Logic: OR (within field)).",
+        "statement": "FR-006 / Screen 5: Admin Bookings Table [P1 — MVP]. Admin searches for and filters all bookings across the platform. Search: Booking reference / patient name / patient email / provider name (Type: text; Placeholder: \"Search bookings…\"; Debounce: 500ms; Notes: Case-insensitive; fuzzy match). Filters: Booking Status (Type: Multi-select; Options: Accepted, Payment Window Expired, Confirmed, In Progress, Aftercare, Completed, Cancelled; Default: All; Logic: OR (within field)) / Provider (Type: Dropdown; Options: All; provider list from DB; Default: All; Logic: Exact match) / Date Range (Type: Date range picker; Options: Custom; Default: All dates; Logic: Filters by appointment date) / Treatment Type (Type: Dropdown; Options: All, Hair Transplant, Beard Transplant, Both; Default: All; Logic: Exact match) / Payment Status (Type: Multi-select; Options: Unpaid, Deposit Only, Installments Active, Full Paid, Refunded (the payment status list owned by FR-007); Default: All; Logic: OR (within field)) / Deposit Status (Type: Multi-select; Options: Pending, Paid, Partial; Default: All; Logic: OR (within field)).",
         "rationale": "Screen Specifications (prd.md lines 949-973). Screen owned by FR-006 (Admin tenant, Master Reference Table). Search inputs and filter controls are UI controls, not Fields; FR-022 owns the criteria (Maintenance Convention, line 319)."
       }
     },
@@ -78136,9 +78136,9 @@
       "owner_fr": "FR-022",
       "title": "Search and filter criteria: Admin Aftercare Cases List (FR-011 / Screen 13)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "FR-011 / Screen 13: Admin Aftercare Cases List [P1 — MVP]. Admin searches for and filters all aftercare cases across all providers. Search: Case ID (Type: text; Placeholder: \"Search by case ID…\"; Debounce: 500ms; Notes: Searchable; sortable). Filters: Provider (Type: Dropdown; Options: All; provider list from DB; Default: All; Logic: Exact match) / Milestone (Type: Dropdown; Options: All; milestone names from aftercare plan templates; Default: All; Logic: Exact match) / Case Status (Type: Multi-select; Options: Active, Overdue, Completed; Default: All; Logic: OR (within field)) / Date Range (Type: Date range picker; Options: Custom; Default: All dates; Logic: Filters by aftercare start date) / Risk Level (Type: Multi-select; Options: High, Medium, Low; Default: All; Logic: OR (within field)) / Specialist Assignment (Type: Dropdown; Options: All; aftercare specialists from DB; Default: All; Logic: Exact match) / Completion Rate (Type: Range slider; Options: 0–100%; Default: All; Logic: Min threshold).",
+        "statement": "FR-011 / Screen 13: Admin Aftercare Cases List [P1 — MVP]. Admin searches for and filters all aftercare cases across all providers. Search: Case ID (Type: text; Placeholder: \"Search by case ID…\"; Debounce: 500ms; Notes: Searchable; sortable). Filters: Provider (Type: Dropdown; Options: All; provider list from DB; Default: All; Logic: Exact match) / Milestone (Type: Dropdown; Options: All; milestone names from aftercare plan templates; Default: All; Logic: Exact match) / Case Status (Type: Multi-select; Options: Pending Activation, Active, Completed, Cancelled; Default: All; Logic: OR (within field)) / Overdue only (Type: Toggle; Options: Show only cases with overdue tasks; Default: Off; Logic: Single flag) / Urgent only (Type: Toggle; Options: Show only cases with the urgent flag set; Default: Off; Logic: Single flag) / Date Range (Type: Date range picker; Options: Custom; Default: All dates; Logic: Filters by aftercare start date) / Risk Level (Type: Multi-select; Options: High, Medium, Low; Default: All; Logic: OR (within field)) / Specialist Assignment (Type: Dropdown; Options: All; aftercare specialists from DB; Default: All; Logic: Exact match) / Completion Rate (Type: Range slider; Options: 0–100%; Default: All; Logic: Min threshold).",
         "rationale": "Screen Specifications (prd.md lines 1190-1215). Screen owned by FR-011 (Admin tenant, Master Reference Table). Search inputs and filter controls are UI controls, not Fields; FR-022 owns the criteria (Maintenance Convention, line 319)."
       }
     },
@@ -78208,9 +78208,9 @@
       "owner_fr": "FR-022",
       "title": "Search and filter criteria: Promotion Program Hub (FR-019 / Screen 1)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "FR-019 / Screen 1: Promotion Program Hub [P1 — MVP]. Admin searches for and filters all promotion programs across the platform, including Admin-via-Provider, Provider Self-Created, and Hairline-Funded & Direct-Issued programs. Search: Code / keyword (Type: text; Placeholder: \"Search promotion programs…\"; Debounce: 500ms; Notes: Case-insensitive; fuzzy match on code text, program name, and keyword). Filters: Program Type (Type: Multi-select; Options: Admin-via-Provider, Provider Self-Created, Hairline-Funded & Direct-Issued; Default: All; Logic: OR (within field)) / Scope (Type: Multi-select; Options: Reusable, Ad-Hoc Quote-Bound; Default: All; Logic: OR (within field)) / Status (Type: Multi-select; Options: Draft, Pending Approval, Active, Paused, Expired, Archived; Default: All; Logic: OR (within field)) / Funding Model (Type: Multi-select; Options: Both Fees, Hairline Only, Provider Only; Default: All; Logic: OR (within field)) / Provider Participation (Type: Dropdown; Options: All; provider list from DB; Default: All; Logic: Exact match) / Date Range (Type: Date range picker; Options: Custom; Default: All dates; Logic: Filters by active window overlap) / Usage (Type: Range; Options: 0–Max; Default: All; Logic: Min–Max usage count) / ROI (Type: Dropdown; Options: All; admin-defined ROI tiers; Default: All; Logic: Exact match).",
+        "statement": "FR-019 / Screen 1: Promotion Program Hub [P1 — MVP]. Admin searches for and filters all promotion programs across the platform, including Admin-via-Provider, Provider Self-Created, and Hairline-Funded & Direct-Issued programs. Search: Code / keyword (Type: text; Placeholder: \"Search promotion programs…\"; Debounce: 500ms; Notes: Minimum 2 characters; case-insensitive; fuzzy match on code text, program name, and keyword). Filters: Program Type (Type: Multi-select; Options: Admin-via-Provider, Provider Self-Created, Hairline-Funded & Direct-Issued; Default: All; Logic: OR (within field)) / Scope (Type: Multi-select; Options: Reusable, Ad-Hoc Quote-Bound; Default: All; Logic: OR (within field)) / Status (Type: Multi-select; Options: Draft, Active, Paused, Expired, Archived; Default: All; Logic: OR (within field)) / Funding Model (Type: Multi-select; Options: Both Fees, Hairline Only, Provider Only; Default: All; Logic: OR (within field)) / Provider Participation (Type: Dropdown; Options: All; provider list from DB; Default: All; Logic: Exact match) / Date Range (Type: Date range picker; Options: Custom; Default: All dates; Logic: Filters by active window overlap) / Usage (Type: Range; Options: 0–Max; Default: All; Logic: Min–Max usage count) / ROI (Type: Dropdown; Options: All; admin-defined ROI tiers; Default: All; Logic: Exact match).",
         "rationale": "Screen Specifications (prd.md lines 1351-1379). Screen owned by FR-019 (Admin tenant, Master Reference Table). Search inputs and filter controls are UI controls, not Fields; FR-022 owns the criteria (Maintenance Convention, line 319). No lifecycle stage fits this screen; applied at the FR-022 default stage (Batch A Inquiry) provisionally. See `fr019-promotions-discounts/prd.md → Screen 1` for the finalized result-table layout, row actions, and acceptance criteria. FR-022 remains the authoritative source for the search/filter contract below."
       }
     },
@@ -78280,9 +78280,9 @@
       "owner_fr": "FR-022",
       "title": "Search and filter criteria: Provider Commission Search (FR-029 / Screen 5)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "FR-029 / Screen 5: Provider Commission Search [P1 — MVP]. Admin searches for a specific provider when configuring provider-specific commission rates. Search: Provider name / ID (Type: text; Placeholder: \"Search provider by name or ID…\"; Debounce: 500ms; Notes: Returns provider record for commission configuration). Notes: No filter controls — search-only functionality for provider selection.",
+        "statement": "FR-029 / Screen 5: Provider Commission Search [P1 — MVP]. Admin searches for a specific provider when configuring provider-specific commission rates. Search: Provider name / ID (Type: text; Placeholder: \"Search provider by name or ID…\"; Debounce: 500ms; Notes: Returns provider record for commission configuration; only providers with status Active or Suspended that are not already in another active provider-specific scope can be selected). Notes: No filter controls — search-only functionality for provider selection.",
         "rationale": "Screen Specifications (prd.md lines 1513-1528). Screen owned by FR-029 (Admin tenant, Master Reference Table). Search inputs and filter controls are UI controls, not Fields; FR-022 owns the criteria (Maintenance Convention, line 319)."
       }
     },
@@ -78352,9 +78352,9 @@
       "owner_fr": "FR-022",
       "title": "Search and filter criteria: FAQ Management (FR-033 / Screen 2)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "FR-033 / Screen 2: FAQ Management [P1 — MVP]. Admin searches for and filters FAQ entries in the Help Centre. Search: Question text (Type: text; Placeholder: \"Search FAQ questions…\"; Debounce: 500ms; Notes: Fuzzy match on question content). Filters: Topic (Type: Dropdown; Options: All; admin-defined FAQ topics; Default: All; Logic: Exact match) / Status (Type: Multi-select; Options: Draft, Published, Archived; Default: All; Logic: OR (within field)) / Audience (Type: Dropdown; Options: All, Patient, Provider; Default: All; Logic: Exact match).",
+        "statement": "FR-033 / Screen 2: FAQ Management [P1 — MVP]. Admin searches for and filters FAQ entries in the Help Centre. Search: Question text (Type: text; Placeholder: \"Search FAQ questions…\"; Debounce: 500ms; Notes: Fuzzy match on question content). Filters: Topic (Type: Dropdown; Options: All; admin-defined FAQ topics; Default: All; Logic: Exact match) / Status (Type: Multi-select; Options: Draft, Published, Unpublished, Archived; Default: All; Logic: OR (within field)) / Audience (Type: Dropdown; Options: All, Patient, Provider; Default: All; Logic: Exact match).",
         "rationale": "Screen Specifications (prd.md lines 1638-1659). Screen owned by FR-033 (Admin tenant, Master Reference Table). Search inputs and filter controls are UI controls, not Fields; FR-022 owns the criteria (Maintenance Convention, line 319). No lifecycle stage fits this screen; applied at the FR-022 default stage (Batch A Inquiry) provisionally."
       }
     },
@@ -78364,9 +78364,9 @@
       "owner_fr": "FR-022",
       "title": "Search and filter criteria: Article Management (FR-033 / Screen 3)",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "FR-033 / Screen 3: Article Management [P1 — MVP]. Admin searches for and filters help articles. Search: Article title (Type: text; Placeholder: \"Search articles…\"; Debounce: 500ms; Notes: Fuzzy match on title). Filters: Article Type (Type: Dropdown; Options: All, Tutorial Guide, Troubleshooting Tip; Default: All; Logic: Exact match) / Category / Tags (Type: Multi-select; Options: Admin-defined article categories; Default: All; Logic: OR (within field)) / Status (Type: Multi-select; Options: Draft, Published, Archived; Default: All; Logic: OR (within field)) / Audience (Type: Dropdown; Options: All, Patient, Provider; Default: All; Logic: Exact match).",
+        "statement": "FR-033 / Screen 3: Article Management [P1 — MVP]. Admin searches for and filters help articles. Search: Article title (Type: text; Placeholder: \"Search articles…\"; Debounce: 500ms; Notes: Fuzzy match on title). Filters: Article Type (Type: Dropdown; Options: All, Tutorial Guide, Troubleshooting Tip, Policy Information; Default: All; Logic: Exact match) / Category / Tags (Type: Multi-select; Options: Admin-defined article categories; Default: All; Logic: OR (within field)) / Status (Type: Multi-select; Options: Draft, Published, Unpublished, Archived; Default: All; Logic: OR (within field)) / Audience (Type: Dropdown; Options: All, Patient, Provider; Default: All; Logic: Exact match).",
         "rationale": "Screen Specifications (prd.md lines 1660-1682). Screen owned by FR-033 (Admin tenant, Master Reference Table). Search inputs and filter controls are UI controls, not Fields; FR-022 owns the criteria (Maintenance Convention, line 319). No lifecycle stage fits this screen; applied at the FR-022 default stage (Batch A Inquiry) provisionally.",
         "distinct_from": "REQ-022-120"
       }
@@ -78377,9 +78377,9 @@
       "owner_fr": "FR-022",
       "title": "Search and filter criteria: Resource Management (FR-033 / Screen 4)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "FR-033 / Screen 4: Resource Management [P1 — MVP]. Admin searches for and filters downloadable help resources. Search: Resource name (Type: text; Placeholder: \"Search resources…\"; Debounce: 500ms; Notes: Fuzzy match on name). Filters: Category (Type: Dropdown; Options: All; admin-defined resource categories; Default: All; Logic: Exact match) / File Type (Type: Multi-select; Options: PDF, Video, Image, Link, and others as configured; Default: All; Logic: OR (within field)) / Status (Type: Multi-select; Options: Draft, Published, Archived; Default: All; Logic: OR (within field)) / Audience (Type: Dropdown; Options: All, Patient, Provider; Default: All; Logic: Exact match).",
+        "statement": "FR-033 / Screen 4: Resource Management [P1 — MVP]. Admin searches for and filters downloadable help resources. Search: Resource name (Type: text; Placeholder: \"Search resources…\"; Debounce: 500ms; Notes: Fuzzy match on name). Filters: Category (Type: Dropdown; Options: All, Templates, Documents, Forms; Default: All; Logic: Exact match) / File Type (Type: Multi-select; Options: PDF, DOCX, XLSX, PNG, JPG; Default: All; Logic: OR (within field)) / Status (Type: Multi-select; Options: Draft, Published, Unpublished, Archived; Default: All; Logic: OR (within field)) / Audience (Type: Dropdown; Options: All, Patient, Provider; Default: All; Logic: Exact match).",
         "rationale": "Screen Specifications (prd.md lines 1683-1705). Screen owned by FR-033 (Admin tenant, Master Reference Table). Search inputs and filter controls are UI controls, not Fields; FR-022 owns the criteria (Maintenance Convention, line 319). No lifecycle stage fits this screen; applied at the FR-022 default stage (Batch A Inquiry) provisionally."
       }
     },
@@ -78389,9 +78389,9 @@
       "owner_fr": "FR-022",
       "title": "Search and filter criteria: Video Management (FR-033 / Screen 5)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "FR-033 / Screen 5: Video Management [P1 — MVP]. Admin searches for and filters help videos. Search: Video title (Type: text; Placeholder: \"Search videos…\"; Debounce: 500ms; Notes: Fuzzy match on title). Filters: Category / Tags (Type: Multi-select; Options: Admin-defined video categories; Default: All; Logic: OR (within field)) / Status (Type: Multi-select; Options: Draft, Published, Archived; Default: All; Logic: OR (within field)) / Source Type (Type: Dropdown; Options: All, Uploaded, YouTube, Vimeo, and other configured sources; Default: All; Logic: Exact match) / Audience (Type: Dropdown; Options: All, Patient, Provider; Default: All; Logic: Exact match).",
+        "statement": "FR-033 / Screen 5: Video Management [P1 — MVP]. Admin searches for and filters help videos. Search: Video title (Type: text; Placeholder: \"Search videos…\"; Debounce: 500ms; Notes: Fuzzy match on title). Filters: Category / Tags (Type: Multi-select; Options: Admin-defined video categories; Default: All; Logic: OR (within field)) / Status (Type: Multi-select; Options: Draft, Published, Unpublished, Archived; Default: All; Logic: OR (within field)) / Source Type (Type: Dropdown; Options: All, Upload File, Embed from Third-Party; Default: All; Logic: Exact match) / Audience (Type: Dropdown; Options: All, Patient, Provider; Default: All; Logic: Exact match).",
         "rationale": "Screen Specifications (prd.md lines 1706-1728). Screen owned by FR-033 (Admin tenant, Master Reference Table). Search inputs and filter controls are UI controls, not Fields; FR-022 owns the criteria (Maintenance Convention, line 319). No lifecycle stage fits this screen; applied at the FR-022 default stage (Batch A Inquiry) provisionally."
       }
     },
@@ -78401,9 +78401,9 @@
       "owner_fr": "FR-022",
       "title": "Search and filter criteria: Communication Monitoring Center (FR-012 / Screen 5)",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "FR-012 / Screen 5: Communication Monitoring Center [P1 — MVP]. Admin searches for and filters all platform conversations for oversight and support. Search: Patient / provider / keyword / inquiry ID (Type: text; Placeholder: \"Search conversations…\"; Min Length: 2 chars; Debounce: 300ms; Notes: Searches across all four fields simultaneously). Filters: Patient (Type: Autocomplete; Options: Matching patient names; Default: None; Logic: Exact selection) / Provider (Type: Autocomplete; Options: Matching provider names; Default: None; Logic: Exact selection) / Service Type (Type: Multi-select; Options: All; platform-defined service types; Default: All; Logic: OR (within field)) / Quote ID (text (optional); \"Filter by quote ID…\"; —; Optional exact match) / Inquiry ID (text (optional); \"Filter by inquiry ID…\"; —; Optional exact match) / Date Range (Type: Date range picker + presets; Options: Custom; Today, Last 7 days, Last 30 days, All; Default: All; Logic: Filters by message date) / Flag Type (Type: Multi-select; Options: Keyword Flagged, Manually Flagged, Intervened, No Flags; Default: All; Logic: OR (within field)) / Conversation Status (Type: Multi-select; Options: Active, Resolved, Escalated; Default: All; Logic: OR (within field)). Active filters combine, and the filters are remembered.",
+        "statement": "FR-012 / Screen 5: Communication Monitoring Center [P1 — MVP]. Admin searches for and filters all platform conversations for oversight and support. Search: Patient / provider / keyword / inquiry ID (Type: text; Placeholder: \"Search conversations…\"; Min Length: 2 chars; Debounce: 500ms; Notes: Searches across all four fields simultaneously). Filters: Patient (Type: Autocomplete; Options: Matching patient names; Default: None; Logic: Exact selection) / Provider (Type: Autocomplete; Options: Matching provider names; Default: None; Logic: Exact selection) / Service Type (Type: Multi-select; Options: All; platform-defined service types; Default: All; Logic: OR (within field)) / Quote ID (text (optional); \"Filter by quote ID…\"; —; Optional exact match) / Inquiry ID (text (optional); \"Filter by inquiry ID…\"; —; Optional exact match) / Date Range (Type: Date range picker + presets; Options: Custom; Today, Last 7 days, Last 30 days, All; Default: All; Logic: Filters by message date) / Flag Type (Type: Multi-select; Options: Keyword Flagged, Manually Flagged, Intervened, No Flags; Default: All; Logic: OR (within field)) / Conversation Status (Type: Multi-select; Options: Active, Resolved, Escalated; Default: All; Logic: OR (within field)). Active filters combine, and the filters are remembered.",
         "rationale": "Screen Specifications (prd.md lines 1735-1761). Screen owned by FR-012 (Admin tenant, Master Reference Table). Search inputs and filter controls are UI controls, not Fields; FR-022 owns the criteria (Maintenance Convention, line 319)."
       }
     },
@@ -78413,9 +78413,9 @@
       "owner_fr": "FR-022",
       "title": "Search and filter criteria: Support Center Dashboard (FR-034 / Screen 1)",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "FR-034 / Screen 1: Support Center Dashboard [P1 — MVP]. Admin searches for and filters all support tickets from patients and providers. Search: Case ID / patient name / provider name / email / title keywords (Type: text; Placeholder: \"Search support cases…\"; Min Length: 3 chars; Debounce: 300ms; Notes: Real-time search across all listed fields). Filters: Status (Type: Multi-select; Options: Open, In Progress, Resolved, Closed; Default: Open + In Progress; Logic: OR (within field)) / Priority (Type: Multi-select; Options: High, Medium, Low; Default: All; Logic: OR (within field)) / Category (Type: Dropdown; Options: All; admin-defined ticket categories; Default: All; Logic: Exact match) / Ticket Source (Type: Dropdown; Options: All, Patient App, Provider App, Admin Portal; Default: All; Logic: Exact match) / Submitter Type (Type: Dropdown; Options: All, Patient, Provider; Default: All; Logic: Exact match) / Date Range (Type: Date range picker; Options: Custom; Default: Last 30 days; Logic: Filters by ticket creation date) / Assigned Admin (Type: Dropdown; Options: All; admin user list; Default: All; Logic: Exact match).",
+        "statement": "FR-034 / Screen 1: Support Center Dashboard [P1 — MVP]. Admin searches for and filters all support tickets from patients and providers. Search: Case ID / patient name / provider name / email / phone / title and description keywords (Type: text; Placeholder: \"Search support cases…\"; Min Length: 3 chars; Debounce: 500ms; Notes: Real-time search across all listed fields). Filters: Status (Type: Multi-select; Options: Open, In Progress, Resolved, Closed; Default: Open + In Progress; Logic: OR (within field)) / Priority (Type: Multi-select; Options: Low, Medium, High, Urgent; Default: All; Logic: OR (within field)) / Category (Type: Dropdown; Options: All; admin-defined ticket categories; Default: All; Logic: Exact match) / Ticket Source (Type: Multi-select; Options: Patient App, Provider Portal, Manual Admin Entry; Default: All; Logic: OR (within field)) / Submitter Type (Type: Multi-select; Options: Patient, Provider, Admin; Default: All; Logic: OR (within field)) / Date Range (Type: Date range picker; Options: Custom; Default: Last 90 days; Logic: Filters by ticket creation date) / Assigned To (Type: Dropdown; Options: All Users; admin user list; Default: All Users; Logic: Exact match) / Request Type (Type: Multi-select; Options: Booking Cancellation, Booking Change; Default: All; Logic: OR (within field)) / Request Status (Type: Multi-select; Options: Open, Resolved, Declined; Default: All; Logic: OR (within field)).",
         "rationale": "Screen Specifications (prd.md lines 1766-1791). Screen owned by FR-034 (Admin tenant, Master Reference Table). Search inputs and filter controls are UI controls, not Fields; FR-022 owns the criteria (Maintenance Convention, line 319)."
       }
     },
@@ -78639,6 +78639,42 @@
       "attrs": {
         "statement": "System MUST show the starting price on a provider card that carries no quote converted to the patient's currency [P2 - Post-MVP]",
         "rationale": "Enhanced Requirements (P2) and General Module Rule 10. Counterpart of REQ-022-058 and General Module Rule 9, which apply to cards that carry a quote."
+      }
+    },
+    {
+      "id": "REQ-022-144",
+      "type": "Rule",
+      "owner_fr": "FR-022",
+      "title": "Search and filter criteria: Team Management Dashboard (FR-009 / Screen 1)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "FR-009 / Screen 1: Team Management Dashboard [P1 — MVP]. Provider searches for and filters the team members of their own clinic. Search: Name / email (Type: text; Placeholder: \"Search team members…\"; Debounce: 500ms; Notes: Case-insensitive). Filters: Role (Type: Multi-select; Options: All roles defined in the clinic; Default: All; Logic: OR (within field)) / Status (Type: Multi-select; Options: Active, Suspended, Invited; Removed (offered to the Owner only); Default: All; Logic: OR (within field)).",
+        "rationale": "Screen Specifications. Screen owned by FR-009 (Provider tenant, Master Reference Table). Search inputs and filter controls are UI controls, not Fields; FR-022 owns the criteria (Maintenance Convention)."
+      }
+    },
+    {
+      "id": "REQ-022-145",
+      "type": "Rule",
+      "owner_fr": "FR-022",
+      "title": "Search and filter criteria: Currency Pair List (FR-029 / Screen 2A)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "FR-029 / Screen 2A: Currency Pair List [P1 — MVP]. Admin sorts and filters the configured currency pairs. Filters: Pair (Type: Text; Options: Pair name; Default: All; Logic: Contains match) / Mode (Type: Dropdown; Options: All, Auto, Manual; Default: All; Logic: Exact match) / Status (Type: Dropdown; Options: All, Healthy, Warning, Error; Default: All; Logic: Exact match). Notes: No search input on this screen — sorting and filtering only. The list can be sorted by pair name, mode, status or last updated.",
+        "rationale": "Screen Specifications. Screen owned by FR-029 (Admin tenant, Master Reference Table). Search inputs and filter controls are UI controls, not Fields; FR-022 owns the criteria (Maintenance Convention)."
+      }
+    },
+    {
+      "id": "REQ-022-146",
+      "type": "Rule",
+      "owner_fr": "FR-022",
+      "title": "Search and filter criteria: Deposit Rate Configuration (FR-029 / Screen 3)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "FR-029 / Screen 3: Deposit Rate Configuration [P1 — MVP]. Admin searches for a specific provider when configuring a provider-specific deposit rate. Search: Provider name / ID (Type: text; Placeholder: \"Search provider by name or ID…\"; Debounce: 500ms; Notes: Shown when the scope is Provider-Specific). Notes: No filter controls — search-only functionality for provider selection.",
+        "rationale": "Screen Specifications. Screen owned by FR-029 (Admin tenant, Master Reference Table). Search inputs and filter controls are UI controls, not Fields; FR-022 owns the criteria (Maintenance Convention)."
       }
     },
     {
@@ -182671,7 +182707,7 @@
       "verb": "active in",
       "to_id": "STG-admin-02-operations",
       "attrs": {
-        "rules": 5
+        "rules": 6
       },
       "derived": true
     },
@@ -182689,7 +182725,7 @@
       "verb": "active in",
       "to_id": "STG-main-01-inquiry",
       "attrs": {
-        "rules": 39
+        "rules": 40
       },
       "derived": true
     },
@@ -182770,7 +182806,7 @@
       "verb": "active in",
       "to_id": "STG-provider-03-active",
       "attrs": {
-        "rules": 35
+        "rules": 36
       },
       "derived": true
     },
@@ -267416,7 +267452,7 @@
     {
       "from_id": "REQ-022-044",
       "verb": "applies to",
-      "to_id": "SCR-009-10",
+      "to_id": "SCR-009-01",
       "attrs": {}
     },
     {
@@ -267986,13 +268022,13 @@
     {
       "from_id": "REQ-022-074",
       "verb": "applies at",
-      "to_id": "STG-provider-03-active",
+      "to_id": "STG-admin-02-operations",
       "attrs": {}
     },
     {
       "from_id": "REQ-022-074",
       "verb": "applies to",
-      "to_id": "ACT-provider",
+      "to_id": "ACT-platform-admin",
       "attrs": {}
     },
     {
@@ -269695,6 +269731,78 @@
     },
     {
       "from_id": "REQ-022-143",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-022",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-022-144",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-022-144",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-022-144",
+      "verb": "applies to",
+      "to_id": "SCR-009-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-022-144",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-022",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-022-145",
+      "verb": "applies at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-022-145",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-022-145",
+      "verb": "applies to",
+      "to_id": "SCR-029-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-022-145",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-022",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-022-146",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-022-146",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-022-146",
+      "verb": "applies to",
+      "to_id": "SCR-029-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-022-146",
       "verb": "decided by",
       "to_id": "SRC-PRD-022",
       "attrs": {}
@@ -458882,6 +458990,42 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-203858-fe7a902d",
+      "at": "2026-11-24T20:38:58.403723+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-022 logic review pass 2: screen criteria mirror the owning FRs again (support center filters and search scope, promotion status list, aftercare case status with Overdue only and Urgent only, help content status, article, resource and video values, analytics country filter without a benchmarks toggle); FR-009 Screen 10 becomes an admin screen and the clinic team list gets its own rule; FR-029 currency pair list, deposit rate provider search and the commission search eligibility rule added; the search audit log rule says patient and provider records; message, conversation and support searches use 500ms.",
+      "source_id": null,
+      "nodes_added": [
+        "REQ-022-144",
+        "REQ-022-145",
+        "REQ-022-146"
+      ],
+      "nodes_updated": [
+        "REQ-022-023",
+        "REQ-022-040",
+        "REQ-022-044",
+        "REQ-022-059",
+        "REQ-022-074",
+        "REQ-022-078",
+        "REQ-022-079",
+        "REQ-022-080",
+        "REQ-022-085",
+        "REQ-022-090",
+        "REQ-022-100",
+        "REQ-022-106",
+        "REQ-022-112",
+        "REQ-022-118",
+        "REQ-022-119",
+        "REQ-022-120",
+        "REQ-022-121",
+        "REQ-022-122",
+        "REQ-022-123"
+      ],
+      "edges_added": 15,
+      "edges_removed": 3,
+      "rows": 58
+    },
     {
       "id": "cs-20261124-200042-a10955ed",
       "at": "2026-11-24T20:00:42.125203+00:00",
