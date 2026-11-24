@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T14:35:16Z",
+  "generated_at": "2026-11-24T14:46:20Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -23370,9 +23370,9 @@
       "owner_fr": "FR-015",
       "title": "Provider starting price",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "description": "Calculated, not typed in: the lowest standard price (ENT-package.standard_price, FR-024) among the provider's active packages, converted to the patient's currency. Shown read-only in Screen 3 Tab 1."
+        "description": "Calculated, not typed in: the lowest standard price (ENT-package.standard_price, FR-024) among the provider's active packages, shown in the package's own currency; conversion to the patient's currency happens only on patient-facing screens. Shown read-only in Screen 3 Tab 1."
       }
     },
     {
@@ -39853,7 +39853,7 @@
       "owner_fr": null,
       "title": "Provider Management (Admin-Initiated)",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "module": "fr015-provider-management",
         "prd_path": "project-requirements/functional-requirements/fr015-provider-management/prd.md",
@@ -61672,9 +61672,9 @@
       "owner_fr": "FR-015",
       "title": "Deactivation is permanent; new account needed to re-onboard",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Deactivation is permanent—deactivated providers cannot be reactivated; admin must create new provider account if re-onboarding required. Deactivation frees the provider's emails: Contact Email uniqueness counts only Active and Suspended providers, and login Email follows the FR-009 global provider email identity rule (Rule 3, REQ-009-008), under which the Owner, team member, and pending-invitation emails of a Deactivated provider are freed. The new account may reuse those emails; the deactivated record and its history are retained unchanged.",
+        "statement": "Deactivation is permanent—deactivated providers cannot be reactivated; admin must create new provider account if re-onboarding required. Deactivation frees the provider's emails: Contact Email uniqueness counts only Active and Suspended providers, and login Email follows the FR-009 global provider email identity rule (Rule 3, REQ-009-008), under which the Owner, team member, and pending-invitation emails of a Deactivated provider are freed. The new account may reuse those emails; the deactivated record and its history are retained unchanged, and Screen 3 Tab 1 is read-only.",
         "rationale": "Screen 4 describes deactivation as permanent and irreversible; Alternative Flow A7 adds that there is no separate Deleted status and that data is retained per FR-023."
       }
     },
@@ -61959,9 +61959,9 @@
       "owner_fr": "FR-015",
       "title": "Resend validates the account; responses never reveal whether the email exists",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System validates email exists in provider database and account status = \"Active\" (account created but password not set). If provider email not found or account already activated (password already set), system displays generic message: \"If an account exists with this email, an activation link will be sent.\" (security: don't reveal if email exists).",
+        "statement": "System validates email exists in provider database, account status is Active or Suspended, and the password is not yet set. If provider email not found, the account is Deactivated, or the account already has a password set, system displays generic message: \"If an account exists with this email, an activation link will be sent.\" (security: don't reveal if email exists).",
         "rationale": "Alternative Flow A1 and the already-activated edge case (prevents email enumeration)."
       }
     },
@@ -61983,9 +61983,9 @@
       "owner_fr": "FR-015",
       "title": "Admin Resend Activation Email visibility and permission",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "\"Resend Activation Email\" (requires the FR-031 Edit Providers permission; visible only if password not yet set and status = Active, so it is hidden for Suspended and Deactivated providers, matching Alternative Flow A1; sends new one-time password setup link)",
+        "statement": "\"Resend Activation Email\" (requires the FR-031 Edit Providers permission; visible only if password not yet set and status is Active or Suspended, so it is hidden for Deactivated providers; a Suspended clinic can set its password but stays read-only per FR-032 Rule 6; matches Alternative Flow A1; sends new one-time password setup link)",
         "rationale": "Screen 3 header quick action."
       }
     },
@@ -62330,9 +62330,9 @@
       "owner_fr": "FR-015",
       "title": "Account-closure request rejection needs review notes",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "If the admin rejects the request instead (e.g., the provider withdraws it), the admin enters review notes (required, min 20 chars); the request is marked Rejected, the provider stays Active, the Closure Requested marker clears, and the provider receives the FR-020 `provider.closure_rejected` email with the review notes (mandatory).",
+        "statement": "If the admin rejects the request instead (e.g., the provider withdraws it), the admin enters review notes (required, min 20 chars); the request is marked Rejected, the provider keeps its current status, the Closure Requested marker clears, and the provider receives the FR-020 `provider.closure_rejected` email with the review notes (mandatory).",
         "rationale": "Alternative Flow A7 step 6."
       }
     },
@@ -62631,9 +62631,9 @@
       "owner_fr": "FR-015",
       "title": "Owner login email change",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Changing the Email Address (the Owner's login ID) requires admin password re-authentication and a reason (the admin change reason above). The new address is validated against the FR-009 global provider email identity rule (REQ-015-014) before saving. The Owner does not confirm the new address. On save, the system: sends FR-020 `provider.login_email_changed` (mandatory security notice) to the old address, saying the login email was changed to the new address (partly masked) by a Hairline admin, with the date and time and a prompt to contact support if unexpected, and to the new address, saying it is now the login email for the clinic; signs the Owner out of all sessions and revokes the Owner's tokens; if `password_set` is false, invalidates the pending activation link and sends a new activation email (FR-020 `provider.activation`) to the new address.",
+        "statement": "Changing the Email Address (the Owner's login ID) requires admin password re-authentication and a reason (the admin change reason above). The new address is validated against the FR-009 global provider email identity rule (REQ-015-014) before saving. The Owner does not confirm the new address. On save, the system: sends FR-020 `provider.login_email_changed` (mandatory security notice) to the old address, saying the login email was changed to the new address (partly masked) by a Hairline admin, with the date and time and a prompt to contact support if unexpected, and to the new address, saying it is now the login email for the clinic; signs the Owner out of all sessions and revokes the Owner's tokens; if `password_set` is false, invalidates the pending activation link and sends a new activation email (FR-020 `provider.activation`) to the new address; this email is sent only when the provider status is Active or Suspended, because Tab 1 is read-only for a Deactivated provider. An admin Owner handover (FR-009 Rule 11, REQ-009-174) applies these same steps to the new Owner's email: admin re-authentication, a reason, notices to the old and new address, and the old Owner signed out; if `password_set` is false, the pending activation link is invalidated and a new activation email goes to the new Owner automatically.",
         "rationale": "prd.md lines 454."
       }
     },
@@ -62655,9 +62655,9 @@
       "owner_fr": "FR-015",
       "title": "Staff tab: invite blocked at the seat limit or when not Active",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Invite is blocked when the provider's Seat Limit (Rule 7) is reached and when provider status is Suspended or Deactivated. \"Invite Staff Member\": admin enters an email and selects one of the provider's existing roles (not Owner); the invitation uses FR-009's normal invitation email, acceptance, and expiry flow. Requires the FR-031 \"Edit Providers\" permission; the invite and the inviting admin are logged in FR-009's audit trail and Tab 8. Existing FR-009 admin actions (force suspend member, reset invitation, view audit log, impersonate) remain available.",
+        "statement": "Invite is blocked when the provider's Seat Limit (Rule 7) is reached and when provider status is Suspended or Deactivated. \"Invite Staff Member\": admin enters an email and selects one of the provider's existing roles (not Owner); the invitation uses FR-009's normal invitation email, acceptance, and expiry flow. Requires the FR-031 \"Edit Providers\" permission; the invite and the inviting admin are logged in FR-009's audit trail and Tab 8. The FR-009 admin actions (force suspend member, reset invitation, Owner handover, view audit log, impersonate) remain available for Active and Suspended providers; for a Deactivated provider only \"view audit log\" remains, and impersonation follows the Login as Provider rules (REQ-015-121). Owner handover (FR-009 REQ-009-174) is available for Active and Suspended providers and unavailable for Deactivated providers, and needs the Edit Providers permission and admin re-authentication.",
         "rationale": "Tab 3 embeds FR-009 Screen 12. Overlaps FR-009 REQ-009-024 and REQ-009-143."
       }
     },
@@ -62887,6 +62887,30 @@
       "attrs": {
         "statement": "For a Stripe Connect clinic, Tab 7 shows Payout Readiness read-only as one of four states: Not started, In progress, Ready, Restricted. The clinic completes Stripe's own sign-up itself and sees the same status read-only in its own dashboard.",
         "rationale": "prd.md lines 636 (Tab 7 Payout Readiness row), 1240 (Key Entity 1 relationships: payout readiness shown to admins and the clinic read-only)."
+      }
+    },
+    {
+      "id": "REQ-015-136",
+      "type": "Rule",
+      "owner_fr": "FR-015",
+      "title": "Creation also makes the Owner's team-member and org-role records",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "When the provider is created, the system also creates, in the same transaction, the Owner's team-member record (ownership flag set; the Owner does not count toward the Seat Limit, FR-009 Rule 6) and the Owner's org-role record (FR-009 REQ-009-196).",
+        "rationale": "Main Flow step 12. FR-009 relies on FR-015 creating both records at onboarding."
+      }
+    },
+    {
+      "id": "REQ-015-137",
+      "type": "Rule",
+      "owner_fr": "FR-015",
+      "title": "Deactivation cancels the provider's Pending team invitations",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Deactivation cancels every Pending team invitation of the provider (FR-009 REQ-009-194) in the same transaction as the status change, with an audit entry in Tab 8; a scheduled deactivation does this on the Effective Date.",
+        "rationale": "Alternative Flow A5 Deactivation, Screen 4 Deactivation rules and General Module Rule 4."
       }
     },
     {
@@ -113776,7 +113800,7 @@
       "owner_fr": "FR-015",
       "title": "System creates the Active provider with password_set false",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 12"
       }
@@ -113930,7 +113954,7 @@
       "owner_fr": "FR-015",
       "title": "Provider clicks Resend Activation Email",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "A1 step 5"
       }
@@ -114106,7 +114130,7 @@
       "owner_fr": "FR-015",
       "title": "System cancels unaccepted quotes and closes pre-treatment bookings",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "A5 step 3"
       }
@@ -114128,7 +114152,7 @@
       "owner_fr": "FR-015",
       "title": "System notifies patients and alerts admins",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "A5 step 5"
       }
@@ -114238,7 +114262,7 @@
       "owner_fr": "FR-015",
       "title": "System applies the deactivation cascade and notifications",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "A7 step 4"
       }
@@ -177372,7 +177396,7 @@
       "verb": "active in",
       "to_id": "STG-provider-01-invited",
       "attrs": {
-        "rules": 31
+        "rules": 32
       },
       "derived": true
     },
@@ -177408,7 +177432,7 @@
       "verb": "active in",
       "to_id": "STG-provider-05-offboarded",
       "attrs": {
-        "rules": 36
+        "rules": 37
       },
       "derived": true
     },
@@ -177469,7 +177493,19 @@
     {
       "from_id": "FR-015",
       "verb": "references",
+      "to_id": "REQ-009-174",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-015",
+      "verb": "references",
       "to_id": "REQ-009-186",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-015",
+      "verb": "references",
+      "to_id": "REQ-009-194",
       "attrs": {}
     },
     {
@@ -233670,6 +233706,66 @@
     },
     {
       "from_id": "REQ-015-135",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-015",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-136",
+      "verb": "applies at",
+      "to_id": "STG-provider-01-invited",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-136",
+      "verb": "applies to",
+      "to_id": "ENT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-136",
+      "verb": "applies to",
+      "to_id": "ENT-team-member",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-136",
+      "verb": "applies to",
+      "to_id": "ENT-team-member-org-role",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-136",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-015",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-137",
+      "verb": "applies at",
+      "to_id": "STG-provider-05-offboarded",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-137",
+      "verb": "applies to",
+      "to_id": "ENT-invitation",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-137",
+      "verb": "applies to",
+      "to_id": "ENT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-137",
+      "verb": "applies to",
+      "to_id": "SCR-015-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-137",
       "verb": "decided by",
       "to_id": "SRC-PRD-015",
       "attrs": {}
@@ -382798,6 +382894,12 @@
     {
       "from_id": "STP-015-012",
       "verb": "applies",
+      "to_id": "REQ-009-196",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-015-012",
+      "verb": "applies",
       "to_id": "REQ-015-031",
       "attrs": {}
     },
@@ -382805,6 +382907,12 @@
       "from_id": "STP-015-012",
       "verb": "applies",
       "to_id": "REQ-015-052",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-015-012",
+      "verb": "applies",
+      "to_id": "REQ-015-136",
       "attrs": {}
     },
     {
@@ -383198,7 +383306,7 @@
       "verb": "next",
       "to_id": "STP-015-107",
       "attrs": {
-        "label": "account exists and is Active"
+        "label": "account exists, status is Active or Suspended, password not set"
       }
     },
     {
@@ -383664,6 +383772,12 @@
     {
       "from_id": "STP-015-153",
       "verb": "applies",
+      "to_id": "REQ-004-073",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-015-153",
+      "verb": "applies",
       "to_id": "REQ-015-017",
       "attrs": {}
     },
@@ -383743,6 +383857,12 @@
       "from_id": "STP-015-154",
       "verb": "on",
       "to_id": "SCR-015-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-015-155",
+      "verb": "applies",
+      "to_id": "REQ-003-021",
       "attrs": {}
     },
     {
@@ -384084,6 +384204,12 @@
       "from_id": "STP-015-174",
       "verb": "applies",
       "to_id": "REQ-015-086",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-015-174",
+      "verb": "applies",
+      "to_id": "REQ-015-137",
       "attrs": {}
     },
     {
@@ -445896,6 +446022,36 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-144516-72fb65e9",
+      "at": "2026-11-24T14:45:16.321523+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-015 logic review pass 1: Owner team-member and org-role records at creation (new REQ-015-136); admin Owner handover uses the login email change steps; deactivation cancels Pending team invitations (new REQ-015-137) and Tab 1 is read-only when Deactivated; Resend Activation Email and the activation email on an email change cover Active and Suspended providers; Starting Price shown in the package currency; last-live-offer hand-off to FR-003 and silent cancellation of unsent drafts in the suspension cascade; Tab 3 admin actions follow provider status; closure rejection keeps the current status.",
+      "source_id": null,
+      "nodes_added": [
+        "REQ-015-136",
+        "REQ-015-137"
+      ],
+      "nodes_updated": [
+        "ENT-provider.starting_price",
+        "FR-015",
+        "REQ-015-032",
+        "REQ-015-056",
+        "REQ-015-058",
+        "REQ-015-087",
+        "REQ-015-114",
+        "REQ-015-116",
+        "STP-015-012",
+        "STP-015-105",
+        "STP-015-106",
+        "STP-015-153",
+        "STP-015-155",
+        "STP-015-174"
+      ],
+      "edges_added": 19,
+      "edges_removed": 2,
+      "rows": 40
+    },
     {
       "id": "cs-20261124-143412-46883d0a",
       "at": "2026-11-24T14:34:12.722633+00:00",
