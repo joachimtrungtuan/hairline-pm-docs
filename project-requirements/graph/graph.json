@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T09:57:56Z",
+  "generated_at": "2026-11-24T10:07:49Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -13705,9 +13705,9 @@
       "owner_fr": "FR-037",
       "title": "Calculated start date",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "The first window starts one cadence period (7 or 14 days) after the provider is first assigned; after a reassignment the schedule carries on and the replacement provider receives the next window date."
+        "description": "The first window starts one cadence period (7 or 14 days) after the provider is first assigned; after a reassignment the replacement provider's first window starts one cadence period after the new assignment (REQ-037-013)."
       }
     },
     {
@@ -14082,9 +14082,9 @@
       "owner_fr": "FR-037",
       "title": "Provider advice state",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Advice mode only: not requested, pending assignment, assigned, pending reassignment or ended (Screen 2 Provider Advice Status)."
+        "description": "Advice mode only: not requested, pending assignment, assigned, pending reassignment or ended (set when the case is completed or converted) (Screen 2 Provider Advice Status)."
       }
     },
     {
@@ -14168,9 +14168,20 @@
       "owner_fr": "FR-037",
       "title": "Duration",
       "status": "active",
+      "version": 2,
+      "attrs": {
+        "description": "Screen 1: the label of the option chosen from the FR-026-managed problem-duration list (FR-003, REQ-003-122), stored with its option reference (duration_option_id) at capture. Only active options are offered; conversion asks for a new choice when the option is no longer active (REQ-037-035)."
+      }
+    },
+    {
+      "id": "ENT-monitoring-case.duration_option_id",
+      "type": "Field",
+      "owner_fr": "FR-037",
+      "title": "Duration option ID",
+      "status": "active",
       "version": 1,
       "attrs": {
-        "description": "Screen 1: the FR-003 Duration value set, identical so conversion copies without remapping. Enum values are not repeated here; the PRD says they are FR-003's."
+        "description": "Reference to the option chosen from the FR-026-managed problem-duration list (FR-003, REQ-003-122) at capture; only active options are offered (REQ-037-035)."
       }
     },
     {
@@ -14363,9 +14374,9 @@
       "owner_fr": "FR-037",
       "title": "Severity summary",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "First, latest, minimum, maximum, average and trend (Screens 6 and 7 Step A)."
+        "description": "First recorded severity, latest, minimum, maximum, average and trend (Screens 6 and 7 Step A)."
       }
     },
     {
@@ -14392,9 +14403,9 @@
       "owner_fr": "FR-037",
       "title": "Initial severity",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Screen 1 Initial Severity: integer 1 to 10. A trend point dated on the case creation date (REQ-037-057)."
+        "description": "Screen 1 Initial Severity: integer 1 to 10. A trend point dated on the case creation date that follows the same-date rule (REQ-037-057)."
       }
     },
     {
@@ -14558,9 +14569,9 @@
       "owner_fr": "FR-037",
       "title": "Provider routing rule",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "The exclusive-provider routing applied at conversion (REQ-037-029)."
+        "description": "The exclusive-provider routing applied when the inquiry submission succeeds (REQ-037-029)."
       }
     },
     {
@@ -14847,6 +14858,28 @@
       "status": "active",
       "version": 1,
       "attrs": {}
+    },
+    {
+      "id": "ENT-monitoring-provider-assignment.end_cause",
+      "type": "Field",
+      "owner_fr": "FR-037",
+      "title": "End cause",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "How an assignment ended other than by the provider's withdrawal (that is status withdrawn): Admin ended it, the provider was suspended or deactivated, the case was completed or converted, or a reassignment replaced it. Empty while the assignment is active. Shown on Screens 12 and 13."
+      }
+    },
+    {
+      "id": "ENT-monitoring-provider-assignment.end_reason",
+      "type": "Field",
+      "owner_fr": "FR-037",
+      "title": "End reason",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Reason Admin enters when ending the assignment; required in that case, empty otherwise. Visible to Admin on Screens 12 and 13, not shown to the provider (REQ-037-094)."
+      }
     },
     {
       "id": "ENT-monitoring-provider-assignment.ended_at",
@@ -39044,7 +39077,7 @@
       "owner_fr": null,
       "title": "Admin assigns or reassigns the provider",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "kind": "main",
         "description": "Entry branch: admin opens a case awaiting assignment or reassignment, shares a preview and selects the provider.",
@@ -94450,9 +94483,9 @@
       "owner_fr": "FR-037",
       "title": "Advice window opens on start date, open until submitted or superseded",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Each advice window MUST open on its calculated start date and remain actionable without an ordinary deadline until its single advice is submitted or a successor window opens; a successor MUST expire only the older unsubmitted window and become the sole actionable window. The cadence is the spacing between window openings. The first window MUST open one cadence period (7 or 14 days) after the provider is first assigned; windows MUST pause while the case has no assigned provider, and the first window for a replacement provider MUST open one cadence period after the new assignment. Window dates MUST be UTC dates. A future window is derived from its start date, so the stored window state has three values (available, submitted, expired).",
+        "statement": "Each advice window MUST open on its calculated start date and remain actionable without an ordinary deadline until its single advice is submitted or a successor window opens; a successor MUST expire only the older unsubmitted window and become the sole actionable window. The cadence is the spacing between window openings. The first window MUST open one cadence period (7 or 14 days) after the provider is first assigned; an open, unanswered window MUST expire when the assignment ends, for any cause; windows MUST then pause while the case has no assigned provider, and the first window for a replacement provider MUST open one cadence period after the new assignment. Window dates MUST be UTC dates. A future window is derived from its start date, so the stored window state has three values (available, submitted, expired).",
         "rationale": "Restated by Business Rule 5b, Screen 10B (each window opens on its calculated start date; both windows stay visible with distinct states), Screen 9 Advice Window Summary, the Provider Platform scope and the Edge Cases (unsubmitted window expires when the next opens)."
       }
     },
@@ -94510,9 +94543,9 @@
       "owner_fr": "FR-037",
       "title": "Admin read-only pre-assignment preview link, revocable, expiry chosen at share time up to 14 days",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Admin MUST be able to generate and revoke a read-only pre-assignment case-preview link for a candidate provider, MUST select its expiry at share time (any time up to 14 days), and preview access MUST NOT create an assignment or ongoing case access. Open previews MUST be revoked on assignment, completion, and conversion.",
+        "statement": "Admin MUST be able to generate and revoke a read-only pre-assignment case-preview link for a candidate provider, MUST select its expiry at share time (any time from 1 to 14 days), and preview access MUST NOT create an assignment or ongoing case access. Open previews MUST be revoked on assignment, completion, and conversion.",
         "rationale": "Restated by Business Rule 5d, Screen 12 (expiry chosen each time Share is used; read-only; scoped to the minimum information for an acceptance decision; audited; revocable; does not grant assignment access), the Business Workflows and the Edge Cases (preview revoked or expired without assignment; candidate opens a valid preview but is never assigned)."
       }
     },
@@ -94546,9 +94579,9 @@
       "owner_fr": "FR-037",
       "title": "Conversion pre-fills compatible information; all copied fields editable",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Conversion MUST pre-fill compatible information and allow the patient to edit all copied fields.",
+        "statement": "Conversion MUST pre-fill compatible information and allow the patient to edit all copied fields; a Duration whose stored option is no longer active MUST be chosen again.",
         "rationale": "Restated by the Executive Summary (the patient must not repeat information already supplied merely because they are changing services) and Screen 7 Step B (every copied field remains editable before submission)."
       }
     },
@@ -94570,9 +94603,9 @@
       "owner_fr": "FR-037",
       "title": "Conversion attaches a generated summary PDF",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Conversion MUST attach a PDF containing logs, scan photos, logged-day count, and severity summary.",
+        "statement": "Conversion MUST attach a PDF containing logs, scan photos, logged-day count, and severity summary; if generation fails three times, conversion proceeds without it and the PDF MUST be attached once a retry succeeds (REQ-037-059).",
         "rationale": "Restated by the Business Workflows (monitoring-summary PDF generated, then pre-fill), Screen 7 Steps A and B and the Integration Points note.",
         "distinct_from": "REQ-038-010"
       }
@@ -94607,9 +94640,9 @@
       "owner_fr": "FR-037",
       "title": "Medical-data access, advice, preview, export, assignment, withdrawal and conversion audited",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST audit all medical-data access, advice submissions and edits, preview-link creation/access/expiry/revocation, exports, assignments, withdrawals, and conversions.",
+        "statement": "System MUST audit all medical-data access, advice submissions and edits, preview-link creation/access/expiry/revocation, exports, assignments, withdrawals, conversions, and advice-cadence changes.",
         "rationale": "Restated by Data and Privacy Rules (every view, export, edit, assignment, withdrawal and conversion of medical data is audited) and Screen 13 Audit History."
       }
     },
@@ -94643,9 +94676,9 @@
       "owner_fr": "FR-037",
       "title": "Exclusive routing to the assigned provider; decline falls back to normal distribution",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "If an assigned advice provider exists at conversion, only that provider MUST initially be selected to quote. Exclusive routing ends only when that provider explicitly declines before quote creation (FR-003 MUST audit the reason) or when redistribution follows the provider's suspension or deactivation (REQ-003-072); either way FR-003 MUST remove exclusive routing and execute normal distribution exactly once. If no provider is assigned at conversion, or the assigned provider has withdrawn or is not eligible at conversion, conversion MUST continue and FR-003 normal distribution MUST apply immediately. Exclusive routing MUST bypass only FR-003 country and provider-selection matching and the 10-provider cap; anonymization, notification timing, and provider dashboard behavior MUST remain unchanged. Expiry MUST remain governed by FR-003/FR-004 rather than this decline fallback.",
+        "statement": "If an assigned advice provider exists when the FR-003 inquiry submission succeeds, only that provider MUST initially be selected to quote. Exclusive routing ends only when that provider explicitly declines before quote creation (FR-003 MUST audit the reason) or when redistribution follows the provider's suspension or deactivation (REQ-003-072); either way FR-003 MUST remove exclusive routing and execute normal distribution exactly once. If no provider is assigned at that moment, or the assigned provider has withdrawn or is not eligible at that moment, conversion MUST continue and FR-003 normal distribution MUST apply immediately. Exclusive routing MUST bypass only FR-003 country and provider-selection matching and the 10-provider cap; anonymization, notification timing, and provider dashboard behavior MUST remain unchanged. Expiry MUST remain governed by FR-003/FR-004 rather than this decline fallback.",
         "rationale": "Restated by Business Rule 7 (decline fallback needs no patient release action; expiry stays governed by FR-003/FR-004), Screen 7 Step B (exclusive provider is the only initial quote recipient; transition occurs on the resulting inquiry), Screen 7 Step A routing notice, the Business Workflows provider-route gate and the Edge Cases. Overlaps FR-003 and FR-004 rules (see the report)."
       }
     },
@@ -94716,9 +94749,9 @@
       "owner_fr": "FR-037",
       "title": "Intake captures reusable concern information",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Hair-loss monitoring intake captures Nature of Concern (required, 1 to 2000 characters), Duration (required, FR-003 Duration enum with an identical value set so conversion copies without remapping), Previous Treatments or \"None\" (required, maximum 2000 characters), Current Severity (required, integer 1 to 10), Lifestyle Factors and Additional Notes (optional, maximum 2000 characters each), Initial Photos (optional, FR-003 image limits) and an Initial Head Scan (optional, FR-002 quality contract).",
+        "statement": "Hair-loss monitoring intake captures Nature of Concern (required, 1 to 2000 characters), Duration (required; only active options of the FR-026-managed problem-duration list are offered, and the case stores the option reference and its label at capture), Previous Treatments or \"None\" (required, maximum 2000 characters), Initial Severity (required, integer 1 to 10), Lifestyle Factors and Additional Notes (optional, maximum 2000 characters each), Initial Photos (optional, FR-003 image limits) and an Initial Head Scan (optional, FR-002 quality contract).",
         "rationale": "Assembled from the Screen 1 field table (prd.md lines 220-229); the PRD has no prose statement."
       }
     },
@@ -94776,9 +94809,9 @@
       "owner_fr": "FR-037",
       "title": "Patient edits and deletes own entries while active; all versions auditable",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "The patient may create, edit, or delete their own entries while the case is active; all versions remain auditable. Deleted and superseded entries are excluded from every count and from the severity trend, and Initial Severity is recalculated from the remaining entries (the first remaining trend point).",
+        "statement": "The patient may create, edit, or delete their own entries while the case is active; all versions remain auditable. Deleted and superseded entries are excluded from every count and from the severity trend, and First recorded severity is recalculated from the remaining entries (the first remaining trend point, which can be the intake rating).",
         "rationale": "Screen 3 business rules."
       }
     },
@@ -94872,9 +94905,9 @@
       "owner_fr": "FR-037",
       "title": "End Monitoring previews the case and needs a confirmed choice",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "End Monitoring shows the patient a preview of date range, logged-day count, scan count, and severity trend. The patient makes a single completion choice (complete and export, or Request Treatment). Complete and export requires a confirmation that acknowledges monitoring will end; Request Treatment does not end monitoring until the FR-003 inquiry is successfully submitted, and its confirmation says so; declining returns to the active case.",
+        "statement": "End Monitoring shows the patient a preview of date range, logged-day count, scan count, and severity trend. The patient makes a single completion choice (complete and export, or Request Treatment). Complete and export requires a confirmation that acknowledges monitoring will end; Request Treatment shows no confirmation and does not end monitoring until the FR-003 inquiry is successfully submitted (Step A states that monitoring ends when the inquiry is submitted); declining returns to the active case.",
         "rationale": "Business Workflows completion preview and gate; Screen 5 field table (Completion Choice single selection; Confirmation must be selected)."
       }
     },
@@ -94884,9 +94917,9 @@
       "owner_fr": "FR-037",
       "title": "Completion or successful conversion ends the case and any advice assignment",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Completing or successfully converting ends the active case and any advice assignment, revokes open case previews, and removes the case from the Admin queue.",
+        "statement": "Completing or successfully converting ends the active case and any advice assignment, sets the advice state to ended, revokes open case previews, and removes the case from the Admin queue.",
         "rationale": "Screen 5 business rules; Business Workflows Complete step."
       }
     },
@@ -94896,9 +94929,9 @@
       "owner_fr": "FR-037",
       "title": "Completed or converted case is read-only except Admin audited correction",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "A completed or converted case is read-only except for Admin audited correction of its content; its status stays final and Admin cannot edit it. A converted case's summary PDF can be viewed on the summary screen like a completed case's.",
+        "statement": "A completed or converted case is read-only except for Admin audited correction of its content; its status stays final and Admin cannot edit it. A converted case's summary PDF can be viewed on the summary screen like a completed case's, and Retry PDF stays available there while the PDF has failed.",
         "rationale": "Screen 5 business rules."
       }
     },
@@ -94908,9 +94941,9 @@
       "owner_fr": "FR-037",
       "title": "PDF generated asynchronously, retained, retryable",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Summary PDFs are generated asynchronously and the generated artifact is retained; the patient is notified when the PDF is ready. A failed generation is retryable without altering the completed case. The PDF is regenerated when logs or the selected scan change after it was made.",
+        "statement": "Summary PDFs are generated asynchronously and the generated artifact is retained; the patient is notified when the PDF is ready. A failed generation is retryable on a completed or converted case without altering it. The PDF is regenerated when logs or the selected scan change after it was made.",
         "rationale": "Shared Services scope (asynchronous generation, retained artifact); Screen 6 business rules; Technology Assumptions (notify when ready); Edge Cases (generation fails after completion and succeeds on retry)."
       }
     },
@@ -94932,9 +94965,9 @@
       "owner_fr": "FR-037",
       "title": "Monitoring summary values derived from valid entries",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Monitoring summary values are derived from valid entries: deleted and superseded entries are excluded from every count and from the severity trend. The monitoring period is the date range from the earlier of the case creation date and the earliest log date through the final case date. The severity trend is in date order; the Initial Severity given at intake is a trend point dated on the case creation date, and the summary's Initial Severity is the first (earliest-dated) remaining trend point, recalculated when entries are deleted or superseded. Logged-day count, scan count, advice count when applicable, and severity latest, minimum, maximum, average, and trend are derived from the same valid entries. A case with zero logs starts its period on the case creation date, shows the Initial Severity as a one-point trend, and shows no log entries.",
+        "statement": "Monitoring summary values are derived from valid entries: deleted and superseded entries are excluded from every count and from the severity trend. The monitoring period is the date range from the earlier of the case creation date and the earliest log date through the final case date. The severity trend is in date order; the Initial Severity given at intake is a trend point dated on the case creation date that follows the same-date rule (the latest-timestamped entry on a date wins), and the summary's First recorded severity is the first (earliest-dated) remaining trend point, which can be the intake rating, recalculated when entries are deleted or superseded. Logged-day count, scan count, advice count when applicable, and severity latest, minimum, maximum, average, and trend are derived from the same valid entries. A case with zero logs starts its period on the case creation date, shows the Initial Severity as a one-point trend, and shows no log entries.",
         "rationale": "Assembled from Screens 2, 5, 6 and 7 Step A (Derived columns); per-date severity follows REQ-037-020."
       }
     },
@@ -94956,9 +94989,9 @@
       "owner_fr": "FR-037",
       "title": "Conversion summary shows PDF status; continue when ready or retry",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "If PDF generation has not finished, the conversion summary step shows generation status and allows the patient to continue once it is ready or retry on failure. After three failed tries the patient can continue without the PDF: the system attaches it to the inquiry when it is ready, and the inquiry shows \"summary pending\" until then.",
+        "statement": "If PDF generation has not finished, the conversion summary step shows generation status and allows the patient to continue once it is ready or retry on failure. After three failed tries the PDF is marked failed and the patient can continue without it: the conversion proceeds, the inquiry shows \"summary pending\", and Admin sees the failure on the case overview. Retry PDF works on the converted case, and a successful retry attaches the PDF to the inquiry.",
         "rationale": "Screen 7 Step A business rules."
       }
     },
@@ -94968,9 +95001,9 @@
       "owner_fr": "FR-037",
       "title": "Conversion summary states the provider routing",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "The conversion summary step states, when an advice provider has an active assignment, that the assigned advice provider will be the only initial quote recipient.",
+        "statement": "The conversion summary step states, when an advice provider has an active assignment, that the assigned advice provider will be the only initial quote recipient if still assigned when the patient submits the inquiry.",
         "rationale": "Screen 7 Step A Provider Routing Notice field."
       }
     },
@@ -95016,9 +95049,9 @@
       "owner_fr": "FR-037",
       "title": "Failed conversion preserves the case and the draft",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "When FR-003 data is invalid or submission fails, System preserves the monitoring case and the conversion draft and shows corrections or a retry option. The conversion draft is held by the patient's app and is not stored on the case.",
+        "statement": "When FR-003 data is invalid or submission fails, System preserves the monitoring case and the conversion draft and shows corrections or a retry option. The conversion draft is held by the patient's app and is not stored on the case; when a kept draft is resumed, the PDF and carried-over values are rebuilt from the current case.",
         "rationale": "Business Workflows PreserveDraft step."
       }
     },
@@ -95052,9 +95085,9 @@
       "owner_fr": "FR-037",
       "title": "Reassignment shows history to Admin and replacement provider",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Reassignment cases display the withdrawal reason and prior assignment history to Admin; the replacement provider receives the case history and the next eligible advice date.",
+        "statement": "Reassignment cases display the withdrawal reason and prior assignment history to Admin; the replacement provider receives the case history and the date of the first window after reassignment.",
         "rationale": "Screen 12 business rules; Business Workflows Reassign and Replacement steps."
       }
     },
@@ -95076,9 +95109,9 @@
       "owner_fr": "FR-037",
       "title": "Provider assigned at conversion eligible; otherwise normal distribution",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "The provider assigned at conversion is eligible to receive the inquiry; if that provider has withdrawn or is not eligible, conversion continues and the case follows the no-assigned-provider path.",
+        "statement": "The provider assigned when the inquiry submission succeeds is eligible to receive the inquiry; if that provider has withdrawn or is not eligible at that moment, conversion continues and the case follows the no-assigned-provider path.",
         "rationale": "Business Process Assumptions, promoted because it states a business path; Marking Unclear Requirements (eligible provider means FR-015 Active with setup complete)."
       }
     },
@@ -95112,9 +95145,9 @@
       "owner_fr": "FR-037",
       "title": "Admin may edit any case information; no edit erases history",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Admin may edit all patient-supplied monitoring information, logs, severity ratings, scan metadata, assignment state, advice records, and conversion links where operational correction is required, each with a reason, but never the case status (completed and converted are final), and no edit may erase historical values or provenance.",
+        "statement": "Admin may edit all patient-supplied monitoring information, logs, severity ratings, scan metadata, and advice records where operational correction is required, each with a reason, but never the case status (completed and converted are final); assignment changes happen only through the assignment controls, conversion provenance is fixed, and no edit may erase historical values or provenance.",
         "rationale": "Admin Editability (Editable by Admin); Screen 13 business rules."
       }
     },
@@ -95124,9 +95157,9 @@
       "owner_fr": "FR-037",
       "title": "Admin advice edits keep the provider as author and every prior version",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Admin edits to advice preserve the provider as original author, retain every prior version, and surface the edited cue and latest-edit timestamp.",
+        "statement": "Admin edits to advice preserve the provider as original author, retain every prior version, and surface the edited cue and latest-edit timestamp. An Admin change to the advice text sends the patient the same advice notification marked \"updated\"; other corrections send no notification.",
         "rationale": "Screen 14B business rules."
       }
     },
@@ -95172,9 +95205,9 @@
       "owner_fr": "FR-037",
       "title": "Who is notified on assignment, withdrawal, replacement and advice",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "The patient is notified when a provider is assigned, withdraws, is replaced, or posts advice; editing posted advice sends the same advice notification marked \"updated\". Provider and Admin are notified of assignment and reassignment actions.",
+        "statement": "The patient is notified when a provider is assigned, withdraws, is replaced, or posts advice; editing posted advice, or an Admin change to its text, sends the same advice notification marked \"updated\". When an assignment ends other than by the provider's withdrawal, the patient and Admin are notified; the provider is also notified, in neutral wording that does not show the reason, when Admin ends the assignment, and receives no notice on completion or conversion. Provider and Admin are notified of assignment and reassignment actions.",
         "rationale": "Communication Structure in scope; Shared Services scope; Business Workflows."
       }
     },
@@ -95184,9 +95217,9 @@
       "owner_fr": "FR-037",
       "title": "FR-037 notification events; no logging or scan reminder",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "FR-037 notifications are limited to assignment, reassignment, advice, withdrawal, completion, export-ready, and conversion events. FR-037 defines no patient-configurable logging or scan reminder for hair-loss cases; reminders belong to transplant-progress cases only (FR-038, REQ-038-031).",
+        "statement": "FR-037 notifications are limited to assignment, reassignment, assignment-ended, advice, withdrawal, completion, export-ready, and conversion events. FR-037 defines no patient-configurable logging or scan reminder for hair-loss cases; reminders belong to transplant-progress cases only (FR-038, REQ-038-031).",
         "rationale": "Service Boundary closing paragraph; Integration Points (FR-020 event candidates)."
       }
     },
@@ -95365,9 +95398,9 @@
       "owner_fr": "FR-037",
       "title": "Assign Provider and Share Case Preview only in pending states",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Admin can assign a provider and share a case preview with a candidate provider only while the case is in Pending Assignment or Pending Reassignment. Admin can end an assignment with a reason, and it ends automatically when the provider is suspended or deactivated (FR-015); the case then returns to Pending Reassignment and the provider's access ends.",
+        "statement": "Admin can assign a provider and share a case preview with a candidate provider only while the case is active and in Pending Assignment or Pending Reassignment. Admin can end an assignment with a reason, and it ends automatically when the provider is suspended or deactivated (FR-015); the case then returns to Pending Reassignment and the provider's access ends. The assignment record keeps the end cause and, for an Admin end, the reason; the reason is not shown to the provider.",
         "rationale": "prd.md lines 503-504 (Screen 12, Assign Provider: pending states only; Share Case Preview: pending assignment or reassignment only)"
       }
     },
@@ -100493,7 +100526,7 @@
       "owner_fr": "FR-037",
       "title": "Hair-Loss Monitoring Intake and Mode Selection",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "patient",
         "description": "Screen 1 (Patient Platform). Creates a monitoring case and captures reusable concern information."
@@ -100649,7 +100682,7 @@
       "owner_fr": "FR-037",
       "title": "Admin Monitoring Cases and Assignment Queue",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "admin",
         "description": "Screen 12 (Admin Platform). System-wide operational picture of monitoring cases; oversight, pre-assignment sharing, first assignment and reassignment."
@@ -100661,7 +100694,7 @@
       "owner_fr": "FR-037",
       "title": "Admin Monitoring Case Overview and Configuration",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "admin",
         "description": "Screen 13 (Admin Platform). Overall view and operational controls for one case; routes individual patient logs and provider advice into dedicated detail screens."
@@ -131583,7 +131616,7 @@
       "owner_fr": "FR-037",
       "title": "Patient selects Monitor Your Hair Loss",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Unified Flow: patient chooses Monitor Your Hair Loss"
       }
@@ -131649,7 +131682,7 @@
       "owner_fr": "FR-037",
       "title": "Patient selects End Monitoring",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Unified Flow: end monitoring"
       }
@@ -131726,7 +131759,7 @@
       "owner_fr": "FR-037",
       "title": "Admin opens a case awaiting assignment or reassignment",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Unified Flow: admin assignment gate"
       }
@@ -131834,9 +131867,9 @@
       "id": "STP-037-029",
       "type": "Step",
       "owner_fr": "FR-037",
-      "title": "System revokes provider access, marks Pending Reassignment and notifies",
+      "title": "System revokes provider access, records how the assignment ended, marks Pending Reassignment and notifies",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Unified Flow: revokes provider access, marks Pending Reassignment and notifies"
       }
@@ -131847,7 +131880,7 @@
       "owner_fr": "FR-037",
       "title": "System records the reassignment; the replacement provider receives the history",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Unified Flow: records the reassignment; the replacement provider receives the history"
       }
@@ -131880,7 +131913,7 @@
       "owner_fr": "FR-037",
       "title": "Patient confirms completion",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Unified Flow: confirms completion"
       }
@@ -131902,7 +131935,7 @@
       "owner_fr": "FR-037",
       "title": "System generates the PDF export",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Unified Flow: generates the PDF export"
       }
@@ -131913,7 +131946,7 @@
       "owner_fr": "FR-037",
       "title": "Patient views or downloads the PDF",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Unified Flow: views or downloads the PDF"
       }
@@ -131924,7 +131957,7 @@
       "owner_fr": "FR-037",
       "title": "System generates the PDF and pre-fills the FR-003 fields",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Unified Flow: generates the PDF and pre-fills the FR-003 fields"
       }
@@ -131935,7 +131968,7 @@
       "owner_fr": "FR-037",
       "title": "Patient reviews the Step A summary",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Unified Flow: reviews the Step A summary"
       }
@@ -131979,31 +132012,9 @@
       "owner_fr": "FR-037",
       "title": "System creates the inquiry, links provenance and completes the case",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Unified Flow: creates the inquiry, links provenance and completes the case"
-      }
-    },
-    {
-      "id": "STP-037-044",
-      "type": "Step",
-      "owner_fr": "FR-037",
-      "title": "System routes the inquiry exclusively to the assigned provider",
-      "status": "active",
-      "version": 3,
-      "attrs": {
-        "prd_ref": "Unified Flow: routes the inquiry exclusively to the assigned provider"
-      }
-    },
-    {
-      "id": "STP-037-045",
-      "type": "Step",
-      "owner_fr": "FR-037",
-      "title": "System distributes the inquiry normally",
-      "status": "active",
-      "version": 2,
-      "attrs": {
-        "prd_ref": "Unified Flow: distributes the inquiry normally"
       }
     },
     {
@@ -132021,9 +132032,9 @@
       "id": "STP-037-047",
       "type": "Step",
       "owner_fr": "FR-037",
-      "title": "Patient retries the PDF generation on the completed case",
+      "title": "Patient retries the PDF generation on the completed or converted case",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Screen 6: Retry PDF"
       }
@@ -132078,7 +132089,7 @@
       "owner_fr": "FR-037",
       "title": "Admin corrects a patient daily log with a reason",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Screen 14A"
       }
@@ -132089,7 +132100,7 @@
       "owner_fr": "FR-037",
       "title": "Admin corrects provider advice with a reason",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Screen 14B"
       }
@@ -132103,6 +132114,28 @@
       "version": 1,
       "attrs": {
         "prd_ref": "Screen 12: Preview Status"
+      }
+    },
+    {
+      "id": "STP-037-055",
+      "type": "Step",
+      "owner_fr": "FR-037",
+      "title": "Admin opens the case list and chooses a case or an action",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Screen 12: Case List"
+      }
+    },
+    {
+      "id": "STP-037-056",
+      "type": "Step",
+      "owner_fr": "FR-037",
+      "title": "System attaches the PDF to the inquiry after a successful retry on a converted case",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Screen 6: Retry PDF"
       }
     },
     {
@@ -142911,7 +142944,15 @@
       "id": "ENT-monitoring-case.duration",
       "entity_id": "ENT-monitoring-case",
       "name": "duration",
-      "data_type": "enum",
+      "data_type": "text",
+      "required": true,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-monitoring-case.duration_option_id",
+      "entity_id": "ENT-monitoring-case",
+      "name": "duration_option_id",
+      "data_type": "id",
       "required": true,
       "calculated_by": null
     },
@@ -143417,6 +143458,22 @@
       "name": "case_id",
       "data_type": "id",
       "required": true,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-monitoring-provider-assignment.end_cause",
+      "entity_id": "ENT-monitoring-provider-assignment",
+      "name": "end_cause",
+      "data_type": "enum",
+      "required": false,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-monitoring-provider-assignment.end_reason",
+      "entity_id": "ENT-monitoring-provider-assignment",
+      "name": "end_reason",
+      "data_type": "text",
+      "required": false,
       "calculated_by": null
     },
     {
@@ -158694,6 +158751,36 @@
       "sort_order": 1
     },
     {
+      "field_id": "ENT-monitoring-provider-assignment.end_cause",
+      "value": "admin_ended",
+      "label": "Admin ended",
+      "sort_order": 0
+    },
+    {
+      "field_id": "ENT-monitoring-provider-assignment.end_cause",
+      "value": "provider_ineligible",
+      "label": "Provider suspended or deactivated",
+      "sort_order": 1
+    },
+    {
+      "field_id": "ENT-monitoring-provider-assignment.end_cause",
+      "value": "case_completed",
+      "label": "Case completed",
+      "sort_order": 2
+    },
+    {
+      "field_id": "ENT-monitoring-provider-assignment.end_cause",
+      "value": "case_converted",
+      "label": "Case converted",
+      "sort_order": 3
+    },
+    {
+      "field_id": "ENT-monitoring-provider-assignment.end_cause",
+      "value": "reassigned",
+      "label": "Replaced by reassignment",
+      "sort_order": 4
+    },
+    {
       "field_id": "ENT-monitoring-provider-assignment.status",
       "value": "active",
       "label": "Active",
@@ -172528,7 +172615,7 @@
     {
       "from_id": "FLW-037-admin-assignment",
       "verb": "starts at",
-      "to_id": "STP-037-014",
+      "to_id": "STP-037-055",
       "attrs": {}
     },
     {
@@ -341407,6 +341494,16 @@
     {
       "from_id": "SCR-037-01",
       "verb": "shows",
+      "to_id": "ENT-monitoring-case.duration_option_id",
+      "attrs": {
+        "provenance": "user input",
+        "label": "Duration",
+        "editable": true
+      }
+    },
+    {
+      "from_id": "SCR-037-01",
+      "verb": "shows",
       "to_id": "ENT-monitoring-case.initial_photos",
       "attrs": {
         "provenance": "user input",
@@ -342654,6 +342751,24 @@
     {
       "from_id": "SCR-037-14",
       "verb": "shows",
+      "to_id": "ENT-monitoring-provider-assignment.end_cause",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Assignment Summary"
+      }
+    },
+    {
+      "from_id": "SCR-037-14",
+      "verb": "shows",
+      "to_id": "ENT-monitoring-provider-assignment.end_reason",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Assignment Summary"
+      }
+    },
+    {
+      "from_id": "SCR-037-14",
+      "verb": "shows",
       "to_id": "ENT-monitoring-provider-assignment.provider_id",
       "attrs": {
         "provenance": "retrieved",
@@ -342842,6 +342957,15 @@
       "from_id": "SCR-037-15",
       "verb": "shows",
       "to_id": "ENT-monitoring-case.duration",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Intake and Medical Data"
+      }
+    },
+    {
+      "from_id": "SCR-037-15",
+      "verb": "shows",
+      "to_id": "ENT-monitoring-case.duration_option_id",
       "attrs": {
         "provenance": "retrieved",
         "label": "Intake and Medical Data"
@@ -343040,6 +343164,24 @@
       "from_id": "SCR-037-15",
       "verb": "shows",
       "to_id": "ENT-monitoring-provider-assignment.assignment_type",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Assignment History"
+      }
+    },
+    {
+      "from_id": "SCR-037-15",
+      "verb": "shows",
+      "to_id": "ENT-monitoring-provider-assignment.end_cause",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Assignment History"
+      }
+    },
+    {
+      "from_id": "SCR-037-15",
+      "verb": "shows",
+      "to_id": "ENT-monitoring-provider-assignment.end_reason",
       "attrs": {
         "provenance": "retrieved",
         "label": "Assignment History"
@@ -432212,6 +432354,12 @@
     {
       "from_id": "STP-037-001",
       "verb": "applies",
+      "to_id": "REQ-037-033",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-037-001",
+      "verb": "applies",
       "to_id": "REQ-037-034",
       "attrs": {}
     },
@@ -432563,9 +432711,17 @@
     {
       "from_id": "STP-037-007",
       "verb": "next",
+      "to_id": "STP-037-008",
+      "attrs": {
+        "label": "patient chooses Request Treatment"
+      }
+    },
+    {
+      "from_id": "STP-037-007",
+      "verb": "next",
       "to_id": "STP-037-032",
       "attrs": {
-        "label": "patient confirms the end"
+        "label": "patient chooses complete and export"
       }
     },
     {
@@ -432969,14 +433125,6 @@
       "to_id": "STP-037-017",
       "attrs": {
         "label": "admin assigns a replacement"
-      }
-    },
-    {
-      "from_id": "STP-037-014",
-      "verb": "next",
-      "to_id": "STP-037-049",
-      "attrs": {
-        "label": "admin ends the assignment"
       }
     },
     {
@@ -433416,6 +433564,12 @@
     {
       "from_id": "STP-037-029",
       "verb": "applies",
+      "to_id": "REQ-037-013",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-037-029",
+      "verb": "applies",
       "to_id": "REQ-037-066",
       "attrs": {}
     },
@@ -433440,10 +433594,24 @@
     {
       "from_id": "STP-037-029",
       "verb": "next",
+      "to_id": "STP-037-004",
+      "attrs": {
+        "label": "patient continues logging"
+      }
+    },
+    {
+      "from_id": "STP-037-029",
+      "verb": "next",
       "to_id": "STP-037-014",
       "attrs": {
         "label": "Admin assigns a replacement"
       }
+    },
+    {
+      "from_id": "STP-037-030",
+      "verb": "applies",
+      "to_id": "REQ-037-013",
+      "attrs": {}
     },
     {
       "from_id": "STP-037-030",
@@ -433481,6 +433649,14 @@
       "to_id": "STP-037-004",
       "attrs": {
         "label": "replacement continues the case"
+      }
+    },
+    {
+      "from_id": "STP-037-030",
+      "verb": "next",
+      "to_id": "STP-037-009",
+      "attrs": {
+        "label": "replacement provider opens the case"
       }
     },
     {
@@ -433570,6 +433746,14 @@
       "verb": "done by",
       "to_id": "ACT-patient",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-037-033",
+      "verb": "next",
+      "to_id": "STP-037-004",
+      "attrs": {
+        "label": "patient declines, case stays active"
+      }
     },
     {
       "from_id": "STP-037-033",
@@ -433671,8 +433855,22 @@
     },
     {
       "from_id": "STP-037-035",
+      "verb": "next",
+      "to_id": "STP-037-056",
+      "attrs": {
+        "label": "PDF ready on a converted case"
+      }
+    },
+    {
+      "from_id": "STP-037-035",
       "verb": "on",
       "to_id": "SCR-037-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-037-036",
+      "verb": "applies",
+      "to_id": "REQ-037-054",
       "attrs": {}
     },
     {
@@ -433731,6 +433929,12 @@
     },
     {
       "from_id": "STP-037-038",
+      "verb": "applies",
+      "to_id": "REQ-037-064",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-037-038",
       "verb": "at",
       "to_id": "STG-monitoring-03-conversion",
       "attrs": {}
@@ -433764,7 +433968,19 @@
     {
       "from_id": "STP-037-039",
       "verb": "applies",
+      "to_id": "REQ-037-011",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-037-039",
+      "verb": "applies",
       "to_id": "REQ-037-059",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-037-039",
+      "verb": "applies",
+      "to_id": "REQ-037-060",
       "attrs": {}
     },
     {
@@ -433778,6 +433994,15 @@
       "verb": "done by",
       "to_id": "ACT-patient",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-037-039",
+      "verb": "next",
+      "to_id": "STP-037-004",
+      "attrs": {
+        "label": "patient goes Back, monitoring stays active",
+        "back": true
+      }
     },
     {
       "from_id": "STP-037-039",
@@ -433927,6 +434152,12 @@
     {
       "from_id": "STP-037-043",
       "verb": "applies",
+      "to_id": "REQ-037-029",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-037-043",
+      "verb": "applies",
       "to_id": "REQ-037-031",
       "attrs": {}
     },
@@ -433950,100 +434181,29 @@
     },
     {
       "from_id": "STP-037-043",
-      "verb": "at",
-      "to_id": "STG-monitoring-03-conversion",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-037-043",
-      "verb": "done by",
-      "to_id": "ACT-system",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-037-043",
-      "verb": "next",
-      "to_id": "STP-037-044",
-      "attrs": {
-        "label": "exclusive provider"
-      }
-    },
-    {
-      "from_id": "STP-037-043",
-      "verb": "next",
-      "to_id": "STP-037-045",
-      "attrs": {
-        "label": "no exclusive provider"
-      }
-    },
-    {
-      "from_id": "STP-037-044",
-      "verb": "applies",
-      "to_id": "REQ-037-029",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-037-044",
-      "verb": "applies",
-      "to_id": "REQ-037-060",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-037-044",
       "verb": "applies",
       "to_id": "REQ-037-069",
       "attrs": {}
     },
     {
-      "from_id": "STP-037-044",
+      "from_id": "STP-037-043",
       "verb": "at",
       "to_id": "STG-monitoring-03-conversion",
       "attrs": {}
     },
     {
-      "from_id": "STP-037-044",
+      "from_id": "STP-037-043",
       "verb": "done by",
       "to_id": "ACT-system",
       "attrs": {}
     },
     {
-      "from_id": "STP-037-044",
+      "from_id": "STP-037-043",
       "verb": "next",
-      "to_id": "STP-003-066",
+      "to_id": "STP-037-036",
       "attrs": {
-        "label": "inquiry goes only to the assigned provider"
-      }
-    },
-    {
-      "from_id": "STP-037-045",
-      "verb": "applies",
-      "to_id": "REQ-037-029",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-037-045",
-      "verb": "applies",
-      "to_id": "REQ-037-069",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-037-045",
-      "verb": "at",
-      "to_id": "STG-monitoring-03-conversion",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-037-045",
-      "verb": "done by",
-      "to_id": "ACT-system",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-037-045",
-      "verb": "next",
-      "to_id": "STP-003-020",
-      "attrs": {
-        "label": "normal provider distribution applies"
+        "label": "patient opens the converted case summary",
+        "back": true
       }
     },
     {
@@ -434088,6 +434248,12 @@
       "from_id": "STP-037-047",
       "verb": "applies",
       "to_id": "REQ-037-055",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-037-047",
+      "verb": "applies",
+      "to_id": "REQ-037-059",
       "attrs": {}
     },
     {
@@ -434267,6 +434433,12 @@
     {
       "from_id": "STP-037-052",
       "verb": "applies",
+      "to_id": "REQ-037-056",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-037-052",
+      "verb": "applies",
       "to_id": "REQ-037-072",
       "attrs": {}
     },
@@ -434281,6 +434453,14 @@
       "verb": "done by",
       "to_id": "ACT-platform-admin",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-037-052",
+      "verb": "next",
+      "to_id": "STP-037-035",
+      "attrs": {
+        "label": "the PDF is versioned and regenerated"
+      }
     },
     {
       "from_id": "STP-037-052",
@@ -434305,7 +434485,19 @@
     {
       "from_id": "STP-037-053",
       "verb": "applies",
+      "to_id": "REQ-037-056",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-037-053",
+      "verb": "applies",
       "to_id": "REQ-037-074",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-037-053",
+      "verb": "applies",
+      "to_id": "REQ-037-078",
       "attrs": {}
     },
     {
@@ -434319,6 +434511,14 @@
       "verb": "done by",
       "to_id": "ACT-platform-admin",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-037-053",
+      "verb": "next",
+      "to_id": "STP-037-035",
+      "attrs": {
+        "label": "the PDF is versioned and regenerated"
+      }
     },
     {
       "from_id": "STP-037-053",
@@ -434370,6 +434570,104 @@
       "from_id": "STP-037-054",
       "verb": "on",
       "to_id": "SCR-037-14",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-037-055",
+      "verb": "applies",
+      "to_id": "REQ-037-016",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-037-055",
+      "verb": "applies",
+      "to_id": "REQ-037-070",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-037-055",
+      "verb": "applies",
+      "to_id": "REQ-037-088",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-037-055",
+      "verb": "at",
+      "to_id": "STG-monitoring-02-tracking",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-037-055",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-037-055",
+      "verb": "next",
+      "to_id": "STP-037-014",
+      "attrs": {
+        "label": "case awaiting assignment or reassignment"
+      }
+    },
+    {
+      "from_id": "STP-037-055",
+      "verb": "next",
+      "to_id": "STP-037-049",
+      "attrs": {
+        "label": "assigned case, admin ends the assignment"
+      }
+    },
+    {
+      "from_id": "STP-037-055",
+      "verb": "next",
+      "to_id": "STP-037-051",
+      "attrs": {
+        "label": "any case, admin opens the overview"
+      }
+    },
+    {
+      "from_id": "STP-037-055",
+      "verb": "on",
+      "to_id": "SCR-037-14",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-037-056",
+      "verb": "applies",
+      "to_id": "REQ-037-023",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-037-056",
+      "verb": "applies",
+      "to_id": "REQ-037-059",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-037-056",
+      "verb": "at",
+      "to_id": "STG-monitoring-02-tracking",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-037-056",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-037-056",
+      "verb": "next",
+      "to_id": "STP-037-036",
+      "attrs": {
+        "label": "PDF attached, patient views the summary"
+      }
+    },
+    {
+      "from_id": "STP-037-056",
+      "verb": "on",
+      "to_id": "SCR-037-06",
       "attrs": {}
     },
     {
@@ -437346,6 +437644,74 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-100646-ed1d9ccb",
+      "at": "2026-11-24T10:06:46.995681+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-037 logic review (second pass): open advice window expires at assignment end, Request Treatment shows no confirmation, advice state ended and the Assign and Share gates, assignment-end notifications and end cause and reason, Admin step for the case list, flowchart returns, PDF failure and retry on a converted case, Duration as an option reference and label, provider routing evaluated when submission succeeds, single FR-003 router (steps 044 and 045 retired), Admin-editable list, Admin advice-text notice, first recorded severity, resumed draft rebuilt, preview expiry range, cadence audit.",
+      "source_id": null,
+      "nodes_added": [
+        "ENT-monitoring-case.duration_option_id",
+        "ENT-monitoring-provider-assignment.end_cause",
+        "ENT-monitoring-provider-assignment.end_reason",
+        "STP-037-055",
+        "STP-037-056"
+      ],
+      "nodes_updated": [
+        "ENT-monitoring-advice-window.start_date",
+        "ENT-monitoring-case.advice_state",
+        "ENT-monitoring-case.duration",
+        "ENT-monitoring-case.severity_summary",
+        "ENT-monitoring-case.starting_severity",
+        "ENT-monitoring-conversion.provider_routing",
+        "FLW-037-admin-assignment",
+        "REQ-037-013",
+        "REQ-037-018",
+        "REQ-037-021",
+        "REQ-037-023",
+        "REQ-037-026",
+        "REQ-037-029",
+        "REQ-037-035",
+        "REQ-037-040",
+        "REQ-037-052",
+        "REQ-037-053",
+        "REQ-037-054",
+        "REQ-037-055",
+        "REQ-037-057",
+        "REQ-037-059",
+        "REQ-037-060",
+        "REQ-037-064",
+        "REQ-037-067",
+        "REQ-037-069",
+        "REQ-037-072",
+        "REQ-037-074",
+        "REQ-037-078",
+        "REQ-037-079",
+        "REQ-037-094",
+        "SCR-037-01",
+        "SCR-037-14",
+        "SCR-037-15",
+        "STP-037-001",
+        "STP-037-007",
+        "STP-037-014",
+        "STP-037-029",
+        "STP-037-030",
+        "STP-037-033",
+        "STP-037-035",
+        "STP-037-036",
+        "STP-037-038",
+        "STP-037-039",
+        "STP-037-043",
+        "STP-037-044",
+        "STP-037-045",
+        "STP-037-047",
+        "STP-037-052",
+        "STP-037-053"
+      ],
+      "edges_added": 45,
+      "edges_removed": 7,
+      "rows": 128
+    },
     {
       "id": "cs-20261124-095650-1be370ec",
       "at": "2026-11-24T09:56:50.436755+00:00",
