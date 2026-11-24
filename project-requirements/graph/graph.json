@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T10:07:49Z",
+  "generated_at": "2026-11-24T10:11:48Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -9378,7 +9378,7 @@
       "owner_fr": "FR-012",
       "title": "Flag type",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Automatic keyword flag or manual observation flag."
       }
@@ -13504,7 +13504,7 @@
       "owner_fr": "FR-012",
       "title": "Sender type",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Whether a patient, provider or admin sent the message."
       }
@@ -13570,7 +13570,7 @@
       "owner_fr": "FR-012",
       "title": "Event type",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "What was logged."
       }
@@ -35728,6 +35728,18 @@
       }
     },
     {
+      "id": "FLW-012-call",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Audio or video call",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "prd_ref": "Alternative Flow A4"
+      }
+    },
+    {
       "id": "FLW-012-connectivity",
       "type": "Flow",
       "owner_fr": null,
@@ -35785,6 +35797,18 @@
       "attrs": {
         "kind": "alternative",
         "prd_ref": "Alternative Flow A2"
+      }
+    },
+    {
+      "id": "FLW-012-moderation-settings",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Admin edits the moderation settings",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "prd_ref": "Screen 5: Moderation settings group"
       }
     },
     {
@@ -39350,7 +39374,7 @@
       "owner_fr": null,
       "title": "Messaging & Communication",
       "status": "active",
-      "version": 7,
+      "version": 8,
       "attrs": {
         "module": "fr012-secure-messaging",
         "prd_path": "project-requirements/functional-requirements/fr012-secure-messaging/prd.md",
@@ -54833,9 +54857,9 @@
       "owner_fr": "FR-012",
       "title": "One conversation per patient-provider pair, created at the first quote",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST automatically create a new conversation between patient and provider when provider submits their first quote for patient inquiry; subsequent quotes from same provider to same patient MUST add inquiry/quote IDs to existing conversation (one conversation per patient-provider pair).",
+        "statement": "System MUST automatically create a new conversation between patient and provider when provider submits their first quote for patient inquiry; subsequent quotes from same provider to same patient MUST add inquiry/quote IDs to existing conversation (one conversation per patient-provider pair). The provider side of the pair is the clinic: every clinic team member with messaging permission reads and replies in the same conversation.",
         "rationale": "Functional Requirements Summary, prd.md line 938."
       }
     },
@@ -54905,9 +54929,9 @@
       "owner_fr": "FR-012",
       "title": "Real-time message notifications and unread badge updates",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST deliver real-time notifications for new messages to intended recipients (patients, providers, and both parties when admin intervenes); update unread badges in inbox views and header popup menus. The notification events are defined in the FR-030 event catalogue.",
+        "statement": "System MUST deliver real-time notifications for new messages to intended recipients (patients, providers, and both parties when admin intervenes); update unread badges in inbox views and header popup menus. The notification events are defined in the FR-030 event catalogue. The intervention notice to both parties and the admin keyword alert cannot be switched off or held; the other chat notices follow the user's notification settings.",
         "rationale": "Functional Requirements Summary. The events are catalogued in FR-030 (REQ-030-061)."
       }
     },
@@ -54929,9 +54953,9 @@
       "owner_fr": "FR-012",
       "title": "Attachment type and size limits with specific feedback",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST enforce attachment type and size limits (Images: JPG/PNG max 5MB; Video: MP4 max 10MB; PDF: max 10MB; max 5 attachments per message) and provide specific user feedback on violations.",
+        "statement": "System MUST enforce attachment type and size limits (Images: JPG/PNG max 5MB; Video: MP4 max 10MB; PDF: max 10MB; max 5 attachments per message) and provide specific user feedback on violations. The checks and the malware scan run on every attachment from a patient, provider or admin; a file that fails is refused with a specific message and the message can still be sent without it.",
         "rationale": "Functional Requirements Summary, prd.md line 946."
       }
     },
@@ -54939,11 +54963,11 @@
       "id": "REQ-012-010",
       "type": "Rule",
       "owner_fr": "FR-012",
-      "title": "Message lifecycle events and emergency interventions logged for audit",
+      "title": "Message lifecycle events, flags, emergency interventions and calls logged for audit",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST log message lifecycle events (sent, delivered, read) and admin emergency interventions for audit.",
+        "statement": "System MUST log message lifecycle events (sent, delivered, read) and these audit events: attachment sent, keyword flag raised, manual flag raised, system flag raised, flag resolved, emergency intervention enabled, the emergency intervention message, and call entry.",
         "rationale": "Functional Requirements Summary, prd.md line 942."
       }
     },
@@ -54977,7 +55001,7 @@
       "owner_fr": "FR-012",
       "title": "Admin sends messages only for emergencies with a mandatory reason",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "System MUST allow admins to send messages in patient-provider conversations ONLY for emergency situations with mandatory reason tracking (Policy Violation / Urgent Dispute / Patient Safety).",
         "rationale": "Functional Requirements Summary, prd.md Screen 6B. The reason options are Policy Violation, Urgent Dispute and Patient Safety."
@@ -55035,11 +55059,11 @@
       "id": "REQ-012-018",
       "type": "Rule",
       "owner_fr": "FR-012",
-      "title": "Messaging enabled only after the provider sent a quote",
+      "title": "Messaging enabled only after the provider sent a quote; conversation read-only when nothing live is left",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST enable patient-provider messaging only when provider has sent a quote to patient.",
+        "statement": "System MUST enable patient-provider messaging only when provider has sent a quote to patient. The conversation is open while the pair has a live quote, booking or aftercare; it becomes read-only (history kept for both parties, nobody can send, admins can still view it) when the provider is suspended or deactivated, the patient's account is deleted, or nothing live is left between the pair, and it opens again when the same provider sends a new quote. Read-only is derived from those conditions and is not a stored conversation status.",
         "rationale": "Functional Requirements Summary, prd.md line 963."
       }
     },
@@ -55059,11 +55083,11 @@
       "id": "REQ-012-020",
       "type": "Rule",
       "owner_fr": "FR-012",
-      "title": "Medical communications retained for the system retention period with audit export",
+      "title": "Messages and attachments retained for the system retention period with audit export",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST retain medical communications as set by the system PRD, Platform-Wide Rules: One 10-year retention period, and support audit export for compliance.",
+        "statement": "System MUST retain messages and attachments as set by the system PRD, Platform-Wide Rules: One 10-year retention period, and support audit export for compliance.",
         "rationale": "Functional Requirements Summary. The retention period is stated once in REQ-SYS-002. Admin conversation export is deferred; see REQ-012-076."
       }
     },
@@ -55085,9 +55109,9 @@
       "owner_fr": "FR-012",
       "title": "All admin actions logged for compliance audit",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST log all admin actions (manual flags, flag status changes, emergency interventions) with timestamp, admin user, reason/notes, and action type for compliance audit.",
+        "statement": "System MUST log all admin actions (manual flags, flag status changes, enabling emergency intervention, emergency interventions) with timestamp, admin user, reason/notes, and action type for compliance audit.",
         "rationale": "Functional Requirements Summary, prd.md line 968."
       }
     },
@@ -55095,11 +55119,11 @@
       "id": "REQ-012-024",
       "type": "Rule",
       "owner_fr": "FR-012",
-      "title": "Intervention restricted to authorized admin roles; frequency under 5 percent",
+      "title": "Intervention restricted to authorized admin roles; intervention rate shown against a 5 percent monitoring target",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST restrict admin intervention to authorized admin roles only; track intervention frequency to ensure <5% threshold; manual observation flags can be used more liberally for proactive monitoring.",
+        "statement": "System MUST restrict admin intervention to authorized admin roles only; Screen 5 shows the intervention rate (interventions in the calendar month divided by conversations with at least one message in that month) against a monitoring target of under 5%, which blocks nothing; manual observation flags can be used more liberally for proactive monitoring.",
         "rationale": "Functional Requirements Summary, prd.md line 969."
       }
     },
@@ -55145,9 +55169,9 @@
       "owner_fr": "FR-012",
       "title": "Payment confirmation lifts patient anonymization",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST integrate with Payment Processing (FR-007) to lift patient anonymization upon payment confirmation.",
+        "statement": "System MUST integrate with Payment Processing (FR-007) to lift patient anonymization upon payment confirmation. Until then, on the provider screens the sender label, avatar and search use the masked identifier and View patient profile is hidden.",
         "rationale": "Functional Requirements Summary, prd.md line 976."
       }
     },
@@ -55193,9 +55217,9 @@
       "owner_fr": "FR-012",
       "title": "Audio and video calls through Twilio",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Audio and video call functionality using Twilio for real-time consultation and communication between patients and providers; Initiate or receive audio/video calls with providers for live consultations and discussions via Twilio; Initiate or receive audio/video calls with patients for consultations and detailed explanations via Twilio; Icon button in header; disabled if provider offline (optional)",
+        "statement": "Audio and video call functionality using Twilio for real-time consultation and communication between patients and providers; Initiate or receive audio/video calls with providers for live consultations and discussions via Twilio; Initiate or receive audio/video calls with patients for consultations and detailed explanations via Twilio; Icon button in header; disabled if provider offline (optional); Calls are started from the chat header; each call leaves a system entry in the conversation (audio or video, start time, duration, outcome answered, missed or declined), and call content is not recorded or monitored.",
         "rationale": "prd.md lines 34, 46, 83, 250. Scope, Screen 2 Audio/Video Call buttons, Screen 4 Audio/Video Call buttons. The call buttons are UI controls, not Fields."
       }
     },
@@ -55289,9 +55313,9 @@
       "owner_fr": "FR-012",
       "title": "Invalid attachment blocked before upload with a specific error",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System validates attachment before upload; If invalid, system blocks upload and displays specific error:; Image must be JPG or PNG format, max 5MB; Video must be MP4 format, max 10MB; PDF must be max 10MB; Maximum 5 attachments per message; User can retry with valid content.",
+        "statement": "System validates attachment before upload; If invalid, system blocks upload and displays specific error:; Image must be JPG or PNG format, max 5MB; Video must be MP4 format, max 10MB; PDF must be max 10MB; Maximum 5 attachments per message; This file failed the security scan and was not attached; User can retry with valid content or send the message without the refused file.",
         "rationale": "prd.md lines 175, 176, 177, 178, 179, 180, 181. Alternative Flow B1. Edge Cases words the same errors differently (\"Image must be under 5MB\", \"Video must be under 10MB\", \"PDF must be under 10MB\", \"Only JPG/PNG images (max 5MB), MP4 videos (max 10MB), and PDF files (max 10MB) are allowed.\", \"Maximum 5 attachments per message\"); B1 wording applied, see the open question."
       }
     },
@@ -55337,9 +55361,9 @@
       "owner_fr": "FR-012",
       "title": "Attachments pass a virus and malware scan",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "S-05 Media Storage for secure storage and retrieval of attachments; virus/malware scanning pipeline.",
+        "statement": "S-05 Media Storage for secure storage and retrieval of attachments; virus/malware scanning pipeline: every attachment from a patient, provider or admin is scanned, and a file that fails the scan is refused.",
         "rationale": "prd.md lines 69. Shared Services S-05."
       }
     },
@@ -55515,11 +55539,11 @@
       "id": "REQ-012-060",
       "type": "Rule",
       "owner_fr": "FR-012",
-      "title": "Message sender label: You, patient name or Hairline Admin",
+      "title": "Message sender label: You, masked patient identifier or name, Hairline Admin, System",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "\"You\" for provider, patient name, \"Hairline Admin\"",
+        "statement": "\"You\" for provider, the patient's masked identifier until payment is confirmed and then the patient name, \"Hairline Admin\", \"System\" for call entries",
         "rationale": "prd.md lines 347. Screen 4 Message sender."
       }
     },
@@ -55529,9 +55553,9 @@
       "owner_fr": "FR-012",
       "title": "Provider chat actions menu",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Options: Archive (future), Export conversation, View patient profile",
+        "statement": "Options: Archive (future), View patient profile (hidden until payment is confirmed); Export conversation is deferred to a future phase",
         "rationale": "prd.md lines 366. Screen 4 Actions menu."
       }
     },
@@ -55565,9 +55589,9 @@
       "owner_fr": "FR-012",
       "title": "Monitoring Center shows all conversations by default",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Shows ALL patient-provider conversations (and any admin-patient communications) by default; filters narrow the view.",
+        "statement": "Shows ALL patient-provider conversations by default; filters narrow the view.",
         "rationale": "prd.md Screen 5 business rules. Filters and AND logic are stated once in REQ-022-122."
       }
     },
@@ -55817,9 +55841,9 @@
       "owner_fr": "FR-012",
       "title": "Intervention updates the flag status of a flagged conversation",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Intervention automatically updates conversation flag status if previously flagged; If conversation was previously flagged, system updates flag status to \"Intervention Completed\"; Conversation manually flagged for observation escalates to emergency intervention when situation worsens; flag status updated to \"Intervention Completed\" after intervention.",
+        "statement": "Enabling emergency intervention sets the conversation's active flags to escalated_to_intervention and sending the message updates them to \"Intervention Completed\"; cancelling without sending restores the flags and changes nothing. A conversation manually flagged for observation escalates to emergency intervention when the situation worsens.",
         "rationale": "prd.md lines 167, 573, 922. Screen 6B business rules; Alternative Flow A3 step 10; Edge Cases, Manual flag escalation. The label Intervention Completed has no matching Key Entities status; see the open question."
       }
     },
@@ -55863,11 +55887,11 @@
       "id": "REQ-012-089",
       "type": "Rule",
       "owner_fr": "FR-012",
-      "title": "Intervention success is tracked; post-intervention auto-flag is configurable",
+      "title": "Intervention success is 30 days without a new flag; post-intervention system flag is configurable",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System tracks intervention success rate (conversation resolved vs escalated further); post-intervention conversation may auto-flag for follow-up review (configurable).",
+        "statement": "System tracks intervention success: an intervention counts as successful when no new flag is raised on that conversation in the 30 days after it (the post-intervention flag does not count). After sending, the system raises a system flag with category Follow-Up Needed for follow-up review unless the post-intervention flag switch on Screen 5 is off (default on).",
         "rationale": "prd.md lines 595. Screen 6B notes."
       }
     },
@@ -55899,11 +55923,11 @@
       "id": "REQ-012-092",
       "type": "Rule",
       "owner_fr": "FR-012",
-      "title": "Patient safety emergency: admin can intervene at once or escalate to the medical team",
+      "title": "Patient safety emergency: admin can intervene at once or escalate to the on-call Admin",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Patient safety emergency during conversation: Admin can intervene immediately using emergency mode to provide guidance or escalate to medical team.",
+        "statement": "Patient safety emergency during conversation: Admin can intervene immediately using emergency mode to provide guidance or escalate to the on-call Admin.",
         "rationale": "prd.md lines 925. Edge Cases."
       }
     },
@@ -55973,9 +55997,9 @@
       "owner_fr": "FR-012",
       "title": "Provider reminder after 48 hours and admin follow-up queue after 72 hours without response",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "No provider response within 48 hours: Auto-remind provider; if still no response after 72 hours, the system itself creates a \"Follow-Up Needed\" flag on the conversation (no admin is named on it) for the admin follow-up queue and sends additional provider reminders via notifications. Admin messaging remains emergency-only.",
+        "statement": "No provider response within 48 hours: The clock starts at the patient's oldest unanswered message and stops at any provider reply, counted in calendar hours. At 48 hours the system reminds the provider; if there is still no reply at 72 hours, the system itself creates a flag of type system with category Follow-Up Needed on the conversation (no admin is named on it) and sends additional provider reminders via notifications. The follow-up queue is Screen 5 filtered by the Follow-Up Needed category. Admin messaging remains emergency-only.",
         "rationale": "prd.md Edge Cases. Business Process Assumptions: respond within 24-48 hours."
       }
     },
@@ -55983,23 +56007,23 @@
       "id": "REQ-012-100",
       "type": "Rule",
       "owner_fr": "FR-012",
-      "title": "Deletion requests archive conversations with restricted access",
+      "title": "Account deletion anonymises messages and attachments in place and makes the conversation read-only",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "deletion requests result in archival with access restrictions; Account deletion request with open conversations: Archive conversations; restrict access per policy; admin emergency messages preserved in archive.",
-        "rationale": "prd.md lines 614, 917. Data & Privacy Rules; Edge Cases. REQ-012-020 states the 7-year retention."
+        "statement": "On account deletion the patient's messages and attachments are anonymised in place per FR-023 (REQ-023-044) and kept for the retention period; admin emergency messages are kept; the conversation becomes read-only.",
+        "rationale": "prd.md Data & Privacy Rules; Edge Cases. FR-023 REQ-023-044 treats messages as Communications anonymised in place. The retention period is stated once in REQ-SYS-002."
       }
     },
     {
       "id": "REQ-012-101",
       "type": "Rule",
       "owner_fr": "FR-012",
-      "title": "Reason for access to a conversation is recorded when required",
+      "title": "Reason is recorded when an admin enables emergency intervention",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "The reason for access to a conversation is recorded when required; who accessed it and when is stated once in the system PRD rule on role-based, audited access.",
+        "statement": "The reason is recorded when an admin enables emergency intervention; who accessed a conversation and when is stated once in the system PRD rule on role-based, audited access.",
         "rationale": "prd.md Data & Privacy Rules. The access and audit halves are retired into REQ-SYS-009; FR-012 keeps the reason when required."
       }
     },
@@ -56031,12 +56055,12 @@
       "id": "REQ-012-105",
       "type": "Rule",
       "owner_fr": "FR-012",
-      "title": "Admin can edit keyword flags and emergency reasons",
+      "title": "Admin can edit keyword flags and the post-intervention flag switch",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Configure moderation rules and automatic keyword flags; maintain compliance audit trail; Keyword/phrase flags that trigger moderation or escalation cues; Emergency intervention reason options (Policy Violation / Urgent Dispute / Patient Safety).",
-        "rationale": "prd.md Admin scope; Admin Editability, Editable by Admin. Notification preferences and quiet hours moved to FR-030. The reason options list has three values."
+        "statement": "Configure moderation rules and automatic keyword flags; maintain compliance audit trail; Keyword/phrase flags that trigger moderation or escalation cues, and the post-intervention flag switch (default on), in the Moderation settings group on Screen 5.",
+        "rationale": "prd.md Admin scope; Admin Editability, Editable by Admin. Notification preferences and quiet hours moved to FR-030. The emergency reason options are a fixed list of three (REQ-012-106)."
       }
     },
     {
@@ -56045,9 +56069,9 @@
       "owner_fr": "FR-012",
       "title": "Fixed in the codebase, not admin-editable",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Cryptographic standards and security controls; Read receipt semantics and audit logging requirements; Minimum retention periods mandated by compliance; Attachment type and size limits: Images (JPG/PNG max 5MB), Video (MP4 max 10MB), PDF (max 10MB); Maximum number of attachments per message (5).",
+        "statement": "Cryptographic standards and security controls; Read receipt semantics and audit logging requirements; Minimum retention periods mandated by compliance; Attachment type and size limits: Images (JPG/PNG max 5MB), Video (MP4 max 10MB), PDF (max 10MB); Maximum number of attachments per message (5); Emergency intervention reasons: the fixed list Policy Violation / Urgent Dispute / Patient Safety.",
         "rationale": "prd.md lines 632, 633, 634, 635, 636. Admin Editability, Fixed in Codebase. The 2000-character limit of that list sits in its own rule."
       }
     },
@@ -56069,9 +56093,9 @@
       "owner_fr": "FR-012",
       "title": "Chat screens offer a machine-translation switch",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Patient and provider chat screens MUST offer an on/off switch for machine translation of messages for the reader. The translation behavior itself is owned by FR-021; this module owns only the switch in the conversation thread.",
+        "statement": "Patient and provider chat screens MUST offer an on/off switch for machine translation of messages for the reader. The switch is shown and works only while the platform-wide translation switch (FR-021) is on. The translation behavior itself is owned by FR-021; this module owns only the switch in the conversation thread.",
         "rationale": "prd.md Screens 2 and 4, Translation switch. Added 2026-11-20."
       }
     },
@@ -56081,9 +56105,9 @@
       "owner_fr": "FR-012",
       "title": "Conversation status is calculated from its flags",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Conversation status MUST be calculated from the conversation's flags, with no manual control: Escalated while an admin intervention is under way (a flag is escalated_to_intervention), Resolved when all flags are closed (resolved or intervention_completed), otherwise Active.",
+        "statement": "Conversation status MUST be calculated from the conversation's flags, with no manual control: Escalated while a flag is escalated_to_intervention (the admin has enabled emergency intervention on Screen 6B and has not yet sent or cancelled); Resolved only when the conversation has at least one flag and all its flags are closed (resolved or intervention_completed); otherwise Active, which covers a conversation with no flag and one with any open flag that is not under intervention. Enabling emergency intervention is the step that sets the flags to escalated_to_intervention; cancelling Screen 6B puts the flags back as they were.",
         "rationale": "prd.md Functional Requirements Summary and Key Entities, Conversation. Added 2026-11-20."
       }
     },
@@ -101224,17 +101248,6 @@
       }
     },
     {
-      "id": "SET-emergency-reason-options",
-      "type": "Setting",
-      "owner_fr": "FR-012",
-      "title": "Emergency intervention reason options",
-      "status": "active",
-      "version": 2,
-      "attrs": {
-        "description": "Admin-editable list of reasons an admin can choose when sending an emergency intervention message: Policy Violation, Urgent Dispute, Patient Safety (Screen 6B, REQ-012-013, Admin Editability)."
-      }
-    },
-    {
       "id": "SET-escalation-routing-rules",
       "type": "Setting",
       "owner_fr": "FR-012",
@@ -101548,9 +101561,9 @@
       "owner_fr": "FR-012",
       "title": "Moderation keyword and phrase flags",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Admin-editable list of keywords and phrases that trigger automatic keyword flags and moderation or escalation cues in conversations (Admin Editability). Provisional owner FR-012; the PRD does not name another owner."
+        "description": "Admin-editable list of keywords and phrases that trigger automatic keyword flags and moderation or escalation cues in conversations, edited in the Moderation settings group on Screen 5 (REQ-012-105). Provisional owner FR-012; the PRD does not name another owner."
       }
     },
     {
@@ -101780,9 +101793,9 @@
       "owner_fr": "FR-012",
       "title": "Post-intervention auto-flag for follow-up",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Whether a conversation is automatically flagged for follow-up review after an emergency intervention (Screen 6B notes: configurable)."
+        "description": "Whether the system raises a system flag with category Follow-Up Needed after an emergency intervention; default on, edited in the Moderation settings group on Screen 5 (REQ-012-089, REQ-012-105)."
       }
     },
     {
@@ -111655,11 +111668,11 @@
       "id": "STP-012-012",
       "type": "Step",
       "owner_fr": "FR-012",
-      "title": "System validates the attachment count",
+      "title": "System validates each attachment's type, size and count and scans it for malware",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A1 step 2"
+        "prd_ref": "Alternative Flow A1 step 1"
       }
     },
     {
@@ -111668,20 +111681,20 @@
       "owner_fr": "FR-012",
       "title": "System stores the media and generates thumbnails",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A1 step 3"
+        "prd_ref": "Alternative Flow A1 step 2"
       }
     },
     {
       "id": "STP-012-014",
       "type": "Step",
       "owner_fr": "FR-012",
-      "title": "System blocks the upload and shows the specific error",
+      "title": "System refuses the file with the specific error; the message can still be sent without it",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A1 step 4"
+        "prd_ref": "Alternative Flow A1 step 3"
       }
     },
     {
@@ -111776,9 +111789,9 @@
       "id": "STP-012-023",
       "type": "Step",
       "owner_fr": "FR-012",
-      "title": "Admin enables emergency intervention and confirms",
+      "title": "Admin enables emergency intervention and confirms; the conversation's active flags become escalated_to_intervention",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A3 step 2"
       }
@@ -111864,9 +111877,9 @@
       "id": "STP-012-031",
       "type": "Step",
       "owner_fr": "FR-012",
-      "title": "System updates the flag status to Intervention Completed",
+      "title": "System updates the flag status to Intervention Completed and raises the post-intervention system flag unless it is switched off",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A3 step 10"
       }
@@ -111888,7 +111901,7 @@
       "owner_fr": "FR-012",
       "title": "System blocks the upload and shows the specific error",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B1 step 2"
       }
@@ -111897,9 +111910,9 @@
       "id": "STP-012-035",
       "type": "Step",
       "owner_fr": "FR-012",
-      "title": "User retries with valid content",
+      "title": "User retries with valid content or sends the message without the refused file",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B1 step 3"
       }
@@ -111924,6 +111937,50 @@
       "version": 1,
       "attrs": {
         "prd_ref": "Alternative Flow B2 step 2"
+      }
+    },
+    {
+      "id": "STP-012-038",
+      "type": "Step",
+      "owner_fr": "FR-012",
+      "title": "Patient or provider taps Audio Call or Video Call in the chat header",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A4 step 1"
+      }
+    },
+    {
+      "id": "STP-012-039",
+      "type": "Step",
+      "owner_fr": "FR-012",
+      "title": "System connects the call through Twilio and notifies the other party, who answers, declines or does not answer",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A4 step 2"
+      }
+    },
+    {
+      "id": "STP-012-040",
+      "type": "Step",
+      "owner_fr": "FR-012",
+      "title": "System writes the call entry in the conversation with type, start time, duration and outcome",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A4 step 3"
+      }
+    },
+    {
+      "id": "STP-012-041",
+      "type": "Step",
+      "owner_fr": "FR-012",
+      "title": "Admin edits the moderation keyword list and the post-intervention flag switch on Screen 5 and saves",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Screen 5: Moderation settings group"
       }
     },
     {
@@ -157605,6 +157662,12 @@
       "sort_order": 1
     },
     {
+      "field_id": "ENT-flag.flag_type",
+      "value": "system",
+      "label": "System",
+      "sort_order": 2
+    },
+    {
       "field_id": "ENT-flag.status",
       "value": "active",
       "label": "Active",
@@ -158499,6 +158562,12 @@
       "sort_order": 2
     },
     {
+      "field_id": "ENT-message.sender_type",
+      "value": "system",
+      "label": "System",
+      "sort_order": 3
+    },
+    {
       "field_id": "ENT-messaging-audit-entry.event_type",
       "value": "message_sent",
       "label": "Message sent",
@@ -158539,6 +158608,36 @@
       "value": "emergency_intervention",
       "label": "Emergency intervention",
       "sort_order": 6
+    },
+    {
+      "field_id": "ENT-messaging-audit-entry.event_type",
+      "value": "attachment_sent",
+      "label": "Attachment sent",
+      "sort_order": 7
+    },
+    {
+      "field_id": "ENT-messaging-audit-entry.event_type",
+      "value": "keyword_flag",
+      "label": "Keyword flag",
+      "sort_order": 8
+    },
+    {
+      "field_id": "ENT-messaging-audit-entry.event_type",
+      "value": "system_flag",
+      "label": "System flag",
+      "sort_order": 9
+    },
+    {
+      "field_id": "ENT-messaging-audit-entry.event_type",
+      "value": "intervention_enabled",
+      "label": "Intervention enabled",
+      "sort_order": 10
+    },
+    {
+      "field_id": "ENT-messaging-audit-entry.event_type",
+      "value": "call_entry",
+      "label": "Call entry",
+      "sort_order": 11
     },
     {
       "field_id": "ENT-monitoring-advice-window.availability",
@@ -170975,6 +171074,12 @@
       "attrs": {}
     },
     {
+      "from_id": "FLW-012-call",
+      "verb": "starts at",
+      "to_id": "STP-012-038",
+      "attrs": {}
+    },
+    {
       "from_id": "FLW-012-connectivity",
       "verb": "starts at",
       "to_id": "STP-012-036",
@@ -171002,6 +171107,12 @@
       "from_id": "FLW-012-manual-flag",
       "verb": "starts at",
       "to_id": "STP-012-015",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-012-moderation-settings",
+      "verb": "starts at",
+      "to_id": "STP-012-041",
       "attrs": {}
     },
     {
@@ -174440,6 +174551,12 @@
       "from_id": "FR-012",
       "verb": "references",
       "to_id": "REQ-022-122",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-012",
+      "verb": "references",
+      "to_id": "REQ-023-044",
       "attrs": {}
     },
     {
@@ -210839,12 +210956,6 @@
       "attrs": {}
     },
     {
-      "from_id": "REQ-012-013",
-      "verb": "governed by",
-      "to_id": "SET-emergency-reason-options",
-      "attrs": {}
-    },
-    {
       "from_id": "REQ-012-014",
       "verb": "applies at",
       "to_id": "STG-main-02-quote",
@@ -211045,6 +211156,12 @@
     {
       "from_id": "REQ-012-024",
       "verb": "applies to",
+      "to_id": "SCR-012-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-012-024",
+      "verb": "applies to",
       "to_id": "SCR-012-07",
       "attrs": {}
     },
@@ -211130,6 +211247,12 @@
       "from_id": "REQ-012-028",
       "verb": "applies to",
       "to_id": "ENT-patient.anonymized_id",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-012-028",
+      "verb": "applies to",
+      "to_id": "SCR-012-04",
       "attrs": {}
     },
     {
@@ -212341,6 +212464,12 @@
     {
       "from_id": "REQ-012-089",
       "verb": "applies to",
+      "to_id": "SCR-012-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-012-089",
+      "verb": "applies to",
       "to_id": "SCR-012-07",
       "attrs": {}
     },
@@ -212568,6 +212697,12 @@
     },
     {
       "from_id": "REQ-012-098",
+      "verb": "applies to",
+      "to_id": "SCR-012-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-012-098",
       "verb": "decided by",
       "to_id": "SRC-PRD-012",
       "attrs": {}
@@ -212670,6 +212805,12 @@
     },
     {
       "from_id": "REQ-012-105",
+      "verb": "applies to",
+      "to_id": "SCR-012-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-012-105",
       "verb": "decided by",
       "to_id": "SRC-PRD-012",
       "attrs": {}
@@ -212677,13 +212818,13 @@
     {
       "from_id": "REQ-012-105",
       "verb": "governed by",
-      "to_id": "SET-emergency-reason-options",
+      "to_id": "SET-moderation-keyword-flags",
       "attrs": {}
     },
     {
       "from_id": "REQ-012-105",
       "verb": "governed by",
-      "to_id": "SET-moderation-keyword-flags",
+      "to_id": "SET-post-intervention-auto-flag",
       "attrs": {}
     },
     {
@@ -374271,6 +374412,12 @@
     },
     {
       "from_id": "STP-012-012",
+      "verb": "applies",
+      "to_id": "REQ-012-044",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-012",
       "verb": "at",
       "to_id": "STG-main-02-quote",
       "attrs": {}
@@ -374306,6 +374453,18 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-012-012",
+      "verb": "on",
+      "to_id": "SCR-012-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-012",
+      "verb": "on",
+      "to_id": "SCR-012-07",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-012-013",
       "verb": "applies",
       "to_id": "REQ-012-039",
@@ -374330,6 +374489,18 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-012-013",
+      "verb": "on",
+      "to_id": "SCR-012-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-013",
+      "verb": "on",
+      "to_id": "SCR-012-07",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-012-014",
       "verb": "applies",
       "to_id": "REQ-012-040",
@@ -374351,6 +374522,18 @@
       "from_id": "STP-012-014",
       "verb": "on",
       "to_id": "SCR-012-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-014",
+      "verb": "on",
+      "to_id": "SCR-012-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-014",
+      "verb": "on",
+      "to_id": "SCR-012-07",
       "attrs": {}
     },
     {
@@ -374589,6 +374772,18 @@
     },
     {
       "from_id": "STP-012-023",
+      "verb": "applies",
+      "to_id": "REQ-012-085",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-023",
+      "verb": "applies",
+      "to_id": "REQ-012-109",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-023",
       "verb": "at",
       "to_id": "STG-main-02-quote",
       "attrs": {}
@@ -374817,6 +375012,12 @@
     },
     {
       "from_id": "STP-012-031",
+      "verb": "applies",
+      "to_id": "REQ-012-089",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-031",
       "verb": "at",
       "to_id": "STG-main-02-quote",
       "attrs": {}
@@ -374888,6 +375089,18 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-012-034",
+      "verb": "on",
+      "to_id": "SCR-012-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-034",
+      "verb": "on",
+      "to_id": "SCR-012-07",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-012-035",
       "verb": "applies",
       "to_id": "REQ-012-040",
@@ -374907,8 +375120,32 @@
     },
     {
       "from_id": "STP-012-035",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-035",
+      "verb": "done by",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-035",
       "verb": "on",
       "to_id": "SCR-012-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-035",
+      "verb": "on",
+      "to_id": "SCR-012-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-035",
+      "verb": "on",
+      "to_id": "SCR-012-07",
       "attrs": {}
     },
     {
@@ -374963,6 +375200,126 @@
       "from_id": "STP-012-037",
       "verb": "on",
       "to_id": "SCR-012-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-038",
+      "verb": "applies",
+      "to_id": "REQ-012-032",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-038",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-038",
+      "verb": "done by",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-038",
+      "verb": "done by",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-038",
+      "verb": "next",
+      "to_id": "STP-012-039",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-038",
+      "verb": "on",
+      "to_id": "SCR-012-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-038",
+      "verb": "on",
+      "to_id": "SCR-012-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-039",
+      "verb": "applies",
+      "to_id": "REQ-012-032",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-039",
+      "verb": "applies",
+      "to_id": "REQ-012-033",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-039",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-039",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-039",
+      "verb": "next",
+      "to_id": "STP-012-040",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-040",
+      "verb": "applies",
+      "to_id": "REQ-012-010",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-040",
+      "verb": "applies",
+      "to_id": "REQ-012-032",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-040",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-040",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-041",
+      "verb": "applies",
+      "to_id": "REQ-012-105",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-041",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-041",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-012-041",
+      "verb": "on",
+      "to_id": "SCR-012-05",
       "attrs": {}
     },
     {
@@ -437644,6 +438001,67 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-101047-49da86a5",
+      "at": "2026-11-24T10:10:47.448618+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-012 logic review: conversation status precedence and the escalation step, intervention success and the system flag type, the monitoring target on Screen 5, the 48-hour clock and the follow-up queue, held notices, translation switch precedence, masked provider screens, anonymise-in-place on deletion, conversation lifecycle, clinic-level conversation, fixed emergency reasons and the Moderation settings step, attachment scan on every sender, call entries, audit event types, and removal of the dead admin-patient reference and the dangling next edge of STP-012-011.",
+      "source_id": null,
+      "nodes_added": [
+        "FLW-012-call",
+        "FLW-012-moderation-settings",
+        "STP-012-038",
+        "STP-012-039",
+        "STP-012-040",
+        "STP-012-041"
+      ],
+      "nodes_updated": [
+        "ENT-flag.flag_type",
+        "ENT-message.sender_type",
+        "ENT-messaging-audit-entry.event_type",
+        "FR-012",
+        "REQ-012-001",
+        "REQ-012-007",
+        "REQ-012-009",
+        "REQ-012-010",
+        "REQ-012-013",
+        "REQ-012-018",
+        "REQ-012-020",
+        "REQ-012-023",
+        "REQ-012-024",
+        "REQ-012-028",
+        "REQ-012-032",
+        "REQ-012-040",
+        "REQ-012-044",
+        "REQ-012-060",
+        "REQ-012-061",
+        "REQ-012-064",
+        "REQ-012-085",
+        "REQ-012-089",
+        "REQ-012-092",
+        "REQ-012-098",
+        "REQ-012-100",
+        "REQ-012-101",
+        "REQ-012-105",
+        "REQ-012-106",
+        "REQ-012-108",
+        "REQ-012-109",
+        "SET-emergency-reason-options",
+        "SET-moderation-keyword-flags",
+        "SET-post-intervention-auto-flag",
+        "STP-012-011",
+        "STP-012-012",
+        "STP-012-013",
+        "STP-012-014",
+        "STP-012-023",
+        "STP-012-031",
+        "STP-012-034",
+        "STP-012-035"
+      ],
+      "edges_added": 45,
+      "edges_removed": 3,
+      "rows": 133
+    },
     {
       "id": "cs-20261124-100646-ed1d9ccb",
       "at": "2026-11-24T10:06:46.995681+00:00",
