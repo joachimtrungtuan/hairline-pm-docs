@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T08:31:38Z",
+  "generated_at": "2026-11-24T08:45:55Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -1096,9 +1096,9 @@
       "owner_fr": "FR-013",
       "title": "Admin action",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Immutable audit record of an admin action on a review or takedown request: action type, reason, admin identity, timestamp and the changes made."
+        "description": "Immutable audit record of an action on a review, response, takedown request or setting: action type, reason, actor type and id (patient, provider or admin), timestamp and the changes made."
       }
     },
     {
@@ -1255,9 +1255,31 @@
       "owner_fr": "FR-013",
       "title": "Action type",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "description": "Kind of admin action. The PRD lists nine values: insert, edit, remove, takedown_approve, takedown_reject, settings_change, export, response_remove, flag_resolve."
+      }
+    },
+    {
+      "id": "ENT-admin-action.actor_id",
+      "type": "Field",
+      "owner_fr": "FR-013",
+      "title": "Actor",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Identity of the patient, provider user or admin that acted."
+      }
+    },
+    {
+      "id": "ENT-admin-action.actor_type",
+      "type": "Field",
+      "owner_fr": "FR-013",
+      "title": "Actor type",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Who acted: patient (review edit), provider (response) or admin."
       }
     },
     {
@@ -1266,9 +1288,9 @@
       "owner_fr": "FR-013",
       "title": "Admin identity",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "The admin who acted."
+        "description": "The admin who acted; set when the actor type is admin."
       }
     },
     {
@@ -25743,17 +25765,6 @@
       }
     },
     {
-      "id": "ENT-review-settings.display_policy",
-      "type": "Field",
-      "owner_fr": "FR-013",
-      "title": "Display policy",
-      "status": "active",
-      "version": 1,
-      "attrs": {
-        "description": "Alias or full-name policy; defaults to alias."
-      }
-    },
-    {
       "id": "ENT-review-settings.flagging_thresholds",
       "type": "Field",
       "owner_fr": "FR-013",
@@ -25792,9 +25803,9 @@
       "owner_fr": "FR-013",
       "title": "Takedown SLA settings",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Queue priority, SLA target and the takedown decision deadline (default 48 hours)."
+        "description": "Queue priority, SLA target and the takedown decision deadline (12 hours to 7 days, default 48 hours)."
       }
     },
     {
@@ -26111,9 +26122,9 @@
       "owner_fr": "FR-013",
       "title": "Response status",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Whether the provider has responded (Response status on Screens 5, 6 and 7). Stub from the FR-032 migration, value list added here."
+        "description": "Whether the provider has an active response (Response status on Screens 5, 6 and 7). Shows No response again when the only response was removed by an admin."
       }
     },
     {
@@ -35690,6 +35701,32 @@
         "kind": "alternative",
         "description": "A4: Admin Processes Takedown Request",
         "prd_ref": "A4"
+      }
+    },
+    {
+      "id": "FLW-013-admin-removes-provider-response",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "B3: Admin Removes a Provider Response",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "B3: Admin Removes a Provider Response",
+        "prd_ref": "B3"
+      }
+    },
+    {
+      "id": "FLW-013-admin-removes-review",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "A5: Admin Removes a Review",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "A5: Admin Removes a Review",
+        "prd_ref": "A5"
       }
     },
     {
@@ -55867,9 +55904,9 @@
       "owner_fr": "FR-013",
       "title": "Review needs 3 months since completion; one published review per procedure",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST enforce time gating (≥ 3 months) and one published review per completed procedure. After an approved takedown the patient MAY submit one new review for the same procedure; both reviews are kept in the archive.",
+        "statement": "System MUST enforce time gating (≥ 3 months) and one published review per treatment case. After a removal (approved takedown or admin policy removal) the patient MAY submit one further review for the case. Removed reviews are kept in the archive and are never restored.",
         "rationale": "Restated by Module Scope, Entry Points, Main Flow prerequisites and General Module Rules (\"Time gating: review invitation and entry allowed ≥ 3 months post-procedure.\"). Change Log 1.13 records the 3-month gate as a product-owner additional requirement that needs no client-transcription evidence."
       }
     },
@@ -55939,9 +55976,9 @@
       "owner_fr": "FR-013",
       "title": "Provider average rating, count and distribution calculated",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST calculate and display provider average rating, count, and distribution.",
+        "statement": "System MUST calculate and display provider average rating, count, and distribution over Published reviews, including admin-seeded `Verified Off-platform` reviews.",
         "rationale": "Restated by Screen 5 (Ratings summary: average rating, count, distribution), Screen 4 (rating summary teaser, cached summary allowed) and Main Flow step 3. Scalability Considerations: caching of ratings summary and distribution per provider (technical, not migrated)."
       }
     },
@@ -56011,9 +56048,9 @@
       "owner_fr": "FR-013",
       "title": "Reviewer identity aliased by default; no PII in public views",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST alias reviewer identity by default and prevent exposure of PII in public views.",
+        "statement": "System MUST always alias reviewer identity and prevent exposure of PII in public views.",
         "rationale": "Restated by Data & Privacy Rules (\"Patient display name uses aliasing by default; see canonical reviewer alias algorithm below.\"), Screen 4 (\"Reviewer identity is aliased by default and must not expose patient PII.\") and the reviewer alias rows of Screens 5 and 6 (no PII exposure). Algorithm: see the reviewer alias rule."
       }
     },
@@ -56035,9 +56072,9 @@
       "owner_fr": "FR-013",
       "title": "Unpublish and archive for compliance removals and takedowns",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST support unpublish + archival for compliance removals and approved takedown requests.",
+        "statement": "System MUST support unpublish + archival for compliance removals and approved takedown requests; an admin removal of a review also closes any Pending takedown request on it as Approved. There is no Restore action.",
         "rationale": "Restated by Screen 8 (\"Removed reviews are unpublished + archived (not hard deleted).\"), Screen 9 (\"Approve decision: review unpublished + archived.\"), Security Considerations (soft-delete (unpublish) for takedowns) and the approved-takedown edge case."
       }
     },
@@ -56047,9 +56084,9 @@
       "owner_fr": "FR-013",
       "title": "Review events raise notifications; delivery follows FR-020 and FR-030",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "The review module raises a notification on each of these events: new published review, provider reply, admin removal, takedown decision. Invitation and reminder timing is owned by FR-030. Delivery, recipients, content and opt-out follow the notification-service Rule in FR-020 and the FR-030 notification catalogue.",
+        "statement": "The review module raises a notification on each of these events: new published review, provider reply, admin removal, takedown decision, review edited by the patient (to the provider, informational only), review edited by an admin (to the reviewing patient), takedown requested (to admins), and takedown overdue (to admins). Notices that would go to the placeholder patient of an admin-seeded review are not sent. The invitation fires on the eligibility date (3 months after confirmed procedure completion) and reminder timing counts from that date; reminder cadence is owned by FR-030. Delivery, recipients, content and opt-out follow the notification-service Rule in FR-020 and the FR-030 notification catalogue.",
         "rationale": "Restated by Main Flow step 4(d), workflows A3 step 4, A4 step 4 and B1 outcome, the Provider Platform scope (receive notification on new published reviews) and Shared Services. Invite and reminder timing is owned by FR-030; delivery, recipients, content and opt-out are owned by FR-020 and the FR-030 catalogue."
       }
     },
@@ -56107,9 +56144,9 @@
       "owner_fr": "FR-013",
       "title": "Admin review settings and restricted export; cadence owned by FR-030",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Admin Review Settings MUST support review category labels, photo guidelines, removal reason catalog, reviewer display policy, restricted flagging/SLA settings, and RBAC-restricted export actions with audit logging. Review invitation and reminder cadence are owned by FR-030 (Notification Rules & Configuration); Screen 10 provides link-outs only.",
+        "statement": "Admin Review Settings MUST support review category labels, photo guidelines, removal reason catalog, restricted flagging/SLA settings, and RBAC-restricted export actions with audit logging. Reviewer identity is always shown as the alias, so there is no display-policy setting. Review reminder cadence is owned by FR-030 (Notification Rules & Configuration); Screen 10 provides link-outs only.",
         "rationale": "Screen 10 and its rules. Change Logs 1.12 and 1.14 move invitation and reminder cadence to FR-030 and leave Screen 10 with read-only link-outs."
       }
     },
@@ -56119,9 +56156,9 @@
       "owner_fr": "FR-013",
       "title": "Per-treatment sub-scores endpoint for FR-014 (PRD id REQ-013-018a)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST additionally expose a per-treatment aggregated sub-scores endpoint that returns, for a given provider, `{treatment_id → {avg_overall, avg_facility, avg_staff, avg_results, avg_value, review_count, distribution}}` over Published reviews only. This endpoint is the data contract consumed by FR-014 \"review sub-scores per treatment\" analytics; cache invalidation MUST be triggered on every review publish, edit republish, removal, and approved takedown.",
+        "statement": "System MUST additionally expose a per-treatment aggregated sub-scores endpoint that returns, for a given provider, `{treatment_id → {avg_overall, avg_facility, avg_staff, avg_results, avg_value, review_count, distribution}}` over Published reviews only. This endpoint is the data contract consumed by FR-014 \"review sub-scores per treatment\" analytics; cache invalidation MUST be triggered on every change of a review's visibility or rating (publish, edit republish, admin add, admin edit of a rating, removal, unpublish from flag resolution, and approved takedown).",
         "rationale": "Renumbered from REQ-013-018a because Rule ids carry digits only. Change Log 1.13 item 4; Dependencies FR-014."
       }
     },
@@ -56131,9 +56168,9 @@
       "owner_fr": "FR-013",
       "title": "Entry points to reviews, takedown requests and review settings",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Time-gated invite after confirmed procedure completion (≥ 3 months) triggers review flow. Patient navigates to “Write a Review” from provider history. Patient views published reviews from provider profile/offer evaluation surfaces. Patient navigates to “Submitted Reviews” to view review history and request takedown from detail page. Providers access “Reviews” in dashboard to list/filter/detail reviews and respond. Admins access “Review Management”, “Takedown Requests”, and “Review Settings” from Admin platform navigation.",
+        "statement": "The review invitation fires on the eligibility date (3 months after confirmed procedure completion) and triggers the review flow; reminders count from that date. Patient navigates to “Write a Review” from provider history. Patient views published reviews from provider profile/offer evaluation surfaces. Patient navigates to “Submitted Reviews” to view review history and request takedown from detail page. Providers access “Reviews” in dashboard to list/filter/detail reviews and respond. Admins access “Review Management”, “Takedown Requests”, and “Review Settings” from Admin platform navigation.",
         "rationale": "prd.md lines 56, 57."
       }
     },
@@ -56203,9 +56240,9 @@
       "owner_fr": "FR-013",
       "title": "Patient may edit a published review at any time; edits publish immediately",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Patient can edit their published review at any time. `Edit Review` opens pre-filled form fields; saved edits are published immediately (no moderation gate).",
+        "statement": "Patient can edit their published review at any time except while a takedown request on it is `Pending`. `Edit Review` opens pre-filled form fields; saved edits are published immediately (no moderation gate).",
         "rationale": "Screen 1 rule (\"One review per completed procedure; patient can edit their published review at any time.\") and Screen 3 rule (`Edit Review` opens pre-filled form fields; saved edits are published immediately (no moderation gate).). Edit availability by status is in the Screen 3 actions rule."
       }
     },
@@ -56215,9 +56252,9 @@
       "owner_fr": "FR-013",
       "title": "Publish and edit republish recalculate provider rating metrics",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System publishes (or republishes, on edit) the review immediately and recalculates provider rating metrics (average, count, distribution) with associated cache invalidation. Recalculation applies whether the action is an initial submission or an edit to an already-published review.",
+        "statement": "System publishes (or republishes, on edit) the review immediately and recalculates provider rating metrics (average, count, distribution) with associated cache invalidation. Recalculation applies whether the action is an initial submission or an edit to an already-published review, and, under the same rule, to every other change of a review's visibility or rating (REQ-013-031): admin add, admin edit of a rating, admin removal, unpublish from flag resolution, and approved takedown. Admin-seeded reviews count in the average and distribution and are labelled Verified Off-platform.",
         "rationale": "Main Flow step 3. The takedown decision rule repeats the recalculation on approval."
       }
     },
@@ -56227,9 +56264,9 @@
       "owner_fr": "FR-013",
       "title": "Patient edit re-runs flagging, tracks edits, audits and notifies provider",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "On edit (republish), system also: (a) re-runs B2 automated flagging (keyword/duplicate/rate-limit checks) against the new payload, (b) sets `last_edited_at` and increments `edit_count`, (c) writes a full audit record (before/after values, actor=patient), and (d) notifies the provider that an existing review they may have responded to was edited so they can re-evaluate their response.",
+        "statement": "On edit (republish), system also: (a) re-runs B2 automated flagging (keyword/duplicate/rate-limit checks) against the new payload, including a comparison with the last admin redaction so an edit cannot restore redacted content, (b) sets `last_edited_at` and increments `edit_count`, (c) writes a full audit record (before/after values, actor=patient), and (d) notifies the provider, for information only, that a review they may have responded to was edited; the provider has no action on the notice because responses are immutable (REQ-013-055).",
         "rationale": "Main Flow step 4 (Change Log 1.13 item 5). last_edited_at and edit_count are calculated by this rule."
       }
     },
@@ -56239,9 +56276,9 @@
       "owner_fr": "FR-013",
       "title": "Edited reviews show an Edited relative-time marker on public surfaces",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Edited reviews surface an \"Edited {relative_time}\" marker on all public surfaces (Patient list, Patient detail, Provider list/detail, Provider Profile Reviews Section) so readers can distinguish current content from the original publish.",
+        "statement": "Edited reviews (patient or admin edit) surface an \"Edited {relative_time}\" marker on all public surfaces (Patient list, Patient detail, Provider list/detail, Provider Profile Reviews Section) so readers can distinguish current content from the original publish.",
         "rationale": "Main Flow step 5, second sentence."
       }
     },
@@ -56251,9 +56288,9 @@
       "owner_fr": "FR-013",
       "title": "Patient sees confirmation; review live and listed",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Patient sees confirmation; review is live on provider profile and appears in Patient “Submitted Reviews” list.",
+        "statement": "Patient sees confirmation; review is live on provider profile and appears in Patient “Submitted Reviews” list. If the submission or edit matches a flagging rule, the review is also queued as B2.",
         "rationale": "Main Flow step 5, first sentence."
       }
     },
@@ -56263,9 +56300,9 @@
       "owner_fr": "FR-013",
       "title": "Admin-seeded reviews flagged Verified Off-platform and published directly by admin",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Admin-imported authenticated reviews must be flagged as \"Verified Off‑platform\" with verification source and date. These are published directly by admin (no patient submission flow). Each is linked to a placeholder patient and a placeholder procedure.",
+        "statement": "Admin-imported authenticated reviews must be flagged as \"Verified Off‑platform\" with verification source and date. These are published directly by admin (no patient submission flow). Each is linked to a placeholder patient and a placeholder procedure. They count in the provider average and distribution.",
         "rationale": "Admin-Seeded Review Policy. Restated by workflow A1 (step 2: System validates fields and stores source provenance; step 3: System publishes review flagged as \"Verified Off-platform\"; outcome: seeded review with explicit provenance marker and full audit record), Screen 8 rules (Admin-seeded reviews must be flagged as \"Verified Off-platform\" with verification provenance) and Screen 4 rules (Admin-seeded reviews must display the Verified Off-platform marker)."
       }
     },
@@ -56299,9 +56336,9 @@
       "owner_fr": "FR-013",
       "title": "Admin add, edit and remove record identity, time, reason and before/after",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Every admin add/edit/remove action records admin identity, timestamp, reason, and before/after changes.",
+        "statement": "Every admin add/edit/remove action records admin identity, timestamp, reason, and before/after changes. Audit records of patient edits and provider responses use the same entity, with an actor type and actor id.",
         "rationale": "Screen 8 rule. Restated by workflow A2 step 2 (System records before/after values, reason, and admin identity.)."
       }
     },
@@ -56347,9 +56384,9 @@
       "owner_fr": "FR-013",
       "title": "Edit and takedown actions only while a review is Published",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "For `Published` status, both `Edit Review` and `Request Takedown` actions are available. For `Removed` status, detail is read-only and shows admin removal reason; edit/takedown actions are hidden.",
+        "statement": "For `Published` status (a `Flagged` review counts as `Published`, REQ-013-079), `Edit Review` is available unless a takedown request is `Pending`, and `Request Takedown` is available unless a request is `Pending` or the one further request after a rejection has been used. For `Removed` status, detail is read-only and shows admin removal reason; edit/takedown actions are hidden.",
         "rationale": "Screen 3 business rules and the Edit review and Request takedown rows (visible only when status = Published)."
       }
     },
@@ -56359,9 +56396,9 @@
       "owner_fr": "FR-013",
       "title": "Review stays published while a takedown request is pending",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "While request status is `Pending`, review remains `Published` unless manually removed by admin.",
+        "statement": "A review has at most one `Pending` takedown request. While a request is `Pending`, review remains `Published` unless manually removed by admin (which closes the request as `Approved`), and the patient cannot edit it. After a rejection the patient may file one further request with a new reason.",
         "rationale": "Screen 3 rule. Restated by workflow A3 outcome (review remains visible until decision) and the Screen 9 note on the reject decision."
       }
     },
@@ -56443,7 +56480,7 @@
       "owner_fr": "FR-013",
       "title": "All review mutations fully auditable with actor type and prior values",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "All review mutations are fully auditable (who, when, what, before/after, reason where applicable), including patient self-edits to published reviews, admin actions (edits, removals, seeded reviews, takedown decisions, settings changes), and provider response creation. Audit records preserve actor type (patient / provider / admin) and prior field values to satisfy constitution Auditability requirements.",
         "rationale": "Data & Privacy Rules. Restated by Screen 8 (audit trail preview, full audit retained) and Screen 7 (review visibility/filter results must preserve complete audit traceability)."
@@ -56467,9 +56504,9 @@
       "owner_fr": "FR-013",
       "title": "Reviewer alias algorithm; seeded display name; alias-only default",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Reviewer alias algorithm (canonical, applied uniformly across Patient, Provider, and Admin public surfaces): `{first_name} {last_initial}.` (e.g., \"Sarah M.\"); collisions within the same provider's review list are deduplicated with a numeric suffix (`Sarah M. 2`, `Sarah M. 3`, …). Admin views may unmask to full identity per RBAC. Admin-seeded reviews use an admin-entered `reviewer_display_name` field (free text, subject to the same PII-safety policy — no full last name, no contact info) instead of the algorithmic alias; the `Verified Off-platform` badge accompanies the display name. Patients have no opt-in to expose full name in V1; reviewer display policy toggle on Screen 10 governs only future policy expansion and MUST default to alias-only.",
+        "statement": "Reviewer alias algorithm (canonical, applied uniformly across Patient, Provider, and Admin public surfaces): `{first_name} {last_initial}.` (e.g., \"Sarah M.\"); collisions within the same provider's review list are deduplicated with a numeric suffix (`Sarah M. 2`, `Sarah M. 3`, …). Admin views may unmask to full identity per RBAC. Admin-seeded reviews use an admin-entered `reviewer_display_name` field (free text, subject to the same PII-safety policy — no full last name, no contact info) instead of the algorithmic alias; the `Verified Off-platform` badge accompanies the display name. The alias is always used: there is no full-name option for patients or admins, and no display-policy setting.",
         "rationale": "Data & Privacy Rules, canonical alias, whole bullet verbatim (Change Log 1.13 item 6). Includes the admin-seeded reviewer_display_name rule and the alias-only default of the reviewer display policy setting."
       }
     },
@@ -56527,9 +56564,9 @@
       "owner_fr": "FR-013",
       "title": "Respond action only on published reviews without a response; submission recorded and patient notified",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Respond as Provider is visible only when the review is published and no response exists. Submission records provider identity and timestamp and triggers patient notification.",
+        "statement": "Respond as Provider is visible only when the review is published (a Flagged review counts as published), the provider account is active, and the review has no active response (a removed response does not count). Submission records provider identity and timestamp and triggers patient notification (not sent when the review is an admin-seeded review linked to a placeholder patient, REQ-013-077). A suspended provider sees the review view-only, with no Respond control.",
         "rationale": "Composed from the Screen 6 row Respond as Provider (Visible only when review is published and no response exists) and the Screen 6 rule (Submission records provider identity and timestamp and triggers patient notification.)."
       }
     },
@@ -56551,9 +56588,9 @@
       "owner_fr": "FR-013",
       "title": "Only Published reviews shown on patient profile and provider list surfaces",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Only `Published` reviews are visible on patient-facing provider/clinic profile surfaces. Only published reviews appear in provider list surfaces.",
+        "statement": "Only `Published` reviews (a `Flagged` review counts as `Published`, REQ-013-079) are visible on patient-facing provider/clinic profile surfaces. Only published reviews (including a `Flagged` review) appear in provider list surfaces.",
         "rationale": "Screen 4 and Screen 5 business rules."
       }
     },
@@ -56635,7 +56672,7 @@
       "owner_fr": "FR-013",
       "title": "Settings changes are admin-only and audit logged",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Settings changes are admin-only and audit logged.",
         "rationale": "Screen 10 business rule."
@@ -56671,9 +56708,9 @@
       "owner_fr": "FR-013",
       "title": "Flagging thresholds and takedown SLA configurable within policy bounds",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Configurable with Restrictions: Flagging thresholds and auto-flag rules for admin review (within safe bounds approved by policy). Takedown decision SLA/queue prioritization parameters (within policy bounds); the takedown decision deadline defaults to 48 hours.",
+        "statement": "Configurable with Restrictions: Flagging thresholds and auto-flag rules for admin review (within safe bounds approved by policy). Takedown decision SLA/queue prioritization parameters; the takedown decision deadline runs from 12 hours to 7 days and defaults to 48 hours.",
         "rationale": "Admin Editability Rules. Screen 10 rows Flagging thresholds (restricted safe ranges only) and Takedown SLA settings (restricted policy range)."
       }
     },
@@ -56683,9 +56720,9 @@
       "owner_fr": "FR-013",
       "title": "Admin edits review labels, photo guidelines, removal reasons and display-name policy",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Editable by Admin: review category labels (canonical keys remain fixed); photo guidelines text; removal reasons catalogue; visibility rules for display name (alias/full name toggle policy).",
+        "statement": "Editable by Admin: review category labels (canonical keys remain fixed); photo guidelines text; removal reasons catalogue.",
         "rationale": "Composed from the Admin Editability Rules (Editable by Admin) and the Screen 10 row Review categories/labels (Admin-editable labels; canonical keys remain fixed). Invitation timing and reminders are configured in FR-030, not here (REQ-013-022, Screen 10 and Change Logs 1.12 and 1.14)."
       }
     },
@@ -56719,9 +56756,9 @@
       "owner_fr": "FR-013",
       "title": "System-automated flagging queues content for admin review post-publication",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Trigger: Content flagged by system-automated detection (keyword matching, duplicate submission patterns, rate-limit triggers). User-initiated flagging is a future enhancement. Steps: System queues flagged content for admin review; Admin may redact, unpublish, or uphold. Outcome: Policy-compliant content remains; violations are removed with audit record. A flagged review stays publicly visible (shown as Published) until an admin removes it.",
+        "statement": "Trigger: Content flagged by system-automated detection (keyword matching, duplicate submission patterns, rate-limit triggers). User-initiated flagging is a future enhancement. Steps: System sets the review status to Flagged and queues the content for admin review; Admin resolves the flag on Screen 8 with a reason: uphold (the review returns to Published and the flag reason is cleared), redact (an admin edit) or unpublish (an admin removal). Outcome: Policy-compliant content remains; violations are removed with audit record. A flagged review stays publicly visible (shown as Published) until an admin removes it.",
         "rationale": "Workflow B2. Edge Cases: \"Duplicate or spam reviews: auto‑flag for admin review post-publication.\" Implementation Notes (technical, not migrated) add that anti-abuse covers duplicate detection, keyword flags and rate limits for submissions and responses. User-initiated flagging is a future enhancement (Change Log 1.11)."
       }
     },
@@ -56767,9 +56804,9 @@
       "owner_fr": "FR-013",
       "title": "Admin-seeded reviews use a placeholder patient and procedure",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Each admin-seeded (off-platform) review MUST be linked to a placeholder patient and a placeholder procedure, so REQ-013-010 holds for every review.",
+        "statement": "Each admin-seeded (off-platform) review MUST be linked to a placeholder patient and a placeholder procedure, so REQ-013-010 holds for every review. The admin add form takes the provider, treatment, ratings, text and review date, and a reason. The placeholder patient is not a person, so notices addressed to it are suppressed.",
         "rationale": "Admin-Seeded Review Policy and Data Requirements. Closes the gap that seeded reviews have no real patient or procedure while REQ-013-010 requires both links."
       }
     },
@@ -56779,9 +56816,9 @@
       "owner_fr": "FR-013",
       "title": "Takedown decision deadline setting defaults to 48 hours",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Admin Review Settings MUST include a takedown decision deadline setting, within policy bounds, that defaults to 48 hours.",
+        "statement": "Admin Review Settings MUST include a takedown decision deadline setting, from 12 hours to 7 days, that defaults to 48 hours. When the deadline passes on a Pending request, the queue shows it as Overdue and admins are notified; no request is approved or rejected automatically.",
         "rationale": "Integration Requirements, Screen 10 Takedown SLA settings row and Configurable with Restrictions."
       }
     },
@@ -56791,9 +56828,9 @@
       "owner_fr": "FR-013",
       "title": "Flagged review stays publicly visible, shows as Published",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "A review with status Flagged MUST stay publicly visible until an admin removes it; patients and the public see it as Published.",
+        "statement": "A review with status Flagged MUST stay publicly visible until an admin removes it; patients and the public see it as Published. Every rule keyed on Published (visibility, patient Edit and Request Takedown, and provider Respond) also covers Flagged. An admin resolves a flag as uphold (back to Published, flag reason cleared), redact or unpublish.",
         "rationale": "Security and Privacy Requirements, workflow B2 outcome and Edge Cases (duplicate or spam). Admins see the Flagged status; the public view does not change until a removal."
       }
     },
@@ -97669,7 +97706,7 @@
       "owner_fr": "FR-013",
       "title": "Admin - Review Detail, Insert and Edit",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
         "description": "Admin inspects a review, edits or removes it with a reason, and inserts authenticated off-platform reviews with a structured source verification group."
@@ -97693,7 +97730,7 @@
       "owner_fr": "FR-013",
       "title": "Admin - Review Settings and Export",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "admin",
         "description": "Review categories/labels, photo guidelines, removal reason catalog, reviewer display policy, flagging thresholds, takedown SLA settings, read-only link-outs to FR-030 for invitation and reminder cadence, and the review export action."
@@ -101597,18 +101634,6 @@
       }
     },
     {
-      "id": "SET-review-display-policy",
-      "type": "Setting",
-      "owner_fr": "FR-013",
-      "title": "Reviewer display policy",
-      "status": "active",
-      "version": 1,
-      "attrs": {
-        "description": "Alias or full-name policy for reviewer display; defaults to alias-only and is PII-safe. In V1 the toggle governs only future policy expansion.",
-        "default": "alias"
-      }
-    },
-    {
       "id": "SET-review-flagging-thresholds",
       "type": "Setting",
       "owner_fr": "FR-013",
@@ -101647,9 +101672,9 @@
       "owner_fr": "FR-013",
       "title": "Takedown request SLA settings",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Queue priority and SLA target for takedown decisions, plus the takedown decision deadline, within a restricted policy range. The deadline defaults to 48 hours.",
+        "description": "Queue priority and SLA target for takedown decisions, plus the takedown decision deadline, from 12 hours to 7 days. The deadline defaults to 48 hours; a breach shows Overdue and notifies admins.",
         "default": "48",
         "unit": "hours"
       }
@@ -111478,7 +111503,7 @@
       "owner_fr": "FR-013",
       "title": "Patient completes ratings, feedback and optional photos",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Main Flow step 1"
       }
@@ -111498,9 +111523,9 @@
       "id": "STP-013-004",
       "type": "Step",
       "owner_fr": "FR-013",
-      "title": "System re-runs flagging, tracks the edit, writes the audit record and notifies the provider on edit",
+      "title": "System re-runs flagging against the last admin redaction too, tracks the edit, writes the audit record and notifies the provider for information only",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 4"
       }
@@ -111511,7 +111536,7 @@
       "owner_fr": "FR-013",
       "title": "Patient sees the confirmation and the live review with the Edited marker",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 5"
       }
@@ -111520,9 +111545,9 @@
       "id": "STP-013-011",
       "type": "Step",
       "owner_fr": "FR-013",
-      "title": "Admin enters the review payload with source evidence",
+      "title": "Admin enters the review payload (provider, treatment, ratings, text, review date, reason) with source evidence",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "A1 step 1"
       }
@@ -111544,9 +111569,20 @@
       "owner_fr": "FR-013",
       "title": "System publishes the review flagged Verified Off-platform",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A1 step 3"
+      }
+    },
+    {
+      "id": "STP-013-014",
+      "type": "Step",
+      "owner_fr": "FR-013",
+      "title": "System recalculates provider rating metrics and invalidates the cache for the seeded review",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A1 step 4"
       }
     },
     {
@@ -111564,11 +111600,22 @@
       "id": "STP-013-022",
       "type": "Step",
       "owner_fr": "FR-013",
-      "title": "System records before and after values, reason and admin identity",
+      "title": "System records before and after values, reason and admin identity, sets the Edited marker and notifies the reviewing patient",
+      "status": "active",
+      "version": 2,
+      "attrs": {
+        "prd_ref": "A2 step 2"
+      }
+    },
+    {
+      "id": "STP-013-023",
+      "type": "Step",
+      "owner_fr": "FR-013",
+      "title": "System recalculates provider rating metrics when a rating changed",
       "status": "active",
       "version": 1,
       "attrs": {
-        "prd_ref": "A2 step 2"
+        "prd_ref": "A2 step 3"
       }
     },
     {
@@ -111577,7 +111624,7 @@
       "owner_fr": "FR-013",
       "title": "Patient taps Request Takedown and the confirmation sheet opens",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A3 step 1"
       }
@@ -111610,9 +111657,20 @@
       "owner_fr": "FR-013",
       "title": "System notifies the admin takedown queue",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A3 step 4"
+      }
+    },
+    {
+      "id": "STP-013-035",
+      "type": "Step",
+      "owner_fr": "FR-013",
+      "title": "System shows the request as Overdue and notifies admins when the deadline passes",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A3 step 5"
       }
     },
     {
@@ -111687,7 +111745,7 @@
       "owner_fr": "FR-013",
       "title": "Provider writes the response",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "B1 step 3"
       }
@@ -111709,7 +111767,7 @@
       "owner_fr": "FR-013",
       "title": "System publishes the response under provider identity",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "B1 step 4"
       }
@@ -111718,9 +111776,9 @@
       "id": "STP-013-061",
       "type": "Step",
       "owner_fr": "FR-013",
-      "title": "System queues flagged content for admin review",
+      "title": "System sets the status to Flagged and queues the content for admin review",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "B2 steps"
       }
@@ -111729,11 +111787,77 @@
       "id": "STP-013-062",
       "type": "Step",
       "owner_fr": "FR-013",
-      "title": "Admin redacts, unpublishes or upholds the flagged content",
+      "title": "Admin resolves the flag with a reason: uphold, redact or unpublish",
+      "status": "active",
+      "version": 2,
+      "attrs": {
+        "prd_ref": "B2 steps"
+      }
+    },
+    {
+      "id": "STP-013-063",
+      "type": "Step",
+      "owner_fr": "FR-013",
+      "title": "System returns the upheld review to Published and clears the flag reason",
       "status": "active",
       "version": 1,
       "attrs": {
-        "prd_ref": "B2 steps"
+        "prd_ref": "B2 step 2"
+      }
+    },
+    {
+      "id": "STP-013-071",
+      "type": "Step",
+      "owner_fr": "FR-013",
+      "title": "Admin selects Remove review and enters the removal reason",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A5 step 1"
+      }
+    },
+    {
+      "id": "STP-013-072",
+      "type": "Step",
+      "owner_fr": "FR-013",
+      "title": "System sets the status to Removed, stores the reason, writes the audit record, closes a Pending takedown request as Approved and notifies the patient",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A5 step 2"
+      }
+    },
+    {
+      "id": "STP-013-073",
+      "type": "Step",
+      "owner_fr": "FR-013",
+      "title": "System recalculates provider rating metrics and invalidates the cache after the removal",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A5 step 3"
+      }
+    },
+    {
+      "id": "STP-013-081",
+      "type": "Step",
+      "owner_fr": "FR-013",
+      "title": "Admin selects Remove provider response and enters the reason",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B3 step 1"
+      }
+    },
+    {
+      "id": "STP-013-082",
+      "type": "Step",
+      "owner_fr": "FR-013",
+      "title": "System sets the response status to removed, writes the audit record and shows No response again",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B3 step 2"
       }
     },
     {
@@ -132228,6 +132352,22 @@
       "calculated_by": null
     },
     {
+      "id": "ENT-admin-action.actor_id",
+      "entity_id": "ENT-admin-action",
+      "name": "actor_id",
+      "data_type": "id",
+      "required": true,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-admin-action.actor_type",
+      "entity_id": "ENT-admin-action",
+      "name": "actor_type",
+      "data_type": "enum",
+      "required": true,
+      "calculated_by": null
+    },
+    {
       "id": "ENT-admin-action.admin_id",
       "entity_id": "ENT-admin-action",
       "name": "admin_id",
@@ -150236,14 +150376,6 @@
       "calculated_by": null
     },
     {
-      "id": "ENT-review-settings.display_policy",
-      "entity_id": "ENT-review-settings",
-      "name": "display_policy",
-      "data_type": "enum",
-      "required": true,
-      "calculated_by": null
-    },
-    {
       "id": "ENT-review-settings.flagging_thresholds",
       "entity_id": "ENT-review-settings",
       "name": "flagging_thresholds",
@@ -154778,6 +154910,36 @@
       "value": "flag_resolve",
       "label": "Flag resolve",
       "sort_order": 8
+    },
+    {
+      "field_id": "ENT-admin-action.action_type",
+      "value": "patient_edit",
+      "label": "Patient edit",
+      "sort_order": 9
+    },
+    {
+      "field_id": "ENT-admin-action.action_type",
+      "value": "response_publish",
+      "label": "Response publish",
+      "sort_order": 10
+    },
+    {
+      "field_id": "ENT-admin-action.actor_type",
+      "value": "patient",
+      "label": "Patient",
+      "sort_order": 0
+    },
+    {
+      "field_id": "ENT-admin-action.actor_type",
+      "value": "provider",
+      "label": "Provider",
+      "sort_order": 1
+    },
+    {
+      "field_id": "ENT-admin-action.actor_type",
+      "value": "admin",
+      "label": "Admin",
+      "sort_order": 2
     },
     {
       "field_id": "ENT-admin-audit-trail-entry.action_type",
@@ -159734,18 +159896,6 @@
       "value": "analytics",
       "label": "Analytics",
       "sort_order": 5
-    },
-    {
-      "field_id": "ENT-review-settings.display_policy",
-      "value": "alias",
-      "label": "Alias",
-      "sort_order": 0
-    },
-    {
-      "field_id": "ENT-review-settings.display_policy",
-      "value": "full_name",
-      "label": "Full name",
-      "sort_order": 1
     },
     {
       "field_id": "ENT-review-source-metadata.source_platform",
@@ -169743,6 +169893,18 @@
       "from_id": "FLW-013-admin-processes-takedown-request",
       "verb": "starts at",
       "to_id": "STP-013-041",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-013-admin-removes-provider-response",
+      "verb": "starts at",
+      "to_id": "STP-013-081",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-013-admin-removes-review",
+      "verb": "starts at",
+      "to_id": "STP-013-071",
       "attrs": {}
     },
     {
@@ -211955,6 +212117,12 @@
     {
       "from_id": "REQ-013-017",
       "verb": "applies to",
+      "to_id": "EVT-review-edited",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-013-017",
+      "verb": "applies to",
       "to_id": "EVT-review-published",
       "attrs": {}
     },
@@ -212142,12 +212310,6 @@
       "from_id": "REQ-013-022",
       "verb": "governed by",
       "to_id": "SET-review-category-labels",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-013-022",
-      "verb": "governed by",
-      "to_id": "SET-review-display-policy",
       "attrs": {}
     },
     {
@@ -212741,6 +212903,18 @@
     {
       "from_id": "REQ-013-038",
       "verb": "applies to",
+      "to_id": "ENT-admin-action.actor_id",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-013-038",
+      "verb": "applies to",
+      "to_id": "ENT-admin-action.actor_type",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-013-038",
+      "verb": "applies to",
       "to_id": "SCR-013-08",
       "attrs": {}
     },
@@ -213089,6 +213263,18 @@
     {
       "from_id": "REQ-013-050",
       "verb": "applies to",
+      "to_id": "ENT-admin-action.actor_id",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-013-050",
+      "verb": "applies to",
+      "to_id": "ENT-admin-action.actor_type",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-013-050",
+      "verb": "applies to",
       "to_id": "ENT-provider-response",
       "attrs": {}
     },
@@ -213179,12 +213365,6 @@
     {
       "from_id": "REQ-013-052",
       "verb": "applies to",
-      "to_id": "ENT-review-settings.display_policy",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-013-052",
-      "verb": "applies to",
       "to_id": "ENT-review-source-metadata.reviewer_display_name",
       "attrs": {}
     },
@@ -213222,12 +213402,6 @@
       "from_id": "REQ-013-052",
       "verb": "decided by",
       "to_id": "SRC-PRD-013",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-013-052",
-      "verb": "governed by",
-      "to_id": "SET-review-display-policy",
       "attrs": {}
     },
     {
@@ -213647,12 +213821,6 @@
     {
       "from_id": "REQ-013-066",
       "verb": "governed by",
-      "to_id": "SET-review-display-policy",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-013-066",
-      "verb": "governed by",
       "to_id": "SET-review-flagging-thresholds",
       "attrs": {}
     },
@@ -213785,12 +213953,6 @@
     {
       "from_id": "REQ-013-070",
       "verb": "applies to",
-      "to_id": "ENT-review-settings.display_policy",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-013-070",
-      "verb": "applies to",
       "to_id": "ENT-review-settings.photo_guidelines",
       "attrs": {}
     },
@@ -213816,12 +213978,6 @@
       "from_id": "REQ-013-070",
       "verb": "governed by",
       "to_id": "SET-review-category-labels",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-013-070",
-      "verb": "governed by",
-      "to_id": "SET-review-display-policy",
       "attrs": {}
     },
     {
@@ -214085,6 +214241,12 @@
     {
       "from_id": "REQ-013-078",
       "verb": "applies to",
+      "to_id": "SCR-013-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-013-078",
+      "verb": "applies to",
       "to_id": "SCR-013-10",
       "attrs": {}
     },
@@ -214128,6 +214290,12 @@
       "from_id": "REQ-013-079",
       "verb": "applies to",
       "to_id": "SCR-013-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-013-079",
+      "verb": "applies to",
+      "to_id": "SCR-013-08",
       "attrs": {}
     },
     {
@@ -318062,6 +318230,26 @@
     {
       "from_id": "SCR-013-08",
       "verb": "shows",
+      "to_id": "ENT-admin-action.actor_id",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Audit trail preview (actor)",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-013-08",
+      "verb": "shows",
+      "to_id": "ENT-admin-action.actor_type",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Audit trail preview (actor type)",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-013-08",
+      "verb": "shows",
       "to_id": "ENT-admin-action.admin_id",
       "attrs": {
         "provenance": "retrieved",
@@ -318097,6 +318285,26 @@
         "provenance": "retrieved",
         "label": "Audit trail preview (reason)",
         "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-013-08",
+      "verb": "shows",
+      "to_id": "ENT-provider-response.removed_at",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Remove provider response (removed at)",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-013-08",
+      "verb": "shows",
+      "to_id": "ENT-provider-response.status",
+      "attrs": {
+        "provenance": "user input",
+        "label": "Remove provider response",
+        "editable": true
       }
     },
     {
@@ -318262,6 +318470,16 @@
     {
       "from_id": "SCR-013-08",
       "verb": "shows",
+      "to_id": "ENT-review.provider_id",
+      "attrs": {
+        "provenance": "user input",
+        "label": "Seeded review inputs (provider)",
+        "editable": true
+      }
+    },
+    {
+      "from_id": "SCR-013-08",
+      "verb": "shows",
       "to_id": "ENT-review.results_rating",
       "attrs": {
         "provenance": "user input",
@@ -318317,6 +318535,16 @@
         "provenance": "retrieved",
         "label": "Review detail payload (status)",
         "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-013-08",
+      "verb": "shows",
+      "to_id": "ENT-review.treatment_id",
+      "attrs": {
+        "provenance": "user input",
+        "label": "Seeded review inputs (treatment)",
+        "editable": true
       }
     },
     {
@@ -318488,16 +318716,6 @@
       "attrs": {
         "provenance": "user input",
         "label": "Review categories/labels",
-        "editable": true
-      }
-    },
-    {
-      "from_id": "SCR-013-10",
-      "verb": "shows",
-      "to_id": "ENT-review-settings.display_policy",
-      "attrs": {
-        "provenance": "user input",
-        "label": "Reviewer display policy",
         "editable": true
       }
     },
@@ -372836,6 +373054,12 @@
     },
     {
       "from_id": "STP-013-005",
+      "verb": "applies",
+      "to_id": "REQ-013-079",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-005",
       "verb": "at",
       "to_id": "STG-main-09-review-close",
       "attrs": {}
@@ -372844,6 +373068,21 @@
       "from_id": "STP-013-005",
       "verb": "done by",
       "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-005",
+      "verb": "next",
+      "to_id": "STP-013-061",
+      "attrs": {
+        "label": "the submission or edit matched a flagging rule",
+        "condition": "REQ-013-073"
+      }
+    },
+    {
+      "from_id": "STP-013-005",
+      "verb": "on",
+      "to_id": "SCR-013-01",
       "attrs": {}
     },
     {
@@ -372862,6 +373101,12 @@
       "from_id": "STP-013-011",
       "verb": "applies",
       "to_id": "REQ-013-037",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-011",
+      "verb": "applies",
+      "to_id": "REQ-013-077",
       "attrs": {}
     },
     {
@@ -372953,6 +373198,38 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-013-013",
+      "verb": "next",
+      "to_id": "STP-013-014",
+      "attrs": {
+        "label": "seeded review published"
+      }
+    },
+    {
+      "from_id": "STP-013-014",
+      "verb": "applies",
+      "to_id": "REQ-013-008",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-014",
+      "verb": "applies",
+      "to_id": "REQ-013-031",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-014",
+      "verb": "at",
+      "to_id": "STG-main-09-review-close",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-014",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-013-021",
       "verb": "applies",
       "to_id": "REQ-013-038",
@@ -372993,6 +373270,18 @@
     {
       "from_id": "STP-013-022",
       "verb": "applies",
+      "to_id": "REQ-013-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-022",
+      "verb": "applies",
+      "to_id": "REQ-013-033",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-022",
+      "verb": "applies",
       "to_id": "REQ-013-038",
       "attrs": {}
     },
@@ -373016,8 +373305,35 @@
     },
     {
       "from_id": "STP-013-022",
+      "verb": "next",
+      "to_id": "STP-013-023",
+      "attrs": {
+        "label": "a rating changed",
+        "condition": "REQ-013-031"
+      }
+    },
+    {
+      "from_id": "STP-013-022",
       "verb": "on",
       "to_id": "SCR-013-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-023",
+      "verb": "applies",
+      "to_id": "REQ-013-031",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-023",
+      "verb": "at",
+      "to_id": "STG-main-09-review-close",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-023",
+      "verb": "done by",
+      "to_id": "ACT-system",
       "attrs": {}
     },
     {
@@ -373036,6 +373352,12 @@
       "from_id": "STP-013-031",
       "verb": "applies",
       "to_id": "REQ-013-042",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-031",
+      "verb": "applies",
+      "to_id": "REQ-013-043",
       "attrs": {}
     },
     {
@@ -373162,6 +373484,45 @@
       "from_id": "STP-013-034",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-034",
+      "verb": "next",
+      "to_id": "STP-013-035",
+      "attrs": {
+        "label": "no decision when the deadline passes",
+        "condition": "REQ-013-078"
+      }
+    },
+    {
+      "from_id": "STP-013-035",
+      "verb": "applies",
+      "to_id": "REQ-013-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-035",
+      "verb": "applies",
+      "to_id": "REQ-013-078",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-035",
+      "verb": "at",
+      "to_id": "STG-main-09-review-close",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-035",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-035",
+      "verb": "on",
+      "to_id": "SCR-013-09",
       "attrs": {}
     },
     {
@@ -373451,6 +373812,12 @@
     {
       "from_id": "STP-013-056",
       "verb": "applies",
+      "to_id": "REQ-013-050",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-056",
+      "verb": "applies",
       "to_id": "REQ-013-055",
       "attrs": {}
     },
@@ -373494,6 +373861,12 @@
       "from_id": "STP-013-061",
       "verb": "applies",
       "to_id": "REQ-013-073",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-061",
+      "verb": "applies",
+      "to_id": "REQ-013-079",
       "attrs": {}
     },
     {
@@ -373548,6 +373921,12 @@
     },
     {
       "from_id": "STP-013-062",
+      "verb": "applies",
+      "to_id": "REQ-013-079",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-062",
       "verb": "at",
       "to_id": "STG-main-09-review-close",
       "attrs": {}
@@ -373560,6 +373939,264 @@
     },
     {
       "from_id": "STP-013-062",
+      "verb": "next",
+      "to_id": "STP-013-021",
+      "attrs": {
+        "label": "admin redacts the review",
+        "condition": "REQ-013-073"
+      }
+    },
+    {
+      "from_id": "STP-013-062",
+      "verb": "next",
+      "to_id": "STP-013-063",
+      "attrs": {
+        "label": "admin upholds the review",
+        "condition": "REQ-013-079"
+      }
+    },
+    {
+      "from_id": "STP-013-062",
+      "verb": "next",
+      "to_id": "STP-013-071",
+      "attrs": {
+        "label": "admin unpublishes the review",
+        "condition": "REQ-013-073"
+      }
+    },
+    {
+      "from_id": "STP-013-062",
+      "verb": "on",
+      "to_id": "SCR-013-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-063",
+      "verb": "applies",
+      "to_id": "REQ-013-050",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-063",
+      "verb": "applies",
+      "to_id": "REQ-013-079",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-063",
+      "verb": "at",
+      "to_id": "STG-main-09-review-close",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-063",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-063",
+      "verb": "on",
+      "to_id": "SCR-013-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-071",
+      "verb": "applies",
+      "to_id": "REQ-013-038",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-071",
+      "verb": "applies",
+      "to_id": "REQ-013-039",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-071",
+      "verb": "at",
+      "to_id": "STG-main-09-review-close",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-071",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-071",
+      "verb": "next",
+      "to_id": "STP-013-072",
+      "attrs": {
+        "label": "admin confirms the removal"
+      }
+    },
+    {
+      "from_id": "STP-013-071",
+      "verb": "on",
+      "to_id": "SCR-013-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-072",
+      "verb": "applies",
+      "to_id": "REQ-013-016",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-072",
+      "verb": "applies",
+      "to_id": "REQ-013-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-072",
+      "verb": "applies",
+      "to_id": "REQ-013-019",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-072",
+      "verb": "applies",
+      "to_id": "REQ-013-043",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-072",
+      "verb": "applies",
+      "to_id": "REQ-013-050",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-072",
+      "verb": "at",
+      "to_id": "STG-main-09-review-close",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-072",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-072",
+      "verb": "next",
+      "to_id": "STP-013-073",
+      "attrs": {
+        "label": "removal recorded"
+      }
+    },
+    {
+      "from_id": "STP-013-072",
+      "verb": "on",
+      "to_id": "SCR-013-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-073",
+      "verb": "applies",
+      "to_id": "REQ-013-023",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-073",
+      "verb": "applies",
+      "to_id": "REQ-013-031",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-073",
+      "verb": "at",
+      "to_id": "STG-main-09-review-close",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-073",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-081",
+      "verb": "applies",
+      "to_id": "REQ-013-038",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-081",
+      "verb": "applies",
+      "to_id": "REQ-013-055",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-081",
+      "verb": "at",
+      "to_id": "STG-main-09-review-close",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-081",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-081",
+      "verb": "next",
+      "to_id": "STP-013-082",
+      "attrs": {
+        "label": "admin confirms the response removal"
+      }
+    },
+    {
+      "from_id": "STP-013-081",
+      "verb": "on",
+      "to_id": "SCR-013-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-082",
+      "verb": "applies",
+      "to_id": "REQ-013-050",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-082",
+      "verb": "applies",
+      "to_id": "REQ-013-055",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-082",
+      "verb": "applies",
+      "to_id": "REQ-013-056",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-082",
+      "verb": "at",
+      "to_id": "STG-main-09-review-close",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-082",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-013-082",
+      "verb": "next",
+      "to_id": "STP-013-051",
+      "attrs": {
+        "label": "provider submits the one replacement response",
+        "condition": "REQ-013-056"
+      }
+    },
+    {
+      "from_id": "STP-013-082",
       "verb": "on",
       "to_id": "SCR-013-08",
       "attrs": {}
@@ -432529,6 +433166,83 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-084447-c441deca",
+      "at": "2026-11-24T08:44:47.643772+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-013 logic review pass 1: Flagged counts as Published for visibility, patient actions and Respond; flag has an entry (confirmation step) and exits (uphold, redact, unpublish); admin review removal and admin response removal get their own flows; recalculation on every visibility or rating change and seeded reviews counted (owner default 108); one review per case, one further review after a removal (approved takedown as before, or admin removal), no restore (owner default 109); takedown limits (owner default 110); takedown deadline 12 hours to 7 days with Overdue and admin notice (owner default 111); Respond needs an active provider account and no active response; audit actor type and id with patient and provider action types; admin add inputs and reason; admin edit marker and patient notice; edit notice informational; reviewer display policy retired, alias only (owner default 112); invitation fires on the eligibility date (owner default 113); stale next edges to retired steps removed; confirmation step placed on Screen 1.",
+      "source_id": null,
+      "nodes_added": [
+        "ENT-admin-action.actor_id",
+        "ENT-admin-action.actor_type",
+        "FLW-013-admin-removes-provider-response",
+        "FLW-013-admin-removes-review",
+        "STP-013-014",
+        "STP-013-023",
+        "STP-013-035",
+        "STP-013-063",
+        "STP-013-071",
+        "STP-013-072",
+        "STP-013-073",
+        "STP-013-081",
+        "STP-013-082"
+      ],
+      "nodes_updated": [
+        "ENT-admin-action",
+        "ENT-admin-action.action_type",
+        "ENT-admin-action.admin_id",
+        "ENT-review-settings.display_policy",
+        "ENT-review-settings.takedown_sla",
+        "ENT-review.response_status",
+        "REQ-013-002",
+        "REQ-013-008",
+        "REQ-013-014",
+        "REQ-013-016",
+        "REQ-013-017",
+        "REQ-013-022",
+        "REQ-013-023",
+        "REQ-013-024",
+        "REQ-013-030",
+        "REQ-013-031",
+        "REQ-013-032",
+        "REQ-013-033",
+        "REQ-013-034",
+        "REQ-013-035",
+        "REQ-013-038",
+        "REQ-013-042",
+        "REQ-013-043",
+        "REQ-013-050",
+        "REQ-013-052",
+        "REQ-013-057",
+        "REQ-013-059",
+        "REQ-013-066",
+        "REQ-013-069",
+        "REQ-013-070",
+        "REQ-013-073",
+        "REQ-013-077",
+        "REQ-013-078",
+        "REQ-013-079",
+        "SCR-013-08",
+        "SCR-013-10",
+        "SET-review-display-policy",
+        "SET-review-takedown-sla",
+        "STP-013-001",
+        "STP-013-004",
+        "STP-013-005",
+        "STP-013-011",
+        "STP-013-013",
+        "STP-013-022",
+        "STP-013-031",
+        "STP-013-034",
+        "STP-013-053",
+        "STP-013-056",
+        "STP-013-061",
+        "STP-013-062"
+      ],
+      "edges_added": 80,
+      "edges_removed": 9,
+      "rows": 207
+    },
     {
       "id": "cs-20261124-083037-8bfb7601",
       "at": "2026-11-24T08:30:37.514905+00:00",
