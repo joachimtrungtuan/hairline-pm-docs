@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T15:30:47Z",
+  "generated_at": "2026-11-24T15:32:48Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -26984,7 +26984,7 @@
       "owner_fr": "FR-026",
       "title": "Change type",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {}
     },
     {
@@ -40055,7 +40055,7 @@
       "owner_fr": null,
       "title": "App Settings & Security Policies",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "module": "fr026-app-settings-security",
         "prd_path": "project-requirements/functional-requirements/fr026-app-settings-security/prd.md",
@@ -42820,7 +42820,7 @@
       "owner_fr": "FR-002",
       "title": "Basic quality checks with actionable guidance",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "Basic quality checks (e.g., brightness/blur) MUST be enforced against the FR-026 quality thresholds and actionable guidance returned on failure. The quality score is 0 to 100 and is returned per photo.",
         "rationale": "Media Rules 4. Error code MEDIA_QUALITY_INSUFFICIENT with retake instructions. The device check uses the same thresholds (REQ-002-050)."
@@ -80104,12 +80104,12 @@
       "id": "REQ-026-001",
       "type": "Rule",
       "owner_fr": "FR-026",
-      "title": "Settings UI limited to Settings Manager and Settings Viewer",
+      "title": "Settings UI gated by View Settings and per-screen edit permissions",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST provide Settings Management UI accessible only to admins with \"Settings Manager\" or \"Settings Viewer\" role",
-        "rationale": "Screen 1 states a different permission name (\"Settings Management\"); see the open question on permission naming."
+        "statement": "System MUST provide Settings Management UI accessible only to admins with the View Settings permission, and editing only to admins with the edit permission of the screen: Manage Authentication Policies for authentication throttling, OTP configuration and the admin session settings; Manage App Data for the App Data lists; Manage Notification Templates for the OTP email templates; Edit Settings (Super Admin only) for the Quote and Analytics Configuration and the other Platform Settings (REQ-031-113, REQ-031-067).",
+        "rationale": "One gate for every Settings screen, replacing the former role names and the separate Screen 1 permission. FR-031 names the permissions; assigning the other App Data lists and the OTP settings is queued for FR-031 to confirm."
       }
     },
     {
@@ -80118,9 +80118,9 @@
       "owner_fr": "FR-026",
       "title": "Change reason required for every setting change",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST require change reason (10-500 characters) for all setting modifications",
+        "statement": "System MUST require change reason (10-500 characters) for all setting modifications made on FR-026 screens; a Quote Configuration version created by a Default Currency change in FR-029 is recorded as a System change with a fixed reason (REQ-026-142)",
         "rationale": "Restated by General Module Rule 1 and Main Flow step 9 (modal titled \"Change Reason\", 10-500 chars, shown after Save) and by the Screen Specification notes and the A1 to A9 workflows."
       }
     },
@@ -80262,10 +80262,10 @@
       "owner_fr": "FR-026",
       "title": "Sensitive values masked in UI and audit logs",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "System MUST mask sensitive values (API keys, secrets) in UI and audit logs (display as \"••••••••\" or \"[REDACTED]\")",
-        "rationale": "Restated by Privacy Rule 1 (UI) and Privacy Rule 2 (audit logs), and the Admin Platform scope."
+        "rationale": "Restated by Privacy Rule 1 (UI) and Privacy Rule 2 (audit logs). No FR-026 setting is sensitive at launch; the rule applies only to a setting later marked sensitive."
       }
     },
     {
@@ -80286,10 +80286,10 @@
       "owner_fr": "FR-026",
       "title": "Sensitive values encrypted at rest with AES-256",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "System MUST encrypt sensitive values at rest using AES-256",
-        "rationale": "prd.md line 1354 (found by matching the rule statement to the PRD text)."
+        "rationale": "No FR-026 setting is sensitive at launch; the rule applies only to a setting later marked sensitive."
       }
     },
     {
@@ -80394,9 +80394,9 @@
       "owner_fr": "FR-026",
       "title": "Quote Configuration changes affect only quotes first sent after activation",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Quote Configuration changes MUST affect only quotes first sent after activation; the currency and expiry already copied onto a sent quote MUST remain unchanged, drafts MUST carry neither value, and no per-quote extension is allowed.",
+        "statement": "Quote Configuration changes MUST affect only quotes first sent after activation; the currency and expiry already copied onto a sent quote MUST remain unchanged, drafts MUST carry neither value, and no per-quote extension is allowed except the admin restore of an expired quote (REQ-004-105) and the admin-authored replacement quote (REQ-004-036), which captures its currency at its first Screen 8 save (REQ-004-082).",
         "rationale": "Restated by workflow A7 step 6 and the Screen 5d business rules."
       }
     },
@@ -80442,9 +80442,9 @@
       "owner_fr": "FR-026",
       "title": "Lead-time changes apply only to reminders not yet sent",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Changes to the quote-expiring-soon or hold-expiring-soon lead time MUST apply only to reminders not yet sent.",
+        "statement": "Changes to the quote-expiring-soon or hold-expiring-soon lead time MUST apply only to reminders not yet sent; when a lead time is raised and a reminder's time has already passed, that reminder MUST be skipped, not sent late.",
         "rationale": "prd.md line 1372 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -80479,9 +80479,9 @@
       "owner_fr": "FR-026",
       "title": "Centrally managed inquiry treatment-area options",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST store centrally managed inquiry treatment-area options: stable option ID, label, image/icon asset URL, display order, and active status. Consumer: FR-003 Screen 1.",
+        "statement": "System MUST store centrally managed inquiry treatment-area options: stable option ID, label, image/icon asset URL, display order, and active status. Consumer: FR-003 Screen 1. Seeded with Hair, Beard and Both (REQ-003-120).",
         "rationale": "PRD id REQ-026-012c, renumbered. Consumer FR-003 Screen 1."
       }
     },
@@ -80671,9 +80671,9 @@
       "owner_fr": "FR-026",
       "title": "Timestamps stored in UTC, shown in the admin local timezone",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "All timestamps MUST be stored in UTC and displayed in admin's local timezone.",
+        "statement": "All timestamps MUST be stored in UTC and displayed in admin's local timezone. Consumer: FR-021.",
         "rationale": "General Module Rule 5."
       }
     },
@@ -80695,9 +80695,9 @@
       "owner_fr": "FR-026",
       "title": "Sensitive values masked in version history; unmask by permission",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Sensitive values are masked in version history (displayed as \"[REDACTED]\"); admins with \"View Sensitive Settings\" permission can click \"Show\" to unmask them.",
+        "statement": "Sensitive values are masked in version history (displayed as \"[REDACTED]\"); admins with \"View Sensitive Settings\" permission can click \"Show\" to unmask them. No FR-026 setting is sensitive at launch, so the Show control appears only for a value later marked sensitive.",
         "rationale": "Edge case on sensitive value visibility in version history, and the Screen 7 business rule."
       }
     },
@@ -80717,12 +80717,12 @@
       "id": "REQ-026-054",
       "type": "Rule",
       "owner_fr": "FR-026",
-      "title": "Settings roles and what each may do",
+      "title": "Settings permissions and what each may do",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Role-based access control is enforced: the \"Settings Manager\" role can view and edit all settings; the \"Settings Viewer\" role can view settings and version history (read-only); the \"Security Admin\" role can view sensitive values (API keys, secrets) unmasked.",
-        "rationale": "Security Considerations and Dependencies. FR-031 owns role management and the permission matrix; this rule records only what FR-026 states. See the open question on roles versus the \"Settings Management\" permission."
+        "statement": "Access is enforced with the FR-031 admin permissions: View Settings views every Settings screen and the version history (read-only); Edit Settings is Super Admin only (REQ-031-067); Manage Authentication Policies, Manage App Data and Manage Notification Templates edit the screens named in REQ-026-001; View Sensitive Settings shows the full value of a sensitive setting, which applies only to a setting later marked sensitive.",
+        "rationale": "Security Controls table in the PRD. FR-031 owns the permission matrix; this rule records only which permission FR-026 screens use."
       }
     },
     {
@@ -80921,11 +80921,11 @@
       "id": "REQ-026-072",
       "type": "Rule",
       "owner_fr": "FR-026",
-      "title": "One OTP expiry for verification and password reset",
+      "title": "One OTP expiry for registration verification and password reset",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Single global OTP expiry: the configured OTP Expiry Time applies uniformly to both email verification and password reset OTP flows (no separate per-flow expiry).",
+        "statement": "Single global OTP expiry: the configured OTP Expiry Time applies uniformly to registration email verification and password reset OTP flows (no separate per-flow expiry). Re-verification and email-change codes follow FR-001 (fixed 15 minutes, REQ-001-098), are outside this setting, and are sent with the email verification template.",
         "rationale": "Screen 3 business rules and field description."
       }
     },
@@ -81342,18 +81342,6 @@
       }
     },
     {
-      "id": "REQ-026-107",
-      "type": "Rule",
-      "owner_fr": "FR-026",
-      "title": "Dashboard access needs the \"Settings Management\" permission",
-      "status": "active",
-      "version": 3,
-      "attrs": {
-        "statement": "Only admins with \"Settings Management\" permission can access the Settings Management Dashboard.",
-        "rationale": "Screen 1 business rules. REQ-026-001 names the roles \"Settings Manager\" and \"Settings Viewer\" instead; see the open question on permission naming."
-      }
-    },
-    {
       "id": "REQ-026-108",
       "type": "Rule",
       "owner_fr": "FR-026",
@@ -81407,9 +81395,9 @@
       "owner_fr": "FR-026",
       "title": "Re-verification threshold Setting",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System MUST store a Re-Verification Threshold Setting (whole minutes, default 5), the time after a patient's last successful sign-in beyond which FR-001 asks the patient to confirm identity again before a sensitive action. Consumer: FR-001 Screens 16 and 18.",
+        "statement": "System MUST store a Re-Verification Threshold Setting (whole minutes from 1 to 60, default 5, the value FR-001 uses), the time after a patient's last successful sign-in beyond which FR-001 asks the patient to confirm identity again before a sensitive action. Consumer: FR-001 Screens 16 and 18.",
         "rationale": "FR-026 PRD, section Platform Settings Requirements."
       }
     },
@@ -81419,9 +81407,9 @@
       "owner_fr": "FR-026",
       "title": "Landing background images Setting",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System MUST let an admin manage the Landing Background Images Setting, the set of background images that rotate behind the patient landing screen. Consumer: FR-001.",
+        "statement": "System MUST let an admin manage the Landing Background Images Setting, the set of background images that rotate behind the patient landing screen; with none set, no background images are shown. Consumer: FR-001.",
         "rationale": "FR-026 PRD, section Platform Settings Requirements."
       }
     },
@@ -81455,9 +81443,9 @@
       "owner_fr": "FR-026",
       "title": "Admin session Settings",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST store the admin session Settings: concurrent sessions per admin user (1 to 5, default 3) and the admin inactivity timeout (default 30 minutes, which also ends a Login as Provider session). Failed admin sign-ins use the shared Max Login Attempts Setting of Screen 2; there is no separate admin Setting. Consumers: FR-031, FR-015.",
+        "statement": "System MUST store the admin session Settings: concurrent sessions per admin user (1 to 5, default 3) and the admin inactivity timeout (whole minutes from 5 to 240, default 30). Failed admin sign-ins use the shared Max Login Attempts Setting of Screen 2 and there is no separate admin Setting; the fixed FR-031 endpoint throttle of 5 attempts per 15 minutes (REQ-031-100) applies in addition, whichever trips first. A Login as Provider session ends after its own fixed 30 minutes of inactivity (REQ-015-026) or when the admin's own session ends under the admin inactivity timeout, whichever comes first. Consumer: FR-031.",
         "rationale": "FR-026 PRD, section Platform Settings Requirements."
       }
     },
@@ -81465,11 +81453,11 @@
       "id": "REQ-026-117",
       "type": "Rule",
       "owner_fr": "FR-026",
-      "title": "Head scan intake Settings",
+      "title": "Head scan quality Settings",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System MUST store the head scan intake Settings: maximum file size, maximum total size, quality thresholds, required views, and head video duration limits. This document fixes no values for them. Consumer: FR-002 REQ-002-032 to REQ-002-035.",
+        "statement": "System MUST store the head scan Settings FR-002 still reads: a minimum brightness score and a minimum blur score (each a whole number from 0 to 100, default 40, admin-editable; a photo passes when both reach their minimum), and head video duration limits, which are not used until head video ships (REQ-002-035). File size, total size and required views are product constants in FR-002 (REQ-002-033, REQ-002-032) and are not Settings. Consumer: FR-002 REQ-002-034, REQ-002-035, REQ-002-050.",
         "rationale": "FR-026 PRD, section Platform Settings Requirements."
       }
     },
@@ -81479,9 +81467,9 @@
       "owner_fr": "FR-026",
       "title": "Acceptance terms text Setting",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System MUST store the acceptance legal copy and terms acknowledgment text shown at quote acceptance as a versioned Setting. Consumer: FR-005.",
+        "statement": "System MUST store the acceptance legal copy and terms acknowledgment text shown at quote acceptance as a versioned Setting, with no seeded text; until the admin sets it, the quote acceptance action that needs the acknowledgment checkbox is blocked with a message. Consumer: FR-005.",
         "rationale": "FR-026 PRD, section Platform Settings Requirements."
       }
     },
@@ -81503,9 +81491,9 @@
       "owner_fr": "FR-026",
       "title": "Provider notification types Setting",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System MUST store the provider notification types offered in provider notification preferences. Admins can add or remove types, but the core types (quote, schedule, treatment, aftercare, review) cannot be removed. Consumers: FR-032, FR-020.",
+        "statement": "System MUST store the provider notification types offered in provider notification preferences, seeded with the five core types. Admins can add or remove types, but the core types (quote, schedule, treatment, aftercare, review) cannot be removed. Consumers: FR-032, FR-020.",
         "rationale": "FR-026 PRD, section Platform Settings Requirements."
       }
     },
@@ -81515,9 +81503,9 @@
       "owner_fr": "FR-026",
       "title": "Timezone options Setting",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System MUST store the timezone options (GMT-12 to GMT+14, each with its offset and a city example). Consumer: FR-032.",
+        "statement": "System MUST store the timezone options (every whole-hour offset from GMT-12 to GMT+14 at launch, each with its offset and a city example). Consumers: FR-032, FR-021.",
         "rationale": "FR-026 PRD, section Platform Settings Requirements."
       }
     },
@@ -81600,9 +81588,9 @@
       "owner_fr": "FR-026",
       "title": "Country CSV bulk import",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Screen 4 MUST offer bulk import of countries from a CSV file, with validation of every row before anything is saved.",
+        "statement": "Screen 4 MUST offer bulk import of countries from a CSV file with the columns Country Name, ISO Code, Calling Code and Display Order (optional) and no flag column, with validation of every row before anything is saved. An imported country is saved Inactive with a \"flag missing\" state and cannot be activated until the admin uploads its flag.",
         "rationale": "FR-026 PRD, section Screen Field Limits and Behaviours."
       }
     },
@@ -81612,9 +81600,9 @@
       "owner_fr": "FR-026",
       "title": "Warning before deactivating an in-use value",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Before an admin deactivates a country that active users have selected, a discovery option, cancellation reason, or deletion reason that patients frequently select, or a provider specialty that providers currently hold, the system MUST warn the admin.",
+        "statement": "Before an admin deactivates a country that active users have selected, a discovery option, cancellation reason, or deletion reason that patients frequently select, or a provider specialty that providers currently hold, the system MUST warn the admin. The country warning also lists the FR-028 regional groupings and fallback price rows that use the country; a deactivated country keeps applying in FR-028 until an admin edits them (REQ-028-083, REQ-028-092).",
         "rationale": "FR-026 PRD, section Screen Field Limits and Behaviours."
       }
     },
@@ -81732,10 +81720,70 @@
       "owner_fr": "FR-026",
       "title": "Store the centrally managed problem-duration list",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System MUST store the centrally managed problem-duration list: option label, display order, active status. Starting values, editable by Admin: Less than 6 months; 6 to 12 months; 1 to 2 years; 2 to 5 years; More than 5 years. At least one option stays active. Consumer: FR-003 Screen 3 (Duration).",
+        "statement": "System MUST store the centrally managed problem-duration list: option label, display order, active status. Starting values, editable by Admin: Less than 6 months; 6 to 12 months; 1 to 2 years; 2 to 5 years; More than 5 years. At least one option stays active. A deactivated duration is no longer offered, and answers already stored stay readable. Consumer: FR-003 Screen 3 (Duration).",
         "rationale": "prd.md Screen 5c (Problem Duration fields and business rules) and REQ-026-139; owner answer 2026-11-22"
+      }
+    },
+    {
+      "id": "REQ-026-140",
+      "type": "Rule",
+      "owner_fr": "FR-026",
+      "title": "Screen 8 lists limits owned by other features",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "System MUST list on Screen 8, under the group \"Limits owned by other features\", the Settings whose owning FR makes them admin-editable: the treatment creation rate limit and the package creation rate limit (FR-024; a new record counts once, when first saved as Active or Inactive), the admin invitation token expiry and the admin repeated denial threshold (FR-031). Range, default and counting rule stay with the owning FR.",
+        "rationale": "Logic review of the FR-026 PRD; mirrors the PRD text. The provider creation rate limit (FR-015) is not stated as admin-editable by its owner, so it is not listed."
+      }
+    },
+    {
+      "id": "REQ-026-141",
+      "type": "Rule",
+      "owner_fr": "FR-026",
+      "title": "Final active country cannot be deactivated",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "System MUST prevent deactivation of the final active country; a deactivation that would leave no active country is rejected with a message.",
+        "rationale": "Logic review of the FR-026 PRD; mirrors the PRD text. Mirrors the treatment-area guard REQ-026-036."
+      }
+    },
+    {
+      "id": "REQ-026-142",
+      "type": "Rule",
+      "owner_fr": "FR-026",
+      "title": "Quote Configuration version from a Default Currency change is a System change",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "A Quote Configuration version created by a Default Currency change in FR-029 (REQ-029-053) MUST have Change Type \"System\", the fixed reason text \"Default currency changed in Payment Configuration\", and Changed By set to the admin who confirmed the change in FR-029; the change reason rule (REQ-026-002) covers changes made on FR-026 screens.",
+        "rationale": "Logic review of the FR-026 PRD; mirrors the PRD text."
+      }
+    },
+    {
+      "id": "REQ-026-143",
+      "type": "Rule",
+      "owner_fr": "FR-026",
+      "title": "Emergency contact needs at least one value",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "System MUST refuse to save the Support Emergency Contact Settings when both phone and email are blank, with the message \"Set at least one emergency contact (phone or email).\" (REQ-035-040).",
+        "rationale": "Logic review of the FR-026 PRD; mirrors the PRD text."
+      }
+    },
+    {
+      "id": "REQ-026-144",
+      "type": "Rule",
+      "owner_fr": "FR-026",
+      "title": "Slot hold placement blocked when the Settings API is unavailable",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "When the Settings API is unavailable as a slot hold is placed at subquote acceptance or an FR-006 admin revive, the action MUST be blocked and can be retried; no stale or guessed slot-hold duration is used.",
+        "rationale": "Logic review of the FR-026 PRD; mirrors the PRD text. Mirrors REQ-026-063 for the quote send."
       }
     },
     {
@@ -100699,10 +100747,10 @@
       "owner_fr": "FR-026",
       "title": "Authentication Throttling (Screen 2)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "admin",
-        "description": "Admin edits max login attempts and lockout duration, then supplies a change reason. Changes apply immediately after save and propagation; existing lockouts are untouched."
+        "description": "Admin edits max login attempts and lockout duration, then supplies a change reason. Changes apply within 60 seconds of saving (propagation); existing lockouts are untouched. The fixed FR-031 admin endpoint throttle applies in addition to the shared lockout."
       }
     },
     {
@@ -100723,10 +100771,10 @@
       "owner_fr": "FR-026",
       "title": "Countries and Calling Codes (Screen 4)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "admin",
-        "description": "Admin adds, edits, reorders, activates and deactivates countries (name, ISO code, calling code, flag, display order); a usage count of users per country is shown with a warning before deactivating."
+        "description": "Admin adds, edits, reorders, activates and deactivates countries (name, ISO code, calling code, flag, display order); a usage count of users per country is shown with a warning before deactivating, which also lists the FR-028 groupings and fallback price rows that use it; the final active country cannot be deactivated; a CSV import saves countries Inactive with a flag missing state."
       }
     },
     {
@@ -100831,10 +100879,10 @@
       "owner_fr": "FR-026",
       "title": "Version History (Screen 7)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
-        "description": "Read-only list of versions of a setting group, newest first, with diff highlighting of old and new values, change reason and admin; sensitive values are masked."
+        "description": "Read-only list of versions of a setting group, newest first, with diff highlighting of old and new values, change reason and admin; sensitive values are masked. A Quote Configuration version created by an FR-029 Default Currency change shows Change Type System."
       }
     },
     {
@@ -100843,10 +100891,10 @@
       "owner_fr": "FR-026",
       "title": "Platform Settings Editor (Screen 8)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
-        "description": "Admin views and changes the platform Settings that other modules read and that Screens 2 to 7 do not edit: re-verification threshold, admin session policy, landing background images, profile photo limits, head scan intake limits, acceptance terms text, timezone options, provider notification types and the support emergency contact. Each Setting sits in one of the Screen 1 setting groups.",
+        "description": "Admin views and changes the platform Settings that other modules read and that Screens 2 to 7 do not edit: re-verification threshold, admin session policy, landing background images, profile photo limits, head scan quality minimums, acceptance terms text, timezone options, provider notification types, the support emergency contact and the limits owned by other features (creation rate limits, admin invitation token expiry, admin repeated denial threshold). Each Setting sits in one of the Screen 1 setting groups.",
         "display_only": true,
         "display_only_reason": "Platform Settings Editor (PRD Screen 8) lists and edits platform Settings, not data Fields, and the schema forbids a Screen to Setting edge; each Setting is linked through the Rules that apply to this Screen (REQ-026-112 to 121) and govern the Setting."
       }
@@ -102153,9 +102201,9 @@
       "owner_fr": "FR-026",
       "title": "Acceptance legal copy and terms acknowledgment text",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Legal copy and terms acknowledgment text shown at quote acceptance (consumer: FR-005). Versioned and edited on FR-026 Screen 8; Terms and Conditions, Privacy Policy and consent forms stay in FR-027."
+        "description": "Legal copy and terms acknowledgment text shown at quote acceptance (consumer: FR-005). Versioned and edited on FR-026 Screen 8; Terms and Conditions, Privacy Policy and consent forms stay in FR-027. No seeded text: until the admin sets it, the quote acceptance action that needs the acknowledgment checkbox is blocked with a message."
       }
     },
     {
@@ -102227,9 +102275,9 @@
       "owner_fr": "FR-026",
       "title": "Admin inactivity timeout",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "The single standard admin inactivity timeout; it also ends a Login as Provider session (consumers: FR-031, FR-015). Edited on FR-026 Screen 8.",
+        "description": "The standard admin inactivity timeout (consumer: FR-031). Whole minutes from 5 to 240. A Login as Provider session ends after its own fixed 30 minutes of inactivity (REQ-015-026) or when the admin's own session ends under this timeout, whichever comes first. Edited on FR-026 Screen 8.",
         "default": "30",
         "unit": "minutes"
       }
@@ -102611,47 +102659,29 @@
       }
     },
     {
-      "id": "SET-head-scan-max-file-size",
+      "id": "SET-head-scan-min-blur-score",
       "type": "Setting",
       "owner_fr": "FR-026",
-      "title": "Head scan maximum file size",
+      "title": "Head scan minimum blur score",
       "status": "active",
-      "version": 2,
+      "version": 1,
       "attrs": {
-        "description": "Largest single head scan file accepted at intake (consumer: FR-002 REQ-002-033). Edited on FR-026 Screen 8; the PRD fixes no value."
+        "description": "Lowest blur score (0 to 100) a head scan photo may have and still pass the basic quality check (consumer: FR-002 REQ-002-034, REQ-002-050). Whole number; a photo passes when both its brightness and its blur score reach their minimum. Edited on FR-026 Screen 8.",
+        "default": "40",
+        "unit": "score"
       }
     },
     {
-      "id": "SET-head-scan-max-total-size",
+      "id": "SET-head-scan-min-brightness-score",
       "type": "Setting",
       "owner_fr": "FR-026",
-      "title": "Head scan maximum total size",
+      "title": "Head scan minimum brightness score",
       "status": "active",
-      "version": 2,
+      "version": 1,
       "attrs": {
-        "description": "Largest total head scan upload accepted at intake (consumer: FR-002 REQ-002-033). Edited on FR-026 Screen 8; the PRD fixes no value."
-      }
-    },
-    {
-      "id": "SET-head-scan-quality-thresholds",
-      "type": "Setting",
-      "owner_fr": "FR-026",
-      "title": "Head scan quality thresholds",
-      "status": "active",
-      "version": 2,
-      "attrs": {
-        "description": "Brightness and blur thresholds below which head scan media fails the basic quality check (consumer: FR-002 REQ-002-034). Edited on FR-026 Screen 8; the PRD fixes no value."
-      }
-    },
-    {
-      "id": "SET-head-scan-required-views",
-      "type": "Setting",
-      "owner_fr": "FR-026",
-      "title": "Head scan required viewpoints",
-      "status": "active",
-      "version": 2,
-      "attrs": {
-        "description": "Viewpoints a head scan photo set must include, for example front, top, left, right and back (consumer: FR-002 REQ-002-032). The examples are not a final list. Edited on FR-026 Screen 8; the PRD fixes no final list."
+        "description": "Lowest brightness score (0 to 100) a head scan photo may have and still pass the basic quality check (consumer: FR-002 REQ-002-034, REQ-002-050). Whole number; a photo passes when both its brightness and its blur score reach their minimum. Edited on FR-026 Screen 8.",
+        "default": "40",
+        "unit": "score"
       }
     },
     {
@@ -102660,9 +102690,9 @@
       "owner_fr": "FR-026",
       "title": "Head video duration limits",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Minimum and maximum duration of a head video, applied only where a head video is accepted (consumer: FR-002 REQ-002-035). Edited on FR-026 Screen 8; the PRD fixes no value.",
+        "description": "Minimum and maximum duration of a head video; not used until head video ships (consumer: FR-002 REQ-002-035). Edited on FR-026 Screen 8; the PRD fixes no value.",
         "unit": "seconds"
       }
     },
@@ -102720,9 +102750,9 @@
       "owner_fr": "FR-026",
       "title": "Landing background images",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Background images that rotate behind the patient landing screen (FR-001). Image assets only; rotation follows the admin configuration. Edited on FR-026 Screen 8."
+        "description": "Background images that rotate behind the patient landing screen (FR-001). Image assets only; rotation follows the admin configuration. With none set, no background images are shown. Edited on FR-026 Screen 8."
       }
     },
     {
@@ -102964,9 +102994,9 @@
       "owner_fr": "FR-026",
       "title": "Password policy",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Fixed in codebase, view-only: minimum 12 characters with at least one uppercase, lowercase, digit and special character."
+        "description": "Defined by REQ-SYS-007. FR-026 holds this Setting only as the stored value other FRs read; it is not editable on FR-026 screens. Minimum 12 characters with at least one uppercase, lowercase, digit and special character."
       }
     },
     {
@@ -103221,9 +103251,9 @@
       "owner_fr": "FR-026",
       "title": "Provider notification types",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Notification types offered in provider notification preferences (consumers: FR-032, FR-020). Core types quote, schedule, treatment, aftercare and review cannot be removed. Edited on FR-026 Screen 8."
+        "description": "Notification types offered in provider notification preferences (consumers: FR-032, FR-020). Core types quote, schedule, treatment, aftercare and review cannot be removed. Seeded with the five core types. Edited on FR-026 Screen 8."
       }
     },
     {
@@ -103342,9 +103372,9 @@
       "owner_fr": "FR-026",
       "title": "Re-verification threshold",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "How long after a patient's last successful sign-in the patient must confirm identity again before a sensitive action (FR-001 Screens 16 and 18). Edited on FR-026 Screen 8.",
+        "description": "How long after a patient's last successful sign-in the patient must confirm identity again before a sensitive action (FR-001 Screens 16 and 18). Whole minutes from 1 to 60. Edited on FR-026 Screen 8.",
         "default": "5",
         "unit": "minutes"
       }
@@ -103533,9 +103563,9 @@
       "owner_fr": "FR-026",
       "title": "Support emergency contact email address",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Emergency email address shown read-only with tap-to-compose on the patient Help & Support Hub (FR-035 Screen 1). No default; FR-035 assumes the admin sets it before go-live. Edited on FR-026 Screen 8."
+        "description": "Emergency email address shown read-only with tap-to-compose on the patient Help & Support Hub (FR-035 Screen 1). No default; at least one of phone and email must be set (REQ-026-143); FR-035 assumes the admin sets it before go-live. Edited on FR-026 Screen 8."
       }
     },
     {
@@ -103544,9 +103574,9 @@
       "owner_fr": "FR-026",
       "title": "Support emergency contact phone number",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Emergency phone number shown read-only with tap-to-call on the patient Help & Support Hub (FR-035 Screen 1). No default; FR-035 assumes the admin sets it before go-live. Edited on FR-026 Screen 8."
+        "description": "Emergency phone number shown read-only with tap-to-call on the patient Help & Support Hub (FR-035 Screen 1). No default; at least one of phone and email must be set (REQ-026-143); FR-035 assumes the admin sets it before go-live. Edited on FR-026 Screen 8."
       }
     },
     {
@@ -103614,9 +103644,9 @@
       "owner_fr": "FR-026",
       "title": "Timezone options",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Timezone choices from GMT-12 to GMT+14, each with its offset and a city example such as \"(GMT+3) Istanbul\" (consumer: FR-032). Edited on FR-026 Screen 8."
+        "description": "Timezone choices: every whole-hour offset from GMT-12 to GMT+14, each with its offset and a city example such as \"(GMT+3) Istanbul\" (consumers: FR-032, FR-021). Edited on FR-026 Screen 8."
       }
     },
     {
@@ -103661,9 +103691,9 @@
       "owner_fr": "FR-026",
       "title": "Inquiry treatment-area options",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Ordered list of treatment-area options (label, image or icon asset, active flag) offered on inquiry creation."
+        "description": "Ordered list of treatment-area options (label, image or icon asset, active flag) offered on inquiry creation. Seeded with Hair, Beard and Both (REQ-003-120)."
       }
     },
     {
@@ -163924,6 +163954,12 @@
       "sort_order": 1
     },
     {
+      "field_id": "ENT-setting-version.change_type",
+      "value": "system",
+      "label": "System",
+      "sort_order": 2
+    },
+    {
       "field_id": "ENT-stripe-account.mode",
       "value": "test",
       "label": "Test Mode",
@@ -179662,7 +179698,7 @@
       "verb": "active in",
       "to_id": "STG-admin-01-configuration",
       "attrs": {
-        "rules": 29
+        "rules": 33
       },
       "derived": true
     },
@@ -179689,7 +179725,7 @@
       "verb": "active in",
       "to_id": "STG-main-03-acceptance",
       "attrs": {
-        "rules": 3
+        "rules": 4
       },
       "derived": true
     },
@@ -179698,7 +179734,7 @@
       "verb": "active in",
       "to_id": "STG-main-04-booking",
       "attrs": {
-        "rules": 3
+        "rules": 4
       },
       "derived": true
     },
@@ -179725,7 +179761,7 @@
       "verb": "active in",
       "to_id": "STG-patient-03-active",
       "attrs": {
-        "rules": 57
+        "rules": 56
       },
       "derived": true
     },
@@ -179743,9 +179779,57 @@
       "verb": "active in",
       "to_id": "STG-provider-03-active",
       "attrs": {
-        "rules": 64
+        "rules": 63
       },
       "derived": true
+    },
+    {
+      "from_id": "FR-026",
+      "verb": "references",
+      "to_id": "REQ-003-120",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-026",
+      "verb": "references",
+      "to_id": "REQ-004-036",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-026",
+      "verb": "references",
+      "to_id": "REQ-004-105",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-026",
+      "verb": "references",
+      "to_id": "REQ-015-026",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-026",
+      "verb": "references",
+      "to_id": "REQ-029-053",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-026",
+      "verb": "references",
+      "to_id": "REQ-031-100",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-026",
+      "verb": "references",
+      "to_id": "REQ-031-113",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-026",
+      "verb": "references",
+      "to_id": "REQ-035-040",
+      "attrs": {}
     },
     {
       "from_id": "FR-026",
@@ -186383,7 +186467,13 @@
     {
       "from_id": "REQ-002-034",
       "verb": "governed by",
-      "to_id": "SET-head-scan-quality-thresholds",
+      "to_id": "SET-head-scan-min-blur-score",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-002-034",
+      "verb": "governed by",
+      "to_id": "SET-head-scan-min-brightness-score",
       "attrs": {}
     },
     {
@@ -273153,36 +273243,6 @@
       "attrs": {}
     },
     {
-      "from_id": "REQ-026-107",
-      "verb": "applies at",
-      "to_id": "STG-patient-03-active",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-026-107",
-      "verb": "applies at",
-      "to_id": "STG-provider-03-active",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-026-107",
-      "verb": "applies to",
-      "to_id": "ACT-platform-admin",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-026-107",
-      "verb": "applies to",
-      "to_id": "SCR-026-01",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-026-107",
-      "verb": "decided by",
-      "to_id": "SRC-PRD-026",
-      "attrs": {}
-    },
-    {
       "from_id": "REQ-026-108",
       "verb": "applies at",
       "to_id": "STG-patient-03-active",
@@ -273473,25 +273533,13 @@
     {
       "from_id": "REQ-026-117",
       "verb": "governed by",
-      "to_id": "SET-head-scan-max-file-size",
+      "to_id": "SET-head-scan-min-blur-score",
       "attrs": {}
     },
     {
       "from_id": "REQ-026-117",
       "verb": "governed by",
-      "to_id": "SET-head-scan-max-total-size",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-026-117",
-      "verb": "governed by",
-      "to_id": "SET-head-scan-quality-thresholds",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-026-117",
-      "verb": "governed by",
-      "to_id": "SET-head-scan-required-views",
+      "to_id": "SET-head-scan-min-brightness-score",
       "attrs": {}
     },
     {
@@ -274332,6 +274380,168 @@
       "from_id": "REQ-026-139",
       "verb": "governed by",
       "to_id": "SET-problem-duration-options",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-140",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-140",
+      "verb": "applies to",
+      "to_id": "SCR-026-14",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-140",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-026",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-140",
+      "verb": "governed by",
+      "to_id": "SET-admin-invitation-token-expiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-140",
+      "verb": "governed by",
+      "to_id": "SET-admin-repeated-denial-threshold",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-140",
+      "verb": "governed by",
+      "to_id": "SET-package-creation-rate-limit",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-140",
+      "verb": "governed by",
+      "to_id": "SET-treatment-creation-rate-limit",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-141",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-141",
+      "verb": "applies to",
+      "to_id": "ENT-country",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-141",
+      "verb": "applies to",
+      "to_id": "SCR-026-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-141",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-026",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-141",
+      "verb": "governed by",
+      "to_id": "SET-country-list",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-142",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-142",
+      "verb": "applies to",
+      "to_id": "ENT-setting-version.change_type",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-142",
+      "verb": "applies to",
+      "to_id": "SCR-026-13",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-142",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-026",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-142",
+      "verb": "governed by",
+      "to_id": "SET-default-currency",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-143",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-143",
+      "verb": "applies to",
+      "to_id": "SCR-026-14",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-143",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-026",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-143",
+      "verb": "governed by",
+      "to_id": "SET-support-emergency-contact-email",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-143",
+      "verb": "governed by",
+      "to_id": "SET-support-emergency-contact-phone",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-144",
+      "verb": "applies at",
+      "to_id": "STG-main-03-acceptance",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-144",
+      "verb": "applies at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-144",
+      "verb": "applies to",
+      "to_id": "ENT-quote-configuration.slot_hold_hours",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-144",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-026",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-144",
+      "verb": "governed by",
+      "to_id": "SET-slot-hold-duration",
       "attrs": {}
     },
     {
@@ -448323,6 +448533,71 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-153131-c25f43aa",
+      "at": "2026-11-24T15:31:31.631978+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-026 logic review pass 1: FR-031 permissions replace the working role names, treatment areas seeded Hair, Beard and Both, head scan Settings reduced to two quality minimums, admin sign-in lockout and fixed throttle both apply, System change type for FR-029 currency versions, limits owned by other features listed on Screen 8, reminder skip rule, country CSV and guard rules, emergency contact at-least-one rule, bounds and seeds for platform Settings, Settings API outage at hold placement.",
+      "source_id": null,
+      "nodes_added": [
+        "REQ-026-140",
+        "REQ-026-141",
+        "REQ-026-142",
+        "REQ-026-143",
+        "REQ-026-144",
+        "SET-head-scan-min-blur-score",
+        "SET-head-scan-min-brightness-score"
+      ],
+      "nodes_updated": [
+        "ENT-setting-version.change_type",
+        "FR-026",
+        "REQ-002-034",
+        "REQ-026-001",
+        "REQ-026-002",
+        "REQ-026-014",
+        "REQ-026-016",
+        "REQ-026-027",
+        "REQ-026-031",
+        "REQ-026-034",
+        "REQ-026-050",
+        "REQ-026-052",
+        "REQ-026-054",
+        "REQ-026-072",
+        "REQ-026-107",
+        "REQ-026-112",
+        "REQ-026-113",
+        "REQ-026-116",
+        "REQ-026-117",
+        "REQ-026-118",
+        "REQ-026-120",
+        "REQ-026-121",
+        "REQ-026-128",
+        "REQ-026-129",
+        "REQ-026-139",
+        "SCR-026-02",
+        "SCR-026-04",
+        "SCR-026-13",
+        "SCR-026-14",
+        "SET-acceptance-terms-text",
+        "SET-admin-inactivity-timeout",
+        "SET-head-scan-max-file-size",
+        "SET-head-scan-max-total-size",
+        "SET-head-scan-quality-thresholds",
+        "SET-head-scan-required-views",
+        "SET-head-video-duration-limits",
+        "SET-landing-background",
+        "SET-password-policy",
+        "SET-provider-notification-types",
+        "SET-reverification-threshold",
+        "SET-support-emergency-contact-email",
+        "SET-support-emergency-contact-phone",
+        "SET-timezone-options",
+        "SET-treatment-area-options"
+      ],
+      "edges_added": 39,
+      "edges_removed": 5,
+      "rows": 136
+    },
     {
       "id": "cs-20261124-152931-5a1556fe",
       "at": "2026-11-24T15:29:31.719663+00:00",
