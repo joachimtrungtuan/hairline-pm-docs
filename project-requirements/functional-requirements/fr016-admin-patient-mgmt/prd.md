@@ -57,7 +57,7 @@ This is a critical operational module that ensures the platform can provide effe
 - Monitor patient-provider communications for compliance
 - Manually intervene in bookings (reschedule, modify, cancel)
 - Reset patient passwords and unlock accounts
-- Suspend or deactivate patient accounts
+- Suspend patient accounts, lift a suspension early, and unlock locked accounts (REQ-016-220)
 - View patient support escalations/context via Support Center (see FR-034) (REQ-016-037)
 - Generate patient reports and analytics (REQ-016-039)
 
@@ -74,7 +74,7 @@ This is a critical operational module that ensures the platform can provide effe
 - Admin viewing patient-provider message history (read-only monitoring)
 - Admin viewing patient support history/context via Support Center (see FR-034)
 - Admin ability to flag/review communications for policy violations
-- System-generated notifications to patients when admin takes action
+- System-generated notifications to patients when admin takes action (suspension, suspension end, password reset, manual notice, policy warning); each of these notices needs a matching event in FR-020 (REQ-016-027)
 
 **Out of Scope**:
 
@@ -164,7 +164,7 @@ This is a critical operational module that ensures the platform can provide effe
      - Payment method used
      - Currency and exchange rates
   3. Admin can click on transaction to view Stripe payment intent details (REQ-016-045)
-  4. Admin can initiate refund with enhanced confirmation for amounts > $1,000 (REQ-016-011)
+  4. Admin can initiate refund with enhanced confirmation for amounts > $1,000 (US dollars; other currencies are converted at the rate FR-007 applies to that payment) (REQ-016-011, REQ-016-221)
 - **Outcome**: Admin has complete financial picture of patient account
 
 **B1: Admin cannot find patient in search**:
@@ -177,7 +177,7 @@ This is a critical operational module that ensures the platform can provide effe
      - Try partial name match
      - Search by phone number instead of email
   3. Admin adjusts search criteria and retries
-  4. If still no results, admin checks if patient account exists in different status or was deactivated (REQ-016-046)
+  4. If still no results, admin checks if the patient account exists in a different status (REQ-016-046)
 - **Outcome**: Admin either finds patient with adjusted search or confirms patient doesn't exist
 
 ---
@@ -198,6 +198,7 @@ This is a critical operational module that ensures the platform can provide effe
    - Unlock account (after failed login attempts)
    - Update patient profile information
    - Suspend account (fraud prevention)
+   - Lift suspension (end an active suspension early) (REQ-016-220)
    - Initiate manual refund (when payment service unavailable or support requires override)
    - Log admin note / follow-up task
 5. System displays confirmation dialog with: (REQ-016-048)
@@ -238,15 +239,16 @@ This is a critical operational module that ensures the platform can provide effe
   2. Admin investigates evidence (multiple accounts, payment chargebacks, policy violations)
   3. Admin determines account suspension is necessary
   4. Admin clicks "Suspend Account" button
-  5. System displays warning: "This action will immediately prevent patient login and cancel active bookings. Proceed?" (REQ-016-052)
+  5. System displays warning: "This action will immediately prevent patient login and cancel bookings that are Accepted, Payment Window Expired or Confirmed. Proceed?" and lists the patient's `In Progress` and `Aftercare` bookings, which are left untouched, for admin follow-up (REQ-016-052, REQ-016-217)
   6. Admin enters detailed justification: "Multiple fraudulent payment attempts - 3 chargebacks in 1 month"
   7. Admin selects suspension duration: 30 days, 90 days, Permanent
   8. Admin confirms suspension
   9. System immediately revokes patient authentication tokens (REQ-016-053)
-  10. System cancels each active booking through the FR-006 admin booking cancellation, using the suspension justification as the cancellation reason; refunds follow the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault)
-  11. System sends suspension notification to patient with appeal process information (REQ-016-054)
-  12. System logs suspension in audit trail with full justification
-- **Outcome**: Account suspended, patient locked out, audit trail created; a 30-day or 90-day suspension ends by itself on its end date (General Module Rule 9)
+  10. System cancels each booking in `Accepted`, `Payment Window Expired` or `Confirmed` through the FR-006 admin booking cancellation, with the fixed reason "Booking cancelled because the patient account was suspended" sent to the patient and the provider; the admin justification stays in the audit entry only; refunds follow the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault) (REQ-016-217, REQ-016-219)
+  11. If a cancellation fails, the suspension still applies and the failed bookings are listed for admin follow-up (REQ-016-218)
+  12. System sends suspension notification to patient; the notice tells the patient to contact support to appeal, which creates an FR-034 support ticket (REQ-016-054)
+  13. System logs suspension in audit trail with full justification
+- **Outcome**: Account suspended, patient locked out, audit trail created; a 30-day or 90-day suspension ends by itself on its end date (General Module Rule 9), and an admin can lift any suspension early (REQ-016-220)
 
 *Note: Booking modifications or cancellations occur on the dedicated case/inquiry detail page; the intervention flow links admins there rather than duplicating controls.* (REQ-016-055)
 
@@ -256,7 +258,7 @@ This is a critical operational module that ensures the platform can provide effe
 - **Steps**:
   1. Admin opens the request from Screen 9 (Booking Support Requests) or from the patient's Overview tab
   2. Admin reviews the booking reference, current booking status, current appointment, and the patient's stated reason
-  3. For a cancellation request, admin opens the FR-006 Cancel Booking action (FR-006 Screen 9), which applies to any booking state from `Accepted` to `Aftercare`, enters the mandatory reason, and confirms; the booking and inquiry become `Cancelled`, the accepted quote stays accepted, the patient and provider receive `booking.cancelled`, and refunds follow the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault)
+  3. For a cancellation request, admin opens the FR-006 Cancel Booking action (FR-006 Screen 9), which applies to `Accepted`, `Payment Window Expired`, and `Confirmed` bookings (for `In Progress` the admin opens FR-006 Screen 11, Alternative Flow B7; for `Aftercare` there is no cancel button and the admin declines the request, pointing to FR-006 Alternative Flow B6), enters the mandatory reason, and confirms; the booking and inquiry become `Cancelled`, the accepted quote stays accepted, the patient and provider receive `booking.cancelled`, and refunds follow the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault)
   4. For a change request, admin opens the FR-006 Change Appointment action (FR-006 Screen 8), which applies to `Accepted` or `Confirmed` bookings; the patient and provider receive `booking.rescheduled`
   5. If the admin declines the request, admin records a decline reason, and the patient is answered through the FR-034 support case
   6. System links the outcome to the request, marks it Resolved or Declined, and logs the action on Screen 7
@@ -280,23 +282,16 @@ This is a critical operational module that ensures the platform can provide effe
 
 FR-016 references patient support escalations, but **formal Support Center + Ticketing** (intake, triage, ticket lifecycle, and agent workflows) is specified in a dedicated requirement: **FR-034** (system-level entry in `local-docs/project-requirements/system-prd.md`).
 
-**B5: Patient requests data deletion (GDPR)**:
+**B5: Admin reviews a patient data deletion request (GDPR)**:
 
-- **Trigger**: Patient exercises "right to be forgotten" under GDPR
+- **Trigger**: The patient submits a deletion request from Delete Account (FR-001); it appears on Screen 8 as Pending Admin Review. The process, statuses, deadline and notices are owned by FR-023 (REQ-016-060)
 - **Steps**:
-  1. Admin receives data deletion request (via Support Center / compliant support channel; see FR-034) (REQ-016-060)
-  2. Admin verifies patient identity and confirms legitimate request (REQ-016-060)
-  3. Admin checks if patient has active bookings or outstanding financial obligations (REQ-016-060)
-  4. If active obligations exist, admin explains data cannot be deleted yet (legal requirement) (REQ-016-060)
-  5. If no obligations, admin initiates data deletion workflow: (REQ-016-061)
-     - Mark account for anonymization
-     - Remove PII (name, email, phone, address)
-     - Retain anonymized medical records and archive transaction history (retention follows the system PRD, Platform-Wide Rules: One 10-year retention period)
-  6. System executes deletion workflow (soft delete with anonymization)
-  7. System generates data deletion certificate for audit (REQ-016-062)
-  8. System notifies the patient of the outcome, listing the actions taken and the legal basis for any retained records (per FR-023) (REQ-016-063)
-  9. Admin closes the request (REQ-016-063)
-- **Outcome**: Patient data deleted while maintaining compliance with retention laws
+  1. Admin opens the request on Screen 8 and reviews it; the admin may contact the patient (REQ-016-060, REQ-016-170)
+  2. If the identity proof is not sufficient, the request becomes Verification Required (FR-023 Alternative Flow A1) and the admin validates the patient's additional verification on Screen 8 (REQ-016-206, REQ-016-207)
+  3. Admin approves with the retention confirmation and a justification, or denies with a reason (FR-023 Alternative Flow A2) (REQ-016-190, REQ-016-191)
+  4. If an active obligation exists, approval is blocked: the request stays Pending Admin Review, marked blocked by obligation, until the obligation ends (FR-023 Alternative Flow A3) (REQ-016-171)
+  5. After approval FR-023 runs the rest: the request becomes In Progress, the data is anonymized or archived in place, the patient receives one outcome notice, and the request ends Fulfilled with the actions taken recorded on the request, which is the audit evidence (REQ-016-061, REQ-016-062, REQ-016-063)
+- **Outcome**: The request is decided with an audit trail; retention follows the system PRD, Platform-Wide Rules: One 10-year retention period
 
 ---
 
@@ -312,7 +307,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 |------------|------|----------|-------------|------------------|-------------|
 | Search Input | text | No | Search by name, email, patient code, phone | Min 2 characters (REQ-016-180) | ENT-patient.name, ENT-patient.email, ENT-patient.patient_id, ENT-patient.phone |
 | Status Filter | multi-select | No | Filter by journey stage | Options: Inquiry, Quoted, Accepted, Confirmed, In Progress, Aftercare, Completed, Cancelled (the FR-003 stage list) (REQ-016-182) | ENT-inquiry.stage |
-| Account Status Filter | multi-select | No | Filter by account status | Options: Active, Suspended, Deactivated, Locked (REQ-016-183) | ENT-patient.account_status |
+| Account Status Filter | multi-select | No | Filter by account status | Options: Active, Suspended, Locked (REQ-016-183) | ENT-patient.account_status |
 | Date Range Filter | date-range | No | Filter by registration date or last activity | Start date ≤ End date (REQ-016-209) | ENT-patient.registration_date, ENT-patient.last_activity_at |
 | Location Filter | select | No | Filter by patient country | Country list from admin settings (REQ-016-210) | ENT-patient.country |
 | Provider Filter | select | No | Filter by assigned provider | Active providers only (REQ-016-181) | ENT-booking.provider_id |
@@ -379,7 +374,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 | Last Activity | datetime | Yes (display only) | Most recent platform action | Read-only | ENT-patient.last_activity_at |
 | Current Status | badge | Yes (display only) | Journey stage | Read-only, color-coded | ENT-inquiry.stage |
 | Assigned Provider | link | No (display only) | Provider name (if applicable) | Click to navigate to provider profile | ENT-booking.provider_id |
-| Account Status | badge | Yes (display only) | Active, Suspended, Deactivated, Locked | Read-only, color-coded | ENT-patient.account_status |
+| Account Status | badge | Yes (display only) | Active, Suspended, Locked | Read-only, color-coded | ENT-patient.account_status |
 | Suspension End Date | date | Conditional (display only) | When a 30-day or 90-day suspension ends and the account returns to Active by itself | Read-only; only shown when Account Status = Suspended for 30 or 90 days (REQ-016-201) | ENT-patient.suspension_end_date |
 | Cancellation Reason | text | Conditional (display only) | Patient-selected cancellation reason (from FR-026 Screen 5a options), or provider-caused cause `ProviderSuspended` / `ProviderDeactivated` (FR-015 A5) | Read-only; only shown when Current Status = Cancelled | ENT-inquiry.cancellation_reason, ENT-provider-inquiry.cancellation_cause |
 | Cancellation Timestamp | datetime | Conditional (display only) | When the inquiry was cancelled by the patient | Read-only; only shown when Current Status = Cancelled | ENT-inquiry.cancelled_at |
@@ -404,7 +399,8 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 
 - Profile photo displayed if patient uploaded one (REQ-016-108)
 - Discovery question response shown (how patient found platform) (REQ-016-109)
-- Quick action buttons: "Reset Password", "Suspend Account", "Send Notification" (REQ-016-110)
+- Quick action buttons: "Reset Password", "Suspend Account", "Send Notification"; "Lift Suspension" is shown only when Account Status is Suspended and "Unlock Account" only when it is Locked (REQ-016-110)
+- "Lift Suspension" ends a suspension early; it needs the Edit Patients permission and a justification, is logged as Suspension Lifted, and sends the patient a notice. The appeal is the patient contacting support, which creates an FR-034 ticket; this module has no appeal queue (REQ-016-220)
 - "Send Notification" lets an admin send a manual notification to this patient; the action requires a justification and is logged in the audit trail (REQ-016-204)
 - Admin access to this tab is logged in audit trail (basic profile view, not medical data) (REQ-016-111)
 
@@ -513,7 +509,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 - Exchange rates shown for multi-currency bookings (REQ-016-135)
 - Stripe Payment ID links directly to Stripe dashboard for admins with Stripe access (REQ-016-136)
 - "Issue Refund" button available only for succeeded payments (REQ-016-137)
-- Refunds require admin justification; amounts > $1,000 trigger extended confirmation modal (no separate role) (REQ-016-011, REQ-016-020)
+- Refunds require admin justification; amounts > $1,000 trigger extended confirmation modal (no separate role); the threshold is in US dollars, and amounts in other currencies are converted at the rate FR-007 applies to that payment (REQ-016-011, REQ-016-020, REQ-016-221)
 - Installment plans show: total installments, paid installments, remaining installments, next due date (REQ-016-138)
 
 **Notes**:
@@ -576,10 +572,10 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 |------------|------|----------|-------------|------------------|-------------|
 | Admin Action List | table | Yes (display only) | Chronological log of actions | Sortable, filterable | ENT-admin-action-log |
 | Action Date | datetime | Yes (display only) | When action occurred | Read-only | ENT-admin-action-log.timestamp |
-| Admin Name | text | Yes (display only) | Which admin performed action | Read-only | ENT-admin-action-log.admin_id |
-| Action Type | badge | Yes (display only) | Type of intervention | Allowed values: Password Reset, Account Unlock, Profile Update, Manual Refund, Account Suspension, Medical Data Access, Data Deletion Request, Admin Note, Patient Inquiry Cancellation (system-generated audit entry when patient cancels inquiry via FR-003 Workflow 5 — logs who/when/reason), Provider-Caused Cancellation (system-generated entry per affected case/inquiry from FR-015 A5 — logs provider-status event, cause, prior stage), Provider Support Resolution (logs affected record, resolution reason, admin), Booking Change or Cancellation (admin changes or cancels a booking through the FR-006 action), Request Decline (admin declines a Screen 9 request), Conversation Flag or Unflag (admin flags or unflags a conversation on Screen 6), Payment Retry (admin retries a failed payment) | ENT-admin-action-log.action_type |
+| Admin Name | text | Yes (display only) | Which admin performed the action; "System" for a system-generated entry | Read-only | ENT-admin-action-log.admin_id |
+| Action Type | badge | Yes (display only) | Type of intervention | Allowed values: Password Reset, Account Unlock, Profile Update, Manual Refund, Account Suspension, Medical Data Access, Data Deletion Request, Admin Note, Patient Inquiry Cancellation (system-generated audit entry when patient cancels inquiry via FR-003 Workflow 5 — logs who/when/reason), Provider-Caused Cancellation (system-generated entry per affected case/inquiry from FR-015 A5 — logs provider-status event, cause, prior stage), Provider Support Resolution (logs affected record, resolution reason, admin), Booking Change or Cancellation (admin changes or cancels a booking through the FR-006 action), Request Decline (admin declines a Screen 9 request), Conversation Flag or Unflag (admin flags or unflags a conversation on Screen 6), Payment Retry (admin retries a failed payment), Manual Notification (admin sends a manual notice to one or several patients), Patient Warning, Provider Warning (admin warns after a communication review), Suspension Lifted (admin ends a suspension early), Suspension Ended (system-generated entry when a timed suspension ends) | ENT-admin-action-log.action_type |
 | Action Description | text | Yes (display only) | Summary of what changed | Read-only | ENT-admin-action-log.action_description |
-| Justification | text | Yes (display only) | Admin reason for action | Read-only, expandable | ENT-admin-action-log.justification |
+| Justification | text | Yes (display only) | Admin reason for action; for a system-generated entry, the cause the system states | Read-only, expandable | ENT-admin-action-log.justification |
 | Impact | badge | No (display only) | Severity of action | Low, Medium, High | ENT-admin-action-log.impact_level |
 
 **Business Rules**:
@@ -588,8 +584,8 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 - Actions displayed in descending chronological order (REQ-016-158)
 - Admin name links to admin profile for accountability (REQ-016-159)
 - Action types restricted to enumerated list above; any new action type requires PRD update (REQ-016-160)
-- Justification field required for every action (minimum 20 characters) (REQ-016-161)
-- Actions marked as "System-Generated" if automated (e.g., auto-unlock account after lockout period) (REQ-016-162)
+- Admin name and justification (minimum 20 characters) are required for every admin-performed action; for a system-generated entry the actor is "System" and the justification is the system-stated cause (REQ-016-161)
+- Actions marked as "System-Generated" if automated (e.g., auto-unlock account after lockout period, end of a timed suspension) (REQ-016-162)
 - Export audit log as PDF or CSV for compliance reporting (REQ-016-163)
 - Audit log immutable (admins cannot delete or modify past entries) (REQ-016-007)
 - Sensitive actions (medical data access) highlighted in distinct color (REQ-016-164)
@@ -615,7 +611,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 |------------|------|----------|-------------|------------------|-------------|
 | Screen Title | text | Yes (display only) | "Deletion Requests" | Located under **User management → Patients** (REQ-016-202) | no graph field (static text) |
 | Search | text | No | Search by patient name, email, or HPID | Debounced; case-insensitive (REQ-016-212) | ENT-patient.name, ENT-patient.email, ENT-patient.patient_id |
-| Filters | group | No | Filter controls | Default filter: Status = Pending Admin Review; the Status filter also offers Verification Required (REQ-016-186) | ENT-deletion-request.status |
+| Filters | group | No | Filter controls | Default filter: Status = Pending Admin Review; the Status filter offers all five request statuses: Pending Admin Review, Verification Required, In Progress, Fulfilled, Denied (REQ-016-186) | ENT-deletion-request.status |
 | Deletion Requests Table | table | Yes (display only) | List of patients with deletion requests | Sorted by oldest pending first (SLA risk) (REQ-016-187) | no graph field (list of the column rows below) |
 | Table Column: Patient ID | text | Yes (display only) | Patient HPID identifier | Copy to clipboard | ENT-patient.patient_id |
 | Table Column: Patient Name | text | Yes (display only) | Patient full name | Click opens patient detail overview in a new tab | ENT-patient.name |
@@ -623,6 +619,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 | Table Column: Submitted At | datetime | Yes (display only) | When request was submitted | Server time | ENT-deletion-request.submitted_at |
 | Table Column: Reason (Optional) | text | No (display only) | Patient-provided reason (if any) | Truncated to 1 line; expand in modal | ENT-deletion-request.reason |
 | Table Column: SLA Due By | datetime | Yes (display only) | Latest completion target | Submitted At + 30 calendar days (FR-023) (REQ-016-188) | ENT-deletion-request.sla_due_by |
+| Table Column: Status Badges | badge | No (display only) | Overdue (past the SLA Due By date shown in its own column), Blocked by obligation, Jurisdiction review, Needs attention (the open inquiry could not be cancelled; the signal is owned by FR-023 and has no field here) | Read-only; each badge is shown only while its condition applies (REQ-016-222) | ENT-deletion-request.blocked_by_obligation, ENT-deletion-request.jurisdiction_review_required |
 | Table Column: Actions | buttons | Yes (display only) | Primary action: Review | Opens review/approve modal | no graph field (control) |
 | Empty State | group | Conditional (display only) | No deletion requests to show | Message: "No pending deletion requests" (REQ-016-189) | no graph field (static text) |
 | Review / Approve Modal | modal | Conditional | Modal shown when admin clicks Review | Displays request reason and approve/deny actions | no graph field (control) |
@@ -630,8 +627,8 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 | Modal: Request Details | group | Yes (display only) | Submitted at, SLA due by, reason (if provided) | Read-only | ENT-deletion-request.submitted_at, ENT-deletion-request.sla_due_by, ENT-deletion-request.reason |
 | Modal: Contact Options | buttons | Yes (display only) | Quick actions: Call patient / Email patient | Opens system dialer/email client (or internal contact tools) | no graph field (control) |
 | Modal: Admin Notes | text | No | Optional notes about verification/contact | Stored in audit trail if approving/denying (REQ-016-199) | no graph field (note text) |
-| Modal: Approve Button | action | Conditional | Approves deletion request | Requires enhanced confirmation + justification (REQ-016-190) | ENT-admin-action-log.justification |
-| Modal: Deny Button | action | Conditional | Denies deletion request | Requires justification (REQ-016-191) | ENT-admin-action-log.justification |
+| Modal: Approve Button | action | Conditional | Approves deletion request | Shown only for Pending Admin Review and Verification Required, not for In Progress; requires the retention confirmation (the protected categories stay in anonymized form with restricted access, FR-023), enhanced confirmation, and justification (REQ-016-190) | ENT-admin-action-log.justification |
+| Modal: Deny Button | action | Conditional | Denies deletion request | Shown only for Pending Admin Review and Verification Required, not for In Progress; requires justification (REQ-016-191) | ENT-admin-action-log.justification |
 | Modal: Validate Verification Button | action | Conditional | Confirms that the patient's additional identity verification is sufficient and resumes processing of the request | Shown only for requests with status Verification Required; requires justification (REQ-016-207) | ENT-admin-action-log.justification |
 | Modal: Close Button | action | Yes | Close modal | No changes | no graph field (control) |
 | Audit Trail Link | link | Yes (display only) | Link to audit log entries for this request | Opens Screen 7 filtered to this request ID | ENT-admin-action-log.request_id |
@@ -666,7 +663,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 | Table Column: Request Type | badge | Yes (display only) | Cancellation or Appointment Change | Read-only | ENT-support-case.request_type |
 | Table Column: Patient Reason | text | No (display only) | Reason the patient gave | Truncated to one line; expand in panel | ENT-support-case.description |
 | Table Column: Submitted At | datetime | Yes (display only) | When the patient raised the request | Read-only | ENT-support-case.submitted_at |
-| Action: Cancel Booking | button | Conditional | Opens the FR-006 Cancel Booking action (FR-006 Screen 9) prefilled with the request source and support case reference | Shown for cancellation requests when the booking is `Accepted`, `Payment Window Expired`, `Confirmed`, `In Progress`, or `Aftercare` (REQ-016-194) | no graph field (control) |
+| Action: Cancel Booking | button | Conditional | Opens the FR-006 Cancel Booking action (FR-006 Screen 9) prefilled with the request source and support case reference | Shown for cancellation requests when the booking is `Accepted`, `Payment Window Expired`, or `Confirmed`. For `In Progress` the row links to FR-006 Screen 11 (Alternative Flow B7) instead; for `Aftercare` no cancel button is shown and the admin uses Decline Request, pointing to FR-006 Alternative Flow B6 (REQ-016-194) | no graph field (control) |
 | Action: Change Appointment | button | Conditional | Opens the FR-006 Change Appointment action (FR-006 Screen 8) | Shown for change requests when the booking is `Accepted` or `Confirmed` (REQ-016-195) | no graph field (control) |
 | Action: Decline Request | button | Conditional | Declines the request without changing the booking | Shown for open requests; decline reason required (minimum 20 characters) (REQ-016-196) | ENT-support-case.decline_reason |
 | Outcome | text | Conditional (display only) | Action taken, admin, timestamp, and linked audit entry | Shown for Resolved or Declined requests (REQ-016-197) | ENT-support-case.outcome |
@@ -685,15 +682,21 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 
 ### General Module Rules
 
-- **Rule 1**: All admin actions on patient accounts MUST be logged in audit trail with timestamp, admin ID, and justification (REQ-016-007)
+- **Rule 1**: All admin actions on patient accounts MUST be logged in audit trail with timestamp, admin ID, and justification; an entry the system generates records System as the actor and the system-stated cause (REQ-016-007, REQ-016-162)
 - **Rule 2**: Admins MAY edit a patient's medical questionnaire responses and alerts (FR-003 admin edit capability), but only with a typed reason that is logged in the audit trail with the edit. Patient scans MUST NOT be modified by admins; scan media is immutable except by patients (REQ-016-069)
-- **Rule 3**: Admin visibility and edit rights follow the FR-031 role permissions: View Patients grants patient visibility (all default roles), Edit Patients grants patient edits (Super Admin by default), Manage Aftercare covers aftercare actions and access to medical data and scans (Super Admin and Aftercare Coordinator by default), View Support Center and Respond to Support cover support actions (Super Admin, Aftercare Coordinator, and Support Staff by default), Issue Refunds covers refunds, and Delete Patients covers account archiving (REQ-016-070)
-- **Rule 4**: High-impact actions (account suspension of any duration, refunds exceeding $1,000, manual booking modifications during active treatment, bulk patient notifications, patient data deletion for GDPR requests) MUST require enhanced confirmation + justification, in addition to the FR-031 permission the action needs (Edit Patients for account suspension, Issue Refunds for refunds, Delete Patients for data deletion) (REQ-016-020)
+- **Rule 3**: Admin visibility and edit rights follow the FR-031 role permissions: View Patients grants patient visibility (all default roles), Edit Patients grants patient edits (Super Admin by default), Manage Aftercare covers aftercare actions and access to medical data and scans (Super Admin and Aftercare Coordinator by default), View Support Center and Respond to Support cover support actions (Super Admin, Aftercare Coordinator, and Support Staff by default), Issue Refunds covers refunds and payment retry, and Delete Patients covers approving deletion requests (REQ-016-070). Actions the FR-031 list does not name map as follows:
+  - Reset Password, Unlock Account, and Lift Suspension need Edit Patients (REQ-016-070)
+  - Send Notification needs Respond to Support (REQ-016-070)
+  - The Payments tab needs View Patient Billing (REQ-016-070)
+  - The Communications tab needs View Provider-Patient Messages, and flagging a conversation needs Flag Communications (REQ-016-070)
+- **Rule 4**: High-impact actions (account suspension of any duration, refunds exceeding $1,000 (US dollars; other currencies converted at the rate FR-007 applies to that payment, REQ-016-221), manual booking modifications during active treatment, bulk patient notifications, patient data deletion for GDPR requests) MUST require enhanced confirmation + justification, in addition to the FR-031 permission the action needs (Edit Patients for account suspension, Issue Refunds for refunds, Delete Patients for data deletion) (REQ-016-020)
 - **Rule 5**: Admin access to patient medical data MUST trigger access justification prompt (HIPAA/GDPR compliance) (REQ-016-004, REQ-016-014)
-- **Rule 6**: Patient account deactivation MUST be soft-delete (archive) not hard-delete; data retained per the system PRD, Platform-Wide Rules: One 10-year retention period (REQ-016-017)
+- **Rule 6**: A patient account is never hard-deleted; an approved deletion request anonymizes or archives the data in place per FR-023, with retention per the system PRD, Platform-Wide Rules: One 10-year retention period (REQ-016-017)
 - **Rule 7**: Admin interventions that affect bookings (reschedule, cancel) MUST go through the FR-006 Change Appointment or Cancel Booking action and MUST notify both patient and provider within 5 minutes through `booking.rescheduled` or `booking.cancelled` (REQ-016-071)
 - **Rule 8**: Provider-caused cancellations (FR-015 A5, causes `ProviderSuspended` / `ProviderDeactivated`) carry an independent Admin Support Required marker that only an admin resolution with reason and audit event can clear; the cause is never overwritten. FR-016 does not auto-create FR-034 tickets or change FR-034's workflow (REQ-016-028, REQ-016-030)
-- **Rule 9**: A 30-day or 90-day account suspension ends by itself: when the suspension end date is reached the patient account returns to Active without an admin action. A permanent suspension has no end date (REQ-016-201)
+- **Rule 9**: A 30-day or 90-day account suspension ends by itself: when the suspension end date is reached the patient account returns to Active without an admin action. At that moment the system logs a System-generated Suspension Ended audit entry and sends the patient a notice. A permanent suspension has no end date (REQ-016-201)
+- **Rule 10**: A suspension cancels only the patient's bookings in `Accepted`, `Payment Window Expired`, and `Confirmed`; `In Progress` and `Aftercare` bookings are left untouched and listed on the suspension confirmation dialog for admin follow-up. The cancellation reason sent to the patient and the provider is the fixed text "Booking cancelled because the patient account was suspended"; the admin justification stays in the audit entry only. If a cancellation fails, the suspension still applies and the failed bookings are listed for admin follow-up (REQ-016-217, REQ-016-218, REQ-016-219)
+- **Rule 11**: An admin with Edit Patients can lift a suspension early with a justification; the system logs Suspension Lifted and notifies the patient. The appeal is the patient contacting support (an FR-034 ticket) (REQ-016-220)
 
 ### Data & Privacy Rules
 
@@ -702,7 +705,6 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 - **Privacy Rule 3**: Only admins with the FR-031 Manage Aftercare permission (Super Admin and Aftercare Coordinator by default) can view and download patient scans; all downloads are logged in audit trail for compliance (REQ-016-073)
 - **Privacy Rule 4**: Patient payment card details NEVER stored or displayed in admin interface (PCI-DSS compliance) (REQ-016-023)
 - **Privacy Rule 5**: Patient data deletion requests (GDPR right to be forgotten) MUST result in anonymization + archival, not permanent deletion (REQ-016-016)
-- **Privacy Rule 6**: Archived patient data accessible only through dedicated archive interface (requires explicit justification and logged access) (REQ-016-074)
 - **Audit Rule**: Every admin action MUST be logged with immutable audit trail (who, what, when, why) (REQ-016-007)
 - **HIPAA/GDPR**: Patient consent required before sharing medical data with third parties; admin cannot share medical data outside platform (REQ-016-075)
 
@@ -739,10 +741,10 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 **Editable by Admin**:
 
 - Patient profile information (name, email, phone, location) with justification (REQ-016-013)
-- Patient account status (active, suspended, deactivated) (REQ-016-076)
+- Patient account status: suspend, lift a suspension early, and unlock a Locked account (REQ-016-076)
 - Patient medical questionnaire responses and alerts (FR-003 admin edit capability), only with a typed reason that is logged in the audit trail (General Module Rule 2) (REQ-016-069)
 - Booking appointment date only through the FR-006 guarded date change: allowed for `Accepted` or `Confirmed` bookings, with a mandatory reason and a slot availability check, and triggering an FR-008 travel-date review for any linked travel records (emergency reschedules with provider coordination) (REQ-016-077)
-- Booking cancellation only through the FR-006 Cancel Booking action: allowed from `Accepted` through `Aftercare`, on an admin decision or a support-routed patient request, with a mandatory reason, confirmation, and audit entry (Flow A8, Screen 9) (REQ-016-078)
+- Booking cancellation only through the FR-006 Cancel Booking action: allowed for `Accepted`, `Payment Window Expired`, and `Confirmed` bookings (`In Progress` goes through FR-006 Screen 11, Alternative Flow B7, and `Aftercare` has no cancel button), on an admin decision or a support-routed patient request, with a mandatory reason, confirmation, and audit entry (Flow A8, Screen 9) (REQ-016-078)
 - Payment status (manual refund issuance, payment retry) (REQ-016-079)
 - Support escalations context (view-only link to Support Center; see FR-034) (REQ-016-037)
 
@@ -865,7 +867,7 @@ Patient exercises "right to be forgotten" under GDPR and submits data deletion r
 
 **Why this priority**: Legal compliance requirement but relatively infrequent request. Important to handle correctly but not as time-sensitive as active bookings or payments.
 
-**Independent Test**: Can be tested by creating test patient with completed treatment history, submitting GDPR deletion request, and verifying admin follows verification workflow, executes anonymization, and generates deletion certificate.
+**Independent Test**: Can be tested by creating test patient with completed treatment history, submitting GDPR deletion request, and verifying admin follows verification workflow, executes anonymization, and the request ends Fulfilled with the actions taken recorded.
 
 **Acceptance Scenarios**:
 
@@ -889,7 +891,7 @@ Fraud detection system flags patient account with multiple chargebacks and suspi
 1. **Given** fraud detection system flags patient account, **When** admin receives alert, **Then** admin navigates to patient detail view and sees red warning banner: "Fraud Alert: Multiple payment chargebacks detected"
 2. **Given** admin reviews evidence (payment history, chargeback details, activity patterns), **When** admin determines suspension warranted, **Then** admin clicks "Suspend Account" button
 3. **Given** suspension dialog displayed, **When** admin enters detailed justification ("3 chargebacks in 30 days totaling $2,500; suspected fraudulent activity") and selects suspension duration (30 days / 90 days / Permanent), **Then** admin confirms action
-4. **Given** admin confirms suspension, **When** system processes suspension, **Then** system immediately revokes patient authentication tokens (forces logout), cancels active bookings with refund processing, sends suspension notification to patient with appeal process information, and logs full audit trail with evidence references
+4. **Given** admin confirms suspension, **When** system processes suspension, **Then** system immediately revokes patient authentication tokens (forces logout), cancels the patient's `Accepted`, `Payment Window Expired`, and `Confirmed` bookings with the fixed neutral reason and refund processing (`In Progress` and `Aftercare` bookings are left untouched and listed for follow-up), sends suspension notification telling the patient to contact support to appeal, and logs full audit trail with evidence references
 
 ---
 
@@ -941,7 +943,7 @@ A provider is suspended or deactivated (FR-015 A5) and the patient's case is can
   - **Handling**: System displays warning: "Patient changed password 5 minutes ago. Reset anyway?"; admin must confirm they still want to reset (logs additional justification); patient receives notification: "Your password was reset by admin - if this wasn't you, contact support immediately" (REQ-016-051)
 
 - **Edge Case 5**: How does system handle patient data deletion request when patient has pending refund?
-  - **Handling**: System prevents deletion: "Cannot process deletion request - patient has pending refund of £500. Deletion will be available after refund completes."; admin can schedule deletion for after refund clears; system sends automated notification when patient becomes eligible (REQ-016-067)
+  - **Handling**: The request stays Pending Admin Review, marked blocked by obligation, and the patient is told the expected timeline (for example, "a pending refund of USD 500 must complete first"); when the refund completes, the system clears the mark and notifies the admins, who then approve or deny; the 30-day deadline keeps running (FR-023 Alternative Flow A3) (REQ-016-067)
 
 - **Edge Case 6**: What occurs if admin issues refund and Stripe API call fails?
   - **Handling**: System queues refund for automatic retry (exponential backoff: 1 min, 5 min, 15 min); admin sees status "Refund Pending"; if all retries fail after 1 hour, system alerts admin: "Refund failed - manual intervention required"; admin can review Stripe error and retry manually (REQ-016-068)
@@ -958,7 +960,7 @@ A provider is suspended or deactivated (FR-015 A5) and the patient's case is can
 - **REQ-016-004**: System MUST allow admins to view patient medical questionnaire and head scan assets (V1 photo set; V2 true 3D) with mandatory access justification prompt (HIPAA/GDPR compliance)
 - **REQ-016-005**: System MUST display complete payment history including successful transactions, failed attempts, refunds, outstanding balances, and installment schedules
 - **REQ-016-006**: System MUST allow admins to view all patient communications (with providers, support, aftercare) for compliance monitoring
-- **REQ-016-007**: System MUST log every admin action on patient accounts in immutable audit trail with timestamp, admin ID, action type, and justification
+- **REQ-016-007**: System MUST log every admin action on patient accounts in immutable audit trail with timestamp, admin ID, action type, and justification; an entry the system generates records System as the actor and the system-stated cause
 
 ### Admin Intervention Requirements
 
@@ -994,7 +996,7 @@ A provider is suspended or deactivated (FR-015 A5) and the patient's case is can
 - **REQ-016-024**: System MUST integrate with patient authentication module (P-01) for password reset and account unlock functionality
 - **REQ-016-025**: System MUST integrate with payment module (P-03) to display transaction history and initiate refunds via Stripe API
 - **REQ-016-026**: System MUST integrate with media storage service (S-05) to display patient head scan media with secure signed URLs
-- **REQ-016-027**: System MUST notify the patient when an admin takes an action that affects them; delivery follows the FR-020 notification service Rule
+- **REQ-016-027**: System MUST notify the patient when an admin takes an action that affects them; delivery follows the FR-020 notification service Rule; the notices raised by this module (suspension, suspension end, password reset by an admin, manual and bulk notices, policy warnings) each need an FR-020 event
 
 ---
 
@@ -1005,6 +1007,7 @@ A provider is suspended or deactivated (FR-015 A5) and the patient's case is can
 | 2026-11-22 | 1.15 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.14) and the change requests CR-FR016-20261014-01, CR-FR016-20261016-01, CR-FR020-20261027-01, CR-FR015-20261013-01 and CR-FR006-20261016-01 are in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
 | 2026-11-23 | 1.16 | Independent compression review: 2 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
 | 2026-11-23 | 1.17 | Owner ruling 2026-11-23: the aftercare specialist is clinic staff on the provider side; the Hairline admin role is renamed Aftercare Coordinator with unchanged permissions. Role name replaced in 6 place(s). No permission change. | Product Owner / Documentation |
+| 2026-11-24 | 1.18 | Logic review pass 1: Cancel Booking offered only in the FR-006 cancel states; audit entries for system actions need no admin or 20-character justification; audit action list extended; suspension cascade limited to cancellable bookings with a fixed neutral reason and a failure step; Lift Suspension and Unlock Account on Screen 2 and a system entry at automatic suspension end; Deactivated status and archive interface removed; deletion flow B5 reduced to the admin steps of the FR-023 process; Screen 8 filter, badges and approval conditions; deletion certificate dropped; Edge Case 5 follows FR-023 A3; permission mapping for uncovered actions; refund threshold in US dollars; FR-020 events noted. | Product Owner / Documentation |
 
 ---
 
@@ -1020,4 +1023,4 @@ A provider is suspended or deactivated (FR-015 A5) and the patient's case is can
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0
 **Based on**: FR-011 Aftercare & Recovery Management PRD template
-**Last Updated**: 2026-11-23
+**Last Updated**: 2026-11-24
