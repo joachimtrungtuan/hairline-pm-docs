@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-23T13:32:28Z",
+  "generated_at": "2026-11-24T02:00:19Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -31189,6 +31189,17 @@
       }
     },
     {
+      "id": "ENT-treatment-record.admin_flags",
+      "type": "Field",
+      "owner_fr": "FR-010",
+      "title": "Admin flags",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Admin flags raised on the case: Report Issue Before Check In, Close Request, Late Check In, Overdue Documentation, Completion Signal Failed. Added for screen fields (Screens 7, 8)."
+      }
+    },
+    {
       "id": "ENT-treatment-record.advice",
       "type": "Field",
       "owner_fr": "FR-010",
@@ -51713,9 +51724,9 @@
       "owner_fr": "FR-010",
       "title": "Documentation due within the deadline from when End Treatment becomes available, with reminders",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System MUST send the first documentation reminder at the reminder-timing setting (default 12 hours after the End Treatment gate is first met) and the second at the configured completion deadline (default 24 hours) while documentation is incomplete, then flag the case as Overdue Documentation on the admin dashboard; the reminder time must be earlier than the deadline, and reminders stop when the case is Closed Early or blocked; enforcement is reminders plus the flag only and nothing is blocked",
+        "statement": "System MUST send the first documentation reminder at the reminder-timing setting (default 6 hours after the End Treatment gate is first met; range 1 hour up to the deadline minus 1 hour) and the second at the configured completion deadline (default 24 hours) while documentation is incomplete, then flag the case as Overdue Documentation on the admin dashboard; the reminder time must be earlier than the deadline, and reminders stop when the case is Closed Early or blocked; enforcement is reminders plus the flag only and nothing is blocked",
         "rationale": "Functional Requirements Summary id kept verbatim. Treatment plans span several days; see the product owner question on how the 24-hour window applies. The deadline and the reminder timing are governed by the two documentation Settings. Archived FR-010 PRD baseline, lines 949."
       }
     },
@@ -51977,9 +51988,9 @@
       "owner_fr": "FR-010",
       "title": "Booking status moves Confirmed, In Progress, Aftercare, Completed with no skipping",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Booking status MUST transition through sequence: Confirmed → In Progress → Aftercare → Completed (no skipping stages). Exceptions: after a provider fault an admin may move an In Progress booking to Aftercare through the FR-006 In-Progress provider-fault decision (Rule 12), and an admin may cancel the booking from any non-terminal state through the FR-006 Cancel Booking action.",
+        "statement": "Booking status MUST transition through sequence: Confirmed → In Progress → Aftercare → Completed (no skipping stages). Exceptions: an admin may move an In Progress booking to Aftercare through the FR-006 Screen 11 decision (early close, Rule 17, or after a provider fault, Rule 12), an admin may cancel an In Progress booking through the same Screen 11 decision after a provider fault (Rule 12, Rule 16), and an admin may cancel the booking through the FR-006 Cancel Booking action before Check In.",
         "rationale": "Archived FR-010 PRD baseline, lines 552."
       }
     },
@@ -52061,9 +52072,9 @@
       "owner_fr": "FR-010",
       "title": "Provider Cancel or Close Case does not change status or trigger money actions",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "The provider's Cancel / Close Case action does NOT auto-transition status or trigger financial actions. The admin resolves it only through the FR-006 governed actions (change appointment, cancel booking, or provider-fault transfer); no one sets a booking status by hand",
+        "statement": "The provider's Cancel / Close Case action does NOT auto-transition status or trigger financial actions. The admin resolves it only through FR-006 Screen 11 (early close without a fault, or provider-fault decision); no one sets a booking status by hand",
         "rationale": "Archived FR-010 PRD baseline, lines 562."
       }
     },
@@ -52073,9 +52084,9 @@
       "owner_fr": "FR-010",
       "title": "Suspension or deactivation leaves In Progress cases In Progress with a support marker",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "When a provider's suspension or deactivation becomes effective, System MUST leave that provider's In Progress cases In Progress with cause `ProviderSuspended` or `ProviderDeactivated` and an independent `supportRequired` marker, block further provider documentation, preserve clinical notes/photos and any recorded completion milestone, and let an admin decide case by case through FR-006 Alternative Flow B7 (move the booking to Aftercare with an FR-011 aftercare reassignment, or cancel the booking), without restoring the provider's actions on reactivation (Alternative Flow B5; Rule 12; FR-015 A5/Screen 4). Provider-requested Cancel/Close Case (B4) remains a non-transitioning admin notification.",
+        "statement": "When a provider's suspension or deactivation becomes effective, System MUST leave that provider's In Progress cases In Progress with cause `ProviderSuspended` or `ProviderDeactivated` and an independent `supportRequired` marker, block further provider documentation, preserve clinical notes, photos, and head scan photo sets, and let an admin decide case by case through FR-006 Alternative Flow B7 (move the booking to Aftercare with an FR-011 aftercare reassignment, or cancel the booking), without restoring the provider's actions on reactivation (Alternative Flow B5; Rule 12; FR-015 A5/Screen 4). Provider-requested Cancel/Close Case (B4) remains a non-transitioning admin flag.",
         "rationale": "Functional Requirements Summary carries the stay-In-Progress reading; the former REQ-010-025 (cancel reading) is merged into this Rule. Also stated in Alternative Flow B5, Rule 12 and the suspended-mid-treatment edge case; the edge case adds that a later deactivation does not overwrite an earlier ProviderSuspended cause.",
         "aliases": "REQ-010-025"
       }
@@ -52170,9 +52181,9 @@
       "owner_fr": "FR-010",
       "title": "Admin can configure the documentation deadline and reminder timing",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Admin can configure the documentation completion deadline (default 24 hours, range 12-48 hours, counted from the moment the End Treatment gate is first met) and the first reminder timing (default 12 hours; must be earlier than the deadline); reminders stop when the case is Closed Early or blocked",
+        "statement": "Admin can configure the documentation completion deadline (default 24 hours, range 12-48 hours, counted from the moment the End Treatment gate is first met) and the first reminder timing (default 6 hours; range 1 hour up to the deadline minus 1 hour, so it is always earlier than the deadline; a value outside the range is rejected); reminders stop when the case is Closed Early or blocked",
         "rationale": "Archived FR-010 PRD baseline, lines 597, 598."
       }
     },
@@ -52386,9 +52397,9 @@
       "owner_fr": "FR-010",
       "title": "Entry points to treatment execution",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Entry points: Provider navigates to \"Confirmed\" section in Patient Management (Provider Platform dashboard) System opens the case detail page in tabbed view (tabs: Treatment Plan | Note | Book hotel & Book flight | In Progress) Provider can resume documentation for \"In Progress\" treatments from the \"In Progress\" section in Patient Management Provider can view completed treatments from \"Completed\" section (read-only mode)",
+        "statement": "Entry points: Provider navigates to \"Confirmed\" section in Patient Management (Provider Platform dashboard) System opens the case detail page in tabbed view (tabs: Treatment Plan | Note | Book hotel & Book flight | In Progress) Provider can resume documentation for \"In Progress\" treatments from the \"In Progress\" section in Patient Management Provider can view completed and Closed Early treatments from the \"Completed\" section (read-only mode)",
         "rationale": "Screens SCR-010-03 and SCR-010-04 are the provider entry screens. Archived FR-010 PRD baseline, lines 83, 85, 91, 92."
       }
     },
@@ -52398,9 +52409,9 @@
       "owner_fr": "FR-010",
       "title": "Check In unavailable shows a generic reason; the admin sees the payment detail and can assist",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Provider sees a clear reason and admin is able to assist per billing ops. \"Check In\" button disabled for bookings with procedure date > today; tooltip displays \"Cannot check in future appointments. Wait until procedure date.\" \"Check In\" is disabled with a clear message. Patient must complete payment through the booking/payment flow (FR-007) before treatment documentation can start.",
+        "statement": "Check In is disabled with a generic reason that never shows payment detail when the procedure date is in the future in the appointment timezone (tooltip: \"Cannot check in future appointments. Wait until procedure date.\"), when the booking has an outstanding balance or a Defaulted installment, when it carries the `supportRequired` marker, or when the patient has another treatment In Progress; the admin sees the payment detail and can assist per billing ops. Patient must complete payment through the booking/payment flow (FR-007) before treatment documentation can start. After the appointment date Check In stays available with the late Check In prompt (Alternative Flow A3).",
         "rationale": "The blocking condition itself is held by FR-006 REQ-006-043 (see cross-FR duplicates). Archived FR-010 PRD baseline, lines 604, 911, 921."
       }
     },
@@ -52494,9 +52505,9 @@
       "owner_fr": "FR-010",
       "title": "Interrupted treatment: reason in day note; case stays In Progress until admin acts",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Provider documents interruption reason in the affected day's note field Provider sets day status to Cancelled/Deferred; clicks Cancel/Close Case; documents reason System notifies admin; the case stays In Progress until the admin acts. The admin lets the case resume later, changes treatment details through Screen 9, or cancels the booking through the FR-006 Cancel Booking action (FR-006 Screen 9); financial reconciliation follows the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault)",
+        "statement": "Provider documents the interruption reason in the affected day's note field. If treatment can resume, the day stays In progress and the provider sets Finished when complete (Need caution/attention is a final status that counts as finished, not a pause). If it cannot, the provider sets the day to Cancelled/Deferred, clicks Cancel/Close Case, and documents the reason; the system flags the case for the admin on the dashboard and the case stays In Progress until the admin acts. The admin lets the case resume later, changes treatment details through Screen 9, or closes the case early on FR-006 Screen 11 with no provider fault (Alternative Flow B4); the refund is set by the admin on that screen",
         "rationale": "Alternative Flow B3. Archived FR-010 PRD baseline, lines 201, 204, 205."
       }
     },
@@ -52506,10 +52517,10 @@
       "owner_fr": "FR-010",
       "title": "Provider closes an In Progress case with a reason; the admin sees a dashboard flag and closes it early on FR-006 Screen 11",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "A provider close request on an In Progress case flags the case for the admin on the dashboard with reason and note; the case stays In Progress until the admin closes it early on FR-006 Screen 11 without a fault, or resolves a provider fault through the Screen 11 decision (Rule 17, Alternative Flow B4)",
-        "rationale": "Alternative Flow B4. Closure is resolved through the FR-006 Cancel Booking action or the In-Progress provider-fault decision. Archived FR-010 PRD baseline, lines 216, 217."
+        "rationale": "Alternative Flow B4. Closure is resolved through the FR-006 Screen 11 early close or the In-Progress provider-fault decision. Archived FR-010 PRD baseline, lines 216, 217."
       }
     },
     {
@@ -52518,9 +52529,9 @@
       "owner_fr": "FR-010",
       "title": "Provider documentation blocked and records read-only after a provider status cascade",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Provider documentation actions (day edits, End Treatment) are blocked; day records, clinical notes, photos, head scan photo sets, and any already recorded completion milestone are retained read-only Patient/admin notifications per FR-015 Screen 4 and FR-030; the patient is told an admin will contact them about the next step",
+        "statement": "Provider documentation actions (day edits, End Treatment) are blocked; day records, clinical notes, photos, and head scan photo sets are retained read-only. Patient/admin notifications per FR-015 Screen 4 and FR-030; the patient is told an admin will contact them about the next step",
         "rationale": "Alternative Flow B5; overlaps Rule 12, possible duplicate within this FR. Archived FR-010 PRD baseline, lines 231, 232."
       }
     },
@@ -52626,9 +52637,9 @@
       "owner_fr": "FR-010",
       "title": "Admin can trigger End Treatment on behalf of the provider",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Admin can trigger End Treatment on behalf of a provider; the End of Treatment modal collects the same required fields as Screen 6.",
+        "statement": "Admin can trigger End Treatment on behalf of a provider only when the End Treatment gate is met (REQ-010-104) and the booking carries no `supportRequired` marker (Rule 12); the End of Treatment modal collects the same required fields as Screen 6.",
         "rationale": "Archived FR-010 PRD baseline, lines 513."
       }
     },
@@ -52660,11 +52671,11 @@
       "id": "REQ-010-092",
       "type": "Rule",
       "owner_fr": "FR-010",
-      "title": "No automatic financial resolution on case cancellation",
+      "title": "Cancellation and early close run through FR-006 actions; no automatic financial resolution",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Case cancellation is performed by an admin through the FR-006 Cancel Booking action; financial reconciliation follows the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault) and the platform does not perform automatic financial resolution.",
+        "statement": "Case cancellation before Check In is performed by an admin through the FR-006 Cancel Booking action; an In Progress case is closed early through FR-006 Screen 11 (Rule 17). Financial reconciliation follows the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault) and the platform does not perform automatic financial resolution.",
         "rationale": "Archived FR-010 PRD baseline, lines 514."
       }
     },
@@ -52698,10 +52709,10 @@
       "owner_fr": "FR-010",
       "title": "Reminders at the reminder-timing setting and the completion deadline; admin dashboard flags Overdue Documentation",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System sends the first reminder to the provider at the reminder-timing setting (default 12 hours after the End Treatment gate is first met) if documentation is still incomplete; the second reminder follows at the configured completion deadline (default 24 hours); the admin dashboard then flags the treatment as \"Overdue Documentation\" for manual follow-up. Reminders and the flag stop when the case is Closed Early or blocked. Enforcement is reminders plus the flag only; nothing is blocked.",
-        "rationale": "Overlaps REQ-010-010; the fixed 12 and 24 hour values sit beside a configurable deadline (product owner question). Archived FR-010 PRD baseline, lines 919."
+        "statement": "System sends the first reminder to the provider at the reminder-timing setting (default 6 hours after the End Treatment gate is first met) if documentation is still incomplete; the second reminder follows at the configured completion deadline (default 24 hours); the admin dashboard then flags the treatment as \"Overdue Documentation\" for manual follow-up. Reminders and the flag stop when the case is Closed Early or blocked. Enforcement is reminders plus the flag only; nothing is blocked.",
+        "rationale": "Overlaps REQ-010-010; the defaults (6 hours for the first reminder, 24 hours for the deadline) are both configurable. Archived FR-010 PRD baseline, lines 919."
       }
     },
     {
@@ -52746,9 +52757,9 @@
       "owner_fr": "FR-010",
       "title": "Treatment record status lifecycle",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "status (\"Awaiting Check In\", \"In Progress\", \"Completed\", \"Cancelled\"; the record is created with status \"Awaiting Check In\" when the booking becomes `Confirmed`, seeded from the accepted snapshot, so treatment-detail changes before Check In have a record to change; Check In sets \"In Progress\"; saving End Treatment sets \"Completed\"; \"Cancelled\" is set when the booking is cancelled through the FR-006 Cancel Booking action, the provider-status cascade (before Check In), or the provider-fault transfer; when an admin moves an In Progress booking to Aftercare after a provider fault (FR-006 Alternative Flow B7), the record keeps what was documented and provider documentation stays blocked; cause and `supportRequired` are held on the booking",
+        "statement": "status (\"Awaiting Check In\", \"In Progress\", \"Completed\", \"Closed Early\", \"Cancelled\"; the record is created with status \"Awaiting Check In\" when the booking becomes `Confirmed`, seeded from the accepted snapshot, so treatment-detail changes before Check In have a record to change; Check In sets \"In Progress\"; saving End Treatment sets \"Completed\"; \"Cancelled\" is set when the booking is cancelled before Check In (the FR-006 Cancel Booking action, the provider-status cascade, or the provider-fault transfer) or when an admin cancels an In Progress booking through the FR-006 Screen 11 decision after a provider fault or a provider status cascade, and the FR-030 `treatment.cancelled` event is then emitted (REQ-010-122); when an admin moves an In Progress booking to Aftercare through the FR-006 Screen 11 decision (early close, or after a provider fault or provider status cascade under FR-006 Alternative Flow B7), the record becomes \"Closed Early\"; in both In Progress cases the record keeps what was documented and provider documentation stays blocked; cause and `supportRequired` are held on the booking",
         "rationale": "From Key Entities, Entity 1. Overlaps Rule 2 on record creation; possible duplicate within this FR. Archived FR-010 PRD baseline, lines 986."
       }
     },
@@ -52792,11 +52803,11 @@
       "id": "REQ-010-103",
       "type": "Rule",
       "owner_fr": "FR-010",
-      "title": "Admin In Progress listing: all providers, opens the case in editable mode",
+      "title": "Admin listing: all providers' cases by status and flag, opens the case in editable mode",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Admin listing shows all providers' In Progress cases — platform-wide visibility. Clicking a row or the Action button opens Screen 8: In Progress Case Detail in editable mode. Default sort: procedure date ascending.",
+        "statement": "Admin listing shows all providers' cases in the selected case status (default In Progress), with a flag filter and a Flags column — platform-wide visibility. Clicking a row or the Action button opens Screen 8: In Progress Case Detail in editable mode, whatever the case status; the controls shown follow the status. Default sort: procedure date ascending.",
         "rationale": "Screen SCR-010-07. Archived FR-010 PRD baseline, lines 472, 473, 474."
       }
     },
@@ -52806,9 +52817,9 @@
       "owner_fr": "FR-010",
       "title": "End Treatment enabled when every day is terminal, at least one day is finished, and the case is not on hold",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "End Treatment is enabled only when every day record is in a terminal status (Finished, Need caution/attention, or Cancelled/Deferred), at least one day is Finished or Need caution/attention, and the booking carries no `supportRequired` marker; a case with every day Cancelled/Deferred goes to the early close (Rule 17); the documentation deadline starts when the gate is first met",
+        "statement": "End Treatment is enabled only when every day record is in a terminal status (Finished, Need caution/attention, or Cancelled/Deferred), at least one day is Finished or Need caution/attention, and the booking carries no `supportRequired` marker; a case with every day Cancelled/Deferred goes to the early close (Rule 17); a partly delivered treatment (at least one day Finished, the others Cancelled/Deferred) ends with End Treatment and needs no close request; the documentation deadline starts when the gate is first met",
         "rationale": "Screens SCR-010-04 and SCR-010-06. Archived FR-010 PRD baseline, lines 386, 438."
       }
     },
@@ -52943,9 +52954,9 @@
       "owner_fr": "FR-010",
       "title": "Admin notices from FR-010 are dashboard flags, not FR-030 events",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "System MUST show the admin notices raised by FR-010 (report issue before Check In, close request, Late Check In, Overdue Documentation, failed completion signal) as dashboard flags, not FR-030 events; the action on a failed completion signal is a retry (Rule 18)",
+        "statement": "System MUST show the admin notices raised by FR-010 (report issue before Check In, close request, Late Check In, Overdue Documentation, failed completion signal) as dashboard flags in the Flags column of the admin case listing and on the case detail, not FR-030 events; the action on a failed completion signal is a retry (Rule 18)",
         "rationale": "Business Rules, Rule 18. No FR-030 event exists for these notices."
       }
     },
@@ -52953,12 +52964,12 @@
       "id": "REQ-010-116",
       "type": "Rule",
       "owner_fr": "FR-010",
-      "title": "Early close of an In Progress case without a fault, record becomes Closed Early",
+      "title": "Early close of an In Progress case without a fault: payout eligible on the decision date, record becomes Closed Early",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "System MUST let an admin close an In Progress case early on FR-006 Screen 11 when the provider is not at fault, set the treatment record to Closed Early, stop reminders and the Overdue Documentation flag, and never have the admin fill the End of Treatment fields (Rule 17; Alternative Flow B4)",
-        "rationale": "Business Rules, Rule 17. FR-006 owns the decision screen; the FR-010 side is the record status and the reminders."
+        "statement": "System MUST let an admin close an In Progress case early on FR-006 Screen 11 when the provider is not at fault, make the provider's share eligible for payout on the decision date after the refund and commission with no waiting window, set the treatment record to Closed Early, stop reminders and the Overdue Documentation flag, signal FR-011 so the aftercare team writes the post-op instructions, and never have the admin fill the End of Treatment fields (Rule 17; Alternative Flow B4)",
+        "rationale": "Business Rules, Rule 17. FR-006 owns the decision screen; the FR-010 side is the record status, the reminders, and the payout trigger. The refund comes out of what the patient paid."
       }
     },
     {
@@ -52967,9 +52978,9 @@
       "owner_fr": "FR-010",
       "title": "End Treatment save marks completion, moves the booking to Aftercare under FR-006, and starts the confirmation window",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "System MUST mark the treatment Completed at End Treatment save, have FR-006 move the booking to Aftercare in the same step whether or not the FR-011 signal is delivered, and start the FR-007 patient confirmation window at that moment (Integration 5)",
+        "statement": "System MUST mark the treatment Completed at End Treatment save, have FR-006 move the booking to Aftercare in the same step whether or not the FR-011 signal is delivered, and start the FR-007 patient confirmation window at that moment; the save and the booking move succeed or fail together, and a save is rejected when the case gains the `supportRequired` marker meanwhile (Integration 5)",
         "rationale": "Business Rules, Integration 5. FR-006 owns the booking status change; FR-007 owns the confirmation window."
       }
     },
@@ -53007,6 +53018,30 @@
       "attrs": {
         "statement": "System MUST block provider documentation and every End Treatment, the admin button included, on any In Progress case with the `supportRequired` marker, whatever the cause, and stop reminders and the Overdue Documentation flag (Rule 12)",
         "rationale": "Business Rules, Rule 12."
+      }
+    },
+    {
+      "id": "REQ-010-121",
+      "type": "Rule",
+      "owner_fr": "FR-010",
+      "title": "Admin case listing has a status filter, a flag filter and a Flags column; Screen 8 opens for any status; failed signal has a Retry button",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "System MUST give admins a case listing (Screen 7) with a case status filter (default In Progress), a flag filter, and a Flags column, MUST open Screen 8 from it for a case in any status, and MUST show a Retry Completion Signal button on Screen 8 while the failed-signal flag is set (Rule 18)",
+        "rationale": "Screens 7 and 8, Rule 18. A failed-signal case is already in Aftercare, so it is found through the status filter."
+      }
+    },
+    {
+      "id": "REQ-010-122",
+      "type": "Rule",
+      "owner_fr": "FR-010",
+      "title": "treatment.cancelled is emitted when the treatment record becomes Cancelled",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "System MUST emit the FR-030 `treatment.cancelled` event when the treatment record becomes Cancelled: a booking cancelled before Check In, the provider-fault transfer, or an In Progress booking cancelled by an admin through the FR-006 Screen 11 decision (Entity 1)",
+        "rationale": "Entity 1 and Integration 3. The event is already emitted at STG-main-06-treatment; this rule names the FR-010 routes that fire it."
       }
     },
     {
@@ -96408,10 +96443,10 @@
       "owner_fr": "FR-010",
       "title": "In Progress Listing (Admin)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "admin",
-        "description": "Display all active In Progress cases across all providers and clinics platform-wide, with search, filter, and direct access to edit any case."
+        "description": "Display cases across all providers and clinics platform-wide, In Progress cases by default and any other case status through the status filter, with search, filters, the admin flags, and direct access to open any case."
       }
     },
     {
@@ -96420,10 +96455,10 @@
       "owner_fr": "FR-010",
       "title": "In Progress Case Detail (Admin)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "admin",
-        "description": "Allow admin to view and edit all aspects of an In Progress case — including treatment day statuses, provider notes, and case actions. The case status is never set by hand. All fields are editable by admin unless system-locked for audit integrity."
+        "description": "Allow admin to view and edit all aspects of a case, opened from the admin listing in any status (Confirmed, In Progress, Aftercare, Completed, or Cancelled) — including treatment day statuses, provider notes, case actions, and the retry of a failed completion signal. The case status is never set by hand. All fields are editable by admin unless system-locked for audit integrity."
       }
     },
     {
@@ -99872,10 +99907,10 @@
       "owner_fr": "FR-010",
       "title": "Documentation reminder timing",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Timing of the first reminder when documentation is not completed, counted from the moment the End Treatment gate is first met; must be earlier than the deadline; admin configurable. Owner is FR-010 because only the FR-010 PRD states it.",
-        "default": "12",
+        "description": "Timing of the first reminder when documentation is not completed, counted from the moment the End Treatment gate is first met; range 1 hour up to the deadline minus 1 hour, so it is always earlier than the deadline; admin configurable. Owner is FR-010 because only the FR-010 PRD states it.",
+        "default": "6",
         "unit": "hours"
       }
     },
@@ -108792,7 +108827,7 @@
       "owner_fr": "FR-010",
       "title": "Provider clicks Check In",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Main Flow step 5"
       }
@@ -108836,7 +108871,7 @@
       "owner_fr": "FR-010",
       "title": "Clinic user edits plan days, clinicians or estimated grafts with a reason",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flow A2 steps 1-2"
       }
@@ -108847,7 +108882,7 @@
       "owner_fr": "FR-010",
       "title": "Admin edits plan days, clinicians or estimated grafts with a reason",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flow A2 steps 1-2"
       }
@@ -108922,9 +108957,9 @@
       "id": "STP-010-016",
       "type": "Step",
       "owner_fr": "FR-010",
-      "title": "Provider sets the day to Need caution or In progress and resumes",
+      "title": "Provider leaves the day In progress, resumes, and sets it Finished when complete",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B3 step 4"
       }
@@ -108955,9 +108990,9 @@
       "id": "STP-010-019",
       "type": "Step",
       "owner_fr": "FR-010",
-      "title": "Admin opens the provider-fault action",
+      "title": "Admin records the provider fault on Screen 8 and opens the provider-fault action",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "prd_ref": "Alternative Flow B6 step 2"
       }
@@ -109034,7 +109069,7 @@
       "owner_fr": "FR-010",
       "title": "System marks the treatment Completed, starts the confirmation window, signals FR-011, and sends post-op instructions and medication to the patient",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Main Flow step 14"
       }
@@ -109043,9 +109078,9 @@
       "id": "STP-010-027",
       "type": "Step",
       "owner_fr": "FR-010",
-      "title": "System records the check-in time and moves the case to In Progress early",
+      "title": "System records the check-in time, moves the case to In Progress early, and notifies the patient",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A1 step 4"
       }
@@ -109089,7 +109124,7 @@
       "owner_fr": "FR-010",
       "title": "System flags the interrupted case for the admin; it stays In Progress",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "prd_ref": "Alternative Flow B3 step 6"
       }
@@ -109100,7 +109135,7 @@
       "owner_fr": "FR-010",
       "title": "System flags the closure reason and note for the admin on the dashboard",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B4 step 3"
       }
@@ -109109,9 +109144,9 @@
       "id": "STP-010-034",
       "type": "Step",
       "owner_fr": "FR-010",
-      "title": "Admin closes the case early on FR-006 Screen 11, or records a provider fault there",
+      "title": "Admin closes the case early on FR-006 Screen 11 with no provider fault",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "prd_ref": "Alternative Flow B4 step 4"
       }
@@ -109166,7 +109201,7 @@
       "owner_fr": "FR-010",
       "title": "Admin resolves the case on FR-006 Screen 11",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B5 step 5"
       }
@@ -109197,9 +109232,9 @@
       "id": "STP-010-042",
       "type": "Step",
       "owner_fr": "FR-010",
-      "title": "System records the check-in time, moves the case to In Progress, and flags Late Check In on the admin dashboard",
+      "title": "System records the check-in time, moves the case to In Progress, notifies the patient, and flags Late Check In on the admin dashboard",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A3 step 4"
       }
@@ -109213,6 +109248,39 @@
       "version": 1,
       "attrs": {
         "prd_ref": "Alternative Flow A3 step 5"
+      }
+    },
+    {
+      "id": "STP-010-044",
+      "type": "Step",
+      "owner_fr": "FR-010",
+      "title": "System sets the record to Closed Early, stops reminders and the Overdue Documentation flag, clears the case flags, and signals FR-011 for the aftercare team",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B4 step 5"
+      }
+    },
+    {
+      "id": "STP-010-045",
+      "type": "Step",
+      "owner_fr": "FR-010",
+      "title": "Provider's share becomes eligible for payout on the decision date, after the refund and the commission, with no confirmation window",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B4 step 5"
+      }
+    },
+    {
+      "id": "STP-010-046",
+      "type": "Step",
+      "owner_fr": "FR-010",
+      "title": "Admin retries the failed completion signal to FR-011 on Screen 8",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Integration 4; Rule 18"
       }
     },
     {
@@ -152613,6 +152681,14 @@
       "calculated_by": null
     },
     {
+      "id": "ENT-treatment-record.admin_flags",
+      "entity_id": "ENT-treatment-record",
+      "name": "admin_flags",
+      "data_type": "text",
+      "required": false,
+      "calculated_by": "REQ-010-115"
+    },
+    {
       "id": "ENT-treatment-record.advice",
       "entity_id": "ENT-treatment-record",
       "name": "advice",
@@ -166917,6 +166993,12 @@
       "attrs": {}
     },
     {
+      "from_id": "ENT-treatment-record.admin_flags",
+      "verb": "calculated by",
+      "to_id": "REQ-010-115",
+      "attrs": {}
+    },
+    {
       "from_id": "ENT-treatment-record.current_day_status",
       "verb": "calculated by",
       "to_id": "REQ-010-100",
@@ -170563,7 +170645,7 @@
       "verb": "active in",
       "to_id": "STG-main-06-treatment",
       "attrs": {
-        "rules": 116
+        "rules": 118
       },
       "derived": true
     },
@@ -203998,6 +204080,66 @@
     },
     {
       "from_id": "REQ-010-120",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-010",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-010-121",
+      "verb": "applies at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-010-121",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-010-121",
+      "verb": "applies to",
+      "to_id": "ENT-treatment-record",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-010-121",
+      "verb": "applies to",
+      "to_id": "SCR-010-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-010-121",
+      "verb": "applies to",
+      "to_id": "SCR-010-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-010-121",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-010",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-010-122",
+      "verb": "applies at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-010-122",
+      "verb": "applies to",
+      "to_id": "ENT-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-010-122",
+      "verb": "applies to",
+      "to_id": "ENT-treatment-record",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-010-122",
       "verb": "decided by",
       "to_id": "SRC-PRD-010",
       "attrs": {}
@@ -310049,6 +310191,15 @@
     {
       "from_id": "SCR-010-07",
       "verb": "shows",
+      "to_id": "ENT-booking.status",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Case Status"
+      }
+    },
+    {
+      "from_id": "SCR-010-07",
+      "verb": "shows",
       "to_id": "ENT-patient.name",
       "attrs": {
         "provenance": "inherited from another FR",
@@ -310062,6 +310213,15 @@
       "attrs": {
         "provenance": "inherited from another FR",
         "label": "Provider / Clinic"
+      }
+    },
+    {
+      "from_id": "SCR-010-07",
+      "verb": "shows",
+      "to_id": "ENT-treatment-record.admin_flags",
+      "attrs": {
+        "provenance": "system calculated",
+        "label": "Flags"
       }
     },
     {
@@ -310252,6 +310412,15 @@
         "provenance": "retrieved",
         "label": "Actual Graft Count",
         "editable": true
+      }
+    },
+    {
+      "from_id": "SCR-010-08",
+      "verb": "shows",
+      "to_id": "ENT-treatment-record.admin_flags",
+      "attrs": {
+        "provenance": "system calculated",
+        "label": "Admin Flags"
       }
     },
     {
@@ -363155,6 +363324,15 @@
     {
       "from_id": "STP-010-004",
       "verb": "next",
+      "to_id": "STP-010-005",
+      "attrs": {
+        "label": "Patient arrives before the scheduled time",
+        "condition": "REQ-010-071"
+      }
+    },
+    {
+      "from_id": "STP-010-004",
+      "verb": "next",
       "to_id": "STP-010-020",
       "attrs": {
         "label": "Check In clicked",
@@ -363824,6 +364002,18 @@
     },
     {
       "from_id": "STP-010-019",
+      "verb": "applies",
+      "to_id": "REQ-010-119",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-010-019",
+      "verb": "applies",
+      "to_id": "REQ-010-122",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-010-019",
       "verb": "at",
       "to_id": "STG-main-06-treatment",
       "attrs": {}
@@ -364233,6 +364423,15 @@
     {
       "from_id": "STP-010-026",
       "verb": "next",
+      "to_id": "STP-010-046",
+      "attrs": {
+        "label": "Signal to FR-011 failed",
+        "condition": "REQ-010-086"
+      }
+    },
+    {
+      "from_id": "STP-010-026",
+      "verb": "next",
       "to_id": "STP-011-001",
       "attrs": {}
     },
@@ -364245,7 +364444,25 @@
     {
       "from_id": "STP-010-027",
       "verb": "applies",
+      "to_id": "REQ-010-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-010-027",
+      "verb": "applies",
+      "to_id": "REQ-010-033",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-010-027",
+      "verb": "applies",
       "to_id": "REQ-010-071",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-010-027",
+      "verb": "applies",
+      "to_id": "REQ-010-099",
       "attrs": {}
     },
     {
@@ -364259,6 +364476,14 @@
       "verb": "done by",
       "to_id": "ACT-system",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-010-027",
+      "verb": "next",
+      "to_id": "STP-010-021",
+      "attrs": {
+        "label": "Case In Progress"
+      }
     },
     {
       "from_id": "STP-010-029",
@@ -364403,10 +364628,19 @@
     {
       "from_id": "STP-010-032",
       "verb": "next",
-      "to_id": "STP-006-802",
+      "to_id": "STP-010-019",
       "attrs": {
-        "label": "Admin closes early or records a fault",
-        "back": true
+        "label": "Provider is at fault",
+        "condition": "REQ-010-119"
+      }
+    },
+    {
+      "from_id": "STP-010-032",
+      "verb": "next",
+      "to_id": "STP-010-034",
+      "attrs": {
+        "label": "Admin closes the case early with no fault",
+        "condition": "REQ-010-116"
       }
     },
     {
@@ -364436,9 +364670,19 @@
     {
       "from_id": "STP-010-033",
       "verb": "next",
+      "to_id": "STP-010-019",
+      "attrs": {
+        "label": "Provider is at fault",
+        "condition": "REQ-010-119"
+      }
+    },
+    {
+      "from_id": "STP-010-033",
+      "verb": "next",
       "to_id": "STP-010-034",
       "attrs": {
-        "label": "Admin notified"
+        "label": "Provider is not at fault",
+        "condition": "REQ-010-116"
       }
     },
     {
@@ -364467,12 +364711,6 @@
     },
     {
       "from_id": "STP-010-034",
-      "verb": "applies",
-      "to_id": "REQ-010-119",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-010-034",
       "verb": "at",
       "to_id": "STG-main-06-treatment",
       "attrs": {}
@@ -364486,17 +364724,11 @@
     {
       "from_id": "STP-010-034",
       "verb": "next",
-      "to_id": "STP-006-802",
+      "to_id": "STP-010-044",
       "attrs": {
-        "label": "Admin closes early or records a fault",
-        "back": true
+        "label": "Booking moves to Aftercare",
+        "condition": "REQ-010-116"
       }
-    },
-    {
-      "from_id": "STP-010-034",
-      "verb": "next",
-      "to_id": "STP-010-019",
-      "attrs": {}
     },
     {
       "from_id": "STP-010-035",
@@ -364616,6 +364848,12 @@
     },
     {
       "from_id": "STP-010-039",
+      "verb": "applies",
+      "to_id": "REQ-010-122",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-010-039",
       "verb": "at",
       "to_id": "STG-main-06-treatment",
       "attrs": {}
@@ -364631,6 +364869,15 @@
       "verb": "next",
       "to_id": "STP-006-802",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-010-039",
+      "verb": "next",
+      "to_id": "STP-010-044",
+      "attrs": {
+        "label": "Admin moves the booking to Aftercare",
+        "condition": "REQ-010-116"
+      }
     },
     {
       "from_id": "STP-010-039",
@@ -364717,6 +364964,24 @@
     {
       "from_id": "STP-010-042",
       "verb": "applies",
+      "to_id": "REQ-010-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-010-042",
+      "verb": "applies",
+      "to_id": "REQ-010-033",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-010-042",
+      "verb": "applies",
+      "to_id": "REQ-010-099",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-010-042",
+      "verb": "applies",
       "to_id": "REQ-010-115",
       "attrs": {}
     },
@@ -364737,6 +365002,14 @@
       "verb": "done by",
       "to_id": "ACT-system",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-010-042",
+      "verb": "next",
+      "to_id": "STP-010-021",
+      "attrs": {
+        "label": "Case In Progress"
+      }
     },
     {
       "from_id": "STP-010-043",
@@ -364760,6 +365033,121 @@
       "from_id": "STP-010-043",
       "verb": "on",
       "to_id": "SCR-010-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-010-044",
+      "verb": "applies",
+      "to_id": "REQ-010-010",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-010-044",
+      "verb": "applies",
+      "to_id": "REQ-010-099",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-010-044",
+      "verb": "applies",
+      "to_id": "REQ-010-115",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-010-044",
+      "verb": "applies",
+      "to_id": "REQ-010-116",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-010-044",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-010-044",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-010-044",
+      "verb": "next",
+      "to_id": "STP-010-045",
+      "attrs": {
+        "label": "No provider fault",
+        "condition": "REQ-010-116"
+      }
+    },
+    {
+      "from_id": "STP-010-045",
+      "verb": "applies",
+      "to_id": "REQ-010-116",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-010-045",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-010-045",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-010-045",
+      "verb": "next",
+      "to_id": "STP-007-008",
+      "attrs": {
+        "label": "Payout eligible on the decision date"
+      }
+    },
+    {
+      "from_id": "STP-010-046",
+      "verb": "applies",
+      "to_id": "REQ-010-086",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-010-046",
+      "verb": "applies",
+      "to_id": "REQ-010-115",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-010-046",
+      "verb": "applies",
+      "to_id": "REQ-010-121",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-010-046",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-010-046",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-010-046",
+      "verb": "next",
+      "to_id": "STP-011-001",
+      "attrs": {
+        "label": "Signal sent again"
+      }
+    },
+    {
+      "from_id": "STP-010-046",
+      "verb": "on",
+      "to_id": "SCR-010-08",
       "attrs": {}
     },
     {
@@ -425797,6 +426185,60 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-015918-c85c5301",
+      "at": "2026-11-24T01:59:18.525932+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-010 logic review round 2 - admin case listing with status filter, flags column and retry for a failed completion signal; no-fault early close with its own steps (Closed Early, FR-011 hand-off, payout eligible on the decision date); Check In path steps joined; stale rule text, titles and reminder default restated from the PRD; treatment.cancelled trigger",
+      "source_id": null,
+      "nodes_added": [
+        "ENT-treatment-record.admin_flags",
+        "REQ-010-121",
+        "REQ-010-122",
+        "STP-010-044",
+        "STP-010-045",
+        "STP-010-046"
+      ],
+      "nodes_updated": [
+        "REQ-010-010",
+        "REQ-010-033",
+        "REQ-010-040",
+        "REQ-010-041",
+        "REQ-010-051",
+        "REQ-010-069",
+        "REQ-010-070",
+        "REQ-010-078",
+        "REQ-010-079",
+        "REQ-010-080",
+        "REQ-010-089",
+        "REQ-010-092",
+        "REQ-010-095",
+        "REQ-010-099",
+        "REQ-010-103",
+        "REQ-010-104",
+        "REQ-010-115",
+        "REQ-010-116",
+        "REQ-010-117",
+        "SCR-010-07",
+        "SCR-010-08",
+        "SET-documentation-reminder-timing",
+        "STP-010-004",
+        "STP-010-008",
+        "STP-010-009",
+        "STP-010-016",
+        "STP-010-019",
+        "STP-010-026",
+        "STP-010-027",
+        "STP-010-032",
+        "STP-010-033",
+        "STP-010-034",
+        "STP-010-039",
+        "STP-010-042"
+      ],
+      "edges_added": 51,
+      "edges_removed": 7,
+      "rows": 127
+    },
     {
       "id": "cs-20261123-133123-91992123",
       "at": "2026-11-23T13:31:23.163709+00:00",
