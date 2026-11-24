@@ -32,7 +32,7 @@ Patient Platform (P-03 overlay):
 
 Provider Platform (PR-02/PR-05):
 
-- Create provider discounts with type (percent/fixed/package upgrade), dates, limits.
+- Create provider discounts with type (percent/fixed), dates, limits.
 - Accept/decline platform both‑fees discounts per program; auto‑active provider‑only discounts. (REQ-019-021)
 - Select applicable approved discounts for each option/date-price row within quote creation (where rules allow), choosing admin programs only from the list of programs the provider has adopted; the selection and its terms are fixed when the quote is sent.
 
@@ -52,9 +52,9 @@ Shared Services (S-03, S-02):
 
 In Scope:
 
-- Discount code definition and lifecycle (draft, pending approval, active, paused, expired, archived), with usage limits and date windows. (REQ-019-023)
+- Discount code definition and lifecycle (draft, active, paused, expired, archived), with usage limits and date windows; approval of an Admin-via-Provider program is per provider adoption, not a program state. (REQ-019-023)
 - Promotion attachment to option/date-price rows when a quote is sent, patient code validation on one named subquote before acceptance, and freezing of the discounted price at acceptance; one discount per subquote.
-- Promotion usage-limit reservation at acceptance, consumption at the first successful payment, and release on `Payment Window Expired` or cancellation; for auto-applied promotions, at most one reservation per sent quote, made at send, consumption when the accepted subquote carries the promotion, and release when the quote expires, is withdrawn, ends Not Selected or cancelled, or a subquote that does not carry the promotion is accepted; at most one automatic promotion per quote.
+- Promotion usage-limit reservation at acceptance, consumption at the first successful payment, and release on `Payment Window Expired` or cancellation; for auto-applied promotions, at most one reservation per sent quote, made at send, consumption when the accepted subquote carries the promotion, and release when the quote expires, is withdrawn, is archived, ends Not Selected or cancelled, or a subquote that does not carry the promotion is accepted; at most one automatic promotion per quote.
 - Provider approval workflow for platform both‑fees discounts.
 - Usage tracking and financial impact reporting.
 
@@ -87,8 +87,8 @@ Outcome: Providers approve participation; discount becomes selectable where appl
 Steps:
 
 1. Admin defines discount (type, value, Hairline share %, dates, usage limit, targeted providers).
-2. System saves discount as Pending Approval and notifies targeted providers (approval-requested event of the FR-030 notification catalogue).
-3. Providers accept or decline; system logs responses.
+2. Admin publishes the discount; the system sets it Active and notifies targeted providers (approval-requested event of the FR-030 notification catalogue). Approval is per provider: the discount applies only to providers whose adoption is Accepted.
+3. Providers accept or decline; system logs responses. A provider who does not answer within the auto-decline window is Auto-Declined. If every provider declines, the program stays Active with no participants until an admin archives it.
 4. When provider accepts, discount becomes eligible for that provider’s option/date-price rows during the active window.
 5. System tracks usage and financial impact per provider.
 
@@ -114,20 +114,20 @@ Steps:
 
 **B1: Code Validation Failure**: (REQ-019-033)
 
-- Trigger: Patient/provider enters invalid/expired/reached‑limit code.
+- Trigger: A patient enters an invalid, expired or limit-reached code, or a provider picks from the list a promotion that no longer qualifies for the row (a provider types no code: FR-004 Screen 1 offers a select-or-create Promotion field).
 - Steps: System returns reason; prevents application.
 - Outcome: No discount applied; user can retry.
 
 **B2: Single‑Discount Rule Conflict (User‑Initiated)**: (REQ-019-034)
 
-- Trigger: Before the quote is sent (provider) or before the subquote is accepted (patient), the user manually enters or selects a second discount for an option/date-price row (subquote) that already has one.
-- Steps: System blocks the new entry; prompts the user to confirm replacement or keep the existing discount. A patient's replacement applies only to the patient's selection on that subquote and never changes the provider's promotion.
+- Trigger: Before the quote is sent, the provider picks a second promotion for an option/date-price row that already has one; or before the subquote is accepted, the patient enters a code on a subquote (option/date-price row) that already carries a promotion.
+- Steps: System blocks the new entry; prompts the user to confirm replacement or keep the existing discount. A patient's replacement applies only to the patient's selection on that subquote and never changes the provider's promotion. A patient code replaces the promotion the row carries, including an automatic one (Alternative Flow A5 states the reservation outcome).
 - Outcome: Exactly one discount per subquote; the user's confirmed choice is applied. After acceptance no entry, selection, or replacement is accepted (Alternative Flow B4).
 
 **B3: Single‑Discount Rule Conflict (Auto‑Applied)**: (REQ-019-035, REQ-019-036)
 
 - Trigger: When a quote is sent, more than one automatic promotion is eligible for the quote, or an automatic promotion is eligible for an option/date-price row that already carries another discount.
-- Steps: A quote carries at most one automatic promotion. System silently resolves the conflict using the priority order: patient-entered code > provider discount (provider-selected or provider auto-applied) > Hairline-funded discount > affiliate discount. When several automatic programs qualify, only the highest-ranked one attaches, to every row it is eligible for; the others attach to no row of that quote and reserve no use. On a row that already carries a higher-ranked discount, the automatic promotion is not applied to that row. No user prompt is shown.
+- Steps: A quote carries at most one automatic promotion. System silently resolves the conflict using the priority order: patient-entered code > provider discount (provider-selected or provider auto-applied) > Hairline-funded discount > affiliate discount. The usage limit is checked before ranking: an automatic program whose limit is fully reserved or consumed is skipped, and the next-ranked qualifying program may attach. When several automatic programs qualify, only the highest-ranked remaining one attaches, to every row it is eligible for; the others attach to no row of that quote and reserve no use. On a row that already carries a higher-ranked discount, the automatic promotion is not applied to that row; a provider-selected promotion wins over a provider auto-applied one on the same row. No user prompt is shown.
 - Example: A Hairline-funded automatic program and a provider's automatic program are both eligible when a quote is sent. The provider's program ranks higher, so it attaches to every row it is eligible for and one use is reserved for it; the Hairline-funded program attaches to no row of that quote and no use is reserved for it.
 - Outcome: Exactly one discount affects the patient's final price; audit records which program was applied and which was superseded. If a valid affiliate-bound code/link was already captured as the patient acquisition source, FR-019 preserves that affiliate attribution metadata for FR-018 even when a provider-side promotion wins the price-discount priority.
 
@@ -140,20 +140,20 @@ Steps:
 **A3: Automatic Promotion Attachment at Send**: (REQ-019-038)
 
 - Trigger: A provider sends a quote while an auto-applied program is active and eligible for one or more of its option/date-price rows.
-- Steps: A quote carries at most one automatic promotion; when several qualify, Alternative Flow B3 picks one. System attaches that program to every eligible option/date-price row of the sent quote and copies its terms into the sent quote version. The provider's entered price on each row stays unchanged, and the discount is shown as a separate line next to it. Rows that are not eligible receive no automatic promotion. Conflicts with another discount on the same row are resolved by Alternative Flow B3. Sending a quote carrying the automatic promotion reserves one use against the program's usage limits. A sent quote holds at most one reserved use: re-sending a new version keeps the existing reservation, creates one only if the new version newly carries the promotion, and releases it if the new version no longer carries the promotion. If the limit is already fully reserved or consumed, the promotion does not attach.
-- Outcome: Each eligible row carries the automatic promotion with terms fixed at send; later edits to the program do not change the sent rows. The reserved use is consumed if the accepted subquote carries the automatic promotion. It is released when the quote expires, is withdrawn, or ends Not Selected or cancelled, and also when a subquote of that quote is accepted that does not carry the automatic promotion (release reason `not_applied`).
-- Exception: an admin-authored replacement quote from an FR-004 provider-fault transfer (Workflow 7) is not sent by a provider. No automatic promotion attaches to it and no use is reserved for it; the admin sets the replacement price directly. The promotion use held by the closed acceptance is returned or kept under the normal rules for that acceptance.
+- Steps: A quote carries at most one automatic promotion; when several qualify, Alternative Flow B3 picks one. System attaches that program to every eligible option/date-price row of the sent quote and copies its terms into the sent quote version. The provider's entered price on each row stays unchanged, and the discount is shown as a separate line next to it. Rows that are not eligible receive no automatic promotion. Conflicts with another discount on the same row are resolved by Alternative Flow B3. Sending a quote carrying the automatic promotion reserves one use against the program's usage limits. A sent quote holds at most one reserved use: re-sending a new version keeps the existing reservation, creates one only if the new version newly carries the promotion, and releases it if the new version no longer carries the promotion. An admin edit that creates a new version of a sent quote (FR-004) counts as a re-send for these rules. If the limit is already fully reserved or consumed, that program is skipped and Alternative Flow B3 picks the next-ranked qualifying program, if any; a promotion never attaches past a full limit.
+- Outcome: Each eligible row carries the automatic promotion with terms fixed at send; later edits to the program do not change the sent rows. The reserved use is consumed if the accepted subquote carries the automatic promotion. It is released when the quote expires, is withdrawn, is archived (release reason `archived`), or ends Not Selected or cancelled, and also when a subquote of that quote is accepted that does not carry the automatic promotion (release reason `not_applied`). Restoring an archived quote re-checks the promotion and takes a new reservation; the restore is refused when the limit is used up or the promotion has ended (FR-004 REQ-004-105).
+- Exception: an admin-authored replacement quote from an FR-004 provider-fault transfer (Workflow 7) is not sent by a provider. No automatic promotion attaches to it and no use is reserved for it; the admin sets the replacement price directly. The replacement carries no promotion; the original Application is marked Superseded and the use it held returns to the usage limit (General Module Rules, post-acceptance freeze).
 
 **A4: Patient Applies a Code Before Acceptance**: (REQ-019-039)
 
 - Trigger: While reviewing one named subquote and before confirming acceptance, the patient enters a code (FR-005 Alternative Flow A8).
-- Steps: System validates the code for that subquote only (active window, eligibility, usage limits, recipient binding). If valid, the discounted price is shown next to the provider's offered price; if invalid, the reason is shown and the offered price is unchanged. The code is recorded against the patient's selection on that subquote and is never written to the provider's promotion or quote records. Opening another subquote does not carry the code over.
+- Steps: System validates the code for that subquote only (active window, eligibility, usage limits, recipient binding). If valid, the discounted price is shown next to the provider's offered price; if invalid, the reason is shown and the price stays what the row carried at send, including its attached promotion. The code is held with the open subquote view and stored only on the AcceptanceEvent at acceptance; it is never written to the provider's promotion or quote records. Opening another subquote does not carry the code over.
 - Outcome: On acceptance, the discounted price and the applied promotion are frozen into the AcceptanceEvent snapshot.
 
 **A5: Subquote Accepted With a Promotion**: (REQ-019-040)
 
 - Trigger: The patient accepts a subquote that carries a promotion attached at send or a valid patient-entered code.
-- Steps: In the same atomic step as the acceptance, the system creates one Application linked to the AcceptanceEvent, the parent quote and version, and the accepted option/date-price row, and reserves one use against the program's usage limits. For an automatic promotion attached at send, the use already reserved at send is consumed instead. If the accepted subquote does not carry the automatic promotion that reserved a use for its parent quote, that reservation is released with reason `not_applied` and the use returns to the limit. Sibling subquotes marked Not Selected and competing quotes never create an Application; any use reserved for them at send is released. A patient code entered on a subquote that was not accepted is discarded.
+- Steps: In the same atomic step as the acceptance, the system creates one Application linked to the AcceptanceEvent, the parent quote and version, and the accepted option/date-price row, and reserves one use against the program's usage limits. For an automatic promotion attached at send, the use already reserved at send is consumed instead. If the accepted subquote does not carry the automatic promotion that reserved a use for its parent quote, that reservation is released with reason `not_applied` and the use returns to the limit. Sibling subquotes marked Not Selected and competing quotes never create an Application; any use reserved for them at send is released. A patient code replaces the promotion the row carried: when the replaced promotion is the automatic one, its reservation is released with reason `not_applied` and the code's use is reserved instead. If the usage limit of a provider-selected promotion is used up when the patient confirms, it is handled like an invalid code (FR-005 REQ-005-026): the acceptance does not happen, the reason is shown, and the patient returns to the subquote detail, which shows the row without that promotion. Pausing, revoking or ending the program after send does not affect a sent quote (General Module Rules); only the usage limit can refuse it at acceptance. A patient code entered on a subquote that was not accepted is discarded.
 - Outcome: The Application is in state Applied with its use reserved, or consumed for an automatic promotion; the discounted price is read from the acceptance snapshot by every later step.
 
 **B4: Promotion Change Attempted After Acceptance**: (REQ-019-041)
@@ -174,7 +174,7 @@ This module exposes **three promotion programs** under one unified governance mo
 
 For every program type, commission is calculated on the accepted price after the promotion, so a discount reduces both the provider's payout and Hairline's commission, and the provider bears most of it. The funding model identifies who creates, approves, and governs a program; it does not keep commission on the price before the promotion. For a Both Fees program, Hairline also reimburses the program's Hairline share % of the discount to the provider at payout, on top of the commission effect (General Module Rules).
 
-All three program types share a single `PromotionProgram` entity (ENT-promotion-program) and are managed through a unified screen system with type-aware filters, forms, and analytics. Admin retains override authority on every program (pause, revoke adoption) and may record a refund through FR-017 regardless of program type. An admin may override a discount approval only for Hairline Only programs and can never force a provider to take part in a program. No actor, including admin, may void, remove, or change the promotion on an accepted subquote (Alternative Flow B4). (REQ-019-043)
+All three program types share a single `PromotionProgram` entity (ENT-promotion-program) and are managed through a unified screen system with type-aware filters, forms, and analytics. Admin retains override authority on every program (pause, revoke adoption) and may record a refund through FR-017 regardless of program type. An admin can never force a provider to take part in a program; the overrides an admin has on a provider's adoption are Force-Revoke and Re-invite. No actor, including admin, may void, remove, or change the promotion on an accepted subquote (Alternative Flow B4). (REQ-019-043)
 
 ### Screen Inventory
 
@@ -207,7 +207,7 @@ All three program types share a single `PromotionProgram` entity (ENT-promotion-
 | Code / keyword search | text input | No | Search by code text, program name, or keyword | Min 2 chars; 500ms debounce; case-insensitive fuzzy match (REQ-019-107) | ENT-promotion-code.code, ENT-promotion-program.name |
 | Filter: Program Type | multi-select | No | Admin-via-Provider, Provider Self-Created, Hairline-Funded & Direct-Issued | OR within field | ENT-promotion-program.program_type |
 | Filter: Scope | multi-select | No | Reusable, Ad-Hoc Quote-Bound | Applies primarily to Provider Self-Created programs (see Screen 9 modes) | ENT-promotion-program.scope |
-| Filter: Status | multi-select | No | Draft, Pending Approval, Active, Paused, Expired, Archived | OR within field | ENT-promotion-program.lifecycle_state |
+| Filter: Status | multi-select | No | Draft, Active, Paused, Expired, Archived | OR within field | ENT-promotion-program.lifecycle_state |
 | Filter: Funding Model | multi-select | No | Both Fees, Hairline Only, Provider Only | Derived from program definition | ENT-promotion-program.funding_model |
 | Filter: Provider Participation | dropdown | No | All / specific provider | Provider list from DB; exact match | ENT-promotion-program.targeting |
 | Filter: Date Range | date range picker | No | Active-window overlap | Start/end overlap logic | ENT-promotion-program.start_at, ENT-promotion-program.end_at |
@@ -225,7 +225,7 @@ All three program types share a single `PromotionProgram` entity (ENT-promotion-
 | Owner | Admin user or Provider entity that created the program | | ENT-promotion-program.owner |
 | Funding Model | Both Fees / Hairline Only / Provider Only | Derived | ENT-promotion-program.funding_model |
 | Participating Providers | `All Providers`, provider count, or `N/A` for Direct-Issued | | ENT-promotion-program.targeting |
-| Status | Draft / Pending Approval / Active / Paused / Expired / Archived | Lifecycle state | ENT-promotion-program.lifecycle_state |
+| Status | Draft / Active / Paused / Expired / Archived | Lifecycle state | ENT-promotion-program.lifecycle_state |
 | Active Window | Start and end dates | | ENT-promotion-program.start_at, ENT-promotion-program.end_at |
 | Usage | Reserved plus redeemed count vs limit | | ENT-promotion-program.usage_count, ENT-promotion-program.total_usage_limit |
 | ROI Tier | Admin-defined band | `Not yet calculated` until data exists | ENT-promotion-program.roi_tier |
@@ -269,15 +269,15 @@ All three program types share a single `PromotionProgram` entity (ENT-promotion-
 |------------|------|----------|-------------|------------------|---|
 | Program Name | text | Yes | Internal name for the campaign | 3–120 chars (REQ-019-048) | ENT-promotion-program.name |
 | Description | textarea | No | Internal notes / patient-facing copy | ≤ 1000 chars (REQ-019-048) | ENT-promotion-program.description |
-| Discount Type | select | Yes | Percentage / Fixed amount / Package upgrade | Must be one of allowed types | ENT-promotion-program.discount_type |
+| Discount Type | select | Yes | Percentage / Fixed amount | Must be one of allowed types | ENT-promotion-program.discount_type |
 | Value | number | Yes | Discount value | Percentage: 1 to 100 and not above the configurable maximum discount value (starts at 50 percent); fixed amount: above 0, no cap (REQ-019-114) | ENT-promotion-program.value, ENT-promotion-program.currency |
-| Applies To | select | Yes | Whole price / Treatment cost only / Travel cost only / Other component | Per HairlineApp Part 1 (partial-scope discounts) | ENT-promotion-program.applies_to |
+| Applies To | fixed label | Yes | Whole price: the discount reduces the row's single offered price | Not editable; there is no treatment-only or travel-only scope because a quote row has one offered price (FR-004) | ENT-promotion-program.applies_to |
 | Code(s) | text or chip list | Conditional | One or many codes per program; required when Application Mode is Code-only, optional otherwise | Format rules; uniqueness enforced (REQ-019-105) | ENT-promotion-code.code |
 | Application Mode | select | Yes | Auto-applied / List-selection / Code-only / Either | Same four choices as provider programs; Auto-applied limits in Business Rules | ENT-promotion-program.application_mode |
 | Start / End Date | datetime | Yes | Active window | End ≥ Start (REQ-019-048) | ENT-promotion-program.start_at, ENT-promotion-program.end_at |
 | Total Usage Limit | number | No | Total redemptions allowed across the program | ≥ 0; blank = unlimited (REQ-019-048) | ENT-promotion-program.total_usage_limit |
 | Per-User Usage Limit | number | No | Per-patient cap | ≥ 0; blank = unlimited (REQ-019-048) | ENT-promotion-program.per_user_usage_limit |
-| Lifecycle State | controlled | Yes | Draft → Active → Paused → Expired → Archived | Forward transitions only, except Pause and Resume (REQ-019-049) | ENT-promotion-program.lifecycle_state |
+| Lifecycle State | controlled | Yes | Draft → Active → Paused → Expired → Archived. Publishing an Admin-via-Provider program makes it Active at once; each targeted provider then accepts or declines (adoption), so there is no program-level approval state. A provider's own Draft is activated by the provider. Who paused is recorded | Forward transitions only, except Pause and Resume; only the side that paused (admin or provider) may resume (REQ-019-049) | ENT-promotion-program.lifecycle_state, ENT-promotion-program.paused_by |
 
 **Type-Specific Fields**:
 
@@ -287,19 +287,19 @@ All three program types share a single `PromotionProgram` entity (ENT-promotion-
 | Hairline Share % | Admin-via-Provider (Both Fees) | Required number from 0 to 100: the share of each discount that Hairline reimburses to the provider at payout, on top of the commission effect. Copied into the terms fixed at send | ENT-promotion-program.hairline_share_percent |
 | Target Providers | Admin-via-Provider | Multi-select: All Providers, by country (the provider's country), or explicit list | ENT-promotion-program.targeting |
 | Approval Routing | Admin-via-Provider | Default vs custom approver per provider entity | ENT-promotion-program.approval_routing |
-| Auto-Decline Window | Admin-via-Provider | Days before unresponded approval auto-declines | ENT-promotion-program.auto_decline_window_days |
+| Auto-Decline Window | Admin-via-Provider | Business days before an unanswered approval auto-declines; the form shows the default of 3 business days (Setting: promotion approval auto-decline window) | ENT-promotion-program.auto_decline_window_days |
 | Issuance Channel | Hairline-Funded & Direct-Issued | Open code / Affiliate-bound (links to FR-018) / Patient-segment-bound / Individually-issued | ENT-promotion-program.issuance_channel |
 | Recipient Binding | Hairline-Funded & Direct-Issued | Affiliate ID, segment definition, or recipient list (when channel is bound) | ENT-promotion-code.recipient_binding |
 | Bulk Generate Codes | Hairline-Funded & Direct-Issued | Generate N unique codes for distribution; quantity 1–10,000 (REQ-019-058) | no graph field (control) |
 
 **Audit Trail Panel**:
 
-- All state changes, edits, approvals, and override actions are listed in chronological order with actor, timestamp, and reason. (REQ-019-057) (ENT-audit-entry.action, ENT-audit-entry.actor_id, ENT-audit-entry.timestamp, ENT-audit-entry.reason)
+- All state changes, edits, approvals, and override actions are listed in chronological order with actor, timestamp, reason, and the old and new values for edits. (REQ-019-057) (ENT-audit-entry.action, ENT-audit-entry.actor_id, ENT-audit-entry.timestamp, ENT-audit-entry.reason, ENT-audit-entry.before, ENT-audit-entry.after)
 
 **Business Rules**:
 
 - `Funding Model` is derived from `Program Type` and cannot be set independently. (REQ-019-050)
-- For Admin-via-Provider, saving transitions the program to `Pending Approval` and notifies targeted providers (S-03; approval-requested event of the FR-030 notification catalogue). (REQ-019-051)
+- For Admin-via-Provider, publishing the program (Draft to Active) notifies targeted providers, who each accept or decline (S-03; approval-requested event of the FR-030 notification catalogue). There is no program-level Pending Approval: approval is per provider adoption, and the program applies only to providers whose adoption is Accepted. If every provider declines, the program stays Active with no participants until archived. (REQ-019-051)
 - Hairline-Funded programs do not appear in provider selection UIs (per Provider Part 2 L3–8).
 - `Application Mode = Auto-applied` is only allowed for programs with `Funding Model = Hairline Only` or `Provider Only` and explicit eligibility rules (cannot be auto-applied across multiple providers without consent). Auto-applied programs attach when a quote is sent (Alternative Flow A3). They never attach to an admin-authored replacement quote, and no use is reserved for one. (REQ-019-052)
 - `Hairline Share %` is required for Both Fees programs and must be a number from 0 to 100; it is hidden for other funding models. It is part of the terms fixed at send and frozen at acceptance, so an edit applies only to quotes sent afterwards. Every change is recorded in the Audit Trail Panel with actor, timestamp, and old and new values. (REQ-019-053)
@@ -308,7 +308,7 @@ All three program types share a single `PromotionProgram` entity (ENT-promotion-
 
 **Acceptance Criteria**:
 
-1. Given the admin creates an Admin-via-Provider program and submits, then the program enters Pending Approval and the targeted providers receive S-03 notifications.
+1. Given the admin creates an Admin-via-Provider program and publishes it, then the program is Active and the targeted providers receive S-03 notifications, each with its own accept or decline.
 2. Given the admin creates a Hairline-Funded program with `Issuance Channel = Open code` and a single code, when the program is published, then the code is immediately redeemable by any patient on a named subquote before acceptance and the program does not appear in any provider's adoption inbox. (REQ-019-055)
 3. Given the admin edits the Value of a Paused program and republishes, then the new value applies only to quotes sent and patient codes validated from that point forward; quotes already sent keep the terms copied at send, and prior redemptions retain their original values in audit. (REQ-019-108)
 4. Given the admin sets `Application Mode = Auto-applied` on an Admin-via-Provider program and attempts to save, then the system rejects the submission with an inline validation error: "Auto-applied is not permitted for Both-Fees programs." (REQ-019-103)
@@ -323,7 +323,7 @@ All three program types share a single `PromotionProgram` entity (ENT-promotion-
 
 #### Screen 3: Admin — Provider Adoption Manager
 
-**Purpose**: For a given Admin-via-Provider program, show every targeted provider's adoption status and let admins override decisions.
+**Purpose**: For a given Admin-via-Provider program, show every targeted provider's adoption status and let admins Force-Revoke or Re-invite.
 
 **Data Fields**:
 
@@ -347,8 +347,9 @@ All three program types share a single `PromotionProgram` entity (ENT-promotion-
 **Business Rules**:
 
 - Force-Revoke immediately removes the program from the provider's quote-creation selection list; in-flight quotes with the program already applied are preserved. (REQ-019-059)
-- Re-invite resets the provider's status from Declined or Auto-Declined back to Pending and re-sends the S-03 notification. (REQ-019-060)
+- Re-invite resets the provider's status from Declined, Auto-Declined, Revoked-by-Provider or Revoked-by-Admin back to Pending and re-sends the S-03 notification. (REQ-019-060)
 - All admin overrides are logged with mandatory reason text in the audit trail. (REQ-019-061)
+- Force-Revoke and Re-invite are the only admin overrides on an adoption; an admin can never accept on a provider's behalf or force a provider into a program. (REQ-019-109)
 
 **Acceptance Criteria**:
 
@@ -433,7 +434,7 @@ All three program types share a single `PromotionProgram` entity (ENT-promotion-
 **Business Rules**:
 
 - Open codes have one code that any eligible patient may use until the total usage limit is reached. (REQ-019-063)
-- Affiliate-bound codes integrate with FR-018; FR-018 owns generation and one-affiliate-per-code assignment, while FR-019 owns validation and redemption state. Redemptions accrue incentive to the linked affiliate.
+- Affiliate-bound codes integrate with FR-018; FR-018 owns generation and one-affiliate-per-code assignment, while FR-019 owns validation and redemption state. Redemptions accrue incentive to the linked affiliate. Affiliate codes follow the same usage rule as every code: one use is reserved at acceptance and consumed at the first payment, and there is no code entry at checkout.
 - Segment-bound codes validate the patient against the segment definition at entry time. (REQ-019-064)
 - Individually-issued codes are single-use and bound to a specific patient identifier. (REQ-019-065)
 - Revoking a code stops it from validating on any subquote not yet accepted. A use already reserved by an accepted subquote (`In-Progress`) stays frozen with the acceptance and is not cancelled by the revoke. (REQ-019-066)
@@ -456,7 +457,7 @@ All three program types share a single `PromotionProgram` entity (ENT-promotion-
 - Active Programs (count by program type) (ENT-promotion-report-snapshot.active_programs_count)
 - Total Redemptions (last 7 / 30 / 90 / 365 days) (ENT-promotion-report-snapshot.total_redemptions)
 - Total Discount Value Issued (Hairline portion + provider portion + total) (ENT-promotion-report-snapshot.total_discount_value_issued, ENT-promotion-report-snapshot.hairline_portion_total, ENT-promotion-report-snapshot.provider_portion_total)
-- Redemption Funnel: Issued → Code Entered → Validated → In-Progress → Completed (ENT-promotion-report-snapshot.redemption_funnel)
+- Redemption Funnel: Issued → Code Entered → Validated → In-Progress → Completed; Code Entered and Validated are counted from the logged code validation requests (ENT-promotion-report-snapshot.redemption_funnel)
 - ROI by Program Type (Hairline's share; see Analytics Definitions below) (ENT-promotion-report-snapshot.roi_by_program_type)
 - Top 10 Programs by Redemptions (ENT-promotion-report-snapshot.top_programs_by_redemptions)
 - Top 10 Programs by Discount Value (ENT-promotion-report-snapshot.top_programs_by_discount_value)
@@ -494,8 +495,8 @@ One row per redemption event with the full state lifecycle preserved.
 
 **Business Rules**:
 
-- The two-state distinction (Applied vs Completed) is preserved per client request (Admin Part 1 L341–344). Applied = the subquote carrying the promotion has been accepted and, for a provider-selected promotion or patient code, one use is reserved; Completed = the first payment for that booking has succeeded and that reserved use is consumed. For an automatic promotion the use is already consumed at acceptance, so Completed only marks the first payment. (REQ-019-069)
-- Voided is set only by the system, when the booking reaches `Payment Window Expired` or is cancelled; the reserved use is then released. For an automatic promotion, the use consumed at acceptance returns to the usage limit when the row is Voided before the first payment. Superseded is set only by the system when a provider-fault transfer replaces the accepted record. There is no admin Void action. (REQ-019-070)
+- The two-state distinction (Applied vs Completed) is preserved per client request (Admin Part 1 L341–344). Applied = the subquote carrying the promotion has been accepted and, for a provider-selected promotion or patient code, one use is reserved at that moment (entering a code never counts against a limit); Completed = the first payment for that booking has succeeded and that reserved use is consumed. For an automatic promotion the use is already consumed at acceptance, so Completed only marks the first payment. (REQ-019-069)
+- Voided is set only by the system, when the booking reaches `Payment Window Expired` or is cancelled, except for a provider-fault transfer, where Superseded takes precedence; the reserved use is then released. For an automatic promotion, the use consumed at acceptance returns to the usage limit when the row is Voided before the first payment. Superseded is set only by the system when a provider-fault transfer replaces the accepted record, and the use it held returns to the usage limit. There is no admin Void action. (REQ-019-070)
 - Refund actions are logged with mandatory reason and integrate with FR-017 (Billing & Finance) for monetary reconciliation. They never change the accepted price or the AcceptanceEvent snapshot. (REQ-019-071)
 - Drilling from a KPI card on the Overview tab filters the Applications tab accordingly. (REQ-019-102)
 
@@ -518,7 +519,7 @@ One row per redemption event with the full state lifecycle preserved.
 
 - **Pending** — Campaigns awaiting accept / decline decision
 - **Active** — Accepted campaigns currently in their active window; revoke control available
-- **Past** — Declined, Auto-Declined, Revoked, or Expired campaigns
+- **Past** — Declined, Auto-Declined or Revoked campaigns, and campaigns whose program end date has passed (an end-date filter on the program, not an adoption status)
 
 **Campaign Card / Row Fields**:
 
@@ -559,12 +560,11 @@ One row per redemption event with the full state lifecycle preserved.
 | Promotion Name | Internal name | ENT-promotion-program.name |
 | Code | Code text (or `—` if none) | ENT-promotion-code.code |
 | Type / Value | e.g. "Percentage / 15%" | ENT-promotion-program.discount_type, ENT-promotion-program.value |
-| Applies To | Whole price / Treatment cost / Travel cost / Other | ENT-promotion-program.applies_to |
 | Active Window | Start–End | ENT-promotion-program.start_at, ENT-promotion-program.end_at |
 | Status | Lifecycle state | ENT-promotion-program.lifecycle_state |
 | Redemptions | Count | ENT-promotion-program.redemption_count |
 | Savings Issued | Currency total | ENT-promotion-program.savings_issued |
-| Row Actions | Edit / Pause / Resume / Archive / View Applications (links to Screen 10 pre-filtered) | no graph field (control) |
+| Row Actions | Edit / Activate (Draft only) / Pause / Resume (only a pause the provider made) / Archive / View Applications (links to Screen 10 pre-filtered) | no graph field (control) |
 
 **Business Rules**:
 
@@ -588,9 +588,9 @@ Both modes use the same form schema below; mode-specific behaviour is noted in t
 |------------|------|----------|-------------|------------------|---|
 | Promotion Name | text | Yes | Display name | See REQ-019-048. | ENT-promotion-program.name |
 | Description | textarea | No | Patient-facing copy | See REQ-019-048. | ENT-promotion-program.description |
-| Discount Type | select | Yes | Percentage / Fixed amount / Package upgrade | Per policy caps | ENT-promotion-program.discount_type |
+| Discount Type | select | Yes | Percentage / Fixed amount | Per policy caps | ENT-promotion-program.discount_type |
 | Value | number | Yes | Discount value | Same as the admin form: percentage 1 to 100 and not above the configurable maximum (starts at 50 percent); fixed amount above 0, no cap | ENT-promotion-program.value |
-| Applies To | select | Yes | Whole price / Treatment cost / Travel cost / Other | | ENT-promotion-program.applies_to |
+| Applies To | fixed label | Yes | Whole price | Not editable (see Screen 2) | ENT-promotion-program.applies_to |
 | Code | text | **Optional** | Optional code for marketing distribution | Format rules; uniqueness platform-wide | ENT-promotion-code.code |
 | Application Mode | select | Yes | List-selection during quote (default) / Auto-applied / Code-only / Either | Code-only requires Code field; same four choices as Screen 2; Auto-applied limits as stated on Screen 2 (REQ-019-105) | ENT-promotion-program.application_mode |
 | Start / End Date | datetime | Yes | Active window | Mode 1: end ≥ start. Mode 2: defaults to the active window of the bound quote (REQ-019-082) | ENT-promotion-program.start_at, ENT-promotion-program.end_at |
@@ -604,7 +604,7 @@ Both modes use the same form schema below; mode-specific behaviour is noted in t
 - **Mode 2 ad-hoc records** are scoped to a single quote and are not shown in the list-selection picker on other quotes' creation screens. They remain visible to admin in Screen 1 Hub (Scope filter = Ad-Hoc Quote-Bound) and Screen 4 Portfolio. (REQ-019-078)
 - Free-text "promotion note" entries are **not supported**: every discount applied to an option/date-price row must correspond to a structured `PromotionProgram` record (Mode 1 or Mode 2). FR-004's legacy `promotionNote` field is removed in FR-004 v1.8.
 - Funding Model is fixed at `Provider Only` and is not user-editable. (ENT-promotion-program.funding_model)
-- No admin approval required for activation in either mode.
+- No admin approval is required for activation in either mode; the provider activates its own Draft.
 - A promotion selected on an option/date-price row may be changed only while the quote is drafted or revised in FR-004 before acceptance. Its terms are copied into the sent quote version when the quote is sent, and a promotion can apply only to a row it was attached to at send. (REQ-019-079)
 
 **Acceptance Criteria**:
@@ -674,21 +674,20 @@ One row per redemption tied to this provider's quotes / treatment cases.
 | Field Name | Type | Required | Description | Validation Rules | Graph field |
 |------------|------|----------|-------------|------------------|---|
 | Code input | text | No | Optional discount code for the named subquote | Format rules; 1 active code at a time on that subquote; not available after acceptance | ENT-acceptance-event.promotion_code |
-| Price breakdown | panel | Yes | Provider's offered price, discount line, discount scope, totals | Provider price shown as entered; discount shown as a separate line | ENT-subquote.offered_price, ENT-subquote.price_after_promotion, ENT-acceptance-event.discounted_price |
-| Discount Scope label | label | Yes | Shows which fee component the discount applies to (e.g., "Applies to transplant cost only") | Per HairlineApp Part 1 L156–158 | ENT-promotion-program.applies_to |
+| Price breakdown | panel | Yes | Provider's offered price, discount line, totals | Provider price shown as entered; discount shown as a separate line | ENT-subquote.offered_price, ENT-subquote.price_after_promotion, ENT-acceptance-event.discounted_price |
 
 **Business Rules**:
 
 - One discount per subquote; entering a new code prompts the patient to confirm replacement of the current discount on that subquote.
-- The code applies only to the named subquote and is not carried to another subquote. It is recorded against the patient's selection and is never written to the provider's promotion or quote records.
+- The code applies only to the named subquote and is not carried to another subquote. It is held with the open subquote view, stored only on the AcceptanceEvent at acceptance, and never written to the provider's promotion or quote records.
 - Validation occurs when the code is entered and again when the patient confirms acceptance. On acceptance, the discounted price is frozen into the AcceptanceEvent snapshot. (REQ-019-084)
 - No code entry, removal, or replacement is available after acceptance, including at checkout or payment; payment screens show the frozen accepted price.
 - Clear feedback for invalid / expired / limit-reached / segment-mismatched codes. (REQ-019-033)
-- Where a discount applies only to a sub-component (e.g., treatment cost, not travel), the breakdown explicitly shows which line is reduced. (REQ-019-085)
+- The discount is shown as one separate line that reduces the whole price. (REQ-019-085)
 
 **Acceptance Criteria**:
 
-1. Given a patient enters a valid code, when validation succeeds, then the price breakdown updates within 1 second and shows the discount scope label. (REQ-019-085)
+1. Given a patient enters a valid code, when validation succeeds, then for 95% of valid codes the price breakdown updates within 1 second and shows the discount as a separate line. (REQ-019-085)
 2. Given a patient enters a code on a subquote that already has a discount, when the patient confirms replacement, then the previous discount is replaced on the patient's selection for that subquote only, the provider's promotion record is unchanged, and audit records both events.
 3. Given a patient applies a valid code on subquote A, when the patient opens subquote B, then subquote B shows its own offered price without the code.
 4. Given a patient has accepted a subquote, when the patient reaches checkout or payment, then no code input is shown, the price equals the acceptance snapshot, and any request to apply a code is rejected.
@@ -699,16 +698,17 @@ One row per redemption tied to this provider's quotes / treatment cases.
 
 ### General Module Rules
 
-- Single‑discount rule enforced globally. Conflict resolution depends on how the conflict arises: (a) **user-initiated** — system prompts the user to confirm replacement (see Alt Flow B2); (b) **auto-applied** — system silently resolves using priority order: patient-entered code > provider discount (provider-selected or provider auto-applied) > Hairline-funded discount > affiliate discount, with no user prompt (see Alt Flow B3).
+- Single‑discount rule enforced globally. Conflict resolution depends on how the conflict arises: (a) **user-initiated** — system prompts the user to confirm replacement (see Alt Flow B2); (b) **auto-applied** — system silently resolves using priority order: patient-entered code > provider discount (provider-selected or provider auto-applied) > Hairline-funded discount > affiliate discount, with no user prompt; a provider-selected promotion wins over a provider auto-applied one on the same row (see Alt Flow B3).
 - Promotion terms are fixed at send. When a quote is sent, the terms of each option/date-price row's promotion (type, value, applies-to, funding model, Hairline share % for Both Fees programs, and the discount amount in the quote currency) are copied into the sent quote version. Later edits, pausing, expiry, or archiving of the program do not change a sent row.
-- Active dates, eligibility, and usage limits are checked when a promotion is attached to a row at send and when a patient code is validated before acceptance. (REQ-019-086)
+- Active dates, eligibility, and usage limits are checked when a promotion is attached to a row at send, when a patient code is validated before acceptance, and, for the usage limit of a provider-selected promotion, when the patient confirms acceptance (Alternative Flow A5). If a promotion the provider selected cannot attach at send (its limit is used up, the program is paused or ended, or the provider's adoption is revoked), the provider sees the reason and the quote is sent without that promotion only after the provider confirms; a draft quote that holds a revoked or paused program drops it the same way. An archived quote that is restored re-checks its promotion and takes a new reservation, and the restore is refused when the limit is used up or the promotion has ended (FR-004 REQ-004-105). (REQ-019-086)
 - A quote carries at most one automatic promotion. The automatic program chosen by the priority order attaches at send to every eligible option/date-price row that does not already carry a higher-ranked discount. The provider's entered price stays unchanged and the discount is shown separately.
 - A promotion applies only to an option/date-price row it was attached to at send, or to the one named subquote on which the patient entered a code. Any other application is rejected. (REQ-019-087)
 - Promotion usage lifecycle for provider-selected promotions and patient-entered codes: one use is reserved when the subquote is accepted, consumed when the first payment succeeds, and released when the booking reaches `Payment Window Expired` or is cancelled; when an admin revives a `Payment Window Expired` booking (FR-006), the use is re-reserved, and the revive is rejected if the usage limit is exhausted.
-- Promotion usage lifecycle for auto-applied promotions: sending a quote carrying the promotion reserves one use. A sent quote holds at most one reserved use: re-sending a new version keeps the existing reservation, creates one only if the new version newly carries the promotion, and releases it if the new version no longer carries the promotion. The reservation is released when the quote expires (`expired`), is withdrawn (`withdrawn`), ends Not Selected because another subquote or quote was accepted (`not_selected`), loses the promotion in a re-sent version (`dropped_on_resend`), is cancelled before acceptance because the inquiry was cancelled or the provider's status changed (`cancelled`), or a subquote of that quote is accepted that does not carry the promotion (`not_applied`); it is consumed when the accepted subquote carries the promotion. If the booking then reaches `Payment Window Expired` or is cancelled before the first payment, the consumed use returns to the usage limit. When an admin revives a `Payment Window Expired` booking (FR-006), the use is taken again if the limit still has room; if it has no room, the revive is rejected, because the accepted price already includes the promotion and cannot change.
+- Code status on release or void: the code's In-Progress count drops and a single-use code returns to Unused. A revoked code stays revoked, and its reservations run their course. A refund after the first payment does not return the use; a use returns only when the booking is cancelled or expires before the first payment.
+- Promotion usage lifecycle for auto-applied promotions: sending a quote carrying the promotion reserves one use. A sent quote holds at most one reserved use: re-sending a new version keeps the existing reservation, creates one only if the new version newly carries the promotion, and releases it if the new version no longer carries the promotion. The reservation is released when the quote expires (`expired`), is withdrawn (`withdrawn`), is archived (`archived`), ends Not Selected because another subquote or quote was accepted (`not_selected`), loses the promotion in a re-sent version (`dropped_on_resend`), is cancelled before acceptance because the inquiry was cancelled or the provider's status changed (`cancelled`), or a subquote of that quote is accepted that does not carry the promotion (`not_applied`); it is consumed when the accepted subquote carries the promotion. If the booking then reaches `Payment Window Expired` or is cancelled before the first payment, the consumed use returns to the usage limit. When an admin revives a `Payment Window Expired` booking (FR-006), the use is taken again if the limit still has room; if it has no room, the revive is rejected, because the accepted price already includes the promotion and cannot change.
 - Usage limits count active reservations plus consumed uses, so a limit can never be exceeded. A promotion whose limit is fully reserved or consumed does not attach at send and fails code validation. (REQ-019-088)
 - Rows that are not accepted (sibling subquotes marked Not Selected, competing quotes, expired or withdrawn quotes) never create an Application; any use reserved for them at send by an auto-applied promotion is released.
-- Post-acceptance freeze: after acceptance, the promotion and discounted price of the accepted subquote are frozen in the AcceptanceEvent snapshot. No removal, replacement, code entry at checkout or booking, price-changing revalidation, or admin void is allowed. The only exception is the provider-fault transfer in FR-006 (Alternative Flow B5): the original Application is kept as history and marked Superseded, and any promotion on the replacement is recorded as a new Application linked to the new admin-authored acceptance record; a use already reserved or consumed carries over and is not counted twice. Money handling for that transfer is defined by FR-006, FR-007, FR-007b, and FR-017. (REQ-019-089)
+- Post-acceptance freeze: after acceptance, the promotion and discounted price of the accepted subquote are frozen in the AcceptanceEvent snapshot. No removal, replacement, code entry at checkout or booking, price-changing revalidation, or admin void is allowed. The only exception is the provider-fault transfer in FR-006 (Alternative Flow B5): the replacement quote carries no promotion, the original Application is kept as history and marked Superseded (Superseded takes precedence over Voided when the original booking is cancelled for the transfer), and the use it held returns to the usage limit. Money handling for that transfer is defined by FR-006, FR-007, FR-007b, and FR-017. (REQ-019-089)
 - Commission is calculated on the accepted price after the promotion, in the quote currency, read from the acceptance snapshot (FR-015, FR-029). This applies to every discount type, including Hairline-funded programs; no program keeps commission on the price before the promotion.
 - Funding of a Both Fees program: this FR owns the definition. Hairline reimburses the program's Hairline share % (0 to 100, fixed at send and frozen at acceptance) of the discount to the provider at payout, on top of the commission effect. FR-017 applies this reimbursement in payout settlement and does not define its own split; payout mechanics belong to the payment work. (REQ-019-017)
 - Funding split of each Application: for every program type, the Hairline portion and the provider portion of the discount value follow the commission effect (commission on the accepted price after the promotion, so the provider bears most of the discount). A Both Fees program adds Hairline's reimbursement of the Hairline share % on top of that effect. (REQ-019-110)
@@ -721,7 +721,7 @@ One row per redemption tied to this provider's quotes / treatment cases.
 - Misapplied discounts detected and corrected to ≤ 0.1% of bookings monthly.
 - 99.9% monthly uptime for validation and calculation services.
 - Zero data loss for discount definitions and usage records.
-- Providers respond to approval requests within 3 business days.
+- Providers respond to approval requests within the auto-decline window (Setting: promotion approval auto-decline window, default 3 business days).
 - Patients enter codes only while reviewing a subquote before acceptance.
 - The subquote review and acceptance flow (FR-005 Screen 2) exposes the only patient code input surface.
 - Calculation service supports deterministic rounding and currency rules.
@@ -760,11 +760,11 @@ Fixed in Codebase (Not Editable):
 Configurable with Restrictions:
 
 - Maximum discount value per policy and region (the same single Setting as above). (REQ-019-094)
-- Auto‑decline window for unresponded provider approvals. (REQ-019-094)
+- Auto‑decline window for unresponded provider approvals; default 3 business days. (REQ-019-094)
 
 **Carried from dropped sections (original wording)**:
 
-- **PromotionProgram**: id, program_type (`ADMIN_VIA_PROVIDER` | `PROVIDER_SELF` | `HAIRLINE_FUNDED_DIRECT_ISSUED`), scope (`REUSABLE` | `AD_HOC_QUOTE_BOUND` — applies to `PROVIDER_SELF` only; other program types are always `REUSABLE`), bound_quote_id (nullable parent containment), bound_quote_option_date_price_id (nullable application target; both bindings set only for `AD_HOC_QUOTE_BOUND`), owner (admin user id or provider id), name, description, discount_type, value, applies_to (whole price / treatment / travel / other), application_mode (auto / code-only / list-selection / either), funding_model (derived), hairline_share_percent (0 to 100; Both Fees programs only), active window, total usage limit, per-user usage limit, targeting, issuance_channel (for Hairline-Funded), lifecycle_state, audit timestamps. Stored in the `promotion_programs` table; references to PromotionProgram point to that table. The legacy `discounts` table does not hold promotion programs.
+- **PromotionProgram**: id, program_type (`ADMIN_VIA_PROVIDER` | `PROVIDER_SELF` | `HAIRLINE_FUNDED_DIRECT_ISSUED`), scope (`REUSABLE` | `AD_HOC_QUOTE_BOUND` — applies to `PROVIDER_SELF` only; other program types are always `REUSABLE`), bound_quote_id (nullable parent containment), bound_quote_option_date_price_id (nullable application target; both bindings set only for `AD_HOC_QUOTE_BOUND`), owner (admin user id or provider id), name, description, discount_type, value, applies_to (whole price), application_mode (auto / code-only / list-selection / either), funding_model (derived), hairline_share_percent (0 to 100; Both Fees programs only), active window, total usage limit, per-user usage limit, targeting, issuance_channel (for Hairline-Funded), lifecycle_state, audit timestamps. Stored in the `promotion_programs` table; references to PromotionProgram point to that table. The legacy `discounts` table does not hold promotion programs.
 
 ---
 
@@ -794,7 +794,7 @@ Independent Test: Create both‑fees discount, providers approve, discount appea
 
 Acceptance Scenarios:
 
-1. Given a new both‑fees discount, when saved, then targeted providers receive approval requests.
+1. Given a new both‑fees discount, when published, then targeted providers receive approval requests.
 2. Given a provider approves, when a quote is created in active window, then the discount is selectable.
 
 ### User Story 2 – Provider creates own discount (P1)
@@ -838,7 +838,7 @@ Acceptance Scenarios:
 7. Given a `Payment Window Expired` booking whose promotion has a usage limit, when an admin revives it, then one use is re-reserved; if the limit is exhausted, the revive is rejected.
 8. Given sibling subquotes marked Not Selected and competing quotes cancelled by the acceptance, then none of them creates an Application, and any use reserved for them at send by an auto-applied promotion is released.
 9. Given an auto-applied program with one use left and two quotes eligible for it, when the first quote is sent, then one use is reserved; when the second quote is sent, then the promotion does not attach because the limit is fully reserved, and the limit is never exceeded.
-10. Given a sent quote carrying an auto-applied promotion with a reserved use, when a subquote carrying the promotion is accepted, then the reservation is consumed; when a subquote of that quote that does not carry the promotion is accepted, then the reservation is released with reason `not_applied`; when instead the quote expires, is withdrawn, ends Not Selected, loses the promotion in a re-sent version, or is cancelled before acceptance because the inquiry was cancelled or the provider's status changed, then the reservation is released with the matching reason.
+10. Given a sent quote carrying an auto-applied promotion with a reserved use, when a subquote carrying the promotion is accepted, then the reservation is consumed; when a subquote of that quote that does not carry the promotion is accepted, then the reservation is released with reason `not_applied`; when instead the quote expires, is withdrawn, is archived, ends Not Selected, loses the promotion in a re-sent version, or is cancelled before acceptance because the inquiry was cancelled or the provider's status changed, then the reservation is released with the matching reason.
 11. Given a sent quote holding one reserved use for an auto-applied promotion, when the provider re-sends a new version that still carries the promotion, then the existing reservation is kept and no second use is reserved; when the new version no longer carries the promotion, then the reservation is released; and given a sent quote with no reservation, when a new version newly carries the promotion, then one use is reserved.
 12. Given an accepted subquote whose auto-applied promotion use was consumed at acceptance, when the booking reaches `Payment Window Expired` or is cancelled before the first payment, then the use returns to the limit; when an admin later revives the booking, then the use is taken again if the limit has room, and otherwise the revive is rejected and the accepted price stays unchanged.
 13. Given a Hairline-funded automatic program and a provider's automatic program both eligible for a quote, when the quote is sent, then only the provider's program attaches, to every row it is eligible for, one use is reserved for it, and the Hairline-funded program attaches to no row of that quote and reserves no use.
@@ -848,7 +848,7 @@ Acceptance Scenarios:
 - Ineligible/expired/limit‑reached codes: validation fails with reason.
 - Simultaneous attempts to apply codes on one subquote before acceptance: last confirmed selection wins; audit both attempts. Attempts after acceptance are rejected. (REQ-019-098)
 - Program paused, edited, or expired after a quote is sent: the sent rows keep the terms copied at send.
-- Patient code no longer valid when the patient confirms acceptance (for example, its usage limit was reached): the reason is shown and the patient may accept at the offered price or cancel. (REQ-019-099)
+- Patient code no longer valid when the patient confirms acceptance (for example, its usage limit was reached): the acceptance does not happen, the reason is shown, and the patient returns to the subquote detail, where the patient may accept without the code or enter another; the price falls back to what the row carried at send, including its attached promotion (FR-005 REQ-005-026). (REQ-019-099)
 - Provider fails to respond to approval: auto‑decline after policy window; visible in audit.
 
 ---
@@ -864,13 +864,13 @@ Acceptance Scenarios:
 - **REQ-019-005**: System MUST track usage and financial impact with exports and dashboards.
 - **REQ-019-012**: System MUST copy each row's promotion terms into the sent quote version at send; later program changes MUST NOT change a sent row.
 - **REQ-019-013**: System MUST freeze the promotion and discounted price of an accepted subquote in the AcceptanceEvent snapshot and MUST reject any later removal, replacement, code entry, price-changing revalidation, or admin void, except through the FR-006 provider-fault transfer, which creates a new linked record.
-- **REQ-019-014**: For provider-selected promotions and patient-entered codes, System MUST reserve one promotion use at acceptance, consume it at the first successful payment, release it on `Payment Window Expired` or cancellation, and re-reserve it on an admin revive, rejecting the revive if the usage limit is exhausted.
-- **REQ-019-015**: For an auto-applied promotion, System MUST reserve one use when a quote carrying it is sent, MUST hold at most one reserved use per sent quote across re-sent versions (keeping the existing reservation, creating one only when a new version newly carries the promotion, and releasing it when a new version no longer carries the promotion), MUST release the reservation when the quote expires, is withdrawn, ends Not Selected, drops the promotion in a re-sent version, or is cancelled before acceptance because the inquiry was cancelled or the provider's status changed, or when a subquote of that quote is accepted that does not carry the promotion (`not_applied`), and MUST consume it when the accepted subquote carries the promotion. If the booking reaches `Payment Window Expired` or is cancelled before the first payment, System MUST return the consumed use to the limit; on an admin revive, System MUST take the use again if the limit has room and otherwise MUST reject the revive, so the accepted price never changes. Usage limits MUST count active reservations plus consumed uses so that a limit can never be exceeded.
+- **REQ-019-014**: For provider-selected promotions and patient-entered codes, System MUST reserve one promotion use at acceptance, consume it at the first successful payment, release it on `Payment Window Expired` or cancellation, and re-reserve it on an admin revive, rejecting the revive if the usage limit is exhausted. On release or void, System MUST drop the code's In-Progress count and return a single-use code to Unused; a refund after the first payment MUST NOT return the use.
+- **REQ-019-015**: For an auto-applied promotion, System MUST reserve one use when a quote carrying it is sent, MUST hold at most one reserved use per sent quote across re-sent versions (keeping the existing reservation, creating one only when a new version newly carries the promotion, and releasing it when a new version no longer carries the promotion), MUST release the reservation when the quote expires, is withdrawn, is archived (`archived`), ends Not Selected, drops the promotion in a re-sent version, or is cancelled before acceptance because the inquiry was cancelled or the provider's status changed, or when a subquote of that quote is accepted that does not carry the promotion (`not_applied`), and MUST consume it when the accepted subquote carries the promotion. If the booking reaches `Payment Window Expired` or is cancelled before the first payment, System MUST return the consumed use to the limit; on an admin revive, System MUST take the use again if the limit has room and otherwise MUST reject the revive, so the accepted price never changes. Restoring an archived quote MUST re-check the promotion and take a new reservation, and the restore MUST be refused when the limit is used up or the promotion has ended (FR-004 REQ-004-105). Usage limits MUST count active reservations plus consumed uses so that a limit can never be exceeded.
 - **REQ-019-016**: System MUST calculate commission on the accepted price after the promotion, in the quote currency and read from the acceptance snapshot, for every discount type, including Hairline-funded programs; no program keeps commission on the price before the promotion. FR-029 carries the matching Rule REQ-029-054.
 - **REQ-019-017**: System MUST record a Hairline share % from 0 to 100 on every Both Fees program, copy it into the terms fixed at send, and provide it to FR-017, which reimburses that share of the discount to the provider at payout on top of the commission effect.
 - **REQ-019-018**: System MUST convert a fixed-amount discount into the quote currency at the FR-029 conversion rate in effect at send and keep the converted amount in the terms fixed at send.
-- **REQ-019-019**: System MUST NOT attach an automatic promotion to an admin-authored replacement quote (FR-004 Workflow 7) or reserve a use for it; the admin sets the replacement price directly, and the promotion use held by the closed acceptance MUST be returned or kept under the normal rules.
-- **REQ-019-109**: System MUST let an admin override a discount approval only for Hairline Only programs; an admin can never force a provider to take part in a program (moved in from FR-017).
+- **REQ-019-019**: System MUST NOT attach an automatic promotion to an admin-authored replacement quote (FR-004 Workflow 7) or reserve a use for it; the admin sets the replacement price directly, the replacement carries no promotion, the original Application MUST be marked Superseded, and the use it held MUST return to the usage limit.
+- **REQ-019-109**: System MUST NOT let an admin force a provider to take part in a program; the overrides an admin has on a provider's adoption are Force-Revoke and Re-invite (moved in from FR-017).
 - **REQ-019-110**: System MUST record the Hairline portion and the provider portion of every Application's discount value according to the commission effect for every program type, and for a Both Fees program MUST add Hairline's reimbursement of the Hairline share % on top.
 
 ### Data Requirements
@@ -896,6 +896,7 @@ Acceptance Scenarios:
 |------------|---------|----------------------------------------------|--------|
 | 2026-11-22 | 2.8 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v2.7) and the change requests (CR-FR019-20261016-01 in `change-request-2026-10-16-mtg002-quote-model-alignment.md`, and `change-request-2026-09-10-option-date-promotion-alignment.md`) are in `archived/prd-baseline-2026-11-08/fr019-promotions-discounts/` and in git history. | Product Owner / Documentation |
 | 2026-11-23 | 2.9 | Independent compression review: 1 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
+| 2026-11-24 | 3.0 | Logic review fixes: archived release reason and restore re-check; send-time and acceptance-time handling of a provider-selected promotion that cannot be used; patient code replaces the row's promotion and the fallback price; a failed code at confirm follows FR-005; tie-break and limit-before-ranking for automatic programs; provider-fault transfer replacement carries no promotion and the original use returns; no program-level Pending Approval, activation, pause and resume ownership; admin overrides limited to Force-Revoke and Re-invite, with Re-invite from revoked states; auto-decline window default of 3 business days; provider code entry removed (select from the list); package-upgrade type and treatment or travel scope removed; affiliate codes follow the same usage rule and Applied means reserved at acceptance; admin edit of a sent quote counts as a re-send; code status on release or void; pre-acceptance code storage and funnel source; audit panel old and new values. | Product Owner / Documentation |
 
 ---
 
@@ -912,4 +913,4 @@ Acceptance Scenarios:
 
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
-**Last Updated**: 2026-11-23
+**Last Updated**: 2026-11-24

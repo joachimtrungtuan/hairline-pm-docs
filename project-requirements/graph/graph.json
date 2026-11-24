@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T10:32:32Z",
+  "generated_at": "2026-11-24T10:41:57Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -20315,9 +20315,9 @@
       "owner_fr": "FR-019",
       "title": "Code status",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "unused, in_progress, redeemed, revoked or expired."
+        "description": "unused, in_progress, redeemed, revoked or expired. On release or void the In-Progress count drops and a single-use code returns to unused; a revoked code stays revoked and its reservations run their course; a refund after the first payment does not return the use."
       }
     },
     {
@@ -20349,9 +20349,9 @@
       "owner_fr": "FR-019",
       "title": "Applies to",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Whole price, treatment cost only, travel cost only or other component."
+        "description": "Whole price: the discount reduces the row's single offered price. A fixed label, not editable."
       }
     },
     {
@@ -20371,9 +20371,9 @@
       "owner_fr": "FR-019",
       "title": "Auto-decline window (days)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Days before an unanswered approval request auto-declines."
+        "description": "Business days before an unanswered approval request auto-declines; defaults to the auto-decline window Setting (3 business days)."
       }
     },
     {
@@ -20437,9 +20437,9 @@
       "owner_fr": "FR-019",
       "title": "Discount type",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Percentage, fixed amount or package upgrade."
+        "description": "Percentage or fixed amount."
       }
     },
     {
@@ -20492,9 +20492,9 @@
       "owner_fr": "FR-019",
       "title": "Lifecycle state",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Draft, Pending Approval, Active, Paused, Expired or Archived. The Screen 2 field lists Draft, Active, Paused, Expired and Archived and moves forward only, except Pause and Resume; where Pending Approval sits in that chain is an open item."
+        "description": "Draft, Active, Paused, Expired or Archived. There is no program-level approval state: approval of an Admin-via-Provider program is per provider adoption. Moves forward only, except Pause and Resume; only the side that paused (see paused_by) may resume."
       }
     },
     {
@@ -20517,6 +20517,17 @@
       "version": 1,
       "attrs": {
         "description": "Admin user id or provider id that created the program."
+      }
+    },
+    {
+      "id": "ENT-promotion-program.paused_by",
+      "type": "Field",
+      "owner_fr": "FR-019",
+      "title": "Paused by",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Who paused the program, admin or provider; empty while the program is not paused. Only the side that paused may resume (REQ-019-049)."
       }
     },
     {
@@ -20722,8 +20733,10 @@
       "owner_fr": "FR-019",
       "title": "Redemption funnel",
       "status": "active",
-      "version": 1,
-      "attrs": {}
+      "version": 2,
+      "attrs": {
+        "description": "Issued, Code Entered, Validated, In-Progress and Completed counts; Code Entered and Validated are counted from the logged code validation requests."
+      }
     },
     {
       "id": "ENT-promotion-report-snapshot.roi_by_program_type",
@@ -20884,9 +20897,9 @@
       "owner_fr": "FR-019",
       "title": "Release reason",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "expired, withdrawn, not_selected, dropped_on_resend, cancelled or not_applied; nullable."
+        "description": "expired, withdrawn, archived, not_selected, dropped_on_resend, cancelled or not_applied; nullable."
       }
     },
     {
@@ -36555,10 +36568,10 @@
       "owner_fr": null,
       "title": "Code validation failure",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "kind": "alternative",
-        "description": "A patient or provider enters an invalid, expired or limit-reached code; the reason is shown and no discount applies.",
+        "description": "A patient enters an invalid, expired or limit-reached code, or a provider picks from the list a promotion that no longer qualifies for the row; the reason is shown and no discount applies.",
         "prd_ref": "Alternative Flow B1"
       }
     },
@@ -36659,10 +36672,10 @@
       "owner_fr": null,
       "title": "User-initiated single-discount conflict",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "kind": "alternative",
-        "description": "A user enters a second discount on a row that already has one and chooses replace or keep.",
+        "description": "A provider picks a second promotion for a row that already has one, or a patient enters a code on a subquote that already carries a promotion, and chooses replace or keep.",
         "prd_ref": "Alternative Flow B2"
       }
     },
@@ -70554,9 +70567,9 @@
       "owner_fr": "FR-019",
       "title": "Provider-selected and patient-code use: reserve at acceptance, consume at first payment, release on expiry or cancellation",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "For provider-selected promotions and patient-entered codes, System MUST reserve one promotion use at acceptance, consume it at the first successful payment, release it on `Payment Window Expired` or cancellation, and re-reserve it on an admin revive, rejecting the revive if the usage limit is exhausted.",
+        "statement": "For provider-selected promotions and patient-entered codes, System MUST reserve one promotion use at acceptance, consume it at the first successful payment, release it on `Payment Window Expired` or cancellation, and re-reserve it on an admin revive, rejecting the revive if the usage limit is exhausted. On release or void, System MUST drop the code's In-Progress count and return a single-use code to Unused; a refund after the first payment MUST NOT return the use.",
         "rationale": "Restated by Scope Boundaries and General Module Rules. PRD lines 58, 726."
       }
     },
@@ -70566,9 +70579,9 @@
       "owner_fr": "FR-019",
       "title": "Auto-applied use: reserve at send, one per sent quote, release or consume by outcome",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "For an auto-applied promotion, System MUST reserve one use when a quote carrying it is sent, MUST hold at most one reserved use per sent quote across re-sent versions (keeping the existing reservation, creating one only when a new version newly carries the promotion, and releasing it when a new version no longer carries the promotion), MUST release the reservation when the quote expires, is withdrawn, ends Not Selected, drops the promotion in a re-sent version, or is cancelled before acceptance because the inquiry was cancelled or the provider's status changed, or when a subquote of that quote is accepted that does not carry the promotion (`not_applied`), and MUST consume it when the accepted subquote carries the promotion. If the booking reaches `Payment Window Expired` or is cancelled before the first payment, System MUST return the consumed use to the limit; on an admin revive, System MUST take the use again if the limit has room and otherwise MUST reject the revive, so the accepted price never changes. Usage limits MUST count active reservations plus consumed uses so that a limit can never be exceeded.",
+        "statement": "For an auto-applied promotion, System MUST reserve one use when a quote carrying it is sent, MUST hold at most one reserved use per sent quote across re-sent versions (keeping the existing reservation, creating one only when a new version newly carries the promotion, and releasing it when a new version no longer carries the promotion), MUST release the reservation when the quote expires, is withdrawn, is archived (`archived`), ends Not Selected, drops the promotion in a re-sent version, or is cancelled before acceptance because the inquiry was cancelled or the provider's status changed, or when a subquote of that quote is accepted that does not carry the promotion (`not_applied`), and MUST consume it when the accepted subquote carries the promotion. If the booking reaches `Payment Window Expired` or is cancelled before the first payment, System MUST return the consumed use to the limit; on an admin revive, System MUST take the use again if the limit has room and otherwise MUST reject the revive, so the accepted price never changes. Restoring an archived quote MUST re-check the promotion and take a new reservation, and the restore MUST be refused when the limit is used up or the promotion has ended (FR-004 REQ-004-105). Usage limits MUST count active reservations plus consumed uses so that a limit can never be exceeded.",
         "rationale": "Restated by Scope Boundaries, Alternative Flows A3 and A5, Screen 6 rules and General Module Rules. PRD lines 58, 144-145, 157, 727, 729."
       }
     },
@@ -70615,9 +70628,9 @@
       "owner_fr": "FR-019",
       "title": "No automatic promotion on an admin-authored replacement quote",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST NOT attach an automatic promotion to an admin-authored replacement quote (FR-004 Workflow 7) or reserve a use for it; the admin sets the replacement price directly, and the promotion use held by the closed acceptance MUST be returned or kept under the normal rules.",
+        "statement": "System MUST NOT attach an automatic promotion to an admin-authored replacement quote (FR-004 Workflow 7) or reserve a use for it; the admin sets the replacement price directly, the replacement carries no promotion, the original Application MUST be marked Superseded, and the use it held MUST return to the usage limit.",
         "rationale": "Restated by Alternative Flow A3 exception and Screen 2 business rules. PRD lines 146, 305."
       }
     },
@@ -70661,12 +70674,12 @@
       "id": "REQ-019-023",
       "type": "Rule",
       "owner_fr": "FR-019",
-      "title": "Program lifecycle in scope: six states, with usage limits and date windows",
+      "title": "Program lifecycle in scope: five states, with usage limits and date windows",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Discount code definition and lifecycle (draft, pending approval, active, paused, expired, archived), with usage limits and date windows.",
-        "rationale": "Scope Boundaries. The Screen 2 lifecycle field lists five states without Pending Approval; the two are not reconciled in the PRD (open item)."
+        "statement": "Discount code definition and lifecycle (draft, active, paused, expired, archived), with usage limits and date windows; approval of an Admin-via-Provider program is per provider adoption, not a program state.",
+        "rationale": "Scope Boundaries. Matches the Screen 2 lifecycle field; there is no program-level Pending Approval state."
       }
     },
     {
@@ -70709,12 +70722,12 @@
       "id": "REQ-019-027",
       "type": "Rule",
       "owner_fr": "FR-019",
-      "title": "Admin defines a both-fees discount; it is saved as Pending Approval and targeted providers are notified",
+      "title": "Admin publishes a both-fees discount; it is Active and targeted providers are notified",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Admin defines discount (type, value, Hairline share %, dates, usage limit, targeted providers). System saves discount as Pending Approval and notifies targeted providers (approval-requested event of the FR-030 notification catalogue).",
-        "rationale": "Main Flow steps 1-2. PRD lines 90-91, Screen 2 business rules (line 303) and acceptance criterion 1 (line 312) repeat the Pending Approval and notification outcome."
+        "statement": "Admin defines discount (type, value, Hairline share %, dates, usage limit, targeted providers). Admin publishes the discount; the system sets it Active and notifies targeted providers (approval-requested event of the FR-030 notification catalogue). Approval is per provider: the discount applies only to providers whose adoption is Accepted.",
+        "rationale": "Main Flow steps 1-2. Screen 2 business rules and acceptance criterion 1 repeat the Active outcome and the notification."
       }
     },
     {
@@ -70723,9 +70736,9 @@
       "owner_fr": "FR-019",
       "title": "Providers accept or decline a both-fees discount and the system logs the response",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Providers accept or decline; system logs responses.",
+        "statement": "Providers accept or decline; system logs responses. A provider who does not answer within the auto-decline window is Auto-Declined. If every provider declines, the program stays Active with no participants until an admin archives it.",
         "rationale": "Main Flow step 3. PRD line 92, Screen 7 business rules (line 533: all decisions logged with timestamp and user) repeat it."
       }
     },
@@ -70783,9 +70796,9 @@
       "owner_fr": "FR-019",
       "title": "Invalid, expired or limit-reached code returns a reason and no discount is applied",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Trigger: Patient/provider enters invalid/expired/reached‑limit code. Steps: System returns reason; prevents application. Outcome: No discount applied; user can retry. On the patient screen (Screen 11), the patient gets clear feedback for an invalid, expired, limit-reached or segment-mismatched code.",
+        "statement": "Trigger: A patient enters an invalid, expired or limit-reached code, or a provider picks from the list a promotion that no longer qualifies for the row (a provider types no code: FR-004 Screen 1 offers a select-or-create Promotion field). Steps: System returns reason; prevents application. Outcome: No discount applied; user can retry. On the patient screen (Screen 11), the patient gets clear feedback for an invalid, expired, limit-reached or segment-mismatched code.",
         "rationale": "Alternative Flow B1. PRD lines 118-120. Screen 11 business rules (line 681) add segment-mismatched codes to the list of reasons shown."
       }
     },
@@ -70795,9 +70808,9 @@
       "owner_fr": "FR-019",
       "title": "A second discount entered by the user prompts a replace-or-keep choice",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Trigger: Before the quote is sent (provider) or before the subquote is accepted (patient), the user manually enters or selects a second discount for an option/date-price row (subquote) that already has one. Steps: System blocks the new entry; prompts the user to confirm replacement or keep the existing discount. A patient's replacement applies only to the patient's selection on that subquote and never changes the provider's promotion. Outcome: Exactly one discount per subquote; the user's confirmed choice is applied. After acceptance no entry, selection, or replacement is accepted (Alternative Flow B4).",
+        "statement": "Trigger: Before the quote is sent, the provider picks a second promotion for an option/date-price row that already has one; or before the subquote is accepted, the patient enters a code on a subquote (option/date-price row) that already carries a promotion. Steps: System blocks the new entry; prompts the user to confirm replacement or keep the existing discount. A patient's replacement applies only to the patient's selection on that subquote and never changes the provider's promotion. A patient code replaces the promotion the row carries, including an automatic one (Alternative Flow A5 states the reservation outcome). Outcome: Exactly one discount per subquote; the user's confirmed choice is applied. After acceptance no entry, selection, or replacement is accepted (Alternative Flow B4).",
         "rationale": "Alternative Flow B2. PRD lines 124-126. Screen 11 business rule (line 677) and acceptance criterion 2 (line 688: audit records both events) repeat it for the patient."
       }
     },
@@ -70807,9 +70820,9 @@
       "owner_fr": "FR-019",
       "title": "Auto-applied conflicts resolve silently by priority, with no user prompt",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Trigger: When a quote is sent, more than one automatic promotion is eligible for the quote, or an automatic promotion is eligible for an option/date-price row that already carries another discount. Steps: A quote carries at most one automatic promotion. System silently resolves the conflict using the priority order: patient-entered code > provider discount (provider-selected or provider auto-applied) > Hairline-funded discount > affiliate discount. When several automatic programs qualify, only the highest-ranked one attaches, to every row it is eligible for; the others attach to no row of that quote and reserve no use. On a row that already carries a higher-ranked discount, the automatic promotion is not applied to that row. No user prompt is shown. Example: A Hairline-funded automatic program and a provider's automatic program are both eligible when a quote is sent. The provider's program ranks higher, so it attaches to every row it is eligible for and one use is reserved for it; the Hairline-funded program attaches to no row of that quote and no use is reserved for it.",
+        "statement": "Trigger: When a quote is sent, more than one automatic promotion is eligible for the quote, or an automatic promotion is eligible for an option/date-price row that already carries another discount. Steps: A quote carries at most one automatic promotion. System silently resolves the conflict using the priority order: patient-entered code > provider discount (provider-selected or provider auto-applied) > Hairline-funded discount > affiliate discount. The usage limit is checked before ranking: an automatic program whose limit is fully reserved or consumed is skipped, and the next-ranked qualifying program may attach. When several automatic programs qualify, only the highest-ranked remaining one attaches, to every row it is eligible for; the others attach to no row of that quote and reserve no use. On a row that already carries a higher-ranked discount, the automatic promotion is not applied to that row; a provider-selected promotion wins over a provider auto-applied one on the same row. No user prompt is shown. Example: A Hairline-funded automatic program and a provider's automatic program are both eligible when a quote is sent. The provider's program ranks higher, so it attaches to every row it is eligible for and one use is reserved for it; the Hairline-funded program attaches to no row of that quote and no use is reserved for it.",
         "rationale": "Alternative Flow B3. PRD lines 130-132. General Module Rules (line 721) repeat the priority order."
       }
     },
@@ -70843,9 +70856,9 @@
       "owner_fr": "FR-019",
       "title": "Automatic promotion attaches at send to every eligible row; the provider price stays and the discount shows as a separate line",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Trigger: A provider sends a quote while an auto-applied program is active and eligible for one or more of its option/date-price rows. Steps: A quote carries at most one automatic promotion; when several qualify, Alternative Flow B3 picks one. System attaches that program to every eligible option/date-price row of the sent quote and copies its terms into the sent quote version. The provider's entered price on each row stays unchanged, and the discount is shown as a separate line next to it. Rows that are not eligible receive no automatic promotion. Conflicts with another discount on the same row are resolved by Alternative Flow B3. Sending a quote carrying the automatic promotion reserves one use against the program's usage limits. A sent quote holds at most one reserved use: re-sending a new version keeps the existing reservation, creates one only if the new version newly carries the promotion, and releases it if the new version no longer carries the promotion. If the limit is already fully reserved or consumed, the promotion does not attach.",
+        "statement": "Trigger: A provider sends a quote while an auto-applied program is active and eligible for one or more of its option/date-price rows. Steps: A quote carries at most one automatic promotion; when several qualify, Alternative Flow B3 picks one. System attaches that program to every eligible option/date-price row of the sent quote and copies its terms into the sent quote version. The provider's entered price on each row stays unchanged, and the discount is shown as a separate line next to it. Rows that are not eligible receive no automatic promotion. Conflicts with another discount on the same row are resolved by Alternative Flow B3. Sending a quote carrying the automatic promotion reserves one use against the program's usage limits. A sent quote holds at most one reserved use: re-sending a new version keeps the existing reservation, creates one only if the new version newly carries the promotion, and releases it if the new version no longer carries the promotion. An admin edit that creates a new version of a sent quote (FR-004) counts as a re-send for these rules. If the limit is already fully reserved or consumed, that program is skipped and Alternative Flow B3 picks the next-ranked qualifying program, if any; a promotion never attaches past a full limit.",
         "rationale": "Alternative Flow A3. PRD lines 143-146, General Module Rules (line 724). Outcome and exception lines are carried by REQ-019-012, REQ-019-015 and REQ-019-019."
       }
     },
@@ -70855,9 +70868,9 @@
       "owner_fr": "FR-019",
       "title": "Patient code is validated for the named subquote only and never written to the provider promotion",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Trigger: While reviewing one named subquote and before confirming acceptance, the patient enters a code (FR-005 Alternative Flow A8). Steps: System validates the code for that subquote only (active window, eligibility, usage limits, recipient binding). If valid, the discounted price is shown next to the provider's offered price; if invalid, the reason is shown and the offered price is unchanged. The code is recorded against the patient's selection on that subquote and is never written to the provider's promotion or quote records. Opening another subquote does not carry the code over. Outcome: On acceptance, the discounted price and the applied promotion are frozen into the AcceptanceEvent snapshot.",
+        "statement": "Trigger: While reviewing one named subquote and before confirming acceptance, the patient enters a code (FR-005 Alternative Flow A8). Steps: System validates the code for that subquote only (active window, eligibility, usage limits, recipient binding). If valid, the discounted price is shown next to the provider's offered price; if invalid, the reason is shown and the price stays what the row carried at send, including its attached promotion. The code is held with the open subquote view and stored only on the AcceptanceEvent at acceptance; it is never written to the provider's promotion or quote records. Opening another subquote does not carry the code over. Outcome: On acceptance, the discounted price and the applied promotion are frozen into the AcceptanceEvent snapshot.",
         "rationale": "Alternative Flow A4. PRD lines 150-152. Screen 11 business rule (line 678) and acceptance criterion 3 (line 688) repeat that the code is not carried to another subquote."
       }
     },
@@ -70867,9 +70880,9 @@
       "owner_fr": "FR-019",
       "title": "Accepting a subquote with a promotion creates one Application atomically and reserves or consumes a use",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Trigger: The patient accepts a subquote that carries a promotion attached at send or a valid patient-entered code. Steps: In the same atomic step as the acceptance, the system creates one Application linked to the AcceptanceEvent, the parent quote and version, and the accepted option/date-price row, and reserves one use against the program's usage limits. For an automatic promotion attached at send, the use already reserved at send is consumed instead. If the accepted subquote does not carry the automatic promotion that reserved a use for its parent quote, that reservation is released with reason `not_applied` and the use returns to the limit. Sibling subquotes marked Not Selected and competing quotes never create an Application; any use reserved for them at send is released. A patient code entered on a subquote that was not accepted is discarded. Outcome: The Application is in state Applied with its use reserved, or consumed for an automatic promotion; the discounted price is read from the acceptance snapshot by every later step.",
+        "statement": "Trigger: The patient accepts a subquote that carries a promotion attached at send or a valid patient-entered code. Steps: In the same atomic step as the acceptance, the system creates one Application linked to the AcceptanceEvent, the parent quote and version, and the accepted option/date-price row, and reserves one use against the program's usage limits. For an automatic promotion attached at send, the use already reserved at send is consumed instead. If the accepted subquote does not carry the automatic promotion that reserved a use for its parent quote, that reservation is released with reason `not_applied` and the use returns to the limit. Sibling subquotes marked Not Selected and competing quotes never create an Application; any use reserved for them at send is released. A patient code replaces the promotion the row carried: when the replaced promotion is the automatic one, its reservation is released with reason `not_applied` and the code's use is reserved instead. If the usage limit of a provider-selected promotion is used up when the patient confirms, it is handled like an invalid code (FR-005 REQ-005-026): the acceptance does not happen, the reason is shown, and the patient returns to the subquote detail, which shows the row without that promotion. Pausing, revoking or ending the program after send does not affect a sent quote (General Module Rules); only the usage limit can refuse it at acceptance. A patient code entered on a subquote that was not accepted is discarded. Outcome: The Application is in state Applied with its use reserved, or consumed for an automatic promotion; the discounted price is read from the acceptance snapshot by every later step.",
         "rationale": "Alternative Flow A5. PRD lines 156-158, Implementation Notes (line 814)."
       }
     },
@@ -70975,10 +70988,10 @@
       "owner_fr": "FR-019",
       "title": "Program lifecycle state moves forward only, except Pause and Resume",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Lifecycle State: Draft → Active → Paused → Expired → Archived; Forward transitions only, except Pause and Resume.",
-        "rationale": "Screen 2 common data fields. Pause and Resume on Screens 1 and 8 are the allowed exception; the Pending Approval state on Screen 1 is not in this field (open item)."
+        "statement": "Lifecycle State: Draft → Active → Paused → Expired → Archived; Forward transitions only, except Pause and Resume; only the side that paused (admin or provider) may resume, and who paused is recorded.",
+        "rationale": "Screen 2 common data fields. Pause and Resume on Screens 1 and 8 are the allowed exception; there is no program-level Pending Approval state."
       }
     },
     {
@@ -70997,12 +71010,12 @@
       "id": "REQ-019-051",
       "type": "Rule",
       "owner_fr": "FR-019",
-      "title": "Saving an Admin-via-Provider program sets Pending Approval and notifies targeted providers",
+      "title": "Publishing an Admin-via-Provider program notifies targeted providers, who each accept or decline",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "For Admin-via-Provider, saving transitions the program to `Pending Approval` and notifies targeted providers (S-03; approval-requested event of the FR-030 notification catalogue).",
-        "rationale": "Screen 2 business rules. PRD line 303; same outcome as the Main Flow step 2 rule."
+        "statement": "For Admin-via-Provider, publishing the program (Draft to Active) notifies targeted providers, who each accept or decline (S-03; approval-requested event of the FR-030 notification catalogue). There is no program-level Pending Approval: approval is per provider adoption, and the program applies only to providers whose adoption is Accepted. If every provider declines, the program stays Active with no participants until archived.",
+        "rationale": "Screen 2 business rules; same outcome as the Main Flow step 2 rule."
       }
     },
     {
@@ -71071,9 +71084,9 @@
       "owner_fr": "FR-019",
       "title": "All state changes, edits, approvals and overrides are listed in time order with actor, time and reason",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "All state changes, edits, approvals, and override actions are listed in chronological order with actor, timestamp, and reason.",
+        "statement": "All state changes, edits, approvals, and override actions are listed in chronological order with actor, timestamp, reason, and the old and new values for edits.",
         "rationale": "Screen 2 audit trail panel. PRD line 298."
       }
     },
@@ -71105,11 +71118,11 @@
       "id": "REQ-019-060",
       "type": "Rule",
       "owner_fr": "FR-019",
-      "title": "Re-invite resets a declined or auto-declined provider to Pending and re-sends the notification",
+      "title": "Re-invite resets a declined, auto-declined or revoked provider to Pending and re-sends the notification",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Re-invite resets the provider's status from Declined or Auto-Declined back to Pending and re-sends the S-03 notification.",
+        "statement": "Re-invite resets the provider's status from Declined, Auto-Declined, Revoked-by-Provider or Revoked-by-Admin back to Pending and re-sends the S-03 notification.",
         "rationale": "Screen 3 business rules. PRD line 351."
       }
     },
@@ -71203,9 +71216,9 @@
       "owner_fr": "FR-019",
       "title": "First successful payment on an affiliate-bound code marks it Redeemed and triggers the affiliate incentive event",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "FR-018: Affiliate Management – Affiliate-bound code redemptions accrue incentive to the linked affiliate; FR-019 triggers the incentive event consumed by FR-018. Given a patient enters an Affiliate-bound code on a named subquote and accepts it, when the first payment succeeds, then the corresponding row updates to Redeemed and the affiliate's incentive accrual (per FR-018) is triggered.",
+        "statement": "FR-018: Affiliate Management – Affiliate-bound code redemptions accrue incentive to the linked affiliate; FR-019 triggers the incentive event consumed by FR-018. Affiliate codes follow the same usage rule as every code: one use is reserved at acceptance and consumed at the first payment, and there is no code entry at checkout. Given a patient enters an Affiliate-bound code on a named subquote and accepts it, when the first payment succeeds, then the corresponding row updates to Redeemed and the affiliate's incentive accrual (per FR-018) is triggered.",
         "rationale": "Internal Dependencies (FR-018) and Screen 5 acceptance criterion 2. PRD lines 437, 445, 775."
       }
     },
@@ -71215,9 +71228,9 @@
       "owner_fr": "FR-019",
       "title": "Applied and Completed are two distinct redemption states",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "The two-state distinction (Applied vs Completed) is preserved per client request (Admin Part 1 L341–344). Applied = the subquote carrying the promotion has been accepted and, for a provider-selected promotion or patient code, one use is reserved; Completed = the first payment for that booking has succeeded and that reserved use is consumed. For an automatic promotion the use is already consumed at acceptance, so Completed only marks the first payment.",
+        "statement": "The two-state distinction (Applied vs Completed) is preserved per client request (Admin Part 1 L341–344). Applied = the subquote carrying the promotion has been accepted and, for a provider-selected promotion or patient code, one use is reserved at that moment (entering a code never counts against a limit); Completed = the first payment for that booking has succeeded and that reserved use is consumed. For an automatic promotion the use is already consumed at acceptance, so Completed only marks the first payment.",
         "rationale": "Screen 6 business rules. PRD line 498."
       }
     },
@@ -71227,9 +71240,9 @@
       "owner_fr": "FR-019",
       "title": "Voided and Superseded are set only by the system; there is no admin Void",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Voided is set only by the system, when the booking reaches `Payment Window Expired` or is cancelled; the reserved use is then released. For an automatic promotion, the use consumed at acceptance returns to the usage limit when the row is Voided before the first payment. Superseded is set only by the system when a provider-fault transfer replaces the accepted record. There is no admin Void action.",
+        "statement": "Voided is set only by the system, when the booking reaches `Payment Window Expired` or is cancelled, except for a provider-fault transfer, where Superseded takes precedence; the reserved use is then released. For an automatic promotion, the use consumed at acceptance returns to the usage limit when the row is Voided before the first payment. Superseded is set only by the system when a provider-fault transfer replaces the accepted record, and the use it held returns to the usage limit. There is no admin Void action.",
         "rationale": "Screen 6 business rules. PRD line 499, acceptance criteria 3 and 4 (lines 501-502)."
       }
     },
@@ -71285,11 +71298,11 @@
       "id": "REQ-019-075",
       "type": "Rule",
       "owner_fr": "FR-019",
-      "title": "A provider may run many self-created promotions at once, subject to one discount per booking",
+      "title": "A provider may run many self-created promotions at once, subject to one discount per subquote",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Provider may have an arbitrary number of self-created promotions concurrently active, subject to the platform's single-discount-per-booking rule at redemption time.",
+        "statement": "Provider may have an arbitrary number of self-created promotions concurrently active, subject to the platform's single-discount-per-subquote rule at redemption time.",
         "rationale": "Screen 8 business rules. PRD line 572."
       }
     },
@@ -71405,23 +71418,23 @@
       "id": "REQ-019-085",
       "type": "Rule",
       "owner_fr": "FR-019",
-      "title": "A partial-scope discount shows which price line it reduces",
+      "title": "A discount shows as one separate line that reduces the whole price",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Where a discount applies only to a sub-component (e.g., treatment cost, not travel), the breakdown explicitly shows which line is reduced. When a valid code is applied, the price breakdown updates within 1 second and shows the discount scope label.",
-        "rationale": "Screen 11 business rules. PRD line 688, acceptance criterion 1 (line 686: breakdown updates within 1 second with the scope label)."
+        "statement": "The discount is shown as one separate line that reduces the whole price. When a valid code is applied, for 95% of valid codes the price breakdown updates within 1 second and shows the discount as a separate line.",
+        "rationale": "Screen 11 business rules and acceptance criterion 1."
       }
     },
     {
       "id": "REQ-019-086",
       "type": "Rule",
       "owner_fr": "FR-019",
-      "title": "Active dates, eligibility and usage limits are checked at attach and at code validation",
+      "title": "Active dates, eligibility and usage limits are checked at attach, at code validation and at confirmation; send-time and restore failures are handled",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Active dates, eligibility, and usage limits are checked when a promotion is attached to a row at send and when a patient code is validated before acceptance.",
+        "statement": "Active dates, eligibility, and usage limits are checked when a promotion is attached to a row at send, when a patient code is validated before acceptance, and, for the usage limit of a provider-selected promotion, when the patient confirms acceptance (Alternative Flow A5). If a promotion the provider selected cannot attach at send (its limit is used up, the program is paused or ended, or the provider's adoption is revoked), the provider sees the reason and the quote is sent without that promotion only after the provider confirms; a draft quote that holds a revoked or paused program drops it the same way. An archived quote that is restored re-checks its promotion and takes a new reservation, and the restore is refused when the limit is used up or the promotion has ended (FR-004 REQ-004-105).",
         "rationale": "General Module Rules. PRD line 729."
       }
     },
@@ -71453,11 +71466,11 @@
       "id": "REQ-019-089",
       "type": "Rule",
       "owner_fr": "FR-019",
-      "title": "On a provider-fault transfer the original Application is kept as Superseded and a new Application is linked",
+      "title": "On a provider-fault transfer the original Application is kept as Superseded and the replacement carries no promotion",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Post-acceptance freeze: after acceptance, the promotion and discounted price of the accepted subquote are frozen in the AcceptanceEvent snapshot. No removal, replacement, code entry at checkout or booking, price-changing revalidation, or admin void is allowed. The only exception is the provider-fault transfer in FR-006 (Alternative Flow B5): the original Application is kept as history and marked Superseded, and any promotion on the replacement is recorded as a new Application linked to the new admin-authored acceptance record; a use already reserved or consumed carries over and is not counted twice. Money handling for that transfer is defined by FR-006, FR-007, FR-007b, and FR-017.",
+        "statement": "Post-acceptance freeze: after acceptance, the promotion and discounted price of the accepted subquote are frozen in the AcceptanceEvent snapshot. No removal, replacement, code entry at checkout or booking, price-changing revalidation, or admin void is allowed. The only exception is the provider-fault transfer in FR-006 (Alternative Flow B5): the replacement quote carries no promotion, the original Application is kept as history and marked Superseded (Superseded takes precedence over Voided when the original booking is cancelled for the transfer), and the use it held returns to the usage limit. Money handling for that transfer is defined by FR-006, FR-007, FR-007b, and FR-017.",
         "rationale": "General Module Rules, post-acceptance freeze exception. PRD line 736. FR-006 Alternative Flow B5 owns the transfer."
       }
     },
@@ -71562,11 +71575,11 @@
       "id": "REQ-019-099",
       "type": "Rule",
       "owner_fr": "FR-019",
-      "title": "If the code is no longer valid at confirmation, the patient may accept at the offered price or cancel",
+      "title": "If the code is no longer valid at confirmation, the acceptance does not happen and the patient returns to the subquote detail",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Patient code no longer valid when the patient confirms acceptance (for example, its usage limit was reached): the reason is shown and the patient may accept at the offered price or cancel.",
+        "statement": "Patient code no longer valid when the patient confirms acceptance (for example, its usage limit was reached): the acceptance does not happen, the reason is shown, and the patient returns to the subquote detail, where the patient may accept without the code or enter another; the price falls back to what the row carried at send, including its attached promotion (FR-005 REQ-005-026).",
         "rationale": "Edge cases. PRD line 911."
       }
     },
@@ -71670,11 +71683,11 @@
       "id": "REQ-019-109",
       "type": "Rule",
       "owner_fr": "FR-019",
-      "title": "An admin overrides a discount approval only for Hairline Only programs",
+      "title": "An admin can never force a provider into a program; the overrides are Force-Revoke and Re-invite",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST let an admin override a discount approval only for Hairline Only programs; an admin can never force a provider to take part in a program.",
+        "statement": "System MUST NOT let an admin force a provider to take part in a program; the overrides an admin has on a provider's adoption are Force-Revoke and Re-invite.",
         "rationale": "FR-019 PRD, Functional Requirements Summary and the module overview. Moved in from FR-017 (former REQ-017-145).",
         "aliases": "REQ-017-145"
       }
@@ -98996,7 +99009,7 @@
       "owner_fr": "FR-019",
       "title": "Promotion Detail (Admin)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
         "description": "Screen 2. Type-aware create and edit form for a program across its lifecycle; the form hides sections that do not apply to the program type."
@@ -99068,7 +99081,7 @@
       "owner_fr": "FR-019",
       "title": "My Promotions (Provider)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "provider",
         "description": "Screen 8. List of every provider self-created promotion with Edit, Pause, Resume, Archive and View Applications row actions."
@@ -99080,7 +99093,7 @@
       "owner_fr": "FR-019",
       "title": "Promotion Detail (Provider)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "provider",
         "description": "Screen 9. Create and edit form for a provider self-created promotion, reached standalone (REUSABLE) or inline from FR-004 quote creation (AD_HOC_QUOTE_BOUND). The Save as reusable toggle is a control that sets scope."
@@ -99104,7 +99117,7 @@
       "owner_fr": "FR-019",
       "title": "Apply Discount Before Acceptance (Patient)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "patient",
         "description": "Screen 11. Validate and apply one discount code on one named subquote before acceptance (FR-005 Screen 2, Alternative Flow A8). The code input is not offered after acceptance."
@@ -101913,9 +101926,11 @@
       "owner_fr": "FR-019",
       "title": "Promotion approval auto-decline window",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Days before an unanswered provider approval auto-declines. PRD lines 291 and 758. The PRD gives no default."
+        "description": "Business days before an unanswered provider approval auto-declines; the default of 3 business days is shown on the program form.",
+        "default": "3",
+        "unit": "business days"
       }
     },
     {
@@ -104600,7 +104615,7 @@
       "owner_fr": null,
       "title": "Operations",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
         "timeline": "platform-admin",
         "sequence": 2,
@@ -104718,7 +104733,7 @@
       "owner_fr": null,
       "title": "Quote",
       "status": "active",
-      "version": 17,
+      "version": 18,
       "attrs": {
         "timeline": "main",
         "sequence": 2,
@@ -104757,7 +104772,7 @@
       "owner_fr": null,
       "title": "Payment",
       "status": "active",
-      "version": 21,
+      "version": 22,
       "attrs": {
         "timeline": "main",
         "sequence": 5,
@@ -105018,7 +105033,7 @@
       "owner_fr": null,
       "title": "Active",
       "status": "active",
-      "version": 29,
+      "version": 30,
       "attrs": {
         "timeline": "provider-account",
         "sequence": 3,
@@ -115755,9 +115770,9 @@
       "id": "STP-019-003",
       "type": "Step",
       "owner_fr": "FR-019",
-      "title": "System saves the discount as Pending Approval and notifies the targeted providers",
+      "title": "System publishes the discount as Active and notifies the targeted providers",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 2"
       }
@@ -115768,7 +115783,7 @@
       "owner_fr": "FR-019",
       "title": "Providers accept or decline; the system logs the responses",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 3"
       }
@@ -115911,7 +115926,7 @@
       "owner_fr": "FR-019",
       "title": "System creates one Application and reserves or consumes one use in the same atomic step as the acceptance",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A5"
       }
@@ -115931,9 +115946,9 @@
       "id": "STP-019-019",
       "type": "Step",
       "owner_fr": "FR-019",
-      "title": "Provider enters an invalid, expired or limit-reached code on a quote row",
+      "title": "Provider picks from the list a promotion that no longer qualifies for the row (no typed code)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B1"
       }
@@ -115942,11 +115957,44 @@
       "id": "STP-019-020",
       "type": "Step",
       "owner_fr": "FR-019",
-      "title": "Provider enters or selects a second discount on a row that already has one",
+      "title": "Provider picks a second promotion from the list for a row that already has one",
+      "status": "active",
+      "version": 2,
+      "attrs": {
+        "prd_ref": "Alternative Flow B2"
+      }
+    },
+    {
+      "id": "STP-019-021",
+      "type": "Step",
+      "owner_fr": "FR-019",
+      "title": "System sets the adoption to Declined or Auto-Declined and logs the response",
       "status": "active",
       "version": 1,
       "attrs": {
-        "prd_ref": "Alternative Flow B2"
+        "prd_ref": "Main Flow step 3"
+      }
+    },
+    {
+      "id": "STP-019-022",
+      "type": "Step",
+      "owner_fr": "FR-019",
+      "title": "System consumes the reserved use at the first successful payment",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "General Module Rules, promotion usage lifecycle"
+      }
+    },
+    {
+      "id": "STP-019-023",
+      "type": "Step",
+      "owner_fr": "FR-019",
+      "title": "System releases or voids the reserved use when the booking expires or is cancelled before the first payment",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "General Module Rules, promotion usage lifecycle"
       }
     },
     {
@@ -147773,6 +147821,14 @@
       "calculated_by": null
     },
     {
+      "id": "ENT-promotion-program.paused_by",
+      "entity_id": "ENT-promotion-program",
+      "name": "paused_by",
+      "data_type": "enum",
+      "required": false,
+      "calculated_by": null
+    },
+    {
       "id": "ENT-promotion-program.per_user_usage_limit",
       "entity_id": "ENT-promotion-program",
       "name": "per_user_usage_limit",
@@ -160249,24 +160305,6 @@
       "sort_order": 0
     },
     {
-      "field_id": "ENT-promotion-program.applies_to",
-      "value": "treatment_cost",
-      "label": "Treatment cost only",
-      "sort_order": 1
-    },
-    {
-      "field_id": "ENT-promotion-program.applies_to",
-      "value": "travel_cost",
-      "label": "Travel cost only",
-      "sort_order": 2
-    },
-    {
-      "field_id": "ENT-promotion-program.applies_to",
-      "value": "other",
-      "label": "Other component",
-      "sort_order": 3
-    },
-    {
       "field_id": "ENT-promotion-program.discount_type",
       "value": "percentage",
       "label": "Percentage",
@@ -160277,12 +160315,6 @@
       "value": "fixed_amount",
       "label": "Fixed amount",
       "sort_order": 1
-    },
-    {
-      "field_id": "ENT-promotion-program.discount_type",
-      "value": "package_upgrade",
-      "label": "Package upgrade",
-      "sort_order": 2
     },
     {
       "field_id": "ENT-promotion-program.funding_model",
@@ -160334,12 +160366,6 @@
     },
     {
       "field_id": "ENT-promotion-program.lifecycle_state",
-      "value": "pending_approval",
-      "label": "Pending Approval",
-      "sort_order": 1
-    },
-    {
-      "field_id": "ENT-promotion-program.lifecycle_state",
       "value": "active",
       "label": "Active",
       "sort_order": 2
@@ -160361,6 +160387,18 @@
       "value": "archived",
       "label": "Archived",
       "sort_order": 5
+    },
+    {
+      "field_id": "ENT-promotion-program.paused_by",
+      "value": "admin",
+      "label": "Admin",
+      "sort_order": 0
+    },
+    {
+      "field_id": "ENT-promotion-program.paused_by",
+      "value": "provider",
+      "label": "Provider",
+      "sort_order": 1
     },
     {
       "field_id": "ENT-promotion-program.program_type",
@@ -160427,6 +160465,12 @@
       "value": "not_applied",
       "label": "Not applied",
       "sort_order": 5
+    },
+    {
+      "field_id": "ENT-promotion-usage-reservation.release_reason",
+      "value": "archived",
+      "label": "Archived",
+      "sort_order": 6
     },
     {
       "field_id": "ENT-promotion-usage-reservation.state",
@@ -329790,9 +329834,8 @@
       "verb": "shows",
       "to_id": "ENT-promotion-program.applies_to",
       "attrs": {
-        "provenance": "user input",
-        "label": "Applies To",
-        "editable": true
+        "provenance": "retrieved",
+        "label": "Applies To"
       }
     },
     {
@@ -329903,6 +329946,15 @@
         "provenance": "user input",
         "label": "Program Name",
         "editable": true
+      }
+    },
+    {
+      "from_id": "SCR-019-02",
+      "verb": "shows",
+      "to_id": "ENT-promotion-program.paused_by",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Paused By"
       }
     },
     {
@@ -330708,15 +330760,6 @@
     {
       "from_id": "SCR-019-08",
       "verb": "shows",
-      "to_id": "ENT-promotion-program.applies_to",
-      "attrs": {
-        "provenance": "retrieved",
-        "label": "Applies To"
-      }
-    },
-    {
-      "from_id": "SCR-019-08",
-      "verb": "shows",
       "to_id": "ENT-promotion-program.discount_type",
       "attrs": {
         "provenance": "retrieved",
@@ -330817,9 +330860,8 @@
       "verb": "shows",
       "to_id": "ENT-promotion-program.applies_to",
       "attrs": {
-        "provenance": "user input",
-        "label": "Applies To",
-        "editable": true
+        "provenance": "retrieved",
+        "label": "Applies To"
       }
     },
     {
@@ -331096,15 +331138,6 @@
         "provenance": "user input",
         "label": "Code input",
         "editable": true
-      }
-    },
-    {
-      "from_id": "SCR-019-11",
-      "verb": "shows",
-      "to_id": "ENT-promotion-program.applies_to",
-      "attrs": {
-        "provenance": "retrieved",
-        "label": "Discount Scope label"
       }
     },
     {
@@ -345712,6 +345745,12 @@
     },
     {
       "from_id": "STG-admin-02-operations",
+      "verb": "emits",
+      "to_id": "EVT-promotion-reconciliation-requested",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-02-operations",
       "verb": "follows",
       "to_id": "STG-admin-01-configuration",
       "attrs": {}
@@ -345804,6 +345843,12 @@
       "from_id": "STG-admin-02-operations",
       "verb": "writes",
       "to_id": "ENT-discount-code",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-02-operations",
+      "verb": "writes",
+      "to_id": "ENT-promotion-adoption",
       "attrs": {}
     },
     {
@@ -346848,6 +346893,12 @@
       "from_id": "STG-main-02-quote",
       "verb": "emits",
       "to_id": "EVT-message-sent",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-02-quote",
+      "verb": "emits",
+      "to_id": "EVT-promotion-discount-approval-requested",
       "attrs": {}
     },
     {
@@ -348228,12 +348279,6 @@
       "from_id": "STG-main-05-payment",
       "verb": "emits",
       "to_id": "EVT-payment-unsupported-country",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-main-05-payment",
-      "verb": "emits",
-      "to_id": "EVT-promotion-reconciliation-requested",
       "attrs": {}
     },
     {
@@ -351108,12 +351153,6 @@
       "from_id": "STG-provider-03-active",
       "verb": "emits",
       "to_id": "EVT-missing-translation-logged",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-provider-03-active",
-      "verb": "emits",
-      "to_id": "EVT-promotion-discount-approval-requested",
       "attrs": {}
     },
     {
@@ -386609,6 +386648,15 @@
     },
     {
       "from_id": "STP-019-003",
+      "verb": "next",
+      "to_id": "STP-019-021",
+      "attrs": {
+        "label": "no decision within the auto-decline window",
+        "condition": "REQ-019-062"
+      }
+    },
+    {
+      "from_id": "STP-019-003",
       "verb": "on",
       "to_id": "SCR-019-02",
       "attrs": {}
@@ -386641,7 +386689,17 @@
       "from_id": "STP-019-004",
       "verb": "next",
       "to_id": "STP-019-005",
-      "attrs": {}
+      "attrs": {
+        "label": "provider accepts"
+      }
+    },
+    {
+      "from_id": "STP-019-004",
+      "verb": "next",
+      "to_id": "STP-019-021",
+      "attrs": {
+        "label": "provider declines"
+      }
     },
     {
       "from_id": "STP-019-004",
@@ -387016,6 +387074,22 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-019-017",
+      "verb": "next",
+      "to_id": "STP-019-022",
+      "attrs": {
+        "label": "first payment succeeds"
+      }
+    },
+    {
+      "from_id": "STP-019-017",
+      "verb": "next",
+      "to_id": "STP-019-023",
+      "attrs": {
+        "label": "booking expires or is cancelled before the first payment"
+      }
+    },
+    {
       "from_id": "STP-019-018",
       "verb": "applies",
       "to_id": "REQ-019-013",
@@ -387058,12 +387132,6 @@
       "attrs": {}
     },
     {
-      "from_id": "STP-019-019",
-      "verb": "next",
-      "to_id": "STP-019-011",
-      "attrs": {}
-    },
-    {
       "from_id": "STP-019-020",
       "verb": "applies",
       "to_id": "REQ-019-034",
@@ -387082,9 +387150,81 @@
       "attrs": {}
     },
     {
-      "from_id": "STP-019-020",
-      "verb": "next",
-      "to_id": "STP-019-012",
+      "from_id": "STP-019-021",
+      "verb": "applies",
+      "to_id": "REQ-019-028",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-021",
+      "verb": "applies",
+      "to_id": "REQ-019-062",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-021",
+      "verb": "at",
+      "to_id": "STG-main-02-quote",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-021",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-022",
+      "verb": "applies",
+      "to_id": "REQ-019-014",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-022",
+      "verb": "applies",
+      "to_id": "REQ-019-072",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-022",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-022",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-023",
+      "verb": "applies",
+      "to_id": "REQ-019-014",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-023",
+      "verb": "applies",
+      "to_id": "REQ-019-015",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-023",
+      "verb": "applies",
+      "to_id": "REQ-019-070",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-023",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-023",
+      "verb": "done by",
+      "to_id": "ACT-system",
       "attrs": {}
     },
     {
@@ -438467,6 +438607,72 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-104053-dfe5829f",
+      "at": "2026-11-24T10:40:53.303523+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-019 logic review: archived release reason and restore re-check, send-time and acceptance-time handling of an unusable provider-selected promotion, patient code replacing the row's promotion, tie-break and limit-before-ranking for automatic programs, provider-fault transfer carrying no promotion, no program-level Pending Approval with per-side pause and resume, admin overrides limited to Force-Revoke and Re-invite, auto-decline default, provider code entry removed, package-upgrade and partial-scope options removed, affiliate usage rule, code status on release or void, funnel source and audit before and after values, plus the consume and release steps and the stage and event wiring.",
+      "source_id": null,
+      "nodes_added": [
+        "ENT-promotion-program.paused_by",
+        "STP-019-021",
+        "STP-019-022",
+        "STP-019-023"
+      ],
+      "nodes_updated": [
+        "ENT-promotion-code.status",
+        "ENT-promotion-program.applies_to",
+        "ENT-promotion-program.auto_decline_window_days",
+        "ENT-promotion-program.discount_type",
+        "ENT-promotion-program.lifecycle_state",
+        "ENT-promotion-report-snapshot.redemption_funnel",
+        "ENT-promotion-usage-reservation.release_reason",
+        "FLW-019-code-invalid",
+        "FLW-019-user-conflict",
+        "REQ-019-014",
+        "REQ-019-015",
+        "REQ-019-019",
+        "REQ-019-023",
+        "REQ-019-027",
+        "REQ-019-028",
+        "REQ-019-033",
+        "REQ-019-034",
+        "REQ-019-035",
+        "REQ-019-038",
+        "REQ-019-039",
+        "REQ-019-040",
+        "REQ-019-049",
+        "REQ-019-051",
+        "REQ-019-057",
+        "REQ-019-060",
+        "REQ-019-068",
+        "REQ-019-069",
+        "REQ-019-070",
+        "REQ-019-075",
+        "REQ-019-085",
+        "REQ-019-086",
+        "REQ-019-089",
+        "REQ-019-099",
+        "REQ-019-109",
+        "SCR-019-02",
+        "SCR-019-08",
+        "SCR-019-09",
+        "SCR-019-11",
+        "SET-promotion-auto-decline-window",
+        "STG-admin-02-operations",
+        "STG-main-02-quote",
+        "STG-main-05-payment",
+        "STG-provider-03-active",
+        "STP-019-003",
+        "STP-019-004",
+        "STP-019-017",
+        "STP-019-019",
+        "STP-019-020"
+      ],
+      "edges_added": 24,
+      "edges_removed": 9,
+      "rows": 120
+    },
     {
       "id": "cs-20261124-103128-cbc7640f",
       "at": "2026-11-24T10:31:28.892985+00:00",
