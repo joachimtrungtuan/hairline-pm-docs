@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T15:32:48Z",
+  "generated_at": "2026-11-24T15:52:33Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -7590,8 +7590,10 @@
       "owner_fr": "FR-026",
       "title": "Country flag URL",
       "status": "active",
-      "version": 2,
-      "attrs": {}
+      "version": 3,
+      "attrs": {
+        "description": "Flag asset URL. Required when an admin adds a country by hand (REQ-026-011); a seeded country may have it empty and an imported country has it empty until the flag is uploaded. \"Flag missing\" means exactly this empty state, and a country with an empty flag cannot be set Active (REQ-026-128)."
+      }
     },
     {
       "id": "ENT-country.iso_code",
@@ -27038,8 +27040,10 @@
       "owner_fr": "FR-026",
       "title": "Version number",
       "status": "active",
-      "version": 1,
-      "attrs": {}
+      "version": 2,
+      "attrs": {
+        "description": "Version label as text, such as v1.0, v1.1 or v2.1 (REQ-026-003)."
+      }
     },
     {
       "id": "ENT-settings-audit-entry",
@@ -27078,6 +27082,17 @@
       "status": "active",
       "version": 1,
       "attrs": {}
+    },
+    {
+      "id": "ENT-settings-audit-entry.admin_user_agent",
+      "type": "Field",
+      "owner_fr": "FR-026",
+      "title": "Admin user agent",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Browser and device identification sent with the admin request that made the change (REQ-026-053)."
+      }
     },
     {
       "id": "ENT-settings-audit-entry.change_reason",
@@ -27132,6 +27147,17 @@
       "status": "active",
       "version": 1,
       "attrs": {}
+    },
+    {
+      "id": "ENT-settings-audit-entry.version_id",
+      "type": "Field",
+      "owner_fr": "FR-026",
+      "title": "Version ID",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "The setting version row (ENT-setting-version.version_id) this audit entry belongs to, so Screen 7 can show the version, change type and audit fields in one row."
+      }
     },
     {
       "id": "ENT-slot-hold",
@@ -80130,7 +80156,7 @@
       "owner_fr": "FR-026",
       "title": "Setting changes versioned with auto-incremented numbers",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "System MUST version all setting changes with auto-incremented version numbers (v1.0, v1.1, v1.2, etc.)",
         "rationale": "Restated by General Module Rule 2 and Main Flow step 11."
@@ -80226,9 +80252,9 @@
       "owner_fr": "FR-026",
       "title": "Centrally managed country list",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST store centrally managed country list: country name, ISO code, calling code, country flag asset URL (stored via S-05 Media Storage; required, the admin uploads the flag on Screen 4), display order, active status",
+        "statement": "System MUST store centrally managed country list: country name, ISO code, calling code, country flag asset URL (stored via S-05 Media Storage; required when an admin adds a country, the admin uploads the flag on Screen 4; a seeded country may have none and an imported country has none until uploaded), display order, active status",
         "rationale": "Flag assets are stored in centralized media storage/CDN (S-05) and referenced by URL. Screen 4 marks the Country Flag field Required = Yes while this rule and Entity 4 say nullable; see the open question on country flag."
       }
     },
@@ -80671,10 +80697,10 @@
       "owner_fr": "FR-026",
       "title": "Timestamps stored in UTC, shown in the admin local timezone",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "All timestamps MUST be stored in UTC and displayed in admin's local timezone. Consumer: FR-021.",
-        "rationale": "General Module Rule 5."
+        "statement": "All timestamps MUST be stored in UTC. Admin screens show times in the admin's browser timezone, with the zone named beside the time; the Timezone Options list (SET-timezone-options, REQ-026-121) is the choice offered to patients and providers only, never to admins.",
+        "rationale": "General Module Rule 5; owner default 268 (other option: one platform-wide admin timezone set in settings)."
       }
     },
     {
@@ -80707,7 +80733,7 @@
       "owner_fr": "FR-026",
       "title": "Audit trail also records IP address and user agent",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "All admin actions are logged with IP address, user agent, timestamp, and change details.",
         "rationale": "Security Considerations, Audit trail. REQ-026-004 lists a narrower set of audit fields; the lists are complementary."
@@ -80923,9 +80949,9 @@
       "owner_fr": "FR-026",
       "title": "One OTP expiry for registration verification and password reset",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Single global OTP expiry: the configured OTP Expiry Time applies uniformly to registration email verification and password reset OTP flows (no separate per-flow expiry). Re-verification and email-change codes follow FR-001 (fixed 15 minutes, REQ-001-098), are outside this setting, and are sent with the email verification template.",
+        "statement": "Single global OTP expiry: the configured OTP Expiry Time applies uniformly to registration email verification and password reset OTP flows (no separate per-flow expiry). Re-verification and email-change codes follow FR-001 (fixed 15 minutes, REQ-001-098), are outside this setting, and are sent with the email verification template. In the email, {expiry_minutes} is the lifetime of the code being sent: the OTP Expiry Time for registration verification and password reset, the fixed 15 minutes for re-verification and email-change codes.",
         "rationale": "Screen 3 business rules and field description."
       }
     },
@@ -80935,9 +80961,9 @@
       "owner_fr": "FR-026",
       "title": "OTP changes apply only to new OTP requests",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "OTP configuration changes apply only to NEW OTP generation requests; existing OTP codes in users' inboxes retain their original expiry time.",
+        "statement": "OTP configuration changes apply only to NEW OTP generation requests; existing OTP codes in users' inboxes retain their original expiry time. A resend always issues a new code under the expiry value in force at the moment of the resend; a code already sent keeps the lifetime it was sent with.",
         "rationale": "Screen 3 business rules."
       }
     },
@@ -81335,9 +81361,9 @@
       "owner_fr": "FR-026",
       "title": "Template changes apply only to new OTP requests",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Template changes apply only to NEW OTP generation requests; users already in a verification flow continue with the previous template version and existing emails are unchanged.",
+        "statement": "Template changes apply only to NEW OTP generation requests; users already in a verification flow continue with the previous template version and existing emails are unchanged. A resend is a new code and is sent with the template version and expiry value in force at the moment of the resend; only emails and codes already sent keep their original content.",
         "rationale": "Screen 6 business rules, Module Scope (Shared Services S-03) and workflow A2 steps 11 and 12."
       }
     },
@@ -81443,9 +81469,9 @@
       "owner_fr": "FR-026",
       "title": "Admin session Settings",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST store the admin session Settings: concurrent sessions per admin user (1 to 5, default 3) and the admin inactivity timeout (whole minutes from 5 to 240, default 30). Failed admin sign-ins use the shared Max Login Attempts Setting of Screen 2 and there is no separate admin Setting; the fixed FR-031 endpoint throttle of 5 attempts per 15 minutes (REQ-031-100) applies in addition, whichever trips first. A Login as Provider session ends after its own fixed 30 minutes of inactivity (REQ-015-026) or when the admin's own session ends under the admin inactivity timeout, whichever comes first. Consumer: FR-031.",
+        "statement": "System MUST store the admin session Settings: concurrent sessions per admin user (1 to 5, default 3) and the admin inactivity timeout (whole minutes from 5 to 240, default 30). Failed admin sign-ins use the shared Max Login Attempts Setting of Screen 2 and there is no separate admin Setting; the fixed FR-031 endpoint throttle of 5 attempts per 15 minutes (REQ-031-100) applies in addition, whichever trips first. A Login as Provider session ends after its own fixed 30 minutes of inactivity (REQ-015-026) or when the admin's own session ends under the admin inactivity timeout, whichever comes first. When an admin signs in while already at the concurrent-session limit, the oldest session is ended and the new one opens. A change to the session limit or the inactivity timeout applies from each open session's next request; sessions above a lowered limit are ended oldest first (owner default 267; other option: refuse the new sign-in until an older session is closed). Consumer: FR-031.",
         "rationale": "FR-026 PRD, section Platform Settings Requirements."
       }
     },
@@ -81588,9 +81614,9 @@
       "owner_fr": "FR-026",
       "title": "Country CSV bulk import",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Screen 4 MUST offer bulk import of countries from a CSV file with the columns Country Name, ISO Code, Calling Code and Display Order (optional) and no flag column, with validation of every row before anything is saved. An imported country is saved Inactive with a \"flag missing\" state and cannot be activated until the admin uploads its flag.",
+        "statement": "Screen 4 MUST offer bulk import of countries from a CSV file with the columns Country Name, ISO Code, Calling Code and Display Order (optional) and no flag column, with validation of every row before anything is saved. An imported country is saved Inactive with the state \"flag missing\", which means its flag (ENT-country.flag_url) is empty, and cannot be activated until the admin uploads its flag.",
         "rationale": "FR-026 PRD, section Screen Field Limits and Behaviours."
       }
     },
@@ -81768,10 +81794,10 @@
       "owner_fr": "FR-026",
       "title": "Emergency contact needs at least one value",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "System MUST refuse to save the Support Emergency Contact Settings when both phone and email are blank, with the message \"Set at least one emergency contact (phone or email).\" (REQ-035-040).",
-        "rationale": "Logic review of the FR-026 PRD; mirrors the PRD text."
+        "statement": "System MUST refuse a save that changes the Support Emergency Contact Phone or Email when it leaves both blank, with the message \"Set at least one emergency contact (phone or email).\"; a save that changes neither value is not checked, so other Screen 8 rows can be saved while both are blank, as at launch. While both are blank the patient Help & Support Hub hides the emergency contact section (REQ-035-040).",
+        "rationale": "Logic review of the FR-026 PRD; owner default 269 (other option: block every Screen 8 save until one contact is set)."
       }
     },
     {
@@ -81784,6 +81810,18 @@
       "attrs": {
         "statement": "When the Settings API is unavailable as a slot hold is placed at subquote acceptance or an FR-006 admin revive, the action MUST be blocked and can be retried; no stale or guessed slot-hold duration is used.",
         "rationale": "Logic review of the FR-026 PRD; mirrors the PRD text. Mirrors REQ-026-063 for the quote send."
+      }
+    },
+    {
+      "id": "REQ-026-145",
+      "type": "Rule",
+      "owner_fr": "FR-026",
+      "title": "One shared failed-attempt counter with reset and lowered-limit rules",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "System MUST keep one failed-attempt counter per account, shared by sign-in and verification-code entry (a wrong password and a wrong code count together, REQ-001-180). The counter MUST return to zero after a successful sign-in or code entry and when a lockout ends. A lowered Max Login Attempts MUST apply from the next failed attempt: an account already at or above the new limit locks on its next failure, and saving the setting locks no account.",
+        "rationale": "Logic review of the FR-026 PRD; owner default 266 (other option: failures expire one by one after a rolling time window). Restates the shared limit of REQ-001-180."
       }
     },
     {
@@ -102846,9 +102884,9 @@
       "owner_fr": "FR-026",
       "title": "Max login attempts before lockout",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Failed login attempts allowed before the account is locked. Permitted 1 through 10. One shared Setting for patients, providers and admins.",
+        "description": "Failed login attempts allowed before the account is locked. Permitted 1 through 10. One shared Setting for patients, providers and admins. One failed-attempt counter per account is shared by sign-in and verification-code entry; it resets after a successful sign-in or code entry and when a lockout ends, and a lowered limit applies from the next failed attempt (REQ-026-145).",
         "default": "5",
         "unit": "attempts"
       }
@@ -103644,9 +103682,9 @@
       "owner_fr": "FR-026",
       "title": "Timezone options",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "description": "Timezone choices: every whole-hour offset from GMT-12 to GMT+14, each with its offset and a city example such as \"(GMT+3) Istanbul\" (consumers: FR-032, FR-021). Edited on FR-026 Screen 8."
+        "description": "Timezone choices: every whole-hour offset from GMT-12 to GMT+14, each with its offset and a city example such as \"(GMT+3) Istanbul\" (consumers: FR-032, FR-021). Edited on FR-026 Screen 8. Offered to patients and providers only; admin screens use the admin's browser timezone (REQ-026-050)."
       }
     },
     {
@@ -121040,7 +121078,7 @@
       "owner_fr": "FR-026",
       "title": "Admin clicks Save Changes",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow step 7"
       }
@@ -121170,9 +121208,9 @@
       "id": "STP-026-020",
       "type": "Step",
       "owner_fr": "FR-026",
-      "title": "Admin enters Albania with +355 and AL",
+      "title": "Admin enters Albania with +355 and AL and uploads the Albanian flag as an SVG file",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A1 step 4"
       }
@@ -121194,7 +121232,7 @@
       "owner_fr": "FR-026",
       "title": "Admin supplies the change reason",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A1 step 6"
       }
@@ -121335,9 +121373,9 @@
       "id": "STP-026-036",
       "type": "Step",
       "owner_fr": "FR-026",
-      "title": "New OTP requests use the new template version",
+      "title": "New OTP requests, including a resend, use the new template version and expiry; codes and emails already sent keep the old version and their original expiry",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A2 step 11"
       }
@@ -121678,7 +121716,7 @@
       "owner_fr": "FR-026",
       "title": "Admin clicks Save and supplies the change reason",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A6 step 4"
       }
@@ -121744,7 +121782,7 @@
       "owner_fr": "FR-026",
       "title": "Admin saves the configuration",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A7 step 4"
       }
@@ -121788,7 +121826,7 @@
       "owner_fr": "FR-026",
       "title": "Admin edits the analytics values",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A8 step 2"
       }
@@ -121865,7 +121903,7 @@
       "owner_fr": "FR-026",
       "title": "Admin clicks Save",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A9 step 4"
       }
@@ -121909,7 +121947,7 @@
       "owner_fr": "FR-026",
       "title": "Admin sets Max Login Attempts to zero",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B1 step 1"
       }
@@ -121931,7 +121969,7 @@
       "owner_fr": "FR-026",
       "title": "Admin corrects the value to three",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B1 step 4"
       }
@@ -122011,6 +122049,17 @@
       "version": 1,
       "attrs": {
         "prd_ref": "Alternative Flow B2 step 6"
+      }
+    },
+    {
+      "id": "STP-026-105",
+      "type": "Step",
+      "owner_fr": "FR-026",
+      "title": "System checks the flag file type and size before Save",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A1 step 4"
       }
     },
     {
@@ -140628,7 +140677,7 @@
       "entity_id": "ENT-country",
       "name": "flag_url",
       "data_type": "text",
-      "required": true,
+      "required": false,
       "calculated_by": null
     },
     {
@@ -154603,7 +154652,7 @@
       "id": "ENT-setting-version.version_number",
       "entity_id": "ENT-setting-version",
       "name": "version_number",
-      "data_type": "int",
+      "data_type": "text",
       "required": true,
       "calculated_by": "REQ-026-003"
     },
@@ -154627,6 +154676,14 @@
       "id": "ENT-settings-audit-entry.admin_ip",
       "entity_id": "ENT-settings-audit-entry",
       "name": "admin_ip",
+      "data_type": "text",
+      "required": true,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-settings-audit-entry.admin_user_agent",
+      "entity_id": "ENT-settings-audit-entry",
+      "name": "admin_user_agent",
       "data_type": "text",
       "required": true,
       "calculated_by": null
@@ -154676,6 +154733,14 @@
       "entity_id": "ENT-settings-audit-entry",
       "name": "timestamp",
       "data_type": "datetime",
+      "required": true,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-settings-audit-entry.version_id",
+      "entity_id": "ENT-settings-audit-entry",
+      "name": "version_id",
+      "data_type": "id",
       "required": true,
       "calculated_by": null
     },
@@ -179698,7 +179763,7 @@
       "verb": "active in",
       "to_id": "STG-admin-01-configuration",
       "attrs": {
-        "rules": 33
+        "rules": 35
       },
       "derived": true
     },
@@ -179743,7 +179808,7 @@
       "verb": "active in",
       "to_id": "STG-patient-01-registered",
       "attrs": {
-        "rules": 32
+        "rules": 33
       },
       "derived": true
     },
@@ -179761,7 +179826,7 @@
       "verb": "active in",
       "to_id": "STG-patient-03-active",
       "attrs": {
-        "rules": 56
+        "rules": 57
       },
       "derived": true
     },
@@ -179779,7 +179844,7 @@
       "verb": "active in",
       "to_id": "STG-provider-03-active",
       "attrs": {
-        "rules": 63
+        "rules": 64
       },
       "derived": true
     },
@@ -270220,6 +270285,12 @@
     },
     {
       "from_id": "REQ-026-003",
+      "verb": "applies to",
+      "to_id": "ENT-settings-audit-entry.version_id",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-003",
       "verb": "decided by",
       "to_id": "SRC-PRD-026",
       "attrs": {}
@@ -271547,6 +271618,12 @@
     {
       "from_id": "REQ-026-050",
       "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-050",
+      "verb": "applies at",
       "to_id": "STG-patient-03-active",
       "attrs": {}
     },
@@ -271644,6 +271721,12 @@
       "from_id": "REQ-026-053",
       "verb": "applies to",
       "to_id": "ENT-settings-audit-entry.admin_ip",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-053",
+      "verb": "applies to",
+      "to_id": "ENT-settings-audit-entry.admin_user_agent",
       "attrs": {}
     },
     {
@@ -274542,6 +274625,54 @@
       "from_id": "REQ-026-144",
       "verb": "governed by",
       "to_id": "SET-slot-hold-duration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-145",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-145",
+      "verb": "applies at",
+      "to_id": "STG-patient-01-registered",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-145",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-145",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-145",
+      "verb": "applies to",
+      "to_id": "ENT-auth-throttling-policy.max_login_attempts",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-145",
+      "verb": "applies to",
+      "to_id": "SCR-026-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-145",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-026",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-026-145",
+      "verb": "governed by",
+      "to_id": "SET-max-login-attempts",
       "attrs": {}
     },
     {
@@ -406615,7 +406746,7 @@
     {
       "from_id": "STP-026-020",
       "verb": "next",
-      "to_id": "STP-026-021",
+      "to_id": "STP-026-105",
       "attrs": {}
     },
     {
@@ -408638,6 +408769,36 @@
       "from_id": "STP-026-104",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-105",
+      "verb": "applies",
+      "to_id": "REQ-026-122",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-105",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-105",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-105",
+      "verb": "next",
+      "to_id": "STP-026-021",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-026-105",
+      "verb": "on",
+      "to_id": "SCR-026-04",
       "attrs": {}
     },
     {
@@ -448533,6 +448694,48 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-155117-91faabea",
+      "at": "2026-11-24T15:51:17.768332+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-026 logic review pass 2: one shared failed-attempt counter with reset and lowered-limit rule, admin session limit and timeout enforcement, flag upload step in the add-country scenario, expiry value in the email variable, resend under the version and expiry in force, admin times in the browser timezone, emergency contact check only on a save that changes those rows, next edges to retired validation steps removed, settings version label as text, audit entry user agent and version reference, and the empty-flag state for countries.",
+      "source_id": null,
+      "nodes_added": [
+        "ENT-settings-audit-entry.admin_user_agent",
+        "ENT-settings-audit-entry.version_id",
+        "REQ-026-145",
+        "STP-026-105"
+      ],
+      "nodes_updated": [
+        "ENT-country.flag_url",
+        "ENT-setting-version.version_number",
+        "REQ-026-003",
+        "REQ-026-011",
+        "REQ-026-050",
+        "REQ-026-053",
+        "REQ-026-072",
+        "REQ-026-073",
+        "REQ-026-106",
+        "REQ-026-116",
+        "REQ-026-128",
+        "REQ-026-143",
+        "SET-max-login-attempts",
+        "SET-timezone-options",
+        "STP-026-007",
+        "STP-026-020",
+        "STP-026-022",
+        "STP-026-036",
+        "STP-026-068",
+        "STP-026-075",
+        "STP-026-080",
+        "STP-026-088",
+        "STP-026-093",
+        "STP-026-096"
+      ],
+      "edges_added": 17,
+      "edges_removed": 9,
+      "rows": 73
+    },
     {
       "id": "cs-20261124-153131-c25f43aa",
       "at": "2026-11-24T15:31:31.631978+00:00",

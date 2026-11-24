@@ -157,7 +157,7 @@ The App Settings & Security Policies module provides a centralized, audited, and
   1. Admin navigates to Settings → App Data → Countries & Calling Codes
   2. System displays current list of countries with calling codes
   3. Admin clicks "Add Country"
-  4. Admin enters country name "Albania", calling code "+355", ISO code "AL"
+  4. Admin enters country name "Albania", calling code "+355", ISO code "AL" and uploads the Albanian flag as an SVG file; System checks the file type and size before Save (REQ-026-122)
   5. Admin clicks "Save"
   6. System opens a modal titled "Change Reason" requiring admin to enter an explanation (10-500 chars). Admin enters: "Expanding service to Albanian market" and confirms.
   7. System validates ISO code uniqueness
@@ -180,7 +180,7 @@ The App Settings & Security Policies module provides a centralized, audited, and
   9. System versions template (v2.1 → v2.2)
   10. System creates audit log
   11. New OTP generation requests use v2.2 template
-  12. Users already in verification flow continue using v2.1 template (no disruption)
+  12. Codes and emails already sent keep v2.1 and their original expiry (no disruption); a resend is a new code and uses v2.2 (REQ-026-106)
 
 - **Outcome**: New verification emails reflect updated branding
 
@@ -382,6 +382,7 @@ The App Settings & Security Policies module provides a centralized, audited, and
 - Changes apply upon save (no staging), within 60 seconds of saving (propagation) (REQ-026-070)
 - Existing locked-out users continue to serve existing lockout duration (no retroactive changes) (REQ-026-071)
 - New login attempts apply new throttling policy after propagation (REQ-026-070)
+- One failed-attempt counter is kept per account and is shared by sign-in and verification-code entry, so a wrong password and a wrong code count together (REQ-001-180). It returns to zero after a successful sign-in or code entry and when a lockout ends. A lowered Max Login Attempts applies from the next failed attempt: an account already at or above the new limit locks on its next failure, and saving the setting locks nobody (REQ-026-145)
 - The shared Max Login Attempts lockout also applies to admin sign-in, together with the fixed admin endpoint throttle of 5 attempts per 15 minutes (REQ-031-100); whichever trips first applies (REQ-026-116)
 
 **Notes**:
@@ -411,11 +412,12 @@ The App Settings & Security Policies module provides a centralized, audited, and
 - OTP length is FIXED at 6 digits in codebase (not editable) (REQ-026-060)
 - Single global OTP expiry: the configured `OTP Expiry Time` applies uniformly to **both** registration email verification and password reset OTP flows (no separate per-flow expiry) (REQ-026-072)
 - Re-verification and email-change codes follow FR-001 (fixed 15 minutes, REQ-001-098), are outside this setting, and are sent with the email verification template (REQ-026-072)
+- In the email, `{expiry_minutes}` is the lifetime of the code being sent: the OTP Expiry Time for registration verification and password reset, the fixed 15 minutes for re-verification and email-change codes (REQ-026-072)
 - Default OTP expiry: 15 minutes
 - Default resend cooldown: 60 seconds
 - Default max resend attempts: 5 per rolling 60 minutes
 - Changes apply only to NEW OTP generation requests (REQ-026-073)
-- Existing OTP codes in users' inboxes retain original expiry time (REQ-026-073)
+- Existing OTP codes in users' inboxes retain original expiry time; a resend always issues a new code under the expiry value in force at the moment of the resend (REQ-026-073)
 
 **Rate Limiting Interaction Logic**:
 
@@ -478,7 +480,7 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 | Country Name   | text     | Yes      | Full country name (e.g., "United Kingdom") | Max 100 chars, unique (REQ-026-122, REQ-026-076) | ENT-country.country_name |
 | ISO Code       | text     | Yes      | ISO 3166-1 alpha-2 code (e.g., "GB")       | Exactly 2 uppercase chars, unique (REQ-026-122, REQ-026-076) | ENT-country.iso_code |
 | Calling Code   | text     | Yes      | International calling code (e.g., "+44")   | Format: +[1-4 digits] (REQ-026-122, REQ-026-077) | ENT-country.calling_code |
-| Country Flag   | file     | Yes      | Country flag asset (SVG preferred; PNG fallback) | Types: .svg or .png; Max size: 1 MB; Recommended dimensions: SVG scalable, PNG ≥ 128x128 (REQ-026-122, REQ-026-079) | ENT-country.flag_url |
+| Country Flag   | file     | Yes when an admin adds a country; a seeded country may have none and an imported country has none until uploaded | Country flag asset (SVG preferred; PNG fallback). A country with no flag has the state "flag missing" and cannot be set Active (REQ-026-128) | Types: .svg or .png; Max size: 1 MB; Recommended dimensions: SVG scalable, PNG ≥ 128x128 (REQ-026-122, REQ-026-079) | ENT-country.flag_url |
 | Display Order  | number   | No       | Sort priority (lower = higher priority)    | Integer, default: 999 (REQ-026-122) | ENT-country.display_order |
 | Active         | checkbox | Yes      | Whether country is visible in UI           | Default: true | ENT-country.active |
 
@@ -721,7 +723,7 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 | Subject Line             | text               | Yes      | Email subject line                    | Max 200 chars (REQ-026-127) | ENT-email-template.subject_line |
 | Email Body (HTML)        | rich text          | Yes      | HTML email content                    | Max 50,000 chars, valid HTML (REQ-026-127, REQ-026-102) | ENT-email-template.html_body |
 | Email Body (Plain Text)  | textarea           | Yes      | Fallback plain text version           | Max 10,000 chars (REQ-026-127) | ENT-email-template.plain_text_body |
-| Available Variables      | list (read-only)   | N/A      | {code}, {email}, {expiry_minutes}, {app_name} | Display only (REQ-026-104) | ENT-email-template.available_variables |
+| Available Variables      | list (read-only)   | N/A      | {code}, {email}, {expiry_minutes}, {app_name} | Display only (REQ-026-104). `{expiry_minutes}` is the lifetime of the code being sent: the OTP Expiry Time for registration and password reset, 15 for re-verification and email-change codes (REQ-026-072) | ENT-email-template.available_variables |
 
 **Business Rules**:
 
@@ -731,7 +733,7 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 - Plain text body is fallback for email clients that don't support HTML (REQ-026-103)
 - Variables are automatically substituted at send time (REQ-026-104)
 - Preview functionality renders sample email with fake data (REQ-026-105)
-- Changes apply only to NEW OTP generation requests (existing emails unaffected) (REQ-026-106)
+- Changes apply only to NEW OTP generation requests (existing emails unaffected); a resend is a new code and uses the template version and expiry in force at the moment of the resend (REQ-026-106)
 
 **Notes**:
 
@@ -754,7 +756,7 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 | Field Name      | Type               | Required | Description                               | Validation Rules   | Graph field |
 | --------------- | ------------------ | -------- | ----------------------------------------- | ------------------ | --- |
 | Version Number  | text (read-only)   | N/A      | Version identifier (e.g., "v1.3")         | N/A (display only) | ENT-setting-version.version_number |
-| Changed On      | datetime (read-only) | N/A      | Timestamp of change                       | N/A (display only) | ENT-settings-audit-entry.timestamp |
+| Changed On      | datetime (read-only) | N/A      | Timestamp of change, shown in the admin's browser timezone with the zone named beside the time (REQ-026-050) | N/A (display only) | ENT-settings-audit-entry.timestamp |
 | Changed By      | text (read-only)   | N/A      | Admin email who made change               | N/A (display only) | ENT-settings-audit-entry.admin_email |
 | Change Type     | text (read-only)   | N/A      | "Update", "Initial", "System" (a Quote Configuration version created by a Default Currency change in FR-029) | N/A (display only) | ENT-setting-version.change_type |
 | Old Values      | JSON (read-only)   | N/A      | Previous configuration values             | N/A (display only) | ENT-settings-audit-entry.old_values |
@@ -798,8 +800,8 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 | Acceptance Terms Text | text | Yes | Legal copy and terms acknowledgment text shown at quote acceptance (consumer: FR-005). Terms & Conditions, Privacy Policy and consent forms stay in FR-027 | Edited with the same change reason and versioning as every other Setting. Until the admin sets the text, the quote acceptance action that needs the acknowledgment checkbox is blocked with a message (REQ-026-118) | no graph field (Setting) |
 | Timezone Options | list | Yes | Timezone choices from GMT-12 to GMT+14, each shown with its offset and a city example such as "(GMT+3) Istanbul" (consumers: FR-032, FR-021) | Offsets GMT-12 to GMT+14 (REQ-026-121) | no graph field (Setting) |
 | Provider Notification Types | list | Yes | Notification types offered in provider notification preferences (consumers: FR-032, FR-020) | Core types quote, schedule, treatment, aftercare and review cannot be removed (REQ-026-120) | no graph field (Setting) |
-| Support Emergency Contact Phone | text | No | Emergency phone number shown read-only with tap-to-call on the patient Help & Support Hub (FR-035 Screen 1) | No default; at least one of phone and email must be set (REQ-026-143), and FR-035 assumes the admin sets it before go-live (REQ-026-115) | SET-support-emergency-contact-phone |
-| Support Emergency Contact Email | text | No | Emergency email address shown read-only with tap-to-compose on the patient Help & Support Hub (FR-035 Screen 1) | No default; at least one of phone and email must be set (REQ-026-143), and FR-035 assumes the admin sets it before go-live (REQ-026-115) | SET-support-emergency-contact-email |
+| Support Emergency Contact Phone | text | No | Emergency phone number shown read-only with tap-to-call on the patient Help & Support Hub (FR-035 Screen 1) | No default; a save that changes the phone or the email must leave at least one of them set (REQ-026-143), and FR-035 assumes the admin sets it before go-live (REQ-026-115) | SET-support-emergency-contact-phone |
+| Support Emergency Contact Email | text | No | Emergency email address shown read-only with tap-to-compose on the patient Help & Support Hub (FR-035 Screen 1) | No default; a save that changes the phone or the email must leave at least one of them set (REQ-026-143), and FR-035 assumes the admin sets it before go-live (REQ-026-115) | SET-support-emergency-contact-email |
 | Treatment Creation Rate Limit | number | Yes | Maximum new treatments per admin per hour (owner: FR-024) | Range and default follow FR-024; a new record counts once, when first saved as Active or Inactive (REQ-026-140) | no graph field (Setting) |
 | Package Creation Rate Limit | number | Yes | Maximum new packages per provider per hour (owner: FR-024) | Range and default follow FR-024; a new record counts once, when first saved as Active or Inactive, and a clone counts (REQ-026-140) | no graph field (Setting) |
 | Admin Invitation Token Expiry | number (days) | Yes | Lifetime of an admin team invitation token (owner: FR-031) | Range and default follow FR-031 (REQ-026-140) | no graph field (Setting) |
@@ -809,9 +811,10 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 
 - Saving requires a change reason, version increment, immutable audit entry, and immediate cache invalidation, as on every other Settings screen. (REQ-026-002, REQ-026-003, REQ-026-004, REQ-026-006)
 - Failed admin sign-ins use the shared Max Login Attempts setting on Screen 2 (default 5, with the shared lockout duration); there is no separate admin setting, and the fixed FR-031 endpoint throttle of 5 attempts per 15 minutes applies in addition, whichever trips first (REQ-031-100). (REQ-026-116)
+- When an admin signs in while already at the Admin Concurrent Sessions limit, the oldest session is ended and the new one opens. A change to the session limit or the inactivity timeout applies from each open session's next request; sessions above a lowered limit are ended oldest first (REQ-026-116)
 - The discovery source options of the registration question are the Discovery Questions answer options managed on Screen 5; Screen 8 holds no second list. (REQ-026-119)
 - Where the table says no value is fixed, an admin sets the value here and can change it without a code release. (REQ-026-117)
-- At least one of Support Emergency Contact Phone and Email must be set; a save that leaves both blank is refused with the message "Set at least one emergency contact (phone or email)." (REQ-026-143)
+- A save that changes Support Emergency Contact Phone or Email and leaves both blank is refused with the message "Set at least one emergency contact (phone or email)."; other Screen 8 rows can be saved while both are still blank, as at launch. While both are blank the patient Help & Support Hub hides the emergency contact section (REQ-026-143, REQ-035-040)
 - The group "Limits owned by other features" (the last four rows) only lists Settings whose owning FR makes them admin-editable; range, default and counting rule stay with the owning FR (REQ-026-140)
 - The edit permission for these Settings is in the permission table under Security Controls (REQ-026-001).
 
@@ -825,7 +828,7 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 - **Rule 2**: Setting changes MUST be versioned with auto-incremented version numbers (v1.0, v1.1, v1.2, etc.) (REQ-026-003)
 - **Rule 3**: Setting changes MUST propagate to dependent services within 1 minute (60-second polling interval) (REQ-026-005)
 - **Rule 4**: Settings cache MUST be invalidated immediately upon save to ensure propagation (REQ-026-006)
-- **Rule 5**: All timestamps MUST be stored in UTC and displayed in admin's local timezone (REQ-026-050; FR-021 also relies on UTC storage)
+- **Rule 5**: All timestamps MUST be stored in UTC. Admin screens show times in the admin's browser timezone, with the zone named beside the time; the Timezone Options list is the choice offered to patients and providers only (REQ-026-050)
 
 ### Data & Privacy Rules
 
@@ -853,7 +856,7 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 - Quote configuration: set the quote expiry window and the quote-expiring-soon lead time (FR-004 consumer), and the slot-hold duration and the hold-expiring-soon lead time (FR-005 and FR-006 consumers); the quote currency is shown read-only because it is the FR-029 Default Currency (REQ-026-037)
 - Analytics configuration: TTFQ SLA target, At Risk and Dormant thresholds, price outlier threshold, benchmark refresh frequency, and optional target monthly commission (FR-014 consumer) (REQ-026-038)
 - OTP email templates: subject line, HTML body, plain text body (REQ-026-013)
-- Platform Settings (Screen 8): re-verification threshold; admin concurrent sessions and inactivity timeout; landing background images; profile photo formats and maximum size; head scan intake limits; acceptance terms text; timezone options; provider notification types; support emergency contact phone and email (REQ-026-112, REQ-026-113, REQ-026-114, REQ-026-115, REQ-026-116, REQ-026-117, REQ-026-118, REQ-026-120, REQ-026-121)
+- Platform Settings (Screen 8): re-verification threshold; admin concurrent sessions and inactivity timeout; landing background images; profile photo formats and maximum size; head scan quality minimums and head video duration limits; acceptance terms text; timezone options; provider notification types; support emergency contact phone and email (REQ-026-112, REQ-026-113, REQ-026-114, REQ-026-115, REQ-026-116, REQ-026-117, REQ-026-118, REQ-026-120, REQ-026-121)
 
 **Fixed in Codebase (Not Editable)**:
 
@@ -994,7 +997,7 @@ The following modules consume FR-026 infrastructure. They are listed here for tr
 - Dependent services (Patient app, Provider app) can poll Settings API every 60 seconds without performance impact
 - Admins have authority to modify security policies without external approval
 - 1-minute propagation delay is acceptable for non-critical settings (e.g., discovery questions)
-- Security policy changes apply prospectively only (do not retroactively affect locked-out users) (REQ-026-071)
+- Security policy changes apply prospectively only (do not retroactively affect locked-out users; a lowered attempt limit applies from the next failed attempt) (REQ-026-071, REQ-026-145)
 
 ### Initial Configuration / Seeding
 
@@ -1291,8 +1294,9 @@ Admin needs one versioned source for the thresholds and targets used by FR-014 a
 ### Data Requirements
 
 - **REQ-026-009**: System MUST store authentication throttling settings: max login attempts (1-10), lockout duration (5-60 minutes)
+- **REQ-026-145**: System MUST keep one failed-attempt counter per account, shared by sign-in and verification-code entry (a wrong password and a wrong code count together, REQ-001-180). The counter MUST return to zero after a successful sign-in or code entry and when a lockout ends. A lowered Max Login Attempts MUST apply from the next failed attempt: an account already at or above the new limit locks on its next failure, and saving the setting locks no account.
 - **REQ-026-010**: System MUST store OTP configuration: expiry time (5-30 minutes), resend cooldown (30-300 seconds), max resend attempts (3-10)
-- **REQ-026-011**: System MUST store centrally managed country list: country name, ISO code, calling code, country flag asset URL (stored via S-05 Media Storage; required, the admin uploads the flag on Screen 4), display order, active status
+- **REQ-026-011**: System MUST store centrally managed country list: country name, ISO code, calling code, country flag asset URL (stored via S-05 Media Storage; required when an admin adds a country, the admin uploads the flag on Screen 4; a seeded country may have none and an imported country has none until uploaded), display order, active status
 - **REQ-026-012**: System MUST store centrally managed discovery question options: answer option, display order, active status
 - **REQ-026-012a**: System MUST store centrally managed inquiry cancellation reason options: reason label, requires_explanation flag, display order, active status. Consumer: FR-003 Screen 8a. (graph id REQ-026-032)
 - **REQ-026-012b**: System MUST store centrally managed account deletion reason options: reason label, requires_explanation flag, display order, active status. Consumer: FR-001 Screen 16. (graph id REQ-026-033)
@@ -1334,8 +1338,8 @@ Admin needs one versioned source for the thresholds and targets used by FR-014 a
 - **REQ-026-112**: System MUST store a Re-Verification Threshold Setting (whole minutes from 1 to 60, default 5, the value FR-001 uses), the time after a patient's last successful sign-in beyond which FR-001 asks the patient to confirm identity again before a sensitive action. Consumer: FR-001 Screens 16 and 18.
 - **REQ-026-113**: System MUST let an admin manage the Landing Background Images Setting, the set of background images that rotate behind the patient landing screen; with none set, no background images are shown. Consumer: FR-001.
 - **REQ-026-114**: System MUST store Profile Photo Accepted Formats (default JPG and PNG) and Profile Photo Maximum Size (default 5 MB) as admin-changeable Settings. Consumer: FR-001 REQ-001-082.
-- **REQ-026-115**: System MUST store the Support Emergency Contact Phone and Support Emergency Contact Email Settings, with no default, for display read-only on the patient Help & Support Hub. At least one of the two MUST be set, and a save that leaves both blank is refused with a message (REQ-026-143). Consumer: FR-035 Screen 1.
-- **REQ-026-116**: System MUST store the admin session Settings: concurrent sessions per admin user (1 to 5, default 3), the admin inactivity timeout (whole minutes from 5 to 240, default 30), and no separate admin failed-login Setting: failed admin sign-ins use the shared Max Login Attempts Setting of Screen 2, and the fixed FR-031 endpoint throttle of 5 attempts per 15 minutes applies in addition, whichever trips first (REQ-031-100). A Login as Provider session ends after its own fixed 30 minutes of inactivity (REQ-015-026) or when the admin's own session ends under the admin inactivity timeout, whichever comes first. Consumer: FR-031.
+- **REQ-026-115**: System MUST store the Support Emergency Contact Phone and Support Emergency Contact Email Settings, with no default, for display read-only on the patient Help & Support Hub. A save that changes either value and leaves both blank is refused with a message; other Screen 8 rows can be saved while both are blank (REQ-026-143). Consumer: FR-035 Screen 1.
+- **REQ-026-116**: System MUST store the admin session Settings: concurrent sessions per admin user (1 to 5, default 3), the admin inactivity timeout (whole minutes from 5 to 240, default 30), and no separate admin failed-login Setting: failed admin sign-ins use the shared Max Login Attempts Setting of Screen 2, and the fixed FR-031 endpoint throttle of 5 attempts per 15 minutes applies in addition, whichever trips first (REQ-031-100). A Login as Provider session ends after its own fixed 30 minutes of inactivity (REQ-015-026) or when the admin's own session ends under the admin inactivity timeout, whichever comes first. When an admin signs in while already at the concurrent-session limit, the oldest session is ended and the new one opens; a change to the session limit or the inactivity timeout applies from each open session's next request, and sessions above a lowered limit are ended oldest first. Consumer: FR-031.
 - **REQ-026-117**: System MUST store the head scan Settings FR-002 still reads: a minimum brightness score and a minimum blur score (each a whole number from 0 to 100, default 40, admin-editable; a photo passes when both reach their minimum), and head video duration limits, which are not used until head video ships (REQ-002-035). File size, total size and required views are product constants in FR-002 (REQ-002-033, REQ-002-032) and are not Settings. Consumer: FR-002 REQ-002-034, REQ-002-035, REQ-002-050.
 - **REQ-026-118**: System MUST store the acceptance legal copy and terms acknowledgment text shown at quote acceptance as a versioned Setting, with no seeded text; until the admin sets it, the quote acceptance action that needs the acknowledgment checkbox is blocked with a message. Consumer: FR-005.
 - **REQ-026-119**: System MUST offer the registration question "How did you find out about us?" from the Discovery Questions options managed on Screen 5. Consumer: FR-001.
@@ -1344,7 +1348,7 @@ Admin needs one versioned source for the thresholds and targets used by FR-014 a
 - **REQ-026-140**: System MUST list on Screen 8, under the group "Limits owned by other features", the Settings whose owning FR makes them admin-editable: the treatment creation rate limit and the package creation rate limit (FR-024; a new record counts once, when first saved as Active or Inactive), the admin invitation token expiry and the admin repeated denial threshold (FR-031). Range, default and counting rule stay with the owning FR.
 - **REQ-026-141**: System MUST prevent deactivation of the final active country; a deactivation that would leave no active country is rejected with a message.
 - **REQ-026-142**: A Quote Configuration version created by a Default Currency change in FR-029 (REQ-029-053) MUST have Change Type "System", the fixed reason text "Default currency changed in Payment Configuration", and Changed By set to the admin who confirmed the change in FR-029; the change reason rule (REQ-026-002) covers changes made on FR-026 screens.
-- **REQ-026-143**: System MUST refuse to save the Support Emergency Contact Settings when both phone and email are blank, with the message "Set at least one emergency contact (phone or email)." (REQ-035-040).
+- **REQ-026-143**: System MUST refuse a save that changes the Support Emergency Contact Phone or Email when it leaves both blank, with the message "Set at least one emergency contact (phone or email)."; a save that changes neither value is not checked, so other Screen 8 rows can be saved while both are blank, as at launch. While both are blank the patient Help & Support Hub hides the emergency contact section (REQ-035-040).
 - **REQ-026-144**: When the Settings API is unavailable as a slot hold is placed at subquote acceptance or an FR-006 admin revive, the action MUST be blocked and can be retried; no stale or guessed slot-hold duration is used.
 
 ### Screen Field Limits and Behaviours
@@ -1355,7 +1359,7 @@ Admin needs one versioned source for the thresholds and targets used by FR-014 a
 - **REQ-026-125**: On Screen 5b, Reason Label MUST be at most 100 characters and unique; Display Order MUST be a whole number (default 999); "Others" always requires an explanation.
 - **REQ-026-126**: On Screen 5c, Treatment Area Label MUST be at most 100 characters and unique among active options; Display Order MUST be a unique whole number.
 - **REQ-026-127**: On Screen 6, Subject Line MUST be at most 200 characters, Email Body (HTML) at most 50,000 characters, and Email Body (Plain Text) at most 10,000 characters.
-- **REQ-026-128**: Screen 4 MUST offer bulk import of countries from a CSV file, with validation of every row before anything is saved.
+- **REQ-026-128**: Screen 4 MUST offer bulk import of countries from a CSV file with no flag column, with validation of every row before anything is saved. An imported country is saved Inactive with the state "flag missing", which means its flag is empty, and cannot be activated until the admin uploads its flag.
 - **REQ-026-129**: Before an admin deactivates a country that active users have selected, a discovery option, cancellation reason, or deletion reason that patients frequently select, or a provider specialty that providers currently hold, the system MUST warn the admin.
 - **REQ-026-130**: Screen 7 MUST let an admin filter version history by date range, admin, and change type, and MUST show 50 entries per page.
 - **REQ-026-131**: Screen 6 MUST let an admin switch between the Verification Email and Password Reset Email templates without leaving the screen.
@@ -1372,6 +1376,7 @@ Admin needs one versioned source for the thresholds and targets used by FR-014 a
 | 2026-11-22 | 1.17 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.16) and the change requests (change-request-2026-09-04-inquiry-configuration.md, change-request-2026-09-10-quote-configuration-ownership.md, CR-FR026-20261013-01 in change-request-2026-10-13-analytics-configuration.md, CR-FR026-20261015-01 in change-request-2026-10-15-provider-specialty-list.md, CR-FR026-20261016-01 in change-request-2026-10-16-mtg002-quote-model-alignment.md) are in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
 | 2026-11-23 | 1.18 | Independent compression review: 2 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
 | 2026-11-24 | 1.19 | Logic review pass 1: permissions replace the working role names, with a screen-to-permission table (REQ-026-001, REQ-026-054); treatment areas seeded Hair, Beard and Both (REQ-026-034); head scan Settings reduced to two quality minimums (default 40 each) and video limits marked unused (REQ-026-117); admin sign-in uses the shared lockout and the fixed FR-031 throttle together (REQ-026-116); Change Type System for FR-029 currency versions (REQ-026-142); creation limits owned by other features listed on Screen 8 (REQ-026-140); reminder skip rule when a lead time is raised (REQ-026-031); country CSV columns, final active country guard and deactivation warning for FR-028 (REQ-026-128, REQ-026-141, REQ-026-129); emergency contact at-least-one rule (REQ-026-143); bounds for the re-verification threshold and admin inactivity timeout; seeding and empty rules for timezones, notification types, landing images, acceptance terms; Settings API outage at hold placement (REQ-026-144). | Product Owner / Documentation |
+| 2026-11-24 | 1.20 | Logic review pass 2: one shared failed-attempt counter with reset and lowered-limit rule (REQ-026-145); admin session limit and timeout enforcement (REQ-026-116); flag upload added to the country scenario (REQ-026-122); expiry value in the email variable and resend under the version and expiry in force (REQ-026-072, REQ-026-073, REQ-026-106); admin times in the browser timezone (REQ-026-050); emergency contact check only on a save that changes those rows (REQ-026-143); flag missing means an empty flag (REQ-026-011, REQ-026-128); stale head scan wording fixed. | Product Owner / Documentation |
 
 ---
 
