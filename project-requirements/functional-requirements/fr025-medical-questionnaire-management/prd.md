@@ -63,16 +63,19 @@ flowchart TD
     ENTRY -->|"Create new set"| CN["Admin enters Set Name, Context Type, Category, Description, and optional Tags"]
     ENTRY -->|"Duplicate existing set (A3)"| DUP["System creates a Draft copy with all questions from source set\nThe copy is named source name + (copy); Admin must make the name unique before the first save\nContext Type is editable on the new set before first publish"]
     ENTRY -->|"Edit a published set (A1)"| EDT["System opens the set's single open Draft (created if none exists)\nThe published Active version stays unchanged until the Draft is published"]
+    ENTRY -->|"Open a Draft or Archived set"| OPN["System opens the set in Set Details\nDraft set: Admin continues the Draft\nArchived set: Admin restores it as a new Draft on Screen 7 (REQ-025-038)"]
 
     CN --> DRAFT["System saves set as Draft with auto-generated Set ID"]
     DRAFT --> LOOP
     DUP --> LOOP
     EDT --> LOOP
+    OPN --> LOOP
 
     LOOP["Admin works on set in Screen 2: Set Details"]
     LOOP --> ACT{"Next action?"}
 
     ACT -->|"Add question"| QT["Screen 3: Admin selects a system-defined question type\nAdmin cannot create new question types"]
+    ACT -->|"Edit a question (type stays locked)"| QC
     ACT -->|"Delete question (A2)"| DEL["System soft-deletes question in the open Draft\nHistorical patient responses are preserved"]
     ACT -->|"Reorder questions"| ORG["Admin reorders via drag-and-drop\nSystem saves display order as a Draft change"]
     ACT -->|"Preview set"| PRV["Screen 6: Admin previews Patient App view and Provider App view"]
@@ -90,11 +93,11 @@ flowchart TD
 
     SEV --> APP["Admin configures appearance overrides in Patient App and Provider App"]
     AFT --> APP
-    APP --> QSAVE["System validates and saves question\nSet remains in Draft state"]
+    APP --> QSAVE["System validates field limits and saves the question; a question with required fields missing is still saved and keeps its status (REQ-025-024)\nSet remains in Draft state"]
     QSAVE --> LOOP
 
-    PUB --> VAL{"All Active questions complete and Context Type fits current uses?\n(text, severity flag for Inquiry/Multi-Context sets)"}
-    VAL -->|"Incomplete questions or unfit Context Type found (A4)"| VFAIL["System blocks publish and lists the incomplete questions\nor the current uses the Context Type no longer fits"]
+    PUB --> VAL{"All Active questions complete, Context Type fits current uses, and category Active?\n(text, severity flag for Inquiry/Multi-Context sets)"}
+    VAL -->|"Incomplete questions, unfit Context Type or inactive category found (A4)"| VFAIL["System blocks publish and lists the incomplete questions,\nthe current uses the Context Type no longer fits, or the missing Active category"]
     VFAIL --> LOOP
     VAL -->|"All valid"| CONF["System shows the new version number and changes summary\nAdmin confirms Publish"]
     CONF -->|"Admin cancels"| LOOP
@@ -108,7 +111,7 @@ Other Admin actions reached from this flow, one step each:
 
 - Category management: from the catalog the Admin manages the global categories on Screen 4 (REQ-025-027 to REQ-025-030).
 - Version history: from Set Details the Admin opens Screen 7 and may use Restore as New Draft on any version, also for an Archived set (REQ-025-038, REQ-025-039).
-- Archive a set: from the catalog; blocked while an aftercare milestone uses the set (REQ-025-045, REQ-025-047, REQ-025-048).
+- Archive a set: from the catalog; blocked while an aftercare milestone uses the set; archiving discards the set's open Draft, and the confirmation warns of this (REQ-025-045, REQ-025-047, REQ-025-048).
 - Delete a set: from the catalog; only for a set that was never published and has no usages (REQ-025-046).
 
 ### Workflow 2: Severity Management (Inquiry Context Only)
@@ -217,7 +220,7 @@ Rules carried by this flow: REQ-025-057, REQ-025-058, REQ-025-059, REQ-025-052.
 flowchart TD
     START{"What is the admin doing?"}
 
-    START -->|"Activating a set for Inquiry"| TOGGLE["Admin clicks 'Set as Active for Inquiry'\non a published Inquiry or Multi-Context set (Screen 1)\nThe control is shown only for such sets"]
+    START -->|"Activating a set for Inquiry"| TOGGLE["Admin clicks 'Set as Active for Inquiry'\non a published Inquiry or Multi-Context set (Screen 1)\nThe control is shown only for such sets, and not on the set that is already designated"]
     START -->|"Assigning a set to an Aftercare milestone"| A_MIL["Admin opens an aftercare template in FR-011\nand selects a set for a specific milestone\nThe list offers only published Aftercare and Multi-Context sets"]
 
     TOGGLE --> STATUS{"Is the selected set\ncurrently published (Active status)?"}
@@ -227,7 +230,7 @@ flowchart TD
     STATUS -->|"Yes — published"| EXISTING{"Is another set currently\ndesignated for Inquiry?"}
 
     EXISTING -->|"Yes"| CONFIRM["System shows confirmation:\n'This will replace [Current Set Name] as the active\nInquiry questionnaire. Continue?'"]
-    CONFIRM -->|"Admin confirms"| SWAP["System removes designation from the previous set (audited)\nDesignates the new set as active for Inquiry\nAll new patient inquiry submissions (FR-003) use the new set immediately"]
+    CONFIRM -->|"Admin confirms"| SWAP["System removes designation from the previous set (audited)\nDesignates the new set as active for Inquiry\nEvery patient inquiry started after this point (FR-003) uses the new set immediately; a resumed draft keeps its version"]
     CONFIRM -->|"Admin cancels (A1)"| CANCEL["No change — previous set remains active"]
 
     EXISTING -->|"No — inquiry flow unconfigured"| FIRST["System designates this set as the active Inquiry questionnaire\nInquiry flow is now configured"]
@@ -279,7 +282,7 @@ flowchart TD
 | Created By | text | No | Admin who created the set | From admin session | ENT-questionnaire-set.created_by |
 | Inquiry Active | indicator | No | Shows "Active for Inquiry" badge on the set currently designated as the active Inquiry questionnaire. Only one set can have this designation at a time. Visible only on Inquiry and Multi-Context sets | System-managed; updated via "Set as Active for Inquiry" action | ENT-questionnaire-set.inquiry_active |
 | Search/Filters | control | No | Keyword search by Set Name. Filters: Context Type (Inquiry / Aftercare / Multi-Context / All), Status (Draft / Active / Archived / All), Category (from global category list / All) | Valid enums; filters applied with AND logic | no graph field (control) |
-| Actions | action | — | View/Edit, Duplicate, Archive, Delete, **Set as Active for Inquiry** (shown only for published Inquiry / Multi-Context sets) | Delete is offered only for a set never published and without usages; Archive is blocked for a set assigned to a milestone, with the milestones listed; "Set as Active for Inquiry" is refused with a message only if the set changed after the screen loaded | no graph field (control) |
+| Actions | action | — | View/Edit, Duplicate, Archive, Delete, **Set as Active for Inquiry** (shown only for published Inquiry / Multi-Context sets that are not already designated) | Delete is offered only for a set never published and without usages; Archive is blocked for a set assigned to a milestone, with the milestones listed, and its confirmation warns that the set's open Draft is discarded; "Set as Active for Inquiry" is refused with a message only if the set changed after the screen loaded | no graph field (control) |
 
 **Notes**:
 
@@ -288,13 +291,13 @@ flowchart TD
 **Business Rules**:
 
 - Sets currently assigned to the inquiry flow or at least one milestone template display their usage locations in the "Used In" column (REQ-025-047)
-- A set designated for Inquiry cannot be deleted, only archived; a set assigned to a milestone can be neither deleted nor archived until the Admin points those milestones to another set, and the Admin sees the milestones using it. Archived is terminal for the set; the way back is Restore as New Draft from Screen 7, then publish (REQ-025-045)
+- A set designated for Inquiry cannot be deleted, only archived; a set assigned to a milestone can be neither deleted nor archived until the Admin points those milestones to another set, and the Admin sees the milestones using it. Archived is terminal for the set; the way back is Restore as New Draft from Screen 7, then publish. Archiving a set discards its open Draft, and the archive confirmation warns of this; a restored set comes back as a new Draft built from the selected version, with no Inquiry designation and no earlier draft, and is Active again when published (REQ-025-045)
 - Archiving a set that is currently designated as the active Inquiry questionnaire removes the designation and flags the inquiry flow as unconfigured; system notifies admin. This applies only to the Archive action on the set, not to the archiving of the previous Active version when a new version is published (REQ-025-048)
 - **Publishing does not activate a set for the inquiry flow.** The admin must explicitly click "Set as Active for Inquiry" on a published Inquiry or Multi-Context set to designate it. This is a separate, deliberate action (REQ-025-049)
 - At most one set may be designated as the active Inquiry questionnaire at a time. Clicking "Set as Active for Inquiry" on a second set shows a confirmation dialog and, upon confirmation, transfers the designation from the previous set to the new one (REQ-025-050)
-- The "Set as Active for Inquiry" action is only available on sets with Status = Active (published) and Context Type = Inquiry or Multi-Context. It is hidden for Draft, Archived, and Aftercare-only sets; the block message appears only when the set changed after the screen loaded (REQ-025-051)
+- The "Set as Active for Inquiry" action is only available on sets with Status = Active (published) and Context Type = Inquiry or Multi-Context. It is hidden for Draft, Archived, and Aftercare-only sets and on the set that already carries the designation; the block message appears only when the set changed after the screen loaded (REQ-025-051)
 - If no set is currently designated for the inquiry flow, the catalog displays a warning banner: "No active Inquiry questionnaire set — patient inquiry submissions will be blocked until one is designated" (REQ-025-052)
-- Delete is available only for a set that was never published and has no usages; it permanently removes the set. A set that has ever been published can only be archived (REQ-025-046)
+- Delete is available only for a set that was never published and has no usages; it permanently removes the set and its questions. The audit entries of a deleted set stay in storage and have no screen at launch (REQ-025-040). A set that has ever been published can only be archived (REQ-025-046)
 - Duplicating a set creates a Draft copy with all questions, named `<source name> (copy)`; the Admin must make the name unique before the first save; the copy's Context Type is editable before first publish; the copy does not inherit the Inquiry designation (REQ-025-008)
 - The Inquiry designation can only be replaced (by designating another set) or ended by archiving the set; there is no control to remove the designation on its own. The designation belongs to the set and carries over to a newly published version (REQ-025-048, REQ-025-031)
 - Field limits on this screen: Set Name is at most 100 characters and unique (REQ-025-078)
@@ -393,7 +396,7 @@ flowchart TD
 **Business Rules**:
 
 - Question Type is locked after first save (REQ-025-011); a confirmation dialog warns the admin before saving for the first time
-- An incomplete question (required fields missing) blocks publishing of the parent set; the system lists the incomplete questions and the set cannot be published until they are complete (REQ-025-024)
+- An incomplete question (required fields missing) blocks publishing of the parent set; the system lists the incomplete questions and the set cannot be published until they are complete. Saving accepts an incomplete question and keeps its status; the Admin completes it or sets it Inactive (REQ-025-024)
 - Field limits on this screen: Help Text is at most 300 characters; Patient App Display Label and Provider App Display Label are each at most 200 characters; Max Characters is a whole number greater than 0 (REQ-025-080)
 - Changes to a question in an Active (published) set are saved as a Draft change on the parent set; the Active version continues to serve downstream consumers until the set is re-published (REQ-025-032)
 - Deleting a question performs a soft delete (status Deleted); historical patient responses referencing this question are preserved and remain accessible (REQ-025-044)
@@ -414,7 +417,7 @@ flowchart TD
 | Description | text | No | Purpose or scope of this category | Max 300 chars | ENT-questionnaire-category.description |
 | Total Sets | derived | No | Count of questionnaire sets assigned to this category | Auto-calculated | ENT-questionnaire-category.total_sets |
 | Status | enum | Yes | Active / Inactive | Default Active | ENT-questionnaire-category.status |
-| Actions | action | — | Edit, Deactivate, Delete | Delete is blocked while sets are assigned to this category; reassign them first | no graph field (control) |
+| Actions | action | — | Edit, Deactivate, Delete | Delete is blocked while any set, of any status, is assigned to this category; deactivate it instead | no graph field (control) |
 
 **Notes**:
 
@@ -425,7 +428,7 @@ flowchart TD
 
 - Category names must be unique (REQ-025-027)
 - See REQ-025-026.
-- Deleting a category with assigned sets is blocked; admin must first reassign those sets. Deactivating a category retires it from use but does not make it deletable until its sets are reassigned (REQ-025-028)
+- A category can be deleted only when no set of any status (Draft, Active or Archived) is assigned to it; otherwise the Admin deactivates it, which hides it from the category picker for new sets (REQ-025-028)
 - Deactivating a category hides it from the category picker in Screen 2 but does not remove existing assignments; affected sets are flagged as "Uncategorised" until reassigned (REQ-025-029)
 - Field limits on this screen: Category Name is at most 100 characters and unique; Description is at most 300 characters (REQ-025-081)
 - Category changes (create, edit, deactivate, delete) are recorded in the platform Admin audit log (FR-031, REQ-031-008), not in a set's audit trail
@@ -518,7 +521,7 @@ flowchart TD
 
 **Notes**:
 
-- "Restore as New Draft" creates the set's single open Draft with the questions from the selected historical version, and is refused while an open Draft exists (REQ-025-038)
+- "Restore as New Draft" creates the set's single open Draft with the questions from the selected historical version, and is refused while an open Draft exists; on an Archived set the set shows status Draft from the restore until the restored Draft is published (REQ-025-038)
 - This screen holds Admin actions only; the patient's answers, the severity tier and the version used belong to the inquiry record (FR-003) and the intake audit entry (FR-002), not to this trail (REQ-025-059)
 - Milestone assignment and replacement are audited by FR-011, not here
 
@@ -538,7 +541,7 @@ flowchart TD
    - Questions within a set are ordered; order determines display sequence to patients (REQ-025-007)
    - A set may be duplicated to create a new Draft copy named `<source name> (copy)`; the Admin makes the name unique before the first save; the copy is independent of the source (REQ-025-008)
    - Delete is allowed only for a set that was never published and has no usages; a set that has been published can only be archived (REQ-025-046)
-   - A set designated for Inquiry can only be archived; a set assigned to a milestone can be neither deleted nor archived until those milestones are reassigned; Archived is terminal, and the way back is Restore as New Draft then publish (REQ-025-045)
+   - A set designated for Inquiry can only be archived; a set assigned to a milestone can be neither deleted nor archived until those milestones are reassigned; Archived is terminal, and the way back is Restore as New Draft then publish; archiving discards the set's open Draft (REQ-025-045)
    - Archiving a designated set removes the designation and flags the Inquiry flow unconfigured; the archiving of the previous Active version on publish is a version-level event and keeps the designation on the set (REQ-025-048)
    - Context Type is read-only on the Active version and editable only in an open Draft; publish is blocked with the list of uses if the type no longer fits (REQ-025-033)
    - Every change to an Active set goes to the set's single open Draft; a set has at most one open Draft (REQ-025-032)
@@ -595,10 +598,10 @@ flowchart TD
 
 1. **Patient Platform Integration**
    - A patient starting the inquiry questionnaire gets the current designated version; a resumed draft keeps its version; the version used is recorded at submit (REQ-025-053); publishing does not activate a set (REQ-025-049)
-   - When the admin replaces the active Inquiry set, all new patient inquiry submissions use the new set immediately (REQ-025-050)
+   - When the admin replaces the active Inquiry set, every patient inquiry started after the change uses the new set immediately; a resumed draft keeps its version (REQ-025-050)
    - If no set is designated as the active Inquiry questionnaire, the system must block all patient inquiry submissions, including resumed drafts; the draft is kept and the patient sees the submission-unavailable message (REQ-002-053); admins see a system-level warning (REQ-025-052). With no active Inquiry questionnaire, provider-advice mode in FR-037 cannot be chosen either, and the same admin warning applies; self-monitoring still works (REQ-037-086)
    - Version consistency must be maintained across all platforms (REQ-025-056)
-   - Questionnaire changes must propagate immediately to patient platform (REQ-025-056)
+   - Questionnaire changes must propagate immediately to the patient platform for a new start; a resumed draft keeps its version (REQ-025-056)
    - Questionnaire updates must deploy across all platform instances (REQ-025-056)
    - When the patient platform holds an older questionnaire version than the current Active version, the system pushes the current Active version for a new start; a patient with a resumed draft is not made to start over, and the submission is accepted on an older version that is or was designated for Inquiry; the version used is recorded against the inquiry (REQ-025-057)
    - Question formatting must be optimized for mobile devices (REQ-025-060)
@@ -658,6 +661,7 @@ flowchart TD
 
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
+| 2026-11-24 | 2.7 | Logic review pass 2: Draft and Archived sets can be opened and restored from the catalog; archiving discards the set's open Draft and a restored set returns as a new Draft without the designation; the publish confirmation, the question edit and the Set as Active for Inquiry actions are wired onto the workflow; publish blocks include the inactive category; an incomplete question can be saved and is caught at publish; a category is deleted only when no set at all is assigned (deactivate otherwise); audit entries of a deleted set stay in storage without a screen at launch; "immediately" applies to a new start, not to a resumed draft; Set as Active for Inquiry is hidden on the already designated set. | Product Team |
 | 2026-11-24 | 2.6 | Logic review pass 1: Alert Engine ownership moved to FR-002 (FR-025 owns the Severity Flag to tier mapping); Context Type, archive, delete, restore and open Draft rules made consistent; resume and version recording rules for the inquiry questionnaire; audit action types and session id extended; admin screens placed in the configuration stage with workflow lines for category, history, archive and delete; publish confirmation, copy naming and Alert Description clarified. | Product Team |
 | 2026-11-22 | 2.5 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v2.4) and the change request `change-request-2026-08-20-fr037-monitoring-advice-questionnaire.md` are in `archived/prd-baseline-2026-11-08/` and in git history. | Product Team |
 

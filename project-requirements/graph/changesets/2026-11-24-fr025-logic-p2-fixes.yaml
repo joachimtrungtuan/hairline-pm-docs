@@ -1,0 +1,102 @@
+# Operations ordered so removals come first, then updates, then new edges; no add_node, add_field or add_enum_value is needed. Stage data-flow edges on shared stages are touched only where the entity or event is owned by FR-025. Needs on other FRs are queued in the ledger, not in this file.
+reason: 'FR-025 logic review pass 2: Draft and Archived sets can be opened and an Archived set restored; archiving discards the open Draft (owner default 105) and a restored set returns as a new Draft without the designation; archive path from the designation step runs through the archive rules and its outcomes are exclusive; Set as Active for Inquiry reachable from the catalog; publish confirmation has its cancel exit and the publish block covers unfit Context Type and the inactive category; question edit reaches the text step for every set type; questionnaire writers and the publish event sit on the configuration stage; REQ-025-084 and REQ-025-017 regain their patient-side and provider-side anchors; immediately means a new start, a resumed draft keeps its version; incomplete question is saved and caught at publish; Set as Active for Inquiry hidden on the designated set; category deleted only when no set at all is assigned, otherwise deactivated (owner default 106); audit entries of a deleted set stay in storage with no screen at launch (owner default 107); preview no longer carries the provider alert display rule; question status field description lists Deleted.'
+by: docs-manager
+operations:
+# ---- Edge removals (branch edges are re-added below with labels and conditions) ----
+- {op: remove_edge, from: STP-025-043, verb: next, to: STP-025-045}
+- {op: remove_edge, from: STP-025-059, verb: next, to: STP-025-001}
+- {op: remove_edge, from: STP-025-059, verb: next, to: STP-025-045}
+- {op: remove_edge, from: STP-025-041, verb: next, to: STP-025-010}
+- {op: remove_edge, from: STP-025-010, verb: next, to: STP-025-015}
+- {op: remove_edge, from: STP-025-010, verb: next, to: STP-025-052}
+- {op: remove_edge, from: STP-025-003, verb: next, to: STP-025-020}
+- {op: remove_edge, from: REQ-025-066, verb: applies to, to: SCR-025-06}
+# Stale questionnaire data flow on the consumer stages (only FR-025 steps ever write these entities or emit this event; the stages keep their reads)
+- {op: remove_edge, from: STG-main-01-inquiry, verb: writes, to: ENT-questionnaire-set}
+- {op: remove_edge, from: STG-main-01-inquiry, verb: writes, to: ENT-questionnaire-question}
+- {op: remove_edge, from: STG-main-01-inquiry, verb: writes, to: ENT-questionnaire-category}
+- {op: remove_edge, from: STG-main-01-inquiry, verb: writes, to: ENT-questionnaire-version}
+- {op: remove_edge, from: STG-main-01-inquiry, verb: writes, to: ENT-questionnaire-audit-entry}
+- {op: remove_edge, from: STG-main-01-inquiry, verb: emits, to: EVT-questionnaire-version-published}
+- {op: remove_edge, from: STG-aftercare-01-recovery-plan, verb: writes, to: ENT-questionnaire-set}
+- {op: remove_edge, from: STG-aftercare-01-recovery-plan, verb: writes, to: ENT-questionnaire-question}
+- {op: remove_edge, from: STG-aftercare-01-recovery-plan, verb: writes, to: ENT-questionnaire-category}
+- {op: remove_edge, from: STG-aftercare-01-recovery-plan, verb: emits, to: EVT-questionnaire-version-published}
+- {op: remove_edge, from: STG-monitoring-01-baseline, verb: emits, to: EVT-questionnaire-version-published}
+# ---- Rule updates ----------------------------------------------------------
+- op: update_node
+  id: REQ-025-024
+  attrs:
+    statement: 'All Active questions must pass completeness validation before the parent set can be published. Saving accepts an incomplete question and keeps its status; publish lists the incomplete questions, and the Admin completes them or sets them Inactive'
+- op: update_node
+  id: REQ-025-028
+  title: 'A category is deleted only when no set is assigned, otherwise it is deactivated'
+  attrs:
+    statement: 'A category can be deleted only when no set of any status (Draft, Active or Archived) is assigned to it; otherwise the Admin deactivates it, which hides it from the category picker for new sets'
+- op: update_node
+  id: REQ-025-038
+  attrs:
+    statement: 'Any earlier version must be restorable as a new Draft, which is then published; there is no one-step rollback, and the Active version is unaffected until the restored Draft is published; Restore is refused while the set has an open Draft; on an Archived set the set shows status Draft from the restore until the restored Draft is published'
+- op: update_node
+  id: REQ-025-045
+  attrs:
+    statement: 'A set designated for Inquiry cannot be deleted, only archived; a set assigned to a milestone can be neither deleted nor archived until those milestones are reassigned; Archived is terminal, and the way back is Restore as New Draft then publish. Archiving a set discards its open Draft, and the archive confirmation warns of this; a restored set comes back as a new Draft built from the selected version, with no Inquiry designation and no earlier draft, and is Active again when published'
+- op: update_node
+  id: REQ-025-046
+  attrs:
+    statement: 'Delete is allowed only for a set that was never published and has no usages; a set that has been published can only be archived. Delete permanently removes the set and its questions; the audit entries of a deleted set stay in storage (REQ-025-040) and have no screen at launch'
+- op: update_node
+  id: REQ-025-050
+  attrs:
+    statement: 'At most one set may be designated as the active Inquiry questionnaire at a time. Clicking "Set as Active for Inquiry" on a second set shows a confirmation dialog and, upon confirmation, transfers the designation from the previous set to the new one; every patient inquiry started after the change uses the new set immediately, and a resumed draft keeps its version'
+    rationale: 'Workflow 4: System shows confirmation ''This will replace [Current Set Name] as the active Inquiry questionnaire. Continue?''; cancel leaves the previous set active; on confirm every patient inquiry (FR-003) started afterwards uses the new set immediately, and a resumed draft keeps its version.'
+- op: update_node
+  id: REQ-025-051
+  attrs:
+    statement: 'The "Set as Active for Inquiry" action is only available on sets with Status = Active (published) and Context Type = Inquiry or Multi-Context. It is hidden for Draft, Archived, and Aftercare-only sets and on the set that already carries the designation; the block message appears only when the set changed after the screen loaded'
+- op: update_node
+  id: REQ-025-056
+  attrs:
+    statement: 'Version consistency must be maintained across all platforms; questionnaire changes must propagate immediately to the patient platform for a new start, and a resumed draft keeps its version'
+# ---- Step titles and field description -------------------------------------
+- op: update_node
+  id: STP-025-015
+  title: 'Admin is told publish is blocked and sees the list of incomplete questions, unfit uses or the missing Active category'
+- op: update_node
+  id: STP-025-059
+  title: 'Admin archives a set; the confirmation warns that its open Draft is discarded'
+- op: update_node
+  id: ENT-questionnaire-question.status
+  attrs:
+    description: 'Active / Inactive; Deleted for a soft-deleted question, which is not listed. Default Active.'
+# ---- New and re-added edges ------------------------------------------------
+# Entry to Set Details for a Draft or Archived set, restore of an Archived set
+- {op: add_edge, from: STP-025-001, verb: next, to: STP-025-003, attrs: {"label": "Open a Draft or Archived set"}}
+- {op: add_edge, from: STP-025-041, verb: next, to: STP-025-010, attrs: {"label": "Set is Draft: admin publishes it first", "condition": "REQ-025-051"}}
+- {op: add_edge, from: STP-025-041, verb: next, to: STP-025-058, attrs: {"label": "Set is Archived: admin restores it as a new Draft", "condition": "REQ-025-051"}}
+# Set as Active for Inquiry from the catalog
+- {op: add_edge, from: STP-025-001, verb: next, to: STP-025-040, attrs: {"label": "Set as Active for Inquiry"}}
+# Publish: cancel exit, complete block, exclusive branches
+- {op: add_edge, from: STP-025-010, verb: next, to: STP-025-015, attrs: {"label": "Incomplete questions, unfit Context Type or inactive category found", "condition": "REQ-025-024"}}
+- {op: add_edge, from: STP-025-010, verb: next, to: STP-025-052, attrs: {"label": "All checks pass and the Admin confirms Publish", "condition": "REQ-025-034"}}
+- {op: add_edge, from: STP-025-010, verb: next, to: STP-025-003, attrs: {"label": "Admin cancels the confirmation", "condition": "REQ-025-034"}}
+- {op: add_edge, from: STP-025-010, verb: applies, to: REQ-025-033}
+- {op: add_edge, from: STP-025-015, verb: applies, to: REQ-025-033}
+- {op: add_edge, from: STP-025-015, verb: applies, to: REQ-025-025}
+# Archive path runs through the archive rules; the unconfigured step follows only a completed archive of the designated set
+- {op: add_edge, from: STP-025-043, verb: next, to: STP-025-059, attrs: {"label": "Admin later archives the designated set", "condition": "REQ-025-048"}}
+- {op: add_edge, from: STP-025-059, verb: next, to: STP-025-001, attrs: {"label": "Archive blocked while a milestone uses the set, or set archived and not designated", "condition": "REQ-025-045"}}
+- {op: add_edge, from: STP-025-059, verb: next, to: STP-025-045, attrs: {"label": "Archive completed on the designated Inquiry set", "condition": "REQ-025-048"}}
+# Editing an existing question: text step for every set type (the severity edit route stays on STP-025-020)
+- {op: add_edge, from: STP-025-003, verb: next, to: STP-025-020, attrs: {"label": "Edit a question severity flag (Inquiry or Multi-Context set)", "condition": "REQ-025-012"}}
+- {op: add_edge, from: STP-025-003, verb: next, to: STP-025-005, attrs: {"label": "Edit a question text, help text or appearance (any set; type is locked)"}}
+# Other-stage anchors of the two mixed rules
+- {op: add_edge, from: REQ-025-084, verb: applies at, to: STG-main-01-inquiry}
+- {op: add_edge, from: REQ-025-017, verb: applies at, to: STG-main-01-inquiry}
+- {op: add_edge, from: STP-025-054, verb: applies, to: REQ-025-084}
+- {op: add_edge, from: STP-025-032, verb: applies, to: REQ-025-017}
+# Questionnaire data flow on the configuration stage
+- {op: add_edge, from: STG-admin-01-configuration, verb: emits, to: EVT-questionnaire-version-published}
+- {op: add_edge, from: STG-admin-01-configuration, verb: writes, to: ENT-questionnaire-version}
+- {op: add_edge, from: STG-admin-01-configuration, verb: writes, to: ENT-questionnaire-audit-entry}
+- {op: add_edge, from: STG-admin-01-configuration, verb: writes, to: ENT-questionnaire-category}

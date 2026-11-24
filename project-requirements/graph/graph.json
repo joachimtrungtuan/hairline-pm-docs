@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T08:23:18Z",
+  "generated_at": "2026-11-24T08:31:38Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -23697,9 +23697,9 @@
       "owner_fr": "FR-025",
       "title": "Status",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Active / Inactive. Default Active."
+        "description": "Active / Inactive; Deleted for a soft-deleted question, which is not listed. Default Active."
       }
     },
     {
@@ -77951,7 +77951,7 @@
       "owner_fr": "FR-025",
       "title": "Severity flags drive provider alerts for inquiry only",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "statement": "Severity flags drive the automatic provider alert system for the inquiry flow only. Severity Flag and Alert Description are shown only on questions in Inquiry or Multi-Context sets; Alert Description is optional and an Admin-only note shown in the editor and Preview, and providers see the question text; response colour-coding in the provider view follows each answer's own flag automatically with no extra configuration; Preview shows no overall tier",
         "rationale": "Workflow 2 scope: severity flags and the provider alert system apply exclusively to Inquiry-context and Multi-Context sets."
@@ -78023,9 +78023,9 @@
       "owner_fr": "FR-025",
       "title": "All questions pass completeness before publish",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "All Active questions must pass completeness validation before the parent set can be published",
+        "statement": "All Active questions must pass completeness validation before the parent set can be published. Saving accepts an incomplete question and keeps its status; publish lists the incomplete questions, and the Admin completes them or sets them Inactive",
         "rationale": "Workflow 1 alternative flow A4: Incomplete questions found: System blocks publish and lists incomplete questions."
       }
     },
@@ -78069,11 +78069,11 @@
       "id": "REQ-025-028",
       "type": "Rule",
       "owner_fr": "FR-025",
-      "title": "Category delete blocked while sets are assigned",
+      "title": "A category is deleted only when no set is assigned, otherwise it is deactivated",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Deleting a category with assigned sets is blocked; admin must first reassign those sets. Deactivating a category retires it from use but does not make it deletable until its sets are reassigned",
+        "statement": "A category can be deleted only when no set of any status (Draft, Active or Archived) is assigned to it; otherwise the Admin deactivates it, which hides it from the category picker for new sets",
         "rationale": "prd.md line 400 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -78191,9 +78191,9 @@
       "owner_fr": "FR-025",
       "title": "Earlier versions restorable as a new Draft, then published",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Any earlier version must be restorable as a new Draft, which is then published; there is no one-step rollback, and the Active version is unaffected until the restored Draft is published; Restore is refused while the set has an open Draft",
+        "statement": "Any earlier version must be restorable as a new Draft, which is then published; there is no one-step rollback, and the Active version is unaffected until the restored Draft is published; Restore is refused while the set has an open Draft; on an Archived set the set shows status Draft from the restore until the restored Draft is published",
         "rationale": "Screen 7: \"Restore as New Draft\" creates a new Draft version of the set with the questions from the selected historical version; the currently Active version is not affected until the restored Draft is published"
       }
     },
@@ -78275,9 +78275,9 @@
       "owner_fr": "FR-025",
       "title": "Set in use cannot be deleted, only archived",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "A set designated for Inquiry cannot be deleted, only archived; a set assigned to a milestone can be neither deleted nor archived until those milestones are reassigned; Archived is terminal, and the way back is Restore as New Draft then publish",
+        "statement": "A set designated for Inquiry cannot be deleted, only archived; a set assigned to a milestone can be neither deleted nor archived until those milestones are reassigned; Archived is terminal, and the way back is Restore as New Draft then publish. Archiving a set discards its open Draft, and the archive confirmation warns of this; a restored set comes back as a new Draft built from the selected version, with no Inquiry designation and no earlier draft, and is Active again when published",
         "rationale": "prd.md line 267 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -78287,9 +78287,9 @@
       "owner_fr": "FR-025",
       "title": "Deleting a Draft set with no usages removes it",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Delete is allowed only for a set that was never published and has no usages; a set that has been published can only be archived",
+        "statement": "Delete is allowed only for a set that was never published and has no usages; a set that has been published can only be archived. Delete permanently removes the set and its questions; the audit entries of a deleted set stay in storage (REQ-025-040) and have no screen at launch",
         "rationale": "prd.md line 273 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -78335,10 +78335,10 @@
       "owner_fr": "FR-025",
       "title": "At most one active Inquiry set; replacing needs confirmation",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "At most one set may be designated as the active Inquiry questionnaire at a time. Clicking \"Set as Active for Inquiry\" on a second set shows a confirmation dialog and, upon confirmation, transfers the designation from the previous set to the new one; all new patient inquiry submissions use the new set immediately",
-        "rationale": "Workflow 4: System shows confirmation 'This will replace [Current Set Name] as the active Inquiry questionnaire. Continue?'; cancel leaves the previous set active; on confirm all new patient inquiry submissions (FR-003) use the new set immediately."
+        "statement": "At most one set may be designated as the active Inquiry questionnaire at a time. Clicking \"Set as Active for Inquiry\" on a second set shows a confirmation dialog and, upon confirmation, transfers the designation from the previous set to the new one; every patient inquiry started after the change uses the new set immediately, and a resumed draft keeps its version",
+        "rationale": "Workflow 4: System shows confirmation 'This will replace [Current Set Name] as the active Inquiry questionnaire. Continue?'; cancel leaves the previous set active; on confirm every patient inquiry (FR-003) started afterwards uses the new set immediately, and a resumed draft keeps its version."
       }
     },
     {
@@ -78347,9 +78347,9 @@
       "owner_fr": "FR-025",
       "title": "Set as Active for Inquiry only on published Inquiry or Multi-Context sets",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "The \"Set as Active for Inquiry\" action is only available on sets with Status = Active (published) and Context Type = Inquiry or Multi-Context. It is hidden for Draft, Archived, and Aftercare-only sets; the block message appears only when the set changed after the screen loaded",
+        "statement": "The \"Set as Active for Inquiry\" action is only available on sets with Status = Active (published) and Context Type = Inquiry or Multi-Context. It is hidden for Draft, Archived, and Aftercare-only sets and on the set that already carries the designation; the block message appears only when the set changed after the screen loaded",
         "rationale": "Workflow 4: for a Draft or Archived set the System blocks activation: 'Only published sets can be designated as the active Inquiry questionnaire'."
       }
     },
@@ -78395,9 +78395,9 @@
       "owner_fr": "FR-025",
       "title": "Version consistency across platforms",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Version consistency must be maintained across all platforms; questionnaire changes must propagate immediately to the patient platform",
+        "statement": "Version consistency must be maintained across all platforms; questionnaire changes must propagate immediately to the patient platform for a new start, and a resumed draft keeps its version",
         "rationale": "prd.md lines 557, 591, 667 (version consistency across platforms; changes propagate immediately to the patient platform)."
       }
     },
@@ -78515,7 +78515,7 @@
       "owner_fr": "FR-025",
       "title": "Alert display follows colour-coding standards",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "Alert display must be consistent with color-coding standards; providers must be able to quickly scan alerts (red/amber/green) in-portal",
         "rationale": "Providers must be able to quickly scan alerts (red/amber/green) in-portal"
@@ -78733,7 +78733,7 @@
       "owner_fr": "FR-025",
       "title": "Inactive, deleted and hidden questions",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Inactive and soft-deleted questions are not delivered to patients and are excluded from completeness checks, severity checks and the tier; Visible to Patient is not offered in Inquiry or Multi-Context sets",
         "rationale": "Logic review: the question status, the Visible to Patient control and the severity and completeness rules were not reconciled."
@@ -104060,7 +104060,7 @@
       "owner_fr": null,
       "title": "Configuration",
       "status": "active",
-      "version": 13,
+      "version": 14,
       "attrs": {
         "timeline": "platform-admin",
         "sequence": 1,
@@ -104138,7 +104138,7 @@
       "owner_fr": null,
       "title": "Recovery plan",
       "status": "active",
-      "version": 10,
+      "version": 11,
       "attrs": {
         "timeline": "aftercare",
         "sequence": 1,
@@ -104178,7 +104178,7 @@
       "owner_fr": null,
       "title": "Inquiry",
       "status": "active",
-      "version": 25,
+      "version": 26,
       "attrs": {
         "timeline": "main",
         "sequence": 1,
@@ -104295,7 +104295,7 @@
       "owner_fr": null,
       "title": "Baseline",
       "status": "active",
-      "version": 9,
+      "version": 10,
       "attrs": {
         "timeline": "monitoring",
         "sequence": 1,
@@ -117743,7 +117743,7 @@
       "owner_fr": "FR-025",
       "title": "Admin opens the Questionnaire Catalog",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Workflow 1 (Primary Flow) entry"
       }
@@ -117765,7 +117765,7 @@
       "owner_fr": "FR-025",
       "title": "Admin works on the set in Set Details",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Workflow 1 flow diagram: Admin works on set in Screen 2"
       }
@@ -117842,7 +117842,7 @@
       "owner_fr": "FR-025",
       "title": "Admin clicks Publish on the set; after validation the new version number and changes summary are confirmed",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "prd_ref": "Workflow 1 flow diagram: Publish"
       }
@@ -117895,9 +117895,9 @@
       "id": "STP-025-015",
       "type": "Step",
       "owner_fr": "FR-025",
-      "title": "Admin is told publish is blocked and sees the list of incomplete questions",
+      "title": "Admin is told publish is blocked and sees the list of incomplete questions, unfit uses or the missing Active category",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Workflow 1 alternative flow A4"
       }
@@ -117952,7 +117952,7 @@
       "owner_fr": "FR-025",
       "title": "Provider sees the alert level on the inquiry record",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "prd_ref": "Workflow 3 flow diagram: alert displayed on inquiry record for provider review"
       }
@@ -117985,7 +117985,7 @@
       "owner_fr": "FR-025",
       "title": "Admin is told activation is blocked because only published sets can be designated",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Workflow 4 flow diagram: set is Draft or Archived"
       }
@@ -118007,7 +118007,7 @@
       "owner_fr": "FR-025",
       "title": "Admin sees the set designated as the active Inquiry questionnaire and serving new inquiries",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Workflow 4 flow diagram: Set is actively serving all new patient inquiries"
       }
@@ -118128,7 +118128,7 @@
       "owner_fr": "FR-025",
       "title": "The FR-002 alert engine returns the Red, Amber or Green tier from the answers and the severity flags (REQ-002-002); FR-025 owns only the mapping",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Workflow 3 flow diagram: System processes each Yes/No response against configured Severity Flags; Generate Red, Amber or Green alert"
       }
@@ -118184,9 +118184,9 @@
       "id": "STP-025-059",
       "type": "Step",
       "owner_fr": "FR-025",
-      "title": "Admin archives a set",
+      "title": "Admin archives a set; the confirmation warns that its open Draft is discarded",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Screen 1: Questionnaire Catalog",
         "description": "Archive is blocked while a milestone uses the set; archiving the designated Inquiry set removes the designation (REQ-025-045, REQ-025-047, REQ-025-048)."
@@ -175225,7 +175225,7 @@
       "verb": "active in",
       "to_id": "STG-main-01-inquiry",
       "attrs": {
-        "rules": 17
+        "rules": 19
       },
       "derived": true
     },
@@ -262324,6 +262324,12 @@
     },
     {
       "from_id": "REQ-025-017",
+      "verb": "applies at",
+      "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-025-017",
       "verb": "applies to",
       "to_id": "ENT-questionnaire-question.severity_flag",
       "attrs": {}
@@ -263404,12 +263410,6 @@
     },
     {
       "from_id": "REQ-025-066",
-      "verb": "applies to",
-      "to_id": "SCR-025-06",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-025-066",
       "verb": "decided by",
       "to_id": "SRC-PRD-025",
       "attrs": {}
@@ -263820,6 +263820,12 @@
       "from_id": "REQ-025-084",
       "verb": "applies at",
       "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-025-084",
+      "verb": "applies at",
+      "to_id": "STG-main-01-inquiry",
       "attrs": {}
     },
     {
@@ -342141,6 +342147,12 @@
     },
     {
       "from_id": "STG-admin-01-configuration",
+      "verb": "emits",
+      "to_id": "EVT-questionnaire-version-published",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
       "verb": "reads",
       "to_id": "ENT-account-deletion-reason",
       "attrs": {}
@@ -342712,6 +342724,18 @@
     {
       "from_id": "STG-admin-01-configuration",
       "verb": "writes",
+      "to_id": "ENT-questionnaire-audit-entry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "writes",
+      "to_id": "ENT-questionnaire-category",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "writes",
       "to_id": "ENT-questionnaire-question",
       "attrs": {}
     },
@@ -342719,6 +342743,12 @@
       "from_id": "STG-admin-01-configuration",
       "verb": "writes",
       "to_id": "ENT-questionnaire-set",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-admin-01-configuration",
+      "verb": "writes",
+      "to_id": "ENT-questionnaire-version",
       "attrs": {}
     },
     {
@@ -343143,12 +343173,6 @@
     },
     {
       "from_id": "STG-aftercare-01-recovery-plan",
-      "verb": "emits",
-      "to_id": "EVT-questionnaire-version-published",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-aftercare-01-recovery-plan",
       "verb": "enters from",
       "to_id": "STG-main-06-treatment",
       "attrs": {}
@@ -343307,24 +343331,6 @@
       "from_id": "STG-aftercare-01-recovery-plan",
       "verb": "writes",
       "to_id": "ENT-aftercare-template-price",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-aftercare-01-recovery-plan",
-      "verb": "writes",
-      "to_id": "ENT-questionnaire-category",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-aftercare-01-recovery-plan",
-      "verb": "writes",
-      "to_id": "ENT-questionnaire-question",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-aftercare-01-recovery-plan",
-      "verb": "writes",
-      "to_id": "ENT-questionnaire-set",
       "attrs": {}
     },
     {
@@ -343547,12 +343553,6 @@
       "from_id": "STG-main-01-inquiry",
       "verb": "emits",
       "to_id": "EVT-provider-status-cancellation-patient",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-main-01-inquiry",
-      "verb": "emits",
-      "to_id": "EVT-questionnaire-version-published",
       "attrs": {}
     },
     {
@@ -343919,36 +343919,6 @@
       "from_id": "STG-main-01-inquiry",
       "verb": "writes",
       "to_id": "ENT-provider-inquiry",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-main-01-inquiry",
-      "verb": "writes",
-      "to_id": "ENT-questionnaire-audit-entry",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-main-01-inquiry",
-      "verb": "writes",
-      "to_id": "ENT-questionnaire-category",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-main-01-inquiry",
-      "verb": "writes",
-      "to_id": "ENT-questionnaire-question",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-main-01-inquiry",
-      "verb": "writes",
-      "to_id": "ENT-questionnaire-set",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-main-01-inquiry",
-      "verb": "writes",
-      "to_id": "ENT-questionnaire-version",
       "attrs": {}
     },
     {
@@ -346619,12 +346589,6 @@
       "from_id": "STG-monitoring-01-baseline",
       "verb": "emits",
       "to_id": "EVT-monitoring-assignment-pending",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-monitoring-01-baseline",
-      "verb": "emits",
-      "to_id": "EVT-questionnaire-version-published",
       "attrs": {}
     },
     {
@@ -391672,6 +391636,14 @@
     {
       "from_id": "STP-025-001",
       "verb": "next",
+      "to_id": "STP-025-003",
+      "attrs": {
+        "label": "Open a Draft or Archived set"
+      }
+    },
+    {
+      "from_id": "STP-025-001",
+      "verb": "next",
       "to_id": "STP-025-012",
       "attrs": {
         "label": "Edit a published set"
@@ -391683,6 +391655,14 @@
       "to_id": "STP-025-014",
       "attrs": {
         "label": "Duplicate existing set"
+      }
+    },
+    {
+      "from_id": "STP-025-001",
+      "verb": "next",
+      "to_id": "STP-025-040",
+      "attrs": {
+        "label": "Set as Active for Inquiry"
       }
     },
     {
@@ -391810,6 +391790,14 @@
     {
       "from_id": "STP-025-003",
       "verb": "next",
+      "to_id": "STP-025-005",
+      "attrs": {
+        "label": "Edit a question text, help text or appearance (any set; type is locked)"
+      }
+    },
+    {
+      "from_id": "STP-025-003",
+      "verb": "next",
       "to_id": "STP-025-008",
       "attrs": {
         "label": "Reorder questions"
@@ -391844,7 +391832,8 @@
       "verb": "next",
       "to_id": "STP-025-020",
       "attrs": {
-        "label": "Edit a question"
+        "label": "Edit a question severity flag (Inquiry or Multi-Context set)",
+        "condition": "REQ-025-012"
       }
     },
     {
@@ -392140,6 +392129,12 @@
     {
       "from_id": "STP-025-010",
       "verb": "applies",
+      "to_id": "REQ-025-033",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-010",
+      "verb": "applies",
       "to_id": "REQ-025-034",
       "attrs": {}
     },
@@ -392164,9 +392159,18 @@
     {
       "from_id": "STP-025-010",
       "verb": "next",
+      "to_id": "STP-025-003",
+      "attrs": {
+        "label": "Admin cancels the confirmation",
+        "condition": "REQ-025-034"
+      }
+    },
+    {
+      "from_id": "STP-025-010",
+      "verb": "next",
       "to_id": "STP-025-015",
       "attrs": {
-        "label": "Incomplete questions found",
+        "label": "Incomplete questions, unfit Context Type or inactive category found",
         "condition": "REQ-025-024"
       }
     },
@@ -392175,8 +392179,8 @@
       "verb": "next",
       "to_id": "STP-025-052",
       "attrs": {
-        "label": "All questions complete",
-        "condition": "REQ-025-024"
+        "label": "All checks pass and the Admin confirms Publish",
+        "condition": "REQ-025-034"
       }
     },
     {
@@ -392356,6 +392360,18 @@
       "from_id": "STP-025-015",
       "verb": "applies",
       "to_id": "REQ-025-024",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-015",
+      "verb": "applies",
+      "to_id": "REQ-025-025",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-015",
+      "verb": "applies",
+      "to_id": "REQ-025-033",
       "attrs": {}
     },
     {
@@ -392550,6 +392566,12 @@
     {
       "from_id": "STP-025-032",
       "verb": "applies",
+      "to_id": "REQ-025-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-032",
+      "verb": "applies",
       "to_id": "REQ-025-064",
       "attrs": {}
     },
@@ -392704,7 +392726,17 @@
       "verb": "next",
       "to_id": "STP-025-010",
       "attrs": {
-        "label": "Admin publishes the set first"
+        "label": "Set is Draft: admin publishes it first",
+        "condition": "REQ-025-051"
+      }
+    },
+    {
+      "from_id": "STP-025-041",
+      "verb": "next",
+      "to_id": "STP-025-058",
+      "attrs": {
+        "label": "Set is Archived: admin restores it as a new Draft",
+        "condition": "REQ-025-051"
       }
     },
     {
@@ -392794,7 +392826,7 @@
     {
       "from_id": "STP-025-043",
       "verb": "next",
-      "to_id": "STP-025-045",
+      "to_id": "STP-025-059",
       "attrs": {
         "label": "Admin later archives the designated set",
         "condition": "REQ-025-048"
@@ -393160,6 +393192,12 @@
     },
     {
       "from_id": "STP-025-054",
+      "verb": "applies",
+      "to_id": "REQ-025-084",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-025-054",
       "verb": "at",
       "to_id": "STG-main-01-inquiry",
       "attrs": {}
@@ -393354,7 +393392,7 @@
       "verb": "next",
       "to_id": "STP-025-001",
       "attrs": {
-        "label": "Set archived, or blocked while a milestone uses it",
+        "label": "Archive blocked while a milestone uses the set, or set archived and not designated",
         "condition": "REQ-025-045"
       }
     },
@@ -393363,7 +393401,7 @@
       "verb": "next",
       "to_id": "STP-025-045",
       "attrs": {
-        "label": "Set is the designated Inquiry set",
+        "label": "Archive completed on the designated Inquiry set",
         "condition": "REQ-025-048"
       }
     },
@@ -432491,6 +432529,44 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-083037-8bfb7601",
+      "at": "2026-11-24T08:30:37.514905+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-025 logic review pass 2: Draft and Archived sets can be opened and an Archived set restored; archiving discards the open Draft (owner default 105) and a restored set returns as a new Draft without the designation; archive path from the designation step runs through the archive rules and its outcomes are exclusive; Set as Active for Inquiry reachable from the catalog; publish confirmation has its cancel exit and the publish block covers unfit Context Type and the inactive category; question edit reaches the text step for every set type; questionnaire writers and the publish event sit on the configuration stage; REQ-025-084 and REQ-025-017 regain their patient-side and provider-side anchors; immediately means a new start, a resumed draft keeps its version; incomplete question is saved and caught at publish; Set as Active for Inquiry hidden on the designated set; category deleted only when no set at all is assigned, otherwise deactivated (owner default 106); audit entries of a deleted set stay in storage with no screen at launch (owner default 107); preview no longer carries the provider alert display rule; question status field description lists Deleted.",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "ENT-questionnaire-question.status",
+        "REQ-025-017",
+        "REQ-025-024",
+        "REQ-025-028",
+        "REQ-025-038",
+        "REQ-025-045",
+        "REQ-025-046",
+        "REQ-025-050",
+        "REQ-025-051",
+        "REQ-025-056",
+        "REQ-025-066",
+        "REQ-025-084",
+        "STG-admin-01-configuration",
+        "STG-aftercare-01-recovery-plan",
+        "STG-main-01-inquiry",
+        "STG-monitoring-01-baseline",
+        "STP-025-001",
+        "STP-025-003",
+        "STP-025-010",
+        "STP-025-015",
+        "STP-025-032",
+        "STP-025-041",
+        "STP-025-043",
+        "STP-025-054",
+        "STP-025-059"
+      ],
+      "edges_added": 23,
+      "edges_removed": 19,
+      "rows": 55
+    },
     {
       "id": "cs-20261124-082209-b96997cf",
       "at": "2026-11-24T08:22:09.138055+00:00",
