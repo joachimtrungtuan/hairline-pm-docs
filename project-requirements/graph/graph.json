@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T13:35:12Z",
+  "generated_at": "2026-11-24T13:37:06Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -12209,9 +12209,9 @@
       "owner_fr": "FR-009",
       "title": "Expires at",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Default 7 days after sending (SET-invitation-expiry-period)."
+        "description": "Always 7 days after sending (REQ-009-016); not a setting."
       }
     },
     {
@@ -29200,17 +29200,6 @@
       }
     },
     {
-      "id": "ENT-team-member.active_inquiries_count",
-      "type": "Field",
-      "owner_fr": "FR-009",
-      "title": "Active inquiries",
-      "status": "active",
-      "version": 1,
-      "attrs": {
-        "description": "Count of active inquiries assigned to the member."
-      }
-    },
-    {
       "id": "ENT-team-member.active_sessions",
       "type": "Field",
       "owner_fr": "FR-009",
@@ -29282,9 +29271,9 @@
       "owner_fr": "FR-009",
       "title": "Draft quotes",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Count of draft quotes in progress."
+        "description": "Count of draft quotes in progress where the member is the responsible clinician."
       }
     },
     {
@@ -29498,9 +29487,20 @@
       "owner_fr": "FR-009",
       "title": "Status",
       "status": "active",
+      "version": 2,
+      "attrs": {
+        "description": "Active, Suspended or Removed; stored as active, suspended and inactive (Rule 9). Flagged on Screen 11 is shown when a compliance alert exists. When Suspended, suspended_by records who set it."
+      }
+    },
+    {
+      "id": "ENT-team-member.suspended_by",
+      "type": "Field",
+      "owner_fr": "FR-009",
+      "title": "Suspended by",
+      "status": "active",
       "version": 1,
       "attrs": {
-        "description": "Active, Suspended or Removed; stored as active, suspended and inactive (Rule 9). Flagged on Screen 11 is shown when a compliance alert exists."
+        "description": "Who set the current suspension: the clinic or the platform (Hairline). Empty unless the member is Suspended. Only a Hairline admin can lift a platform suspension (REQ-009-192)."
       }
     },
     {
@@ -29526,25 +29526,14 @@
       }
     },
     {
-      "id": "ENT-team-member.unread_messages_count",
-      "type": "Field",
-      "owner_fr": "FR-009",
-      "title": "Unread messages",
-      "status": "active",
-      "version": 1,
-      "attrs": {
-        "description": "Count of unread messages."
-      }
-    },
-    {
       "id": "ENT-team-member.upcoming_appointments_count",
       "type": "Field",
       "owner_fr": "FR-009",
       "title": "Upcoming appointments",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Count of upcoming scheduled appointments."
+        "description": "Count of upcoming scheduled appointments where the member is the responsible clinician."
       }
     },
     {
@@ -33692,17 +33681,6 @@
       }
     },
     {
-      "id": "EVT-team-patient-handler-changed",
-      "type": "Event",
-      "owner_fr": "FR-009",
-      "title": "Patient handler changed",
-      "status": "active",
-      "version": 1,
-      "attrs": {
-        "description": "A removed member's patient conversations were rerouted and patients were told who handles the inquiry now (B6)."
-      }
-    },
-    {
       "id": "EVT-transplant-progress-conversion-started",
       "type": "Event",
       "owner_fr": "FR-030",
@@ -35251,6 +35229,19 @@
       }
     },
     {
+      "id": "FLW-009-cancel-invitation",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "A8: Cancel a pending invitation",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Alternative Flow A8: Cancel a pending invitation",
+        "prd_ref": "Alternative Flow A8"
+      }
+    },
+    {
       "id": "FLW-009-change-team-member-role",
       "type": "Flow",
       "owner_fr": null,
@@ -35355,6 +35346,19 @@
       }
     },
     {
+      "id": "FLW-009-owner-handover",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Admin Flow: Hand Over the Owner Role",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Admin Flow: Hand Over the Owner Role",
+        "prd_ref": "Admin Flow: Hand Over the Owner Role"
+      }
+    },
+    {
       "id": "FLW-009-owner-self-removal",
       "type": "Flow",
       "owner_fr": null,
@@ -35410,12 +35414,12 @@
       "id": "FLW-009-removed-member-active-conversations",
       "type": "Flow",
       "owner_fr": null,
-      "title": "Alternative Flow B6: removed member has active patient conversations",
+      "title": "Alternative Flow B6: removal does not affect clinic conversations",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "kind": "alternative",
-        "description": "Alternative Flow B6: removed member has active patient conversations",
+        "description": "Alternative Flow B6: removal does not affect clinic conversations",
         "prd_ref": "Alternative Flow B6"
       }
     },
@@ -35430,6 +35434,19 @@
         "kind": "alternative",
         "description": "Alternative Flow B5: team member currently performing a critical action",
         "prd_ref": "Alternative Flow B5"
+      }
+    },
+    {
+      "id": "FLW-009-suspend-reactivate-member",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "A9: Suspend or reactivate a team member",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Alternative Flow A9: Suspend or reactivate a team member",
+        "prd_ref": "Alternative Flow A9"
       }
     },
     {
@@ -50468,9 +50485,9 @@
       "owner_fr": "FR-009",
       "title": "System MUST allow Owners and Managers to remove non-Owner team members with immediate access...",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST allow Owners and Managers to remove non-Owner team members with immediate access revocation",
+        "statement": "System MUST allow the Owner to remove or suspend any non-Owner team member and a Manager to remove or suspend only Clinical Staff and Billing Staff, with immediate access revocation",
         "rationale": "prd.md line 1152 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -50492,9 +50509,9 @@
       "owner_fr": "FR-009",
       "title": "System MUST send email notifications for team management events (invitation, role change, removal)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST send email notifications for team management events (invitation, role change, removal)",
+        "statement": "System MUST send email notifications for team management events (invitation, role change, removal, suspension, reactivation, Owner handover); these notices need matching FR-030 catalogue entries",
         "rationale": "prd.md line 1154 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -50600,7 +50617,7 @@
       "owner_fr": "FR-009",
       "title": "System MUST generate cryptographically secure, single-use invitation tokens that expire after 7...",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "System MUST generate cryptographically secure, single-use invitation tokens that expire after 7 days",
         "rationale": "Rule 5: Invitation links expire after 7 days—expired invitations can be resent with new expiry. System generates secure invitation token (expires in 7 days)"
@@ -50828,9 +50845,9 @@
       "owner_fr": "FR-009",
       "title": "Communication in scope: emails and in-platform notifications",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Email invitations to new team members with secure signup link Email notifications when team member role changes Email notifications when team member is removed or suspended In-platform notifications for team management events",
+        "statement": "Email invitations to new team members with secure signup link Email notifications when team member role changes Email notifications when team member is removed, suspended, or reactivated In-platform notifications for team management events",
         "rationale": "prd.md lines 74-77 (checked against the PRD text)."
       }
     },
@@ -50852,9 +50869,9 @@
       "owner_fr": "FR-009",
       "title": "Entry points to team management by actor",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Provider Owner: Accesses team management from provider dashboard main navigation (\"Team\" tab) Provider Manager: Accesses operational team management features from settings menu (within Owner-defined limits) New Team Member: Receives email invitation with signup link, creates account, automatically assigned to provider organization with specified role Admin Platform: System administrators access team management oversight from admin dashboard provider detail view",
+        "statement": "Provider Owner: Accesses team management from provider dashboard main navigation (\"Team\" tab) Provider Manager: Accesses operational team management features from settings menu (within the Manager permissions defined in FR-031) New Team Member: Receives email invitation with signup link, creates account, automatically assigned to provider organization with specified role Admin Platform: System administrators access team management oversight from admin dashboard provider detail view",
         "rationale": "prd.md lines 87-90 (checked against the PRD text)."
       }
     },
@@ -50924,9 +50941,9 @@
       "owner_fr": "FR-009",
       "title": "Invitation link validated for token, seat and status",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System validates invitation token (not expired, not already used) Token validity, seat availability (double-check), invitation status (Pending and not past expires_at only).",
+        "statement": "System validates invitation token (not expired, not already used) Token validity, and invitation status (Pending and not past expires_at only), which means the invitation is still Pending and its seat is held; this is not a fresh seat availability test.",
         "rationale": "prd.md lines 116, 522 (checked against the PRD text)."
       }
     },
@@ -50984,9 +51001,9 @@
       "owner_fr": "FR-009",
       "title": "A2: expired invitation resent with new token and expiry",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System generates new invitation token and sends new email Old invitation token invalidated Outcome: Team member receives fresh invitation with new 7-day expiry",
+        "statement": "System checks that a seat is free and blocks the resend with the Screen 2 seat limit message when none is (the invitation stays Expired); otherwise System generates new invitation token and sends new email Old invitation token invalidated Outcome: Team member receives fresh invitation with new 7-day expiry",
         "rationale": "prd.md lines 134-136 (checked against the PRD text)."
       }
     },
@@ -51140,9 +51157,9 @@
       "owner_fr": "FR-009",
       "title": "Role dialog: confirmation modal summarises risk; impact and last change shown",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Confirmation modal summarises risk (e.g., losing billing access). Provide impact summary (# of inquiries/quotes affected). Display last role change timestamp + actor.",
+        "statement": "Confirmation modal summarises risk (e.g., losing billing access). Provide impact summary (# of quotes and appointments naming the member as responsible clinician). Display last role change timestamp + actor.",
         "rationale": "prd.md lines 388, 392-393 (checked against the PRD text)."
       }
     },
@@ -51188,9 +51205,9 @@
       "owner_fr": "FR-009",
       "title": "Removal: confirmation warns and lists responsibilities and reassign prompt",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System presents confirmation dialog with warning about data reassignment System displays list of team member's current responsibilities: Active inquiries assigned to them Draft quotes in progress Upcoming scheduled appointments System prompts: \"Reassign to:\" with dropdown of remaining team members",
+        "statement": "System presents confirmation dialog with warning about handing over open items System displays the open items that name the team member as responsible clinician: Draft quotes in progress Open treatment records Upcoming scheduled appointments System prompts: \"Replacement clinician:\" with dropdown of remaining team members",
         "rationale": "prd.md lines 244-249 (checked against the PRD text)."
       }
     },
@@ -51224,9 +51241,9 @@
       "owner_fr": "FR-009",
       "title": "Removal: active work items reassigned to the selected member",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System reassigns all active work items to selected team member",
+        "statement": "System replaces the removed member with the selected replacement clinician as responsible clinician on the open items",
         "rationale": "prd.md line 254 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -51296,9 +51313,9 @@
       "owner_fr": "FR-009",
       "title": "A7: removal without active work skips reassignment",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System detects no active work items System skips reassignment step Removal proceeds immediately after confirmation",
+        "statement": "System detects no open items System skips the replacement clinician step Removal proceeds immediately after confirmation",
         "rationale": "prd.md lines 275-279 (checked against the PRD text)."
       }
     },
@@ -51308,9 +51325,9 @@
       "owner_fr": "FR-009",
       "title": "B6: active patient conversations rerouted with patient message",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System displays warning: \"This member has active patient conversations\" System prompts: \"New messages from patients will be routed to [reassigned team member]\" System updates message routing System sends automated message to patients: \"Your inquiry is now being handled by [new team member]\"",
+        "statement": "System leaves the clinic's patient conversations unchanged by a removal: each conversation belongs to the clinic (one conversation per patient and provider, FR-012), so no routing changes and no patient message is sent.",
         "rationale": "prd.md lines 285-290 (checked against the PRD text)."
       }
     },
@@ -51368,9 +51385,9 @@
       "owner_fr": "FR-009",
       "title": "Suspensions use the removal modal with a different final state",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Suspensions use same modal with different final state.",
+        "statement": "Suspensions use same modal with different final state. A suspension emits the team member suspended event and records who set it (REQ-009-192).",
         "rationale": "prd.md line 416 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -51392,9 +51409,9 @@
       "owner_fr": "FR-009",
       "title": "Remove modal: bulk reassignment over 10 inquiries and transfer SLA",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Provide bulk reassignment for >10 inquiries (wizard launches Screen 5). Show SLA: \"Transfers must complete before confirming removal.\"",
+        "statement": "Provide bulk reassignment for >10 open items (wizard launches Screen 5). Show SLA: \"Transfers must complete before confirming removal.\"",
         "rationale": "prd.md lines 420-421 (checked against the PRD text)."
       }
     },
@@ -51404,9 +51421,9 @@
       "owner_fr": "FR-009",
       "title": "Task Transfer Wizard steps",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Select Workloads: Breakdown by entity type with counts (inquiries, quotes, appointments, messages). Assign Targets: Map each workload type to a target member (supports split assignments). Review & Confirm: Summary of transfers, notifications to recipients, and audit preview.",
+        "statement": "Select Workloads: Breakdown by item type with counts (quotes, treatment records, appointments). Assign Targets: Map each workload type to a target member (supports split assignments). Review & Confirm: Summary of transfers, notifications to recipients, and audit preview.",
         "rationale": "prd.md lines 431-433 (checked against the PRD text)."
       }
     },
@@ -51464,9 +51481,9 @@
       "owner_fr": "FR-009",
       "title": "Suspended member rows offer Reactivate",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "\"Suspended\" rows show \"Reactivate.\"",
+        "statement": "\"Suspended\" rows show \"Reactivate\", except a suspension set by Hairline, which only a Hairline admin can lift (REQ-009-192).",
         "rationale": "prd.md line 322 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -51572,9 +51589,9 @@
       "owner_fr": "FR-009",
       "title": "Workload summary counts per member",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Current Workload Summary: Active inquiries (count), Draft quotes (count), Upcoming appointments (count), Unread messages (count). Screen 1 Workload Summary: Counts of inquiries/quotes assigned.",
+        "statement": "Current Workload Summary: Draft quotes (count) and Upcoming appointments (count) that name the member as responsible clinician. Screen 1 Workload Summary: Draft quotes count.",
         "rationale": "prd.md line 476 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -51668,9 +51685,9 @@
       "owner_fr": "FR-009",
       "title": "Suspended member shows reactivate banner",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Suspended members show banner: \"This member is suspended. Reactivate to restore access.\"",
+        "statement": "Suspended members show banner: \"This member is suspended. Reactivate to restore access.\" The banner and the Reactivate action apply only to a suspension set by the clinic; a suspension set by Hairline shows no Reactivate.",
         "rationale": "prd.md line 503 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -51716,9 +51733,9 @@
       "owner_fr": "FR-009",
       "title": "Assigned Work bulk reassign opens the Task Transfer Wizard",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Screen 6 Tab 3 Assigned Work: Inquiries, Quotes, Appointments, Messages sub-tabs with counts. Bulk Reassign: Select multiple items and reassign to another member; opens Screen 5 (Task Transfer Wizard).",
+        "statement": "Screen 6 Tab 3 Assigned Work: Quotes, Treatment records, Appointments sub-tabs with counts. Bulk Reassign: Select multiple items and reassign to another member; opens Screen 5 (Task Transfer Wizard).",
         "rationale": "prd.md lines 492, 494 (checked against the PRD text)."
       }
     },
@@ -51788,9 +51805,9 @@
       "owner_fr": "FR-009",
       "title": "Admin directory row actions and permissions",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Screen 10 Actions: Force suspend, reset invitation, view audit log, impersonate. Buttons enabled based on admin permissions; Impersonate is Super Admin only and follows the FR-015 Login as Provider rules.",
+        "statement": "Screen 10 Actions: Force suspend, Reactivate, resend invitation, view audit log, impersonate. Buttons enabled based on admin permissions; Force suspend is not offered on the Owner row; resend invitation is the A2 resend; Impersonate is Super Admin only and follows the FR-015 Login as Provider rules.",
         "rationale": "prd.md line 592 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -52124,9 +52141,9 @@
       "owner_fr": "FR-009",
       "title": "Existing admin row actions remain available",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Existing admin actions (force suspend, reset invitation, view audit log, impersonate) remain available from each row.",
+        "statement": "Existing admin actions (force suspend, reactivate, resend invitation, view audit log, impersonate) remain available from each row. Resend invitation is the A2 resend, including its seat check.",
         "rationale": "prd.md line 769 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -52280,9 +52297,9 @@
       "owner_fr": "FR-009",
       "title": "Team members may request personal data export and account deletion",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "GDPR Compliance: Team members can request data export (personal data only) and account deletion (marks as deleted, archives for compliance period)",
+        "statement": "GDPR Compliance: Team members can request data export (personal data only) and account deletion through support (FR-034). A Hairline admin removes the account (status Removed) and anonymizes the member's personal data; audit entries keep an anonymous label for the existing audit retention period. An Owner must go through the Owner handover first.",
         "rationale": "prd.md line 796 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -52292,9 +52309,9 @@
       "owner_fr": "FR-009",
       "title": "Admin-editable limits: team size and invitation expiry",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Maximum team size limit per provider (default 100, adjustable 1-500) Invitation expiry period (default 7 days, range 1-30 days)",
+        "statement": "Maximum team size limit per provider (default 100, adjustable 1-500). Invitation expiry is fixed at 7 days and is not a setting.",
         "rationale": "prd.md lines 802-803 (checked against the PRD text)."
       }
     },
@@ -52304,9 +52321,9 @@
       "owner_fr": "FR-009",
       "title": "Admin force-suspend of a team member for terms violations",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Force-suspend individual team member accounts for terms violations",
+        "statement": "Force-suspend individual team member accounts for terms violations; not offered on the Owner row",
         "rationale": "prd.md line 804 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -52316,9 +52333,9 @@
       "owner_fr": "FR-009",
       "title": "Admin force-remove in emergencies bypasses the Owner-only rule",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Force-remove team member in emergency situations (bypasses Owner-only rule)",
+        "statement": "Force-remove team member in emergency situations (any member except the Owner, who changes only through the Owner handover)",
         "rationale": "prd.md line 805 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -52352,9 +52369,9 @@
       "owner_fr": "FR-009",
       "title": "Admins may suspend team members but cannot delete accounts",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Admin can suspend team members but cannot delete accounts (compliance requirement)",
+        "statement": "Admin can suspend team members but cannot hard-delete accounts (compliance requirement); on a deletion request the admin removes the account and anonymizes personal data",
         "rationale": "prd.md line 820 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -52388,9 +52405,9 @@
       "owner_fr": "FR-009",
       "title": "Edge: bounced invitation stays Pending and the Owner is notified in-platform",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System logs the bounce event, keeps the invitation status Pending with delivery state \"Pending Send\" (there is no Bounced status), and notifies provider owner via in-app notification: \"Invitation to [email] failed—email address may be invalid. Please verify and resend.\"",
+        "statement": "System logs the bounce event, keeps the invitation status Pending with delivery state \"Pending Send\" (there is no Bounced status), and notifies provider owner via in-app notification: \"Invitation to [email] failed—email address may be invalid. Please cancel the invitation and invite again with the correct address.\"",
         "rationale": "prd.md line 1108 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -52448,9 +52465,9 @@
       "owner_fr": "FR-009",
       "title": "Only a Hairline admin can hand the Owner role to another person",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST let only a Hairline admin hand the Owner role of a provider organization to another person (Rule 11). The provider organization keeps exactly one Owner before, during, and after the handover, and no provider-side user can start a handover. The new Owner MUST already be an active team member of that organization; the previous Owner becomes a Manager; the action requires a reason; and the new and the previous Owner are both notified by email",
+        "statement": "System MUST let only a Hairline admin hand the Owner role of a provider organization to another person (Rule 11). The provider organization keeps exactly one Owner before, during, and after the handover, and no provider-side user can start a handover. The new Owner MUST already be an active team member of that organization; the previous Owner becomes a Manager; the action requires a reason; and the new and the previous Owner are both notified by email. The admin starts it from Screen 12.",
         "rationale": "Rule 11 (Owner Handover): Only a Hairline admin can hand the Owner role of a provider organization to another person; no provider-side user can do it (Rule 2). The handover is one admin action, so the provider organization has exactly one Owner before and after it (Rule 1). The action requires a reason, is recorded in the FR-009 audit trail (Rule 4) and FR-015 Tab 8: Activity Log with the admin as actor, and the new and the previous Owner are notified by email."
       }
     },
@@ -52508,9 +52525,9 @@
       "owner_fr": "FR-009",
       "title": "Screen 11 Tab 3 work category tabs show a count badge",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "Screen 11 Tab 3 (Assigned Work, admin view): the work category tabs (Inquiries, Quotes, Appointments, Messages) each show a badge with the number of items in the category.",
+        "statement": "Screen 11 Tab 3 (Assigned Work, admin view): the work category tabs (Quotes, Treatment records, Appointments) each show a badge with the number of items in the category.",
         "rationale": "prd.md line 661 (Screen 11 Work Category Tabs row)"
       }
     },
@@ -52644,6 +52661,78 @@
       "attrs": {
         "statement": "Screen 8 (Account Setup): the Create Account button is disabled until all required fields are valid.",
         "rationale": "prd.md line 541 (Screen 8 Create Account CTA row)"
+      }
+    },
+    {
+      "id": "REQ-009-191",
+      "type": "Rule",
+      "owner_fr": "FR-009",
+      "title": "Work belongs to the clinic; a named person is only the responsible clinician",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Inquiries, bookings, and messages belong to the clinic as a whole. A named person is recorded only as the responsible clinician on quotes and treatment records (clinician_ids) and on appointments. Removal and suspension list only those items and require a replacement clinician for the open ones.",
+        "rationale": "General Module Rule 12; owner ruling on whose work a team member holds."
+      }
+    },
+    {
+      "id": "REQ-009-192",
+      "type": "Rule",
+      "owner_fr": "FR-009",
+      "title": "Who may suspend, remove or reactivate, and who set a suspension",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The Owner can suspend or remove any non-Owner team member; a Manager can suspend or remove only Clinical Staff and Billing Staff. A suspension records who set it, the clinic or the platform. A suspension set by the platform can be lifted only by a Hairline admin; the clinic sees no Reactivate on it.",
+        "rationale": "General Module Rule 13; Alternative Flow A9; Screens 1, 4 and 6; owner ruling on the Manager limit and on platform suspensions."
+      }
+    },
+    {
+      "id": "REQ-009-193",
+      "type": "Rule",
+      "owner_fr": "FR-009",
+      "title": "Cancel a pending invitation",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The Owner can cancel any Pending invitation and a Manager only those for Clinical Staff and Billing Staff. Cancelling invalidates the token, sets the invitation status to Cancelled, frees the seat, and is logged in the audit trail.",
+        "rationale": "Alternative Flow A8; Screen 1 and Screen 6 invitation rows."
+      }
+    },
+    {
+      "id": "REQ-009-194",
+      "type": "Rule",
+      "owner_fr": "FR-009",
+      "title": "A Deactivated provider cancels its Pending invitations",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "When a provider is Deactivated (FR-015), the system cancels every Pending invitation of that provider: the status becomes Cancelled and an audit entry is written.",
+        "rationale": "General Module Rule 14; Screen 7 provider-status checks."
+      }
+    },
+    {
+      "id": "REQ-009-195",
+      "type": "Rule",
+      "owner_fr": "FR-009",
+      "title": "The invitation page checks the provider status",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Before an invitation is accepted, Screen 7 checks the provider status. For a Deactivated provider it shows \"This invitation is no longer valid.\"; for a Suspended provider it shows \"This clinic is temporarily unavailable\", the invitation stays Pending, and its expiry keeps running.",
+        "rationale": "General Module Rule 14; Screen 7 validation."
+      }
+    },
+    {
+      "id": "REQ-009-196",
+      "type": "Rule",
+      "owner_fr": "FR-009",
+      "title": "The login email follows the new Owner; the Owner has onboarding records",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "After an Owner handover the provider record's Owner login email becomes the new Owner's email. The Owner already has a team member record and an org-role record created with the provider account at onboarding (FR-015), so the handover changes roles on existing records.",
+        "rationale": "Rule 11; Admin Flow: Hand Over the Owner Role; Screen 12 business rules."
       }
     },
     {
@@ -97988,7 +98077,7 @@
       "owner_fr": "FR-009",
       "title": "Team Management Dashboard",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "provider",
         "description": "Central view of team members, roles, status, seat usage and available actions (PRD Screen 1)."
@@ -98024,7 +98113,7 @@
       "owner_fr": "FR-009",
       "title": "Remove or Suspend Team Member Modal",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "provider",
         "description": "Guided reassignment and access revocation (PRD Screen 4)."
@@ -98036,7 +98125,7 @@
       "owner_fr": "FR-009",
       "title": "Task Transfer Wizard",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "provider",
         "description": "High-volume reassignment before removal (PRD Screen 5)."
@@ -98048,7 +98137,7 @@
       "owner_fr": "FR-009",
       "title": "Team Member Detail Page (Provider)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "provider",
         "description": "Profile, workload, permissions and activity of one member for Owners and Admins (PRD Screen 6)."
@@ -98120,7 +98209,7 @@
       "owner_fr": "FR-009",
       "title": "Provider Team (Admin, Single Provider)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "admin",
         "description": "One provider's team with an Invite Staff Member action, embedded in FR-015 Screen 3 Tab 3 (PRD Screen 12)."
@@ -98132,7 +98221,7 @@
       "owner_fr": "FR-009",
       "title": "Invite Staff Member Form (Admin)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "admin",
         "description": "Admin invite form inside PRD Screen 12: email address and non-Owner role."
@@ -101900,19 +101989,6 @@
       }
     },
     {
-      "id": "SET-invitation-expiry-period",
-      "type": "Setting",
-      "owner_fr": "FR-009",
-      "title": "Invitation expiry period",
-      "status": "active",
-      "version": 1,
-      "attrs": {
-        "description": "Admin-editable lifetime of an invitation link; range 1-30 days. The PRD names no owner FR for this setting.",
-        "default": "7",
-        "unit": "days"
-      }
-    },
-    {
       "id": "SET-landing-background",
       "type": "Setting",
       "owner_fr": "FR-026",
@@ -105441,7 +105517,7 @@
       "owner_fr": null,
       "title": "Active",
       "status": "active",
-      "version": 30,
+      "version": 31,
       "attrs": {
         "timeline": "provider-account",
         "sequence": 3,
@@ -110196,7 +110272,7 @@
       "owner_fr": "FR-009",
       "title": "New team member clicks the invitation link",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Main Flow Invite step 12"
       }
@@ -110240,7 +110316,7 @@
       "owner_fr": "FR-009",
       "title": "Provider Owner clicks Resend Invitation",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flow A2 step 3"
       }
@@ -110265,17 +110341,6 @@
       "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B2 step 4"
-      }
-    },
-    {
-      "id": "STP-009-012",
-      "type": "Step",
-      "owner_fr": "FR-009",
-      "title": "Provider Owner confirms that patient messages will be routed to the reassigned member",
-      "status": "active",
-      "version": 2,
-      "attrs": {
-        "prd_ref": "Alternative Flow B6 step 4"
       }
     },
     {
@@ -110755,9 +110820,9 @@
       "id": "STP-009-056",
       "type": "Step",
       "owner_fr": "FR-009",
-      "title": "System lists the member's current responsibilities",
+      "title": "System lists the open items that name the member as responsible clinician",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow Remove step 3"
       }
@@ -110766,9 +110831,9 @@
       "id": "STP-009-057",
       "type": "Step",
       "owner_fr": "FR-009",
-      "title": "System prompts Reassign to with the remaining team members",
+      "title": "System prompts for a replacement clinician from the remaining team members",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow Remove step 4"
       }
@@ -110777,9 +110842,9 @@
       "id": "STP-009-058",
       "type": "Step",
       "owner_fr": "FR-009",
-      "title": "Provider Owner or Manager selects a reassignment target or Archive unassigned",
+      "title": "Provider Owner or Manager selects a replacement clinician or Archive unassigned",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow Remove step 5"
       }
@@ -110810,9 +110875,9 @@
       "id": "STP-009-061",
       "type": "Step",
       "owner_fr": "FR-009",
-      "title": "System reassigns all active work items to the selected member",
+      "title": "System replaces the removed member with the selected replacement clinician as responsible clinician on the open items",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow Remove step 9"
       }
@@ -110898,9 +110963,9 @@
       "id": "STP-009-069",
       "type": "Step",
       "owner_fr": "FR-009",
-      "title": "System skips reassignment and removal proceeds after confirmation",
+      "title": "System skips the replacement clinician step and removal proceeds after confirmation",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A7 steps 2-3"
       }
@@ -110909,44 +110974,99 @@
       "id": "STP-009-070",
       "type": "Step",
       "owner_fr": "FR-009",
-      "title": "System warns that this member has active patient conversations",
+      "title": "System leaves the clinic conversations unchanged by the removal",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B6 step 2"
       }
     },
     {
-      "id": "STP-009-071",
+      "id": "STP-009-074",
       "type": "Step",
       "owner_fr": "FR-009",
-      "title": "System prompts that new patient messages will be routed to the reassigned team member",
+      "title": "System checks that a seat is free and blocks the resend with the Screen 2 seat limit message when none is",
       "status": "active",
       "version": 1,
       "attrs": {
-        "prd_ref": "Alternative Flow B6 step 3"
+        "prd_ref": "Alternative Flow A2 step 4"
       }
     },
     {
-      "id": "STP-009-072",
+      "id": "STP-009-075",
       "type": "Step",
       "owner_fr": "FR-009",
-      "title": "System updates the message routing to the reassigned team member",
+      "title": "Provider Owner or Manager clicks Cancel Invitation on a Pending invitation row",
       "status": "active",
       "version": 1,
       "attrs": {
-        "prd_ref": "Alternative Flow B6 step 5"
+        "prd_ref": "Alternative Flow A8 step 1"
       }
     },
     {
-      "id": "STP-009-073",
+      "id": "STP-009-076",
       "type": "Step",
       "owner_fr": "FR-009",
-      "title": "System sends an automated message to patients that their inquiry is now handled by the new team member",
+      "title": "System invalidates the token, sets the invitation to Cancelled, frees the seat and logs it in the audit trail",
       "status": "active",
       "version": 1,
       "attrs": {
-        "prd_ref": "Alternative Flow B6 step 6"
+        "prd_ref": "Alternative Flow A8 step 2"
+      }
+    },
+    {
+      "id": "STP-009-077",
+      "type": "Step",
+      "owner_fr": "FR-009",
+      "title": "Provider Owner or Manager clicks Suspend or Reactivate on a team member row",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A9 step 1"
+      }
+    },
+    {
+      "id": "STP-009-078",
+      "type": "Step",
+      "owner_fr": "FR-009",
+      "title": "System sets the member to Suspended (recording who set it, revoking sessions) or back to Active, emails the member and logs it in the audit trail",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A9 step 2"
+      }
+    },
+    {
+      "id": "STP-009-079",
+      "type": "Step",
+      "owner_fr": "FR-009",
+      "title": "Hairline admin clicks Hand over Owner role, picks an active team member, enters a reason and confirms",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Admin Flow: Hand Over the Owner Role step 1"
+      }
+    },
+    {
+      "id": "STP-009-080",
+      "type": "Step",
+      "owner_fr": "FR-009",
+      "title": "System makes the picked member the Owner, the previous Owner a Manager, and sets the provider Owner login email to the new Owner's email",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Admin Flow: Hand Over the Owner Role step 2"
+      }
+    },
+    {
+      "id": "STP-009-081",
+      "type": "Step",
+      "owner_fr": "FR-009",
+      "title": "System logs the handover in the FR-009 audit trail and FR-015 Activity Log and emails the new and the previous Owner",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Admin Flow: Hand Over the Owner Role step 3"
       }
     },
     {
@@ -154688,14 +154808,6 @@
       "calculated_by": null
     },
     {
-      "id": "ENT-team-member.active_inquiries_count",
-      "entity_id": "ENT-team-member",
-      "name": "active_inquiries_count",
-      "data_type": "int",
-      "required": false,
-      "calculated_by": "REQ-009-099"
-    },
-    {
       "id": "ENT-team-member.active_sessions",
       "entity_id": "ENT-team-member",
       "name": "active_sessions",
@@ -154912,6 +155024,14 @@
       "calculated_by": null
     },
     {
+      "id": "ENT-team-member.suspended_by",
+      "entity_id": "ENT-team-member",
+      "name": "suspended_by",
+      "data_type": "enum",
+      "required": false,
+      "calculated_by": null
+    },
+    {
       "id": "ENT-team-member.terms_accepted_at",
       "entity_id": "ENT-team-member",
       "name": "terms_accepted_at",
@@ -154926,14 +155046,6 @@
       "data_type": "int",
       "required": false,
       "calculated_by": "REQ-009-130"
-    },
-    {
-      "id": "ENT-team-member.unread_messages_count",
-      "entity_id": "ENT-team-member",
-      "name": "unread_messages_count",
-      "data_type": "int",
-      "required": false,
-      "calculated_by": "REQ-009-099"
     },
     {
       "id": "ENT-team-member.upcoming_appointments_count",
@@ -163228,6 +163340,18 @@
       "sort_order": 2
     },
     {
+      "field_id": "ENT-team-member.suspended_by",
+      "value": "clinic",
+      "label": "Clinic",
+      "sort_order": 0
+    },
+    {
+      "field_id": "ENT-team-member.suspended_by",
+      "value": "platform",
+      "label": "Platform",
+      "sort_order": 1
+    },
+    {
       "field_id": "ENT-transaction-audit-log.action_type",
       "value": "payout_approved",
       "label": "Payout Approved",
@@ -171102,12 +171226,6 @@
       "attrs": {}
     },
     {
-      "from_id": "ENT-team-member.active_inquiries_count",
-      "verb": "calculated by",
-      "to_id": "REQ-009-099",
-      "attrs": {}
-    },
-    {
       "from_id": "ENT-team-member.avg_response_time",
       "verb": "calculated by",
       "to_id": "REQ-009-130",
@@ -171129,12 +171247,6 @@
       "from_id": "ENT-team-member.total_work_items",
       "verb": "calculated by",
       "to_id": "REQ-009-130",
-      "attrs": {}
-    },
-    {
-      "from_id": "ENT-team-member.unread_messages_count",
-      "verb": "calculated by",
-      "to_id": "REQ-009-099",
       "attrs": {}
     },
     {
@@ -171978,6 +172090,12 @@
       "attrs": {}
     },
     {
+      "from_id": "FLW-009-cancel-invitation",
+      "verb": "starts at",
+      "to_id": "STP-009-075",
+      "attrs": {}
+    },
+    {
       "from_id": "FLW-009-change-team-member-role",
       "verb": "starts at",
       "to_id": "STP-009-036",
@@ -172026,6 +172144,12 @@
       "attrs": {}
     },
     {
+      "from_id": "FLW-009-owner-handover",
+      "verb": "starts at",
+      "to_id": "STP-009-079",
+      "attrs": {}
+    },
+    {
       "from_id": "FLW-009-owner-self-removal",
       "verb": "starts at",
       "to_id": "STP-009-067",
@@ -172059,6 +172183,12 @@
       "from_id": "FLW-009-role-change-during-critical-action",
       "verb": "starts at",
       "to_id": "STP-009-051",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-009-suspend-reactivate-member",
+      "verb": "starts at",
+      "to_id": "STP-009-077",
       "attrs": {}
     },
     {
@@ -175213,7 +175343,7 @@
       "verb": "active in",
       "to_id": "STG-provider-03-active",
       "attrs": {
-        "rules": 185
+        "rules": 188
       },
       "derived": true
     },
@@ -175231,7 +175361,16 @@
       "verb": "active in",
       "to_id": "STG-provider-05-offboarded",
       "attrs": {
-        "rules": 1
+        "rules": 2
+      },
+      "derived": true
+    },
+    {
+      "from_id": "FR-009",
+      "verb": "active in",
+      "to_id": "STG-provider-config-01-configuration",
+      "attrs": {
+        "rules": 2
       },
       "derived": true
     },
@@ -203538,12 +203677,6 @@
       "attrs": {}
     },
     {
-      "from_id": "REQ-009-016",
-      "verb": "governed by",
-      "to_id": "SET-invitation-expiry-period",
-      "attrs": {}
-    },
-    {
       "from_id": "REQ-009-017",
       "verb": "applies at",
       "to_id": "STG-provider-03-active",
@@ -204975,12 +205108,6 @@
       "from_id": "REQ-009-077",
       "verb": "applies to",
       "to_id": "ACT-patient",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-009-077",
-      "verb": "applies to",
-      "to_id": "EVT-team-patient-handler-changed",
       "attrs": {}
     },
     {
@@ -206838,12 +206965,6 @@
       "attrs": {}
     },
     {
-      "from_id": "REQ-009-160",
-      "verb": "governed by",
-      "to_id": "SET-invitation-expiry-period",
-      "attrs": {}
-    },
-    {
       "from_id": "REQ-009-161",
       "verb": "applies at",
       "to_id": "STG-provider-03-active",
@@ -207499,6 +207620,192 @@
     },
     {
       "from_id": "REQ-009-190",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-191",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-191",
+      "verb": "applies to",
+      "to_id": "ENT-quote.clinician_ids",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-191",
+      "verb": "applies to",
+      "to_id": "ENT-team-member",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-191",
+      "verb": "applies to",
+      "to_id": "ENT-treatment-record.clinician_ids",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-191",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-192",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-192",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-192",
+      "verb": "applies to",
+      "to_id": "ACT-provider-owner",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-192",
+      "verb": "applies to",
+      "to_id": "ENT-team-member.status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-192",
+      "verb": "applies to",
+      "to_id": "ENT-team-member.suspended_by",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-192",
+      "verb": "applies to",
+      "to_id": "SCR-009-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-192",
+      "verb": "applies to",
+      "to_id": "SCR-009-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-192",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-193",
+      "verb": "applies at",
+      "to_id": "STG-provider-config-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-193",
+      "verb": "applies to",
+      "to_id": "ENT-invitation",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-193",
+      "verb": "applies to",
+      "to_id": "ENT-invitation.status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-193",
+      "verb": "applies to",
+      "to_id": "SCR-009-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-193",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-194",
+      "verb": "applies at",
+      "to_id": "STG-provider-05-offboarded",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-194",
+      "verb": "applies to",
+      "to_id": "ENT-invitation",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-194",
+      "verb": "applies to",
+      "to_id": "ENT-invitation.status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-194",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-195",
+      "verb": "applies at",
+      "to_id": "STG-provider-config-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-195",
+      "verb": "applies to",
+      "to_id": "ENT-invitation",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-195",
+      "verb": "applies to",
+      "to_id": "SCR-009-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-195",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-009",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-196",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-196",
+      "verb": "applies to",
+      "to_id": "ENT-provider.email",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-196",
+      "verb": "applies to",
+      "to_id": "ENT-team-member",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-196",
+      "verb": "applies to",
+      "to_id": "ENT-team-member-org-role",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-009-196",
       "verb": "decided by",
       "to_id": "SRC-PRD-009",
       "attrs": {}
@@ -316185,15 +316492,6 @@
     {
       "from_id": "SCR-009-01",
       "verb": "shows",
-      "to_id": "ENT-team-member.active_inquiries_count",
-      "attrs": {
-        "provenance": "system calculated",
-        "label": "Workload Summary (inquiries)"
-      }
-    },
-    {
-      "from_id": "SCR-009-01",
-      "verb": "shows",
       "to_id": "ENT-team-member.draft_quotes_count",
       "attrs": {
         "provenance": "system calculated",
@@ -316243,6 +316541,15 @@
       "attrs": {
         "provenance": "retrieved",
         "label": "Status"
+      }
+    },
+    {
+      "from_id": "SCR-009-01",
+      "verb": "shows",
+      "to_id": "ENT-team-member.suspended_by",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Status (suspended by)"
       }
     },
     {
@@ -316372,15 +316679,6 @@
     {
       "from_id": "SCR-009-04",
       "verb": "shows",
-      "to_id": "ENT-team-member.active_inquiries_count",
-      "attrs": {
-        "provenance": "system calculated",
-        "label": "Responsibilities List (inquiries)"
-      }
-    },
-    {
-      "from_id": "SCR-009-04",
-      "verb": "shows",
       "to_id": "ENT-team-member.draft_quotes_count",
       "attrs": {
         "provenance": "system calculated",
@@ -316425,28 +316723,10 @@
     {
       "from_id": "SCR-009-05",
       "verb": "shows",
-      "to_id": "ENT-team-member.active_inquiries_count",
-      "attrs": {
-        "provenance": "system calculated",
-        "label": "Select Workloads (inquiries)"
-      }
-    },
-    {
-      "from_id": "SCR-009-05",
-      "verb": "shows",
       "to_id": "ENT-team-member.draft_quotes_count",
       "attrs": {
         "provenance": "system calculated",
         "label": "Select Workloads (quotes)"
-      }
-    },
-    {
-      "from_id": "SCR-009-05",
-      "verb": "shows",
-      "to_id": "ENT-team-member.unread_messages_count",
-      "attrs": {
-        "provenance": "system calculated",
-        "label": "Select Workloads (messages)"
       }
     },
     {
@@ -316539,15 +316819,6 @@
     {
       "from_id": "SCR-009-06",
       "verb": "shows",
-      "to_id": "ENT-team-member.active_inquiries_count",
-      "attrs": {
-        "provenance": "system calculated",
-        "label": "Current Workload Summary"
-      }
-    },
-    {
-      "from_id": "SCR-009-06",
-      "verb": "shows",
       "to_id": "ENT-team-member.created_at",
       "attrs": {
         "provenance": "retrieved",
@@ -316635,15 +316906,6 @@
       "attrs": {
         "provenance": "retrieved",
         "label": "Status"
-      }
-    },
-    {
-      "from_id": "SCR-009-06",
-      "verb": "shows",
-      "to_id": "ENT-team-member.unread_messages_count",
-      "attrs": {
-        "provenance": "system calculated",
-        "label": "Current Workload Summary"
       }
     },
     {
@@ -317232,6 +317494,16 @@
     {
       "from_id": "SCR-009-12",
       "verb": "shows",
+      "to_id": "ENT-team-activity-audit-log.description",
+      "attrs": {
+        "provenance": "user input",
+        "label": "Reason for Handover",
+        "editable": true
+      }
+    },
+    {
+      "from_id": "SCR-009-12",
+      "verb": "shows",
       "to_id": "ENT-team-member-org-role.role_id",
       "attrs": {
         "provenance": "retrieved",
@@ -317296,6 +317568,26 @@
       "attrs": {
         "provenance": "user input",
         "label": "Email Address",
+        "editable": true
+      }
+    },
+    {
+      "from_id": "SCR-009-13",
+      "verb": "shows",
+      "to_id": "ENT-invitation.first_name",
+      "attrs": {
+        "provenance": "user input",
+        "label": "First Name",
+        "editable": true
+      }
+    },
+    {
+      "from_id": "SCR-009-13",
+      "verb": "shows",
+      "to_id": "ENT-invitation.last_name",
+      "attrs": {
+        "provenance": "user input",
+        "label": "Last Name",
         "editable": true
       }
     },
@@ -353155,12 +353447,6 @@
     {
       "from_id": "STG-provider-03-active",
       "verb": "emits",
-      "to_id": "EVT-team-patient-handler-changed",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-provider-03-active",
-      "verb": "emits",
       "to_id": "EVT-treatment-added",
       "attrs": {}
     },
@@ -370842,6 +371128,12 @@
     },
     {
       "from_id": "STP-009-005",
+      "verb": "applies",
+      "to_id": "REQ-009-195",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-005",
       "verb": "at",
       "to_id": "STG-provider-config-01-configuration",
       "attrs": {}
@@ -371019,7 +371311,7 @@
     {
       "from_id": "STP-009-009",
       "verb": "next",
-      "to_id": "STP-009-025",
+      "to_id": "STP-009-074",
       "attrs": {}
     },
     {
@@ -371080,36 +371372,6 @@
       "from_id": "STP-009-011",
       "verb": "on",
       "to_id": "SCR-009-02",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-009-012",
-      "verb": "applies",
-      "to_id": "REQ-009-077",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-009-012",
-      "verb": "at",
-      "to_id": "STG-provider-03-active",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-009-012",
-      "verb": "done by",
-      "to_id": "ACT-provider-owner",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-009-012",
-      "verb": "next",
-      "to_id": "STP-009-072",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-009-012",
-      "verb": "on",
-      "to_id": "SCR-009-04",
       "attrs": {}
     },
     {
@@ -373030,84 +373292,291 @@
     },
     {
       "from_id": "STP-009-070",
-      "verb": "next",
-      "to_id": "STP-009-071",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-009-070",
       "verb": "on",
       "to_id": "SCR-009-04",
       "attrs": {}
     },
     {
-      "from_id": "STP-009-071",
+      "from_id": "STP-009-074",
       "verb": "applies",
-      "to_id": "REQ-009-077",
+      "to_id": "REQ-009-048",
       "attrs": {}
     },
     {
-      "from_id": "STP-009-071",
+      "from_id": "STP-009-074",
+      "verb": "applies",
+      "to_id": "REQ-009-101",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-074",
+      "verb": "applies",
+      "to_id": "REQ-009-148",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-074",
       "verb": "at",
-      "to_id": "STG-provider-03-active",
+      "to_id": "STG-provider-config-01-configuration",
       "attrs": {}
     },
     {
-      "from_id": "STP-009-071",
+      "from_id": "STP-009-074",
       "verb": "done by",
       "to_id": "ACT-system",
       "attrs": {}
     },
     {
-      "from_id": "STP-009-071",
+      "from_id": "STP-009-074",
       "verb": "next",
-      "to_id": "STP-009-012",
-      "attrs": {}
+      "to_id": "STP-009-025",
+      "attrs": {
+        "label": "A seat is free",
+        "condition": "REQ-009-048"
+      }
     },
     {
-      "from_id": "STP-009-071",
+      "from_id": "STP-009-074",
       "verb": "on",
-      "to_id": "SCR-009-04",
+      "to_id": "SCR-009-01",
       "attrs": {}
     },
     {
-      "from_id": "STP-009-072",
+      "from_id": "STP-009-075",
       "verb": "applies",
-      "to_id": "REQ-009-077",
+      "to_id": "REQ-009-089",
       "attrs": {}
     },
     {
-      "from_id": "STP-009-072",
+      "from_id": "STP-009-075",
+      "verb": "applies",
+      "to_id": "REQ-009-193",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-075",
       "verb": "at",
-      "to_id": "STG-provider-03-active",
+      "to_id": "STG-provider-config-01-configuration",
       "attrs": {}
     },
     {
-      "from_id": "STP-009-072",
+      "from_id": "STP-009-075",
+      "verb": "done by",
+      "to_id": "ACT-provider-owner",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-075",
+      "verb": "next",
+      "to_id": "STP-009-076",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-075",
+      "verb": "on",
+      "to_id": "SCR-009-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-076",
+      "verb": "applies",
+      "to_id": "REQ-009-013",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-076",
+      "verb": "applies",
+      "to_id": "REQ-009-148",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-076",
+      "verb": "applies",
+      "to_id": "REQ-009-193",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-076",
+      "verb": "at",
+      "to_id": "STG-provider-config-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-076",
       "verb": "done by",
       "to_id": "ACT-system",
       "attrs": {}
     },
     {
-      "from_id": "STP-009-072",
-      "verb": "next",
-      "to_id": "STP-009-073",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-009-073",
+      "from_id": "STP-009-077",
       "verb": "applies",
-      "to_id": "REQ-009-077",
+      "to_id": "REQ-009-082",
       "attrs": {}
     },
     {
-      "from_id": "STP-009-073",
+      "from_id": "STP-009-077",
+      "verb": "applies",
+      "to_id": "REQ-009-090",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-077",
+      "verb": "applies",
+      "to_id": "REQ-009-192",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-077",
       "verb": "at",
       "to_id": "STG-provider-03-active",
       "attrs": {}
     },
     {
-      "from_id": "STP-009-073",
+      "from_id": "STP-009-077",
+      "verb": "done by",
+      "to_id": "ACT-provider-owner",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-077",
+      "verb": "next",
+      "to_id": "STP-009-078",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-077",
+      "verb": "on",
+      "to_id": "SCR-009-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-078",
+      "verb": "applies",
+      "to_id": "REQ-009-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-078",
+      "verb": "applies",
+      "to_id": "REQ-009-013",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-078",
+      "verb": "applies",
+      "to_id": "REQ-009-069",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-078",
+      "verb": "applies",
+      "to_id": "REQ-009-082",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-078",
+      "verb": "applies",
+      "to_id": "REQ-009-192",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-078",
+      "verb": "at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-078",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-079",
+      "verb": "applies",
+      "to_id": "REQ-009-174",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-079",
+      "verb": "at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-079",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-079",
+      "verb": "next",
+      "to_id": "STP-009-080",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-079",
+      "verb": "on",
+      "to_id": "SCR-009-12",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-080",
+      "verb": "applies",
+      "to_id": "REQ-009-174",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-080",
+      "verb": "applies",
+      "to_id": "REQ-009-196",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-080",
+      "verb": "at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-080",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-080",
+      "verb": "next",
+      "to_id": "STP-009-081",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-081",
+      "verb": "applies",
+      "to_id": "REQ-009-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-081",
+      "verb": "applies",
+      "to_id": "REQ-009-013",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-081",
+      "verb": "applies",
+      "to_id": "REQ-009-174",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-081",
+      "verb": "at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-009-081",
       "verb": "done by",
       "to_id": "ACT-system",
       "attrs": {}
@@ -442422,6 +442891,95 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-133552-fb2829b6",
+      "at": "2026-11-24T13:35:52.990564+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-009 logic review pass 1: work belongs to the clinic with a replacement clinician for open items, Manager limit on remove and suspend, Suspend and Reactivate flow with who set the suspension, no Force actions on the Owner row, admin Owner handover with the login email, fixed 7-day invitation expiry, seat check on resend, Cancel Invitation flow, provider-status checks and cancellation of Pending invitations for a Deactivated provider, admin invite form names, account deletion through support, and a removal that leaves clinic conversations unchanged.",
+      "source_id": null,
+      "nodes_added": [
+        "ENT-team-member.suspended_by",
+        "FLW-009-cancel-invitation",
+        "FLW-009-owner-handover",
+        "FLW-009-suspend-reactivate-member",
+        "REQ-009-191",
+        "REQ-009-192",
+        "REQ-009-193",
+        "REQ-009-194",
+        "REQ-009-195",
+        "REQ-009-196",
+        "STP-009-074",
+        "STP-009-075",
+        "STP-009-076",
+        "STP-009-077",
+        "STP-009-078",
+        "STP-009-079",
+        "STP-009-080",
+        "STP-009-081"
+      ],
+      "nodes_updated": [
+        "ENT-invitation.expires_at",
+        "ENT-team-member.active_inquiries_count",
+        "ENT-team-member.draft_quotes_count",
+        "ENT-team-member.status",
+        "ENT-team-member.unread_messages_count",
+        "ENT-team-member.upcoming_appointments_count",
+        "EVT-team-patient-handler-changed",
+        "FLW-009-removed-member-active-conversations",
+        "REQ-009-005",
+        "REQ-009-007",
+        "REQ-009-016",
+        "REQ-009-035",
+        "REQ-009-037",
+        "REQ-009-043",
+        "REQ-009-048",
+        "REQ-009-062",
+        "REQ-009-067",
+        "REQ-009-070",
+        "REQ-009-076",
+        "REQ-009-077",
+        "REQ-009-082",
+        "REQ-009-084",
+        "REQ-009-085",
+        "REQ-009-090",
+        "REQ-009-099",
+        "REQ-009-107",
+        "REQ-009-111",
+        "REQ-009-117",
+        "REQ-009-145",
+        "REQ-009-159",
+        "REQ-009-160",
+        "REQ-009-161",
+        "REQ-009-162",
+        "REQ-009-165",
+        "REQ-009-168",
+        "REQ-009-174",
+        "REQ-009-179",
+        "SCR-009-01",
+        "SCR-009-04",
+        "SCR-009-05",
+        "SCR-009-06",
+        "SCR-009-12",
+        "SCR-009-13",
+        "SET-invitation-expiry-period",
+        "STG-provider-03-active",
+        "STP-009-005",
+        "STP-009-009",
+        "STP-009-012",
+        "STP-009-056",
+        "STP-009-057",
+        "STP-009-058",
+        "STP-009-061",
+        "STP-009-069",
+        "STP-009-070",
+        "STP-009-071",
+        "STP-009-072",
+        "STP-009-073"
+      ],
+      "edges_added": 87,
+      "edges_removed": 15,
+      "rows": 255
+    },
     {
       "id": "cs-20261124-133409-ed8d1aae",
       "at": "2026-11-24T13:34:09.401930+00:00",

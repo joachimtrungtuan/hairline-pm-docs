@@ -3,7 +3,7 @@
 **Module**: PR-01: Auth & Team Management
 **Feature Branch**: `fr009-provider-team-roles`
 **Created**: 2025-11-11
-**Status**: Proposed revision (v1.8); prior v1.2 document marked Verified & Approved
+**Status**: Proposed revision (v1.12); prior v1.2 document marked Verified & Approved
 **Source**: FR-009 from system-prd.md
 
 ---
@@ -72,8 +72,9 @@ The provider platform starts with four protected clinic-side roles that directly
 
 - Email invitations to new team members with secure signup link (REQ-009-035)
 - Email notifications when team member role changes (REQ-009-035)
-- Email notifications when team member is removed or suspended (REQ-009-035)
+- Email notifications when team member is removed, suspended, or reactivated (REQ-009-035)
 - In-platform notifications for team management events (REQ-009-035)
+- These notices (invitation, accepted, role changed, removed, suspended, reactivated, Owner handover, invitation delivery failure) need matching entries in the FR-030 notification catalogue (REQ-009-007)
 
 **Out of Scope**:
 
@@ -84,7 +85,7 @@ The provider platform starts with four protected clinic-side roles that directly
 ### Entry Points
 
 - **Provider Owner**: Accesses team management from provider dashboard main navigation ("Team" tab) (REQ-009-037)
-- **Provider Manager**: Accesses operational team management features from settings menu (within Owner-defined limits) (REQ-009-037)
+- **Provider Manager**: Accesses operational team management features from settings menu (within the Manager permissions defined in FR-031) (REQ-009-037)
 - **New Team Member**: Receives email invitation with signup link, creates account, automatically assigned to provider organization with specified role (REQ-009-037)
 - **Admin Platform**: System administrators access team management oversight from admin dashboard provider detail view (REQ-009-037)
 
@@ -130,8 +131,9 @@ The provider platform starts with four protected clinic-side roles that directly
   1. Provider Owner views pending invitations list
   2. System shows invitation status as "Expired"
   3. Provider Owner clicks "Resend Invitation" button
-  4. System generates new invitation token and sends new email (REQ-009-048)
-  5. Old invitation token invalidated (REQ-009-048)
+  4. System checks that a seat is free. When none is free, the resend is blocked with the Screen 2 seat limit message and the invitation stays Expired (REQ-009-048)
+  5. System generates new invitation token and sends new email (REQ-009-048)
+  6. Old invitation token invalidated (REQ-009-048)
 - **Outcome**: Team member receives fresh invitation with new 7-day expiry (REQ-009-048)
 
 **A3: Team member already has account (different provider)**:
@@ -182,6 +184,14 @@ The provider platform starts with four protected clinic-side roles that directly
   5. System displays warning to Provider Owner: "Invitation created but email failed. We'll retry automatically." (REQ-009-054)
   6. If sending still fails when the FR-030 retry rule is exhausted, system alerts admin team (REQ-009-055)
 - **Outcome**: Invitation record created, email eventually delivered or admin intervenes (REQ-009-054)
+
+**A8: Cancel a pending invitation**:
+
+- **Trigger**: Provider Owner or Manager clicks "Cancel Invitation" on a Pending invitation row. A Manager can cancel only invitations for Clinical Staff and Billing Staff, the same limit as for removal (REQ-009-193)
+- **Steps**:
+  1. Provider Owner or Manager clicks "Cancel Invitation" (REQ-009-193)
+  2. System invalidates the token, sets the invitation status to "Cancelled", frees the seat, and logs the cancellation in the audit trail (REQ-009-193)
+- **Outcome**: The invitation can no longer be accepted, and the person can be invited again (REQ-009-193)
 
 ---
 
@@ -234,23 +244,23 @@ The provider platform starts with four protected clinic-side roles that directly
 ### Main Flow: Remove Team Member
 
 **Actors**: Provider Owner or Manager, System, Removed Team Member
-**Trigger**: Provider Owner or Manager clicks "Remove" on team member row
-**Outcome**: Team member's access revoked, data reassigned or archived, team member notified
+**Trigger**: Provider Owner or Manager clicks "Remove" on team member row. The Owner can remove any non-Owner member; a Manager can remove only Clinical Staff and Billing Staff (REQ-009-005)
+**Outcome**: Team member's access revoked, open items handed to a replacement clinician or archived, team member notified
 
 **Steps**:
 
 1. Provider Owner or Manager clicks "Remove" button next to team member name
-2. System presents confirmation dialog with warning about data reassignment (REQ-009-067)
-3. System displays list of team member's current responsibilities: (REQ-009-067)
-   - Active inquiries assigned to them (REQ-009-067)
+2. System presents confirmation dialog with warning about handing over open items (REQ-009-067)
+3. System displays the open items that name the team member as responsible clinician (REQ-009-067, REQ-009-191):
    - Draft quotes in progress (REQ-009-067)
+   - Open treatment records (REQ-009-067)
    - Upcoming scheduled appointments (REQ-009-067)
-4. System prompts: "Reassign to:" with dropdown of remaining team members (REQ-009-067)
-5. Provider Owner or Manager selects the reassignment target. "Archive unassigned" is offered only when the team member has nothing outstanding; otherwise the work must be reassigned (REQ-009-068)
+4. System prompts: "Replacement clinician:" with dropdown of remaining team members (REQ-009-067)
+5. Provider Owner or Manager selects the replacement clinician. "Archive unassigned" is offered only when the team member has no open items; otherwise a replacement clinician must be chosen (REQ-009-068)
 6. Provider Owner or Manager confirms removal
-7. System validates actor has permission to remove target team member (REQ-009-015)
+7. System validates actor has permission to remove target team member: the Owner may remove any non-Owner member, a Manager only Clinical Staff and Billing Staff (REQ-009-015, REQ-009-005)
 8. System immediately revokes all active sessions for removed team member (REQ-009-069)
-9. System reassigns all active work items to selected team member (REQ-009-070)
+9. System replaces the removed member with the selected replacement clinician as responsible clinician on the open items (REQ-009-070)
 10. System archives team member's historical records (maintains for audit) (REQ-009-071)
 11. System sends email to removed team member: "Your access to [Provider Name] has been removed" (REQ-009-072)
 12. System logs removal in audit trail with the removal reason (required) (REQ-009-073)
@@ -270,24 +280,39 @@ The provider platform starts with four protected clinic-side roles that directly
 
 **A7: Remove team member with no active work**:
 
-- **Trigger**: Team member being removed has no assigned inquiries, quotes, or appointments
+- **Trigger**: Team member being removed is the responsible clinician on no open quotes, treatment records, or appointments
 - **Steps**:
-  1. System detects no active work items (REQ-009-076)
-  2. System skips reassignment step (REQ-009-076)
+  1. System detects no open items (REQ-009-076)
+  2. System skips the replacement clinician step (REQ-009-076)
   3. Removal proceeds immediately after confirmation (REQ-009-076)
 - **Outcome**: Simplified flow for inactive team members (REQ-009-076)
 
-**B6: Team member removed has active patient communication**:
+**B6: Removal does not affect clinic conversations**:
 
-- **Trigger**: Removed team member has ongoing message threads with patients
+- **Trigger**: Removed team member took part in patient message threads
 - **Steps**:
-  1. System detects active message threads (REQ-009-077)
-  2. System displays warning: "This member has active patient conversations" (REQ-009-077)
-  3. System prompts: "New messages from patients will be routed to [reassigned team member]" (REQ-009-077)
-  4. Provider Owner confirms understanding (REQ-009-077)
-  5. System updates message routing (REQ-009-077)
-  6. System sends automated message to patients: "Your inquiry is now being handled by [new team member]" (REQ-009-077)
-- **Outcome**: Seamless patient communication continuity (REQ-009-077)
+  1. System leaves the clinic's patient conversations unchanged: each conversation belongs to the clinic (one conversation per patient and provider, FR-012), so no routing changes and no patient message is sent (REQ-009-077)
+- **Outcome**: Patient conversations continue with the clinic (REQ-009-077)
+
+**A9: Suspend or reactivate a team member**:
+
+- **Trigger**: Provider Owner or Manager clicks "Suspend" on an Active member row or "Reactivate" on a Suspended member row (Screens 1 and 6). The Owner can act on any non-Owner member; a Manager only on Clinical Staff and Billing Staff (REQ-009-192)
+- **Steps**:
+  1. Provider Owner or Manager clicks "Suspend" or "Reactivate". Suspend opens the Screen 4 modal with the final state Suspended (REQ-009-082, REQ-009-192)
+  2. System sets the member to Suspended (recording that the clinic set it, revoking all active sessions) or back to Active, emails the member, and logs the change in the audit trail (REQ-009-082, REQ-009-192)
+- **Outcome**: The member is suspended or reactivated. A suspension set by Hairline can be lifted only by a Hairline admin, so the clinic sees no "Reactivate" on it (REQ-009-192)
+
+### Admin Flow: Hand Over the Owner Role
+
+**Actors**: Hairline admin, System, new Owner, previous Owner
+**Trigger**: Hairline admin clicks "Hand over Owner role" on Screen 12
+**Outcome**: The new Owner holds the Owner role, the previous Owner is a Manager, both are notified (Rule 11, REQ-009-174)
+
+**Steps**:
+
+1. Hairline admin clicks "Hand over Owner role", picks an active team member of that provider, enters a required reason, and confirms (REQ-009-174)
+2. System makes the picked member the Owner and the previous Owner a Manager, and sets the provider record's Owner login email to the new Owner's email (REQ-009-174, REQ-009-196)
+3. System logs the handover in the FR-009 audit trail and FR-015 Tab 8: Activity Log with the admin as actor, and emails the new and the previous Owner (REQ-009-174)
 
 ---
 
@@ -307,10 +332,10 @@ The provider platform starts with four protected clinic-side roles that directly
 | Email | Display (email) | N/A | Team member's email address | Display only | ENT-team-member.email |
 | Role | Display (badge/tag) | N/A | Current provider role | Display only | ENT-team-member-org-role.role_id |
 | Role Lock Indicator | Icon | N/A | Shows lock icon for Owner rows (non-editable) | Display only | no graph field (control) |
-| Status | Display (badge) | N/A | Team member status Active or Suspended; a pending invitation row shows the "Invited" badge (an invitation, not a member status) | Display only | ENT-team-member.status, ENT-invitation.status |
+| Status | Display (badge) | N/A | Team member status Active or Suspended, with who set a suspension (clinic or Hairline); a pending invitation row shows the "Invited" badge (an invitation, not a member status) | Display only | ENT-team-member.status, ENT-team-member.suspended_by, ENT-invitation.status |
 | Last Active | Display (timestamp) | N/A | Last login or activity timestamp | Display as relative time | ENT-team-member.last_active_at |
-| Workload Summary | Display (chip) | N/A | Counts of inquiries/quotes assigned | Display only (REQ-009-099) | ENT-team-member.active_inquiries_count, ENT-team-member.draft_quotes_count |
-| Actions | Button group | N/A | Edit, Remove, View Activity | Hidden for Owner rows | no graph field (control) |
+| Workload Summary | Display (chip) | N/A | Count of draft quotes that name the member as responsible clinician | Display only (REQ-009-099) | ENT-team-member.draft_quotes_count |
+| Actions | Button group | N/A | Edit, Suspend, Remove, View Activity | Hidden for Owner rows; Suspend and Remove are offered to a Manager only on Clinical Staff and Billing Staff rows (REQ-009-192) | no graph field (control) |
 | Team Size Meter | Progress bar | N/A | Seat usage (non-Owner team members with status Active or Suspended plus pending invitations not past expiry; see Rule 6) vs centrally approved limit | Turns amber at 90%, red at 100% (REQ-009-095) | ENT-provider-team-summary.seat_usage, ENT-provider.seat_limit |
 
 **Business Rules**:
@@ -318,7 +343,7 @@ The provider platform starts with four protected clinic-side roles that directly
 - Only Owners and authorized Managers can access the dashboard; non-Owner users have read-only visibility into Owner rows. (REQ-009-087)
 - Owner rows display lock badge with tooltip: "Primary Owner role cannot be changed." (REQ-009-088)
 - Pending invitation rows (badge "Invited") show "Resend Invitation" and "Cancel Invitation." (REQ-009-089)
-- "Suspended" rows show "Reactivate." (REQ-009-090)
+- Active rows show "Suspend" (same modal as Remove, Screen 4; REQ-009-082). "Suspended" rows show "Reactivate", except a suspension set by Hairline, which only a Hairline admin can lift. (REQ-009-090, REQ-009-192)
 - While the provider organization is Suspended, the dashboard is view-only (Rule 10): invite, resend, cancel invitation, role change, suspend, reactivate, and remove actions are unavailable, and the page shows "Your account is suspended. Team changes are unavailable. Please contact support." (REQ-009-153)
 - Current logged-in user's row highlighted with "(You)." (REQ-009-091)
 - Sorting: Owners (locked) first, then other roles alphabetically. (REQ-009-092)
@@ -389,7 +414,7 @@ The provider platform starts with four protected clinic-side roles that directly
 
 **Notes**:
 
-- Provide impact summary (# of inquiries/quotes affected). (REQ-009-062)
+- Provide impact summary (# of quotes and appointments naming the member as responsible clinician). (REQ-009-062)
 - Display last role change timestamp + actor. (REQ-009-062)
 
 ---
@@ -402,8 +427,8 @@ The provider platform starts with four protected clinic-side roles that directly
 
 | Field Name | Type | Required | Description | Validation Rules | Graph field |
 |------------|------|----------|-------------|------------------|-------------|
-| Responsibilities List | table | N/A | Active inquiries, quotes, appointments | Auto-generated | ENT-team-member.active_inquiries_count, ENT-team-member.draft_quotes_count, ENT-team-member.upcoming_appointments_count |
-| Reassignment Dropdown | select | Yes (if outstanding work) | Target team member | Filters by role compatibility | no graph field (control) |
+| Responsibilities List | table | N/A | Draft quotes, open treatment records, and upcoming appointments that name the member as responsible clinician | Auto-generated | ENT-team-member.draft_quotes_count, ENT-team-member.upcoming_appointments_count |
+| Replacement Clinician Dropdown | select | Yes (if open items) | Replacement clinician for the open items | Filters by role compatibility | no graph field (control) |
 | Removal Reason | select + textarea | Yes | Categorized reason + optional notes | Predefined reasons (REQ-009-083) | ENT-team-member.removal_reason_category, ENT-team-member.removal_reason_note |
 | Session Revocation Toggle | checkbox | Yes | Force logout all sessions | Locked to true (REQ-009-083) | no graph field (control) |
 | Notification Preview | display | N/A | Email template summary | Pulls from FR-020 notification templates | no graph field (control) |
@@ -411,13 +436,14 @@ The provider platform starts with four protected clinic-side roles that directly
 **Business Rules**:
 
 - Modal unavailable for Owners; no provider-facing workflow can remove or suspend the primary Owner. (REQ-009-079)
-- Reassignment required when outstanding work exists; otherwise option to archive. (REQ-009-080)
+- A replacement clinician is required when open items exist; otherwise option to archive. (REQ-009-080)
 - Removal triggers notifications to removed member and provider owner, plus audit event. (REQ-009-081)
 - Suspensions use same modal with different final state. (REQ-009-082)
+- Remove and Suspend are offered to a Manager only for Clinical Staff and Billing Staff members; the Owner can use them on any non-Owner member. (REQ-009-192)
 
 **Notes**:
 
-- Provide bulk reassignment for >10 inquiries (wizard launches Screen 5). (REQ-009-084)
+- Provide bulk reassignment for >10 open items (wizard launches Screen 5). (REQ-009-084)
 - Show SLA: "Transfers must complete before confirming removal." (REQ-009-084)
 
 ---
@@ -428,7 +454,7 @@ The provider platform starts with four protected clinic-side roles that directly
 
 **Steps**:
 
-1. **Select Workloads**: Breakdown by entity type with counts (inquiries, quotes, appointments, messages). (REQ-009-085; ENT-team-member.active_inquiries_count, ENT-team-member.draft_quotes_count, ENT-team-member.upcoming_appointments_count, ENT-team-member.unread_messages_count)
+1. **Select Workloads**: Breakdown by item type with counts (quotes, treatment records, appointments). (REQ-009-085; ENT-team-member.draft_quotes_count, ENT-team-member.upcoming_appointments_count)
 2. **Assign Targets**: Map each workload type to a target member (supports split assignments). (REQ-009-085)
 3. **Review & Confirm**: Summary of transfers, notifications to recipients, and audit preview. (REQ-009-085)
 
@@ -464,7 +490,7 @@ The provider platform starts with four protected clinic-side roles that directly
 | Role Badge | badge | N/A | Current role with lock icon if Owner | Color-coded by role | ENT-team-member-org-role.role_id |
 | Status Indicator | badge | N/A | Active / Suspended for team members; "Invited" for a pending invitation | Real-time status | ENT-team-member.status, ENT-invitation.status |
 | Last Active | display (timestamp) | N/A | Last login or action timestamp | Relative time with tooltip | ENT-team-member.last_active_at |
-| Quick Actions | button group | N/A | Edit Role, Remove Member, View Activity Log | Context-aware based on actor permissions | no graph field (control) |
+| Quick Actions | button group | N/A | Edit Role, Suspend or Reactivate, Remove Member, View Activity Log | Context-aware based on actor permissions; Suspend and Remove Member are offered to a Manager only on Clinical Staff and Billing Staff members (REQ-009-192) | no graph field (control) |
 
 **Tab 1: Overview**:
 
@@ -473,7 +499,7 @@ The provider platform starts with four protected clinic-side roles that directly
 | Member Since | display (date) | N/A | Account creation / invitation acceptance date | Read-only | ENT-team-member.created_at |
 | Phone Number | display (tel) | Yes | Contact phone (required at account setup, Screen 8) | Masked for privacy (REQ-009-109) | ENT-team-member.phone_number |
 | Department/Specialty | text | No | Optional organizational label (e.g., "Surgeon", "Reception") | Max 50 chars; editable by Owner/Manager (REQ-009-109) | ENT-team-member.department_specialty |
-| Current Workload Summary | card/widget | N/A | Active inquiries (count), Draft quotes (count), Upcoming appointments (count), Unread messages (count) | Click counts to filter relevant lists (REQ-009-099) | ENT-team-member.active_inquiries_count, ENT-team-member.draft_quotes_count, ENT-team-member.upcoming_appointments_count, ENT-team-member.unread_messages_count |
+| Current Workload Summary | card/widget | N/A | Draft quotes (count) and Upcoming appointments (count) that name the member as responsible clinician | Click counts to filter relevant lists (REQ-009-099) | ENT-team-member.draft_quotes_count, ENT-team-member.upcoming_appointments_count |
 | Permissions Matrix | table | N/A | Read-only table showing what this role can/cannot do | Grouped by feature area; links to Screen 3 for role changes | ENT-role-permission-definition.permissions |
 
 **Tab 2: Activity Log**:
@@ -489,7 +515,7 @@ The provider platform starts with four protected clinic-side roles that directly
 
 | Field Name | Type | Required | Description | Validation Rules | Graph field |
 |------------|------|----------|-------------|------------------|-------------|
-| Work Category Tabs | sub-tabs | N/A | Inquiries, Quotes, Appointments, Messages | Badge shows count per category (REQ-009-111) | no graph field (control) |
+| Work Category Tabs | sub-tabs | N/A | Quotes, Treatment records, Appointments | Badge shows count per category (REQ-009-111) | no graph field (control) |
 | Work Item List | table | N/A | Context-specific columns per category | Sortable by date, status, priority (REQ-009-178) | no graph field (list of work items) |
 | Bulk Reassign | button | N/A | Select multiple items and reassign to another member | Opens Screen 5 (Task Transfer Wizard) (REQ-009-111) | no graph field (control) |
 
@@ -500,7 +526,7 @@ The provider platform starts with four protected clinic-side roles that directly
 - "Remove Member" action shows confirmation with impact summary (pulls data from Screen 4). (REQ-009-105)
 - Activity log respects privacy rules and the global audit retention policy; IP addresses remain visible in full to authorized admins for the duration of the retention period. (REQ-009-156)
 - If viewing own detail page, "Remove Member" and "Edit Role" actions are hidden (cannot self-modify). (REQ-009-106)
-- Suspended members show banner: "This member is suspended. Reactivate to restore access." (REQ-009-107)
+- Suspended members show banner: "This member is suspended. Reactivate to restore access." The banner and the Reactivate action apply only to a suspension set by the clinic; a suspension set by Hairline shows no Reactivate. (REQ-009-107, REQ-009-192)
 - A pending invitation (badge "Invited") is not yet a team member and shows limited data: only the Overview tab with invitation status and "Resend Invitation" / "Cancel Invitation" actions. (REQ-009-108)
 
 ---
@@ -519,7 +545,8 @@ The provider platform starts with four protected clinic-side roles that directly
 
 **Validation**:
 
-- Token validity, seat availability (double-check), invitation status (Pending and not past expires_at only). (REQ-009-043)
+- Token validity, and invitation status (Pending and not past expires_at only), which means the invitation is still Pending and its seat is held (Rule 6); this is not a fresh seat availability test. (REQ-009-043)
+- Provider status: for a Deactivated provider the page shows the invalid-invitation message "This invitation is no longer valid."; for a Suspended provider it shows "This clinic is temporarily unavailable", the invitation stays Pending, and its expiry keeps running. (REQ-009-195)
 
 ---
 
@@ -560,7 +587,7 @@ The provider platform starts with four protected clinic-side roles that directly
 **Components**:
 
 - Role overview card (permissions summary). (ENT-role-permission-definition.permissions)
-- Required next steps (e.g., complete profile, review assigned inquiries handed over via Screen 5).
+- Required next steps (e.g., complete profile, review items handed over via Screen 5).
 - Notification opt-in management referencing FR-020 templates. (REQ-009-187)
 
 **Business Rules**:
@@ -589,7 +616,7 @@ The provider platform starts with four protected clinic-side roles that directly
 | Ownership Flag | icon | N/A | Indicates primary owner | Tooltip: "Primary Owner" (REQ-009-186) | no graph field (control) |
 | Status | badge | N/A | Team member status Active or Suspended; a pending invitation row shows the "Invited" badge | Color-coded | ENT-team-member.status, ENT-invitation.status |
 | Last Login | display (timestamp) | N/A | Most recent login timestamp | Relative time with tooltip for exact timestamp | ENT-team-member.last_login_at |
-| Actions | button group | N/A | Force suspend, reset invitation, view audit log, impersonate | Buttons enabled based on admin permissions; Impersonate is Super Admin only and follows the FR-015 "Login as Provider" rules (see Screen 11 Business Rules) (REQ-009-117) | no graph field (control) |
+| Actions | button group | N/A | Force suspend, Reactivate, resend invitation, view audit log, impersonate | Buttons enabled based on admin permissions; Force suspend is not offered on the Owner row (use the Owner handover first, REQ-009-161); Reactivate shows on a Suspended member; resend invitation is the A2 resend; Impersonate is Super Admin only and follows the FR-015 "Login as Provider" rules (see Screen 11 Business Rules) (REQ-009-117) | no graph field (control) |
 | Filters Panel | chips/checkboxes | No | Filter by status, role, region | Multi-select (REQ-009-185) | no graph field (control) |
 | Pagination Controls | pagination | N/A | Navigate through result pages | Server-driven | no graph field (control) |
 
@@ -626,7 +653,7 @@ The provider platform starts with four protected clinic-side roles that directly
 | Status Indicator | badge | N/A | Active / Suspended / Flagged for team members; "Invited" for a pending invitation | Real-time status; "Flagged" shown if compliance alert exists (REQ-009-119) | ENT-team-member.status, ENT-invitation.status |
 | Account Created | display (timestamp) | N/A | Original account creation date | Relative time with tooltip | ENT-team-member.created_at |
 | Last Active | display (timestamp) | N/A | Most recent login or action timestamp | Relative time with tooltip; highlight if >30 days inactive (REQ-009-119) | ENT-team-member.last_active_at |
-| Admin Actions | button group | N/A | Force Suspend, Reset Password, View Sessions, Impersonate | High-privilege actions require re-authentication; MFA-based re-auth is a future enhancement tied to platform-wide MFA rollout | no graph field (control) |
+| Admin Actions | button group | N/A | Force Suspend, Reactivate, Reset Password, View Sessions, Impersonate | High-privilege actions require re-authentication; MFA-based re-auth is a future enhancement tied to platform-wide MFA rollout; Force Suspend is not offered on the Owner row (REQ-009-161) | no graph field (control) |
 
 **Tab 1: Profile & Overview**:
 
@@ -658,7 +685,7 @@ The provider platform starts with four protected clinic-side roles that directly
 
 | Field Name | Type | Required | Description | Validation Rules | Graph field |
 |------------|------|----------|-------------|------------------|-------------|
-| Work Category Tabs | sub-tabs | N/A | Inquiries, Quotes, Appointments, Messages | Badge shows count per category (REQ-009-179) | no graph field (control) |
+| Work Category Tabs | sub-tabs | N/A | Quotes, Treatment records, Appointments | Badge shows count per category (REQ-009-179) | no graph field (control) |
 | Work Item List | table | N/A | Context-specific columns per category | Sortable by date, status, priority; includes patient ID, status, assigned date, last activity (REQ-009-180) | no graph field (list of work items) |
 | Patient Link | link | N/A | Links to patient detail page in admin console | Opens patient record in FR-016 (Admin Patient Management) (REQ-009-182) | no graph field (control) |
 | Provider Context | display (badge) | N/A | Shows which provider organization this work belongs to | Always displays since this is admin view | ENT-provider.name |
@@ -702,7 +729,7 @@ The provider platform starts with four protected clinic-side roles that directly
 | Membership Status | badge | N/A | Active / Suspended / Removed | Current team member status; a pending invitation is not a membership and appears only in Invitation History | ENT-team-member.status |
 | Invitation History | table | N/A | All invitations sent to this email | Columns: Date, Inviting Provider, Role Offered, Status | ENT-invitation.created_at, ENT-provider.name, ENT-invitation.role, ENT-invitation.status |
 | Role Change History | table | N/A | All role modifications | Columns: Date, Old Role, New Role, Changed By, Reason | ENT-team-member-org-role.role_id |
-| Remove from Provider | button | N/A | Admin-forced removal | Requires re-authentication + justification (MFA requirement deferred to future release); logs high-priority audit event | no graph field (control) |
+| Remove from Provider | button | N/A | Admin-forced removal | Requires re-authentication + justification (MFA requirement deferred to future release); logs high-priority audit event; not offered on the Owner row (use the Owner handover first, REQ-009-162) | no graph field (control) |
 
 **Business Rules**:
 
@@ -748,8 +775,9 @@ The provider platform starts with four protected clinic-side roles that directly
 | Status | badge | N/A | Team member status Active or Suspended; a pending invitation row shows the "Invited" badge | Color-coded | ENT-team-member.status, ENT-invitation.status |
 | Last Login | display (timestamp) | N/A | Most recent login timestamp | Relative time with tooltip for exact timestamp | ENT-team-member.last_login_at |
 | Seat Usage | display | N/A | Non-Owner team members with status Active or Suspended plus invitations with status Pending that are not past expires_at, against the provider's Seat Limit (FR-015); the Owner, Removed members, and Expired, Cancelled, or Accepted invitations do not count (Rule 6) | Example: "12 / 100 seats used" (REQ-009-148) | ENT-provider-team-summary.seat_usage, ENT-provider.seat_limit |
-| Row Actions | button group | N/A | Force suspend, reset invitation, view audit log, impersonate | Same behavior and permissions as Screen 10 and Screen 11 | no graph field (control) |
+| Row Actions | button group | N/A | Force suspend, Reactivate, resend invitation, view audit log, impersonate | Same behavior and permissions as Screen 10 and Screen 11; Force suspend and Force remove are not offered on the Owner row (REQ-009-161, REQ-009-162) | no graph field (control) |
 | Invite Staff Member | button | N/A | Opens the admin invite form for this provider | Hidden or disabled without FR-031 "Edit Providers"; disabled with reason when blocked (see Business Rules) | no graph field (control) |
+| Hand over Owner role | button | N/A | Opens the Owner handover dialog for this provider (Rule 11) | Hairline admin action; not available to provider users (REQ-009-174) | no graph field (control) |
 
 **Invite Staff Member Form (admin)**:
 
@@ -757,6 +785,16 @@ The provider platform starts with four protected clinic-side roles that directly
 |------------|------|----------|-------------|--------------------|-------------|
 | Email Address | email | Yes | Invitee email | Same validation as Screen 2, including the global provider email identity rule (REQ-009-008) and duplicate pending invitation checks | ENT-invitation.email |
 | Role | dropdown | Yes | One of the provider's assignable roles | Manager, Clinical Staff, and Billing Staff only (FR-031); Owner is not offered | ENT-invitation.role |
+| First Name | text | Yes | Invitee first name | Same validation as Screen 2 (REQ-009-175) | ENT-invitation.first_name |
+| Last Name | text | Yes | Invitee last name | Same validation as Screen 2 (REQ-009-175) | ENT-invitation.last_name |
+
+**Hand Over Owner Role Dialog (admin)**:
+
+| Field Name | Type | Required | Description | Validation / Notes | Graph field |
+|------------|------|----------|-------------|--------------------|-------------|
+| New Owner | select | Yes | One active team member of this provider | Active members only; the current Owner is not listed (REQ-009-174) | no graph field (control) |
+| Reason for Handover | textarea | Yes | Reason recorded in the audit trail | Required (REQ-009-174) | ENT-team-activity-audit-log.description |
+| Confirm Handover | button | N/A | Confirms the handover | Asks the admin to confirm before it runs (REQ-009-174) | no graph field (control) |
 
 **Business Rules**:
 
@@ -766,7 +804,8 @@ The provider platform starts with four protected clinic-side roles that directly
 - Invite is blocked when the provider's Seat Limit (FR-015) is reached, with message: "This provider has reached its seat limit. Increase the Seat Limit in Tab 1 before inviting." (REQ-009-143)
 - Invite is blocked when the provider status is Suspended or Deactivated, with message: "Invitations are unavailable while this provider is [Status]." (REQ-009-144)
 - Each admin invitation is logged in the FR-009 audit trail and in FR-015 Tab 8: Activity Log, recording the inviting admin as the actor. (REQ-009-025)
-- Existing admin actions (force suspend, reset invitation, view audit log, impersonate) remain available from each row. (REQ-009-145)
+- Existing admin actions (force suspend, reactivate, resend invitation, view audit log, impersonate) remain available from each row. Resend invitation is the A2 resend, including its seat check. (REQ-009-145)
+- Hand over Owner role: the admin picks an active team member and a reason and confirms; the new member becomes Owner, the previous Owner becomes a Manager, the handover is logged, and both are emailed (Rule 11). The provider record's Owner login email then becomes the new Owner's email. The Owner already has a team member record and an org-role record, created with the provider account at onboarding (FR-015), so the handover changes roles on existing records. (REQ-009-174, REQ-009-196)
 
 ---
 
@@ -784,7 +823,10 @@ The provider platform starts with four protected clinic-side roles that directly
 - **Rule 8**: Provider roles are limited to the four clinic roles: Owner, Manager, Clinical Staff, and Billing Staff. Custom provider roles do not exist. (REQ-009-002)
 - **Rule 9 (Invitation and Team Member Model)**: An invited person exists only as an invitation (Pending, Accepted, Expired, Cancelled) until they accept. A team member record is created only when the invitation is accepted. Team member statuses are Active, Suspended, and Removed, stored as `active`, `suspended`, and `inactive` (`inactive` means Removed and is kept for compatibility). A Removed member never takes a seat. "Invited" is only the badge that team lists show for a Pending invitation row; it is not a team member status. Legacy invitees that the old invite flow stored as team member rows (status `inactive` or `pending`, never accepted and no password set) are migrated into invitations: Pending if their invite or activation link has not expired, otherwise Expired. The placeholder member row is then deleted, so after migration `inactive` means Removed only (CR-FR009-20261028-01). (REQ-009-150; REQ-009-151; REQ-009-152)
 - **Rule 10 (Suspended Provider Team Management)**: While the provider organization is Suspended (FR-015; banner per FR-032 Rule 6), the provider Team page and team member detail pages are view-only. Provider users cannot invite, resend or cancel an invitation, change a role, suspend, reactivate, or remove a member. The Team page shows "Your account is suspended. Team changes are unavailable. Please contact support." Admin invitations to a Suspended or Deactivated provider are blocked by REQ-009-024. (REQ-009-153)
-- **Rule 11 (Owner Handover)**: Only a Hairline admin can hand the Owner role of a provider organization to another person; no provider-side user can do it (Rule 2). The handover is one admin action, so the provider organization has exactly one Owner before and after it (Rule 1). The new Owner must already be an active team member of that provider organization, and the previous Owner becomes a Manager. The action requires a reason, is recorded in the FR-009 audit trail (Rule 4) and FR-015 Tab 8: Activity Log with the admin as actor, and the new and the previous Owner are notified by email. REQ-009-174.
+- **Rule 11 (Owner Handover)**: Only a Hairline admin can hand the Owner role of a provider organization to another person; no provider-side user can do it (Rule 2). The handover is one admin action, so the provider organization has exactly one Owner before and after it (Rule 1). The new Owner must already be an active team member of that provider organization, and the previous Owner becomes a Manager. The action requires a reason, is recorded in the FR-009 audit trail (Rule 4) and FR-015 Tab 8: Activity Log with the admin as actor, and the new and the previous Owner are notified by email. After the handover the provider record's Owner login email is the new Owner's email (REQ-009-196). REQ-009-174.
+- **Rule 12 (Work belongs to the clinic)**: Inquiries, bookings, and messages belong to the clinic as a whole. A named person is recorded only as the responsible clinician on quotes and treatment records (`clinician_ids`, FR-004 and FR-010) and on appointments. Removal and suspension list only those items and require a replacement clinician for the open ones; the lists on the FR-004 and FR-010 records are rewritten when a member is removed. (REQ-009-191)
+- **Rule 13 (Suspend and Reactivate)**: The Owner can suspend or remove any non-Owner member; a Manager can suspend or remove only Clinical Staff and Billing Staff. A suspension records who set it, the clinic or the platform. A suspension set by the platform can be lifted only by a Hairline admin; the clinic sees no Reactivate on it. (REQ-009-192)
+- **Rule 14 (Invitations and provider status)**: When a provider is Deactivated (FR-015), the system cancels every Pending invitation (status Cancelled, audit entry). Screen 7 checks the provider status before an invitation is accepted. (REQ-009-194, REQ-009-195)
 - One team member belongs to exactly one provider organization at any given time. Transfers require admin-assisted reassignment that archives the old membership before creating a new one. (REQ-009-189)
 - Team Member Organization Role: One-to-one mapping per team member ensuring unique provider linkage; record persists for audit/history when transfers occur.
 - Team Member: Name, email, phone number, and password belong to the individual team member; clinic-level settings stay with the provider organization
@@ -796,7 +838,7 @@ The provider platform starts with four protected clinic-side roles that directly
 - **Privacy Rule 3**: IP addresses in team member activity logs are retained in full for security and compliance investigations, subject to the global audit log retention and access rules defined in the Constitution (REQ-009-156)
 - **Privacy Rule 4**: Removed team members' historical records are archived (not deleted) for compliance—visible only to Owners and platform admins (REQ-009-157)
 - **Audit Rule**: All access to team member data must be logged with timestamp, accessing user, and action performed (REQ-009-158)
-- **GDPR Compliance**: Team members can request data export (personal data only) and account deletion (marks as deleted, archives for compliance period) (REQ-009-159)
+- **GDPR Compliance**: Team members can request data export (personal data only) and account deletion through support (FR-034). A Hairline admin removes the account (status Removed; there is no fourth status) and anonymizes the member's personal data, and audit entries keep an anonymous label for the existing audit retention period. An Owner must go through the Owner handover first (REQ-009-159)
 - **Authentication**: Team member accounts use same strong authentication as provider owners (password only in initial FR-009 scope; MFA is planned as a future enhancement per Constitution / FR-031 and will be applied platform-wide, including provider admins and staff, in a later release)
 - **Authorization**: Every API request validates role permissions before execution—fail closed on permission check errors
 - **Storage**: Audit logs stored in append-only ledger for immutability and compliance
@@ -810,9 +852,10 @@ The provider platform starts with four protected clinic-side roles that directly
 **Editable by Admin (Hairline platform admins)**:
 
 - Maximum team size limit per provider (default 100, adjustable 1-500) (REQ-009-160)
-- Invitation expiry period (default 7 days, range 1-30 days) (REQ-009-160)
-- Force-suspend individual team member accounts for terms violations (REQ-009-161)
-- Force-remove team member in emergency situations (bypasses Owner-only rule) (REQ-009-162)
+- Force-suspend individual team member accounts for terms violations; not offered on the Owner row (REQ-009-161)
+- Reactivate a Suspended team member; a suspension set by the platform can be lifted only by a Hairline admin (REQ-009-192)
+- Force-remove team member in emergency situations (any member except the Owner, who changes only through the Owner handover) (REQ-009-162)
+- Hand over the Owner role to an active team member (Screen 12; Rule 11) (REQ-009-174)
 - Invite staff to a single provider with a non-Owner role (Screen 12; requires FR-031 "Edit Providers") (REQ-009-024)
 
 **Fixed in Codebase (Not Editable)**:
@@ -821,13 +864,14 @@ The provider platform starts with four protected clinic-side roles that directly
 - Number of Owners (always exactly 1) (REQ-009-163)
 - Team activity log retention: the global audit-log rule applies (10 years); there is no FR-009 retention setting (REQ-009-163)
 - Audit log structure and required fields (REQ-009-163)
+- Invitation expiry: always 7 days, not a setting (REQ-009-016)
 - Email invitation template structure (content editable, structure fixed) (REQ-009-163)
 - Session management security parameters (REQ-009-163)
 
 **Configurable with Restrictions**:
 
 - Admin can view any provider's team structure but cannot modify it without provider consent (audit trail logged), except the admin actions defined in Screens 10-12 (including inviting staff via Screen 12 and actions taken during a Super Admin impersonation session) (REQ-009-164)
-- Admin can suspend team members but cannot delete accounts (compliance requirement) (REQ-009-165)
+- Admin can suspend team members but cannot hard-delete accounts (compliance requirement); on a deletion request the admin removes the account and anonymizes personal data (Data & Privacy Rules, GDPR Compliance) (REQ-009-165)
 
 ### Payment & Billing Rules
 
@@ -839,6 +883,8 @@ The provider platform starts with four protected clinic-side roles that directly
 
 - **FR-031**: Admin Access Control & Permissions (provider roles and permission matrices)
 - **FR-020**: Notifications & Alerts (invitation, role change, removal, and reassignment templates)
+- **FR-030**: Notification Rules & Configuration (catalogue entries for the team notices, REQ-009-007)
+- **FR-012**: Messaging & Communication (one conversation per patient and provider, unaffected by a removal)
 - **FR-015**: Provider Management (provider organizations and owner accounts, Seat Limit, "Login as Provider"; Staff List embeds Screen 12)
 - **FR-032**: Provider Dashboard Settings & Profile Management (Owner-level settings gated by FR-009 roles)
 - **FR-003 and FR-004**: Inquiry Submission & Distribution; Quote Submission & Management (role-based access to inquiries and quotes)
@@ -889,18 +935,18 @@ A clinician who was initially invited as "Clinical Staff" (limited to treatment 
 
 ### User Story 3 - Owner Removes Team Member (Priority: P1)
 
-A coordinator leaves the clinic and the owner needs to remove their access to the platform. The owner removes the team member, reassigns their active inquiries to another coordinator, and the departing team member can no longer log in.
+A coordinator leaves the clinic and the owner needs to remove their access to the platform. The owner removes the team member, names a replacement clinician for the open quotes and appointments, and the departing team member can no longer log in.
 
 **Why this priority**: Critical for security and compliance—must be able to immediately revoke access for departing staff. Prevents unauthorized data access.
 
-**Independent Test**: Remove an existing team member and verify they can no longer authenticate, and verify their assigned work was reassigned to another team member.
+**Independent Test**: Remove an existing team member and verify they can no longer authenticate, and verify the open items now name the replacement clinician.
 
 **Acceptance Scenarios**:
 
-1. **Given** owner clicks "Remove" on a team member's row, **When** confirmation dialog appears, **Then** system displays list of team member's active responsibilities (5 active inquiries, 2 draft quotes)
-2. **Given** owner is prompted to reassign work, **When** owner selects another coordinator from dropdown as reassignment target, **Then** system confirms reassignment and warns that removed team member will lose access immediately
+1. **Given** owner clicks "Remove" on a team member's row, **When** confirmation dialog appears, **Then** system displays the open items that name the team member as responsible clinician (2 draft quotes, 3 upcoming appointments)
+2. **Given** owner is prompted to name a replacement clinician, **When** owner selects another coordinator from dropdown as replacement clinician, **Then** system confirms the replacement and warns that removed team member will lose access immediately
 3. **Given** owner confirms removal, **When** system processes removal, **Then** all active sessions for removed team member are invalidated immediately
-4. **Given** removed team member's work was reassigned, **When** new coordinator logs in, **Then** they see the 5 inquiries and 2 draft quotes now assigned to them
+4. **Given** removed team member's open items were handed over, **When** new coordinator logs in, **Then** they see the 2 draft quotes and 3 appointments that now name them as responsible clinician
 5. **Given** removed team member tries to log in, **When** they enter credentials, **Then** authentication fails with message "You no longer have access to this organization. Contact your clinic owner if you believe this is an error."
 6. **Given** owner views team dashboard after removal, **When** dashboard refreshes, **Then** removed team member no longer appears in active team list but appears in audit log as "Removed"
 
@@ -959,7 +1005,7 @@ Each clinic has exactly one primary Owner account. All other elevated users are 
 ### Edge Cases
 
 - **What happens when invitation email bounces (invalid email address)?**
-  System logs the bounce event, keeps the invitation status Pending with delivery state "Pending Send" (there is no Bounced status), and notifies provider owner via in-app notification: "Invitation to [email] failed—email address may be invalid. Please verify and resend." (REQ-009-168)
+  System logs the bounce event, keeps the invitation status Pending with delivery state "Pending Send" (there is no Bounced status), and notifies provider owner via in-app notification: "Invitation to [email] failed—email address may be invalid. Please cancel the invitation and invite again with the correct address." (REQ-009-168)
 
 - **How does system handle provider owner inviting 100+ team members at once?**
   System enforces rate limit: maximum 10 invitations per hour per provider organization. If limit exceeded, display error: "You've reached the invitation limit (10 per hour). Please try again later." This prevents abuse and email service quota exhaustion. (REQ-009-169)
@@ -1003,11 +1049,11 @@ Implementation teams MUST treat the above as **non-blocking, non-MVP requirement
 - **REQ-009-002**: System MUST support the four provider roles (Owner, Manager, Clinical Staff, Billing Staff) defined in FR-031; custom provider roles do not exist
 - **REQ-009-003**: System MUST enforce role-based access control for all provider platform features and data
 - **REQ-009-004**: System MUST allow the Owner to modify the role of any non-Owner team member, and a Manager to modify the role only of members below Manager (Clinical Staff and Billing Staff), never the Owner or another Manager, with immediate permission updates
-- **REQ-009-005**: System MUST allow Owners and Managers to remove non-Owner team members with immediate access revocation
+- **REQ-009-005**: System MUST allow the Owner to remove or suspend any non-Owner team member and a Manager to remove or suspend only Clinical Staff and Billing Staff, with immediate access revocation
 - **REQ-009-006**: System MUST keep exactly one Owner per provider organization at all times—prevent removal or demotion of the Owner and prevent a second Owner from being created from the provider platform; the Owner changes only through the Hairline admin handover (REQ-009-174)
-- **REQ-009-007**: System MUST send email notifications for team management events (invitation, role change, removal)
+- **REQ-009-007**: System MUST send email notifications for team management events (invitation, role change, removal, suspension, reactivation, Owner handover); these notices need matching FR-030 catalogue entries
 - **REQ-009-008**: System MUST enforce the global provider email identity rule (Rule 3): an email can belong to only one provider organization at a time as Owner, team member, or pending invitation; invitations, FR-015 provider creation, and FR-015 owner login-email edits that use an email tied to another non-Deactivated provider must be blocked; emails of Deactivated providers are freed for reuse while their records stay archived
-- **REQ-009-174**: System MUST let only a Hairline admin hand the Owner role of a provider organization to another person (Rule 11). The provider organization keeps exactly one Owner before, during, and after the handover, and no provider-side user can start a handover. The new Owner MUST already be an active team member of that organization; the previous Owner becomes a Manager; the action requires a reason; and the new and the previous Owner are both notified by email
+- **REQ-009-174**: System MUST let only a Hairline admin hand the Owner role of a provider organization to another person (Rule 11). The provider organization keeps exactly one Owner before, during, and after the handover, and no provider-side user can start a handover. The new Owner MUST already be an active team member of that organization; the previous Owner becomes a Manager; the action requires a reason; and the new and the previous Owner are both notified by email. The admin starts it from Screen 12
 
 ### Data Requirements
 
@@ -1047,6 +1093,7 @@ Implementation teams MUST treat the above as **non-blocking, non-MVP requirement
 
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
+| 2026-11-24 | 1.12 (proposed) | Logic review pass 1: a Manager may remove or suspend only Clinical Staff and Billing Staff; work belongs to the clinic and a person is named only as responsible clinician; Suspend and Reactivate flow with who set a suspension; Owner handover action on Screen 12 with the login email following the new Owner; seat check on resend; Cancel Invitation flow; Deactivated provider cancels Pending invitations; Screen 7 provider-status checks; invitation expiry fixed at 7 days; account deletion by admin with anonymization; B6 no longer reroutes messages. | Documentation |
 | 2026-11-22 | 1.11 (proposed) | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.10) and the change requests CR-FR009-20260929-01, CR-FR009-20261015-01, CR-FR009-20261015-02, CR-FR015-20261027-01 and CR-FR009-20261028-01 are in `archived/prd-baseline-2026-11-08/fr009-provider-team-roles/` and in git history. | Documentation |
 
 ---
@@ -1063,4 +1110,4 @@ Implementation teams MUST treat the above as **non-blocking, non-MVP requirement
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B
 **Based on**: FR-009 from system-prd.md
-**Last Updated**: 2026-11-22 (proposed revision v1.10; prior approval status unchanged)
+**Last Updated**: 2026-11-24 (proposed revision v1.12; prior approval status unchanged)
