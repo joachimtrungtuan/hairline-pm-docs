@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T15:52:33Z",
+  "generated_at": "2026-11-24T15:56:03Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -2996,9 +2996,9 @@
       "owner_fr": "FR-018",
       "title": "Referral link",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Unique auto-apply code URL."
+        "description": "Unique auto-apply code URL; shown only while an Active Auto-apply code that is not disabled by account status exists, otherwise the field reads \"No auto-apply code\"."
       }
     },
     {
@@ -3016,7 +3016,7 @@
       "owner_fr": "FR-018",
       "title": "Settlement outcome",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {}
     },
     {
@@ -39977,7 +39977,7 @@
       "owner_fr": null,
       "title": "Affiliate Management",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "module": "fr018-affiliate-management",
         "prd_path": "project-requirements/functional-requirements/fr018-affiliate-management/prd.md",
@@ -67961,11 +67961,11 @@
       "id": "REQ-018-003",
       "type": "Rule",
       "owner_fr": "FR-018",
-      "title": "validate affiliate-bound codes/links during the patient booking journey, apply the affiliate discount from Hairline's...",
+      "title": "validate affiliate-bound codes/links during the patient booking journey, apply the affiliate discount like any other FR-019 discount...",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST validate affiliate-bound codes/links during the patient booking journey, apply the affiliate discount from Hairline's commission when it is the final price discount, and preserve valid affiliate referral attribution for commission/reporting when another higher-priority discount controls the final price",
+        "statement": "System MUST validate affiliate-bound codes/links during the patient booking journey, apply the affiliate discount like any other FR-019 discount (commission is calculated on the price after the promotion) when it is the final price discount, and preserve valid affiliate referral attribution for commission/reporting when another higher-priority discount controls the final price",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1608"
       }
     },
@@ -68419,11 +68419,11 @@
       "id": "REQ-018-041",
       "type": "Rule",
       "owner_fr": "FR-018",
-      "title": "validate at affiliate code creation/generation that the combined Hairline-funded cost on a booking...",
+      "title": "validate at affiliate code creation/generation that the affiliate commission percentage stays within the platform default Hairline commission percentage",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System MUST validate at affiliate code creation/generation that the combined Hairline-funded cost on a booking (patient-facing affiliate discount + affiliate commission) stays within the platform default Hairline commission rate (Rule 15), re-run the check when commission is set at onboarding or edited, and flag a booking that still breaches at accrual for admin review while paying the commission in full; percentage breaches at code creation MUST be blocked (override requires documented, audited business approval) and fixed-amount configurations MUST raise a review warning",
+        "statement": "System MUST validate at affiliate code creation/generation that the affiliate commission percentage does not exceed the platform default Hairline commission percentage (Rule 15), re-run the check when commission is set at onboarding (Screen 2) or edited (Screen 3.2), and flag a booking that still breaches at accrual for admin review while paying the commission in full; percentage breaches MUST block the save unless the admin ticks Override and enters a required Approval reference stored in the audit entry (nothing is disabled automatically), and fixed-amount configurations MUST raise a review warning",
         "rationale": "PRD Functional Requirements Summary, prd.md line 1631"
       }
     },
@@ -68445,9 +68445,9 @@
       "owner_fr": "FR-018",
       "title": "Affiliate commissions are ONLY calculated for completed bookings where payment is confirmed...",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Affiliate commissions are ONLY calculated for completed bookings where payment is confirmed (not for quote requests or pending bookings). In FR-018 a \"completed booking\" means the booking's final payment is confirmed (FR-007, REQ-007-036); this event sets the accrual month, the effective-date test for commission changes, and Total Referrals",
+        "statement": "Affiliate commissions are ONLY calculated for completed bookings where payment is confirmed (not for quote requests or pending bookings). In FR-018 a \"completed booking\" means the payment that leaves the booking fully paid in FR-007: pay in full, the final balance payment, or the last installment (REQ-007-083, REQ-007-084, REQ-007B-049), called the final payment in this PRD; this event sets the accrual month, the effective-date test for commission changes, and Total Referrals",
         "rationale": "PRD General Module Rules, prd.md line 1178"
       }
     },
@@ -68455,11 +68455,11 @@
       "id": "REQ-018-044",
       "type": "Rule",
       "owner_fr": "FR-018",
-      "title": "Affiliate discounts and commissions are funded only from Hairline's commission",
+      "title": "The affiliate discount follows FR-019; the affiliate commission is funded only from Hairline's commission",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "Affiliate discount codes and affiliate commissions are both funded ONLY from Hairline's commission: the patient-facing affiliate discount applies only to Hairline's commission, and the affiliate commission is deducted from Hairline's commission. Neither reduces the provider's payout",
+        "statement": "The affiliate discount is treated like every other discount in FR-019: commission is calculated on the accepted price after the promotion, so Hairline's commission and the provider's payout both fall in proportion to their shares, with the provider bearing most of it (REQ-019-016, REQ-019-037). The affiliate commission itself is deducted from Hairline's commission only, never from the provider's payout",
         "rationale": "PRD General Module Rules, prd.md line 1179",
         "aliases": "REQ-018-045, REQ-017-156"
       }
@@ -68530,9 +68530,9 @@
       "owner_fr": "FR-018",
       "title": "Affiliate referral attribution is preserved separately from price discount priority",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Affiliate commission and referral credit are earned when a valid affiliate-bound code or affiliate auto-apply referral link is captured for the patient's booking journey and the booking completes with payment confirmation, even if the final price discount applied at quote acceptance is a higher-priority patient or provider promotion under FR-019's priority order (Rule 3). The attribution goes to the last valid affiliate code or affiliate link the patient used before accepting the quote: a link click counts for 30 days, a typed affiliate code replaces an earlier link, the link carries the affiliate's one Auto-apply code (the newest Active one if several), and the capture is stored with the patient's inquiry journey and read by FR-019 at acceptance. The single-discount rule still controls the patient's price and provider/Hairline discount impact; it does not erase affiliate referral attribution. This protects affiliates from losing commission because a provider-side promotion is applied outside the patient's knowledge. FR-017 and FR-019 MUST consume the FR-018/FR-019 attribution result separately from the final applied discount line.",
+        "statement": "Affiliate commission and referral credit are earned when a valid affiliate-bound code or affiliate auto-apply referral link is captured for the patient's booking journey and the booking completes with payment confirmation; \"valid\" means the affiliate is Active at the moment the quote is accepted, and a capture for an affiliate that is not Active at acceptance earns no credit and no commission, even if the final price discount applied at quote acceptance is a higher-priority patient or provider promotion under FR-019's priority order (Rule 3). The attribution goes to the last valid affiliate code or affiliate link the patient used before accepting the quote: a link click counts for 30 days, a typed affiliate code replaces an earlier link, the link carries the affiliate's newest Active Auto-apply code that is not disabled by account status (if there is none, an old link opens the normal landing page with no code and no attribution), and the capture is stored with the patient's inquiry journey and read by FR-019 at acceptance. The single-discount rule still controls the patient's price and provider/Hairline discount impact; it does not erase affiliate referral attribution. This protects affiliates from losing commission because a provider-side promotion is applied outside the patient's knowledge. FR-017 and FR-019 MUST consume the FR-018/FR-019 attribution result separately from the final applied discount line.",
         "rationale": "PRD General Module Rules, prd.md line 1188"
       }
     },
@@ -68542,9 +68542,9 @@
       "owner_fr": "FR-018",
       "title": "Affiliate lifecycle states",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "An affiliate has four states: Pending (account created, password not yet set), Active (password set, transacting), Suspended (temporary and reversible; codes disabled by account status, unpaid commission held, B3) and Inactive (permanent end of the partnership; codes revoked, portal read-only, final balance settled, forfeited or written off, B5). Only these transitions are allowed: Pending to Active (password set, Screen 10.1), Pending to Inactive (Screen 3.3), Active to Suspended (Screen 3.1), Suspended to Active (Screen 3.1), Active to Inactive (Screen 3.3) and Suspended to Inactive (Screen 3.3). Inactive is terminal and is not silently reversed (resuming requires re-onboarding). Setting the password changes the status only from Pending.",
+        "statement": "An affiliate has four states: Pending (account created, password not yet set), Active (password set, transacting), Suspended (temporary and reversible; codes disabled by account status, unpaid commission held, B3) and Inactive (permanent end of the partnership; codes revoked, portal read-only, final balance settled, forfeited or written off, B5). Only these transitions are allowed: Pending to Active (password set, Screen 10.1), Pending to Inactive (Screen 3.3), Active to Suspended (Screen 3.1), Suspended to Active (Screen 3.1), Active to Inactive (Screen 3.3) and Suspended to Inactive (Screen 3.3). Inactive is terminal and is not silently reversed (resuming requires re-onboarding as a new affiliate record, Screen 2). Setting the password changes the status only from Pending.",
         "rationale": "PRD General Module Rules, prd.md line 1189"
       }
     },
@@ -68566,9 +68566,9 @@
       "owner_fr": "FR-018",
       "title": "Commission base",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Percentage commissions are calculated as a percentage of the completed booking's net revenue (the booking total after discounts and refunds, in USD per the Currency Rule) — not as a percentage of Hairline's net commission. Fixed-amount commissions are a flat USD amount per completed booking, independent of booking value. In both cases the commission is funded from (deducted from) Hairline's commission, never the provider's payout (Rule 2). The patient-facing affiliate discount (also Hairline-funded, Rule 2) and the affiliate commission are separate Hairline-borne costs against the same booking.",
+        "statement": "Percentage commissions are calculated as a percentage of the completed booking's net revenue (the booking total after discounts and refunds, in USD per the Currency Rule) — not as a percentage of Hairline's net commission. Fixed-amount commissions are a flat USD amount per completed booking, independent of booking value. In both cases the commission is funded from (deducted from) Hairline's commission, never the provider's payout (Rule 2). The affiliate discount only lowers the price that both shares are calculated on (Rule 2); the affiliate commission is a separate Hairline-borne cost against the same booking.",
         "rationale": "PRD General Module Rules, prd.md line 1191"
       }
     },
@@ -68576,11 +68576,11 @@
       "id": "REQ-018-055",
       "type": "Rule",
       "owner_fr": "FR-018",
-      "title": "Hairline-funded cost ceiling",
+      "title": "Commission ceiling",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "On any single booking, the combined Hairline-funded cost, which is the patient-facing affiliate discount (Rule 2) plus the affiliate commission (Rule 14), is meant to stay within Hairline's own commission earned on that booking. The system checks this at affiliate code creation/generation (Screen 4) using the platform default Hairline commission rate: when both the discount and the commission are percentage-based, it validates that `discount % + commission % ≤ the platform default Hairline commission %` and blocks the save with the shortfall shown; an admin with documented business approval may override with an audited confirmation. The check runs again against the affiliate's active codes when the commission is set at onboarding or edited on Screen 3.2. Fixed-amount configurations (where the ceiling depends on booking value) raise a review warning rather than a hard block. At accrual, a booking whose discount plus commission is still more than Hairline's commission on that booking is paid in full and flagged for admin review on the commission list. This rule complements Assumption 4 (aggregate program cost at most 10% of Hairline commission revenue).",
+        "statement": "On any single booking, the affiliate commission (Rule 14) is meant to stay within Hairline's own commission earned on that booking. For a percentage commission the system checks that `commission % ≤ the platform default Hairline commission %` and blocks the save with the shortfall shown; the discount is not part of the test, because it is already reflected in the price both shares are calculated on (Rule 2). The check runs at affiliate code creation/generation (Screen 4), when the commission is set at onboarding (Screen 2) and when it is edited on Screen 3.2. The admin can save past a breach only by ticking \"Override\" and entering a required \"Approval reference\" text, which is stored in the audit entry; nothing is disabled automatically, and who may override follows the FR-031 permission matrix. Fixed-amount commissions (where the ceiling depends on booking value) raise a review warning rather than a hard block. At accrual, a booking whose commission is still more than Hairline's commission on that booking is paid in full and flagged for admin review on the commission list. This rule complements Assumption 4 (aggregate program cost at most 10% of Hairline commission revenue)",
         "rationale": "PRD General Module Rules, prd.md line 1192"
       }
     },
@@ -68710,9 +68710,9 @@
       "owner_fr": "FR-018",
       "title": "If patient refunds booking, affiliate commission is reversed (deducted from next payout)",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Payment Rule 2: If patient refunds booking, affiliate commission is reversed (deducted from next payout). A refund after a payout was already Paid creates a reversal that is carried forward and deducted from later payouts of an active affiliate until it is cleared",
+        "statement": "Payment Rule 2: If patient refunds booking, affiliate commission is reversed (deducted from next payout). A refund after a payout was already Paid creates a reversal that is carried forward and deducted from later payouts of an active affiliate until it is cleared; a reversal that arrives after the affiliate is Inactive is written off with an audit entry (Payment Rule 7)",
         "rationale": "PRD Payment and Billing Rules, prd.md line 1242"
       }
     },
@@ -68722,9 +68722,9 @@
       "owner_fr": "FR-018",
       "title": "Minimum payout threshold: $50 (commissions below $50 roll over to next month)",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Minimum payout threshold: $50 (commissions below $50 roll over to next month)",
+        "statement": "Minimum payout threshold: $50 (commissions below $50 roll over to next month); it does not apply to an Inactive affiliate (Payment Rule 7)",
         "rationale": "PRD Payment and Billing Rules, prd.md line 1243"
       }
     },
@@ -68843,9 +68843,9 @@
       "owner_fr": "FR-018",
       "title": "Screen 2: Email Uniqueness",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Email Uniqueness: System validates email is not already registered as affiliate or admin user",
+        "statement": "Email Uniqueness: System validates email is not already registered as an affiliate or admin user. An Inactive affiliate without a ban flag does not count, so a person who left by normal offboarding can be onboarded again with the same email as a new affiliate record with a new ID and a zero balance; the old record is unchanged. The email of a banned affiliate stays blocked",
         "rationale": "PRD Screen 2, prd.md line 415"
       }
     },
@@ -68951,9 +68951,9 @@
       "owner_fr": "FR-018",
       "title": "Screen 3: Resend Activation",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Resend Activation: \"Resend Activation Email\" is enabled only while Activation Status is \"Invited\" (password not yet set); it follows the A5 rate-limit and security rules",
+        "statement": "Resend Activation: \"Resend Activation Email\" is enabled only while Activation Status is \"Invited\" (password not yet set) and the affiliate is Pending; offboarding a Pending affiliate invalidates the link and disables the action; it follows the A5 rate-limit and security rules",
         "rationale": "PRD Screen 3, prd.md line 457"
       }
     },
@@ -69071,9 +69071,9 @@
       "owner_fr": "FR-018",
       "title": "Screen 3.3: Final Settlement",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Final Settlement: Net final balance ≥ $50 is queued for the next scheduled payout run (payout readiness unchanged); a residual below $50 is forfeited with an audit entry; a negative balance is written off with an audit entry (no future payouts exist to net against)",
+        "statement": "Final Settlement: The modal first shows the settlement outcome; nothing is applied until the admin confirms. After confirmation, a net final balance ≥ $50 is queued for the next scheduled payout run, a residual below $50 is forfeited with an audit entry, and a negative balance is written off with an audit entry (no future payouts exist to net against); a Pending affiliate has nothing to settle and its activation link is invalidated",
         "rationale": "PRD Screen 3.3, prd.md line 550"
       }
     },
@@ -69119,9 +69119,9 @@
       "owner_fr": "FR-018",
       "title": "Screen 3.3: No Silent Reactivation",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "No Silent Reactivation: An Inactive affiliate is not reinstated via Screen 3.1; resuming a partnership requires re-onboarding (new activation)",
+        "statement": "No Silent Reactivation: An Inactive affiliate is not reinstated via Screen 3.1; resuming a partnership requires re-onboarding on Screen 2 as a new affiliate record with a new ID and zero balance, allowed with the same email only after a normal offboarding",
         "rationale": "PRD Screen 3.3, prd.md line 555"
       }
     },
@@ -69239,9 +69239,9 @@
       "owner_fr": "FR-018",
       "title": "Screen 4: Margin Guard (Rule 15)",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Margin Guard (Rule 15): At code creation the system checks the configured discount plus the affiliate's commission against the platform default Hairline commission rate. Percentage configurations that breach it (`discount % + commission % > default Hairline commission %`) are blocked with the shortfall shown (override requires documented, audited business approval); fixed-amount configurations raise a review warning since the breach is booking-value dependent. The check runs again when the commission is set at onboarding or edited on Screen 3.2, and at accrual a booking that still breaches is flagged for admin review",
+        "statement": "Margin Guard (Rule 15): At code creation the system checks the affiliate's commission percentage against the platform default Hairline commission percentage (the discount is not part of the test). A percentage commission above it (`commission % > default Hairline commission %`) is blocked with the shortfall shown, unless the admin ticks \"Override\" and enters a required \"Approval reference\" text, which is stored in the audit entry; nothing is disabled automatically. Fixed-amount configurations raise a review warning since the breach is booking-value dependent. The check runs again when the commission is set at onboarding or edited on Screen 3.2, and at accrual a booking that still breaches is flagged for admin review",
         "rationale": "PRD Screen 4, prd.md line 602"
       }
     },
@@ -69527,9 +69527,9 @@
       "owner_fr": "FR-018",
       "title": "Screen 9: Referral Link",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Referral Link: The affiliate's unique referral link (auto-apply code URL) is available with a one-click copy action; the link carries the affiliate's one Auto-apply code, and a click counts for 30 days",
+        "statement": "Referral Link: The affiliate's unique referral link (auto-apply code URL) is shown with a one-click copy action only while the affiliate has an Active Auto-apply code that is not disabled by account status; the link carries the newest such code, and a click counts for 30 days. Otherwise the field reads \"No auto-apply code\", and an old link opens the normal landing page with no code and no attribution",
         "rationale": "PRD Screen 9, prd.md line 854"
       }
     },
@@ -69635,9 +69635,9 @@
       "owner_fr": "FR-018",
       "title": "Screen 9.3: Minimum Threshold",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Minimum Threshold: When the next payout amount is below the $50 minimum, the panel notes it will roll over to the next cycle (Payment Rule 3)",
+        "statement": "Minimum Threshold: When the next payout amount of an Active affiliate is below the $50 minimum, the panel notes it will roll over to the next cycle (Payment Rule 3); a Suspended affiliate sees \"Held\" and an Inactive affiliate sees \"Final balance\" instead (Payment Rules 4 and 7)",
         "rationale": "PRD Screen 9.3, prd.md line 1002"
       }
     },
@@ -69731,9 +69731,9 @@
       "owner_fr": "FR-018",
       "title": "Screen 10.1: Expired / Used Link",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Expired / Used Link: System shows an explanatory message and a link to request a new one (Screen 10.2)",
+        "statement": "Expired / Used Link: System shows an explanatory message and a link to request a new one (Screen 10.2); if the affiliate was offboarded while Pending, the link no longer works and the screen shows \"This activation link is no longer valid\" with no resend option",
         "rationale": "PRD Screen 10.1, prd.md line 1106"
       }
     },
@@ -69779,9 +69779,9 @@
       "owner_fr": "FR-018",
       "title": "Screen 10.2: Eligibility",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Eligibility: A link is only generated for accounts created but not yet activated (password not set)",
+        "statement": "Eligibility: A link is only generated for accounts created but not yet activated (password not set) and still Pending; for an affiliate offboarded while Pending, resend is disabled and the \"link no longer valid\" message is shown",
         "rationale": "PRD Screen 10.2, prd.md line 1134"
       }
     },
@@ -70101,11 +70101,11 @@
       "id": "REQ-018-183",
       "type": "Rule",
       "owner_fr": "FR-018",
-      "title": "Providers understand that affiliate discounts come from Hairline's commission (not their payout)",
+      "title": "Providers understand that an affiliate discount follows FR-019 and the commission never comes from their payout",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Providers understand that affiliate discounts come from Hairline's commission (not their payout)",
+        "statement": "Providers understand that an affiliate discount is treated like any other FR-019 discount (commission is calculated on the price after the promotion) and that the affiliate commission never comes from their payout",
         "rationale": "PRD Module Scope, prd.md line 45"
       }
     },
@@ -70257,11 +70257,11 @@
       "id": "REQ-018-196",
       "type": "Rule",
       "owner_fr": "FR-018",
-      "title": "Discount type: Hairline fees only (deducted from Hairline's commission)",
+      "title": "Discount type: Hairline fees only (treated like any other FR-019 discount)",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Discount type: Hairline fees only (deducted from Hairline's commission); future phase: Both Fees",
+        "statement": "Discount type: Hairline fees only (the discount is treated like any other FR-019 discount; the affiliate commission is deducted from Hairline's commission); future phase: Both Fees",
         "rationale": "PRD Main Flow, prd.md line 115"
       }
     },
@@ -70440,9 +70440,9 @@
       "owner_fr": "FR-018",
       "title": "Contact Email validation (Screen 2)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Valid email format, unique across affiliates",
+        "statement": "Valid email format, unique across affiliates except Inactive records without a ban flag",
         "rationale": "Screen 2, Contact Email, Validation Rules column (PRD line 393)"
       }
     },
@@ -71202,9 +71202,9 @@
       "owner_fr": "FR-018",
       "title": "One-click copy of a discount code",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "On the affiliate Promo Codes tab, the discount code is read-only and has a one-click copy action; copying an active code puts the code text (or the auto-apply referral link) on the clipboard",
+        "statement": "On the affiliate Promo Codes tab, the discount code is read-only and has a one-click copy action; copying an active code puts the code text (or the auto-apply referral link) on the clipboard. While a code carries the disabled-by-account-status marker, a read-only \"Disabled by account status\" badge is shown and copying is blocked (a Suspended affiliate can log in and view but cannot copy codes or links)",
         "rationale": "prd.md lines 913 and 953 (Screen 9.2 Discount Code, Validation Rules, and acceptance criterion 3)"
       }
     },
@@ -71214,9 +71214,9 @@
       "owner_fr": "FR-018",
       "title": "First code is generated at activation from the settings stored at onboarding",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "System MUST store the first code's settings (code name, discount type and amount, expiry, maximum usage, application method) with the affiliate account at onboarding and generate, validate and save the first code only after the affiliate becomes Active (password set), so a code never exists for a Pending affiliate",
+        "statement": "System MUST store the first code's settings (code name, discount type and amount, expiry, maximum usage, application method) with the affiliate account at onboarding and generate, validate and save the first code only after the affiliate becomes Active (password set), so a code never exists for a Pending affiliate; if the first code cannot be generated or registered, the affiliate stays Active with no code, the failure and reason are recorded in the audit panel and shown on Screen 3, and the admin creates the code from Screen 4 with the stored settings, which stay editable until a code exists",
         "rationale": "PRD Main Flow and Business Rules, REQ-018-307"
       }
     },
@@ -71226,9 +71226,9 @@
       "owner_fr": "FR-018",
       "title": "Attribution goes to the last valid affiliate code or link before quote acceptance",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "System MUST give the referral attribution to the last valid affiliate code or affiliate link the patient used before quote acceptance: a link click counts for 30 days, a typed affiliate code replaces an earlier link, the link carries the affiliate's one Auto-apply code (the newest Active one if several), and the capture is stored with the patient's inquiry journey and read by FR-019 at acceptance",
+        "statement": "System MUST give the referral attribution to the last valid affiliate code or affiliate link the patient used before quote acceptance: a link click counts for 30 days, a typed affiliate code replaces an earlier link, the link carries the affiliate's newest Active Auto-apply code that is not disabled by account status (if there is none, an old link opens the normal landing page with no code and no attribution), and the capture is stored with the patient's inquiry journey and read by FR-019 at acceptance; the affiliate must be Active at the moment the quote is accepted, otherwise the capture earns no credit and no commission",
         "rationale": "PRD Business Rules, Rule 11"
       }
     },
@@ -71236,11 +71236,11 @@
       "id": "REQ-018-309",
       "type": "Rule",
       "owner_fr": "FR-018",
-      "title": "A completed booking means the booking's final payment is confirmed",
+      "title": "A completed booking means the payment that leaves the booking fully paid is confirmed",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "System MUST treat a booking as completed in FR-018 when its final payment is confirmed (FR-007), and use that event for the accrual month, the effective-date test for commission changes, and Total Referrals",
+        "statement": "System MUST treat a booking as completed in FR-018 when the payment that leaves it fully paid is confirmed in FR-007 (pay in full, final balance or last installment; REQ-007-083, REQ-007-084, REQ-007B-049), and use that event for the accrual month, the effective-date test for commission changes, and Total Referrals",
         "rationale": "PRD Business Rules, Rule 1 and Payment Rule 1"
       }
     },
@@ -71250,9 +71250,9 @@
       "owner_fr": "FR-018",
       "title": "Account status disables codes through a marker separate from the admin Inactive toggle",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "System MUST mark an affiliate's codes \"disabled by account status\" on suspension or offboarding, separate from the admin Inactive toggle, and clear the marker on reinstatement so codes that were Active before suspension work again; Revoked is the permanent result of offboarding or ban, Inactive is the admin switch-off, and Expired is past the expiry date",
+        "statement": "System MUST mark an affiliate's codes \"disabled by account status\" on suspension or offboarding, separate from the admin Inactive toggle, and clear the marker on reinstatement so codes that were Active before suspension work again; Revoked is the permanent result of offboarding or ban, Inactive is the admin switch-off, and Expired is past the expiry date; the affiliate sees a read-only \"Disabled by account status\" badge on the code and copying is blocked while the marker is set",
         "rationale": "PRD Screens 3.1, 3.3, 5 and 6; workflows B3 and B5"
       }
     },
@@ -71262,9 +71262,9 @@
       "owner_fr": "FR-018",
       "title": "Suspension holds the unpaid commission with payout readiness Manual Review Required",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "System MUST set payout readiness of a suspended affiliate's unpaid commission to Manual Review Required with the suspension reason, list it as held in the monthly run without paying it, and clear the hold on reinstatement so all held commission is paid in the next run; only a ban forfeits. Ready, Missing Destination and Invalid Destination are set by the system from the stored bank details",
+        "statement": "System MUST set payout readiness of a suspended affiliate's unpaid commission to Manual Review Required with the suspension reason, list it as held in the monthly run without paying it, and clear the hold on reinstatement so all held commission is paid in the next run under the normal $50 threshold, or on a normal offboarding so readiness follows the stored bank details; only a ban forfeits. Ready, Missing Destination and Invalid Destination are set by the system from the stored bank details",
         "rationale": "PRD Business Rules, Payment Rule 4; Screen 7"
       }
     },
@@ -71274,9 +71274,9 @@
       "owner_fr": "FR-018",
       "title": "A booking accepted before a status change keeps its commission outcome",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "System MUST keep earning commission for a booking whose quote was accepted with the affiliate's code or link before a status change and whose final payment is confirmed later: held while Suspended, paid in the next run after a normal offboarding, forfeited after a ban",
+        "statement": "System MUST keep earning commission for a booking whose quote was accepted with the affiliate's code or link before a status change and whose final payment is confirmed later, but only when the affiliate was Active when the quote was accepted: held while Suspended, paid in the next run after a normal offboarding, forfeited after a ban",
         "rationale": "PRD Business Rules, Payment Rule 5"
       }
     },
@@ -71286,9 +71286,9 @@
       "owner_fr": "FR-018",
       "title": "Final balance settles in the next scheduled run and refund reversals carry forward",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "System MUST settle an Inactive affiliate's final balance in the next scheduled run, and carry forward a reversal created by a refund after a payout was Paid, deducting it from later payouts of an active affiliate until it is cleared",
+        "statement": "System MUST settle an Inactive affiliate's final balance in the next scheduled run with readiness following the stored bank details, and carry forward a reversal created by a refund after a payout was Paid, deducting it from later payouts of an active affiliate until it is cleared",
         "rationale": "PRD Business Rules, Payment Rules 2 and 6"
       }
     },
@@ -71334,10 +71334,22 @@
       "owner_fr": "FR-018",
       "title": "Offboarding type selector and ban flag on Screen 3.3",
       "status": "active",
+      "version": 2,
+      "attrs": {
+        "statement": "System MUST require an Offboarding type (Normal offboarding or Permanent ban) on Screen 3.3; Permanent ban sets Settlement Outcome to \"Forfeit whole balance (ban)\" and stores a ban flag on the affiliate; the Permanent ban option is hidden while the affiliate is Pending, and the Settlement Outcome of a Pending affiliate reads \"Nothing to settle\"",
+        "rationale": "PRD Screen 3.3, Business Rules, Rule 16"
+      }
+    },
+    {
+      "id": "REQ-018-318",
+      "type": "Rule",
+      "owner_fr": "FR-018",
+      "title": "Inactive affiliate: whole unpaid balance paid in the next run with no threshold",
+      "status": "active",
       "version": 1,
       "attrs": {
-        "statement": "System MUST require an Offboarding type (Normal offboarding or Permanent ban) on Screen 3.3; Permanent ban sets Settlement Outcome to \"Forfeit whole balance (ban)\" and stores a ban flag on the affiliate",
-        "rationale": "PRD Screen 3.3, Business Rules, Rule 16"
+        "statement": "System MUST keep an Inactive affiliate without a ban flag in the monthly cycle list for any month with unpaid commission, pay in the next run the whole unpaid balance earned up to the offboarding (including the current month's part) and any commission confirmed after the offboarding with no $50 threshold, and write off with an audit entry a refund reversal that arrives after the affiliate is Inactive. The $50 forfeiture at the moment of deactivation stays",
+        "rationale": "PRD Payment Rule 7, Screen 3.3, Screen 7"
       }
     },
     {
@@ -116536,7 +116548,7 @@
       "owner_fr": "FR-018",
       "title": "System generates the affiliate's first discount code from the settings stored at onboarding",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "prd_ref": "Main Flow step 8"
       }
@@ -116547,7 +116559,7 @@
       "owner_fr": "FR-018",
       "title": "System saves the code and links it to the affiliate",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Main Flow step 8"
       }
@@ -117216,9 +117228,9 @@
       "id": "STP-018-108",
       "type": "Step",
       "owner_fr": "FR-018",
-      "title": "System retains historical data and blocks new activity",
+      "title": "System retains historical data and blocks new activity; a Suspended affiliate can view the portal but cannot copy codes or links",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "B3 step 8"
       }
@@ -117315,9 +117327,9 @@
       "id": "STP-018-122",
       "type": "Step",
       "owner_fr": "FR-018",
-      "title": "System opens Screen 3.3 and requires an Offboarding type and a reason",
+      "title": "System opens Screen 3.3 and requires an Offboarding type and a reason; Permanent ban is hidden for a Pending affiliate",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "B5 step 2"
       }
@@ -117337,9 +117349,9 @@
       "id": "STP-018-124",
       "type": "Step",
       "owner_fr": "FR-018",
-      "title": "System applies the terminal settlement rules",
+      "title": "System computes and shows the settlement outcome; nothing is applied yet",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "B5 step 4"
       }
@@ -117350,7 +117362,7 @@
       "owner_fr": "FR-018",
       "title": "Admin confirms and the status becomes Inactive",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "B5 step 5"
       }
@@ -117361,9 +117373,9 @@
       "owner_fr": "FR-018",
       "title": "System sets all of the affiliate codes to Revoked and sets the disabled-by-account-status marker",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "prd_ref": "B5 step 6"
+        "prd_ref": "B5 step 8"
       }
     },
     {
@@ -117372,9 +117384,9 @@
       "owner_fr": "FR-018",
       "title": "System makes the portal access read-only",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "B5 step 7"
+        "prd_ref": "B5 step 9"
       }
     },
     {
@@ -117383,9 +117395,9 @@
       "owner_fr": "FR-018",
       "title": "System retains all historical data",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "B5 step 8"
+        "prd_ref": "B5 step 10"
       }
     },
     {
@@ -117394,9 +117406,9 @@
       "owner_fr": "FR-018",
       "title": "System sends the offboarding notification and records the audit entry",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "B5 step 9"
+        "prd_ref": "B5 step 11"
       }
     },
     {
@@ -117438,7 +117450,7 @@
       "owner_fr": "FR-018",
       "title": "Admin confirms and the status becomes Inactive",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "B6 step 4"
       }
@@ -117471,7 +117483,7 @@
       "owner_fr": "FR-018",
       "title": "System retains all historical data and sends the offboarding notification",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "B6 step 7"
       }
@@ -117491,9 +117503,9 @@
       "id": "STP-018-138",
       "type": "Step",
       "owner_fr": "FR-018",
-      "title": "System clears the hold and pays all held commission in the next monthly run",
+      "title": "System clears the hold and pays all held commission in the next monthly run under the normal $50 threshold",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "B3 step 12"
       }
@@ -117507,6 +117519,50 @@
       "version": 1,
       "attrs": {
         "prd_ref": "B3 step 13"
+      }
+    },
+    {
+      "id": "STP-018-140",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System applies the settlement outcome shown: queues, forfeits or writes off the balance and records the audit entry; a Pending affiliate's activation link is invalidated",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B5 step 6"
+      }
+    },
+    {
+      "id": "STP-018-141",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System clears the Manual Review Required hold of a Suspended affiliate so the payout readiness follows the stored bank details",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B5 step 7"
+      }
+    },
+    {
+      "id": "STP-018-142",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System keeps earning commission for a booking whose quote was accepted while the affiliate was Active, paid in the next run after its final payment is confirmed",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B5 step 12"
+      }
+    },
+    {
+      "id": "STP-018-143",
+      "type": "Step",
+      "owner_fr": "FR-018",
+      "title": "System forfeits the commission of a booking whose final payment is confirmed after the ban",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B6 step 8"
       }
     },
     {
@@ -159087,6 +159143,12 @@
       "sort_order": 3
     },
     {
+      "field_id": "ENT-affiliate.settlement_outcome",
+      "value": "nothing_to_settle",
+      "label": "Nothing to settle",
+      "sort_order": 4
+    },
+    {
       "field_id": "ENT-affiliate.status",
       "value": "pending",
       "label": "Pending",
@@ -178764,7 +178826,7 @@
       "verb": "active in",
       "to_id": "STG-affiliate-04-inactive",
       "attrs": {
-        "rules": 4
+        "rules": 6
       },
       "derived": true
     },
@@ -178798,7 +178860,19 @@
     {
       "from_id": "FR-018",
       "verb": "references",
-      "to_id": "REQ-007-036",
+      "to_id": "REQ-007-083",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-018",
+      "verb": "references",
+      "to_id": "REQ-007-084",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-018",
+      "verb": "references",
+      "to_id": "REQ-007B-049",
       "attrs": {}
     },
     {
@@ -178828,7 +178902,19 @@
     {
       "from_id": "FR-018",
       "verb": "references",
+      "to_id": "REQ-019-016",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-018",
+      "verb": "references",
       "to_id": "REQ-019-025",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-018",
+      "verb": "references",
+      "to_id": "REQ-019-037",
       "attrs": {}
     },
     {
@@ -251349,6 +251435,12 @@
     },
     {
       "from_id": "REQ-018-311",
+      "verb": "applies at",
+      "to_id": "STG-affiliate-04-inactive",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-311",
       "verb": "applies to",
       "to_id": "ENT-affiliate-payout.payout_readiness",
       "attrs": {}
@@ -251493,6 +251585,24 @@
     },
     {
       "from_id": "REQ-018-317",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-018",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-318",
+      "verb": "applies at",
+      "to_id": "STG-affiliate-04-inactive",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-318",
+      "verb": "applies to",
+      "to_id": "ENT-affiliate-payout",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-018-318",
       "verb": "decided by",
       "to_id": "SRC-PRD-018",
       "attrs": {}
@@ -391478,12 +391588,6 @@
       }
     },
     {
-      "from_id": "STP-018-006",
-      "verb": "on",
-      "to_id": "SCR-018-07",
-      "attrs": {}
-    },
-    {
       "from_id": "STP-018-008",
       "verb": "applies",
       "to_id": "REQ-018-012",
@@ -391514,12 +391618,6 @@
       "attrs": {
         "label": "then"
       }
-    },
-    {
-      "from_id": "STP-018-008",
-      "verb": "on",
-      "to_id": "SCR-018-07",
-      "attrs": {}
     },
     {
       "from_id": "STP-018-010",
@@ -393824,12 +393922,6 @@
     },
     {
       "from_id": "STP-018-125",
-      "verb": "applies",
-      "to_id": "REQ-018-312",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-018-125",
       "verb": "at",
       "to_id": "STG-affiliate-04-inactive",
       "attrs": {}
@@ -393843,7 +393935,7 @@
     {
       "from_id": "STP-018-125",
       "verb": "next",
-      "to_id": "STP-018-126",
+      "to_id": "STP-018-140",
       "attrs": {
         "label": "then"
       }
@@ -393988,6 +394080,14 @@
     },
     {
       "from_id": "STP-018-129",
+      "verb": "next",
+      "to_id": "STP-018-142",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-129",
       "verb": "on",
       "to_id": "SCR-018-06",
       "attrs": {}
@@ -394122,12 +394222,6 @@
       "from_id": "STP-018-133",
       "verb": "applies",
       "to_id": "REQ-018-297",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-018-133",
-      "verb": "applies",
-      "to_id": "REQ-018-312",
       "attrs": {}
     },
     {
@@ -394270,6 +394364,14 @@
     },
     {
       "from_id": "STP-018-136",
+      "verb": "next",
+      "to_id": "STP-018-143",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-136",
       "verb": "on",
       "to_id": "SCR-018-06",
       "attrs": {}
@@ -394366,6 +394468,118 @@
       "from_id": "STP-018-139",
       "verb": "on",
       "to_id": "SCR-018-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-140",
+      "verb": "applies",
+      "to_id": "REQ-018-097",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-140",
+      "verb": "applies",
+      "to_id": "REQ-018-313",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-140",
+      "verb": "at",
+      "to_id": "STG-affiliate-04-inactive",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-140",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-140",
+      "verb": "next",
+      "to_id": "STP-018-141",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-140",
+      "verb": "on",
+      "to_id": "SCR-018-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-141",
+      "verb": "applies",
+      "to_id": "REQ-018-311",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-141",
+      "verb": "applies",
+      "to_id": "REQ-018-313",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-141",
+      "verb": "at",
+      "to_id": "STG-affiliate-04-inactive",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-141",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-141",
+      "verb": "next",
+      "to_id": "STP-018-126",
+      "attrs": {
+        "label": "then"
+      }
+    },
+    {
+      "from_id": "STP-018-141",
+      "verb": "on",
+      "to_id": "SCR-018-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-142",
+      "verb": "applies",
+      "to_id": "REQ-018-312",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-142",
+      "verb": "at",
+      "to_id": "STG-affiliate-04-inactive",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-142",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-143",
+      "verb": "applies",
+      "to_id": "REQ-018-312",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-143",
+      "verb": "at",
+      "to_id": "STG-affiliate-04-inactive",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-018-143",
+      "verb": "done by",
+      "to_id": "ACT-system",
       "attrs": {}
     },
     {
@@ -448694,6 +448908,73 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-155457-d1c8821e",
+      "at": "2026-11-24T15:54:57.375152+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-018 logic review pass 2: affiliate discount follows the shared FR-019 model and the commission ceiling compares the commission percentage with the platform default Hairline commission percentage (audited Override with an Approval reference), completed booking means the payment that leaves the booking fully paid, normal offboarding of a Suspended affiliate clears the hold, Inactive affiliates stay in the cycle list and are paid in full with no threshold, re-onboarding with the same email after a normal offboarding, first code failure handling, referral credit needs an Active affiliate at quote acceptance, referral link only with an Active Auto-apply code, settlement shown before and applied after confirmation, offboarding a Pending affiliate, Suspended and Inactive portal states, system steps without an admin screen.",
+      "source_id": null,
+      "nodes_added": [
+        "REQ-018-318",
+        "STP-018-140",
+        "STP-018-141",
+        "STP-018-142",
+        "STP-018-143"
+      ],
+      "nodes_updated": [
+        "ENT-affiliate.referral_link",
+        "ENT-affiliate.settlement_outcome",
+        "FR-018",
+        "REQ-018-003",
+        "REQ-018-041",
+        "REQ-018-043",
+        "REQ-018-044",
+        "REQ-018-051",
+        "REQ-018-052",
+        "REQ-018-054",
+        "REQ-018-055",
+        "REQ-018-067",
+        "REQ-018-068",
+        "REQ-018-078",
+        "REQ-018-087",
+        "REQ-018-097",
+        "REQ-018-101",
+        "REQ-018-111",
+        "REQ-018-135",
+        "REQ-018-144",
+        "REQ-018-152",
+        "REQ-018-156",
+        "REQ-018-183",
+        "REQ-018-196",
+        "REQ-018-213",
+        "REQ-018-306",
+        "REQ-018-307",
+        "REQ-018-308",
+        "REQ-018-309",
+        "REQ-018-310",
+        "REQ-018-311",
+        "REQ-018-312",
+        "REQ-018-313",
+        "REQ-018-317",
+        "STP-018-006",
+        "STP-018-007",
+        "STP-018-008",
+        "STP-018-108",
+        "STP-018-122",
+        "STP-018-124",
+        "STP-018-125",
+        "STP-018-126",
+        "STP-018-127",
+        "STP-018-128",
+        "STP-018-129",
+        "STP-018-133",
+        "STP-018-136",
+        "STP-018-138"
+      ],
+      "edges_added": 30,
+      "edges_removed": 7,
+      "rows": 111
+    },
     {
       "id": "cs-20261124-155117-91faabea",
       "at": "2026-11-24T15:51:17.768332+00:00",
