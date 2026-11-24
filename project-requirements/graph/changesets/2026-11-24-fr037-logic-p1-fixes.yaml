@@ -1,0 +1,136 @@
+# FR-037 logic review: ruled fixes applied to the PRD (hair-loss monitoring). New steps and the reminder_preference field come first, then removals, updates and new edges.
+# Cross-FR edges: STP-003-014 -> STP-037-043, STP-015-152 -> STP-037-050, STP-015-174 -> STP-037-050 (inbound to FR-037 steps); STP-037-041 -> STP-003-003, STP-037-044 -> STP-003-066, STP-037-045 -> STP-003-020 (outbound); FR-037 references REQ-002-038, -047, -051, REQ-003-072, REQ-038-031.
+# Not touched here (owned elsewhere): EVT-monitoring-advice-posted description (FR-030), STP-003-065 title and the decline-step link (FR-003), the provider_assigned event wording (FR-020).
+reason: "FR-037 logic review: scan call and staged-photo contract, conversion photo items and draft rules, summary calculation (initial severity, period start, date order, zero logs, deleted entries), reminders scoped to transplant-progress cases, scan quality rule, Retry PDF, Admin status final, advice edit notification and author-only edit, window cadence and pause, assignment end paths, preview revocation, step wiring and FR-003 boundary edges."
+by: docs-manager
+operations:
+  - {"op": "add_node", "id": "STP-037-046", "type": "Step", "owner_fr": "FR-037", "title": "System saves the edited advice as a new version, shows the edited cue and notifies the patient that the advice was updated", "attrs": {"prd_ref": "Unified Flow: provider edits the advice; system preserves version history, shows edited state plus latest-edit time, and notifies the patient that the advice was updated"}}
+  - {"op": "add_node", "id": "STP-037-047", "type": "Step", "owner_fr": "FR-037", "title": "Patient retries the PDF generation on the completed case", "attrs": {"prd_ref": "Screen 6: Retry PDF"}}
+  - {"op": "add_node", "id": "STP-037-048", "type": "Step", "owner_fr": "FR-037", "title": "Patient continues without the PDF after three failed tries", "attrs": {"prd_ref": "Screen 7 Step A: generation status"}}
+  - {"op": "add_node", "id": "STP-037-049", "type": "Step", "owner_fr": "FR-037", "title": "Admin ends the provider assignment with a reason", "attrs": {"prd_ref": "Screen 12: End Assignment"}}
+  - {"op": "add_node", "id": "STP-037-050", "type": "Step", "owner_fr": "FR-037", "title": "System ends the assignment when the provider is suspended or deactivated", "attrs": {"prd_ref": "Business Rules: Rule 5e"}}
+  - {"op": "add_node", "id": "STP-037-051", "type": "Step", "owner_fr": "FR-037", "title": "Admin opens the case overview and sets the global advice cadence", "attrs": {"prd_ref": "Screen 13"}}
+  - {"op": "add_node", "id": "STP-037-052", "type": "Step", "owner_fr": "FR-037", "title": "Admin corrects a patient daily log with a reason", "attrs": {"prd_ref": "Screen 14A"}}
+  - {"op": "add_node", "id": "STP-037-053", "type": "Step", "owner_fr": "FR-037", "title": "Admin corrects provider advice with a reason", "attrs": {"prd_ref": "Screen 14B"}}
+  - {"op": "add_node", "id": "STP-037-054", "type": "Step", "owner_fr": "FR-037", "title": "Admin revokes a candidate-provider preview", "attrs": {"prd_ref": "Screen 12: Preview Status"}}
+  - {"op": "add_field", "id": "ENT-monitoring-case.reminder_preference", "entity_id": "ENT-monitoring-case", "name": "reminder_preference", "data_type": "json", "title": "Reminder preference", "owner_fr": "FR-037", "required": false, "attrs": {"description": "Reminder schedule or off switch. Used by transplant_progress cases only (FR-038 REQ-038-031); empty for hair_loss cases, which have no reminders (REQ-037-012)."}}
+  - {"op": "remove_edge", "from": "STP-037-009", "verb": "next", "to": "STP-037-011"}
+  - {"op": "remove_edge", "from": "STP-037-009", "verb": "next", "to": "STP-037-012"}
+  - {"op": "remove_edge", "from": "STP-037-041", "verb": "next", "to": "STP-003-003"}
+  - {"op": "remove_edge", "from": "STP-037-041", "verb": "next", "to": "STP-037-043"}
+  - {"op": "remove_edge", "from": "STP-037-043", "verb": "next", "to": "STP-003-065"}
+  - {"op": "remove_edge", "from": "STP-037-044", "verb": "next", "to": "STP-003-078"}
+  - {"op": "remove_edge", "from": "SCR-037-01", "verb": "shows", "to": "ENT-monitoring-case.starting_severity"}
+  - {"op": "remove_edge", "from": "SCR-037-07", "verb": "shows", "to": "ENT-monitoring-case.advice_count"}
+  - {"op": "retire_node", "id": "ENT-monitoring-scan.quality_state"}
+  - {"op": "update_node", "id": "REQ-037-012", "attrs": {"statement": "For hair-loss cases, System MUST NOT provide patient logging or scan reminders, cadence, milestones, or overdue/compliance state; reminders belong to transplant-progress cases only (FR-038, REQ-038-031), and the other mechanics belong to the aftercare package."}}
+  - {"op": "update_node", "id": "REQ-037-013", "attrs": {"statement": "Each advice window MUST open on its calculated start date and remain actionable without an ordinary deadline until its single advice is submitted or a successor window opens; a successor MUST expire only the older unsubmitted window and become the sole actionable window. The cadence is the spacing between window openings. The first window MUST open one cadence period (7 or 14 days) after the provider is first assigned; windows MUST pause while the case has no assigned provider, and the first window for a replacement provider MUST open one cadence period after the new assignment. Window dates MUST be UTC dates. A future window is derived from its start date, so the stored window state has three values (available, submitted, expired)."}}
+  - {"op": "update_node", "id": "REQ-037-016", "attrs": {"statement": "Provider and Admin listing screens MUST support scoped search, filters, sorting, and pagination; the Admin list MUST cover hair-loss cases only and provide separate All Cases, Self-Monitoring, and Provider Intervention tabs with operational case, activity, and assignment summaries."}}
+  - {"op": "update_node", "id": "REQ-037-018", "attrs": {"statement": "Admin MUST be able to generate and revoke a read-only pre-assignment case-preview link for a candidate provider, MUST select its expiry at share time (any time up to 14 days), and preview access MUST NOT create an assignment or ongoing case access. Open previews MUST be revoked on assignment, completion, and conversion."}}
+  - {"op": "update_node", "id": "REQ-037-022", "attrs": {"statement": "Conversion MUST select the latest valid scan by default and allow another scan or retake. Photo items MUST be sent as `{ scanRef, photoIndex }` references, the stored scan MUST be copied and never moved or replaced, and a retake in Step B MUST belong to the inquiry only."}}
+  - {"op": "update_node", "id": "REQ-037-029", "attrs": {"statement": "If an assigned advice provider exists at conversion, only that provider MUST initially be selected to quote. Exclusive routing ends only when that provider explicitly declines before quote creation (FR-003 MUST audit the reason) or when redistribution follows the provider's suspension or deactivation (REQ-003-072); either way FR-003 MUST remove exclusive routing and execute normal distribution exactly once. If no provider is assigned at conversion, or the assigned provider has withdrawn or is not eligible at conversion, conversion MUST continue and FR-003 normal distribution MUST apply immediately. Exclusive routing MUST bypass only FR-003 country and provider-selection matching and the 10-provider cap; anonymization, notification timing, and provider dashboard behavior MUST remain unchanged. Expiry MUST remain governed by FR-003/FR-004 rather than this decline fallback."}}
+  - {"op": "update_node", "id": "REQ-037-030", "attrs": {"statement": "The monitoring case MUST stay untouched until the FR-003 inquiry submission succeeds (Step B ends in a hand-off into the FR-003 screens and submits nothing), MUST remain active if that submission fails, and MUST terminate only after successful conversion commit or explicit completion."}}
+  - {"op": "update_node", "id": "REQ-037-031", "attrs": {"statement": "Conversion MUST be idempotent and MUST NOT create duplicate inquiries. One idempotency key MUST be created per case at the first Request Treatment and kept when the conversion draft is cleared; completion MUST discard any open conversion draft, and a conversion request that arrives after completion MUST be refused."}}
+  - {"op": "update_node", "id": "REQ-037-040", "attrs": {"statement": "The patient may create, edit, or delete their own entries while the case is active; all versions remain auditable. Deleted and superseded entries are excluded from every count and from the severity trend, and Initial Severity is recalculated from the remaining entries (the first remaining trend point)."}}
+  - {"op": "update_node", "id": "REQ-037-044", "attrs": {"statement": "Scan capture opens the head scan capture screen and links the resulting scan to the log date. The capture shows front, top, left, right, and back guidance, offers five views with at least one view required and no single view mandatory, and validates quality. A scan set that fails the quality check cannot be saved; it must be retaken to be saved, so every saved scan is valid. The scan is optional on a case or a log, but a saved scan set needs at least one photo; saving makes one FR-002 media-only call with the scan id as the idempotency key and up to five photos, and staged photos that are never saved are removed 7 days after staging (REQ-002-047, REQ-002-051)."}}
+  - {"op": "update_node", "id": "REQ-037-046", "attrs": {"statement": "Provider access ends immediately on withdrawal, Admin ending the assignment, provider suspension or deactivation, reassignment away, case completion, or conversion. Providers can view scans and media only while assigned to the advice case."}}
+  - {"op": "update_node", "id": "REQ-037-051", "attrs": {"statement": "Pre-assignment preview links must use an unguessable token, expire at the Admin-selected time, support revocation (including automatic revocation on assignment, completion, and conversion), expose only the approved preview dataset, and record creation, access, expiry, and revocation events."}}
+  - {"op": "update_node", "id": "REQ-037-052", "attrs": {"statement": "End Monitoring shows the patient a preview of date range, logged-day count, scan count, and severity trend. The patient makes a single completion choice (complete and export, or Request Treatment). Complete and export requires a confirmation that acknowledges monitoring will end; Request Treatment does not end monitoring until the FR-003 inquiry is successfully submitted, and its confirmation says so; declining returns to the active case."}}
+  - {"op": "update_node", "id": "REQ-037-053", "attrs": {"statement": "Completing or successfully converting ends the active case and any advice assignment, revokes open case previews, and removes the case from the Admin queue."}}
+  - {"op": "update_node", "id": "REQ-037-054", "attrs": {"statement": "A completed or converted case is read-only except for Admin audited correction of its content; its status stays final and Admin cannot edit it. A converted case's summary PDF can be viewed on the summary screen like a completed case's."}}
+  - {"op": "update_node", "id": "REQ-037-055", "attrs": {"statement": "Summary PDFs are generated asynchronously and the generated artifact is retained; the patient is notified when the PDF is ready. A failed generation is retryable without altering the completed case. The PDF is regenerated when logs or the selected scan change after it was made."}}
+  - {"op": "update_node", "id": "REQ-037-057", "attrs": {"statement": "Monitoring summary values are derived from valid entries: deleted and superseded entries are excluded from every count and from the severity trend. The monitoring period is the date range from the earlier of the case creation date and the earliest log date through the final case date. The severity trend is in date order; the Initial Severity given at intake is a trend point dated on the case creation date, and the summary's Initial Severity is the first (earliest-dated) remaining trend point, recalculated when entries are deleted or superseded. Logged-day count, scan count, advice count when applicable, and severity latest, minimum, maximum, average, and trend are derived from the same valid entries. A case with zero logs starts its period on the case creation date, shows the Initial Severity as a one-point trend, and shows no log entries."}}
+  - {"op": "update_node", "id": "REQ-037-059", "attrs": {"statement": "If PDF generation has not finished, the conversion summary step shows generation status and allows the patient to continue once it is ready or retry on failure. After three failed tries the patient can continue without the PDF: the system attaches it to the inquiry when it is ready, and the inquiry shows \"summary pending\" until then."}}
+  - {"op": "update_node", "id": "REQ-037-064", "attrs": {"statement": "When FR-003 data is invalid or submission fails, System preserves the monitoring case and the conversion draft and shows corrections or a retry option. The conversion draft is held by the patient's app and is not stored on the case."}}
+  - {"op": "update_node", "id": "REQ-037-072", "attrs": {"statement": "Admin may edit all patient-supplied monitoring information, logs, severity ratings, scan metadata, assignment state, advice records, and conversion links where operational correction is required, each with a reason, but never the case status (completed and converted are final), and no edit may erase historical values or provenance."}}
+  - {"op": "update_node", "id": "REQ-037-077", "attrs": {"statement": "Advice submit and edit actions require an active assignment, and only the author of an advice record may edit it; a replacement provider can read earlier advice but cannot edit it."}}
+  - {"op": "update_node", "id": "REQ-037-078", "attrs": {"statement": "The patient is notified when a provider is assigned, withdraws, is replaced, or posts advice; editing posted advice sends the same advice notification marked \"updated\". Provider and Admin are notified of assignment and reassignment actions."}}
+  - {"op": "update_node", "id": "REQ-037-079", "attrs": {"statement": "FR-037 notifications are limited to assignment, reassignment, advice, withdrawal, completion, export-ready, and conversion events. FR-037 defines no patient-configurable logging or scan reminder for hair-loss cases; reminders belong to transplant-progress cases only (FR-038, REQ-038-031)."}}
+  - {"op": "update_node", "id": "REQ-037-081", "attrs": {"statement": "Advice availability is derived and shown as a future start date, available since date, submitted, or expired-unsubmitted; the stored window state has three values (available, submitted, expired)."}}
+  - {"op": "update_node", "id": "REQ-037-088", "attrs": {"statement": "Admin can search by patient name, patient ID, case ID, assigned provider, or candidate provider; filter by case status, advice state, advice window, provider, and date; and sort by updated date, start date, last patient log, advice availability, patient, or provider. The list covers case type hair_loss only; FR-038 lists its own cases on its own screen."}}
+  - {"op": "update_node", "id": "REQ-037-094", "attrs": {"statement": "Admin can assign a provider and share a case preview with a candidate provider only while the case is in Pending Assignment or Pending Reassignment. Admin can end an assignment with a reason, and it ends automatically when the provider is suspended or deactivated (FR-015); the case then returns to Pending Reassignment and the provider's access ends."}}
+  - {"op": "update_node", "id": "ENT-monitoring-case.starting_severity", "title": "Initial severity", "attrs": {"description": "Screen 1 Initial Severity: integer 1 to 10. A trend point dated on the case creation date (REQ-037-057)."}}
+  - {"op": "update_node", "id": "ENT-monitoring-scan.quality_state", "attrs": {"description": "Retired: a scan set that fails the quality check cannot be saved (REQ-037-044), so every saved scan is valid and no state is stored."}}
+  - {"op": "update_node", "id": "ENT-monitoring-provider-assignment.status", "attrs": {"description": "Assignment status: active, withdrawn (the provider withdrew), or ended (Admin ended it, the provider was suspended or deactivated, or the case was completed or converted)."}}
+  - {"op": "update_field", "id": "ENT-monitoring-provider-assignment.status", "data_type": "enum"}
+  - {"op": "add_enum_value", "field_id": "ENT-monitoring-provider-assignment.status", "value": "active", "label": "Active", "sort_order": 0}
+  - {"op": "add_enum_value", "field_id": "ENT-monitoring-provider-assignment.status", "value": "withdrawn", "label": "Withdrawn", "sort_order": 1}
+  - {"op": "add_enum_value", "field_id": "ENT-monitoring-provider-assignment.status", "value": "ended", "label": "Ended", "sort_order": 2}
+  - {"op": "update_node", "id": "ENT-monitoring-advice-window.availability", "attrs": {"description": "Derived from the window start date and state; future is not a stored window state (REQ-037-081)."}}
+  - {"op": "add_edge", "from": "STP-037-046", "verb": "at", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "STP-037-046", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-037-046", "verb": "on", "to": "SCR-037-12"}
+  - {"op": "add_edge", "from": "STP-037-046", "verb": "applies", "to": "REQ-037-015"}
+  - {"op": "add_edge", "from": "STP-037-046", "verb": "applies", "to": "REQ-037-078"}
+  - {"op": "add_edge", "from": "STP-037-047", "verb": "at", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "STP-037-047", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-037-047", "verb": "on", "to": "SCR-037-06"}
+  - {"op": "add_edge", "from": "STP-037-047", "verb": "applies", "to": "REQ-037-055"}
+  - {"op": "add_edge", "from": "STP-037-048", "verb": "at", "to": "STG-monitoring-03-conversion"}
+  - {"op": "add_edge", "from": "STP-037-048", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-037-048", "verb": "on", "to": "SCR-037-07"}
+  - {"op": "add_edge", "from": "STP-037-048", "verb": "applies", "to": "REQ-037-059"}
+  - {"op": "add_edge", "from": "STP-037-049", "verb": "at", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "STP-037-049", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-037-049", "verb": "on", "to": "SCR-037-14"}
+  - {"op": "add_edge", "from": "STP-037-049", "verb": "applies", "to": "REQ-037-094"}
+  - {"op": "add_edge", "from": "STP-037-049", "verb": "applies", "to": "REQ-037-046"}
+  - {"op": "add_edge", "from": "STP-037-050", "verb": "at", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "STP-037-050", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-037-050", "verb": "applies", "to": "REQ-037-094"}
+  - {"op": "add_edge", "from": "STP-037-050", "verb": "applies", "to": "REQ-037-046"}
+  - {"op": "add_edge", "from": "STP-037-051", "verb": "at", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "STP-037-051", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-037-051", "verb": "on", "to": "SCR-037-15"}
+  - {"op": "add_edge", "from": "STP-037-051", "verb": "applies", "to": "REQ-037-008"}
+  - {"op": "add_edge", "from": "STP-037-052", "verb": "at", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "STP-037-052", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-037-052", "verb": "on", "to": "SCR-037-16"}
+  - {"op": "add_edge", "from": "STP-037-052", "verb": "applies", "to": "REQ-037-072"}
+  - {"op": "add_edge", "from": "STP-037-052", "verb": "applies", "to": "REQ-037-027"}
+  - {"op": "add_edge", "from": "STP-037-053", "verb": "at", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "STP-037-053", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-037-053", "verb": "on", "to": "SCR-037-17"}
+  - {"op": "add_edge", "from": "STP-037-053", "verb": "applies", "to": "REQ-037-074"}
+  - {"op": "add_edge", "from": "STP-037-053", "verb": "applies", "to": "REQ-037-027"}
+  - {"op": "add_edge", "from": "STP-037-054", "verb": "at", "to": "STG-monitoring-02-tracking"}
+  - {"op": "add_edge", "from": "STP-037-054", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-037-054", "verb": "on", "to": "SCR-037-14"}
+  - {"op": "add_edge", "from": "STP-037-054", "verb": "applies", "to": "REQ-037-018"}
+  - {"op": "add_edge", "from": "STP-037-054", "verb": "applies", "to": "REQ-037-051"}
+  - {"op": "add_edge", "from": "STP-037-010", "verb": "next", "to": "STP-037-011", "attrs": {"label": "provider posts advice"}}
+  - {"op": "add_edge", "from": "STP-037-010", "verb": "next", "to": "STP-037-012", "attrs": {"label": "provider edits advice"}}
+  - {"op": "add_edge", "from": "STP-037-010", "verb": "on", "to": "SCR-037-11"}
+  - {"op": "add_edge", "from": "STP-037-012", "verb": "next", "to": "STP-037-046", "attrs": {"label": "provider saves the edit"}}
+  - {"op": "add_edge", "from": "STP-037-046", "verb": "next", "to": "STP-037-004", "attrs": {"label": "patient sees the updated advice"}}
+  - {"op": "add_edge", "from": "STP-037-023", "verb": "next", "to": "STP-037-004", "attrs": {"label": "case active, patient continues logging"}}
+  - {"op": "add_edge", "from": "STP-037-035", "verb": "next", "to": "STP-037-047", "attrs": {"label": "generation failed"}}
+  - {"op": "add_edge", "from": "STP-037-047", "verb": "next", "to": "STP-037-035", "attrs": {"label": "generation started again"}}
+  - {"op": "add_edge", "from": "STP-037-039", "verb": "next", "to": "STP-037-048", "attrs": {"label": "PDF failed three times"}}
+  - {"op": "add_edge", "from": "STP-037-048", "verb": "next", "to": "STP-037-040", "attrs": {"label": "patient continues without the PDF"}}
+  - {"op": "add_edge", "from": "STP-037-014", "verb": "next", "to": "STP-037-049", "attrs": {"label": "admin ends the assignment"}}
+  - {"op": "add_edge", "from": "STP-037-049", "verb": "next", "to": "STP-037-029", "attrs": {"label": "assignment ended"}}
+  - {"op": "add_edge", "from": "STP-037-050", "verb": "next", "to": "STP-037-029", "attrs": {"label": "assignment ended"}}
+  - {"op": "add_edge", "from": "STP-015-152", "verb": "next", "to": "STP-037-050", "attrs": {"label": "provider suspended while assigned to monitoring cases"}}
+  - {"op": "add_edge", "from": "STP-015-174", "verb": "next", "to": "STP-037-050", "attrs": {"label": "provider deactivated while assigned to monitoring cases"}}
+  - {"op": "add_edge", "from": "STP-037-014", "verb": "next", "to": "STP-037-051", "attrs": {"label": "admin opens the case overview"}}
+  - {"op": "add_edge", "from": "STP-037-051", "verb": "next", "to": "STP-037-052", "attrs": {"label": "admin opens a daily log"}}
+  - {"op": "add_edge", "from": "STP-037-051", "verb": "next", "to": "STP-037-053", "attrs": {"label": "admin opens an advice record"}}
+  - {"op": "add_edge", "from": "STP-037-052", "verb": "next", "to": "STP-037-051", "attrs": {"label": "correction saved"}}
+  - {"op": "add_edge", "from": "STP-037-053", "verb": "next", "to": "STP-037-051", "attrs": {"label": "correction saved"}}
+  - {"op": "add_edge", "from": "STP-037-014", "verb": "next", "to": "STP-037-054", "attrs": {"label": "admin revokes a preview"}}
+  - {"op": "add_edge", "from": "STP-037-054", "verb": "next", "to": "STP-037-014", "attrs": {"label": "preview revoked"}}
+  - {"op": "add_edge", "from": "STP-037-041", "verb": "next", "to": "STP-003-003", "attrs": {"label": "patient continues into the FR-003 inquiry screens with the pre-filled values"}}
+  - {"op": "add_edge", "from": "STP-003-014", "verb": "next", "to": "STP-037-043", "attrs": {"label": "FR-003 inquiry submission succeeds for a conversion", "condition": "REQ-037-030"}}
+  - {"op": "add_edge", "from": "STP-037-044", "verb": "next", "to": "STP-003-066", "attrs": {"label": "inquiry goes only to the assigned provider"}}
+  - {"op": "add_edge", "from": "STP-037-045", "verb": "next", "to": "STP-003-020", "attrs": {"label": "normal provider distribution applies"}}
+  - {"op": "add_edge", "from": "STP-037-026", "verb": "applies", "to": "REQ-037-018"}
+  - {"op": "add_edge", "from": "STP-037-043", "verb": "applies", "to": "REQ-037-053"}
+  - {"op": "add_edge", "from": "STP-037-006", "verb": "applies", "to": "REQ-002-047"}
+  - {"op": "add_edge", "from": "STP-037-043", "verb": "applies", "to": "REQ-037-022"}
+  - {"op": "add_edge", "from": "SCR-037-01", "verb": "shows", "to": "ENT-monitoring-case.starting_severity", "attrs": {"provenance": "user input", "label": "Initial Severity", "editable": true}}
+  - {"op": "add_edge", "from": "FR-037", "verb": "references", "to": "REQ-002-038"}
+  - {"op": "add_edge", "from": "FR-037", "verb": "references", "to": "REQ-002-047"}
+  - {"op": "add_edge", "from": "FR-037", "verb": "references", "to": "REQ-002-051"}
+  - {"op": "add_edge", "from": "FR-037", "verb": "references", "to": "REQ-003-072"}
+  - {"op": "add_edge", "from": "FR-037", "verb": "references", "to": "REQ-038-031"}
