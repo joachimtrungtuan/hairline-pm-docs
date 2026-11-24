@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T14:18:44Z",
+  "generated_at": "2026-11-24T14:35:16Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -27913,6 +27913,17 @@
       }
     },
     {
+      "id": "ENT-support-case-category.visible_to",
+      "type": "Field",
+      "owner_fr": "FR-034",
+      "title": "Visible to",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Which submission forms offer the category; fixed for each built-in category and not editable."
+      }
+    },
+    {
       "id": "ENT-support-case-message",
       "type": "Entity",
       "owner_fr": "FR-034",
@@ -27965,6 +27976,17 @@
       "version": 1,
       "attrs": {
         "description": "Unread indicator shows count of admin messages the provider has not viewed; marked read when the provider opens case detail (Screens 5.7 and 5.8)."
+      }
+    },
+    {
+      "id": "ENT-support-case-message.is_reopen_request",
+      "type": "Field",
+      "owner_fr": "FR-034",
+      "title": "Reopen request flag",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Set on a provider message that asks for a Closed case to be reopened (Alternative Flow B3a)."
       }
     },
     {
@@ -28138,7 +28160,7 @@
       "owner_fr": "FR-034",
       "title": "New priority",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Priority set at reopening; defaults to the previous priority."
       }
@@ -28171,9 +28193,20 @@
       "owner_fr": "FR-034",
       "title": "Reopened by admin user ID",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Admin user who reopened the case."
+      }
+    },
+    {
+      "id": "ENT-support-case-reopening.reopened_by_type",
+      "type": "Field",
+      "owner_fr": "FR-034",
+      "title": "Reopened by type",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Admin for a manual reopen, System for an automatic reopen after a user reply."
       }
     },
     {
@@ -28496,6 +28529,17 @@
       }
     },
     {
+      "id": "ENT-support-case.app_version",
+      "type": "Field",
+      "owner_fr": "FR-034",
+      "title": "App version",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "App version attached to a problem report."
+      }
+    },
+    {
       "id": "ENT-support-case.assigned_admin_id",
       "type": "Field",
       "owner_fr": "FR-034",
@@ -28513,6 +28557,17 @@
       "version": 1,
       "attrs": {
         "description": "Optional screenshot or document. Max 10MB, common file types (PDF, PNG, JPG, DOCX)"
+      }
+    },
+    {
+      "id": "ENT-support-case.booking_reference",
+      "type": "Field",
+      "owner_fr": "FR-034",
+      "title": "Booking reference",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "The booking a booking cancellation or change request is about (Alternative Flow A8)."
       }
     },
     {
@@ -28549,6 +28604,28 @@
       }
     },
     {
+      "id": "ENT-support-case.contact_email",
+      "type": "Field",
+      "owner_fr": "FR-034",
+      "title": "Contact email",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Required when the case has no patient link (No Patient Link ticked); replies, the confirmation and the resolution email go to it."
+      }
+    },
+    {
+      "id": "ENT-support-case.contact_name",
+      "type": "Field",
+      "owner_fr": "FR-034",
+      "title": "Contact name",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Optional name of the contact on a case without a patient link."
+      }
+    },
+    {
       "id": "ENT-support-case.decline_reason",
       "type": "Field",
       "owner_fr": "FR-034",
@@ -28568,6 +28645,17 @@
       "version": 2,
       "attrs": {
         "description": "Support request message or feedback description: min 20 chars, max 5000 chars."
+      }
+    },
+    {
+      "id": "ENT-support-case.device",
+      "type": "Field",
+      "owner_fr": "FR-034",
+      "title": "Device",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Device model attached to a problem report."
       }
     },
     {
@@ -28601,6 +28689,17 @@
       "version": 1,
       "attrs": {
         "description": "Most recent modification timestamp (format: YYYY-MM-DD HH:mm); Width: 130px. Local timezone; Default sort column (descending); Sortable"
+      }
+    },
+    {
+      "id": "ENT-support-case.operating_system",
+      "type": "Field",
+      "owner_fr": "FR-034",
+      "title": "Operating system",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Operating system name and version attached to a problem report."
       }
     },
     {
@@ -28651,7 +28750,7 @@
       "owner_fr": "FR-034",
       "title": "Request status",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "description": "Open, Resolved or Declined (Screen 9). Ownership between FR-016 and FR-034 is an open question."
       }
@@ -39112,6 +39211,19 @@
       }
     },
     {
+      "id": "FLW-034-booking-request-from-booking-screen",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Alternative Flow A8: Booking Request Raised from a Booking Screen",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Alternative Flow A8: Booking Request Raised from a Booking Screen",
+        "prd_ref": "Alternative Flow A8"
+      }
+    },
+    {
       "id": "FLW-034-escalation",
       "type": "Flow",
       "owner_fr": null,
@@ -39216,6 +39328,19 @@
       }
     },
     {
+      "id": "FLW-034-provider-reopening-request",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Alternative Flow B3a: Provider Requests Case Reopening",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Alternative Flow B3a: Provider Requests Case Reopening",
+        "prd_ref": "Alternative Flow B3a"
+      }
+    },
+    {
       "id": "FLW-034-reassignment",
       "type": "Flow",
       "owner_fr": null,
@@ -39239,6 +39364,32 @@
         "kind": "alternative",
         "description": "Alternative Flow B3: Patient Requests Case Reopening",
         "prd_ref": "Alternative Flow B3"
+      }
+    },
+    {
+      "id": "FLW-034-scanner-unavailable",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Alternative Flow B4a: Virus Scanner Unavailable",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Alternative Flow B4a: Virus Scanner Unavailable",
+        "prd_ref": "Alternative Flow B4a"
+      }
+    },
+    {
+      "id": "FLW-034-system-escalation",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Alternative Flow A7: System Escalates an Overdue Case",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Alternative Flow A7: System Escalates an Overdue Case",
+        "prd_ref": "Alternative Flow A7"
       }
     },
     {
@@ -39949,7 +40100,7 @@
       "owner_fr": null,
       "title": "Support Center & Ticketing System",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "module": "fr034-support-center-ticketing",
         "prd_path": "project-requirements/functional-requirements/fr034-support-center-ticketing/prd.md",
@@ -92511,10 +92662,10 @@
       "owner_fr": "FR-034",
       "title": "Enforce RBAC permissions for case access",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST enforce RBAC permissions for case access (Support Staff and Super Admin roles)",
-        "rationale": "Functional Requirements Summary (prd.md line 1223). Restated at prd.md lines 1018 (Security Considerations Authorization)."
+        "statement": "System MUST enforce RBAC permissions for case access on the FR-031 permissions View Support Center and Respond to Support, with the Screen 7 settings and the audit export limited to Super Admin (REQ-034-094)",
+        "rationale": "Functional Requirements Summary, Security and Privacy. REQ-034-094 lists what each permission allows."
       }
     },
     {
@@ -92535,10 +92686,10 @@
       "owner_fr": "FR-034",
       "title": "Scan uploaded attachments for viruses/malware",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST scan uploaded attachments for viruses/malware before accepting",
-        "rationale": "Functional Requirements Summary (prd.md line 1242). Restated at prd.md lines 449, 1150 (Screen 2 and Edge Cases)."
+        "statement": "System MUST scan uploaded attachments for viruses/malware before accepting; when the scanner is unavailable the file is refused with a \"try again later\" message and the case, reply or note can be saved without it",
+        "rationale": "Functional Requirements Summary, Screen 2, Edge Cases and Alternative Flow B4a. FR-035 states the same behaviour for the patient app."
       }
     },
     {
@@ -92667,10 +92818,10 @@
       "owner_fr": "FR-034",
       "title": "Display case list",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST display case list with comprehensive filters: status, priority, category, ticket source, submitter type, date range, assigned admin, and search functionality",
-        "rationale": "Functional Requirements Summary (prd.md line 1262). Restated at prd.md lines 365, 403 (Screen 1 filter bar and business rules)."
+        "statement": "System MUST display case list with comprehensive filters: status, priority, category, ticket source, submitter type, request type, request status, date range, assigned admin, and search functionality",
+        "rationale": "Functional Requirements Summary. Restated in the Screen 1 filter bar."
       }
     },
     {
@@ -92703,10 +92854,10 @@
       "owner_fr": "FR-034",
       "title": "Display warning for cases with no activity beyond the Case Inactivity Threshold",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST display warning for cases with no activity for longer than the Case Inactivity Threshold (Screen 7, default 14 days)",
-        "rationale": "Functional Requirements Summary (prd.md line 1265). Restated at prd.md lines 401, 553 (Screen 1 and Screen 3)."
+        "statement": "System MUST display warning for Open and In Progress cases with no activity for longer than the Case Inactivity Threshold (Screen 7, default 14 days); activity means any reply, note, status change or reassignment",
+        "rationale": "Functional Requirements Summary. Restated in Screen 1 and Screen 3 (REQ-034-078)."
       }
     },
     {
@@ -92895,10 +93046,10 @@
       "owner_fr": "FR-034",
       "title": "Resolution time targets",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Maximum case resolution time target: 48 hours for Urgent, 5 business days for High, 10 business days for Medium/Low priority",
-        "rationale": "General Module Rules, Rule 12 (prd.md line 764). Success Criteria SC-002 and SC-006 state a 5 business day target for non-urgent cases (prd.md lines 851, 858); see migration report."
+        "statement": "Maximum case resolution time target: 48 hours for Urgent, 5 business days for High, 10 business days for Medium/Low priority; a target only, with no system behaviour when it passes",
+        "rationale": "General Module Rules, Rule 12. Success criteria state a 5 business day target for non-urgent cases; see migration report."
       }
     },
     {
@@ -92907,10 +93058,10 @@
       "owner_fr": "FR-034",
       "title": "Inactive cases flagged for review",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Cases with no activity for longer than the Case Inactivity Threshold (Screen 7, default 14 days) flagged for admin review and potential closure; the same threshold drives the warning shown in the case list and case detail view",
-        "rationale": "General Module Rules, Rule 13 (prd.md line 765). The 14-day figure is configurable on Screen 7 (Case Inactivity Threshold, prd.md line 708)."
+        "statement": "Open and In Progress cases with no activity for longer than the Case Inactivity Threshold (Screen 7, default 14 days) are flagged for admin review and potential closure; the same threshold drives the warning shown in the case list and case detail view; activity means any reply, note, status change or reassignment",
+        "rationale": "General Module Rules, Rule 13. The 14-day figure is configurable on Screen 7 (Case Inactivity Threshold)."
       }
     },
     {
@@ -93065,10 +93216,10 @@
       "owner_fr": "FR-034",
       "title": "Admin email notifications",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Admin staff receive email notifications when: Case assigned to them; Case escalated to them (escalations go to Super Admin); Patient/provider replies to a case (one email per reply); A case is reopened (a separate reopening notice, in addition to the reply email); Urgent case created and still unassigned after 1 hour (a fixed alert email to admins; if the case is still unassigned at the Urgent Case Unassigned Threshold in Screen 7, default 24 hours, it escalates to Super Admin)",
-        "rationale": "Business Rules, Notification Rule 3 (prd.md lines 847 to 852). The 1-hour alert is fixed; the Screen 7 threshold (prd.md line 710) is the point where the case escalates to Super Admin."
+        "statement": "Admin staff receive email notifications when: Case assigned to them; Case escalated to them (an escalation always goes to a Super Admin, and a system escalation goes to all Super Admins); Patient/provider replies to a case (one email per reply); A case is reopened (a separate reopening notice, in addition to the reply email); Urgent case created and still unassigned after 1 hour (a fixed alert email to the Support Staff pool; if the case is still unassigned at the Urgent Case Unassigned Threshold in Screen 7, default 24 hours, the system escalates it to Super Admin)",
+        "rationale": "Business Rules, Notification Rule 3. The 1-hour alert is fixed; the Screen 7 threshold is the point where the system escalates the case (REQ-034-173)."
       }
     },
     {
@@ -93087,12 +93238,12 @@
       "id": "REQ-034-094",
       "type": "Rule",
       "owner_fr": "FR-034",
-      "title": "Role permissions for support staff",
+      "title": "Support Center permissions",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Support Staff: Create, view, edit, reassign, and resolve cases (assignment is informational only and does not restrict access); Super Admin: Full access including Support Center configuration management, receipt of escalations, and audit log export (no hard delete; archive only); There is no Support Manager role and no \"Manage Support Configuration\" permission",
-        "rationale": "Implementation Notes, Security Considerations, Authorization (prd.md lines 1029 to 1032). REQ-034-042 names the two roles; FR-031 owns the role definitions."
+        "statement": "View Support Center: open and read cases, including internal notes; Respond to Support: reply, add internal notes, create, edit, reassign, resolve, close and reopen cases (assignment is informational only and does not restrict access); Super Admin only: Support Center configuration (Screen 7), receipt of escalations and audit log export (no hard delete; archive only); There is no Support Manager role and no \"Manage Support Configuration\" permission; A user without View Support Center who sees a case row in FR-016 Screen 9 gets the case reference without a link",
+        "rationale": "Data and Privacy Rules, Authorization. The two permission names are the FR-031 Communication and Support permissions (REQ-031-111); FR-031 owns the role definitions."
       }
     },
     {
@@ -93137,10 +93288,10 @@
       "owner_fr": "FR-034",
       "title": "Submission confirmation shown to submitter",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System displays confirmation to patient: \"Support request submitted. Case #[number]. Our team will respond within 24 hours.\"; System displays confirmation to provider: \"Support request submitted. Case #[number]. Our team will respond within 24 hours.\"; System displays confirmation to provider: \"Thank you for your feedback! Case #[number]. We'll review your submission.\"",
-        "rationale": "Alternative Flows A5, A3 and A4 step 10 (prd.md lines 285, 245, 265). The quoted confirmation wording is template copy and is not modelled; the 24-hour response commitment is the rule."
+        "statement": "System displays confirmation to patient: \"Support request submitted. Case #[number]. Our team will respond within 24 hours on business days.\"; System displays confirmation to provider: \"Support request submitted. Case #[number]. Our team will respond within 24 hours on business days.\"; System displays confirmation to provider: \"Thank you for your feedback! Case #[number]. We'll review your submission.\"",
+        "rationale": "Alternative Flows A5, A3 and A4 step 10. The quoted wording is template copy and is not modelled; the 24-hours-on-business-days commitment is the first-response target (REQ-034-175), worded as in FR-035 REQ-035-054."
       }
     },
     {
@@ -93173,10 +93324,10 @@
       "owner_fr": "FR-034",
       "title": "Category and priority from the submitter",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System sets case category based on patient's selection (Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry, Feature Request, Bug Report, Feedback: the eight patient categories); System sets case priority based on patient's selection (Low, Medium, High, Urgent); System sets case category based on provider's selection (Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry, Provider Support: the six provider categories); System sets case priority based on provider's selection (Low, Medium, High, Urgent); System sets case category from the feedback type: Feature Request and Bug Report keep their own categories, Suggestion and Other are filed under category Feedback (no new categories); System sets case priority based on provider's suggested priority (Low, Medium, High, Urgent)",
-        "rationale": "Alternative Flows A5, A3 and A4 steps 6 and 7 (prd.md lines 281, 282, 241, 242, 261, 262). Patient and provider categories are subsets of the ten-category master list (Screen 7, prd.md line 682)."
+        "statement": "System sets case category based on the patient's selection from the categories visible to patients; System sets case priority based on patient's selection (Low, Medium, High, Urgent); System sets case category based on the provider's selection from the categories visible to providers; System sets case priority based on provider's selection (Low, Medium, High, Urgent); System sets case category from the feedback type: Feature Request and Bug Report keep their own categories, Suggestion and Other are filed under category Feedback (no new categories); System sets case priority based on provider's suggested priority (Low, Medium, High, Urgent); Each built-in category has a fixed Visible To value (patient and provider, patient, provider, or admin only) that decides which submission forms offer it; the membership is the table on Screen 7 and is not editable",
+        "rationale": "Alternative Flows A5, A3 and A4 steps 6 and 7, and Screen 7. The feedback-type mapping in A4 is separate from the Visible To value, which governs the category choices a form offers."
       }
     },
     {
@@ -93185,10 +93336,10 @@
       "owner_fr": "FR-034",
       "title": "No skipped stages, no closing before Resolved",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Status follows unified workflow: Open → In Progress → Resolved → Closed (cannot skip stages except for case reopening); Case cannot be marked \"Closed\" until status is \"Resolved\" (validation rule); System prevents closing case unless status is \"Resolved\" first",
-        "rationale": "Screen 2 and Screen 3 business rules (prd.md lines 452, 457, 541). Business Rule 2 states the same no-skip rule (prd.md line 748)."
+        "statement": "Status follows unified workflow: Open → In Progress → Resolved → Closed (cannot skip stages except for case reopening); Case cannot be marked \"Closed\" until status is \"Resolved\" (validation rule); System prevents closing case unless status is \"Resolved\" first; Status is Open on create and is not editable on Screen 2 when a case is edited; the Update Status modal offers Open to In Progress only; Resolved is reached only through Resolve Case (Screen 4, resolution summary required), Closed only through Close Case, and Closed to Open only through Reopen Case",
+        "rationale": "Screen 2, Screen 3 and Business Rule 2. Each later stage has one control that carries its own required input."
       }
     },
     {
@@ -93197,10 +93348,10 @@
       "owner_fr": "FR-034",
       "title": "Escalate a case",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Admin clicks \"Reassign Case\" (there is no separate escalation button or form); System displays the Reassign Case modal (Screen 5); Admin selects the new assignee, enters the required reassignment reason, and ticks \"Escalate\"; System raises case priority to \"High\" or \"Urgent\" as the admin chooses; System sends the escalation notice to the new assignee; System logs the reassignment in case timeline, marked as an escalation; Case reassigned to higher-level support staff with increased priority",
-        "rationale": "Alternative Flow A1. Escalation is the Escalate tick in the Reassign Case modal (Screen 5); it has no separate screen or form."
+        "statement": "Admin clicks \"Reassign Case\" (there is no separate escalation button or form); System displays the Reassign Case modal (Screen 5); Admin ticks \"Escalate\", selects a Super Admin as the new assignee (the list shows active Super Admin users only), and enters the required reassignment reason; System raises case priority to \"High\" or \"Urgent\" as the admin chooses; System sends the escalation notice to the chosen Super Admin; System logs the reassignment in case timeline, marked as an escalation; Case reassigned to a Super Admin with increased priority",
+        "rationale": "Alternative Flow A1. Escalation is the Escalate tick in the Reassign Case modal (Screen 5); it has no separate screen or form, and it always goes to a Super Admin."
       }
     },
     {
@@ -93269,10 +93420,10 @@
       "owner_fr": "FR-034",
       "title": "Case kept when patient account is deleted",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Support case remains in system with anonymized patient identifier for audit trail compliance; Case marked with \"Patient Account Deleted\" badge; Admin cannot deep-link to patient record but can still close case with resolution notes; If patient record deleted, support case retains anonymized copy of patient name/email for audit trail",
-        "rationale": "Edge Cases (prd.md lines 1145 to 1147) and Implementation Notes, Integration 1 (prd.md line 995). FR-035 states a related rule for open cases when a patient deletes an account."
+        "statement": "Support case remains in system with anonymized patient identifier for audit trail compliance; Case marked with \"Patient Account Deleted\" badge; Admin cannot deep-link to patient record but can still take the case to Resolved with a resolution summary and then Closed; If patient record deleted, support case retains anonymized copy of patient name/email for audit trail, and the anonymisation follows FR-023; No email of any kind is sent to a deleted patient, and the email checkboxes on Screens 4 and 6 show unchecked and disabled",
+        "rationale": "Edge Cases and Data and Privacy Rules. FR-035 REQ-035-075 states the matching rule for the patient app: notices stop."
       }
     },
     {
@@ -93474,10 +93625,10 @@
       "owner_fr": "FR-034",
       "title": "Assignee optional on creation",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Assigned To field optional on creation; can be assigned later (assignment is informational only - all admins can work on all cases); Assigned To: List of active admin users with \"Support Staff\" role",
-        "rationale": "Screen 2 data fields and business rules (prd.md lines 454, 434). The Support Staff role name differs from the Support Agent role in the security notes; see migration report."
+        "statement": "Assigned To field optional on creation; can be assigned later (assignment is informational only - all admins can work on all cases); Assigned To: List of active admin users with the Respond to Support permission",
+        "rationale": "Screen 2 data fields and business rules. The permission name comes from FR-031 (REQ-031-111)."
       }
     },
     {
@@ -93618,10 +93769,10 @@
       "owner_fr": "FR-034",
       "title": "Reply during auto-close period reopens the case",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System automatically closes a Resolved case after the specified auto-close period if the patient/provider doesn't respond; If the patient/provider replies while the case is Resolved (before the auto-close period expires), the case is reopened automatically and the system records a Reopening by System with the reason \"User replied\"; A reply to a Closed case does not reopen it automatically: it goes to an admin, who decides whether to reopen it",
-        "rationale": "Screen 4 business rules (prd.md lines 586 to 588). Admins reopen Closed cases (REQ-034-017); the automatic reopen applies only while the case is Resolved (REQ-034-165)."
+        "statement": "System automatically closes a Resolved case after the specified auto-close period if the patient/provider doesn't respond; If the patient/provider replies while the case is Resolved (before the auto-close period expires), the case is reopened automatically and the system records a Reopening by System with the reason \"User replied\"; A reply to a Closed case does not reopen it automatically: it goes to an admin, who decides whether to reopen it; A provider replies through FR-032 Screen 5.8 (Case Detail) and the same rules apply",
+        "rationale": "Screen 4 business rules. Admins reopen Closed cases (REQ-034-017); the automatic reopen applies only while the case is Resolved (REQ-034-165)."
       }
     },
     {
@@ -93678,10 +93829,10 @@
       "owner_fr": "FR-034",
       "title": "Reassign modal inputs",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "New Assignee: List of active admin users with \"Support Staff\" role; cannot select current assignee; Reassignment Reason: Min 10 chars, max 500 chars; Display new assignee's current case load (number of Open/In Progress cases) to help with workload balancing",
-        "rationale": "Screen 5 data fields and notes (prd.md lines 609, 610, 626)."
+        "statement": "New Assignee: List of active admin users with the Respond to Support permission (active Super Admin users only when Escalate is ticked); cannot select current assignee; Reassignment Reason: Min 10 chars, max 500 chars; Display new assignee's current case load (number of Open/In Progress cases) to help with workload balancing",
+        "rationale": "Screen 5 data fields and notes. An escalation goes to a Super Admin (REQ-034-103)."
       }
     },
     {
@@ -93810,10 +93961,10 @@
       "owner_fr": "FR-034",
       "title": "Auto-escalation thresholds",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Auto-escalation thresholds configurable within defined ranges to prevent overly aggressive or too lenient escalation; Urgent Case Unassigned Threshold: Hours before an urgent case that is still unassigned auto-escalates to Super Admin, after a fixed alert email to admins at 1 hour (Min: 1, Max: 48, Default: 24 hours); High Priority Case Threshold: Hours before high priority case auto-escalates if no status change (Min: 12, Max: 72, Default: 48 hours); Case Inactivity Threshold: Days before case with no activity flagged for admin review, also the one clock behind the inactivity warnings in the case list and case detail view (Min: 7, Max: 90, Default: 14 days)",
-        "rationale": "Screen 7 section 6 (prd.md lines 709 to 712). Notification Rule 3 states the 1-hour alert and the escalation to Super Admin (prd.md line 852); Assumption 3 repeats the 24-hour default (prd.md line 985)."
+        "statement": "Auto-escalation thresholds configurable within defined ranges to prevent overly aggressive or too lenient escalation; Urgent Case Unassigned Threshold: Hours before an urgent case that is still unassigned auto-escalates to Super Admin (REQ-034-173), after a fixed alert email to the Support Staff pool at 1 hour (Min: 1, Max: 48, Default: 24 hours); High Priority Case Threshold: Hours before a high priority case auto-escalates to Super Admin (REQ-034-173) if no status change (Min: 12, Max: 72, Default: 48 hours); Case Inactivity Threshold: Days before an Open or In Progress case with no activity is flagged for admin review, also the one clock behind the inactivity warnings in the case list and case detail view (Min: 7, Max: 90, Default: 14 days)",
+        "rationale": "Screen 7, Section 6. Notification Rule 3 states the 1-hour alert and the escalation to Super Admin; Alternative Flow A7 is the escalation itself."
       }
     },
     {
@@ -93919,10 +94070,10 @@
       "owner_fr": "FR-034",
       "title": "Report a problem (device details attached, submissions throttled)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Report a problem: FR-034 owns the Report a problem rule for the patient app (FR-035 and FR-001 point to it). A problem report MUST create a support case with the device, operating system, app version, and report timestamp attached, and problem report submissions MUST be throttled",
-        "rationale": "Functional Requirements Summary; restated in General Module Rules, Rule 18. FR-035 and FR-001 point to it."
+        "statement": "Report a problem: FR-034 owns the Report a problem rule for the patient app (FR-035 and FR-001 point to it). A problem report MUST create a support case under the Technical Issue preset with the device, operating system, app version, and report timestamp attached (shown read-only on Screen 3), and problem report submissions MUST be throttled to 10 new cases per hour per patient (REQ-035-063)",
+        "rationale": "Functional Requirements Summary; restated in Business Rule 18. FR-035 and FR-001 point to it."
       }
     },
     {
@@ -94019,6 +94170,102 @@
       "attrs": {
         "statement": "The four built-in priorities (Low, Medium, High, Urgent) cannot be renamed, switched off or deleted; Super Admin may add other priorities, which carry no escalation or resolution-time rule unless one is defined",
         "rationale": "prd.md lines 686 to 688, 726 (Screen 7 Case Priorities section and business rules)."
+      }
+    },
+    {
+      "id": "REQ-034-173",
+      "type": "Rule",
+      "owner_fr": "FR-034",
+      "title": "An overdue Urgent or High case is escalated by the system to all Super Admins",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "When the Urgent Case Unassigned Threshold or the High Priority Case Threshold expires, the system marks the case as escalated in its timeline and sends the escalation notice to all Super Admins; it does not reassign the case or change its priority. The High clock restarts on any status change, and the fixed 1-hour alert for an unassigned Urgent case goes to the Support Staff pool",
+        "rationale": "Alternative Flow A7 and Screen 7, Section 6. It is the same Support Case Escalated event as a manual escalation (REQ-034-103), raised by a clock instead of an admin."
+      }
+    },
+    {
+      "id": "REQ-034-174",
+      "type": "Rule",
+      "owner_fr": "FR-034",
+      "title": "A case with an Open booking request cannot be Resolved until the request is completed or declined",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "A case whose request status is Open cannot be set to Resolved until the request is completed or declined; declining and recording the outcome stay in FR-016 (Screen 9, REQ-016-196, REQ-016-197)",
+        "rationale": "Screen 3 business rules and Business Rule 20. The request status and the case status are separate (REQ-034-168); this rule keeps them from contradicting each other."
+      }
+    },
+    {
+      "id": "REQ-034-175",
+      "type": "Rule",
+      "owner_fr": "FR-034",
+      "title": "First response target: 24 hours on business days",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "First-response target: 24 hours on business days (Monday to Friday, UTC, matching the support staff hours); it is a target only and the system takes no action when it passes",
+        "rationale": "Business Rule 21. The submission confirmations (REQ-034-098) and FR-035 REQ-035-054 quote the same 24 hours on business days."
+      }
+    },
+    {
+      "id": "REQ-034-176",
+      "type": "Rule",
+      "owner_fr": "FR-034",
+      "title": "Provider case submission limit",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Provider submissions are limited to 10 new cases per hour per provider user, the same figure as the patient limit (REQ-035-063)",
+        "rationale": "Data and Privacy Rules, Threat mitigation. Owner ruling: the provider figure follows the patient figure."
+      }
+    },
+    {
+      "id": "REQ-034-177",
+      "type": "Rule",
+      "owner_fr": "FR-034",
+      "title": "No email route to reopen when the support email setting is empty",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "When the support email setting is empty there is no email route for asking to reopen a Closed case, and the patient creates a new ticket instead",
+        "rationale": "Alternative Flow B3. FR-035 shows the Email support link in the Closed Case Banner only when the setting has a value."
+      }
+    },
+    {
+      "id": "REQ-034-178",
+      "type": "Rule",
+      "owner_fr": "FR-034",
+      "title": "A provider can only ask for a Closed case to be reopened",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "A provider cannot reopen a Closed case; the request is added to the case thread as a flagged message, the case stays Closed, the assigned admin (or the Support Staff pool if unassigned) is told through the user-reply notice, and an admin decides with Reopen Case (Screen 6), as for a patient",
+        "rationale": "Alternative Flow B3a. Owner ruling: the admin decides, as for patients (REQ-034-017). No new notification event is needed."
+      }
+    },
+    {
+      "id": "REQ-034-179",
+      "type": "Rule",
+      "owner_fr": "FR-034",
+      "title": "A case without a patient link carries a contact email",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "When No Patient Link is ticked on Screen 2, a contact email is required and a contact name is optional; both are stored on the case, and replies, the confirmation and the resolution email go to that address",
+        "rationale": "Screen 2 and Alternative Flow B1. Owner ruling: a case without a patient link still gets its emails."
+      }
+    },
+    {
+      "id": "REQ-034-180",
+      "type": "Rule",
+      "owner_fr": "FR-034",
+      "title": "Account intervention from a case needs the account permission",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "An account intervention started from a case needs the FR-031 permission that FR-016 requires for that action (Edit Patients for patient accounts, REQ-016-070 and REQ-016-220; Edit Providers for provider accounts); an admin without it escalates the case to a Super Admin (REQ-034-103)",
+        "rationale": "Alternative Flows A2 and A6. The permission is settled by FR-016 and FR-031; FR-034 only states that the case route needs it."
       }
     },
     {
@@ -101091,7 +101338,7 @@
       "owner_fr": "FR-034",
       "title": "Support Case Listing",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "admin",
         "description": "Primary admin interface for browsing, searching, filtering, and managing all support cases with quick actions. Controls with no field of their own: Create New Case button, quick stats bar (counts of open, in progress, urgent and unassigned cases), row selection checkboxes, row action buttons, bulk assign and bulk close buttons, pagination."
@@ -101103,7 +101350,7 @@
       "owner_fr": "FR-034",
       "title": "Create/Edit Support Case Form",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "admin",
         "description": "Allows admin staff to create new support cases or edit existing case details. Controls with no field of their own: Link to Patient Record and Link to Provider Record buttons, character counters, Save as Draft. Opens from the listing (Create New Case) and from the detail view (Edit Case)."
@@ -101115,7 +101362,7 @@
       "owner_fr": "FR-034",
       "title": "Support Case Detail View",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
         "description": "Displays complete case information, two-way communication thread, comprehensive timeline with full context, and all case management actions. Controls with no field of their own: Add Internal Note, Reply to Patient/Provider, Update Status, Resolve Case, Reassign Case, Reopen Case, Close Case and Edit Case buttons; deep links to patient and provider records."
@@ -101163,7 +101410,7 @@
       "owner_fr": "FR-034",
       "title": "Support Center Configuration",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
         "description": "Allows Super Admin and authorized admin staff to manage centralized lists and configuration options for Support Center module (accessed via Settings > Support Center). Settings path Settings > Support Center. Controls with no field of their own: add buttons and modals per list, list tables, Save Configuration and Cancel buttons."
@@ -131363,9 +131610,9 @@
       "id": "STP-034-016",
       "type": "Step",
       "owner_fr": "FR-034",
-      "title": "Admin Staff updates case status to \"Resolved\" once issue is fixed",
+      "title": "Admin Staff clicks \"Resolve Case\" (Screen 4) and enters the resolution summary once the issue is fixed; the case moves to \"Resolved\"",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow step 16"
       }
@@ -131440,9 +131687,9 @@
       "id": "STP-034-023",
       "type": "Step",
       "owner_fr": "FR-034",
-      "title": "Admin selects the new assignee, enters the required reassignment reason, and ticks \"Escalate\"",
+      "title": "Admin ticks \"Escalate\", selects a Super Admin as the new assignee, and enters the required reassignment reason",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A1 step 3"
       }
@@ -131462,9 +131709,9 @@
       "id": "STP-034-025",
       "type": "Step",
       "owner_fr": "FR-034",
-      "title": "System sends the escalation notice to the new assignee",
+      "title": "System sends the escalation notice to the chosen Super Admin",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A1 step 5"
       }
@@ -131506,9 +131753,9 @@
       "id": "STP-034-029",
       "type": "Step",
       "owner_fr": "FR-034",
-      "title": "Admin performs account intervention (password reset, account unlock, data correction)",
+      "title": "Admin performs account intervention (password reset, suspend account, lift suspension, account unlock, data correction) with the account permission; an admin without it escalates the case to a Super Admin",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A2 step 3"
       }
@@ -131594,9 +131841,9 @@
       "id": "STP-034-037",
       "type": "Step",
       "owner_fr": "FR-034",
-      "title": "System sets case category based on provider's selection (Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry, Provider Support)",
+      "title": "System sets case category based on provider's selection from the categories visible to providers (Screen 7 table)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A3 step 6"
       }
@@ -131638,9 +131885,9 @@
       "id": "STP-034-041",
       "type": "Step",
       "owner_fr": "FR-034",
-      "title": "System displays confirmation to provider: \"Support request submitted. Case #[number]. Our team will respond within 24 hours.\"",
+      "title": "System displays confirmation to provider: \"Support request submitted. Case #[number]. Our team will respond within 24 hours on business days.\"",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A3 step 10"
       }
@@ -131847,9 +132094,9 @@
       "id": "STP-034-060",
       "type": "Step",
       "owner_fr": "FR-034",
-      "title": "Patient navigates to Help Center in patient mobile app and selects \"Contact Support\" or \"Submit Feedback\" (FR-035)",
+      "title": "Patient opens the Help & Support Hub in the patient app and taps the \"Contact Support\" row (FR-035 Screen 1); feedback is sent with the category Feedback",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flow A5 step 1"
       }
@@ -131858,9 +132105,9 @@
       "id": "STP-034-061",
       "type": "Step",
       "owner_fr": "FR-034",
-      "title": "System displays submission form (subject, category, message, priority, optional attachment)",
+      "title": "FR-035 Screen 5 displays the submission form (the form is owned by FR-035)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A5 step 2"
       }
@@ -131869,9 +132116,9 @@
       "id": "STP-034-062",
       "type": "Step",
       "owner_fr": "FR-034",
-      "title": "Patient completes form with support request or feedback details and submits",
+      "title": "Patient submits the form and FR-035 hands the submission to FR-034",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A5 step 3"
       }
@@ -131902,9 +132149,9 @@
       "id": "STP-034-065",
       "type": "Step",
       "owner_fr": "FR-034",
-      "title": "System sets case category based on patient's selection (Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry, Feature Request, Bug Report, Feedback)",
+      "title": "System sets case category based on patient's selection from the categories visible to patients (Screen 7 table)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A5 step 6"
       }
@@ -131946,9 +132193,9 @@
       "id": "STP-034-069",
       "type": "Step",
       "owner_fr": "FR-034",
-      "title": "System displays confirmation to patient: \"Support request submitted. Case #[number]. Our team will respond within 24 hours.\"",
+      "title": "System displays confirmation to patient: \"Support request submitted. Case #[number]. Our team will respond within 24 hours on business days.\"",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A5 step 10"
       }
@@ -132045,9 +132292,9 @@
       "id": "STP-034-078",
       "type": "Step",
       "owner_fr": "FR-034",
-      "title": "Admin performs provider account intervention if needed",
+      "title": "Admin performs provider account intervention if needed, with the account permission (Edit Providers); an admin without it escalates the case to a Super Admin",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A6 step 4"
       }
@@ -132089,9 +132336,9 @@
       "id": "STP-034-083",
       "type": "Step",
       "owner_fr": "FR-034",
-      "title": "Admin corrects identifier or selects \"No Patient Link\" option for anonymous inquiries",
+      "title": "Admin corrects identifier or ticks \"No Patient Link\" and enters the required contact email (contact name optional)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B1 step 3"
       }
@@ -132100,9 +132347,9 @@
       "id": "STP-034-084",
       "type": "Step",
       "owner_fr": "FR-034",
-      "title": "System allows case creation without patient linkage",
+      "title": "System allows case creation without patient linkage and stores the contact on the case",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B1 step 4"
       }
@@ -132177,9 +132424,9 @@
       "id": "STP-034-091",
       "type": "Step",
       "owner_fr": "FR-034",
-      "title": "Admin receives patient email reply",
+      "title": "Admin receives the patient's email, which carries the case ID in the subject (FR-035 Closed Case Banner)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B3 step 1"
       }
@@ -132188,9 +132435,9 @@
       "id": "STP-034-092",
       "type": "Step",
       "owner_fr": "FR-034",
-      "title": "Admin locates closed case by case ID",
+      "title": "Admin finds the closed case by that case ID in search",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B3 step 2"
       }
@@ -132292,6 +132539,160 @@
       "version": 1,
       "attrs": {
         "prd_ref": "Alternative Flow B4 step 5"
+      }
+    },
+    {
+      "id": "STP-034-103",
+      "type": "Step",
+      "owner_fr": "FR-034",
+      "title": "System finds that the Urgent Case Unassigned Threshold or the High Priority Case Threshold has expired for a case",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A7 step 1"
+      }
+    },
+    {
+      "id": "STP-034-104",
+      "type": "Step",
+      "owner_fr": "FR-034",
+      "title": "System marks the case as escalated in its timeline, without reassigning it or changing its priority",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A7 step 2"
+      }
+    },
+    {
+      "id": "STP-034-105",
+      "type": "Step",
+      "owner_fr": "FR-034",
+      "title": "System sends the escalation notice to all Super Admins",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A7 step 3"
+      }
+    },
+    {
+      "id": "STP-034-106",
+      "type": "Step",
+      "owner_fr": "FR-034",
+      "title": "Patient taps \"Contact Support\" on a booking screen (FR-006) and submits a booking cancellation or change request",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A8 step 1"
+      }
+    },
+    {
+      "id": "STP-034-107",
+      "type": "Step",
+      "owner_fr": "FR-034",
+      "title": "System creates the support case with the request type, the booking reference and request status \"Open\" (Ticket Source \"Patient App\", Submitter Type \"Patient\")",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A8 step 2"
+      }
+    },
+    {
+      "id": "STP-034-108",
+      "type": "Step",
+      "owner_fr": "FR-034",
+      "title": "System sets case status to \"Open\", routes it to the Support Staff pool and notifies the pool",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A8 step 3"
+      }
+    },
+    {
+      "id": "STP-034-109",
+      "type": "Step",
+      "owner_fr": "FR-034",
+      "title": "Admin completes the request or declines it in FR-016 (Screen 9, flow A8); the case cannot be Resolved until then",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A8 step 4"
+      }
+    },
+    {
+      "id": "STP-034-110",
+      "type": "Step",
+      "owner_fr": "FR-034",
+      "title": "Provider asks for a Closed case to be reopened (FR-032 Screen 5.9)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B3a step 1"
+      }
+    },
+    {
+      "id": "STP-034-111",
+      "type": "Step",
+      "owner_fr": "FR-034",
+      "title": "System adds the request to the case thread as a flagged message; the case stays \"Closed\"",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B3a step 2"
+      }
+    },
+    {
+      "id": "STP-034-112",
+      "type": "Step",
+      "owner_fr": "FR-034",
+      "title": "System tells the assigned admin (or the Support Staff pool) through the user-reply notice",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B3a step 3"
+      }
+    },
+    {
+      "id": "STP-034-113",
+      "type": "Step",
+      "owner_fr": "FR-034",
+      "title": "Admin decides with \"Reopen Case\" (Screen 6), as for a patient",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B3a step 4"
+      }
+    },
+    {
+      "id": "STP-034-114",
+      "type": "Step",
+      "owner_fr": "FR-034",
+      "title": "System finds the virus scanner unavailable when a file is uploaded",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B4a step 1"
+      }
+    },
+    {
+      "id": "STP-034-115",
+      "type": "Step",
+      "owner_fr": "FR-034",
+      "title": "System refuses the file with a \"try again later\" message",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B4a step 2"
+      }
+    },
+    {
+      "id": "STP-034-116",
+      "type": "Step",
+      "owner_fr": "FR-034",
+      "title": "Admin saves the case, reply or note without the file",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B4a step 3"
       }
     },
     {
@@ -154201,6 +154602,14 @@
       "calculated_by": "REQ-034-152"
     },
     {
+      "id": "ENT-support-case-category.visible_to",
+      "entity_id": "ENT-support-case-category",
+      "name": "visible_to",
+      "data_type": "enum",
+      "required": true,
+      "calculated_by": null
+    },
+    {
       "id": "ENT-support-case-message.attachments",
       "entity_id": "ENT-support-case-message",
       "name": "attachments",
@@ -154231,6 +154640,14 @@
       "data_type": "bool",
       "required": true,
       "calculated_by": "REQ-032-108"
+    },
+    {
+      "id": "ENT-support-case-message.is_reopen_request",
+      "entity_id": "ENT-support-case-message",
+      "name": "is_reopen_request",
+      "data_type": "bool",
+      "required": false,
+      "calculated_by": null
     },
     {
       "id": "ENT-support-case-message.message_id",
@@ -154341,7 +154758,7 @@
       "entity_id": "ENT-support-case-reopening",
       "name": "new_priority",
       "data_type": "enum",
-      "required": true,
+      "required": false,
       "calculated_by": null
     },
     {
@@ -154365,6 +154782,14 @@
       "entity_id": "ENT-support-case-reopening",
       "name": "reopened_by_admin_id",
       "data_type": "id",
+      "required": false,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-support-case-reopening.reopened_by_type",
+      "entity_id": "ENT-support-case-reopening",
+      "name": "reopened_by_type",
+      "data_type": "enum",
       "required": true,
       "calculated_by": null
     },
@@ -154577,6 +155002,14 @@
       "calculated_by": null
     },
     {
+      "id": "ENT-support-case.app_version",
+      "entity_id": "ENT-support-case",
+      "name": "app_version",
+      "data_type": "text",
+      "required": false,
+      "calculated_by": null
+    },
+    {
       "id": "ENT-support-case.assigned_admin_id",
       "entity_id": "ENT-support-case",
       "name": "assigned_admin_id",
@@ -154589,6 +155022,14 @@
       "entity_id": "ENT-support-case",
       "name": "attachments",
       "data_type": "file",
+      "required": false,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-support-case.booking_reference",
+      "entity_id": "ENT-support-case",
+      "name": "booking_reference",
+      "data_type": "id",
       "required": false,
       "calculated_by": null
     },
@@ -154617,6 +155058,22 @@
       "calculated_by": null
     },
     {
+      "id": "ENT-support-case.contact_email",
+      "entity_id": "ENT-support-case",
+      "name": "contact_email",
+      "data_type": "text",
+      "required": false,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-support-case.contact_name",
+      "entity_id": "ENT-support-case",
+      "name": "contact_name",
+      "data_type": "text",
+      "required": false,
+      "calculated_by": null
+    },
+    {
       "id": "ENT-support-case.decline_reason",
       "entity_id": "ENT-support-case",
       "name": "decline_reason",
@@ -154630,6 +155087,14 @@
       "name": "description",
       "data_type": "text",
       "required": true,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-support-case.device",
+      "entity_id": "ENT-support-case",
+      "name": "device",
+      "data_type": "text",
+      "required": false,
       "calculated_by": null
     },
     {
@@ -154654,6 +155119,14 @@
       "name": "last_updated_at",
       "data_type": "datetime",
       "required": true,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-support-case.operating_system",
+      "entity_id": "ENT-support-case",
+      "name": "operating_system",
+      "data_type": "text",
+      "required": false,
       "calculated_by": null
     },
     {
@@ -154693,7 +155166,7 @@
       "entity_id": "ENT-support-case",
       "name": "request_status",
       "data_type": "enum",
-      "required": true,
+      "required": false,
       "calculated_by": null
     },
     {
@@ -162973,6 +163446,30 @@
       "sort_order": 1
     },
     {
+      "field_id": "ENT-support-case-category.visible_to",
+      "value": "patient_and_provider",
+      "label": "Patient and provider",
+      "sort_order": 0
+    },
+    {
+      "field_id": "ENT-support-case-category.visible_to",
+      "value": "patient",
+      "label": "Patient",
+      "sort_order": 1
+    },
+    {
+      "field_id": "ENT-support-case-category.visible_to",
+      "value": "provider",
+      "label": "Provider",
+      "sort_order": 2
+    },
+    {
+      "field_id": "ENT-support-case-category.visible_to",
+      "value": "admin_only",
+      "label": "Admin only",
+      "sort_order": 3
+    },
+    {
       "field_id": "ENT-support-case-message.sender_type",
       "value": "admin",
       "label": "Admin",
@@ -163061,6 +163558,18 @@
       "value": "urgent",
       "label": "Urgent",
       "sort_order": 3
+    },
+    {
+      "field_id": "ENT-support-case-reopening.reopened_by_type",
+      "value": "admin",
+      "label": "Admin",
+      "sort_order": 0
+    },
+    {
+      "field_id": "ENT-support-case-reopening.reopened_by_type",
+      "value": "system",
+      "label": "System",
+      "sort_order": 1
     },
     {
       "field_id": "ENT-support-case-resolution.auto_close_period_days",
@@ -174279,6 +174788,12 @@
       "attrs": {}
     },
     {
+      "from_id": "FLW-034-booking-request-from-booking-screen",
+      "verb": "starts at",
+      "to_id": "STP-034-106",
+      "attrs": {}
+    },
+    {
       "from_id": "FLW-034-escalation",
       "verb": "starts at",
       "to_id": "STP-034-021",
@@ -174327,6 +174842,12 @@
       "attrs": {}
     },
     {
+      "from_id": "FLW-034-provider-reopening-request",
+      "verb": "starts at",
+      "to_id": "STP-034-110",
+      "attrs": {}
+    },
+    {
       "from_id": "FLW-034-reassignment",
       "verb": "starts at",
       "to_id": "STP-034-085",
@@ -174336,6 +174857,18 @@
       "from_id": "FLW-034-reopening",
       "verb": "starts at",
       "to_id": "STP-034-091",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-034-scanner-unavailable",
+      "verb": "starts at",
+      "to_id": "STP-034-114",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-034-system-escalation",
+      "verb": "starts at",
+      "to_id": "STP-034-103",
       "attrs": {}
     },
     {
@@ -179680,7 +180213,7 @@
       "verb": "active in",
       "to_id": "STG-patient-03-active",
       "attrs": {
-        "rules": 159
+        "rules": 167
       },
       "derived": true
     },
@@ -179689,7 +180222,7 @@
       "verb": "active in",
       "to_id": "STG-provider-03-active",
       "attrs": {
-        "rules": 159
+        "rules": 167
       },
       "derived": true
     },
@@ -179703,6 +180236,72 @@
       "from_id": "FR-034",
       "verb": "references",
       "to_id": "REQ-015-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-034",
+      "verb": "references",
+      "to_id": "REQ-016-070",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-034",
+      "verb": "references",
+      "to_id": "REQ-016-175",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-034",
+      "verb": "references",
+      "to_id": "REQ-016-177",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-034",
+      "verb": "references",
+      "to_id": "REQ-016-196",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-034",
+      "verb": "references",
+      "to_id": "REQ-016-197",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-034",
+      "verb": "references",
+      "to_id": "REQ-016-220",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-034",
+      "verb": "references",
+      "to_id": "REQ-023-004",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-034",
+      "verb": "references",
+      "to_id": "REQ-023-014",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-034",
+      "verb": "references",
+      "to_id": "REQ-031-103",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-034",
+      "verb": "references",
+      "to_id": "REQ-031-111",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-034",
+      "verb": "references",
+      "to_id": "REQ-035-063",
       "attrs": {}
     },
     {
@@ -296258,6 +296857,12 @@
     {
       "from_id": "REQ-034-139",
       "verb": "applies to",
+      "to_id": "SCR-032-17",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-139",
+      "verb": "applies to",
       "to_id": "SCR-034-04",
       "attrs": {}
     },
@@ -297115,6 +297720,180 @@
     },
     {
       "from_id": "REQ-034-172",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-034",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-173",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-173",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-173",
+      "verb": "applies to",
+      "to_id": "EVT-support-case-escalated",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-173",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-034",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-174",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-174",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-174",
+      "verb": "applies to",
+      "to_id": "ENT-support-case.request_status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-174",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-034",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-175",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-175",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-175",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-034",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-176",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-176",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-176",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-034",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-177",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-177",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-177",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-034",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-177",
+      "verb": "governed by",
+      "to_id": "SET-support-emergency-contact-email",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-178",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-178",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-178",
+      "verb": "applies to",
+      "to_id": "SCR-032-18",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-178",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-034",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-179",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-179",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-179",
+      "verb": "applies to",
+      "to_id": "ENT-support-case.contact_email",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-179",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-034",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-180",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-180",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-034-180",
       "verb": "decided by",
       "to_id": "SRC-PRD-034",
       "attrs": {}
@@ -343579,6 +344358,24 @@
     {
       "from_id": "SCR-034-01",
       "verb": "shows",
+      "to_id": "ENT-support-case.request_status",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Request Status filter"
+      }
+    },
+    {
+      "from_id": "SCR-034-01",
+      "verb": "shows",
+      "to_id": "ENT-support-case.request_type",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Request Type filter"
+      }
+    },
+    {
+      "from_id": "SCR-034-01",
+      "verb": "shows",
       "to_id": "ENT-support-case.status",
       "attrs": {
         "provenance": "retrieved",
@@ -343697,6 +344494,26 @@
       "attrs": {
         "provenance": "user input",
         "label": "Category",
+        "editable": true
+      }
+    },
+    {
+      "from_id": "SCR-034-02",
+      "verb": "shows",
+      "to_id": "ENT-support-case.contact_email",
+      "attrs": {
+        "provenance": "user input",
+        "label": "Contact Email (No Patient Link)",
+        "editable": true
+      }
+    },
+    {
+      "from_id": "SCR-034-02",
+      "verb": "shows",
+      "to_id": "ENT-support-case.contact_name",
+      "attrs": {
+        "provenance": "user input",
+        "label": "Contact Name (No Patient Link)",
         "editable": true
       }
     },
@@ -343897,6 +344714,15 @@
     {
       "from_id": "SCR-034-03",
       "verb": "shows",
+      "to_id": "ENT-support-case-message.is_reopen_request",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Reopen request flag"
+      }
+    },
+    {
+      "from_id": "SCR-034-03",
+      "verb": "shows",
       "to_id": "ENT-support-case-message.parent_message_id",
       "attrs": {
         "provenance": "retrieved",
@@ -343987,10 +344813,28 @@
     {
       "from_id": "SCR-034-03",
       "verb": "shows",
+      "to_id": "ENT-support-case.app_version",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "App Version"
+      }
+    },
+    {
+      "from_id": "SCR-034-03",
+      "verb": "shows",
       "to_id": "ENT-support-case.assigned_admin_id",
       "attrs": {
         "provenance": "retrieved",
         "label": "Assigned To"
+      }
+    },
+    {
+      "from_id": "SCR-034-03",
+      "verb": "shows",
+      "to_id": "ENT-support-case.booking_reference",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Booking Reference"
       }
     },
     {
@@ -344014,10 +344858,28 @@
     {
       "from_id": "SCR-034-03",
       "verb": "shows",
+      "to_id": "ENT-support-case.decline_reason",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Decline Reason"
+      }
+    },
+    {
+      "from_id": "SCR-034-03",
+      "verb": "shows",
       "to_id": "ENT-support-case.description",
       "attrs": {
         "provenance": "retrieved",
         "label": "Description"
+      }
+    },
+    {
+      "from_id": "SCR-034-03",
+      "verb": "shows",
+      "to_id": "ENT-support-case.device",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Device"
       }
     },
     {
@@ -344041,10 +344903,46 @@
     {
       "from_id": "SCR-034-03",
       "verb": "shows",
+      "to_id": "ENT-support-case.operating_system",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Operating System"
+      }
+    },
+    {
+      "from_id": "SCR-034-03",
+      "verb": "shows",
+      "to_id": "ENT-support-case.outcome",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Outcome"
+      }
+    },
+    {
+      "from_id": "SCR-034-03",
+      "verb": "shows",
       "to_id": "ENT-support-case.priority",
       "attrs": {
         "provenance": "retrieved",
         "label": "Priority"
+      }
+    },
+    {
+      "from_id": "SCR-034-03",
+      "verb": "shows",
+      "to_id": "ENT-support-case.request_status",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Request Status"
+      }
+    },
+    {
+      "from_id": "SCR-034-03",
+      "verb": "shows",
+      "to_id": "ENT-support-case.request_type",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Request Type"
       }
     },
     {
@@ -344324,6 +345222,15 @@
       "attrs": {
         "provenance": "system calculated",
         "label": "Category Used Count"
+      }
+    },
+    {
+      "from_id": "SCR-034-07",
+      "verb": "shows",
+      "to_id": "ENT-support-case-category.visible_to",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Visible To"
       }
     },
     {
@@ -435129,6 +436036,12 @@
     },
     {
       "from_id": "STP-034-029",
+      "verb": "applies",
+      "to_id": "REQ-034-180",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-029",
       "verb": "at",
       "to_id": "STG-patient-03-active",
       "attrs": {}
@@ -435443,6 +436356,12 @@
       "from_id": "STP-034-041",
       "verb": "applies",
       "to_id": "REQ-034-098",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-041",
+      "verb": "applies",
+      "to_id": "REQ-034-175",
       "attrs": {}
     },
     {
@@ -436161,6 +437080,12 @@
     },
     {
       "from_id": "STP-034-069",
+      "verb": "applies",
+      "to_id": "REQ-034-175",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-069",
       "verb": "at",
       "to_id": "STG-patient-03-active",
       "attrs": {}
@@ -436395,6 +437320,12 @@
     },
     {
       "from_id": "STP-034-078",
+      "verb": "applies",
+      "to_id": "REQ-034-180",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-078",
       "verb": "at",
       "to_id": "STG-provider-03-active",
       "attrs": {}
@@ -436505,6 +437436,12 @@
       "from_id": "STP-034-083",
       "verb": "applies",
       "to_id": "REQ-034-104",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-083",
+      "verb": "applies",
+      "to_id": "REQ-034-179",
       "attrs": {}
     },
     {
@@ -436733,6 +437670,12 @@
       "from_id": "STP-034-090",
       "verb": "on",
       "to_id": "SCR-034-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-091",
+      "verb": "applies",
+      "to_id": "REQ-034-177",
       "attrs": {}
     },
     {
@@ -437055,6 +437998,402 @@
     },
     {
       "from_id": "STP-034-102",
+      "verb": "on",
+      "to_id": "SCR-034-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-103",
+      "verb": "applies",
+      "to_id": "REQ-034-155",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-103",
+      "verb": "applies",
+      "to_id": "REQ-034-173",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-103",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-103",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-103",
+      "verb": "next",
+      "to_id": "STP-034-104",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-104",
+      "verb": "applies",
+      "to_id": "REQ-034-173",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-104",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-104",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-104",
+      "verb": "next",
+      "to_id": "STP-034-105",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-104",
+      "verb": "on",
+      "to_id": "SCR-034-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-105",
+      "verb": "applies",
+      "to_id": "REQ-034-092",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-105",
+      "verb": "applies",
+      "to_id": "REQ-034-173",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-105",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-105",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-106",
+      "verb": "applies",
+      "to_id": "REQ-034-167",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-106",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-106",
+      "verb": "done by",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-106",
+      "verb": "next",
+      "to_id": "STP-034-107",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-106",
+      "verb": "on",
+      "to_id": "SCR-006-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-107",
+      "verb": "applies",
+      "to_id": "REQ-034-024",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-107",
+      "verb": "applies",
+      "to_id": "REQ-034-167",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-107",
+      "verb": "applies",
+      "to_id": "REQ-034-168",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-107",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-107",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-107",
+      "verb": "next",
+      "to_id": "STP-034-108",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-108",
+      "verb": "applies",
+      "to_id": "REQ-034-099",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-108",
+      "verb": "applies",
+      "to_id": "REQ-034-100",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-108",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-108",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-108",
+      "verb": "next",
+      "to_id": "STP-034-109",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-109",
+      "verb": "applies",
+      "to_id": "REQ-034-174",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-109",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-109",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-109",
+      "verb": "on",
+      "to_id": "SCR-016-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-110",
+      "verb": "applies",
+      "to_id": "REQ-034-178",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-110",
+      "verb": "at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-110",
+      "verb": "done by",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-110",
+      "verb": "next",
+      "to_id": "STP-034-111",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-110",
+      "verb": "on",
+      "to_id": "SCR-032-18",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-111",
+      "verb": "applies",
+      "to_id": "REQ-034-178",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-111",
+      "verb": "at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-111",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-111",
+      "verb": "next",
+      "to_id": "STP-034-112",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-112",
+      "verb": "applies",
+      "to_id": "REQ-034-080",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-112",
+      "verb": "applies",
+      "to_id": "REQ-034-178",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-112",
+      "verb": "at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-112",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-112",
+      "verb": "next",
+      "to_id": "STP-034-113",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-113",
+      "verb": "applies",
+      "to_id": "REQ-034-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-113",
+      "verb": "applies",
+      "to_id": "REQ-034-178",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-113",
+      "verb": "at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-113",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-113",
+      "verb": "on",
+      "to_id": "SCR-034-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-114",
+      "verb": "applies",
+      "to_id": "REQ-034-044",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-114",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-114",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-114",
+      "verb": "next",
+      "to_id": "STP-034-115",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-115",
+      "verb": "applies",
+      "to_id": "REQ-034-044",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-115",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-115",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-115",
+      "verb": "next",
+      "to_id": "STP-034-116",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-115",
+      "verb": "on",
+      "to_id": "SCR-034-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-116",
+      "verb": "applies",
+      "to_id": "REQ-034-044",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-116",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-116",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-034-116",
       "verb": "on",
       "to_id": "SCR-034-02",
       "attrs": {}
@@ -444557,6 +445896,97 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-143412-46883d0a",
+      "at": "2026-11-24T14:34:12.722633+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-034 logic review pass 1: Super Admin escalation target, system escalation flow, Resolve Case and Update Status limits, booking request flow and display, request-status and reopening field flags, Support Center permissions, account intervention permission, provider reply route and reopening request, device details and provider limit, first-response target, B3 email route, A5 hand-off to FR-035, scanner-unavailable variant, category visibility, deleted-patient emails, No Patient Link contact, inactivity warning scope.",
+      "source_id": null,
+      "nodes_added": [
+        "ENT-support-case-category.visible_to",
+        "ENT-support-case-message.is_reopen_request",
+        "ENT-support-case-reopening.reopened_by_type",
+        "ENT-support-case.app_version",
+        "ENT-support-case.booking_reference",
+        "ENT-support-case.contact_email",
+        "ENT-support-case.contact_name",
+        "ENT-support-case.device",
+        "ENT-support-case.operating_system",
+        "FLW-034-booking-request-from-booking-screen",
+        "FLW-034-provider-reopening-request",
+        "FLW-034-scanner-unavailable",
+        "FLW-034-system-escalation",
+        "REQ-034-173",
+        "REQ-034-174",
+        "REQ-034-175",
+        "REQ-034-176",
+        "REQ-034-177",
+        "REQ-034-178",
+        "REQ-034-179",
+        "REQ-034-180",
+        "STP-034-103",
+        "STP-034-104",
+        "STP-034-105",
+        "STP-034-106",
+        "STP-034-107",
+        "STP-034-108",
+        "STP-034-109",
+        "STP-034-110",
+        "STP-034-111",
+        "STP-034-112",
+        "STP-034-113",
+        "STP-034-114",
+        "STP-034-115",
+        "STP-034-116"
+      ],
+      "nodes_updated": [
+        "ENT-support-case-reopening.new_priority",
+        "ENT-support-case-reopening.reopened_by_admin_id",
+        "ENT-support-case.request_status",
+        "FR-034",
+        "REQ-034-042",
+        "REQ-034-044",
+        "REQ-034-055",
+        "REQ-034-058",
+        "REQ-034-077",
+        "REQ-034-078",
+        "REQ-034-092",
+        "REQ-034-094",
+        "REQ-034-098",
+        "REQ-034-101",
+        "REQ-034-102",
+        "REQ-034-103",
+        "REQ-034-109",
+        "REQ-034-126",
+        "REQ-034-139",
+        "REQ-034-144",
+        "REQ-034-155",
+        "REQ-034-164",
+        "SCR-034-01",
+        "SCR-034-02",
+        "SCR-034-03",
+        "SCR-034-07",
+        "STP-034-016",
+        "STP-034-023",
+        "STP-034-025",
+        "STP-034-029",
+        "STP-034-037",
+        "STP-034-041",
+        "STP-034-060",
+        "STP-034-061",
+        "STP-034-062",
+        "STP-034-065",
+        "STP-034-069",
+        "STP-034-078",
+        "STP-034-083",
+        "STP-034-084",
+        "STP-034-091",
+        "STP-034-092"
+      ],
+      "edges_added": 131,
+      "edges_removed": 0,
+      "rows": 416
+    },
     {
       "id": "cs-20261124-141739-85fb3750",
       "at": "2026-11-24T14:17:39.697586+00:00",
