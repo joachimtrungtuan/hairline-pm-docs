@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T09:07:33Z",
+  "generated_at": "2026-11-24T09:13:03Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -93058,9 +93058,9 @@
       "owner_fr": "FR-035",
       "title": "Patient uploads virus-scanned before acceptance",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST virus-scan all patient-uploaded files before acceptance; when the scanner is unavailable the file is refused with a \"try again later\" message and the case can be sent without it",
+        "statement": "System MUST virus-scan all patient-uploaded files before acceptance; when the scanner is unavailable the file is refused with a \"try again later\" message and the case or reply can be sent without it; a file attached to a reply follows the same scan rules as a file attached to a new case",
         "rationale": "Restated by Privacy Rule 4 (line 464), Screen 5 Attachments (434) and the Virus Scanning dependency (558-561). Mechanics: REQ-035-058 to REQ-035-060."
       }
     },
@@ -93250,9 +93250,9 @@
       "owner_fr": "FR-035",
       "title": "Entry points to the patient Help Center",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Patient navigates to \"Help & Support\" from Settings screen (FR-026 / P01.2-S1); in-app deep link from other screens (e.g., contextual help links from booking, payment, or aftercare screens); push notification tap (e.g., tapping a case status change notification navigates to Ticket Detail); the Report a Problem row on the Hub opens Contact Support with the device, operating system, app version, and report time attached per FR-034 REQ-034-164; a person who is not logged in reaches only the support contact details (REQ-035-024).",
+        "statement": "Patient navigates to \"Help & Support\" from Settings screen (FR-026 / P01.2-S1); in-app deep link from other screens (e.g., contextual help links from booking, payment, or aftercare screens); push notification tap (e.g., tapping a case status change notification navigates to Ticket Detail); the Report a Problem row on the Hub opens Contact Support with the category preset to Technical Issue and the device, operating system, app version, and report time attached per FR-034 REQ-034-164; a person who is not logged in reaches only the support contact details (REQ-035-024).",
         "rationale": "Entry Points (lines 96-98). Also Multi-Tenant Breakdown (48) and Dependencies FR-026 (547-549: the Settings screen has a Help & Support menu item linking to Screen 1)."
       }
     },
@@ -93320,11 +93320,11 @@
       "id": "REQ-035-039",
       "type": "Rule",
       "owner_fr": "FR-035",
-      "title": "Emergency Contact Section always visible on the Hub",
+      "title": "Emergency Contact Section always rendered on the Hub, each row when it has a value",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Emergency contact section is a healthcare UX best practice for post-procedure patient safety; it must always be visible - it cannot be hidden or require scrolling past it. The section must remain visible regardless of scroll position (sticky or always rendered); emergency phone is read-only with tap-to-call on mobile and emergency email is read-only with tap-to-compose on mobile. Each row is shown only when its App Setting has a value: a row with no value is left out, and the Contact Support row stays.",
+        "statement": "Emergency contact section is a healthcare UX best practice for post-procedure patient safety; the section is always rendered - it cannot be hidden or require scrolling past it. The section must remain visible regardless of scroll position (sticky or always rendered); emergency phone is read-only with tap-to-call on mobile and emergency email is read-only with tap-to-compose on mobile. Each row is shown only when its App Setting has a value: a row with no value is left out, and the Contact Support row stays.",
         "rationale": "Screen 1 rules (248, marked [Design Addition: not in FR-033/FR-034]) and Screen 1 fields Emergency Contact Section, Emergency Phone, Emergency Email (240-242). Main Flow step 2 (114) lists the section on the Hub."
       }
     },
@@ -93334,9 +93334,9 @@
       "owner_fr": "FR-035",
       "title": "Emergency phone and email are two App Settings owned by FR-026",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Emergency phone and email values are two App Settings owned by FR-026 (support emergency contact phone and email); this screen displays them.",
+        "statement": "Emergency phone and email values are two App Settings owned by FR-026 (support emergency contact phone and email); this screen displays them. FR-026 must keep at least one of the two values set: its settings screen refuses to save both blank, so the section is never empty.",
         "rationale": "Screen 1 rules (248), Admin Editability (474: two App Settings owned by FR-026) and Business Process Assumption 3 (599: values are configured by admin before FR-035 goes live)."
       }
     },
@@ -93370,9 +93370,9 @@
       "owner_fr": "FR-035",
       "title": "Empty content type shown greyed out with an empty-state message",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Content type card is shown but greyed out / disabled with label \"No content available yet\"; tapping shows empty state message \"No [content type] available yet. Check back later or Contact Support.\" Item count badge is hidden if count is 0.",
+        "statement": "Content type card is shown greyed out but still tappable, with label \"No content available yet\"; tapping shows empty state message \"No [content type] available yet. Check back later or Contact Support.\" Item count badge is hidden if count is 0.",
         "rationale": "Screen 2 Empty Content Type State and Item Count Badge (268-269), General Content List Empty Content State (332) and Edge Cases (736: first launch before admin populates content)."
       }
     },
@@ -93562,9 +93562,9 @@
       "owner_fr": "FR-035",
       "title": "Failed virus scan refuses the file with the FR-034 message",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "A file that fails virus scanning is refused with the FR-034 message (REQ-034-106), and the patient can send the case without it.",
+        "statement": "A file that fails virus scanning is refused with the FR-034 message (REQ-034-106), and the patient can send the case or reply without it.",
         "rationale": "Edge Cases (735)."
       }
     },
@@ -93586,9 +93586,9 @@
       "owner_fr": "FR-035",
       "title": "Support request submitted offline is queued",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "A support request submitted while offline, or one that fails with a server error (5xx), is queued on the device and shows \"queued, will be sent when online\"; it is sent when connectivity returns or retried with exponential backoff, and the patient gets the Case ID after it is sent.",
+        "statement": "A support request submitted while offline, or one that fails with a server error (5xx), is queued on the device and shows \"queued, will be sent when online\"; it is sent when connectivity returns or retried with exponential backoff, and the patient gets the Case ID after it is sent. Only one request waits in the queue at a time (a second submit is refused with a message to wait until the first is sent); one not sent within 24 hours is reported to the patient as not sent, and the typed text is kept so it can be sent again.",
         "rationale": "Edge Cases (734) and Integration 2 error handling (623: queue submission locally if offline; retry with exponential backoff on 5xx errors)."
       }
     },
@@ -93632,11 +93632,11 @@
       "id": "REQ-035-066",
       "type": "Rule",
       "owner_fr": "FR-035",
-      "title": "Send Reply enabled only with text",
+      "title": "Send Reply enabled only with text; a reply that cannot be sent keeps the text",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Send Reply Button is enabled when reply input is non-empty; hidden for Closed cases.",
+        "statement": "Send Reply Button is enabled when reply input is non-empty; hidden for Closed cases. A reply that cannot be sent right now (device offline, server error, or media storage unavailable) is refused with a retry message and the typed text is kept.",
         "rationale": "Screen 4 Send Reply Button (404)."
       }
     },
@@ -93670,9 +93670,9 @@
       "owner_fr": "FR-035",
       "title": "Closed Case Banner offers new ticket or reopen request",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Closed Case Banner: \"This case is closed. If you still need help, you can create a new ticket or contact support to request this case be reopened.\" with \"Create New Ticket\" link to Screen 5 and \"Contact Support\" link that opens an email to the support address (the emergency email App Setting) with the case ID in the subject; the Contact Support link is shown only when that setting has a value. Both paths: new ticket creation (in-app) and case reopening via admin (FR-034 Workflow B3, REQ-034-017).",
+        "statement": "Closed Case Banner: \"This case is closed. If you still need help, you can create a new ticket or contact support to request this case be reopened.\" with \"Create New Ticket\" link to Screen 5 and \"Email support\" link that opens an email to the support address (the emergency email App Setting) with the case ID in the subject; the clause \"or contact support to request this case be reopened\" and the Email support link are shown only when that setting has a value (the sentence then ends after \"create a new ticket\"). Both paths: new ticket creation (in-app) and case reopening via admin (FR-034 Workflow B3, REQ-034-017).",
         "rationale": "Screen 4 Closed Case Banner (405) and User Story 4 scenario 3 (712). The reply input is hidden for Closed cases (REQ-035-018)."
       }
     },
@@ -93682,9 +93682,9 @@
       "owner_fr": "FR-035",
       "title": "Resolution summary emailed when the case becomes Resolved",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "The resolution summary is also sent to the patient via email notification on status change to Resolved, unless an admin has switched the notice off in the Admin notification settings (FR-030, FR-034 REQ-034-060); the summary always shows on Ticket Detail.",
+        "statement": "The resolution summary is also emailed to the patient when the case becomes Resolved, if the admin left Send Resolution Email checked on the case (FR-034 REQ-034-060, REQ-034-161) and the notification settings allow it (FR-030); the summary always shows on Ticket Detail.",
         "rationale": "Screen 4 Resolution Summary (395)."
       }
     },
@@ -93694,9 +93694,9 @@
       "owner_fr": "FR-035",
       "title": "Support case lifecycle is fixed",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Support case lifecycle workflow: Open -> In Progress -> Resolved -> Closed (fixed in the codebase, not editable by admin).",
+        "statement": "Support case lifecycle workflow: Open -> In Progress -> Resolved -> Closed (fixed in the codebase, not editable by admin); it moves forward only, except that a patient reply reopens a Resolved case (REQ-035-019) and an Admin can reopen a Closed case (FR-034 REQ-034-017), after which the patient sees the case as Open with the reply box again and receives the FR-034 reopen notice (REQ-034-163).",
         "rationale": "Fixed in Codebase (480) and Screen 3 filter chips (358)."
       }
     },
@@ -129332,7 +129332,7 @@
       "owner_fr": "FR-034",
       "title": "Admin Staff updates case status to \"Resolved\" once issue is fixed",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 16"
       }
@@ -130267,7 +130267,7 @@
       "owner_fr": "FR-035",
       "title": "Patient opens Help and Support from Settings or a deep link",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow step 1"
       }
@@ -130278,7 +130278,7 @@
       "owner_fr": "FR-035",
       "title": "System shows the Hub with search, links and emergency contact",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 2"
       }
@@ -130575,7 +130575,7 @@
       "owner_fr": "FR-035",
       "title": "Patient taps a ticket card",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A4 step 3"
       }
@@ -130597,7 +130597,7 @@
       "owner_fr": "FR-035",
       "title": "Patient types a reply and taps Send",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A4 step 5"
       }
@@ -130652,7 +130652,7 @@
       "owner_fr": "FR-035",
       "title": "Patient types a reply describing the unresolved issue",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flow A5 step 3"
       }
@@ -130804,9 +130804,9 @@
       "id": "STP-035-081",
       "type": "Step",
       "owner_fr": "FR-035",
-      "title": "System sends the resolution summary email when the case becomes Resolved",
+      "title": "System sends the resolution summary email when the case becomes Resolved, if Send Resolution Email is checked on the case",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A6 step 1"
       }
@@ -130815,9 +130815,9 @@
       "id": "STP-035-082",
       "type": "Step",
       "owner_fr": "FR-035",
-      "title": "System closes the Resolved case when the closure period ends with no reply",
+      "title": "The Resolved case is Closed when the closure period ends with no reply (the auto-close is owned by FR-034 REQ-034-062)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A6 step 3"
       }
@@ -130828,7 +130828,7 @@
       "owner_fr": "FR-035",
       "title": "System sends the support.case_closed notice to the patient",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A6 step 4"
       }
@@ -130839,7 +130839,7 @@
       "owner_fr": "FR-035",
       "title": "System shows Ticket Detail of a Closed case with the Closed Case Banner",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A6 step 5"
       }
@@ -130859,9 +130859,9 @@
       "id": "STP-035-086",
       "type": "Step",
       "owner_fr": "FR-035",
-      "title": "Patient taps Contact Support in the banner and an email to the support address opens with the case ID in the subject",
+      "title": "Patient taps Email support in the banner and an email to the support address opens with the case ID in the subject",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A6 step 6b"
       }
@@ -130883,7 +130883,7 @@
       "owner_fr": "FR-035",
       "title": "Patient taps Submit or attaches a file and the step cannot complete right now",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "B3 step 1"
       }
@@ -130905,7 +130905,7 @@
       "owner_fr": "FR-035",
       "title": "System sends the queued submission when connectivity returns",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "B3 step 3a"
       }
@@ -130941,6 +130941,28 @@
       "version": 1,
       "attrs": {
         "prd_ref": "B3 step 2d"
+      }
+    },
+    {
+      "id": "STP-035-097",
+      "type": "Step",
+      "owner_fr": "FR-035",
+      "title": "System tells the patient the queued request was not sent within 24 hours and keeps the typed text",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B3 step 3b"
+      }
+    },
+    {
+      "id": "STP-035-098",
+      "type": "Step",
+      "owner_fr": "FR-035",
+      "title": "System refuses a file that fails the virus scan with the FR-034 message",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B3 step 2e"
       }
     },
     {
@@ -424936,6 +424958,14 @@
     },
     {
       "from_id": "STP-034-016",
+      "verb": "next",
+      "to_id": "STP-035-081",
+      "attrs": {
+        "label": "admin marks the case Resolved"
+      }
+    },
+    {
+      "from_id": "STP-034-016",
       "verb": "on",
       "to_id": "SCR-034-04",
       "attrs": {}
@@ -427287,6 +427317,15 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-035-001",
+      "verb": "next",
+      "to_id": "STP-035-044",
+      "attrs": {
+        "label": "patient taps a case notice (push or in-app)",
+        "condition": "REQ-035-031"
+      }
+    },
+    {
       "from_id": "STP-035-002",
       "verb": "applies",
       "to_id": "REQ-035-039",
@@ -427315,6 +427354,15 @@
       "verb": "next",
       "to_id": "STP-035-003",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-035-002",
+      "verb": "next",
+      "to_id": "STP-035-031",
+      "attrs": {
+        "label": "patient taps Report a Problem",
+        "condition": "REQ-035-033"
+      }
     },
     {
       "from_id": "STP-035-002",
@@ -428179,7 +428227,16 @@
       "verb": "next",
       "to_id": "STP-035-044",
       "attrs": {
-        "label": "case is Open, In Progress or Resolved",
+        "label": "case is Open or In Progress",
+        "condition": "REQ-035-018"
+      }
+    },
+    {
+      "from_id": "STP-035-043",
+      "verb": "next",
+      "to_id": "STP-035-051",
+      "attrs": {
+        "label": "case is Resolved",
         "condition": "REQ-035-018"
       }
     },
@@ -428256,6 +428313,12 @@
       "from_id": "STP-035-044",
       "verb": "on",
       "to_id": "SCR-035-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-045",
+      "verb": "applies",
+      "to_id": "REQ-035-014",
       "attrs": {}
     },
     {
@@ -428429,7 +428492,19 @@
     {
       "from_id": "STP-035-053",
       "verb": "applies",
+      "to_id": "REQ-035-014",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-053",
+      "verb": "applies",
       "to_id": "REQ-035-018",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-053",
+      "verb": "applies",
+      "to_id": "REQ-035-066",
       "attrs": {}
     },
     {
@@ -428883,6 +428958,12 @@
     },
     {
       "from_id": "STP-035-081",
+      "verb": "applies",
+      "to_id": "REQ-035-075",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-081",
       "verb": "at",
       "to_id": "STG-patient-03-active",
       "attrs": {}
@@ -428898,7 +428979,7 @@
       "verb": "next",
       "to_id": "STP-020-001",
       "attrs": {
-        "label": "email sent unless switched off",
+        "label": "email sent when Send Resolution Email is checked on the case and the notification settings allow it",
         "condition": "REQ-035-070"
       }
     },
@@ -428954,6 +429035,12 @@
       "from_id": "STP-035-083",
       "verb": "applies",
       "to_id": "REQ-035-067",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-083",
+      "verb": "applies",
+      "to_id": "REQ-035-075",
       "attrs": {}
     },
     {
@@ -429018,7 +429105,7 @@
       "verb": "next",
       "to_id": "STP-035-086",
       "attrs": {
-        "label": "patient taps Contact Support",
+        "label": "patient taps Email support, shown only when the support email setting has a value",
         "condition": "REQ-035-069"
       }
     },
@@ -429176,6 +429263,15 @@
     },
     {
       "from_id": "STP-035-091",
+      "verb": "next",
+      "to_id": "STP-035-098",
+      "attrs": {
+        "label": "file fails the virus scan",
+        "condition": "REQ-035-059"
+      }
+    },
+    {
+      "from_id": "STP-035-091",
       "verb": "on",
       "to_id": "SCR-035-05",
       "attrs": {}
@@ -429234,6 +429330,15 @@
       "to_id": "STP-035-035",
       "attrs": {
         "label": "queued submission sent"
+      }
+    },
+    {
+      "from_id": "STP-035-093",
+      "verb": "next",
+      "to_id": "STP-035-097",
+      "attrs": {
+        "label": "queued request not sent within 24 hours",
+        "condition": "REQ-035-062"
       }
     },
     {
@@ -429320,6 +429425,68 @@
     },
     {
       "from_id": "STP-035-096",
+      "verb": "on",
+      "to_id": "SCR-035-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-097",
+      "verb": "applies",
+      "to_id": "REQ-035-062",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-097",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-097",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-097",
+      "verb": "on",
+      "to_id": "SCR-035-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-098",
+      "verb": "applies",
+      "to_id": "REQ-035-058",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-098",
+      "verb": "applies",
+      "to_id": "REQ-035-059",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-098",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-098",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-035-098",
+      "verb": "next",
+      "to_id": "STP-035-033",
+      "attrs": {
+        "label": "patient sends the case without the file"
+      }
+    },
+    {
+      "from_id": "STP-035-098",
       "verb": "on",
       "to_id": "SCR-035-05",
       "attrs": {}
@@ -434057,6 +434224,46 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-091159-60ffb017",
+      "at": "2026-11-24T09:11:59.235036+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-035 logic review pass 2: banner email link, support contact dependency, Resolved case path, reply failures, offline queue limit, resolution email switch, lifecycle moves back, Report a Problem entry, notice stop for deleted patients, failed scan step, FR-034 hand-off into A6",
+      "source_id": null,
+      "nodes_added": [
+        "STP-035-097",
+        "STP-035-098"
+      ],
+      "nodes_updated": [
+        "REQ-035-014",
+        "REQ-035-033",
+        "REQ-035-039",
+        "REQ-035-040",
+        "REQ-035-043",
+        "REQ-035-059",
+        "REQ-035-062",
+        "REQ-035-066",
+        "REQ-035-069",
+        "REQ-035-070",
+        "REQ-035-071",
+        "STP-034-016",
+        "STP-035-001",
+        "STP-035-002",
+        "STP-035-043",
+        "STP-035-045",
+        "STP-035-053",
+        "STP-035-081",
+        "STP-035-082",
+        "STP-035-083",
+        "STP-035-084",
+        "STP-035-086",
+        "STP-035-091",
+        "STP-035-093"
+      ],
+      "edges_added": 24,
+      "edges_removed": 3,
+      "rows": 53
+    },
     {
       "id": "cs-20261124-090630-04d78f59",
       "at": "2026-11-24T09:06:30.680122+00:00",

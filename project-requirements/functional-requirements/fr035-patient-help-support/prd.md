@@ -96,7 +96,7 @@ The Patient Help Center & Support Submission module provides the patient-facing 
 - Patient navigates to "Help & Support" from Settings screen (FR-026 / P01.2-S1) (REQ-035-033)
 - In-app deep link from other screens (e.g., contextual help links from booking, payment, or aftercare screens) (REQ-035-033)
 - Push notification tap (e.g., tapping a case status change notification navigates to Ticket Detail) (REQ-035-033)
-- Report a Problem row on the Help & Support Hub opens Contact Support (Screen 5); the system attaches the device, operating system, app version, and report time per FR-034 REQ-034-164 (REQ-035-033)
+- Report a Problem row on the Help & Support Hub opens Contact Support (Screen 5) with the category preset to Technical Issue; the system attaches the device, operating system, app version, and report time per FR-034 REQ-034-164 (REQ-035-033)
 - Help and Support entry for a person who is not logged in (for example when sign-up fails, FR-001 REQ-001-170): shows only the support contact details (phone and email), with no case and no help content (REQ-035-024, REQ-035-033)
 
 ---
@@ -152,7 +152,7 @@ flowchart TD
 
 **A3: Patient Submits Support Request**
 
-- **Trigger**: Patient taps Contact Support from Hub, Ticket List, or after unsuccessful help search
+- **Trigger**: Patient taps Contact Support from Hub, Ticket List, or after unsuccessful help search, or taps Report a Problem on the Hub (Screen 5 then opens with the category preset to Technical Issue and the device details attached, FR-034 REQ-034-164)
 - **Outcome**: Support case created in FR-034, patient sees the confirmation screen (a confirmation email follows unless an admin has switched it off)
 
 ```mermaid
@@ -168,14 +168,16 @@ flowchart TD
 
 **A4: Patient Views and Replies to Support Ticket**
 
-- **Trigger**: Patient taps a ticket from My Support Tickets list
+- **Trigger**: Patient taps a ticket from My Support Tickets list, or taps a case notice (push or in-app) that opens Ticket Detail (REQ-035-031)
 - **Outcome**: Patient views case detail and replies to admin message
 
 ```mermaid
 flowchart TD
     A4S1["1. Patient navigates to My Support Tickets (Screen 3)"] --> A4S2["2. System displays list of patient's support cases with status badges and last activity timestamps"]
     A4S2 --> A4S3["3. Patient taps a ticket card"]
-    A4S3 --> A4S4["4. System displays Ticket Detail (Screen 4) with case info, communication thread, and reply input"]
+    A4S3 -->|case is Open or In Progress| A4S4["4. System displays Ticket Detail (Screen 4) with case info, communication thread, and reply input"]
+    A4S3 -->|case is Resolved| A5S1ref["Flow A5, step 1"]
+    A4N["Patient taps a case notice"] --> A4S4
     A4S4 --> A4S5["5. Patient types reply and taps Send"]
     A4S5 --> A4S6["6. System adds patient reply to communication thread"]
     A4S6 --> A4S7["7. System notifies assigned admin via FR-020 (support.case_user_reply event)"]
@@ -188,7 +190,7 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A5S1["1. Patient views Ticket Detail for a Resolved case"] --> A5S2["2. Patient sees auto-closure countdown: This case will close in X days if no further reply (no Resolved window and no countdown when the closure period is Immediately)"]
+    A5S1["1. Patient views Ticket Detail for a Resolved case (opened from the list, or after the case becomes Resolved in flow A6)"] --> A5S2["2. Patient sees auto-closure countdown: This case will close in X days if no further reply (no Resolved window and no countdown when the closure period is Immediately)"]
     A5S2 --> A5S3["3. Patient types reply describing unresolved issue"]
     A5S3 --> A5S4["4. System adds reply to communication thread"]
     A5S4 --> A5S5["5. System automatically reopens case to Open status"]
@@ -200,17 +202,17 @@ flowchart TD
 **A6: Resolved Case Closes**
 
 - **Trigger**: Admin marks a case Resolved and the patient does not reply before the auto-closure period ends (or the period is Immediately)
-- **Outcome**: Case is Closed; the patient sees the Closed Case Banner and can create a new ticket or ask for the case to be reopened
+- **Outcome**: Case is Closed; the patient sees the Closed Case Banner and can create a new ticket or, when the support email setting has a value, ask for the case to be reopened by email
 
 ```mermaid
 flowchart TD
-    A6S1["1. System sends the resolution summary email when the case becomes Resolved, unless an admin has switched it off (REQ-035-070)"] -->|period is 3, 7, or 14 days| A6S2["2. Patient views Ticket Detail and sees the countdown (flow A5 if the patient replies)"]
+    A6S1["1. System sends the resolution summary email when the case becomes Resolved, if Send Resolution Email is checked on the case and the notification settings allow it, and not to a deleted patient (REQ-035-070, REQ-035-075)"] -->|period is 3, 7, or 14 days| A6S2["2. Patient views Ticket Detail and sees the countdown (flow A5 if the patient replies)"]
     A6S1 -->|period is Immediately| A6S3
-    A6S2 -->|no reply before the period ends| A6S3["3. System closes the case (REQ-035-067)"]
-    A6S3 --> A6S4["4. System sends the support.case_closed notice to the patient"]
+    A6S2 -->|no reply before the period ends| A6S3["3. The case is Closed when the closure period ends; FR-034 REQ-034-062 owns the auto-close and REQ-035-067 the patient-side result"]
+    A6S3 --> A6S4["4. System sends the support.case_closed notice to the patient, unless the patient account is deleted (REQ-035-075)"]
     A6S4 --> A6S5["5. Patient opens Ticket Detail; System shows the Closed Case Banner in place of the reply input (REQ-035-069)"]
     A6S5 -->|Create New Ticket| A6S6["6a. Patient taps Create New Ticket and Contact Support form opens (Screen 5)"]
-    A6S5 -->|Contact Support| A6S7["6b. Patient taps Contact Support; an email to the support address opens with the case ID in the subject (FR-034 Workflow B3)"]
+    A6S5 -->|Email support, shown only when the support email setting has a value| A6S7["6b. Patient taps Email support; an email to the support address opens with the case ID in the subject (FR-034 Workflow B3)"]
     A6S2 -->|reply sent as the case closes| A6S8["7. System refuses the reply with a message, keeps the typed text visible for copying, and shows the Closed Case Banner (REQ-035-068)"]
     A6S8 --> A6S5
 ```
@@ -241,16 +243,19 @@ flowchart TD
 
 **B3: Submission Cannot Complete Now**
 
-- **Trigger**: Patient taps Submit or attaches a file and a supporting service cannot complete the step right now
+- **Trigger**: Patient taps Submit or attaches a file and a supporting service cannot complete the step right now, or the file fails the virus scan
 - **Outcome**: Patient sees a clear end state for each cause and never loses the request
 
 ```mermaid
 flowchart TD
-    B3S1["1. Patient taps Submit or attaches a file and the step cannot complete right now"] -->|device offline or FR-034 server error| B3S2["2a. System queues the submission on the device and shows: queued, will be sent when online (a server error is retried with growing waits) (REQ-035-062)"]
+    B3S1["1. Patient taps Submit or attaches a file and the step cannot complete right now"] -->|device offline or FR-034 server error| B3S2["2a. System queues the submission on the device (one request waits at a time; a second submit is refused with a message to wait until the first is sent) and shows: queued, will be sent when online (a server error is retried with growing waits) (REQ-035-062)"]
     B3S2 --> B3S3["3a. System sends the queued submission when connectivity returns; the patient gets the Case ID after it is sent, and flow A3 continues"]
+    B3S3 -->|not sent within 24 hours| B3S8["3b. System tells the patient the request was not sent and keeps the typed text so it can be sent again (REQ-035-062)"]
     B3S1 -->|10 new tickets already in the last hour| B3S4["2b. System refuses the submission and shows a message to wait before trying again (REQ-035-063)"]
     B3S1 -->|virus scanner unavailable| B3S5["2c. System refuses the file with a try again later message; the patient can send the case without it (REQ-035-014)"]
     B3S5 --> B3S6["3c. Patient taps Submit without the file and flow A3 continues"]
+    B3S1 -->|file fails the virus scan| B3S9["2e. System refuses the file with the FR-034 message (REQ-034-106); the patient can send the case without it (REQ-035-058, REQ-035-059)"]
+    B3S9 --> B3S6
     B3S1 -->|media storage unavailable| B3S7["2d. System creates the case without the files, queues the files for retry, and tells the patient of the delay (REQ-035-061)"]
 ```
 
@@ -271,9 +276,9 @@ flowchart TD
 | Search Bar | text | Yes | "Search help articles..." placeholder; full-text search across all published patient-audience Help Center content (FAQs, Articles, Resources, Videos) | Results appear on the Help Center Browser (Screen 2), whichever search bar the patient types in; scoped to patient audience only (FR-033 Rule 3); relevance-ranked results are required for P1 | no graph field (control) |
 | Browse Help Center | link | Yes | Row with book/article icon + "Help Center" label + chevron | Navigates to Screen 2; covers 4 content types: FAQs, Articles (Tutorial Guides + Troubleshooting Tips), Resources, Videos (FR-033 REQ-033-003) | no graph field (control) |
 | Contact Support | link | Yes | Row with headset/message icon + "Contact Support" label + chevron | Opens Contact Support form (Screen 5), creating new ticket via FR-034 | no graph field (control) |
-| Report a Problem | link | Yes | Row with warning icon + "Report a Problem" label + chevron | Opens Contact Support form (Screen 5); the system attaches the device, operating system, app version, and report time per FR-034 REQ-034-164; the patient does not enter them | no graph field (control) |
+| Report a Problem | link | Yes | Row with warning icon + "Report a Problem" label + chevron | Opens Contact Support form (Screen 5) with the category preset to Technical Issue (the patient can change it); the system attaches the device, operating system, app version, and report time per FR-034 REQ-034-164; the patient does not enter them | no graph field (control) |
 | My Support Tickets | link | Yes | Row with ticket icon + "My Support Tickets" label + chevron + open ticket count badge | Navigates to Screen 3; badge shows count of open/in-progress tickets | ENT-support-case.status |
-| Emergency Contact Section | group | Yes | Always-visible section at bottom of screen with emergency contact details | Must remain visible regardless of scroll position (sticky or always rendered) | no graph field (group of two App Settings) |
+| Emergency Contact Section | group | Yes | Always-rendered section at bottom of screen with emergency contact details; each row shows when it has a value, and at least one always has (FR-026 keeps at least one of the two set) | Must remain visible regardless of scroll position (sticky or always rendered) | no graph field (group of two App Settings) |
 | — Emergency Phone | text | Conditional | Emergency phone number for urgent post-treatment concerns | Shown only when its App Setting has a value; read-only; tap-to-call on mobile | no graph field (App Setting SET-support-emergency-contact-phone) |
 | — Emergency Email | text | Conditional | Emergency email address | Shown only when its App Setting has a value; read-only; tap-to-compose on mobile | no graph field (App Setting SET-support-emergency-contact-email) |
 
@@ -281,7 +286,7 @@ flowchart TD
 
 - All Help Center content is read-only for patients; it is managed exclusively by admins via FR-033 and scoped to the patient audience (FR-033 REQ-033-008) (REQ-035-001)
 - Search covers all published patient-audience Help Center content (FAQs, Articles, Resources, Videos); results are ranked by relevance; if no results match, show a "Contact Support" prompt. Full-text search is required for P1 and must not be downgraded to browse-only behavior. (REQ-035-036)
-- **[Design Addition — not in FR-033/FR-034]** Emergency contact section is a healthcare UX best practice for post-procedure patient safety; it must always be visible — it cannot be hidden or require scrolling past it. Emergency phone and email values are two App Settings owned by FR-026 (support emergency contact phone and email); this screen displays them. Each row is shown only when its setting has a value: a row with no value is left out, and the Contact Support row stays. (REQ-035-039, REQ-035-040)
+- **[Design Addition — not in FR-033/FR-034]** Emergency contact section is a healthcare UX best practice for post-procedure patient safety; the section is always rendered — it cannot be hidden or require scrolling past it. Emergency phone and email values are two App Settings owned by FR-026 (support emergency contact phone and email); this screen displays them. Each row is shown only when its setting has a value: a row with no value is left out, and the Contact Support row stays. FR-026 must keep at least one of the two values set: its settings screen refuses to save both blank, so the section is never empty. (REQ-035-039, REQ-035-040)
 - See REQ-035-010.
 - A person who is not logged in sees only the support contact details (phone and email) when reaching Help and Support, for example when sign-up fails (FR-001 REQ-001-170); no case and no help content is shown (REQ-035-024, REQ-035-033)
 - "My Support Tickets" badge count reflects open + in-progress tickets only; hidden when count is 0 (REQ-035-041)
@@ -303,7 +308,7 @@ flowchart TD
 | — Content Type Icon | icon | Yes | Icon representing the content type | Visual differentiator per content type | ENT-help-centre-content.content_type |
 | — Content Type Label | text | Yes | Content type name | Read-only | ENT-help-centre-content.content_type |
 | — Item Count Badge | badge | No | Number of published items in the content type | Read-only; hidden if count is 0 | no graph field (derived count) |
-| — Empty Content Type State | group | Conditional | Shown when a content type has 0 published items | Content type card is shown but greyed out / disabled with label "No content available yet"; tapping shows empty state message | no graph field (state message) |
+| — Empty Content Type State | group | Conditional | Shown when a content type has 0 published items | Content type card is shown greyed out but still tappable, with label "No content available yet"; tapping shows empty state message | no graph field (state message) |
 | Featured / Popular Articles | list | No | **[Design Addition]** Automatic shortlist of the five patient articles with the most views in the past 30 days | Not defined in FR-033; generated automatically from view analytics (FR-033 REQ-033-018), not curated by admins. Up to 5 items. (REQ-035-044) | ENT-help-centre-content |
 | Content Unavailable State | group | Conditional | Shown when Help Center content cannot be loaded (API unavailable) | "Help Center temporarily unavailable. Please try again later." with retry button. Alternatively, display cached content if available. | no graph field (state message) |
 
@@ -430,7 +435,7 @@ flowchart TD
 | Case Category | badge | Yes | Selected category (e.g., "Account Access", "Payment Question") | Read-only | ENT-support-case.category |
 | Submitted Date | datetime | Yes | Date and time case was submitted | Read-only | ENT-support-case.submitted_at |
 | Auto-Closure Countdown | text | Conditional | "This case will close in X days if no further reply" | Shown only when status = Resolved; displays remaining days in auto-closure window (FR-034 REQ-034-061, configurable: Immediately, 3, 7, or 14 days, default 7); on the last day it reads "This case will close today if no further reply"; with Immediately there is no Resolved window, so no countdown is shown. Helps patient understand the urgency of replying if their issue persists. Hidden for Open, In Progress, and Closed statuses. | no graph field (derived; Setting SET-support-case-auto-closure-period) |
-| Resolution Summary | text | Conditional | Admin-provided resolution summary displayed when case is resolved or closed (FR-034 REQ-034-059, REQ-034-060) | Read-only; shown only when status = Resolved or Closed and admin has entered a resolution summary. Displayed prominently above the communication thread with a "Resolution" header. The resolution summary is also sent to the patient via email notification on status change to Resolved, unless an admin has switched the notice off in the Admin notification settings (FR-030, FR-034 REQ-034-060); the summary always shows here. (REQ-035-070) | ENT-support-case-resolution.resolution_summary |
+| Resolution Summary | text | Conditional | Admin-provided resolution summary displayed when case is resolved or closed (FR-034 REQ-034-059, REQ-034-060) | Read-only; shown only when status = Resolved or Closed and admin has entered a resolution summary. Displayed prominently above the communication thread with a "Resolution" header. The resolution summary is also emailed to the patient when the case becomes Resolved, if the admin left Send Resolution Email checked on the case (FR-034 REQ-034-060, REQ-034-161) and the notification settings allow it (FR-030); the summary always shows here. (REQ-035-070) | ENT-support-case-resolution.resolution_summary |
 | Feedback Resolution | badge | Conditional | For feedback/feature request cases only: Implemented, Planned, Declined, Under Review | Read-only; shown only when admin has set a feedback resolution value (FR-034 REQ-034-006) | ENT-support-case.feedback_resolution |
 | Your Request — Description | text | Yes | The description the patient wrote when submitting the case | Read-only; shown above the communication thread (REQ-035-017) | ENT-support-case.description |
 | Your Request — Attachments | file | Conditional | The files the patient attached when submitting the case | Read-only; shown above the communication thread; tap to view full-size or download | ENT-support-case.attachments |
@@ -440,14 +445,15 @@ flowchart TD
 | — Message Timestamp | datetime | Yes | Date and time message was sent | Relative or absolute format | ENT-support-case-message.sent_at |
 | — Attachment | file | Conditional | Attached screenshot or document within message | Read-only; tap to view full-size or download; max 10 MB per file, formats: JPG, PNG, PDF, DOC, DOCX (FR-034 REQ-034-036/037) | ENT-support-case-message.attachments |
 | Reply Input Field | text | Conditional | Multi-line text input for patient to reply to admin | Shown when case is Open, In Progress, or **Resolved** (FR-034 REQ-034-026); hidden **only** for Closed cases. Replying to a Resolved case triggers automatic reopening to Open status. A reply that reaches the server after the case has closed is refused with a message and the typed text stays visible for copying (REQ-035-068). | ENT-support-case-message.content |
-| Attachment Button | action | Conditional | Button to attach files to reply | Shown alongside Reply Input Field; max 10 MB per file, formats: JPG/PNG/PDF/DOC/DOCX; max 5 files per message. | ENT-support-case-message.attachments |
-| Send Reply Button | action | Conditional | Submits patient reply to the case thread | Enabled when reply input is non-empty; hidden for Closed cases; admin notified on send via FR-020 (support.case_user_reply) (REQ-035-066) | no graph field (control) |
-| Closed Case Banner | group | Conditional | Informational banner shown when case is Closed | "This case is closed. If you still need help, you can create a new ticket or contact support to request this case be reopened." with "Create New Ticket" link to Screen 5 and "Contact Support" link that opens an email to the support address (the emergency email setting on Screen 1) with the case ID in the subject; the Contact Support link is shown only when that setting has a value. Provides both paths: new ticket creation (in-app) and case reopening via admin (FR-034 Workflow B3, REQ-034-017). (REQ-035-069) | no graph field (control) |
+| Attachment Button | action | Conditional | Button to attach files to reply | Shown alongside Reply Input Field; max 10 MB per file, formats: JPG/PNG/PDF/DOC/DOCX; max 5 files per message; a reply file follows the same virus-scan rules as a case file (REQ-035-014, REQ-035-059). | ENT-support-case-message.attachments |
+| Send Reply Button | action | Conditional | Submits patient reply to the case thread | Enabled when reply input is non-empty; hidden for Closed cases; admin notified on send via FR-020 (support.case_user_reply); a reply that cannot be sent right now (device offline, server error, or media storage unavailable) is refused with a retry message and the typed text is kept (REQ-035-066) | no graph field (control) |
+| Closed Case Banner | group | Conditional | Informational banner shown when case is Closed | "This case is closed. If you still need help, you can create a new ticket or contact support to request this case be reopened." with "Create New Ticket" link to Screen 5 and "Email support" link that opens an email to the support address (the emergency email setting on Screen 1) with the case ID in the subject; the clause "or contact support to request this case be reopened" and the Email support link are shown only when that setting has a value (the sentence then ends after "create a new ticket"). Provides both paths: new ticket creation (in-app) and case reopening via admin (FR-034 Workflow B3, REQ-034-017). (REQ-035-069) | no graph field (control) |
 | Empty Thread State | text | Conditional | Shown when no messages exist yet (case just created) | "Your case has been submitted. Our team will respond within 24 hours on business days." (aligns with FR-034 SC-003) (REQ-035-087) | no graph field (state message) |
 
 **Business Rules**:
 
 - Patients can reply to admin messages when the case is Open, In Progress, or **Resolved** (FR-034 REQ-034-026); **only Closed** cases are fully read-only. This is critical for healthcare — patients must be able to report that a resolved issue has recurred (e.g., post-treatment complications) during the auto-closure window. (REQ-035-018)
+- A Closed case that an Admin reopens (FR-034 REQ-034-017) shows again as an Open case with the reply box; see REQ-035-071
 - Replying to a Resolved case automatically reopens it to Open status; the patient sees the status badge update immediately and the admin receives a support.case_reopened notice (FR-034 REQ-034-092, FR-030) in addition to the reply notice (REQ-035-019)
 - Cases auto-close after 7 days in Resolved status if no patient reply (configurable: Immediately, 3, 7, or 14 days per FR-034 REQ-034-061/062); the patient receives a support.case_closed notification. The auto-closure countdown is visible in the Ticket Detail to set clear expectations. With Immediately there is no Resolved window: the case goes straight to Closed, no countdown or Auto-closes indicator is shown, and the patient uses the Closed Case Banner (reopen request or new ticket). (REQ-035-067)
 - Patient replies are added to the shared communication thread; the assigned admin notification for each reply (recipients, content, and whether it can be switched off) is defined in FR-020 REQ-020-111 (support.case_user_reply event) (REQ-035-065)
@@ -468,7 +474,7 @@ flowchart TD
 | Screen Title | text | Yes | "Contact Support" | Displayed at top of screen | no graph field (static text) |
 | Back Navigation | action | Yes | Back arrow to return to previous screen (Hub or Ticket List) | Top-left corner; prompts "Discard draft?" confirmation if form has unsaved input (REQ-035-057) | no graph field (control) |
 | Case Title | text | Yes | Patient-entered title describing their issue (FR-034 REQ-034-020) | Min 10 characters, max 200 characters; no auto-generation; placeholder: "Briefly describe your issue" | ENT-support-case.title |
-| Category Picker | dropdown | Yes | Support case category selection | Options: Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry, Feature Request, Bug Report, Feedback, shown under their current labels (FR-034 REQ-034-030; labels are edited in FR-034 REQ-034-087). "Provider Support" and "Patient Support" are admin-internal categories and are never shown to patients, whatever their label. Brief inline description per category to help patients select correctly: Feature Request = "Suggest a new feature or improvement", Bug Report = "Report something that is broken or not working as expected", Feedback = "Share general feedback about your experience". | ENT-support-case.category |
+| Category Picker | dropdown | Yes | Support case category selection | Options: Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry, Feature Request, Bug Report, Feedback, shown under their current labels (FR-034 REQ-034-030; labels are edited in FR-034 REQ-034-087); preset to Technical Issue when the form is opened from Report a Problem. "Provider Support" and "Patient Support" are admin-internal categories and are never shown to patients, whatever their label. Brief inline description per category to help patients select correctly: Feature Request = "Suggest a new feature or improvement", Bug Report = "Report something that is broken or not working as expected", Feedback = "Share general feedback about your experience". | ENT-support-case.category |
 | Description | text | Yes | Detailed description of the issue or feedback | Multi-line input; min 20 characters, max 5000 characters (FR-034 REQ-034-035); placeholder: "Describe your issue in detail so we can help you faster" | ENT-support-case.description |
 | Priority Picker | dropdown | Yes | Patient-selected priority level | Options: Low, Medium, High, Urgent (FR-034 REQ-034-031); default: Medium. Brief inline descriptions help patients self-triage: Low = "General question", Medium = "Something isn't working right", High = "Blocking my care or booking", Urgent = "Critical issue needing immediate attention" | ENT-support-case.priority |
 | Attachments | file | No | Optional file attachments (screenshots, documents) | Max 5 files per submission, max 10 MB per file; accepted formats: JPG, PNG, PDF, DOC, DOCX (FR-034 REQ-034-036/037); tap to add; shows thumbnail preview with remove option; virus-scanned before acceptance. (REQ-035-088) | ENT-support-case.attachments |
@@ -498,9 +504,9 @@ flowchart TD
 - **Search**: Full-text search, relevance ordering, and inline suggestions are required for the patient Help Center MVP scope. (REQ-035-037)
 - **Caching**: Help Center content should be cached locally on the patient device to support offline browsing and reduce API load. Cache invalidation should respect the 1-minute content propagation SLA from FR-033. (REQ-035-045, REQ-035-028)
 - **Media Storage Service (S-05) failure handling**: for file uploads, the case is created without the files, the files are queued for retry, and the patient is told of the delay (REQ-035-061)
-- **FR-034 Ticketing API error handling**: Retry with exponential backoff on 5xx errors; a submission that cannot be sent (offline or server error) is queued and shows "queued, will be sent when online", and it gets its Case ID after it is sent (REQ-035-062)
+- **FR-034 Ticketing API error handling**: Retry with exponential backoff on 5xx errors; a submission that cannot be sent (offline or server error) is queued and shows "queued, will be sent when online", and it gets its Case ID after it is sent; only one request waits in the queue at a time (a second submit is refused with a message to wait until the first is sent), and one not sent within 24 hours is reported to the patient as not sent, with the text kept so it can be sent again (REQ-035-062)
 - **FR-020/S-03 Notification Service error handling**: Notification delivery failures do not block case operations; retry asynchronously (REQ-035-064)
-- **Threat mitigation**: Rate limiting on new ticket submissions (max 10 new tickets per hour per patient; the patient sees a wait message); replies are not counted by this limit; file upload virus scanning (when the scanner is unavailable the file is refused with a "try again later" message and the case can be sent without it); input sanitization for all text fields (REQ-035-063, REQ-035-089, REQ-035-014)
+- **Threat mitigation**: Rate limiting on new ticket submissions (max 10 new tickets per hour per patient; the patient sees a wait message); replies are not counted by this limit; file upload virus scanning (when the scanner is unavailable the file is refused with a "try again later" message and the case or reply can be sent without it); input sanitization for all text fields (REQ-035-063, REQ-035-089, REQ-035-014)
 - Admin team responds to patient support cases within 24 hours on business days (FR-034 SC-003); every patient-facing line says "within 24 hours on business days"
 - Help Center content is curated to avoid medical advice and focus on platform usage, appointment management, and general information (FR-033 Assumption 5)
 
@@ -521,13 +527,13 @@ flowchart TD
 - Help Center content (FAQs, articles, resources, videos) — managed via FR-033
 - Support case status, assignment, resolution — managed via FR-034
 - Auto-closure period for resolved cases (Immediately, 3, 7, or 14 days, default 7 days) — configured via FR-034
-- Emergency contact phone number and email — two App Settings owned by FR-026
+- Emergency contact phone number and email — two App Settings owned by FR-026; at least one must stay set
 - Help Centre content category descriptions shown to patients — managed via FR-033
 
 **Fixed in Codebase (Not Editable)**:
 
 - 4 content types for patient platform: FAQs, Articles, Resources, Videos (FR-033 REQ-033-003) (REQ-035-042)
-- Support case lifecycle workflow: Open -> In Progress -> Resolved -> Closed (REQ-035-071)
+- Support case lifecycle workflow: Open -> In Progress -> Resolved -> Closed (fixed in the codebase, not editable by admin); it moves forward only, except that a patient reply reopens a Resolved case (REQ-035-019) and an Admin can reopen a Closed case (FR-034 REQ-034-017), after which the patient sees the case as Open with the reply box again and receives the FR-034 reopen notice (REQ-034-163) (REQ-035-071)
 - Case ID format: CASE-YYYY-##### (REQ-035-056)
 - File attachment limits: max 10 MB per file, max 5 files per message, formats: JPG/PNG/PDF/DOC/DOCX (REQ-035-013)
 - Contact Support form validation: title min 10 chars, description min 20 chars (REQ-035-009)
@@ -548,7 +554,7 @@ flowchart TD
 - **FR-034**: Support Center & Ticketing System; creates support cases and provides the two-way communication thread.
 - **FR-020**: Notifications & Alerts; push and email notifications for support case updates.
 - **FR-001**: Patient Authentication & Profile; authenticated session provides the patient ID.
-- **FR-026**: App Settings & Security; Settings screen entry point and emergency contact settings.
+- **FR-026**: App Settings & Security; Settings screen entry point and emergency contact settings; the settings screen must refuse to save both support contact values (phone and email) blank, so at least one always has a value.
 
 ---
 
@@ -616,7 +622,7 @@ A patient's support case has been resolved by admin. The patient views the resol
 
 1. **Given** a patient has a ticket with status Resolved, **When** they open the Ticket Detail, **Then** they see the resolution summary above the thread and an auto-closure countdown ("This case will close in X days if no further reply")
 2. **Given** a Resolved ticket's auto-closure period expires (7 days default), **When** the patient has not replied, **Then** the case automatically transitions to Closed and the patient receives a support.case_closed notification
-3. **Given** a patient has a Closed ticket, **When** they open the Ticket Detail, **Then** the reply input is hidden and a Closed Case Banner is shown with options to create a new ticket or contact support to reopen
+3. **Given** a patient has a Closed ticket, **When** they open the Ticket Detail, **Then** the reply input is hidden and a Closed Case Banner is shown with the option to create a new ticket and, when the support email setting has a value, to email support to ask for a reopen
 
 ---
 
@@ -638,8 +644,8 @@ A patient preparing for their upcoming procedure browses the Help Center for edu
 
 ### Edge Cases
 
-- What happens when a patient submits a support request while offline? The submission is queued on the device and shows "queued, will be sent when online"; it is sent when connectivity returns and gets its Case ID then (Alternative Flow B3). (REQ-035-062)
-- How does the system handle a patient who uploads a file that fails virus scanning? The file is refused with the FR-034 message (REQ-034-106), and the patient can send the case without it. (REQ-035-059)
+- What happens when a patient submits a support request while offline? The submission is queued on the device and shows "queued, will be sent when online"; it is sent when connectivity returns and gets its Case ID then; only one request waits in the queue at a time (a second submit is refused with a message to wait until the first is sent), and one not sent within 24 hours is reported as not sent, with the text kept so it can be sent again (Alternative Flow B3). (REQ-035-062)
+- How does the system handle a patient who uploads a file that fails virus scanning? The file is refused with the FR-034 message (REQ-034-106), and the patient can send the case or reply without it. (REQ-035-059)
 - What happens when a patient views Help Center with no published content (e.g., first launch before admin populates content)? Each content type card shows "No content available yet. Check back later or Contact Support." (REQ-035-043)
 - How does the system handle a patient deleting their account while support cases are active? Open, In Progress, and Resolved cases stay with the Admin, marked "Patient Account Deleted" (FR-034 REQ-034-109), and notices to the deleted patient stop; patient identity is anonymized per data retention policy (FR-023). (REQ-035-075)
 - What happens when the auto-closure countdown reaches 0 while the patient is actively viewing the ticket? The screen learns of the closure on its next refresh or when the patient sends a reply; a reply sent after closure is refused with a message, the typed text stays visible for copying, and the Closed Case Banner replaces the reply input (Alternative Flow A6). (REQ-035-068)
@@ -666,7 +672,7 @@ A patient preparing for their upcoming procedure browses the Help Center for edu
 - **REQ-035-011**: System MUST link patient-submitted cases to patient records using logged-in patient session (FR-034 REQ-034-024)
 - **REQ-035-012**: System MUST display 8 patient-visible categories under their current labels: Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry, Feature Request, Bug Report, Feedback (FR-034 REQ-034-030; labels edited in FR-034 REQ-034-087; "Provider Support" and "Patient Support" excluded as admin-internal whatever their label)
 - **REQ-035-013**: System MUST support file attachments up to 10 MB per file, maximum 5 files per message (the initial request and each reply may each carry up to 5 files), formats: JPG, PNG, PDF, DOC, DOCX (FR-034 REQ-034-036/037)
-- **REQ-035-014**: System MUST virus-scan all patient-uploaded files before acceptance; when the scanner is unavailable the file is refused with a "try again later" message and the case can be sent without it
+- **REQ-035-014**: System MUST virus-scan all patient-uploaded files before acceptance; when the scanner is unavailable the file is refused with a "try again later" message and the case or reply can be sent without it; a file attached to a reply follows the same scan rules as a file attached to a new case
 
 ### Ticket Management Requirements
 
@@ -707,6 +713,7 @@ A patient preparing for their upcoming procedure browses the Help Center for edu
 | 2026-11-22 | 1.2 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.1) is in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
 | 2026-11-23 | 1.3 | Independent compression review: 1 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
 | 2026-11-24 | 1.4 | Logic review pass 1: not-logged-in view, Report a Problem entry, optional emergency rows, Immediately closure (no Resolved window), notification-setting wording, new flows A6 (Resolved case closes) and B3 (submission cannot complete now), reopen notice, original request shown on Ticket Detail, refusal of a reply sent after closure, related content up to 4, single "within 24 hours on business days" wording. See update log FR035_LOGIC_REVIEW_PASS_1_2026-11-24. | Product Owner / Documentation |
+| 2026-11-24 | 1.5 | Logic review pass 2: Closed Case Banner email link shown only with a support email, at least one support contact value always set (FR-026), Resolved case from the list reaches the reopen path, reply failure rule, offline queue limit (one request, 24 hours), resolution email switch named as in FR-034, lifecycle moves back (patient reply, Admin reopen), Report a Problem preset, notice stop for deleted patients on flow A6, failed virus scan branch, notice tap entry. See update log FR035_LOGIC_REVIEW_PASS_2_2026-11-24. | Product Owner / Documentation |
 
 ---
 
@@ -720,4 +727,4 @@ A patient preparing for their upcoming procedure browses the Help Center for edu
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-035 from system-prd.md, FR-033 Help Centre Content Management, FR-034 Support Center & Ticketing System
-**Last Updated**: 2026-11-23
+**Last Updated**: 2026-11-24
