@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T19:11:55Z",
+  "generated_at": "2026-11-24T19:14:02Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -29985,9 +29985,9 @@
       "owner_fr": "FR-032",
       "title": "Timezone",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "This person's local timezone for date/time display; fixed-offset option from the FR-026 list (GMT-12 to GMT+14). The browser timezone is offered at first login, otherwise UTC."
+        "description": "This person's local timezone for date/time display; fixed-offset option from the FR-026 list (GMT-12 to GMT+14). Empty only before the person's first login; at first login it is set without a prompt to the listed whole-hour offset nearest to the browser time zone, or UTC when the browser zone cannot be read, and the person can change it at any time."
       }
     },
     {
@@ -40725,7 +40725,7 @@
       "owner_fr": null,
       "title": "Provider Dashboard Settings & Profile Management",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "module": "fr032-provider-dashboard-settings",
         "prd_path": "project-requirements/functional-requirements/fr032-provider-dashboard-settings/prd.md",
@@ -91599,9 +91599,9 @@
       "owner_fr": "FR-032",
       "title": "Owner account name synced from clinic name",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Account Name field is read-only for Owner role; it automatically syncs when clinic name is updated in Tab 1; If Owner updates clinic name in Tab 1, Account Name in Tab 2 updates automatically (within 1 minute)",
+        "statement": "Account Name field is read-only for Owner role; it automatically syncs when clinic name is updated in Tab 1; If Owner updates clinic name in Tab 1, Account Name in Tab 2 updates automatically (within 1 minute); when the Owner role is handed over (REQ-009-174) the new Owner's Account Name is set to the clinic name and the previous Owner's is reset to First Name + Last Name",
         "rationale": "Screen 2: \"Owner account represents the clinic organization, so account name should match clinic name for consistency across the platform\". Screen: SCR-032-06."
       }
     },
@@ -91611,9 +91611,9 @@
       "owner_fr": "FR-032",
       "title": "Staff account name is a personal display name",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "For Staff roles (Manager, Clinical Staff, Billing Staff): Account Name is editable and independent from clinic name; Default Account Name for staff is \"First Name + Last Name\" (e.g., \"John Smith\"); Staff Account Name changes do not affect clinic name or other staff members' account names",
+        "statement": "For Staff roles (Manager, Clinical Staff, Billing Staff): Account Name is editable and independent from clinic name; Default Account Name for staff is \"First Name + Last Name\" (e.g., \"John Smith\"), set when the account is created (FR-009 account setup); Staff Account Name changes do not affect clinic name or other staff members' account names",
         "rationale": "Screen 2: staff account name is used in dashboard, notifications, activity logs and team member listings. Screen: SCR-032-06."
       }
     },
@@ -91635,9 +91635,9 @@
       "owner_fr": "FR-032",
       "title": "Timezone drives display, storage stays UTC",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Timezone is saved per person and applies to all date/time displays in that person's provider dashboard session; the browser timezone is offered at first login, otherwise UTC (REQ-032-145); existing timestamps in the database remain in UTC, converted for display with the fixed offsets of the FR-026 timezone list (REQ-026-121)",
+        "statement": "Timezone is saved per person and applies to all date/time displays in that person's provider dashboard session; at first login it is set without a prompt to the listed whole-hour offset nearest to the browser time zone, or UTC when the browser zone cannot be read (REQ-032-145); existing timestamps in the database remain in UTC, converted for display with the fixed offsets of the FR-026 timezone list (REQ-026-121)",
         "rationale": "Alternative Flow A7. Screen: SCR-032-06."
       }
     },
@@ -91707,9 +91707,9 @@
       "owner_fr": "FR-032",
       "title": "One pending closure request per provider",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System creates account closure request record with status \"Pending Admin Review\" (only one pending request per provider; no booking or payout check blocks submission)",
+        "statement": "System creates account closure request record with status \"Pending Admin Review\" (only one pending request per provider; no booking or payout check blocks submission). While a request is Pending Admin Review the closure card shows \"Closure requested on DD-MM-YYYY, awaiting admin review\" (plus \"Deactivation scheduled for DD-MM-YYYY\" when the admin scheduled a date) with the button disabled, and returns to normal when the request is Rejected; a second submission while one is pending is refused with \"A closure request is already pending.\"",
         "rationale": "Key Entities Entity 5: \"only one \"Pending\" at a time\"."
       }
     },
@@ -91729,11 +91729,11 @@
       "id": "REQ-032-073",
       "type": "Rule",
       "owner_fr": "FR-032",
-      "title": "Closure confirmation promises review in 5 business days",
+      "title": "Closure confirmation states the 5-business-day review target",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System displays confirmation to provider \"Account closure request submitted. Our team will review and process your request within 5 business days. You will receive an email once your account is deactivated.\"",
+        "statement": "System displays confirmation to provider \"Account closure request submitted. We aim to review and process your request within 5 business days. You will receive an email once your account is deactivated.\"",
         "rationale": "Business Process Assumption 2: \"Admins review and process provider account closure requests within 5 business days\"."
       }
     },
@@ -92067,9 +92067,9 @@
       "owner_fr": "FR-032",
       "title": "Contact support form limits",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Support Request Form - Subject: Max 200 chars; Support Request Form - Message: Max 5000 chars, min 20 chars; Support Request Form - Priority: Default: Medium; Support Request Form - Attachment: Max 10MB, common file types (PDF, PNG, JPG, DOCX)",
+        "statement": "Support Request Form - Subject: Min 10, max 200 chars (FR-034 REQ-034-130); Support Request Form - Message: Max 5000 chars, min 20 chars; Support Request Form - Priority: Default: Medium; Support Request Form - Attachments: Up to 5 files, 10MB each, formats JPG, PNG, PDF, DOC, DOCX (FR-034 REQ-034-036, REQ-034-037)",
         "rationale": "Screen 5.5. Help Centre Main Flow step 20 lists only subject, message and attachment. Screen: SCR-032-14."
       }
     },
@@ -92091,9 +92091,9 @@
       "owner_fr": "FR-032",
       "title": "Feedback form limits",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Feedback Form - Title: Max 100 chars; Feedback Form - Description: Max 5000 chars, min 20 chars; Feedback Form - Priority: Default: Low",
+        "statement": "Feedback Form - Title: Min 10, max 100 chars (FR-034 REQ-034-130); Feedback Form - Description: Max 5000 chars, min 20 chars; Feedback Form - Priority: Default: Low",
         "rationale": "Screen 5.6; confirmation \"Thank you for your feedback! We'll review your submission.\" Screen: SCR-032-15."
       }
     },
@@ -92199,9 +92199,9 @@
       "owner_fr": "FR-032",
       "title": "Reopen request is sent to the admin and the case stays Closed",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "The reopen request is sent to FR-034 as a flagged message in the case thread; the case stays Closed until the admin reopens it; the provider sees \"Request sent, awaiting admin\" with the reply box disabled; FR-034 notifies the admin through the user-reply notice (support.case_user_reply, REQ-034-178)",
+        "statement": "The reopen request is sent to FR-034 as a flagged message in the case thread; the case stays Closed until the admin reopens it; the provider sees \"Request sent, awaiting admin\" with the reply box disabled; FR-034 notifies the admin through the user-reply notice (support.case_user_reply, REQ-034-178). When an admin accepts the request, the admin reopens the case in FR-034 (status Open, REQ-034-145), which enables the reply box again; when an admin answers but keeps the case Closed, the \"Request sent, awaiting admin\" banner clears and the Request Reopen button returns, so the provider may ask again",
         "rationale": "Screen 5.9; Support Alternative Flow A1 step 11. Reply Message Box is enabled again after reopening. Screen: SCR-032-18."
       }
     },
@@ -92329,11 +92329,11 @@
       "id": "REQ-032-125",
       "type": "Rule",
       "owner_fr": "FR-032",
-      "title": "A phone number country code is required when a phone number is entered",
+      "title": "Phone number and country code are required; the number is unique and a changed number is verified",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "A phone number country code is required when a phone number is entered; with no phone number the country code is not needed.",
+        "statement": "A phone number with its country code is required on Account Settings: it can be replaced but not removed; it is unique per user within the provider, and a changed number is verified as in FR-009 (REQ-009-113).",
         "rationale": "prd.md line 1037 (Screen 2 Phone Number - Country Code row, Required \"Yes (if phone provided)\"). Screen: SCR-032-06."
       }
     },
@@ -92511,9 +92511,9 @@
       "owner_fr": "FR-032",
       "title": "Who edits what is fixed per area",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "System MUST apply the who-edits-what table in Screen 1 (General Business Rules): clinic profile, languages, awards and documents are edited by the Owner and a Manager; the account closure request by the Owner only; personal account settings by every role for their own account only; billing settings need the permission \"View and Edit Billing Settings\", held by FR-031 with the default Owner only (REQ-031-005).",
+        "statement": "System MUST apply the who-edits-what table in Screen 1 (General Business Rules): clinic profile, languages, awards and documents are edited by the Owner and a Manager by default, gated by the FR-031 permission \"Edit Profile\"; notification settings are gated by \"Edit Notification Settings\" (REQ-032-142); the account closure request by the Owner only; personal account settings by every role for their own account only; billing settings need the permission \"View and Edit Billing Settings\", held by FR-031 with the default Owner only (REQ-031-005).",
         "rationale": "One table replaces the scattered role wording. The billing permission is owned by FR-031, not FR-009."
       }
     },
@@ -92521,11 +92521,11 @@
       "id": "REQ-032-142",
       "type": "Rule",
       "owner_fr": "FR-032",
-      "title": "Only Owner and Manager change notification settings",
+      "title": "Holders of Edit Notification Settings change the notification settings",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "System MUST let only the Owner and a Manager change the clinic's notification settings; other roles see them read-only; every change is audit-logged with the user who made it.",
+        "statement": "System MUST let only the holders of the FR-031 permission \"Edit Notification Settings\" (by default the Owner and a Manager) change the clinic's notification settings; other roles see them read-only; every change is audit-logged with the user who made it.",
         "rationale": "Notification settings are clinic-wide, so they follow the same editors as the clinic profile."
       }
     },
@@ -92557,11 +92557,11 @@
       "id": "REQ-032-145",
       "type": "Rule",
       "owner_fr": "FR-032",
-      "title": "Timezone is saved per person",
+      "title": "Timezone is saved per person and set silently at first login",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "System MUST save the timezone per person: the browser timezone is offered at first login, otherwise UTC; dates display with the fixed offsets of the FR-026 timezone list (REQ-026-121).",
+        "statement": "System MUST save the timezone per person; at a person's first login System MUST set it without a prompt to the listed whole-hour offset nearest to the browser time zone (UTC when the browser zone cannot be read), and the person can change it on Screen 2 at any time; dates display with the fixed offsets of the FR-026 timezone list (REQ-026-121).",
         "rationale": "Team members work from different places; one clinic-wide value would show wrong times to some of them."
       }
     },
@@ -129178,7 +129178,7 @@
       "owner_fr": "FR-032",
       "title": "Save profile updates for the current tab with timestamp",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Update Provider Profile Information step 11"
       }
@@ -129816,7 +129816,7 @@
       "owner_fr": "FR-032",
       "title": "Navigate to Settings, Account Settings",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Main Flow: Update Account Settings step 1"
       }
@@ -129891,9 +129891,9 @@
       "id": "STP-032-083",
       "type": "Step",
       "owner_fr": "FR-032",
-      "title": "Save the phone number in international format",
+      "title": "Save the phone number in international format after checking it is unique per user within the provider; a changed number is verified as in FR-009",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Update Account Settings step 9"
       }
@@ -129937,7 +129937,7 @@
       "owner_fr": "FR-032",
       "title": "Save the timezone preference for this person",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow: Update Account Settings step 13"
       }
@@ -130399,7 +130399,7 @@
       "owner_fr": "FR-032",
       "title": "Navigate to Settings, Billing",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "prd_ref": "Main Flow: Manage Billing Settings step 1"
       }
@@ -131136,7 +131136,7 @@
       "owner_fr": "FR-032",
       "title": "Load the video player",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A11 (Watch Video Tutorial) step 4"
       }
@@ -131147,7 +131147,7 @@
       "owner_fr": "FR-032",
       "title": "Watch the video tutorial",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A11 (Watch Video Tutorial) step 5"
       }
@@ -131950,7 +131950,7 @@
       "owner_fr": "FR-032",
       "title": "Review the reopening reason",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A1 (Request Reopen Closed Case) step 12"
       }
@@ -132135,9 +132135,9 @@
       "id": "STP-032-304",
       "type": "Step",
       "owner_fr": "FR-032",
-      "title": "Reply if needed or mark the issue as resolved",
+      "title": "Reply if needed",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A3 (Admin Reply Notification) step 9"
       }
@@ -132214,7 +132214,7 @@
       "owner_fr": "FR-032",
       "title": "Click Submit Closure Request",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Request Account Closure step 7"
       }
@@ -132404,9 +132404,9 @@
       "id": "STP-032-329",
       "type": "Step",
       "owner_fr": "FR-032",
-      "title": "System records the video view for admin analytics through the FR-033 view write",
+      "title": "After 30 seconds of play, System records the video view for admin analytics through the FR-033 view write",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {}
     },
     {
@@ -132433,8 +132433,74 @@
       "owner_fr": "FR-032",
       "title": "Reopen the case when the provider replies to a Resolved case",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {}
+    },
+    {
+      "id": "STP-032-333",
+      "type": "Step",
+      "owner_fr": "FR-032",
+      "title": "Admin reopens the case in FR-034 with Reopen Case (status Open), which enables the reply box again",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A1 (Request Reopen Closed Case) step 12"
+      }
+    },
+    {
+      "id": "STP-032-334",
+      "type": "Step",
+      "owner_fr": "FR-032",
+      "title": "On clinic name save, System sets the Owner's Account Name to the clinic name",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow: Update Provider Profile Information step 11"
+      }
+    },
+    {
+      "id": "STP-032-335",
+      "type": "Step",
+      "owner_fr": "FR-032",
+      "title": "System refuses a second closure submission while one is pending, with the message A closure request is already pending.",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow: Request Account Closure step 8"
+      }
+    },
+    {
+      "id": "STP-032-336",
+      "type": "Step",
+      "owner_fr": "FR-032",
+      "title": "At a person's first login, System silently sets their timezone to the listed whole-hour offset nearest to the browser time zone, or UTC when the browser zone cannot be read",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow: Update Account Settings step 1"
+      }
+    },
+    {
+      "id": "STP-032-337",
+      "type": "Step",
+      "owner_fr": "FR-032",
+      "title": "Log the phone number change in the audit trail with the phone values masked",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow: Update Account Settings step 9"
+      }
+    },
+    {
+      "id": "STP-032-338",
+      "type": "Step",
+      "owner_fr": "FR-032",
+      "title": "Log the timezone change in the audit trail",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow: Update Account Settings step 13"
+      }
     },
     {
       "id": "STP-033-001",
@@ -183666,6 +183732,18 @@
     {
       "from_id": "FR-032",
       "verb": "references",
+      "to_id": "REQ-009-113",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-032",
+      "verb": "references",
+      "to_id": "REQ-009-174",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-032",
+      "verb": "references",
       "to_id": "REQ-013-008",
       "attrs": {}
     },
@@ -183780,13 +183858,37 @@
     {
       "from_id": "FR-032",
       "verb": "references",
+      "to_id": "REQ-034-036",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-032",
+      "verb": "references",
+      "to_id": "REQ-034-037",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-032",
+      "verb": "references",
       "to_id": "REQ-034-114",
       "attrs": {}
     },
     {
       "from_id": "FR-032",
       "verb": "references",
+      "to_id": "REQ-034-130",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-032",
+      "verb": "references",
       "to_id": "REQ-034-139",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-032",
+      "verb": "references",
+      "to_id": "REQ-034-145",
       "attrs": {}
     },
     {
@@ -297862,6 +297964,36 @@
       "from_id": "REQ-032-141",
       "verb": "applies at",
       "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-032-141",
+      "verb": "applies to",
+      "to_id": "SCR-032-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-032-141",
+      "verb": "applies to",
+      "to_id": "SCR-032-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-032-141",
+      "verb": "applies to",
+      "to_id": "SCR-032-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-032-141",
+      "verb": "applies to",
+      "to_id": "SCR-032-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-032-141",
+      "verb": "applies to",
+      "to_id": "SCR-032-05",
       "attrs": {}
     },
     {
@@ -431213,7 +431345,7 @@
     {
       "from_id": "STP-032-011",
       "verb": "next",
-      "to_id": "STP-032-012",
+      "to_id": "STP-032-334",
       "attrs": {}
     },
     {
@@ -432886,6 +433018,15 @@
     },
     {
       "from_id": "STP-032-075",
+      "verb": "next",
+      "to_id": "STP-032-336",
+      "attrs": {
+        "label": "first login of this person",
+        "condition": "REQ-032-145"
+      }
+    },
+    {
+      "from_id": "STP-032-075",
       "verb": "on",
       "to_id": "SCR-032-06",
       "attrs": {}
@@ -433078,6 +433219,12 @@
     },
     {
       "from_id": "STP-032-083",
+      "verb": "applies",
+      "to_id": "REQ-032-125",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-083",
       "verb": "at",
       "to_id": "STG-provider-03-active",
       "attrs": {}
@@ -433091,7 +433238,7 @@
     {
       "from_id": "STP-032-083",
       "verb": "next",
-      "to_id": "STP-032-084",
+      "to_id": "STP-032-337",
       "attrs": {}
     },
     {
@@ -433223,7 +433370,7 @@
     {
       "from_id": "STP-032-087",
       "verb": "next",
-      "to_id": "STP-032-088",
+      "to_id": "STP-032-338",
       "attrs": {}
     },
     {
@@ -434484,6 +434631,12 @@
       "from_id": "STP-032-138",
       "verb": "applies",
       "to_id": "REQ-032-022",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-138",
+      "verb": "applies",
+      "to_id": "REQ-032-141",
       "attrs": {}
     },
     {
@@ -436567,14 +436720,6 @@
     },
     {
       "from_id": "STP-032-213",
-      "verb": "next",
-      "to_id": "STP-032-329",
-      "attrs": {
-        "label": "video opened"
-      }
-    },
-    {
-      "from_id": "STP-032-213",
       "verb": "on",
       "to_id": "SCR-032-13",
       "attrs": {}
@@ -436602,6 +436747,14 @@
       "verb": "next",
       "to_id": "STP-032-215",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-032-214",
+      "verb": "next",
+      "to_id": "STP-032-329",
+      "attrs": {
+        "label": "after 30 seconds of play"
+      }
     },
     {
       "from_id": "STP-032-214",
@@ -438758,6 +438911,15 @@
     },
     {
       "from_id": "STP-032-287",
+      "verb": "next",
+      "to_id": "STP-032-333",
+      "attrs": {
+        "label": "admin accepts the request",
+        "condition": "REQ-032-114"
+      }
+    },
+    {
+      "from_id": "STP-032-287",
       "verb": "on",
       "to_id": "SCR-032-17",
       "attrs": {}
@@ -439466,6 +439628,15 @@
     },
     {
       "from_id": "STP-032-311",
+      "verb": "next",
+      "to_id": "STP-032-335",
+      "attrs": {
+        "label": "a closure request is already pending",
+        "condition": "REQ-032-071"
+      }
+    },
+    {
+      "from_id": "STP-032-311",
       "verb": "on",
       "to_id": "SCR-032-06",
       "attrs": {}
@@ -439977,6 +440148,12 @@
     {
       "from_id": "STP-032-329",
       "verb": "applies",
+      "to_id": "REQ-032-099",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-329",
+      "verb": "applies",
       "to_id": "REQ-033-097",
       "attrs": {}
     },
@@ -440072,8 +440249,194 @@
     },
     {
       "from_id": "STP-032-332",
+      "verb": "next",
+      "to_id": "STP-032-268",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-332",
       "verb": "on",
       "to_id": "SCR-032-17",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-333",
+      "verb": "applies",
+      "to_id": "REQ-032-114",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-333",
+      "verb": "applies",
+      "to_id": "REQ-034-145",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-333",
+      "verb": "at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-333",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-333",
+      "verb": "next",
+      "to_id": "STP-032-288",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-333",
+      "verb": "on",
+      "to_id": "SCR-032-17",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-334",
+      "verb": "applies",
+      "to_id": "REQ-032-061",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-334",
+      "verb": "at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-334",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-334",
+      "verb": "next",
+      "to_id": "STP-032-012",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-334",
+      "verb": "on",
+      "to_id": "SCR-032-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-335",
+      "verb": "applies",
+      "to_id": "REQ-032-071",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-335",
+      "verb": "at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-335",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-335",
+      "verb": "on",
+      "to_id": "SCR-032-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-336",
+      "verb": "applies",
+      "to_id": "REQ-032-145",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-336",
+      "verb": "at",
+      "to_id": "STG-provider-config-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-336",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-336",
+      "verb": "next",
+      "to_id": "STP-032-076",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-336",
+      "verb": "on",
+      "to_id": "SCR-032-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-337",
+      "verb": "applies",
+      "to_id": "REQ-032-020",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-337",
+      "verb": "at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-337",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-337",
+      "verb": "next",
+      "to_id": "STP-032-084",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-337",
+      "verb": "on",
+      "to_id": "SCR-032-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-338",
+      "verb": "applies",
+      "to_id": "REQ-032-020",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-338",
+      "verb": "at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-338",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-338",
+      "verb": "next",
+      "to_id": "STP-032-088",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-338",
+      "verb": "on",
+      "to_id": "SCR-032-06",
       "attrs": {}
     },
     {
@@ -456696,6 +457059,52 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-191239-37c9ac0d",
+      "at": "2026-11-24T19:12:39.824996+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-032 logic review pass 2, PRD revised from version 1.18 to 1.19",
+      "source_id": null,
+      "nodes_added": [
+        "STP-032-333",
+        "STP-032-334",
+        "STP-032-335",
+        "STP-032-336",
+        "STP-032-337",
+        "STP-032-338"
+      ],
+      "nodes_updated": [
+        "ENT-team-member.timezone",
+        "FR-032",
+        "REQ-032-061",
+        "REQ-032-062",
+        "REQ-032-064",
+        "REQ-032-071",
+        "REQ-032-073",
+        "REQ-032-102",
+        "REQ-032-104",
+        "REQ-032-114",
+        "REQ-032-125",
+        "REQ-032-141",
+        "REQ-032-142",
+        "REQ-032-145",
+        "STP-032-011",
+        "STP-032-075",
+        "STP-032-083",
+        "STP-032-087",
+        "STP-032-138",
+        "STP-032-213",
+        "STP-032-214",
+        "STP-032-287",
+        "STP-032-304",
+        "STP-032-311",
+        "STP-032-329",
+        "STP-032-332"
+      ],
+      "edges_added": 52,
+      "edges_removed": 4,
+      "rows": 106
+    },
     {
       "id": "cs-20261124-191034-ef1c134f",
       "at": "2026-11-24T19:10:34.838420+00:00",

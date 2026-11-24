@@ -1,0 +1,98 @@
+# FR-032 logic review, pass 2: graph change-set mirroring the revised PRD.
+# Mirrors the revised PRD (functional-requirements/fr032-provider-dashboard-settings/prd.md, version 1.19).
+#
+# Ordering: new steps first; then new edges; then rule, field and step updates; then edge removals.
+# Removals sit last so that every moved branch stays connected while the file is applied.
+#
+# Cross-FR edges: only FR-032 to other FRs. FR-032 references six rules owned by FR-009 and FR-034
+# (REQ-009-113, REQ-009-174, REQ-034-036, REQ-034-037, REQ-034-130, REQ-034-145). No node owned by
+# another FR is updated or retired, and no handoff_to / handoff_from attribute is touched.
+#
+# Step STP-032-139 is retired, so the billing permission rule is applied on STP-032-138 itself and the
+# three next edges of STP-032-138 are left as they are.
+#
+# Queued for neighbour FRs (not in this file): FR-009 (account setup writes the default Account Name;
+# ENT-team-member.phone_number description still says optional on Screen 6), FR-031 (Manager gets
+# View Profile and Edit Profile; new permission Edit Notification Settings for Owner and Manager;
+# billing permission naming), FR-033 (nothing new), FR-034 (nothing new), FR-015 (nothing new).
+reason: "FR-032 logic review pass 2, PRD revised from version 1.18 to 1.19"
+by: docs-manager
+operations:
+  - {"op": "add_node", "id": "STP-032-333", "type": "Step", "owner_fr": "FR-032", "title": "Admin reopens the case in FR-034 with Reopen Case (status Open), which enables the reply box again", "attrs": {"prd_ref": "Alternative Flow A1 (Request Reopen Closed Case) step 12"}}
+  - {"op": "add_node", "id": "STP-032-334", "type": "Step", "owner_fr": "FR-032", "title": "On clinic name save, System sets the Owner's Account Name to the clinic name", "attrs": {"prd_ref": "Main Flow: Update Provider Profile Information step 11"}}
+  - {"op": "add_node", "id": "STP-032-335", "type": "Step", "owner_fr": "FR-032", "title": "System refuses a second closure submission while one is pending, with the message A closure request is already pending.", "attrs": {"prd_ref": "Main Flow: Request Account Closure step 8"}}
+  - {"op": "add_node", "id": "STP-032-336", "type": "Step", "owner_fr": "FR-032", "title": "At a person's first login, System silently sets their timezone to the listed whole-hour offset nearest to the browser time zone, or UTC when the browser zone cannot be read", "attrs": {"prd_ref": "Main Flow: Update Account Settings step 1"}}
+  - {"op": "add_node", "id": "STP-032-337", "type": "Step", "owner_fr": "FR-032", "title": "Log the phone number change in the audit trail with the phone values masked", "attrs": {"prd_ref": "Main Flow: Update Account Settings step 9"}}
+  - {"op": "add_node", "id": "STP-032-338", "type": "Step", "owner_fr": "FR-032", "title": "Log the timezone change in the audit trail", "attrs": {"prd_ref": "Main Flow: Update Account Settings step 13"}}
+  - {"op": "add_edge", "from": "STP-032-333", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-032-333", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-032-333", "verb": "on", "to": "SCR-032-17"}
+  - {"op": "add_edge", "from": "STP-032-333", "verb": "applies", "to": "REQ-032-114"}
+  - {"op": "add_edge", "from": "STP-032-333", "verb": "applies", "to": "REQ-034-145"}
+  - {"op": "add_edge", "from": "STP-032-334", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-032-334", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-032-334", "verb": "on", "to": "SCR-032-01"}
+  - {"op": "add_edge", "from": "STP-032-334", "verb": "applies", "to": "REQ-032-061"}
+  - {"op": "add_edge", "from": "STP-032-335", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-032-335", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-032-335", "verb": "on", "to": "SCR-032-06"}
+  - {"op": "add_edge", "from": "STP-032-335", "verb": "applies", "to": "REQ-032-071"}
+  - {"op": "add_edge", "from": "STP-032-336", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-032-336", "verb": "at", "to": "STG-provider-config-01-configuration"}
+  - {"op": "add_edge", "from": "STP-032-336", "verb": "on", "to": "SCR-032-06"}
+  - {"op": "add_edge", "from": "STP-032-336", "verb": "applies", "to": "REQ-032-145"}
+  - {"op": "add_edge", "from": "STP-032-337", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-032-337", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-032-337", "verb": "on", "to": "SCR-032-06"}
+  - {"op": "add_edge", "from": "STP-032-337", "verb": "applies", "to": "REQ-032-020"}
+  - {"op": "add_edge", "from": "STP-032-338", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-032-338", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-032-338", "verb": "on", "to": "SCR-032-06"}
+  - {"op": "add_edge", "from": "STP-032-338", "verb": "applies", "to": "REQ-032-020"}
+  - {"op": "add_edge", "from": "STP-032-287", "verb": "next", "to": "STP-032-333", "attrs": {"label": "admin accepts the request", "condition": "REQ-032-114"}}
+  - {"op": "add_edge", "from": "STP-032-333", "verb": "next", "to": "STP-032-288"}
+  - {"op": "add_edge", "from": "STP-032-011", "verb": "next", "to": "STP-032-334"}
+  - {"op": "add_edge", "from": "STP-032-334", "verb": "next", "to": "STP-032-012"}
+  - {"op": "add_edge", "from": "STP-032-311", "verb": "next", "to": "STP-032-335", "attrs": {"label": "a closure request is already pending", "condition": "REQ-032-071"}}
+  - {"op": "add_edge", "from": "STP-032-075", "verb": "next", "to": "STP-032-336", "attrs": {"label": "first login of this person", "condition": "REQ-032-145"}}
+  - {"op": "add_edge", "from": "STP-032-336", "verb": "next", "to": "STP-032-076"}
+  - {"op": "add_edge", "from": "STP-032-083", "verb": "next", "to": "STP-032-337"}
+  - {"op": "add_edge", "from": "STP-032-337", "verb": "next", "to": "STP-032-084"}
+  - {"op": "add_edge", "from": "STP-032-087", "verb": "next", "to": "STP-032-338"}
+  - {"op": "add_edge", "from": "STP-032-338", "verb": "next", "to": "STP-032-088"}
+  - {"op": "add_edge", "from": "STP-032-214", "verb": "next", "to": "STP-032-329", "attrs": {"label": "after 30 seconds of play"}}
+  - {"op": "add_edge", "from": "STP-032-329", "verb": "applies", "to": "REQ-032-099"}
+  - {"op": "add_edge", "from": "STP-032-083", "verb": "applies", "to": "REQ-032-125"}
+  - {"op": "add_edge", "from": "STP-032-332", "verb": "next", "to": "STP-032-268"}
+  - {"op": "add_edge", "from": "STP-032-138", "verb": "applies", "to": "REQ-032-141"}
+  - {"op": "add_edge", "from": "REQ-032-141", "verb": "applies to", "to": "SCR-032-01"}
+  - {"op": "add_edge", "from": "REQ-032-141", "verb": "applies to", "to": "SCR-032-02"}
+  - {"op": "add_edge", "from": "REQ-032-141", "verb": "applies to", "to": "SCR-032-03"}
+  - {"op": "add_edge", "from": "REQ-032-141", "verb": "applies to", "to": "SCR-032-04"}
+  - {"op": "add_edge", "from": "REQ-032-141", "verb": "applies to", "to": "SCR-032-05"}
+  - {"op": "add_edge", "from": "FR-032", "verb": "references", "to": "REQ-009-113"}
+  - {"op": "add_edge", "from": "FR-032", "verb": "references", "to": "REQ-009-174"}
+  - {"op": "add_edge", "from": "FR-032", "verb": "references", "to": "REQ-034-036"}
+  - {"op": "add_edge", "from": "FR-032", "verb": "references", "to": "REQ-034-037"}
+  - {"op": "add_edge", "from": "FR-032", "verb": "references", "to": "REQ-034-130"}
+  - {"op": "add_edge", "from": "FR-032", "verb": "references", "to": "REQ-034-145"}
+  - {"op": "update_node", "id": "REQ-032-061", "attrs": {"statement": "Account Name field is read-only for Owner role; it automatically syncs when clinic name is updated in Tab 1; If Owner updates clinic name in Tab 1, Account Name in Tab 2 updates automatically (within 1 minute); when the Owner role is handed over (REQ-009-174) the new Owner's Account Name is set to the clinic name and the previous Owner's is reset to First Name + Last Name"}}
+  - {"op": "update_node", "id": "REQ-032-062", "attrs": {"statement": "For Staff roles (Manager, Clinical Staff, Billing Staff): Account Name is editable and independent from clinic name; Default Account Name for staff is \"First Name + Last Name\" (e.g., \"John Smith\"), set when the account is created (FR-009 account setup); Staff Account Name changes do not affect clinic name or other staff members' account names"}}
+  - {"op": "update_node", "id": "REQ-032-064", "attrs": {"statement": "Timezone is saved per person and applies to all date/time displays in that person's provider dashboard session; at first login it is set without a prompt to the listed whole-hour offset nearest to the browser time zone, or UTC when the browser zone cannot be read (REQ-032-145); existing timestamps in the database remain in UTC, converted for display with the fixed offsets of the FR-026 timezone list (REQ-026-121)"}}
+  - {"op": "update_node", "id": "REQ-032-071", "attrs": {"statement": "System creates account closure request record with status \"Pending Admin Review\" (only one pending request per provider; no booking or payout check blocks submission). While a request is Pending Admin Review the closure card shows \"Closure requested on DD-MM-YYYY, awaiting admin review\" (plus \"Deactivation scheduled for DD-MM-YYYY\" when the admin scheduled a date) with the button disabled, and returns to normal when the request is Rejected; a second submission while one is pending is refused with \"A closure request is already pending.\""}}
+  - {"op": "update_node", "id": "REQ-032-073", "title": "Closure confirmation states the 5-business-day review target", "attrs": {"statement": "System displays confirmation to provider \"Account closure request submitted. We aim to review and process your request within 5 business days. You will receive an email once your account is deactivated.\""}}
+  - {"op": "update_node", "id": "REQ-032-102", "attrs": {"statement": "Support Request Form - Subject: Min 10, max 200 chars (FR-034 REQ-034-130); Support Request Form - Message: Max 5000 chars, min 20 chars; Support Request Form - Priority: Default: Medium; Support Request Form - Attachments: Up to 5 files, 10MB each, formats JPG, PNG, PDF, DOC, DOCX (FR-034 REQ-034-036, REQ-034-037)"}}
+  - {"op": "update_node", "id": "REQ-032-104", "attrs": {"statement": "Feedback Form - Title: Min 10, max 100 chars (FR-034 REQ-034-130); Feedback Form - Description: Max 5000 chars, min 20 chars; Feedback Form - Priority: Default: Low"}}
+  - {"op": "update_node", "id": "REQ-032-114", "attrs": {"statement": "The reopen request is sent to FR-034 as a flagged message in the case thread; the case stays Closed until the admin reopens it; the provider sees \"Request sent, awaiting admin\" with the reply box disabled; FR-034 notifies the admin through the user-reply notice (support.case_user_reply, REQ-034-178). When an admin accepts the request, the admin reopens the case in FR-034 (status Open, REQ-034-145), which enables the reply box again; when an admin answers but keeps the case Closed, the \"Request sent, awaiting admin\" banner clears and the Request Reopen button returns, so the provider may ask again"}}
+  - {"op": "update_node", "id": "REQ-032-125", "title": "Phone number and country code are required; the number is unique and a changed number is verified", "attrs": {"statement": "A phone number with its country code is required on Account Settings: it can be replaced but not removed; it is unique per user within the provider, and a changed number is verified as in FR-009 (REQ-009-113)."}}
+  - {"op": "update_node", "id": "REQ-032-141", "attrs": {"statement": "System MUST apply the who-edits-what table in Screen 1 (General Business Rules): clinic profile, languages, awards and documents are edited by the Owner and a Manager by default, gated by the FR-031 permission \"Edit Profile\"; notification settings are gated by \"Edit Notification Settings\" (REQ-032-142); the account closure request by the Owner only; personal account settings by every role for their own account only; billing settings need the permission \"View and Edit Billing Settings\", held by FR-031 with the default Owner only (REQ-031-005)."}}
+  - {"op": "update_node", "id": "REQ-032-142", "title": "Holders of Edit Notification Settings change the notification settings", "attrs": {"statement": "System MUST let only the holders of the FR-031 permission \"Edit Notification Settings\" (by default the Owner and a Manager) change the clinic's notification settings; other roles see them read-only; every change is audit-logged with the user who made it."}}
+  - {"op": "update_node", "id": "REQ-032-145", "title": "Timezone is saved per person and set silently at first login", "attrs": {"statement": "System MUST save the timezone per person; at a person's first login System MUST set it without a prompt to the listed whole-hour offset nearest to the browser time zone (UTC when the browser zone cannot be read), and the person can change it on Screen 2 at any time; dates display with the fixed offsets of the FR-026 timezone list (REQ-026-121)."}}
+  - {"op": "update_node", "id": "ENT-team-member.timezone", "attrs": {"description": "This person's local timezone for date/time display; fixed-offset option from the FR-026 list (GMT-12 to GMT+14). Empty only before the person's first login; at first login it is set without a prompt to the listed whole-hour offset nearest to the browser time zone, or UTC when the browser zone cannot be read, and the person can change it at any time."}}
+  - {"op": "update_node", "id": "STP-032-304", "title": "Reply if needed"}
+  - {"op": "update_node", "id": "STP-032-329", "title": "After 30 seconds of play, System records the video view for admin analytics through the FR-033 view write"}
+  - {"op": "update_node", "id": "STP-032-083", "title": "Save the phone number in international format after checking it is unique per user within the provider; a changed number is verified as in FR-009"}
+  - {"op": "remove_edge", "from": "STP-032-213", "verb": "next", "to": "STP-032-329"}
+  - {"op": "remove_edge", "from": "STP-032-011", "verb": "next", "to": "STP-032-012"}
+  - {"op": "remove_edge", "from": "STP-032-083", "verb": "next", "to": "STP-032-084"}
+  - {"op": "remove_edge", "from": "STP-032-087", "verb": "next", "to": "STP-032-088"}
