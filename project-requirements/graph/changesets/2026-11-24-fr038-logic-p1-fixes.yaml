@@ -1,0 +1,172 @@
+# Operations ordered so nodes are created before the edges that use them; removals, retirements and updates follow the additions. No add_field or add_enum_value is needed. Needs on FR-037, FR-011, FR-030, FR-003 and stage nodes are queued in the ledger, not in this file.
+reason: 'FR-038 logic review pass 1: hand-off lands on FR-011 Screen 6 and package choice stays in FR-011 (FR-038 Screen 6 ends at the review; rules 065 and 074 retired); conversion contract named in REQ-038-016; request creation confirmed in FR-011 before the case is committed (next edge from the FR-011 submit step, retry edge, edges to retired steps removed); provider access to copied data from FR-011 assignment (owner default 96); Screen 5 confirmation by choice and Switch from Screen 5; PDF status, retry, regeneration and repeat rules; retry and Admin regeneration steps; completed or converted case reachable from the home card; only Admin corrects the treatment date (owner default 97); Initial Severity as first data point, monitoring period and zero-log summary; reminders on by default with a stop rule (owner default 98); Screen 4 and Screen 8 entry points and an Admin list step; quality-failed scans are not saved; conversion draft set and cleared; Screen 8 filter values and audit Action column.'
+by: docs-manager
+operations:
+# ---- New steps -------------------------------------------------------------
+- op: add_node
+  id: STP-038-057
+  type: Step
+  owner_fr: FR-038
+  title: System regenerates the PDF when the patient selects Retry PDF
+  attrs:
+    prd_ref: 'A1 step 5a'
+- op: add_node
+  id: STP-038-058
+  type: Step
+  owner_fr: FR-038
+  title: System regenerates the PDF as the next report version after an Admin correction
+  attrs:
+    prd_ref: 'A3 step 5'
+- op: add_node
+  id: STP-038-059
+  type: Step
+  owner_fr: FR-038
+  title: Admin opens the case list and selects a case
+  attrs:
+    prd_ref: 'A3 step 1'
+# ---- Edge removals ---------------------------------------------------------
+- {op: remove_edge, from: STP-038-055, verb: next, to: STP-038-056}
+- {op: remove_edge, from: STP-038-001, verb: next, to: STP-038-002}
+- {op: remove_edge, from: STP-038-032, verb: next, to: STP-038-033}
+- {op: remove_edge, from: STP-038-055, verb: applies, to: REQ-038-065}
+- {op: remove_edge, from: STP-038-055, verb: applies, to: REQ-038-074}
+- {op: remove_edge, from: SCR-038-06, verb: shows, to: ENT-aftercare-template.name}
+- {op: remove_edge, from: SCR-038-06, verb: shows, to: ENT-aftercare-template.description}
+- {op: remove_edge, from: FLW-038-admin-correction, verb: starts at, to: STP-038-031}
+# ---- Retired rules (package selection moved out of FR-038 Screen 6) --------
+- {op: retire_node, id: REQ-038-065}
+- {op: retire_node, id: REQ-038-074}
+# ---- Rule updates ----------------------------------------------------------
+- op: update_node
+  id: REQ-038-016
+  attrs:
+    statement: 'Conversion MUST be idempotent and MUST NOT create duplicate standalone-aftercare requests. A standalone request may be created from an FR-038 conversion with pre-filled fields, the attached monitoring PDF, an optional selected scan, and an idempotency key; a repeated key returns the existing request.'
+- op: update_node
+  id: REQ-038-030
+  title: Only Admin corrects the treatment date; earlier-dated logs are fixed in the same edit
+  attrs:
+    statement: 'Only the Admin can correct the treatment date after the case exists. When the new date leaves logs dated before it, the Admin must correct or remove those logs in the same edit, otherwise the save is refused.'
+    rationale: 'Screen 9 (Admin is the only route to correct the treatment date) and Edge Cases.'
+- op: update_node
+  id: REQ-038-031
+  title: Reminders are on by default, patient-changeable, and stop at completion or conversion
+  attrs:
+    statement: 'Reminders are on by default with the Admin schedule (once a month for 12 months after treatment); the patient can change the schedule or switch them off with Reminder Preference on Screen 2, without affecting case status. Reminders are sent through a progress-reminder event of the FR-030 catalogue, stop when the case is completed or converted, and cannot become mandatory milestones or compliance checks.'
+    rationale: 'Communication Structure, Screen 2 (Reminder Preference) and Admin Editability (patient reminder defaults).'
+- op: update_node
+  id: REQ-038-034
+  title: Severity summary derived from the severity ratings, starting at the Initial Severity
+  attrs:
+    statement: 'Severity Summary shows first, latest, minimum, maximum, average, and trend of the severity ratings; the Initial Severity given at intake is the first data point of the trend, dated the case creation date. A case with no log shows no entries for the summary values, its latest severity equals the Initial Severity, and completion and conversion stay allowed.'
+- op: update_node
+  id: REQ-038-035
+  title: Monitoring Period runs from the case creation date to the completion or conversion date
+  attrs:
+    statement: 'Monitoring Period is the date range from the case creation date to the date the case was completed or converted (to today for an active case preview).'
+- op: update_node
+  id: REQ-038-037
+  title: Conversion State is None, draft or converted; the draft is set at Switch and cleared at commit or return
+  attrs:
+    statement: 'Conversion State is None, draft, or converted to FR-011. The conversion draft is set when the patient selects Switch to Aftercare Package and cleared when the conversion is committed or the patient returns to monitoring.'
+- op: update_node
+  id: REQ-038-041
+  attrs:
+    statement: 'Failed generation can be retried without reopening the case: the patient sees the failed status on Screen 7 and selects Retry PDF.'
+- op: update_node
+  id: REQ-038-045
+  title: Admin correction after PDF generation regenerates the PDF as a new report version
+  attrs:
+    statement: 'When Admin corrects data after PDF generation, the system regenerates the PDF as the next report version; the patient sees the latest version on Screen 7 and gets the export-ready notice, and a copy already attached to an FR-011 request is not replaced.'
+- op: update_node
+  id: REQ-038-048
+  title: A scan that fails the quality check cannot be saved
+  attrs:
+    statement: 'A scan set that fails the quality check cannot be saved; it must be retaken to be saved, so every saved scan is valid.'
+- op: update_node
+  id: REQ-038-049
+  attrs:
+    statement: 'Scan history lists prior scans grouped by date, for the current case only. Screen 4 opens from Scan History on Screen 2 and from the head-scan capture on Screens 1 and 3.'
+- op: update_node
+  id: REQ-038-050
+  title: Provider access to copied data begins at FR-011 assignment
+  attrs:
+    statement: 'Provider access to information copied from FR-038 begins when the Admin assigns the provider to the FR-011 request, under FR-011 rules and before payment.'
+    rationale: 'Module Scope, Screen 4 and Data & Privacy Rules; the assigned provider reviews the copied intake, PDF and scan to set up the plan, and the patient has already reviewed what is sent (REQ-038-067).'
+- op: update_node
+  id: REQ-038-055
+  attrs:
+    statement: 'Admin may edit all monitoring intake information, entries, severity ratings, scan metadata, status, report regeneration, and conversion metadata when operational correction is required. No edit may erase historical values or provenance.'
+- op: update_node
+  id: REQ-038-061
+  attrs:
+    statement: 'Admin Transplant-Progress Cases (Screen 8) lists all transplant-progress monitoring cases, paginated, with a status filter (Active, Completed, Converted to aftercare), no Type filter, and search by patient or case identifier within the Admin''s permission scope.'
+    rationale: 'Module Scope (Admin views all self-service cases and supports the patient when needed) and Entry Points (Admin opens Transplant-Progress Cases). Digest of the Screen 8 field table.'
+- op: update_node
+  id: REQ-038-062
+  attrs:
+    statement: 'Patient selects Aftercare: Monitor Transplant Progress from FR-003 Screen 1: Service Selection. Patient opens the active case from the patient home/dashboard monitoring card. Patient opens a completed or converted case from the patient home/dashboard monitoring card, which opens Screen 7 read-only. Admin opens Transplant-Progress Cases (Screen 8). Patient selects Switch to Aftercare Package from active-case actions or Screen 5.'
+- op: update_node
+  id: REQ-038-064
+  title: Current summary PDF generated at Switch, with status, retry, regeneration and repeat rules
+  attrs:
+    statement: 'System generates the current monitoring-summary PDF when the patient selects Switch to Aftercare Package. Screen 6 shows the PDF status; on failed the patient can retry; the PDF is regenerated when logs or the selected scan change after it was made; a repeated Switch reuses the existing draft PDF unless data changed; the export-ready notice for the conversion PDF opens Screen 6.'
+- op: update_node
+  id: REQ-038-066
+  title: Fields valid and PDF ready before the aftercare request
+  attrs:
+    statement: 'Patient continues to FR-011 to submit the standalone aftercare request only when the fields are valid and the monitoring PDF status is ready.'
+    rationale: 'Screen 6 Continue to Aftercare Request. The patient picks the package and pricing option on FR-011 Screen 6 (REQ-038-017).'
+- op: update_node
+  id: REQ-038-076
+  attrs:
+    statement: 'Download PDF MUST be available only when the report is ready, through a signed access link; each Download issues a new signed link.'
+- op: update_node
+  id: REQ-038-081
+  attrs:
+    statement: 'Confirmation (Screen 5) is required and MUST be selected: for Complete and export it acknowledges that this case will end, and for Switch to Aftercare Package it acknowledges that the case stays active until the aftercare request is created.'
+# ---- Step, screen and setting updates --------------------------------------
+- op: update_node
+  id: STP-038-055
+  title: Patient continues to FR-011 to pick a package and submit the standalone request
+- op: update_node
+  id: SCR-038-06
+  attrs:
+    description: Reviews the pre-filled information and the monitoring PDF before continuing into FR-011 Screen 6, where the patient picks the package and pricing option.
+- op: update_node
+  id: SCR-038-07
+  attrs:
+    description: Displays the completed or converted case and the downloadable report, read-only.
+- op: update_node
+  id: SET-transplant-progress-reminder-defaults
+  attrs:
+    description: Patient reminder defaults for transplant-progress monitoring. Reminders are on by default with this schedule and cannot become mandatory milestones or compliance checks. The default schedule is set by admins in the FR-030 notification settings (REQ-030-225); FR-038 only refers to it. The patient may change or switch off their own reminders, and reminders stop when the case is completed or converted.
+# ---- New edges: new steps first, then edge changes on existing nodes ---------
+- {op: add_edge, from: STP-038-057, verb: done by, to: ACT-system}
+- {op: add_edge, from: STP-038-058, verb: done by, to: ACT-system}
+- {op: add_edge, from: STP-038-059, verb: done by, to: ACT-platform-admin}
+- {op: add_edge, from: STP-038-057, verb: at, to: STG-monitoring-02-tracking}
+- {op: add_edge, from: STP-038-058, verb: at, to: STG-monitoring-02-tracking}
+- {op: add_edge, from: STP-038-059, verb: at, to: STG-monitoring-02-tracking}
+- {op: add_edge, from: STP-038-057, verb: 'on', to: SCR-038-07}
+- {op: add_edge, from: STP-038-059, verb: 'on', to: SCR-038-08}
+- {op: add_edge, from: STP-038-057, verb: applies, to: REQ-038-041}
+- {op: add_edge, from: STP-038-057, verb: applies, to: REQ-038-079}
+- {op: add_edge, from: STP-038-058, verb: applies, to: REQ-038-045}
+- {op: add_edge, from: STP-038-058, verb: applies, to: REQ-038-079}
+- {op: add_edge, from: STP-038-059, verb: applies, to: REQ-038-061}
+- {op: add_edge, from: STP-038-059, verb: applies, to: REQ-038-012}
+- {op: add_edge, from: STP-038-015, verb: next, to: STP-038-057, attrs: {"label": "PDF generation failed and the patient selects Retry PDF", "condition": "REQ-038-041"}}
+- {op: add_edge, from: STP-038-057, verb: next, to: STP-038-016, attrs: {"label": "report regenerated"}}
+- {op: add_edge, from: STP-038-034, verb: next, to: STP-038-058}
+- {op: add_edge, from: STP-038-059, verb: next, to: STP-038-031}
+- {op: add_edge, from: STP-038-053, verb: next, to: STP-038-054, attrs: {"label": "patient retries"}}
+- {op: add_edge, from: STP-011-009, verb: next, to: STP-038-056, attrs: {"label": "Request created from an FR-038 conversion", "condition": "REQ-038-015"}}
+- {op: add_edge, from: FLW-038-admin-correction, verb: starts at, to: STP-038-059}
+- {op: add_edge, from: STP-038-021, verb: 'on', to: SCR-038-05}
+- {op: add_edge, from: STP-038-007, verb: 'on', to: SCR-038-04}
+- {op: add_edge, from: STP-038-055, verb: applies, to: REQ-038-017}
+- {op: add_edge, from: STP-038-032, verb: applies, to: REQ-038-030}
+- {op: add_edge, from: REQ-038-030, verb: applies to, to: SCR-038-09}
+- {op: add_edge, from: REQ-038-062, verb: applies to, to: SCR-038-07}
+- {op: add_edge, from: SCR-038-06, verb: shows, to: ENT-monitoring-export.generation_state, attrs: {"provenance": "system calculated", "label": "PDF Status"}}
+- {op: add_edge, from: SCR-038-09, verb: shows, to: ENT-transplant-progress-audit-entry.action, attrs: {"provenance": "retrieved", "label": "Audit History (action)"}}
