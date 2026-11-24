@@ -1,0 +1,244 @@
+# Operations ordered so nodes are created before the edges that use them; removals and updates follow the additions. No add_field or add_enum_value is needed.
+reason: 'FR-027 logic review pass 2: one acceptance base and Pending set for prompts, reminders, the re-accept count and the rate, with a fixed audience per document type (owner default 88); banner and alert both start 14 days after the version became Current; Screen 5 limited-access exit and blocked state only at gated actions; a missing locale text may be added to a Current version (owner default 87); audit actions per event; Audit trail list also opens unfiltered; settings, withdraw and rejected second Publish as steps with back edges; provider first-run and sign-in prompt steps; recipients of the publication notice and coverage alert; Consent entry in patient Settings; restore draft Material Change fixed on Screen 2; stale graph descriptions and step references updated.'
+by: docs-manager
+operations:
+# ---- New steps -------------------------------------------------------------
+- op: add_node
+  id: STP-027-035
+  type: Step
+  owner_fr: FR-027
+  title: Admin sets the legal settings
+  attrs:
+    prd_ref: 'Screen 1: Legal settings panel'
+    description: Admin edits the acceptance rules, coverage threshold, reminder limit and export limit in the Legal settings panel; each change is audited (REQ-027-059).
+- op: add_node
+  id: STP-027-036
+  type: Step
+  owner_fr: FR-027
+  title: Admin withdraws the Scheduled version
+  attrs:
+    prd_ref: 'Alternative Flow A1: Scheduled Effective Date, step 3'
+    description: Admin withdraws a Scheduled version back to Draft with the Withdraw action on Screen 1; the withdrawal is audited (REQ-027-060).
+- op: add_node
+  id: STP-027-037
+  type: Step
+  owner_fr: FR-027
+  title: System asks a new provider team member at invitation acceptance to accept the Current Terms and Privacy Policy
+  attrs:
+    prd_ref: 'Main Flow: User Accepts New Version, step 1'
+    description: The member arrives through the FR-009 invitation link; FR-009 invitation acceptance is queued to continue here (REQ-027-062).
+- op: add_node
+  id: STP-027-038
+  type: Step
+  owner_fr: FR-027
+  title: System shows a signed-in provider team member the current legal documents requiring acceptance
+  attrs:
+    prd_ref: 'Main Flow: User Accepts New Version, step 3'
+# ---- Edge removals ---------------------------------------------------------
+- {op: remove_edge, from: STP-027-005, verb: applies, to: REQ-027-060}
+- {op: remove_edge, from: STP-027-011, verb: next, to: STP-027-009}
+- {op: remove_edge, from: STP-027-010, verb: next, to: STP-027-009}
+# ---- New edges: new steps and flow entry points first, then edge changes on existing steps ---
+- {op: add_edge, from: STP-027-035, verb: done by, to: ACT-platform-admin}
+- {op: add_edge, from: STP-027-036, verb: done by, to: ACT-platform-admin}
+- {op: add_edge, from: STP-027-037, verb: done by, to: ACT-system}
+- {op: add_edge, from: STP-027-038, verb: done by, to: ACT-system}
+- {op: add_edge, from: STP-027-035, verb: at, to: STG-admin-01-configuration}
+- {op: add_edge, from: STP-027-036, verb: at, to: STG-admin-01-configuration}
+- {op: add_edge, from: STP-027-037, verb: at, to: STG-provider-01-invited}
+- {op: add_edge, from: STP-027-038, verb: at, to: STG-provider-03-active}
+- {op: add_edge, from: STP-027-035, verb: 'on', to: SCR-027-01}
+- {op: add_edge, from: STP-027-036, verb: 'on', to: SCR-027-01}
+- {op: add_edge, from: STP-027-037, verb: 'on', to: SCR-027-06}
+- {op: add_edge, from: STP-027-038, verb: 'on', to: SCR-027-06}
+- {op: add_edge, from: STP-027-035, verb: applies, to: REQ-027-059}
+- {op: add_edge, from: STP-027-035, verb: applies, to: REQ-027-021}
+- {op: add_edge, from: STP-027-036, verb: applies, to: REQ-027-060}
+- {op: add_edge, from: STP-027-037, verb: applies, to: REQ-027-005}
+- {op: add_edge, from: STP-027-037, verb: applies, to: REQ-027-009}
+- {op: add_edge, from: STP-027-037, verb: applies, to: REQ-027-012}
+- {op: add_edge, from: STP-027-037, verb: applies, to: REQ-027-062}
+- {op: add_edge, from: STP-027-038, verb: applies, to: REQ-027-012}
+- {op: add_edge, from: STP-027-038, verb: applies, to: REQ-027-033}
+- {op: add_edge, from: STP-027-038, verb: applies, to: REQ-027-036}
+- {op: add_edge, from: STP-027-038, verb: applies, to: REQ-027-037}
+- {op: add_edge, from: STP-027-038, verb: applies, to: REQ-027-058}
+- {op: add_edge, from: STP-027-036, verb: next, to: STP-027-001, attrs: {"label": "withdrawn to Draft"}}
+- {op: add_edge, from: STP-027-037, verb: next, to: STP-027-009, attrs: {"label": "new provider team member", "condition": "REQ-027-062"}}
+- {op: add_edge, from: STP-027-038, verb: next, to: STP-027-009, attrs: {"label": "provider team member signs in", "condition": "REQ-027-019"}}
+- {op: add_edge, from: STP-027-038, verb: next, to: STP-027-033, attrs: {"label": "continues with limited access"}}
+- {op: add_edge, from: FLW-027-admin-publish, verb: starts at, to: STP-027-035}
+- {op: add_edge, from: FLW-027-a1-scheduled-date, verb: starts at, to: STP-027-036}
+- {op: add_edge, from: FLW-027-user-accepts, verb: starts at, to: STP-027-037}
+- {op: add_edge, from: FLW-027-user-accepts, verb: starts at, to: STP-027-038}
+- {op: add_edge, from: STP-027-004, verb: applies, to: REQ-027-060}
+- {op: add_edge, from: STP-027-004, verb: next, to: STP-027-003, attrs: {"label": "rejected: a Scheduled version already exists", "condition": "REQ-027-060", "back": true}}
+- {op: add_edge, from: STP-027-002, verb: next, to: STP-027-001, attrs: {"label": "back to edit", "back": true}}
+- {op: add_edge, from: STP-027-003, verb: next, to: STP-027-001, attrs: {"label": "back to edit", "back": true}}
+- {op: add_edge, from: STP-027-001, verb: applies, to: REQ-027-013}
+- {op: add_edge, from: STP-027-010, verb: next, to: STP-027-033, attrs: {"label": "continues with limited access"}}
+- {op: add_edge, from: STP-027-012, verb: next, to: STP-027-038, attrs: {"label": "reminder sent and the provider team member signs in", "condition": "REQ-027-063"}}
+- {op: add_edge, from: REQ-027-062, verb: applies at, to: STG-provider-03-active}
+- {op: add_edge, from: SCR-027-06, verb: belongs to, to: STG-patient-01-registered}
+- {op: add_edge, from: SCR-027-06, verb: belongs to, to: STG-provider-01-invited}
+# ---- Text and title updates ------------------------------------------------
+- op: update_node
+  id: REQ-027-013
+  attrs:
+    statement: 'Audit trail MUST be immutable and reviewable by authorized Admins as a read-only Audit trail list on Screen 1. The list is filtered to one document from a document row or the Screen 4 audit link, and also opens unfiltered from the Legal settings panel; the object reference is empty for settings_change. Audit actions: create on the first save of a draft; edit when the Admin leaves the editor with changes (not per autosave) and when a locale text is added to a Current version; Publish now writes publish, activate and archive (of the prior Current); Publish with a future effective date writes publish and schedule, and the effective date then writes activate and archive; withdraw writes withdraw; a settings change writes settings_change.'
+    rationale: Security and Privacy Requirements. Every audit action has a producer, and the unfiltered list lets the settings_change entries, which have no document, be seen.
+- op: update_node
+  id: REQ-027-016
+  attrs:
+    statement: 'Admin: Settings → Legal Content → Documents (T&C, Privacy, Consent, Cancellation Policy) → Draft/Preview/Publish. Patient: First-run or on change → Acceptance prompt; Settings → Terms & Conditions; Settings → Privacy & Security → Privacy Policy; Settings → Consent. Provider: First-run or on change → Acceptance prompt; Settings → Legal → View documents.'
+    rationale: Entry Points (lines 69-71). The Terms and Privacy paths match FR-001 Screens 15c and 15d; Settings → Consent lets a patient read the general Consent text again after accepting it (REQ-027-017).
+- op: update_node
+  id: REQ-027-021
+  title: Fixed audience per document type; Admin may only switch the acceptance requirement of a type off for an audience
+  attrs:
+    statement: 'The audience of each document type is fixed: Terms & Conditions and Privacy Policy, patients and provider team members; general Consent, patients only; Cancellation Policy, nobody. Admin uses the acceptance rules in the Legal settings panel on Screen 1 (REQ-027-059) only to switch the acceptance requirement of a type off for an audience; the setting cannot widen the audience or change the gated actions (REQ-027-033), and while it is unset the fixed audience applies.'
+    rationale: Owner default 88. The earlier wording left open who accepts which type and what the setting could change, since who is fixed by the base (REQ-027-053) and when by the gating (REQ-027-033). A provider team member is not asked for the patient consent.
+- op: update_node
+  id: REQ-027-022
+  title: Publishing Admin notified when publication succeeds
+  attrs:
+    statement: System notifies the Admin who published when publication succeeds.
+    rationale: Communication Structure and Main Flow step 5. The recipient is the publishing Admin.
+- op: update_node
+  id: REQ-027-023
+  title: Admins holding A-09 Edit Settings notified when the Acceptance Rate is below the threshold
+  attrs:
+    statement: System notifies the Admins holding A-09 Edit Settings when the Acceptance Rate of a Current version is below the Admin-set threshold.
+    rationale: Communication scope. The alert is raised by the daily job, which has no acting Admin, so the recipients are the Admins who can change the settings. Coverage is the accepted share, so the alert fires when it is low. The evaluation time is in REQ-027-063.
+- op: update_node
+  id: REQ-027-024
+  attrs:
+    statement: Screen 1 (Admin Legal Documents List, SCR-027-01) shows a warning banner when the Acceptance Rate of the Current version is below the Admin-set threshold, from 14 days after the version became Current (the same start as the alert in REQ-027-063).
+    rationale: Screen 1 notes. The threshold is set in the Legal settings panel; unset means no banner (REQ-027-059). The banner waits as the alert does, because the rate is 0 percent at publication.
+- op: update_node
+  id: REQ-027-031
+  title: Restoring an earlier text is a new draft published as a new version; no revert button; prompts updated and audit entries recorded
+  attrs:
+    statement: There is no revert button. To go back to an earlier text, Admin creates a new draft from the old version (Create draft from this version on a Current or Archived row of Screen 1) and publishes it as a new version through the normal publishing flow with Material Change fixed to Yes (No for the Cancellation Policy); Screen 2 shows the Material Change field fixed and not editable on such a draft, and the audit entries of the normal publish are recorded (REQ-027-013).
+    rationale: Alternative Flow B1. The restore reuses the main edit, preview and publish steps; the audit and prompt steps are those of the normal flow.
+- op: update_node
+  id: REQ-027-032
+  title: Restoring an earlier text keeps existing acceptance records; users with no row for the restored version or its source version accept the restored one
+  attrs:
+    statement: When an earlier text is restored it is published as a new version; existing acceptance records are preserved, a base member with a ledger row for the version the text was restored from counts as accepted, and every other base member is Pending and is asked to accept it (REQ-027-053).
+    rationale: Edge Cases. A restored version is always material, so one population decides who is prompted, reminded and counted; a user who already holds the original version is not asked again.
+- op: update_node
+  id: REQ-027-035
+  attrs:
+    statement: After the user accepts, System resumes normal access without further prompts until the next required version; acceptance is once per version, so FR-003 asks again at an inquiry only when the Current Terms & Conditions are not accepted. A user must accept the Current text of a type while the latest Material Change = Yes version up to and including it is not accepted by them; first run asks for the Current text whatever its flag.
+    rationale: Owner default 82. Main Flow step 6 of User Accepts New Version and User Story 2 scenario 2. A minor version therefore does not cancel an earlier material requirement. The FR-003 checkbox change is a neighbour change.
+- op: update_node
+  id: REQ-027-037
+  attrs:
+    statement: When a user is served the fallback text, Screen 1 shows a Locale gap badge on that version's row; Admin may add the missing locale text to a Current version, which clears the badge. The addition is audited as edit, creates no new version and needs no re-acceptance; existing locale texts of a Current version stay view-only.
+    rationale: Owner default 87. CL-3 and Edge Cases. The task for the Admin is a badge on the existing list; a translation of unchanged text should not churn version labels or acceptance coverage.
+- op: update_node
+  id: REQ-027-049
+  title: Edit opens only Draft versions; Current and Archived are view-only, except adding a missing locale text to a Current version
+  attrs:
+    statement: Edit opens only Draft versions; Scheduled, Current and Archived versions are view-only (preview/history), except that Admin may add a missing locale text to a Current version (REQ-027-037). Create draft from this version is offered on Current and Archived rows; View history filters the list to that document type.
+- op: update_node
+  id: REQ-027-052
+  attrs:
+    statement: 'Preview & Publish shows an acceptance impact summary: the number of users who would be Pending under REQ-027-053 if the version became Current now.'
+- op: update_node
+  id: REQ-027-053
+  attrs:
+    statement: For a version, the acceptance base is the Active patient accounts and the team members of Active providers, in that document type's audience (REQ-027-021), that existed when the version became Current. Accepted are the base members with a ledger row for this version or, for a restored version, for the version it was restored from; Pending are the rest of the base. An account that leaves Active leaves the base and is prompted at its next sign-in if it returns; an account created after the version became Current accepts at first run and is not in the base. Acceptance Rate is the accepted share of the base. Prompts, reminders, the Screen 3 re-accept count and the rate all use this Pending set; a user still required under REQ-027-035 is also prompted and reminded when the rate is not applicable. For the Cancellation Policy and any version with Material Change = No, rate and pending are shown as not applicable.
+    rationale: Owner default 80, restated with a snapshot base so that accepting does not remove a user from the base and an Archived version does not change as users accept newer ones. The ledger holds only acceptances, so the population needed a definition; one Pending set serves prompts, reminders, the Screen 3 count (REQ-027-052) and the rate.
+- op: update_node
+  id: REQ-027-058
+  attrs:
+    statement: The acceptance prompt MUST list each document that needs acceptance with its version and effective date, MUST enable Accept for a document only after its full text has been opened, MUST give one Accept per document, MUST show the fallback-language notice when REQ-027-036 applies, and MUST at sign-in offer Continue with limited access, sign-out and the FR-001 account-deletion link. At a gated action (REQ-027-033) it MUST be shown again with a blocked state until every listed document is accepted, and with an accepted state afterwards.
+    rationale: The user-facing half of the flow had no screen, so the acceptance steps could not be built or tested. One spec serves the patient app and the provider portal (REQ-027-012, REQ-027-015). The blocked state applies only at the gated actions, so a user who does not accept keeps the open features of REQ-027-033.
+- op: update_node
+  id: REQ-027-059
+  attrs:
+    statement: Admin MUST edit the acceptance rules, the coverage threshold (percent), the reminder limit (reminders per user per version) and the export limit (exports per Admin per day) in a Legal settings panel on Screen 1; each change is audited. While a value is unset there is no banner or alert (threshold), no reminders (reminder limit) and CSV export is blocked (export limit); while the acceptance rules are unset, a version with Material Change = Yes gates the fixed audience of its document type (REQ-027-021).
+- op: update_node
+  id: REQ-027-062
+  attrs:
+    statement: A new patient at registration and a new provider team member at invitation acceptance, including a new member of an Active clinic, MUST accept the Current Terms & Conditions and the Current Privacy Policy; a new patient is asked for the general consent at the first sign-in, and a provider team member is not (REQ-027-021). A Scheduled version is never shown or recorded before its effective date.
+    rationale: Owner default 81. The first-run entry points had no step and FR-001 records only the Terms checkbox. A new member of an Active clinic is at the clinic stage STG-provider-03-active, a clinic's first user at STG-provider-01-invited. Accounts created after a version became Current accept at first run and are not in the base (REQ-027-053).
+- op: update_node
+  id: REQ-027-063
+  attrs:
+    statement: A daily system job MUST send each user in the Pending set (REQ-027-053) one reminder at most every 7 days, up to the reminder limit, and MUST evaluate the Acceptance Rate of the Current version of each document type daily from 14 days after it became Current, raising the coverage alert once per version while the rate is below the threshold; the Screen 1 banner uses the same start (REQ-027-024). reminders_sent_count is the count of the version's legal reminder records.
+    rationale: Owner default 85. Reminders and the coverage alert had no trigger, cadence or producer, and at publication the rate is 0 percent so the alert would have fired at once. The 14-day wait removes that, for the alert and the banner.
+- op: update_node
+  id: SET-legal-acceptance-rules
+  attrs:
+    description: 'Admin-configurable acceptance rules. The audience of each document type is fixed (REQ-027-021); the setting can only switch the acceptance requirement of a type off for an audience, and cannot widen the audience or change the gated actions. Edited in the Legal settings panel on Screen 1 (REQ-027-059). Unset: the fixed audience applies. FR-027 owns this setting (CL-5).'
+- op: update_node
+  id: ENT-legal-audit-entry
+  attrs:
+    description: 'Audit Entry: actor, action (create, edit, publish, schedule, activate, archive, withdraw, settings_change), timestamp, object reference (empty for settings_change), summary. References the Admin actor and the document version. Immutable (REQ-027-013).'
+- op: update_node
+  id: ENT-legal-audit-entry.action
+  attrs:
+    description: create, edit, publish, schedule, activate, archive, withdraw or settings_change; the action each event writes is in REQ-027-013.
+- op: update_node
+  id: ENT-legal-audit-entry.object_reference
+  attrs:
+    description: The legal document version the action applies to; empty for settings_change.
+- op: update_node
+  id: ENT-legal-document
+  attrs:
+    description: 'Legal document version (Terms & Conditions, Privacy Policy, general Consent, Cancellation Policy): type, locale, version, status (Draft, Scheduled, Current, Archived), effective date, content, change summary. Version label, status, effective date, Material Change and change summary belong to the version and each locale text is a child of it (REQ-027-061); one Current version per document type. Cancellation Policy has Requires Acceptance = No. Stub from the FR-001 migration, now filled.'
+- op: update_node
+  id: ENT-legal-document.effective_date
+  attrs:
+    description: 'When the version becomes Current: a UTC date and time, shown in the Admin''s time zone (REQ-027-041).'
+- op: update_node
+  id: ENT-legal-document.version
+  attrs:
+    description: Version label, unique per document type and shared by every locale text of the version (REQ-027-040, REQ-027-061).
+- op: update_node
+  id: ENT-legal-document.content
+  attrs:
+    description: Rich-text body of one locale text of a legal document (Terms and Conditions, Privacy Policy, general Consent, Cancellation Policy). Stub created during FR-001 migration; FR-027 owns legal content.
+- op: update_node
+  id: ENT-legal-document.acceptance_rate
+  attrs:
+    description: Percentage of the version's acceptance base that has accepted it, computed from the acceptance ledger (REQ-027-053).
+- op: update_node
+  id: ENT-legal-document.pending_user_count
+  attrs:
+    description: Users in the version's acceptance base who have not accepted it (REQ-027-053).
+- op: update_node
+  id: EVT-legal-version-published
+  attrs:
+    description: 'Publication succeeded: the publishing Admin is notified (REQ-027-022); user acceptance prompts start when the version is Current (REQ-027-004, REQ-027-030).'
+- op: update_node
+  id: EVT-legal-coverage-below-threshold
+  attrs:
+    description: 'The Acceptance Rate of a Current version is below the Admin-set threshold: the Admins holding A-09 Edit Settings are notified once per version, evaluated daily from 14 days after the version became Current (REQ-027-063, REQ-027-023).'
+- op: update_node
+  id: STP-027-008
+  attrs:
+    prd_ref: 'Main Flow: User Accepts New Version, step 4'
+- op: update_node
+  id: STP-027-009
+  attrs:
+    prd_ref: 'Main Flow: User Accepts New Version, step 4'
+- op: update_node
+  id: STP-027-010
+  title: System shows a signed-in patient the current legal documents requiring acceptance
+  attrs:
+    prd_ref: 'Main Flow: User Accepts New Version, step 3'
+- op: update_node
+  id: STP-027-011
+  title: System asks a new patient at registration to accept the Current Terms and Privacy Policy
+- op: update_node
+  id: STP-027-032
+  attrs:
+    prd_ref: 'Main Flow: User Accepts New Version, step 5'
+- op: update_node
+  id: STP-027-033
+  attrs:
+    prd_ref: 'Main Flow: User Accepts New Version, step 6'
