@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T13:10:16Z",
+  "generated_at": "2026-11-24T13:27:44Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -30604,7 +30604,7 @@
       "owner_fr": "FR-008",
       "title": "Hotel status",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "description": "Badge on provider and admin Travel sections."
       }
@@ -30624,9 +30624,9 @@
       "owner_fr": "FR-008",
       "title": "Included services labels snapshot",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Names of the accepted option's included services (for example hotel, airport transfer, city tour), copied from its included-services list at confirmation; the Package Travel Items source."
+        "description": "Names of the accepted option's included services (for example hotel, airport transfer, city tour), copied from its included-services list at confirmation; the Package Travel Items source. The FR-004 included_services checklist supplies the labels; option item names are display detail only."
       }
     },
     {
@@ -30673,7 +30673,7 @@
       "owner_fr": "FR-008",
       "title": "Outbound flight status",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "description": "Badge on provider and admin Travel sections."
       }
@@ -30684,9 +30684,9 @@
       "owner_fr": "FR-008",
       "title": "Overall status",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Admin Screen 12 header badge: Pending, Partially submitted, Complete. The PRD does not define how it is derived (see questions)."
+        "description": "Admin Screen 12 header badge: Pending, Partially submitted, Complete; derived by REQ-008-077."
       }
     },
     {
@@ -30695,7 +30695,7 @@
       "owner_fr": "FR-008",
       "title": "Passport status",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Shown as a badge (Path A only). Added for screen badges; the PRD Key Entities hold the status on the passport record (see questions)."
       }
@@ -30715,7 +30715,7 @@
       "owner_fr": "FR-008",
       "title": "Return flight status",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "description": "Badge on provider and admin Travel sections."
       }
@@ -49526,9 +49526,9 @@
       "owner_fr": "FR-008",
       "title": "Hotel transportation field is canonical for pickup notes",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "The `transportation` field in the hotel record MUST be the canonical field for airport pickup and transfer coordination in MVP.",
+        "statement": "The `transportation` field in the hotel record MUST be the canonical field for airport pickup and transfer coordination in MVP. When the hotel is marked Not needed, no transportation details are collected (accepted for MVP).",
         "rationale": "No separate transport form exists in MVP (Screens 4 and 9 notes, Hotel Records, Assumptions)."
       }
     },
@@ -49586,9 +49586,9 @@
       "owner_fr": "FR-008",
       "title": "Travel path derived from the accepted option snapshot",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "The binary travel path MUST be derived from `included_services` in the accepted FR-004 Quote Option snapshot carried by the FR-005 AcceptanceEvent, not selected by the provider in FR-008. `flight` or `hotel` (the FR-004 `accommodation` item type) yields `provider_included` (Path A); neither yields `patient_self_booked` (Path B), including transport-only options. FR-008 MUST persist the derived path and accepted inclusions in TravelContext at booking confirmation. Path A allows provider entry only for included flight/hotel services and never patient entry; Path B allows patient entry only and never provider entry. An omitted Path A flight/hotel service is \"Not included\" and is not collected in MVP. The reusable package preset and parent quote are not the authority for this choice.",
+        "statement": "The binary travel path MUST be derived from `included_services` in the accepted FR-004 Quote Option snapshot carried by the FR-005 AcceptanceEvent, not selected by the provider in FR-008. `flight` or `hotel` (the FR-004 `accommodation` item type) yields `provider_included` (Path A); neither yields `patient_self_booked` (Path B), including transport-only options. FR-008 MUST persist the derived path and accepted inclusions in TravelContext at booking confirmation. Path A allows provider entry only for included flight/hotel services and never patient entry; Path B allows patient entry only and never provider entry. An omitted Path A flight/hotel service is \"Not included\" and is not collected in MVP. The reusable package preset and parent quote are not the authority for this choice. The FR-004 included_services checklist alone decides the path; option item names are display detail only.",
         "rationale": "Travel Path Determination: travel_path is not user-selectable; the provider edits option-level included_services in FR-004 and those changes stay within that quote. Transport-only inclusion remains Path B."
       }
     },
@@ -49728,9 +49728,9 @@
       "owner_fr": "FR-008",
       "title": "Early departure raises an acknowledged soft warning",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "When a return flight departs, or the hotel check-out date falls, before the last treatment plan day (current booking appointment date plus the plan day count minus one), the system MUST show the submitter a soft warning that must be acknowledged before saving, MUST still allow the record to be saved, MUST record who acknowledged it and when, and MUST show the provider an early-departure flag on the booking.",
+        "statement": "When a return flight departs, or the hotel check-out date falls, before the last treatment plan day (current booking appointment date plus the plan day count minus one), the system MUST show the submitter a soft warning that must be acknowledged before saving, MUST still allow the record to be saved, MUST record who acknowledged it and when, and MUST show the provider an early-departure flag on the booking. If a reschedule then leaves the return flight or the hotel check-out before the new last treatment plan day, the earlier acknowledgment is cleared and asked again.",
         "rationale": "Applies on Screens 3, 8 and 12 (return flight) and Screens 4, 9 and 12 (hotel check-out); the provider's status badge shows 'Leaves before last treatment day' with the time the submitter acknowledged the warning (Screen 6)."
       }
     },
@@ -49740,9 +49740,9 @@
       "owner_fr": "FR-008",
       "title": "Provider-fault transfer carries travel records to the replacement booking",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "When FR-006 Alternative Flow B5 transfers a patient to a replacement booking, the system MUST keep the original TravelContext closed with its records read-only; only when the replacement booking's travel path (A or B) matches the original's, MUST carry the passport record over to the replacement TravelContext as a new locked booking-linked record, MUST copy the current flight and hotel records to it with a copy-source reference and the flag \"travel-date review required\", MUST NOT request carried-over items from the patient again, and MUST set the replacement TravelContext to `travel-date-review-required` until an admin clears the review under REQ-008-030. When the paths differ, nothing is carried over or copied, the replacement TravelContext starts `active`, and the initial requests for its own path are sent. Each copied record (passport, flight, hotel) keeps its original submitter plus the copy-source reference; any correction to a copy goes through the admin.",
+        "statement": "When FR-006 Alternative Flow B5 transfers a patient to a replacement booking, the system MUST keep the original TravelContext closed with its records read-only; only when the replacement booking's travel path (A or B) matches the original's, MUST carry the passport record over to the replacement TravelContext as a new locked booking-linked record, MUST copy the current flight and hotel records to it with a copy-source reference and the flag \"travel-date review required\", MUST NOT request carried-over items from the patient again, and MUST set the replacement TravelContext to `travel-date-review-required` until an admin clears the review under REQ-008-030. When the paths differ, nothing is carried over or copied, the replacement TravelContext starts `active`, and the initial requests for its own path are sent. Each copied record (passport, flight, hotel) keeps its original submitter plus the copy-source reference; any correction to a copy goes through the admin. The carry-over also keeps any Not-needed marks, the no-travel declaration and an Incomplete passport mark as they were, and the admin travel record shows \"carried over from the original booking\" so an admin can review them.",
         "rationale": "Alternative Flow B2: copied flight and hotel records show 'Travel-date review required' on the provider Travel section until admin clears it; admin confirms or corrects copied dates on Screens 11 and 12."
       }
     },
@@ -49889,9 +49889,9 @@
       "owner_fr": "FR-008",
       "title": "Included travel items listed on the patient itinerary",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Included travel items of the accepted option (for example hotel, airport transfer, or another travel service such as a city tour) MUST be listed as Package Travel Items on the patient itinerary whenever they exist, in Path A or Path B, named from the accepted option's included-services list as saved with the TravelContext at confirmation. Services not included are shown as Not included and are not collected in MVP.",
+        "statement": "Included travel items of the accepted option (for example hotel, airport transfer, or another travel service such as a city tour) MUST be listed as Package Travel Items on the patient itinerary whenever they exist, in Path A or Path B, named from the accepted option's included-services list as saved with the TravelContext at confirmation. Services not included are shown as Not included and are not collected in MVP. The FR-004 included_services checklist supplies these labels; option item names are display detail only.",
         "rationale": "prd.md lines 419, 794, 796 (checked against the PRD text)."
       }
     },
@@ -49961,9 +49961,9 @@
       "owner_fr": "FR-008",
       "title": "Provider passport access logged and limited to assigned clinic",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Provider access to passport data MUST be logged (timestamp, provider user ID), and a provider MUST NOT be able to view passport data of patients not assigned to its clinic. The provider sees the passport number in full and the passport view is read-only; incorrect data is corrected by contacting admin. Once the TravelContext is closed (booking cancelled after confirmation, or closed by a provider-fault transfer), the original provider MUST lose access to the passport record; flight and hotel details stay read-only for that provider, and admins keep access.",
+        "statement": "Provider access to passport data MUST be logged (timestamp, provider user ID), and a provider MUST NOT be able to view passport data of patients not assigned to its clinic. The provider sees the passport number in full and the passport view is read-only; incorrect data is corrected by contacting admin. Once the TravelContext is closed (booking cancelled after confirmation, or closed by a provider-fault transfer) or the booking reaches Completed, the provider MUST lose access to the passport record; flight and hotel details stay read-only for that provider, and admins keep access.",
         "rationale": "prd.md lines 490-493 (checked against the PRD text)."
       }
     },
@@ -49973,9 +49973,9 @@
       "owner_fr": "FR-008",
       "title": "Earlier passport details reused through a new locked record",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "If passport details were previously submitted for an earlier appointment, the passport request is still sent as usual. The patient either confirms the earlier details or enters new ones, and the result is a new booking-linked locked record; the earlier record is not edited.",
+        "statement": "If passport details were previously submitted for an earlier appointment, the passport request is still sent as usual. The patient either confirms the earlier details (\"Use these details\") or enters new ones (\"Enter new details\"), and the result is a new booking-linked locked record; the earlier record is not edited.",
         "rationale": "prd.md line 305 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -50033,9 +50033,9 @@
       "owner_fr": "FR-008",
       "title": "Itinerary sections show submitter, timestamp and pending state",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Each itinerary section MUST show the submission timestamp and the submitter (patient or provider). A pending item shows an 'Awaiting submission' state, and a submission link appears only when the patient owns that item (Path B, or the Path A passport). The passport section (full name, masked passport number, date of expiry) appears only for Path A, and the return flight section only if a return record exists.",
+        "statement": "Each itinerary section MUST show the submission timestamp and the submitter (patient or provider). A pending item shows an 'Awaiting submission' state, and a submission link appears only when the patient owns that item (Path B, or the Path A passport). The passport section (full name, masked passport number, date of expiry) appears only for Path A, and in Path A the return flight section only if a return record exists. In Path B the outbound flight, return flight and hotel rows are always shown, as the record, Awaiting or Not needed.",
         "rationale": "prd.md lines 420, 422, 429-430 (checked against the PRD text)."
       }
     },
@@ -50069,9 +50069,9 @@
       "owner_fr": "FR-008",
       "title": "No-travel declaration reversed by admin only",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "A patient MUST NOT be able to reverse a no-travel declaration and contacts admin instead. Admin MAY override no_travel_required from the Travel section and re-send the travel submission request. The declaration and any admin override MUST be recorded on the TravelContext with timestamp and actor ID.",
+        "statement": "A patient MUST NOT be able to reverse a no-travel declaration and contacts admin instead. Admin MAY override no_travel_required from the Travel section and re-send the travel submission request. The declaration and any admin override MUST be recorded on the TravelContext with timestamp and actor ID. The provider MUST see \"Patient declared no travel needed\" on the Travel Details view and MUST be notified when the declaration is made or overridden.",
         "rationale": "prd.md lines 333-335 (checked against the PRD text)."
       }
     },
@@ -50081,9 +50081,9 @@
       "owner_fr": "FR-008",
       "title": "Admin re-notify limited to patient-owned pending items",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Admin 'Re-notify patient' MUST send a manual notification only for a patient-owned pending item: the passport in Path A, or flight or hotel in Path B unless the booking is marked no_travel_required or the item is marked Not needed. Provider-owned Path A flight and hotel items MUST NOT create patient submission notifications. There are no automatic reminders at MVP; after the initial request this admin action is the only follow-up.",
+        "statement": "Admin 'Re-notify patient' MUST send a manual notification only for a patient-owned pending item: the passport in Path A (not yet submitted, or marked Incomplete), or flight or hotel in Path B unless the booking is marked no_travel_required or the item is marked Not needed. Provider-owned Path A flight and hotel items MUST NOT create patient submission notifications. There are no automatic reminders at MVP; after the initial request this admin action is the only follow-up.",
         "rationale": "prd.md line 647 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -50105,9 +50105,9 @@
       "owner_fr": "FR-008",
       "title": "Appointment change keeps the accepted baseline visible",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "When an approved admin intervention changes the appointment date after confirmation and FR-006 sends its booking.rescheduled event (REQ-006-011), the system MUST preserve the immutable accepted appointment baseline, show the current booking appointment alongside it, and revalidate the existing flight and hotel dates before the itinerary is treated as current. Patients and providers see 'Travel dates under admin review' on the affected sections but cannot clear it. FR-008 MUST NOT automatically rebook external travel.",
+        "statement": "When an approved admin intervention changes the appointment date after confirmation and FR-006 sends its booking.rescheduled event (REQ-006-011), the system MUST preserve the immutable accepted appointment baseline, show the current booking appointment alongside it, and revalidate the existing flight and hotel dates before the itinerary is treated as current. Patients and providers see 'Travel dates under admin review' on the affected sections but cannot clear it. FR-008 MUST NOT automatically rebook external travel. A reschedule on a booking with no flight or hotel records starts no review. Submissions and edits stay allowed during a review, and the admin still confirms the dates.",
         "rationale": "prd.md lines 431, 464, 808-809 (checked against the PRD text)."
       }
     },
@@ -50128,9 +50128,9 @@
       "owner_fr": "FR-008",
       "title": "Provider status badges and entry actions follow path and inclusion",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "The provider Travel section MUST show status badges for the passport (Path A only; Awaiting, Submitted or Incomplete), the outbound flight, the return flight and the hotel (Not included, Awaiting or Submitted), updated in real time on submission and on admin correction, and MUST show the Awaiting states immediately when the booking becomes Confirmed. In Path A, View Passport appears, and Enter Flight and Enter Hotel appear only for included services that have not yet been submitted; services not included show 'Not included' with no entry action. In Path B only View Travel Details (read-only) is shown and the provider cannot enter or modify records.",
+        "statement": "The provider Travel section MUST show status badges for the passport (Path A only; Awaiting, Submitted or Incomplete), the outbound flight, the return flight and the hotel (Not included, Awaiting, Submitted or, in Path B, Not needed), updated in real time on submission and on admin correction, and MUST show the Awaiting states immediately when the booking becomes Confirmed. In Path A, View Passport appears, and Enter Flight and Enter Hotel appear only for included services that have not yet been submitted; services not included show 'Not included' with no entry action. In Path B only View Travel Details (read-only) is shown and the provider cannot enter or modify records. An item marked Not needed shows Not needed, not Awaiting.",
         "rationale": "prd.md lines 449-452, 457, 459-460, 786 (checked against the PRD text)."
       }
     },
@@ -50164,9 +50164,9 @@
       "owner_fr": "FR-008",
       "title": "Admin soft-delete with reason",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Admin MAY soft-delete any travel record with a mandatory reason; deletion is not permanent and is retained in the backend audit trail. After a flight or hotel soft-delete the status returns to Awaiting and the item's owner (provider in Path A, patient in Path B) MAY enter one replacement, following the passport pattern (REQ-008-076); until then the item counts as not submitted.",
+        "statement": "Admin MAY soft-delete any travel record with a mandatory reason; deletion is not permanent and is retained in the backend audit trail. After a flight or hotel soft-delete the status returns to Awaiting and the item's owner (provider in Path A, patient in Path B) MAY enter one replacement, following the passport pattern (REQ-008-076); until then the item counts as not submitted. The owner of a soft-deleted flight or hotel record MUST receive a notice asking them to enter it again.",
         "rationale": "prd.md line 767 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -50272,9 +50272,9 @@
       "owner_fr": "FR-008",
       "title": "After an admin soft-delete the passport returns to Awaiting and one new submission is allowed",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "After an admin soft-deletes a passport record, the system MUST set the passport status back to Awaiting and allow exactly one new submission by the patient. The deleted record stays in the travel audit trail.",
+        "statement": "After an admin soft-deletes a passport record, the system MUST set the passport status back to Awaiting and allow exactly one new submission by the patient. The deleted record stays in the travel audit trail. The patient MUST receive a notice asking them to submit it again.",
         "rationale": "Passport Rules, Screen 1 business rules and Screen 12 General Business Rules."
       }
     },
@@ -50284,9 +50284,9 @@
       "owner_fr": "FR-008",
       "title": "Overall Status of the travel record is worked out from the submitted items",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "The system MUST work out the booking's Overall Status shown on the admin travel record screen as follows. Pending: nothing has been submitted. Partially submitted: some required items are in, or the passport is marked Incomplete by an admin. Complete: all required items are in and the passport is not marked Incomplete. Required items: in Path A, the passport plus each of the flight and the hotel that the accepted option includes; in Path B, the outbound flight, the return flight and the hotel, except any item marked Not needed. A booking marked no_travel_required is Complete. A soft-deleted flight or hotel record counts as not submitted until re-entered.",
+        "statement": "The system MUST work out the booking's Overall Status shown on the admin travel record screen as follows. Pending: nothing has been submitted. Partially submitted: some required items are in, or the passport is marked Incomplete by an admin. Complete: all required items are in and the passport is not marked Incomplete. Required items: in Path A, the passport plus each of the flight and the hotel that the accepted option includes; in Path B, the outbound flight, the return flight and the hotel, except any item marked Not needed. A booking marked no_travel_required is Complete. A soft-deleted flight or hotel record counts as not submitted until re-entered. When every required Path B item is marked Not needed, the Overall Status is Complete; this is separate from the no-travel declaration, which stays its own flag.",
         "rationale": "prd.md lines 669, 768 (Screen 12 Overall Status badge and its derivation)."
       }
     },
@@ -50320,9 +50320,9 @@
       "owner_fr": "FR-008",
       "title": "Provider Path B view shows a not-yet-submitted state for each missing record",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "In the provider's read-only Travel Details view of a Path B booking, a flight leg or hotel record that the patient has not submitted MUST show 'Awaiting patient submission', and when no return flight record exists the view MUST show 'Return flight not yet submitted'.",
+        "statement": "In the provider's read-only Travel Details view of a Path B booking, a flight leg or hotel record that the patient has not submitted MUST show 'Awaiting patient submission' unless it is marked Not needed, in which case it MUST show 'Not needed', and when no return flight record exists the view MUST show 'Return flight not yet submitted'. When the patient has declared no travel needed, the view MUST show 'Patient declared no travel needed' and the Awaiting messages do not apply.",
         "rationale": "prd.md lines 588, 613-614 (Screen 10 empty states)."
       }
     },
@@ -50332,9 +50332,9 @@
       "owner_fr": "FR-008",
       "title": "Admin travel record screen shows an empty state and the Re-notify button for a tab with nothing submitted",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "On the admin travel record screen, a tab with nothing submitted MUST show 'Awaiting submission'. The Passport tab then offers the Re-notify patient button, while the Flight and Hotel tabs offer Re-notify patient only in Path B because Path A flight and hotel entry is provider-owned. When no return flight record exists the Flight tab MUST show 'Return flight not yet submitted'.",
+        "statement": "On the admin travel record screen, a tab with nothing submitted and nothing marked Not needed MUST show 'Awaiting submission'; an item marked Not needed shows 'Not needed' and is not offered for Re-notify. The Passport tab then offers the Re-notify patient button, while the Flight and Hotel tabs offer Re-notify patient only in Path B because Path A flight and hotel entry is provider-owned. When the return flight is neither submitted nor marked Not needed the Flight tab MUST show 'Return flight not yet submitted'. The Passport tab also offers Re-notify patient while the passport is marked Incomplete.",
         "rationale": "prd.md lines 694, 727, 731, 761 (Screen 12 empty states and Re-notify availability)."
       }
     },
@@ -97756,10 +97756,10 @@
       "owner_fr": "FR-008",
       "title": "Passport Submission",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "patient",
-        "description": "Patient submits the passport photo and form after the booking is Confirmed, only for Path A, so the provider can complete included bookings. Passes the on-device photo quality gate first. After submission the screen becomes a read-only confirmation of the form fields with a masked passport number and no photo."
+        "description": "Patient submits the passport photo and form after the booking is Confirmed, only for Path A, so the provider can complete included bookings. Passes the on-device photo quality gate first. After submission the screen becomes a read-only confirmation of the form fields with a masked passport number and no photo. On an earlier or carried-over passport the patient sees Use these details and Enter new details."
       }
     },
     {
@@ -97804,10 +97804,10 @@
       "owner_fr": "FR-008",
       "title": "Travel Itinerary View Patient",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "patient",
-        "description": "Unified read-only view assembled each time it opens from the booking, TravelContext and current records: booking and accepted choice, package travel items, passport (Path A only), outbound and return flight, hotel. Shows Awaiting submission, Travel dates under admin review, and No travel required states; read-only when the TravelContext is closed."
+        "description": "Unified read-only view assembled each time it opens from the booking, TravelContext and current records: booking and accepted choice, package travel items, passport (Path A only), outbound and return flight, hotel. Shows Awaiting submission, Travel dates under admin review, and No travel required states; read-only when the TravelContext is closed. In Path B the outbound flight, return flight and hotel rows are always shown, as the record, Awaiting or Not needed."
       }
     },
     {
@@ -97864,10 +97864,10 @@
       "owner_fr": "FR-008",
       "title": "Travel Details Provider Path B",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "provider",
-        "description": "Patient-submitted flight and hotel details shown inline as collapsible sub-sections of the Travel section for Path B bookings. Entirely read-only; no passport sub-section."
+        "description": "Patient-submitted flight and hotel details shown inline as collapsible sub-sections of the Travel section for Path B bookings. Entirely read-only; no passport sub-section. Each item shows Submitted, Awaiting or Not needed, and Patient declared no travel needed is shown when the patient has declared it."
       }
     },
     {
@@ -108266,7 +108266,7 @@
       "owner_fr": "FR-006",
       "title": "System sets the booking and the inquiry to Cancelled and keeps the accepted quote accepted; for a pending provider fault the cause is ProviderFault and the submit resolves the marker; when Screen 9 was opened from Screen 11 the submit also resolves the supportRequired marker and ends the payout hold",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flow B2 step 3"
       }
@@ -109665,7 +109665,7 @@
       "owner_fr": "FR-008",
       "title": "Patient submits the passport photo and form",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Main Flow 1 step A3 (and A1S1)"
       }
@@ -109786,7 +109786,7 @@
       "owner_fr": "FR-008",
       "title": "Provider reviews the patient-submitted travel details",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow 2 step B10"
       }
@@ -109863,7 +109863,7 @@
       "owner_fr": "FR-008",
       "title": "Admin applies the correction on the admin travel record screen",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A2 step A2S5"
       }
@@ -109896,7 +109896,7 @@
       "owner_fr": "FR-008",
       "title": "System stores the passport and notifies the provider",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow 1 step A6; Alternative Flow A1 step A1S5"
       }
@@ -109949,9 +109949,9 @@
       "id": "STP-008-027",
       "type": "Step",
       "owner_fr": "FR-008",
-      "title": "System records that no travel is required",
+      "title": "System records that no travel is required and notifies the provider",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B1 steps B1S5-B1S6; Main Flow 2 step B4"
       }
@@ -109973,7 +109973,7 @@
       "owner_fr": "FR-008",
       "title": "System closes the original TravelContext",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B2 step B2S2"
       }
@@ -109993,9 +109993,9 @@
       "id": "STP-008-031",
       "type": "Step",
       "owner_fr": "FR-008",
-      "title": "System copies the passport record to the replacement TravelContext when the replacement path matches the original path",
+      "title": "System copies the passport record to the replacement TravelContext when the replacement path matches the original path, keeping an Incomplete mark",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B2 step B2S4"
       }
@@ -110004,9 +110004,9 @@
       "id": "STP-008-032",
       "type": "Step",
       "owner_fr": "FR-008",
-      "title": "System copies the flight and hotel records to the replacement TravelContext when the replacement path matches the original path",
+      "title": "System copies the flight and hotel records to the replacement TravelContext when the replacement path matches the original path, keeping Not-needed marks and the no-travel declaration",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B2 step B2S5"
       }
@@ -110037,14 +110037,23 @@
       "owner_fr": "FR-008",
       "title": "Admin re-notifies the patient about a patient-owned pending item",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {}
     },
     {
       "id": "STP-008-036",
       "type": "Step",
       "owner_fr": "FR-008",
-      "title": "Admin overrides the no-travel declaration and the flight and hotel request is re-sent",
+      "title": "Admin overrides the no-travel declaration, the flight and hotel request is re-sent and the provider is notified",
+      "status": "active",
+      "version": 2,
+      "attrs": {}
+    },
+    {
+      "id": "STP-008-037",
+      "type": "Step",
+      "owner_fr": "FR-008",
+      "title": "System notifies the item's owner that the soft-deleted record must be entered again",
       "status": "active",
       "version": 1,
       "attrs": {}
@@ -155577,7 +155586,7 @@
       "name": "hotel_status",
       "data_type": "enum",
       "required": false,
-      "calculated_by": "REQ-008-019"
+      "calculated_by": "REQ-008-064"
     },
     {
       "id": "ENT-travel-context.id",
@@ -155633,7 +155642,7 @@
       "name": "outbound_flight_status",
       "data_type": "enum",
       "required": false,
-      "calculated_by": "REQ-008-019"
+      "calculated_by": "REQ-008-064"
     },
     {
       "id": "ENT-travel-context.overall_status",
@@ -155649,7 +155658,7 @@
       "name": "passport_status",
       "data_type": "enum",
       "required": false,
-      "calculated_by": "REQ-008-019"
+      "calculated_by": "REQ-008-064"
     },
     {
       "id": "ENT-travel-context.quote_option_id",
@@ -155665,7 +155674,7 @@
       "name": "return_flight_status",
       "data_type": "enum",
       "required": false,
-      "calculated_by": "REQ-008-019"
+      "calculated_by": "REQ-008-064"
     },
     {
       "id": "ENT-travel-context.review_cleared_at",
@@ -171022,13 +171031,13 @@
     {
       "from_id": "ENT-travel-context.hotel_status",
       "verb": "calculated by",
-      "to_id": "REQ-008-019",
+      "to_id": "REQ-008-064",
       "attrs": {}
     },
     {
       "from_id": "ENT-travel-context.outbound_flight_status",
       "verb": "calculated by",
-      "to_id": "REQ-008-019",
+      "to_id": "REQ-008-064",
       "attrs": {}
     },
     {
@@ -171040,13 +171049,13 @@
     {
       "from_id": "ENT-travel-context.passport_status",
       "verb": "calculated by",
-      "to_id": "REQ-008-019",
+      "to_id": "REQ-008-064",
       "attrs": {}
     },
     {
       "from_id": "ENT-travel-context.return_flight_status",
       "verb": "calculated by",
-      "to_id": "REQ-008-019",
+      "to_id": "REQ-008-064",
       "attrs": {}
     },
     {
@@ -315018,6 +315027,15 @@
       }
     },
     {
+      "from_id": "SCR-008-10",
+      "verb": "shows",
+      "to_id": "ENT-travel-context.travel_required",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Travel Declaration: Patient declared no travel needed"
+      }
+    },
+    {
       "from_id": "SCR-008-11",
       "verb": "belongs to",
       "to_id": "STG-main-04-booking",
@@ -363864,6 +363882,15 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-006-303",
+      "verb": "next",
+      "to_id": "STP-008-029",
+      "attrs": {
+        "label": "Confirmed booking cancelled",
+        "condition": "REQ-008-028"
+      }
+    },
+    {
       "from_id": "STP-006-304",
       "verb": "applies",
       "to_id": "REQ-006-051",
@@ -368331,6 +368358,12 @@
     {
       "from_id": "STP-008-001",
       "verb": "applies",
+      "to_id": "REQ-008-051",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-008-001",
+      "verb": "applies",
       "to_id": "REQ-008-074",
       "attrs": {}
     },
@@ -369078,6 +369111,12 @@
     },
     {
       "from_id": "STP-008-012",
+      "verb": "applies",
+      "to_id": "REQ-008-080",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-008-012",
       "verb": "at",
       "to_id": "STG-main-04-booking",
       "attrs": {}
@@ -369377,6 +369416,15 @@
     },
     {
       "from_id": "STP-008-019",
+      "verb": "next",
+      "to_id": "STP-008-037",
+      "attrs": {
+        "label": "Admin soft-deletes a record",
+        "condition": "REQ-008-067"
+      }
+    },
+    {
+      "from_id": "STP-008-019",
       "verb": "on",
       "to_id": "SCR-008-12",
       "attrs": {}
@@ -369516,6 +369564,12 @@
       "from_id": "STP-008-022",
       "verb": "applies",
       "to_id": "REQ-008-042",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-008-022",
+      "verb": "applies",
+      "to_id": "REQ-008-049",
       "attrs": {}
     },
     {
@@ -369733,6 +369787,18 @@
     },
     {
       "from_id": "STP-008-027",
+      "verb": "applies",
+      "to_id": "REQ-008-059",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-008-027",
+      "verb": "applies",
+      "to_id": "REQ-008-071",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-008-027",
       "verb": "at",
       "to_id": "STG-main-04-booking",
       "attrs": {}
@@ -369794,6 +369860,12 @@
       "from_id": "STP-008-028",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-008-029",
+      "verb": "applies",
+      "to_id": "REQ-008-028",
       "attrs": {}
     },
     {
@@ -370020,6 +370092,12 @@
     },
     {
       "from_id": "STP-008-035",
+      "verb": "applies",
+      "to_id": "REQ-008-081",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-008-035",
       "verb": "at",
       "to_id": "STG-main-04-booking",
       "attrs": {}
@@ -370060,6 +370138,12 @@
     },
     {
       "from_id": "STP-008-036",
+      "verb": "applies",
+      "to_id": "REQ-008-071",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-008-036",
       "verb": "at",
       "to_id": "STG-main-04-booking",
       "attrs": {}
@@ -370083,6 +370167,92 @@
       "verb": "on",
       "to_id": "SCR-008-11",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-008-037",
+      "verb": "applies",
+      "to_id": "REQ-008-067",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-008-037",
+      "verb": "applies",
+      "to_id": "REQ-008-071",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-008-037",
+      "verb": "applies",
+      "to_id": "REQ-008-076",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-008-037",
+      "verb": "at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-008-037",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-008-037",
+      "verb": "next",
+      "to_id": "STP-008-001",
+      "attrs": {
+        "label": "Patient enters the passport again"
+      }
+    },
+    {
+      "from_id": "STP-008-037",
+      "verb": "next",
+      "to_id": "STP-008-003",
+      "attrs": {
+        "label": "Provider enters the outbound flight again (Path A)"
+      }
+    },
+    {
+      "from_id": "STP-008-037",
+      "verb": "next",
+      "to_id": "STP-008-004",
+      "attrs": {
+        "label": "Provider enters the return flight again (Path A)"
+      }
+    },
+    {
+      "from_id": "STP-008-037",
+      "verb": "next",
+      "to_id": "STP-008-005",
+      "attrs": {
+        "label": "Provider enters the hotel again (Path A)"
+      }
+    },
+    {
+      "from_id": "STP-008-037",
+      "verb": "next",
+      "to_id": "STP-008-009",
+      "attrs": {
+        "label": "Patient enters the outbound flight again (Path B)"
+      }
+    },
+    {
+      "from_id": "STP-008-037",
+      "verb": "next",
+      "to_id": "STP-008-010",
+      "attrs": {
+        "label": "Patient enters the return flight again (Path B)"
+      }
+    },
+    {
+      "from_id": "STP-008-037",
+      "verb": "next",
+      "to_id": "STP-008-011",
+      "attrs": {
+        "label": "Patient enters the hotel again (Path B)"
+      }
     },
     {
       "from_id": "STP-009-001",
@@ -441560,6 +441730,58 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-132640-4adea3fa",
+      "at": "2026-11-24T13:26:40.323723+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-008 logic review pass 2: Not-needed status on provider and admin views, always-shown Path B rows, declaration visible to the provider, carry-over of Not-needed marks and declaration, checklist decides path and labels, Complete when all Path B items are Not needed, Incomplete passport re-notify, notice after admin soft-delete, reschedule rules, Use these details control, provider passport access ends at Completed, status fields tied to the status rule",
+      "source_id": null,
+      "nodes_added": [
+        "STP-008-037"
+      ],
+      "nodes_updated": [
+        "ENT-travel-context.hotel_status",
+        "ENT-travel-context.included_services_labels_snapshot",
+        "ENT-travel-context.outbound_flight_status",
+        "ENT-travel-context.overall_status",
+        "ENT-travel-context.passport_status",
+        "ENT-travel-context.return_flight_status",
+        "REQ-008-013",
+        "REQ-008-018",
+        "REQ-008-031",
+        "REQ-008-032",
+        "REQ-008-044",
+        "REQ-008-050",
+        "REQ-008-051",
+        "REQ-008-056",
+        "REQ-008-059",
+        "REQ-008-060",
+        "REQ-008-062",
+        "REQ-008-064",
+        "REQ-008-067",
+        "REQ-008-076",
+        "REQ-008-077",
+        "REQ-008-080",
+        "REQ-008-081",
+        "SCR-008-01",
+        "SCR-008-05",
+        "SCR-008-10",
+        "STP-006-303",
+        "STP-008-001",
+        "STP-008-012",
+        "STP-008-019",
+        "STP-008-022",
+        "STP-008-027",
+        "STP-008-029",
+        "STP-008-031",
+        "STP-008-032",
+        "STP-008-035",
+        "STP-008-036"
+      ],
+      "edges_added": 27,
+      "edges_removed": 4,
+      "rows": 57
+    },
     {
       "id": "cs-20261124-130913-5aa9a24f",
       "at": "2026-11-24T13:09:13.995300+00:00",

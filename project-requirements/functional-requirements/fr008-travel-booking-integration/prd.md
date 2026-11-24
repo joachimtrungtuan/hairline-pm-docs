@@ -301,7 +301,7 @@ flowchart TD
 - Passport photo upload MUST run an on-device quality check before submission is allowed (lighting conditions, focus, blurriness). Use the app's standard Flutter implementation (Google ML Kit) for this quality gate. If the check fails, the app blocks submission and provides an actionable error (e.g., "Too blurry — retake in better light"). This is a **quality gate only** (no OCR / data extraction). (REQ-008-047, REQ-008-048)
 - The stored image is accessible to the assigned provider (while the booking is open, REQ-008-050) and admin for manual verification purposes; it is not shown in any list or itinerary view.
 - Once submitted, the passport record is **locked** and cannot be edited, deleted, or re-submitted by the patient or provider. Corrections must be requested through admin (Screen 12 replacement + audit reason). Exceptions: if an admin soft-deletes the passport record, the status returns to Awaiting and the patient may submit one new passport (REQ-008-076); the deleted record stays in the travel audit trail. If an admin marks the submitted passport Incomplete, the patient is notified and may submit one new passport, which clears the mark and supersedes the earlier record (REQ-008-065). (REQ-008-052)
-- If passport details were previously submitted for an earlier appointment, the passport request is still sent as usual. The patient either confirms the earlier details or enters new ones, and the result is a new booking-linked locked record; the earlier record is not edited. (REQ-008-051)
+- If passport details were previously submitted for an earlier appointment, the passport request is still sent as usual. The screen shows the earlier details with two controls, "Use these details" and "Enter new details"; either choice results in a new booking-linked locked record, and the earlier record is not edited. (REQ-008-051)
 - All passport fields are treated as PII and subject to GDPR/data protection rules. (REQ-008-049)
 
 **Notes**:
@@ -401,6 +401,7 @@ flowchart TD
 - See REQ-008-055.
 - The `Transportation Details` field is the canonical field for recording airport pickup and transfer notes. There is no separate transport form in MVP. (REQ-008-013)
 - Instead of submitting a hotel, the patient may mark the hotel **Not needed** (for example staying with family). The mark is recorded with time and actor, and a Not-needed hotel does not count as required. (REQ-008-083)
+- When the hotel is marked Not needed, no transportation details are collected, because they exist only on a hotel record (accepted for MVP). (REQ-008-013, REQ-008-083)
 - See REQ-008-017, REQ-008-052.
 
 **Notes**:
@@ -420,11 +421,11 @@ flowchart TD
 | Section | Fields Displayed | Notes | Graph field |
 |---|---|---|---|
 | Booking and Accepted Choice | Booking reference, accepted subquote reference, current booking appointment date/time/timezone, selected package name | Accepted baseline from the immutable snapshot is also shown if an admin-approved date change exists | ENT-booking.id, ENT-subquote.id, ENT-quote-option.package_name_snapshot, ENT-booking.appointment_at, ENT-booking.appointment_timezone, ENT-travel-context.accepted_appointment_date_time |
-| Package Travel Items | List of provider-included travel items, named from the accepted option's included-services list as saved at confirmation (e.g. "Hotel included", "Airport transfer included", or other travel services such as a city tour) | Shown only if provider-included travel items exist, in Path A or Path B (REQ-008-044) | ENT-travel-context.included_services_labels_snapshot |
+| Package Travel Items | List of provider-included travel items, named from the accepted option's included-services list as saved at confirmation (e.g. "Hotel included", "Airport transfer included", or other travel services such as a city tour) | Shown only if provider-included travel items exist, in Path A or Path B; the FR-004 `included_services` checklist supplies the labels, option item names are display detail only (REQ-008-044) | ENT-travel-context.included_services_labels_snapshot |
 | Passport | Full Name, masked Passport Number, Date of Expiry | **Shown only for Path A** (provider-booked travel); not shown when patient self-books | ENT-passport-record.passport_name, ENT-passport-record.passport_number, ENT-passport-record.passport_expiry, ENT-passport-record.submitted_by, ENT-passport-record.submitted_at |
-| Outbound Flight | Airline, flight number, departure → arrival airport, date/time, confirmation number, ticket class | Always shown if record exists | ENT-flight-record.airline_name, ENT-flight-record.flight_number, ENT-flight-record.departure_airport, ENT-flight-record.arrival_airport, ENT-flight-record.departure_date, ENT-flight-record.departure_time, ENT-flight-record.arrival_date, ENT-flight-record.arrival_time, ENT-flight-record.ticket_confirmation_number, ENT-flight-record.ticket_class, ENT-flight-record.leg_type, ENT-flight-record.submitted_by, ENT-flight-record.submitted_at |
-| Return Flight | Same fields as outbound | Shown only if return record exists | ENT-flight-record.airline_name, ENT-flight-record.flight_number, ENT-flight-record.departure_airport, ENT-flight-record.arrival_airport, ENT-flight-record.departure_date, ENT-flight-record.departure_time, ENT-flight-record.arrival_date, ENT-flight-record.arrival_time, ENT-flight-record.ticket_confirmation_number, ENT-flight-record.ticket_class, ENT-flight-record.leg_type, ENT-flight-record.submitted_by, ENT-flight-record.submitted_at |
-| Hotel | Hotel name, address, check-in/out date & time, reservation number, transportation details | Shown if record exists | ENT-hotel-record.hotel_name, ENT-hotel-record.hotel_address, ENT-hotel-record.check_in_date, ENT-hotel-record.check_in_time, ENT-hotel-record.check_out_date, ENT-hotel-record.check_out_time, ENT-hotel-record.reservation_number, ENT-hotel-record.transportation, ENT-hotel-record.submitted_by, ENT-hotel-record.submitted_at |
+| Outbound Flight | Airline, flight number, departure → arrival airport, date/time, confirmation number, ticket class | Path B: always shown, as the record, Awaiting or Not needed; Path A: shown if a record exists (REQ-008-056) | ENT-flight-record.airline_name, ENT-flight-record.flight_number, ENT-flight-record.departure_airport, ENT-flight-record.arrival_airport, ENT-flight-record.departure_date, ENT-flight-record.departure_time, ENT-flight-record.arrival_date, ENT-flight-record.arrival_time, ENT-flight-record.ticket_confirmation_number, ENT-flight-record.ticket_class, ENT-flight-record.leg_type, ENT-flight-record.submitted_by, ENT-flight-record.submitted_at |
+| Return Flight | Same fields as outbound | Path B: always shown, as the record, Awaiting or Not needed; Path A: shown only if a return record exists (REQ-008-056) | ENT-flight-record.airline_name, ENT-flight-record.flight_number, ENT-flight-record.departure_airport, ENT-flight-record.arrival_airport, ENT-flight-record.departure_date, ENT-flight-record.departure_time, ENT-flight-record.arrival_date, ENT-flight-record.arrival_time, ENT-flight-record.ticket_confirmation_number, ENT-flight-record.ticket_class, ENT-flight-record.leg_type, ENT-flight-record.submitted_by, ENT-flight-record.submitted_at |
+| Hotel | Hotel name, address, check-in/out date & time, reservation number, transportation details | Path B: always shown, as the record, Awaiting or Not needed; Path A: shown if a record exists (REQ-008-056) | ENT-hotel-record.hotel_name, ENT-hotel-record.hotel_address, ENT-hotel-record.check_in_date, ENT-hotel-record.check_in_time, ENT-hotel-record.check_out_date, ENT-hotel-record.check_out_time, ENT-hotel-record.reservation_number, ENT-hotel-record.transportation, ENT-hotel-record.submitted_by, ENT-hotel-record.submitted_at |
 
 **Business Rules**:
 
@@ -468,6 +469,7 @@ flowchart TD
 - If an admin soft-deletes a provider-entered flight or hotel record, its status returns to Awaiting and the Enter button is offered again for one replacement. (REQ-008-067)
 - Each action button navigates to the relevant screen: View Passport → Screen 7; Enter Flight → Screen 8; Enter Hotel → Screen 9; View Travel Details → Screen 10.
 - While the TravelContext is in travel-date review, the section shows "Travel dates under admin review". When the TravelContext is closed (booking cancelled after confirmation, or closed by a provider-fault transfer), "Enter Flight" and "Enter Hotel" are not rendered, "View Passport" is no longer available to the provider, and flight and hotel details are read-only. (REQ-008-061, REQ-008-062, REQ-008-050)
+- When the booking reaches Completed, "View Passport" is no longer available to the provider and flight and hotel details stay read-only; admin keeps access. (REQ-008-050)
 - When a return flight departs, or the hotel check-out falls, before the last treatment plan day, the related status badge shows a "Leaves before last treatment day" flag together with the time the submitter acknowledged the warning.
 - Flight and hotel records copied from a closed booking after a provider-fault transfer show the label "Travel-date review required" until an admin clears the review.
 
@@ -481,15 +483,15 @@ flowchart TD
 
 | Field Name | API Field | Display | Graph field |
 |---|---|---|---|
-| Full Name | `passport_name` | Plain text | ENT-passport-record.passport_image |
-| Passport Number | `passport_number` | Shown in full to assigned provider and admin only | ENT-passport-record.passport_name |
-| Date of Birth | `passport_dob` | Plain text | ENT-passport-record.passport_number |
-| Gender | `gender` | Plain text | ENT-passport-record.passport_dob |
-| Location (Nationality) | `location` | Plain text | ENT-passport-record.gender |
-| Place of Birth | `place_of_birth` | Plain text | ENT-passport-record.location |
-| Date of Issue | `passport_issue` | Plain text | ENT-passport-record.place_of_birth |
-| Date of Expiry | `passport_expiry` | Plain text | ENT-passport-record.passport_issue |
-| Passport Photo | `passport_image` | Viewable (not downloadable in MVP) | ENT-passport-record.passport_expiry |
+| Full Name | `passport_name` | Plain text | ENT-passport-record.passport_name |
+| Passport Number | `passport_number` | Shown in full to assigned provider and admin only | ENT-passport-record.passport_number |
+| Date of Birth | `passport_dob` | Plain text | ENT-passport-record.passport_dob |
+| Gender | `gender` | Plain text | ENT-passport-record.gender |
+| Location (Nationality) | `location` | Plain text | ENT-passport-record.location |
+| Place of Birth | `place_of_birth` | Plain text | ENT-passport-record.place_of_birth |
+| Date of Issue | `passport_issue` | Plain text | ENT-passport-record.passport_issue |
+| Date of Expiry | `passport_expiry` | Plain text | ENT-passport-record.passport_expiry |
+| Passport Photo | `passport_image` | Viewable (not downloadable in MVP) | ENT-passport-record.passport_image |
 
 **Business Rules**:
 
@@ -497,7 +499,7 @@ flowchart TD
 - Read-only. Provider cannot edit passport data. If the data is incorrect, the provider must contact admin for correction. (REQ-008-050)
 - Access is logged (timestamp, provider user ID) for audit purposes. (REQ-008-050)
 - Provider must not be able to view passport data for patients not assigned to their clinic. (REQ-008-050)
-- When the booking closes (cancelled after confirmation, or closed by a provider-fault transfer), the original provider loses access to the passport record; admin keeps access. (REQ-008-050, REQ-008-061)
+- When the booking closes (cancelled after confirmation, or closed by a provider-fault transfer) or reaches Completed, the provider loses access to the passport record; flight and hotel details stay read-only for them and admin keeps access. (REQ-008-050, REQ-008-061)
 
 ---
 
@@ -572,6 +574,12 @@ flowchart TD
 
 **Placement**: Rendered as two collapsible sub-sections ("Flight Details" and "Hotel Details") that expand within Screen 6's Travel section when the provider opens a Path B booking. Passport sub-section is not present (not collected in Path B).
 
+**Travel Declaration**:
+
+| Field Name | Display | Graph field |
+|---|---|---|
+| No-travel declaration | "Patient declared no travel needed" when the patient has declared that no travel is needed on Screen 2 | ENT-travel-context.travel_required |
+
 **Flight Details** *(up to two sub-sections: Outbound and Return)*:
 
 | Field Name | API Field | Display | Graph field |
@@ -589,9 +597,9 @@ flowchart TD
 | Baggage Allowance | `baggage_allowance` | Plain text | ENT-flight-record.baggage_allowance |
 | Special Requests | `special_request` | Plain text | ENT-flight-record.special_request |
 | Submitted By | — | Patient name + submission timestamp | ENT-flight-record.submitted_by, ENT-flight-record.submitted_at |
-| Status | — | Submitted / Awaiting | ENT-travel-context.outbound_flight_status, ENT-travel-context.return_flight_status |
+| Status | — | Submitted / Awaiting / Not needed | ENT-travel-context.outbound_flight_status, ENT-travel-context.return_flight_status |
 
-Return flight uses the same fields, shown as a separate sub-section. If no return record exists, shows "Return flight not yet submitted." (REQ-008-080)
+Return flight uses the same fields, shown as a separate sub-section. If the return flight is marked Not needed it shows "Not needed"; otherwise, if no return record exists, it shows "Return flight not yet submitted." (REQ-008-080)
 
 **Hotel Details**:
 
@@ -611,13 +619,14 @@ Return flight uses the same fields, shown as a separate sub-section. If no retur
 | Phone Number | `contact_number` | Plain text | ENT-hotel-record.contact_number |
 | Email | `contact_email` | Plain text | ENT-hotel-record.contact_email |
 | Submitted By | — | Patient name + submission timestamp | ENT-hotel-record.submitted_by, ENT-hotel-record.submitted_at |
-| Status | — | Submitted / Awaiting | ENT-travel-context.hotel_status |
+| Status | — | Submitted / Awaiting / Not needed | ENT-travel-context.hotel_status |
 
 **Business Rules**:
 
 - Entirely read-only. Provider cannot enter or correct any record in Path B. (REQ-008-064)
-- If a flight leg has not been submitted, its sub-section shows "Awaiting patient submission." (REQ-008-080)
-- If no hotel record has been submitted, the Hotel Details sub-section shows "Awaiting patient submission." (REQ-008-080)
+- If a flight leg has not been submitted, its sub-section shows "Awaiting patient submission"; if the patient marked it Not needed, it shows "Not needed" and is not Awaiting. (REQ-008-080, REQ-008-083)
+- If no hotel record has been submitted, the Hotel Details sub-section shows "Awaiting patient submission"; if the patient marked the hotel Not needed, it shows "Not needed". (REQ-008-080, REQ-008-083)
+- When the patient has declared no travel needed, the Travel Declaration row shows "Patient declared no travel needed" and the Awaiting messages do not apply. The provider receives a notice when the patient makes the declaration and when an admin overrides it. (REQ-008-059, REQ-008-080)
 - Provider can use the Transportation Details field to plan clinic-side logistics (e.g. verifying patient arrival times for airport pickup arrangements). (REQ-008-045)
 - Visible only for Path B appointments. For Path A, the provider enters records directly via Screens 8 and 9 from the same Travel section.
 - Provider can only view records for patients assigned to their clinic; no cross-clinic access. (REQ-008-057)
@@ -650,11 +659,12 @@ Return flight uses the same fields, shown as a separate sub-section. If no retur
 **Business Rules**:
 
 - Admin can view all travel records without access restrictions; no cross-clinic filtering needed — admin is already within a specific booking. (REQ-008-057)
-- "Re-notify patient" sends a manual notification only for a patient-owned pending item: passport in Path A, or flight/hotel in Path B unless the booking is marked `no_travel_required`. Provider-owned Path A flight/hotel items do not create patient submission notifications, and an item marked Not needed is not pending. There are no automatic reminders at MVP: after the initial request, this admin action is the only follow-up. (REQ-008-060, REQ-008-083)
+- "Re-notify patient" sends a manual notification only for a patient-owned pending item: passport in Path A (not yet submitted, or marked Incomplete), or flight/hotel in Path B unless the booking is marked `no_travel_required`. Provider-owned Path A flight/hotel items do not create patient submission notifications, and an item marked Not needed is not pending and not eligible. There are no automatic reminders at MVP: after the initial request, this admin action is the only follow-up. (REQ-008-060, REQ-008-083)
 - "Override no-travel declaration" reverses `no_travel_required` and re-sends the flight and hotel request. (REQ-008-059)
 - "Apply Correction" navigates to Screen 12 for the detailed correction workflow.
 - "Confirm Travel Dates" is shown only while the TravelContext is in travel-date review. See REQ-008-030.
 - When the TravelContext is closed, "Re-notify patient", "Override no-travel declaration", "Confirm Travel Dates" and "Apply Correction" are not available and all records are read-only. (REQ-008-061)
+- A passport, flight or hotel record, a Not-needed mark or a no-travel declaration carried over from the original booking shows "Carried over from the original booking" so an admin can review it with the travel-date review. (REQ-008-032)
 - See REQ-008-024, REQ-008-066, REQ-008-067.
 
 ---
@@ -698,7 +708,7 @@ Return flight uses the same fields, shown as a separate sub-section. If no retur
 **Tab 1 Business Rules**:
 
 - Passport number and photo are shown unmasked/in full to admin only.
-- If no passport has been submitted yet, tab shows "Awaiting submission" with a "Re-notify patient" button. (REQ-008-081)
+- If no passport has been submitted yet, tab shows "Awaiting submission" with a "Re-notify patient" button; a passport marked Incomplete counts as pending and also offers "Re-notify patient". (REQ-008-081, REQ-008-060)
 - Admin can mark a submitted passport "Incomplete" from this tab (Path A) with a mandatory reason, when the data or photo is unusable or incorrect. The patient is notified with the reason and may submit one new passport; alternatively admin applies a correction (replace photo and/or edit fields) with a mandatory reason note. A new submission or a saved correction clears the mark. (REQ-008-065)
 - Admin correction replaces the current record with a new locked version; the previous version is retained in the system's backend records. (REQ-008-017, REQ-008-066)
 - See REQ-008-066.
@@ -731,11 +741,11 @@ Return flight uses the same fields, shown as a separate sub-section. If no retur
 
 **Return Flight**:
 
-Same fields as Outbound Flight. Displayed as a separate sub-section below. If no return record exists, tab shows "Return flight not yet submitted." (REQ-008-081)
+Same fields as Outbound Flight. Displayed as a separate sub-section below. If the return flight is marked Not needed, the tab shows "Not needed"; otherwise, if no return record exists, it shows "Return flight not yet submitted." (REQ-008-081)
 
 **Tab 2 Business Rules**:
 
-- If neither outbound nor return has been submitted, tab shows "Awaiting submission" for each. "Re-notify patient" is available only in Path B; Path A flight entry remains provider-owned. (REQ-008-081, REQ-008-060)
+- A leg that has been neither submitted nor marked Not needed shows "Awaiting submission". "Re-notify patient" is available only in Path B and never for an item marked Not needed; Path A flight entry remains provider-owned. (REQ-008-081, REQ-008-060)
 - See REQ-008-017.
 - See REQ-008-066.
 
@@ -765,14 +775,14 @@ Same fields as Outbound Flight. Displayed as a separate sub-section below. If no
 
 **Tab 3 Business Rules**:
 
-- If no hotel record has been submitted, tab shows "Awaiting submission". "Re-notify patient" is available only in Path B; Path A hotel entry remains provider-owned. (REQ-008-081, REQ-008-060)
+- If the hotel has been neither submitted nor marked Not needed, tab shows "Awaiting submission". "Re-notify patient" is available only in Path B and never for a hotel marked Not needed; Path A hotel entry remains provider-owned. (REQ-008-081, REQ-008-060)
 - See REQ-008-017.
 - See REQ-008-066.
 
 **General Business Rules (Screen 12)**:
 
-- Admin can soft-delete any record with a mandatory reason; deletion is not permanent and is retained in the system's backend audit trail. After a passport soft-delete the passport status is Awaiting and the patient may submit one new passport (REQ-008-076). After a flight or hotel soft-delete the status returns to Awaiting and the item's owner (provider in Path A, patient in Path B) may enter one replacement the same way; until then the item counts as not submitted. (REQ-008-067)
-- Overall Status is worked out as follows. **Pending**: nothing has been submitted. **Partially submitted**: some required items are in, or the passport is marked Incomplete by an admin. **Complete**: all required items are in and the passport is not marked Incomplete. Required items: in Path A, the passport plus each of the flight and the hotel that the accepted option includes; in Path B, the outbound flight, the return flight and the hotel, except any item marked Not needed. A booking marked `no_travel_required` is Complete. (REQ-008-077)
+- Admin can soft-delete any record with a mandatory reason; deletion is not permanent and is retained in the system's backend audit trail. After a passport soft-delete the passport status is Awaiting and the patient may submit one new passport (REQ-008-076). After a flight or hotel soft-delete the status returns to Awaiting and the item's owner (provider in Path A, patient in Path B) may enter one replacement the same way; until then the item counts as not submitted. The owner of a soft-deleted passport, flight or hotel record receives a notice asking them to enter it again. (REQ-008-067, REQ-008-076)
+- Overall Status is worked out as follows. **Pending**: nothing has been submitted. **Partially submitted**: some required items are in, or the passport is marked Incomplete by an admin. **Complete**: all required items are in and the passport is not marked Incomplete. Required items: in Path A, the passport plus each of the flight and the hotel that the accepted option includes; in Path B, the outbound flight, the return flight and the hotel, except any item marked Not needed. A booking marked `no_travel_required` is Complete. When every required Path B item is marked Not needed, the Overall Status is also Complete; this is separate from the no-travel declaration, which stays its own flag. (REQ-008-077)
 - Every admin correction requires a mandatory "Reason for correction" note before saving. (REQ-008-066)
 - See REQ-008-021, REQ-008-022.
 - Passport tab is hidden entirely for Path B appointments (no passport is captured). (REQ-008-068)
@@ -800,6 +810,7 @@ Same fields as Outbound Flight. Displayed as a separate sub-section below. If no
 - The travel path remains binary and is **automatically derived** from the `included_services` of the accepted FR-004 Quote Option snapshot contained in the FR-005 accepted subquote. FR-008 reads the accepted appointment and date range from the FR-005 accepted subquote snapshot (the selected Option/Date-Price Record), never from the live quote; the parent quote supplies inherited provider and treatment context. Travel items in the accepted option are FR-004 Quote Option items of a travel item type, which may have been seeded from an FR-024 package and then customised for that quote. Neither the parent quote as a whole nor the reusable package preset determines the accepted travel choice.
   - **Path A (provider-included travel)**: `included_services` contains `flight` or `hotel` (or both); `hotel` is the FR-004 `accommodation` item type, so a provider who includes accommodation puts the booking on Path A (REQ-008-018). Provider books included travel services externally; the platform captures passport details (from patient) and confirmed travel details (from provider).
   - **Path B (patient self-booked travel)**: `included_services` does not contain `flight` or `hotel` (it may contain only `transport` or other travel services, or be empty). Any included transport or other travel services are listed under Package Travel Items on Screen 5. Patient books externally; the platform captures confirmed travel details (from patient). No passport request is sent.
+- The FR-004 `included_services` checklist alone decides both the travel path and the Package Travel Items labels; option item names are display detail only. (REQ-008-018, REQ-008-044)
 - `travel_path` is **not a user-selectable field**. The provider edits option-level `included_services` in FR-004 Sub-screen 2A; those changes stay within that quote and do not update the provider's package library. FR-008 derives `travel_path` from the immutable accepted option snapshot when the booking is confirmed, then stores both the derived path and included-service snapshot in the booking's TravelContext. Later package-library or quote changes cannot reroute an existing booking. (REQ-008-043)
 - In **Path A**, the accepted option MAY include any mix of travel services (flight, hotel, transport). Services not included are treated as "Not included" for that appointment and are not collected in MVP. A partial inclusion does not create a hybrid patient/provider submission path. (REQ-008-044)
 - **No submitter mixing**:
@@ -813,9 +824,9 @@ Same fields as Outbound Flight. Displayed as a separate sub-section below. If no
 - See REQ-008-025, REQ-008-026.
 - The TravelContext and all travel records are operationally keyed to the confirmed booking. Quote, option, and subquote references are immutable provenance for audit; a flat `quote_id` MUST NOT be used as the sole travel-record key or to reconstruct the accepted choice. (REQ-008-025)
 - If a confirmed booking is later cancelled, the TravelContext becomes `closed` and pending travel requests close, while submitted records, versions, and audit history are retained. Any external flight or hotel cancellation is coordinated outside the platform under the governing booking policy; FR-008 does not calculate refunds or cancellation fees. A closed TravelContext rejects new passport, flight and hotel records, patient re-notification and admin corrections; its records stay read-only, except that the original provider loses access to the passport record while flight and hotel details stay read-only for them and admins keep access. (REQ-008-061, REQ-008-050)
-- If an approved admin intervention changes the appointment date after confirmation, FR-006 confirms the change and sends its `booking.rescheduled` event (REQ-006-011); on receiving it the system preserves the immutable accepted appointment baseline, displays the current Booking appointment alongside it, and sets the TravelContext to `travel-date-review-required` so that existing flight and hotel dates are revalidated before the itinerary is treated as current. FR-008 does not automatically rebook external travel. (REQ-008-062)
-- Travel-date review is owned by admin. From Screen 11 the admin either confirms that the existing flight and hotel dates still fit the current booking appointment, or corrects the affected records through Screen 12. Either action clears the flag and returns the TravelContext to `active`; the admin, time, reason and outcome are audited. Patients and providers see the review state but cannot clear it. (REQ-008-030, REQ-008-062)
-- When FR-006 Alternative Flow B5 transfers the patient to a replacement booking after a provider fault, the original TravelContext closes and its passport, flight and hotel records stay read-only on the closed booking. When the replacement booking's TravelContext is created and its travel path (A or B) matches the original's, the passport record carries over as a new locked booking-linked record, and the current flight and hotel records are copied to it with a reference to their source record and the flag "travel-date review required"; items carried over or copied are not requested from the patient again. The replacement TravelContext then starts in `travel-date-review-required`, and the admin review above clears both the context state and the record flags. If the paths differ, nothing is carried over or copied, the replacement TravelContext starts `active`, and the initial requests for its own path are sent as usual. (REQ-008-032, REQ-008-072, REQ-008-073)
+- If an approved admin intervention changes the appointment date after confirmation, FR-006 confirms the change and sends its `booking.rescheduled` event (REQ-006-011); on receiving it the system preserves the immutable accepted appointment baseline, displays the current Booking appointment alongside it, and sets the TravelContext to `travel-date-review-required` so that existing flight and hotel dates are revalidated before the itinerary is treated as current. FR-008 does not automatically rebook external travel. A reschedule on a booking that has no flight or hotel records starts no review and the TravelContext stays `active`. (REQ-008-062)
+- Travel-date review is owned by admin. From Screen 11 the admin either confirms that the existing flight and hotel dates still fit the current booking appointment, or corrects the affected records through Screen 12. Either action clears the flag and returns the TravelContext to `active`; the admin, time, reason and outcome are audited. Patients and providers see the review state but cannot clear it. Submissions and edits stay allowed during a review, and the admin still confirms the dates. If a return flight is then before the new last treatment plan day, its early-departure acknowledgment is cleared and asked again; the same applies to the hotel check-out. (REQ-008-030, REQ-008-062, REQ-008-031)
+- When FR-006 Alternative Flow B5 transfers the patient to a replacement booking after a provider fault, the original TravelContext closes and its passport, flight and hotel records stay read-only on the closed booking. When the replacement booking's TravelContext is created and its travel path (A or B) matches the original's, the passport record carries over as a new locked booking-linked record, and the current flight and hotel records are copied to it with a reference to their source record and the flag "travel-date review required"; items carried over or copied are not requested from the patient again. The carry-over also keeps any Not-needed marks, the no-travel declaration and an Incomplete passport mark as they were, and the admin travel record shows "carried over from the original booking" for review. The replacement TravelContext then starts in `travel-date-review-required`, and the admin review above clears both the context state and the record flags. If the paths differ, nothing is carried over or copied, the replacement TravelContext starts `active`, and the initial requests for its own path are sent as usual. (REQ-008-032, REQ-008-072, REQ-008-073)
 - Treatment plan days in the accepted option are relative days (Day 1, Day 2, and so on). FR-008 does not store them as calendar dates; it derives the date of the last treatment plan day (current booking appointment date plus the plan day count minus one) only to show the early-departure warning. Later FR-010 changes to the treatment plan, clinicians or grafts do not change the TravelContext or the accepted snapshot. (REQ-008-063)
 - `travel_required` (default true; false means `no_travel_required`). (REQ-008-058)
 - A TravelContext belongs to one confirmed FR-006 Booking and references its single FR-005 AcceptanceEvent, accepted parent quote and subquote identifiers/aggregate version, Quote Option ID, Option/Date-Price ID, accepted appointment date/time/timezone, accepted date range start and end, and accepted option travel inclusions, all copied from the accepted snapshot. `acceptedSubquoteVersion` equals `acceptedParentQuoteVersion` because both refer to the same FR-004 parent aggregate revision.
@@ -827,6 +838,7 @@ Same fields as Outbound Flight. Displayed as a separate sub-section below. If no
 - See REQ-008-002.
 - See REQ-008-017, REQ-008-052, REQ-008-076.
 - One current booking-linked passport record per Path A TravelContext.
+- The provider's passport access ends when the booking closes or reaches Completed; flight and hotel details stay read-only for the provider and admins keep access. (REQ-008-050, REQ-008-061)
 
 ### Flight Records
 
@@ -862,6 +874,8 @@ Same fields as Outbound Flight. Displayed as a separate sub-section below. If no
 - See REQ-008-020, REQ-008-021.
 - See REQ-008-004, REQ-008-022.
 - All notifications via email + in-app. Every notice this feature sends is an MVP notice and needs an entry in the FR-030 notification catalogue. (REQ-008-071)
+- The provider also receives a notice when the patient declares no travel needed and when an admin overrides that declaration. (REQ-008-059, REQ-008-080)
+- When an admin soft-deletes a passport, flight or hotel record, its owner (patient for the passport and in Path B, provider for Path A flight and hotel) receives a notice asking them to enter it again. (REQ-008-067, REQ-008-076)
 - There are no automatic reminders at MVP: after the initial request, the only follow-up is the admin's manual Re-notify. (REQ-008-060)
 - Patient profile: Home location, preferred language (for notification formatting).
 
@@ -990,6 +1004,7 @@ Related FRs: FR-001 (patient authentication), FR-004 (quote option `included_ser
 | 2026-11-22 | 3.1 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v3.0) and the change requests CR-FR008-20260929-01 and CR-FR008-20261016-01 (file `change-request-2026-10-16-mtg002-quote-model-alignment.md`) are in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
 | 2026-11-23 | 3.2 | Independent compression review: 2 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
 | 2026-11-24 | 3.3 | Logic review pass 1, gaps closed without new screens: replacement-booking carry-over and copy only when the travel path matches, carried items not requested again (REQ-008-032, REQ-008-005, REQ-008-034); Overall Status required items per path (REQ-008-077); admin can mark the passport Incomplete and the patient may then resubmit (REQ-008-065, REQ-008-052); soft-deleted flight and hotel records re-entered by their owner (REQ-008-067); Path B patient can mark a flight or the hotel Not needed, new rule REQ-008-083 (default recorded for owner review); admin override and Re-notify placed on Screen 11 (REQ-008-059, REQ-008-060); travel-date review trigger named as the FR-006 booking.rescheduled event (REQ-008-062, REQ-008-028); no automatic reminders at MVP and FR-030 catalogue entries needed (REQ-008-060, REQ-008-071); original provider loses passport access when a booking closes (REQ-008-050, REQ-008-061, default recorded for owner review); Package Travel Items named from a stored label list (REQ-008-044); Travel section placement in FR-006 Screens 2, 4 and 6; hotel equals the FR-004 accommodation item type (REQ-008-018). | Product Owner / Documentation |
+| 2026-11-24 | 3.4 | Logic review pass 2, gaps closed without new screens: a Not-needed item is shown as Not needed, is not Awaiting and is not eligible for Re-notify (REQ-008-064, REQ-008-080, REQ-008-081); Path B Screen 5 rows always shown as the record (REQ-008-056); no-travel declaration shown to the provider with a notice on declaration and override (REQ-008-059, REQ-008-080, default recorded for owner review); replacement carry-over also keeps Not-needed marks, the declaration and an Incomplete passport mark, shown as carried over for admin review (REQ-008-032, default recorded); the FR-004 `included_services` checklist decides path and labels (REQ-008-018, REQ-008-044); all Path B items Not needed gives Overall Status Complete (REQ-008-077, default recorded); Incomplete passport is pending and eligible for Re-notify (REQ-008-060); owner notice after an admin soft-delete (REQ-008-067, REQ-008-076); no transportation details when the hotel is Not needed (REQ-008-013, REQ-008-083); reschedule review rules and acknowledgment cleared and asked again (REQ-008-062, REQ-008-031, default recorded); Screen 1 "Use these details" and "Enter new details" controls (REQ-008-051); Screen 7 field column realigned; provider passport access also ends at Completed (REQ-008-050, REQ-008-061, default recorded). | Product Owner / Documentation |
 
 ---
 
